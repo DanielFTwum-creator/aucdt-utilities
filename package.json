@@ -1,0 +1,45 @@
+{
+  "name": "thesisai-frontend",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@8.15.0",
+  "scripts": {
+    "ng": "ng",
+    "start": "ng serve",
+    "start-dev": "lite-server --baseDir=\"./dist\"",
+    "build:ci": "cross-env NODE_OPTIONS=--max-old-space-size=16384 ng build --configuration=$BUILD_CONFIG --base-href $BASE_HREF",
+    "build-dev": "ng build --configuration=development --base-href /admissions-sdev/",
+    "build": "ng build",
+    "test": "ng test",
+    "lint": "run-s lint:prettier lint:eslint",
+    "lint:prettier": "prettier --check \"src/**/*.{ts,html,css,scss,json}\"",
+    "lint:eslint": "eslint \"src/**/*.ts\" --cache --cache-location \"../../.eslintcache\" --format stylish",
+    "fix": "run-s fix:eslint fix:prettier",
+    "fix:prettier": "prettier --write \"src/**/*.{ts,html,css,scss,json}\"",
+    "fix:eslint": "eslint \"src/**/*.ts\" --format stylish --fix",
+    "e2e": "ng e2e",
+    "install-clean": "pnpm install && pnpm start",
+    "postinstall": "patch-package"
+  },
+  "dependencies": {
+    "axios": "^1.13.2",
+    "framer-motion": "^12.23.24",
+    "lucide-react": "^0.554.0",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "react-router-dom": "^7.9.6",
+    "recharts": "^3.5.0",
+    "run-s": "^0.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.6",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^5.1.1",
+    "autoprefixer": "^10.4.22",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^4.1.17",
+    "typescript": "^5.9.3",
+    "vite": "^7.2.4"
+  }
+}
