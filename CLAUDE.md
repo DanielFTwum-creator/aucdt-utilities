@@ -23,8 +23,10 @@
 
 ```
 aucdt-utilities/
-├── src/                    # Source code directory (to be created)
-│   └── main.tsx           # Application entry point
+├── src/                    # Source code directory
+│   ├── main.tsx           # Application entry point
+│   ├── App.tsx            # Main App component
+│   └── index.css          # Tailwind CSS imports
 ├── index.html             # HTML entry point
 ├── package.json           # Dependencies and scripts
 ├── pnpm-lock.yaml         # Lockfile for reproducible installs
@@ -46,18 +48,17 @@ pnpm install
 
 # Start development server (port 3000)
 pnpm start
+# or
+pnpm dev
 
 # Build for production
 pnpm build
 
-# Run tests
-pnpm test
+# Preview production build
+pnpm preview
 
-# Lint code
+# Type check (lint)
 pnpm lint
-
-# Fix linting issues
-pnpm fix
 ```
 
 ## Development Guidelines
@@ -131,17 +132,15 @@ The Dockerfile uses:
 
 ## Important Notes for AI Assistants
 
-1. **Source Directory**: The `src/` directory needs to be created with source files. The entry point should be `src/main.tsx` as referenced in `index.html`.
+1. **Package Manager**: Always use `pnpm` (version 8.15.0) - do not use npm or yarn.
 
-2. **Package Manager**: Always use `pnpm` (version 8.15.0) - do not use npm or yarn.
+2. **API Backend**: This frontend expects a backend API service. During development, it proxies to `localhost:8080`. In Docker, it connects to `backend:8080`.
 
-3. **Build Scripts**: Note that some scripts in `package.json` reference Angular CLI (`ng`) which appears to be legacy. The project is configured for Vite/React.
+3. **Fonts**: Google Fonts (Crimson Text, Inter) are loaded via CDN in `index.html`.
 
-4. **API Backend**: This frontend expects a backend API service. During development, it proxies to `localhost:8080`. In Docker, it connects to `backend:8080`.
+4. **React Version**: Using React 19 - use modern React patterns (hooks, function components, no class components).
 
-5. **Fonts**: Google Fonts (Crimson Text, Inter) are loaded via CDN in `index.html`.
-
-6. **React Version**: Using React 19 - use modern React patterns (hooks, function components, no class components).
+5. **Styling**: Use Tailwind CSS utility classes with the custom `academic-*` color palette.
 
 ## License
 
