@@ -1,7 +1,17 @@
+import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { GraduationCap, FileText, Brain, CheckCircle } from 'lucide-react'
+import { GraduationCap, FileText, Brain, CheckCircle, FlaskConical } from 'lucide-react'
+import { PuppeteerSelfTest } from './components/PuppeteerSelfTest'
+
+type View = 'home' | 'self-test'
 
 function App() {
+  const [currentView, setCurrentView] = useState<View>('home')
+
+  if (currentView === 'self-test') {
+    return <PuppeteerSelfTest onBack={() => setCurrentView('home')} />
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-academic-navy to-academic-blue">
       {/* Header */}
@@ -11,9 +21,16 @@ function App() {
             <GraduationCap className="w-8 h-8 text-academic-gold" />
             <h1 className="text-2xl font-serif font-bold text-white">ThesisAI</h1>
           </div>
-          <nav className="flex gap-6">
+          <nav className="flex gap-6 items-center">
             <a href="#features" className="text-white/80 hover:text-white transition-colors">Features</a>
             <a href="#about" className="text-white/80 hover:text-white transition-colors">About</a>
+            <button
+              onClick={() => setCurrentView('self-test')}
+              className="flex items-center gap-2 text-white/80 hover:text-white transition-colors"
+            >
+              <FlaskConical className="w-4 h-4" />
+              Self-Test
+            </button>
             <button className="bg-academic-amber hover:bg-academic-gold text-academic-navy px-4 py-2 rounded-lg font-medium transition-colors">
               Get Started
             </button>
