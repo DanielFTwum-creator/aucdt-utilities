@@ -1,70 +1,100 @@
+import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { GraduationCap, FileText, Brain, CheckCircle } from 'lucide-react'
+import { GraduationCap, FileText, Brain, CheckCircle, TestTube2 } from 'lucide-react'
+import { TestRunner } from './components/TestRunner'
+
+type TabType = 'home' | 'tests'
 
 function App() {
+  const [activeTab, setActiveTab] = useState<TabType>('home')
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-academic-navy to-academic-blue">
       {/* Header */}
       <header className="bg-white/10 backdrop-blur-sm border-b border-white/20">
-        <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <GraduationCap className="w-8 h-8 text-academic-gold" />
-            <h1 className="text-2xl font-serif font-bold text-white">ThesisAI</h1>
+        <div className="max-w-7xl mx-auto px-4 py-4">
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-3">
+              <GraduationCap className="w-8 h-8 text-academic-gold" />
+              <h1 className="text-2xl font-serif font-bold text-white">ThesisAI</h1>
+            </div>
+            <nav className="flex gap-6">
+              <a href="#features" className="text-white/80 hover:text-white transition-colors">Features</a>
+              <a href="#about" className="text-white/80 hover:text-white transition-colors">About</a>
+              <button className="bg-academic-amber hover:bg-academic-gold text-academic-navy px-4 py-2 rounded-lg font-medium transition-colors">
+                Get Started
+              </button>
+            </nav>
           </div>
-          <nav className="flex gap-6">
-            <a href="#features" className="text-white/80 hover:text-white transition-colors">Features</a>
-            <a href="#about" className="text-white/80 hover:text-white transition-colors">About</a>
-            <button className="bg-academic-amber hover:bg-academic-gold text-academic-navy px-4 py-2 rounded-lg font-medium transition-colors">
-              Get Started
-            </button>
-          </nav>
+
+          {/* Tab Navigation */}
+          <div className="flex gap-2 border-t border-white/10 pt-4">
+            <TabButton
+              active={activeTab === 'home'}
+              onClick={() => setActiveTab('home')}
+              icon={<GraduationCap className="w-5 h-5" />}
+              label="Home"
+            />
+            <TabButton
+              active={activeTab === 'tests'}
+              onClick={() => setActiveTab('tests')}
+              icon={<TestTube2 className="w-5 h-5" />}
+              label="Puppeteer Self-Test"
+            />
+          </div>
         </div>
       </header>
 
-      {/* Hero Section */}
-      <main className="max-w-7xl mx-auto px-4 py-20">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="text-center"
-        >
-          <h2 className="text-5xl font-serif font-bold text-white mb-6">
-            AI-Powered Thesis Assessment
-          </h2>
-          <p className="text-xl text-white/80 max-w-2xl mx-auto mb-10">
-            Streamline your academic evaluation process with intelligent analysis,
-            detailed feedback, and comprehensive assessment tools.
-          </p>
-          <button className="bg-academic-gold hover:bg-academic-amber text-academic-navy px-8 py-4 rounded-xl font-semibold text-lg transition-all hover:scale-105 shadow-lg">
-            Start Assessment
-          </button>
-        </motion.div>
+      {/* Main Content */}
+      <main className="min-h-[calc(100vh-280px)]">
+        {activeTab === 'home' ? (
+          <div className="max-w-7xl mx-auto px-4 py-20">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              className="text-center"
+            >
+              <h2 className="text-5xl font-serif font-bold text-white mb-6">
+                AI-Powered Thesis Assessment
+              </h2>
+              <p className="text-xl text-white/80 max-w-2xl mx-auto mb-10">
+                Streamline your academic evaluation process with intelligent analysis,
+                detailed feedback, and comprehensive assessment tools.
+              </p>
+              <button className="bg-academic-gold hover:bg-academic-amber text-academic-navy px-8 py-4 rounded-xl font-semibold text-lg transition-all hover:scale-105 shadow-lg">
+                Start Assessment
+              </button>
+            </motion.div>
 
-        {/* Features Grid */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.3, duration: 0.6 }}
-          className="grid md:grid-cols-3 gap-8 mt-20"
-          id="features"
-        >
-          <FeatureCard
-            icon={<FileText className="w-10 h-10" />}
-            title="Document Analysis"
-            description="Upload thesis documents and receive comprehensive structural analysis and formatting checks."
-          />
-          <FeatureCard
-            icon={<Brain className="w-10 h-10" />}
-            title="AI Evaluation"
-            description="Leverage advanced AI to evaluate content quality, argumentation, and academic rigor."
-          />
-          <FeatureCard
-            icon={<CheckCircle className="w-10 h-10" />}
-            title="Detailed Feedback"
-            description="Get actionable feedback with specific suggestions for improvement and grading criteria."
-          />
-        </motion.div>
+            {/* Features Grid */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.3, duration: 0.6 }}
+              className="grid md:grid-cols-3 gap-8 mt-20"
+              id="features"
+            >
+              <FeatureCard
+                icon={<FileText className="w-10 h-10" />}
+                title="Document Analysis"
+                description="Upload thesis documents and receive comprehensive structural analysis and formatting checks."
+              />
+              <FeatureCard
+                icon={<Brain className="w-10 h-10" />}
+                title="AI Evaluation"
+                description="Leverage advanced AI to evaluate content quality, argumentation, and academic rigor."
+              />
+              <FeatureCard
+                icon={<CheckCircle className="w-10 h-10" />}
+                title="Detailed Feedback"
+                description="Get actionable feedback with specific suggestions for improvement and grading criteria."
+              />
+            </motion.div>
+          </div>
+        ) : (
+          <TestRunner />
+        )}
       </main>
 
       {/* Footer */}
@@ -93,6 +123,32 @@ function FeatureCard({ icon, title, description }: FeatureCardProps) {
       <h3 className="text-xl font-semibold text-white mb-3">{title}</h3>
       <p className="text-white/70">{description}</p>
     </motion.div>
+  )
+}
+
+interface TabButtonProps {
+  active: boolean
+  onClick: () => void
+  icon: React.ReactNode
+  label: string
+}
+
+function TabButton({ active, onClick, icon, label }: TabButtonProps) {
+  return (
+    <button
+      onClick={onClick}
+      className={`
+        flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all
+        ${
+          active
+            ? 'bg-academic-gold text-academic-navy'
+            : 'bg-white/5 text-white/70 hover:bg-white/10 hover:text-white'
+        }
+      `}
+    >
+      {icon}
+      <span>{label}</span>
+    </button>
   )
 }
 
