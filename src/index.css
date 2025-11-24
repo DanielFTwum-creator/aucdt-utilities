@@ -1,1 +1,108 @@
 @import "tailwindcss";
+
+/* Custom Color Definitions for Tailwind */
+@theme {
+  --color-academic-navy: #1e3a5f;
+  --color-academic-blue: #2563eb;
+  --color-academic-amber: #f59e0b;
+  --color-academic-gold: #fbbf24;
+  --color-academic-slate: #475569;
+}
+
+/* Theme Variables */
+:root {
+  --bg-primary: #ffffff;
+  --bg-secondary: #f9fafb;
+  --text-primary: #111827;
+  --text-secondary: #6b7280;
+  --border-color: #e5e7eb;
+}
+
+[data-theme="dark"] {
+  --bg-primary: #1f2937;
+  --bg-secondary: #111827;
+  --text-primary: #f9fafb;
+  --text-secondary: #9ca3af;
+  --border-color: #374151;
+}
+
+[data-theme="high-contrast"] {
+  --bg-primary: #000000;
+  --bg-secondary: #1a1a1a;
+  --text-primary: #ffffff;
+  --text-secondary: #cccccc;
+  --border-color: #ffffff;
+}
+
+/* Dark theme base styles */
+[data-theme="dark"] {
+  color-scheme: dark;
+}
+
+[data-theme="dark"] body {
+  @apply bg-gray-900 text-gray-100;
+}
+
+/* High contrast theme styles */
+[data-theme="high-contrast"] {
+  color-scheme: dark;
+}
+
+[data-theme="high-contrast"] body {
+  @apply bg-black text-white;
+}
+
+[data-theme="high-contrast"] * {
+  @apply border-white;
+}
+
+[data-theme="high-contrast"] a,
+[data-theme="high-contrast"] button {
+  @apply underline;
+}
+
+/* Accessibility: Focus visible styles */
+*:focus-visible {
+  @apply outline-2 outline-offset-2 outline-academic-blue;
+}
+
+/* Accessibility: Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Skip to main content link for screen readers */
+.skip-to-main {
+  @apply sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50;
+  @apply bg-academic-blue text-white px-4 py-2 rounded-lg;
+  @apply focus:outline-none focus:ring-2 focus:ring-white;
+}
+
+/* Screen reader only utility (if not provided by Tailwind) */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+.sr-only:focus,
+.sr-only:active {
+  position: static;
+  width: auto;
+  height: auto;
+  overflow: visible;
+  clip: auto;
+  white-space: normal;
+}
