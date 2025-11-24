@@ -1,0 +1,151 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800">
+  <!-- Title -->
+  <text x="600" y="30" text-anchor="middle" font-size="24" font-weight="bold" fill="#1e3a5f">
+    ThesisAI System Architecture
+  </text>
+
+  <!-- User Layer -->
+  <g id="user-layer">
+    <rect x="450" y="60" width="300" height="80" rx="10" fill="#f59e0b" stroke="#1e3a5f" stroke-width="2"/>
+    <text x="600" y="90" text-anchor="middle" font-size="16" font-weight="bold" fill="#1e3a5f">Users</text>
+    <text x="600" y="115" text-anchor="middle" font-size="12" fill="#1e3a5f">Students, Faculty, Administrators</text>
+  </g>
+
+  <!-- Arrow from Users to Frontend -->
+  <line x1="600" y1="140" x2="600" y2="180" stroke="#475569" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <text x="620" y="165" font-size="11" fill="#475569">HTTPS</text>
+
+  <!-- Frontend Layer -->
+  <g id="frontend-layer">
+    <rect x="50" y="180" width="1100" height="200" rx="10" fill="#e0f2fe" stroke="#2563eb" stroke-width="3"/>
+    <text x="600" y="210" text-anchor="middle" font-size="18" font-weight="bold" fill="#1e3a5f">
+      Frontend Layer (Docker Container)
+    </text>
+
+    <!-- Nginx -->
+    <g id="nginx">
+      <rect x="100" y="230" width="200" height="120" rx="8" fill="#ffffff" stroke="#2563eb" stroke-width="2"/>
+      <text x="200" y="260" text-anchor="middle" font-size="14" font-weight="bold" fill="#1e3a5f">Nginx Web Server</text>
+      <text x="200" y="280" text-anchor="middle" font-size="11" fill="#475569">Port: 80/443</text>
+      <text x="200" y="300" text-anchor="middle" font-size="11" fill="#475569">• Static File Serving</text>
+      <text x="200" y="315" text-anchor="middle" font-size="11" fill="#475569">• SPA Routing</text>
+      <text x="200" y="330" text-anchor="middle" font-size="11" fill="#475569">• API Proxy</text>
+    </g>
+
+    <!-- React App -->
+    <g id="react-app">
+      <rect x="350" y="230" width="200" height="120" rx="8" fill="#ffffff" stroke="#2563eb" stroke-width="2"/>
+      <text x="450" y="260" text-anchor="middle" font-size="14" font-weight="bold" fill="#1e3a5f">React Application</text>
+      <text x="450" y="280" text-anchor="middle" font-size="11" fill="#475569">React 19 + TypeScript</text>
+      <text x="450" y="300" text-anchor="middle" font-size="11" fill="#475569">• Thesis Upload UI</text>
+      <text x="450" y="315" text-anchor="middle" font-size="11" fill="#475569">• Assessment Dashboard</text>
+      <text x="450" y="330" text-anchor="middle" font-size="11" fill="#475569">• Results Visualization</text>
+    </g>
+
+    <!-- Build Tools -->
+    <g id="build-tools">
+      <rect x="600" y="230" width="200" height="120" rx="8" fill="#ffffff" stroke="#2563eb" stroke-width="2"/>
+      <text x="700" y="260" text-anchor="middle" font-size="14" font-weight="bold" fill="#1e3a5f">Build Tools</text>
+      <text x="700" y="280" text-anchor="middle" font-size="11" fill="#475569">Vite + TypeScript</text>
+      <text x="700" y="300" text-anchor="middle" font-size="11" fill="#475569">• Fast HMR</text>
+      <text x="700" y="315" text-anchor="middle" font-size="11" fill="#475569">• Optimized Builds</text>
+      <text x="700" y="330" text-anchor="middle" font-size="11" fill="#475569">• Asset Bundling</text>
+    </g>
+
+    <!-- Styling -->
+    <g id="styling">
+      <rect x="850" y="230" width="200" height="120" rx="8" fill="#ffffff" stroke="#2563eb" stroke-width="2"/>
+      <text x="950" y="260" text-anchor="middle" font-size="14" font-weight="bold" fill="#1e3a5f">Styling &amp; UI</text>
+      <text x="950" y="280" text-anchor="middle" font-size="11" fill="#475569">Tailwind CSS</text>
+      <text x="950" y="300" text-anchor="middle" font-size="11" fill="#475569">• Framer Motion</text>
+      <text x="950" y="315" text-anchor="middle" font-size="11" fill="#475569">• Lucide Icons</text>
+      <text x="950" y="330" text-anchor="middle" font-size="11" fill="#475569">• Recharts</text>
+    </g>
+  </g>
+
+  <!-- Arrow from Frontend to Backend -->
+  <line x1="600" y1="380" x2="600" y2="430" stroke="#475569" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <text x="620" y="410" font-size="11" fill="#475569">REST API</text>
+  <text x="620" y="423" font-size="11" fill="#475569">/api/*</text>
+
+  <!-- Backend Layer -->
+  <g id="backend-layer">
+    <rect x="50" y="430" width="500" height="180" rx="10" fill="#dbeafe" stroke="#2563eb" stroke-width="3"/>
+    <text x="300" y="460" text-anchor="middle" font-size="18" font-weight="bold" fill="#1e3a5f">
+      Backend API Layer
+    </text>
+
+    <!-- API Server -->
+    <rect x="100" y="480" width="180" height="100" rx="8" fill="#ffffff" stroke="#2563eb" stroke-width="2"/>
+    <text x="190" y="510" text-anchor="middle" font-size="14" font-weight="bold" fill="#1e3a5f">API Server</text>
+    <text x="190" y="530" text-anchor="middle" font-size="11" fill="#475569">Port: 8080</text>
+    <text x="190" y="545" text-anchor="middle" font-size="11" fill="#475569">• Authentication</text>
+    <text x="190" y="560" text-anchor="middle" font-size="11" fill="#475569">• Thesis Processing</text>
+    <text x="190" y="575" text-anchor="middle" font-size="11" fill="#475569">• Assessment API</text>
+
+    <!-- AI Engine -->
+    <rect x="320" y="480" width="180" height="100" rx="8" fill="#ffffff" stroke="#2563eb" stroke-width="2"/>
+    <text x="410" y="510" text-anchor="middle" font-size="14" font-weight="bold" fill="#1e3a5f">AI Engine</text>
+    <text x="410" y="530" text-anchor="middle" font-size="11" fill="#475569">ML Models</text>
+    <text x="410" y="545" text-anchor="middle" font-size="11" fill="#475569">• Content Analysis</text>
+    <text x="410" y="560" text-anchor="middle" font-size="11" fill="#475569">• Quality Scoring</text>
+    <text x="410" y="575" text-anchor="middle" font-size="11" fill="#475569">• Plagiarism Check</text>
+  </g>
+
+  <!-- Arrow from Backend to Database -->
+  <line x1="300" y1="610" x2="300" y2="650" stroke="#475569" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <text x="320" y="635" font-size="11" fill="#475569">SQL Queries</text>
+
+  <!-- Database Layer -->
+  <g id="database-layer">
+    <rect x="100" y="650" width="400" height="100" rx="10" fill="#fef3c7" stroke="#f59e0b" stroke-width="3"/>
+    <text x="300" y="680" text-anchor="middle" font-size="18" font-weight="bold" fill="#1e3a5f">
+      Database Layer
+    </text>
+    <text x="300" y="705" text-anchor="middle" font-size="12" fill="#475569">PostgreSQL / MySQL</text>
+    <text x="300" y="725" text-anchor="middle" font-size="11" fill="#475569">
+      Users • Theses • Assessments • Feedback • Analytics
+    </text>
+  </g>
+
+  <!-- External Services -->
+  <g id="external-services">
+    <rect x="650" y="430" width="500" height="180" rx="10" fill="#fef2f2" stroke="#ef4444" stroke-width="3"/>
+    <text x="900" y="460" text-anchor="middle" font-size="18" font-weight="bold" fill="#1e3a5f">
+      External Services
+    </text>
+
+    <!-- File Storage -->
+    <rect x="700" y="480" width="180" height="100" rx="8" fill="#ffffff" stroke="#ef4444" stroke-width="2"/>
+    <text x="790" y="510" text-anchor="middle" font-size="14" font-weight="bold" fill="#1e3a5f">File Storage</text>
+    <text x="790" y="530" text-anchor="middle" font-size="11" fill="#475569">S3 / Cloud Storage</text>
+    <text x="790" y="545" text-anchor="middle" font-size="11" fill="#475569">• Thesis Documents</text>
+    <text x="790" y="560" text-anchor="middle" font-size="11" fill="#475569">• Generated Reports</text>
+    <text x="790" y="575" text-anchor="middle" font-size="11" fill="#475569">• Backups</text>
+
+    <!-- Email Service -->
+    <rect x="920" y="480" width="180" height="100" rx="8" fill="#ffffff" stroke="#ef4444" stroke-width="2"/>
+    <text x="1010" y="510" text-anchor="middle" font-size="14" font-weight="bold" fill="#1e3a5f">Email Service</text>
+    <text x="1010" y="530" text-anchor="middle" font-size="11" fill="#475569">SMTP / SendGrid</text>
+    <text x="1010" y="545" text-anchor="middle" font-size="11" fill="#475569">• Notifications</text>
+    <text x="1010" y="560" text-anchor="middle" font-size="11" fill="#475569">• Assessment Results</text>
+    <text x="1010" y="575" text-anchor="middle" font-size="11" fill="#475569">• System Alerts</text>
+  </g>
+
+  <!-- Connections Backend to External -->
+  <line x1="550" y1="520" x2="700" y2="530" stroke="#475569" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <line x1="550" y1="540" x2="920" y2="540" stroke="#475569" stroke-width="2" marker-end="url(#arrowhead)"/>
+
+  <!-- Legend -->
+  <g id="legend">
+    <text x="50" y="770" font-size="12" font-weight="bold" fill="#1e3a5f">Technology Stack:</text>
+    <text x="200" y="770" font-size="11" fill="#475569">React 19 • TypeScript 5.9 • Vite 7.2 • Tailwind CSS 4.1 • Nginx • Docker • pnpm 8.15</text>
+  </g>
+
+  <!-- Arrow marker definition -->
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <polygon points="0 0, 10 3, 0 6" fill="#475569"/>
+    </marker>
+  </defs>
+</svg>

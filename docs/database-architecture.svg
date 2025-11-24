@@ -1,0 +1,358 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 1100">
+  <!-- Title -->
+  <text x="700" y="30" text-anchor="middle" font-size="24" font-weight="bold" fill="#1e3a5f">
+    ThesisAI Database Architecture
+  </text>
+  <text x="700" y="55" text-anchor="middle" font-size="12" fill="#475569">
+    Entity Relationship Diagram (ERD) - PostgreSQL/MySQL Schema
+  </text>
+
+  <!-- Users Table -->
+  <g id="users-table">
+    <rect x="50" y="100" width="280" height="280" rx="8" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/>
+    <rect x="50" y="100" width="280" height="40" rx="8" fill="#2563eb"/>
+    <text x="190" y="125" text-anchor="middle" font-size="16" font-weight="bold" fill="#ffffff">users</text>
+
+    <!-- Columns -->
+    <text x="70" y="160" font-size="12" font-weight="bold" fill="#1e3a5f">🔑 id</text>
+    <text x="250" y="160" font-size="11" fill="#475569">SERIAL PRIMARY KEY</text>
+
+    <text x="70" y="180" font-size="12" fill="#1e3a5f">email</text>
+    <text x="250" y="180" font-size="11" fill="#475569">VARCHAR(255) UNIQUE</text>
+
+    <text x="70" y="200" font-size="12" fill="#1e3a5f">password_hash</text>
+    <text x="250" y="200" font-size="11" fill="#475569">VARCHAR(255)</text>
+
+    <text x="70" y="220" font-size="12" fill="#1e3a5f">first_name</text>
+    <text x="250" y="220" font-size="11" fill="#475569">VARCHAR(100)</text>
+
+    <text x="70" y="240" font-size="12" fill="#1e3a5f">last_name</text>
+    <text x="250" y="240" font-size="11" fill="#475569">VARCHAR(100)</text>
+
+    <text x="70" y="260" font-size="12" fill="#1e3a5f">role</text>
+    <text x="250" y="260" font-size="11" fill="#475569">ENUM (student, faculty, admin)</text>
+
+    <text x="70" y="280" font-size="12" fill="#1e3a5f">department</text>
+    <text x="250" y="280" font-size="11" fill="#475569">VARCHAR(100)</text>
+
+    <text x="70" y="300" font-size="12" fill="#1e3a5f">student_id</text>
+    <text x="250" y="300" font-size="11" fill="#475569">VARCHAR(50) UNIQUE</text>
+
+    <text x="70" y="320" font-size="12" fill="#1e3a5f">is_active</text>
+    <text x="250" y="320" font-size="11" fill="#475569">BOOLEAN DEFAULT true</text>
+
+    <text x="70" y="340" font-size="12" fill="#1e3a5f">created_at</text>
+    <text x="250" y="340" font-size="11" fill="#475569">TIMESTAMP</text>
+
+    <text x="70" y="360" font-size="12" fill="#1e3a5f">updated_at</text>
+    <text x="250" y="360" font-size="11" fill="#475569">TIMESTAMP</text>
+  </g>
+
+  <!-- Theses Table -->
+  <g id="theses-table">
+    <rect x="450" y="100" width="300" height="340" rx="8" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/>
+    <rect x="450" y="100" width="300" height="40" rx="8" fill="#2563eb"/>
+    <text x="600" y="125" text-anchor="middle" font-size="16" font-weight="bold" fill="#ffffff">theses</text>
+
+    <!-- Columns -->
+    <text x="470" y="160" font-size="12" font-weight="bold" fill="#1e3a5f">🔑 id</text>
+    <text x="690" y="160" font-size="11" fill="#475569">SERIAL PRIMARY KEY</text>
+
+    <text x="470" y="180" font-size="12" fill="#1e3a5f">🔗 user_id</text>
+    <text x="690" y="180" font-size="11" fill="#475569">INTEGER FOREIGN KEY</text>
+
+    <text x="470" y="200" font-size="12" fill="#1e3a5f">title</text>
+    <text x="690" y="200" font-size="11" fill="#475569">VARCHAR(500)</text>
+
+    <text x="470" y="220" font-size="12" fill="#1e3a5f">abstract</text>
+    <text x="690" y="220" font-size="11" fill="#475569">TEXT</text>
+
+    <text x="470" y="240" font-size="12" fill="#1e3a5f">field_of_study</text>
+    <text x="690" y="240" font-size="11" fill="#475569">VARCHAR(100)</text>
+
+    <text x="470" y="260" font-size="12" fill="#1e3a5f">degree_level</text>
+    <text x="690" y="260" font-size="11" fill="#475569">ENUM (bachelor, master, phd)</text>
+
+    <text x="470" y="280" font-size="12" fill="#1e3a5f">file_path</text>
+    <text x="690" y="280" font-size="11" fill="#475569">VARCHAR(500)</text>
+
+    <text x="470" y="300" font-size="12" fill="#1e3a5f">file_size</text>
+    <text x="690" y="300" font-size="11" fill="#475569">BIGINT (bytes)</text>
+
+    <text x="470" y="320" font-size="12" fill="#1e3a5f">file_hash</text>
+    <text x="690" y="320" font-size="11" fill="#475569">VARCHAR(64)</text>
+
+    <text x="470" y="340" font-size="12" fill="#1e3a5f">status</text>
+    <text x="690" y="340" font-size="11" fill="#475569">ENUM (uploaded, processing, completed)</text>
+
+    <text x="470" y="360" font-size="12" fill="#1e3a5f">word_count</text>
+    <text x="690" y="360" font-size="11" fill="#475569">INTEGER</text>
+
+    <text x="470" y="380" font-size="12" fill="#1e3a5f">submission_date</text>
+    <text x="690" y="380" font-size="11" fill="#475569">DATE</text>
+
+    <text x="470" y="400" font-size="12" fill="#1e3a5f">created_at</text>
+    <text x="690" y="400" font-size="11" fill="#475569">TIMESTAMP</text>
+
+    <text x="470" y="420" font-size="12" fill="#1e3a5f">updated_at</text>
+    <text x="690" y="420" font-size="11" fill="#475569">TIMESTAMP</text>
+  </g>
+
+  <!-- Assessments Table -->
+  <g id="assessments-table">
+    <rect x="850" y="100" width="300" height="320" rx="8" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/>
+    <rect x="850" y="100" width="300" height="40" rx="8" fill="#2563eb"/>
+    <text x="1000" y="125" text-anchor="middle" font-size="16" font-weight="bold" fill="#ffffff">assessments</text>
+
+    <!-- Columns -->
+    <text x="870" y="160" font-size="12" font-weight="bold" fill="#1e3a5f">🔑 id</text>
+    <text x="1080" y="160" font-size="11" fill="#475569">SERIAL PRIMARY KEY</text>
+
+    <text x="870" y="180" font-size="12" fill="#1e3a5f">🔗 thesis_id</text>
+    <text x="1080" y="180" font-size="11" fill="#475569">INTEGER FOREIGN KEY</text>
+
+    <text x="870" y="200" font-size="12" fill="#1e3a5f">🔗 assessor_id</text>
+    <text x="1080" y="200" font-size="11" fill="#475569">INTEGER FOREIGN KEY</text>
+
+    <text x="870" y="220" font-size="12" fill="#1e3a5f">overall_score</text>
+    <text x="1080" y="220" font-size="11" fill="#475569">DECIMAL(5,2) (0-100)</text>
+
+    <text x="870" y="240" font-size="12" fill="#1e3a5f">content_quality</text>
+    <text x="1080" y="240" font-size="11" fill="#475569">DECIMAL(5,2) (0-100)</text>
+
+    <text x="870" y="260" font-size="12" fill="#1e3a5f">structure_score</text>
+    <text x="1080" y="260" font-size="11" fill="#475569">DECIMAL(5,2) (0-100)</text>
+
+    <text x="870" y="280" font-size="12" fill="#1e3a5f">methodology_score</text>
+    <text x="1080" y="280" font-size="11" fill="#475569">DECIMAL(5,2) (0-100)</text>
+
+    <text x="870" y="300" font-size="12" fill="#1e3a5f">originality_score</text>
+    <text x="1080" y="300" font-size="11" fill="#475569">DECIMAL(5,2) (0-100)</text>
+
+    <text x="870" y="320" font-size="12" fill="#1e3a5f">plagiarism_score</text>
+    <text x="1080" y="320" font-size="11" fill="#475569">DECIMAL(5,2) (0-100)</text>
+
+    <text x="870" y="340" font-size="12" fill="#1e3a5f">assessment_type</text>
+    <text x="1080" y="340" font-size="11" fill="#475569">ENUM (ai, manual, hybrid)</text>
+
+    <text x="870" y="360" font-size="12" fill="#1e3a5f">status</text>
+    <text x="1080" y="360" font-size="11" fill="#475569">ENUM (pending, in_progress, completed)</text>
+
+    <text x="870" y="380" font-size="12" fill="#1e3a5f">created_at</text>
+    <text x="1080" y="380" font-size="11" fill="#475569">TIMESTAMP</text>
+
+    <text x="870" y="400" font-size="12" fill="#1e3a5f">completed_at</text>
+    <text x="1080" y="400" font-size="11" fill="#475569">TIMESTAMP</text>
+  </g>
+
+  <!-- Feedback Table -->
+  <g id="feedback-table">
+    <rect x="50" y="480" width="280" height="240" rx="8" fill="#fef3c7" stroke="#f59e0b" stroke-width="2"/>
+    <rect x="50" y="480" width="280" height="40" rx="8" fill="#f59e0b"/>
+    <text x="190" y="505" text-anchor="middle" font-size="16" font-weight="bold" fill="#1e3a5f">feedback</text>
+
+    <!-- Columns -->
+    <text x="70" y="540" font-size="12" font-weight="bold" fill="#1e3a5f">🔑 id</text>
+    <text x="250" y="540" font-size="11" fill="#475569">SERIAL PRIMARY KEY</text>
+
+    <text x="70" y="560" font-size="12" fill="#1e3a5f">🔗 assessment_id</text>
+    <text x="250" y="560" font-size="11" fill="#475569">INTEGER FOREIGN KEY</text>
+
+    <text x="70" y="580" font-size="12" fill="#1e3a5f">category</text>
+    <text x="250" y="580" font-size="11" fill="#475569">VARCHAR(100)</text>
+
+    <text x="70" y="600" font-size="12" fill="#1e3a5f">feedback_text</text>
+    <text x="250" y="600" font-size="11" fill="#475569">TEXT</text>
+
+    <text x="70" y="620" font-size="12" fill="#1e3a5f">severity</text>
+    <text x="250" y="620" font-size="11" fill="#475569">ENUM (critical, major, minor, info)</text>
+
+    <text x="70" y="640" font-size="12" fill="#1e3a5f">page_number</text>
+    <text x="250" y="640" font-size="11" fill="#475569">INTEGER</text>
+
+    <text x="70" y="660" font-size="12" fill="#1e3a5f">line_number</text>
+    <text x="250" y="660" font-size="11" fill="#475569">INTEGER</text>
+
+    <text x="70" y="680" font-size="12" fill="#1e3a5f">suggestion</text>
+    <text x="250" y="680" font-size="11" fill="#475569">TEXT</text>
+
+    <text x="70" y="700" font-size="12" fill="#1e3a5f">created_at</text>
+    <text x="250" y="700" font-size="11" fill="#475569">TIMESTAMP</text>
+  </g>
+
+  <!-- Citations Table -->
+  <g id="citations-table">
+    <rect x="450" y="480" width="300" height="220" rx="8" fill="#fef3c7" stroke="#f59e0b" stroke-width="2"/>
+    <rect x="450" y="480" width="300" height="40" rx="8" fill="#f59e0b"/>
+    <text x="600" y="505" text-anchor="middle" font-size="16" font-weight="bold" fill="#1e3a5f">citations</text>
+
+    <!-- Columns -->
+    <text x="470" y="540" font-size="12" font-weight="bold" fill="#1e3a5f">🔑 id</text>
+    <text x="690" y="540" font-size="11" fill="#475569">SERIAL PRIMARY KEY</text>
+
+    <text x="470" y="560" font-size="12" fill="#1e3a5f">🔗 thesis_id</text>
+    <text x="690" y="560" font-size="11" fill="#475569">INTEGER FOREIGN KEY</text>
+
+    <text x="470" y="580" font-size="12" fill="#1e3a5f">citation_text</text>
+    <text x="690" y="580" font-size="11" fill="#475569">TEXT</text>
+
+    <text x="470" y="600" font-size="12" fill="#1e3a5f">citation_type</text>
+    <text x="690" y="600" font-size="11" fill="#475569">VARCHAR(50)</text>
+
+    <text x="470" y="620" font-size="12" fill="#1e3a5f">page_number</text>
+    <text x="690" y="620" font-size="11" fill="#475569">INTEGER</text>
+
+    <text x="470" y="640" font-size="12" fill="#1e3a5f">is_valid</text>
+    <text x="690" y="640" font-size="11" fill="#475569">BOOLEAN</text>
+
+    <text x="470" y="660" font-size="12" fill="#1e3a5f">validation_notes</text>
+    <text x="690" y="660" font-size="11" fill="#475569">TEXT</text>
+
+    <text x="470" y="680" font-size="12" fill="#1e3a5f">created_at</text>
+    <text x="690" y="680" font-size="11" fill="#475569">TIMESTAMP</text>
+  </g>
+
+  <!-- Activity Logs Table -->
+  <g id="activity-logs-table">
+    <rect x="850" y="480" width="300" height="200" rx="8" fill="#fef3c7" stroke="#f59e0b" stroke-width="2"/>
+    <rect x="850" y="480" width="300" height="40" rx="8" fill="#f59e0b"/>
+    <text x="1000" y="505" text-anchor="middle" font-size="16" font-weight="bold" fill="#1e3a5f">activity_logs</text>
+
+    <!-- Columns -->
+    <text x="870" y="540" font-size="12" font-weight="bold" fill="#1e3a5f">🔑 id</text>
+    <text x="1080" y="540" font-size="11" fill="#475569">SERIAL PRIMARY KEY</text>
+
+    <text x="870" y="560" font-size="12" fill="#1e3a5f">🔗 user_id</text>
+    <text x="1080" y="560" font-size="11" fill="#475569">INTEGER FOREIGN KEY</text>
+
+    <text x="870" y="580" font-size="12" fill="#1e3a5f">action</text>
+    <text x="1080" y="580" font-size="11" fill="#475569">VARCHAR(100)</text>
+
+    <text x="870" y="600" font-size="12" fill="#1e3a5f">entity_type</text>
+    <text x="1080" y="600" font-size="11" fill="#475569">VARCHAR(50)</text>
+
+    <text x="870" y="620" font-size="12" fill="#1e3a5f">entity_id</text>
+    <text x="1080" y="620" font-size="11" fill="#475569">INTEGER</text>
+
+    <text x="870" y="640" font-size="12" fill="#1e3a5f">ip_address</text>
+    <text x="1080" y="640" font-size="11" fill="#475569">VARCHAR(45)</text>
+
+    <text x="870" y="660" font-size="12" fill="#1e3a5f">created_at</text>
+    <text x="1080" y="660" font-size="11" fill="#475569">TIMESTAMP</text>
+  </g>
+
+  <!-- System Settings Table -->
+  <g id="system-settings-table">
+    <rect x="50" y="760" width="280" height="180" rx="8" fill="#e0e7ff" stroke="#6366f1" stroke-width="2"/>
+    <rect x="50" y="760" width="280" height="40" rx="8" fill="#6366f1"/>
+    <text x="190" y="785" text-anchor="middle" font-size="16" font-weight="bold" fill="#ffffff">system_settings</text>
+
+    <!-- Columns -->
+    <text x="70" y="820" font-size="12" font-weight="bold" fill="#1e3a5f">🔑 id</text>
+    <text x="250" y="820" font-size="11" fill="#475569">SERIAL PRIMARY KEY</text>
+
+    <text x="70" y="840" font-size="12" fill="#1e3a5f">setting_key</text>
+    <text x="250" y="840" font-size="11" fill="#475569">VARCHAR(100) UNIQUE</text>
+
+    <text x="70" y="860" font-size="12" fill="#1e3a5f">setting_value</text>
+    <text x="250" y="860" font-size="11" fill="#475569">TEXT</text>
+
+    <text x="70" y="880" font-size="12" fill="#1e3a5f">data_type</text>
+    <text x="250" y="880" font-size="11" fill="#475569">VARCHAR(50)</text>
+
+    <text x="70" y="900" font-size="12" fill="#1e3a5f">description</text>
+    <text x="250" y="900" font-size="11" fill="#475569">TEXT</text>
+
+    <text x="70" y="920" font-size="12" fill="#1e3a5f">updated_at</text>
+    <text x="250" y="920" font-size="11" fill="#475569">TIMESTAMP</text>
+  </g>
+
+  <!-- Notifications Table -->
+  <g id="notifications-table">
+    <rect x="450" y="760" width="300" height="200" rx="8" fill="#e0e7ff" stroke="#6366f1" stroke-width="2"/>
+    <rect x="450" y="760" width="300" height="40" rx="8" fill="#6366f1"/>
+    <text x="600" y="785" text-anchor="middle" font-size="16" font-weight="bold" fill="#ffffff">notifications</text>
+
+    <!-- Columns -->
+    <text x="470" y="820" font-size="12" font-weight="bold" fill="#1e3a5f">🔑 id</text>
+    <text x="690" y="820" font-size="11" fill="#475569">SERIAL PRIMARY KEY</text>
+
+    <text x="470" y="840" font-size="12" fill="#1e3a5f">🔗 user_id</text>
+    <text x="690" y="840" font-size="11" fill="#475569">INTEGER FOREIGN KEY</text>
+
+    <text x="470" y="860" font-size="12" fill="#1e3a5f">title</text>
+    <text x="690" y="860" font-size="11" fill="#475569">VARCHAR(200)</text>
+
+    <text x="470" y="880" font-size="12" fill="#1e3a5f">message</text>
+    <text x="690" y="880" font-size="11" fill="#475569">TEXT</text>
+
+    <text x="470" y="900" font-size="12" fill="#1e3a5f">type</text>
+    <text x="690" y="900" font-size="11" fill="#475569">ENUM (info, success, warning, error)</text>
+
+    <text x="470" y="920" font-size="12" fill="#1e3a5f">is_read</text>
+    <text x="690" y="920" font-size="11" fill="#475569">BOOLEAN DEFAULT false</text>
+
+    <text x="470" y="940" font-size="12" fill="#1e3a5f">created_at</text>
+    <text x="690" y="940" font-size="11" fill="#475569">TIMESTAMP</text>
+  </g>
+
+  <!-- Relationships -->
+  <!-- users to theses -->
+  <line x1="330" y1="240" x2="450" y2="240" stroke="#ef4444" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <text x="390" y="235" font-size="10" fill="#ef4444">1:N</text>
+
+  <!-- theses to assessments -->
+  <line x1="750" y1="260" x2="850" y2="260" stroke="#ef4444" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <text x="800" y="255" font-size="10" fill="#ef4444">1:N</text>
+
+  <!-- users to assessments (assessor) -->
+  <path d="M 330 280 Q 590 50 850 240" stroke="#ef4444" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+  <text x="590" y="100" font-size="10" fill="#ef4444">1:N (assessor)</text>
+
+  <!-- assessments to feedback -->
+  <path d="M 1000 420 Q 1000 450 190 480" stroke="#10b981" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+  <text x="600" y="465" font-size="10" fill="#10b981">1:N</text>
+
+  <!-- theses to citations -->
+  <line x1="600" y1="440" x2="600" y2="480" stroke="#10b981" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <text x="610" y="465" font-size="10" fill="#10b981">1:N</text>
+
+  <!-- users to activity_logs -->
+  <path d="M 190 380 Q 190 530 870 600" stroke="#10b981" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+  <text x="500" y="490" font-size="10" fill="#10b981">1:N</text>
+
+  <!-- users to notifications -->
+  <path d="M 190 380 Q 190 750 470 850" stroke="#10b981" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+  <text x="320" y="750" font-size="10" fill="#10b981">1:N</text>
+
+  <!-- Legend -->
+  <g id="legend">
+    <rect x="850" y="760" width="500" height="200" rx="8" fill="#f1f5f9" stroke="#475569" stroke-width="2"/>
+    <text x="1100" y="790" text-anchor="middle" font-size="14" font-weight="bold" fill="#1e3a5f">Legend</text>
+
+    <line x1="900" y1="820" x2="950" y2="820" stroke="#ef4444" stroke-width="2" marker-end="url(#arrowhead)"/>
+    <text x="960" y="825" font-size="11" fill="#475569">Primary Relationships (1:N)</text>
+
+    <line x1="900" y1="840" x2="950" y2="840" stroke="#10b981" stroke-width="2" marker-end="url(#arrowhead)"/>
+    <text x="960" y="845" font-size="11" fill="#475569">Secondary Relationships (1:N)</text>
+
+    <text x="900" y="870" font-size="11" fill="#1e3a5f">🔑 = Primary Key</text>
+    <text x="900" y="890" font-size="11" fill="#1e3a5f">🔗 = Foreign Key</text>
+
+    <text x="900" y="920" font-size="10" font-weight="bold" fill="#475569">Database Features:</text>
+    <text x="900" y="935" font-size="9" fill="#475569">• Cascading deletes on foreign keys</text>
+    <text x="900" y="947" font-size="9" fill="#475569">• Indexes on foreign keys and frequently queried columns</text>
+  </g>
+
+  <!-- Arrow marker definition -->
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <polygon points="0 0, 10 3, 0 6" fill="#ef4444"/>
+    </marker>
+  </defs>
+
+  <!-- Footer -->
+  <text x="700" y="1080" text-anchor="middle" font-size="11" fill="#475569">
+    Total Tables: 8 | Database Engine: PostgreSQL 14+ or MySQL 8.0+
+  </text>
+</svg>
