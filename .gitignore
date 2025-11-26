@@ -38,3 +38,4 @@ lerna-debug.log*
 
 # Vitest
 .vitest/
+e2e/screenshots/

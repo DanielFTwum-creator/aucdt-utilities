@@ -1,7 +1,13 @@
+import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { GraduationCap, FileText, Brain, CheckCircle } from 'lucide-react'
+import { GraduationCap, FileText, Brain, CheckCircle, TestTube2 } from 'lucide-react'
+import PuppeteerSelfTest from './components/PuppeteerSelfTest'
+
+type Tab = 'home' | 'self-test'
 
 function App() {
+  const [activeTab, setActiveTab] = useState<Tab>('home')
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-academic-navy to-academic-blue">
       {/* Header */}
@@ -11,7 +17,24 @@ function App() {
             <GraduationCap className="w-8 h-8 text-academic-gold" />
             <h1 className="text-2xl font-serif font-bold text-white">ThesisAI</h1>
           </div>
-          <nav className="flex gap-6">
+          <nav className="flex gap-6 items-center">
+            <button
+              onClick={() => setActiveTab('home')}
+              className={`transition-colors ${
+                activeTab === 'home' ? 'text-white' : 'text-white/80 hover:text-white'
+              }`}
+            >
+              Home
+            </button>
+            <button
+              onClick={() => setActiveTab('self-test')}
+              className={`flex items-center gap-2 transition-colors ${
+                activeTab === 'self-test' ? 'text-white' : 'text-white/80 hover:text-white'
+              }`}
+            >
+              <TestTube2 className="w-4 h-4" />
+              Self-Test
+            </button>
             <a href="#features" className="text-white/80 hover:text-white transition-colors">Features</a>
             <a href="#about" className="text-white/80 hover:text-white transition-colors">About</a>
             <button className="bg-academic-amber hover:bg-academic-gold text-academic-navy px-4 py-2 rounded-lg font-medium transition-colors">
@@ -21,8 +44,11 @@ function App() {
         </div>
       </header>
 
-      {/* Hero Section */}
-      <main className="max-w-7xl mx-auto px-4 py-20">
+      {/* Main Content */}
+      {activeTab === 'self-test' ? (
+        <PuppeteerSelfTest />
+      ) : (
+        <main className="max-w-7xl mx-auto px-4 py-20">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -65,14 +91,15 @@ function App() {
             description="Get actionable feedback with specific suggestions for improvement and grading criteria."
           />
         </motion.div>
-      </main>
 
-      {/* Footer */}
-      <footer className="bg-black/20 border-t border-white/10 mt-20">
-        <div className="max-w-7xl mx-auto px-4 py-8 text-center text-white/60">
-          <p>&copy; 2025 ThesisAI - African University College of Digital Technologies</p>
-        </div>
-      </footer>
+        {/* Footer */}
+        <footer className="bg-black/20 border-t border-white/10 mt-20">
+          <div className="max-w-7xl mx-auto px-4 py-8 text-center text-white/60">
+            <p>&copy; 2025 ThesisAI - African University College of Digital Technologies</p>
+          </div>
+        </footer>
+      </main>
+      )}
     </div>
   )
 }

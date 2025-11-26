@@ -144,6 +144,12 @@ pnpm test:ui
 # Generate coverage report
 pnpm test:coverage
 
+# E2E test runner server
+pnpm test:e2e:server
+
+# E2E test runner (development)
+pnpm test:e2e:dev
+
 # Clean install
 pnpm install-clean
 ```
@@ -207,6 +213,29 @@ pnpm test:coverage
 
 The project maintains **100% test coverage** across all components. Coverage reports are generated in the `coverage/` directory.
 
+### E2E Testing with Puppeteer
+
+The project includes a comprehensive **Puppeteer-based E2E testing framework** with:
+
+- **10 automated tests** covering critical user journeys
+- **Real-time test results** via WebSocket connection
+- **Screenshot capture** for all test passes and failures
+- **Interactive UI** with self-test tab in the frontend
+
+#### Running E2E Tests
+
+```bash
+# Terminal 1: Start the frontend
+pnpm dev
+
+# Terminal 2: Start the test runner server
+pnpm test:e2e:dev
+
+# Then navigate to http://localhost:3000 and click "Self-Test" tab
+```
+
+For more details, see the [E2E Testing Documentation](./e2e/README.md).
+
 ---
 
 ## 🐳 Docker Deployment
@@ -251,10 +280,18 @@ aucdt-utilities/
 │   ├── main.tsx             # Application entry point
 │   ├── App.tsx              # Main App component
 │   ├── index.css            # Tailwind CSS imports
-│   └── test/                # Test files
+│   ├── components/          # React components
+│   │   └── PuppeteerSelfTest.tsx
+│   └── test/                # Unit tests
 │       ├── App.test.tsx
 │       ├── FeatureCard.test.tsx
 │       └── setup.ts
+├── e2e/                     # E2E testing framework
+│   ├── test-runner.ts       # Puppeteer test suite
+│   ├── server.ts            # Test runner API server
+│   ├── index.ts             # Entry point
+│   ├── screenshots/         # Auto-generated screenshots
+│   └── README.md            # E2E documentation
 ├── index.html               # HTML entry point
 ├── package.json             # Dependencies and scripts
 ├── pnpm-lock.yaml          # Lockfile
