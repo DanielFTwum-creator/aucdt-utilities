@@ -1,0 +1,67 @@
+version: '3.8'
+
+services:
+  # MySQL Database
+  mysql:
+    image: mysql:8.0
+    container_name: thesisai-mysql
+    environment:
+      MYSQL_DATABASE: thesisai
+      MYSQL_ROOT_PASSWORD: root_password_2025
+      MYSQL_USER: thesisai_user
+      MYSQL_PASSWORD: thesisai_password_2025
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+      - ./database/schema.sql:/docker-entrypoint-initdb.d/schema.sql
+    networks:
+      - thesisai-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+
+  # Backend Spring Boot Application
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: thesisai-backend
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/thesisai?useSSL=false&serverTimezone=UTC
+      SPRING_DATASOURCE_USERNAME: thesisai_user
+      SPRING_DATASOURCE_PASSWORD: thesisai_password_2025
+      CLAUDE_API_KEY: ${CLAUDE_API_KEY}
+    depends_on:
+      mysql:
+        condition: service_healthy
+    volumes:
+      - uploads:/app/uploads
+    networks:
+      - thesisai-network
+    restart: unless-stopped
+
+  # Frontend React Application
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: thesisai-frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    networks:
+      - thesisai-network
+    restart: unless-stopped
+
+networks:
+  thesisai-network:
+    driver: bridge
+
+volumes:
+  mysql-data:
+  uploads:
