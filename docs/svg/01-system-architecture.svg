@@ -1,0 +1,124 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" width="1200" height="800">
+  <defs>
+    <style>
+      .title { font: bold 32px 'Inter', sans-serif; fill: #1e3a5f; }
+      .component-box { fill: #ffffff; stroke: #2563eb; stroke-width: 3; rx: 8; }
+      .component-title { font: bold 18px 'Inter', sans-serif; fill: #1e3a5f; }
+      .component-desc { font: 14px 'Inter', sans-serif; fill: #475569; }
+      .arrow { stroke: #2563eb; stroke-width: 2.5; fill: none; marker-end: url(#arrowhead); }
+      .arrow-label { font: 13px 'Inter', sans-serif; fill: #475569; }
+      .layer-label { font: bold 16px 'Inter', sans-serif; fill: #f59e0b; }
+      .db-icon { fill: #2563eb; opacity: 0.1; }
+      .external-box { fill: #fef3c7; stroke: #f59e0b; stroke-width: 3; rx: 8; }
+    </style>
+    <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <polygon points="0 0, 10 3, 0 6" fill="#2563eb" />
+    </marker>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="800" fill="#f8fafc"/>
+
+  <!-- Title -->
+  <text x="600" y="50" class="title" text-anchor="middle">ThesisAI System Architecture</text>
+
+  <!-- Layer Labels -->
+  <text x="100" y="130" class="layer-label">Presentation Layer</text>
+  <text x="100" y="330" class="layer-label">Application Layer</text>
+  <text x="100" y="530" class="layer-label">Data Layer</text>
+  <text x="850" y="330" class="layer-label">External Services</text>
+
+  <!-- Client Layer -->
+  <rect x="350" y="100" width="500" height="160" class="component-box"/>
+  <text x="600" y="135" class="component-title" text-anchor="middle">Web Client (React Frontend)</text>
+  <text x="600" y="165" class="component-desc" text-anchor="middle">React 19.2.0 • TypeScript 5.9.3 • Vite 7.2.4</text>
+  <text x="600" y="190" class="component-desc" text-anchor="middle">Tailwind CSS • Framer Motion • Recharts</text>
+  <text x="370" y="220" class="component-desc">• Document Upload UI</text>
+  <text x="370" y="240" class="component-desc">• Analysis Dashboard</text>
+  <text x="620" y="220" class="component-desc">• Feedback Display</text>
+  <text x="620" y="240" class="component-desc">• Result Visualization</text>
+
+  <!-- Application/API Layer -->
+  <rect x="350" y="300" width="240" height="160" class="component-box"/>
+  <text x="470" y="335" class="component-title" text-anchor="middle">API Gateway / Backend</text>
+  <text x="470" y="360" class="component-desc" text-anchor="middle">Node.js / Express</text>
+  <text x="470" y="385" class="component-desc" text-anchor="middle">Port: 8080</text>
+  <text x="370" y="415" class="component-desc">• Authentication</text>
+  <text x="370" y="435" class="component-desc">• Request Routing</text>
+
+  <!-- Processing Service -->
+  <rect x="610" y="300" width="240" height="160" class="component-box"/>
+  <text x="730" y="335" class="component-title" text-anchor="middle">Processing Service</text>
+  <text x="730" y="360" class="component-desc" text-anchor="middle">Thesis Analysis Engine</text>
+  <text x="630" y="390" class="component-desc">• Document Parser</text>
+  <text x="630" y="410" class="component-desc">• Structure Validator</text>
+  <text x="630" y="430" class="component-desc">• Content Analyzer</text>
+  <text x="630" y="450" class="component-desc">• Feedback Generator</text>
+
+  <!-- Data Layer -->
+  <rect x="350" y="500" width="240" height="140" class="component-box"/>
+  <circle cx="420" cy="540" r="30" class="db-icon"/>
+  <text x="470" y="535" class="component-title" text-anchor="middle">PostgreSQL Database</text>
+  <text x="470" y="560" class="component-desc" text-anchor="middle">Persistent Storage</text>
+  <text x="370" y="590" class="component-desc">• User Data</text>
+  <text x="370" y="610" class="component-desc">• Document Metadata</text>
+  <text x="370" y="630" class="component-desc">• Assessment Results</text>
+
+  <!-- File Storage -->
+  <rect x="610" y="500" width="240" height="140" class="component-box"/>
+  <text x="730" y="535" class="component-title" text-anchor="middle">File Storage</text>
+  <text x="730" y="560" class="component-desc" text-anchor="middle">AWS S3 / Local Storage</text>
+  <text x="630" y="590" class="component-desc">• Thesis Documents</text>
+  <text x="630" y="610" class="component-desc">• Generated Reports</text>
+  <text x="630" y="630" class="component-desc">• Cached Results</text>
+
+  <!-- External Services -->
+  <rect x="900" y="280" width="260" height="200" class="external-box"/>
+  <text x="1030" y="315" class="component-title" text-anchor="middle">AI/ML Services</text>
+  <text x="1030" y="340" class="component-desc" text-anchor="middle">Third-Party AI APIs</text>
+  <text x="920" y="370" class="component-desc">• Natural Language Processing</text>
+  <text x="920" y="390" class="component-desc">• Content Quality Analysis</text>
+  <text x="920" y="410" class="component-desc">• Plagiarism Detection</text>
+  <text x="920" y="430" class="component-desc">• Citation Validation</text>
+  <text x="920" y="450" class="component-desc">• Grammar Checking</text>
+  <text x="920" y="470" class="component-desc">• Sentiment Analysis</text>
+
+  <!-- Arrows and Data Flow -->
+  <!-- Client to API Gateway -->
+  <path d="M 600 260 L 470 300" class="arrow"/>
+  <text x="530" y="275" class="arrow-label">HTTP/REST</text>
+  <text x="530" y="290" class="arrow-label">API Requests</text>
+
+  <!-- API Gateway to Processing -->
+  <path d="M 590 380 L 610 380" class="arrow"/>
+  <text x="595" y="370" class="arrow-label">Process</text>
+
+  <!-- Processing to External AI -->
+  <path d="M 850 360 L 900 340" class="arrow"/>
+  <text x="860" y="345" class="arrow-label">AI Analysis</text>
+
+  <!-- External AI back to Processing -->
+  <path d="M 900 380 L 850 400" class="arrow"/>
+  <text x="860" y="395" class="arrow-label">Results</text>
+
+  <!-- Processing to Database -->
+  <path d="M 690 460 L 530 500" class="arrow"/>
+  <text x="600" y="480" class="arrow-label">Store Results</text>
+
+  <!-- Processing to File Storage -->
+  <path d="M 730 460 L 730 500" class="arrow"/>
+  <text x="740" y="480" class="arrow-label">Save Files</text>
+
+  <!-- Database to API -->
+  <path d="M 470 460 L 470 500" class="arrow"/>
+  <text x="480" y="480" class="arrow-label">Query Data</text>
+
+  <!-- API back to Client -->
+  <path d="M 520 300 L 650 260" class="arrow"/>
+  <text x="580" y="275" class="arrow-label">JSON Response</text>
+
+  <!-- Footer Note -->
+  <text x="600" y="770" class="component-desc" text-anchor="middle" style="font-style: italic;">
+    Figure 1: High-Level System Architecture - ThesisAI Frontend connects to backend services for AI-powered thesis assessment
+  </text>
+</svg>
