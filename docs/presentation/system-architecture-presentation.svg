@@ -1,0 +1,110 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" width="1920" height="1080">
+  <defs>
+    <style>
+      .title { font: bold 72px 'Inter', sans-serif; fill: #1e3a5f; }
+      .subtitle { font: 48px 'Inter', sans-serif; fill: #475569; }
+      .box { fill: #ffffff; stroke: #2563eb; stroke-width: 6; rx: 20; }
+      .box-title { font: bold 42px 'Inter', sans-serif; fill: #1e3a5f; text-anchor: middle; }
+      .box-desc { font: 28px 'Inter', sans-serif; fill: #475569; text-anchor: middle; }
+      .arrow { stroke: #2563eb; stroke-width: 8; fill: none; marker-end: url(#big-arrow); }
+      .arrow-label { font: bold 32px 'Inter', sans-serif; fill: #2563eb; }
+      .layer { font: bold 36px 'Inter', sans-serif; fill: #f59e0b; }
+      .highlight { fill: #fef3c7; stroke: #f59e0b; stroke-width: 6; rx: 20; }
+    </style>
+    <marker id="big-arrow" markerWidth="20" markerHeight="20" refX="18" refY="10" orient="auto">
+      <polygon points="0 0, 20 10, 0 20" fill="#2563eb" />
+    </marker>
+  </defs>
+
+  <!-- Background with gradient -->
+  <defs>
+    <linearGradient id="bg-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#f8fafc;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#e2e8f0;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <rect width="1920" height="1080" fill="url(#bg-gradient)"/>
+
+  <!-- Title -->
+  <text x="960" y="100" class="title" text-anchor="middle">ThesisAI System Architecture</text>
+  <text x="960" y="160" class="subtitle" text-anchor="middle">AI-Powered Thesis Assessment Platform</text>
+
+  <!-- Layer Labels -->
+  <text x="120" y="260" class="layer">FRONTEND</text>
+  <text x="120" y="560" class="layer">BACKEND</text>
+  <text x="120" y="820" class="layer">DATA</text>
+  <text x="1500" y="560" class="layer">AI SERVICES</text>
+
+  <!-- Frontend Layer -->
+  <rect x="300" y="220" width="1300" height="180" class="box"/>
+  <text x="950" y="280" class="box-title">Web Application (React)</text>
+  <text x="950" y="330" class="box-desc">TypeScript • Vite • Tailwind CSS</text>
+  <text x="950" y="370" class="box-desc">Upload Interface • Dashboard • Analytics</text>
+
+  <!-- Backend Layer -->
+  <rect x="300" y="480" width="600" height="180" class="box"/>
+  <text x="600" y="540" class="box-title">API Gateway</text>
+  <text x="600" y="590" class="box-desc">Node.js / Express</text>
+  <text x="600" y="630" class="box-desc">Authentication • Routing</text>
+
+  <rect x="1000" y="480" width="600" height="180" class="box"/>
+  <text x="1300" y="540" class="box-title">Processing Service</text>
+  <text x="1300" y="590" class="box-desc">Analysis Engine</text>
+  <text x="1300" y="630" class="box-desc">Parser • Validator • Generator</text>
+
+  <!-- Data Layer -->
+  <rect x="300" y="740" width="600" height="180" class="box"/>
+  <text x="600" y="800" class="box-title">Database</text>
+  <text x="600" y="850" class="box-desc">PostgreSQL</text>
+  <text x="600" y="890" class="box-desc">User Data • Results</text>
+
+  <rect x="1000" y="740" width="600" height="180" class="box"/>
+  <text x="1300" y="800" class="box-title">File Storage</text>
+  <text x="1300" y="850" class="box-desc">AWS S3 / Cloud</text>
+  <text x="1300" y="890" class="box-desc">Documents • Reports</text>
+
+  <!-- External AI Services -->
+  <rect x="1700" y="480" width="520" height="400" class="highlight"/>
+  <text x="1960" y="540" class="box-title">AI/ML Services</text>
+  <text x="1960" y="590" class="box-desc">External APIs</text>
+
+  <text x="1730" y="650" style="font: 28px 'Inter', sans-serif; fill: #1e3a5f;">✓ Content Analysis</text>
+  <text x="1730" y="700" style="font: 28px 'Inter', sans-serif; fill: #1e3a5f;">✓ Grammar Check</text>
+  <text x="1730" y="750" style="font: 28px 'Inter', sans-serif; fill: #1e3a5f;">✓ Plagiarism Detection</text>
+  <text x="1730" y="800" style="font: 28px 'Inter', sans-serif; fill: #1e3a5f;">✓ Citation Validation</text>
+  <text x="1730" y="850" style="font: 28px 'Inter', sans-serif; fill: #1e3a5f;">✓ Quality Scoring</text>
+
+  <!-- Main Data Flow Arrows -->
+  <!-- Frontend to API -->
+  <path d="M 950 400 L 700 480" class="arrow"/>
+  <text x="780" y="430" class="arrow-label">HTTPS/REST</text>
+
+  <!-- API to Processing -->
+  <path d="M 900 570 L 1000 570" class="arrow"/>
+  <text x="920" y="560" class="arrow-label">Process</text>
+
+  <!-- Processing to AI -->
+  <path d="M 1600 570 L 1700 570" class="arrow"/>
+  <text x="1610" y="560" class="arrow-label">Analyze</text>
+
+  <!-- AI back to Processing -->
+  <path d="M 1700 650 L 1600 610" class="arrow"/>
+  <text x="1610" y="670" class="arrow-label">Results</text>
+
+  <!-- Processing to Database -->
+  <path d="M 1100 660 L 700 740" class="arrow"/>
+  <text x="850" y="690" class="arrow-label">Store</text>
+
+  <!-- Processing to File Storage -->
+  <path d="M 1300 660 L 1300 740" class="arrow"/>
+  <text x="1320" y="690" class="arrow-label">Save Files</text>
+
+  <!-- API to Frontend (response) -->
+  <path d="M 800 480 L 1000 400" class="arrow"/>
+  <text x="860" y="430" class="arrow-label">Response</text>
+
+  <!-- Footer -->
+  <text x="960" y="1020" style="font: bold 32px 'Inter', sans-serif; fill: #475569; text-anchor: middle;">
+    Clean, Scalable Architecture for Academic Excellence
+  </text>
+</svg>
