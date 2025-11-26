@@ -1,0 +1,614 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="1600" height="1400" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      .title { font-family: 'Arial', sans-serif; font-size: 28px; font-weight: bold; fill: #1e3a5f; }
+      .subtitle { font-family: 'Arial', sans-serif; font-size: 16px; fill: #475569; }
+      .table-title { font-family: 'Arial', sans-serif; font-size: 16px; font-weight: bold; fill: white; }
+      .column-text { font-family: 'Courier New', monospace; font-size: 12px; fill: #1e293b; }
+      .pk-text { font-family: 'Courier New', monospace; font-size: 12px; fill: #dc2626; font-weight: bold; }
+      .fk-text { font-family: 'Courier New', monospace; font-size: 12px; fill: #2563eb; }
+      .type-text { font-family: 'Arial', sans-serif; font-size: 11px; fill: #64748b; font-style: italic; }
+      .legend-text { font-family: 'Arial', sans-serif; font-size: 13px; fill: #334155; }
+      .relation-text { font-family: 'Arial', sans-serif; font-size: 11px; fill: #475569; font-weight: bold; }
+      .note-text { font-family: 'Arial', sans-serif; font-size: 12px; fill: #64748b; font-style: italic; }
+
+      .table-header { fill: #2563eb; }
+      .table-body { fill: white; stroke: #cbd5e1; stroke-width: 2; }
+      .pk-icon { fill: #fef3c7; stroke: #f59e0b; stroke-width: 1.5; }
+      .fk-icon { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.5; }
+
+      .relation-line { stroke: #475569; stroke-width: 2; fill: none; }
+      .relation-one { stroke: #475569; stroke-width: 2; fill: none; marker-end: url(#one-marker); }
+      .relation-many { stroke: #475569; stroke-width: 2; fill: none; marker-end: url(#many-marker); }
+    </style>
+
+    <!-- Relationship markers -->
+    <marker id="one-marker" markerWidth="12" markerHeight="12" refX="6" refY="6" orient="auto">
+      <line x1="0" y1="0" x2="0" y2="12" stroke="#475569" stroke-width="2"/>
+      <line x1="0" y1="6" x2="12" y2="6" stroke="#475569" stroke-width="2"/>
+    </marker>
+    <marker id="many-marker" markerWidth="15" markerHeight="15" refX="10" refY="7.5" orient="auto">
+      <path d="M 0 7.5 L 10 0 L 10 15 Z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <!-- Title -->
+  <text x="800" y="35" text-anchor="middle" class="title">Database Architecture - ThesisAI Backend</text>
+  <text x="800" y="58" text-anchor="middle" class="subtitle">Conceptual Schema for AI-Powered Thesis Assessment System</text>
+  <line x1="50" y1="70" x2="1550" y2="70" stroke="#cbd5e1" stroke-width="2"/>
+  <text x="800" y="90" text-anchor="middle" class="note-text">Note: This is a conceptual schema for the expected backend system (not included in frontend repository)</text>
+
+  <!-- Table: users -->
+  <g id="table-users">
+    <rect x="50" y="120" width="320" height="35" rx="5" class="table-header"/>
+    <text x="210" y="143" text-anchor="middle" class="table-title">users</text>
+
+    <rect x="50" y="155" width="320" height="330" rx="5" class="table-body"/>
+
+    <circle cx="65" cy="175" r="6" class="pk-icon"/>
+    <text x="80" y="180" class="pk-text">id</text>
+    <text x="280" y="180" text-anchor="end" class="type-text">UUID, PK</text>
+
+    <text x="80" y="202" class="column-text">email</text>
+    <text x="280" y="202" text-anchor="end" class="type-text">VARCHAR(255), UNIQUE</text>
+
+    <text x="80" y="224" class="column-text">password_hash</text>
+    <text x="280" y="224" text-anchor="end" class="type-text">VARCHAR(255)</text>
+
+    <text x="80" y="246" class="column-text">first_name</text>
+    <text x="280" y="246" text-anchor="end" class="type-text">VARCHAR(100)</text>
+
+    <text x="80" y="268" class="column-text">last_name</text>
+    <text x="280" y="268" text-anchor="end" class="type-text">VARCHAR(100)</text>
+
+    <text x="80" y="290" class="column-text">role</text>
+    <text x="280" y="290" text-anchor="end" class="type-text">ENUM (student, assessor, admin)</text>
+
+    <text x="80" y="312" class="column-text">institution</text>
+    <text x="280" y="312" text-anchor="end" class="type-text">VARCHAR(255)</text>
+
+    <text x="80" y="334" class="column-text">department</text>
+    <text x="280" y="334" text-anchor="end" class="type-text">VARCHAR(100)</text>
+
+    <text x="80" y="356" class="column-text">profile_picture_url</text>
+    <text x="280" y="356" text-anchor="end" class="type-text">TEXT</text>
+
+    <text x="80" y="378" class="column-text">is_active</text>
+    <text x="280" y="378" text-anchor="end" class="type-text">BOOLEAN, DEFAULT true</text>
+
+    <text x="80" y="400" class="column-text">email_verified</text>
+    <text x="280" y="400" text-anchor="end" class="type-text">BOOLEAN, DEFAULT false</text>
+
+    <text x="80" y="422" class="column-text">last_login</text>
+    <text x="280" y="422" text-anchor="end" class="type-text">TIMESTAMP</text>
+
+    <text x="80" y="444" class="column-text">created_at</text>
+    <text x="280" y="444" text-anchor="end" class="type-text">TIMESTAMP</text>
+
+    <text x="80" y="466" class="column-text">updated_at</text>
+    <text x="280" y="466" text-anchor="end" class="type-text">TIMESTAMP</text>
+  </g>
+
+  <!-- Table: theses -->
+  <g id="table-theses">
+    <rect x="440" y="120" width="340" height="35" rx="5" class="table-header"/>
+    <text x="610" y="143" text-anchor="middle" class="table-title">theses</text>
+
+    <rect x="440" y="155" width="340" height="440" rx="5" class="table-body"/>
+
+    <circle cx="455" cy="175" r="6" class="pk-icon"/>
+    <text x="470" y="180" class="pk-text">id</text>
+    <text x="760" y="180" text-anchor="end" class="type-text">UUID, PK</text>
+
+    <circle cx="455" cy="197" r="6" class="fk-icon"/>
+    <text x="470" y="202" class="fk-text">student_id</text>
+    <text x="760" y="202" text-anchor="end" class="type-text">UUID, FK → users.id</text>
+
+    <text x="470" y="224" class="column-text">title</text>
+    <text x="760" y="224" text-anchor="end" class="type-text">TEXT, NOT NULL</text>
+
+    <text x="470" y="246" class="column-text">abstract</text>
+    <text x="760" y="246" text-anchor="end" class="type-text">TEXT</text>
+
+    <text x="470" y="268" class="column-text">document_url</text>
+    <text x="760" y="268" text-anchor="end" class="type-text">TEXT, NOT NULL</text>
+
+    <text x="470" y="290" class="column-text">document_hash</text>
+    <text x="760" y="290" text-anchor="end" class="type-text">VARCHAR(64), UNIQUE</text>
+
+    <text x="470" y="312" class="column-text">file_size_bytes</text>
+    <text x="760" y="312" text-anchor="end" class="type-text">BIGINT</text>
+
+    <text x="470" y="334" class="column-text">page_count</text>
+    <text x="760" y="334" text-anchor="end" class="type-text">INTEGER</text>
+
+    <text x="470" y="356" class="column-text">submission_date</text>
+    <text x="760" y="356" text-anchor="end" class="type-text">DATE</text>
+
+    <text x="470" y="378" class="column-text">status</text>
+    <text x="760" y="378" text-anchor="end" class="type-text">ENUM (draft, submitted,</text>
+    <text x="760" y="392" text-anchor="end" class="type-text">under_review, assessed, approved)</text>
+
+    <text x="470" y="412" class="column-text">keywords</text>
+    <text x="760" y="412" text-anchor="end" class="type-text">TEXT[]</text>
+
+    <text x="470" y="434" class="column-text">research_field</text>
+    <text x="760" y="434" text-anchor="end" class="type-text">VARCHAR(255)</text>
+
+    <text x="470" y="456" class="column-text">degree_level</text>
+    <text x="760" y="456" text-anchor="end" class="type-text">ENUM (bachelor, master, phd)</text>
+
+    <text x="470" y="478" class="column-text">version</text>
+    <text x="760" y="478" text-anchor="end" class="type-text">INTEGER, DEFAULT 1</text>
+
+    <text x="470" y="500" class="column-text">metadata_json</text>
+    <text x="760" y="500" text-anchor="end" class="type-text">JSONB</text>
+
+    <text x="470" y="522" class="column-text">created_at</text>
+    <text x="760" y="522" text-anchor="end" class="type-text">TIMESTAMP</text>
+
+    <text x="470" y="544" class="column-text">updated_at</text>
+    <text x="760" y="544" text-anchor="end" class="type-text">TIMESTAMP</text>
+  </g>
+
+  <!-- Table: assessments -->
+  <g id="table-assessments">
+    <rect x="850" y="120" width="340" height="35" rx="5" class="table-header"/>
+    <text x="1020" y="143" text-anchor="middle" class="table-title">assessments</text>
+
+    <rect x="850" y="155" width="340" height="396" rx="5" class="table-body"/>
+
+    <circle cx="865" cy="175" r="6" class="pk-icon"/>
+    <text x="880" y="180" class="pk-text">id</text>
+    <text x="1170" y="180" text-anchor="end" class="type-text">UUID, PK</text>
+
+    <circle cx="865" cy="197" r="6" class="fk-icon"/>
+    <text x="880" y="202" class="fk-text">thesis_id</text>
+    <text x="1170" y="202" text-anchor="end" class="type-text">UUID, FK → theses.id</text>
+
+    <circle cx="865" cy="219" r="6" class="fk-icon"/>
+    <text x="880" y="224" class="fk-text">assessor_id</text>
+    <text x="1170" y="224" text-anchor="end" class="type-text">UUID, FK → users.id</text>
+
+    <text x="880" y="246" class="column-text">assessment_type</text>
+    <text x="1170" y="246" text-anchor="end" class="type-text">ENUM (ai_automated, human,</text>
+    <text x="1170" y="260" text-anchor="end" class="type-text">hybrid)</text>
+
+    <text x="880" y="280" class="column-text">overall_score</text>
+    <text x="1170" y="280" text-anchor="end" class="type-text">DECIMAL(5,2), CHECK 0-100</text>
+
+    <text x="880" y="302" class="column-text">structure_score</text>
+    <text x="1170" y="302" text-anchor="end" class="type-text">DECIMAL(5,2)</text>
+
+    <text x="880" y="324" class="column-text">content_score</text>
+    <text x="1170" y="324" text-anchor="end" class="type-text">DECIMAL(5,2)</text>
+
+    <text x="880" y="346" class="column-text">methodology_score</text>
+    <text x="1170" y="346" text-anchor="end" class="type-text">DECIMAL(5,2)</text>
+
+    <text x="880" y="368" class="column-text">originality_score</text>
+    <text x="1170" y="368" text-anchor="end" class="type-text">DECIMAL(5,2)</text>
+
+    <text x="880" y="390" class="column-text">references_score</text>
+    <text x="1170" y="390" text-anchor="end" class="type-text">DECIMAL(5,2)</text>
+
+    <text x="880" y="412" class="column-text">summary</text>
+    <text x="1170" y="412" text-anchor="end" class="type-text">TEXT</text>
+
+    <text x="880" y="434" class="column-text">strengths</text>
+    <text x="1170" y="434" text-anchor="end" class="type-text">TEXT[]</text>
+
+    <text x="880" y="456" class="column-text">weaknesses</text>
+    <text x="1170" y="456" text-anchor="end" class="type-text">TEXT[]</text>
+
+    <text x="880" y="478" class="column-text">recommendations</text>
+    <text x="1170" y="478" text-anchor="end" class="type-text">TEXT</text>
+
+    <text x="880" y="500" class="column-text">is_final</text>
+    <text x="1170" y="500" text-anchor="end" class="type-text">BOOLEAN, DEFAULT false</text>
+
+    <text x="880" y="522" class="column-text">created_at</text>
+    <text x="1170" y="522" text-anchor="end" class="type-text">TIMESTAMP</text>
+
+    <text x="880" y="544" class="column-text">updated_at</text>
+    <text x="1170" y="544" text-anchor="end" class="type-text">TIMESTAMP</text>
+  </g>
+
+  <!-- Table: feedback_items -->
+  <g id="table-feedback">
+    <rect x="1230" y="120" width="320" height="35" rx="5" class="table-header"/>
+    <text x="1390" y="143" text-anchor="middle" class="table-title">feedback_items</text>
+
+    <rect x="1230" y="155" width="320" height="330" rx="5" class="table-body"/>
+
+    <circle cx="1245" cy="175" r="6" class="pk-icon"/>
+    <text x="1260" y="180" class="pk-text">id</text>
+    <text x="1530" y="180" text-anchor="end" class="type-text">UUID, PK</text>
+
+    <circle cx="1245" cy="197" r="6" class="fk-icon"/>
+    <text x="1260" y="202" class="fk-text">assessment_id</text>
+    <text x="1530" y="202" text-anchor="end" class="type-text">UUID, FK → assessments.id</text>
+
+    <text x="1260" y="224" class="column-text">category</text>
+    <text x="1530" y="224" text-anchor="end" class="type-text">ENUM (structure, content,</text>
+    <text x="1530" y="238" text-anchor="end" class="type-text">grammar, citations, formatting)</text>
+
+    <text x="1260" y="258" class="column-text">severity</text>
+    <text x="1530" y="258" text-anchor="end" class="type-text">ENUM (info, warning, error,</text>
+    <text x="1530" y="272" text-anchor="end" class="type-text">critical)</text>
+
+    <text x="1260" y="292" class="column-text">page_number</text>
+    <text x="1530" y="292" text-anchor="end" class="type-text">INTEGER</text>
+
+    <text x="1260" y="314" class="column-text">line_number</text>
+    <text x="1530" y="314" text-anchor="end" class="type-text">INTEGER</text>
+
+    <text x="1260" y="336" class="column-text">context_text</text>
+    <text x="1530" y="336" text-anchor="end" class="type-text">TEXT</text>
+
+    <text x="1260" y="358" class="column-text">issue_description</text>
+    <text x="1530" y="358" text-anchor="end" class="type-text">TEXT</text>
+
+    <text x="1260" y="380" class="column-text">suggestion</text>
+    <text x="1530" y="380" text-anchor="end" class="type-text">TEXT</text>
+
+    <text x="1260" y="402" class="column-text">confidence_score</text>
+    <text x="1530" y="402" text-anchor="end" class="type-text">DECIMAL(4,3)</text>
+
+    <text x="1260" y="424" class="column-text">is_resolved</text>
+    <text x="1530" y="424" text-anchor="end" class="type-text">BOOLEAN, DEFAULT false</text>
+
+    <text x="1260" y="446" class="column-text">created_at</text>
+    <text x="1530" y="446" text-anchor="end" class="type-text">TIMESTAMP</text>
+
+    <text x="1260" y="468" class="column-text">updated_at</text>
+    <text x="1530" y="468" text-anchor="end" class="type-text">TIMESTAMP</text>
+  </g>
+
+  <!-- Table: ai_analysis_logs -->
+  <g id="table-ai-logs">
+    <rect x="440" y="630" width="340" height="35" rx="5" class="table-header"/>
+    <text x="610" y="653" text-anchor="middle" class="table-title">ai_analysis_logs</text>
+
+    <rect x="440" y="665" width="340" height="286" rx="5" class="table-body"/>
+
+    <circle cx="455" cy="685" r="6" class="pk-icon"/>
+    <text x="470" y="690" class="pk-text">id</text>
+    <text x="760" y="690" text-anchor="end" class="type-text">UUID, PK</text>
+
+    <circle cx="455" cy="707" r="6" class="fk-icon"/>
+    <text x="470" y="712" class="fk-text">thesis_id</text>
+    <text x="760" y="712" text-anchor="end" class="type-text">UUID, FK → theses.id</text>
+
+    <circle cx="455" cy="729" r="6" class="fk-icon"/>
+    <text x="470" y="734" class="fk-text">assessment_id</text>
+    <text x="760" y="734" text-anchor="end" class="type-text">UUID, FK → assessments.id</text>
+
+    <text x="470" y="756" class="column-text">model_name</text>
+    <text x="760" y="756" text-anchor="end" class="type-text">VARCHAR(100)</text>
+
+    <text x="470" y="778" class="column-text">model_version</text>
+    <text x="760" y="778" text-anchor="end" class="type-text">VARCHAR(50)</text>
+
+    <text x="470" y="800" class="column-text">processing_time_ms</text>
+    <text x="760" y="800" text-anchor="end" class="type-text">INTEGER</text>
+
+    <text x="470" y="822" class="column-text">tokens_used</text>
+    <text x="760" y="822" text-anchor="end" class="type-text">INTEGER</text>
+
+    <text x="470" y="844" class="column-text">analysis_metadata</text>
+    <text x="760" y="844" text-anchor="end" class="type-text">JSONB</text>
+
+    <text x="470" y="866" class="column-text">error_log</text>
+    <text x="760" y="866" text-anchor="end" class="type-text">TEXT</text>
+
+    <text x="470" y="888" class="column-text">status</text>
+    <text x="760" y="888" text-anchor="end" class="type-text">ENUM (success, failed, timeout)</text>
+
+    <text x="470" y="910" class="column-text">created_at</text>
+    <text x="760" y="910" text-anchor="end" class="type-text">TIMESTAMP</text>
+
+    <text x="470" y="932" class="column-text">completed_at</text>
+    <text x="760" y="932" text-anchor="end" class="type-text">TIMESTAMP</text>
+  </g>
+
+  <!-- Table: plagiarism_checks -->
+  <g id="table-plagiarism">
+    <rect x="850" y="630" width="340" height="35" rx="5" class="table-header"/>
+    <text x="1020" y="653" text-anchor="middle" class="table-title">plagiarism_checks</text>
+
+    <rect x="850" y="665" width="340" height="286" rx="5" class="table-body"/>
+
+    <circle cx="865" cy="685" r="6" class="pk-icon"/>
+    <text x="880" y="690" class="pk-text">id</text>
+    <text x="1170" y="690" text-anchor="end" class="type-text">UUID, PK</text>
+
+    <circle cx="865" cy="707" r="6" class="fk-icon"/>
+    <text x="880" y="712" class="fk-text">thesis_id</text>
+    <text x="1170" y="712" text-anchor="end" class="type-text">UUID, FK → theses.id</text>
+
+    <text x="880" y="734" class="column-text">check_date</text>
+    <text x="1170" y="734" text-anchor="end" class="type-text">TIMESTAMP</text>
+
+    <text x="880" y="756" class="column-text">similarity_percentage</text>
+    <text x="1170" y="756" text-anchor="end" class="type-text">DECIMAL(5,2)</text>
+
+    <text x="880" y="778" class="column-text">sources_found</text>
+    <text x="1170" y="778" text-anchor="end" class="type-text">INTEGER</text>
+
+    <text x="880" y="800" class="column-text">report_url</text>
+    <text x="1170" y="800" text-anchor="end" class="type-text">TEXT</text>
+
+    <text x="880" y="822" class="column-text">service_used</text>
+    <text x="1170" y="822" text-anchor="end" class="type-text">VARCHAR(100)</text>
+
+    <text x="880" y="844" class="column-text">matches_json</text>
+    <text x="1170" y="844" text-anchor="end" class="type-text">JSONB</text>
+
+    <text x="880" y="866" class="column-text">status</text>
+    <text x="1170" y="866" text-anchor="end" class="type-text">ENUM (pending, completed, failed)</text>
+
+    <text x="880" y="888" class="column-text">flagged</text>
+    <text x="1170" y="888" text-anchor="end" class="type-text">BOOLEAN, DEFAULT false</text>
+
+    <text x="880" y="910" class="column-text">created_at</text>
+    <text x="1170" y="910" text-anchor="end" class="type-text">TIMESTAMP</text>
+
+    <text x="880" y="932" class="column-text">updated_at</text>
+    <text x="1170" y="932" text-anchor="end" class="type-text">TIMESTAMP</text>
+  </g>
+
+  <!-- Table: comments -->
+  <g id="table-comments">
+    <rect x="50" y="630" width="320" height="35" rx="5" class="table-header"/>
+    <text x="210" y="653" text-anchor="middle" class="table-title">comments</text>
+
+    <rect x="50" y="665" width="320" height="264" rx="5" class="table-body"/>
+
+    <circle cx="65" cy="685" r="6" class="pk-icon"/>
+    <text x="80" y="690" class="pk-text">id</text>
+    <text x="350" y="690" text-anchor="end" class="type-text">UUID, PK</text>
+
+    <circle cx="65" cy="707" r="6" class="fk-icon"/>
+    <text x="80" y="712" class="fk-text">thesis_id</text>
+    <text x="350" y="712" text-anchor="end" class="type-text">UUID, FK → theses.id</text>
+
+    <circle cx="65" cy="729" r="6" class="fk-icon"/>
+    <text x="80" y="734" class="fk-text">user_id</text>
+    <text x="350" y="734" text-anchor="end" class="type-text">UUID, FK → users.id</text>
+
+    <circle cx="65" cy="751" r="6" class="fk-icon"/>
+    <text x="80" y="756" class="fk-text">parent_comment_id</text>
+    <text x="350" y="756" text-anchor="end" class="type-text">UUID, FK → comments.id</text>
+
+    <text x="80" y="778" class="column-text">content</text>
+    <text x="350" y="778" text-anchor="end" class="type-text">TEXT, NOT NULL</text>
+
+    <text x="80" y="800" class="column-text">page_number</text>
+    <text x="350" y="800" text-anchor="end" class="type-text">INTEGER</text>
+
+    <text x="80" y="822" class="column-text">is_resolved</text>
+    <text x="350" y="822" text-anchor="end" class="type-text">BOOLEAN, DEFAULT false</text>
+
+    <text x="80" y="844" class="column-text">is_private</text>
+    <text x="350" y="844" text-anchor="end" class="type-text">BOOLEAN, DEFAULT false</text>
+
+    <text x="80" y="866" class="column-text">created_at</text>
+    <text x="350" y="866" text-anchor="end" class="type-text">TIMESTAMP</text>
+
+    <text x="80" y="888" class="column-text">updated_at</text>
+    <text x="350" y="888" text-anchor="end" class="type-text">TIMESTAMP</text>
+
+    <text x="80" y="910" class="column-text">deleted_at</text>
+    <text x="350" y="910" text-anchor="end" class="type-text">TIMESTAMP (soft delete)</text>
+  </g>
+
+  <!-- Table: notifications -->
+  <g id="table-notifications">
+    <rect x="50" y="990" width="320" height="35" rx="5" class="table-header"/>
+    <text x="210" y="1013" text-anchor="middle" class="table-title">notifications</text>
+
+    <rect x="50" y="1025" width="320" height="242" rx="5" class="table-body"/>
+
+    <circle cx="65" cy="1045" r="6" class="pk-icon"/>
+    <text x="80" y="1050" class="pk-text">id</text>
+    <text x="350" y="1050" text-anchor="end" class="type-text">UUID, PK</text>
+
+    <circle cx="65" cy="1067" r="6" class="fk-icon"/>
+    <text x="80" y="1072" class="fk-text">user_id</text>
+    <text x="350" y="1072" text-anchor="end" class="type-text">UUID, FK → users.id</text>
+
+    <text x="80" y="1094" class="column-text">type</text>
+    <text x="350" y="1094" text-anchor="end" class="type-text">ENUM (assessment_complete,</text>
+    <text x="350" y="1108" text-anchor="end" class="type-text">comment_added, status_change)</text>
+
+    <text x="80" y="1128" class="column-text">title</text>
+    <text x="350" y="1128" text-anchor="end" class="type-text">VARCHAR(255)</text>
+
+    <text x="80" y="1150" class="column-text">message</text>
+    <text x="350" y="1150" text-anchor="end" class="type-text">TEXT</text>
+
+    <text x="80" y="1172" class="column-text">link_url</text>
+    <text x="350" y="1172" text-anchor="end" class="type-text">TEXT</text>
+
+    <text x="80" y="1194" class="column-text">is_read</text>
+    <text x="350" y="1194" text-anchor="end" class="type-text">BOOLEAN, DEFAULT false</text>
+
+    <text x="80" y="1216" class="column-text">read_at</text>
+    <text x="350" y="1216" text-anchor="end" class="type-text">TIMESTAMP</text>
+
+    <text x="80" y="1238" class="column-text">created_at</text>
+    <text x="350" y="1238" text-anchor="end" class="type-text">TIMESTAMP</text>
+
+    <text x="80" y="1260" class="column-text">expires_at</text>
+    <text x="350" y="1260" text-anchor="end" class="type-text">TIMESTAMP</text>
+  </g>
+
+  <!-- Table: audit_logs -->
+  <g id="table-audit">
+    <rect x="440" y="990" width="340" height="35" rx="5" class="table-header"/>
+    <text x="610" y="1013" text-anchor="middle" class="table-title">audit_logs</text>
+
+    <rect x="440" y="1025" width="340" height="242" rx="5" class="table-body"/>
+
+    <circle cx="455" cy="1045" r="6" class="pk-icon"/>
+    <text x="470" y="1050" class="pk-text">id</text>
+    <text x="760" y="1050" text-anchor="end" class="type-text">UUID, PK</text>
+
+    <circle cx="455" cy="1067" r="6" class="fk-icon"/>
+    <text x="470" y="1072" class="fk-text">user_id</text>
+    <text x="760" y="1072" text-anchor="end" class="type-text">UUID, FK → users.id</text>
+
+    <text x="470" y="1094" class="column-text">action</text>
+    <text x="760" y="1094" text-anchor="end" class="type-text">VARCHAR(100)</text>
+
+    <text x="470" y="1116" class="column-text">entity_type</text>
+    <text x="760" y="1116" text-anchor="end" class="type-text">VARCHAR(50)</text>
+
+    <text x="470" y="1138" class="column-text">entity_id</text>
+    <text x="760" y="1138" text-anchor="end" class="type-text">UUID</text>
+
+    <text x="470" y="1160" class="column-text">changes_json</text>
+    <text x="760" y="1160" text-anchor="end" class="type-text">JSONB</text>
+
+    <text x="470" y="1182" class="column-text">ip_address</text>
+    <text x="760" y="1182" text-anchor="end" class="type-text">INET</text>
+
+    <text x="470" y="1204" class="column-text">user_agent</text>
+    <text x="760" y="1204" text-anchor="end" class="type-text">TEXT</text>
+
+    <text x="470" y="1226" class="column-text">session_id</text>
+    <text x="760" y="1226" text-anchor="end" class="type-text">UUID</text>
+
+    <text x="470" y="1248" class="column-text">created_at</text>
+    <text x="760" y="1248" text-anchor="end" class="type-text">TIMESTAMP, INDEXED</text>
+  </g>
+
+  <!-- Table: system_settings -->
+  <g id="table-settings">
+    <rect x="850" y="990" width="340" height="35" rx="5" class="table-header"/>
+    <text x="1020" y="1013" text-anchor="middle" class="table-title">system_settings</text>
+
+    <rect x="850" y="1025" width="340" height="176" rx="5" class="table-body"/>
+
+    <circle cx="865" cy="1045" r="6" class="pk-icon"/>
+    <text x="880" y="1050" class="pk-text">id</text>
+    <text x="1170" y="1050" text-anchor="end" class="type-text">UUID, PK</text>
+
+    <text x="880" y="1072" class="column-text">key</text>
+    <text x="1170" y="1072" text-anchor="end" class="type-text">VARCHAR(100), UNIQUE</text>
+
+    <text x="880" y="1094" class="column-text">value</text>
+    <text x="1170" y="1094" text-anchor="end" class="type-text">TEXT</text>
+
+    <text x="880" y="1116" class="column-text">data_type</text>
+    <text x="1170" y="1116" text-anchor="end" class="type-text">VARCHAR(50)</text>
+
+    <text x="880" y="1138" class="column-text">description</text>
+    <text x="1170" y="1138" text-anchor="end" class="type-text">TEXT</text>
+
+    <text x="880" y="1160" class="column-text">is_public</text>
+    <text x="1170" y="1160" text-anchor="end" class="type-text">BOOLEAN, DEFAULT false</text>
+
+    <text x="880" y="1182" class="column-text">created_at</text>
+    <text x="1170" y="1182" text-anchor="end" class="type-text">TIMESTAMP</text>
+
+    <text x="880" y="1204" class="column-text">updated_at</text>
+    <text x="1170" y="1204" text-anchor="end" class="type-text">TIMESTAMP</text>
+  </g>
+
+  <!-- Relationships -->
+
+  <!-- users → theses -->
+  <path d="M 370 190 L 440 200" class="relation-many"/>
+  <text x="405" y="185" class="relation-text">1:N</text>
+  <text x="405" y="200" class="type-text">submits</text>
+
+  <!-- theses → assessments -->
+  <path d="M 780 310 L 850 310" class="relation-many"/>
+  <text x="815 300" class="relation-text">1:N</text>
+  <text x="800" y="325" class="type-text">has</text>
+
+  <!-- users → assessments -->
+  <path d="M 210 485 L 210 570 L 1020 570 L 1020 551" class="relation-many"/>
+  <text x="620" y="560" class="relation-text">1:N (assesses)</text>
+
+  <!-- assessments → feedback_items -->
+  <path d="M 1190 310 L 1230 310" class="relation-many"/>
+  <text x="1200" y="300" class="relation-text">1:N</text>
+  <text x="1195" y="325" class="type-text">contains</text>
+
+  <!-- theses → ai_analysis_logs -->
+  <path d="M 610 595 L 610 630" class="relation-many"/>
+  <text x="620" y="620" class="relation-text">1:N</text>
+
+  <!-- assessments → ai_analysis_logs -->
+  <path d="M 940 551 L 760 665" class="relation-one"/>
+  <text x="850" y="600" class="relation-text">1:1</text>
+
+  <!-- theses → plagiarism_checks -->
+  <path d="M 730 595 L 940 665" class="relation-many"/>
+  <text x="835" y="620" class="relation-text">1:N</text>
+
+  <!-- users → comments -->
+  <path d="M 210 485 L 210 630" class="relation-many"/>
+  <text x="220" y="560" class="relation-text">1:N</text>
+  <text x="220" y="575" class="type-text">posts</text>
+
+  <!-- theses → comments -->
+  <path d="M 440 395 L 210 665" class="relation-many"/>
+  <text x="320" y="530" class="relation-text">1:N</text>
+
+  <!-- comments → comments (self-referencing) -->
+  <path d="M 50 750 L 30 750 L 30 640 L 50 640" class="relation-many"/>
+  <text x="10" y="695" class="relation-text">1:N</text>
+  <text x="3" y="710" class="type-text" transform="rotate(-90 10 700)">replies</text>
+
+  <!-- users → notifications -->
+  <path d="M 210 485 L 210 990" class="relation-many"/>
+  <text x="220" y="740" class="relation-text">1:N</text>
+  <text x="220" y="755" class="type-text">receives</text>
+
+  <!-- users → audit_logs -->
+  <path d="M 300 485 L 500 990" class="relation-many"/>
+  <text x="400" y="740" class="relation-text">1:N</text>
+  <text x="400" y="755" class="type-text">performs</text>
+
+  <!-- Legend -->
+  <rect x="1230" y="1025" width="320" height="242" rx="5" fill="#f8fafc" stroke="#cbd5e1" stroke-width="2"/>
+  <text x="1390" y="1050" text-anchor="middle" class="component-title">Legend &amp; Indexes</text>
+  <line x1="1245" y1="1060" x2="1535" y2="1060" stroke="#cbd5e1" stroke-width="1"/>
+
+  <circle cx="1255" cy="1080" r="6" class="pk-icon"/>
+  <text x="1270" y="1085" class="legend-text">Primary Key (PK)</text>
+
+  <circle cx="1255" cy="1105" r="6" class="fk-icon"/>
+  <text x="1270" y="1110" class="legend-text">Foreign Key (FK)</text>
+
+  <line x1="1245" y1="1125" x2="1340" y2="1125" class="relation-many"/>
+  <text x="1350" y="1130" class="legend-text">One-to-Many (1:N)</text>
+
+  <line x1="1245" y1="1145" x2="1340" y2="1145" class="relation-one"/>
+  <text x="1350" y="1150" class="legend-text">One-to-One (1:1)</text>
+
+  <text x="1255" y="1175" class="legend-text" font-weight="bold">Key Indexes:</text>
+  <text x="1255" y="1193" class="type-text">• users: email, role, created_at</text>
+  <text x="1255" y="1208" class="type-text">• theses: student_id, status, created_at</text>
+  <text x="1255" y="1223" class="type-text">• assessments: thesis_id, assessor_id</text>
+  <text x="1255" y="1238" class="type-text">• feedback_items: assessment_id</text>
+  <text x="1255" y="1253" class="type-text">• audit_logs: user_id, created_at</text>
+
+  <!-- Database Info -->
+  <text x="50" y="1320" class="section-title">Database Information</text>
+  <text x="50" y="1345" class="legend-text">• Total Tables: 10 (users, theses, assessments, feedback_items, ai_analysis_logs,</text>
+  <text x="70" y="1362" class="legend-text">plagiarism_checks, comments, notifications, audit_logs, system_settings)</text>
+  <text x="50" y="1380" class="legend-text">• Recommended DBMS: PostgreSQL 14+ (supports JSONB, UUID, INET, Arrays)</text>
+  <text x="50" y="1397" class="legend-text">• Features Used: UUID primary keys, JSONB for flexible data, ENUM for type safety, soft deletes</text>
+
+  <!-- Footer -->
+  <line x1="50" y1="1310" x2="1550" y2="1310" stroke="#cbd5e1" stroke-width="2"/>
+  <text x="800" y="1380" text-anchor="middle" class="note-text">This schema supports: Multi-user roles, AI-powered assessments, Plagiarism detection,</text>
+  <text x="800" y="1395" text-anchor="middle" class="note-text">Real-time comments, Comprehensive audit trails, Flexible metadata storage</text>
+  <text x="1550" y="1380" text-anchor="end" class="type-text">Generated: 2025-11-26 | ThesisAI Backend Schema v1.0</text>
+</svg>
