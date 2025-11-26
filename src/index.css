@@ -1,1 +1,132 @@
 @import "tailwindcss";
+
+/* Base styles for accessibility and themes */
+:root {
+  /* Light theme colors (default) */
+  --color-background: #ffffff;
+  --color-text: #1a1a1a;
+  --color-primary: #2563eb;
+  --color-secondary: #f59e0b;
+}
+
+.dark {
+  /* Dark theme colors */
+  --color-background: #1a1a1a;
+  --color-text: #ffffff;
+  --color-primary: #3b82f6;
+  --color-secondary: #fbbf24;
+}
+
+.high-contrast {
+  /* High contrast theme colors for accessibility */
+  --color-background: #000000;
+  --color-text: #ffff00;
+  --color-primary: #ffff00;
+  --color-secondary: #ffff00;
+}
+
+/* Ensure smooth transitions between themes */
+* {
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+/* Skip to main content link for accessibility */
+.skip-to-main {
+  position: absolute;
+  left: -9999px;
+  z-index: 999;
+  padding: 1rem 1.5rem;
+  background-color: var(--color-primary);
+  color: white;
+  text-decoration: none;
+  border-radius: 0 0 0.5rem 0.5rem;
+}
+
+.skip-to-main:focus {
+  left: 50%;
+  transform: translateX(-50%);
+  top: 0;
+}
+
+/* Focus visible styles for better keyboard navigation */
+*:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+.high-contrast *:focus-visible {
+  outline: 3px solid #ffff00;
+  outline-offset: 3px;
+}
+
+/* Reduced motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* High contrast mode enhancements */
+.high-contrast {
+  /* Ensure all text is readable */
+  color: #ffff00;
+}
+
+.high-contrast a {
+  text-decoration: underline;
+}
+
+.high-contrast button:disabled,
+.high-contrast input:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Dark mode scrollbar styling */
+.dark::-webkit-scrollbar {
+  width: 12px;
+}
+
+.dark::-webkit-scrollbar-track {
+  background: #1a1a1a;
+}
+
+.dark::-webkit-scrollbar-thumb {
+  background: #4b5563;
+  border-radius: 6px;
+}
+
+.dark::-webkit-scrollbar-thumb:hover {
+  background: #6b7280;
+}
+
+/* High contrast scrollbar */
+.high-contrast::-webkit-scrollbar-thumb {
+  background: #ffff00;
+}
+
+/* Ensure images have alt text for screen readers */
+img:not([alt]) {
+  outline: 3px solid red;
+}
+
+/* Screen reader only class */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* Focus trap for modals */
+.focus-trap {
+  position: fixed;
+  inset: 0;
+}
