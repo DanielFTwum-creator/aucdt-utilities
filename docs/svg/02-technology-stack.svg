@@ -1,0 +1,205 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 900" width="1400" height="900">
+  <defs>
+    <style>
+      .title { font: bold 32px 'Inter', sans-serif; fill: #1e3a5f; }
+      .category-title { font: bold 20px 'Inter', sans-serif; fill: #ffffff; }
+      .tech-box { fill: #ffffff; stroke: #2563eb; stroke-width: 2; rx: 6; }
+      .tech-name { font: bold 15px 'Inter', sans-serif; fill: #1e3a5f; }
+      .tech-version { font: 12px 'Inter', sans-serif; fill: #475569; }
+      .category-box-frontend { fill: #2563eb; }
+      .category-box-backend { fill: #059669; }
+      .category-box-database { fill: #7c3aed; }
+      .category-box-devops { fill: #dc2626; }
+      .category-box-external { fill: #f59e0b; }
+      .footer-text { font: 13px 'Inter', sans-serif; fill: #475569; font-style: italic; }
+    </style>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1400" height="900" fill="#f8fafc"/>
+
+  <!-- Title -->
+  <text x="700" y="50" class="title" text-anchor="middle">ThesisAI Technology Stack</text>
+
+  <!-- FRONTEND CATEGORY -->
+  <rect x="50" y="100" width="620" height="40" class="category-box-frontend" rx="8"/>
+  <text x="360" y="127" class="category-title" text-anchor="middle">FRONTEND TECHNOLOGIES</text>
+
+  <!-- Frontend Row 1 -->
+  <rect x="60" y="160" width="140" height="70" class="tech-box"/>
+  <text x="130" y="185" class="tech-name" text-anchor="middle">React</text>
+  <text x="130" y="205" class="tech-version" text-anchor="middle">v19.2.0</text>
+  <text x="130" y="220" class="tech-version" text-anchor="middle">UI Framework</text>
+
+  <rect x="220" y="160" width="140" height="70" class="tech-box"/>
+  <text x="290" y="185" class="tech-name" text-anchor="middle">TypeScript</text>
+  <text x="290" y="205" class="tech-version" text-anchor="middle">v5.9.3</text>
+  <text x="290" y="220" class="tech-version" text-anchor="middle">Language</text>
+
+  <rect x="380" y="160" width="140" height="70" class="tech-box"/>
+  <text x="450" y="185" class="tech-name" text-anchor="middle">Vite</text>
+  <text x="450" y="205" class="tech-version" text-anchor="middle">v7.2.4</text>
+  <text x="450" y="220" class="tech-version" text-anchor="middle">Build Tool</text>
+
+  <rect x="540" y="160" width="140" height="70" class="tech-box"/>
+  <text x="610" y="185" class="tech-name" text-anchor="middle">Tailwind CSS</text>
+  <text x="610" y="205" class="tech-version" text-anchor="middle">v4.1.17</text>
+  <text x="610" y="220" class="tech-version" text-anchor="middle">Styling</text>
+
+  <!-- Frontend Row 2 -->
+  <rect x="60" y="250" width="140" height="70" class="tech-box"/>
+  <text x="130" y="275" class="tech-name" text-anchor="middle">React Router</text>
+  <text x="130" y="295" class="tech-version" text-anchor="middle">v7.9.6</text>
+  <text x="130" y="310" class="tech-version" text-anchor="middle">Routing</text>
+
+  <rect x="220" y="250" width="140" height="70" class="tech-box"/>
+  <text x="290" y="275" class="tech-name" text-anchor="middle">Framer Motion</text>
+  <text x="290" y="295" class="tech-version" text-anchor="middle">v12.23.24</text>
+  <text x="290" y="310" class="tech-version" text-anchor="middle">Animations</text>
+
+  <rect x="380" y="250" width="140" height="70" class="tech-box"/>
+  <text x="450" y="275" class="tech-name" text-anchor="middle">Lucide React</text>
+  <text x="450" y="295" class="tech-version" text-anchor="middle">v0.554.0</text>
+  <text x="450" y="310" class="tech-version" text-anchor="middle">Icons</text>
+
+  <rect x="540" y="250" width="140" height="70" class="tech-box"/>
+  <text x="610" y="275" class="tech-name" text-anchor="middle">Recharts</text>
+  <text x="610" y="295" class="tech-version" text-anchor="middle">v3.5.0</text>
+  <text x="610" y="310" class="tech-version" text-anchor="middle">Charts</text>
+
+  <!-- BACKEND CATEGORY -->
+  <rect x="720" y="100" width="620" height="40" class="category-box-backend" rx="8"/>
+  <text x="1030" y="127" class="category-title" text-anchor="middle">BACKEND TECHNOLOGIES</text>
+
+  <!-- Backend Row 1 -->
+  <rect x="730" y="160" width="180" height="70" class="tech-box"/>
+  <text x="820" y="185" class="tech-name" text-anchor="middle">Node.js</text>
+  <text x="820" y="205" class="tech-version" text-anchor="middle">v18+</text>
+  <text x="820" y="220" class="tech-version" text-anchor="middle">Runtime</text>
+
+  <rect x="930" y="160" width="180" height="70" class="tech-box"/>
+  <text x="1020" y="185" class="tech-name" text-anchor="middle">Express.js</text>
+  <text x="1020" y="205" class="tech-version" text-anchor="middle">Latest</text>
+  <text x="1020" y="220" class="tech-version" text-anchor="middle">API Framework</text>
+
+  <rect x="1130" y="160" width="180" height="70" class="tech-box"/>
+  <text x="1220" y="185" class="tech-name" text-anchor="middle">Axios</text>
+  <text x="1220" y="205" class="tech-version" text-anchor="middle">v1.13.2</text>
+  <text x="1220" y="220" class="tech-version" text-anchor="middle">HTTP Client</text>
+
+  <!-- DATABASE CATEGORY -->
+  <rect x="50" y="380" width="400" height="40" class="category-box-database" rx="8"/>
+  <text x="250" y="407" class="category-title" text-anchor="middle">DATABASE & STORAGE</text>
+
+  <!-- Database Row -->
+  <rect x="60" y="440" width="180" height="70" class="tech-box"/>
+  <text x="150" y="465" class="tech-name" text-anchor="middle">PostgreSQL</text>
+  <text x="150" y="485" class="tech-version" text-anchor="middle">v14+</text>
+  <text x="150" y="500" class="tech-version" text-anchor="middle">Database</text>
+
+  <rect x="260" y="440" width="180" height="70" class="tech-box"/>
+  <text x="350" y="465" class="tech-name" text-anchor="middle">AWS S3</text>
+  <text x="350" y="485" class="tech-version" text-anchor="middle">Cloud Storage</text>
+  <text x="350" y="500" class="tech-version" text-anchor="middle">File Storage</text>
+
+  <!-- DEVOPS CATEGORY -->
+  <rect x="500" y="380" width="460" height="40" class="category-box-devops" rx="8"/>
+  <text x="730" y="407" class="category-title" text-anchor="middle">DEVOPS & TESTING</text>
+
+  <!-- DevOps Row 1 -->
+  <rect x="510" y="440" width="140" height="70" class="tech-box"/>
+  <text x="580" y="465" class="tech-name" text-anchor="middle">Docker</text>
+  <text x="580" y="485" class="tech-version" text-anchor="middle">Latest</text>
+  <text x="580" y="500" class="tech-version" text-anchor="middle">Containerization</text>
+
+  <rect x="670" y="440" width="140" height="70" class="tech-box"/>
+  <text x="740" y="465" class="tech-name" text-anchor="middle">Nginx</text>
+  <text x="740" y="485" class="tech-version" text-anchor="middle">Alpine</text>
+  <text x="740" y="500" class="tech-version" text-anchor="middle">Web Server</text>
+
+  <rect x="830" y="440" width="140" height="70" class="tech-box"/>
+  <text x="900" y="465" class="tech-name" text-anchor="middle">Vitest</text>
+  <text x="900" y="485" class="tech-version" text-anchor="middle">v4.0.13</text>
+  <text x="900" y="500" class="tech-version" text-anchor="middle">Testing</text>
+
+  <!-- DevOps Row 2 -->
+  <rect x="510" y="530" width="140" height="70" class="tech-box"/>
+  <text x="580" y="555" class="tech-name" text-anchor="middle">pnpm</text>
+  <text x="580" y="575" class="tech-version" text-anchor="middle">v8.15.0</text>
+  <text x="580" y="590" class="tech-version" text-anchor="middle">Package Manager</text>
+
+  <rect x="670" y="530" width="140" height="70" class="tech-box"/>
+  <text x="740" y="555" class="tech-name" text-anchor="middle">Git</text>
+  <text x="740" y="575" class="tech-version" text-anchor="middle">Latest</text>
+  <text x="740" y="590" class="tech-version" text-anchor="middle">Version Control</text>
+
+  <rect x="830" y="530" width="140" height="70" class="tech-box"/>
+  <text x="900" y="555" class="tech-name" text-anchor="middle">ESLint</text>
+  <text x="900" y="575" class="tech-version" text-anchor="middle">v9+</text>
+  <text x="900" y="590" class="tech-version" text-anchor="middle">Code Quality</text>
+
+  <!-- EXTERNAL SERVICES CATEGORY -->
+  <rect x="1010" y="380" width="330" height="40" class="category-box-external" rx="8"/>
+  <text x="1175" y="407" class="category-title" text-anchor="middle">EXTERNAL SERVICES</text>
+
+  <!-- External Services Row -->
+  <rect x="1020" y="440" width="150" height="70" class="tech-box"/>
+  <text x="1095" y="465" class="tech-name" text-anchor="middle">AI/ML APIs</text>
+  <text x="1095" y="485" class="tech-version" text-anchor="middle">OpenAI / GPT</text>
+  <text x="1095" y="500" class="tech-version" text-anchor="middle">NLP Services</text>
+
+  <rect x="1190" y="440" width="150" height="70" class="tech-box"/>
+  <text x="1265" y="465" class="tech-name" text-anchor="middle">Cloud Services</text>
+  <text x="1265" y="485" class="tech-version" text-anchor="middle">AWS / Azure</text>
+  <text x="1265" y="500" class="tech-version" text-anchor="middle">Infrastructure</text>
+
+  <!-- DEVELOPMENT TOOLS -->
+  <rect x="50" y="660" width="1290" height="40" class="category-box-frontend" rx="8"/>
+  <text x="695" y="687" class="category-title" text-anchor="middle">DEVELOPMENT TOOLS & LIBRARIES</text>
+
+  <!-- Dev Tools Row -->
+  <rect x="60" y="720" width="140" height="70" class="tech-box"/>
+  <text x="130" y="745" class="tech-name" text-anchor="middle">PostCSS</text>
+  <text x="130" y="765" class="tech-version" text-anchor="middle">v8+</text>
+  <text x="130" y="780" class="tech-version" text-anchor="middle">CSS Processing</text>
+
+  <rect x="220" y="720" width="140" height="70" class="tech-box"/>
+  <text x="290" y="745" class="tech-name" text-anchor="middle">Testing Library</text>
+  <text x="290" y="765" class="tech-version" text-anchor="middle">React</text>
+  <text x="290" y="780" class="tech-version" text-anchor="middle">Component Tests</text>
+
+  <rect x="380" y="720" width="140" height="70" class="tech-box"/>
+  <text x="450" y="745" class="tech-name" text-anchor="middle">jsdom</text>
+  <text x="450" y="765" class="tech-version" text-anchor="middle">Latest</text>
+  <text x="450" y="780" class="tech-version" text-anchor="middle">DOM Simulation</text>
+
+  <rect x="540" y="720" width="140" height="70" class="tech-box"/>
+  <text x="610" y="745" class="tech-name" text-anchor="middle">Crimson Text</text>
+  <text x="610" y="765" class="tech-version" text-anchor="middle">Google Fonts</text>
+  <text x="610" y="780" class="tech-version" text-anchor="middle">Typography</text>
+
+  <rect x="700" y="720" width="140" height="70" class="tech-box"/>
+  <text x="770" y="745" class="tech-name" text-anchor="middle">Inter</text>
+  <text x="770" y="765" class="tech-version" text-anchor="middle">Google Fonts</text>
+  <text x="770" y="780" class="tech-version" text-anchor="middle">Typography</text>
+
+  <rect x="860" y="720" width="140" height="70" class="tech-box"/>
+  <text x="930" y="745" class="tech-name" text-anchor="middle">GitHub</text>
+  <text x="930" y="765" class="tech-version" text-anchor="middle">Repository</text>
+  <text x="930" y="780" class="tech-version" text-anchor="middle">Code Hosting</text>
+
+  <rect x="1020" y="720" width="140" height="70" class="tech-box"/>
+  <text x="1090" y="745" class="tech-name" text-anchor="middle">VS Code</text>
+  <text x="1090" y="765" class="tech-version" text-anchor="middle">Latest</text>
+  <text x="1090" y="780" class="tech-version" text-anchor="middle">IDE</text>
+
+  <rect x="1180" y="720" width="140" height="70" class="tech-box"/>
+  <text x="1250" y="745" class="tech-name" text-anchor="middle">Claude Code</text>
+  <text x="1250" y="765" class="tech-version" text-anchor="middle">AI Assistant</text>
+  <text x="1250" y="780" class="tech-version" text-anchor="middle">Development</text>
+
+  <!-- Footer -->
+  <text x="700" y="860" class="footer-text" text-anchor="middle">
+    Figure 2: Complete Technology Stack - ThesisAI leverages modern technologies for robust thesis assessment
+  </text>
+</svg>
