@@ -1,0 +1,9 @@
+{
+  "name": "Techbridge University College",
+  "description": "The official digital platform for Techbridge University College (TUC), a leader in design and technology education in Ghana.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone",
+    "geolocation"
+  ]
+}
