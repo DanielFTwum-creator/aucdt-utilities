@@ -1,0 +1,407 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 1000" width="1400" height="1000">
+  <defs>
+    <style>
+      .title { font: bold 36px 'Inter', sans-serif; fill: #1e3a5f; }
+      .subtitle { font: 18px 'Inter', sans-serif; fill: #475569; }
+      .table-header { fill: #2563eb; rx: 8 8 0 0; }
+      .table-header-critical { fill: #dc2626; rx: 8 8 0 0; }
+      .table-header-clinical { fill: #16a34a; rx: 8 8 0 0; }
+      .table-header-telehealth { fill: #7c3aed; rx: 8 8 0 0; }
+      .table-body { fill: #ffffff; stroke: #e2e8f0; stroke-width: 2; }
+      .table-title { font: bold 16px 'Inter', sans-serif; fill: #ffffff; }
+      .pk { font: bold 12px 'Consolas', monospace; fill: #dc2626; }
+      .fk { font: bold 12px 'Consolas', monospace; fill: #2563eb; }
+      .field { font: 12px 'Consolas', monospace; fill: #1e3a5f; }
+      .field-type { font: 11px 'Consolas', monospace; fill: #6b7280; }
+      .encrypted { font: italic 10px 'Inter', sans-serif; fill: #dc2626; }
+      .relationship { stroke: #64748b; stroke-width: 2; fill: none; }
+      .relationship-label { font: 11px 'Inter', sans-serif; fill: #64748b; }
+      .section-label { font: bold 14px 'Inter', sans-serif; fill: #f59e0b; text-transform: uppercase; letter-spacing: 1px; }
+      .section-bg { fill: #fafafa; stroke: #e2e8f0; stroke-width: 1; stroke-dasharray: 5,5; rx: 8; }
+      .note { font: 11px 'Inter', sans-serif; fill: #6b7280; }
+      .legend-box { fill: #f8fafc; stroke: #e2e8f0; rx: 8; }
+    </style>
+    <marker id="crow-foot-many" markerWidth="12" markerHeight="12" refX="0" refY="6" orient="auto">
+      <path d="M 0 6 L 12 0 M 0 6 L 12 6 M 0 6 L 12 12" stroke="#64748b" stroke-width="2" fill="none"/>
+    </marker>
+    <marker id="crow-foot-one" markerWidth="12" markerHeight="12" refX="12" refY="6" orient="auto">
+      <line x1="8" y1="0" x2="8" y2="12" stroke="#64748b" stroke-width="2"/>
+      <line x1="12" y1="0" x2="12" y2="12" stroke="#64748b" stroke-width="2"/>
+    </marker>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1400" height="1000" fill="#ffffff"/>
+
+  <!-- Title -->
+  <text x="700" y="45" class="title" text-anchor="middle">RPMS Database Schema</text>
+  <text x="700" y="70" class="subtitle" text-anchor="middle">Logical Schema for Patient Demographics, Encounter Histories, and Clinical Audit Logs</text>
+
+  <!-- Section Labels -->
+  <text x="200" y="105" class="section-label">Patient Management</text>
+  <text x="750" y="105" class="section-label">Clinical Encounters</text>
+  <text x="1150" y="105" class="section-label">Audit &amp; Compliance</text>
+  <text x="200" y="535" class="section-label">Telehealth</text>
+  <text x="550" y="535" class="section-label">Vital Monitoring</text>
+
+  <!-- Section Backgrounds -->
+  <rect x="50" y="115" width="400" height="400" class="section-bg"/>
+  <rect x="500" y="115" width="500" height="400" class="section-bg"/>
+  <rect x="1050" y="115" width="320" height="400" class="section-bg"/>
+  <rect x="50" y="545" width="300" height="320" class="section-bg"/>
+  <rect x="400" y="545" width="350" height="320" class="section-bg"/>
+
+  <!-- ==================== PATIENTS TABLE ==================== -->
+  <rect x="70" y="135" width="360" height="25" class="table-header"/>
+  <text x="250" y="153" class="table-title" text-anchor="middle">patients</text>
+  <rect x="70" y="160" width="360" height="220" class="table-body"/>
+
+  <text x="85" y="180" class="pk">PK</text>
+  <text x="115" y="180" class="field">patient_id</text>
+  <text x="280" y="180" class="field-type">UUID</text>
+
+  <text x="115" y="200" class="field">mrn</text>
+  <text x="280" y="200" class="field-type">VARCHAR(20) UNIQUE</text>
+
+  <text x="115" y="220" class="field">first_name</text>
+  <text x="280" y="220" class="field-type">VARCHAR(100)</text>
+  <text x="390" y="220" class="encrypted">encrypted</text>
+
+  <text x="115" y="240" class="field">last_name</text>
+  <text x="280" y="240" class="field-type">VARCHAR(100)</text>
+  <text x="390" y="240" class="encrypted">encrypted</text>
+
+  <text x="115" y="260" class="field">date_of_birth</text>
+  <text x="280" y="260" class="field-type">DATE</text>
+  <text x="390" y="260" class="encrypted">encrypted</text>
+
+  <text x="115" y="280" class="field">gender</text>
+  <text x="280" y="280" class="field-type">VARCHAR(20)</text>
+
+  <text x="115" y="300" class="field">ssn_hash</text>
+  <text x="280" y="300" class="field-type">VARCHAR(64)</text>
+  <text x="390" y="300" class="encrypted">hashed</text>
+
+  <text x="115" y="320" class="field">phone</text>
+  <text x="280" y="320" class="field-type">VARCHAR(20)</text>
+  <text x="390" y="320" class="encrypted">encrypted</text>
+
+  <text x="115" y="340" class="field">email</text>
+  <text x="280" y="340" class="field-type">VARCHAR(255)</text>
+  <text x="390" y="340" class="encrypted">encrypted</text>
+
+  <text x="115" y="360" class="field">created_at</text>
+  <text x="280" y="360" class="field-type">TIMESTAMPTZ</text>
+
+  <text x="115" y="375" class="field">updated_at</text>
+  <text x="280" y="375" class="field-type">TIMESTAMPTZ</text>
+
+  <!-- ==================== PATIENT_ADDRESSES TABLE ==================== -->
+  <rect x="70" y="400" width="360" height="25" class="table-header"/>
+  <text x="250" y="418" class="table-title" text-anchor="middle">patient_addresses</text>
+  <rect x="70" y="425" width="360" height="80" class="table-body"/>
+
+  <text x="85" y="445" class="pk">PK</text>
+  <text x="115" y="445" class="field">address_id</text>
+  <text x="280" y="445" class="field-type">UUID</text>
+
+  <text x="85" y="465" class="fk">FK</text>
+  <text x="115" y="465" class="field">patient_id</text>
+  <text x="280" y="465" class="field-type">UUID</text>
+
+  <text x="115" y="485" class="field">address_line_1</text>
+  <text x="280" y="485" class="field-type">VARCHAR(255)</text>
+  <text x="390" y="485" class="encrypted">encrypted</text>
+
+  <!-- ==================== ENCOUNTERS TABLE ==================== -->
+  <rect x="520" y="135" width="460" height="25" class="table-header-clinical"/>
+  <text x="750" y="153" class="table-title" text-anchor="middle">encounters</text>
+  <rect x="520" y="160" width="460" height="260" class="table-body"/>
+
+  <text x="535" y="180" class="pk">PK</text>
+  <text x="565" y="180" class="field">encounter_id</text>
+  <text x="740" y="180" class="field-type">UUID</text>
+
+  <text x="535" y="200" class="fk">FK</text>
+  <text x="565" y="200" class="field">patient_id</text>
+  <text x="740" y="200" class="field-type">UUID NOT NULL</text>
+
+  <text x="535" y="220" class="fk">FK</text>
+  <text x="565" y="220" class="field">provider_id</text>
+  <text x="740" y="220" class="field-type">UUID NOT NULL</text>
+
+  <text x="565" y="240" class="field">encounter_type</text>
+  <text x="740" y="240" class="field-type">VARCHAR(50)</text>
+
+  <text x="565" y="260" class="field">status</text>
+  <text x="740" y="260" class="field-type">VARCHAR(20)</text>
+
+  <text x="565" y="280" class="field">chief_complaint</text>
+  <text x="740" y="280" class="field-type">TEXT</text>
+  <text x="890" y="280" class="encrypted">encrypted</text>
+
+  <text x="565" y="300" class="field">clinical_notes</text>
+  <text x="740" y="300" class="field-type">TEXT</text>
+  <text x="890" y="300" class="encrypted">encrypted</text>
+
+  <text x="565" y="320" class="field">diagnosis_codes</text>
+  <text x="740" y="320" class="field-type">JSONB</text>
+  <text x="890" y="320" class="note">ICD-10</text>
+
+  <text x="565" y="340" class="field">procedure_codes</text>
+  <text x="740" y="340" class="field-type">JSONB</text>
+  <text x="890" y="340" class="note">CPT</text>
+
+  <text x="565" y="360" class="field">encounter_date</text>
+  <text x="740" y="360" class="field-type">TIMESTAMPTZ</text>
+
+  <text x="565" y="380" class="field">ai_suggestions</text>
+  <text x="740" y="380" class="field-type">JSONB</text>
+  <text x="890" y="380" class="note">Gemini</text>
+
+  <text x="565" y="400" class="field">created_at</text>
+  <text x="740" y="400" class="field-type">TIMESTAMPTZ</text>
+
+  <text x="565" y="415" class="field">updated_at</text>
+  <text x="740" y="415" class="field-type">TIMESTAMPTZ</text>
+
+  <!-- ==================== PROVIDERS TABLE ==================== -->
+  <rect x="520" y="440" width="220" height="25" class="table-header"/>
+  <text x="630" y="458" class="table-title" text-anchor="middle">providers</text>
+  <rect x="520" y="465" width="220" height="50" class="table-body"/>
+
+  <text x="535" y="485" class="pk">PK</text>
+  <text x="565" y="485" class="field">provider_id</text>
+  <text x="680" y="485" class="field-type">UUID</text>
+
+  <text x="565" y="505" class="field">npi</text>
+  <text x="680" y="505" class="field-type">VARCHAR(10)</text>
+
+  <!-- ==================== PRESCRIPTIONS TABLE ==================== -->
+  <rect x="760" y="440" width="220" height="25" class="table-header-clinical"/>
+  <text x="870" y="458" class="table-title" text-anchor="middle">prescriptions</text>
+  <rect x="760" y="465" width="220" height="50" class="table-body"/>
+
+  <text x="775" y="485" class="pk">PK</text>
+  <text x="805" y="485" class="field">rx_id</text>
+  <text x="890" y="485" class="field-type">UUID</text>
+
+  <text x="775" y="505" class="fk">FK</text>
+  <text x="805" y="505" class="field">encounter_id</text>
+  <text x="890" y="505" class="field-type">UUID</text>
+
+  <!-- ==================== AUDIT_LOGS TABLE ==================== -->
+  <rect x="1070" y="135" width="280" height="25" class="table-header-critical"/>
+  <text x="1210" y="153" class="table-title" text-anchor="middle">audit_logs</text>
+  <rect x="1070" y="160" width="280" height="280" class="table-body"/>
+
+  <text x="1085" y="180" class="pk">PK</text>
+  <text x="1115" y="180" class="field">log_id</text>
+  <text x="1250" y="180" class="field-type">BIGSERIAL</text>
+
+  <text x="1115" y="200" class="field">timestamp</text>
+  <text x="1250" y="200" class="field-type">TIMESTAMPTZ</text>
+  <text x="1335" y="200" class="note">NTP</text>
+
+  <text x="1115" y="220" class="field">user_id</text>
+  <text x="1250" y="220" class="field-type">UUID</text>
+
+  <text x="1115" y="240" class="field">patient_id</text>
+  <text x="1250" y="240" class="field-type">UUID NULL</text>
+
+  <text x="1115" y="260" class="field">action</text>
+  <text x="1250" y="260" class="field-type">VARCHAR(50)</text>
+
+  <text x="1115" y="280" class="field">resource_type</text>
+  <text x="1250" y="280" class="field-type">VARCHAR(50)</text>
+
+  <text x="1115" y="300" class="field">resource_id</text>
+  <text x="1250" y="300" class="field-type">UUID</text>
+
+  <text x="1115" y="320" class="field">ip_hash</text>
+  <text x="1250" y="320" class="field-type">VARCHAR(64)</text>
+  <text x="1335" y="320" class="encrypted">hashed</text>
+
+  <text x="1115" y="340" class="field">session_id</text>
+  <text x="1250" y="340" class="field-type">UUID</text>
+
+  <text x="1115" y="360" class="field">outcome</text>
+  <text x="1250" y="360" class="field-type">VARCHAR(20)</text>
+
+  <text x="1115" y="380" class="field">details</text>
+  <text x="1250" y="380" class="field-type">JSONB</text>
+
+  <text x="1115" y="400" class="field">prev_hash</text>
+  <text x="1250" y="400" class="field-type">VARCHAR(64)</text>
+
+  <text x="1115" y="420" class="field">entry_hash</text>
+  <text x="1250" y="420" class="field-type">VARCHAR(64)</text>
+  <text x="1335" y="420" class="note">chain</text>
+
+  <!-- Immutable Note -->
+  <rect x="1070" y="450" width="280" height="40" fill="#fef2f2" stroke="#dc2626" rx="4"/>
+  <text x="1210" y="475" class="encrypted" text-anchor="middle" style="font-size: 12px;">IMMUTABLE - APPEND ONLY</text>
+  <text x="1210" y="485" class="note" text-anchor="middle">No UPDATE/DELETE operations permitted</text>
+
+  <!-- ==================== TELEHEALTH_SESSIONS TABLE ==================== -->
+  <rect x="70" y="565" width="260" height="25" class="table-header-telehealth"/>
+  <text x="200" y="583" class="table-title" text-anchor="middle">telehealth_sessions</text>
+  <rect x="70" y="590" width="260" height="180" class="table-body"/>
+
+  <text x="85" y="610" class="pk">PK</text>
+  <text x="115" y="610" class="field">session_id</text>
+  <text x="220" y="610" class="field-type">UUID</text>
+
+  <text x="85" y="630" class="fk">FK</text>
+  <text x="115" y="630" class="field">encounter_id</text>
+  <text x="220" y="630" class="field-type">UUID</text>
+
+  <text x="115" y="650" class="field">start_time</text>
+  <text x="220" y="650" class="field-type">TIMESTAMPTZ</text>
+
+  <text x="115" y="670" class="field">end_time</text>
+  <text x="220" y="670" class="field-type">TIMESTAMPTZ</text>
+
+  <text x="115" y="690" class="field">recording_url</text>
+  <text x="220" y="690" class="field-type">TEXT</text>
+  <text x="300" y="690" class="encrypted">encrypted</text>
+
+  <text x="115" y="710" class="field">consent_given</text>
+  <text x="220" y="710" class="field-type">BOOLEAN</text>
+
+  <text x="115" y="730" class="field">quality_score</text>
+  <text x="220" y="730" class="field-type">INTEGER</text>
+
+  <text x="115" y="750" class="field">participants</text>
+  <text x="220" y="750" class="field-type">JSONB</text>
+
+  <!-- ==================== VITAL_SIGNS TABLE ==================== -->
+  <rect x="420" y="565" width="310" height="25" class="table-header-critical"/>
+  <text x="575" y="583" class="table-title" text-anchor="middle">vital_signs</text>
+  <rect x="420" y="590" width="310" height="200" class="table-body"/>
+
+  <text x="435" y="610" class="pk">PK</text>
+  <text x="465" y="610" class="field">vital_id</text>
+  <text x="600" y="610" class="field-type">UUID</text>
+
+  <text x="435" y="630" class="fk">FK</text>
+  <text x="465" y="630" class="field">patient_id</text>
+  <text x="600" y="630" class="field-type">UUID NOT NULL</text>
+
+  <text x="465" y="650" class="field">recorded_at</text>
+  <text x="600" y="650" class="field-type">TIMESTAMPTZ</text>
+
+  <text x="465" y="670" class="field">heart_rate</text>
+  <text x="600" y="670" class="field-type">INTEGER</text>
+  <text x="690" y="670" class="note">BPM</text>
+
+  <text x="465" y="690" class="field">bp_systolic</text>
+  <text x="600" y="690" class="field-type">INTEGER</text>
+  <text x="690" y="690" class="note">mmHg</text>
+
+  <text x="465" y="710" class="field">bp_diastolic</text>
+  <text x="600" y="710" class="field-type">INTEGER</text>
+  <text x="690" y="710" class="note">mmHg</text>
+
+  <text x="465" y="730" class="field">spo2</text>
+  <text x="600" y="730" class="field-type">DECIMAL(5,2)</text>
+  <text x="690" y="730" class="note">%</text>
+
+  <text x="465" y="750" class="field">temperature</text>
+  <text x="600" y="750" class="field-type">DECIMAL(4,1)</text>
+  <text x="690" y="750" class="note">C</text>
+
+  <text x="465" y="770" class="field">alert_triggered</text>
+  <text x="600" y="770" class="field-type">BOOLEAN</text>
+
+  <!-- ==================== ALERT_THRESHOLDS TABLE ==================== -->
+  <rect x="420" y="805" width="310" height="25" class="table-header-critical"/>
+  <text x="575" y="823" class="table-title" text-anchor="middle">alert_thresholds</text>
+  <rect x="420" y="830" width="310" height="50" class="table-body"/>
+
+  <text x="435" y="850" class="pk">PK</text>
+  <text x="465" y="850" class="field">threshold_id</text>
+  <text x="600" y="850" class="field-type">UUID</text>
+
+  <text x="465" y="870" class="field">vital_type</text>
+  <text x="600" y="870" class="field-type">VARCHAR(50)</text>
+
+  <!-- ==================== RELATIONSHIPS ==================== -->
+
+  <!-- patients to encounters (1:M) -->
+  <path d="M 430 280 L 520 280" class="relationship" marker-end="url(#crow-foot-many)"/>
+  <text x="475" y="270" class="relationship-label">1:M</text>
+
+  <!-- patients to patient_addresses (1:M) -->
+  <path d="M 250 380 L 250 400" class="relationship" marker-end="url(#crow-foot-many)"/>
+  <text x="260" y="393" class="relationship-label">1:M</text>
+
+  <!-- providers to encounters (1:M) -->
+  <path d="M 630 465 L 630 420" class="relationship" marker-end="url(#crow-foot-many)"/>
+  <text x="640" y="445" class="relationship-label">1:M</text>
+
+  <!-- encounters to prescriptions (1:M) -->
+  <path d="M 870 420 L 870 465" class="relationship" marker-end="url(#crow-foot-many)"/>
+  <text x="880" y="445" class="relationship-label">1:M</text>
+
+  <!-- encounters to telehealth_sessions (1:1) -->
+  <path d="M 520 420 L 330 570" class="relationship"/>
+  <text x="410" y="490" class="relationship-label">1:1</text>
+
+  <!-- patients to vital_signs (1:M) -->
+  <path d="M 430 350 L 575 590" class="relationship" marker-end="url(#crow-foot-many)"/>
+  <text x="490" y="465" class="relationship-label">1:M</text>
+
+  <!-- patients to audit_logs (1:M) -->
+  <path d="M 430 200 L 1070 240" class="relationship" marker-end="url(#crow-foot-many)"/>
+  <text x="750" y="210" class="relationship-label">PHI Access Tracking</text>
+
+  <!-- ==================== LEGEND ==================== -->
+  <rect x="800" y="565" width="550" height="120" class="legend-box"/>
+  <text x="1075" y="590" class="section-label" text-anchor="middle">Schema Legend</text>
+
+  <rect x="820" y="605" width="20" height="15" class="table-header"/>
+  <text x="850" y="617" class="note">Patient Management</text>
+
+  <rect x="820" y="630" width="20" height="15" class="table-header-clinical"/>
+  <text x="850" y="642" class="note">Clinical/Encounters</text>
+
+  <rect x="820" y="655" width="20" height="15" class="table-header-critical"/>
+  <text x="850" y="667" class="note">Critical/Monitoring</text>
+
+  <rect x="1000" y="605" width="20" height="15" class="table-header-telehealth"/>
+  <text x="1030" y="617" class="note">Telehealth</text>
+
+  <text x="1000" y="642" class="pk">PK</text>
+  <text x="1030" y="642" class="note">Primary Key</text>
+
+  <text x="1000" y="667" class="fk">FK</text>
+  <text x="1030" y="667" class="note">Foreign Key</text>
+
+  <text x="1180" y="617" class="encrypted">encrypted</text>
+  <text x="1240" y="617" class="note">AES-256</text>
+
+  <text x="1180" y="642" class="encrypted">hashed</text>
+  <text x="1240" y="642" class="note">SHA-256</text>
+
+  <line x1="1180" y1="660" x2="1220" y2="660" class="relationship"/>
+  <text x="1230" y="667" class="note">Relationship</text>
+
+  <!-- Notes Box -->
+  <rect x="800" y="700" width="550" height="100" class="legend-box"/>
+  <text x="1075" y="720" class="section-label" text-anchor="middle">HIPAA Compliance Notes</text>
+  <text x="820" y="745" class="note">All PHI columns encrypted at rest using AES-256</text>
+  <text x="820" y="765" class="note">Row-level security (RLS) enabled for patient data</text>
+  <text x="820" y="785" class="note">Audit logs use cryptographic chaining for tamper detection</text>
+
+  <!-- Footer -->
+  <text x="700" y="930" class="subtitle" text-anchor="middle" style="font-style: italic;">
+    Figure 2: RPMS Logical Database Schema
+  </text>
+  <text x="700" y="955" class="note" text-anchor="middle">
+    Patient demographics, encounter histories, and clinical audit logs managed with HIPAA-compliant encryption and immutable audit trails
+  </text>
+  <text x="700" y="980" class="note" text-anchor="middle">
+    Minimum 6-year retention for audit logs | Row-level security for multi-tenant isolation | Cryptographic hash chaining for integrity
+  </text>
+</svg>

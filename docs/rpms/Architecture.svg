@@ -1,0 +1,265 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 900" width="1400" height="900">
+  <defs>
+    <style>
+      .title { font: bold 36px 'Inter', sans-serif; fill: #1e3a5f; }
+      .subtitle { font: 18px 'Inter', sans-serif; fill: #475569; }
+      .component-box { fill: #ffffff; stroke: #2563eb; stroke-width: 3; rx: 12; }
+      .component-box-critical { fill: #fef2f2; stroke: #dc2626; stroke-width: 3; rx: 12; }
+      .component-box-ai { fill: #f0fdf4; stroke: #16a34a; stroke-width: 3; rx: 12; }
+      .component-box-external { fill: #fef3c7; stroke: #f59e0b; stroke-width: 3; rx: 12; }
+      .component-box-data { fill: #eff6ff; stroke: #3b82f6; stroke-width: 3; rx: 12; }
+      .component-title { font: bold 16px 'Inter', sans-serif; fill: #1e3a5f; }
+      .component-desc { font: 13px 'Inter', sans-serif; fill: #475569; }
+      .component-tech { font: italic 12px 'Inter', sans-serif; fill: #6b7280; }
+      .arrow { stroke: #2563eb; stroke-width: 2.5; fill: none; marker-end: url(#arrowhead); }
+      .arrow-critical { stroke: #dc2626; stroke-width: 3; fill: none; marker-end: url(#arrowhead-red); }
+      .arrow-ai { stroke: #16a34a; stroke-width: 2.5; fill: none; marker-end: url(#arrowhead-green); }
+      .arrow-label { font: 12px 'Inter', sans-serif; fill: #475569; }
+      .layer-label { font: bold 14px 'Inter', sans-serif; fill: #f59e0b; text-transform: uppercase; letter-spacing: 1px; }
+      .layer-bg { fill: #f8fafc; stroke: #e2e8f0; stroke-width: 1; stroke-dasharray: 5,5; rx: 8; }
+      .badge { font: bold 10px 'Inter', sans-serif; fill: #ffffff; }
+      .badge-bg-hipaa { fill: #dc2626; rx: 4; }
+      .badge-bg-ai { fill: #16a34a; rx: 4; }
+      .icon-text { font: bold 20px 'Inter', sans-serif; fill: #2563eb; }
+    </style>
+    <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <polygon points="0 0, 10 3, 0 6" fill="#2563eb" />
+    </marker>
+    <marker id="arrowhead-red" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <polygon points="0 0, 10 3, 0 6" fill="#dc2626" />
+    </marker>
+    <marker id="arrowhead-green" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <polygon points="0 0, 10 3, 0 6" fill="#16a34a" />
+    </marker>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1400" height="900" fill="#ffffff"/>
+
+  <!-- Title -->
+  <text x="700" y="45" class="title" text-anchor="middle">Rophe Patient Management System (RPMS)</text>
+  <text x="700" y="70" class="subtitle" text-anchor="middle">Decoupled React-Based Clinical Service Architecture</text>
+
+  <!-- Layer Labels -->
+  <text x="60" y="130" class="layer-label">Presentation Layer</text>
+  <text x="60" y="340" class="layer-label">Application Layer</text>
+  <text x="60" y="590" class="layer-label">Data Layer</text>
+  <text x="1050" y="130" class="layer-label">External Services</text>
+
+  <!-- Presentation Layer Background -->
+  <rect x="50" y="140" width="950" height="170" class="layer-bg"/>
+
+  <!-- Client Layer - Main Box -->
+  <rect x="80" y="155" width="900" height="140" class="component-box"/>
+
+  <!-- HIPAA Badge -->
+  <rect x="880" y="160" width="90" height="20" class="badge-bg-hipaa"/>
+  <text x="925" y="174" class="badge" text-anchor="middle">HIPAA SECURE</text>
+
+  <text x="530" y="185" class="component-title" text-anchor="middle">Web Client (React Frontend)</text>
+  <text x="530" y="205" class="component-tech" text-anchor="middle">React 19 + TypeScript + Vite + Tailwind CSS + Framer Motion</text>
+
+  <!-- Client Components -->
+  <rect x="100" y="220" width="145" height="60" class="component-box" style="stroke-width: 2;"/>
+  <text x="172" y="245" class="component-desc" text-anchor="middle">Clinical Dashboard</text>
+  <text x="172" y="260" class="component-tech" text-anchor="middle">Patient Census</text>
+
+  <rect x="260" y="220" width="145" height="60" class="component-box" style="stroke-width: 2;"/>
+  <text x="332" y="245" class="component-desc" text-anchor="middle">EHR Viewer</text>
+  <text x="332" y="260" class="component-tech" text-anchor="middle">Chart Management</text>
+
+  <rect x="420" y="220" width="145" height="60" class="component-box-critical" style="stroke-width: 2;"/>
+  <text x="492" y="245" class="component-desc" text-anchor="middle">Vital Monitor</text>
+  <text x="492" y="260" class="component-tech" text-anchor="middle">Real-Time Alerts</text>
+
+  <rect x="580" y="220" width="145" height="60" class="component-box-ai" style="stroke-width: 2;"/>
+  <text x="652" y="245" class="component-desc" text-anchor="middle">AI Console</text>
+  <text x="652" y="260" class="component-tech" text-anchor="middle">Gemini Integration</text>
+
+  <rect x="740" y="220" width="145" height="60" class="component-box" style="stroke-width: 2;"/>
+  <text x="812" y="245" class="component-desc" text-anchor="middle">Telehealth UI</text>
+  <text x="812" y="260" class="component-tech" text-anchor="middle">WebRTC Video</text>
+
+  <!-- Accessibility Badge -->
+  <rect x="900" y="230" width="65" height="40" class="component-box" style="stroke-width: 2;"/>
+  <text x="932" y="252" class="component-desc" text-anchor="middle">A11y</text>
+  <text x="932" y="264" class="component-tech" text-anchor="middle">ARIA 1.2</text>
+
+  <!-- Application Layer Background -->
+  <rect x="50" y="350" width="950" height="200" class="layer-bg"/>
+
+  <!-- API Gateway -->
+  <rect x="80" y="365" width="200" height="170" class="component-box"/>
+  <text x="180" y="395" class="component-title" text-anchor="middle">API Gateway</text>
+  <text x="180" y="415" class="component-tech" text-anchor="middle">Node.js / Express</text>
+  <text x="100" y="445" class="component-desc">Authentication</text>
+  <text x="100" y="465" class="component-desc">Authorization (RBAC)</text>
+  <text x="100" y="485" class="component-desc">Request Routing</text>
+  <text x="100" y="505" class="component-desc">Rate Limiting</text>
+  <text x="100" y="525" class="component-desc">Audit Logging</text>
+
+  <!-- Clinical Intelligence Service -->
+  <rect x="300" y="365" width="200" height="170" class="component-box-ai"/>
+  <rect x="400" y="370" width="90" height="20" class="badge-bg-ai"/>
+  <text x="445" y="384" class="badge" text-anchor="middle">AI POWERED</text>
+  <text x="400" y="410" class="component-title" text-anchor="middle">Clinical Intelligence</text>
+  <text x="400" y="430" class="component-tech" text-anchor="middle">Gemini 3 Pro Preview</text>
+  <text x="320" y="460" class="component-desc">Symptom Analysis</text>
+  <text x="320" y="480" class="component-desc">ICD-10 Suggestions</text>
+  <text x="320" y="500" class="component-desc">Drug Interactions</text>
+  <text x="320" y="520" class="component-desc">Clinical Alerts</text>
+
+  <!-- Safety Watchdog -->
+  <rect x="520" y="365" width="200" height="170" class="component-box-critical"/>
+  <text x="620" y="395" class="component-title" text-anchor="middle">Safety Watchdog</text>
+  <text x="620" y="415" class="component-tech" text-anchor="middle">Real-Time Engine</text>
+  <text x="540" y="445" class="component-desc">Vital Monitoring</text>
+  <text x="540" y="465" class="component-desc">Threshold Rules</text>
+  <text x="540" y="485" class="component-desc">Alert Escalation</text>
+  <text x="540" y="505" class="component-desc">INFO/WARN/CRITICAL</text>
+  <text x="540" y="525" class="component-desc">Nurse Dashboard</text>
+
+  <!-- Telehealth Service -->
+  <rect x="740" y="365" width="200" height="170" class="component-box"/>
+  <text x="840" y="395" class="component-title" text-anchor="middle">Telehealth Service</text>
+  <text x="840" y="415" class="component-tech" text-anchor="middle">WebRTC + TURN/STUN</text>
+  <text x="760" y="445" class="component-desc">P2P Video Calls</text>
+  <text x="760" y="465" class="component-desc">DTLS-SRTP Encryption</text>
+  <text x="760" y="485" class="component-desc">Session Recording</text>
+  <text x="760" y="505" class="component-desc">EHR Attachment</text>
+  <text x="760" y="525" class="component-desc">Virtual Waiting Room</text>
+
+  <!-- EHR Service (smaller) -->
+  <rect x="960" y="365" width="30" height="170" class="component-box"/>
+  <text x="975" y="455" class="component-desc" text-anchor="middle" transform="rotate(-90, 975, 455)">EHR Service</text>
+
+  <!-- Data Layer Background -->
+  <rect x="50" y="600" width="950" height="150" class="layer-bg"/>
+
+  <!-- PostgreSQL Database -->
+  <rect x="80" y="615" width="220" height="120" class="component-box-data"/>
+  <text x="190" y="645" class="component-title" text-anchor="middle">PostgreSQL Database</text>
+  <text x="190" y="665" class="component-tech" text-anchor="middle">Row-Level Security + AES-256</text>
+  <text x="100" y="695" class="component-desc">Patient Demographics</text>
+  <text x="100" y="715" class="component-desc">Clinical Encounters</text>
+
+  <!-- Document Storage -->
+  <rect x="320" y="615" width="200" height="120" class="component-box-data"/>
+  <text x="420" y="645" class="component-title" text-anchor="middle">Document Storage</text>
+  <text x="420" y="665" class="component-tech" text-anchor="middle">Encrypted Blob Storage</text>
+  <text x="340" y="695" class="component-desc">Medical Documents</text>
+  <text x="340" y="715" class="component-desc">Scanned Records</text>
+
+  <!-- Media Storage -->
+  <rect x="540" y="615" width="200" height="120" class="component-box-data"/>
+  <text x="640" y="645" class="component-title" text-anchor="middle">Media Storage</text>
+  <text x="640" y="665" class="component-tech" text-anchor="middle">Secure Video Archive</text>
+  <text x="560" y="695" class="component-desc">Telehealth Recordings</text>
+  <text x="560" y="715" class="component-desc">Consent Records</text>
+
+  <!-- Audit Store -->
+  <rect x="760" y="615" width="220" height="120" class="component-box-critical"/>
+  <text x="870" y="645" class="component-title" text-anchor="middle">Audit Store</text>
+  <text x="870" y="665" class="component-tech" text-anchor="middle">Immutable Append-Only</text>
+  <text x="780" y="695" class="component-desc">Access Logs (6+ years)</text>
+  <text x="780" y="715" class="component-desc">Compliance Audit Trail</text>
+
+  <!-- External Services Layer -->
+  <rect x="1020" y="140" width="350" height="500" class="layer-bg"/>
+
+  <!-- Gemini 3 AI -->
+  <rect x="1040" y="160" width="310" height="130" class="component-box-ai"/>
+  <rect x="1250" y="165" width="90" height="20" class="badge-bg-ai"/>
+  <text x="1295" y="179" class="badge" text-anchor="middle">GEMINI 3</text>
+  <text x="1195" y="195" class="component-title" text-anchor="middle">Google Gemini 3 Pro Preview</text>
+  <text x="1195" y="215" class="component-tech" text-anchor="middle">Clinical AI Intelligence</text>
+  <text x="1060" y="245" class="component-desc">Natural Language Processing</text>
+  <text x="1060" y="265" class="component-desc">Diagnostic Reasoning</text>
+  <text x="1060" y="285" class="component-desc">ICD-10 Code Mapping</text>
+
+  <!-- HL7 FHIR -->
+  <rect x="1040" y="310" width="310" height="100" class="component-box-external"/>
+  <text x="1195" y="340" class="component-title" text-anchor="middle">HL7 FHIR R4 Gateway</text>
+  <text x="1195" y="360" class="component-tech" text-anchor="middle">EHR Interoperability</text>
+  <text x="1060" y="390" class="component-desc">Patient, Encounter, Observation</text>
+
+  <!-- WebRTC Infrastructure -->
+  <rect x="1040" y="430" width="310" height="100" class="component-box-external"/>
+  <text x="1195" y="460" class="component-title" text-anchor="middle">WebRTC Infrastructure</text>
+  <text x="1195" y="480" class="component-tech" text-anchor="middle">TURN/STUN Servers</text>
+  <text x="1060" y="510" class="component-desc">NAT Traversal + Media Relay</text>
+
+  <!-- Identity Provider -->
+  <rect x="1040" y="550" width="310" height="80" class="component-box-external"/>
+  <text x="1195" y="580" class="component-title" text-anchor="middle">Identity Provider</text>
+  <text x="1195" y="600" class="component-tech" text-anchor="middle">OAuth 2.0 / OIDC + MFA</text>
+
+  <!-- Arrows - Client to API Gateway -->
+  <path d="M 530 295 L 180 365" class="arrow"/>
+  <text x="330" y="325" class="arrow-label">REST/HTTPS</text>
+
+  <!-- API Gateway to Services -->
+  <path d="M 280 450 L 300 450" class="arrow"/>
+  <path d="M 280 450 L 520 450" class="arrow"/>
+  <path d="M 280 450 L 740 450" class="arrow"/>
+
+  <!-- Clinical Intelligence to Gemini -->
+  <path d="M 500 400 L 1040 225" class="arrow-ai"/>
+  <text x="770" y="300" class="arrow-label" fill="#16a34a">AI Analysis</text>
+
+  <!-- Safety Watchdog Alert Flow -->
+  <path d="M 620 365 L 620 295" class="arrow-critical"/>
+  <text x="630" y="330" class="arrow-label" fill="#dc2626">CRITICAL</text>
+
+  <!-- Telehealth to WebRTC -->
+  <path d="M 940 480 L 1040 480" class="arrow"/>
+  <text x="980" y="470" class="arrow-label">WebRTC</text>
+
+  <!-- Services to Data Layer -->
+  <path d="M 180 535 L 180 615" class="arrow"/>
+  <path d="M 400 535 L 420 615" class="arrow"/>
+  <path d="M 620 535 L 640 615" class="arrow"/>
+  <path d="M 840 535 L 870 615" class="arrow"/>
+
+  <!-- Data Flow Labels -->
+  <text x="160" y="575" class="arrow-label">Query</text>
+  <text x="405" y="575" class="arrow-label">Store</text>
+  <text x="625" y="575" class="arrow-label">Archive</text>
+  <text x="850" y="575" class="arrow-label">Log</text>
+
+  <!-- API Gateway to Identity Provider -->
+  <path d="M 280 535 L 1040 590" class="arrow"/>
+  <text x="650" y="570" class="arrow-label">Auth/MFA</text>
+
+  <!-- Legend -->
+  <rect x="50" y="770" width="1320" height="110" fill="#f8fafc" stroke="#e2e8f0" rx="8"/>
+  <text x="700" y="795" class="component-title" text-anchor="middle">Architecture Legend</text>
+
+  <rect x="80" y="810" width="25" height="25" class="component-box" style="stroke-width: 2;"/>
+  <text x="115" y="828" class="component-desc">Standard Component</text>
+
+  <rect x="260" y="810" width="25" height="25" class="component-box-critical" style="stroke-width: 2;"/>
+  <text x="295" y="828" class="component-desc">Critical/Alerting</text>
+
+  <rect x="440" y="810" width="25" height="25" class="component-box-ai" style="stroke-width: 2;"/>
+  <text x="475" y="828" class="component-desc">AI-Powered</text>
+
+  <rect x="620" y="810" width="25" height="25" class="component-box-external" style="stroke-width: 2;"/>
+  <text x="655" y="828" class="component-desc">External Service</text>
+
+  <rect x="820" y="810" width="25" height="25" class="component-box-data" style="stroke-width: 2;"/>
+  <text x="855" y="828" class="component-desc">Data Storage</text>
+
+  <line x1="1020" y1="822" x2="1070" y2="822" class="arrow"/>
+  <text x="1080" y="828" class="component-desc">Data Flow</text>
+
+  <line x1="1200" y1="822" x2="1250" y2="822" class="arrow-critical"/>
+  <text x="1260" y="828" class="component-desc">Alert Flow</text>
+
+  <text x="80" y="865" class="component-tech">Browser-native hardware for encrypted media processing | Google Gemini for clinical reasoning | HIPAA-compliant architecture</text>
+
+  <!-- Footer -->
+  <text x="700" y="895" class="component-tech" text-anchor="middle" style="font-style: italic;">
+    Figure 1: RPMS High-Level System Architecture - Decoupled React-Based Clinical Service Architecture
+  </text>
+</svg>
