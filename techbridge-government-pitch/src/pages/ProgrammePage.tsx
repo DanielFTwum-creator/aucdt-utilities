@@ -215,28 +215,89 @@ export default function ProgrammePage() {
         </div>
       </section>
 
+      {/* Section 2 + 7: National Context & Opportunity */}
       <section className="py-20 bg-techbridge-light">
         <div className="max-w-6xl mx-auto px-6">
-          <motion.div {...inView()} className="max-w-3xl">
+          <motion.div {...inView()} className="max-w-3xl mb-14">
             <h2 className="font-serif text-3xl md:text-4xl font-bold text-techbridge-navy mb-5">
-              What is the One Million Coders Programme?
+              Background &amp; National Context
             </h2>
             <p className="text-lg text-gray-700 leading-relaxed mb-4">
-              The Government of Ghana has committed to building a digitally skilled workforce
-              capable of driving the country's economic transformation. The One Million Coders
-              Programme is a flagship national initiative designed to equip young Ghanaians —
-              particularly at tertiary level — with critical coding, cloud, data, and artificial
-              intelligence skills demanded by the modern global economy.
+              Ghana faces a structural digital skills deficit at a pivotal moment in its economic
+              development. With a youth population of over 15 million and 46% of 15–35 year-olds
+              classified as unemployed or underemployed, the inability to access formal technology
+              training represents both a crisis and an opportunity.
             </p>
             <p className="text-lg text-gray-700 leading-relaxed">
-              Techbridge proposes to implement this programme through a national experiential
-              learning ecosystem built on real industry tools, verified credentials, and direct
-              pathways to employment. Rather than passive instruction, every student learns by
-              doing — building genuine projects, earning portable certifications, and entering a
-              structured internship and hiring pipeline backed by Techbridge's global technology
-              partner network.
+              The Government of Ghana's One Million Coders Programme is a flagship national
+              initiative designed to equip young Ghanaians — particularly at tertiary level — with
+              critical coding, cloud, data, and AI skills demanded by the global digital economy.
+              Techbridge proposes to implement this programme through a proven, locally-operated
+              experiential learning ecosystem already serving 15,000+ active learners.
             </p>
           </motion.div>
+
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            {[
+              { stat: '15M+', label: 'Youth Population', sub: 'Ages 15–35 in Ghana' },
+              { stat: '46%', label: 'Youth Underemployment', sub: 'Formal sector skills gap' },
+              { stat: '3.2%', label: 'GDP Uplift Potential', sub: 'From digital skills investment' },
+              { stat: '$4.2B', label: 'Digital Economy Target', sub: 'Ghana 2030 agenda' },
+            ].map((item, i) => (
+              <motion.div
+                key={item.label}
+                {...inView(i * 0.08)}
+                className="bg-white rounded-2xl border border-gray-200 p-6 text-center shadow-sm"
+              >
+                <div className="font-serif text-4xl font-bold text-techbridge-blue mb-1">{item.stat}</div>
+                <div className="font-semibold text-techbridge-navy text-sm mb-1">{item.label}</div>
+                <div className="text-gray-500 text-xs">{item.sub}</div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Section 7: National Opportunity */}
+      <section className="py-16 bg-ghana-green">
+        <div className="max-w-6xl mx-auto px-6">
+          <motion.div {...inView()} className="text-center mb-10">
+            <h2 className="font-serif text-3xl md:text-4xl font-bold text-white mb-3">
+              The National Opportunity for Ghana's Digital Workforce
+            </h2>
+            <p className="text-green-100 max-w-2xl mx-auto text-lg">
+              Training one million Ghanaians in digital skills is not just a social policy — it
+              is the single highest-return economic investment available to Ghana today.
+            </p>
+          </motion.div>
+          <div className="grid sm:grid-cols-3 gap-6">
+            {[
+              {
+                title: 'Employment Creation',
+                body: 'Every 100 software developers trained creates an estimated 40 additional indirect jobs in the Ghanaian economy through supplier and demand effects.',
+                accent: 'border-techbridge-gold',
+              },
+              {
+                title: 'Export Revenue',
+                body: 'Ghana\'s technology services export market could reach $1.2B annually by 2030 if a skilled workforce pipeline is established at national scale now.',
+                accent: 'border-white',
+              },
+              {
+                title: 'Import Substitution',
+                body: 'Ghana currently spends $800M+ annually on foreign technology services. A domestically-skilled workforce recaptures this spend inside the Ghanaian economy.',
+                accent: 'border-techbridge-gold',
+              },
+            ].map((card, i) => (
+              <motion.div
+                key={card.title}
+                {...inView(i * 0.1)}
+                className={`bg-white/10 border-t-4 ${card.accent} rounded-xl p-7 text-white`}
+              >
+                <h3 className="font-serif text-xl font-bold mb-3">{card.title}</h3>
+                <p className="text-green-100 text-sm leading-relaxed">{card.body}</p>
+              </motion.div>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -315,7 +376,97 @@ export default function ProgrammePage() {
         </div>
       </section>
 
+      {/* Section 11 + 13: Scope of Work & Project Lifecycle */}
       <section className="py-20 bg-techbridge-light">
+        <div className="max-w-6xl mx-auto px-6">
+          <motion.div {...inView()} className="text-center mb-14">
+            <h2 className="font-serif text-3xl md:text-4xl font-bold text-techbridge-navy mb-3">
+              Scope of Work &amp; Project Lifecycle
+            </h2>
+            <p className="text-gray-500 max-w-2xl mx-auto">
+              Each learner follows a structured project lifecycle — from onboarding through to
+              employer-ready certification. Every stage produces a measurable, verified outcome.
+            </p>
+          </motion.div>
+
+          <div className="relative">
+            {/* Connecting line */}
+            <div className="hidden lg:block absolute top-12 left-[10%] right-[10%] h-0.5 bg-gradient-to-r from-techbridge-gold via-techbridge-green to-techbridge-blue" />
+
+            <div className="grid grid-cols-2 lg:grid-cols-5 gap-4">
+              {[
+                {
+                  phase: '01',
+                  title: 'Enrolment & Track Selection',
+                  detail: 'Student registers via techbridge.edu.gh, selects technology track, and completes diagnostic assessment to place into appropriate cohort.',
+                  colour: 'bg-techbridge-gold',
+                  textAccent: 'text-techbridge-gold',
+                },
+                {
+                  phase: '02',
+                  title: 'Foundations Module',
+                  detail: 'Core concepts, tools setup, version control (GitHub), and collaborative workflow training. Assessed via hands-on practical tasks.',
+                  colour: 'bg-techbridge-blue',
+                  textAccent: 'text-techbridge-blue',
+                },
+                {
+                  phase: '03',
+                  title: 'Industry Project Sprint',
+                  detail: 'Cohort works on a real industry brief — sourced from Techbridge employer partners — under the guidance of a sector mentor.',
+                  colour: 'bg-ghana-green',
+                  textAccent: 'text-ghana-green',
+                },
+                {
+                  phase: '04',
+                  title: 'Assessment & Credential',
+                  detail: 'External assessors evaluate project deliverables. Successful learners receive a Techbridge Skill Wallet badge and certification record.',
+                  colour: 'bg-academic-amber',
+                  textAccent: 'text-academic-amber',
+                },
+                {
+                  phase: '05',
+                  title: 'Placement Pipeline',
+                  detail: 'Graduates enter the Techbridge employer matching algorithm — connected to internship openings, graduate roles, and freelance opportunities.',
+                  colour: 'bg-ghana-red',
+                  textAccent: 'text-ghana-red',
+                },
+              ].map((phase, i) => (
+                <motion.div
+                  key={phase.phase}
+                  {...inView(i * 0.1)}
+                  className="relative flex flex-col items-center text-center"
+                >
+                  <div className={`w-12 h-12 rounded-full ${phase.colour} flex items-center justify-center mb-4 shadow-lg z-10`}>
+                    <span className="text-white font-bold text-sm">{phase.phase}</span>
+                  </div>
+                  <h4 className={`font-semibold ${phase.textAccent} text-sm mb-2 leading-tight`}>{phase.title}</h4>
+                  <p className="text-gray-500 text-xs leading-relaxed">{phase.detail}</p>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+
+          <motion.div
+            {...inView(0.2)}
+            className="mt-12 bg-white rounded-2xl border border-gray-200 p-7 shadow-sm"
+          >
+            <div className="grid sm:grid-cols-3 gap-6 text-center">
+              {[
+                { label: 'Programme Duration', value: '12–16 weeks per cohort' },
+                { label: 'Cohort Cadence', value: '4 intakes per year nationally' },
+                { label: 'Delivery Mode', value: 'Blended online + on-campus labs' },
+              ].map((item) => (
+                <div key={item.label}>
+                  <div className="font-serif text-xl font-bold text-techbridge-navy mb-1">{item.value}</div>
+                  <div className="text-gray-500 text-sm">{item.label}</div>
+                </div>
+              ))}
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      <section className="py-20 bg-white">
         <div className="max-w-6xl mx-auto px-6">
           <motion.div {...inView()} className="text-center mb-12">
             <h2 className="font-serif text-3xl md:text-4xl font-bold text-techbridge-navy mb-3">
