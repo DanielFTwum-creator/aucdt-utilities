@@ -9,6 +9,7 @@ import TrackRecordPage from './pages/TrackRecordPage'
 import ImpactPage from './pages/ImpactPage'
 import ImplementationPage from './pages/ImplementationPage'
 import ContactPage from './pages/ContactPage'
+import ExecutiveSummaryPage from './pages/ExecutiveSummaryPage'
 
 export default function App() {
   return (
@@ -25,6 +26,7 @@ export default function App() {
             <Route path="/impact" element={<ImpactPage />} />
             <Route path="/implementation" element={<ImplementationPage />} />
             <Route path="/contact" element={<ContactPage />} />
+            <Route path="/executive-summary" element={<ExecutiveSummaryPage />} />
           </Routes>
         </main>
         <Footer />

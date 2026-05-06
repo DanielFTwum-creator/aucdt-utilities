@@ -25,3 +25,39 @@
   --font-family-serif: 'Crimson Text', Georgia, serif;
   --font-family-sans: Inter, system-ui, sans-serif;
 }
+
+/* ── Print styles ───────────────────────────────────────────── */
+@media print {
+  /* Hide site chrome on ALL pages when printing */
+  nav,
+  footer,
+  .no-print {
+    display: none !important;
+  }
+
+  body {
+    margin: 0;
+    padding: 0;
+    background: white !important;
+  }
+
+  /* Executive Summary page layout */
+  .exec-page {
+    page-break-after: always;
+    break-after: page;
+    box-shadow: none !important;
+    margin: 0 !important;
+    border-radius: 0 !important;
+  }
+
+  .exec-page:last-child {
+    page-break-after: avoid;
+    break-after: avoid;
+  }
+
+  .exec-doc {
+    padding: 0 !important;
+    background: white !important;
+  }
+}
+
