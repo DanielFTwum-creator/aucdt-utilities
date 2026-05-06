@@ -1,0 +1,121 @@
+========================================
+TUC - Dockerfile Generation Script
+========================================
+
+Scanning for apps without Dockerfiles...
+
+[1;33m⊘[0m Skipped (Dockerfile exists): 6r-product-design-workshop-portal/
+[1;33m⊘[0m Skipped (Dockerfile exists): academic-integrity-detector/
+[1;33m⊘[0m Skipped (Dockerfile exists): academic-performance-app/
+[1;33m⊘[0m Skipped (Dockerfile exists): accommodation-management/
+[1;33m⊘[0m Skipped (Dockerfile exists): adaptive-curriculum-engine/
+[1;33m⊘[0m Skipped (Dockerfile exists): agent-collaboration-framework/
+[1;33m⊘[0m Skipped (Dockerfile exists): agenticai-masterclass/
+[1;33m⊘[0m Skipped (Dockerfile exists): ai-@-techbridge/
+[1;33m⊘[0m Skipped (no package.json): ai_facebook_bot/
+[1;33m⊘[0m Skipped (Dockerfile exists): ai-code-reviewer/
+[1;33m⊘[0m Skipped (no package.json): ai-doc-assistant/
+[1;33m⊘[0m Skipped (Dockerfile exists): ai-exam-generator/
+[1;33m⊘[0m Skipped (Dockerfile exists): ai-explainability-console/
+[1;33m⊘[0m Skipped (Dockerfile exists): ai-governance-analytics-hub/
+[1;33m⊘[0m Skipped (Dockerfile exists): ai-knowledge-compression-lab/
+[1;33m⊘[0m Skipped (Dockerfile exists): ai-legal-clause-analyzer/
+[1;33m⊘[0m Skipped (Dockerfile exists): ai-log-pattern-analyzer/
+[1;33m⊘[0m Skipped (Dockerfile exists): ai-marketplace-engine/
+[1;33m⊘[0m Skipped (Dockerfile exists): ai-music-arrangement-assistant/
+[1;33m⊘[0m Skipped (Dockerfile exists): ai-portfolio-demonstrator/
+[1;33m⊘[0m Skipped (Dockerfile exists): ai-resource-arbitrage-engine/
+[1;33m⊘[0m Skipped (Dockerfile exists): ai-risk-rebalancing-engine/
+[1;33m⊘[0m Skipped (Dockerfile exists): ai-skill-transfer-engine/
+[1;33m⊘[0m Skipped (Dockerfile exists): ai-strategy-recommender/
+[1;33m⊘[0m Skipped (Dockerfile exists): ai-studio-directives/
+[1;33m⊘[0m Skipped (Dockerfile exists): ai-transformation-framework/
+[1;33m⊘[0m Skipped (no package.json): ai-utilities/
+[1;33m⊘[0m Skipped (Dockerfile exists): alumni-network/
+[1;33m⊘[0m Skipped (Dockerfile exists): analytics-refactor/
+[1;33m⊘[0m Skipped (Dockerfile exists): ananse-cartoon-generator/
+[1;33m⊘[0m Skipped (Dockerfile exists): api-monetization-portal/
+[1;33m⊘[0m Skipped (no package.json): applicant-dashboard/
+[1;33m⊘[0m Skipped (Dockerfile exists): aurelia-v4---working-with-aurelia/
+[1;33m⊘[0m Skipped (Dockerfile exists): automated-compliance-monitor/
+[1;33m⊘[0m Skipped (Dockerfile exists): automated-rollback-ai/
+[1;33m⊘[0m Skipped (Dockerfile exists): autonomous-audit-engine/
+[1;33m⊘[0m Skipped (Dockerfile exists): autonomous-budget-allocator/
+[1;33m⊘[0m Skipped (Dockerfile exists): autonomous-compliance-enforcer/
+[1;33m⊘[0m Skipped (Dockerfile exists): autonomous-decision-optimizer/
+[1;33m⊘[0m Skipped (Dockerfile exists): autonomous-incident-resolver/
+[1;33m⊘[0m Skipped (Dockerfile exists): autonomous-refactoring-ai/
+[1;33m⊘[0m Skipped (Dockerfile exists): autonomous-robotics-coordination-engine/
+[1;33m⊘[0m Skipped (Dockerfile exists): autonomous-system-governance-core/
+[1;33m⊘[0m Skipped (Dockerfile exists): auto-scaling-policy-engine/
+[1;33m⊘[0m Skipped (Dockerfile exists): backend/
+[1;33m⊘[0m Skipped (Dockerfile exists): bias-detection-engine/
+[1;33m⊘[0m Skipped (Dockerfile exists): bp-bulletproof-directive-v22012026-1326/
+[1;33m⊘[0m Skipped (Dockerfile exists): brainiac-challenge/
+[1;33m⊘[0m Skipped (Dockerfile exists): brand-guideline-checker/
+[1;33m⊘[0m Skipped (Dockerfile exists): brand-narrative-synthesizer/
+[1;33m⊘[0m Skipped (no package.json): campus-disk-analyser/
+[1;33m⊘[0m Skipped (Dockerfile exists): canary-release-manager/
+[1;33m⊘[0m Skipped (Dockerfile exists): carbon-credit-tracker/
+[1;33m⊘[0m Skipped (Dockerfile exists): career-services/
+[1;33m⊘[0m Skipped (Dockerfile exists): cinematic-triptych-generator/
+[1;33m⊘[0m Skipped (Dockerfile exists): city-digital-twin/
+[1;33m⊘[0m Skipped (Dockerfile exists): ckt-utas-modern-website/
+[1;33m⊘[0m Skipped (Dockerfile exists): class4-digital-learning/
+[1;33m⊘[0m Skipped (Dockerfile exists): climate-impact-modeler/
+[1;33m⊘[0m Skipped (Dockerfile exists): climate-impact-twin/
+[1;33m⊘[0m Skipped (Dockerfile exists): cognitive-load-monitor/
+[1;33m⊘[0m Skipped (Dockerfile exists): commodity-price-forecast-engine/
+[1;33m⊘[0m Skipped (Dockerfile exists): community-plates.v1/
+[1;33m⊘[0m Skipped (Dockerfile exists): complaint-resolution-system/
+[1;33m⊘[0m Skipped (Dockerfile exists): container-health-auditor (2)/
+[1;33m⊘[0m Skipped (no package.json): counselor-pro/
+[1;33m⊘[0m Skipped (Dockerfile exists): countdown-timer/
+[1;33m⊘[0m Skipped (Dockerfile exists): creativity-amplifier/
+[1;33m⊘[0m Skipped (Dockerfile exists): crisis-simulation-ai/
+[1;33m⊘[0m Skipped (Dockerfile exists): crop-yield-predictor/
+[1;33m⊘[0m Skipped (Dockerfile exists): cross-app-api-gateway/
+[1;33m⊘[0m Skipped (Dockerfile exists): cross-app-data-fabric/
+[1;33m⊘[0m Skipped (Dockerfile exists): cross-app-performance-synthesizer/
+[1;33m⊘[0m Skipped (Dockerfile exists): cross-app-search/
+[1;33m⊘[0m Skipped (Dockerfile exists): cross-border-trade-optimizer/
+[1;33m⊘[0m Skipped (Dockerfile exists): cross-industry-pattern-miner/
+[1;33m⊘[0m Skipped (Dockerfile exists): cross-system-stability-controller/
+[1;33m⊘[0m Skipped (no package.json): css-checker/
+[1;33m⊘[0m Skipped (Dockerfile exists): cyber-threat-landscape-analyzer/
+[1;33m⊘[0m Skipped (Dockerfile exists): dadaist-concert-visualizer/
+[1;33m⊘[0m Skipped (no package.json): daddylumba/
+[1;33m⊘[0m Skipped (Dockerfile exists): data-anonymization-engine/
+[1;33m⊘[0m Skipped (Dockerfile exists): data-lineage-tracker/
+[1;33m⊘[0m Skipped (Dockerfile exists): decision-confidence-estimator/
+[1;33m⊘[0m Skipped (Dockerfile exists): dependency-graph-visualizer/
+[1;33m⊘[0m Skipped (Dockerfile exists): deployment-drift-detector/
+[1;33m⊘[0m Skipped (Dockerfile exists): dictation-app/
+[1;33m⊘[0m Skipped (Dockerfile exists): digital-identity-verifier/
+[1;33m⊘[0m Skipped (Dockerfile exists): digital-twin-builder/
+[1;33m⊘[0m Skipped (Dockerfile exists): directive-workflow/
+[1;33m⊘[0m Skipped (Dockerfile exists): disaster-preparedness-simulator/
+[1;33m⊘[0m Skipped (Dockerfile exists): disaster-response-allocator/
+[1;33m⊘[0m Skipped (Dockerfile exists): dns-copy-utility/
+[1;33m⊘[0m Skipped (Dockerfile exists): docujudge_202624502_1111/
+[1;33m⊘[0m Skipped (no package.json): doculatex/
+[1;33m⊘[0m Skipped (Dockerfile exists): drone-fleet-intelligence-manager/
+[1;33m⊘[0m Skipped (Dockerfile exists): drone-light-show-simulator/
+[1;33m⊘[0m Skipped (Dockerfile exists): drone-showcase/
+[1;33m⊘[0m Skipped (Dockerfile exists): dynamic-policy-adjustment-engine/
+[1;33m⊘[0m Skipped (Dockerfile exists): edge-deployment-manager/
+[1;33m⊘[0m Skipped (no package.json): educational-resources-library/
+[1;33m⊘[0m Skipped (Dockerfile exists): election-sentiment-analyzer/
+
+========================================
+Dockerfile Generation Complete
+========================================
+
+Summary:
+  Total apps scanned:    102
+  Dockerfiles generated: 0
+  Skipped:               102
+  Errors:                0
+
+Log saved to: dockerfile-generation.log
+
