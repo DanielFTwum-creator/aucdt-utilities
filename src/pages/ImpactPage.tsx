@@ -11,7 +11,7 @@ const fadeUp = {
   visible: (i: number) => ({
     opacity: 1,
     y: 0,
-    transition: { delay: i * 0.1, duration: 0.5, ease: 'easeOut' },
+    transition: { delay: i * 0.1, duration: 0.5, ease: 'easeOut' as const },
   }),
 }
 
@@ -175,7 +175,7 @@ export default function ImpactPage() {
               <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
               <XAxis dataKey="year" tick={{ fontFamily: 'Inter, sans-serif', fontSize: 13 }} />
               <YAxis tick={{ fontFamily: 'Inter, sans-serif', fontSize: 13 }} tickFormatter={(v) => v.toLocaleString()} />
-              <Tooltip formatter={(v: number) => v.toLocaleString()} />
+              <Tooltip formatter={(v) => (typeof v === 'number' ? v.toLocaleString() : '')} />
               <Line
                 type="monotone"
                 dataKey="students"
@@ -201,7 +201,7 @@ export default function ImpactPage() {
                 interval={0}
               />
               <YAxis tick={{ fontFamily: 'Inter, sans-serif', fontSize: 12 }} tickFormatter={(v) => v.toLocaleString()} />
-              <Tooltip formatter={(v: number) => v.toLocaleString()} />
+              <Tooltip formatter={(v) => (typeof v === 'number' ? v.toLocaleString() : '')} />
               <Bar dataKey="students" fill="#1a4b8c" radius={[4, 4, 0, 0]} name="Students" />
             </BarChart>
           </ResponsiveContainer>
@@ -225,7 +225,7 @@ export default function ImpactPage() {
                     <Cell key={i} fill={programmeColors[i]} />
                   ))}
                 </Pie>
-                <Tooltip formatter={(v: number) => v.toLocaleString()} />
+                <Tooltip formatter={(v) => (typeof v === 'number' ? v.toLocaleString() : '')} />
               </PieChart>
             </ResponsiveContainer>
             <div className="flex flex-wrap gap-3 mt-4 justify-center">
@@ -244,7 +244,7 @@ export default function ImpactPage() {
                 <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" horizontal={false} />
                 <XAxis type="number" tick={{ fontFamily: 'Inter, sans-serif', fontSize: 12 }} unit="%" domain={[0, 40]} />
                 <YAxis dataKey="range" type="category" tick={{ fontFamily: 'Inter, sans-serif', fontSize: 12 }} width={120} />
-                <Tooltip formatter={(v: number) => `${v}%`} />
+                <Tooltip formatter={(v) => (typeof v === 'number' ? `${v}%` : '')} />
                 <Bar dataKey="pct" fill="#006B3F" radius={[0, 4, 4, 0]} name="Graduates %" />
               </BarChart>
             </ResponsiveContainer>
