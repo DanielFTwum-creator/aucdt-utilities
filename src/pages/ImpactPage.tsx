@@ -218,7 +218,7 @@ export default function ImpactPage() {
                   cx="50%"
                   cy="50%"
                   outerRadius={110}
-                  label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                  label={({ name, percent }) => `${name} ${((percent ?? 0) * 100).toFixed(0)}%`}
                   labelLine={true}
                 >
                   {programmeData.map((_, i) => (
@@ -303,7 +303,7 @@ export default function ImpactPage() {
               <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
               <XAxis dataKey="year" tick={{ fontFamily: 'Inter, sans-serif', fontSize: 13 }} />
               <YAxis tick={{ fontFamily: 'Inter, sans-serif', fontSize: 12 }} tickFormatter={(v) => (v >= 1000000 ? `${(v / 1000000).toFixed(1)}M` : v >= 1000 ? `${(v / 1000).toFixed(0)}k` : v)} />
-              <Tooltip formatter={(v: number) => v.toLocaleString()} />
+              <Tooltip formatter={(v) => (typeof v === 'number' ? v.toLocaleString() : '')} />
               <Legend />
               <Bar dataKey="enrolled" name="Enrolled" stackId="a" fill="#1a4b8c" radius={[0, 0, 0, 0]} />
               <Bar dataKey="graduated" name="Graduated" stackId="b" fill="#006B3F" />
