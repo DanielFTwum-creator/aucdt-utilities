@@ -14,7 +14,8 @@
     "test": "vitest",
     "test:watch": "vitest --watch",
     "test:ui": "vitest --ui",
-    "test:coverage": "vitest --coverage"
+    "test:coverage": "vitest --coverage",
+    "export-pdf": "pnpm run build && node scripts/export-pdf.js"
   },
   "dependencies": {
     "axios": "^1.13.2",
@@ -36,7 +37,9 @@
     "@vitest/coverage-v8": "^4.0.13",
     "autoprefixer": "^10.4.22",
     "jsdom": "^27.2.0",
+    "pdf-lib": "^1.17.1",
     "postcss": "^8.5.6",
+    "puppeteer": "^24.43.0",
     "tailwindcss": "^4.1.17",
     "typescript": "^5.9.3",
     "vite": "^7.2.4",
