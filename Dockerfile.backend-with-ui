@@ -1,0 +1,51 @@
+# Multi-stage Dockerfile for Backend APIs with Admin UI
+# Serves both Express API and static admin interface
+
+# Stage 1: Build
+FROM node:24-alpine AS build
+
+# Install pnpm
+RUN corepack enable && corepack prepare pnpm@latest --activate
+
+WORKDIR /app
+
+# Copy package files
+COPY package*.json ./
+COPY pnpm-lock.yaml* ./
+
+# Install dependencies
+RUN pnpm install --frozen-lockfile --prod
+
+# Copy source code
+COPY . .
+
+# Build if TypeScript
+RUN if [ -f "tsconfig.json" ]; then pnpm run build; fi
+
+# Stage 2: Production
+FROM node:24-alpine
+
+# Install pnpm for serve
+RUN corepack enable && corepack prepare pnpm@latest --activate
+
+WORKDIR /app
+
+# Install serve for static files
+RUN pnpm add -g serve
+
+# Copy node_modules and built files
+COPY --from=build /app/node_modules ./node_modules
+COPY --from=build /app/dist ./dist
+COPY --from=build /app/src ./src
+COPY --from=build /app/public ./public
+COPY --from=build /app/package*.json ./
+
+# Expose port
+EXPOSE 3000
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
+  CMD node -e "require('http').get('http://localhost:3000/health', (r) => {process.exit(r.statusCode === 200 ? 0 : 1)})"
+
+# Start both API server and serve static UI
+CMD ["sh", "-c", "node dist/server.js || node src/server.js || node src/index.js"]
