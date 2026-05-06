@@ -15,20 +15,22 @@ import {
   Users,
 } from 'lucide-react'
 
-function fadeUpProps(delay: number = 0) {
+const EASE = 'easeOut' as const
+
+function inView(delay: number = 0) {
   return {
-    initial: { opacity: 0, y: 32 },
+    initial: { opacity: 0, y: 28 },
     whileInView: { opacity: 1, y: 0 },
-    viewport: { once: true as const },
-    transition: { duration: 0.55, delay, ease: 'easeOut' as const },
+    viewport: { once: true },
+    transition: { duration: 0.55, delay, ease: EASE },
   }
 }
 
-function fadeUpAnimate(delay: number = 0) {
+function onMount(delay: number = 0) {
   return {
-    initial: { opacity: 0, y: 32 },
+    initial: { opacity: 0, y: 28 },
     animate: { opacity: 1, y: 0 },
-    transition: { duration: 0.55, delay, ease: 'easeOut' as const },
+    transition: { duration: 0.55, delay, ease: EASE },
   }
 }
 
@@ -138,13 +140,15 @@ const partners = [
 ]
 
 const experientialFeatures = [
-  'Real project work on live industry briefs and open-source contributions',
-  'Industry mentors from Ghana\'s leading tech companies and global firms',
+  "Real project work on live industry briefs and open-source contributions",
+  "Industry mentors from Ghana's leading tech companies and global firms",
   'Collaborative development environments mirroring professional workflows',
   'Portfolio-building assessments that produce tangible, shareable artefacts',
   'Internship placement pipeline with vetted employer partners',
   'Peer cohort system fostering collaboration, accountability, and community',
 ]
+
+const skillWalletItems = ['Project Portfolio', 'Certification Badge', 'Employer Match Score', 'Internship Placement']
 
 export default function ProgrammePage() {
   return (
@@ -158,14 +162,14 @@ export default function ProgrammePage() {
             <div className="flex-1 bg-ghana-green" />
           </div>
         </div>
-        <div className="absolute inset-0 opacity-5 pointer-events-none"
-          style={{ backgroundImage: 'radial-gradient(circle at 70% 40%, #FCD116 0%, transparent 60%)' }} />
+        <div
+          className="absolute inset-0 opacity-5 pointer-events-none"
+          style={{ backgroundImage: 'radial-gradient(circle at 70% 40%, #FCD116 0%, transparent 60%)' }}
+        />
 
         <div className="relative max-w-6xl mx-auto px-6 pt-28 pb-24">
           <motion.div
-            initial="hidden"
-            animate="visible"
-            variants={fadeUp}
+            {...onMount(0)}
             className="inline-flex items-center gap-2 mb-6 px-4 py-2 rounded-full border border-techbridge-gold/40 bg-techbridge-gold/10"
           >
             <span className="w-2 h-2 rounded-full bg-techbridge-gold animate-pulse" />
@@ -175,10 +179,7 @@ export default function ProgrammePage() {
           </motion.div>
 
           <motion.h1
-            custom={1}
-            initial="hidden"
-            animate="visible"
-            variants={fadeUp}
+            {...onMount(0.1)}
             className="font-serif text-4xl md:text-6xl font-bold text-white leading-tight max-w-4xl mb-6"
           >
             The One Million Coders Programme
@@ -186,10 +187,7 @@ export default function ProgrammePage() {
           </motion.h1>
 
           <motion.p
-            custom={2}
-            initial="hidden"
-            animate="visible"
-            variants={fadeUp}
+            {...onMount(0.2)}
             className="text-lg md:text-xl text-blue-100 max-w-2xl leading-relaxed mb-10"
           >
             Ghana's national digital skills initiative, implemented through Techbridge's
@@ -198,10 +196,7 @@ export default function ProgrammePage() {
           </motion.p>
 
           <motion.div
-            custom={3}
-            initial="hidden"
-            animate="visible"
-            variants={fadeUp}
+            {...onMount(0.3)}
             className="flex flex-col sm:flex-row gap-4"
           >
             <Link
@@ -222,13 +217,7 @@ export default function ProgrammePage() {
 
       <section className="py-20 bg-techbridge-light">
         <div className="max-w-6xl mx-auto px-6">
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={fadeUp}
-            className="max-w-3xl"
-          >
+          <motion.div {...inView()} className="max-w-3xl">
             <h2 className="font-serif text-3xl md:text-4xl font-bold text-techbridge-navy mb-5">
               What is the One Million Coders Programme?
             </h2>
@@ -253,13 +242,7 @@ export default function ProgrammePage() {
 
       <section className="py-20 bg-white">
         <div className="max-w-6xl mx-auto px-6">
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={fadeUp}
-            className="text-center mb-14"
-          >
+          <motion.div {...inView()} className="text-center mb-14">
             <h2 className="font-serif text-3xl md:text-4xl font-bold text-techbridge-navy mb-3">
               The 4 Core Technology Tracks
             </h2>
@@ -275,11 +258,7 @@ export default function ProgrammePage() {
               return (
                 <motion.div
                   key={track.title}
-                  custom={i}
-                  initial="hidden"
-                  whileInView="visible"
-                  viewport={{ once: true }}
-                  variants={fadeUp}
+                  {...inView(i * 0.08)}
                   className="flex gap-5 p-7 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow bg-white"
                 >
                   <div className={`shrink-0 w-12 h-12 rounded-xl ${track.accent} flex items-center justify-center`}>
@@ -298,13 +277,7 @@ export default function ProgrammePage() {
 
       <section className="py-20 bg-techbridge-navy">
         <div className="max-w-6xl mx-auto px-6">
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={fadeUp}
-            className="text-center mb-16"
-          >
+          <motion.div {...inView()} className="text-center mb-16">
             <h2 className="font-serif text-3xl md:text-4xl font-bold text-white mb-3">
               The Experiential Learning Model
             </h2>
@@ -322,11 +295,7 @@ export default function ProgrammePage() {
               return (
                 <motion.div
                   key={step.title}
-                  custom={i}
-                  initial="hidden"
-                  whileInView="visible"
-                  viewport={{ once: true }}
-                  variants={fadeUp}
+                  {...inView(i * 0.1)}
                   className="relative text-center"
                 >
                   <div className="relative inline-flex items-center justify-center w-20 h-20 rounded-full bg-techbridge-blue border-2 border-techbridge-gold mb-6">
@@ -348,13 +317,7 @@ export default function ProgrammePage() {
 
       <section className="py-20 bg-techbridge-light">
         <div className="max-w-6xl mx-auto px-6">
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={fadeUp}
-            className="text-center mb-12"
-          >
+          <motion.div {...inView()} className="text-center mb-12">
             <h2 className="font-serif text-3xl md:text-4xl font-bold text-techbridge-navy mb-3">
               Partner University Coverage
             </h2>
@@ -365,10 +328,7 @@ export default function ProgrammePage() {
           </motion.div>
 
           <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={fadeUp}
+            {...inView(0.05)}
             className="bg-white rounded-2xl border border-gray-200 shadow-sm p-8 mb-8"
           >
             <div className="flex items-center gap-3 mb-6">
@@ -382,11 +342,7 @@ export default function ProgrammePage() {
               {regions.map((region, i) => (
                 <motion.div
                   key={region.name}
-                  custom={i}
-                  initial="hidden"
-                  whileInView="visible"
-                  viewport={{ once: true }}
-                  variants={fadeUp}
+                  {...inView(i * 0.06)}
                   className="p-4 rounded-xl bg-techbridge-light border border-techbridge-blue/10 text-center"
                 >
                   <div className="text-2xl font-bold text-techbridge-blue mb-1">
@@ -403,13 +359,7 @@ export default function ProgrammePage() {
 
       <section className="py-20 bg-white">
         <div className="max-w-6xl mx-auto px-6">
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={fadeUp}
-            className="text-center mb-14"
-          >
+          <motion.div {...inView()} className="text-center mb-14">
             <h2 className="font-serif text-3xl md:text-4xl font-bold text-techbridge-navy mb-3">
               Programme Targets
             </h2>
@@ -422,11 +372,7 @@ export default function ProgrammePage() {
             {targets.map((target, i) => (
               <motion.div
                 key={target.year}
-                custom={i}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true }}
-                variants={fadeUp}
+                {...inView(i * 0.1)}
                 className={`rounded-2xl border-2 ${target.colour} ${target.bg} p-7 text-center`}
               >
                 <div className="text-sm font-semibold text-gray-500 uppercase tracking-widest mb-3">
@@ -444,10 +390,7 @@ export default function ProgrammePage() {
           </div>
 
           <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={fadeUp}
+            {...inView(0.1)}
             className="mt-8 flex items-center gap-3 justify-center"
           >
             <Target size={18} className="text-ghana-red" />
@@ -460,13 +403,7 @@ export default function ProgrammePage() {
 
       <section className="py-20 bg-techbridge-navy">
         <div className="max-w-6xl mx-auto px-6">
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={fadeUp}
-            className="text-center mb-12"
-          >
+          <motion.div {...inView()} className="text-center mb-12">
             <h2 className="font-serif text-3xl md:text-4xl font-bold text-white mb-3">
               Technology Partner Ecosystem
             </h2>
@@ -480,11 +417,7 @@ export default function ProgrammePage() {
             {partners.map((partner, i) => (
               <motion.div
                 key={partner.name}
-                custom={i}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true }}
-                variants={fadeUp}
+                {...inView(i * 0.08)}
                 className={`${partner.bg} ${partner.text} px-6 py-3 rounded-full font-semibold text-sm shadow-md`}
               >
                 {partner.name}
@@ -493,10 +426,7 @@ export default function ProgrammePage() {
           </div>
 
           <motion.p
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={fadeUp}
+            {...inView(0.1)}
             className="text-center text-blue-300 text-sm"
           >
             — and more global technology partners joining the ecosystem
@@ -507,12 +437,7 @@ export default function ProgrammePage() {
       <section className="py-20 bg-techbridge-light">
         <div className="max-w-6xl mx-auto px-6">
           <div className="grid md:grid-cols-2 gap-14 items-center">
-            <motion.div
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
-              variants={fadeUp}
-            >
+            <motion.div {...inView()}>
               <h2 className="font-serif text-3xl md:text-4xl font-bold text-techbridge-navy mb-4">
                 What Makes This Experiential?
               </h2>
@@ -526,11 +451,7 @@ export default function ProgrammePage() {
                 {experientialFeatures.map((feature, i) => (
                   <motion.li
                     key={feature}
-                    custom={i}
-                    initial="hidden"
-                    whileInView="visible"
-                    viewport={{ once: true }}
-                    variants={fadeUp}
+                    {...inView(i * 0.07)}
                     className="flex items-start gap-3"
                   >
                     <CheckCircle size={20} className="text-techbridge-green shrink-0 mt-0.5" />
@@ -541,10 +462,7 @@ export default function ProgrammePage() {
             </motion.div>
 
             <motion.div
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
-              variants={fadeUp}
+              {...inView(0.1)}
               className="bg-white rounded-2xl border border-gray-200 shadow-sm p-8"
             >
               <div className="flex items-center gap-3 mb-6">
@@ -558,7 +476,7 @@ export default function ProgrammePage() {
               </div>
 
               <div className="space-y-4">
-                {['Project Portfolio', 'Certification Badge', 'Employer Match Score', 'Internship Placement'].map((item, i) => (
+                {skillWalletItems.map((item) => (
                   <div key={item} className="flex items-center gap-3 p-3 rounded-lg bg-techbridge-light">
                     <div className="w-2 h-2 rounded-full bg-techbridge-green" />
                     <span className="text-sm font-medium text-techbridge-navy">{item}</span>
@@ -589,12 +507,7 @@ export default function ProgrammePage() {
         </div>
 
         <div className="relative max-w-3xl mx-auto px-6 text-center">
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={fadeUp}
-          >
+          <motion.div {...inView()}>
             <h2 className="font-serif text-3xl md:text-4xl font-bold text-white mb-4">
               Ready to Build Ghana's Digital Future?
             </h2>
