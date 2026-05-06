@@ -249,6 +249,40 @@ export default function HomePage() {
             className="text-center mb-16"
           >
             <h2 className="font-serif text-4xl lg:text-5xl font-bold text-techbridge-navy mb-4">
+              Visit Our Campus
+            </h2>
+            <p className="text-slate-600 text-lg max-w-2xl mx-auto">
+              See the facilities and infrastructure that power Techbridge's learning ecosystem.
+            </p>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-80px' }}
+            transition={{ duration: 0.6 }}
+            className="rounded-2xl overflow-hidden shadow-2xl bg-black"
+          >
+            <video
+              src="https://techbridge.edu.gh/static/campus_tour.mp4"
+              controls
+              className="w-full h-auto"
+              poster="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1920 1080'%3E%3Crect fill='%230f2545' width='1920' height='1080'/%3E%3C/svg%3E"
+            />
+          </motion.div>
+        </div>
+      </section>
+
+      <section className="bg-white py-24">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8">
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-80px' }}
+            transition={{ duration: 0.6 }}
+            className="text-center mb-16"
+          >
+            <h2 className="font-serif text-4xl lg:text-5xl font-bold text-techbridge-navy mb-4">
               Programme Alignment
             </h2>
             <p className="text-slate-600 text-lg max-w-2xl mx-auto">

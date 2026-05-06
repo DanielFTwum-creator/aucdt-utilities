@@ -31,6 +31,14 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
           {/* Brand */}
           <div className="lg:col-span-1">
+            {/* TUC Logo */}
+            <div className="mb-4">
+              <img
+                src="https://techbridge.edu.gh/static/TUC_LOGO_1.png"
+                alt="Techbridge University College Logo"
+                className="h-12 mb-3"
+              />
+            </div>
             <div className="mb-3">
               <div className="text-xl font-serif font-bold text-white">Techbridge</div>
               <div className="text-[10px] text-ghana-gold/80 tracking-[0.2em] uppercase font-sans">
