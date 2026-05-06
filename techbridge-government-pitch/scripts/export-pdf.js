@@ -1,6 +1,6 @@
 /**
  * Techbridge Government Pitch — PDF Export Script
- * Captures all 8 website pages + Executive Summary to PDF.
+ * Captures all 8 website pages + Executive Summary to PDF using Playwright.
  *
  * Usage:
  *   pnpm run export-pdf
@@ -10,7 +10,7 @@
  *   exports/Techbridge-Executive-Summary.pdf              (exec summary)
  */
 
-import puppeteer from 'puppeteer'
+import { chromium } from 'playwright'
 import { PDFDocument } from 'pdf-lib'
 import { spawn } from 'child_process'
 import { writeFileSync, mkdirSync, existsSync } from 'fs'
@@ -45,34 +45,24 @@ function startPreviewServer() {
       { cwd: ROOT, shell: process.platform === 'win32', stdio: 'pipe' }
     )
     let started = false
-    proc.stdout.on('data', (d) => {
-      const out = d.toString()
-      if (!started && out.includes('Local:')) {
+    const onData = (d) => {
+      if (!started && d.toString().includes('Local:')) {
         started = true
         resolve(proc)
       }
-    })
-    proc.stderr.on('data', (d) => {
-      const err = d.toString()
-      if (!started && err.includes('Local:')) {
-        started = true
-        resolve(proc)
-      }
-    })
+    }
+    proc.stdout.on('data', onData)
+    proc.stderr.on('data', onData)
     proc.on('error', reject)
-    setTimeout(() => {
-      if (!started) {
-        started = true
-        resolve(proc)
-      }
-    }, 5000)
+    // Fallback: assume ready after 5s
+    setTimeout(() => { if (!started) { started = true; resolve(proc) } }, 5000)
   })
 }
 
 async function capturePage(page, url, label) {
   console.log(`  → ${label}`)
-  await page.goto(url, { waitUntil: 'networkidle0', timeout: 30000 })
-  await sleep(1500)
+  await page.goto(url, { waitUntil: 'networkidle', timeout: 30000 })
+  await sleep(1200)
   return page.pdf({
     format: 'A4',
     printBackground: true,
@@ -90,7 +80,7 @@ async function mergeAndSave(buffers, filename) {
   const bytes = await merged.save()
   const outPath = resolve(EXPORTS, filename)
   writeFileSync(outPath, bytes)
-  console.log(`  ✅ Saved → ${outPath}`)
+  console.log(`  ✅ Saved → exports/${filename}`)
 }
 
 async function main() {
@@ -105,16 +95,13 @@ async function main() {
   console.log('\n🚀 Starting preview server...')
   const server = await startPreviewServer()
 
-  const browser = await puppeteer.launch({
-    headless: true,
-    args: ['--no-sandbox', '--disable-setuid-sandbox'],
-  })
+  const browser = await chromium.launch()
+  const context = await browser.newContext({ viewport: { width: 1440, height: 900 } })
 
   try {
-    const page = await browser.newPage()
-    await page.setViewport({ width: 1440, height: 900, deviceScaleFactor: 1.5 })
+    const page = await context.newPage()
 
-    // ── Full Site Export ──────────────────────────────────────────────────
+    // ── Full Site Export ──────────────────────────────────────────
     console.log('\n📄 Exporting full site PDF...')
     const siteBuffers = []
     for (const route of SITE_ROUTES) {
@@ -123,7 +110,7 @@ async function main() {
     }
     await mergeAndSave(siteBuffers, 'Techbridge-One-Million-Coders-Proposal.pdf')
 
-    // ── Executive Summary ─────────────────────────────────────────────────
+    // ── Executive Summary ─────────────────────────────────────────
     console.log('\n📋 Exporting Executive Summary...')
     const execBuf = await capturePage(page, `http://localhost:${PORT}/executive-summary`, 'Executive Summary')
     await mergeAndSave([execBuf], 'Techbridge-Executive-Summary.pdf')
