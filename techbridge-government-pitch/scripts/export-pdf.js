@@ -16,6 +16,7 @@ import { spawn } from 'child_process'
 import { writeFileSync, mkdirSync, existsSync } from 'fs'
 import { resolve, dirname } from 'path'
 import { fileURLToPath } from 'url'
+import http from 'http'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const ROOT = resolve(__dirname, '..')
@@ -37,25 +38,45 @@ function sleep(ms) {
   return new Promise(r => setTimeout(r, ms))
 }
 
+function testPort(port) {
+  return new Promise((resolve) => {
+    const req = http.get(`http://localhost:${port}/`, (res) => {
+      resolve(res.statusCode < 500)
+    })
+    req.on('error', () => resolve(false))
+    req.setTimeout(500, () => req.destroy())
+  })
+}
+
 function startPreviewServer() {
   return new Promise((resolve, reject) => {
     const proc = spawn(
       'node',
-      ['node_modules/.bin/vite', 'preview', '--port', String(PORT), '--strictPort'],
-      { cwd: ROOT, shell: process.platform === 'win32', stdio: 'pipe' }
+      ['node_modules/.bin/vite', 'preview', '--port', String(PORT)],
+      { cwd: ROOT, shell: process.platform === 'win32', stdio: 'inherit' }
     )
-    let started = false
-    const onData = (d) => {
-      if (!started && d.toString().includes('Local:')) {
-        started = true
+
+    proc.on('error', reject)
+
+    // Poll for port to be ready (with fallback to alternate ports)
+    let attempts = 0
+    const checkReady = async () => {
+      attempts++
+      if (attempts > 30) {
+        reject(new Error(`Preview server failed to start after 30 attempts`))
+        return
+      }
+
+      // Try the requested port first, then check 4173 (default Vite preview port)
+      const portReady = await testPort(PORT) || await testPort(4173)
+      if (portReady) {
         resolve(proc)
+      } else {
+        setTimeout(checkReady, 200)
       }
     }
-    proc.stdout.on('data', onData)
-    proc.stderr.on('data', onData)
-    proc.on('error', reject)
-    // Fallback: assume ready after 5s
-    setTimeout(() => { if (!started) { started = true; resolve(proc) } }, 5000)
+
+    setTimeout(checkReady, 500)
   })
 }
 
@@ -95,24 +116,37 @@ async function main() {
   console.log('\n🚀 Starting preview server...')
   const server = await startPreviewServer()
 
+  // Extra wait to ensure server is fully ready
+  await sleep(2000)
+
   const browser = await chromium.launch()
   const context = await browser.newContext({ viewport: { width: 1440, height: 900 } })
 
   try {
     const page = await context.newPage()
 
+    // Detect actual port (try PORT first, then 4173 default)
+    let actualPort = PORT
+    if (!(await testPort(PORT))) {
+      if (await testPort(4173)) {
+        actualPort = 4173
+      } else {
+        throw new Error('Preview server not responding on ports 4174 or 4173')
+      }
+    }
+
     // ── Full Site Export ──────────────────────────────────────────
-    console.log('\n📄 Exporting full site PDF...')
+    console.log(`\n📄 Exporting full site PDF (port ${actualPort})...`)
     const siteBuffers = []
     for (const route of SITE_ROUTES) {
-      const pdf = await capturePage(page, `http://localhost:${PORT}${route.path}`, route.label)
+      const pdf = await capturePage(page, `http://localhost:${actualPort}${route.path}`, route.label)
       siteBuffers.push(pdf)
     }
     await mergeAndSave(siteBuffers, 'Techbridge-One-Million-Coders-Proposal.pdf')
 
     // ── Executive Summary ─────────────────────────────────────────
     console.log('\n📋 Exporting Executive Summary...')
-    const execBuf = await capturePage(page, `http://localhost:${PORT}/executive-summary`, 'Executive Summary')
+    const execBuf = await capturePage(page, `http://localhost:${actualPort}/executive-summary`, 'Executive Summary')
     await mergeAndSave([execBuf], 'Techbridge-Executive-Summary.pdf')
 
   } finally {
