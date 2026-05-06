@@ -1,0 +1,245 @@
+{
+  "data" : [ {
+    "gid" : "1209444702088265",
+    "actual_time_minutes" : null,
+    "assignee" : null,
+    "assignee_status" : "upcoming",
+    "completed" : false,
+    "completed_at" : null,
+    "created_at" : "2025-02-19T15:50:30.276Z",
+    "due_at" : null,
+    "due_on" : "2025-02-21",
+    "followers" : [ {
+      "gid" : "1208557755196260",
+      "name" : "Sharon A. Tego",
+      "resource_type" : "user"
+    } ],
+    "hearted" : false,
+    "hearts" : [ ],
+    "liked" : false,
+    "likes" : [ ],
+    "memberships" : [ {
+      "project" : {
+        "gid" : "1208589794329167",
+        "name" : "Quality Assurance Unit",
+        "resource_type" : "project"
+      },
+      "section" : {
+        "gid" : "1208589794329168",
+        "name" : "Untitled section",
+        "resource_type" : "section"
+      }
+    } ],
+    "modified_at" : "2025-02-19T15:50:39.228Z",
+    "name" : "Lecturer Assessment",
+    "notes" : "",
+    "num_hearts" : 0,
+    "num_likes" : 0,
+    "parent" : null,
+    "permalink_url" : "https://app.asana.com/1/236599948336393/project/1208589794329167/task/1209444702088265",
+    "projects" : [ {
+      "gid" : "1208589794329167",
+      "name" : "Quality Assurance Unit",
+      "resource_type" : "project"
+    } ],
+    "resource_type" : "task",
+    "start_at" : null,
+    "start_on" : null,
+    "subtasks" : [ ],
+    "tags" : [ ],
+    "resource_subtype" : "default_task",
+    "workspace" : {
+      "gid" : "236599948336393",
+      "name" : "aucdt.edu.gh",
+      "resource_type" : "workspace"
+    }
+  }, {
+    "gid" : "1209365420253390",
+    "actual_time_minutes" : null,
+    "assignee" : {
+      "gid" : "1205939110703922",
+      "name" : "Mandela vudugah",
+      "resource_type" : "user"
+    },
+    "assignee_status" : "inbox",
+    "assignee_section" : {
+      "gid" : "1205939110703945",
+      "name" : "Recently assigned",
+      "resource_type" : "section"
+    },
+    "completed" : false,
+    "completed_at" : null,
+    "created_at" : "2025-02-10T13:20:42.204Z",
+    "due_at" : null,
+    "due_on" : null,
+    "followers" : [ {
+      "gid" : "1205939110703922",
+      "name" : "Mandela vudugah",
+      "resource_type" : "user"
+    }, {
+      "gid" : "1200587641048692",
+      "name" : "Daniel F. Twum",
+      "resource_type" : "user"
+    } ],
+    "hearted" : false,
+    "hearts" : [ ],
+    "liked" : false,
+    "likes" : [ ],
+    "memberships" : [ {
+      "project" : {
+        "gid" : "1208589794329167",
+        "name" : "Quality Assurance Unit",
+        "resource_type" : "project"
+      },
+      "section" : {
+        "gid" : "1209365420253387",
+        "name" : "AUCDT-iMac Evalutation",
+        "resource_type" : "section"
+      }
+    } ],
+    "modified_at" : "2025-02-10T13:42:03.969Z",
+    "name" : " Bright has submitted a proposal to increase the memory of the iMacs in the lab",
+    "notes" : "Bright has submitted a proposal to increase the memory of the iMacs in the lab\nCan you do a test on the specifics of the machine and what is making it slow\n\nThis has been done and submitted to the IT Team. Attached to this task is the document to that effect.",
+    "num_hearts" : 0,
+    "num_likes" : 0,
+    "parent" : null,
+    "permalink_url" : "https://app.asana.com/1/236599948336393/project/1208589794329167/task/1209365420253390",
+    "projects" : [ {
+      "gid" : "1208589794329167",
+      "name" : "Quality Assurance Unit",
+      "resource_type" : "project"
+    } ],
+    "resource_type" : "task",
+    "start_at" : null,
+    "start_on" : null,
+    "subtasks" : [ ],
+    "tags" : [ ],
+    "resource_subtype" : "default_task",
+    "workspace" : {
+      "gid" : "236599948336393",
+      "name" : "aucdt.edu.gh",
+      "resource_type" : "workspace"
+    }
+  }, {
+    "gid" : "1209412599169271",
+    "actual_time_minutes" : null,
+    "assignee" : null,
+    "assignee_status" : "upcoming",
+    "completed" : true,
+    "completed_at" : "2025-02-14T18:12:50.314Z",
+    "created_at" : "2025-02-14T18:10:06.071Z",
+    "due_at" : null,
+    "due_on" : null,
+    "followers" : [ {
+      "gid" : "1205939110703922",
+      "name" : "Mandela vudugah",
+      "resource_type" : "user"
+    } ],
+    "hearted" : false,
+    "hearts" : [ ],
+    "liked" : false,
+    "likes" : [ ],
+    "memberships" : [ {
+      "project" : {
+        "gid" : "1208589794329167",
+        "name" : "Quality Assurance Unit",
+        "resource_type" : "project"
+      },
+      "section" : {
+        "gid" : "1209365420253387",
+        "name" : "AUCDT-iMac Evalutation",
+        "resource_type" : "section"
+      }
+    } ],
+    "modified_at" : "2025-02-14T18:12:50.448Z",
+    "name" : "Repositioned the wyze camera in the conference room on the wall at the right top corner closer to the refrigerator in the corner.",
+    "notes" : "This was done in consultation with Mr. Bright in order to view the doors when someone enters the conference room.",
+    "num_hearts" : 0,
+    "num_likes" : 0,
+    "parent" : null,
+    "permalink_url" : "https://app.asana.com/1/236599948336393/project/1208589794329167/task/1209412599169271",
+    "projects" : [ {
+      "gid" : "1208589794329167",
+      "name" : "Quality Assurance Unit",
+      "resource_type" : "project"
+    } ],
+    "resource_type" : "task",
+    "start_at" : null,
+    "start_on" : null,
+    "subtasks" : [ ],
+    "tags" : [ ],
+    "resource_subtype" : "default_task",
+    "workspace" : {
+      "gid" : "236599948336393",
+      "name" : "aucdt.edu.gh",
+      "resource_type" : "workspace"
+    }
+  }, {
+    "gid" : "1209764741777742",
+    "actual_time_minutes" : null,
+    "assignee" : {
+      "gid" : "1205939110703922",
+      "name" : "Mandela vudugah",
+      "resource_type" : "user"
+    },
+    "assignee_status" : "inbox",
+    "assignee_section" : {
+      "gid" : "1205939110703945",
+      "name" : "Recently assigned",
+      "resource_type" : "section"
+    },
+    "completed" : false,
+    "completed_at" : null,
+    "created_at" : "2025-03-24T11:26:51.736Z",
+    "due_at" : null,
+    "due_on" : null,
+    "followers" : [ {
+      "gid" : "1205939110703922",
+      "name" : "Mandela vudugah",
+      "resource_type" : "user"
+    }, {
+      "gid" : "434273397793530",
+      "name" : "Bright Senanu Agbosu",
+      "resource_type" : "user"
+    } ],
+    "hearted" : false,
+    "hearts" : [ ],
+    "liked" : false,
+    "likes" : [ ],
+    "memberships" : [ {
+      "project" : {
+        "gid" : "1208589794329167",
+        "name" : "Quality Assurance Unit",
+        "resource_type" : "project"
+      },
+      "section" : {
+        "gid" : "1209764741777741",
+        "name" : "Laptop fix issues",
+        "resource_type" : "section"
+      }
+    } ],
+    "modified_at" : "2025-03-24T16:34:18.533Z",
+    "name" : "Ms. Stephanie has slow PC runtime with her laptop which requires new OS installation",
+    "notes" : "I asked her to copy all important files unto the Ex registrar's PC given to her so I can install a new OS unto her own for the new Staff to use when he or she resumes work.\n\nhttps://app.asana.com/app/asana/-/get_asset?asset_id=1209764741777746\n\n\n",
+    "num_hearts" : 0,
+    "num_likes" : 0,
+    "parent" : null,
+    "permalink_url" : "https://app.asana.com/1/236599948336393/project/1208589794329167/task/1209764741777742",
+    "projects" : [ {
+      "gid" : "1208589794329167",
+      "name" : "Quality Assurance Unit",
+      "resource_type" : "project"
+    } ],
+    "resource_type" : "task",
+    "start_at" : null,
+    "start_on" : null,
+    "subtasks" : [ ],
+    "tags" : [ ],
+    "resource_subtype" : "default_task",
+    "workspace" : {
+      "gid" : "236599948336393",
+      "name" : "aucdt.edu.gh",
+      "resource_type" : "workspace"
+    }
+  } ]
+}

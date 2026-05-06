@@ -1,0 +1,5 @@
+{
+  "name": "PDF to Assessment JSON Converter",
+  "description": "An AI-powered tool to convert PDF documents containing university program and assessment data into a structured JSON format. Upload a PDF, and the tool will automatically extract and format the information.",
+  "requestFramePermissions": []
+}

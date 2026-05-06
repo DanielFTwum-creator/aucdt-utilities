@@ -1,0 +1,222 @@
+<svg viewBox="0 0 1400 900" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      .component-box { fill: #e0f2fe; stroke: #0284c7; stroke-width: 2; }
+      .data-box { fill: #fef3c7; stroke: #d97706; stroke-width: 2; }
+      .ui-box { fill: #dbeafe; stroke: #3b82f6; stroke-width: 2; }
+      .utility-box { fill: #e9d5ff; stroke: #a855f7; stroke-width: 2; }
+      .text-label { font-family: Arial, sans-serif; font-size: 13px; font-weight: bold; }
+      .text-small { font-family: Arial, sans-serif; font-size: 11px; }
+      .title { font-family: Arial, sans-serif; font-size: 18px; font-weight: bold; }
+      .subtitle { font-family: Arial, sans-serif; font-size: 12px; fill: #666; }
+      .arrow { stroke: #374151; stroke-width: 2; fill: none; marker-end: url(#arrowhead); }
+      .dashed-arrow { stroke: #9ca3af; stroke-width: 2; fill: none; stroke-dasharray: 5,5; marker-end: url(#arrowhead-gray); }
+    </style>
+    <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <polygon points="0 0, 10 3, 0 6" fill="#374151" />
+    </marker>
+    <marker id="arrowhead-gray" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <polygon points="0 0, 10 3, 0 6" fill="#9ca3af" />
+    </marker>
+  </defs>
+
+  <!-- Title -->
+  <text x="700" y="40" text-anchor="middle" class="title">AUCDT Analytics Dashboard - System Architecture</text>
+  <text x="700" y="60" text-anchor="middle" class="subtitle">Component Interaction & Data Flow Diagram</text>
+
+  <!-- Layer 1: Browser/Client Layer -->
+  <rect x="50" y="100" width="1300" height="80" fill="#f0f9ff" stroke="#0284c7" stroke-width="2" stroke-dasharray="5,5" rx="5"/>
+  <text x="70" y="125" class="text-label">WEB BROWSER LAYER</text>
+
+  <!-- React App -->
+  <rect x="100" y="135" width="180" height="40" class="ui-box" rx="5"/>
+  <text x="190" y="160" text-anchor="middle" class="text-label">React App</text>
+
+  <!-- App.tsx -->
+  <rect x="310" y="135" width="150" height="40" class="component-box" rx="5"/>
+  <text x="385" y="160" text-anchor="middle" class="text-label">App.tsx</text>
+
+  <!-- Theme Provider -->
+  <rect x="490" y="135" width="170" height="40" class="utility-box" rx="5"/>
+  <text x="575" y="160" text-anchor="middle" class="text-label">ThemeProvider</text>
+
+  <!-- Error Boundary -->
+  <rect x="690" y="135" width="170" height="40" class="component-box" rx="5"/>
+  <text x="775" y="160" text-anchor="middle" class="text-label">ErrorBoundary</text>
+
+  <!-- Admin Panel -->
+  <rect x="890" y="135" width="170" height="40" class="component-box" rx="5"/>
+  <text x="975" y="160" text-anchor="middle" class="text-label">AdminPanel</text>
+
+  <!-- Theme Toggle -->
+  <rect x="1090" y="135" width="170" height="40" class="utility-box" rx="5"/>
+  <text x="1175" y="160" text-anchor="middle" class="text-label">ThemeToggle</text>
+
+  <!-- Layer 2: Main Dashboard -->
+  <rect x="50" y="220" width="1300" height="90" fill="#fef3c7" stroke="#d97706" stroke-width="2" stroke-dasharray="5,5" rx="5"/>
+  <text x="70" y="245" class="text-label">DASHBOARD COMPONENT LAYER</text>
+
+  <!-- EnhancedDashboard -->
+  <rect x="100" y="260" width="1200" height="40" class="component-box" rx="5"/>
+  <text x="700" y="285" text-anchor="middle" class="text-label">EnhancedDashboard (Main Component)</text>
+
+  <!-- Layer 3: Tab Components -->
+  <rect x="50" y="340" width="1300" height="120" fill="#e0f2fe" stroke="#0284c7" stroke-width="2" stroke-dasharray="5,5" rx="5"/>
+  <text x="70" y="365" class="text-label">TAB COMPONENTS LAYER</text>
+
+  <!-- Overview Tab -->
+  <rect x="70" y="380" width="120" height="60" class="ui-box" rx="5"/>
+  <text x="130" y="405" text-anchor="middle" class="text-small">OverviewTab</text>
+  <text x="130" y="420" text-anchor="middle" class="text-small" style="font-size: 10px;">Key Metrics</text>
+  <text x="130" y="430" text-anchor="middle" class="text-small" style="font-size: 10px;">Data Summary</text>
+
+  <!-- Trends Tab -->
+  <rect x="210" y="380" width="120" height="60" class="ui-box" rx="5"/>
+  <text x="270" y="405" text-anchor="middle" class="text-small">TrendsTab</text>
+  <text x="270" y="420" text-anchor="middle" class="text-small" style="font-size: 10px;">Time Series</text>
+  <text x="270" y="430" text-anchor="middle" class="text-small" style="font-size: 10px;">Trendlines</text>
+
+  <!-- Funnel Tab -->
+  <rect x="350" y="380" width="120" height="60" class="ui-box" rx="5"/>
+  <text x="410" y="405" text-anchor="middle" class="text-small">FunnelTab</text>
+  <text x="410" y="420" text-anchor="middle" class="text-small" style="font-size: 10px;">Conversion</text>
+  <text x="410" y="430" text-anchor="middle" class="text-small" style="font-size: 10px;">Stages</text>
+
+  <!-- Demographics Tab -->
+  <rect x="490" y="380" width="120" height="60" class="ui-box" rx="5"/>
+  <text x="550" y="405" text-anchor="middle" class="text-small">DemographicsTab</text>
+  <text x="550" y="420" text-anchor="middle" class="text-small" style="font-size: 10px;">Regional Data</text>
+  <text x="550" y="430" text-anchor="middle" class="text-small" style="font-size: 10px;">Diversity</text>
+
+  <!-- Seasonal Tab -->
+  <rect x="630" y="380" width="120" height="60" class="ui-box" rx="5"/>
+  <text x="690" y="405" text-anchor="middle" class="text-small">SeasonalTab</text>
+  <text x="690" y="420" text-anchor="middle" class="text-small" style="font-size: 10px;">Patterns</text>
+  <text x="690" y="430" text-anchor="middle" class="text-small" style="font-size: 10px;">Trends</text>
+
+  <!-- Export Tab -->
+  <rect x="770" y="380" width="120" height="60" class="ui-box" rx="5"/>
+  <text x="830" y="405" text-anchor="middle" class="text-small">ExportTab</text>
+  <text x="830" y="420" text-anchor="middle" class="text-small" style="font-size: 10px;">CSV/JSON</text>
+  <text x="830" y="430" text-anchor="middle" class="text-small" style="font-size: 10px;">Download</text>
+
+  <!-- About Tab -->
+  <rect x="910" y="380" width="120" height="60" class="ui-box" rx="5"/>
+  <text x="970" y="405" text-anchor="middle" class="text-small">AboutTab</text>
+  <text x="970" y="420" text-anchor="middle" class="text-small" style="font-size: 10px;">System Info</text>
+  <text x="970" y="430" text-anchor="middle" class="text-small" style="font-size: 10px;">Metadata</text>
+
+  <!-- Testing Tab -->
+  <rect x="1050" y="380" width="120" height="60" class="utility-box" rx="5"/>
+  <text x="1110" y="405" text-anchor="middle" class="text-small">TestingTab</text>
+  <text x="1110" y="420" text-anchor="middle" class="text-small" style="font-size: 10px;">Test Suite</text>
+  <text x="1110" y="430" text-anchor="middle" class="text-small" style="font-size: 10px;">Screenshots</text>
+
+  <!-- Layer 4: Chart Components -->
+  <rect x="50" y="490" width="1300" height="90" fill="#dbeafe" stroke="#3b82f6" stroke-width="2" stroke-dasharray="5,5" rx="5"/>
+  <text x="70" y="515" class="text-label">CHART COMPONENTS LAYER</text>
+
+  <!-- TimeSeriesChart -->
+  <rect x="120" y="535" width="130" height="35" class="ui-box" rx="5"/>
+  <text x="185" y="558" text-anchor="middle" class="text-small">TimeSeriesChart</text>
+
+  <!-- ConversionRateChart -->
+  <rect x="300" y="535" width="130" height="35" class="ui-box" rx="5"/>
+  <text x="365" y="558" text-anchor="middle" class="text-small">ConversionRateChart</text>
+
+  <!-- DonutChart -->
+  <rect x="480" y="535" width="130" height="35" class="ui-box" rx="5"/>
+  <text x="545" y="558" text-anchor="middle" class="text-small">DonutChart</text>
+
+  <!-- TrendlineControls -->
+  <rect x="660" y="535" width="130" height="35" class="utility-box" rx="5"/>
+  <text x="725" y="558" text-anchor="middle" class="text-small">TrendlineControls</text>
+
+  <!-- Layer 5: Utilities & Services -->
+  <rect x="50" y="610" width="1300" height="110" fill="#e9d5ff" stroke="#a855f7" stroke-width="2" stroke-dasharray="5,5" rx="5"/>
+  <text x="70" y="635" class="text-label">UTILITIES & SERVICES LAYER</text>
+
+  <!-- Trendlines -->
+  <rect x="80" y="650" width="120" height="50" class="utility-box" rx="5"/>
+  <text x="140" y="670" text-anchor="middle" class="text-small">Trendlines</text>
+  <text x="140" y="690" text-anchor="middle" class="text-small" style="font-size: 10px;">Linear, Exp, Poly</text>
+
+  <!-- AuditLogger -->
+  <rect x="230" y="650" width="120" height="50" class="utility-box" rx="5"/>
+  <text x="290" y="670" text-anchor="middle" class="text-small">AuditLogger</text>
+  <text x="290" y="690" text-anchor="middle" class="text-small" style="font-size: 10px;">Action Tracking</text>
+
+  <!-- TestSuite -->
+  <rect x="380" y="650" width="120" height="50" class="utility-box" rx="5"/>
+  <text x="440" y="670" text-anchor="middle" class="text-small">TestSuite</text>
+  <text x="440" y="690" text-anchor="middle" class="text-small" style="font-size: 10px;">Unit Tests</text>
+
+  <!-- PuppeteerTests -->
+  <rect x="530" y="650" width="120" height="50" class="utility-box" rx="5"/>
+  <text x="590" y="670" text-anchor="middle" class="text-small">PuppeteerTests</text>
+  <text x="590" y="690" text-anchor="middle" class="text-small" style="font-size: 10px;">E2E Tests</text>
+
+  <!-- ThemeContext -->
+  <rect x="680" y="650" width="120" height="50" class="utility-box" rx="5"/>
+  <text x="740" y="670" text-anchor="middle" class="text-small">ThemeContext</text>
+  <text x="740" y="690" text-anchor="middle" class="text-small" style="font-size: 10px;">Theme State</text>
+
+  <!-- Utils -->
+  <rect x="830" y="650" width="120" height="50" class="utility-box" rx="5"/>
+  <text x="890" y="670" text-anchor="middle" class="text-small">Utils Functions</text>
+  <text x="890" y="690" text-anchor="middle" class="text-small" style="font-size: 10px;">Helpers</text>
+
+  <!-- Layer 6: Data Sources -->
+  <rect x="50" y="750" width="1300" height="90" fill="#fef3c7" stroke="#d97706" stroke-width="2" stroke-dasharray="5,5" rx="5"/>
+  <text x="70" y="775" class="text-label">DATA LAYER</text>
+
+  <!-- JSON Data Files -->
+  <rect x="120" y="795" width="150" height="35" class="data-box" rx="5"/>
+  <text x="195" y="818" text-anchor="middle" class="text-small">JSON Data Files</text>
+
+  <!-- CSV Data Files -->
+  <rect x="320" y="795" width="150" height="35" class="data-box" rx="5"/>
+  <text x="395" y="818" text-anchor="middle" class="text-small">CSV Data Files</text>
+
+  <!-- Local Storage -->
+  <rect x="520" y="795" width="150" height="35" class="data-box" rx="5"/>
+  <text x="595" y="818" text-anchor="middle" class="text-small">LocalStorage</text>
+
+  <!-- Session Cache -->
+  <rect x="720" y="795" width="150" height="35" class="data-box" rx="5"/>
+  <text x="795" y="818" text-anchor="middle" class="text-small">Session Cache</text>
+
+  <!-- Audit Logs DB -->
+  <rect x="920" y="795" width="150" height="35" class="data-box" rx="5"/>
+  <text x="995" y="818" text-anchor="middle" class="text-small">Audit Logs DB</text>
+
+  <!-- External APIs -->
+  <rect x="1120" y="795" width="150" height="35" class="data-box" rx="5"/>
+  <text x="1195" y="818" text-anchor="middle" class="text-small">External APIs</text>
+
+  <!-- Arrows showing data flow -->
+  <path class="arrow" d="M 700 300 L 700 340" />
+  <path class="arrow" d="M 700 460 L 700 490" />
+  <path class="arrow" d="M 700 580 L 700 610" />
+  <path class="arrow" d="M 700 710 L 700 750" />
+
+  <!-- Cross-component connections -->
+  <path class="dashed-arrow" d="M 975 175 L 975 260" />
+  <path class="dashed-arrow" d="M 575 175 L 575 260" />
+
+  <!-- Legend -->
+  <g transform="translate(1000, 520)">
+    <text x="0" y="0" class="text-label">Legend:</text>
+    <rect x="0" y="10" width="15" height="15" class="ui-box" rx="2"/>
+    <text x="25" y="22" class="text-small">UI Components</text>
+
+    <rect x="0" y="40" width="15" height="15" class="component-box" rx="2"/>
+    <text x="25" y="52" class="text-small">Container Components</text>
+
+    <rect x="0" y="70" width="15" height="15" class="utility-box" rx="2"/>
+    <text x="25" y="82" class="text-small">Utilities & Services</text>
+
+    <rect x="0" y="100" width="15" height="15" class="data-box" rx="2"/>
+    <text x="25" y="112" class="text-small">Data Sources</text>
+  </g>
+</svg>

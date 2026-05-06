@@ -1,0 +1,141 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // ===============================================================
+    // Assumed Data Model
+    // ===============================================================
+    //
+    // Collection: leaderboard
+    // Fields:
+    //   - name: string (1-12 chars)
+    //   - score: number (0-50)
+    //   - mode: string (easy/hard)
+    //   - createdAt: timestamp
+    //
+    // Collection: challenges
+    // Fields:
+    //   - code: string (unique 6-char)
+    //   - creatorName: string
+    //   - colors: list of maps (h,s,b)
+    //   - mode: string (easy/hard)
+    //   - createdAt: timestamp
+    //
+    // Collection: challenge_scores
+    // Fields:
+    //   - challengeCode: string
+    //   - name: string
+    //   - score: number
+    //   - roundScores: list of numbers
+    //   - playerColors: list of maps
+    //   - createdAt: timestamp
+    //
+    // Collection: daily_scores
+    // Fields:
+    //   - date: string (YYYY-MM-DD)
+    //   - name: string
+    //   - score: number
+    //   - roundScores: list of numbers
+    //   - playerColors: list of maps
+    //   - createdAt: timestamp
+    //
+    // ===============================================================
+
+    // ===============================================================
+    // Helper Functions
+    // ===============================================================
+    
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isVerified() {
+      return isAuthenticated() && request.auth.token.email_verified == true;
+    }
+
+    function isAdmin() {
+      return isVerified() && 
+        (request.auth.token.email == "daniel.twum@techbridge.edu.gh" || 
+         get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin');
+    }
+
+    function isValidScore(score) {
+      return score is number && score >= 0 && score <= 50;
+    }
+
+    function isValidName(name) {
+      return name is string && name.size() >= 1 && name.size() <= 12;
+    }
+
+    function isValidMode(mode) {
+      return mode in ['easy', 'hard'];
+    }
+
+    function isRecent(ts) {
+      return ts is timestamp && ts > request.time - duration.value(5, 'm') && ts <= request.time;
+    }
+
+    // ===============================================================
+    // Rules
+    // ===============================================================
+
+    match /leaderboard/{scoreId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated() && 
+        isValidName(request.resource.data.name) &&
+        isValidScore(request.resource.data.score) &&
+        isValidMode(request.resource.data.mode) &&
+        isRecent(request.resource.data.createdAt);
+      allow update, delete: if isAdmin();
+    }
+
+    match /challenges/{challengeId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated() &&
+        isValidName(request.resource.data.creatorName) &&
+        request.resource.data.code is string &&
+        request.resource.data.colors is list &&
+        request.resource.data.colors.size() == 5 &&
+        isValidMode(request.resource.data.mode) &&
+        isRecent(request.resource.data.createdAt);
+      allow update, delete: if isAdmin();
+    }
+
+    match /challenge_scores/{scoreId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated() &&
+        isValidName(request.resource.data.name) &&
+        isValidScore(request.resource.data.score) &&
+        request.resource.data.challengeCode is string &&
+        isRecent(request.resource.data.createdAt);
+      allow update, delete: if isAdmin();
+    }
+
+    match /daily_scores/{scoreId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated() &&
+        isValidName(request.resource.data.name) &&
+        isValidScore(request.resource.data.score) &&
+        request.resource.data.date is string &&
+        isRecent(request.resource.data.createdAt);
+      allow update, delete: if isAdmin();
+    }
+
+    match /users/{userId} {
+      allow read: if isAuthenticated() && (request.auth.uid == userId || isAdmin());
+      allow create: if isAuthenticated() && request.auth.uid == userId && request.resource.data.role == 'user';
+      allow update: if isAuthenticated() && (request.auth.uid == userId && request.resource.data.role == resource.data.role) || isAdmin();
+      allow delete: if isAdmin();
+    }
+
+    match /admin_logs/{logId} {
+      allow read: if isAdmin();
+      allow create: if isAuthenticated();
+      allow update, delete: if false;
+    }
+
+    // Default deny
+    match /{path=**} {
+      allow read, write: if false;
+    }
+  }
+}

@@ -1,0 +1,181 @@
+import { AuthGate } from './AuthGate';
+require('dotenv').config();
+const express = require('express');
+const cors = require('cors');
+const mysql = require('mysql2/promise');
+const { v4: uuidv4 } = require('uuid');
+
+const PORT = process.env.PORT || 4050;
+const app = express();
+app.use(cors());
+app.use(express.json());
+
+
+// Serve admin UI from public directory
+app.use(express.static(path.join(__dirname, '../public')));
+let pool;
+
+async function initDB() {
+  pool = mysql.createPool({
+    host: process.env.DB_HOST || 'localhost',
+    user: process.env.DB_USER || 'appuser',
+    password: process.env.DB_PASSWORD || 'apppass',
+    database: process.env.DB_NAME || 'alumni_network',
+    waitForConnections: true,
+    connectionLimit: 10,
+    queueLimit: 0,
+  });
+
+  const conn = await pool.getConnection();
+
+  await conn.query(`
+    CREATE TABLE IF NOT EXISTS alumni_profiles (
+      id VARCHAR(255) PRIMARY KEY,
+      alumni_name VARCHAR(255),
+      graduation_year INT,
+      current_job_title VARCHAR(255),
+      company VARCHAR(255),
+      location VARCHAR(255),
+      bio TEXT,
+      profile_verified BOOLEAN DEFAULT FALSE,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
+
+  await conn.query(`
+    CREATE TABLE IF NOT EXISTS alumni_connections (
+      id VARCHAR(255) PRIMARY KEY,
+      alumni_id_1 VARCHAR(255),
+      alumni_id_2 VARCHAR(255),
+      connection_date DATE,
+      connection_strength VARCHAR(50),
+      shared_interests TEXT,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (alumni_id_1) REFERENCES alumni_profiles(id)
+    )
+  `);
+
+  conn.release();
+  console.log('Alumni Network DB initialized');
+}
+
+
+// Serve admin UI at root
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, '../public', 'index.html'));
+});
+app.get('/health', (_req, res) => res.json({ status: 'ok', service: 'alumni-network' }));
+
+// --- alumni_profiles CRUD ---
+
+app.get('/api/alumni-profiles', async (_req, res) => {
+  try {
+    const [rows] = await pool.query('SELECT * FROM alumni_profiles ORDER BY created_at DESC');
+    res.json(rows);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.post('/api/alumni-profiles', async (req, res) => {
+  try {
+    const id = `alum_${uuidv4()}`;
+    const { alumni_name, graduation_year, current_job_title, company, location, bio, profile_verified } = req.body;
+    await pool.query(
+      'INSERT INTO alumni_profiles (id, alumni_name, graduation_year, current_job_title, company, location, bio, profile_verified) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+      [id, alumni_name, graduation_year, current_job_title, company, location, bio, profile_verified ?? false]
+    );
+    const [[row]] = await pool.query('SELECT * FROM alumni_profiles WHERE id = ?', [id]);
+    res.status(201).json(row);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.put('/api/alumni-profiles/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { alumni_name, graduation_year, current_job_title, company, location, bio, profile_verified } = req.body;
+    await pool.query(
+      'UPDATE alumni_profiles SET alumni_name=?, graduation_year=?, current_job_title=?, company=?, location=?, bio=?, profile_verified=? WHERE id=?',
+      [alumni_name, graduation_year, current_job_title, company, location, bio, profile_verified, id]
+    );
+    const [[row]] = await pool.query('SELECT * FROM alumni_profiles WHERE id = ?', [id]);
+    if (!row) return res.status(404).json({ error: 'Not found' });
+    res.json(row);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.delete('/api/alumni-profiles/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    await pool.query('DELETE FROM alumni_connections WHERE alumni_id_1 = ? OR alumni_id_2 = ?', [id, id]);
+    const [result] = await pool.query('DELETE FROM alumni_profiles WHERE id = ?', [id]);
+    if (result.affectedRows === 0) return res.status(404).json({ error: 'Not found' });
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// --- alumni_connections CRUD ---
+
+app.get('/api/alumni-connections', async (_req, res) => {
+  try {
+    const [rows] = await pool.query('SELECT * FROM alumni_connections ORDER BY created_at DESC');
+    res.json(rows);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.post('/api/alumni-connections', async (req, res) => {
+  try {
+    const id = `conn_${uuidv4()}`;
+    const { alumni_id_1, alumni_id_2, connection_date, connection_strength, shared_interests } = req.body;
+    await pool.query(
+      'INSERT INTO alumni_connections (id, alumni_id_1, alumni_id_2, connection_date, connection_strength, shared_interests) VALUES (?, ?, ?, ?, ?, ?)',
+      [id, alumni_id_1, alumni_id_2, connection_date, connection_strength, shared_interests]
+    );
+    const [[row]] = await pool.query('SELECT * FROM alumni_connections WHERE id = ?', [id]);
+    res.status(201).json(row);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.put('/api/alumni-connections/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { alumni_id_1, alumni_id_2, connection_date, connection_strength, shared_interests } = req.body;
+    await pool.query(
+      'UPDATE alumni_connections SET alumni_id_1=?, alumni_id_2=?, connection_date=?, connection_strength=?, shared_interests=? WHERE id=?',
+      [alumni_id_1, alumni_id_2, connection_date, connection_strength, shared_interests, id]
+    );
+    const [[row]] = await pool.query('SELECT * FROM alumni_connections WHERE id = ?', [id]);
+    if (!row) return res.status(404).json({ error: 'Not found' });
+    res.json(row);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.delete('/api/alumni-connections/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const [result] = await pool.query('DELETE FROM alumni_connections WHERE id = ?', [id]);
+    if (result.affectedRows === 0) return res.status(404).json({ error: 'Not found' });
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+async function start() {
+  await initDB();
+  app.listen(PORT, () => console.log(`Alumni Network API running on port ${PORT}`));
+}
+
+start().catch(console.error);

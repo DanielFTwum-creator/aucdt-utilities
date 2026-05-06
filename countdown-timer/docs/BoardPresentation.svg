@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 600" width="100%" height="100%">
+  <defs>
+    <style>
+      .bg { fill: #0f172a; }
+      .text-title { font-family: sans-serif; font-size: 36px; font-weight: bold; fill: #f8fafc; }
+      .text-subtitle { font-family: sans-serif; font-size: 20px; fill: #94a3b8; }
+      .box { fill: #1e293b; stroke: #3b82f6; stroke-width: 3; rx: 12; }
+      .box-highlight { fill: #2563eb; stroke: #60a5fa; stroke-width: 3; rx: 12; }
+      .text-box { font-family: sans-serif; font-size: 18px; font-weight: bold; fill: #ffffff; }
+      .text-box-desc { font-family: sans-serif; font-size: 14px; fill: #cbd5e1; }
+      .line { stroke: #475569; stroke-width: 3; fill: none; stroke-dasharray: 5,5; }
+    </style>
+  </defs>
+
+  <!-- Background -->
+  <rect width="100%" height="100%" class="bg" />
+
+  <!-- Header -->
+  <text x="500" y="80" text-anchor="middle" class="text-title">Countdown Timer Platform</text>
+  <text x="500" y="120" text-anchor="middle" class="text-subtitle">Executive Overview & Architecture</text>
+
+  <!-- Core Value Proposition -->
+  <rect x="100" y="180" width="800" height="100" class="box-highlight" />
+  <text x="500" y="225" text-anchor="middle" class="text-box" style="font-size: 24px;">React 19.2.4 Powered SPA</text>
+  <text x="500" y="255" text-anchor="middle" class="text-box-desc" style="font-size: 16px;">High-performance, accessible, and visually stunning user experience</text>
+
+  <!-- Pillars -->
+  <!-- Pillar 1: Security -->
+  <rect x="100" y="320" width="240" height="150" class="box" />
+  <text x="220" y="360" text-anchor="middle" class="text-box">Security & Admin</text>
+  <text x="220" y="390" text-anchor="middle" class="text-box-desc">- Password Protected</text>
+  <text x="220" y="415" text-anchor="middle" class="text-box-desc">- Comprehensive Audit Logs</text>
+  <text x="220" y="440" text-anchor="middle" class="text-box-desc">- Centralised Diagnostics</text>
+
+  <!-- Pillar 2: UX / Accessibility -->
+  <rect x="380" y="320" width="240" height="150" class="box" />
+  <text x="500" y="360" text-anchor="middle" class="text-box">UX & Accessibility</text>
+  <text x="500" y="390" text-anchor="middle" class="text-box-desc">- Zero Broken Links</text>
+  <text x="500" y="415" text-anchor="middle" class="text-box-desc">- 3 Selectable Themes</text>
+  <text x="500" y="440" text-anchor="middle" class="text-box-desc">- Full ARIA Support</text>
+
+  <!-- Pillar 3: Quality Assurance -->
+  <rect x="660" y="320" width="240" height="150" class="box" />
+  <text x="780" y="360" text-anchor="middle" class="text-box">Quality Assurance</text>
+  <text x="780" y="390" text-anchor="middle" class="text-box-desc">- Automated Puppeteer Tests</text>
+  <text x="780" y="415" text-anchor="middle" class="text-box-desc">- Real-time Screenshot Capture</text>
+  <text x="780" y="440" text-anchor="middle" class="text-box-desc">- Self-Testing Capability</text>
+
+  <!-- Connections -->
+  <path d="M 220 280 L 220 320" class="line" />
+  <path d="M 500 280 L 500 320" class="line" />
+  <path d="M 780 280 L 780 320" class="line" />
+
+  <!-- Footer -->
+  <text x="500" y="550" text-anchor="middle" class="text-subtitle" style="font-size: 14px;">Built with React, Tailwind CSS, Express, and Puppeteer</text>
+
+</svg>

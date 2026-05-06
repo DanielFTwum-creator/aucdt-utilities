@@ -1,0 +1,209 @@
+[136] Installing: incident-response-copilot
+Lockfile is up to date, resolution step is skipped
+Progress: resolved 1, reused 0, downloaded 0, added 0
+Packages: +454
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Progress: resolved 454, reused 2, downloaded 0, added 0
+Progress: resolved 454, reused 3, downloaded 0, added 0
+Progress: resolved 454, reused 4, downloaded 0, added 0
+Progress: resolved 454, reused 11, downloaded 0, added 0
+Progress: resolved 454, reused 14, downloaded 0, added 0
+Progress: resolved 454, reused 29, downloaded 0, added 0
+Progress: resolved 454, reused 54, downloaded 0, added 0
+Progress: resolved 454, reused 74, downloaded 0, added 0
+Progress: resolved 454, reused 113, downloaded 0, added 0
+Progress: resolved 454, reused 136, downloaded 0, added 0
+Progress: resolved 454, reused 170, downloaded 0, added 0
+Progress: resolved 454, reused 205, downloaded 0, added 0
+Progress: resolved 454, reused 232, downloaded 0, added 0
+Progress: resolved 454, reused 267, downloaded 0, added 0
+Progress: resolved 454, reused 271, downloaded 0, added 0
+Progress: resolved 454, reused 276, downloaded 0, added 0
+Progress: resolved 454, reused 283, downloaded 0, added 0
+Progress: resolved 454, reused 298, downloaded 0, added 0
+Progress: resolved 454, reused 314, downloaded 0, added 0
+Progress: resolved 454, reused 325, downloaded 0, added 0
+Progress: resolved 454, reused 328, downloaded 0, added 0
+Progress: resolved 454, reused 329, downloaded 0, added 0
+Progress: resolved 454, reused 330, downloaded 0, added 0
+Progress: resolved 454, reused 331, downloaded 0, added 0
+Progress: resolved 454, reused 332, downloaded 0, added 0
+Progress: resolved 454, reused 335, downloaded 0, added 0
+Progress: resolved 454, reused 349, downloaded 0, added 0
+Progress: resolved 454, reused 357, downloaded 0, added 0
+Progress: resolved 454, reused 371, downloaded 0, added 0
+Progress: resolved 454, reused 380, downloaded 0, added 0
+Progress: resolved 454, reused 389, downloaded 0, added 0
+Progress: resolved 454, reused 402, downloaded 0, added 0
+Progress: resolved 454, reused 420, downloaded 0, added 0
+Progress: resolved 454, reused 435, downloaded 0, added 0
+Progress: resolved 454, reused 444, downloaded 0, added 0
+Progress: resolved 454, reused 451, downloaded 0, added 1
+Progress: resolved 454, reused 451, downloaded 0, added 8
+Progress: resolved 454, reused 451, downloaded 0, added 9
+Progress: resolved 454, reused 452, downloaded 0, added 13
+Progress: resolved 454, reused 452, downloaded 0, added 14
+Progress: resolved 454, reused 452, downloaded 0, added 16
+Progress: resolved 454, reused 452, downloaded 0, added 17
+Progress: resolved 454, reused 452, downloaded 0, added 24
+Progress: resolved 454, reused 452, downloaded 0, added 35
+Progress: resolved 454, reused 452, downloaded 0, added 41
+Progress: resolved 454, reused 452, downloaded 0, added 46
+Progress: resolved 454, reused 452, downloaded 0, added 47
+Progress: resolved 454, reused 452, downloaded 0, added 48
+Progress: resolved 454, reused 453, downloaded 0, added 51
+Progress: resolved 454, reused 453, downloaded 0, added 52
+Progress: resolved 454, reused 453, downloaded 0, added 53
+Progress: resolved 454, reused 453, downloaded 0, added 54
+Progress: resolved 454, reused 453, downloaded 0, added 60
+Progress: resolved 454, reused 453, downloaded 0, added 61
+Progress: resolved 454, reused 454, downloaded 0, added 65
+Progress: resolved 454, reused 454, downloaded 0, added 70
+Progress: resolved 454, reused 454, downloaded 0, added 75
+Progress: resolved 454, reused 454, downloaded 0, added 78
+Progress: resolved 454, reused 454, downloaded 0, added 85
+Progress: resolved 454, reused 454, downloaded 0, added 93
+Progress: resolved 454, reused 454, downloaded 0, added 98
+Progress: resolved 454, reused 454, downloaded 0, added 112
+Progress: resolved 454, reused 454, downloaded 0, added 115
+Progress: resolved 454, reused 454, downloaded 0, added 118
+Progress: resolved 454, reused 454, downloaded 0, added 121
+Progress: resolved 454, reused 454, downloaded 0, added 126
+Progress: resolved 454, reused 454, downloaded 0, added 133
+Progress: resolved 454, reused 454, downloaded 0, added 134
+Progress: resolved 454, reused 454, downloaded 0, added 138
+Progress: resolved 454, reused 454, downloaded 0, added 143
+Progress: resolved 454, reused 454, downloaded 0, added 152
+Progress: resolved 454, reused 454, downloaded 0, added 157
+Progress: resolved 454, reused 454, downloaded 0, added 158
+Progress: resolved 454, reused 454, downloaded 0, added 163
+Progress: resolved 454, reused 454, downloaded 0, added 169
+Progress: resolved 454, reused 454, downloaded 0, added 170
+Progress: resolved 454, reused 454, downloaded 0, added 171
+Progress: resolved 454, reused 454, downloaded 0, added 179
+Progress: resolved 454, reused 454, downloaded 0, added 184
+Progress: resolved 454, reused 454, downloaded 0, added 189
+Progress: resolved 454, reused 454, downloaded 0, added 196
+Progress: resolved 454, reused 454, downloaded 0, added 197
+Progress: resolved 454, reused 454, downloaded 0, added 199
+Progress: resolved 454, reused 454, downloaded 0, added 200
+Progress: resolved 454, reused 454, downloaded 0, added 203
+Progress: resolved 454, reused 454, downloaded 0, added 204
+Progress: resolved 454, reused 454, downloaded 0, added 205
+Progress: resolved 454, reused 454, downloaded 0, added 207
+Progress: resolved 454, reused 454, downloaded 0, added 208
+Progress: resolved 454, reused 454, downloaded 0, added 210
+Progress: resolved 454, reused 454, downloaded 0, added 211
+Progress: resolved 454, reused 454, downloaded 0, added 212
+Progress: resolved 454, reused 454, downloaded 0, added 213
+Progress: resolved 454, reused 454, downloaded 0, added 214
+Progress: resolved 454, reused 454, downloaded 0, added 228
+Progress: resolved 454, reused 454, downloaded 0, added 229
+Progress: resolved 454, reused 454, downloaded 0, added 233
+Progress: resolved 454, reused 454, downloaded 0, added 234
+Progress: resolved 454, reused 454, downloaded 0, added 235
+Progress: resolved 454, reused 454, downloaded 0, added 236
+Progress: resolved 454, reused 454, downloaded 0, added 239
+Progress: resolved 454, reused 454, downloaded 0, added 240
+Progress: resolved 454, reused 454, downloaded 0, added 264
+Progress: resolved 454, reused 454, downloaded 0, added 269
+Progress: resolved 454, reused 454, downloaded 0, added 270
+Progress: resolved 454, reused 454, downloaded 0, added 271
+Progress: resolved 454, reused 454, downloaded 0, added 272
+Progress: resolved 454, reused 454, downloaded 0, added 273
+Progress: resolved 454, reused 454, downloaded 0, added 275
+Progress: resolved 454, reused 454, downloaded 0, added 276
+Progress: resolved 454, reused 454, downloaded 0, added 279
+Progress: resolved 454, reused 454, downloaded 0, added 280
+Progress: resolved 454, reused 454, downloaded 0, added 281
+Progress: resolved 454, reused 454, downloaded 0, added 282
+Progress: resolved 454, reused 454, downloaded 0, added 283
+Progress: resolved 454, reused 454, downloaded 0, added 286
+Progress: resolved 454, reused 454, downloaded 0, added 287
+Progress: resolved 454, reused 454, downloaded 0, added 290
+Progress: resolved 454, reused 454, downloaded 0, added 294
+Progress: resolved 454, reused 454, downloaded 0, added 302
+Progress: resolved 454, reused 454, downloaded 0, added 305
+Progress: resolved 454, reused 454, downloaded 0, added 306
+Progress: resolved 454, reused 454, downloaded 0, added 309
+Progress: resolved 454, reused 454, downloaded 0, added 312
+Progress: resolved 454, reused 454, downloaded 0, added 316
+Progress: resolved 454, reused 454, downloaded 0, added 326
+Progress: resolved 454, reused 454, downloaded 0, added 332
+Progress: resolved 454, reused 454, downloaded 0, added 342
+Progress: resolved 454, reused 454, downloaded 0, added 353
+Progress: resolved 454, reused 454, downloaded 0, added 358
+Progress: resolved 454, reused 454, downloaded 0, added 368
+Progress: resolved 454, reused 454, downloaded 0, added 370
+Progress: resolved 454, reused 454, downloaded 0, added 372
+Progress: resolved 454, reused 454, downloaded 0, added 377
+Progress: resolved 454, reused 454, downloaded 0, added 382
+Progress: resolved 454, reused 454, downloaded 0, added 383
+Progress: resolved 454, reused 454, downloaded 0, added 387
+Progress: resolved 454, reused 454, downloaded 0, added 391
+Progress: resolved 454, reused 454, downloaded 0, added 394
+Progress: resolved 454, reused 454, downloaded 0, added 400
+Progress: resolved 454, reused 454, downloaded 0, added 409
+Progress: resolved 454, reused 454, downloaded 0, added 417
+Progress: resolved 454, reused 454, downloaded 0, added 421
+Progress: resolved 454, reused 454, downloaded 0, added 429
+Progress: resolved 454, reused 454, downloaded 0, added 433
+Progress: resolved 454, reused 454, downloaded 0, added 437
+Progress: resolved 454, reused 454, downloaded 0, added 441
+Progress: resolved 454, reused 454, downloaded 0, added 442
+Progress: resolved 454, reused 454, downloaded 0, added 447
+Progress: resolved 454, reused 454, downloaded 0, added 448
+Progress: resolved 454, reused 454, downloaded 0, added 449
+Progress: resolved 454, reused 454, downloaded 0, added 450
+Progress: resolved 454, reused 454, downloaded 0, added 451
+Progress: resolved 454, reused 454, downloaded 0, added 452
+Progress: resolved 454, reused 454, downloaded 0, added 453
+Progress: resolved 454, reused 454, downloaded 0, added 454
+Progress: resolved 454, reused 454, downloaded 0, added 454, done
+
+dependencies:
++ @google/genai 1.43.0
++ @tailwindcss/vite 4.2.1
++ @vitejs/plugin-react 5.1.4
++ axios 1.13.6
++ better-sqlite3 12.6.2
++ clsx 2.1.1
++ date-fns 4.1.0
++ dotenv 17.3.1
++ express 4.22.1
++ framer-motion 12.34.3
++ lucide-react 0.546.0
++ motion 12.34.3
++ react 19.2.4
++ react-dom 19.2.4
++ react-router-dom 7.13.1
++ recharts 3.7.0
++ tailwind-merge 3.5.0
++ vite 6.4.1
++ zustand 5.0.11
+
+devDependencies:
++ @testing-library/jest-dom 6.9.1
++ @testing-library/react 16.3.2
++ @testing-library/user-event 14.6.1
++ @types/express 4.17.25
++ @types/node 22.19.13
++ @types/react-router-dom 5.3.3
++ @vitest/coverage-v8 3.2.4
++ @vitest/ui 3.2.4
++ autoprefixer 10.4.27
++ jsdom 26.1.0
++ tailwindcss 4.2.1
++ tsx 4.21.0
++ typescript 5.8.3
++ vitest 3.2.4
+
+╭ Warning ─────────────────────────────────────────────────────────────────────╮
+│                                                                              │
+│   Ignored build scripts: better-sqlite3@12.6.2, esbuild@0.25.12,             │
+│   esbuild@0.27.3, protobufjs@7.5.4.                                          │
+│   Run "pnpm approve-builds" to pick which dependencies should be allowed     │
+│   to run scripts.                                                            │
+│                                                                              │
+╰──────────────────────────────────────────────────────────────────────────────╯
+Done in 7m 0.6s using pnpm v10.32.1

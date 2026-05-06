@@ -1,0 +1,37 @@
+{
+  "entities": {
+    "BlogPost": {
+      "title": "BlogPost",
+      "description": "A blog post or news article.",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string", "description": "The title of the post." },
+        "content": { "type": "string", "description": "The content of the post." },
+        "author": { "type": "string", "description": "The author of the post." },
+        "createdAt": { "type": "string", "format": "date", "description": "The creation date." }
+      },
+      "required": ["title", "content", "createdAt"]
+    },
+    "Resource": {
+      "title": "Resource",
+      "description": "A downloadable resource or guide.",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string", "description": "The title of the resource." },
+        "description": { "type": "string", "description": "A brief description." },
+        "url": { "type": "string", "format": "uri", "description": "The URL to the resource." }
+      },
+      "required": ["title", "url"]
+    }
+  },
+  "firestore": {
+    "/blogPosts/{postId}": {
+      "schema": "BlogPost",
+      "description": "Collection of blog posts."
+    },
+    "/resources/{resourceId}": {
+      "schema": "Resource",
+      "description": "Collection of resources."
+    }
+  }
+}

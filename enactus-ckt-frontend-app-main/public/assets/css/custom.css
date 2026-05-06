@@ -1,0 +1,176 @@
+/* Custom overrides */
+/* Disable any shake animations globally */
+.shake {
+  -webkit-animation: none !important;
+  animation: none !important;
+}
+
+/* Disable other decorative jump animations globally */
+.jump,
+.jump-reverse {
+  -webkit-animation: none !important;
+  animation: none !important;
+}
+
+/* Hide any remaining hand shape images if present */
+img[src*="hand-shape"],
+[data-mask-src*="hand-shape"],
+img[src*="/shape/hand"],
+[data-mask-src*="/shape/hand"] {
+  display: none !important;
+}
+
+/* Hide all decorative hero shapes */
+.hero-shape-3-1,
+.hero-shape-3-2,
+.hero-shape-3-3 {
+  display: none !important;
+}
+
+/* Hide all generic shape mockups across the site */
+.shape-mockup {
+  display: none !important;
+}
+
+/* Project cards */
+.project-card {
+  background: #fff;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.06);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.project-card .project-thumb img {
+  width: 100%;
+  display: block;
+}
+.project-card .project-content {
+  padding: 16px;
+}
+
+/* Achievements grid */
+.achievements-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+@media (max-width: 1199px) {
+  .achievements-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 575px) {
+  .achievements-grid { grid-template-columns: 1fr; }
+}
+
+.achievement-card {
+  background: #fff;
+  border-radius: 16px;
+  padding: 18px 16px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.06);
+  position: relative;
+  overflow: hidden;
+}
+.achievement-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(160px 60px at -10% -10%, rgba(255,215,0,.15), transparent 60%),
+              radial-gradient(120px 50px at 110% 110%, rgba(255,215,0,.12), transparent 60%);
+  pointer-events: none;
+}
+.achievement-icon {
+  color: var(--theme-color);
+  font-size: 22px;
+  margin-bottom: 6px;
+}
+.achievement-value {
+  font-weight: 800;
+  font-size: 34px;
+  line-height: 1;
+}
+.achievement-label {
+  color: var(--title-color);
+  font-weight: 600;
+  opacity: 0.8;
+}
+
+/* Counter animation (basic) */
+.achievement-card .counter-number {
+  display: inline-block;
+  transform: translateY(6px);
+  animation: raise-in 600ms ease forwards;
+}
+@keyframes raise-in {
+  to { transform: translateY(0); }
+}
+
+/* Nudge the hero right image upward on large screens and add festive background */
+@media (min-width: 992px) {
+  .th-hero-wrapper.hero-3 .hero-img-offset-lg {
+    margin-top: 280px !important;
+    position: relative;
+    z-index: 1;
+  }
+  /* Image should sit above decorations */
+  .th-hero-wrapper.hero-3 .hero-img-offset-lg img {
+    position: relative;
+    z-index: 2;
+    transform: rotate(20deg);
+    transform-origin: center;
+  }
+  /* Subtle angled lines behind image */
+  .th-hero-wrapper.hero-3 .hero-img-offset-lg::before {
+    content: "";
+    position: absolute;
+    inset: -30px -20px -30px 0;
+    z-index: 0;
+    background: repeating-linear-gradient(45deg, rgba(255, 215, 0, 0.18) 0 12px, transparent 12px 28px);
+    border-radius: 20px;
+    transform: rotate(-6deg);
+    pointer-events: none;
+    filter: blur(0.2px);
+  }
+  /* Confetti sparkles */
+  .th-hero-wrapper.hero-3 .hero-img-offset-lg::after {
+    content: "";
+    position: absolute;
+    top: -20px;
+    right: -10px;
+    bottom: -20px;
+    left: 10%;
+    z-index: 0;
+    pointer-events: none;
+    background-image:
+      radial-gradient(circle 3px at 10% 20%, rgba(255, 215, 0, 0.85) 99%, transparent 100%),
+      radial-gradient(circle 2px at 30% 80%, rgba(255, 107, 129, 0.9) 99%, transparent 100%),
+      radial-gradient(circle 2.5px at 60% 30%, rgba(72, 149, 239, 0.9) 99%, transparent 100%),
+      radial-gradient(circle 2px at 80% 60%, rgba(46, 213, 115, 0.9) 99%, transparent 100%),
+      radial-gradient(circle 1.8px at 50% 10%, rgba(255, 159, 67, 0.95) 99%, transparent 100%);
+    background-repeat: no-repeat;
+    animation: confetti-drift 6s linear infinite;
+    opacity: 0.9;
+  }
+
+  /* About section tweaks */
+  #about-sec .img-box3 { padding: 200px 60px 0 0 !important; }
+  #about-sec .img-box3 .img2 { top: 70px !important; right: -6px !important; }
+}
+
+/* Reset on smaller screens */
+@media (max-width: 991.98px) {
+  .th-hero-wrapper.hero-3 .hero-img-offset-lg { margin-top: 0 !important; }
+}
+
+/* Keyframes */
+@keyframes confetti-drift {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(6px); }
+  100% { transform: translateY(0); }
+}
+
+/* Brand logos cleanup */
+.brand-box { display: flex; align-items: center; justify-content: center; padding: 12px 8px; }
+.brand-logo { max-height: 70px; width: auto; display: block; filter: none !important; mix-blend-mode: normal !important; opacity: 1 !important; }
+.brand-box:hover .brand-logo { filter: none !important; opacity: 1 !important; }
+@media (max-width: 991.98px) { .brand-logo { max-height: 60px; } }

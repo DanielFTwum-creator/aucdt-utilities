@@ -1,0 +1,393 @@
+name: tuc-utilities
+services:
+  accommodation-management:
+    build:
+      context: C:\Users\DELL\OneDrive\Documents\Downloads\Development\tuc-utilities\accommodation-management
+      dockerfile: Dockerfile.prod
+    environment:
+      DB_HOST: mariadb
+      DB_NAME: accommodation_management
+      DB_PASSWORD: apppass
+      DB_USER: appuser
+    networks:
+      default: null
+    ports:
+      - mode: ingress
+        target: 4053
+        published: "4053"
+        protocol: tcp
+    restart: unless-stopped
+  alumni-network:
+    build:
+      context: C:\Users\DELL\OneDrive\Documents\Downloads\Development\tuc-utilities\alumni-network
+      dockerfile: Dockerfile.prod
+    environment:
+      DB_HOST: mariadb
+      DB_NAME: alumni_network
+      DB_PASSWORD: apppass
+      DB_USER: appuser
+    networks:
+      default: null
+    ports:
+      - mode: ingress
+        target: 4050
+        published: "4050"
+        protocol: tcp
+    restart: unless-stopped
+  analytics-refactor:
+    build:
+      context: C:\Users\DELL\OneDrive\Documents\Downloads\Development\tuc-utilities\analytics-refactor
+      dockerfile: ../Dockerfile.vite
+    container_name: analytics-refactor
+    environment:
+      NODE_ENV: production
+    healthcheck:
+      test:
+        - CMD
+        - wget
+        - --quiet
+        - --tries=1
+        - --spider
+        - http://localhost/health
+      timeout: 10s
+      interval: 30s
+      retries: 3
+    networks:
+      tuc-network: null
+    restart: unless-stopped
+  tuc-analytics-dashboard:
+    build:
+      context: C:\Users\DELL\OneDrive\Documents\Downloads\Development\tuc-utilities\tuc-analytics-dashboard
+      dockerfile: ../Dockerfile.vite
+    container_name: tuc-analytics-dashboard
+    environment:
+      NODE_ENV: production
+    healthcheck:
+      test:
+        - CMD
+        - wget
+        - --quiet
+        - --tries=1
+        - --spider
+        - http://localhost/health
+      timeout: 10s
+      interval: 30s
+      retries: 3
+    networks:
+      tuc-network: null
+    restart: unless-stopped
+  tuc-website-react:
+    build:
+      context: C:\Users\DELL\OneDrive\Documents\Downloads\Development\tuc-utilities\tuc-website-react
+      dockerfile: ../Dockerfile.vite
+    container_name: tuc-website-react
+    environment:
+      NODE_ENV: production
+    healthcheck:
+      test:
+        - CMD
+        - wget
+        - --quiet
+        - --tries=1
+        - --spider
+        - http://localhost/health
+      timeout: 10s
+      interval: 30s
+      retries: 3
+    networks:
+      tuc-network: null
+    restart: unless-stopped
+  career-services:
+    build:
+      context: C:\Users\DELL\OneDrive\Documents\Downloads\Development\tuc-utilities\career-services
+      dockerfile: Dockerfile.prod
+    environment:
+      DB_HOST: mariadb
+      DB_NAME: career_services
+      DB_PASSWORD: apppass
+      DB_USER: appuser
+    networks:
+      default: null
+    ports:
+      - mode: ingress
+        target: 4051
+        published: "4051"
+        protocol: tcp
+    restart: unless-stopped
+  complaint-resolution:
+    build:
+      context: C:\Users\DELL\OneDrive\Documents\Downloads\Development\tuc-utilities\complaint-resolution-system
+      dockerfile: Dockerfile.prod
+    environment:
+      DB_HOST: mariadb
+      DB_NAME: complaint_resolution
+      DB_PASSWORD: apppass
+      DB_USER: appuser
+    networks:
+      default: null
+    ports:
+      - mode: ingress
+        target: 4055
+        published: "4055"
+        protocol: tcp
+    restart: unless-stopped
+  fees-comparison-dashboard:
+    build:
+      context: C:\Users\DELL\OneDrive\Documents\Downloads\Development\tuc-utilities\fees-comparison-dashboard
+      dockerfile: ../Dockerfile.vite
+    container_name: fees-comparison-dashboard
+    environment:
+      NODE_ENV: production
+    healthcheck:
+      test:
+        - CMD
+        - wget
+        - --quiet
+        - --tries=1
+        - --spider
+        - http://localhost/health
+      timeout: 10s
+      interval: 30s
+      retries: 3
+    networks:
+      tuc-network: null
+    restart: unless-stopped
+  health-wellness-portal:
+    build:
+      context: C:\Users\DELL\OneDrive\Documents\Downloads\Development\tuc-utilities\health-wellness-portal
+      dockerfile: Dockerfile.prod
+    environment:
+      DB_HOST: mariadb
+      DB_NAME: health_wellness
+      DB_PASSWORD: apppass
+      DB_USER: appuser
+    networks:
+      default: null
+    ports:
+      - mode: ingress
+        target: 4054
+        published: "4054"
+        protocol: tcp
+    restart: unless-stopped
+  internship-program:
+    build:
+      context: C:\Users\DELL\OneDrive\Documents\Downloads\Development\tuc-utilities\internship-program
+      dockerfile: Dockerfile.prod
+    environment:
+      DB_HOST: mariadb
+      DB_NAME: internship_program
+      DB_PASSWORD: apppass
+      DB_USER: appuser
+    networks:
+      default: null
+    ports:
+      - mode: ingress
+        target: 4058
+        published: "4058"
+        protocol: tcp
+    restart: unless-stopped
+  kanban-app:
+    build:
+      context: C:\Users\DELL\OneDrive\Documents\Downloads\Development\tuc-utilities\kanban-app
+      dockerfile: ../Dockerfile.vite
+    container_name: kanban-app
+    environment:
+      NODE_ENV: production
+    healthcheck:
+      test:
+        - CMD
+        - wget
+        - --quiet
+        - --tries=1
+        - --spider
+        - http://localhost/health
+      timeout: 10s
+      interval: 30s
+      retries: 3
+    networks:
+      tuc-network: null
+    restart: unless-stopped
+  library-management:
+    build:
+      context: C:\Users\DELL\OneDrive\Documents\Downloads\Development\tuc-utilities\library-management
+      dockerfile: Dockerfile.prod
+    environment:
+      DB_HOST: mariadb
+      DB_NAME: library_management
+      DB_PASSWORD: apppass
+      DB_USER: appuser
+    networks:
+      default: null
+    ports:
+      - mode: ingress
+        target: 4052
+        published: "4052"
+        protocol: tcp
+    restart: unless-stopped
+  mentorship-program:
+    build:
+      context: C:\Users\DELL\OneDrive\Documents\Downloads\Development\tuc-utilities\mentorship-program
+      dockerfile: Dockerfile.prod
+    environment:
+      DB_HOST: mariadb
+      DB_NAME: mentorship_program
+      DB_PASSWORD: apppass
+      DB_USER: appuser
+    networks:
+      default: null
+    ports:
+      - mode: ingress
+        target: 4056
+        published: "4056"
+        protocol: tcp
+    restart: unless-stopped
+  nginx-gateway:
+    container_name: tuc-gateway
+    depends_on:
+      analytics-refactor:
+        condition: service_started
+        required: true
+      tuc-analytics-dashboard:
+        condition: service_started
+        required: true
+      tuc-website-react:
+        condition: service_started
+        required: true
+      fees-comparison-dashboard:
+        condition: service_started
+        required: true
+      kanban-app:
+        condition: service_started
+        required: true
+      techbridge-product-design-6r-design-portal:
+        condition: service_started
+        required: true
+    healthcheck:
+      test:
+        - CMD
+        - wget
+        - --quiet
+        - --tries=1
+        - --spider
+        - http://localhost/health
+      timeout: 10s
+      interval: 30s
+      retries: 3
+    image: nginx:alpine
+    networks:
+      tuc-network: null
+    ports:
+      - mode: ingress
+        target: 80
+        published: "8080"
+        protocol: tcp
+    restart: unless-stopped
+    volumes:
+      - type: bind
+        source: C:\Users\DELL\OneDrive\Documents\Downloads\Development\tuc-utilities\docker\nginx\nginx-all-apps.conf
+        target: /etc/nginx/conf.d/default.conf
+        read_only: true
+        bind: {}
+      - type: bind
+        source: C:\Users\DELL\OneDrive\Documents\Downloads\Development\tuc-utilities\docker\nginx\html
+        target: /usr/share/nginx/html
+        read_only: true
+        bind: {}
+  research-portal:
+    build:
+      context: C:\Users\DELL\OneDrive\Documents\Downloads\Development\tuc-utilities\research-portal
+      dockerfile: Dockerfile.prod
+    environment:
+      DB_HOST: mariadb
+      DB_NAME: research_portal
+      DB_PASSWORD: apppass
+      DB_USER: appuser
+    networks:
+      default: null
+    ports:
+      - mode: ingress
+        target: 4057
+        published: "4057"
+        protocol: tcp
+    restart: unless-stopped
+  scholarship-tracker:
+    build:
+      context: C:\Users\DELL\OneDrive\Documents\Downloads\Development\tuc-utilities\scholarship-tracker
+      dockerfile: Dockerfile.prod
+    environment:
+      DB_HOST: mariadb
+      DB_NAME: scholarship_tracker
+      DB_PASSWORD: apppass
+      DB_USER: appuser
+    networks:
+      default: null
+    ports:
+      - mode: ingress
+        target: 4049
+        published: "4049"
+        protocol: tcp
+    restart: unless-stopped
+  student-payment:
+    build:
+      context: C:\Users\DELL\OneDrive\Documents\Downloads\Development\tuc-utilities\student-payment-system
+      dockerfile: Dockerfile.prod
+    environment:
+      DB_HOST: mariadb
+      DB_NAME: student_payment
+      DB_PASSWORD: apppass
+      DB_USER: appuser
+    networks:
+      default: null
+    ports:
+      - mode: ingress
+        target: 4059
+        published: "4059"
+        protocol: tcp
+    restart: unless-stopped
+  student-success-coach:
+    build:
+      context: C:\Users\DELL\OneDrive\Documents\Downloads\Development\tuc-utilities\student-success-coach
+      dockerfile: Dockerfile.prod
+    environment:
+      DB_HOST: mariadb
+      DB_NAME: student_success_coach
+      DB_PASSWORD: apppass
+      DB_USER: appuser
+    networks:
+      default: null
+    ports:
+      - mode: ingress
+        target: 4048
+        published: "4048"
+        protocol: tcp
+    restart: unless-stopped
+  techbridge-product-design-6r-design-portal:
+    build:
+      context: C:\Users\DELL\OneDrive\Documents\Downloads\Development\tuc-utilities\techbridge-product-design-6r-design-portal
+      dockerfile: ../Dockerfile.vite
+    container_name: techbridge-product-design-6r-design-portal
+    environment:
+      NODE_ENV: production
+    healthcheck:
+      test:
+        - CMD
+        - wget
+        - --quiet
+        - --tries=1
+        - --spider
+        - http://localhost/health
+      timeout: 10s
+      interval: 30s
+      retries: 3
+    networks:
+      tuc-network: null
+    restart: unless-stopped
+networks:
+  tuc-network:
+    name: tuc-utilities_tuc-network
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
+  default:
+    name: tuc-utilities_default

@@ -1,0 +1,81 @@
+
+<svg width="800" height="500" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif" font-size="12">
+    <title>Data Flow Diagram - Salary Calculation and Auditing</title>
+    <defs>
+        <marker id="arrow-dfd" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569" />
+        </marker>
+        <style>
+            .title { font-size: 16px; font-weight: bold; text-anchor: middle; }
+            .entity { fill: #e0f2fe; stroke: #38bdf8; }
+            .process { fill: #d1fae5; stroke: #34d399; }
+            .datastore { stroke: #4b5563; fill: #f3f4f6; }
+            .flow { stroke: #6b7280; stroke-width: 1.5; marker-end: url(#arrow-dfd); fill: none; }
+            .label { fill: #1f2937; font-size: 11px; text-anchor: middle; }
+            .process-text { text-anchor: middle; font-weight: bold; }
+            .entity-text { text-anchor: middle; font-weight: bold; }
+            .datastore-text { text-anchor: middle; font-weight: bold; }
+        </style>
+    </defs>
+
+    <text x="400" y="30" class="title">DFD: Salary Calculation and Auditing</text>
+
+    <!-- External Entity: Administrator -->
+    <rect x="50" y="200" width="120" height="60" rx="5" class="entity" />
+    <text x="110" y="235" class="entity-text">Administrator</text>
+
+    <!-- Process 1.0: Perform Calculation -->
+    <ellipse cx="300" cy="230" rx="80" ry="40" class="process" />
+    <text x="300" y="225" class="process-text">1.0</text>
+    <text x="300" y="240" class="process-text">Perform Calculation</text>
+
+    <!-- Process 2.0: Generate Audit Log -->
+    <ellipse cx="550" cy="230" rx="80" ry="40" class="process" />
+    <text x="550" y="225" class="process-text">2.0</text>
+    <text x="550" y="240" class="process-text">Generate Audit Log</text>
+    
+    <!-- Process 3.0: View History/Logs -->
+    <ellipse cx="300" cy="400" rx="80" ry="40" class="process" />
+    <text x="300" y="395" class="process-text">3.0</text>
+    <text x="300" y="410" class="process-text">View History/Logs</text>
+
+    <!-- Data Store: Audit Log -->
+    <rect x="680" y="300" width="100" height="70" class="datastore" />
+    <line x1="685" y1="300" x2="685" y2="370" stroke="#4b5563" stroke-width="2"/>
+    <text x="730" y="330" class="datastore-text">D1</text>
+    <text x="730" y="345" class="datastore-text">Audit Log</text>
+    <text x="730" y="358" class="datastore-text" font-size="9">(localStorage)</text>
+    
+    <!-- Data Store: Step Codes -->
+    <rect x="680" y="100" width="100" height="70" class="datastore" />
+    <line x1="685" y1="100" x2="685" y2="170" stroke="#4b5563" stroke-width="2"/>
+    <text x="730" y="130" class="datastore-text">D2</text>
+    <text x="730" y="145" class="datastore-text">Step Codes</text>
+     <text x="730" y="158" class="datastore-text" font-size="9">(localStorage)</text>
+
+    <!-- Flows -->
+    <path class="flow" d="M 170 220 L 220 220" />
+    <text x="195" y="215" class="label">Salary Inputs</text>
+
+    <path class="flow" d="M 380 230 H 470" />
+    <text x="425" y="225" class="label">Calculation Details</text>
+    
+    <path class="flow" d="M 630 240 Q 660 270 680 300" />
+    <text x="660" y="280" class="label">New Log Entry</text>
+
+    <path class="flow" d="M 220 250 Q 190 270 170 280" />
+    <text x="205" y="280" class="label">Payslip Results</text>
+    
+    <path class="flow" d="M 170 380 L 220 390" />
+    <text x="195" y="375" class="label">View Request</text>
+    
+    <path class="flow" d="M 680 335 H 380 V 400" />
+    <text x="530" y="325" class="label">Log Data</text>
+    
+    <path class="flow" d="M 220 410 L 170 420" />
+    <text x="195" y="430" class="label">History View</text>
+
+    <path class="flow" d="M 680 135 H 380 V 220" />
+    <text x="530" y="180" class="label">Grade/Step Data</text>
+
+</svg>

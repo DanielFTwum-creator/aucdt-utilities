@@ -1,0 +1,5 @@
+{
+  "name": "SEND Platform Dashboard",
+  "description": "Admin dashboard for the SEND (Schedule | Execute | Notify | Deliver) Report Automation Platform. Manages report jobs, schedules, delivery targets, and monitors system performance.",
+  "requestFramePermissions": []
+}

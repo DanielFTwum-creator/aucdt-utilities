@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#666" />
+    </marker>
+    <style>
+      .box { fill: #f8fafc; stroke: #334155; stroke-width: 2; rx: 8; }
+      .text { font-family: sans-serif; font-size: 14px; fill: #1e293b; text-anchor: middle; }
+      .title { font-weight: bold; font-size: 16px; }
+      .connector { stroke: #64748b; stroke-width: 2; fill: none; marker-end: url(#arrow); }
+      .cloud { fill: #e0f2fe; stroke: #0ea5e9; stroke-dasharray: 5,5; }
+      .ext-text { fill: #0369a1; font-weight: bold; }
+    </style>
+  </defs>
+
+  <!-- Title -->
+  <text x="400" y="40" text-anchor="middle" font-family="sans-serif" font-size="24" font-weight="bold" fill="#0f172a">Pama Realtor - System Architecture</text>
+
+  <!-- Client Browser Area -->
+  <rect x="50" y="80" width="700" height="400" fill="none" stroke="#cbd5e1" stroke-width: 2" stroke-dasharray="10,5" rx="15" />
+  <text x="80" y="110" font-family="sans-serif" font-size="14" fill="#64748b" font-weight="bold">Client Browser (SPA)</text>
+
+  <!-- React App Core -->
+  <rect x="250" y="150" width="300" height="250" class="box" />
+  <text x="400" y="180" class="text title">React Application</text>
+  
+  <!-- Components -->
+  <g transform="translate(270, 210)">
+    <rect width="120" height="50" fill="#fff" stroke="#94a3b8" rx="4" />
+    <text x="60" y="30" class="text">App Router</text>
+  </g>
+  
+  <g transform="translate(410, 210)">
+    <rect width="120" height="50" fill="#fff" stroke="#94a3b8" rx="4" />
+    <text x="60" y="30" class="text">Admin Dashboard</text>
+  </g>
+
+  <g transform="translate(270, 280)">
+    <rect width="120" height="50" fill="#fff" stroke="#94a3b8" rx="4" />
+    <text x="60" y="30" class="text">Property Catalog</text>
+  </g>
+
+  <g transform="translate(410, 280)">
+    <rect width="120" height="50" fill="#fff" stroke="#94a3b8" rx="4" />
+    <text x="60" y="30" class="text">Testing Suite</text>
+  </g>
+
+  <!-- State -->
+  <g transform="translate(340, 350)">
+    <rect width="120" height="40" fill="#f0fdf4" stroke="#22c55e" rx="4" />
+    <text x="60" y="25" class="text" fill="#15803d">React State</text>
+  </g>
+
+  <!-- External Services -->
+  <ellipse cx="150" cy="530" rx="80" ry="40" class="cloud" />
+  <text x="150" y="535" class="text ext-text">Google Gemini API</text>
+  
+  <ellipse cx="650" cy="530" rx="80" ry="40" class="cloud" />
+  <text x="650" y="535" class="text ext-text">Image CDN</text>
+
+  <!-- Connections -->
+  <path d="M400 400 L400 430 L150 430 L150 490" class="connector" />
+  <path d="M400 400 L400 430 L650 430 L650 490" class="connector" />
+
+  <!-- Descriptions -->
+  <text x="180" y="460" font-family="sans-serif" font-size="12" fill="#64748b">AI Queries (Chat)</text>
+  <text x="620" y="460" font-family="sans-serif" font-size="12" fill="#64748b">Assets</text>
+
+</svg>

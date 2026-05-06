@@ -1,0 +1,585 @@
+\documentclass[11pt]{article}
+
+%======= PACKAGES =======%
+\usepackage[a4paper, margin=1in]{geometry}
+\usepackage{graphicx}
+\usepackage[svgnames]{xcolor}
+\usepackage{titlesec}
+\usepackage{caption}
+\usepackage[colorlinks=true, linkcolor=AUCDTBurgundy, citecolor=AUCDTBurgundy, urlcolor=AUCDTBurgundy]{hyperref}
+\usepackage{enumitem}
+\usepackage{amsmath, amsfonts, amssymb}
+\usepackage[english]{datetime}
+
+% --- FONT SETUP (FOR XELATEX/LUALATEX) ---
+% This method manually sets Poppins as the font for the entire document.
+\usepackage{fontspec}
+\setmainfont{Poppins}
+
+%======= AUCDT BRAND COLORS =======%
+\definecolor{AUCDTBurgundy}{HTML}{8B1538}
+\definecolor{AUCDTGold}{HTML}{D4AF37}
+\definecolor{AUCDTDarkText}{HTML}{2C1810}
+
+% Set main text color
+\color{AUCDTDarkText}
+
+%======= SECTION HEADING STYLING (titlesec) =======%
+\titleformat{\section}{\normalfont\sffamily\huge\bfseries\color{AUCDTBurgundy}}{\thesection.}{1em}{}
+\titleformat{\subsection}{\normalfont\sffamily\Large\bfseries\color{AUCDTGold}}{\thesubsection.}{1em}{}
+\titleformat{\subsubsection}{\normalfont\sffamily\large\bfseries\color{AUCDTDarkText}}{\thesubsubsection.}{1em}{}
+
+% Adjust spacing for titlesec headings
+\titlespacing*{\section}{0pt}{3.5ex plus 1ex minus .2ex}{2.3ex plus .2ex}
+\titlespacing*{\subsection}{0pt}{3.25ex plus 1ex minus .2ex}{1.5ex plus .2ex}
+\titlespacing*{\subsubsection}{0pt}{3.25ex plus 1ex minus .2ex}{1.5ex plus .2ex}
+
+%======= CUSTOM ENVIRONMENTS =======%
+\newenvironment{frdescription}{%
+  \begin{description}[font=\normalfont\sffamily\bfseries, labelwidth=2cm, leftmargin=2.2cm]%
+}{%
+  \end{description}%
+}
+
+%================================================%
+%               DOCUMENT START                   %
+%================================================%
+\begin{document}
+
+%======= TITLE PAGE =======%
+\begin{titlepage}
+    \centering
+    \thispagestyle{empty} % No header or footer on the title page
+    
+    \vspace*{2cm}
+    
+    % Ensure the logo file 'aucdt-logo.png' is in the same directory as your .tex file
+    \includegraphics[width=6cm]{aucdt-logo.png}\par
+    
+    \vfill % Adds flexible vertical space
+    
+    {\huge\sffamily\bfseries\color{AUCDTBurgundy} Software Requirements Specification}\par
+    \vspace{0.5cm}
+    {\Large\sffamily\bfseries For AUCDT/Hubtel Payment Integration}\par
+    
+    \vfill % Adds flexible vertical space
+    
+    {\Large\sffamily AsanSka University College of Design and Technology}\par
+    \vspace{1.5cm}
+    {\large\sffamily \monthname[\the\month] \the\year}\par
+    
+\end{titlepage}
+
+%======= TABLE OF CONTENTS =======%
+\newpage
+\tableofcontents
+\newpage
+
+%================================================%
+%           MAIN DOCUMENT CONTENT                %
+%================================================%
+
+\section{Introduction}
+
+\subsection{Purpose}
+This Software Requirements Specification (SRS) document describes the functional and non-functional requirements for the AsanSka University College of Design and Technology Online Application Portal with integrated payment processing via Stripe and PayPal. The system is designed to modernise the application process for prospective students whilst ensuring secure payment processing and compliance with UK data protection regulations.
+
+\subsection{Scope}
+The AsanSka University College Application Portal is a web-based platform that facilitates:
+\begin{itemize}
+    \item Streamlined student registration with UCAS integration capabilities
+    \item Dynamic fee calculation based on course type and student residency status (Home/EU vs International)
+    \item Secure payment processing through Stripe and PayPal integration
+    \item Comprehensive application data collection aligned with UCAS standards for creative and design programmes
+    \item Administrative oversight and compliance reporting
+    \item Integration with existing Student Information Systems (SIS)
+    \item Portfolio upload and assessment tools specific to design and technology programmes
+\end{itemize}
+The system will benefit prospective students by providing an intuitive application journey tailored to creative disciplines and benefit University College staff by automating administrative processes whilst maintaining rigorous data governance standards.
+
+\subsection{Definitions, Acronyms, and Abbreviations}
+\begin{description}[font=\normalfont\sffamily\bfseries,labelwidth=3cm,leftmargin=3.2cm]
+    \item[AUCDT] AsanSka University College of Design and Technology
+    \item[UCAS] Universities and Colleges Admissions Service
+    \item[SIS] Student Information System
+    \item[GDPR] General Data protection Regulation
+    \item[API] Application Programming Interface
+    \item[SRS] Software Requirements Specification
+    \item[TDD] Test-Driven Development
+    \item[UI] User Interface
+    \item[SMS] Short Message Service
+    \item[PCI DSS] Payment Card Industry Data Security Standard
+    \item[ICO] Information Commissioner's Office
+\end{description}
+
+\subsection{References}
+\begin{itemize}
+    \item IEEE Std 830-1998: IEEE Recommended Practice for Software Requirements Specifications
+    \item Stripe Payment Gateway API Documentation v2023
+    \item PayPal Developer API Documentation
+    \item GDPR Compliance Guidelines (ICO)
+    \item UCAS Technical Integration Standards
+    \item AsanSka University College Data protection Policy
+    \item Java Spring Boot Framework Documentation
+    \item Angular Framework Documentation
+\end{itemize}
+
+\subsection{Overview}
+This SRS is organized into sections covering overall system description, specific functional requirements, system features, interface requirements, and non-functional requirements. The document serves as the primary reference for development, testing, and validation activities.
+
+\section{Overall Description}
+
+\subsection{Product Perspective}
+The AsanSka University College Application Portal is a comprehensive web application that integrates with:
+\begin{itemize}
+    \item Stripe and PayPal payment gateways for secure transaction processing
+    \item Email and SMS services for applicant verification and communication
+    \item PostgreSQL database with encryption at rest
+    \item UCAS Connect API for application data exchange
+    \item Existing University College SIS for student record management
+    \item Microsoft 365 for email services integration
+    \item Creative portfolio management systems for design and technology submissions
+    \item Web browsers across all major platforms with accessibility compliance
+\end{itemize}
+
+\subsection{Product Functions}
+The primary functions include:
+\begin{itemize}
+    \item Secure applicant registration with enhanced verification processes
+    \item Account verification via email and mobile authentication
+    \item Dynamic tuition fee calculation based on residency status and programme selection
+    \item Multi-gateway payment processing with PCI DSS compliance
+    \item Comprehensive application data collection following UCAS standards for creative programmes
+    \item Portfolio upload and management system for design and technology applications
+    \item Document upload and verification system
+    \item Administrative dashboard with comprehensive reporting
+    \item Integration with University College's existing student management systems
+\end{itemize}
+
+\subsection{User Classes and Characteristics}
+\subsubsection{Primary Users}
+\begin{description}[font=\normalfont\sffamily\bfseries,labelwidth=3cm,leftmargin=3.2cm]
+    \item[Prospective Applicants] Individuals seeking admission to AsanSka University College design and technology programmes
+    \item[Technical expertise] Basic to intermediate digital literacy with creative software familiarity
+    \item[Frequency of use] Primarily single-use during application period
+    \item[Security level] Authenticated applicant access with role-based permissions
+\end{description}
+
+\subsubsection{Secondary Users}
+\begin{description}[font=\normalfont\sffamily\bfseries,labelwidth=3cm,leftmargin=3.2cm]
+    \item[Academic Staff] Programme coordinators, design tutors, and admissions staff
+    \item[Technical expertise] Intermediate digital skills with training provided
+    \item[Frequency of use] Regular during admissions cycles
+    \item[Security level] Academic staff access with programme-specific permissions
+    \item[Admissions Office] Professional services staff managing creative programme applications
+    \item[Technical expertise] Advanced administrative system knowledge
+    \item[Frequency of use] Daily operational use
+    \item[Security level] Administrative access with full application oversight
+    \item[IT Support] Technical staff maintaining system integrity
+    \item[Technical expertise] Expert-level system administration
+    \item[Frequency of use] Ongoing maintenance and support
+    \item[Security level] System administrator privileges
+\end{description}
+
+\subsection{Operating Environment}
+\begin{itemize}
+    \item Server Environment: AWS Cloud Infrastructure or University-managed servers
+    \item Database: PostgreSQL 13 or higher with encryption capabilities
+    \item Backend Framework: Java Spring Boot with Spring Security
+    \item Frontend Framework: Angular with Material Design
+    \item Web Servers: Nginx with SSL/TLS termination
+    \item Client Environment: Modern web browsers supporting HTML5, CSS3, and ES6+ (Chrome 90+, Firefox 88+, Safari 14+, Edge 90+)
+    \item Network: JANET connectivity with internet failover
+    \item Mobile Compatibility: Responsive design supporting iOS Safari and Android Chrome
+\end{itemize}
+
+\subsection{Design and Implementation Constraints}
+\begin{itemize}
+    \item Compliance with GDPR and UK Data protection Act 2018
+    \item Integration with Stripe and PayPal payment gateways
+    \item Adherence to WCAG 2.1 AA accessibility standards
+    \item PCI DSS compliance for payment processing
+    \item Integration with existing University College authentication systems (Active Directory/SAML)
+    \item Performance requirements supporting peak application periods
+    \item Data residency requirements within UK/EU jurisdictions
+    \item Support for large file uploads for creative portfolios and design work
+    \item Integration with creative software file formats (Adobe Creative Suite, CAD files, etc.)
+\end{itemize}
+
+\subsection{Assumptions and Dependencies}
+\begin{itemize}
+    \item Stripe and PayPal payment gateway availability and reliability
+    \item JANET network connectivity with appropriate bandwidth for large file transfers
+    \item Microsoft 365 integration for email and authentication services
+    \item UCAS API availability for data exchange
+    \item User device compatibility with contemporary web standards and creative file formats
+    \item Compliance with evolving UK data protection legislation
+    \item Integration capabilities with existing University College systems
+    \item Cloud storage solutions for portfolio and creative work submissions
+\end{itemize}
+
+\section{Specific Requirements}
+
+\subsection{Functional Requirements}
+
+\subsubsection{FR-001: User Registration}
+\begin{frdescription}
+    \item[Priority] High
+    \item[Description] The system shall allow prospective applicants to create accounts with minimal required information.
+    \item[Inputs] First name, last name, email address, phone number
+    \item[Processing] Validate input data, create user account, generate verification token
+    \item[Outputs] User account created, verification token sent via email/SMS
+\end{frdescription}
+
+\subsubsection{FR-002: Account Verification}
+\begin{frdescription}
+    \item[Priority] High
+    \item[Description] The system shall verify user accounts through token-based verification.
+    \item[Inputs] Verification token
+    \item[Processing] Validate token, check expiry, activate user account
+    \item[Outputs] Account activation confirmation
+\end{frdescription}
+
+\subsubsection{FR-003: Tuition Fee Calculation}
+\begin{frdescription}
+    \item[Priority] High
+    \item[Description] The system shall dynamically calculate application and tuition fees based on programme selection and student residency status.
+    \item[Inputs] Programme code, student residency status (Home/EU/International), application type
+    \item[Processing] Determine fee structure, apply any applicable discounts or scholarships, calculate total fees
+    \item[Outputs] Detailed fee breakdown, payment options, estimated total cost
+\end{frdescription}
+
+\subsubsection{FR-004: Multi-Gateway Payment Processing}
+\begin{frdescription}
+    \item[Priority] High
+    \item[Description] The system shall integrate with multiple payment providers (Stripe, PayPal) for secure transaction processing.
+    \item[Inputs] Payment request, applicant information, fee amount, preferred payment method
+    \item[Processing] Route to appropriate payment gateway, process transaction, handle callbacks and webhooks
+    \item[Outputs] Payment confirmation, transaction reference, receipt generation
+\end{frdescription}
+
+\subsubsection{FR-005: Comprehensive Application Management}
+\begin{frdescription}
+    \item[Priority] High
+    \item[Description] The system shall collect and manage comprehensive application information in accordance with UCAS standards and University College requirements, with special provisions for creative portfolio submissions.
+    \item[Inputs] Personal details, educational qualifications, references, personal statement, creative portfolio, supporting documentation
+    \item[Processing] Validate application completeness, perform eligibility checks, process creative submissions, store securely with audit trail
+    \item[Outputs] Complete application profile, application reference number, status tracking, portfolio review interface
+\end{frdescription}
+
+\section{System Features}
+
+\subsection{User Registration and Verification}
+\subsubsection{Description}
+Streamlined registration process requiring only essential information followed by secure account verification.
+
+\subsubsection{Functional Requirements}
+\begin{itemize}
+    \item REQ-4.1.1: System shall validate email format and phone number format
+    \item REQ-4.1.2: System shall generate unique verification tokens with expiration times
+    \item REQ-4.1.3: System shall send verification tokens via email and SMS
+    \item REQ-4.1.4: System shall prevent duplicate registrations for the same email/phone
+\end{itemize}
+
+\subsubsection{Priority}
+High - Critical for user onboarding
+
+\subsection{Payment Integration and Financial Management}
+\subsubsection{Description}
+Robust payment processing through multiple gateways with comprehensive financial reporting and compliance.
+
+\subsubsection{Functional Requirements}
+\begin{itemize}
+    \item REQ-4.2.1: System shall determine fee structure based on programme type and residency status
+    \item REQ-4.2.2: System shall provide transparent fee breakdown before payment authorisation
+    \item REQ-4.2.3: System shall securely integrate with Stripe for card payments and direct debit
+    \item REQ-4.2.4: System shall integrate with PayPal for alternative payment methods
+    \item REQ-4.2.5: System shall maintain PCI DSS compliance throughout payment processing
+    \item REQ-4.2.6: System shall generate VAT-compliant receipts and invoices
+    \item REQ-4.2.7: System shall support instalment payment plans where applicable
+\end{itemize}
+
+\subsubsection{Priority}
+High - Critical for revenue management and regulatory compliance
+
+\subsection{Application Management}
+\subsubsection{Description}
+Comprehensive application data collection and management capabilities.
+
+\subsubsection{Functional Requirements}
+\begin{itemize}
+    \item REQ-4.3.1: System shall provide forms for educational background entry
+    \item REQ-4.3.2: System shall collect family and personal information
+    \item REQ-4.3.3: System shall validate required fields and data formats
+    \item REQ-4.3.4: System shall allow application data modification before submission
+    \item REQ-4.3.5: System shall generate application reference numbers
+\end{itemize}
+
+\subsubsection{Priority}
+Medium - Important for complete application processing
+
+\section{External Interface Requirements}
+
+\subsection{User Interfaces}
+\begin{itemize}
+    \item UI-001: Responsive web design supporting desktop and mobile devices
+    \item UI-002: Intuitive navigation with clear progress indicators
+    \item UI-003: Accessible design following WCAG 2.1 guidelines
+    \item UI-004: Multi-language support (English primary)
+\end{itemize}
+
+\subsection{Hardware Interfaces}
+\begin{itemize}
+    \item HI-001: Standard web server hardware requirements
+    \item HI-002: Database server with adequate storage and processing capacity
+\end{itemize}
+
+\subsection{Software Interfaces}
+\begin{itemize}
+    \item SI-001: Stripe Payment Gateway API v2023 with webhook integration
+    \item SI-002: PayPal REST API v2 for alternative payment processing
+    \item SI-003: Microsoft 365 API for email services and authentication
+    \item SI-004: UCAS Connect API for application data exchange
+    \item SI-005: PostgreSQL database with encrypted connections
+    \item SI-006: University SIS integration via secure REST APIs
+    \item SI-007: SMS service provider API (Twilio or equivalent UK provider)
+\end{itemize}
+
+\subsection{Communication Interfaces}
+\begin{itemize}
+    \item CI-001: HTTPS protocol for all client-server communication
+    \item CI-002: RESTful API design for frontend-backend communication
+    \item CI-003: Secure webhook endpoints for payment callbacks
+\end{itemize}
+
+\section{Non-Functional Requirements}
+
+\subsection{Performance Requirements}
+\begin{itemize}
+    \item PERF-001: System shall support 100 concurrent users
+    \item PERF-002: Page load times shall not exceed 3 seconds
+    \item PERF-003: Payment processing shall complete within 30 seconds
+    \item PERF-004: Database queries shall execute within 2 seconds
+\end{itemize}
+
+\subsection{Security Requirements}
+\begin{itemize}
+    \item SEC-001: All data transmission shall use TLS 1.3 encryption as minimum standard
+    \item SEC-002: User passwords shall be hashed using bcrypt with appropriate salt rounds
+    \item SEC-003: Payment information shall be processed through PCI DSS compliant gateways only
+    \item SEC-004: Session management with secure, HTTP-only cookies and CSRF protection
+    \item SEC-005: Comprehensive input validation and sanitisation to prevent injection attacks
+    \item SEC-006: Implementation of OWASP security guidelines and regular vulnerability assessments
+    \item SEC-007: Multi-factor authentication for administrative accounts
+    \item SEC-008: Regular security audits and penetration testing
+    \item SEC-009: GDPR-compliant data handling with right to erasure capabilities
+\end{itemize}
+
+\subsection{Reliability Requirements}
+\begin{itemize}
+    \item REL-001: System uptime shall be 99.5\% during business hours
+    \item REL-002: Automatic backup of critical data every 24 hours
+    \item REL-003: Recovery time objective (RTO) of 4 hours
+    \item REL-004: Recovery point objective (RPO) of 1 hour
+\end{itemize}
+
+\subsection{Availability Requirements}
+\begin{itemize}
+    \item AVAIL-001: System shall be available 24/7 with planned maintenance windows
+    \item AVAIL-002: Graceful degradation during partial system failures
+    \item AVAIL-003: Load balancing for high availability
+\end{itemize}
+
+\subsection{Maintainability Requirements}
+\begin{itemize}
+    \item MAINT-001: Modular architecture for easy component updates
+    \item MAINT-002: Comprehensive logging for troubleshooting
+    \item MAINT-003: Code documentation and commenting standards
+    \item MAINT-004: Automated testing coverage minimum 80\%
+\end{itemize}
+
+\subsection{Portability Requirements}
+\begin{itemize}
+    \item PORT-001: Database independence through ORM layer
+    \item PORT-002: Cross-platform compatibility
+    \item PORT-003: Containerization support for deployment flexibility
+\end{itemize}
+
+\section{Appendices}
+
+\subsection{Database Schema}
+
+\subsubsection*{Applicants Table}
+\begin{tabular}{|l|l|l|}
+    \hline
+    \textbf{Field} & \textbf{Type} & \textbf{Constraints} \\
+    \hline
+    applicant\_id & SERIAL & PRIMARY KEY \\
+    title & VARCHAR(10) & NOT NULL \\
+    first\_name & VARCHAR(100) & NOT NULL \\
+    surname & VARCHAR(100) & NOT NULL \\
+    email & VARCHAR(255) & UNIQUE, NOT NULL \\
+    mobile\_number & VARCHAR(20) & NOT NULL \\
+    date\_of\_birth & DATE & NOT NULL \\
+    nationality & VARCHAR(100) & NOT NULL \\
+    residency\_status & ENUM & 'HOME', 'EU', 'INTERNATIONAL' \\
+    ucas\_id & VARCHAR(20) & UNIQUE \\
+    created\_at & TIMESTAMPTZ & DEFAULT NOW() \\
+    updated\_at & TIMESTAMPTZ & DEFAULT NOW() \\
+    \hline
+\end{tabular}
+\captionof{table}{Applicants Table Schema}
+\label{tab:applicants_schema}
+\vspace{1em}
+
+\subsubsection*{Verification Table}
+\begin{tabular}{|l|l|l|}
+    \hline
+    \textbf{Field} & \textbf{Type} & \textbf{Constraints} \\
+    \hline
+    verification\_id & SERIAL & PRIMARY KEY \\
+    applicant\_id & INTEGER & FOREIGN KEY REFERENCES applicants(applicant\_id) \\
+    verification\_token & VARCHAR(255) & NOT NULL \\
+    token\_type & ENUM & 'EMAIL', 'MOBILE', 'DOCUMENT' \\
+    expiry\_time & TIMESTAMPTZ & NOT NULL \\
+    status & ENUM & 'PENDING', 'VERIFIED', 'EXPIRED', 'FAILED' \\
+    attempts & INTEGER & DEFAULT 0 \\
+    created\_at & TIMESTAMPTZ & DEFAULT NOW() \\
+    \hline
+\end{tabular}
+\captionof{table}{Verification Table Schema}
+\label{tab:verification_schema}
+\vspace{1em}
+
+\subsubsection*{Transactions Table}
+\begin{tabular}{|l|l|l|}
+    \hline
+    \textbf{Field} & \textbf{Type} & \textbf{Constraints} \\
+    \hline
+    transaction\_id & SERIAL & PRIMARY KEY \\
+    applicant\_id & INTEGER & FOREIGN KEY REFERENCES applicants(applicant\_id) \\
+    stripe\_payment\_id & VARCHAR(255) & UNIQUE \\
+    paypal\_payment\_id & VARCHAR(255) & UNIQUE \\
+    amount\_gbp & DECIMAL(10,2) & NOT NULL \\
+    payment\_method & ENUM & 'STRIPE\_CARD', 'STRIPE\_DIRECT\_DEBIT', 'PAYPAL' \\
+    transaction\_status & ENUM & 'PENDING', 'COMPLETED', 'FAILED', 'REFUNDED' \\
+    vat\_amount & DECIMAL(8,2) & DEFAULT 0.00 \\
+    transaction\_date & TIMESTAMPTZ & NOT NULL \\
+    created\_at & TIMESTAMPTZ & DEFAULT NOW() \\
+    \hline
+\end{tabular}
+\captionof{table}{Transactions Table Schema}
+\label{tab:transactions_schema}
+\vspace{1em}
+
+\subsubsection*{Programmes Table}
+\begin{tabular}{|l|l|l|}
+    \hline
+    \textbf{Field} & \textbf{Type} & \textbf{Constraints} \\
+    \hline
+    programme\_id & SERIAL & PRIMARY KEY \\
+    programme\_code & VARCHAR(20) & UNIQUE, NOT NULL \\
+    programme\_title & VARCHAR(255) & NOT NULL \\
+    faculty & VARCHAR(100) & NOT NULL \\
+    level & ENUM & 'UNDERGRADUATE', 'POSTGRADUATE', 'RESEARCH' \\
+    home\_fee\_gbp & DECIMAL(10,2) & NOT NULL \\
+    international\_fee\_gbp & DECIMAL(10,2) & NOT NULL \\
+    application\_fee\_gbp & DECIMAL(8,2) & DEFAULT 0.00 \\
+    is\_active & BOOLEAN & DEFAULT TRUE \\
+    \hline
+\end{tabular}
+\captionof{table}{Programmes Table Schema}
+\label{tab:programmes_schema}
+\vspace{1em}
+
+\subsection{API Endpoints}
+\begin{verbatim}
+Authentication Endpoints
+POST /api/v1/auth/register - Applicant registration
+POST /api/v1/auth/verify-email - Email verification
+POST /api/v1/auth/verify-mobile - Mobile number verification
+POST /api/v1/auth/login - Applicant authentication
+POST /api/v1/auth/logout - Session termination
+POST /api/v1/auth/password-reset - Password reset functionality
+
+Payment Endpoints
+GET /api/v1/payment/fees/{applicantId} - Retrieve applicable fees
+POST /api/v1/payment/stripe/intent - Create Stripe payment intent
+POST /api/v1/payment/paypal/order - Create PayPal payment order
+POST /api/v1/payment/webhooks/stripe - Handle Stripe webhooks
+POST /api/v1/payment/webhooks/paypal - Handle PayPal webhooks
+GET /api/v1/payment/receipt/{transactionId} - Generate payment receipt
+
+Application Endpoints
+POST /api/v1/applications/personal-details - Submit personal information
+POST /api/v1/applications/qualifications - Submit educational qualifications
+POST /api/v1/applications/references - Submit reference details
+POST /api/v1/applications/documents/upload - Document upload functionality
+GET /api/v1/applications/status/{applicantId} - Application status tracking
+POST /api/v1/applications/submit - Final application submission
+
+Administrative Endpoints
+GET /api/v1/admin/applications - List all applications (paginated)
+GET /api/v1/admin/reports/financial - Financial reporting
+PUT /api/v1/admin/applications/{id}/status - Update application status
+\end{verbatim}
+
+\subsection{User Journey Summary}
+\begin{itemize}
+    \item Initial Registration: Streamlined account creation with email and mobile verification
+    \item Programme Selection: Browse available courses with clear fee information
+    \item Eligibility Assessment: Automated pre-screening based on entry requirements
+    \item Secure Payment Processing: Multi-gateway payment options with instant confirmation
+    \item Comprehensive Application: Detailed information collection following UCAS standards
+    \item Document Verification: Secure upload and verification of supporting documents
+    \item Application Tracking: Real-time status updates and communication
+    \item Administrative Review: Streamlined processing for admissions staff
+    \item Decision Communication: Automated notification of application outcomes
+    \item Enrolment Integration: Seamless transition to student systems upon acceptance
+\end{itemize}
+
+\subsection{Implementation Timeline}
+\begin{tabular}{|l|l|l|}
+    \hline
+    \textbf{Phase} & \textbf{Duration} & \textbf{Completion Status} \\
+    \hline
+    Requirements Analysis \& Design & 3 weeks & 85\% \\
+    Backend API Development & 6 weeks & 75\% \\
+    Frontend Development & 6 weeks & 60\% \\
+    Database Setup \& Migration & 2 weeks & 90\% \\
+    Payment Gateway Integration & 4 weeks & 70\% \\
+    UCAS API Integration & 3 weeks & 40\% \\
+    Security Implementation & 2 weeks & 80\% \\
+    Testing \& Quality Assurance & 3 weeks & Planned \\
+    User Acceptance Testing & 2 weeks & Planned \\
+    Production Deployment & 1 week & Planned \\
+    Post-Launch Support & Ongoing & Planned \\
+    \hline
+\end{tabular}
+\captionof{table}{Implementation Timeline}
+\label{tab:timeline}
+\vspace{1em}
+
+\subsection{Compliance Checklist}
+\begin{itemize}[label=\checkmark]
+    \item GDPR Article 13 - Information provided when personal data is obtained
+    \item GDPR Article 17 - Right to erasure implementation
+    \item PCI DSS Level 1 compliance certification
+    \item WCAG 2.1 AA accessibility standards
+    \item ICO registration and data protection impact assessment
+    \item University information security policy compliance
+    \item UCAS technical integration standards adherence
+\end{itemize}
+
+\section*{Document Control}
+\addcontentsline{toc}{section}{Document Control} % Add to TOC manually
+
+\begin{description}[font=\normalfont\sffamily\bfseries,labelwidth=3cm,leftmargin=3.2cm]
+    \item[Version] 1.0
+    \item[Status] Under Review
+    \item[Next Review Date] 15th September 2025
+    \item[Classification] Confidential - University College Internal Use Only
+    \item[Document Owner] Digital Services Team, AsanSka University College of Design and Technology
+\end{description}
+
+\end{document}

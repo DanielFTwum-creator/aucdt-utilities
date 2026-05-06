@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600">
+  <!-- Background -->
+  <rect width="800" height="600" fill="#1a1a1a" />
+  
+  <!-- Title -->
+  <text x="400" y="50" fill="#D4AF37" font-family="Arial, sans-serif" font-size="28" font-weight="bold" text-anchor="middle">Patois Lyricist - Technology Stack</text>
+  
+  <!-- Frontend -->
+  <rect x="50" y="100" width="220" height="400" fill="#2d2d2d" stroke="#61dafb" stroke-width="2" rx="10" />
+  <text x="160" y="140" fill="#61dafb" font-family="Arial, sans-serif" font-size="20" font-weight="bold" text-anchor="middle">Frontend</text>
+  
+  <rect x="70" y="160" width="180" height="50" fill="#61dafb" stroke="#ffffff" stroke-width="1" rx="5" />
+  <text x="160" y="190" fill="#000000" font-family="Arial, sans-serif" font-size="16" font-weight="bold" text-anchor="middle">React 19.2.4</text>
+  
+  <rect x="70" y="220" width="180" height="50" fill="#3178c6" stroke="#ffffff" stroke-width="1" rx="5" />
+  <text x="160" y="250" fill="#ffffff" font-family="Arial, sans-serif" font-size="16" font-weight="bold" text-anchor="middle">TypeScript 5.8</text>
+  
+  <rect x="70" y="280" width="180" height="50" fill="#38bdf8" stroke="#ffffff" stroke-width="1" rx="5" />
+  <text x="160" y="310" fill="#000000" font-family="Arial, sans-serif" font-size="16" font-weight="bold" text-anchor="middle">Tailwind CSS</text>
+  
+  <rect x="70" y="340" width="180" height="50" fill="#646cff" stroke="#ffffff" stroke-width="1" rx="5" />
+  <text x="160" y="370" fill="#ffffff" font-family="Arial, sans-serif" font-size="16" font-weight="bold" text-anchor="middle">Vite 6.2</text>
+  
+  <!-- AI & Services -->
+  <rect x="290" y="100" width="220" height="400" fill="#2d2d2d" stroke="#4ade80" stroke-width="2" rx="10" />
+  <text x="400" y="140" fill="#4ade80" font-family="Arial, sans-serif" font-size="20" font-weight="bold" text-anchor="middle">AI & Services</text>
+  
+  <rect x="310" y="160" width="180" height="50" fill="#4285f4" stroke="#ffffff" stroke-width="1" rx="5" />
+  <text x="400" y="190" fill="#ffffff" font-family="Arial, sans-serif" font-size="16" font-weight="bold" text-anchor="middle">Google Gemini API</text>
+  
+  <rect x="310" y="220" width="180" height="50" fill="#34a853" stroke="#ffffff" stroke-width="1" rx="5" />
+  <text x="400" y="250" fill="#ffffff" font-family="Arial, sans-serif" font-size="16" font-weight="bold" text-anchor="middle">@google/genai</text>
+  
+  <rect x="310" y="280" width="180" height="50" fill="#fbbc04" stroke="#ffffff" stroke-width="1" rx="5" />
+  <text x="400" y="310" fill="#000000" font-family="Arial, sans-serif" font-size="16" font-weight="bold" text-anchor="middle">Web Speech API</text>
+  
+  <!-- Utilities -->
+  <rect x="530" y="100" width="220" height="400" fill="#2d2d2d" stroke="#f59e0b" stroke-width="2" rx="10" />
+  <text x="640" y="140" fill="#f59e0b" font-family="Arial, sans-serif" font-size="20" font-weight="bold" text-anchor="middle">Utilities</text>
+  
+  <rect x="550" y="160" width="180" height="50" fill="#ef4444" stroke="#ffffff" stroke-width="1" rx="5" />
+  <text x="640" y="190" fill="#ffffff" font-family="Arial, sans-serif" font-size="16" font-weight="bold" text-anchor="middle">jsPDF</text>
+  
+  <rect x="550" y="220" width="180" height="50" fill="#ec4899" stroke="#ffffff" stroke-width="1" rx="5" />
+  <text x="640" y="250" fill="#ffffff" font-family="Arial, sans-serif" font-size="16" font-weight="bold" text-anchor="middle">html2canvas</text>
+  
+  <rect x="550" y="280" width="180" height="50" fill="#8b5cf6" stroke="#ffffff" stroke-width="1" rx="5" />
+  <text x="640" y="310" fill="#ffffff" font-family="Arial, sans-serif" font-size="16" font-weight="bold" text-anchor="middle">LocalStorage</text>
+  
+  <!-- Footer -->
+  <text x="400" y="550" fill="#ffffff" font-family="Arial, sans-serif" font-size="14" text-anchor="middle">Built for Performance, Security, and Scalability</text>
+</svg>

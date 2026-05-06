@@ -1,0 +1,6 @@
+{
+  "name": "LinkScan Techbridge",
+  "description": "A professional diagnostic tool for auditing and testing web links on the Techbridge University College admissions portal.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["Link Testing", "Automation", "Reporting"]
+}

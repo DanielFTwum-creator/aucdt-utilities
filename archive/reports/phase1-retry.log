@@ -1,0 +1,677 @@
+ Image aucdt-utilities-analytics-refactor Building 
+ Image aucdt-utilities-fees-comparison-dashboard Building 
+ Image aucdt-utilities-techbridge-product-design-6r-design-portal Building 
+ Image aucdt-utilities-aucdt-analytics-dashboard Building 
+ Image aucdt-utilities-aucdt-website-react Building 
+ Image aucdt-utilities-kanban-app Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 3.90kB 0.0s done
+#1 DONE 0.0s
+
+#2 [aucdt-analytics-dashboard internal] load build definition from Dockerfile.vite
+#2 transferring dockerfile: 1.94kB 0.0s done
+#2 DONE 0.1s
+
+#3 [aucdt-analytics-dashboard internal] load metadata for docker.io/library/nginx:alpine
+#3 ...
+
+#4 [auth] library/nginx:pull token for registry-1.docker.io
+#4 DONE 0.0s
+
+#5 [auth] library/node:pull token for registry-1.docker.io
+#5 DONE 0.0s
+
+#6 [analytics-refactor internal] load metadata for docker.io/library/node:20-alpine
+#6 ...
+
+#3 [fees-comparison-dashboard internal] load metadata for docker.io/library/nginx:alpine
+#3 DONE 1.5s
+
+#6 [analytics-refactor internal] load metadata for docker.io/library/node:20-alpine
+#6 DONE 1.9s
+
+#7 [techbridge-product-design-6r-design-portal internal] load .dockerignore
+#7 transferring context: 2B done
+#7 DONE 0.0s
+
+#8 [fees-comparison-dashboard internal] load .dockerignore
+#8 transferring context: 2B done
+#8 DONE 0.1s
+
+#9 [aucdt-analytics-dashboard internal] load .dockerignore
+#9 transferring context: 158B 0.0s done
+#9 DONE 0.1s
+
+#10 [analytics-refactor internal] load .dockerignore
+#10 transferring context: 347B 0.0s done
+#10 DONE 0.1s
+
+#11 [techbridge-product-design-6r-design-portal internal] load build context
+#11 DONE 0.0s
+
+#12 [kanban-app internal] load .dockerignore
+#12 transferring context: 196B done
+#12 DONE 0.1s
+
+#13 [fees-comparison-dashboard internal] load build context
+#13 DONE 0.0s
+
+#14 [aucdt-website-react internal] load .dockerignore
+#14 transferring context: 2B done
+#14 DONE 0.1s
+
+#15 [fees-comparison-dashboard builder 1/8] FROM docker.io/library/node:20-alpine@sha256:09e2b3d9726018aecf269bd35325f46bf75046a643a66d28360ec71132750ec8
+#15 resolve docker.io/library/node:20-alpine@sha256:09e2b3d9726018aecf269bd35325f46bf75046a643a66d28360ec71132750ec8
+#15 resolve docker.io/library/node:20-alpine@sha256:09e2b3d9726018aecf269bd35325f46bf75046a643a66d28360ec71132750ec8 0.1s done
+#15 DONE 0.1s
+
+#16 [techbridge-product-design-6r-design-portal stage-1 1/3] FROM docker.io/library/nginx:alpine@sha256:1d13701a5f9f3fb01aaa88cef2344d65b6b5bf6b7d9fa4cf0dca557a8d7702ba
+#16 resolve docker.io/library/nginx:alpine@sha256:1d13701a5f9f3fb01aaa88cef2344d65b6b5bf6b7d9fa4cf0dca557a8d7702ba 0.1s done
+#16 DONE 0.1s
+
+#17 [techbridge-product-design-6r-design-portal stage-1 2/3] RUN echo 'server {     listen 80;     server_name localhost;     root /usr/share/nginx/html;     index index.html;     gzip on;     gzip_vary on;     gzip_min_length 1024;     gzip_types text/plain text/css text/xml text/javascript application/x-javascript application/xml+rss application/json application/javascript;     add_header X-Frame-Options "SAMEORIGIN" always;     add_header X-Content-Type-Options "nosniff" always;     add_header X-XSS-Protection "1; mode=block" always;     location ~* \.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot)$ {         expires 1y;         add_header Cache-Control "public, immutable";     }     location / {         try_files $uri $uri/ /index.html;     }     location /health {         access_log off;         return 200 "healthy\n";         add_header Content-Type text/plain;     } }' > /etc/nginx/conf.d/default.conf
+#17 CACHED
+
+#11 [techbridge-product-design-6r-design-portal internal] load build context
+#11 transferring context: 1.23kB 0.0s done
+#11 DONE 0.1s
+
+#18 [aucdt-website-react internal] load build context
+#18 transferring context: 1.69kB 0.0s done
+#18 DONE 0.1s
+
+#19 [aucdt-analytics-dashboard internal] load build context
+#19 transferring context: 6.11kB 0.0s done
+#19 DONE 0.1s
+
+#20 [kanban-app internal] load build context
+#20 transferring context: 981B 0.0s done
+#20 DONE 0.1s
+
+#13 [fees-comparison-dashboard internal] load build context
+#13 transferring context: 2.24kB 0.0s done
+#13 DONE 0.1s
+
+#21 [analytics-refactor internal] load build context
+#21 transferring context: 5.37kB 0.0s done
+#21 DONE 0.1s
+
+#22 [aucdt-analytics-dashboard builder 4/8] COPY package*.json ./
+#22 CACHED
+
+#23 [aucdt-website-react builder 4/8] COPY package*.json ./
+#23 CACHED
+
+#24 [aucdt-website-react builder 5/8] COPY pnpm-lock.yaml* ./
+#24 CACHED
+
+#25 [aucdt-website-react builder 6/8] RUN npm install --legacy-peer-deps
+#25 CACHED
+
+#26 [aucdt-website-react builder 7/8] COPY . .
+#26 CACHED
+
+#27 [aucdt-analytics-dashboard builder 5/8] COPY pnpm-lock.yaml* ./
+#27 CACHED
+
+#28 [techbridge-product-design-6r-design-portal builder 2/8] RUN corepack enable && corepack prepare pnpm@latest --activate
+#28 CACHED
+
+#29 [techbridge-product-design-6r-design-portal builder 5/8] COPY pnpm-lock.yaml* ./
+#29 CACHED
+
+#30 [techbridge-product-design-6r-design-portal builder 6/8] RUN npm install --legacy-peer-deps
+#30 CACHED
+
+#31 [techbridge-product-design-6r-design-portal builder 4/8] COPY package*.json ./
+#31 CACHED
+
+#32 [techbridge-product-design-6r-design-portal builder 7/8] COPY . .
+#32 CACHED
+
+#33 [kanban-app builder 4/8] COPY package*.json ./
+#33 CACHED
+
+#34 [kanban-app builder 5/8] COPY pnpm-lock.yaml* ./
+#34 CACHED
+
+#35 [kanban-app builder 6/8] RUN npm install --legacy-peer-deps
+#35 CACHED
+
+#36 [analytics-refactor builder 4/8] COPY package*.json ./
+#36 CACHED
+
+#28 [analytics-refactor builder 2/8] RUN corepack enable && corepack prepare pnpm@latest --activate
+#28 CACHED
+
+#37 [kanban-app builder 7/8] COPY . .
+#37 CACHED
+
+#38 [analytics-refactor builder 3/8] WORKDIR /app
+#38 CACHED
+
+#39 [analytics-refactor builder 5/8] COPY pnpm-lock.yaml* ./
+#39 CACHED
+
+#40 [fees-comparison-dashboard builder 4/8] COPY package*.json ./
+#40 DONE 0.1s
+
+#41 [techbridge-product-design-6r-design-portal builder 8/8] RUN npm run build
+#41 ...
+
+#42 [fees-comparison-dashboard builder 5/8] COPY pnpm-lock.yaml* ./
+#42 DONE 0.1s
+
+#43 [fees-comparison-dashboard builder 6/8] RUN npm install --legacy-peer-deps
+#43 ...
+
+#44 [kanban-app builder 8/8] RUN npm run build
+#44 1.344 
+#44 1.344 > kanban-app@0.1.0 build
+#44 1.344 > vite build
+#44 1.344 
+#44 1.934 vite v7.3.1 building client environment for production...
+#44 4.780 transforming...
+#44 5.609 
+#44 5.610 warn - No utility classes were detected in your source files. If this is unexpected, double-check the `content` option in your Tailwind CSS configuration.
+#44 5.610 warn - https://tailwindcss.com/docs/content-configuration
+#44 7.077 Γ£ô 30 modules transformed.
+#44 7.364 rendering chunks...
+#44 7.379 computing gzip size...
+#44 7.396 dist/index.html                   1.82 kB Γöé gzip:  0.89 kB
+#44 7.396 dist/assets/index-BuyWQOB0.css    4.95 kB Γöé gzip:  1.50 kB
+#44 7.397 dist/assets/index-CJlKjNzc.js   154.11 kB Γöé gzip: 48.76 kB
+#44 7.398 Γ£ô built in 5.41s
+#44 DONE 7.6s
+
+#41 [techbridge-product-design-6r-design-portal builder 8/8] RUN npm run build
+#41 1.343 
+#41 1.343 > techbridge-product-design-6r-design-portal@0.0.0 build
+#41 1.343 > vite build
+#41 1.343 
+#41 1.917 vite v7.3.1 building client environment for production...
+#41 2.043 
+#41 2.043 /index.css doesn't exist at build time, it will remain unchanged to be resolved at runtime
+#41 2.056 transforming...
+#41 7.520 Γ£ô 42 modules transformed.
+#41 7.930 rendering chunks...
+#41 7.944 computing gzip size...
+#41 7.963 dist/index.html                  2.11 kB Γöé gzip:   0.94 kB
+#41 7.963 dist/assets/index-BIAM76--.js  491.05 kB Γöé gzip: 124.60 kB
+#41 7.963 Γ£ô built in 5.99s
+#41 DONE 8.0s
+
+#45 [aucdt-website-react builder 8/8] RUN npm run build
+#45 1.352 
+#45 1.352 > tuc-website@0.0.0 build
+#45 1.352 > vite build
+#45 1.352 
+#45 1.923 vite v7.3.1 building client environment for production...
+#45 2.063 transforming...
+#45 ...
+
+#46 [kanban-app stage-1 3/3] COPY --from=builder /app/dist /usr/share/nginx/html
+#46 DONE 0.1s
+
+#47 [techbridge-product-design-6r-design-portal stage-1 3/3] COPY --from=builder /app/dist /usr/share/nginx/html
+#47 DONE 0.1s
+
+#48 [techbridge-product-design-6r-design-portal] exporting to image
+#48 exporting layers
+#48 ...
+
+#45 [aucdt-website-react builder 8/8] RUN npm run build
+#45 8.383 Γ£ô 1694 modules transformed.
+#45 8.615 rendering chunks...
+#45 8.627 computing gzip size...
+#45 8.638 dist/index.html                   3.49 kB Γöé gzip:  1.26 kB
+#45 8.638 dist/assets/index-tn0RQdqM.css    0.00 kB Γöé gzip:  0.02 kB
+#45 8.639 dist/assets/index-C4scwTek.js   247.91 kB Γöé gzip: 75.22 kB
+#45 8.640 Γ£ô built in 6.67s
+#45 DONE 8.7s
+
+#48 [techbridge-product-design-6r-design-portal] exporting to image
+#48 exporting layers 0.2s done
+#48 exporting manifest sha256:87ddb1e2cc4f7b8157fabddd861bac86c8f419ad8bd99ef7ab40af0f3cc88945 0.0s done
+#48 exporting config sha256:056df509a9571d423c4b99417525020c6d786a0be883b745f8f48c3b4816ac98 0.0s done
+#48 ...
+
+#49 [kanban-app] exporting to image
+#49 exporting layers 0.2s done
+#49 exporting manifest sha256:eb47db21921b083cfeb17864ec53a65e621dc8f11d9233583cbd89acb44223fb 0.0s done
+#49 exporting config sha256:eb1c2c740e71a21fc5cac49b5a4b8aabac0ce1b4405f15331bc4359ad374c057 0.0s done
+#49 exporting attestation manifest sha256:d37da098896889dfac6245d4ac5c5fc481e40867a552165aa2302a5148eb9e66 0.1s done
+#49 exporting manifest list sha256:8798cca279d0da85080d26137f718dcf0bad9734e837cf686b97b51ad69d0eb0 0.0s done
+#49 naming to docker.io/library/aucdt-utilities-kanban-app:latest done
+#49 unpacking to docker.io/library/aucdt-utilities-kanban-app:latest 0.1s done
+#49 DONE 0.5s
+
+#48 [techbridge-product-design-6r-design-portal] exporting to image
+#48 exporting attestation manifest sha256:5c0fde9e652f8d3882c40c427e73734256859c0c7b435b4c09d2b95aebead7a8 0.0s done
+#48 exporting manifest list sha256:692ab00318d8ba962ab876c8cc94225bf403846293827701344ed9cdc7a590ae 0.0s done
+#48 naming to docker.io/library/aucdt-utilities-techbridge-product-design-6r-design-portal:latest done
+#48 unpacking to docker.io/library/aucdt-utilities-techbridge-product-design-6r-design-portal:latest 0.1s done
+#48 DONE 0.5s
+
+#50 [analytics-refactor builder 6/8] RUN npm install --legacy-peer-deps
+#50 ...
+
+#51 [kanban-app] resolving provenance for metadata file
+#51 DONE 0.0s
+
+#52 [techbridge-product-design-6r-design-portal] resolving provenance for metadata file
+#52 DONE 0.0s
+
+#53 [aucdt-website-react stage-1 3/3] COPY --from=builder /app/dist /usr/share/nginx/html
+#53 DONE 0.1s
+
+#54 [aucdt-website-react] exporting to image
+#54 exporting layers 0.1s done
+#54 exporting manifest sha256:fdeb24bcdf50574e4bfb9c93f3989dc4bcf4d9af9d299abc617db3e247911a42 0.0s done
+#54 exporting config sha256:77949e10520c6fce8247747ee7553d7f4cfb51d99681e8e05a43ac2cdd8da718 0.0s done
+#54 exporting attestation manifest sha256:20f3e12a2850d4adf1f63d348e4108974f3952a70cd94c97ecfc18049bc0bd3d 0.0s done
+#54 exporting manifest list sha256:c8b095659b148fdcf2d6880c39b5ff07c5c0b6d989a3569c8813a62cd4923609 0.0s done
+#54 naming to docker.io/library/aucdt-utilities-aucdt-website-react:latest
+#54 naming to docker.io/library/aucdt-utilities-aucdt-website-react:latest done
+#54 unpacking to docker.io/library/aucdt-utilities-aucdt-website-react:latest 0.0s done
+#54 DONE 0.3s
+
+#55 [aucdt-analytics-dashboard builder 6/8] RUN npm install --legacy-peer-deps
+#55 ...
+
+#56 [aucdt-website-react] resolving provenance for metadata file
+#56 DONE 0.0s
+
+#50 [analytics-refactor builder 6/8] RUN npm install --legacy-peer-deps
+#50 ...
+
+#43 [fees-comparison-dashboard builder 6/8] RUN npm install --legacy-peer-deps
+#43 39.09 
+#43 39.09 added 197 packages, and audited 198 packages in 38s
+#43 39.09 
+#43 39.09 36 packages are looking for funding
+#43 39.09   run `npm fund` for details
+#43 39.11 
+#43 39.11 4 vulnerabilities (1 moderate, 3 high)
+#43 39.11 
+#43 39.11 To address all issues (including breaking changes), run:
+#43 39.11   npm audit fix --force
+#43 39.11 
+#43 39.11 Run `npm audit` for details.
+#43 39.11 npm notice
+#43 39.11 npm notice New major version of npm available! 10.8.2 -> 11.10.1
+#43 39.11 npm notice Changelog: https://github.com/npm/cli/releases/tag/v11.10.1
+#43 39.11 npm notice To update run: npm install -g npm@11.10.1
+#43 39.11 npm notice
+#43 DONE 39.7s
+
+#50 [analytics-refactor builder 6/8] RUN npm install --legacy-peer-deps
+#50 ...
+
+#57 [fees-comparison-dashboard builder 7/8] COPY . .
+#57 DONE 0.1s
+
+#58 [fees-comparison-dashboard builder 8/8] RUN npm run build
+#58 0.366 
+#58 0.366 > ghana-university-fees-dashboard@0.0.0 build
+#58 0.366 > vite build
+#58 0.366 
+#58 0.626 vite v7.3.1 building client environment for production...
+#58 0.709 
+#58 0.709 /index.css doesn't exist at build time, it will remain unchanged to be resolved at runtime
+#58 0.719 transforming...
+#58 4.361 Γ£ô 671 modules transformed.
+#58 4.840 rendering chunks...
+#58 4.853 computing gzip size...
+#58 4.870 dist/index.html                  1.01 kB Γöé gzip:   0.55 kB
+#58 4.870 dist/assets/index-C4ZkKwjk.js  578.14 kB Γöé gzip: 175.27 kB
+#58 4.870 
+#58 4.870 (!) Some chunks are larger than 500 kB after minification. Consider:
+#58 4.870 - Using dynamic import() to code-split the application
+#58 4.870 - Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+#58 4.870 - Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+#58 4.870 Γ£ô built in 4.21s
+#58 DONE 5.0s
+
+#50 [analytics-refactor builder 6/8] RUN npm install --legacy-peer-deps
+#50 ...
+
+#59 [fees-comparison-dashboard stage-1 3/3] COPY --from=builder /app/dist /usr/share/nginx/html
+#59 DONE 0.0s
+
+#60 [fees-comparison-dashboard] exporting to image
+#60 exporting layers 0.1s done
+#60 exporting manifest sha256:1f0e329faa4e012259d97efb48c8312c086391272a90624f048a052de54c2172 0.0s done
+#60 exporting config sha256:b4dc57f404d28bf47ea688c607a390414e699ea6be3697a0bc38fd8c6a2cc8c8 0.0s done
+#60 exporting attestation manifest sha256:4089a0d850ba78076d3a6eff52407d50fa95ee778ae99d98a879257c1fd46687 0.0s done
+#60 exporting manifest list sha256:ba92cb40133b637f79e4fb930d4c487b3be262fd16518c2ba21dfdc95820b90b 0.0s done
+#60 naming to docker.io/library/aucdt-utilities-fees-comparison-dashboard:latest
+#60 naming to docker.io/library/aucdt-utilities-fees-comparison-dashboard:latest done
+#60 unpacking to docker.io/library/aucdt-utilities-fees-comparison-dashboard:latest 0.0s done
+#60 DONE 0.3s
+
+#50 [analytics-refactor builder 6/8] RUN npm install --legacy-peer-deps
+#50 ...
+
+#61 [fees-comparison-dashboard] resolving provenance for metadata file
+#61 DONE 0.0s
+
+#50 [analytics-refactor builder 6/8] RUN npm install --legacy-peer-deps
+#50 85.84 npm warn deprecated @babel/plugin-proposal-private-property-in-object@7.21.11: This proposal has been merged to the ECMAScript standard and thus this plugin is no longer maintained. Please use @babel/plugin-transform-private-property-in-object instead.
+#50 85.84 npm warn deprecated @babel/plugin-proposal-private-methods@7.18.6: This proposal has been merged to the ECMAScript standard and thus this plugin is no longer maintained. Please use @babel/plugin-transform-private-methods instead.
+#50 85.98 npm warn deprecated @babel/plugin-proposal-numeric-separator@7.18.6: This proposal has been merged to the ECMAScript standard and thus this plugin is no longer maintained. Please use @babel/plugin-transform-numeric-separator instead.
+#50 85.98 npm warn deprecated @babel/plugin-proposal-optional-chaining@7.21.0: This proposal has been merged to the ECMAScript standard and thus this plugin is no longer maintained. Please use @babel/plugin-transform-optional-chaining instead.
+#50 86.07 npm warn deprecated @babel/plugin-proposal-class-properties@7.18.6: This proposal has been merged to the ECMAScript standard and thus this plugin is no longer maintained. Please use @babel/plugin-transform-class-properties instead.
+#50 86.11 npm warn deprecated @babel/plugin-proposal-nullish-coalescing-operator@7.18.6: This proposal has been merged to the ECMAScript standard and thus this plugin is no longer maintained. Please use @babel/plugin-transform-nullish-coalescing-operator instead.
+#50 ...
+
+#55 [aucdt-analytics-dashboard builder 6/8] RUN npm install --legacy-peer-deps
+#55 115.2 
+#55 115.2 added 568 packages, and audited 569 packages in 2m
+#55 115.2 
+#55 115.2 111 packages are looking for funding
+#55 115.2   run `npm fund` for details
+#55 115.2 
+#55 115.2 4 vulnerabilities (1 moderate, 3 high)
+#55 115.2 
+#55 115.2 To address all issues (including breaking changes), run:
+#55 115.2   npm audit fix --force
+#55 115.2 
+#55 115.2 Run `npm audit` for details.
+#55 115.2 npm notice
+#55 115.2 npm notice New major version of npm available! 10.8.2 -> 11.10.1
+#55 115.2 npm notice Changelog: https://github.com/npm/cli/releases/tag/v11.10.1
+#55 115.2 npm notice To update run: npm install -g npm@11.10.1
+#55 115.2 npm notice
+#55 DONE 117.7s
+
+#50 [analytics-refactor builder 6/8] RUN npm install --legacy-peer-deps
+#50 ...
+
+#62 [aucdt-analytics-dashboard builder 7/8] COPY . .
+#62 DONE 0.8s
+
+#50 [analytics-refactor builder 6/8] RUN npm install --legacy-peer-deps
+#50 ...
+
+#63 [aucdt-analytics-dashboard builder 8/8] RUN npm run build
+#63 0.513 
+#63 0.513 > react_repo@0.0.0 build
+#63 0.513 > pnpm install --no-frozen-lockfile && rm -rf ./node_modules/.vite-temp && tsc -b && vite build
+#63 0.513 
+#63 0.645 ! Corepack is about to download https://registry.npmjs.org/pnpm/-/pnpm-10.30.1.tgz
+#63 5.230 ΓÇëWARNΓÇë Moving @eslint/js that was installed by a different package manager to "node_modules/.ignored"
+#63 5.233 ΓÇëWARNΓÇë Moving @playwright/test that was installed by a different package manager to "node_modules/.ignored"
+#63 5.236 ΓÇëWARNΓÇë Moving @testing-library/jest-dom that was installed by a different package manager to "node_modules/.ignored"
+#63 5.237 ΓÇëWARNΓÇë Moving @testing-library/react that was installed by a different package manager to "node_modules/.ignored"
+#63 5.237 ΓÇëWARNΓÇë Moving @testing-library/user-event that was installed by a different package manager to "node_modules/.ignored"
+#63 5.239 ΓÇëWARNΓÇë Moving @types/node that was installed by a different package manager to "node_modules/.ignored"
+#63 5.239 ΓÇëWARNΓÇë Moving @types/react that was installed by a different package manager to "node_modules/.ignored"
+#63 5.239 ΓÇëWARNΓÇë Moving @types/react-dom that was installed by a different package manager to "node_modules/.ignored"
+#63 5.241 ΓÇëWARNΓÇë Moving @types/react-router-dom that was installed by a different package manager to "node_modules/.ignored"
+#63 5.241 ΓÇëWARNΓÇë Moving @vitejs/plugin-react that was installed by a different package manager to "node_modules/.ignored"
+#63 5.242 ΓÇëWARNΓÇë Moving autoprefixer that was installed by a different package manager to "node_modules/.ignored"
+#63 5.242 ΓÇëWARNΓÇë Moving eslint that was installed by a different package manager to "node_modules/.ignored"
+#63 5.243 ΓÇëWARNΓÇë Moving eslint-plugin-react-hooks that was installed by a different package manager to "node_modules/.ignored"
+#63 5.244 ΓÇëWARNΓÇë Moving globals that was installed by a different package manager to "node_modules/.ignored"
+#63 5.245 ΓÇëWARNΓÇë Moving eslint-plugin-react-refresh that was installed by a different package manager to "node_modules/.ignored"
+#63 5.247 ΓÇëWARNΓÇë Moving happy-dom that was installed by a different package manager to "node_modules/.ignored"
+#63 5.247 ΓÇëWARNΓÇë Moving jsdom that was installed by a different package manager to "node_modules/.ignored"
+#63 5.250 ΓÇëWARNΓÇë Moving postcss that was installed by a different package manager to "node_modules/.ignored"
+#63 5.253 ΓÇëWARNΓÇë Moving serve that was installed by a different package manager to "node_modules/.ignored"
+#63 5.254 ΓÇëWARNΓÇë Moving tailwindcss that was installed by a different package manager to "node_modules/.ignored"
+#63 5.254 ΓÇëWARNΓÇë Moving typescript that was installed by a different package manager to "node_modules/.ignored"
+#63 5.255 ΓÇëWARNΓÇë Moving typescript-eslint that was installed by a different package manager to "node_modules/.ignored"
+#63 5.255 ΓÇëWARNΓÇë Moving vite that was installed by a different package manager to "node_modules/.ignored"
+#63 5.256 ΓÇëWARNΓÇë Moving vitest that was installed by a different package manager to "node_modules/.ignored"
+#63 5.256 ΓÇëWARNΓÇë Moving @hookform/resolvers that was installed by a different package manager to "node_modules/.ignored"
+#63 5.257 ΓÇëWARNΓÇë Moving @radix-ui/react-accordion that was installed by a different package manager to "node_modules/.ignored"
+#63 5.257 ΓÇëWARNΓÇë Moving @radix-ui/react-alert-dialog that was installed by a different package manager to "node_modules/.ignored"
+#63 5.258 ΓÇëWARNΓÇë Moving @radix-ui/react-aspect-ratio that was installed by a different package manager to "node_modules/.ignored"
+#63 5.258 ΓÇëWARNΓÇë Moving @radix-ui/react-avatar that was installed by a different package manager to "node_modules/.ignored"
+#63 5.258 ΓÇëWARNΓÇë Moving @radix-ui/react-checkbox that was installed by a different package manager to "node_modules/.ignored"
+#63 5.259 ΓÇëWARNΓÇë Moving @radix-ui/react-collapsible that was installed by a different package manager to "node_modules/.ignored"
+#63 5.259 ΓÇëWARNΓÇë Moving @radix-ui/react-context-menu that was installed by a different package manager to "node_modules/.ignored"
+#63 5.260 ΓÇëWARNΓÇë Moving @radix-ui/react-dialog that was installed by a different package manager to "node_modules/.ignored"
+#63 5.260 ΓÇëWARNΓÇë Moving @radix-ui/react-dropdown-menu that was installed by a different package manager to "node_modules/.ignored"
+#63 5.261 ΓÇëWARNΓÇë Moving @radix-ui/react-hover-card that was installed by a different package manager to "node_modules/.ignored"
+#63 5.261 ΓÇëWARNΓÇë Moving @radix-ui/react-menubar that was installed by a different package manager to "node_modules/.ignored"
+#63 5.261 ΓÇëWARNΓÇë Moving @radix-ui/react-label that was installed by a different package manager to "node_modules/.ignored"
+#63 5.262 ΓÇëWARNΓÇë Moving @radix-ui/react-navigation-menu that was installed by a different package manager to "node_modules/.ignored"
+#63 5.262 ΓÇëWARNΓÇë Moving @radix-ui/react-popover that was installed by a different package manager to "node_modules/.ignored"
+#63 5.263 ΓÇëWARNΓÇë Moving @radix-ui/react-progress that was installed by a different package manager to "node_modules/.ignored"
+#63 5.264 ΓÇëWARNΓÇë Moving @radix-ui/react-radio-group that was installed by a different package manager to "node_modules/.ignored"
+#63 5.264 ΓÇëWARNΓÇë Moving @radix-ui/react-scroll-area that was installed by a different package manager to "node_modules/.ignored"
+#63 5.265 ΓÇëWARNΓÇë Moving @radix-ui/react-select that was installed by a different package manager to "node_modules/.ignored"
+#63 5.266 ΓÇëWARNΓÇë Moving @radix-ui/react-separator that was installed by a different package manager to "node_modules/.ignored"
+#63 5.268 ΓÇëWARNΓÇë Moving @radix-ui/react-slider that was installed by a different package manager to "node_modules/.ignored"
+#63 5.270 ΓÇëWARNΓÇë Moving @radix-ui/react-slot that was installed by a different package manager to "node_modules/.ignored"
+#63 5.271 ΓÇëWARNΓÇë Moving @radix-ui/react-switch that was installed by a different package manager to "node_modules/.ignored"
+#63 5.272 ΓÇëWARNΓÇë Moving @radix-ui/react-tabs that was installed by a different package manager to "node_modules/.ignored"
+#63 5.272 ΓÇëWARNΓÇë Moving @radix-ui/react-toast that was installed by a different package manager to "node_modules/.ignored"
+#63 5.273 ΓÇëWARNΓÇë Moving @radix-ui/react-toggle that was installed by a different package manager to "node_modules/.ignored"
+#63 5.273 ΓÇëWARNΓÇë Moving @radix-ui/react-toggle-group that was installed by a different package manager to "node_modules/.ignored"
+#63 5.273 ΓÇëWARNΓÇë Moving @radix-ui/react-tooltip that was installed by a different package manager to "node_modules/.ignored"
+#63 5.274 ΓÇëWARNΓÇë Moving chart.js that was installed by a different package manager to "node_modules/.ignored"
+#63 5.274 ΓÇëWARNΓÇë Moving chartjs-adapter-date-fns that was installed by a different package manager to "node_modules/.ignored"
+#63 5.275 ΓÇëWARNΓÇë Moving class-variance-authority that was installed by a different package manager to "node_modules/.ignored"
+#63 5.275 ΓÇëWARNΓÇë Moving clsx that was installed by a different package manager to "node_modules/.ignored"
+#63 5.276 ΓÇëWARNΓÇë Moving cmdk that was installed by a different package manager to "node_modules/.ignored"
+#63 5.276 ΓÇëWARNΓÇë Moving date-fns that was installed by a different package manager to "node_modules/.ignored"
+#63 5.276 ΓÇëWARNΓÇë Moving embla-carousel-react that was installed by a different package manager to "node_modules/.ignored"
+#63 5.276 ΓÇëWARNΓÇë Moving html2canvas that was installed by a different package manager to "node_modules/.ignored"
+#63 5.277 ΓÇëWARNΓÇë Moving input-otp that was installed by a different package manager to "node_modules/.ignored"
+#63 5.278 ΓÇëWARNΓÇë Moving lucide-react that was installed by a different package manager to "node_modules/.ignored"
+#63 5.278 ΓÇëWARNΓÇë Moving next-themes that was installed by a different package manager to "node_modules/.ignored"
+#63 5.279 ΓÇëWARNΓÇë Moving react that was installed by a different package manager to "node_modules/.ignored"
+#63 5.279 ΓÇëWARNΓÇë Moving react-chartjs-2 that was installed by a different package manager to "node_modules/.ignored"
+#63 5.279 ΓÇëWARNΓÇë Moving react-day-picker that was installed by a different package manager to "node_modules/.ignored"
+#63 5.279 ΓÇëWARNΓÇë Moving react-dom that was installed by a different package manager to "node_modules/.ignored"
+#63 5.280 ΓÇëWARNΓÇë Moving react-hook-form that was installed by a different package manager to "node_modules/.ignored"
+#63 5.280 ΓÇëWARNΓÇë Moving react-resizable-panels that was installed by a different package manager to "node_modules/.ignored"
+#63 5.280 ΓÇëWARNΓÇë Moving react-router-dom that was installed by a different package manager to "node_modules/.ignored"
+#63 5.280 ΓÇëWARNΓÇë Moving recharts that was installed by a different package manager to "node_modules/.ignored"
+#63 5.282 ΓÇëWARNΓÇë Moving regression that was installed by a different package manager to "node_modules/.ignored"
+#63 5.282 ΓÇëWARNΓÇë Moving simple-statistics that was installed by a different package manager to "node_modules/.ignored"
+#63 5.283 ΓÇëWARNΓÇë Moving sonner that was installed by a different package manager to "node_modules/.ignored"
+#63 5.284 ΓÇëWARNΓÇë Moving tailwind-merge that was installed by a different package manager to "node_modules/.ignored"
+#63 5.285 ΓÇëWARNΓÇë Moving tailwindcss-animate that was installed by a different package manager to "node_modules/.ignored"
+#63 5.285 ΓÇëWARNΓÇë Moving vaul that was installed by a different package manager to "node_modules/.ignored"
+#63 5.285 ΓÇëWARNΓÇë Moving zod that was installed by a different package manager to "node_modules/.ignored"
+#63 13.88 
+#63 13.88    Γò¡ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓò«
+#63 13.88    Γöé                                               Γöé
+#63 13.88    Γöé     Update available! 10.30.1 ΓåÆ 10.30.2.      Γöé
+#63 13.88    Γöé     Changelog: https://pnpm.io/v/10.30.2      Γöé
+#63 13.88    Γöé   To update, run: corepack use pnpm@10.30.2   Γöé
+#63 13.88    Γöé                                               Γöé
+#63 13.88    Γò░ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓò»
+#63 13.88 
+#63 14.33 Progress: resolved 0, reused 0, downloaded 1, added 0
+#63 15.33 Progress: resolved 22, reused 0, downloaded 19, added 0
+#63 16.33 Progress: resolved 55, reused 0, downloaded 51, added 0
+#63 17.33 Progress: resolved 70, reused 0, downloaded 68, added 0
+#63 18.33 Progress: resolved 73, reused 0, downloaded 72, added 0
+#63 19.33 Progress: resolved 75, reused 0, downloaded 75, added 0
+#63 20.33 Progress: resolved 77, reused 0, downloaded 77, added 0
+#63 21.33 Progress: resolved 122, reused 0, downloaded 103, added 0
+#63 22.33 Progress: resolved 195, reused 0, downloaded 178, added 0
+#63 23.33 Progress: resolved 231, reused 0, downloaded 213, added 0
+#63 24.33 Progress: resolved 285, reused 0, downloaded 283, added 0
+#63 25.33 Progress: resolved 355, reused 0, downloaded 350, added 0
+#63 26.33 Progress: resolved 406, reused 0, downloaded 356, added 0
+#63 27.40 Progress: resolved 447, reused 0, downloaded 386, added 0
+#63 28.40 Progress: resolved 537, reused 0, downloaded 481, added 0
+#63 29.42 Progress: resolved 591, reused 0, downloaded 540, added 0
+#63 30.42 Progress: resolved 603, reused 0, downloaded 551, added 0
+#63 31.42 Progress: resolved 604, reused 0, downloaded 553, added 0
+#63 32.42 Progress: resolved 611, reused 0, downloaded 554, added 0
+#63 34.23 Progress: resolved 613, reused 0, downloaded 561, added 0
+#63 34.74 Packages: +562
+#63 34.74 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#63 35.23 Progress: resolved 613, reused 0, downloaded 562, added 145
+#63 36.01 Progress: resolved 613, reused 0, downloaded 562, added 562, done
+#63 38.23 ΓÇëWARNΓÇë Issues with peer dependencies found
+#63 38.23 .
+#63 38.23 ΓööΓöÇΓö¼ @vitejs/plugin-react 4.3.4
+#63 38.23   ΓööΓöÇΓöÇ Γ£ò unmet peer vite@"^4.2.0 || ^5.0.0 || ^6.0.0": found 7.3.1
+#63 38.24 
+#63 38.24 dependencies:
+#63 38.24 + @hookform/resolvers 3.10.0
+#63 38.24 + @radix-ui/react-accordion 1.2.4
+#63 38.24 + @radix-ui/react-alert-dialog 1.1.7
+#63 38.24 + @radix-ui/react-aspect-ratio 1.1.3
+#63 38.24 + @radix-ui/react-avatar 1.1.4
+#63 38.24 + @radix-ui/react-checkbox 1.1.5
+#63 38.24 + @radix-ui/react-collapsible 1.1.4
+#63 38.24 + @radix-ui/react-context-menu 2.2.7
+#63 38.24 + @radix-ui/react-dialog 1.1.7
+#63 38.24 + @radix-ui/react-dropdown-menu 2.1.7
+#63 38.24 + @radix-ui/react-hover-card 1.1.7
+#63 38.24 + @radix-ui/react-label 2.1.3
+#63 38.24 + @radix-ui/react-menubar 1.1.7
+#63 38.24 + @radix-ui/react-navigation-menu 1.2.6
+#63 38.24 + @radix-ui/react-popover 1.1.7
+#63 38.24 + @radix-ui/react-progress 1.1.3
+#63 38.24 + @radix-ui/react-radio-group 1.2.4
+#63 38.24 + @radix-ui/react-scroll-area 1.2.4
+#63 38.24 + @radix-ui/react-select 2.1.7
+#63 38.24 + @radix-ui/react-separator 1.1.3
+#63 38.24 + @radix-ui/react-slider 1.2.4
+#63 38.24 + @radix-ui/react-slot 1.2.0
+#63 38.24 + @radix-ui/react-switch 1.1.4
+#63 38.24 + @radix-ui/react-tabs 1.1.4
+#63 38.24 + @radix-ui/react-toast 1.2.7
+#63 38.24 + @radix-ui/react-toggle 1.1.3
+#63 38.24 + @radix-ui/react-toggle-group 1.1.3
+#63 38.24 + @radix-ui/react-tooltip 1.2.0
+#63 38.24 + chart.js 4.4.9
+#63 38.24 + chartjs-adapter-date-fns 3.0.0
+#63 38.24 + class-variance-authority 0.7.1
+#63 38.24 + clsx 2.1.1
+#63 38.24 + cmdk 1.0.0
+#63 38.24 + date-fns 3.6.0
+#63 38.24 + embla-carousel-react 8.6.0
+#63 38.24 + html2canvas 1.4.1
+#63 38.24 + input-otp 1.4.2
+#63 38.24 + lucide-react 0.364.0
+#63 38.24 + next-themes 0.4.6
+#63 38.24 + react 18.3.1
+#63 38.24 + react-chartjs-2 5.3.0
+#63 38.24 + react-day-picker 8.10.1
+#63 38.24 + react-dom 18.3.1
+#63 38.24 + react-hook-form 7.55.0
+#63 38.24 + react-resizable-panels 2.1.7
+#63 38.24 + react-router-dom 6.30.0
+#63 38.24 + recharts 2.15.2
+#63 38.24 + regression 2.0.1
+#63 38.24 + simple-statistics 7.8.8
+#63 38.24 + sonner 1.7.4
+#63 38.24 + tailwind-merge 2.6.0
+#63 38.24 + tailwindcss-animate 1.0.7
+#63 38.24 + vaul 1.1.2
+#63 38.24 + zod 3.24.2
+#63 38.24 
+#63 38.24 devDependencies:
+#63 38.24 + @eslint/js 9.24.0
+#63 38.24 + @playwright/test 1.58.2
+#63 38.24 + @testing-library/jest-dom 6.9.1
+#63 38.24 + @testing-library/react 16.3.1
+#63 38.24 + @testing-library/user-event 14.6.1
+#63 38.24 + @types/node 22.14.1
+#63 38.24 + @types/react 18.3.20
+#63 38.24 + @types/react-dom 18.3.6
+#63 38.24 + @types/react-router-dom 5.3.3
+#63 38.24 + @vitejs/plugin-react 4.3.4
+#63 38.24 + autoprefixer 10.4.20
+#63 38.24 + eslint 9.24.0
+#63 38.24 + eslint-plugin-react-hooks 5.2.0
+#63 38.24 + eslint-plugin-react-refresh 0.4.19
+#63 38.24 + globals 15.15.0
+#63 38.24 + happy-dom 20.3.0
+#63 38.24 + jsdom 27.4.0
+#63 38.24 + postcss 8.4.49
+#63 38.24 + serve 14.2.5
+#63 38.24 + tailwindcss 3.4.16
+#63 38.24 + typescript 5.6.3
+#63 38.24 + typescript-eslint 8.29.1
+#63 38.24 + vite 7.3.1
+#63 38.24 + vitest 4.0.17
+#63 38.24 
+#63 38.24 Γò¡ Warning ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓò«
+#63 38.24 Γöé                                                                              Γöé
+#63 38.24 Γöé   Ignored build scripts: esbuild@0.27.3.                                     Γöé
+#63 38.24 Γöé   Run "pnpm approve-builds" to pick which dependencies should be allowed     Γöé
+#63 38.24 Γöé   to run scripts.                                                            Γöé
+#63 38.24 Γöé                                                                              Γöé
+#63 38.24 Γò░ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓò»
+#63 38.34 Done in 34.1s using pnpm v10.30.1
+#63 57.66 src/components/AdminPanel.tsx(64,11): error TS2304: Cannot find name 'setSession'.
+#63 57.66 src/components/AdminPanel.tsx(71,11): error TS2304: Cannot find name 'setSession'.
+#63 57.66 src/components/AdminPanel.tsx(84,15): error TS2304: Cannot find name 'session'.
+#63 57.66 src/components/AdminPanel.tsx(111,9): error TS2552: Cannot find name 'setSession'. Did you mean 'newSession'?
+#63 57.66 src/components/AdminPanel.tsx(128,5): error TS2304: Cannot find name 'setSession'.
+#63 57.66 src/components/AdminPanel.tsx(161,8): error TS2304: Cannot find name 'session'.
+#63 57.66 src/components/AdminPanel.tsx(237,60): error TS2304: Cannot find name 'session'.
+#63 57.66 src/components/AdminPanel.tsx(238,40): error TS2304: Cannot find name 'session'.
+#63 57.66 src/components/tabs/OverviewTab.test.tsx(85,13): error TS2322: Type '{ data: null; timeRange: string; showTrendlines: boolean; setShowTrendlines: Mock<Procedure>; trendlineOptions: { type: string; }; setTrendlineOptions: Mock<Procedure>; activeTrendlines: { ...; }; setActiveTrendlines: Mock<...>; }' is not assignable to type 'OverviewTabProps'.
+#63 57.66   The types of 'trendlineOptions.type' are incompatible between these types.
+#63 57.66     Type 'string' is not assignable to type '"linear" | "polynomial" | "movingAverage"'.
+#63 57.66 src/components/tabs/OverviewTab.test.tsx(90,13): error TS2322: Type '{ data: { timeSeriesData: { month: string; signups: number; applicants: number; accepted: number; registered: number; }[]; totalMetrics: { totalSignups: number; totalApplicants: number; totalAccepted: number; totalRegistered: number; acceptedNotRegistered: number; signupsNeverApplied: number; overallConversionRate: ...' is not assignable to type 'OverviewTabProps'.
+#63 57.66   The types of 'trendlineOptions.type' are incompatible between these types.
+#63 57.66     Type 'string' is not assignable to type '"linear" | "polynomial" | "movingAverage"'.
+#63 57.66 src/components/tabs/OverviewTab.test.tsx(100,13): error TS2322: Type '{ data: { timeSeriesData: { month: string; signups: number; applicants: number; accepted: number; registered: number; }[]; totalMetrics: { totalSignups: number; totalApplicants: number; totalAccepted: number; totalRegistered: number; acceptedNotRegistered: number; signupsNeverApplied: number; overallConversionRate: ...' is not assignable to type 'OverviewTabProps'.
+#63 57.66   The types of 'trendlineOptions.type' are incompatible between these types.
+#63 57.66     Type 'string' is not assignable to type '"linear" | "polynomial" | "movingAverage"'.
+#63 57.66 src/components/tabs/OverviewTab.test.tsx(106,13): error TS2322: Type '{ data: { timeSeriesData: { month: string; signups: number; applicants: number; accepted: number; registered: number; }[]; totalMetrics: { totalSignups: number; totalApplicants: number; totalAccepted: number; totalRegistered: number; acceptedNotRegistered: number; signupsNeverApplied: number; overallConversionRate: ...' is not assignable to type 'OverviewTabProps'.
+#63 57.66   The types of 'trendlineOptions.type' are incompatible between these types.
+#63 57.66     Type 'string' is not assignable to type '"linear" | "polynomial" | "movingAverage"'.
+#63 57.66 src/components/tabs/OverviewTab.test.tsx(119,13): error TS2322: Type '{ data: { timeSeriesData: { month: string; signups: number; applicants: number; accepted: number; registered: number; }[]; totalMetrics: { totalSignups: number; totalApplicants: number; totalAccepted: number; totalRegistered: number; acceptedNotRegistered: number; signupsNeverApplied: number; overallConversionRate: ...' is not assignable to type 'OverviewTabProps'.
+#63 57.66   The types of 'trendlineOptions.type' are incompatible between these types.
+#63 57.66     Type 'string' is not assignable to type '"linear" | "polynomial" | "movingAverage"'.
+#63 57.66 src/components/tabs/OverviewTab.test.tsx(127,13): error TS2322: Type '{ showTrendlines: false; data: { timeSeriesData: { month: string; signups: number; applicants: number; accepted: number; registered: number; }[]; totalMetrics: { totalSignups: number; totalApplicants: number; ... 4 more ...; overallConversionRate: number; }; conversionRates: { ...; }; funnelBreakdown: { ...; }; impo...' is not assignable to type 'OverviewTabProps'.
+#63 57.66   The types of 'trendlineOptions.type' are incompatible between these types.
+#63 57.66     Type 'string' is not assignable to type '"linear" | "polynomial" | "movingAverage"'.
+#63 57.66 src/test/setup.ts(10,1): error TS2304: Cannot find name 'global'.
+#63 59.66 vite.config.ts(17,3): error TS2769: No overload matches this call.
+#63 59.66   The last overload gave the following error.
+#63 59.66     Object literal may only specify known properties, and 'test' does not exist in type 'UserConfigExport'.
+#63 ERROR: process "/bin/sh -c npm run build" did not complete successfully: exit code: 1
+
+#50 [analytics-refactor builder 6/8] RUN npm install --legacy-peer-deps
+#50 CANCELED
+------
+ > [aucdt-analytics-dashboard builder 8/8] RUN npm run build:
+57.66 src/components/tabs/OverviewTab.test.tsx(119,13): error TS2322: Type '{ data: { timeSeriesData: { month: string; signups: number; applicants: number; accepted: number; registered: number; }[]; totalMetrics: { totalSignups: number; totalApplicants: number; totalAccepted: number; totalRegistered: number; acceptedNotRegistered: number; signupsNeverApplied: number; overallConversionRate: ...' is not assignable to type 'OverviewTabProps'.
+57.66   The types of 'trendlineOptions.type' are incompatible between these types.
+57.66     Type 'string' is not assignable to type '"linear" | "polynomial" | "movingAverage"'.
+57.66 src/components/tabs/OverviewTab.test.tsx(127,13): error TS2322: Type '{ showTrendlines: false; data: { timeSeriesData: { month: string; signups: number; applicants: number; accepted: number; registered: number; }[]; totalMetrics: { totalSignups: number; totalApplicants: number; ... 4 more ...; overallConversionRate: number; }; conversionRates: { ...; }; funnelBreakdown: { ...; }; impo...' is not assignable to type 'OverviewTabProps'.
+57.66   The types of 'trendlineOptions.type' are incompatible between these types.
+57.66     Type 'string' is not assignable to type '"linear" | "polynomial" | "movingAverage"'.
+57.66 src/test/setup.ts(10,1): error TS2304: Cannot find name 'global'.
+59.66 vite.config.ts(17,3): error TS2769: No overload matches this call.
+59.66   The last overload gave the following error.
+59.66     Object literal may only specify known properties, and 'test' does not exist in type 'UserConfigExport'.
+------
+Dockerfile.vite:26
+
+--------------------
+
+  24 |     
+
+  25 |     # Build the application
+
+  26 | >>> RUN npm run build
+
+  27 |     
+
+  28 |     # Production stage
+
+--------------------
+
+target aucdt-analytics-dashboard: failed to solve: process "/bin/sh -c npm run build" did not complete successfully: exit code: 1
+
+
+
+View build details: docker-desktop://dashboard/build/default/default/boc9zqn311p8zu4njjw96486d
+

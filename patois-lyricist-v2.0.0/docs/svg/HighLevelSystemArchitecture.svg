@@ -1,0 +1,46 @@
+<svg width="800" height="500" xmlns="http://www.w3.org/2000/svg" font-family="Inter, sans-serif" font-size="14">
+    <style>
+        .box { fill: #1a202c; stroke: #4a5568; stroke-width: 2; rx: 12; }
+        .box-user { fill: #2d3748; stroke: #D4AF37; }
+        .box-logic { fill: #1f2937; stroke: #48bb78; }
+        .box-api { fill: #2d3748; stroke: #f56565; }
+        .box-storage { fill: #1a202c; stroke: #4299e1; }
+        .txt { fill: #f7fafc; text-anchor: middle; dominant-baseline: middle; font-weight: 600; }
+        .txt-sub { fill: #a0aec0; font-size: 11px; font-weight: normal; }
+        .arrow { stroke: #718096; stroke-width: 2; marker-end: url(#arrowhead); fill: none; }
+        .arrow-label { fill: #cbd5e0; text-anchor: middle; font-size: 11px; font-style: italic; }
+    </style>
+    <defs>
+        <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="0" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" fill="#718096" />
+        </marker>
+    </defs>
+    
+    <text x="400" y="30" class="txt" font-size="20">Laboratory Architecture v1.1</text>
+    
+    <rect x="325" y="70" width="150" height="60" class="box box-user" />
+    <text x="400" y="100" class="txt">👤 Identity Layer</text>
+    
+    <rect x="200" y="180" width="400" height="120" class="box box-logic" />
+    <text x="400" y="210" class="txt">Core Security & Logic</text>
+    <text x="400" y="235" class="txt-sub">Session Management • SOC 2 Governance</text>
+    <text x="400" y="255" class="txt-sub">Riddim Construction Engine</text>
+    <text x="400" y="275" class="txt-sub">Forensic Auditing (UA / RES)</text>
+    
+    <rect x="50" y="380" width="300" height="80" class="box box-storage" />
+    <text x="200" y="410" class="txt">Secure Persistence</text>
+    <text x="200" y="435" class="txt-sub">Base64 Obfuscated LocalStorage</text>
+    
+    <rect x="450" y="380" width="300" height="80" class="box box-api" />
+    <text x="600" y="410" class="txt">Gemini 3 Pro API</text>
+    <text x="600" y="435" class="txt-sub">Patois Context Engine</text>
+    
+    <path class="arrow" d="M400,130 v50" />
+    <text x="450" y="160" class="arrow-label">Auth Session</text>
+    
+    <path class="arrow" d="M300,300 L200,380" />
+    <text x="210" y="340" class="arrow-label">Confidential Data</text>
+    
+    <path class="arrow" d="M500,300 L600,380" />
+    <text x="590" y="340" class="arrow-label">Prompting</text>
+</svg>

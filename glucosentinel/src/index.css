@@ -1,0 +1,90 @@
+@import "tailwindcss";
+
+@theme {
+  --color-ink: #0F0C07;
+  --color-gold: #C8A84B;
+  --color-gold-light: #E8C96A;
+  --color-gold-pale: #F5E6B8;
+  --color-cream: #F2EBD9;
+  --color-divider: rgba(200, 168, 75, 0.27);
+  
+  --font-display: "Playfair Display", serif;
+  --font-label: "Bebas Neue", sans-serif;
+  --font-body: "Cormorant Garamond", serif;
+  --font-meta: "DM Sans", sans-serif;
+
+  --animate-fade-down: fadeDown 0.8s ease-out forwards;
+  --animate-fade-up: fadeUp 0.8s ease-out forwards;
+}
+
+/* High Contrast Theme Overrides */
+:root.high-contrast {
+  --color-ink: #000000;
+  --color-gold: #FFFF00;
+  --color-gold-light: #FFFFFF;
+  --color-gold-pale: #FFFFFF;
+  --color-cream: #FFFFFF;
+  --color-divider: #FFFFFF;
+}
+
+:root.high-contrast body {
+  background-color: #000000;
+  color: #FFFFFF;
+}
+
+:root.high-contrast * {
+  text-shadow: none !important;
+  box-shadow: none !important;
+}
+
+@layer base {
+  body {
+    background-color: var(--color-ink);
+    color: var(--color-cream);
+    font-family: var(--font-body);
+    overflow-x: hidden;
+  }
+
+  /* Grain Overlay */
+  body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
+    z-index: 50;
+    opacity: 0.04;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display);
+  }
+}
+
+@keyframes fadeDown {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #0F0C07;
+}
+::-webkit-scrollbar-thumb {
+  background: #333;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #C8A84B;
+}

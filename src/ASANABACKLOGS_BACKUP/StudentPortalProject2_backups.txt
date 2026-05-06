@@ -1,0 +1,2467 @@
+{
+  "data" : [ {
+    "gid" : "1197593390729875",
+    "actual_time_minutes" : null,
+    "assignee" : {
+      "gid" : "434273397793530",
+      "name" : "Bright Senanu Agbosu",
+      "resource_type" : "user"
+    },
+    "assignee_status" : "inbox",
+    "completed" : false,
+    "completed_at" : null,
+    "created_at" : "2020-10-06T13:50:17.354Z",
+    "due_at" : null,
+    "due_on" : null,
+    "followers" : [ {
+      "gid" : "434273397793530",
+      "name" : "Bright Senanu Agbosu",
+      "resource_type" : "user"
+    } ],
+    "hearted" : false,
+    "hearts" : [ ],
+    "liked" : false,
+    "likes" : [ ],
+    "memberships" : [ {
+      "project" : {
+        "gid" : "1196582714650519",
+        "name" : "Student Portal",
+        "resource_type" : "project"
+      },
+      "section" : {
+        "gid" : "1196582714650520",
+        "name" : "Untitled section",
+        "resource_type" : "section"
+      }
+    } ],
+    "modified_at" : "2020-10-06T14:29:38.045Z",
+    "name" : "ASP-1006 (01) Create Student Examination Result page",
+    "notes" : "Remove Generate Courses button since a combination of the first three fields on the examinations page can trigger a content generation result.\n\nAdd a table for tabulation of results at the bottom.\n\n",
+    "num_hearts" : 0,
+    "num_likes" : 0,
+    "parent" : null,
+    "permalink_url" : "https://app.asana.com/1/236599948336393/project/1196582714650519/task/1197593390729875",
+    "projects" : [ {
+      "gid" : "1196582714650519",
+      "name" : "Student Portal",
+      "resource_type" : "project"
+    } ],
+    "resource_type" : "task",
+    "start_at" : null,
+    "start_on" : null,
+    "subtasks" : [ ],
+    "tags" : [ ],
+    "resource_subtype" : "default_task",
+    "workspace" : {
+      "gid" : "236599948336393",
+      "name" : "aucdt.edu.gh",
+      "resource_type" : "workspace"
+    }
+  }, {
+    "gid" : "1197590934576772",
+    "actual_time_minutes" : null,
+    "assignee" : {
+      "gid" : "434273397793530",
+      "name" : "Bright Senanu Agbosu",
+      "resource_type" : "user"
+    },
+    "assignee_status" : "inbox",
+    "completed" : true,
+    "completed_at" : "2020-10-11T08:31:06.139Z",
+    "created_at" : "2020-10-06T15:02:13.050Z",
+    "due_at" : null,
+    "due_on" : null,
+    "followers" : [ {
+      "gid" : "434273397793530",
+      "name" : "Bright Senanu Agbosu",
+      "resource_type" : "user"
+    } ],
+    "hearted" : false,
+    "hearts" : [ ],
+    "liked" : false,
+    "likes" : [ ],
+    "memberships" : [ {
+      "project" : {
+        "gid" : "1196582714650519",
+        "name" : "Student Portal",
+        "resource_type" : "project"
+      },
+      "section" : {
+        "gid" : "1196582714650520",
+        "name" : "Untitled section",
+        "resource_type" : "section"
+      }
+    } ],
+    "modified_at" : "2020-10-11T08:31:06.463Z",
+    "name" : "ASP-1007 Create Lecturer Assessment Page",
+    "notes" : "",
+    "num_hearts" : 0,
+    "num_likes" : 0,
+    "parent" : null,
+    "permalink_url" : "https://app.asana.com/1/236599948336393/project/1196582714650519/task/1197590934576772",
+    "projects" : [ {
+      "gid" : "1196582714650519",
+      "name" : "Student Portal",
+      "resource_type" : "project"
+    } ],
+    "resource_type" : "task",
+    "start_at" : null,
+    "start_on" : null,
+    "subtasks" : [ ],
+    "tags" : [ ],
+    "resource_subtype" : "default_task",
+    "workspace" : {
+      "gid" : "236599948336393",
+      "name" : "aucdt.edu.gh",
+      "resource_type" : "workspace"
+    }
+  }, {
+    "gid" : "1197786482402531",
+    "actual_time_minutes" : null,
+    "assignee" : {
+      "gid" : "434273397793530",
+      "name" : "Bright Senanu Agbosu",
+      "resource_type" : "user"
+    },
+    "assignee_status" : "inbox",
+    "completed" : true,
+    "completed_at" : "2020-10-11T08:31:13.235Z",
+    "created_at" : "2020-10-07T15:33:58.974Z",
+    "due_at" : null,
+    "due_on" : null,
+    "followers" : [ {
+      "gid" : "434273397793530",
+      "name" : "Bright Senanu Agbosu",
+      "resource_type" : "user"
+    } ],
+    "hearted" : false,
+    "hearts" : [ ],
+    "liked" : false,
+    "likes" : [ ],
+    "memberships" : [ {
+      "project" : {
+        "gid" : "1196582714650519",
+        "name" : "Student Portal",
+        "resource_type" : "project"
+      },
+      "section" : {
+        "gid" : "1196582714650520",
+        "name" : "Untitled section",
+        "resource_type" : "section"
+      }
+    } ],
+    "modified_at" : "2020-10-11T08:31:13.552Z",
+    "name" : "ASP-1007 (01) Create Lecturer Assessment Page",
+    "notes" : "Make item selection field checkboxes",
+    "num_hearts" : 0,
+    "num_likes" : 0,
+    "parent" : null,
+    "permalink_url" : "https://app.asana.com/1/236599948336393/project/1196582714650519/task/1197786482402531",
+    "projects" : [ {
+      "gid" : "1196582714650519",
+      "name" : "Student Portal",
+      "resource_type" : "project"
+    } ],
+    "resource_type" : "task",
+    "start_at" : null,
+    "start_on" : null,
+    "subtasks" : [ ],
+    "tags" : [ ],
+    "resource_subtype" : "default_task",
+    "workspace" : {
+      "gid" : "236599948336393",
+      "name" : "aucdt.edu.gh",
+      "resource_type" : "workspace"
+    }
+  }, {
+    "gid" : "1198979236651775",
+    "actual_time_minutes" : null,
+    "assignee" : {
+      "gid" : "434273397793530",
+      "name" : "Bright Senanu Agbosu",
+      "resource_type" : "user"
+    },
+    "assignee_status" : "inbox",
+    "completed" : false,
+    "completed_at" : null,
+    "created_at" : "2020-10-30T13:42:33.059Z",
+    "due_at" : null,
+    "due_on" : null,
+    "followers" : [ {
+      "gid" : "434273397793530",
+      "name" : "Bright Senanu Agbosu",
+      "resource_type" : "user"
+    } ],
+    "hearted" : false,
+    "hearts" : [ ],
+    "liked" : false,
+    "likes" : [ ],
+    "memberships" : [ {
+      "project" : {
+        "gid" : "1196582714650519",
+        "name" : "Student Portal",
+        "resource_type" : "project"
+      },
+      "section" : {
+        "gid" : "1196582714650520",
+        "name" : "Untitled section",
+        "resource_type" : "section"
+      }
+    } ],
+    "modified_at" : "2020-10-30T13:43:26.128Z",
+    "name" : "ASP-1034 Re-organize-timetable component",
+    "notes" : "Re-organize timetable component into modules directory.",
+    "num_hearts" : 0,
+    "num_likes" : 0,
+    "parent" : null,
+    "permalink_url" : "https://app.asana.com/1/236599948336393/project/1196582714650519/task/1198979236651775",
+    "projects" : [ {
+      "gid" : "1196582714650519",
+      "name" : "Student Portal",
+      "resource_type" : "project"
+    } ],
+    "resource_type" : "task",
+    "start_at" : null,
+    "start_on" : null,
+    "subtasks" : [ ],
+    "tags" : [ ],
+    "resource_subtype" : "default_task",
+    "workspace" : {
+      "gid" : "236599948336393",
+      "name" : "aucdt.edu.gh",
+      "resource_type" : "workspace"
+    }
+  }, {
+    "gid" : "1197590934576774",
+    "actual_time_minutes" : null,
+    "assignee" : {
+      "gid" : "434273397793530",
+      "name" : "Bright Senanu Agbosu",
+      "resource_type" : "user"
+    },
+    "assignee_status" : "inbox",
+    "completed" : true,
+    "completed_at" : "2020-10-11T08:31:22.389Z",
+    "created_at" : "2020-10-06T15:03:28.170Z",
+    "due_at" : null,
+    "due_on" : null,
+    "followers" : [ {
+      "gid" : "434273397793530",
+      "name" : "Bright Senanu Agbosu",
+      "resource_type" : "user"
+    } ],
+    "hearted" : false,
+    "hearts" : [ ],
+    "liked" : false,
+    "likes" : [ ],
+    "memberships" : [ {
+      "project" : {
+        "gid" : "1196582714650519",
+        "name" : "Student Portal",
+        "resource_type" : "project"
+      },
+      "section" : {
+        "gid" : "1196582714650520",
+        "name" : "Untitled section",
+        "resource_type" : "section"
+      }
+    } ],
+    "modified_at" : "2020-10-11T08:31:22.692Z",
+    "name" : "ASP-1008 Create Course Timetable Page",
+    "notes" : "Create a page layout for previewing semester timetable",
+    "num_hearts" : 0,
+    "num_likes" : 0,
+    "parent" : null,
+    "permalink_url" : "https://app.asana.com/1/236599948336393/project/1196582714650519/task/1197590934576774",
+    "projects" : [ {
+      "gid" : "1196582714650519",
+      "name" : "Student Portal",
+      "resource_type" : "project"
+    } ],
+    "resource_type" : "task",
+    "start_at" : null,
+    "start_on" : null,
+    "subtasks" : [ ],
+    "tags" : [ ],
+    "resource_subtype" : "default_task",
+    "workspace" : {
+      "gid" : "236599948336393",
+      "name" : "aucdt.edu.gh",
+      "resource_type" : "workspace"
+    }
+  }, {
+    "gid" : "1198016538225017",
+    "actual_time_minutes" : null,
+    "assignee" : null,
+    "assignee_status" : "upcoming",
+    "completed" : true,
+    "completed_at" : "2020-10-11T08:31:35.874Z",
+    "created_at" : "2020-10-08T09:08:30.839Z",
+    "due_at" : null,
+    "due_on" : null,
+    "followers" : [ {
+      "gid" : "434273397793530",
+      "name" : "Bright Senanu Agbosu",
+      "resource_type" : "user"
+    } ],
+    "hearted" : false,
+    "hearts" : [ ],
+    "liked" : false,
+    "likes" : [ ],
+    "memberships" : [ {
+      "project" : {
+        "gid" : "1196582714650519",
+        "name" : "Student Portal",
+        "resource_type" : "project"
+      },
+      "section" : {
+        "gid" : "1196582714650520",
+        "name" : "Untitled section",
+        "resource_type" : "section"
+      }
+    } ],
+    "modified_at" : "2020-10-11T08:31:36.216Z",
+    "name" : "ASP-1009 Lecturer Assessment Page (make tables responsive)",
+    "notes" : "Make the tables on this page responsive.",
+    "num_hearts" : 0,
+    "num_likes" : 0,
+    "parent" : null,
+    "permalink_url" : "https://app.asana.com/1/236599948336393/project/1196582714650519/task/1198016538225017",
+    "projects" : [ {
+      "gid" : "1196582714650519",
+      "name" : "Student Portal",
+      "resource_type" : "project"
+    } ],
+    "resource_type" : "task",
+    "start_at" : null,
+    "start_on" : null,
+    "subtasks" : [ ],
+    "tags" : [ ],
+    "resource_subtype" : "default_task",
+    "workspace" : {
+      "gid" : "236599948336393",
+      "name" : "aucdt.edu.gh",
+      "resource_type" : "workspace"
+    }
+  }, {
+    "gid" : "1196582714650522",
+    "actual_time_minutes" : null,
+    "assignee" : {
+      "gid" : "434273397793530",
+      "name" : "Bright Senanu Agbosu",
+      "resource_type" : "user"
+    },
+    "assignee_status" : "inbox",
+    "completed" : false,
+    "completed_at" : null,
+    "created_at" : "2020-09-30T13:43:24.783Z",
+    "due_at" : null,
+    "due_on" : null,
+    "followers" : [ {
+      "gid" : "434273397793530",
+      "name" : "Bright Senanu Agbosu",
+      "resource_type" : "user"
+    } ],
+    "hearted" : false,
+    "hearts" : [ ],
+    "liked" : false,
+    "likes" : [ ],
+    "memberships" : [ {
+      "project" : {
+        "gid" : "1196582714650519",
+        "name" : "Student Portal",
+        "resource_type" : "project"
+      },
+      "section" : {
+        "gid" : "1196582714650520",
+        "name" : "Untitled section",
+        "resource_type" : "section"
+      }
+    } ],
+    "modified_at" : "2020-10-08T09:15:51.159Z",
+    "name" : "ASP-1010 Create landing page",
+    "notes" : "",
+    "num_hearts" : 0,
+    "num_likes" : 0,
+    "parent" : null,
+    "permalink_url" : "https://app.asana.com/1/236599948336393/project/1196582714650519/task/1196582714650522",
+    "projects" : [ {
+      "gid" : "1196582714650519",
+      "name" : "Student Portal",
+      "resource_type" : "project"
+    } ],
+    "resource_type" : "task",
+    "start_at" : null,
+    "start_on" : null,
+    "subtasks" : [ ],
+    "tags" : [ ],
+    "resource_subtype" : "default_task",
+    "workspace" : {
+      "gid" : "236599948336393",
+      "name" : "aucdt.edu.gh",
+      "resource_type" : "workspace"
+    }
+  }, {
+    "gid" : "1196582714650540",
+    "actual_time_minutes" : null,
+    "assignee" : {
+      "gid" : "434273397793530",
+      "name" : "Bright Senanu Agbosu",
+      "resource_type" : "user"
+    },
+    "assignee_status" : "inbox",
+    "completed" : false,
+    "completed_at" : null,
+    "created_at" : "2020-09-30T14:02:07.687Z",
+    "due_at" : null,
+    "due_on" : null,
+    "followers" : [ {
+      "gid" : "434273397793530",
+      "name" : "Bright Senanu Agbosu",
+      "resource_type" : "user"
+    } ],
+    "hearted" : false,
+    "hearts" : [ ],
+    "liked" : false,
+    "likes" : [ ],
+    "memberships" : [ {
+      "project" : {
+        "gid" : "1196582714650519",
+        "name" : "Student Portal",
+        "resource_type" : "project"
+      },
+      "section" : {
+        "gid" : "1196582714650520",
+        "name" : "Untitled section",
+        "resource_type" : "section"
+      }
+    } ],
+    "modified_at" : "2020-10-27T09:50:46.086Z",
+    "name" : "ASP-1011 Create Dashboard Feature",
+    "notes" : "Student should be able to:\n    Preview Upcoming Events\n    View Analytics\n    Preview courses\n    Courses to register\n    Courses registered\n    Trailing Papers\n",
+    "num_hearts" : 0,
+    "num_likes" : 0,
+    "parent" : null,
+    "permalink_url" : "https://app.asana.com/1/236599948336393/project/1196582714650519/task/1196582714650540",
+    "projects" : [ {
+      "gid" : "1196582714650519",
+      "name" : "Student Portal",
+      "resource_type" : "project"
+    } ],
+    "resource_type" : "task",
+    "start_at" : null,
+    "start_on" : null,
+    "subtasks" : [ ],
+    "tags" : [ ],
+    "resource_subtype" : "default_task",
+    "workspace" : {
+      "gid" : "236599948336393",
+      "name" : "aucdt.edu.gh",
+      "resource_type" : "workspace"
+    }
+  }, {
+    "gid" : "1196687200719951",
+    "actual_time_minutes" : null,
+    "assignee" : {
+      "gid" : "236599939894511",
+      "name" : "Daniel Twum",
+      "resource_type" : "user"
+    },
+    "assignee_status" : "inbox",
+    "completed" : false,
+    "completed_at" : null,
+    "created_at" : "2020-09-30T20:22:26.980Z",
+    "due_at" : null,
+    "due_on" : null,
+    "followers" : [ {
+      "gid" : "236599939894511",
+      "name" : "Daniel Twum",
+      "resource_type" : "user"
+    }, {
+      "gid" : "434273397793530",
+      "name" : "Bright Senanu Agbosu",
+      "resource_type" : "user"
+    }, {
+      "gid" : "687832382631759",
+      "name" : "bibhu moharana",
+      "resource_type" : "user"
+    } ],
+    "hearted" : false,
+    "hearts" : [ ],
+    "liked" : false,
+    "likes" : [ ],
+    "memberships" : [ {
+      "project" : {
+        "gid" : "1196582714650519",
+        "name" : "Student Portal",
+        "resource_type" : "project"
+      },
+      "section" : {
+        "gid" : "1196582714650520",
+        "name" : "Untitled section",
+        "resource_type" : "section"
+      }
+    } ],
+    "modified_at" : "2020-10-14T09:05:19.295Z",
+    "name" : "ASP-1012 Document high level functional requirements for the project",
+    "notes" : "See attachment for initial UI requirements.\n\n    Handle courses by semester table ( which courses will be offered per semester by Lecturer? )\n    Semester table ( list semester name - period )\n    Course_topics table ( associate topics with courses )\n    Topics table: topic_id, topic_title, topic_details\n    Lecturers table: lecturer is a person with contact details\n    \n\n\nFYI: https://app.asana.com/0/434273397793534/list https://app.asana.com/0/687832382631763/list",
+    "num_hearts" : 0,
+    "num_likes" : 0,
+    "parent" : null,
+    "permalink_url" : "https://app.asana.com/1/236599948336393/project/1196582714650519/task/1196687200719951",
+    "projects" : [ {
+      "gid" : "1196582714650519",
+      "name" : "Student Portal",
+      "resource_type" : "project"
+    } ],
+    "resource_type" : "task",
+    "start_at" : null,
+    "start_on" : null,
+    "subtasks" : [ ],
+    "tags" : [ ],
+    "resource_subtype" : "default_task",
+    "workspace" : {
+      "gid" : "236599948336393",
+      "name" : "aucdt.edu.gh",
+      "resource_type" : "workspace"
+    }
+  }, {
+    "gid" : "1196687200719955",
+    "actual_time_minutes" : null,
+    "assignee" : {
+      "gid" : "236599939894511",
+      "name" : "Daniel Twum",
+      "resource_type" : "user"
+    },
+    "assignee_status" : "inbox",
+    "completed" : false,
+    "completed_at" : null,
+    "created_at" : "2020-09-30T20:22:50.464Z",
+    "due_at" : null,
+    "due_on" : null,
+    "followers" : [ {
+      "gid" : "236599939894511",
+      "name" : "Daniel Twum",
+      "resource_type" : "user"
+    } ],
+    "hearted" : false,
+    "hearts" : [ ],
+    "liked" : false,
+    "likes" : [ ],
+    "memberships" : [ {
+      "project" : {
+        "gid" : "1196582714650519",
+        "name" : "Student Portal",
+        "resource_type" : "project"
+      },
+      "section" : {
+        "gid" : "1196582714650520",
+        "name" : "Untitled section",
+        "resource_type" : "section"
+      }
+    } ],
+    "modified_at" : "2020-10-08T09:16:06.518Z",
+    "name" : "ASP-1013 Identify and document MT methods to support functional requirements",
+    "notes" : "",
+    "num_hearts" : 0,
+    "num_likes" : 0,
+    "parent" : null,
+    "permalink_url" : "https://app.asana.com/1/236599948336393/project/1196582714650519/task/1196687200719955",
+    "projects" : [ {
+      "gid" : "1196582714650519",
+      "name" : "Student Portal",
+      "resource_type" : "project"
+    } ],
+    "resource_type" : "task",
+    "start_at" : null,
+    "start_on" : null,
+    "subtasks" : [ ],
+    "tags" : [ ],
+    "resource_subtype" : "default_task",
+    "workspace" : {
+      "gid" : "236599948336393",
+      "name" : "aucdt.edu.gh",
+      "resource_type" : "workspace"
+    }
+  }, {
+    "gid" : "1198069676186619",
+    "actual_time_minutes" : null,
+    "assignee" : {
+      "gid" : "434273397793530",
+      "name" : "Bright Senanu Agbosu",
+      "resource_type" : "user"
+    },
+    "assignee_status" : "inbox",
+    "completed" : false,
+    "completed_at" : null,
+    "created_at" : "2020-10-08T16:09:28.952Z",
+    "due_at" : null,
+    "due_on" : null,
+    "followers" : [ {
+      "gid" : "434273397793530",
+      "name" : "Bright Senanu Agbosu",
+      "resource_type" : "user"
+    } ],
+    "hearted" : false,
+    "hearts" : [ ],
+    "liked" : false,
+    "likes" : [ ],
+    "memberships" : [ {
+      "project" : {
+        "gid" : "1196582714650519",
+        "name" : "Student Portal",
+        "resource_type" : "project"
+      },
+      "section" : {
+        "gid" : "1196582714650520",
+        "name" : "Untitled section",
+        "resource_type" : "section"
+      }
+    } ],
+    "modified_at" : "2020-10-08T16:10:31.815Z",
+    "name" : "ASP-1015 Add submit button on lecturer assessment page",
+    "notes" : "",
+    "num_hearts" : 0,
+    "num_likes" : 0,
+    "parent" : null,
+    "permalink_url" : "https://app.asana.com/1/236599948336393/project/1196582714650519/task/1198069676186619",
+    "projects" : [ {
+      "gid" : "1196582714650519",
+      "name" : "Student Portal",
+      "resource_type" : "project"
+    } ],
+    "resource_type" : "task",
+    "start_at" : null,
+    "start_on" : null,
+    "subtasks" : [ ],
+    "tags" : [ ],
+    "resource_subtype" : "default_task",
+    "workspace" : {
+      "gid" : "236599948336393",
+      "name" : "aucdt.edu.gh",
+      "resource_type" : "workspace"
+    }
+  }, {
+    "gid" : "1198069676186617",
+    "actual_time_minutes" : null,
+    "assignee" : {
+      "gid" : "434273397793530",
+      "name" : "Bright Senanu Agbosu",
+      "resource_type" : "user"
+    },
+    "assignee_status" : "inbox",
+    "completed" : false,
+    "completed_at" : null,
+    "created_at" : "2020-10-08T13:54:44.425Z",
+    "due_at" : null,
+    "due_on" : null,
+    "followers" : [ {
+      "gid" : "434273397793530",
+      "name" : "Bright Senanu Agbosu",
+      "resource_type" : "user"
+    } ],
+    "hearted" : false,
+    "hearts" : [ ],
+    "liked" : false,
+    "likes" : [ ],
+    "memberships" : [ {
+      "project" : {
+        "gid" : "1196582714650519",
+        "name" : "Student Portal",
+        "resource_type" : "project"
+      },
+      "section" : {
+        "gid" : "1196582714650520",
+        "name" : "Untitled section",
+        "resource_type" : "section"
+      }
+    } ],
+    "modified_at" : "2020-10-08T13:57:43.851Z",
+    "name" : "ASP-1014 Login page",
+    "notes" : "Format the page UI\nredirect login to point to student profile page",
+    "num_hearts" : 0,
+    "num_likes" : 0,
+    "parent" : null,
+    "permalink_url" : "https://app.asana.com/1/236599948336393/project/1196582714650519/task/1198069676186617",
+    "projects" : [ {
+      "gid" : "1196582714650519",
+      "name" : "Student Portal",
+      "resource_type" : "project"
+    } ],
+    "resource_type" : "task",
+    "start_at" : null,
+    "start_on" : null,
+    "subtasks" : [ ],
+    "tags" : [ ],
+    "resource_subtype" : "default_task",
+    "workspace" : {
+      "gid" : "236599948336393",
+      "name" : "aucdt.edu.gh",
+      "resource_type" : "workspace"
+    }
+  }, {
+    "gid" : "1198069676186621",
+    "actual_time_minutes" : null,
+    "assignee" : {
+      "gid" : "434273397793530",
+      "name" : "Bright Senanu Agbosu",
+      "resource_type" : "user"
+    },
+    "assignee_status" : "inbox",
+    "completed" : false,
+    "completed_at" : null,
+    "created_at" : "2020-10-08T16:12:32.589Z",
+    "due_at" : null,
+    "due_on" : null,
+    "followers" : [ {
+      "gid" : "434273397793530",
+      "name" : "Bright Senanu Agbosu",
+      "resource_type" : "user"
+    } ],
+    "hearted" : false,
+    "hearts" : [ ],
+    "liked" : false,
+    "likes" : [ ],
+    "memberships" : [ {
+      "project" : {
+        "gid" : "1196582714650519",
+        "name" : "Student Portal",
+        "resource_type" : "project"
+      },
+      "section" : {
+        "gid" : "1196582714650520",
+        "name" : "Untitled section",
+        "resource_type" : "section"
+      }
+    } ],
+    "modified_at" : "2020-10-08T16:13:09.231Z",
+    "name" : "ASP-1016 Allow selection of only one checkbox on lecturer assessment page",
+    "notes" : "",
+    "num_hearts" : 0,
+    "num_likes" : 0,
+    "parent" : null,
+    "permalink_url" : "https://app.asana.com/1/236599948336393/project/1196582714650519/task/1198069676186621",
+    "projects" : [ {
+      "gid" : "1196582714650519",
+      "name" : "Student Portal",
+      "resource_type" : "project"
+    } ],
+    "resource_type" : "task",
+    "start_at" : null,
+    "start_on" : null,
+    "subtasks" : [ ],
+    "tags" : [ ],
+    "resource_subtype" : "default_task",
+    "workspace" : {
+      "gid" : "236599948336393",
+      "name" : "aucdt.edu.gh",
+      "resource_type" : "workspace"
+    }
+  }, {
+    "gid" : "1198069676186623",
+    "actual_time_minutes" : null,
+    "assignee" : null,
+    "assignee_status" : "upcoming",
+    "completed" : false,
+    "completed_at" : null,
+    "created_at" : "2020-10-08T16:15:57.574Z",
+    "due_at" : null,
+    "due_on" : null,
+    "followers" : [ {
+      "gid" : "434273397793530",
+      "name" : "Bright Senanu Agbosu",
+      "resource_type" : "user"
+    } ],
+    "hearted" : false,
+    "hearts" : [ ],
+    "liked" : false,
+    "likes" : [ ],
+    "memberships" : [ {
+      "project" : {
+        "gid" : "1196582714650519",
+        "name" : "Student Portal",
+        "resource_type" : "project"
+      },
+      "section" : {
+        "gid" : "1196582714650520",
+        "name" : "Untitled section",
+        "resource_type" : "section"
+      }
+    } ],
+    "modified_at" : "2020-10-08T16:21:27.379Z",
+    "name" : "ASP-1017 make table on timetable page responsive",
+    "notes" : "",
+    "num_hearts" : 0,
+    "num_likes" : 0,
+    "parent" : null,
+    "permalink_url" : "https://app.asana.com/1/236599948336393/project/1196582714650519/task/1198069676186623",
+    "projects" : [ {
+      "gid" : "1196582714650519",
+      "name" : "Student Portal",
+      "resource_type" : "project"
+    } ],
+    "resource_type" : "task",
+    "start_at" : null,
+    "start_on" : null,
+    "subtasks" : [ ],
+    "tags" : [ ],
+    "resource_subtype" : "default_task",
+    "workspace" : {
+      "gid" : "236599948336393",
+      "name" : "aucdt.edu.gh",
+      "resource_type" : "workspace"
+    }
+  }, {
+    "gid" : "1198069676186625",
+    "actual_time_minutes" : null,
+    "assignee" : {
+      "gid" : "434273397793530",
+      "name" : "Bright Senanu Agbosu",
+      "resource_type" : "user"
+    },
+    "assignee_status" : "inbox",
+    "completed" : false,
+    "completed_at" : null,
+    "created_at" : "2020-10-08T16:20:47.719Z",
+    "due_at" : null,
+    "due_on" : null,
+    "followers" : [ {
+      "gid" : "434273397793530",
+      "name" : "Bright Senanu Agbosu",
+      "resource_type" : "user"
+    } ],
+    "hearted" : false,
+    "hearts" : [ ],
+    "liked" : false,
+    "likes" : [ ],
+    "memberships" : [ {
+      "project" : {
+        "gid" : "1196582714650519",
+        "name" : "Student Portal",
+        "resource_type" : "project"
+      },
+      "section" : {
+        "gid" : "1196582714650520",
+        "name" : "Untitled section",
+        "resource_type" : "section"
+      }
+    } ],
+    "modified_at" : "2020-10-13T09:17:21.844Z",
+    "name" : "ASP-1018 remove generate courses button",
+    "notes" : "",
+    "num_hearts" : 0,
+    "num_likes" : 0,
+    "parent" : null,
+    "permalink_url" : "https://app.asana.com/1/236599948336393/project/1196582714650519/task/1198069676186625",
+    "projects" : [ {
+      "gid" : "1196582714650519",
+      "name" : "Student Portal",
+      "resource_type" : "project"
+    } ],
+    "resource_type" : "task",
+    "start_at" : null,
+    "start_on" : null,
+    "subtasks" : [ ],
+    "tags" : [ ],
+    "resource_subtype" : "default_task",
+    "workspace" : {
+      "gid" : "236599948336393",
+      "name" : "aucdt.edu.gh",
+      "resource_type" : "workspace"
+    }
+  }, {
+    "gid" : "1198187121423785",
+    "actual_time_minutes" : null,
+    "assignee" : {
+      "gid" : "434273397793530",
+      "name" : "Bright Senanu Agbosu",
+      "resource_type" : "user"
+    },
+    "assignee_status" : "inbox",
+    "completed" : false,
+    "completed_at" : null,
+    "created_at" : "2020-10-12T08:23:12.098Z",
+    "due_at" : null,
+    "due_on" : null,
+    "followers" : [ {
+      "gid" : "434273397793530",
+      "name" : "Bright Senanu Agbosu",
+      "resource_type" : "user"
+    } ],
+    "hearted" : false,
+    "hearts" : [ ],
+    "liked" : false,
+    "likes" : [ ],
+    "memberships" : [ {
+      "project" : {
+        "gid" : "1196582714650519",
+        "name" : "Student Portal",
+        "resource_type" : "project"
+      },
+      "section" : {
+        "gid" : "1196582714650520",
+        "name" : "Untitled section",
+        "resource_type" : "section"
+      }
+    } ],
+    "modified_at" : "2020-10-17T18:35:05.044Z",
+    "name" : "ASP-1019 Remove multiple sidenav in each component",
+    "notes" : "The sidenav code keeps being repeated in each component. Reformat code by \nchanging the route location. ",
+    "num_hearts" : 0,
+    "num_likes" : 0,
+    "parent" : null,
+    "permalink_url" : "https://app.asana.com/1/236599948336393/project/1196582714650519/task/1198187121423785",
+    "projects" : [ {
+      "gid" : "1196582714650519",
+      "name" : "Student Portal",
+      "resource_type" : "project"
+    } ],
+    "resource_type" : "task",
+    "start_at" : null,
+    "start_on" : null,
+    "subtasks" : [ ],
+    "tags" : [ ],
+    "resource_subtype" : "default_task",
+    "workspace" : {
+      "gid" : "236599948336393",
+      "name" : "aucdt.edu.gh",
+      "resource_type" : "workspace"
+    }
+  }, {
+    "gid" : "1196761760169797",
+    "actual_time_minutes" : null,
+    "assignee" : {
+      "gid" : "434273397793530",
+      "name" : "Bright Senanu Agbosu",
+      "resource_type" : "user"
+    },
+    "assignee_status" : "inbox",
+    "completed" : true,
+    "completed_at" : "2020-10-06T14:54:18.045Z",
+    "created_at" : "2020-10-01T08:37:02.256Z",
+    "due_at" : null,
+    "due_on" : null,
+    "followers" : [ {
+      "gid" : "434273397793530",
+      "name" : "Bright Senanu Agbosu",
+      "resource_type" : "user"
+    } ],
+    "hearted" : false,
+    "hearts" : [ ],
+    "liked" : false,
+    "likes" : [ ],
+    "memberships" : [ {
+      "project" : {
+        "gid" : "1196582714650519",
+        "name" : "Student Portal",
+        "resource_type" : "project"
+      },
+      "section" : {
+        "gid" : "1196582714650520",
+        "name" : "Untitled section",
+        "resource_type" : "section"
+      }
+    } ],
+    "modified_at" : "2020-10-06T14:54:18.433Z",
+    "name" : "ASP-1000 Create Angular Project",
+    "notes" : "    Create angular project for the student portal\n    Add angular material\n",
+    "num_hearts" : 0,
+    "num_likes" : 0,
+    "parent" : null,
+    "permalink_url" : "https://app.asana.com/1/236599948336393/project/1196582714650519/task/1196761760169797",
+    "projects" : [ {
+      "gid" : "1196582714650519",
+      "name" : "Student Portal",
+      "resource_type" : "project"
+    } ],
+    "resource_type" : "task",
+    "start_at" : null,
+    "start_on" : null,
+    "subtasks" : [ ],
+    "tags" : [ ],
+    "resource_subtype" : "default_task",
+    "workspace" : {
+      "gid" : "236599948336393",
+      "name" : "aucdt.edu.gh",
+      "resource_type" : "workspace"
+    }
+  }, {
+    "gid" : "1196761760169801",
+    "actual_time_minutes" : null,
+    "assignee" : {
+      "gid" : "434273397793530",
+      "name" : "Bright Senanu Agbosu",
+      "resource_type" : "user"
+    },
+    "assignee_status" : "inbox",
+    "completed" : true,
+    "completed_at" : "2020-10-06T14:54:12.395Z",
+    "created_at" : "2020-10-01T08:38:43.647Z",
+    "due_at" : null,
+    "due_on" : null,
+    "followers" : [ {
+      "gid" : "434273397793530",
+      "name" : "Bright Senanu Agbosu",
+      "resource_type" : "user"
+    } ],
+    "hearted" : false,
+    "hearts" : [ ],
+    "liked" : false,
+    "likes" : [ ],
+    "memberships" : [ {
+      "project" : {
+        "gid" : "1196582714650519",
+        "name" : "Student Portal",
+        "resource_type" : "project"
+      },
+      "section" : {
+        "gid" : "1196582714650520",
+        "name" : "Untitled section",
+        "resource_type" : "section"
+      }
+    } ],
+    "modified_at" : "2020-10-06T14:54:12.720Z",
+    "name" : "ASP-1001 Add components",
+    "notes" : "Generate various components for the student portal which will include:\n    Login page\n    Profile\n    Course registration\n    Examination\n    Fees\n",
+    "num_hearts" : 0,
+    "num_likes" : 0,
+    "parent" : null,
+    "permalink_url" : "https://app.asana.com/1/236599948336393/project/1196582714650519/task/1196761760169801",
+    "projects" : [ {
+      "gid" : "1196582714650519",
+      "name" : "Student Portal",
+      "resource_type" : "project"
+    } ],
+    "resource_type" : "task",
+    "start_at" : null,
+    "start_on" : null,
+    "subtasks" : [ ],
+    "tags" : [ ],
+    "resource_subtype" : "default_task",
+    "workspace" : {
+      "gid" : "236599948336393",
+      "name" : "aucdt.edu.gh",
+      "resource_type" : "workspace"
+    }
+  }, {
+    "gid" : "1196582714650526",
+    "actual_time_minutes" : null,
+    "assignee" : {
+      "gid" : "434273397793530",
+      "name" : "Bright Senanu Agbosu",
+      "resource_type" : "user"
+    },
+    "assignee_status" : "inbox",
+    "completed" : true,
+    "completed_at" : "2020-10-06T14:53:59.828Z",
+    "created_at" : "2020-09-30T13:44:09.105Z",
+    "due_at" : null,
+    "due_on" : null,
+    "followers" : [ {
+      "gid" : "434273397793530",
+      "name" : "Bright Senanu Agbosu",
+      "resource_type" : "user"
+    } ],
+    "hearted" : false,
+    "hearts" : [ ],
+    "liked" : false,
+    "likes" : [ ],
+    "memberships" : [ {
+      "project" : {
+        "gid" : "1196582714650519",
+        "name" : "Student Portal",
+        "resource_type" : "project"
+      },
+      "section" : {
+        "gid" : "1196582714650520",
+        "name" : "Untitled section",
+        "resource_type" : "section"
+      }
+    } ],
+    "modified_at" : "2020-10-06T14:54:00.174Z",
+    "name" : "ASP-1003 Create Student Course Registration",
+    "notes" : "",
+    "num_hearts" : 0,
+    "num_likes" : 0,
+    "parent" : null,
+    "permalink_url" : "https://app.asana.com/1/236599948336393/project/1196582714650519/task/1196582714650526",
+    "projects" : [ {
+      "gid" : "1196582714650519",
+      "name" : "Student Portal",
+      "resource_type" : "project"
+    } ],
+    "resource_type" : "task",
+    "start_at" : null,
+    "start_on" : null,
+    "subtasks" : [ ],
+    "tags" : [ ],
+    "resource_subtype" : "default_task",
+    "workspace" : {
+      "gid" : "236599948336393",
+      "name" : "aucdt.edu.gh",
+      "resource_type" : "workspace"
+    }
+  }, {
+    "gid" : "1197336832308921",
+    "actual_time_minutes" : null,
+    "assignee" : {
+      "gid" : "434273397793530",
+      "name" : "Bright Senanu Agbosu",
+      "resource_type" : "user"
+    },
+    "assignee_status" : "inbox",
+    "completed" : true,
+    "completed_at" : "2020-10-06T14:54:07.190Z",
+    "created_at" : "2020-10-05T14:57:54.150Z",
+    "due_at" : null,
+    "due_on" : null,
+    "followers" : [ {
+      "gid" : "434273397793530",
+      "name" : "Bright Senanu Agbosu",
+      "resource_type" : "user"
+    } ],
+    "hearted" : false,
+    "hearts" : [ ],
+    "liked" : false,
+    "likes" : [ ],
+    "memberships" : [ {
+      "project" : {
+        "gid" : "1196582714650519",
+        "name" : "Student Portal",
+        "resource_type" : "project"
+      },
+      "section" : {
+        "gid" : "1196582714650520",
+        "name" : "Untitled section",
+        "resource_type" : "section"
+      }
+    } ],
+    "modified_at" : "2020-10-06T14:54:07.467Z",
+    "name" : "ASP-1003 (01) Create Student Course Registration",
+    "notes" : "Remove fields which are already on the student profile page.",
+    "num_hearts" : 0,
+    "num_likes" : 0,
+    "parent" : null,
+    "permalink_url" : "https://app.asana.com/1/236599948336393/project/1196582714650519/task/1197336832308921",
+    "projects" : [ {
+      "gid" : "1196582714650519",
+      "name" : "Student Portal",
+      "resource_type" : "project"
+    } ],
+    "resource_type" : "task",
+    "start_at" : null,
+    "start_on" : null,
+    "subtasks" : [ ],
+    "tags" : [ ],
+    "resource_subtype" : "default_task",
+    "workspace" : {
+      "gid" : "236599948336393",
+      "name" : "aucdt.edu.gh",
+      "resource_type" : "workspace"
+    }
+  }, {
+    "gid" : "1196582714650524",
+    "actual_time_minutes" : null,
+    "assignee" : {
+      "gid" : "434273397793530",
+      "name" : "Bright Senanu Agbosu",
+      "resource_type" : "user"
+    },
+    "assignee_status" : "inbox",
+    "completed" : true,
+    "completed_at" : "2020-10-06T14:54:23.553Z",
+    "created_at" : "2020-09-30T13:44:05.198Z",
+    "due_at" : null,
+    "due_on" : null,
+    "followers" : [ {
+      "gid" : "434273397793530",
+      "name" : "Bright Senanu Agbosu",
+      "resource_type" : "user"
+    } ],
+    "hearted" : false,
+    "hearts" : [ ],
+    "liked" : false,
+    "likes" : [ ],
+    "memberships" : [ {
+      "project" : {
+        "gid" : "1196582714650519",
+        "name" : "Student Portal",
+        "resource_type" : "project"
+      },
+      "section" : {
+        "gid" : "1196582714650520",
+        "name" : "Untitled section",
+        "resource_type" : "section"
+      }
+    } ],
+    "modified_at" : "2020-10-06T14:54:23.876Z",
+    "name" : "ASP-1004 Create Profile Page for Student",
+    "notes" : "Profile page of student will have\n    Name\n    Student ID\n    Email\n    Personal Details\n    Academic Information\n    Profile Photo\n\n",
+    "num_hearts" : 0,
+    "num_likes" : 0,
+    "parent" : null,
+    "permalink_url" : "https://app.asana.com/1/236599948336393/project/1196582714650519/task/1196582714650524",
+    "projects" : [ {
+      "gid" : "1196582714650519",
+      "name" : "Student Portal",
+      "resource_type" : "project"
+    } ],
+    "resource_type" : "task",
+    "start_at" : null,
+    "start_on" : null,
+    "subtasks" : [ ],
+    "tags" : [ ],
+    "resource_subtype" : "default_task",
+    "workspace" : {
+      "gid" : "236599948336393",
+      "name" : "aucdt.edu.gh",
+      "resource_type" : "workspace"
+    }
+  }, {
+    "gid" : "1196761760169803",
+    "actual_time_minutes" : null,
+    "assignee" : {
+      "gid" : "434273397793530",
+      "name" : "Bright Senanu Agbosu",
+      "resource_type" : "user"
+    },
+    "assignee_status" : "inbox",
+    "completed" : true,
+    "completed_at" : "2020-10-06T14:54:32.429Z",
+    "created_at" : "2020-10-01T09:09:50.339Z",
+    "due_at" : null,
+    "due_on" : null,
+    "followers" : [ {
+      "gid" : "434273397793530",
+      "name" : "Bright Senanu Agbosu",
+      "resource_type" : "user"
+    } ],
+    "hearted" : false,
+    "hearts" : [ ],
+    "liked" : false,
+    "likes" : [ ],
+    "memberships" : [ {
+      "project" : {
+        "gid" : "1196582714650519",
+        "name" : "Student Portal",
+        "resource_type" : "project"
+      },
+      "section" : {
+        "gid" : "1196582714650520",
+        "name" : "Untitled section",
+        "resource_type" : "section"
+      }
+    } ],
+    "modified_at" : "2020-10-06T14:54:32.795Z",
+    "name" : "ASP-1005 Create Fee Payment Page",
+    "notes" : "A student should have the ability to:\n    Preview outstanding fees\n    Preview fees paid \n\n",
+    "num_hearts" : 0,
+    "num_likes" : 0,
+    "parent" : null,
+    "permalink_url" : "https://app.asana.com/1/236599948336393/project/1196582714650519/task/1196761760169803",
+    "projects" : [ {
+      "gid" : "1196582714650519",
+      "name" : "Student Portal",
+      "resource_type" : "project"
+    } ],
+    "resource_type" : "task",
+    "start_at" : null,
+    "start_on" : null,
+    "subtasks" : [ ],
+    "tags" : [ ],
+    "resource_subtype" : "default_task",
+    "workspace" : {
+      "gid" : "236599948336393",
+      "name" : "aucdt.edu.gh",
+      "resource_type" : "workspace"
+    }
+  }, {
+    "gid" : "1196582714650528",
+    "actual_time_minutes" : null,
+    "assignee" : {
+      "gid" : "434273397793530",
+      "name" : "Bright Senanu Agbosu",
+      "resource_type" : "user"
+    },
+    "assignee_status" : "inbox",
+    "completed" : true,
+    "completed_at" : "2020-10-06T14:54:56.842Z",
+    "created_at" : "2020-09-30T13:44:13.726Z",
+    "due_at" : null,
+    "due_on" : null,
+    "followers" : [ {
+      "gid" : "434273397793530",
+      "name" : "Bright Senanu Agbosu",
+      "resource_type" : "user"
+    } ],
+    "hearted" : false,
+    "hearts" : [ ],
+    "liked" : false,
+    "likes" : [ ],
+    "memberships" : [ {
+      "project" : {
+        "gid" : "1196582714650519",
+        "name" : "Student Portal",
+        "resource_type" : "project"
+      },
+      "section" : {
+        "gid" : "1196582714650520",
+        "name" : "Untitled section",
+        "resource_type" : "section"
+      }
+    } ],
+    "modified_at" : "2020-10-06T14:54:57.228Z",
+    "name" : "ASP-1006 Create Student Examination Results page",
+    "notes" : "A student should have the ability to:\n    Preview registered courses\n    Preview each semester results\n",
+    "num_hearts" : 0,
+    "num_likes" : 0,
+    "parent" : null,
+    "permalink_url" : "https://app.asana.com/1/236599948336393/project/1196582714650519/task/1196582714650528",
+    "projects" : [ {
+      "gid" : "1196582714650519",
+      "name" : "Student Portal",
+      "resource_type" : "project"
+    } ],
+    "resource_type" : "task",
+    "start_at" : null,
+    "start_on" : null,
+    "subtasks" : [ ],
+    "tags" : [ ],
+    "resource_subtype" : "default_task",
+    "workspace" : {
+      "gid" : "236599948336393",
+      "name" : "aucdt.edu.gh",
+      "resource_type" : "workspace"
+    }
+  }, {
+    "gid" : "1197604111680521",
+    "actual_time_minutes" : null,
+    "assignee" : {
+      "gid" : "236599939894511",
+      "name" : "Daniel Twum",
+      "resource_type" : "user"
+    },
+    "assignee_status" : "inbox",
+    "completed" : false,
+    "completed_at" : null,
+    "created_at" : "2020-10-06T14:55:04.518Z",
+    "due_at" : null,
+    "due_on" : null,
+    "followers" : [ {
+      "gid" : "236599939894511",
+      "name" : "Daniel Twum",
+      "resource_type" : "user"
+    } ],
+    "hearted" : false,
+    "hearts" : [ ],
+    "liked" : false,
+    "likes" : [ ],
+    "memberships" : [ {
+      "project" : {
+        "gid" : "1196582714650519",
+        "name" : "Student Portal",
+        "resource_type" : "project"
+      },
+      "section" : {
+        "gid" : "1196582714650520",
+        "name" : "Untitled section",
+        "resource_type" : "section"
+      }
+    } ],
+    "modified_at" : "2020-10-06T15:04:07.469Z",
+    "name" : "ASP-1020 Add prettier and eslint support to student-portal-dev",
+    "notes" : "",
+    "num_hearts" : 0,
+    "num_likes" : 0,
+    "parent" : null,
+    "permalink_url" : "https://app.asana.com/1/236599948336393/project/1196582714650519/task/1197604111680521",
+    "projects" : [ {
+      "gid" : "1196582714650519",
+      "name" : "Student Portal",
+      "resource_type" : "project"
+    } ],
+    "resource_type" : "task",
+    "start_at" : null,
+    "start_on" : null,
+    "subtasks" : [ ],
+    "tags" : [ ],
+    "resource_subtype" : "default_task",
+    "workspace" : {
+      "gid" : "236599948336393",
+      "name" : "aucdt.edu.gh",
+      "resource_type" : "workspace"
+    }
+  }, {
+    "gid" : "1198188454403017",
+    "actual_time_minutes" : null,
+    "assignee" : {
+      "gid" : "434273397793530",
+      "name" : "Bright Senanu Agbosu",
+      "resource_type" : "user"
+    },
+    "assignee_status" : "inbox",
+    "completed" : false,
+    "completed_at" : null,
+    "created_at" : "2020-10-12T11:21:07.390Z",
+    "due_at" : null,
+    "due_on" : null,
+    "followers" : [ {
+      "gid" : "434273397793530",
+      "name" : "Bright Senanu Agbosu",
+      "resource_type" : "user"
+    } ],
+    "hearted" : false,
+    "hearts" : [ ],
+    "liked" : false,
+    "likes" : [ ],
+    "memberships" : [ {
+      "project" : {
+        "gid" : "1196582714650519",
+        "name" : "Student Portal",
+        "resource_type" : "project"
+      },
+      "section" : {
+        "gid" : "1196582714650520",
+        "name" : "Untitled section",
+        "resource_type" : "section"
+      }
+    } ],
+    "modified_at" : "2025-04-23T02:12:37.026Z",
+    "name" : "ASP-1021 Change path of student profile image",
+    "notes" : "Missing image reference is not correct\nhttps://www.google.com/url?q=https://portal.acdt.edu.gh/assets/img/student-profile.jpg&sa=D&source=hangouts&ust=1602587940394000&usg=AFQjCNGrwzBSymLFWOkvKln1Tzfyy92X0g\nCorrect URL is\nhttps://www.google.com/url?q=https://portal.acdt.edu.gh/student-dev/assets/img/student-profile.jpg&sa=D&source=hangouts&ust=1602587940394000&usg=AFQjCNHRiyvzD3mh31v7dKxwC3MUeNxzqA\nCode needs to use: ./assets/img/student-profile.jpg\n\n\n",
+    "num_hearts" : 0,
+    "num_likes" : 0,
+    "parent" : null,
+    "permalink_url" : "https://app.asana.com/1/236599948336393/project/1196582714650519/task/1198188454403017",
+    "projects" : [ {
+      "gid" : "1196582714650519",
+      "name" : "Student Portal",
+      "resource_type" : "project"
+    } ],
+    "resource_type" : "task",
+    "start_at" : null,
+    "start_on" : null,
+    "subtasks" : [ ],
+    "tags" : [ ],
+    "resource_subtype" : "default_task",
+    "workspace" : {
+      "gid" : "236599948336393",
+      "name" : "aucdt.edu.gh",
+      "resource_type" : "workspace"
+    }
+  }, {
+    "gid" : "1198188454403022",
+    "actual_time_minutes" : null,
+    "assignee" : {
+      "gid" : "434273397793530",
+      "name" : "Bright Senanu Agbosu",
+      "resource_type" : "user"
+    },
+    "assignee_status" : "inbox",
+    "completed" : false,
+    "completed_at" : null,
+    "created_at" : "2020-10-12T11:41:43.891Z",
+    "due_at" : null,
+    "due_on" : null,
+    "followers" : [ {
+      "gid" : "434273397793530",
+      "name" : "Bright Senanu Agbosu",
+      "resource_type" : "user"
+    } ],
+    "hearted" : false,
+    "hearts" : [ ],
+    "liked" : false,
+    "likes" : [ ],
+    "memberships" : [ {
+      "project" : {
+        "gid" : "1196582714650519",
+        "name" : "Student Portal",
+        "resource_type" : "project"
+      },
+      "section" : {
+        "gid" : "1196582714650520",
+        "name" : "Untitled section",
+        "resource_type" : "section"
+      }
+    } ],
+    "modified_at" : "2020-10-12T11:42:38.844Z",
+    "name" : "ASP-1022 Change path of student profile image",
+    "notes" : "Change the pathname of the student profile page to make it shorter.\nThat is, change student-profile to profile.",
+    "num_hearts" : 0,
+    "num_likes" : 0,
+    "parent" : null,
+    "permalink_url" : "https://app.asana.com/1/236599948336393/project/1196582714650519/task/1198188454403022",
+    "projects" : [ {
+      "gid" : "1196582714650519",
+      "name" : "Student Portal",
+      "resource_type" : "project"
+    } ],
+    "resource_type" : "task",
+    "start_at" : null,
+    "start_on" : null,
+    "subtasks" : [ ],
+    "tags" : [ ],
+    "resource_subtype" : "default_task",
+    "workspace" : {
+      "gid" : "236599948336393",
+      "name" : "aucdt.edu.gh",
+      "resource_type" : "workspace"
+    }
+  }, {
+    "gid" : "1198191791721665",
+    "actual_time_minutes" : null,
+    "assignee" : {
+      "gid" : "434273397793530",
+      "name" : "Bright Senanu Agbosu",
+      "resource_type" : "user"
+    },
+    "assignee_status" : "inbox",
+    "completed" : false,
+    "completed_at" : null,
+    "created_at" : "2020-10-12T15:10:16.761Z",
+    "due_at" : null,
+    "due_on" : null,
+    "followers" : [ {
+      "gid" : "434273397793530",
+      "name" : "Bright Senanu Agbosu",
+      "resource_type" : "user"
+    } ],
+    "hearted" : false,
+    "hearts" : [ ],
+    "liked" : false,
+    "likes" : [ ],
+    "memberships" : [ {
+      "project" : {
+        "gid" : "1196582714650519",
+        "name" : "Student Portal",
+        "resource_type" : "project"
+      },
+      "section" : {
+        "gid" : "1196582714650520",
+        "name" : "Untitled section",
+        "resource_type" : "section"
+      }
+    } ],
+    "modified_at" : "2020-10-12T15:11:20.559Z",
+    "name" : "ASP-1023 Format Pages",
+    "notes" : "    Change color scheme from accent to primary.\n    Change date sequence from 2018/2019 to 2018\n",
+    "num_hearts" : 0,
+    "num_likes" : 0,
+    "parent" : null,
+    "permalink_url" : "https://app.asana.com/1/236599948336393/project/1196582714650519/task/1198191791721665",
+    "projects" : [ {
+      "gid" : "1196582714650519",
+      "name" : "Student Portal",
+      "resource_type" : "project"
+    } ],
+    "resource_type" : "task",
+    "start_at" : null,
+    "start_on" : null,
+    "subtasks" : [ ],
+    "tags" : [ ],
+    "resource_subtype" : "default_task",
+    "workspace" : {
+      "gid" : "236599948336393",
+      "name" : "aucdt.edu.gh",
+      "resource_type" : "workspace"
+    }
+  }, {
+    "gid" : "1198191791721669",
+    "actual_time_minutes" : null,
+    "assignee" : {
+      "gid" : "434273397793530",
+      "name" : "Bright Senanu Agbosu",
+      "resource_type" : "user"
+    },
+    "assignee_status" : "inbox",
+    "completed" : false,
+    "completed_at" : null,
+    "created_at" : "2020-10-12T16:05:36.250Z",
+    "due_at" : null,
+    "due_on" : null,
+    "followers" : [ {
+      "gid" : "434273397793530",
+      "name" : "Bright Senanu Agbosu",
+      "resource_type" : "user"
+    } ],
+    "hearted" : false,
+    "hearts" : [ ],
+    "liked" : false,
+    "likes" : [ ],
+    "memberships" : [ {
+      "project" : {
+        "gid" : "1196582714650519",
+        "name" : "Student Portal",
+        "resource_type" : "project"
+      },
+      "section" : {
+        "gid" : "1196582714650520",
+        "name" : "Untitled section",
+        "resource_type" : "section"
+      }
+    } ],
+    "modified_at" : "2020-10-13T08:46:06.767Z",
+    "name" : "ACDT-1024 Provide course lists for each programme",
+    "notes" : "In other to generate available courses for each semester, we need the course lists for each programme:\n    Jewellery Design\n    Product Design\n",
+    "num_hearts" : 0,
+    "num_likes" : 0,
+    "parent" : null,
+    "permalink_url" : "https://app.asana.com/1/236599948336393/project/1196582714650519/task/1198191791721669",
+    "projects" : [ {
+      "gid" : "1196582714650519",
+      "name" : "Student Portal",
+      "resource_type" : "project"
+    } ],
+    "resource_type" : "task",
+    "start_at" : null,
+    "start_on" : null,
+    "subtasks" : [ ],
+    "tags" : [ ],
+    "resource_subtype" : "default_task",
+    "workspace" : {
+      "gid" : "236599948336393",
+      "name" : "aucdt.edu.gh",
+      "resource_type" : "workspace"
+    }
+  }, {
+    "gid" : "1198192575312713",
+    "actual_time_minutes" : null,
+    "assignee" : {
+      "gid" : "434273397793530",
+      "name" : "Bright Senanu Agbosu",
+      "resource_type" : "user"
+    },
+    "assignee_status" : "inbox",
+    "completed" : false,
+    "completed_at" : null,
+    "created_at" : "2020-10-12T16:21:09.861Z",
+    "due_at" : null,
+    "due_on" : null,
+    "followers" : [ {
+      "gid" : "434273397793530",
+      "name" : "Bright Senanu Agbosu",
+      "resource_type" : "user"
+    } ],
+    "hearted" : false,
+    "hearts" : [ ],
+    "liked" : false,
+    "likes" : [ ],
+    "memberships" : [ {
+      "project" : {
+        "gid" : "1196582714650519",
+        "name" : "Student Portal",
+        "resource_type" : "project"
+      },
+      "section" : {
+        "gid" : "1196582714650520",
+        "name" : "Untitled section",
+        "resource_type" : "section"
+      }
+    } ],
+    "modified_at" : "2020-12-15T15:31:20.246Z",
+    "name" : "ASP-1025 Change profile image path",
+    "notes" : "The path for the student profile imagine throws an error. Realign the path",
+    "num_hearts" : 0,
+    "num_likes" : 0,
+    "parent" : null,
+    "permalink_url" : "https://app.asana.com/1/236599948336393/project/1196582714650519/task/1198192575312713",
+    "projects" : [ {
+      "gid" : "1196582714650519",
+      "name" : "Student Portal",
+      "resource_type" : "project"
+    } ],
+    "resource_type" : "task",
+    "start_at" : null,
+    "start_on" : null,
+    "subtasks" : [ ],
+    "tags" : [ ],
+    "resource_subtype" : "default_task",
+    "workspace" : {
+      "gid" : "236599948336393",
+      "name" : "aucdt.edu.gh",
+      "resource_type" : "workspace"
+    }
+  }, {
+    "gid" : "1198192154731263",
+    "actual_time_minutes" : null,
+    "assignee" : {
+      "gid" : "236599939894511",
+      "name" : "Daniel Twum",
+      "resource_type" : "user"
+    },
+    "assignee_status" : "inbox",
+    "completed" : false,
+    "completed_at" : null,
+    "created_at" : "2020-10-12T16:25:29.857Z",
+    "due_at" : null,
+    "due_on" : null,
+    "followers" : [ {
+      "gid" : "236599939894511",
+      "name" : "Daniel Twum",
+      "resource_type" : "user"
+    } ],
+    "hearted" : false,
+    "hearts" : [ ],
+    "liked" : false,
+    "likes" : [ ],
+    "memberships" : [ {
+      "project" : {
+        "gid" : "1196582714650519",
+        "name" : "Student Portal",
+        "resource_type" : "project"
+      },
+      "section" : {
+        "gid" : "1196582714650520",
+        "name" : "Untitled section",
+        "resource_type" : "section"
+      }
+    } ],
+    "modified_at" : "2020-10-12T16:26:13.328Z",
+    "name" : "ASP-1026 Create student-portal-prd repository in bitbucket",
+    "notes" : "",
+    "num_hearts" : 0,
+    "num_likes" : 0,
+    "parent" : null,
+    "permalink_url" : "https://app.asana.com/1/236599948336393/project/1196582714650519/task/1198192154731263",
+    "projects" : [ {
+      "gid" : "1196582714650519",
+      "name" : "Student Portal",
+      "resource_type" : "project"
+    } ],
+    "resource_type" : "task",
+    "start_at" : null,
+    "start_on" : null,
+    "subtasks" : [ ],
+    "tags" : [ ],
+    "resource_subtype" : "default_task",
+    "workspace" : {
+      "gid" : "236599948336393",
+      "name" : "aucdt.edu.gh",
+      "resource_type" : "workspace"
+    }
+  }, {
+    "gid" : "1198192154731259",
+    "actual_time_minutes" : null,
+    "assignee" : {
+      "gid" : "434273397793530",
+      "name" : "Bright Senanu Agbosu",
+      "resource_type" : "user"
+    },
+    "assignee_status" : "inbox",
+    "completed" : false,
+    "completed_at" : null,
+    "created_at" : "2020-10-12T15:43:24.395Z",
+    "due_at" : null,
+    "due_on" : null,
+    "followers" : [ {
+      "gid" : "236599939894511",
+      "name" : "Daniel Twum",
+      "resource_type" : "user"
+    }, {
+      "gid" : "434273397793530",
+      "name" : "Bright Senanu Agbosu",
+      "resource_type" : "user"
+    }, {
+      "gid" : "687832382631759",
+      "name" : "bibhu moharana",
+      "resource_type" : "user"
+    } ],
+    "hearted" : false,
+    "hearts" : [ ],
+    "liked" : false,
+    "likes" : [ ],
+    "memberships" : [ {
+      "project" : {
+        "gid" : "1196582714650519",
+        "name" : "Student Portal",
+        "resource_type" : "project"
+      },
+      "section" : {
+        "gid" : "1196582714650520",
+        "name" : "Untitled section",
+        "resource_type" : "section"
+      }
+    } ],
+    "modified_at" : "2020-10-13T13:39:56.766Z",
+    "name" : "ASP-1027 Seed courses table with ACDT courses",
+    "notes" : "Need the official list of courses currently offered by ACDT.\n\n\n",
+    "num_hearts" : 0,
+    "num_likes" : 0,
+    "parent" : null,
+    "permalink_url" : "https://app.asana.com/1/236599948336393/project/1196582714650519/task/1198192154731259",
+    "projects" : [ {
+      "gid" : "1196582714650519",
+      "name" : "Student Portal",
+      "resource_type" : "project"
+    } ],
+    "resource_type" : "task",
+    "start_at" : null,
+    "start_on" : null,
+    "subtasks" : [ ],
+    "tags" : [ ],
+    "resource_subtype" : "default_task",
+    "workspace" : {
+      "gid" : "236599948336393",
+      "name" : "aucdt.edu.gh",
+      "resource_type" : "workspace"
+    }
+  }, {
+    "gid" : "1198218755587181",
+    "actual_time_minutes" : null,
+    "assignee" : {
+      "gid" : "434273397793530",
+      "name" : "Bright Senanu Agbosu",
+      "resource_type" : "user"
+    },
+    "assignee_status" : "inbox",
+    "completed" : false,
+    "completed_at" : null,
+    "created_at" : "2020-10-14T15:06:22.081Z",
+    "due_at" : null,
+    "due_on" : null,
+    "followers" : [ {
+      "gid" : "434273397793530",
+      "name" : "Bright Senanu Agbosu",
+      "resource_type" : "user"
+    } ],
+    "hearted" : false,
+    "hearts" : [ ],
+    "liked" : false,
+    "likes" : [ ],
+    "memberships" : [ {
+      "project" : {
+        "gid" : "1196582714650519",
+        "name" : "Student Portal",
+        "resource_type" : "project"
+      },
+      "section" : {
+        "gid" : "1196582714650520",
+        "name" : "Untitled section",
+        "resource_type" : "section"
+      }
+    } ],
+    "modified_at" : "2020-10-14T15:11:43.407Z",
+    "name" : "ASP-1028 Re-organize Lecturer Assessment Page",
+    "notes" : "Re-organize this page using expansion panels\n\n",
+    "num_hearts" : 0,
+    "num_likes" : 0,
+    "parent" : null,
+    "permalink_url" : "https://app.asana.com/1/236599948336393/project/1196582714650519/task/1198218755587181",
+    "projects" : [ {
+      "gid" : "1196582714650519",
+      "name" : "Student Portal",
+      "resource_type" : "project"
+    } ],
+    "resource_type" : "task",
+    "start_at" : null,
+    "start_on" : null,
+    "subtasks" : [ ],
+    "tags" : [ ],
+    "resource_subtype" : "default_task",
+    "workspace" : {
+      "gid" : "236599948336393",
+      "name" : "aucdt.edu.gh",
+      "resource_type" : "workspace"
+    }
+  }, {
+    "gid" : "1198220351317005",
+    "actual_time_minutes" : null,
+    "assignee" : {
+      "gid" : "434273397793530",
+      "name" : "Bright Senanu Agbosu",
+      "resource_type" : "user"
+    },
+    "assignee_status" : "inbox",
+    "completed" : false,
+    "completed_at" : null,
+    "created_at" : "2020-10-14T16:42:38.740Z",
+    "due_at" : null,
+    "due_on" : null,
+    "followers" : [ {
+      "gid" : "434273397793530",
+      "name" : "Bright Senanu Agbosu",
+      "resource_type" : "user"
+    } ],
+    "hearted" : false,
+    "hearts" : [ ],
+    "liked" : false,
+    "likes" : [ ],
+    "memberships" : [ {
+      "project" : {
+        "gid" : "1196582714650519",
+        "name" : "Student Portal",
+        "resource_type" : "project"
+      },
+      "section" : {
+        "gid" : "1196582714650520",
+        "name" : "Untitled section",
+        "resource_type" : "section"
+      }
+    } ],
+    "modified_at" : "2020-10-14T16:43:49.900Z",
+    "name" : "ASP-1029 Remove duplicate instruction on page",
+    "notes" : "Remove duplicate instructions in expansion panel and have it declared once.",
+    "num_hearts" : 0,
+    "num_likes" : 0,
+    "parent" : null,
+    "permalink_url" : "https://app.asana.com/1/236599948336393/project/1196582714650519/task/1198220351317005",
+    "projects" : [ {
+      "gid" : "1196582714650519",
+      "name" : "Student Portal",
+      "resource_type" : "project"
+    } ],
+    "resource_type" : "task",
+    "start_at" : null,
+    "start_on" : null,
+    "subtasks" : [ ],
+    "tags" : [ ],
+    "resource_subtype" : "default_task",
+    "workspace" : {
+      "gid" : "236599948336393",
+      "name" : "aucdt.edu.gh",
+      "resource_type" : "workspace"
+    }
+  }, {
+    "gid" : "1196687200719957",
+    "actual_time_minutes" : null,
+    "assignee" : {
+      "gid" : "236599939894511",
+      "name" : "Daniel Twum",
+      "resource_type" : "user"
+    },
+    "assignee_status" : "inbox",
+    "completed" : false,
+    "completed_at" : null,
+    "created_at" : "2020-09-30T20:23:34.720Z",
+    "due_at" : null,
+    "due_on" : null,
+    "followers" : [ {
+      "gid" : "236599939894511",
+      "name" : "Daniel Twum",
+      "resource_type" : "user"
+    } ],
+    "hearted" : false,
+    "hearts" : [ ],
+    "liked" : false,
+    "likes" : [ ],
+    "memberships" : [ {
+      "project" : {
+        "gid" : "1196582714650519",
+        "name" : "Student Portal",
+        "resource_type" : "project"
+      },
+      "section" : {
+        "gid" : "1196582714650520",
+        "name" : "Untitled section",
+        "resource_type" : "section"
+      }
+    } ],
+    "modified_at" : "2020-10-06T15:03:56.115Z",
+    "name" : "ASP-1031 Document student portal database model",
+    "notes" : "",
+    "num_hearts" : 0,
+    "num_likes" : 0,
+    "parent" : null,
+    "permalink_url" : "https://app.asana.com/1/236599948336393/project/1196582714650519/task/1196687200719957",
+    "projects" : [ {
+      "gid" : "1196582714650519",
+      "name" : "Student Portal",
+      "resource_type" : "project"
+    } ],
+    "resource_type" : "task",
+    "start_at" : null,
+    "start_on" : null,
+    "subtasks" : [ ],
+    "tags" : [ ],
+    "resource_subtype" : "default_task",
+    "workspace" : {
+      "gid" : "236599948336393",
+      "name" : "aucdt.edu.gh",
+      "resource_type" : "workspace"
+    }
+  }, {
+    "gid" : "1196777033658465",
+    "actual_time_minutes" : null,
+    "assignee" : {
+      "gid" : "236599939894511",
+      "name" : "Daniel Twum",
+      "resource_type" : "user"
+    },
+    "assignee_status" : "inbox",
+    "completed" : true,
+    "completed_at" : "2020-10-06T14:56:55.942Z",
+    "created_at" : "2020-10-01T09:52:22.943Z",
+    "due_at" : null,
+    "due_on" : null,
+    "followers" : [ {
+      "gid" : "236599939894511",
+      "name" : "Daniel Twum",
+      "resource_type" : "user"
+    }, {
+      "gid" : "434273397793530",
+      "name" : "Bright Senanu Agbosu",
+      "resource_type" : "user"
+    }, {
+      "gid" : "687832382631759",
+      "name" : "bibhu moharana",
+      "resource_type" : "user"
+    } ],
+    "hearted" : false,
+    "hearts" : [ ],
+    "liked" : false,
+    "likes" : [ ],
+    "memberships" : [ {
+      "project" : {
+        "gid" : "1196582714650519",
+        "name" : "Student Portal",
+        "resource_type" : "project"
+      },
+      "section" : {
+        "gid" : "1196582714650520",
+        "name" : "Untitled section",
+        "resource_type" : "section"
+      }
+    } ],
+    "modified_at" : "2020-10-06T14:56:56.295Z",
+    "name" : "ASP-1012 Create build and deployment scripts for -dev",
+    "notes" : "https://portal.acdt.edu.gh/student-portal-dev/\n\n",
+    "num_hearts" : 0,
+    "num_likes" : 0,
+    "parent" : null,
+    "permalink_url" : "https://app.asana.com/1/236599948336393/project/1196582714650519/task/1196777033658465",
+    "projects" : [ {
+      "gid" : "1196582714650519",
+      "name" : "Student Portal",
+      "resource_type" : "project"
+    } ],
+    "resource_type" : "task",
+    "start_at" : null,
+    "start_on" : null,
+    "subtasks" : [ ],
+    "tags" : [ ],
+    "resource_subtype" : "default_task",
+    "workspace" : {
+      "gid" : "236599948336393",
+      "name" : "aucdt.edu.gh",
+      "resource_type" : "workspace"
+    }
+  }, {
+    "gid" : "1196806151961802",
+    "actual_time_minutes" : null,
+    "assignee" : {
+      "gid" : "236599939894511",
+      "name" : "Daniel Twum",
+      "resource_type" : "user"
+    },
+    "assignee_status" : "inbox",
+    "completed" : true,
+    "completed_at" : "2020-10-06T14:58:21.274Z",
+    "created_at" : "2020-10-01T12:45:44.787Z",
+    "due_at" : null,
+    "due_on" : null,
+    "followers" : [ {
+      "gid" : "236599939894511",
+      "name" : "Daniel Twum",
+      "resource_type" : "user"
+    }, {
+      "gid" : "434273397793530",
+      "name" : "Bright Senanu Agbosu",
+      "resource_type" : "user"
+    }, {
+      "gid" : "687832382631759",
+      "name" : "bibhu moharana",
+      "resource_type" : "user"
+    } ],
+    "hearted" : false,
+    "hearts" : [ ],
+    "liked" : false,
+    "likes" : [ ],
+    "memberships" : [ {
+      "project" : {
+        "gid" : "1196582714650519",
+        "name" : "Student Portal",
+        "resource_type" : "project"
+      },
+      "section" : {
+        "gid" : "1196582714650520",
+        "name" : "Untitled section",
+        "resource_type" : "section"
+      }
+    } ],
+    "modified_at" : "2020-10-06T14:58:21.639Z",
+    "name" : "ASP-1015 Create Dockerfile for -dev",
+    "notes" : "Implement Dockerfile for building and testing dev builds.\n\nFYI: https://app.asana.com/0/434273397793534/list https://app.asana.com/0/687832382631763/list\n\n",
+    "num_hearts" : 0,
+    "num_likes" : 0,
+    "parent" : null,
+    "permalink_url" : "https://app.asana.com/1/236599948336393/project/1196582714650519/task/1196806151961802",
+    "projects" : [ {
+      "gid" : "1196582714650519",
+      "name" : "Student Portal",
+      "resource_type" : "project"
+    } ],
+    "resource_type" : "task",
+    "start_at" : null,
+    "start_on" : null,
+    "subtasks" : [ ],
+    "tags" : [ ],
+    "resource_subtype" : "default_task",
+    "workspace" : {
+      "gid" : "236599948336393",
+      "name" : "aucdt.edu.gh",
+      "resource_type" : "workspace"
+    }
+  }, {
+    "gid" : "1196791526860770",
+    "actual_time_minutes" : null,
+    "assignee" : {
+      "gid" : "236599939894511",
+      "name" : "Daniel Twum",
+      "resource_type" : "user"
+    },
+    "assignee_status" : "inbox",
+    "completed" : true,
+    "completed_at" : "2020-10-01T12:26:39.355Z",
+    "created_at" : "2020-10-01T11:50:54.268Z",
+    "due_at" : null,
+    "due_on" : null,
+    "followers" : [ {
+      "gid" : "236599939894511",
+      "name" : "Daniel Twum",
+      "resource_type" : "user"
+    } ],
+    "hearted" : false,
+    "hearts" : [ ],
+    "liked" : false,
+    "likes" : [ ],
+    "memberships" : [ {
+      "project" : {
+        "gid" : "1196582714650519",
+        "name" : "Student Portal",
+        "resource_type" : "project"
+      },
+      "section" : {
+        "gid" : "1196582714650520",
+        "name" : "Untitled section",
+        "resource_type" : "section"
+      }
+    } ],
+    "modified_at" : "2020-10-01T12:26:39.491Z",
+    "name" : "ASP-1014 Add web.xml for build and deployment",
+    "notes" : "To help with the packaging of the students-portal-dev.war file:\n\n—\n<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<web-app xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" version=\"3.0\" xmlns=\"http://java.sun.com/xml/ns/javaee\" xsi:schemaLocation=\"http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd\">\n<description>\nWelcome to ACDT Students Portal Application\n</description>\n<display-name>\nACDT Students Portal Application v1.0.0\n</display-name>\n</web-app>",
+    "num_hearts" : 0,
+    "num_likes" : 0,
+    "parent" : null,
+    "permalink_url" : "https://app.asana.com/1/236599948336393/project/1196582714650519/task/1196791526860770",
+    "projects" : [ {
+      "gid" : "1196582714650519",
+      "name" : "Student Portal",
+      "resource_type" : "project"
+    } ],
+    "resource_type" : "task",
+    "start_at" : null,
+    "start_on" : null,
+    "subtasks" : [ ],
+    "tags" : [ ],
+    "resource_subtype" : "default_task",
+    "workspace" : {
+      "gid" : "236599948336393",
+      "name" : "aucdt.edu.gh",
+      "resource_type" : "workspace"
+    }
+  }, {
+    "gid" : "1196777033658469",
+    "actual_time_minutes" : null,
+    "assignee" : {
+      "gid" : "434273397793530",
+      "name" : "Bright Senanu Agbosu",
+      "resource_type" : "user"
+    },
+    "assignee_status" : "inbox",
+    "completed" : false,
+    "completed_at" : null,
+    "created_at" : "2020-10-01T09:53:41.510Z",
+    "due_at" : null,
+    "due_on" : null,
+    "followers" : [ {
+      "gid" : "236599939894511",
+      "name" : "Daniel Twum",
+      "resource_type" : "user"
+    }, {
+      "gid" : "434273397793530",
+      "name" : "Bright Senanu Agbosu",
+      "resource_type" : "user"
+    } ],
+    "hearted" : false,
+    "hearts" : [ ],
+    "liked" : false,
+    "likes" : [ ],
+    "memberships" : [ {
+      "project" : {
+        "gid" : "1196582714650519",
+        "name" : "Student Portal",
+        "resource_type" : "project"
+      },
+      "section" : {
+        "gid" : "1196582714650520",
+        "name" : "Untitled section",
+        "resource_type" : "section"
+      }
+    } ],
+    "modified_at" : "2020-10-08T16:37:45.438Z",
+    "name" : "ASP-1032 Update README.md",
+    "notes" : "",
+    "num_hearts" : 0,
+    "num_likes" : 0,
+    "parent" : null,
+    "permalink_url" : "https://app.asana.com/1/236599948336393/project/1196582714650519/task/1196777033658469",
+    "projects" : [ {
+      "gid" : "1196582714650519",
+      "name" : "Student Portal",
+      "resource_type" : "project"
+    } ],
+    "resource_type" : "task",
+    "start_at" : null,
+    "start_on" : null,
+    "subtasks" : [ ],
+    "tags" : [ ],
+    "resource_subtype" : "default_task",
+    "workspace" : {
+      "gid" : "236599948336393",
+      "name" : "aucdt.edu.gh",
+      "resource_type" : "workspace"
+    }
+  }, {
+    "gid" : "1198968957403197",
+    "actual_time_minutes" : null,
+    "assignee" : {
+      "gid" : "434273397793530",
+      "name" : "Bright Senanu Agbosu",
+      "resource_type" : "user"
+    },
+    "assignee_status" : "inbox",
+    "completed" : false,
+    "completed_at" : null,
+    "created_at" : "2020-10-29T16:56:04.941Z",
+    "due_at" : null,
+    "due_on" : null,
+    "followers" : [ {
+      "gid" : "434273397793530",
+      "name" : "Bright Senanu Agbosu",
+      "resource_type" : "user"
+    } ],
+    "hearted" : false,
+    "hearts" : [ ],
+    "liked" : false,
+    "likes" : [ ],
+    "memberships" : [ {
+      "project" : {
+        "gid" : "1196582714650519",
+        "name" : "Student Portal",
+        "resource_type" : "project"
+      },
+      "section" : {
+        "gid" : "1196582714650520",
+        "name" : "Untitled section",
+        "resource_type" : "section"
+      }
+    } ],
+    "modified_at" : "2020-10-29T16:56:54.695Z",
+    "name" : "ASP-1033 Re-organize-fee component",
+    "notes" : "Re-organize fee component into the new module created",
+    "num_hearts" : 0,
+    "num_likes" : 0,
+    "parent" : null,
+    "permalink_url" : "https://app.asana.com/1/236599948336393/project/1196582714650519/task/1198968957403197",
+    "projects" : [ {
+      "gid" : "1196582714650519",
+      "name" : "Student Portal",
+      "resource_type" : "project"
+    } ],
+    "resource_type" : "task",
+    "start_at" : null,
+    "start_on" : null,
+    "subtasks" : [ ],
+    "tags" : [ ],
+    "resource_subtype" : "default_task",
+    "workspace" : {
+      "gid" : "236599948336393",
+      "name" : "aucdt.edu.gh",
+      "resource_type" : "workspace"
+    }
+  }, {
+    "gid" : "1198997519504645",
+    "actual_time_minutes" : null,
+    "assignee" : {
+      "gid" : "434273397793530",
+      "name" : "Bright Senanu Agbosu",
+      "resource_type" : "user"
+    },
+    "assignee_status" : "inbox",
+    "completed" : false,
+    "completed_at" : null,
+    "created_at" : "2020-11-02T14:28:29.104Z",
+    "due_at" : null,
+    "due_on" : null,
+    "followers" : [ {
+      "gid" : "434273397793530",
+      "name" : "Bright Senanu Agbosu",
+      "resource_type" : "user"
+    } ],
+    "hearted" : false,
+    "hearts" : [ ],
+    "liked" : false,
+    "likes" : [ ],
+    "memberships" : [ {
+      "project" : {
+        "gid" : "1196582714650519",
+        "name" : "Student Portal",
+        "resource_type" : "project"
+      },
+      "section" : {
+        "gid" : "1196582714650520",
+        "name" : "Untitled section",
+        "resource_type" : "section"
+      }
+    } ],
+    "modified_at" : "2020-11-02T14:52:49.294Z",
+    "name" : "ASP-1035 Re-organize-lecturer-assessment page",
+    "notes" : "Re-organize Lecturer assessment component into modules directory. ",
+    "num_hearts" : 0,
+    "num_likes" : 0,
+    "parent" : null,
+    "permalink_url" : "https://app.asana.com/1/236599948336393/project/1196582714650519/task/1198997519504645",
+    "projects" : [ {
+      "gid" : "1196582714650519",
+      "name" : "Student Portal",
+      "resource_type" : "project"
+    } ],
+    "resource_type" : "task",
+    "start_at" : null,
+    "start_on" : null,
+    "subtasks" : [ ],
+    "tags" : [ ],
+    "resource_subtype" : "default_task",
+    "workspace" : {
+      "gid" : "236599948336393",
+      "name" : "aucdt.edu.gh",
+      "resource_type" : "workspace"
+    }
+  }, {
+    "gid" : "1198998510332285",
+    "actual_time_minutes" : null,
+    "assignee" : {
+      "gid" : "434273397793530",
+      "name" : "Bright Senanu Agbosu",
+      "resource_type" : "user"
+    },
+    "assignee_status" : "inbox",
+    "completed" : false,
+    "completed_at" : null,
+    "created_at" : "2020-11-02T15:11:36.771Z",
+    "due_at" : null,
+    "due_on" : null,
+    "followers" : [ {
+      "gid" : "434273397793530",
+      "name" : "Bright Senanu Agbosu",
+      "resource_type" : "user"
+    } ],
+    "hearted" : false,
+    "hearts" : [ ],
+    "liked" : false,
+    "likes" : [ ],
+    "memberships" : [ {
+      "project" : {
+        "gid" : "1196582714650519",
+        "name" : "Student Portal",
+        "resource_type" : "project"
+      },
+      "section" : {
+        "gid" : "1196582714650520",
+        "name" : "Untitled section",
+        "resource_type" : "section"
+      }
+    } ],
+    "modified_at" : "2020-11-02T15:33:38.099Z",
+    "name" : "ASP-1036 Re-organize Course Registration page",
+    "notes" : "Recreate course registration page into the modules directory",
+    "num_hearts" : 0,
+    "num_likes" : 0,
+    "parent" : null,
+    "permalink_url" : "https://app.asana.com/1/236599948336393/project/1196582714650519/task/1198998510332285",
+    "projects" : [ {
+      "gid" : "1196582714650519",
+      "name" : "Student Portal",
+      "resource_type" : "project"
+    } ],
+    "resource_type" : "task",
+    "start_at" : null,
+    "start_on" : null,
+    "subtasks" : [ ],
+    "tags" : [ ],
+    "resource_subtype" : "default_task",
+    "workspace" : {
+      "gid" : "236599948336393",
+      "name" : "aucdt.edu.gh",
+      "resource_type" : "workspace"
+    }
+  }, {
+    "gid" : "1198998510332287",
+    "actual_time_minutes" : null,
+    "assignee" : {
+      "gid" : "434273397793530",
+      "name" : "Bright Senanu Agbosu",
+      "resource_type" : "user"
+    },
+    "assignee_status" : "inbox",
+    "completed" : false,
+    "completed_at" : null,
+    "created_at" : "2020-11-02T15:40:04.257Z",
+    "due_at" : null,
+    "due_on" : null,
+    "followers" : [ {
+      "gid" : "434273397793530",
+      "name" : "Bright Senanu Agbosu",
+      "resource_type" : "user"
+    } ],
+    "hearted" : false,
+    "hearts" : [ ],
+    "liked" : false,
+    "likes" : [ ],
+    "memberships" : [ {
+      "project" : {
+        "gid" : "1196582714650519",
+        "name" : "Student Portal",
+        "resource_type" : "project"
+      },
+      "section" : {
+        "gid" : "1196582714650520",
+        "name" : "Untitled section",
+        "resource_type" : "section"
+      }
+    } ],
+    "modified_at" : "2020-11-02T15:40:25.213Z",
+    "name" : "ASP-1037 Re-organize Examinations page",
+    "notes" : "",
+    "num_hearts" : 0,
+    "num_likes" : 0,
+    "parent" : null,
+    "permalink_url" : "https://app.asana.com/1/236599948336393/project/1196582714650519/task/1198998510332287",
+    "projects" : [ {
+      "gid" : "1196582714650519",
+      "name" : "Student Portal",
+      "resource_type" : "project"
+    } ],
+    "resource_type" : "task",
+    "start_at" : null,
+    "start_on" : null,
+    "subtasks" : [ ],
+    "tags" : [ ],
+    "resource_subtype" : "default_task",
+    "workspace" : {
+      "gid" : "236599948336393",
+      "name" : "aucdt.edu.gh",
+      "resource_type" : "workspace"
+    }
+  } ]
+}

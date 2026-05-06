@@ -1,0 +1,46 @@
+<svg viewBox="0 0 800 400" xmlns="http://www.w3.org/2000/svg">
+  <rect width="800" height="400" fill="#0f172a" rx="20"/>
+  <text x="400" y="60" font-family="Inter, sans-serif" font-size="28" font-weight="900" text-anchor="middle" fill="#ffffff">ROPHE TECHNOLOGY ECOSYSTEM</text>
+  
+  <g transform="translate(100, 120)">
+    <!-- Frontend -->
+    <rect width="280" height="200" rx="16" fill="#1e293b" stroke="#334155" stroke-width="1" />
+    <text x="140" y="35" font-family="Inter, sans-serif" font-size="16" font-weight="800" text-anchor="middle" fill="#10b981">FRONTEND CORE</text>
+    
+    <g transform="translate(20, 60)">
+      <rect width="110" height="35" rx="10" fill="#0ea5e9" fill-opacity="0.1" stroke="#0ea5e9" />
+      <text x="55" y="22" font-family="Inter, sans-serif" font-size="12" font-weight="700" text-anchor="middle" fill="#0ea5e9">React 19</text>
+    </g>
+    <g transform="translate(150, 60)">
+      <rect width="110" height="35" rx="10" fill="#38bdf8" fill-opacity="0.1" stroke="#38bdf8" />
+      <text x="55" y="22" font-family="Inter, sans-serif" font-size="12" font-weight="700" text-anchor="middle" fill="#38bdf8">Tailwind CSS</text>
+    </g>
+    <g transform="translate(20, 110)">
+      <rect width="110" height="35" rx="10" fill="#f43f5e" fill-opacity="0.1" stroke="#f43f5e" />
+      <text x="55" y="22" font-family="Inter, sans-serif" font-size="12" font-weight="700" text-anchor="middle" fill="#f43f5e">Recharts</text>
+    </g>
+    <g transform="translate(150, 110)">
+      <rect width="110" height="35" rx="10" fill="#10b981" fill-opacity="0.1" stroke="#10b981" />
+      <text x="55" y="22" font-family="Inter, sans-serif" font-size="12" font-weight="700" text-anchor="middle" fill="#10b981">Lucide Icons</text>
+    </g>
+  </g>
+
+  <g transform="translate(420, 120)">
+    <!-- Services -->
+    <rect width="280" height="200" rx="16" fill="#1e293b" stroke="#334155" stroke-width="1" />
+    <text x="140" y="35" font-family="Inter, sans-serif" font-size="16" font-weight="800" text-anchor="middle" fill="#8b5cf6">SERVICE LAYER</text>
+    
+    <g transform="translate(20, 60)">
+      <rect width="240" height="35" rx="10" fill="#fff" fill-opacity="0.05" stroke="#fff" stroke-dasharray="4" />
+      <text x="120" y="22" font-family="Inter, sans-serif" font-size="12" font-weight="700" text-anchor="middle" fill="#fff">Google Gemini 3 Pro (AI)</text>
+    </g>
+    <g transform="translate(20, 110)">
+      <rect width="240" height="35" rx="10" fill="#8b5cf6" fill-opacity="0.1" stroke="#8b5cf6" />
+      <text x="120" y="22" font-family="Inter, sans-serif" font-size="12" font-weight="700" text-anchor="middle" fill="#8b5cf6">WebRTC / MediaRec</text>
+    </g>
+    <g transform="translate(20, 155)">
+      <rect width="240" height="25" rx="10" fill="#64748b" fill-opacity="0.1" stroke="#64748b" />
+      <text x="120" y="17" font-family="Inter, sans-serif" font-size="10" font-weight="700" text-anchor="middle" fill="#94a3b8">ES Modules / ESM.sh</text>
+    </g>
+  </g>
+</svg>

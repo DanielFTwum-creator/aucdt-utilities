@@ -1,0 +1,78 @@
+<svg width="700" height="500" viewBox="0 0 700 500" xmlns="http://www.w3.org/2000/svg" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif">
+  <defs>
+    <linearGradient id="bg-grad-tech" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0f172a;" />
+      <stop offset="100%" style="stop-color:#1e293b;" />
+    </linearGradient>
+    <linearGradient id="card-grad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="rgba(255,255,255,0.08)" />
+      <stop offset="100%" stop-color="rgba(255,255,255,0.02)" />
+    </linearGradient>
+     <filter id="card-shadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feDropShadow dx="5" dy="5" stdDeviation="8" flood-color="#000" flood-opacity="0.5" />
+    </filter>
+  </defs>
+
+  <rect width="700" height="500" fill="url(#bg-grad-tech)" />
+
+  <text x="350" y="50" font-size="28" font-weight="bold" text-anchor="middle" fill="#e2e8f0">MarkAI Technology Stack</text>
+  <line x1="220" y1="65" x2="480" y2="65" stroke="#475569" stroke-width="1" />
+
+  <g id="stack-grid" transform="translate(50, 100)">
+    <!-- Frontend Card -->
+    <g transform="translate(0, 0)" filter="url(#card-shadow)">
+      <rect width="280" height="150" rx="15" fill="url(#card-grad)" stroke="#3b82f6" stroke-width="2"/>
+      <rect x="1" y="1" width="278" height="40" rx="14" fill="rgba(59, 130, 246, 0.1)" />
+      <text x="25" y="28" font-size="18" font-weight="bold" fill="#60a5fa">🖥️ Frontend</text>
+      <g transform="translate(30, 60)">
+        <text y="0" font-size="14" fill="#cbd5e1" font-weight="600">React</text>
+        <text y="18" font-size="12" fill="#94a3b8">Component-based UI library</text>
+        <text y="45" font-size="14" fill="#cbd5e1" font-weight="600">Tailwind CSS</text>
+        <text y="63" font-size="12" fill="#94a3b8">Utility-first styling framework</text>
+      </g>
+    </g>
+
+    <!-- AI Core Card -->
+    <g transform="translate(320, 0)" filter="url(#card-shadow)">
+      <rect width="280" height="150" rx="15" fill="url(#card-grad)" stroke="#10b981" stroke-width="2"/>
+       <rect x="1" y="1" width="278" height="40" rx="14" fill="rgba(16, 185, 129, 0.1)" />
+      <text x="25" y="28" font-size="18" font-weight="bold" fill="#34d399">🤖 AI Core</text>
+       <g transform="translate(30, 60)">
+        <text y="0" font-size="14" fill="#cbd5e1" font-weight="600">Google Gemini API</text>
+        <text y="18" font-size="12" fill="#94a3b8">Content, Image & Live Audio AI</text>
+        <text y="45" font-size="14" fill="#cbd5e1" font-weight="600">@google/genai SDK</text>
+        <text y="63" font-size="12" fill="#94a3b8">Official client library for Gemini</text>
+      </g>
+    </g>
+
+    <!-- Backend Card -->
+    <g transform="translate(0, 180)" filter="url(#card-shadow)">
+      <rect width="280" height="150" rx="15" fill="url(#card-grad)" stroke="#4ade80" stroke-width="2"/>
+       <rect x="1" y="1" width="278" height="40" rx="14" fill="rgba(74, 222, 128, 0.1)" />
+      <text x="25" y="28" font-size="18" font-weight="bold" fill="#4ade80">🔌 Backend</text>
+       <g transform="translate(30, 60)">
+        <text y="0" font-size="14" fill="#cbd5e1" font-weight="600">Node.js</text>
+        <text y="18" font-size="12" fill="#94a3b8">JavaScript runtime environment</text>
+        <text y="45" font-size="14" fill="#cbd5e1" font-weight="600">Express.js</text>
+        <text y="63" font-size="12" fill="#94a3b8">API proxy server framework</text>
+      </g>
+    </g>
+
+    <!-- Testing Card -->
+    <g transform="translate(320, 180)" filter="url(#card-shadow)">
+      <rect width="280" height="150" rx="15" fill="url(#card-grad)" stroke="#8b5cf6" stroke-width="2"/>
+       <rect x="1" y="1" width="278" height="40" rx="14" fill="rgba(139, 92, 246, 0.1)" />
+      <text x="25" y="28" font-size="18" font-weight="bold" fill="#a78bfa">🧪 Testing</text>
+       <g transform="translate(30, 60)">
+        <text y="0" font-size="14" fill="#cbd5e1" font-weight="600">Puppeteer</text>
+        <text y="18" font-size="12" fill="#94a3b8">Automated E2E browser testing</text>
+        <text y="45" font-size="14" fill="#cbd5e1" font-weight="600">In-App Test Runner</text>
+        <text y="63" font-size="12" fill="#94a3b8">Interactive test simulations</text>
+      </g>
+    </g>
+  </g>
+  
+  <text x="350" y="450" font-size="14" fill="#64748b" text-anchor="middle" font-style="italic">
+    A modern, robust stack for building intelligent applications.
+  </text>
+</svg>

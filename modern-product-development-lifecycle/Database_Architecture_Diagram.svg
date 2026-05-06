@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600" style="background-color: #0f172a; font-family: sans-serif; color: #cbd5e1;">
+
+    <defs>
+        <style>
+            .title { font-size: 24px; font-weight: bold; fill: #e2e8f0; }
+            .subtitle { font-size: 14px; fill: #94a3b8; }
+            .table-title { font-size: 16px; font-weight: bold; fill: #60a5fa; }
+            .col-name { font-size: 14px; font-weight: bold; fill: #e2e8f0; }
+            .col-type { font-size: 12px; fill: #94a3b8; font-family: monospace; }
+            .col-desc { font-size: 12px; fill: #cbd5e1; }
+        </style>
+    </defs>
+
+    <text x="400" y="40" text-anchor="middle" class="title">Database Architecture Diagram</text>
+    <text x="400" y="65" text-anchor="middle" class="subtitle">Client-Side `localStorage` Key-Value Store</text>
+
+    <!-- Main Container -->
+    <rect x="20" y="90" width="760" height="490" rx="15" fill="#1e293b" stroke="#334155" stroke-width="2" />
+    <text x="400" y="115" text-anchor="middle" fill="#94a3b8" font-size="16" font-weight="bold">`localStorage`</text>
+
+    <!-- Key: pdl-theme -->
+    <g transform="translate(40, 140)">
+        <rect x="0" y="0" width="350" height="90" rx="8" fill="#0f172a" stroke="#475569" />
+        <text x="15" y="25" class="table-title">pdl-theme</text>
+        <line x1="15" y1="35" x2="335" y2="35" stroke="#334155"/>
+        <text x="20" y="55" class="col-name">key</text>
+        <text x="20" y="75" class="col-type">'pdl-theme'</text>
+        <text x="120" y="55" class="col-name">value</text>
+        <text x="120" y="75" class="col-type">String ('light' | 'dark' | 'hc')</text>
+    </g>
+
+    <!-- Key: projectName -->
+    <g transform="translate(410, 140)">
+        <rect x="0" y="0" width="350" height="90" rx="8" fill="#0f172a" stroke="#475569" />
+        <text x="15" y="25" class="table-title">projectName</text>
+        <line x1="15" y1="35" x2="335" y2="35" stroke="#334155"/>
+        <text x="20" y="55" class="col-name">key</text>
+        <text x="20" y="75" class="col-type">'projectName'</text>
+        <text x="120" y="55" class="col-name">value</text>
+        <text x="120" y="75" class="col-type">String</text>
+    </g>
+    
+    <!-- Key: projectProgress -->
+    <g transform="translate(40, 250)">
+        <rect x="0" y="0" width="720" height="150" rx="8" fill="#0f172a" stroke="#475569" />
+        <text x="15" y="25" class="table-title">projectProgress</text>
+        <line x1="15" y1="35" x2="705" y2="35" stroke="#334155"/>
+        <text x="20" y="55" class="col-name">key</text>
+        <text x="20" y="75" class="col-type">'projectProgress'</text>
+        <text x="180" y="55" class="col-name">value</text>
+        <text x="180" y="75" class="col-type">JSON String</text>
+        <text x="180" y="95" class="col-desc">Serialized object representing user's notes and checklist progress.</text>
+        <text x="180" y="115" class="col-type">Structure: { [stageId]: { [pointIndex]: { checked: boolean, notes: string } } }</text>
+    </g>
+
+    <!-- Key: pdl-audit-log -->
+    <g transform="translate(40, 420)">
+        <rect x="0" y="0" width="720" height="140" rx="8" fill="#0f172a" stroke="#475569" />
+        <text x="15" y="25" class="table-title">pdl-audit-log</text>
+        <line x1="15" y1="35" x2="705" y2="35" stroke="#334155"/>
+        <text x="20" y="55" class="col-name">key</text>
+        <text x="20" y="75" class="col-type">'pdl-audit-log'</text>
+        <text x="180" y="55" class="col-name">value</text>
+        <text x="180" y="75" class="col-type">JSON String</text>
+        <text x="180" y="95" class="col-desc">Serialized array of admin actions and timestamps.</text>
+        <text x="180" y="115" class="col-type">Structure: [ { timestamp: string, action: string } ]</text>
+    </g>
+
+</svg>

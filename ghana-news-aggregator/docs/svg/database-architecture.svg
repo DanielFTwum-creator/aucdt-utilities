@@ -1,0 +1,79 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 700">
+  <defs>
+    <style>
+      .table-header { fill: #3b82f6; stroke: #1d4ed8; }
+      .table-body { fill: #ffffff; stroke: #cbd5e1; }
+      .text-title { font-family: monospace; font-weight: bold; font-size: 14px; fill: white; }
+      .text-item { font-family: monospace; font-size: 12px; fill: #334155; }
+      .text-pk { fill: #b91c1c; font-weight: bold; }
+      .text-fk { fill: #1d4ed8; font-weight: bold; }
+      .line { stroke: #64748b; stroke-width: 2; fill: none; }
+      marker#arrowhead { fill: #64748b; }
+    </style>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="0" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" />
+    </marker>
+  </defs>
+  
+  <rect width="900" height="700" fill="#f8fafc"/>
+  <text x="450" y="30" font-family="sans-serif" font-size="22" font-weight="bold" text-anchor="middle" fill="#0f172a">Database Schema: Entity Relationship Diagram</text>
+
+  <!-- Users Table -->
+  <g transform="translate(50, 60)">
+    <rect width="200" height="30" class="table-header"/>
+    <text x="10" y="20" class="text-title">users</text>
+    <rect y="30" width="200" height="120" class="table-body"/>
+    <text x="10" y="55" class="text-item text-pk">PK id (UUID)</text>
+    <text x="10" y="75" class="text-item">username (VARCHAR)</text>
+    <text x="10" y="95" class="text-item">password_hash (TEXT)</text>
+    <text x="10" y="115" class="text-item">role (ENUM)</text>
+    <text x="10" y="135" class="text-item">last_login (TIMESTAMP)</text>
+  </g>
+
+  <!-- News Sources Table -->
+  <g transform="translate(350, 60)">
+    <rect width="220" height="30" class="table-header"/>
+    <text x="10" y="20" class="text-title">news_sources</text>
+    <rect y="30" width="220" height="140" class="table-body"/>
+    <text x="10" y="55" class="text-item text-pk">PK id (VARCHAR)</text>
+    <text x="10" y="75" class="text-item">name (VARCHAR)</text>
+    <text x="10" y="95" class="text-item">url (TEXT)</text>
+    <text x="10" y="115" class="text-item">type (ENUM)</text>
+    <text x="10" y="135" class="text-item">is_enabled (BOOLEAN)</text>
+    <text x="10" y="155" class="text-item">last_fetch (TIMESTAMP)</text>
+  </g>
+
+  <!-- Articles Table -->
+  <g transform="translate(350, 280)">
+    <rect width="220" height="30" class="table-header"/>
+    <text x="10" y="20" class="text-title">articles</text>
+    <rect y="30" width="220" height="250" class="table-body"/>
+    <text x="10" y="55" class="text-item text-pk">PK id (VARCHAR)</text>
+    <text x="10" y="75" class="text-item text-fk">FK source_id (VARCHAR)</text>
+    <text x="10" y="95" class="text-item">title (TEXT)</text>
+    <text x="10" y="115" class="text-item">summary (TEXT)</text>
+    <text x="10" y="135" class="text-item">original_url (TEXT)</text>
+    <text x="10" y="155" class="text-item">image_url (TEXT)</text>
+    <text x="10" y="175" class="text-item">category (VARCHAR)</text>
+    <text x="10" y="195" class="text-item">sentiment (VARCHAR)</text>
+    <text x="10" y="215" class="text-item">engagement_score (INT)</text>
+    <text x="10" y="235" class="text-item">status (VARCHAR)</text>
+    <text x="10" y="255" class="text-item">published_at (TIMESTAMP)</text>
+  </g>
+
+  <!-- Audit Logs -->
+  <g transform="translate(50, 280)">
+    <rect width="220" height="30" class="table-header"/>
+    <text x="10" y="20" class="text-title">audit_logs</text>
+    <rect y="30" width="220" height="120" class="table-body"/>
+    <text x="10" y="55" class="text-item text-pk">PK id (UUID)</text>
+    <text x="10" y="75" class="text-item">action (VARCHAR)</text>
+    <text x="10" y="95" class="text-item">user_identity (VARCHAR)</text>
+    <text x="10" y="115" class="text-item">details (JSON)</text>
+    <text x="10" y="135" class="text-item">timestamp (TIMESTAMP)</text>
+  </g>
+
+  <!-- Relationships -->
+  <path d="M 460 200 L 460 280" class="line" marker-end="url(#arrowhead)"/>
+  <path d="M 150 180 L 150 280" class="line" marker-end="url(#arrowhead)"/>
+</svg>

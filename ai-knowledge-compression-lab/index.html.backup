@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- ========== BASIC SEO META TAGS ========== -->
+    <title>Ai Knowledge Compression Lab | Techbridge University College</title>
+    <meta name="description" content="Ai Knowledge Compression Lab — Techbridge University College (TUC) is a premier private institution in Accra pioneering innovative and progressive higher education in design and technology." />
+    <meta name="keywords" content="Techbridge University College, TUC, ai-knowledge-compression-lab, design education, technology education, Accra university, Ghana university, product design, entrepreneurship" />
+    <meta name="author" content="Techbridge University College" />
+    <meta name="publisher" content="Techbridge University College" />
+    <link rel="canonical" href="https://techbridge.edu.gh/" />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    <meta name="language" content="English" />
+    <meta name="geo.region" content="GH-AA" />
+    <meta name="geo.placename" content="Accra" />
+    <meta name="geo.position" content="5.6037;-0.1870" />
+    <meta name="ICBM" content="5.6037, -0.1870" />
+
+    <!-- ========== OPEN GRAPH META TAGS ========== -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://techbridge.edu.gh/" />
+    <meta property="og:site_name" content="Techbridge University College" />
+    <meta property="og:title" content="Ai Knowledge Compression Lab | Techbridge University College" />
+    <meta property="og:description" content="Ai Knowledge Compression Lab — Techbridge University College (TUC) is a premier private institution in Accra pioneering innovative and progressive higher education in design and technology." />
+    <meta property="og:image" content="https://techbridge.edu.gh/static/TUC_LOGO.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Techbridge University College Logo" />
+    <meta property="og:locale" content="en_GB" />
+
+    <!-- ========== TWITTER CARD META TAGS ========== -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@TUCGhana" />
+    <meta name="twitter:creator" content="@TUCGhana" />
+    <meta name="twitter:title" content="Ai Knowledge Compression Lab | Techbridge University College" />
+    <meta name="twitter:description" content="Ai Knowledge Compression Lab — Techbridge University College (TUC), Accra, Ghana." />
+    <meta name="twitter:image" content="https://techbridge.edu.gh/static/TUC_LOGO.png" />
+    <meta name="twitter:image:alt" content="Techbridge University College Logo" />
+
+    <!-- ========== ADDITIONAL META TAGS ========== -->
+    <meta name="theme-color" content="#630f12" />
+    <meta name="msapplication-TileColor" content="#630f12" />
+    <meta name="copyright" content="Techbridge University College" />
+    <meta name="rating" content="general" />
+    <meta name="referrer" content="origin-when-cross-origin" />
+
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-FKXTELQ71R"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-FKXTELQ71R');
+    </script>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="https://techbridge.edu.gh/static/TUC_LOGO.png" />
+    <link rel="apple-touch-icon" href="https://techbridge.edu.gh/static/TUC_LOGO.png" />
+
+    <!-- Fonts preconnect -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+    <script type="module" src="/src/main.tsx"></script>
+  </head>
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
+  </body>
+</html>

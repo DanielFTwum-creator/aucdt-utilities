@@ -1,0 +1,80 @@
+/* --- Styles for the Response Log Modal --- */
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(5px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  
+  .modal-content {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+    width: 80%;
+    max-width: 1200px;
+    height: 85%;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 15px;
+    margin-bottom: 15px;
+  }
+  
+  .modal-header h2 {
+    margin: 0;
+    color: #5a0001;
+  }
+  
+  .modal-close-btn {
+    background: none;
+    border: none;
+    font-size: 2.5rem;
+    font-weight: 300;
+    color: #aaa;
+    cursor: pointer;
+    line-height: 1;
+    padding: 0;
+    transition: color 0.2s ease;
+  }
+  
+  .modal-close-btn:hover {
+    color: #333;
+  }
+  
+  .modal-body {
+    flex-grow: 1;
+    overflow: hidden; /* Hide the body's scrollbar */
+  }
+  
+  .log-table-container {
+    height: 100%;
+    overflow-y: auto; /* Make the table container scrollable */
+  }
+  
+  .log-table-container table {
+    width: 100%;
+    margin: 0;
+  }
+  
+  .log-url {
+    max-width: 300px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  

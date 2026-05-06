@@ -1,0 +1,66 @@
+.student-portal {
+  min-height: 100vh;
+  background-color: var(--bg-color);
+}
+
+.portal-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.portal-header {
+  text-align: center;
+  margin-bottom: 3rem;
+  padding: 2rem;
+  background: linear-gradient(135deg, var(--primary-color), #1e40af);
+  color: white;
+  border-radius: 0.5rem;
+  box-shadow: var(--shadow-lg);
+}
+
+.portal-header h1 {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.portal-header p {
+  font-size: 1.1rem;
+  margin-bottom: 1.5rem;
+  opacity: 0.95;
+}
+
+.admin-button {
+  background-color: rgba(255, 255, 255, 0.2);
+  color: white;
+  border: 2px solid white;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  border-radius: 0.375rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.admin-button:hover {
+  background-color: rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px);
+}
+
+@media (max-width: 768px) {
+  .portal-container {
+    padding: 1rem;
+  }
+
+  .portal-header {
+    padding: 1.5rem;
+  }
+
+  .portal-header h1 {
+    font-size: 1.5rem;
+  }
+
+  .portal-header p {
+    font-size: 1rem;
+  }
+}
+

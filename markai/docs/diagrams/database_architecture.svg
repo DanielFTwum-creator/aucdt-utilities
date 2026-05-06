@@ -1,0 +1,76 @@
+<svg width="700" height="500" viewBox="0 0 700 500" xmlns="http://www.w3.org/2000/svg" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif">
+  <defs>
+    <linearGradient id="bg-grad-db" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#f8fafc;" />
+      <stop offset="100%" style="stop-color:#e2e8f0;" />
+    </linearGradient>
+    <linearGradient id="table-header-grad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#f1f5f9;" />
+      <stop offset="100%" style="stop-color:#e2e8f0;" />
+    </linearGradient>
+    <filter id="table-shadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feDropShadow dx="2" dy="4" stdDeviation="4" flood-color="#000" flood-opacity="0.1" />
+    </filter>
+  </defs>
+  <rect width="700" height="500" fill="url(#bg-grad-db)" />
+  <text x="350" y="50" font-size="28" font-weight="bold" text-anchor="middle" fill="#1e293b">MarkAI Data Model (Local Storage)</text>
+  <line x1="150" y1="65" x2="550" y2="65" stroke="#cbd5e1" stroke-width="1" />
+  <text x="350" y="90" font-size="14" text-anchor="middle" fill="#475569">Data is stored as JSON strings in the browser's key-value local storage.</text>
+
+  <!-- User Table -->
+  <g transform="translate(20, 120)" filter="url(#table-shadow)">
+    <rect width="200" height="240" rx="8" fill="#ffffff" stroke="#cbd5e1"/>
+    <rect width="200" height="40" rx="8" ry="8" fill="url(#table-header-grad)"/>
+    <text x="100" y="27" font-size="16" font-weight="bold" fill="#1e293b" text-anchor="middle">👤 User</text>
+    <line x1="0" y1="40" x2="200" y2="40" stroke="#cbd5e1" />
+    <g transform="translate(15, 55)" font-size="12" fill="#334155">
+      <text y="15"><tspan font-weight="bold">id:</tspan> string (PK)</text>
+      <text y="35"><tspan font-weight="bold">name:</tspan> string</text>
+      <text y="55"><tspan font-weight="bold">email:</tspan> string</text>
+      <text y="75"><tspan font-weight="bold">tier:</tspan> string</text>
+      <text y="95"><tspan font-weight="bold">username:</tspan> string</text>
+      <text y="115"><tspan font-weight="bold">password:</tspan> string (mock)</text>
+      <text y="135"><tspan font-weight="bold">phone?:</tspan> string</text>
+      <text y="155"><tspan font-weight="bold">location?:</tspan> Geolocation</text>
+    </g>
+    <text x="100" y="230" font-size="11" fill="#94a3b8" text-anchor="middle">Key: 'markai-users'</text>
+  </g>
+
+  <!-- ScheduledPost Table -->
+  <g transform="translate(240, 120)" filter="url(#table-shadow)">
+    <rect width="220" height="240" rx="8" fill="#ffffff" stroke="#cbd5e1"/>
+    <rect width="220" height="40" rx="8" ry="8" fill="url(#table-header-grad)"/>
+    <text x="110" y="27" font-size="16" font-weight="bold" fill="#1e293b" text-anchor="middle">📅 ScheduledPost</text>
+    <line x1="0" y1="40" x2="220" y2="40" stroke="#cbd5e1" />
+    <g transform="translate(15, 55)" font-size="12" fill="#334155">
+      <text y="15"><tspan font-weight="bold">id:</tspan> string (PK)</text>
+      <text y="35"><tspan font-weight="bold">platform:</tspan> enum</text>
+      <text y="55"><tspan font-weight="bold">content:</tspan> string</text>
+      <text y="75"><tspan font-weight="bold">imagePrompt:</tspan> string</text>
+      <text y="95"><tspan font-weight="bold">generatedImageUrl?:</tspan> string</text>
+      <text y="115"><tspan font-weight="bold">scheduledAt:</tspan> ISO string</text>
+      <text y="135"><tspan font-weight="bold">status:</tspan> enum</text>
+      <text y="155"><tspan font-weight="bold">priority:</tspan> enum</text>
+    </g>
+    <text x="110" y="230" font-size="11" fill="#94a3b8" text-anchor="middle">Key: 'markai-scheduled-posts'</text>
+  </g>
+
+  <!-- AuditLogEntry Table -->
+  <g transform="translate(480, 120)" filter="url(#table-shadow)">
+    <rect width="200" height="150" rx="8" fill="#ffffff" stroke="#cbd5e1"/>
+    <rect width="200" height="40" rx="8" ry="8" fill="url(#table-header-grad)"/>
+    <text x="100" y="27" font-size="16" font-weight="bold" fill="#1e293b" text-anchor="middle">🛡️ AuditLogEntry</text>
+    <line x1="0" y1="40" x2="200" y2="40" stroke="#cbd5e1" />
+    <g transform="translate(15, 55)" font-size="12" fill="#334155">
+      <text y="15"><tspan font-weight="bold">id:</tspan> string (PK)</text>
+      <text y="35"><tspan font-weight="bold">timestamp:</tspan> ISO string</text>
+      <text y="55"><tspan font-weight="bold">action:</tspan> string</text>
+      <text y="75"><tspan font-weight="bold">details?:</tspan> string</text>
+    </g>
+     <text x="100" y="140" font-size="11" fill="#94a3b8" text-anchor="middle">Key: 'markai-audit-logs'</text>
+  </g>
+
+  <text x="350" y="450" font-size="14" fill="#64748b" text-anchor="middle" font-style="italic">
+    A simple, robust data model for a client-side application.
+  </text>
+</svg>

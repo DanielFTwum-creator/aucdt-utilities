@@ -1,0 +1,29 @@
+
+import { Question } from '../types';
+
+export const defaultQuestions: Question[] = [
+    { id: 1, question: "Evaluate the expression: $5x - 2y + 3$, when $x = 3$ and $y = -1$.", options: ["14", "16", "20", "22", "None of these"], correct: 2 },
+    { id: 2, question: "Solve for p in the equation: $3(p + 5) = 21$", options: ["p=2", "p=4", "p=6", "p=8", "None of these"], correct: 0 },
+    { id: 3, question: "The ages of five friends are 23, 18, 20, 25, and 21. What is the median age?", options: ["20", "21", "22", "23", "None of these"], correct: 1 },
+    { id: 4, question: "Simplify the expression: $7(2m - 3) - 4(m+5)$", options: ["10m-1", "10m-41", "14m-1", "14m-41", "None of these"], correct: 1 },
+    { id: 5, question: "Arrange the following numbers in ascending order: $0.35, 1/3, 25\\%$", options: ["0.35, 1/3, 25%", "1/3, 25%, 0.35", "25%, 0.35, 1/3", "25%, 1/3, 0.35", "None of these"], correct: 3 },
+    { id: 6, question: "A carpenter cuts a piece of wood that is 12 feet long. He uses $1/3$ of it for a shelf and $2/5$ of it for a table leg. How many feet of wood does he have left?", options: ["2 feet", "4 feet", "6 feet", "8 feet", "None of these"], correct: 4 },
+    { id: 7, question: "Increase 240 by 35%.", options: ["84", "156", "324", "400", "None of these"], correct: 2 },
+    { id: 8, question: "A container holds 450 litres of juice. If 135 litres are poured out, what percentage of the original amount of juice remains in the container?", options: ["30%", "40%", "60%", "70%", "None of these"], correct: 3 },
+    { id: 9, question: "A recipe for trail mix calls for peanuts, raisins, and chocolate chips in the ratio of $3:2:1$. If 12 cups of peanuts are used, how many cups of trail mix will the recipe make?", options: ["18 cups", "20 cups", "24 cups", "36 cups", "None of these"], correct: 2 },
+    { id: 10, question: "Using the same recipe from question 9, how many cups of chocolate chips will be needed?", options: ["2 cups", "4 cups", "6 cups", "8 cups", "None of these"], correct: 1 },
+    { id: 11, question: "In the diagram below, find the value of angle y.", options: ["65°", "75°", "85°", "95°", "None of these"], correct: 1, diagram: 'angles_on_line' },
+    { id: 12, question: "The pie chart below shows the distribution of favourite colours among a group of students. What angle would represent the colour blue?", options: ["30°", "90°", "120°", "135°", "150°"], correct: 3, diagram: 'pie_chart_colors' },
+    { id: 13, question: "Using the diagram from question 12, if a student is selected at random, what is the probability that their favourite colour is yellow?", options: ["7/25", "7/32", "1/4", "1/7", "None of these"], correct: 1 },
+    { id: 14, question: "What is the mode of the data set: 5, 8, 2, 8, 5, 6, 6, 8, 9, 5?", options: ["2", "5", "6", "8", "None of these"], correct: 3 },
+    { id: 15, question: "Find the arithmetic mean of the following numbers: 4, 10, 6, 12, 8.", options: ["6", "8", "10", "12", "None of these"], correct: 1 },
+    { id: 16, question: "In the right-angled triangle ABC shown in the diagram, side AB has length 6 and side BC has length 8. What is the length of the hypotenuse AC?", options: ["10", "12", "14", "100", "None of these"], correct: 0, diagram: 'right_triangle_abc' },
+    { id: 17, question: "A bag contains 3 red marbles, 5 blue marbles, and 2 green marbles. If a marble is selected at random, what is the probability that it is NOT blue?", options: ["1/5", "2/5", "3/5", "4/5", "None of these"], correct: 4 },
+    { id: 18, question: "Solve the inequality: $4x + 3 < 15$", options: ["x<3", "x>3", "x<-3", "x>-3", "None of these"], correct: 0 },
+    { id: 19, question: "If $P = \\begin{bmatrix} 2 & -1 \\\\ 0 & 5 \\end{bmatrix}$ and $Q = \\begin{bmatrix} 3 & 4 \\\\ -2 & 1 \\end{bmatrix}$, evaluate $2P + Q$.", options: ["$\\begin{bmatrix} 7 & 2 \\\\ -2 & 11 \\end{bmatrix}$", "$\\begin{bmatrix} 7 & 9 \\\\ -2 & 11 \\end{bmatrix}$", "$\\begin{bmatrix} 1 & 9 \\\\ -2 & 11 \\end{bmatrix}$", "$\\begin{bmatrix} 1 & 11 \\\\ -2 & 9 \\end{bmatrix}$", "None of these"], correct: 0 },
+    { id: 20, question: "Given the equations: $2x + y = 9$ and $x - y = 3$, find the value of $(x - y)$.", options: ["1", "2", "3", "4", "None of these"], correct: 2 },
+    { id: 21, question: "Calculate the result of the following matrix multiplication: $$\begin{bmatrix} 6 & 5 & 3 & 7 \\\\ 3 & 2 & 1 & 3 \\\\ 5 & 3 & 2 & 5 \\\\ 7 & 5 & 3 & 6 \\end{bmatrix} \\times \\begin{bmatrix} 7 & 2 & 1 & 2 \\\\ 2 & 7 & 1 & 2 \\\\ 1 & 1 & 3 & 1 \\\\ 2 & 2 & 1 & 7 \\end{bmatrix}$$", options: ["$$\\begin{bmatrix} 67 & 52 & 31 & 72 \\\\ 31 & 21 & 13 & 31 \\\\ 52 & 37 & 21 & 52 \\\\ 72 & 52 & 31 & 67 \\end{bmatrix}$$", "$$\\begin{bmatrix} 67 & 50 & 30 & 70 \\\\ 31 & 20 & 10 & 30 \\\\ 52 & 35 & 20 & 50 \\\\ 72 & 50 & 30 & 67 \\end{bmatrix}$$", "A 2x2 Matrix", "An identity matrix", "None of these"], correct: 0, bonus: { title: "Honors Section: A Beautiful Coincidence", content: "This specific matrix multiplication, where a symmetric matrix is multiplied by another symmetric matrix, results in a new symmetric matrix. This is a fascinating example of how properties of matrices are preserved through certain operations." } },
+    { id: 22, question: "A car travels at a speed of 60 km/h. How long will it take to travel 180 km?", options: ["2 hours", "3 hours", "4 hours", "5 hours", "None of these"], correct: 1 },
+    { id: 23, question: "What is the area of a circle with a radius of 7 cm? (Use $\\pi = 22/7$)", options: ["154 cm²", "44 cm²", "22 cm²", "14 cm²", "None of these"], correct: 0 },
+    { id: 24, question: "If a = 5 and b = 3, what is the value of $a^2 - b^2$?", options: ["4", "8", "16", "25", "None of these"], correct: 2 }
+];

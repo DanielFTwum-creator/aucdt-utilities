@@ -1,0 +1,44 @@
+
+<svg width="800" height="300" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif" font-size="12">
+    <title>Technology Stack Diagram</title>
+    <style>
+        .title { font-size: 16px; font-weight: bold; text-anchor: middle; }
+        .category-title { font-size: 14px; font-weight: bold; fill: #1e3a8a; }
+        .tech-box { fill: #f0f9ff; stroke: #7dd3fc; stroke-width: 1.5; }
+        .tech-text { text-anchor: middle; font-size: 13px; }
+        .desc-text { text-anchor: middle; font-size: 11px; fill: #475569; }
+    </style>
+
+    <text x="400" y="30" class="title">Techbridge TSAP - Technology Stack</text>
+    <text x="400" y="48" class="desc-text" font-style="italic">(Client-Side Only Architecture)</text>
+
+    <!-- Frontend -->
+    <g transform="translate(50, 80)">
+        <text x="125" y="15" text-anchor="middle" class="category-title">Frontend</text>
+        <rect x="0" y="30" width="250" height="150" rx="10" class="tech-box" />
+        <text x="125" y="60" class="tech-text">React 19</text>
+        <text x="125" y="75" class="desc-text">(via Import Map)</text>
+        <line x1="20" y1="95" x2="230" y2="95" stroke="#dbeafe"/>
+        <text x="125" y="125" class="tech-text">TypeScript</text>
+        <line x1="20" y1="145" x2="230" y2="145" stroke="#dbeafe"/>
+        <text x="125" y="175" class="tech-text">React Router</text>
+    </g>
+
+    <!-- Styling -->
+    <g transform="translate(325, 80)">
+        <text x="75" y="15" text-anchor="middle" class="category-title">Styling</text>
+        <rect x="0" y="30" width="150" height="150" rx="10" class="tech-box" />
+        <text x="75" y="110" class="tech-text">Tailwind CSS</text>
+        <text x="75" y="125" class="desc-text">(via CDN)</text>
+    </g>
+
+    <!-- State & Data -->
+    <g transform="translate(500, 80)">
+        <text x="125" y="15" text-anchor="middle" class="category-title">State & Data Persistence</text>
+        <rect x="0" y="30" width="250" height="150" rx="10" class="tech-box" />
+        <text x="125" y="70" class="tech-text">React Hooks</text>
+        <text x="125" y="85" class="desc-text">(Context API)</text>
+        <line x1="20" y1="115" x2="230" y2="115" stroke="#dbeafe"/>
+        <text x="125" y="145" class="tech-text">Browser localStorage</text>
+    </g>
+</svg>

@@ -1,0 +1,8 @@
+{
+  "name": "TalentVerify",
+  "description": "AI-Resilient Talent Identification Platform for Human Resource Departments",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ]
+}

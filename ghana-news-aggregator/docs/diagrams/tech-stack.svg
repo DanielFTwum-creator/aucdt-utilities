@@ -1,0 +1,73 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500">
+  <defs>
+    <style>
+      .box { fill: #ffffff; stroke: #334155; stroke-width: 2; rx: 8; }
+      .category-bg { fill: #f1f5f9; stroke: none; }
+      .title { font-family: sans-serif; font-weight: bold; font-size: 16px; fill: #0f172a; text-anchor: middle; }
+      .item-text { font-family: sans-serif; font-size: 14px; fill: #334155; text-anchor: middle; }
+      .header { font-family: sans-serif; font-weight: bold; font-size: 24px; fill: #0f172a; text-anchor: middle; }
+    </style>
+  </defs>
+
+  <rect width="800" height="500" fill="#ffffff"/>
+  <text x="400" y="40" class="header">Technology Stack</text>
+
+  <!-- Frontend -->
+  <rect x="50" y="80" width="150" height="350" class="category-bg" rx="10"/>
+  <text x="125" y="110" class="title">Frontend</text>
+  
+  <rect x="70" y="130" width="110" height="40" class="box" stroke="#0ea5e9"/>
+  <text x="125" y="155" class="item-text">React 18</text>
+  
+  <rect x="70" y="180" width="110" height="40" class="box" stroke="#3178c6"/>
+  <text x="125" y="205" class="item-text">TypeScript</text>
+  
+  <rect x="70" y="230" width="110" height="40" class="box" stroke="#38bdf8"/>
+  <text x="125" y="255" class="item-text">Tailwind CSS</text>
+  
+  <rect x="70" y="280" width="110" height="40" class="box" stroke="#f97316"/>
+  <text x="125" y="305" class="item-text">Vite</text>
+
+  <!-- Backend -->
+  <rect x="230" y="80" width="150" height="350" class="category-bg" rx="10"/>
+  <text x="305" y="110" class="title">Backend</text>
+  
+  <rect x="250" y="130" width="110" height="40" class="box" stroke="#22c55e"/>
+  <text x="305" y="155" class="item-text">Node.js</text>
+  
+  <rect x="250" y="180" width="110" height="40" class="box" stroke="#000000"/>
+  <text x="305" y="205" class="item-text">Express</text>
+  
+  <rect x="250" y="230" width="110" height="40" class="box" stroke="#ff0000"/>
+  <text x="305" y="255" class="item-text">Puppeteer</text>
+
+  <!-- Database/Data -->
+  <rect x="410" y="80" width="150" height="350" class="category-bg" rx="10"/>
+  <text x="485" y="110" class="title">Data</text>
+  
+  <rect x="430" y="130" width="110" height="40" class="box" stroke="#006064"/>
+  <text x="485" y="155" class="item-text">MariaDB</text>
+  
+  <rect x="430" y="180" width="110" height="40" class="box" stroke="#dc2626"/>
+  <text x="485" y="205" class="item-text">Redis</text>
+  
+  <rect x="430" y="230" width="110" height="40" class="box" stroke="#f97316"/>
+  <text x="485" y="255" class="item-text">RabbitMQ</text>
+
+  <!-- Infrastructure -->
+  <rect x="590" y="80" width="150" height="350" class="category-bg" rx="10"/>
+  <text x="665" y="110" class="title">Infra & Ext</text>
+  
+  <rect x="610" y="130" width="110" height="40" class="box" stroke="#0284c7"/>
+  <text x="665" y="155" class="item-text">Docker</text>
+  
+  <rect x="610" y="180" width="110" height="40" class="box" stroke="#1877f2"/>
+  <text x="665" y="205" class="item-text">Facebook API</text>
+  
+  <rect x="610" y="230" width="110" height="40" class="box" stroke="#10a37f"/>
+  <text x="665" y="255" class="item-text">OpenAI API</text>
+  
+  <rect x="610" y="280" width="110" height="40" class="box" stroke="#7c3aed"/>
+  <text x="665" y="305" class="item-text">Claude API</text>
+
+</svg>

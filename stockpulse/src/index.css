@@ -1,0 +1,18 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --color-gain: #2E8B5A;
+    --color-loss: #D94F4F;
+    --color-accent: #4F46E5;
+    --color-data: #D97706;
+  }
+}
+
+@layer utilities {
+  .tabular-nums {
+    font-variant-numeric: tabular-nums;
+  }
+  .gain { color: var(--color-gain); }
+  .loss { color: var(--color-loss); }
+}

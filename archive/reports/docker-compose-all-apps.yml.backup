@@ -1,0 +1,2094 @@
+﻿# Docker Compose - All TUC Applications
+# Last Updated: 2026-02-27
+# Total Projects: 109 (100 Vite/React + 9 Backend Services)
+# Services Configured: 109 (100% COVERAGE ACHIEVED!)
+# Core: 8 | Standard: 89 | Full-Stack Services: 8
+# THE AGENT Book: Foundation for scaling to 256 managed applications
+
+services:
+
+  nginx-gateway:
+    image: nginx:alpine
+    container_name: tuc-gateway
+    ports:
+      - "8080:80"
+    volumes:
+      - ./docker/nginx/nginx-all-apps.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./docker/nginx/html:/usr/share/nginx/html:ro
+    depends_on:
+      - analytics-refactor
+      - tuc-analytics-dashboard
+      - tuc-website-react
+      - fees-comparison-dashboard
+      - kanban-app
+      - techbridge-product-design-6r-design-portal
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+  analytics-refactor:
+    build:
+      context: ./analytics-refactor
+      dockerfile: ../Dockerfile.vite
+    container_name: analytics-refactor
+    environment:
+      NODE_ENV: production
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+  tuc-analytics-dashboard:
+    build:
+      context: ./tuc-analytics-dashboard
+      dockerfile: ../Dockerfile.vite
+    container_name: tuc-analytics-dashboard
+    environment:
+      NODE_ENV: production
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+  tuc-website-react:
+    build:
+      context: ./tuc-website-react
+      dockerfile: ../Dockerfile.vite
+    container_name: tuc-website-react
+    environment:
+      NODE_ENV: production
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+  fees-comparison-dashboard:
+    build:
+      context: ./fees-comparison-dashboard
+      dockerfile: ../Dockerfile.vite
+    container_name: fees-comparison-dashboard
+    environment:
+      NODE_ENV: production
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+  kanban-app:
+    build:
+      context: ./kanban-app
+      dockerfile: ../Dockerfile.vite
+    container_name: kanban-app
+    environment:
+      NODE_ENV: production
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+  techbridge-product-design-6r-design-portal:
+    build:
+      context: ./techbridge-product-design-6r-design-portal
+      dockerfile: ../Dockerfile.vite
+    container_name: techbridge-product-design-6r-design-portal
+    environment:
+      NODE_ENV: production
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+  6r-product-design-workshop-portal:
+    build:
+      context: ./6r-product-design-workshop-portal
+      dockerfile: ../Dockerfile.vite
+    container_name: 6r-product-design-workshop-portal
+    environment:
+      NODE_ENV: production
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    profiles:
+      - standard
+      - full
+  academic-performance-app:
+    build:
+      context: ./academic-performance-app
+      dockerfile: ../Dockerfile.vite
+    container_name: academic-performance-app
+    environment:
+      NODE_ENV: production
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    profiles:
+      - standard
+      - full
+  ananse-cartoon-generator:
+    build:
+      context: ./ananse-cartoon-generator
+      dockerfile: ../Dockerfile.vite
+    container_name: ananse-cartoon-generator
+    environment:
+      NODE_ENV: production
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    profiles:
+      - standard
+      - full
+  tuc-assessment-platform:
+    build:
+      context: ./tuc-assessment-platform
+      dockerfile: ../Dockerfile.vite
+    container_name: tuc-assessment-platform
+    environment:
+      NODE_ENV: production
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    profiles:
+      - standard
+      - full
+  tuc-dashboard:
+    build:
+      context: ./tuc-dashboard
+      dockerfile: ../Dockerfile.vite
+    container_name: tuc-dashboard
+    environment:
+      NODE_ENV: production
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    profiles:
+      - standard
+      - full
+  tuc-eligibility-checker:
+    build:
+      context: ./tuc-eligibility-checker
+      dockerfile: ../Dockerfile.vite
+    container_name: tuc-eligibility-checker
+    environment:
+      NODE_ENV: production
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    profiles:
+      - standard
+      - full
+  tuc-lead-generation-infographic:
+    build:
+      context: ./tuc-lead-generation-infographic
+      dockerfile: ../Dockerfile.vite
+    container_name: tuc-lead-generation-infographic
+    environment:
+      NODE_ENV: production
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    profiles:
+      - standard
+      - full
+  tuc-lead-generator:
+    build:
+      context: ./tuc-lead-generator
+      dockerfile: ../Dockerfile.vite
+    container_name: tuc-lead-generator
+    environment:
+      NODE_ENV: production
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    profiles:
+      - standard
+      - full
+  tuc-portal-tests:
+    build:
+      context: ./tuc-portal-tests
+      dockerfile: ../Dockerfile.vite
+    container_name: tuc-portal-tests
+    environment:
+      NODE_ENV: production
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    profiles:
+      - standard
+      - full
+  tuc-skills-evaluation:
+    build:
+      context: ./tuc-skills-evaluation
+      dockerfile: ../Dockerfile.vite
+    container_name: tuc-skills-evaluation
+    environment:
+      NODE_ENV: production
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    profiles:
+      - standard
+      - full
+  aurelia-v4-working-with-aurelia:
+    build:
+      context: ./aurelia-v4---working-with-aurelia
+      dockerfile: ../Dockerfile.vite
+    container_name: aurelia-v4-working-with-aurelia
+    environment:
+      NODE_ENV: production
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    profiles:
+      - standard
+      - full
+  bp-bulletproof-directive-v22012026-1326:
+    build:
+      context: ./bp-bulletproof-directive-v22012026-1326
+      dockerfile: ../Dockerfile.vite
+    container_name: bp-bulletproof-directive-v22012026-1326
+    environment:
+      NODE_ENV: production
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    profiles:
+      - standard
+      - full
+  brainiac-challenge:
+    build:
+      context: ./brainiac-challenge
+      dockerfile: ../Dockerfile.vite
+    container_name: brainiac-challenge
+    environment:
+      NODE_ENV: production
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    profiles:
+      - standard
+      - full
+  brand-guideline-checker:
+    build:
+      context: ./brand-guideline-checker
+      dockerfile: ../Dockerfile.vite
+    container_name: brand-guideline-checker
+    environment:
+      NODE_ENV: production
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    profiles:
+      - standard
+      - full
+  cinematic-triptych-generator:
+    build:
+      context: ./cinematic-triptych-generator
+      dockerfile: ../Dockerfile.vite
+    container_name: cinematic-triptych-generator
+    environment:
+      NODE_ENV: production
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    profiles:
+      - standard
+      - full
+  ckt-utas-modern-website:
+    build:
+      context: ./ckt-utas-modern-website
+      dockerfile: ../Dockerfile.vite
+    container_name: ckt-utas-modern-website
+    environment:
+      NODE_ENV: production
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    profiles:
+      - standard
+      - full
+  class4-digital-learning-system:
+    build:
+      context: ./Class4_Digital_Learning_System
+      dockerfile: ../Dockerfile.vite
+    container_name: class4-digital-learning-system
+    environment:
+      NODE_ENV: production
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    profiles:
+      - standard
+      - full
+  community-platesv1:
+    build:
+      context: ./community-plates.v1
+      dockerfile: ../Dockerfile.vite
+    container_name: community-platesv1
+    environment:
+      NODE_ENV: production
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    profiles:
+      - standard
+      - full
+  dadaist-concert-visualizer:
+    build:
+      context: ./dadaist-concert-visualizer
+      dockerfile: ../Dockerfile.vite
+    container_name: dadaist-concert-visualizer
+    environment:
+      NODE_ENV: production
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    profiles:
+      - standard
+      - full
+  dictation-app:
+    build:
+      context: ./dictation-app
+      dockerfile: ../Dockerfile.vite
+    container_name: dictation-app
+    environment:
+      NODE_ENV: production
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    profiles:
+      - standard
+      - full
+  directive-workflow:
+    build:
+      context: ./directive-workflow
+      dockerfile: ../Dockerfile.vite
+    container_name: directive-workflow
+    environment:
+      NODE_ENV: production
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    profiles:
+      - standard
+      - full
+  dns-copy-utility:
+    build:
+      context: ./dns-copy-utility
+      dockerfile: ../Dockerfile.vite
+    container_name: dns-copy-utility
+    environment:
+      NODE_ENV: production
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    profiles:
+      - standard
+      - full
+  drone-light-show-simulator:
+    build:
+      context: ./drone-light-show-simulator
+      dockerfile: ../Dockerfile.vite
+    container_name: drone-light-show-simulator
+    environment:
+      NODE_ENV: production
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    profiles:
+      - standard
+      - full
+  drone-showcase:
+    build:
+      context: ./drone-showcase
+      dockerfile: ../Dockerfile.vite
+    container_name: drone-showcase
+    environment:
+      NODE_ENV: production
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    profiles:
+      - standard
+      - full
+  enactus-ckt-frontend-app-main:
+    build:
+      context: ./enactus-ckt-frontend-app-main
+      dockerfile: ../Dockerfile.vite
+    container_name: enactus-ckt-frontend-app-main
+    environment:
+      NODE_ENV: production
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    profiles:
+      - standard
+      - full
+  english-safari:
+    build:
+      context: ./english-safari
+      dockerfile: ../Dockerfile.vite
+    container_name: english-safari
+    environment:
+      NODE_ENV: production
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    profiles:
+      - standard
+      - full
+  expensepro-advanced-financial-tracker:
+    build:
+      context: ./expensepro---advanced-financial-tracker
+      dockerfile: ../Dockerfile.vite
+    container_name: expensepro-advanced-financial-tracker
+    environment:
+      NODE_ENV: production
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    profiles:
+      - standard
+      - full
+  ghana-news-aggregator:
+    build:
+      context: ./ghana-news-aggregator
+      dockerfile: ../Dockerfile.vite
+    container_name: ghana-news-aggregator
+    environment:
+      NODE_ENV: production
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    profiles:
+      - standard
+      - full
+  ghana-university-fees-dashboard:
+    build:
+      context: ./ghana-university-fees-dashboard
+      dockerfile: ../Dockerfile.vite
+    container_name: ghana-university-fees-dashboard
+    environment:
+      NODE_ENV: production
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    profiles:
+      - standard
+      - full
+  kente-fusion-fashion-workshop:
+    build:
+      context: ./kente-fusion-fashion-workshop
+      dockerfile: ../Dockerfile.vite
+    container_name: kente-fusion-fashion-workshop
+    environment:
+      NODE_ENV: production
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    profiles:
+      - standard
+      - full
+  lecturer-assessment-system:
+    build:
+      context: ./lecturer-assessment-system
+      dockerfile: ../Dockerfile.vite
+    container_name: lecturer-assessment-system
+    environment:
+      NODE_ENV: production
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    profiles:
+      - standard
+      - full
+  lumina-triptych-studio:
+    build:
+      context: ./lumina-triptych-studio
+      dockerfile: ../Dockerfile.vite
+    container_name: lumina-triptych-studio
+    environment:
+      NODE_ENV: production
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    profiles:
+      - standard
+      - full
+  mannequin-ai:
+    build:
+      context: ./mannequin-ai
+      dockerfile: ../Dockerfile.vite
+    container_name: mannequin-ai
+    environment:
+      NODE_ENV: production
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    profiles:
+      - standard
+      - full
+  master-thumbnail-catalog:
+    build:
+      context: ./master-thumbnail-catalog
+      dockerfile: ../Dockerfile.vite
+    container_name: master-thumbnail-catalog
+    environment:
+      NODE_ENV: production
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    profiles:
+      - standard
+      - full
+  mature-students-exam-app:
+    build:
+      context: ./mature-students-exam-app
+      dockerfile: ../Dockerfile.vite
+    container_name: mature-students-exam-app
+    environment:
+      NODE_ENV: production
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    profiles:
+      - standard
+      - full
+  mature-students-exam-app-waec-integrated:
+    build:
+      context: ./mature-students-exam-app-waec-integrated
+      dockerfile: ../Dockerfile.vite
+    container_name: mature-students-exam-app-waec-integrated
+    environment:
+      NODE_ENV: production
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    profiles:
+      - standard
+      - full
+  mirror-truth-thumbnail-designer:
+    build:
+      context: ./mirror-truth---thumbnail-designer
+      dockerfile: ../Dockerfile.vite
+    container_name: mirror-truth-thumbnail-designer
+    environment:
+      NODE_ENV: production
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    profiles:
+      - standard
+      - full
+  omniextract:
+    build:
+      context: ./omniextract
+      dockerfile: ../Dockerfile.vite
+    container_name: omniextract
+    environment:
+      NODE_ENV: production
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    profiles:
+      - standard
+      - full
+  pama-realtor:
+    build:
+      context: ./pama-realtor
+      dockerfile: ../Dockerfile.vite
+    container_name: pama-realtor
+    environment:
+      NODE_ENV: production
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    profiles:
+      - standard
+      - full
+  pdf-extractor-app:
+    build:
+      context: ./pdf-extractor-app
+      dockerfile: ../Dockerfile.vite
+    container_name: pdf-extractor-app
+    environment:
+      NODE_ENV: production
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    profiles:
+      - standard
+      - full
+  pdf-to-assessment-json-converter:
+    build:
+      context: ./pdf-to-assessment-json-converter
+      dockerfile: ../Dockerfile.vite
+    container_name: pdf-to-assessment-json-converter
+    environment:
+      NODE_ENV: production
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    profiles:
+      - standard
+      - full
+  presentation-app:
+    build:
+      context: ./presentation-app
+      dockerfile: ../Dockerfile.vite
+    container_name: presentation-app
+    environment:
+      NODE_ENV: production
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    profiles:
+      - standard
+      - full
+  primevaluer-pro:
+    build:
+      context: ./primevaluer-pro
+      dockerfile: ../Dockerfile.vite
+    container_name: primevaluer-pro
+    environment:
+      NODE_ENV: production
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    profiles:
+      - standard
+      - full
+  puppeteer:
+    build:
+      context: ./puppeteer
+      dockerfile: ../Dockerfile.vite
+    container_name: puppeteer
+    environment:
+      NODE_ENV: production
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    profiles:
+      - standard
+      - full
+  remix-muniratu-portfolio:
+    build:
+      context: ./remix_-muniratu-portfolio
+      dockerfile: ../Dockerfile.vite
+    container_name: remix-muniratu-portfolio
+    environment:
+      NODE_ENV: production
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    profiles:
+      - standard
+      - full
+  rophe-specialist-care-rpms:
+    build:
+      context: ./rophe-specialist-care-rpms
+      dockerfile: ../Dockerfile.vite
+    container_name: rophe-specialist-care-rpms
+    environment:
+      NODE_ENV: production
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    profiles:
+      - standard
+      - full
+  rophe-specialist-care-rpms-final:
+    build:
+      context: ./rophe-specialist-care-rpms-final
+      dockerfile: ../Dockerfile.vite
+    container_name: rophe-specialist-care-rpms-final
+    environment:
+      NODE_ENV: production
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    profiles:
+      - standard
+      - full
+  sashmade-afro-chic-studio:
+    build:
+      context: ./sashmade_-afro-chic-studio
+      dockerfile: ../Dockerfile.vite
+    container_name: sashmade-afro-chic-studio
+    environment:
+      NODE_ENV: production
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    profiles:
+      - standard
+      - full
+  scholarship-bond-portal-v3:
+    build:
+      context: ./scholarship-bond-portal-v3
+      dockerfile: ../Dockerfile.vite
+    container_name: scholarship-bond-portal-v3
+    environment:
+      NODE_ENV: production
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    profiles:
+      - standard
+      - full
+  smartscale-presenter:
+    build:
+      context: ./smartscale-presenter
+      dockerfile: ../Dockerfile.vite
+    container_name: smartscale-presenter
+    environment:
+      NODE_ENV: production
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    profiles:
+      - standard
+      - full
+  still-her-baby:
+    build:
+      context: ./still_her_baby
+      dockerfile: ../Dockerfile.vite
+    container_name: still-her-baby
+    environment:
+      NODE_ENV: production
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    profiles:
+      - standard
+      - full
+  techbridge-media-club-platform:
+    build:
+      context: ./techbridge-media-club-platform
+      dockerfile: ../Dockerfile.vite
+    container_name: techbridge-media-club-platform
+    environment:
+      NODE_ENV: production
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    profiles:
+      - standard
+      - full
+  techbridge-promo:
+    build:
+      context: ./techbridge-promo
+      dockerfile: ../Dockerfile.vite
+    container_name: techbridge-promo
+    environment:
+      NODE_ENV: production
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    profiles:
+      - standard
+      - full
+  techbridge-scholarship-portal:
+    build:
+      context: ./techbridge-scholarship-portal
+      dockerfile: ../Dockerfile.vite
+    container_name: techbridge-scholarship-portal
+    environment:
+      NODE_ENV: production
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    profiles:
+      - standard
+      - full
+  techbridge-strategy-dashboard:
+    build:
+      context: ./techbridge-strategy-dashboard
+      dockerfile: ../Dockerfile.vite
+    container_name: techbridge-strategy-dashboard
+    environment:
+      NODE_ENV: production
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    profiles:
+      - standard
+      - full
+  techbridge-technical-quiz-platform:
+    build:
+      context: ./techbridge-technical-quiz-platform
+      dockerfile: ../Dockerfile.vite
+    container_name: techbridge-technical-quiz-platform
+    environment:
+      NODE_ENV: production
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    profiles:
+      - standard
+      - full
+  timetable-management-system:
+    build:
+      context: ./timetable-management-system
+      dockerfile: ../Dockerfile.vite
+    container_name: timetable-management-system
+    environment:
+      NODE_ENV: production
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    profiles:
+      - standard
+      - full
+  tsapro:
+    build:
+      context: ./tsapro
+      dockerfile: ../Dockerfile.vite
+    container_name: tsapro
+    environment:
+      NODE_ENV: production
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    profiles:
+      - standard
+      - full
+  tvet-assessment-progress-dashboard:
+    build:
+      context: ./tvet-assessment-progress-dashboard
+      dockerfile: ../Dockerfile.vite
+    container_name: tvet-assessment-progress-dashboard
+    environment:
+      NODE_ENV: production
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    profiles:
+      - standard
+      - full
+  umoja-react-app:
+    build:
+      context: ./umoja-react-app
+      dockerfile: ../Dockerfile.vite
+    container_name: umoja-react-app
+    environment:
+      NODE_ENV: production
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    profiles:
+      - standard
+      - full
+  university-timetable-insights:
+    build:
+      context: ./university-timetable-insights
+      dockerfile: ../Dockerfile.vite
+    container_name: university-timetable-insights
+    environment:
+      NODE_ENV: production
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    profiles:
+      - standard
+      - full
+  veca-vermont-education-contact-aggregator:
+    build:
+      context: ./veca---vermont-education-contact-aggregator
+      dockerfile: ../Dockerfile.vite
+    container_name: veca-vermont-education-contact-aggregator
+    environment:
+      NODE_ENV: production
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    profiles:
+      - standard
+      - full
+  whatsapp-parody:
+    build:
+      context: ./whatsapp-parody
+      dockerfile: ../Dockerfile.vite
+    container_name: whatsapp-parody
+    environment:
+      NODE_ENV: production
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    profiles:
+      - standard
+      - full
+  willpro:
+    build:
+      context: ./willpro
+      dockerfile: ../Dockerfile.vite
+    container_name: willpro
+    environment:
+      NODE_ENV: production
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    profiles:
+      - standard
+      - full
+  agenticai-masterclass:
+    build:
+      context: ./agenticai-masterclass
+      dockerfile: ../Dockerfile.vite
+    container_name: agenticai-masterclass
+    environment:
+      NODE_ENV: production
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    profiles:
+      - experimental
+      - full
+  ai-techbridge:
+    build:
+      context: ./ai-@-techbridge
+      dockerfile: ../Dockerfile.vite
+    container_name: ai-techbridge
+    environment:
+      NODE_ENV: production
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    profiles:
+      - experimental
+      - full
+  ai-code-reviewer:
+    build:
+      context: ./ai-code-reviewer
+      dockerfile: ../Dockerfile.vite
+    container_name: ai-code-reviewer
+    environment:
+      NODE_ENV: production
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    profiles:
+      - experimental
+      - full
+  ai-studio-directives:
+    build:
+      context: ./ai-studio-directives
+      dockerfile: ../Dockerfile.vite
+    container_name: ai-studio-directives
+    environment:
+      NODE_ENV: production
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    profiles:
+      - experimental
+      - full
+  enhanced-youtube-genie:
+    build:
+      context: ./enhanced-youtube-genie
+      dockerfile: ../Dockerfile.vite
+    container_name: enhanced-youtube-genie
+    environment:
+      NODE_ENV: production
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    profiles:
+      - experimental
+      - full
+  gif-animator-ai-refactored:
+    build:
+      context: ./gif-animator-ai-refactored
+      dockerfile: ../Dockerfile.vite
+    container_name: gif-animator-ai-refactored
+    environment:
+      NODE_ENV: production
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    profiles:
+      - experimental
+      - full
+  sentinel-agent:
+    build:
+      context: ./sentinel-agent
+      dockerfile: ../Dockerfile.vite
+    container_name: sentinel-agent
+    environment:
+      NODE_ENV: production
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    profiles:
+      - experimental
+      - full
+  smartscale-ai-presentation-platform:
+    build:
+      context: ./smartscale-ai-presentation-platform
+      dockerfile: ../Dockerfile.vite
+    container_name: smartscale-ai-presentation-platform
+    environment:
+      NODE_ENV: production
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    profiles:
+      - experimental
+      - full
+  smartscale-ai-presentation-v1061220250020:
+    build:
+      context: ./smartscale-ai-presentation-v1.06.12.2025.0020
+      dockerfile: ../Dockerfile.vite
+    container_name: smartscale-ai-presentation-v1061220250020
+    environment:
+      NODE_ENV: production
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    profiles:
+      - experimental
+      - full
+  techbridge-ai-workshop-flyer:
+    build:
+      context: ./techbridge-ai-workshop-flyer
+      dockerfile: ../Dockerfile.vite
+    container_name: techbridge-ai-workshop-flyer
+    environment:
+      NODE_ENV: production
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    profiles:
+      - experimental
+      - full
+  youtube-description-genie:
+    build:
+      context: ./youtube-description-genie
+      dockerfile: ../Dockerfile.vite
+    container_name: youtube-description-genie
+    environment:
+      NODE_ENV: production
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    profiles:
+      - experimental
+      - full
+
+  # ========================================
+  # BACKEND API (Critical Infrastructure)
+  # ========================================
+  tuc-auth-api:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: tuc-auth-api
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+    env_file:
+      - ./backend/.env
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3000/health', (r) => {process.exit(r.statusCode === 200 ? 0 : 1)})"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    profiles:
+      - core
+      - full
+
+  # ========================================
+  # NEWLY ADDED VITE PROJECTS (19 projects)
+  # ========================================
+  ai-at-techbridge:
+    build:
+      context: ./ai-@-techbridge
+      dockerfile: ../Dockerfile.vite
+    container_name: ai-at-techbridge
+    environment:
+      NODE_ENV: production
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    profiles:
+      - standard
+      - full
+  ai-transformation-framework:
+    build:
+      context: ./ai-transformation-framework
+      dockerfile: ../Dockerfile.vite
+    container_name: ai-transformation-framework
+    environment:
+      NODE_ENV: production
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    profiles:
+      - standard
+      - full
+  aurelia-v4-working-with-aurelia:
+    build:
+      context: ./aurelia-v4---working-with-aurelia
+      dockerfile: ../Dockerfile.vite
+    container_name: aurelia-v4-working-with-aurelia
+    environment:
+      NODE_ENV: production
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    profiles:
+      - standard
+      - full
+  class4-digital-learning-system:
+    build:
+      context: ./Class4_Digital_Learning_System
+      dockerfile: ../Dockerfile.vite
+    container_name: class4-digital-learning-system
+    environment:
+      NODE_ENV: production
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    profiles:
+      - standard
+      - full
+  community-plates-v1:
+    build:
+      context: ./community-plates.v1
+      dockerfile: ../Dockerfile.vite
+    container_name: community-plates-v1
+    environment:
+      NODE_ENV: production
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    profiles:
+      - standard
+      - full
+  countdown-timer:
+    build:
+      context: ./countdown-timer
+      dockerfile: ../Dockerfile.vite
+    container_name: countdown-timer
+    environment:
+      NODE_ENV: production
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    profiles:
+      - standard
+      - full
+  docujudge:
+    build:
+      context: ./docujudge_202624502_1111
+      dockerfile: ../Dockerfile.vite
+    container_name: docujudge
+    environment:
+      NODE_ENV: production
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    profiles:
+      - standard
+      - full
+  expensepro-advanced-financial-tracker:
+    build:
+      context: ./expensepro---advanced-financial-tracker
+      dockerfile: ../Dockerfile.vite
+    container_name: expensepro-advanced-financial-tracker
+    environment:
+      NODE_ENV: production
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    profiles:
+      - standard
+      - full
+  fashionprompt-ai:
+    build:
+      context: ./fashionprompt-ai
+      dockerfile: ../Dockerfile.vite
+    container_name: fashionprompt-ai
+    environment:
+      NODE_ENV: production
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    profiles:
+      - standard
+      - full
+  gemini-slingshot-3:
+    build:
+      context: ./gemini-slingshot (3)
+      dockerfile: ../Dockerfile.vite
+    container_name: gemini-slingshot-3
+    environment:
+      NODE_ENV: production
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    profiles:
+      - standard
+      - full
+  lumina-concert-video-wall:
+    build:
+      context: ./lumina---concert-video-wall
+      dockerfile: ../Dockerfile.vite
+    container_name: lumina-concert-video-wall
+    environment:
+      NODE_ENV: production
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    profiles:
+      - standard
+      - full
+  midjourney-prompt-helper:
+    build:
+      context: ./midjourney-prompt-helper
+      dockerfile: ../Dockerfile.vite
+    container_name: midjourney-prompt-helper
+    environment:
+      NODE_ENV: production
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    profiles:
+      - standard
+      - full
+  mirror-truth-thumbnail-designer:
+    build:
+      context: ./mirror-truth---thumbnail-designer
+      dockerfile: ../Dockerfile.vite
+    container_name: mirror-truth-thumbnail-designer
+    environment:
+      NODE_ENV: production
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    profiles:
+      - standard
+      - full
+  patois-lyricist:
+    build:
+      context: ./patois-lyricist-v1.7-(5000-chars)
+      dockerfile: ../Dockerfile.vite
+    container_name: patois-lyricist
+    environment:
+      NODE_ENV: production
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    profiles:
+      - standard
+      - full
+  remix-muniratu-portfolio:
+    build:
+      context: ./remix_-muniratu-portfolio
+      dockerfile: ../Dockerfile.vite
+    container_name: remix-muniratu-portfolio
+    environment:
+      NODE_ENV: production
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    profiles:
+      - standard
+      - full
+  smartscale-ai-presentation-v1:
+    build:
+      context: ./smartscale-ai-presentation-v1.06.12.2025.0020
+      dockerfile: ../Dockerfile.vite
+    container_name: smartscale-ai-presentation-v1
+    environment:
+      NODE_ENV: production
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    profiles:
+      - standard
+      - full
+  still-her-baby:
+    build:
+      context: ./still_her_baby
+      dockerfile: ../Dockerfile.vite
+    container_name: still-her-baby
+    environment:
+      NODE_ENV: production
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    profiles:
+      - standard
+      - full
+  techbridge-media-club-platform-alt:
+    build:
+      context: ./techbridge-media-club-platform (1)
+      dockerfile: ../Dockerfile.vite
+    container_name: techbridge-media-club-platform-alt
+    environment:
+      NODE_ENV: production
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    profiles:
+      - standard
+      - full
+  veca-vermont-education-contact-aggregator:
+    build:
+      context: ./veca---vermont-education-contact-aggregator
+      dockerfile: ../Dockerfile.vite
+    container_name: veca-vermont-education-contact-aggregator
+    environment:
+      NODE_ENV: production
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    profiles:
+      - standard
+      - full
+
+  # ====================
+  # Full-Stack Services (Express + React)
+  # Recently Added: 2026-02-27
+  # ====================
+
+  tuc-mysql:
+    image: mysql:8.0
+    container_name: tuc-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-tuc_root_2026}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-tuc_services}
+    volumes:
+      - mysql-data:/var/lib/mysql
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD:-tuc_root_2026}"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    profiles:
+      - core
+      - full
+
+  accommodation-management:
+    build:
+      context: ./accommodation-management
+      dockerfile: ../Dockerfile.fullstack
+    container_name: accommodation-management
+    environment:
+      NODE_ENV: production
+      PORT: 4053
+      API_PORT: 4053
+      DB_HOST: tuc-mysql
+      DB_USER: root
+      DB_PASSWORD: ${MYSQL_ROOT_PASSWORD:-tuc_root_2026}
+      DB_NAME: accommodation_management
+    depends_on:
+      - tuc-mysql
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    profiles:
+      - standard
+      - full
+
+  alumni-network:
+    build:
+      context: ./alumni-network
+      dockerfile: ../Dockerfile.fullstack
+    container_name: alumni-network
+    environment:
+      NODE_ENV: production
+      PORT: 4050
+      API_PORT: 4050
+      DB_HOST: tuc-mysql
+      DB_USER: root
+      DB_PASSWORD: ${MYSQL_ROOT_PASSWORD:-tuc_root_2026}
+      DB_NAME: alumni_network
+    depends_on:
+      - tuc-mysql
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    profiles:
+      - standard
+      - full
+
+  career-services:
+    build:
+      context: ./career-services
+      dockerfile: ../Dockerfile.fullstack
+    container_name: career-services
+    environment:
+      NODE_ENV: production
+      PORT: 4051
+      API_PORT: 4051
+      DB_HOST: tuc-mysql
+      DB_USER: root
+      DB_PASSWORD: ${MYSQL_ROOT_PASSWORD:-tuc_root_2026}
+      DB_NAME: career_services
+    depends_on:
+      - tuc-mysql
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    profiles:
+      - standard
+      - full
+
+  complaint-resolution-system:
+    build:
+      context: ./complaint-resolution-system
+      dockerfile: ../Dockerfile.fullstack
+    container_name: complaint-resolution-system
+    environment:
+      NODE_ENV: production
+      PORT: 4055
+      API_PORT: 4055
+      DB_HOST: tuc-mysql
+      DB_USER: root
+      DB_PASSWORD: ${MYSQL_ROOT_PASSWORD:-tuc_root_2026}
+      DB_NAME: complaint_resolution
+    depends_on:
+      - tuc-mysql
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    profiles:
+      - standard
+      - full
+
+  health-wellness-portal:
+    build:
+      context: ./health-wellness-portal
+      dockerfile: ../Dockerfile.fullstack
+    container_name: health-wellness-portal
+    environment:
+      NODE_ENV: production
+      PORT: 4054
+      API_PORT: 4054
+      DB_HOST: tuc-mysql
+      DB_USER: root
+      DB_PASSWORD: ${MYSQL_ROOT_PASSWORD:-tuc_root_2026}
+      DB_NAME: health_wellness
+    depends_on:
+      - tuc-mysql
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    profiles:
+      - standard
+      - full
+
+  library-management:
+    build:
+      context: ./library-management
+      dockerfile: ../Dockerfile.fullstack
+    container_name: library-management
+    environment:
+      NODE_ENV: production
+      PORT: 4052
+      API_PORT: 4052
+      DB_HOST: tuc-mysql
+      DB_USER: root
+      DB_PASSWORD: ${MYSQL_ROOT_PASSWORD:-tuc_root_2026}
+      DB_NAME: library_management
+    depends_on:
+      - tuc-mysql
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    profiles:
+      - standard
+      - full
+
+  mentorship-program:
+    build:
+      context: ./mentorship-program
+      dockerfile: ../Dockerfile.fullstack
+    container_name: mentorship-program
+    environment:
+      NODE_ENV: production
+      PORT: 4056
+      API_PORT: 4056
+      DB_HOST: tuc-mysql
+      DB_USER: root
+      DB_PASSWORD: ${MYSQL_ROOT_PASSWORD:-tuc_root_2026}
+      DB_NAME: mentorship_program
+    depends_on:
+      - tuc-mysql
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    profiles:
+      - standard
+      - full
+
+  internship-program:
+    build:
+      context: ./internship-program
+      dockerfile: Dockerfile.prod
+    container_name: internship-program
+    environment:
+      NODE_ENV: production
+      PORT: 4058
+      DB_HOST: tuc-mysql
+      DB_USER: root
+      DB_PASSWORD: ${MYSQL_ROOT_PASSWORD:-tuc_root_2026}
+      DB_NAME: internship_program
+    depends_on:
+      - tuc-mysql
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:4058/health', (r) => { if (r.statusCode !== 200) throw new Error(r.statusCode) })"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    profiles:
+      - standard
+      - full
+
+networks:
+  tuc-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
+
+volumes:
+  node_modules:
+  mysql-data:

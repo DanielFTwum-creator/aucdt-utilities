@@ -1,0 +1,30 @@
+<svg width="600" height="400" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif" font-size="14">
+    <style>
+        .title { font-size: 20px; font-weight: bold; fill: #f1f5f9; text-anchor: middle; }
+        .box { fill: #1a1f3a; stroke: #64748b; stroke-width: 2; }
+        .key { font-weight: bold; fill: #f59e0b; }
+        .desc { fill: #cbd5e1; }
+    </style>
+    
+    <text x="300" y="40" class="title">LocalStorage Data Schema</text>
+    
+    <rect x="20" y="80" width="560" height="50" rx="5" class="box" />
+    <text x="40" y="100"><tspan class="key">ai-scene-visualizer-users:</tspan> <tspan class="desc">Array of user objects. [{username, password}]</tspan></text>
+    <text x="40" y="120"><tspan class="desc">Stores all registered user credentials.</tspan></text>
+    
+    <rect x="20" y="140" width="560" height="50" rx="5" class="box" />
+    <text x="40" y="160"><tspan class="key">creations_&#x3C;username&#x3E;:</tspan> <tspan class="desc">Array of creation objects. [{id, prompt, imageUrl, filter}]</tspan></text>
+    <text x="40" y="180"><tspan class="desc">Stores generated images for each specific user.</tspan></text>
+
+    <rect x="20" y="200" width="560" height="50" rx="5" class="box" />
+    <text x="40" y="220"><tspan class="key">ai-scene-visualizer-currentUser:</tspan> <tspan class="desc">String.</tspan></text>
+    <text x="40" y="240"><tspan class="desc">Stores the username of the currently logged-in user.</tspan></text>
+    
+    <rect x="20" y="260" width="560" height="50" rx="5" class="box" />
+    <text x="40" y="280"><tspan class="key">ai-scene-visualizer-theme:</tspan> <tspan class="desc">String ('light', 'dark', or 'high-contrast').</tspan></text>
+    <text x="40" y="300"><tspan class="desc">Persists the user's selected UI theme.</tspan></text>
+
+    <rect x="20" y="320" width="560" height="50" rx="5" class="box" />
+    <text x="40" y="340"><tspan class="key">ai-scene-visualizer-admin-auth:</tspan> <tspan class="desc">Boolean string ('true').</tspan></text>
+    <text x="40" y="360"><tspan class="desc">Flag indicating if an admin is authenticated.</tspan></text>
+</svg>

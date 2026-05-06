@@ -1,0 +1,55 @@
+<svg width="700" height="400" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif" font-size="14">
+  <style>
+    .title { font-size: 20px; font-weight: bold; text-anchor: middle; }
+    .box { fill: #eef7ff; stroke: #90c3e8; stroke-width: 1.5; }
+    .actor { fill: #fff0cc; stroke: #f0b849; }
+    .api { fill: #e6f5e6; stroke: #8fca8f; }
+    .label { font-weight: bold; text-anchor: middle; }
+    .arrow { marker-end: url(#arrowhead); stroke: #333; stroke-width: 2; fill: none; }
+    .arrow-text { fill: #444; font-size: 12px; text-anchor: middle; }
+  </style>
+  
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="0" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#333" />
+    </marker>
+  </defs>
+
+  <text x="350" y="40" class="title">System Architecture: AI Flyer Generator</text>
+  
+  <!-- User -->
+  <g transform="translate(80, 150)">
+    <circle cx="50" cy="50" r="50" class="actor"/>
+    <text x="50" y="55" class="label">User</text>
+  </g>
+  
+  <!-- Browser / Client App -->
+  <g transform="translate(250, 100)">
+    <rect x="0" y="0" width="200" height="200" rx="10" class="box" />
+    <text x="100" y="30" class="label">User's Web Browser</text>
+    <rect x="15" y="50" width="170" height="130" fill="#fff" stroke="#ccc" />
+    <text x="100" y="80" font-weight="bold" text-anchor="middle">Client Application</text>
+    <text x="100" y="105" text-anchor="middle" font-size="12">React UI Components</text>
+    <text x="100" y="125" text-anchor="middle" font-size="12">State Management</text>
+    <text x="100" y="145" text-anchor="middle" font-size="12">Gemini Service Logic</text>
+  </g>
+  
+  <!-- Gemini API -->
+  <g transform="translate(550, 150)">
+    <rect x="0" y="0" width="120" height="100" rx="10" class="api" />
+    <text x="60" y="40" class="label">Google</text>
+    <text x="60" y="65" class="label">Gemini API</text>
+  </g>
+  
+  <!-- Arrows and Text -->
+  <path class="arrow" d="M150,200 C200,200 220,200 250,200" />
+  <text x="200" y="190" class="arrow-text">Interacts with UI</text>
+  
+  <path class="arrow" d="M450,160 C480,160 520,160 550,170" />
+  <text x="500" y="150" class="arrow-text">1. API Request</text>
+  <text x="500" y="165" class="arrow-text">(Prompt + API Key)</text>
+
+  <path class="arrow" d="M550,230 C520,230 480,230 450,230" />
+  <text x="500" y="245" class="arrow-text">2. API Response</text>
+  <text x="500" y="260" class="arrow-text">(Base64 Image)</text>
+</svg>

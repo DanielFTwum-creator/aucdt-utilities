@@ -1,0 +1,29 @@
+erDiagram
+    STUDENT {
+        string name
+        string indexNumber
+        object overall
+    }
+    COURSE {
+        string name
+        int marks
+        string grade
+        float gp
+        int creditHours
+    }
+    OVERALL {
+        int tcr
+        float tgp
+        float sgpa
+        int ccr
+        float cgv
+        float cgpa
+    }
+    AUDIT_LOG {
+        string timestamp
+        string action
+    }
+
+    STUDENT ||--|{ COURSE : has
+    STUDENT ||--|| OVERALL : achieves
+    ADMIN ||--|{ AUDIT_LOG : generates

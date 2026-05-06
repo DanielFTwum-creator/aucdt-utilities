@@ -1,0 +1,14 @@
+\contentsline {section}{\numberline {1}Brand Overview}{2}{section.1}%
+\contentsline {section}{\numberline {2}Colour Palette}{2}{section.2}%
+\contentsline {subsection}{\numberline {2.1}Primary Brand Colours}{2}{subsection.2.1}%
+\contentsline {subsection}{\numberline {2.2}Secondary Brand Colours}{2}{subsection.2.2}%
+\contentsline {subsection}{\numberline {2.3}Tertiary Accent Colour}{2}{subsection.2.3}%
+\contentsline {subsection}{\numberline {2.4}Text Colours}{3}{subsection.2.4}%
+\contentsline {section}{\numberline {3}Typography}{3}{section.3}%
+\contentsline {subsection}{\numberline {3.1}Font Hierarchy}{3}{subsection.3.1}%
+\contentsline {section}{\numberline {4}UI Element Guidelines}{3}{section.4}%
+\contentsline {subsection}{\numberline {4.1}Buttons}{3}{subsection.4.1}%
+\contentsline {subsection}{\numberline {4.2}Cards \& Containers}{4}{subsection.4.2}%
+\contentsline {section}{\numberline {5}Brand Protection}{4}{section.5}%
+\contentsline {subsection}{\numberline {5.1}Logo Don'ts}{4}{subsection.5.1}%
+\contentsline {subsection}{\numberline {5.2}Implementation Checklist}{4}{subsection.5.2}%

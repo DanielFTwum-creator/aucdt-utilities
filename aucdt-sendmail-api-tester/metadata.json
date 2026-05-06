@@ -1,0 +1,5 @@
+{
+  "name": "AUCDT SendMail API Tester",
+  "description": "A web application to test the SendMail API for different environments (dev, qa, uat). It provides a user-friendly interface to compose and send emails, and view the API response.",
+  "requestFramePermissions": []
+}

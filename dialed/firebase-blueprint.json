@@ -1,0 +1,85 @@
+{
+  "entities": {
+    "ScoreEntry": {
+      "title": "Score Entry",
+      "description": "A high score entry for the global leaderboard.",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string", "description": "Player initials or name." },
+        "score": { "type": "number", "description": "Total score out of 50." },
+        "mode": { "type": "string", "enum": ["easy", "hard"], "description": "Game mode." },
+        "createdAt": { "type": "string", "format": "date-time", "description": "When the score was achieved." }
+      },
+      "required": ["name", "score", "mode", "createdAt"]
+    },
+    "Challenge": {
+      "title": "Challenge",
+      "description": "A shared game session with fixed colors.",
+      "type": "object",
+      "properties": {
+        "code": { "type": "string", "description": "Unique 6-char alphanumeric code." },
+        "creatorName": { "type": "string", "description": "Name of the challenge creator." },
+        "colors": { "type": "array", "items": { "$ref": "HSB" }, "description": "The 5 colors for this challenge." },
+        "mode": { "type": "string", "enum": ["easy", "hard"], "description": "Game mode." },
+        "createdAt": { "type": "string", "format": "date-time", "description": "When the challenge was created." }
+      },
+      "required": ["code", "creatorName", "colors", "mode", "createdAt"]
+    },
+    "ChallengeScore": {
+      "title": "Challenge Score",
+      "description": "A score achieved in a specific challenge.",
+      "type": "object",
+      "properties": {
+        "challengeCode": { "type": "string", "description": "The code of the challenge." },
+        "name": { "type": "string", "description": "Player name." },
+        "score": { "type": "number", "description": "Total score." },
+        "roundScores": { "type": "array", "items": { "type": "number" }, "description": "Individual round scores." },
+        "playerColors": { "type": "array", "items": { "$ref": "HSB" }, "description": "The colors picked by the player." },
+        "createdAt": { "type": "string", "format": "date-time", "description": "When the score was achieved." }
+      },
+      "required": ["challengeCode", "name", "score", "createdAt"]
+    },
+    "DailyScore": {
+      "title": "Daily Score",
+      "description": "A score for the daily challenge.",
+      "type": "object",
+      "properties": {
+        "date": { "type": "string", "description": "The date of the daily challenge (YYYY-MM-DD)." },
+        "name": { "type": "string", "description": "Player name." },
+        "score": { "type": "number", "description": "Total score." },
+        "roundScores": { "type": "array", "items": { "type": "number" }, "description": "Individual round scores." },
+        "playerColors": { "type": "array", "items": { "$ref": "HSB" }, "description": "The colors picked by the player." },
+        "createdAt": { "type": "string", "format": "date-time", "description": "When the score was achieved." }
+      },
+      "required": ["date", "name", "score", "createdAt"]
+    },
+    "HSB": {
+      "title": "HSB Color",
+      "type": "object",
+      "properties": {
+        "h": { "type": "number" },
+        "s": { "type": "number" },
+        "b": { "type": "number" }
+      },
+      "required": ["h", "s", "b"]
+    }
+  },
+  "firestore": {
+    "leaderboard": {
+      "schema": "ScoreEntry",
+      "description": "Global high scores."
+    },
+    "challenges": {
+      "schema": "Challenge",
+      "description": "Shared game sessions."
+    },
+    "challenge_scores": {
+      "schema": "ChallengeScore",
+      "description": "Scores for specific challenges."
+    },
+    "daily_scores": {
+      "schema": "DailyScore",
+      "description": "Scores for the daily challenge."
+    }
+  }
+}

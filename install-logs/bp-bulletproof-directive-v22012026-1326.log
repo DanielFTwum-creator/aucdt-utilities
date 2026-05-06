@@ -1,0 +1,79 @@
+[56] Installing: bp-bulletproof-directive-v22012026-1326
+Lockfile is up to date, resolution step is skipped
+Progress: resolved 1, reused 0, downloaded 0, added 0
+Packages: +322
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Progress: resolved 322, reused 58, downloaded 0, added 0
+Progress: resolved 322, reused 61, downloaded 0, added 0
+Progress: resolved 322, reused 63, downloaded 0, added 0
+Progress: resolved 322, reused 64, downloaded 0, added 0
+Progress: resolved 322, reused 69, downloaded 0, added 0
+Progress: resolved 322, reused 70, downloaded 0, added 0
+Progress: resolved 322, reused 105, downloaded 0, added 0
+Progress: resolved 322, reused 188, downloaded 0, added 0
+Progress: resolved 322, reused 245, downloaded 0, added 0
+Progress: resolved 322, reused 293, downloaded 0, added 0
+Progress: resolved 322, reused 319, downloaded 0, added 3
+Progress: resolved 322, reused 319, downloaded 0, added 9
+Progress: resolved 322, reused 320, downloaded 0, added 16
+Progress: resolved 322, reused 321, downloaded 0, added 29
+Progress: resolved 322, reused 321, downloaded 0, added 33
+Progress: resolved 322, reused 321, downloaded 0, added 48
+Progress: resolved 322, reused 321, downloaded 0, added 70
+Progress: resolved 322, reused 321, downloaded 0, added 80
+Progress: resolved 322, reused 321, downloaded 0, added 104
+Progress: resolved 322, reused 321, downloaded 0, added 106
+Progress: resolved 322, reused 321, downloaded 0, added 113
+Progress: resolved 322, reused 321, downloaded 0, added 122
+Progress: resolved 322, reused 322, downloaded 0, added 128
+Progress: resolved 322, reused 322, downloaded 0, added 133
+Progress: resolved 322, reused 322, downloaded 0, added 137
+Progress: resolved 322, reused 322, downloaded 0, added 145
+Progress: resolved 322, reused 322, downloaded 0, added 153
+Progress: resolved 322, reused 322, downloaded 0, added 154
+Progress: resolved 322, reused 322, downloaded 0, added 167
+Progress: resolved 322, reused 322, downloaded 0, added 176
+Progress: resolved 322, reused 322, downloaded 0, added 192
+Progress: resolved 322, reused 322, downloaded 0, added 202
+Progress: resolved 322, reused 322, downloaded 0, added 223
+Progress: resolved 322, reused 322, downloaded 0, added 241
+Progress: resolved 322, reused 322, downloaded 0, added 254
+Progress: resolved 322, reused 322, downloaded 0, added 270
+Progress: resolved 322, reused 322, downloaded 0, added 285
+Progress: resolved 322, reused 322, downloaded 0, added 317
+Progress: resolved 322, reused 322, downloaded 0, added 318
+Progress: resolved 322, reused 322, downloaded 0, added 319
+Progress: resolved 322, reused 322, downloaded 0, added 320
+Progress: resolved 322, reused 322, downloaded 0, added 321
+Progress: resolved 322, reused 322, downloaded 0, added 322
+Progress: resolved 322, reused 322, downloaded 0, added 322, done
+
+dependencies:
++ @google/genai 1.45.0
++ lucide-react 0.400.0
++ react 19.2.4
++ react-dom 19.2.4
++ react-router-dom 7.13.1
+
+devDependencies:
++ @testing-library/jest-dom 6.9.1
++ @testing-library/react 16.3.2
++ @testing-library/user-event 14.6.1
++ @types/node 22.19.15
++ @vitejs/plugin-react 5.1.4
++ @vitest/coverage-v8 3.2.4
++ @vitest/ui 3.2.4
++ jsdom 26.1.0
++ serve 14.2.5
++ typescript 5.8.3
++ vite 7.3.1
++ vitest 3.2.4
+
+╭ Warning ─────────────────────────────────────────────────────────────────────╮
+│                                                                              │
+│   Ignored build scripts: esbuild@0.27.3, protobufjs@7.5.4.                   │
+│   Run "pnpm approve-builds" to pick which dependencies should be allowed     │
+│   to run scripts.                                                            │
+│                                                                              │
+╰──────────────────────────────────────────────────────────────────────────────╯
+Done in 1m 19.4s using pnpm v10.30.1

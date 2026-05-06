@@ -1,0 +1,41 @@
+<svg width="600" height="300" viewBox="0 0 600 300" xmlns="http://www.w3.org/2000/svg" style="font-family: 'Poppins', sans-serif; background-color: #0D1117; color: #E6EDF3;">
+    <defs>
+        <style>
+            .box { fill: #161B22; stroke: #30363D; stroke-width: 2; }
+            .txt { fill: #E6EDF3; font-size: 16px; text-anchor: middle; }
+            .line { stroke: #58A6FF; stroke-width: 2; marker-end: url(#arrow); }
+            .title { fill: #E6EDF3; font-size: 20px; font-weight: bold; text-anchor: middle; }
+        </style>
+        <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#58A6FF" />
+        </marker>
+    </defs>
+    
+    <text x="300" y="40" class="title">High-Level Data Flow</text>
+
+    <!-- User Interaction -->
+    <g>
+        <rect x="25" y="100" width="150" height="80" rx="10" class="box"/>
+        <text x="100" y="135" class="txt">User Interaction</text>
+        <text x="100" y="155" class="txt" style="font-size: 12px; fill: #8B949E;">(Selects Answer, Navigates)</text>
+    </g>
+
+    <!-- State Management -->
+    <g>
+        <rect x="225" y="100" width="150" height="80" rx="10" class="box"/>
+        <text x="300" y="135" class="txt">React State</text>
+        <text x="300" y="155" class="txt" style="font-size: 12px; fill: #8B949E;">(State is Updated)</text>
+    </g>
+
+    <!-- UI Re-render -->
+    <g>
+        <rect x="425" y="100" width="150" height="80" rx="10" class="box"/>
+        <text x="500" y="135" class="txt">UI Re-render</text>
+        <text x="500" y="155" class="txt" style="font-size: 12px; fill: #8B949E;">(Component Tree Updates)</text>
+    </g>
+
+    <!-- Arrows -->
+    <path d="M 175 140 H 225" class="line" fill="none"/>
+    <path d="M 375 140 H 425" class="line" fill="none"/>
+
+</svg>

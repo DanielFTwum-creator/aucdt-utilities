@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <!-- ========== BASIC SEO META TAGS ========== -->
+    <title>Techbridge University College | Pioneering Design & Technology</title>
+    <meta name="description" content="Techbridge University College (TUC) is a premier private institution in Accra pioneering innovative and progressive higher education in design and entrepreneurship." />
+    
+    <!-- 🆕 SEO ADDITION: Keywords -->
+    <meta name="keywords" content="Techbridge University College, TUC, design education, technology education, Accra university, Ghana university, product design, entrepreneurship, private university Ghana, design school" />
+    
+    <!-- 🆕 SEO ADDITION: Author and Publisher -->
+    <meta name="author" content="Techbridge University College" />
+    <meta name="publisher" content="Techbridge University College" />
+    
+    <!-- 🆕 SEO ADDITION: Canonical URL -->
+    <link rel="canonical" href="https://www.techbridge.edu.gh/" />
+    
+    <!-- 🆕 SEO ADDITION: Robots Meta Tag -->
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    
+    <!-- 🆕 SEO ADDITION: Language and Geographic Targeting -->
+    <meta name="language" content="English" />
+    <meta name="geo.region" content="GH-AA" />
+    <meta name="geo.placename" content="Accra" />
+    <meta name="geo.position" content="5.6037;-0.1870" />
+    <meta name="ICBM" content="5.6037, -0.1870" />
+    
+    <!-- ========== OPEN GRAPH META TAGS (Facebook, LinkedIn, etc.) ========== -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://www.techbridge.edu.gh/" />
+    <meta property="og:site_name" content="Techbridge University College" />
+    <meta property="og:title" content="Techbridge University College | Pioneering Design & Technology" />
+    <meta property="og:description" content="Techbridge University College (TUC) is a premier private institution in Accra pioneering innovative and progressive higher education in design and entrepreneurship." />
+    <meta property="og:image" content="https://techbridge.edu.gh/static/TUC_LOGO.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Techbridge University College Logo" />
+    <meta property="og:locale" content="en_GB" />
+    
+    <!-- ========== TWITTER CARD META TAGS ========== -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@TUCGhana" />
+    <meta name="twitter:creator" content="@TUCGhana" />
+    <meta name="twitter:title" content="Techbridge University College | Pioneering Design & Technology" />
+    <meta name="twitter:description" content="Techbridge University College (TUC) is a premier private institution in Accra pioneering innovative and progressive higher education in design and entrepreneurship." />
+    <meta name="twitter:image" content="https://techbridge.edu.gh/static/TUC_LOGO.png" />
+    <meta name="twitter:image:alt" content="Techbridge University College Logo" />
+    
+    <!-- ========== ADDITIONAL SEO META TAGS ========== -->
+    <meta name="theme-color" content="#630f12" />
+    <meta name="msapplication-TileColor" content="#630f12" />
+    <meta name="copyright" content="Techbridge University College" />
+    <meta name="rating" content="general" />
+    <meta name="referrer" content="origin-when-cross-origin" />
+    
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-FKXTELQ71R"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-FKXTELQ71R');
+    </script>
+        
+    <!-- Favicon / Tab Logo -->
+    <link rel="icon" type="image/png" href="https://aucdt.edu.gh/tuc/TUC_LOGO.png" />
+    <link rel="apple-touch-icon" href="https://aucdt.edu.gh/tuc/TUC_LOGO.png" />
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script type="importmap">
+    {
+      "imports": {
+        "react": "https://esm.sh/react@18.2.0",
+        "react-dom/client": "https://esm.sh/react-dom@18.2.0/client",
+        "react/jsx-runtime": "https://esm.sh/react@18.2.0/jsx-runtime",
+        "jspdf": "https://esm.sh/jspdf@2.5.1",
+        "react-dom/": "https://esm.sh/react-dom@^19.1.1/",
+        "react/": "https://esm.sh/react@^19.1.1/"
+      }
+    }
+    </script>
+    <link rel="stylesheet" href="/index.css">
+    <style>
+        /* Global Styles */
+        * {
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
+        }
+
+        body {
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+          background-color: #f8f9fa;
+          color: #333;
+          line-height: 1.6;
+        }
+        
+        #root {
+            width: 100%;
+        }
+
+        /* Header */
+        .header {
+          background-color: white;
+          padding: 30px 40px;
+          border-bottom: 2px solid #e9ecef;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+        }
+
+        .logo {
+          display: flex;
+          align-items: center;
+        }
+
+        .audit-logs-btn {
+          padding: 12px 24px;
+          background-color: transparent;
+          color: #0891b2;
+          border: 2px solid #0891b2;
+          border-radius: 8px;
+          font-weight: 500;
+          cursor: pointer;
+          transition: all 0.3s ease;
+        }
+
+        .audit-logs-btn:hover {
+          background-color: #0891b2;
+          color: white;
+        }
+
+        /* Progress Steps */
+        .progress-container {
+          background-color: white;
+          padding: 20px 40px;
+          border-bottom: 1px solid #e9ecef;
+        }
+
+        .progress-steps {
+          display: flex;
+          justify-content: space-between;
+          align-items: flex-start;
+          max-width: 900px;
+          margin: 0 auto;
+          position: relative;
+        }
+
+        .progress-steps::before {
+          content: '';
+          position: absolute;
+          top: 20px;
+          left: 0;
+          right: 0;
+          height: 2px;
+          background-color: #e9ecef;
+          z-index: 0;
+        }
+        
+        .progress-line {
+            position: absolute;
+            top: 20px;
+            left: 0;
+            height: 2px;
+            background: #0891b2;
+            z-index: 0;
+            transition: width 0.4s ease;
+        }
+
+        .step {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          position: relative;
+          z-index: 1;
+          width: 100px;
+        }
+
+        .step-number {
+          width: 40px;
+          height: 40px;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-weight: bold;
+          margin-bottom: 8px;
+          background-color: white;
+          border: 2px solid #ccc;
+          color: #666;
+          transition: all 0.3s ease;
+        }
+
+        .step.active .step-number {
+          background-color: #0891b2;
+          border-color: #0891b2;
+          color: white;
+          transform: scale(1.1);
+        }
+
+        .step.completed .step-number {
+          background-color: #0891b2;
+          border-color: #0891b2;
+          color: white;
+        }
+
+        .step-label {
+          font-size: 12px;
+          color: #666;
+          text-align: center;
+          font-weight: 500;
+          height: 30px;
+        }
+
+        .step.active .step-label {
+          color: #0891b2;
+          font-weight: 600;
+        }
+
+        /* Main Content */
+        .main-content {
+          max-width: 800px;
+          margin: 40px auto;
+          padding: 40px;
+          background-color: white;
+          border-radius: 12px;
+          box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+
+        .step-title {
+          font-size: 32px;
+          font-weight: bold;
+          color: #111827;
+          margin-bottom: 10px;
+        }
+        
+        .step-subtitle {
+            font-size: 1rem;
+            color: #6b7280;
+            margin-bottom: 30px;
+        }
+
+        /* Disclaimer Box */
+        .disclaimer {
+          background-color: #fef3c7;
+          border-left: 4px solid #f59e0b;
+          border-radius: 4px;
+          padding: 20px;
+          margin-bottom: 30px;
+          position: relative;
+        }
+
+        .disclaimer-title {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          font-weight: bold;
+          color: #d97706;
+          margin-bottom: 12px;
+          font-size: 16px;
+        }
+
+        .disclaimer-icon {
+          font-size: 20px;
+        }
+
+        .disclaimer-text {
+          color: #92400e;
+          line-height: 1.5;
+          font-size: 14px;
+        }
+
+        /* Form Section */
+        .form-section {
+          margin-bottom: 24px;
+        }
+
+        .form-label {
+          display: block;
+          font-weight: 600;
+          color: #374151;
+          margin-bottom: 8px;
+          font-size: 15px;
+        }
+
+        .form-select, .form-input {
+          width: 100%;
+          padding: 12px 16px;
+          background-color: #f3f4f6;
+          color: #111827;
+          border: 1px solid #d1d5db;
+          border-radius: 6px;
+          font-size: 16px;
+          transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .form-select:focus, .form-input:focus {
+          outline: none;
+          border-color: #0891b2;
+          box-shadow: 0 0 0 3px rgba(8, 145, 178, 0.2);
+        }
+
+        .form-select {
+          cursor: pointer;
+          appearance: none;
+          background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+          background-position: right 12px center;
+          background-repeat: no-repeat;
+          background-size: 16px;
+          padding-right: 40px;
+        }
+        
+        .form-checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background-color: #f3f4f6;
+            padding: 12px;
+            border-radius: 6px;
+        }
+        
+        .form-checkbox {
+            width: 1.25em;
+            height: 1.25em;
+            accent-color: #0891b2;
+            cursor: pointer;
+        }
+
+        /* Button Group */
+        .button-group {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #e9ecef;
+        }
+
+        .continue-btn, .back-btn, .btn-primary, .btn-secondary {
+          border: none;
+          padding: 14px 28px;
+          border-radius: 8px;
+          font-size: 16px;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.3s ease;
+        }
+
+        .continue-btn, .btn-primary {
+          background: linear-gradient(135deg, #0891b2, #06b6d4);
+          color: white;
+        }
+
+        .continue-btn:hover, .btn-primary:hover {
+          background: linear-gradient(135deg, #0e7490, #0891b2);
+          transform: translateY(-1px);
+          box-shadow: 0 4px 8px rgba(8, 145, 178, 0.3);
+        }
+
+        .continue-btn:active, .btn-primary:active {
+          transform: translateY(0);
+        }
+        
+        .back-btn, .btn-secondary {
+            background-color: #e5e7eb;
+            color: #4b5563;
+        }
+        
+        .back-btn:hover, .btn-secondary:hover {
+            background-color: #d1d5db;
+        }
+        
+        .add-item-box {
+            background-color: #f8f9fa;
+            border: 1px solid #e9ecef;
+            padding: 24px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        
+        .item-list-container {
+            margin-top: 20px;
+        }
+        
+        .item-list-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            border-radius: 6px;
+            background-color: #f8f9fa;
+            margin-bottom: 8px;
+        }
+
+        .item-list-remove-btn {
+            background-color: #fee2e2;
+            color: #b91c1c;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .item-list-remove-btn:hover {
+            background-color: #fecaca;
+        }
+
+        .review-section {
+            margin-bottom: 24px;
+        }
+        
+        .review-section h3 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 12px;
+            border-bottom: 1px solid #e9ecef;
+            padding-bottom: 8px;
+        }
+        
+        .review-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            font-size: 15px;
+        }
+        
+        .review-item strong {
+             font-weight: 600;
+             color: #111827;
+        }
+
+        .review-item span {
+            color: #4b5563;
+            text-align: right;
+        }
+        
+        .start-over-btn {
+            background: none;
+            border: none;
+            color: #0891b2;
+            text-decoration: underline;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(17, 24, 39, 0.6);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            backdrop-filter: blur(4px);
+        }
+
+        .modal-content {
+            background-color: white;
+            border-radius: 12px;
+            padding: 24px;
+            width: 90%;
+            max-width: 600px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            max-height: 80vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #e9ecef;
+            padding-bottom: 16px;
+            margin-bottom: 16px;
+        }
+
+        .modal-header h2 {
+            margin: 0;
+            font-size: 20px;
+            color: #111827;
+        }
+
+        .modal-body {
+            overflow-y: auto;
+            flex-grow: 1;
+        }
+        
+        .modal-close-btn {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #6b7280;
+        }
+
+        .modal-footer {
+            padding-top: 16px;
+            margin-top: 16px;
+            border-top: 1px solid #e9ecef;
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+        }
+
+        .audit-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .audit-table th, .audit-table td {
+            text-align: left;
+            padding: 12px;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .audit-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .audit-table th {
+            font-weight: 600;
+            font-size: 12px;
+            text-transform: uppercase;
+            color: #6b7280;
+        }
+        
+        .audit-table td {
+            font-size: 14px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+          .header {
+            padding: 15px 20px;
+            flex-direction: column;
+            gap: 15px;
+          }
+          
+          .progress-container {
+            padding: 15px 10px;
+          }
+          
+          .progress-steps {
+            justify-content: flex-start;
+            overflow-x: auto;
+            padding-bottom: 10px;
+            scrollbar-width: none; /* Firefox */
+          }
+          .progress-steps::-webkit-scrollbar {
+              display: none; /* Safari and Chrome */
+          }
+          
+          .step {
+            min-width: 80px;
+          }
+          
+          .step-number {
+            width: 35px;
+            height: 35px;
+            font-size: 14px;
+          }
+          
+          .step-label {
+            font-size: 11px;
+          }
+          
+          .main-content {
+            padding: 20px;
+            margin: 20px;
+          }
+          
+          .step-title {
+            font-size: 24px;
+          }
+          
+          .continue-btn, .back-btn {
+            width: 100%;
+            float: none;
+          }
+
+          .button-group {
+              flex-direction: column-reverse;
+              gap: 10px;
+          }
+        }
+    </style>
+<script type="importmap">
+{
+  "imports": {
+    "react": "https://esm.sh/react@18.2.0",
+    "react-dom/client": "https://esm.sh/react-dom@18.2.0/client",
+    "react/jsx-runtime": "https://esm.sh/react@18.2.0/jsx-runtime",
+    "jspdf": "https://esm.sh/jspdf@2.5.1",
+    "react-dom/": "https://esm.sh/react-dom@^19.1.1/",
+    "react/": "https://esm.sh/react@^19.1.1/"
+  }
+}
+</script>
+<link rel="stylesheet" href="/index.css">
+
+    <style id="tuc-splash-styles">
+      body { background-color: #0F0C07 !important; margin: 0; padding: 0; display: flex; align-items: center; justify-content: center; min-height: 100vh; font-family: serif; overflow: hidden; }
+      .tuc-splash { text-align: center; border: 1px solid rgba(200,168,75,0.2); padding: 60px; background: #141210; position: relative; }
+      .tuc-splash::before { content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 4px; background: #C8A84B; }
+      .tuc-logo { color: #C8A84B; font-size: 3rem; font-weight: 900; letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 10px; display: block; }
+      .tuc-status { color: #D4C4A0; font-family: sans-serif; text-transform: uppercase; letter-spacing: 0.4em; font-size: 0.7rem; opacity: 0.6; }
+      .tuc-loading { margin-top: 30px; height: 1px; width: 100px; background: rgba(200,168,75,0.2); margin-left: auto; margin-right: auto; position: relative; overflow: hidden; }
+      .tuc-loading::after { content: ""; position: absolute; left: -100%; width: 50%; height: 100%; background: #C8A84B; animation: tuc-load 2s infinite; }
+      @keyframes tuc-load { to { left: 150%; } }
+    </style>
+</head>
+<body>
+    
+    <div id="root">
+      <div class="tuc-splash">
+        <span class="tuc-logo">TECHBRIDGE</span>
+        <div class="tuc-status">willpro</div>
+        <div class="tuc-loading"></div>
+      </div>
+    </div>
+
+    <script type="module" src="./index.tsx"></script>
+</body>
+</html>

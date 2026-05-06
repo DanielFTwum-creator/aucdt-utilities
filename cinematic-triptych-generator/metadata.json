@@ -1,0 +1,5 @@
+{
+  "name": "Cinematic Triptych Generator",
+  "description": "An AI-powered tool to generate a cinematic triptych of images from a detailed prompt, allowing for variations in lighting, color, and camera lens to craft a visual narrative.",
+  "requestFramePermissions": []
+}

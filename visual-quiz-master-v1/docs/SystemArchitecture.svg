@@ -1,0 +1,86 @@
+<svg width="600" height="500" viewBox="0 0 600 500" xmlns="http://www.w3.org/2000/svg" style="--bg-primary:#0D1117;--bg-secondary:#161B22;--bg-tertiary:#21262D;--border-primary:#30363D;--text-primary:#E6EDF3;--text-secondary:#8B949E;--accent-primary:#58A6FF;--feedback-warn:#F0B72F; font-family: 'Poppins', sans-serif; color: var(--text-primary);">
+    <defs>
+        <style>
+            .box { fill: var(--bg-secondary); stroke: var(--border-primary); stroke-width: 2; }
+            .box-alt { fill: var(--bg-tertiary); }
+            .txt { fill: var(--text-primary); font-size: 14px; text-anchor: middle; }
+            .line { stroke: var(--accent-primary); stroke-width: 1.5; marker-end: url(#arrow); }
+            .line-alt { stroke: var(--feedback-warn); stroke-dasharray: 4; }
+            .title { fill: var(--text-primary); font-size: 18px; font-weight: bold; text-anchor: middle; }
+        </style>
+        <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--accent-primary)" />
+        </marker>
+    </defs>
+    
+    <rect x="0" y="0" width="600" height="500" fill="var(--bg-primary)" />
+    <text x="300" y="30" class="title">System Architecture</text>
+
+    <!-- App Component -->
+    <g>
+        <rect x="225" y="60" width="150" height="50" rx="5" class="box"/>
+        <text x="300" y="85" class="txt">App (Root)</text>
+        <text x="300" y="100" class="txt" style="font-size:11px; fill: var(--text-secondary)">(Manages State)</text>
+    </g>
+    
+    <!-- Admin Components -->
+    <g>
+        <rect x="25" y="150" width="150" height="40" rx="5" class="box box-alt"/>
+        <text x="100" y="175" class="txt">LoginModal</text>
+    </g>
+    <g>
+        <rect x="25" y="220" width="150" height="40" rx="5" class="box box-alt"/>
+        <text x="100" y="245" class="txt">AdminPanel</text>
+    </g>
+
+    <!-- Main Quiz Component -->
+    <g>
+        <rect x="200" y="180" width="200" height="40" rx="5" class="box"/>
+        <text x="300" y="205" class="txt">VisualQuestion</text>
+    </g>
+    
+    <!-- Sub Components -->
+    <g>
+        <rect x="25" y="290" width="150" height="40" rx="5" class="box"/>
+        <text x="100" y="315" class="txt">Timer</text>
+    </g>
+
+    <g>
+        <rect x="200" y="290" width="200" height="40" rx="5" class="box"/>
+        <text x="300" y="315" class="txt">QuestionOption (Multiple)</text>
+    </g>
+
+    <g>
+        <rect x="425" y="290" width="150" height="40" rx="5" class="box"/>
+        <text x="500" y="315" class="txt">Visual Renderers</text>
+    </g>
+    
+    <!-- Renderer Details -->
+    <g>
+        <rect x="365" y="360" width="120" height="30" rx="5" class="box box-alt"/>
+        <text x="425" y="380" class="txt" style="font-size: 12px;">SVGRenderer</text>
+    </g>
+    <g>
+        <rect x="495" y="360" width="100" height="30" rx="5" class="box box-alt"/>
+        <text x="545" y="380" class="txt" style="font-size: 12px;">ChartRenderer</text>
+    </g>
+     <g>
+        <rect x="245" y="360" width="110" height="30" rx="5" class="box box-alt"/>
+        <text x="300" y="380" class="txt" style="font-size: 12px;">MathRenderer</text>
+    </g>
+
+    <!-- Lines -->
+    <path d="M 225 85 H 175 C 160 85, 140 100, 140 130 V 160" class="line line-alt" fill="none" />
+    <text x="180" y="125" style="font-size:10px; fill: var(--feedback-warn);">conditionally</text>
+    <text x="180" y="137" style="font-size:10px; fill: var(--feedback-warn);">renders</text>
+    <path d="M 140 180 V 230" class="line line-alt" fill="none" />
+    
+    <path d="M 300 110 V 180" class="line" fill="none" />
+    <path d="M 300 220 V 270 H 100 V 290" class="line" fill="none" />
+    <path d="M 300 220 V 290" class="line" fill="none" />
+    <path d="M 300 220 V 270 H 500 V 290" class="line" fill="none" />
+    
+    <path d="M 500 330 V 340 H 425 V 360" class="line" style="marker-end: none;" fill="none" />
+    <path d="M 500 330 V 340 H 545 V 360" class="line" style="marker-end: none;" fill="none" />
+    <path d="M 300 330 V 360" class="line" style="marker-end: none;" fill="none" />
+</svg>

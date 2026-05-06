@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600">
+  <defs>
+    <style>
+      .box { fill: #f8f9fa; stroke: #343a40; stroke-width: 2; }
+      .text { font-family: sans-serif; font-size: 14px; text-anchor: middle; }
+      .title { font-size: 18px; font-weight: bold; }
+      .arrow { stroke: #343a40; stroke-width: 2; marker-end: url(#arrowhead); }
+    </style>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="0" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#343a40" />
+    </marker>
+  </defs>
+
+  <!-- Title -->
+  <text x="400" y="30" class="text title">GlucoSentinel System Architecture</text>
+
+  <!-- Frontend -->
+  <rect x="50" y="100" width="200" height="150" class="box" />
+  <text x="150" y="130" class="text title">Frontend (PWA)</text>
+  <text x="150" y="160" class="text">React 19.2.4</text>
+  <text x="150" y="180" class="text">Tailwind CSS</text>
+  <text x="150" y="200" class="text">Recharts</text>
+
+  <!-- Backend -->
+  <rect x="550" y="100" width="200" height="150" class="box" />
+  <text x="650" y="130" class="text title">Backend API</text>
+  <text x="650" y="160" class="text">Node.js / Express</text>
+  <text x="650" y="180" class="text">Auth Middleware</text>
+  <text x="650" y="200" class="text">Pattern Engine</text>
+
+  <!-- Database -->
+  <rect x="300" y="350" width="200" height="100" class="box" />
+  <text x="400" y="380" class="text title">Database</text>
+  <text x="400" y="410" class="text">SQLite (Dev)</text>
+  <text x="400" y="430" class="text">MariaDB (Prod)</text>
+
+  <!-- Connections -->
+  <line x1="250" y1="175" x2="550" y2="175" class="arrow" />
+  <text x="400" y="165" class="text">REST API (JSON)</text>
+
+  <line x1="650" y1="250" x2="500" y2="350" class="arrow" />
+  <text x="600" y="300" class="text">SQL Queries</text>
+
+  <line x1="150" y1="250" x2="300" y2="350" class="arrow" style="stroke-dasharray: 5,5;" />
+  <text x="200" y="300" class="text">Local Storage (Cache)</text>
+
+</svg>

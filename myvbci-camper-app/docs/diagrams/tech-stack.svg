@@ -1,0 +1,82 @@
+<svg width="800" height="500" viewBox="0 0 800 500" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      .bg { fill: #0f172a; }
+      .box { fill: #1e293b; stroke: #475569; stroke-width: 2; rx: 12; ry: 12; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3)); }
+      .box-user { fill: #7c3aed; stroke: #a78bfa; }
+      .box-gemini { fill: #2563eb; stroke: #60a5fa; }
+      .box-ui { fill: #059669; stroke: #34d399; }
+      .box-state { fill: #dc2626; stroke: #f87171; }
+      .box-data { fill: #d97706; stroke: #fbbf24; }
+      .box-ts { fill: #0d9488; stroke: #2dd4bf; }
+      .text { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 15px; fill: #f1f5f9; text-anchor: middle; dominant-baseline: middle; font-weight: 500; }
+      .text-title { font-size: 28px; font-weight: 700; fill: #ffffff; letter-spacing: -0.5px; }
+      .text-label { font-size: 13px; fill: #cbd5e1; font-weight: 600; }
+      .icon-text { font-size: 32px; }
+    </style>
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#0f172a;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1e293b;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+
+  <rect width="100%" height="100%" fill="url(#bgGradient)" />
+
+  <!-- Grid pattern -->
+  <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+    <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#1e293b" stroke-width="1" opacity="0.3"/>
+  </pattern>
+  <rect width="100%" height="100%" fill="url(#grid)" />
+
+  <!-- Title -->
+  <text x="400" y="45" class="text text-title">myVBCI App - Tech Stack</text>
+  <text x="400" y="75" class="text-label">Core Technologies &amp; Libraries</text>
+
+  <!-- React -->
+  <g>
+    <rect x="50" y="120" width="210" height="140" class="box box-ui" />
+    <text x="155" y="170" class="icon-text">⚛️</text>
+    <text x="155" y="215" class="text" font-size="18" font-weight="600">React</text>
+    <text x="155" y="235" class="text text-label">UI Library</text>
+  </g>
+
+  <!-- TypeScript -->
+  <g>
+    <rect x="295" y="120" width="210" height="140" class="box box-gemini" />
+    <text x="400" y="170" class="icon-text" font-size="36px" font-weight="bold">TS</text>
+    <text x="400" y="215" class="text" font-size="18" font-weight="600">TypeScript</text>
+    <text x="400" y="235" class="text text-label">Language</text>
+  </g>
+
+  <!-- Tailwind CSS -->
+  <g>
+    <rect x="540" y="120" width="210" height="140" class="box box-ts" />
+    <text x="645" y="170" class="icon-text">💨</text>
+    <text x="645" y="215" class="text" font-size="18" font-weight="600">Tailwind CSS</text>
+    <text x="645" y="235" class="text text-label">Styling Framework</text>
+  </g>
+
+  <!-- Google Gemini -->
+  <g>
+    <rect x="50" y="290" width="210" height="140" class="box box-gemini" />
+    <text x="155" y="340" class="icon-text">🤖</text>
+    <text x="155" y="385" class="text" font-size="18" font-weight="600">Google Gemini</text>
+    <text x="155" y="405" class="text text-label">AI Model API</text>
+  </g>
+
+  <!-- Recharts -->
+  <g>
+    <rect x="295" y="290" width="210" height="140" class="box box-state" />
+    <text x="400" y="340" class="icon-text">📊</text>
+    <text x="400" y="385" class="text" font-size="18" font-weight="600">Recharts</text>
+    <text x="400" y="405" class="text text-label">Charting Library</text>
+  </g>
+
+  <!-- Lucide React -->
+  <g>
+    <rect x="540" y="290" width="210" height="140" class="box box-user" />
+    <text x="645" y="340" class="icon-text">✨</text>
+    <text x="645" y="385" class="text" font-size="18" font-weight="600">Lucide React</text>
+    <text x="645" y="405" class="text text-label">Icon Library</text>
+  </g>
+</svg>

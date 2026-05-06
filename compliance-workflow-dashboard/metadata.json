@@ -1,0 +1,7 @@
+{
+  "name": "Compliance Workflow Dashboard",
+  "description": "An interactive dashboard to track and manage project refresh and compliance implementation workflows for various frameworks like HIPAA, PCI-DSS, SOC 2, and GDPR. It allows users to view phase-specific directives, copy them for use in AI Studio, and track progress for each phase.",
+  "requestFramePermissions": [],
+  "y7": [],
+  "Yp": []
+}

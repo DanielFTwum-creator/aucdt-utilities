@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#64748b" />
+    </marker>
+    <style>
+      .box { fill: #f8fafc; stroke: #334155; stroke-width: 2; rx: 8; }
+      .text { font-family: 'Segoe UI', sans-serif; font-size: 14px; fill: #1e293b; text-anchor: middle; }
+      .title { font-weight: bold; font-size: 16px; }
+      .connector { stroke: #64748b; stroke-width: 2; fill: none; marker-end: url(#arrow); }
+      .cloud { fill: #e0f2fe; stroke: #0ea5e9; stroke-dasharray: 5,5; }
+      .ext-text { fill: #0369a1; font-weight: bold; font-family: 'Segoe UI', sans-serif; text-anchor: middle; }
+    </style>
+  </defs>
+
+  <rect width="100%" height="100%" fill="#ffffff"/>
+  <text x="400" y="40" text-anchor="middle" font-family="sans-serif" font-size="24" font-weight="bold" fill="#0f172a">Pama Realtor - High Level Architecture</text>
+
+  <!-- Client Browser Area -->
+  <rect x="50" y="80" width="700" height="400" fill="#f8fafc" stroke="#cbd5e1" stroke-width="2" stroke-dasharray="10,5" rx="15" />
+  <text x="80" y="110" font-family="sans-serif" font-size="14" fill="#64748b" font-weight="bold">Client Browser</text>
+
+  <!-- React App Core -->
+  <rect x="200" y="150" width="400" height="250" class="box" fill="#ffffff" />
+  <text x="400" y="180" class="text title">React Application (v18.3.1)</text>
+  
+  <!-- Internal Components -->
+  <g transform="translate(240, 210)">
+    <rect width="140" height="50" fill="#eff6ff" stroke="#3b82f6" rx="4" />
+    <text x="70" y="30" class="text">Frontend Controller</text>
+  </g>
+  
+  <g transform="translate(420, 210)">
+    <rect width="140" height="50" fill="#eff6ff" stroke="#3b82f6" rx="4" />
+    <text x="70" y="30" class="text">Admin Dashboard</text>
+  </g>
+
+  <g transform="translate(240, 280)">
+    <rect width="140" height="50" fill="#eff6ff" stroke="#3b82f6" rx="4" />
+    <text x="70" y="30" class="text">Testing Suite</text>
+  </g>
+
+  <g transform="translate(420, 280)">
+    <rect width="140" height="50" fill="#f0fdf4" stroke="#22c55e" rx="4" />
+    <text x="70" y="30" class="text">State Management</text>
+  </g>
+
+  <!-- External Services -->
+  <ellipse cx="200" cy="540" rx="90" ry="40" class="cloud" />
+  <text x="200" y="545" class="ext-text">Google Gemini AI</text>
+  
+  <ellipse cx="600" cy="540" rx="90" ry="40" class="cloud" />
+  <text x="600" y="545" class="ext-text">Unsplash CDN</text>
+
+  <!-- Connections -->
+  <path d="M400 400 L400 440 L200 440 L200 500" class="connector" />
+  <path d="M400 400 L400 440 L600 440 L600 500" class="connector" />
+
+</svg>
