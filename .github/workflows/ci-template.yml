@@ -1,0 +1,22 @@
+name: CI Template
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+      - name: Install dependencies
+        run: |
+          echo "Install step (adapt per service)"
+      - name: Run tests
+        run: |
+          echo "Run test step (adapt per service)"
+      - name: Lint
+        run: |
+          echo "Lint step (adapt per service)"
