@@ -47,7 +47,7 @@ const testimonials = [
     initials: 'MA',
   },
   {
-    quote: 'The platform's ability to provide consistent, bias-free assessment is a major step forward for academic equity in our institutions.',
+    quote: "The platform's ability to provide consistent, bias-free assessment is a major step forward for academic equity in our institutions.",
     author: 'Dr. Abena Asante',
     role: 'Director, Ghana Education Service',
     initials: 'AA',
