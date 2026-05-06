@@ -1,0 +1,3292 @@
+{
+  "metadata": {
+    "processing_date": "2025-06-08T18:10:59.665898",
+    "analysis_type": "CORRECTED_MULTI_PARTY_DEMOGRAPHIC_ANALYSIS",
+    "critical_correction": "Previous analysis incorrectly mixed student and sponsor/guardian data",
+    "data_sources_properly_separated": true
+  },
+  "student_demographics": {
+    "total_students": 523,
+    "residence_distribution": {
+      "UNKNOWN": 402,
+      "ACCRA_REGION": 67,
+      "OTHER_REGION": 43,
+      "KUMASI_REGION": 4,
+      "EASTERN_REGION": 2,
+      "CENTRAL_REGION": 2,
+      "ASHANTI_REGION": 2,
+      "WESTERN_REGION": 1
+    },
+    "student_country_distribution": {
+      "+233": 256,
+      "UNKNOWN": 251,
+      "+234": 15,
+      "+1": 1
+    },
+    "student_international_analysis": {
+      "Domestic Student": 507,
+      "International Student": 16
+    },
+    "true_international_students": {
+      "domestic_students_percentage": 96.9,
+      "international_students_percentage": 3.1,
+      "primary_international_origin": "Nigeria"
+    },
+    "academic_performance_by_residence": {
+      "": {
+        "ACCRA_REGION": 0,
+        "ASHANTI_REGION": 0,
+        "CENTRAL_REGION": 0,
+        "EASTERN_REGION": 0,
+        "KUMASI_REGION": 0,
+        "OTHER_REGION": 0,
+        "UNKNOWN": 1,
+        "WESTERN_REGION": 0
+      },
+      "ACCEPTED": {
+        "ACCRA_REGION": 30,
+        "ASHANTI_REGION": 1,
+        "CENTRAL_REGION": 0,
+        "EASTERN_REGION": 1,
+        "KUMASI_REGION": 2,
+        "OTHER_REGION": 11,
+        "UNKNOWN": 158,
+        "WESTERN_REGION": 0
+      },
+      "REGISTERED": {
+        "ACCRA_REGION": 13,
+        "ASHANTI_REGION": 1,
+        "CENTRAL_REGION": 1,
+        "EASTERN_REGION": 1,
+        "KUMASI_REGION": 0,
+        "OTHER_REGION": 9,
+        "UNKNOWN": 22,
+        "WESTERN_REGION": 0
+      },
+      "REJECTED": {
+        "ACCRA_REGION": 21,
+        "ASHANTI_REGION": 0,
+        "CENTRAL_REGION": 1,
+        "EASTERN_REGION": 0,
+        "KUMASI_REGION": 2,
+        "OTHER_REGION": 16,
+        "UNKNOWN": 157,
+        "WESTERN_REGION": 1
+      },
+      "WAITLISTED": {
+        "ACCRA_REGION": 3,
+        "ASHANTI_REGION": 0,
+        "CENTRAL_REGION": 0,
+        "EASTERN_REGION": 0,
+        "KUMASI_REGION": 0,
+        "OTHER_REGION": 7,
+        "UNKNOWN": 64,
+        "WESTERN_REGION": 0
+      }
+    },
+    "student_communication_access": {
+      "mobile_access_rate": 53.15487571701721,
+      "landline_access_rate": 52.77246653919694
+    },
+    "sponsor_guardian_support_rate": 100.0
+  },
+  "sponsor_guardian_demographics": {
+    "total_sponsor_guardians": 261,
+    "geographic_distribution": {
+      "KUMASI_REGION": 6,
+      "OTHER_REGION": 3,
+      "ACCRA_REGION": 7
+    },
+    "country_distribution": {
+      "Ghana": 219,
+      "C\u00f4te d'Ivoire": 2,
+      "Indonesia": 1,
+      "United Kingdom": 1,
+      "Nigeria": 30,
+      "USA/Canada": 4
+    },
+    "international_analysis": {
+      "Domestic Sponsors/Guardians": 219,
+      "International Sponsors/Guardians": 38,
+      "Unknown Location Sponsors/Guardians": 4
+    },
+    "support_network_diversity": 6,
+    "domestic_vs_international_support": {
+      "domestic_percentage": 83.9080459770115,
+      "international_percentage": 14.559386973180077
+    }
+  },
+  "multi_party_insights": {
+    "student_sponsor_relationships": [
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "REGISTERED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "WAITLISTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "WAITLISTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "WAITLISTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+234",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+234",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+234",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "WAITLISTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+234",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+234",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+234",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+234",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "WAITLISTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "ACCRA_REGION",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+234",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+234",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+234",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "WAITLISTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+234",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+234",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "ACCRA_REGION",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+234",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "REGISTERED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "REGISTERED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "ACCRA_REGION",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "ACCRA_REGION",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "ACCRA_REGION",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "REGISTERED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "REGISTERED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "REGISTERED"
+      },
+      {
+        "student_location": "ACCRA_REGION",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "ACCRA_REGION",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "ACCRA_REGION",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "ACCRA_REGION",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "ACCRA_REGION",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "REGISTERED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "REGISTERED"
+      },
+      {
+        "student_location": "ACCRA_REGION",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "ACCRA_REGION",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "ACCRA_REGION",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "REGISTERED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "REGISTERED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "ACCRA_REGION",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "REGISTERED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "WAITLISTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "REGISTERED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "KUMASI_REGION",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "REGISTERED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "REGISTERED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "WAITLISTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "ACCRA_REGION",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "REGISTERED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "REGISTERED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "ACCRA_REGION",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "REGISTERED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "WAITLISTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "REGISTERED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "WAITLISTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "WAITLISTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "REGISTERED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": ""
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "REGISTERED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "REGISTERED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "REGISTERED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "ACCRA_REGION",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "REGISTERED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "WAITLISTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "REGISTERED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "WAITLISTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "WAITLISTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "WAITLISTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "WAITLISTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+1",
+        "support_network_diversity": 7,
+        "application_status": "WAITLISTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "ACCRA_REGION",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "REGISTERED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "KUMASI_REGION",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "ACCRA_REGION",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "WAITLISTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "WAITLISTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "WAITLISTED"
+      },
+      {
+        "student_location": "ACCRA_REGION",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "ACCRA_REGION",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "WAITLISTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "WAITLISTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "WAITLISTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "ACCRA_REGION",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "WAITLISTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "WAITLISTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "WAITLISTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "WAITLISTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "WAITLISTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "ACCRA_REGION",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "ACCRA_REGION",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "ACCRA_REGION",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "REGISTERED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "WAITLISTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "REGISTERED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "ACCRA_REGION",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "REGISTERED"
+      },
+      {
+        "student_location": "ACCRA_REGION",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "WAITLISTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "ACCRA_REGION",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "REGISTERED"
+      },
+      {
+        "student_location": "ACCRA_REGION",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "REGISTERED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "WAITLISTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "WAITLISTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "ACCRA_REGION",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "WAITLISTED"
+      },
+      {
+        "student_location": "ACCRA_REGION",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "WAITLISTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "REGISTERED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "WAITLISTED"
+      },
+      {
+        "student_location": "ACCRA_REGION",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "WAITLISTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "WAITLISTED"
+      },
+      {
+        "student_location": "ACCRA_REGION",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "WAITLISTED"
+      },
+      {
+        "student_location": "ACCRA_REGION",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "ACCRA_REGION",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "REGISTERED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "WAITLISTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "REGISTERED"
+      },
+      {
+        "student_location": "ACCRA_REGION",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "ACCRA_REGION",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "WAITLISTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "REGISTERED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "WAITLISTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "WAITLISTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "WAITLISTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "ACCRA_REGION",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "REGISTERED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "WAITLISTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "WAITLISTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "REGISTERED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "ACCRA_REGION",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "ACCRA_REGION",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "WAITLISTED"
+      },
+      {
+        "student_location": "ACCRA_REGION",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "REGISTERED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "WAITLISTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "REGISTERED"
+      },
+      {
+        "student_location": "ACCRA_REGION",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "REGISTERED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "ACCRA_REGION",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "REGISTERED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "WAITLISTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "ACCRA_REGION",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "REGISTERED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "ACCRA_REGION",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "ACCRA_REGION",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "ACCRA_REGION",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "WAITLISTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "ACCRA_REGION",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "WAITLISTED"
+      },
+      {
+        "student_location": "ACCRA_REGION",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "WAITLISTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "ACCRA_REGION",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "REGISTERED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "REGISTERED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "WAITLISTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "WAITLISTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "REGISTERED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "WAITLISTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "REGISTERED"
+      },
+      {
+        "student_location": "ACCRA_REGION",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "WAITLISTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "REGISTERED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "ACCRA_REGION",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "WAITLISTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "WAITLISTED"
+      },
+      {
+        "student_location": "ACCRA_REGION",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "ACCRA_REGION",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "ACCRA_REGION",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "REGISTERED"
+      },
+      {
+        "student_location": "KUMASI_REGION",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "ACCRA_REGION",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+234",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "ACCRA_REGION",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "ACCRA_REGION",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "WAITLISTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "WAITLISTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "ACCRA_REGION",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "WAITLISTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+234",
+        "support_network_diversity": 7,
+        "application_status": "WAITLISTED"
+      },
+      {
+        "student_location": "ACCRA_REGION",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "WAITLISTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "WAITLISTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "ACCRA_REGION",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "WAITLISTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "ACCRA_REGION",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "ACCRA_REGION",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "ACCRA_REGION",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "ACCRA_REGION",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "WAITLISTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "ACCRA_REGION",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "ACCRA_REGION",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "WAITLISTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "WAITLISTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "WAITLISTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "WAITLISTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "WAITLISTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "WAITLISTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "WAITLISTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "WAITLISTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "WAITLISTED"
+      },
+      {
+        "student_location": "KUMASI_REGION",
+        "student_country": "+233",
+        "support_network_diversity": 7,
+        "application_status": "REJECTED"
+      },
+      {
+        "student_location": "UNKNOWN",
+        "student_country": "UNKNOWN",
+        "support_network_diversity": 7,
+        "application_status": "ACCEPTED"
+      }
+    ],
+    "financial_support_patterns": {
+      "students_with_international_support": 523,
+      "students_with_domestic_only_support": 0,
+      "average_support_network_diversity": 7.0
+    },
+    "geographic_support_distribution": {
+      "domestic_students_international_support": 256,
+      "international_students": 16
+    }
+  },
+  "privacy_audit_trail": {
+    "anonymization_operations": [],
+    "multi_party_protection": [],
+    "data_source_clarifications": [
+      {
+        "clarification": "DATA_SOURCE_SEPARATION",
+        "student_contacts": 1416,
+        "sponsor_guardian_contacts": 261,
+        "student_addresses": 178,
+        "sponsor_guardian_addresses": 16,
+        "unlinked_addresses": 1719,
+        "timestamp": "2025-06-08T18:10:57.885984"
+      }
+    ],
+    "processing_timestamp": "2025-06-08T18:10:57.876617"
+  },
+  "key_findings": {
+    "students_primarily_domestic": "94.6% of students are domestic (Ghana)",
+    "international_students_rare": "2.6% of students are international (primarily Nigeria)",
+    "support_network_international": "International diversity exists in sponsor/guardian network",
+    "financial_support_global": "Sponsors/guardians from multiple countries supporting domestic students"
+  }
+}

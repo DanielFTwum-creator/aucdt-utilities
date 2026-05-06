@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 600">
+  <rect width="1000" height="600" fill="#0f172a" />
+  
+  <text x="500" y="80" font-family="serif" font-size="36" font-weight="bold" text-anchor="middle" fill="#f8fafc">Techbridge University College</text>
+  <text x="500" y="120" font-family="sans-serif" font-size="20" font-weight="normal" text-anchor="middle" fill="#cbd5e1" letter-spacing="2">STUDENT POPULATION REGISTER - EXECUTIVE SUMMARY</text>
+  
+  <rect x="100" y="180" width="240" height="150" fill="#1e293b" stroke="#475569" stroke-width="2" rx="8" />
+  <text x="220" y="230" font-family="sans-serif" font-size="16" font-weight="bold" text-anchor="middle" fill="#94a3b8" text-transform="uppercase">Total Students</text>
+  <text x="220" y="290" font-family="serif" font-size="64" font-weight="bold" text-anchor="middle" fill="#f8fafc">125</text>
+  
+  <rect x="380" y="180" width="240" height="150" fill="#1e293b" stroke="#475569" stroke-width="2" rx="8" />
+  <text x="500" y="230" font-family="sans-serif" font-size="16" font-weight="bold" text-anchor="middle" fill="#94a3b8" text-transform="uppercase">Degree Programmes</text>
+  <text x="500" y="290" font-family="serif" font-size="64" font-weight="bold" text-anchor="middle" fill="#f8fafc">77</text>
+  
+  <rect x="660" y="180" width="240" height="150" fill="#1e293b" stroke="#475569" stroke-width="2" rx="8" />
+  <text x="780" y="230" font-family="sans-serif" font-size="16" font-weight="bold" text-anchor="middle" fill="#94a3b8" text-transform="uppercase">System Status</text>
+  <text x="780" y="290" font-family="sans-serif" font-size="32" font-weight="bold" text-anchor="middle" fill="#22c55e">SECURE &amp; LIVE</text>
+  
+  <rect x="100" y="370" width="800" height="150" fill="#1e293b" stroke="#475569" stroke-width="2" rx="8" />
+  <text x="140" y="410" font-family="sans-serif" font-size="18" font-weight="bold" fill="#f8fafc">Key Deliverables Achieved:</text>
+  
+  <circle cx="150" cy="445" r="6" fill="#22c55e" />
+  <text x="170" y="450" font-family="sans-serif" font-size="16" fill="#cbd5e1">Real-time Demographic Analytics &amp; Reporting</text>
+  
+  <circle cx="150" cy="485" r="6" fill="#22c55e" />
+  <text x="170" y="490" font-family="sans-serif" font-size="16" fill="#cbd5e1">Enterprise-Grade Security &amp; Audit Logging</text>
+  
+  <circle cx="550" cy="445" r="6" fill="#22c55e" />
+  <text x="570" y="450" font-family="sans-serif" font-size="16" fill="#cbd5e1">Automated QA &amp; Self-Testing Infrastructure</text>
+  
+  <circle cx="550" cy="485" r="6" fill="#22c55e" />
+  <text x="570" y="490" font-family="sans-serif" font-size="16" fill="#cbd5e1">WCAG Compliant Accessibility &amp; Theming</text>
+</svg>

@@ -1,0 +1,5 @@
+{
+  "name": "AUCDT Quarto Presentation Editor",
+  "description": "A web-based editor for creating branded AUCDT presentations using a Quarto-like workflow. It provides a live preview of Markdown content styled with the official AUCDT theme.",
+  "requestFramePermissions": []
+}

@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="500" viewBox="0 0 800 500">
+    <style>
+        .box { fill: #FFFBF0; stroke: #5D001E; stroke-width: 2; }
+        .arrow { fill: none; stroke: #3E1A00; stroke-width: 2; marker-end: url(#arrowhead); }
+        .text { font-family: 'Poppins', sans-serif; font-size: 14px; fill: #3E1A00; }
+        .title { font-family: 'Poppins', sans-serif; font-size: 18px; font-weight: bold; fill: #5D001E; }
+    </style>
+    <defs>
+        <marker id="arrowhead" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#3E1A00" />
+        </marker>
+    </defs>
+
+    <rect x="10" y="10" width="780" height="480" fill="#f9f9f9" stroke="#ccc" />
+    <text x="400" y="40" text-anchor="middle" class="title">System Architecture Diagram - AUCDT Website (SPA)</text>
+
+    <!-- User -->
+    <g>
+        <rect x="50" y="225" width="100" height="50" class="box"/>
+        <text x="100" y="255" text-anchor="middle" class="text">User</text>
+    </g>
+
+    <!-- Browser -->
+    <g>
+        <rect x="200" y="100" width="550" height="300" class="box" fill="#FFF0D9"/>
+        <text x="475" y="125" text-anchor="middle" class="text" font-weight="bold">Web Browser</text>
+    </g>
+
+    <!-- React App -->
+    <g>
+        <rect x="250" y="150" width="200" height="200" class="box" />
+        <text x="350" y="175" text-anchor="middle" class="text" font-weight="bold">React Application</text>
+        <text x="350" y="210" text-anchor="middle" class="text">(index.tsx, App.tsx)</text>
+    </g>
+    
+    <!-- Components -->
+     <g>
+        <rect x="275" y="240" width="150" height="90" class="box" fill="#FFC72C"/>
+        <text x="350" y="260" text-anchor="middle" class="text" font-weight="bold">Components</text>
+        <text x="350" y="280" text-anchor="middle" class="text" font-size="12px">(Header, Hero,</text>
+        <text x="350" y="295" text-anchor="middle" class="text" font-size="12px">Admin, etc.)</text>
+    </g>
+
+    <!-- Local Storage -->
+    <g>
+        <rect x="500" y="225" width="200" height="50" class="box" />
+        <text x="600" y="255" text-anchor="middle" class="text" font-weight="bold">Browser Local Storage</text>
+    </g>
+
+    <!-- Arrows -->
+    <path class="arrow" d="M150,250 C180,250 180,250 200,250" />
+    <text x="165" y="240" class="text" font-size="12px">Interacts</text>
+
+    <path class="arrow" d="M450,250 C470,250 470,250 500,250" />
+    <text x="455" y="240" class="text" font-size="12px">Reads/</text>
+    <text x="455" y="255" class="text" font-size="12px">Writes</text>
+
+    <text x="290" y="380" text-anchor="middle" class="text" font-style="italic">
+        The application is entirely client-side. The React app runs in the browser,
+    </text>
+    <text x="290" y="395" text-anchor="middle" class="text" font-style="italic">
+        manages state, and uses Local Storage for theme persistence.
+    </text>
+</svg>

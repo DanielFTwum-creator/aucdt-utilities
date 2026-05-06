@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Documentary: Jamaican Steel Pulse Reggae Concert</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #1a1a1a; /* Dark background for contrast */
+            display: flex;
+            flex-direction: column; /* Changed to column to stack elements */
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .container {
+            width: 100%;
+            max-width: 900px; /* Wider for 3:2 aspect ratio */
+            aspect-ratio: 3 / 2; /* Maintain 3:2 aspect ratio */
+            background-color: #333;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            margin-bottom: 20px; /* Space between image and buttons */
+        }
+        .loading-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 1.2rem;
+            z-index: 10;
+            border-radius: 15px; /* Match container border-radius */
+        }
+        .spinner {
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-top: 4px solid #fff;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin-bottom: 10px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .album-art {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 15px;
+            transition: opacity 0.3s ease-in-out;
+        }
+        .button-group {
+            display: flex;
+            gap: 15px; /* Space between buttons */
+            margin-top: 10px; /* Space above buttons if needed */
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-white flex flex-col items-center justify-center min-h-screen p-4">
+    <div class="container rounded-xl shadow-2xl">
+        <div id="loadingOverlay" class="loading-overlay">
+            <div class="spinner"></div>
+            <p>Generating concert image...</p>
+        </div>
+        <img id="albumArt" class="album-art opacity-0" alt="Concert Image">
+    </div>
+
+    <div class="button-group">
+        <button id="downloadButton" class="px-6 py-3 bg-green-600 hover:bg-green-700 text-white font-bold rounded-lg shadow-lg transition-all duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-75 disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+            Download Concert Image
+        </button>
+        <button id="regenerateButton" class="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg shadow-lg transition-all duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-75 disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+            Regenerate Concert Image
+        </button>
+    </div>
+
+    <script type="module">
+        // Global variables for Firebase configuration, provided by the environment
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+        const firebaseConfig = JSON.parse(typeof __firebase_config !== 'undefined' ? __firebase_config : '{}');
+        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+
+        // Firebase imports - these will be globally available from the script tag
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+
+        let app;
+        let db;
+        let auth;
+        let userId;
+
+        // Function to initialize Firebase and authenticate
+        async function initializeFirebase() {
+            try {
+                app = initializeApp(firebaseConfig);
+                db = getFirestore(app);
+                auth = getAuth(app);
+
+                // Check if initialAuthToken is a non-empty string before trying signInWithCustomToken
+                if (initialAuthToken && typeof initialAuthToken === 'string' && initialAuthToken.length > 0) {
+                    try {
+                        await signInWithCustomToken(auth, initialAuthToken);
+                        console.log("Signed in with custom token.");
+                    } catch (customTokenError) {
+                        console.warn("Custom token sign-in failed, falling back to anonymous sign-in:", customTokenError);
+                        // If custom token fails (e.g., invalid-claims), try anonymous sign-in
+                        await signInAnonymously(auth);
+                        console.log("Signed in anonymously after custom token failure.");
+                    }
+                } else {
+                    // If no custom token is provided or it's not valid, sign in anonymously
+                    await signInAnonymously(auth);
+                    console.log("Signed in anonymously (no custom token or invalid token).");
+                }
+                userId = auth.currentUser?.uid || crypto.randomUUID(); // Get user ID or generate if anonymous
+                console.log("Firebase initialized and authenticated. User ID:", userId);
+            } catch (error) {
+                console.error("Error initializing Firebase or authenticating:", error);
+            }
+        }
+
+        // Array of prompt variations, updated with Caribbean female frontman details
+        const promptVariations = [
+            `Live reggae concert Steel Pulse, Caribbean female lead vocalist with natural-looking sistah lochs, wearing a red short sleeves shirt with a black strip with white Adinkra symbols on the shoulders, sunglasses, and a stylish bowler hat. She is holding a silver microphone with both hands, positioned directly in front of her as she sings. A black stratocaster guitar is strapped to her shoulder, but she is not actively playing it. Drummer behind glass acoustic shield, Rastafarian red gold green black color palette, warm stage lighting, crowd silhouettes --ar 16:9 --style dramatic --v 6`,
+            `Steel Pulse reggae band performance, Caribbean female singer with natural-looking sistah lochs, wearing a red short sleeves shirt with a black strip with white Adinkra symbols on the shoulders, sunglasses, and a stylish bowler hat. She is holding a silver microphone with both hands. A black stratocaster guitar is strapped to her shoulder, but she is not actively playing it. Glass-enclosed drummer, rasta colors red yellow green dominant lighting scheme, concert venue atmosphere --ar 4:3 --style raw --c 75 --s 400`,
+            `Jamaican reggae concert Steel Pulse live, Caribbean female frontman with natural-looking sistah lochs, wearing a red short sleeves shirt with a black strip with white Adinkra symbols on the shoulders, dark sunglasses, and a stylish bowler hat. She is holding a silver microphone with both hands, singing. A black stratocaster guitar is strapped to her shoulder, but she is not actively playing it. Transparent drum booth, traditional rasta red gold green black color grading, professional music photography --ar 3:2 --style cinematic --q 2`,
+            `Steel Pulse reggae legends performing, Caribbean female lead singer with natural-looking sistah lochs, wearing bright red short sleeves shirt with a black strip with white Adinkra symbols on the shoulders, sunglasses, and a stylish bowler hat. She is holding a silver microphone with both hands, singing. A black stratocaster guitar is strapped to her shoulder, but she is not actively playing it. Drummer isolated glass enclosure, rastafari red yellow green black themed stage design, crowd energy --ar 16:9 --style photorealistic --s 150`,
+            `Live music Steel Pulse reggae concert, Caribbean female vocalist with natural-looking sistah lochs, wearing a red short sleeves shirt with a black strip with white Adinkra symbols on the shoulders, sunglasses, and a stylish bowler hat. She is holding a silver microphone with both hands, singing. A black stratocaster guitar is strapped to her shoulder, but she is not actively playing it. Glass-walled drum kit area, rasta movement colors red gold green black ambient lighting --ar 4:3 --style natural --c 25 --v 6`,
+            `Steel Pulse reggae performance, Caribbean female frontman with natural-looking sistah lochs, wearing a red short sleeves shirt with a black strip with white Adinkra symbols on the shoulders, sunglasses, and a stylish bowler hat. She is holding a silver microphone with both hands, singing. A black stratocaster guitar is strapped to her shoulder, but she is not actively playing it. Drummer behind protective glass barrier, Ethiopian flag colors red yellow green black stage atmosphere --ar 3:2 --style vintage --s 600`,
+            `Reggae concert Steel Pulse band, Caribbean female singer with natural-looking sistah lochs, wearing a red short sleeves shirt with a black strip with white Adinkra symbols on the shoulders, dark sunglasses, and a stylish bowler hat. She is holding a silver microphone with both hands, singing. A black stratocaster guitar is strapped to her shoulder, but she is not actively playing it. Enclosed drum section transparent walls, rastafarian red gold green black color scheme dominant, venue lighting --ar 16:9 --style moody --c 50`,
+            `Steel Pulse live reggae show, Caribbean female lead vocalist with natural-looking sistah lochs, wearing bright red short sleeves shirt with a black strip with white Adinkra symbols on the shoulders, sunglasses, and a stylish bowler hat. She is holding a silver microphone with both hands, singing. A black stratocaster guitar is strapped to her shoulder, but she is not actively playing it. Glass booth drummer setup, rasta colors red yellow green black integrated stage design, audience silhouettes --ar 4:3 --style documentary --q 1.5`,
+            `Jamaican Steel Pulse reggae concert, Caribbean female frontman with natural-looking sistah lochs, wearing a red short sleeves shirt with a black strip with white Adinkra symbols on the shoulders, sunglasses, and a stylish bowler hat. She is holding a silver microphone with both hands, singing. A black stratocaster guitar is strapped to her shoulder, but she is not actively playing it. Drummer glass isolation booth, traditional rasta red gold green black lighting palette, live music energy --ar 3:2 --style vibrant --s 300`,
+            `Steel Pulse reggae legends concert, Caribbean female singer with natural-looking sistah lochs, wearing a red short sleeves shirt with a black strip with white Adinkra symbols on the shoulders, sunglasses, and a stylish bowler hat. She is holding a silver microphone with both hands, singing. A black stratocaster guitar is strapped to her shoulder, but she is not actively playing it. Transparent drum enclosure, rastafari movement red yellow green black themed venue, professional concert photography --ar 16:9 --style authentic --c 100 --v 6`
+        ];
+
+        // Function to generate the concert image using the Imagen API
+        async function generateAlbumCover() {
+            const albumArtElement = document.getElementById('albumArt');
+            const loadingOverlay = document.getElementById('loadingOverlay');
+            const downloadButton = document.getElementById('downloadButton');
+            const regenerateButton = document.getElementById('regenerateButton');
+
+            loadingOverlay.classList.remove('hidden'); // Show loading overlay
+            albumArtElement.classList.add('opacity-0'); // Hide image initially
+            downloadButton.disabled = true; // Disable download button during generation
+            regenerateButton.disabled = true; // Disable regenerate button during generation
+
+            // Select a random prompt from the variations array
+            const randomIndex = Math.floor(Math.random() * promptVariations.length);
+            const selectedPrompt = promptVariations[randomIndex];
+            console.log("Selected Prompt for generation:", selectedPrompt); // Log the selected prompt
+
+            const payload = { instances: { prompt: selectedPrompt }, parameters: { "sampleCount": 1 } };
+            const apiKey = ""; // API key will be provided by the environment
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/imagen-3.0-generate-002:predict?key=${apiKey}`;
+
+            try {
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(`API Error: ${response.status} ${response.statusText} - ${JSON.stringify(errorData)}`);
+                }
+
+                const result = await response.json();
+                console.log("Image generation API response:", result);
+
+                if (result.predictions && result.predictions.length > 0 && result.predictions[0].bytesBase64Encoded) {
+                    const imageUrl = `data:image/png;base64,${result.predictions[0].bytesBase64Encoded}`;
+                    albumArtElement.src = imageUrl;
+                    albumArtElement.onload = () => {
+                        loadingOverlay.classList.add('hidden');
+                        albumArtElement.classList.remove('opacity-0');
+                        downloadButton.disabled = false;
+                        regenerateButton.disabled = false;
+                    };
+                } else {
+                    throw new Error("No image data received from API. Check console for details.");
+                }
+            } catch (error) {
+                console.error("Error generating concert image:", error);
+                loadingOverlay.innerHTML = '<p class="text-red-500">Error generating image. Please try again.</p>';
+            }
+        }
+
+        // Add event listener for the download button
+        document.getElementById('downloadButton').addEventListener('click', () => {
+            const albumArtElement = document.getElementById('albumArt');
+            const imageUrl = albumArtElement.src;
+
+            if (imageUrl && imageUrl.startsWith('data:image')) {
+                const a = document.createElement('a');
+                a.href = imageUrl;
+                a.download = 'steel_pulse_concert_image.png'; // Generic filename
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+            } else {
+                console.warn("No image available to download.");
+            }
+        });
+
+        // Add event listener for the regenerate button
+        document.getElementById('regenerateButton').addEventListener('click', () => {
+            generateAlbumCover(); // Call the generation function again
+        });
+
+        // Call the main function to initialize Firebase and generate the image on window load
+        window.onload = async () => {
+            await initializeFirebase();
+            generateAlbumCover();
+        };
+    </script>
+</body>
+</html>

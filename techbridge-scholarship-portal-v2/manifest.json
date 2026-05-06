@@ -1,0 +1,42 @@
+{
+  "id": "techbridge-scholarship-portal",
+  "name": "TECHBRIDGE Scholarship Portal",
+  "short_name": "TUC Portal",
+  "description": "Digital agreement and application portal for the Techbridge University College scholarship scheme.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#0ea5e9",
+  "orientation": "portrait",
+  "categories": ["education", "finance", "productivity"],
+  "icons": [
+    {
+      "src": "https://techbridge.edu.gh/static/TUC_LOGO_1.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "https://techbridge.edu.gh/static/TUC_LOGO_1.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "New Application",
+      "short_name": "New",
+      "description": "Start a new scholarship bond application",
+      "url": "./",
+      "icons": [{ "src": "https://techbridge.edu.gh/static/TUC_LOGO_1.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Admin Dashboard",
+      "short_name": "Admin",
+      "description": "Access the security and audit logs",
+      "url": "./#/admin",
+      "icons": [{ "src": "https://techbridge.edu.gh/static/TUC_LOGO_1.png", "sizes": "192x192" }]
+    }
+  ]
+}

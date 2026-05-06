@@ -1,0 +1,81 @@
+Project Name,Build Tool,Build Tool Version,Has Serve,Serve Version,Serve Type,Notes
+analytics-refactor,Vite,7.3.1,Yes,14.2.5,dependencies,Production server in build artifacts
+patois-lyricist-v1.6-(dictionary-overhaul) (1),Vite,7.3.1,Yes,14.2.5,dependencies,Static file server
+techbridge-strategy-dashboard,Vite,7.3.1,Yes,14.2.5,devDependencies,Development preview server with PWA support
+aucdt-analytics-dashboard,Vite,6.0.1,No,N/A,N/A,Analytics dashboard
+aucdt-dashboard,Vite,6.0.1,No,N/A,N/A,Main dashboard
+aucdt-eligibility-checker,Vite,6.0.1,No,N/A,N/A,Eligibility verification tool
+aucdt-assessment-platform,Vite,5.3.3,No,N/A,N/A,Assessment management
+still_her_baby,Vite,4.4.5,No,N/A,N/A,Legacy Vite version
+6r-product-design-workshop-portal,Vite,Unspecified,No,N/A,N/A,TechBridge workshop portal
+agenticai-masterclass,Vite,Unspecified,No,N/A,N/A,AI masterclass platform
+ai-@-techbridge,Vite,Unspecified,No,N/A,N/A,AI utilities
+ai-code-reviewer,Vite,Unspecified,No,N/A,N/A,Code review tool
+ai-studio-directives,Vite,Unspecified,No,N/A,N/A,AI workflow directives
+ananse-cartoon-generator,Vite,Unspecified,No,N/A,N/A,Cartoon generation tool
+aucdt-lead-generation-app (1),Vite,Unspecified,No,N/A,N/A,Lead generation
+aucdt-lead-generation-infographic,Vite,Unspecified,No,N/A,N/A,Lead infographic tool
+aucdt-lead-generator,Vite,Unspecified,No,N/A,N/A,Lead generation platform
+aucdt-website-react,Vite,Unspecified,No,N/A,N/A,AUCDT main website
+aurelia-v4---working-with-aurelia,Vite,Unspecified,No,N/A,N/A,Aurelia framework tutorial
+aurelia-v4---working-with-aurelia (1),Vite,Unspecified,No,N/A,N/A,Aurelia framework tutorial
+bp-bulletproof-directive-v22012026-1326,Vite,Unspecified,No,N/A,N/A,Bulletproof directive system
+brainiac-challenge,Vite,Unspecified,No,N/A,N/A,Challenge platform
+brand-guideline-checker,Vite,Unspecified,No,N/A,N/A,Brand compliance tool
+cinematic-triptych-generator,Vite,Unspecified,No,N/A,N/A,Cinematic generator
+ckt-utas-modern-website,Vite,Unspecified,No,N/A,N/A,CKT website
+Class4_Digital_Learning_System,Vite,Unspecified,No,N/A,N/A,Learning management system
+community-plates.v1,Vite,Unspecified,No,N/A,N/A,Community plates application
+dadaist-concert-visualizer,Vite,Unspecified,No,N/A,N/A,Concert visualization
+dictation-app,Vite,Unspecified,No,N/A,N/A,Dictation tool
+drone-light-show-simulator,Vite,Unspecified,No,N/A,N/A,Drone simulation
+drone-showcase,React-Scripts,5.0.1,No,N/A,N/A,Drone demonstration
+enactus-ckt-frontend-app-main,Vite,Unspecified,No,N/A,N/A,Enactus platform
+enhanced-youtube-genie,Vite,Unspecified,No,N/A,N/A,YouTube tool enhancement
+expensepro---advanced-financial-tracker,Vite,Unspecified,No,N/A,N/A,Expense tracking
+fashionprompt-ai (2),Vite,Unspecified,No,N/A,N/A,Fashion AI tool
+fees-comparison-dashboard,Vite,Unspecified,No,N/A,N/A,University fees comparison
+gemini-slingshot (3),Vite,Unspecified,No,N/A,N/A,Gemini AI integration
+ghana-news-aggregator,Vite,Unspecified,No,N/A,N/A,News aggregation
+ghana-university-fees-dashboard,Vite,Unspecified,No,N/A,N/A,University fees dashboard
+gif-animator-ai-refactored,Vite,Unspecified,No,N/A,N/A,GIF animation tool
+academic-performance-app,React-Scripts,5.0.1,No,N/A,N/A,Academic performance tracking
+aucdt-skills-evaluation,React-Scripts,5.0.1,No,N/A,N/A,Skills assessment
+english-safari,React-Scripts,5.0.1,No,N/A,N/A,English learning platform
+kanban-app,React-Scripts,5.0.1,No,N/A,N/A,Kanban board application
+pdf-extractor-app,React-Scripts,5.0.1,No,N/A,N/A,PDF extraction utility
+presentation-app,React-Scripts,5.0.1,No,N/A,N/A,Presentation tool
+kente-fusion-fashion-workshop,Vite,Unspecified,No,N/A,N/A,Fashion workshop
+kente-fusion-fashion-workshop (1),Vite,Unspecified,No,N/A,N/A,Fashion workshop duplicate
+lecturer-assessment-system,Vite,Unspecified,No,N/A,N/A,Lecturer assessment tool
+lumina-triptych-studio,Vite,Unspecified,No,N/A,N/A,Triptych studio
+mature-students-exam-app,Vite,Unspecified,No,N/A,N/A,Mature student exams
+mature-students-exam-app-waec-integrated,Vite,Unspecified,No,N/A,N/A,WAEC integrated exam app
+mirror-truth---thumbnail-designer,Vite,Unspecified,No,N/A,N/A,Thumbnail design tool
+omniextract,Vite,Unspecified,No,N/A,N/A,Extraction utility
+pama-realtor,Vite,Unspecified,No,N/A,N/A,Real estate platform
+pdf-to-assessment-json-converter,Vite,Unspecified,No,N/A,N/A,PDF to JSON converter
+primevaluer-pro,Vite,Unspecified,No,N/A,N/A,Valuation tool
+rophe-specialist-care-rpms,Vite,Unspecified,No,N/A,N/A,Healthcare RPMS system
+rophe-specialist-care-rpms-final,Vite,Unspecified,No,N/A,N/A,Healthcare RPMS final version
+scholarship-bond-portal-v3,Vite,Unspecified,No,N/A,N/A,Scholarship portal
+sentinel-agent,Vite,Unspecified,No,N/A,N/A,Sentinel monitoring agent
+smartscale-ai-presentation-platform,Vite,Unspecified,No,N/A,N/A,AI presentation platform
+smartscale-ai-presentation-v1.06.12.2025.0020,Vite,Unspecified,No,N/A,N/A,AI presentation version
+smartscale-presenter,Vite,Unspecified,No,N/A,N/A,Presentation tool
+techbridge-ai-workshop-flyer,Vite,Unspecified,No,N/A,N/A,Workshop flyer generator
+techbridge-media-club-platform,Vite,Unspecified,No,N/A,N/A,Media club platform
+techbridge-media-club-platform (1),Vite,Unspecified,No,N/A,N/A,Media club platform duplicate
+techbridge-product-design-6r-design-portal,Vite,Unspecified,No,N/A,N/A,Design portal
+techbridge-scholarship-portal,Vite,Unspecified,No,N/A,N/A,Scholarship management
+techbridge-technical-quiz-platform,Vite,Unspecified,No,N/A,N/A,Technical quiz platform
+timetable-management-system,Vite,Unspecified,No,N/A,N/A,Timetable management
+tsapro,Vite,Unspecified,No,N/A,N/A,Salary audit platform
+tvet-assessment-progress-dashboard,Vite,Unspecified,No,N/A,N/A,Assessment dashboard
+umoja-react-app,React-Scripts,^5.0.1,No,N/A,N/A,Umoja application (caret version)
+university-timetable-insights,Vite,Unspecified,No,N/A,N/A,Timetable insights
+veca---vermont-education-contact-aggregator,Vite,Unspecified,No,N/A,N/A,Education contact aggregator
+willpro,Vite,Unspecified,No,N/A,N/A,Will management tool
+youtube-description-genie,Vite,Unspecified,No,N/A,N/A,YouTube description generator
+aucdt-portal-tests,None (Testing),N/A,No,N/A,N/A,Playwright E2E testing suite
+puppeteer,None (Testing),N/A,No,N/A,N/A,Puppeteer automation utility

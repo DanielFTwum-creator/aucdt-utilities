@@ -1,0 +1,50 @@
+<svg width="800" height="400" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif">
+    <title>Presentation: System Architecture</title>
+    <defs>
+        <linearGradient id="grad-ui" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" style="stop-color:#38bdf8;stop-opacity:1" />
+            <stop offset="100%" style="stop-color:#0ea5e9;stop-opacity:1" />
+        </linearGradient>
+        <linearGradient id="grad-logic" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" style="stop-color:#4ade80;stop-opacity:1" />
+            <stop offset="100%" style="stop-color:#22c55e;stop-opacity:1" />
+        </linearGradient>
+        <linearGradient id="grad-data" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" style="stop-color:#facc15;stop-opacity:1" />
+            <stop offset="100%" style="stop-color:#eab308;stop-opacity:1" />
+        </linearGradient>
+        <marker id="arrow-pres" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569" />
+        </marker>
+    </defs>
+    
+    <rect x="0" y="0" width="800" height="400" fill="#f8fafc" />
+
+    <text x="400" y="40" text-anchor="middle" font-size="24" font-weight="bold" fill="#1e293b">ASAPro System Architecture</text>
+    
+    <!-- UI Layer -->
+    <g transform="translate(100, 80)">
+        <rect x="0" y="0" width="600" height="80" rx="10" fill="url(#grad-ui)" />
+        <text x="300" y="35" text-anchor="middle" font-size="20" font-weight="bold" fill="white">UI Layer</text>
+        <text x="300" y="60" text-anchor="middle" font-size="16" fill="white">React Components & Pages</text>
+    </g>
+
+    <!-- Logic Layer -->
+    <g transform="translate(100, 190)">
+        <rect x="0" y="0" width="600" height="80" rx="10" fill="url(#grad-logic)" />
+        <text x="300" y="35" text-anchor="middle" font-size="20" font-weight="bold" fill="white">Business Logic Layer</text>
+        <text x="300" y="60" text-anchor="middle" font-size="16" fill="white">React Hooks, Context & Services</text>
+    </g>
+    
+    <!-- Data Layer -->
+    <g transform="translate(100, 300)">
+        <rect x="0" y="0" width="600" height="80" rx="10" fill="url(#grad-data)" />
+        <text x="300" y="35" text-anchor="middle" font-size="20" font-weight="bold" fill="#422006">Data Persistence Layer</text>
+        <text x="300" y="60" text-anchor="middle" font-size="16" fill="#422006">Browser localStorage</text>
+    </g>
+    
+    <!-- Arrows -->
+    <path d="M 400 160 V 190" stroke="#475569" stroke-width="2.5" marker-end="url(#arrow-pres)" />
+    <path d="M 400 270 V 300" stroke="#475569" stroke-width="2.5" marker-end="url(#arrow-pres)" />
+
+</svg>

@@ -1,0 +1,32 @@
+<svg width="800" height="400" viewBox="0 0 800 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="800" height="400" rx="20" fill="#F9FAFB"/>
+  <text x="400" y="50" text-anchor="middle" fill="#111827" font-family="Arial" font-size="28" font-weight="bold">Technology Ecosystem</text>
+
+  <g transform="translate(100, 100)">
+    <circle cx="0" cy="50" r="45" fill="#EEF2FF" stroke="#4F46E5" stroke-width="2"/>
+    <text x="0" y="115" text-anchor="middle" fill="#111827" font-family="Arial" font-size="16" font-weight="bold">React 19</text>
+  </g>
+
+  <g transform="translate(250, 100)">
+    <circle cx="0" cy="50" r="45" fill="#ECFDF5" stroke="#10B981" stroke-width="2"/>
+    <text x="0" y="115" text-anchor="middle" fill="#111827" font-family="Arial" font-size="16" font-weight="bold">TypeScript</text>
+  </g>
+
+  <g transform="translate(400, 100)">
+    <circle cx="0" cy="50" r="45" fill="#FFF7ED" stroke="#EA580C" stroke-width="2"/>
+    <text x="0" y="115" text-anchor="middle" fill="#111827" font-family="Arial" font-size="16" font-weight="bold">Tailwind</text>
+  </g>
+
+  <g transform="translate(550, 100)">
+    <circle cx="0" cy="50" r="45" fill="#FFFBEB" stroke="#D4AF37" stroke-width="2"/>
+    <text x="0" y="115" text-anchor="middle" fill="#111827" font-family="Arial" font-size="16" font-weight="bold">Gemini API</text>
+  </g>
+
+  <g transform="translate(700, 100)">
+    <circle cx="0" cy="50" r="45" fill="#EFF6FF" stroke="#3B82F6" stroke-width="2"/>
+    <text x="0" y="115" text-anchor="middle" fill="#111827" font-family="Arial" font-size="16" font-weight="bold">jsPDF</text>
+  </g>
+
+  <rect x="100" y="250" width="600" height="80" rx="15" fill="#F3F4F6" stroke="#D1D5DB" stroke-width="2"/>
+  <text x="400" y="295" text-anchor="middle" fill="#4B5563" font-family="Arial" font-size="18" font-weight="bold">SOC 2 Hardened Security Layers</text>
+</svg>

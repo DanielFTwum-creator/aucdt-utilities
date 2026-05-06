@@ -1,0 +1,29 @@
+<svg viewBox="0 0 600 400" xmlns="http://www.w3.org/2000/svg">
+  <rect width="600" height="400" fill="#f0f0f0" />
+  <text x="300" y="40" font-family="Montserrat" font-size="20" font-weight="800" text-anchor="middle" fill="#6B1515">LOCAL DATA SCHEMA (LocalStorage)</text>
+
+  <!-- Audit Logs -->
+  <rect x="50" y="100" width="200" height="150" rx="5" fill="white" stroke="#6B1515" stroke-width="2"/>
+  <text x="150" y="125" font-family="Montserrat" font-size="14" font-weight="bold" text-anchor="middle">tb-audit-logs</text>
+  <line x1="50" y1="135" x2="250" y2="135" stroke="#6B1515" />
+  <text x="60" y="155" font-family="Inter" font-size="10">id: string (PK)</text>
+  <text x="60" y="175" font-family="Inter" font-size="10">timestamp: ISOString</text>
+  <text x="60" y="195" font-family="Inter" font-size="10">user: string</text>
+  <text x="60" y="215" font-family="Inter" font-size="10">action: string</text>
+  <text x="60" y="235" font-family="Inter" font-size="10">details: string</text>
+
+  <!-- User Progress -->
+  <rect x="350" y="100" width="200" height="150" rx="5" fill="white" stroke="#6B1515" stroke-width="2"/>
+  <text x="450" y="125" font-family="Montserrat" font-size="14" font-weight="bold" text-anchor="middle">workshop-progress</text>
+  <line x1="350" y1="135" x2="550" y2="135" stroke="#6B1515" />
+  <text x="360" y="155" font-family="Inter" font-size="10">moduleId: string (FK)</text>
+  <text x="360" y="175" font-family="Inter" font-size="10">status: ModuleStatus</text>
+  <text x="360" y="195" font-family="Inter" font-size="10">progress: number</text>
+  <text x="360" y="215" font-family="Inter" font-size="10">lastAccessed: ISOString</text>
+
+  <!-- Preferences -->
+  <rect x="200" y="280" width="200" height="80" rx="5" fill="white" stroke="#F4C430" stroke-width="2"/>
+  <text x="300" y="305" font-family="Montserrat" font-size="14" font-weight="bold" text-anchor="middle">tb-theme</text>
+  <line x1="200" y1="315" x2="400" y2="315" stroke="#F4C430" />
+  <text x="210" y="335" font-family="Inter" font-size="10">value: 'light' | 'dark' | 'high-contrast'</text>
+</svg>

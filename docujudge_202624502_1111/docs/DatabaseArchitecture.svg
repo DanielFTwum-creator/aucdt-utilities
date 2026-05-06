@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600">
+  <rect width="800" height="600" fill="#f8f9fa"/>
+  
+  <rect x="100" y="100" width="600" height="400" rx="10" fill="#fff" stroke="#333" stroke-width="2"/>
+  <text x="400" y="80" text-anchor="middle" font-family="sans-serif" font-size="24" font-weight="bold">Browser LocalStorage Schema</text>
+  
+  <g transform="translate(150, 150)">
+    <rect width="500" height="60" rx="5" fill="#e0e7ff" stroke="#4338ca"/>
+    <text x="20" y="35" font-family="monospace" font-size="16" font-weight="bold">Key: 'docujudge-data'</text>
+    <text x="20" y="85" font-family="monospace" font-size="14" fill="#666">Value: JSON Object (Nested Scores)</text>
+    <text x="40" y="105" font-family="monospace" font-size="12" fill="#666">{ "storytelling": { "plot": 8, ... }, ... }</text>
+  </g>
+  
+  <g transform="translate(150, 280)">
+    <rect width="500" height="60" rx="5" fill="#fef3c7" stroke="#d97706"/>
+    <text x="20" y="35" font-family="monospace" font-size="16" font-weight="bold">Key: 'docujudge-admin-auth'</text>
+    <text x="20" y="85" font-family="monospace" font-size="14" fill="#666">Value: 'true' (Session Storage)</text>
+  </g>
+  
+  <g transform="translate(150, 380)">
+    <rect width="500" height="60" rx="5" fill="#d1fae5" stroke="#059669"/>
+    <text x="20" y="35" font-family="monospace" font-size="16" font-weight="bold">Key: 'docujudge-audit-logs'</text>
+    <text x="20" y="85" font-family="monospace" font-size="14" fill="#666">Value: Array of AuditLog objects</text>
+  </g>
+</svg>

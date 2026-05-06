@@ -1,0 +1,16 @@
+npm warn Unknown project config "package-manager". This will stop working in the next major version of npm.
+
+> ai-studio-directives@1.0.0 build
+> vite build
+
+[36mvite v7.3.1 [32mbuilding client environment for production...[36m[39m
+[32m✓[39m 0 modules transformed.
+[31m✗[39m Build failed in 408ms
+[31merror during build:
+[31m[vite:build-html] Failed to resolve /index.tsx from C:/Users/DELL/OneDrive/Documents/Downloads/Development/aucdt-utilities/ai-studio-directives/index.html[31m
+file: [36mC:/Users/DELL/OneDrive/Documents/Downloads/Development/aucdt-utilities/ai-studio-directives/index.html[31m
+    at file:///C:/Users/DELL/OneDrive/Documents/Downloads/Development/aucdt-utilities/ai-studio-directives/node_modules/.pnpm/vite@7.3.1/node_modules/vite/dist/node/chunks/config.js:23919:64
+    at async Promise.all (index 0)
+    at async Object.handler (file:///C:/Users/DELL/OneDrive/Documents/Downloads/Development/aucdt-utilities/ai-studio-directives/node_modules/.pnpm/vite@7.3.1/node_modules/vite/dist/node/chunks/config.js:24016:5)
+    at async transform (file:///C:/Users/DELL/OneDrive/Documents/Downloads/Development/aucdt-utilities/ai-studio-directives/node_modules/.pnpm/rollup@4.57.1/node_modules/rollup/dist/es/shared/node-entry.js:21246:16)
+    at async ModuleLoader.addModuleSource (file:///C:/Users/DELL/OneDrive/Documents/Downloads/Development/aucdt-utilities/ai-studio-directives/node_modules/.pnpm/rollup@4.57.1/node_modules/rollup/dist/es/shared/node-entry.js:21474:36)[39m

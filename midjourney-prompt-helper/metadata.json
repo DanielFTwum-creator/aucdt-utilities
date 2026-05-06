@@ -1,0 +1,5 @@
+{
+  "name": "Midjourney Prompt Helper",
+  "description": "A tool to generate prompt variations for Midjourney by combining base prompts with selected modifiers.",
+  "requestFramePermissions": []
+}

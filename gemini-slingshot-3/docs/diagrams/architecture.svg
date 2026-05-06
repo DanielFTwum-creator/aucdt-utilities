@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500">
+  <defs>
+    <style>
+      .bg { fill: #08080a; }
+      .box { fill: rgba(66,133,244,0.05); stroke: #4285f4; stroke-width: 2; rx: 8; }
+      .text-title { fill: #ffffff; font-family: sans-serif; font-size: 20px; font-weight: bold; text-anchor: middle; }
+      .text-sub { fill: #4285f4; font-family: sans-serif; font-size: 12px; letter-spacing: 2px; text-anchor: middle; }
+      .line { stroke: #4285f4; stroke-width: 2; stroke-dasharray: 4; fill: none; }
+      .arrow { fill: #4285f4; }
+    </style>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" class="arrow" />
+    </marker>
+  </defs>
+  
+  <rect width="1000" height="600" class="bg" />
+  
+  <!-- Presentation Title -->
+  <text x="400" y="40" fill="#4285f4" font-family="serif" font-size="24" font-weight="bold" text-anchor="middle" letter-spacing="4">SLINGSHOT SYSTEM ARCHITECTURE</text>
+  <text x="400" y="60" fill="#ffffff" opacity="0.6" font-family="sans-serif" font-size="10" text-anchor="middle" letter-spacing="2">HIGH-VELOCITY AI • REACT 19.2.4</text>
+
+  <!-- Client Layer -->
+  <rect x="50" y="100" width="200" height="300" class="box" />
+  <text x="150" y="130" class="text-title">AI Cockpit</text>
+  <text x="150" y="150" class="text-sub">REACT 19.2.4 SPA</text>
+  
+  <rect x="70" y="180" width="160" height="40" fill="rgba(255,255,255,0.1)" rx="4" />
+  <text x="150" y="205" fill="#fff" font-family="sans-serif" font-size="12" text-anchor="middle">Terminal HUD</text>
+
+  <rect x="70" y="240" width="160" height="40" fill="rgba(255,255,255,0.1)" rx="4" />
+  <text x="150" y="265" fill="#fff" font-family="sans-serif" font-size="12" text-anchor="middle">Tactical Scanner</text>
+
+  <rect x="70" y="300" width="160" height="40" fill="rgba(255,255,255,0.1)" rx="4" />
+  <text x="150" y="325" fill="#fff" font-family="sans-serif" font-size="12" text-anchor="middle">Refresh Status</text>
+
+  <!-- Processing Layer -->
+  <rect x="300" y="100" width="200" height="300" class="box" />
+  <text x="400" y="130" class="text-title">Slingshot Engine</text>
+  <text x="400" y="150" class="text-sub">CORE LOGIC</text>
+
+  <rect x="320" y="180" width="160" height="40" fill="rgba(66,133,244,0.2)" rx="4" />
+  <text x="400" y="205" fill="#4285f4" font-family="sans-serif" font-size="12" text-anchor="middle" font-weight="bold">Gemini 3.0 Pro</text>
+
+  <rect x="320" y="240" width="160" height="40" fill="rgba(66,133,244,0.2)" rx="4" />
+  <text x="400" y="265" fill="#4285f4" font-family="sans-serif" font-size="12" text-anchor="middle" font-weight="bold">Vision Buffer</text>
+
+  <rect x="320" y="300" width="160" height="40" fill="rgba(66,133,244,0.2)" rx="4" />
+  <text x="400" y="325" fill="#4285f4" font-family="sans-serif" font-size="12" text-anchor="middle" font-weight="bold">Audit Logging</text>
+
+  <!-- Resource Layer -->
+  <rect x="550" y="100" width="200" height="300" class="box" />
+  <text x="650" y="130" class="text-title">Resources</text>
+  <text x="650" y="150" class="text-sub">EXTERNAL</text>
+
+  <rect x="570" y="180" width="160" height="40" fill="#ffffff" rx="4" />
+  <text x="650" y="205" fill="#000" font-family="sans-serif" font-size="12" text-anchor="middle" font-weight="bold">Google AI Studio</text>
+
+  <rect x="570" y="240" width="160" height="40" fill="#ffffff" rx="4" />
+  <text x="650" y="265" fill="#000" font-family="sans-serif" font-size="12" text-anchor="middle" font-weight="bold">MediaPipe API</text>
+
+  <!-- Connections -->
+  <path d="M 250 200 L 310 200" class="line" marker-end="url(#arrowhead)" />
+  <path d="M 500 200 L 560 200" class="line" marker-end="url(#arrowhead)" />
+  
+  <path d="M 250 260 L 310 260" class="line" marker-end="url(#arrowhead)" />
+  <path d="M 500 260 L 560 260" class="line" marker-end="url(#arrowhead)" />
+
+  <path d="M 250 320 L 310 320" class="line" marker-end="url(#arrowhead)" />
+  <path d="M 310 320 L 250 320" class="line" marker-end="url(#arrowhead)" />
+</svg>

@@ -1,0 +1,43 @@
+<svg viewBox="0 0 800 500" xmlns="http://www.w3.org/2000/svg">
+  <rect width="800" height="500" fill="#f9f9f9" />
+  <text x="400" y="40" font-family="Montserrat" font-size="24" font-weight="800" text-anchor="middle" fill="#6B1515">SYSTEM ARCHITECTURE: 6R PORTAL</text>
+  
+  <!-- User -->
+  <circle cx="100" cy="250" r="40" fill="#F4C430" stroke="#6B1515" stroke-width="2"/>
+  <text x="100" y="310" font-family="Inter" font-size="12" font-weight="bold" text-anchor="middle">USER</text>
+
+  <!-- PWA Layer -->
+  <rect x="250" y="150" width="150" height="200" rx="10" fill="white" stroke="#6B1515" stroke-width="2"/>
+  <text x="325" y="180" font-family="Montserrat" font-size="14" font-weight="bold" text-anchor="middle">PWA LAYER</text>
+  <rect x="260" y="200" width="130" height="40" rx="5" fill="#f0f0f0" />
+  <text x="325" y="225" font-family="Inter" font-size="10" text-anchor="middle">Service Worker</text>
+  <rect x="260" y="260" width="130" height="40" rx="5" fill="#f0f0f0" />
+  <text x="325" y="285" font-family="Inter" font-size="10" text-anchor="middle">Cache Storage</text>
+
+  <!-- Application Core -->
+  <rect x="450" y="150" width="150" height="200" rx="10" fill="white" stroke="#6B1515" stroke-width="2"/>
+  <text x="525" y="180" font-family="Montserrat" font-size="14" font-weight="bold" text-anchor="middle">REACT CORE</text>
+  <rect x="460" y="200" width="130" height="40" rx="5" fill="#f0f0f0" />
+  <text x="525" y="225" font-family="Inter" font-size="10" text-anchor="middle">State Management</text>
+  <rect x="460" y="260" width="130" height="40" rx="5" fill="#f0f0f0" />
+  <text x="525" y="285" font-family="Inter" font-size="10" text-anchor="middle">Component Logic</text>
+
+  <!-- External/Storage -->
+  <rect x="650" y="100" width="120" height="80" rx="5" fill="#6B1515" />
+  <text x="710" y="145" font-family="Inter" font-size="12" fill="white" text-anchor="middle">Gemini AI</text>
+  
+  <rect x="650" y="320" width="120" height="80" rx="5" fill="#F4C430" />
+  <text x="710" y="365" font-family="Inter" font-size="12" fill="#6B1515" text-anchor="middle">LocalStorage</text>
+
+  <!-- Connections -->
+  <path d="M140 250 H250" stroke="#6B1515" stroke-width="2" marker-end="url(#arrow)"/>
+  <path d="M400 250 H450" stroke="#6B1515" stroke-width="2" marker-end="url(#arrow)"/>
+  <path d="M600 200 L650 140" stroke="#6B1515" stroke-width="2" stroke-dasharray="4" marker-end="url(#arrow)"/>
+  <path d="M600 300 L650 360" stroke="#6B1515" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="0" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#6B1515" />
+    </marker>
+  </defs>
+</svg>

@@ -1,0 +1,5 @@
+{
+  "name": "Lecturer Assessment System",
+  "description": "A comprehensive system for students to assess lecturers, view analytics, and take self-assessment quizzes. Features AI-powered data extraction from PDFs to streamline curriculum management.",
+  "requestFramePermissions": []
+}

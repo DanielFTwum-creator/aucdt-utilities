@@ -1,0 +1,23 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Helper functions
+    function isAuthenticated() { return request.auth != null; }
+    function isOwner(userId) { return isAuthenticated() && request.auth.uid == userId; }
+
+    // Assumed Data Model
+    // Collection: blogPosts
+    // Fields: title (string, required), content (string, required), author (string, optional), createdAt (string, required)
+    match /blogPosts/{postId} {
+      allow read: if true;
+      allow write: if isAuthenticated(); // Prototype: restrict to admins later
+    }
+
+    // Collection: resources
+    // Fields: title (string, required), description (string, optional), url (string, required)
+    match /resources/{resourceId} {
+      allow read: if true;
+      allow write: if isAuthenticated(); // Prototype: restrict to admins later
+    }
+  }
+}

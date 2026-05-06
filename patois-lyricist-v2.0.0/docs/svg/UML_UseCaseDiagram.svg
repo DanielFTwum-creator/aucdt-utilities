@@ -1,0 +1,78 @@
+<svg width="800" height="600" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif">
+    <style>
+        .actor { fill: #e2e8f0; font-size: 14px; text-anchor: middle; }
+        .usecase { fill: #2d3748; stroke: #a0aec0; stroke-width: 1.5; rx: 20; }
+        .usecase-text { fill: #ffffff; font-size: 13px; text-anchor: middle; dominant-baseline: middle; }
+        .system-boundary { fill: none; stroke: #a0aec0; stroke-width: 2; stroke-dasharray: 8 4; }
+        .line { stroke: #a0aec0; stroke-width: 1.5; }
+        .arrow { stroke: #a0aec0; stroke-width: 1.5; marker-end: url(#uc-arrowhead); }
+        .label { fill: #a0aec0; font-size: 12px; text-anchor: middle; }
+    </style>
+    <defs>
+        <marker id="uc-arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" fill="#a0aec0" />
+        </marker>
+    </defs>
+    <title>UML Use Case Diagram</title>
+
+    <!-- System Boundary -->
+    <rect x="150" y="20" width="500" height="560" class="system-boundary" />
+    <text x="400" y="45" class="label" font-size="16px" font-weight="bold">Patois Lyricist System</text>
+
+    <!-- Actors -->
+    <text x="70" y="250" class="actor">👤</text>
+    <text x="70" y="270" class="actor">User</text>
+    <text x="730" y="250" class="actor">👑</text>
+    <text x="730" y="270" class="actor">Administrator</text>
+
+    <!-- General Use Cases -->
+    <g>
+        <rect x="250" y="70" width="150" height="40" class="usecase" />
+        <text x="325" y="90" class="usecase-text">Generate Lyrics</text>
+    </g>
+    <g>
+        <rect x="250" y="130" width="150" height="40" class="usecase" />
+        <text x="325" y="150" class="usecase-text">Customize Song</text>
+    </g>
+    <g>
+        <rect x="250" y="190" width="150" height="40" class="usecase" />
+        <text x="325" y="210" class="usecase-text">Manage History</text>
+    </g>
+    <g>
+        <rect x="250" y="250" width="150" height="40" class="usecase" />
+        <text x="325" y="270" class="usecase-text">Register / Login</text>
+    </g>
+    <g>
+        <rect x="250" y="310" width="150" height="40" class="usecase" />
+        <text x="325" y="330" class="usecase-text">Change Theme</text>
+    </g>
+    <g>
+        <rect x="250" y="370" width="150" height="40" class="usecase" />
+        <text x="325" y="390" class="usecase-text">Use Test Panel</text>
+    </g>
+    
+    <!-- Admin Use Cases -->
+    <g>
+        <rect x="450" y="450" width="150" height="40" class="usecase" />
+        <text x="525" y="470" class="usecase-text">View Audit Log</text>
+    </g>
+    <g>
+        <rect x="450" y="510" width="150" height="40" class="usecase" />
+        <text x="525" y="530" class="usecase-text">Manage Users</text>
+    </g>
+
+    <!-- Connections -->
+    <line x1="100" y1="260" x2="250" y2="90" class="line" />
+    <line x1="100" y1="260" x2="250" y2="150" class="line" />
+    <line x1="100" y1="260" x2="250" y2="210" class="line" />
+    <line x1="100" y1="260" x2="250" y2="270" class="line" />
+    <line x1="100" y1="260" x2="250" y2="330" class="line" />
+    <line x1="100" y1="260" x2="250" y2="390" class="line" />
+    
+    <line x1="700" y1="260" x2="600" y2="470" class="line" />
+    <line x1="700" y1="260" x2="600" y2="530" class="line" />
+
+    <!-- Inheritance -->
+    <line x1="680" y1="260" x2="120" y2="260" class="arrow" />
+    <text x="400" y="255" class="label">&lt;&lt; extends &gt;&gt;</text>
+</svg>

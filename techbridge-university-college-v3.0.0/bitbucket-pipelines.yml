@@ -1,0 +1,22 @@
+# Bitbucket Pipeline for Techbridge University College
+# Targeted Host: https://techbridge.aucdt.edu.gh
+
+pipelines:
+  default:
+    - step:
+        name: Build and package war
+        image: atlassian/default-image:2
+        script:
+          - mvn clean install
+        after-script:
+          # Collect checkstyle results and convert to Bitbucket Code Insights.
+          - pipe: atlassian/checkstyle-report:0.2.0
+        artifacts:
+          - target/*.war
+           
+    - step:
+        name: Deployment to Development
+        image: atlassian/default-image:2
+        script:
+          # Renamed from aucdt-prd to techbridge-website-dev as per requirement
+          - scp target/techbridge-website-dev.war root@66.226.72.199:/opt/tomcat/webapps/techbridge-website-dev.war

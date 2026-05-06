@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+  <head>
+    <meta charset="UTF-8" />
+    <!-- ── TUC Standard Meta ─────────────────────────────────────── -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <!-- SEO -->
+    <meta name="description" content="Techbridge University College (TUC) is a premier private institution in Accra pioneering innovative and progressive higher education in design and entrepreneurship." />
+    <meta name="keywords" content="Techbridge University College, TUC, design education, technology education, Accra university, Ghana university, product design, entrepreneurship, private university Ghana, design school" />
+    <meta name="author" content="Techbridge University College" />
+    <meta name="publisher" content="Techbridge University College" />
+    <link rel="canonical" href="https://www.techbridge.edu.gh/" />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    <!-- Geographic -->
+    <meta name="language" content="English" />
+    <meta name="geo.region" content="GH-AA" />
+    <meta name="geo.placename" content="Accra" />
+    <meta name="geo.position" content="5.6037;-0.1870" />
+    <meta name="ICBM" content="5.6037, -0.1870" />
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://www.techbridge.edu.gh/" />
+    <meta property="og:site_name" content="Techbridge University College" />
+    <meta property="og:title" content="ClipAI" />
+    <meta property="og:description" content="Techbridge University College (TUC) is a premier private institution in Accra pioneering innovative and progressive higher education in design and entrepreneurship." />
+    <meta property="og:image" content="https://techbridge.edu.gh/static/TUC_LOGO.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Techbridge University College Logo" />
+    <meta property="og:locale" content="en_GB" />
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@TUCGhana" />
+    <meta name="twitter:creator" content="@TUCGhana" />
+    <meta name="twitter:title" content="ClipAI" />
+    <meta name="twitter:description" content="Techbridge University College (TUC) is a premier private institution in Accra pioneering innovative and progressive higher education in design and entrepreneurship." />
+    <meta name="twitter:image" content="https://techbridge.edu.gh/static/TUC_LOGO.png" />
+    <meta name="twitter:image:alt" content="Techbridge University College Logo" />
+    <!-- Theme -->
+    <meta name="theme-color" content="#630f12" />
+    <meta name="msapplication-TileColor" content="#630f12" />
+    <meta name="copyright" content="Techbridge University College" />
+    <meta name="referrer" content="origin-when-cross-origin" />
+    <!-- ────────────────────────────────────────────────────────────── -->
+    <link rel="icon" type="image/png" href="https://techbridge.edu.gh/static/TUC_LOGO.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ClipAI</title>
+    <script type="importmap">
+{
+  "imports": {
+    "react": "https://aistudiocdn.com/react@^19.1.1",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.1.1/",
+    "react/": "https://aistudiocdn.com/react@^19.1.1/",
+    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.22.0",
+    "jspdf": "https://aistudiocdn.com/jspdf@^2.5.1"
+  }
+}
+</script>
+  <style>
+    .bg-grid-pattern {
+        background-image: linear-gradient(rgba(0, 0, 0, 0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 0, 0, 0.04) 1px, transparent 1px);
+        background-size: 20px 20px;
+    }
+    html.dark .bg-grid-pattern {
+        background-image: linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+    }
+
+    /* High Contrast Theme */
+    html.theme-high-contrast {
+      --bg-color: black;
+      --text-color: white;
+      --primary-highlight: #ffff00; /* Bright Yellow */
+      --secondary-highlight: #00ffff; /* Bright Cyan */
+      --border-color: #ffff00;
+      --disabled-bg: #333333;
+      --disabled-text: #888888;
+    }
+    .theme-high-contrast body { background-color: var(--bg-color); color: var(--text-color); }
+    .theme-high-contrast .hc-bg { background-color: var(--bg-color) !important; }
+    .theme-high-contrast .hc-text { color: var(--text-color) !important; }
+    .theme-high-contrast .hc-text-secondary { color: var(--secondary-highlight) !important; }
+    .theme-high-contrast .hc-border { border-color: var(--border-color) !important; }
+    .theme-high-contrast .hc-placeholder::placeholder { color: var(--secondary-highlight) !important; opacity: 1; }
+    .theme-high-contrast .hc-button-primary { background-color: var(--primary-highlight) !important; color: var(--bg-color) !important; border: 2px solid var(--bg-color); }
+    .theme-high-contrast .hc-button-primary:hover { filter: brightness(1.2); }
+    .theme-high-contrast .hc-button-secondary { background-color: transparent !important; color: var(--primary-highlight) !important; border: 2px solid var(--primary-highlight); }
+    .theme-high-contrast .hc-button-secondary:hover { background-color: rgba(255, 255, 0, 0.1) !important; }
+    .theme-high-contrast .hc-disabled { background-color: var(--disabled-bg) !important; color: var(--disabled-text) !important; border-color: var(--disabled-text) !important; cursor: not-allowed; }
+    .theme-high-contrast .hc-link { color: var(--secondary-highlight); text-decoration: underline; }
+    .theme-high-contrast .hc-shadow { box-shadow: 0 0 0 2px var(--border-color) !important; }
+    .theme-high-contrast .hc-focus-ring:focus { outline: 3px solid var(--secondary-highlight) !important; }
+    .theme-high-contrast input[type="color"] { border: 2px solid var(--border-color); }
+
+    /* Testing Panel Styles */
+    @keyframes spin {
+        to { transform: rotate(360deg); }
+    }
+    .spinner {
+        animation: spin 1s linear infinite;
+        border-color: rgba(124, 58, 237, 0.2);
+        border-top-color: rgba(124, 58, 237, 1);
+    }
+    .dark .spinner {
+        border-color: rgba(167, 139, 250, 0.2);
+        border-top-color: rgba(167, 139, 250, 1);
+    }
+    
+    /* Animations */
+    @keyframes slide-up {
+      from { transform: translateY(100%); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    @keyframes fade-in {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    .animate-slide-up { animation: slide-up 0.3s ease-out; }
+    .animate-fade-in { animation: fade-in 0.2s ease-out; }
+
+    /* Custom Focus Styles */
+    button:focus-visible, input:focus-visible, textarea:focus-visible {
+      outline: 2px solid #7c3aed;
+      outline-offset: 2px;
+    }
+    
+    /* Custom Range Input Styling */
+    input[type='range'] { -webkit-appearance: none; appearance: none; background: transparent; }
+    input[type='range']::-webkit-slider-track { background: #e5e7eb; height: 8px; border-radius: 4px; }
+    .dark input[type='range']::-webkit-slider-track { background: #4b5563; }
+    input[type='range']::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 20px; height: 20px; border-radius: 50%; background: #7c3aed; cursor: pointer; margin-top: -6px; transition: transform 0.2s ease; }
+    input[type='range']::-webkit-slider-thumb:hover { transform: scale(1.2); }
+    input[type='range']::-moz-range-track { background: #e5e7eb; height: 8px; border-radius: 4px; }
+    .dark input[type='range']::-moz-range-track { background: #4b5563; }
+    input[type='range']::-moz-range-thumb { width: 20px; height: 20px; border-radius: 50%; background: #7c3aed; cursor: pointer; border: none; transition: transform 0.2s ease; }
+    input[type='range']::-moz-range-thumb:hover { transform: scale(1.2); }
+  </style>
+  <script>
+    // Set theme on initial load
+    const theme = localStorage.getItem('clipai-theme') || 'light';
+    if (theme === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else if (theme === 'high-contrast') {
+      document.documentElement.classList.add('theme-high-contrast');
+    }
+  </script>
+<link rel="stylesheet" href="/index.css">
+</head>
+  <body class="bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
+    <div id="root"></div>
+    <script type="module" src="/index.tsx"></script>
+  </body>
+</html>

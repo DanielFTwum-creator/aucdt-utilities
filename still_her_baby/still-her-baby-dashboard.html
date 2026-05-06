@@ -1,0 +1,1372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Still Her Baby - Video Prompt Manager</title>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+                'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        .line-clamp-3 {
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+
+        // Embedded JSON data
+        const PROMPT_DATA = {
+  "projectInfo": {
+    "title": "Still Her Baby",
+    "artist": "Daniel",
+    "duration": "4:15",
+    "totalScenes": 29,
+    "genre": "Emotional Ballad / Grief Narrative",
+    "visualStyle": "Cinematic, Intimate, Afrocentric, West African cultural authenticity",
+    "culturalContext": "West African/Ghanaian grief narrative centering Black African women's experiences",
+    "representation": "Explicit focus on Black/African subjects, West African cultural practices, Ghanaian aesthetics"
+  },
+  "colorPalettes": {
+    "presentDay": {
+      "primary": ["#2C3E50", "#95A5A6", "#7F8C8D"],
+      "mood": "Desaturated blues and grays",
+      "description": "Cool, muted tones representing grief and emptiness"
+    },
+    "memories": {
+      "primary": ["#F39C12", "#E67E22", "#D68910", "#8B4513"],
+      "mood": "Warm golds, sepia, rich earth tones",
+      "description": "Nostalgic warmth with African sunset and earth tones"
+    },
+    "dreamSequence": {
+      "primary": ["#ECF0F1", "#BDC3C7", "#E8F8F5"],
+      "mood": "Ethereal whites and pastels",
+      "description": "Liminal spiritual space"
+    },
+    "culturalAccents": {
+      "primary": ["#FFD700", "#DC143C", "#228B22", "#000000"],
+      "description": "Ghanaian kente colors - gold, red, green, black"
+    }
+  },
+  "scenes": [
+    {
+      "id": "scene_001",
+      "title": "Opening - Stoic Strength",
+      "timeCode": {
+        "start": "0:00",
+        "end": "0:13",
+        "duration": 13
+      },
+      "lyrics": "I don't need no pity.",
+      "visualPrompt": {
+        "mainPrompt": "Cinematic close-up portrait of a young Black West African woman in her late 20s, rich dark brown skin with deep melanin tones, stoic expression, looking directly at camera with defiant yet broken eyes. Tears welling but not falling. Natural hair in short afro or braids. Harsh side lighting creating dramatic shadows across half her face, highlighting her beautiful African features - high cheekbones, full lips. Dark room, single window light source. Photorealistic, 8K quality, shallow depth of field, film grain texture. Slow push-in camera movement. Colour graded with desaturated blues and grays. CRITICAL: Subject must be visibly Black African woman with dark skin.",
+        "negativePrompt": "Caucasian, white skin, light skin, pale skin, European features, Asian features, smiling, happy, bright colors, soft lighting, multiple people, outdoor, daylight, cartoon, anime, low quality, whitewashed, colorism",
+        "style": "Cinematic drama, Barry Jenkins aesthetic, Moonlight film style, Afrocentric portraiture",
+        "cameraMovement": "Slow dolly push-in (0.5 seconds per inch)",
+        "lighting": "Harsh side light, Rembrandt lighting, 70% shadow coverage, highlights melanin richness",
+        "colorGrade": "Desaturated, cool tones, crushed blacks, proper skin tone rendering for dark skin",
+        "culturalNotes": "Emphasize natural African beauty, authentic representation, no colorism"
+      },
+      "technicalParams": {
+        "aspectRatio": "16:9",
+        "fps": 24,
+        "resolution": "3840x2160",
+        "duration": 13,
+        "motionIntensity": "Low (subtle facial micro-expressions only)",
+        "aiModel": "Runway Gen-3, Kling 1.5, or Pika 2.0",
+        "representationNote": "CRITICAL: Explicitly specify 'Black African woman with dark skin' in all generation attempts"
+      },
+      "audioSync": {
+        "beatSync": false,
+        "voiceSync": true,
+        "syncPoints": ["Eye blink on 'pity' at 0:13"]
+      }
+    },
+    {
+      "id": "scene_002",
+      "title": "Don't Need No Speech",
+      "timeCode": {
+        "start": "0:13",
+        "end": "0:17",
+        "duration": 4
+      },
+      "lyrics": "Don't need no speech.",
+      "visualPrompt": {
+        "mainPrompt": "Wide cinematic shot of a young Black West African woman standing alone in modest Ghanaian home interior, viewed from behind. Dark brown skin visible on neck and arms. Natural hair in braids or traditional style. Single empty wooden armchair (West African crafted style) positioned prominently in center of frame. Warm tropical sunlight streaming through curtained window, dust particles floating in light beams. Woman's posture shows defeat - shoulders slightly slumped, head tilted down. Polished concrete or tile floors typical of West African homes. Visible details: African print fabric on chair, family photos on wall showing Black family members. Photorealistic, film photography aesthetic, natural lighting, melancholic atmosphere. CRITICAL: Woman must be visibly Black with dark skin from behind.",
+        "negativePrompt": "Caucasian, white skin, light skin, European furniture, Western home decor, cluttered room, multiple people, bright artificial lighting, modern minimalist furniture, TV on, cheerful mood, low quality, non-African setting",
+        "style": "Edward Hopper loneliness meets African domestic space, muted color palette",
+        "cameraMovement": "Static wide shot, no movement",
+        "lighting": "Natural tropical window light, soft shadows, golden hour quality",
+        "colorGrade": "Slightly desaturated, warm highlights, cool shadows, authentic rendering of dark skin tones",
+        "culturalNotes": "Ghanaian home interior, West African furniture style, traditional family space"
+      },
+      "technicalParams": {
+        "aspectRatio": "2.39:1 (Cinematic widescreen)",
+        "fps": 24,
+        "resolution": "3840x2160",
+        "duration": 4,
+        "motionIntensity": "Minimal (only dust particles and slight body sway)",
+        "aiModel": "Runway Gen-3 or Kling 1.5"
+      },
+      "audioSync": {
+        "beatSync": false,
+        "voiceSync": false,
+        "syncPoints": []
+      }
+    },
+    {
+      "id": "scene_003",
+      "title": "Need My Mama - The Reach",
+      "timeCode": {
+        "start": "0:17",
+        "end": "0:21",
+        "duration": 4
+      },
+      "lyrics": "I need my mama. She's a piece I can't reach.",
+      "visualPrompt": {
+        "mainPrompt": "Medium shot of young Black West African woman's hand reaching toward empty vintage armchair, dark brown skin hand with natural nails, fingers trembling in mid-air. Hand occupies right third of frame, empty chair on left. Focus shifts from hand to chair. Room lit by single window, creating volumetric light rays. Woman's rich melanin skin catching soft light, highlighting beautiful dark skin tones. Extreme detail on hand - visible emotional tremor, slight moisture on palm, natural skin texture. Chair shows wear, traditional African fabric upholstery or covering. Photorealistic, 8K, shallow depth of field, bokeh background. CRITICAL: Hand must be visibly dark-skinned, Black African woman's hand.",
+        "negativePrompt": "light skin, pale skin, Caucasian, white hands, manicured nails, artificial nails, person sitting in chair, happy mood, bright room, modern furniture, multiple hands, low quality, blurry, light-skinned hand",
+        "style": "Intimate portrait photography, emotional close-up, emphasis on Black skin beauty",
+        "cameraMovement": "Slow rack focus from hand to chair",
+        "lighting": "Soft window light, volumetric rays, warm temperature, proper exposure for dark skin",
+        "colorGrade": "Slightly warm, increased contrast, vignette edges, rich melanin tones properly rendered",
+        "culturalNotes": "Natural African hand, no European beauty standards, authentic representation"
+      },
+      "technicalParams": {
+        "aspectRatio": "16:9",
+        "fps": 24,
+        "resolution": "3840x2160",
+        "duration": 4,
+        "motionIntensity": "Low (hand trembling, subtle focus shift)",
+        "aiModel": "Runway Gen-3 or Pika 2.0"
+      },
+      "audioSync": {
+        "beatSync": false,
+        "voiceSync": true,
+        "syncPoints": ["Hand reach begins at 'mama' (0:19)"]
+      }
+    },
+    {
+      "id": "scene_004",
+      "title": "Golden Memory Flash",
+      "timeCode": {
+        "start": "0:20",
+        "end": "0:21",
+        "duration": 1
+      },
+      "lyrics": "[Memory insert]",
+      "visualPrompt": {
+        "mainPrompt": "Quick flash memory: Close-up of elderly Black West African woman's warm, loving hand reaching back toward camera, beautiful aged dark brown skin showing life's journey, wearing simple gold wedding ring or traditional African jewelry. Warm golden lighting, slightly overexposed, dreamy quality. Hand shows age with grace - gentle wrinkles on rich melanin skin, aged spots on dark skin, but movement is tender and purposeful. Background completely blurred in warm amber tones. Film grain texture, slightly faded like old photograph. Super brief, 1 second duration. Emotional warmth radiating from image. CRITICAL: Must be elderly Black African woman's hand with dark aged skin.",
+        "negativePrompt": "young hands, light skin, pale skin, Caucasian, European hands, multiple rings, cold lighting, modern setting, low quality, white elderly woman, light-skinned elderly woman",
+        "style": "Faded photograph aesthetic, nostalgic golden hour, Kodak Portra film simulation, African family album",
+        "cameraMovement": "None (static flash)",
+        "lighting": "Warm, slightly overexposed, golden backlight, proper exposure for dark skin",
+        "colorGrade": "Heavy warm grade, increased highlights, soft focus, film grain overlay, rich skin tone preservation",
+        "culturalNotes": "Traditional African elder's hands, possible traditional jewelry, natural aging of Black skin"
+      },
+      "technicalParams": {
+        "aspectRatio": "16:9",
+        "fps": 24,
+        "resolution": "3840x2160",
+        "duration": 1,
+        "motionIntensity": "Minimal (hand reaching only)",
+        "aiModel": "Runway Gen-3 or Midjourney Video"
+      },
+      "audioSync": {
+        "beatSync": false,
+        "voiceSync": false,
+        "syncPoints": ["Flash occurs between 0:20-0:21"]
+      }
+    },
+    {
+      "id": "scene_005",
+      "title": "If You See Me Quiet",
+      "timeCode": {
+        "start": "0:21",
+        "end": "0:28",
+        "duration": 7
+      },
+      "lyrics": "So if you see me quiet,",
+      "visualPrompt": {
+        "mainPrompt": "Slow motion tracking shot following young Black West African woman with rich dark brown skin as she moves through dimly lit Ghanaian home, gently touching mother's belongings. Natural hair in protective style (braids, twists, or afro). She touches a colorful kente cloth or African print fabric hanging on wall, runs fingers across reading glasses on side table, pauses at framed photo showing Black family members. Each touch is reverent, painful, searching. Woman wears simple casual African or Western casual clothes - maybe ankara print top and jeans, or simple traditional cloth. Lighting is natural, soft, coming from windows. Room shows West African lived-in quality - family photos of Black people, African decor, not pristine. Camera floats behind her smoothly. Photorealistic, cinematic, intimate documentary style. CRITICAL: Woman must be visibly Black African with dark skin throughout.",
+        "negativePrompt": "light skin, Caucasian, white woman, rushing movement, bright lighting, cluttered mess, Western minimalist decor, happy expression, multiple people, low quality, European home, no African elements",
+        "style": "Intimate documentary, Terrence Malick cinematography, Afrocentric domestic space",
+        "cameraMovement": "Smooth steadicam follow, floating camera, slow motion 50%",
+        "lighting": "Soft natural tropical window light, gentle shadows, warm interior",
+        "colorGrade": "Slightly desaturated, warm mids, cool shadows, film look, proper dark skin rendering",
+        "culturalNotes": "Ghanaian/West African home interior, kente cloth, African prints, traditional mourning items"
+      },
+      "technicalParams": {
+        "aspectRatio": "2.39:1",
+        "fps": 60,
+        "resolution": "3840x2160",
+        "duration": 7,
+        "motionIntensity": "Medium (walking, touching objects, slow motion)",
+        "aiModel": "Runway Gen-3 or Kling 1.5"
+      },
+      "audioSync": {
+        "beatSync": false,
+        "voiceSync": false,
+        "syncPoints": []
+      }
+    },
+    {
+      "id": "scene_006",
+      "title": "Learning to Breathe",
+      "timeCode": {
+        "start": "0:28",
+        "end": "0:36",
+        "duration": 8
+      },
+      "lyrics": "just know what's true. I'm learning to breathe with a whole I never knew.",
+      "visualPrompt": {
+        "mainPrompt": "Extreme close-up of young Black West African woman's chest and shoulders, beautiful dark brown melanin skin, showing shallow, struggling breathing pattern. Camera slowly pulls back to reveal her sitting on polished concrete or tile floor (typical West African flooring), back leaning against mother's chair covered with traditional African fabric (kente, ankara, or traditional mourning cloth). Natural hair visible, head tilted back against chair cushion, eyes closed, one hand on chest, other hand gripping fabric. Dim lighting from single lamp, creating soft shadows on her rich dark skin. Room quiet, still, heavy with grief. Slow reveal shot. Photorealistic, 8K quality, intimate cinematography, deep emotional resonance. CRITICAL: Woman must be visibly Black with dark skin, African features.",
+        "negativePrompt": "light skin, Caucasian, white woman, standing, bright lighting, smiling, multiple people, modern furniture, fast movement, low quality, cheerful mood, European setting, pale skin",
+        "style": "Intimate portrait, Chantal Akerman stillness, slow cinema aesthetic, Afrocentric framing",
+        "cameraMovement": "Slow dolly pull-back, revealing shot from close-up to medium-wide",
+        "lighting": "Single source warm lamp light, dramatic shadows on dark skin, chiaroscuro",
+        "colorGrade": "Desaturated, warm lamp glow, deep shadows, increased contrast, proper melanin rendering",
+        "culturalNotes": "West African home flooring, traditional fabric on furniture, authentic domestic grief space"
+      },
+      "technicalParams": {
+        "aspectRatio": "16:9",
+        "fps": 24,
+        "resolution": "3840x2160",
+        "duration": 8,
+        "motionIntensity": "Low (breathing movement, camera pull-back only)",
+        "aiModel": "Runway Gen-3 or Pika 2.0"
+      },
+      "audioSync": {
+        "beatSync": false,
+        "voiceSync": true,
+        "syncPoints": ["Camera reveal completes at 'whole I never knew' (0:36)"]
+      }
+    },
+    {
+      "id": "scene_007",
+      "title": "Split Screen - Public Smile",
+      "timeCode": {
+        "start": "0:36",
+        "end": "0:44",
+        "duration": 8
+      },
+      "lyrics": "I've been smiling for the world, but inside I'm still broke.",
+      "visualPrompt": {
+        "mainPrompt": "Split screen composition. LEFT SIDE: Young Black West African woman with dark brown skin at office workspace in Ghanaian office setting, laughing genuinely with Black colleagues, bright professional African or Western attire (maybe colorful blouse), warm office lighting, appearing completely fine and functional. Natural hair in professional style or protective style. RIGHT SIDE: Same Black woman alone in bedroom at night in Ghanaian home, sitting on edge of bed, dark brown skin visible, shoulders slumped, mask completely dropped, wearing oversized t-shirt or simple night clothes, single bedside lamp. Perfect synchronization - same Black woman, two realities. Clean split down middle of frame. Both sides photorealistic, high contrast between bright office and dim bedroom. Documentary realism style. CRITICAL: Both sides must show same Black African woman with consistent dark skin tone.",
+        "negativePrompt": "light skin, Caucasian, white woman, blurry split line, different women, inconsistent skin tones, cartoon style, low quality, messy composition, European women, colorism",
+        "style": "Split-screen narrative cinema, contrast storytelling, documentary realism, Afrocentric workplace",
+        "cameraMovement": "Both sides static, locked camera",
+        "lighting": "LEFT: Bright office fluorescent. RIGHT: Single warm bedside lamp",
+        "colorGrade": "LEFT: Normal saturation, cool tones. RIGHT: Desaturated, warm single source, dark skin properly exposed",
+        "culturalNotes": "Ghanaian office setting, Black colleagues, West African professional environment, authentic bedroom"
+      },
+      "technicalParams": {
+        "aspectRatio": "16:9",
+        "fps": 24,
+        "resolution": "3840x2160",
+        "duration": 8,
+        "motionIntensity": "Low-Medium (LEFT: conversation gestures. RIGHT: minimal movement)",
+        "aiModel": "Runway Gen-3 or custom composite"
+      },
+      "audioSync": {
+        "beatSync": false,
+        "voiceSync": true,
+        "syncPoints": ["Split appears at 'smiling' (0:38)", "RIGHT side emphasis at 'broke' (0:44)"]
+      }
+    },
+    {
+      "id": "scene_008",
+      "title": "Text Messages - You're So Strong",
+      "timeCode": {
+        "start": "0:44",
+        "end": "0:49",
+        "duration": 5
+      },
+      "lyrics": "People say she's strong, but they don't know I barely cope.",
+      "visualPrompt": {
+        "mainPrompt": "Close-up POV shot of smartphone screen showing text message thread with messages in English or possibly mixed with local Ghanaian language. Messages appear sequentially: 'You're so strong! 💪', 'She'd be proud of you ❤️', 'Time heals everything 🙏', 'You're handling this so well'. Phone screen reflects young Black West African woman's face with dark brown skin - expressionless, tired eyes, not responding to messages. Screen brightness illuminates her beautiful dark melanin skin in dark room. Realistic iPhone or Android interface. Dark brown fingers hover over keyboard but don't type. Photorealistic, detailed screen graphics, emotional disconnect visible in reflection. CRITICAL: Reflected face must be Black African woman with dark skin.",
+        "negativePrompt": "light skin reflection, Caucasian, white woman, typing responses, smiling, bright room, multiple phones, unrealistic UI, cartoon messages, low quality, pale skin",
+        "style": "Social media realism, screen-based narrative, contemporary African digital life",
+        "cameraMovement": "Locked close-up on phone screen, slight hand tremor only",
+        "lighting": "Phone screen glow illuminating dark skin in darkness",
+        "colorGrade": "Cool blue screen light, dark surroundings, high contrast, dark skin properly lit by screen",
+        "culturalNotes": "Contemporary West African digital communication, possible mixed language messages"
+      },
+      "technicalParams": {
+        "aspectRatio": "9:16 (Vertical phone format)",
+        "fps": 24,
+        "resolution": "1080x1920",
+        "duration": 5,
+        "motionIntensity": "Minimal (messages appearing, slight hand movement)",
+        "aiModel": "Runway Gen-3 or After Effects composite"
+      },
+      "audioSync": {
+        "beatSync": false,
+        "voiceSync": false,
+        "syncPoints": ["Each message appears with subtle notification sound"]
+      }
+    },
+    {
+      "id": "scene_009",
+      "section": "VERSE_1",
+      "timestamp": "0:55-1:01",
+      "lyric": "Every room feels empty",
+      "visualPrompt": {
+        "mainPrompt": "Smooth 360-degree pan around a Ghanaian home interior, showing multiple rooms. Each room has objects suggesting an elderly woman's presence: a well-worn bible on a side table, traditional kente cloth draped over a chair, framed photos of a Black family. The rooms are tidy but feel hollow. Slow, searching camera movement. Natural tropical sunlight streams through windows, creating soft shadows. The color palette is desaturated, enhancing the feeling of emptiness. Objects come into focus as the camera passes them. The sense of absence is palpable despite the physical reminders. CRITICAL: The home must reflect a West African setting and family.",
+        "negativePrompt": "Caucasian family photos, Western decor, minimalist modern furniture, bright artificial lighting, cheerful mood, cluttered rooms",
+        "style": "Cinematic pan, emphasis on absence and memory, Afrocentric interior design",
+        "cameraMovement": "Smooth 360-degree pan",
+        "lighting": "Natural window light, creating soft shadows and a melancholic mood",
+        "colorGrade": "Desaturated blues and grays, with slight warmth on the cultural objects",
+        "culturalNotes": "Focus on Ghanaian home aesthetics, including specific objects like a bible, kente cloth, and family photos of Black people."
+      },
+      "technicalParams": {
+        "aspectRatio": "16:9",
+        "fps": 24,
+        "resolution": "3840x2160",
+        "duration": 6,
+        "motionIntensity": "Low",
+        "aiModel": "Runway Gen-3, Kling 1.5"
+      },
+      "audioSync": {
+        "beatSync": false,
+        "voiceSync": false,
+        "syncPoints": []
+      }
+    },
+    {
+      "id": "scene_010",
+      "section": "VERSE_1",
+      "timestamp": "1:01-1:09",
+      "lyric": "I still hear her voice",
+      "visualPrompt": {
+        "mainPrompt": "Night scene. A young Black West African woman with dark melanin skin is in bed, her face illuminated by the glow of her smartphone. She holds the phone to her ear, listening to a voicemail. Tears glisten on her cheeks, catching the cool blue light from the screen. Subtle text appears on the screen, transcribing the voicemail in a gentle, handwritten font: 'Baby, hold on. You going to be all right'. The audio waveform of the voicemail is visible on the phone's screen. An intimate close-up shot that captures her vulnerability and the comfort she seeks in her mother's voice. CRITICAL: The woman must be visibly Black with dark skin.",
+        "negativePrompt": "Smiling, laughing, bright room, multiple people, Caucasian or light-skinned woman, generic phone interface",
+        "style": "Intimate and emotional close-up, digital grief, modern mourning",
+        "cameraMovement": "Slow push-in on her face",
+        "lighting": "The smartphone screen is the key light, creating a cool blue glow on her face",
+        "colorGrade": "Cool blue tones from the phone light, with very dark, deep shadows in the rest of the room. High contrast to emphasize her isolation.",
+        "culturalNotes": "The use of a smartphone to connect with a lost loved one is a modern form of mourning, relevant to contemporary African life."
+      },
+      "technicalParams": {
+        "aspectRatio": "16:9",
+        "fps": 24,
+        "resolution": "3840x2160",
+        "duration": 8,
+        "motionIntensity": "Low",
+        "aiModel": "Runway Gen-3, Pika 2.0"
+      },
+      "audioSync": {
+        "beatSync": false,
+        "voiceSync": true,
+        "syncPoints": ["The text on the screen appears in sync with the voicemail audio."]
+      }
+    },
+    {
+      "id": "scene_011",
+      "section": "CHORUS_1",
+      "timestamp": "1:14-1:17",
+      "lyric": "I'm still a baby",
+      "visualPrompt": {
+        "mainPrompt": "Iconic overhead shot of a young Black West African woman with rich dark brown skin, curled in a fetal position on a simple bed with white sheets or on a traditional woven mat on the floor. A slow, rotating overhead camera movement creates a sense of disorientation and vulnerability. Soft, diffused lighting creates gentle shadows that accentuate her form. Her arms are wrapped around her knees, a small and childlike position of self-protection. The composition is beautiful despite the painful subject matter, emphasizing her isolation and grief. CRITICAL: The woman must be visibly Black with dark skin.",
+        "negativePrompt": "Man, child, non-Black person, standing or sitting, bright lighting, colorful room",
+        "style": "Cinematic, vulnerable, high-angle shot, emotional and raw",
+        "cameraMovement": "Slow rotating overhead camera",
+        "lighting": "Soft, diffused overhead light",
+        "colorGrade": "Desaturated, with a slight warmth on her skin to create a contrast with the cool, empty space around her",
+        "culturalNotes": "The choice of a simple bed or traditional mat grounds the scene in a humble, non-ostentatious African setting."
+      },
+      "technicalParams": {
+        "aspectRatio": "16:9",
+        "fps": 24,
+        "resolution": "3840x2160",
+        "duration": 3,
+        "motionIntensity": "Low",
+        "aiModel": "Runway Gen-3, Kling 1.5"
+      },
+      "audioSync": {
+        "beatSync": false,
+        "voiceSync": false,
+        "syncPoints": []
+      }
+    },
+    {
+      "id": "scene_012",
+      "section": "CHORUS_1",
+      "timestamp": "1:17-1:23",
+      "lyric": "Still reach for her number",
+      "visualPrompt": {
+        "mainPrompt": "Extreme close-up of a dark-skinned finger hovering over a smartphone contact labeled 'Mom ❤️', with a photo of a smiling, elderly Black African woman. The call history is visible, showing a long list of outgoing calls that were never actually made. The screen is slightly blurred by what could be tears or water droplets on the glass. The finger trembles slightly, conveying the painful impulse to call. The phone's interface is a cool blue. This is an intimate detail shot that captures the heart-wrenching reality of loss in the digital age. CRITICAL: The finger and the mother's photo must be of Black individuals.",
+        "negativePrompt": "Caucasian or light-skinned finger, man's hand, finger tapping the screen, making a call, clear screen",
+        "style": "Modern grief, digital longing, extreme close-up, emotional and poignant",
+        "cameraMovement": "Static, locked close-up on the phone screen",
+        "lighting": "The phone screen's glow is the primary light source",
+        "colorGrade": "Cool blue from the phone's UI, with natural, rich tones for the dark-skinned finger",
+        "culturalNotes": "This scene reflects the universal experience of wanting to contact a lost loved one, updated for the digital age."
+      },
+      "technicalParams": {
+        "aspectRatio": "9:16",
+        "fps": 24,
+        "resolution": "1080x1920",
+        "duration": 6,
+        "motionIntensity": "Low",
+        "aiModel": "Runway Gen-3, Pika 2.0"
+      },
+      "audioSync": {
+        "beatSync": false,
+        "voiceSync": false,
+        "syncPoints": []
+      }
+    },
+    {
+      "id": "scene_013",
+      "section": "CHORUS_1",
+      "timestamp": "1:23-1:31",
+      "lyric": "Nobody sees the war I fight",
+      "visualPrompt": {
+        "mainPrompt": "A rapid montage alternating between day and night scenes. DAY: a young Black West African woman getting dressed in professional attire, eating breakfast, working at a computer, appearing normal and functional. The scenes are brightly lit and saturated. NIGHT: The same woman in moments of breakdown – sobbing in front of a bathroom mirror, on her knees in prayer, curled up on the bathroom floor. These scenes are dark and desaturated. The cuts are fast, creating a jarring rhythm that reflects her internal turmoil. The night scenes are shot with a handheld camera to create a sense of raw immediacy. CRITICAL: The woman must be visibly Black with dark skin in all scenes.",
+        "negativePrompt": "Man, non-Black person, consistently happy or sad, static camera in night scenes, bright lighting at night",
+        "style": "Montage, contrast, duality of public and private life, raw and emotional",
+        "cameraMovement": "Day scenes are stable; night scenes are handheld and shaky",
+        "lighting": "Day scenes have bright, natural light; night scenes have a single, harsh light source, creating deep shadows",
+        "colorGrade": "Day scenes have normal saturation; night scenes are heavily desaturated",
+        "culturalNotes": "The professional attire can include modern African prints, reflecting a contemporary, urban Ghanaian setting."
+      },
+      "technicalParams": {
+        "aspectRatio": "16:9",
+        "fps": 24,
+        "resolution": "3840x2160",
+        "duration": 8,
+        "motionIntensity": "High (due to fast cuts)",
+        "aiModel": "Runway Gen-3, Kling 1.5"
+      },
+      "audioSync": {
+        "beatSync": true,
+        "voiceSync": false,
+        "syncPoints": ["The cuts are synchronized with the beat of the music."]
+      }
+    },
+    {
+      "id": "scene_014",
+      "section": "CHORUS_1",
+      "timestamp": "1:31-1:40",
+      "lyric": "Just to feel her arms",
+      "visualPrompt": {
+        "mainPrompt": "Slow motion shot of a young Black West African woman wrapping herself in her mother's colorful kente cloth or patterned ankara shawl. She brings the fabric to her face, inhaling deeply with her eyes closed, seeking comfort in its scent. Her expression is one of desperate comfort-seeking. Eventually, she wraps her arms around herself in a self-embrace. Soft window light illuminates the scene. The overall color palette is desaturated, but the fabric of the shawl retains a hint of its vibrant color. This is an intimate, emotional moment of self-soothing. CRITICAL: The woman must be visibly Black with dark skin, and the fabric should be recognizably of African origin.",
+        "negativePrompt": "Man, non-Black person, plain or non-African fabric, smiling or happy expression",
+        "style": "Slow motion, emotional, sensory memory, intimate and personal",
+        "cameraMovement": "Slow circular dolly movement around the woman",
+        "lighting": "Soft, natural window light",
+        "colorGrade": "Desaturated, with the fabric of the shawl showing a slight, muted color",
+        "culturalNotes": "The use of kente cloth or ankara fabric is a specific and powerful cultural signifier of Ghanaian or West African identity."
+      },
+      "technicalParams": {
+        "aspectRatio": "16:9",
+        "fps": 60,
+        "resolution": "3840x2160",
+        "duration": 9,
+        "motionIntensity": "Low",
+        "aiModel": "Runway Gen-3, Pika 2.0"
+      },
+      "audioSync": {
+        "beatSync": false,
+        "voiceSync": false,
+        "syncPoints": []
+      }
+    },
+    {
+      "id": "scene_015",
+      "section": "VERSE_2_DREAM",
+      "timestamp": "1:59-2:02",
+      "lyric": "I saw her in my dream",
+      "visualPrompt": {
+        "mainPrompt": "Ethereal dream sequence. An elderly Black West African woman, the mother, appears in a soft, white and pale blue environment. She is slightly translucent, with a gentle, glowing aura. She reaches a hand toward the camera, which is the POV of her daughter. The mother's expression is peaceful and loving. Her movement has a floating quality. The scene is shot in slow motion. The color palette shifts to pale blues and whites, creating a heavenly, liminal space. The mother appears younger and healthier than in memory. CRITICAL: The mother must be visibly Black with dark, aged skin.",
+        "negativePrompt": "Young woman, non-Black person, sad or angry expression, sharp focus, realistic setting",
+        "style": "Dream sequence, ethereal, soft focus, high-key lighting",
+        "cameraMovement": "Slow drift forward from the daughter's POV",
+        "lighting": "Soft, diffused, ethereal glow",
+        "colorGrade": "Soft whites and pale blues, with high-key lighting that creates a heavenly feel",
+        "culturalNotes": "This scene represents a common dream archetype of seeing a lost loved one in a peaceful, heavenly place."
+      },
+      "technicalParams": {
+        "aspectRatio": "16:9",
+        "fps": 60,
+        "resolution": "3840x2160",
+        "duration": 3,
+        "motionIntensity": "Low",
+        "aiModel": "Runway Gen-3, Pika 2.0"
+      },
+      "audioSync": {
+        "beatSync": false,
+        "voiceSync": false,
+        "syncPoints": []
+      }
+    },
+    {
+      "id": "scene_016",
+      "section": "VERSE_2_DREAM",
+      "timestamp": "2:02-2:10",
+      "lyric": "But I woke up drowning",
+      "visualPrompt": {
+        "mainPrompt": "A jarring, sudden cut from the ethereal dream to reality. The young Black West African woman gasps as she wakes up in her dark bedroom, sitting up abruptly. She is disoriented and reaches for something that isn't there. The sheets are tangled around her. The room is lit only by the faint light of a streetlamp coming through the window. The camera is handheld and shaky, conveying her raw, chaotic state. She is breathing heavily, and her face shows a mixture of confusion and loss. There may be sweat or tears on her face. A harsh awakening to a painful reality. CRITICAL: The woman must be visibly Black with dark skin.",
+        "negativePrompt": "Calm awakening, bright room, smiling, non-Black person",
+        "style": "Raw, jarring, handheld camera, high contrast between dream and reality",
+        "cameraMovement": "Handheld, shaky, and raw",
+        "lighting": "Dark room, with a single, cool light source from a streetlamp outside the window",
+        "colorGrade": "Very desaturated, with cool, dark tones",
+        "culturalNotes": "The bedroom should be simple and modest, reflecting a typical Ghanaian home."
+      },
+      "technicalParams": {
+        "aspectRatio": "16:9",
+        "fps": 24,
+        "resolution": "3840x2160",
+        "duration": 8,
+        "motionIntensity": "High",
+        "aiModel": "Runway Gen-3, Kling 1.5"
+      },
+      "audioSync": {
+        "beatSync": true,
+        "voiceSync": false,
+        "syncPoints": ["The cut from the dream happens on a beat, to maximize the jarring effect."]
+      }
+    },
+    {
+      "id": "scene_017",
+      "section": "VERSE_2",
+      "timestamp": "2:10-2:17",
+      "lyric": "Wearing her smile",
+      "visualPrompt": {
+        "mainPrompt": "Split composition. A young Black West African woman stands at a bathroom mirror, practicing her mother's smile. A side-by-side photo comparison appears, showing her mother's genuine, joyful smile next to the daughter's practiced imitation. The similarity is striking and haunting. The daughter's eyes, however, remain sad, creating a poignant disconnect. The lighting is natural, coming from a window in the bathroom. This is a cinematic mirror shot, with the photos appearing as overlays or in a picture-in-picture format. CRITICAL: The woman and her mother in the photo must be visibly Black.",
+        "negativePrompt": "Different smiles, happy eyes on the daughter, non-Black people, bad lighting",
+        "style": "Split-screen, mirror shot, emotional, poignant, a reflection on inherited traits and grief",
+        "cameraMovement": "Static, locked on the mirror reflection",
+        "lighting": "Natural bathroom light",
+        "colorGrade": "Desaturated, with a slight warmth on the photos to distinguish them from the present-day scene",
+        "culturalNotes": "The bathroom should be simple and functional, not overly luxurious."
+      },
+      "technicalParams": {
+        "aspectRatio": "16:9",
+        "fps": 24,
+        "resolution": "3840x2160",
+        "duration": 7,
+        "motionIntensity": "Low",
+        "aiModel": "Runway Gen-3, Pika 2.0"
+      },
+      "audioSync": {
+        "beatSync": false,
+        "voiceSync": false,
+        "syncPoints": []
+      }
+    },
+    {
+      "id": "scene_018",
+      "section": "VERSE_3",
+      "timestamp": "2:17-2:23",
+      "lyric": "Her voicemail still lives",
+      "visualPrompt": {
+        "mainPrompt": "Extreme close-up of a smartphone screen showing the voicemail interface, with a contact labeled 'Mom' and an old timestamp. A dark-skinned finger presses the 'Play' button. The audio waveform animates as the voicemail plays. The phone's screen illuminates the young Black West African woman's face in the darkness. Her eyes are closed, and she leans into the phone, listening intently. Tears form in her eyes but do not fall. An intimate moment of connection with a voice that remains. CRITICAL: The finger and face must be of a Black person.",
+        "negativePrompt": "Light-skinned person, smiling, bright room, generic phone interface",
+        "style": "Extreme close-up, digital grief, modern mourning, emotional and intimate",
+        "cameraMovement": "Slow push-in from the phone to the woman's face",
+        "lighting": "The phone screen is the only light source, casting a cool blue glow",
+        "colorGrade": "Cool blue tones from the phone light, with deep, dark shadows",
+        "culturalNotes": "This scene highlights how technology mediates modern grief and mourning."
+      },
+      "technicalParams": {
+        "aspectRatio": "16:9",
+        "fps": 24,
+        "resolution": "3840x2160",
+        "duration": 6,
+        "motionIntensity": "Low",
+        "aiModel": "Runway Gen-3, Pika 2.0"
+      },
+      "audioSync": {
+        "beatSync": false,
+        "voiceSync": true,
+        "syncPoints": ["The audio waveform on the screen animates in sync with the voicemail audio."]
+      }
+    },
+    {
+      "id": "scene_019",
+      "section": "VERSE_3",
+      "timestamp": "2:23-2:31",
+      "lyric": "I dress up for her",
+      "visualPrompt": {
+        "mainPrompt": "A contemplative montage. 1) A young Black West African woman gets dressed in an outfit her mother would have approved of, adjusting her collar in the mirror. 2) A small memorial altar with her mother's photo, fresh flowers, and a lit candle. 3) The woman kneels before the altar, her hands clasped in prayer. 4) A close-up of the mother's photo, with the candlelight flickering across it. The scene can include traditional Ghanaian mourning cloth as a cultural element. The lighting is soft and natural, with the warm glow of the candle creating a reverent atmosphere. CRITICAL: The woman and the photo of her mother must be of Black people.",
+        "negativePrompt": "Casual or sloppy dress, no memorial, smiling or laughing, bright, harsh lighting",
+        "style": "Montage, ritual, reverence, a personal and cultural expression of grief",
+        "cameraMovement": "Slow, smooth transitions between static shots",
+        "lighting": "Soft, natural light, with the warm glow of a candle",
+        "colorGrade": "Desaturated blues and grays, with the warm candlelight creating a contrasting point of color",
+        "culturalNotes": "The memorial altar and the act of dressing up are both ways of honoring the deceased, with specific cultural variations. The inclusion of Ghanaian mourning cloth would be a powerful cultural signifier."
+      },
+      "technicalParams": {
+        "aspectRatio": "16:9",
+        "fps": 24,
+        "resolution": "3840x2160",
+        "duration": 8,
+        "motionIntensity": "Low",
+        "aiModel": "Runway Gen-3, Pika 2.0"
+      },
+      "audioSync": {
+        "beatSync": false,
+        "voiceSync": false,
+        "syncPoints": []
+      }
+    },
+    {
+      "id": "scene_020",
+      "section": "VERSE_3",
+      "timestamp": "2:31-2:43",
+      "lyric": "What do you do when the strongest woman",
+      "visualPrompt": {
+        "mainPrompt": "Powerful wide cinematic shot. A young Black West African woman stands at her mother's grave in a cemetery. A low angle makes her appear small and vulnerable against the vast, overcast sky. The headstone is in the foreground, the woman in the middle ground, and the sky in the background. The wind moves the grass and trees, but the woman is motionless, a still point in a world that keeps moving. The color palette is heavily desaturated, and the light is either from an overcast sky or late in the afternoon. A cinematic composition that emphasizes her feeling of being overshadowed by her loss. CRITICAL: The woman must be visibly Black.",
+        "negativePrompt": "Sunny day, smiling, with other people, high-angle shot, colorful",
+        "style": "Cinematic, wide shot, low angle, epic and emotional, a feeling of being small in the face of loss",
+        "cameraMovement": "Static, with a slight, slow drift to enhance the feeling of unease",
+        "lighting": "Natural, from an overcast sky or late in the afternoon",
+        "colorGrade": "Heavily desaturated, with cool tones",
+        "culturalNotes": "Cemeteries have different aesthetics in different cultures. A Ghanaian cemetery might have unique features that could be incorporated."
+      },
+      "technicalParams": {
+        "aspectRatio": "2.39:1",
+        "fps": 24,
+        "resolution": "3840x2160",
+        "duration": 12,
+        "motionIntensity": "Low",
+        "aiModel": "Runway Gen-3, Kling 1.5"
+      },
+      "audioSync": {
+        "beatSync": false,
+        "voiceSync": false,
+        "syncPoints": []
+      }
+    },
+    {
+      "id": "scene_021",
+      "section": "BRIDGE_MEMORIES",
+      "timestamp": "2:43-2:50",
+      "lyric": "I miss her voice",
+      "visualPrompt": {
+        "mainPrompt": "Fragmented memory flashbacks with a Super 8mm film aesthetic. 1) An elderly Black West African mother laughing, her head thrown back with joy. 2) The mother singing while cooking in a simple kitchen. 3) The mother's profile, a peaceful expression on her face. All shots have warm, golden sepia tones, heavy film grain, and are slightly overexposed, with light leaks. The feeling is of nostalgic, vintage home movies. Quick cuts between the fragments create a sense of fractured memory. CRITICAL: The mother must be visibly Black.",
+        "negativePrompt": "Sadness, anger, modern video quality, cool tones",
+        "style": "Vintage, Super 8mm, home movie, nostalgic, warm and loving",
+        "cameraMovement": "Simulated handheld vintage camera shake",
+        "lighting": "Warm, natural light, slightly overexposed to create a dreamy, nostalgic feel",
+        "colorGrade": "Warm sepia and gold, with heavy film grain and light leaks",
+        "culturalNotes": "The kitchen should be simple and reflect a Ghanaian home."
+      },
+      "technicalParams": {
+        "aspectRatio": "4:3",
+        "fps": 24,
+        "resolution": "1920x1080",
+        "duration": 7,
+        "motionIntensity": "Medium",
+        "aiModel": "Runway Gen-3, Pika 2.0"
+      },
+      "audioSync": {
+        "beatSync": true,
+        "voiceSync": false,
+        "syncPoints": ["The cuts are synchronized with the beat of the music."]
+      }
+    },
+    {
+      "id": "scene_022",
+      "section": "BRIDGE_MEMORIES",
+      "timestamp": "2:50-2:59",
+      "lyric": "I'm proud of you",
+      "visualPrompt": {
+        "mainPrompt": "Golden hour memory flashback. A young Black West African protagonist as a teenager, with her mother's arms around her shoulders from behind in a loving embrace. The mother's dark-skinned hands are visible on her daughter's chest and shoulders. They are both looking forward at the horizon, bathed in the warm light of a sunset. A feeling of safety, completeness, and love. The background is a beautiful bokeh. The memory freezes and becomes a printed photograph, which the present-day protagonist holds in her hands. CRITICAL: Both mother and daughter must be visibly Black.",
+        "negativePrompt": "Sadness, arguing, bad weather, indoors",
+        "style": "Golden hour, nostalgic, emotional, a frozen moment in time",
+        "cameraMovement": "Starts as a slow push-in, then freezes to become a photograph",
+        "lighting": "Golden hour backlight from the setting sun",
+        "colorGrade": "Warm golden tones, which then transition to the texture of a printed photograph",
+        "culturalNotes": "The clothing of the mother and daughter can reflect Ghanaian styles of the time."
+      },
+      "technicalParams": {
+        "aspectRatio": "16:9",
+        "fps": 24,
+        "resolution": "3840x2160",
+        "duration": 9,
+        "motionIntensity": "Low",
+        "aiModel": "Runway Gen-3, Pika 2.0"
+      },
+      "audioSync": {
+        "beatSync": false,
+        "voiceSync": false,
+        "syncPoints": []
+      }
+    },
+    {
+      "id": "scene_023",
+      "section": "BRIDGE_MEMORIES",
+      "timestamp": "2:59-3:02",
+      "lyric": "Her laugh so loud",
+      "visualPrompt": {
+        "mainPrompt": "Vibrant memory. An elderly Black West African mother is at the center of a family gathering or community event, surrounded by people. Her laugh rings out, a commanding, joyful presence. Everyone's attention and smiles are directed toward her. The colors are warm and saturated, showing a life full of energy. A quick cut back to the present shows an empty chair in a quiet room. A jarring contrast between a full life and an empty silence. CRITICAL: The mother and the people around her must be Black.",
+        "negativePrompt": "Sadness, silence, empty room in the memory, cool colors",
+        "style": "Contrast, vibrant memory vs. empty present, the power of a single personality",
+        "cameraMovement": "The memory scene has a slow zoom; the present-day scene is static",
+        "lighting": "The memory is warm and bright; the present is cool and dim",
+        "colorGrade": "The memory is saturated and warm; the present is desaturated",
+        "culturalNotes": "The gathering can be a Ghanaian celebration, with traditional food and clothing."
+      },
+      "technicalParams": {
+        "aspectRatio": "16:9",
+        "fps": 24,
+        "resolution": "3840x2160",
+        "duration": 3,
+        "motionIntensity": "Medium",
+        "aiModel": "Runway Gen-3, Kling 1.5"
+      },
+      "audioSync": {
+        "beatSync": true,
+        "voiceSync": false,
+        "syncPoints": ["The cut to the empty chair happens on a beat, for maximum impact."]
+      }
+    },
+    {
+      "id": "scene_024",
+      "section": "CHORUS_2",
+      "timestamp": "3:11-3:17",
+      "lyric": "I'm still a baby (reprise)",
+      "visualPrompt": {
+        "mainPrompt": "A young Black West African woman is now sitting in her mother's vintage armchair, wrapped in her mother's colorful kente cloth shawl. She is curled up small in the chair, an evolution from her earlier fetal position on the floor. She is now seeking comfort in her mother's space. Her body language shows pain, but with a hint of acceptance. The scene is desaturated, but with a slight warmth from the shawl. Soft window light illuminates the scene. She is still grieving, but she is seeking comfort in a different way. CRITICAL: The woman must be visibly Black.",
+        "negativePrompt": "Standing, smiling, in a different chair, without the shawl",
+        "style": "Emotional, a subtle evolution of grief, finding comfort in memory",
+        "cameraMovement": "Slow circular dolly around the chair",
+        "lighting": "Soft, natural window light",
+        "colorGrade": "Desaturated, with a touch of warmth from the colorful shawl",
+        "culturalNotes": "The armchair and shawl are the same ones from earlier in the video, creating a sense of continuity."
+      },
+      "technicalParams": {
+        "aspectRatio": "16:9",
+        "fps": 24,
+        "resolution": "3840x2160",
+        "duration": 6,
+        "motionIntensity": "Low",
+        "aiModel": "Runway Gen-3, Pika 2.0"
+      },
+      "audioSync": {
+        "beatSync": false,
+        "voiceSync": false,
+        "syncPoints": []
+      }
+    },
+    {
+      "id": "scene_025",
+      "section": "CHORUS_2",
+      "timestamp": "3:17-3:40",
+      "lyric": "Still reach for her number (reprise)",
+      "visualPrompt": {
+        "mainPrompt": "A montage showing the evolution of grief. 1) A genuine smile is triggered by a happy memory. 2) The young Black West African woman gently touches her mother's photo with love, not just pain. 3) She takes a deep, full breath, something she was unable to do before. 4) She looks at a sunset, a classic symbol of hope and the passage of time. The grief is still present, but its edges are slightly softer. The color palette is slightly less desaturated than before. Small signs of healing are beginning to appear. CRITICAL: The woman must be visibly Black.",
+        "negativePrompt": "Crying, sadness, no change in emotion, dark and gloomy scenes",
+        "style": "Montage, emotional evolution, hope, the passage of time",
+        "cameraMovement": "A mix of static shots and slow, gentle movements",
+        "lighting": "Gradually introducing more natural, warm light",
+        "colorGrade": "Slightly less desaturated, with subtle warmth to indicate a shift in mood",
+        "culturalNotes": "The sunset can be over a recognizable Ghanaian landscape, like the coast."
+      },
+      "technicalParams": {
+        "aspectRatio": "16:9",
+        "fps": 24,
+        "resolution": "3840x2160",
+        "duration": 23,
+        "motionIntensity": "Low",
+        "aiModel": "Runway Gen-3, Pika 2.0"
+      },
+      "audioSync": {
+        "beatSync": false,
+        "voiceSync": false,
+        "syncPoints": []
+      }
+    },
+    {
+      "id": "scene_026",
+      "section": "OUTRO_HEAVEN",
+      "timestamp": "3:49-3:55",
+      "lyric": "If heaven had visiting hours",
+      "visualPrompt": {
+        "mainPrompt": "Fantasy ethereal sequence. A young Black West African woman enters a bright, white, ethereal space filled with soft, diffused light. Her mother's figure is visible in the distance, her back turned, wearing a flowing white garment. The daughter begins to run toward her mother in slow motion. The scene has a soft focus and a dreamlike haze. A heavenly, liminal space aesthetic, with a palette of pale whites and golds. The distance between them slowly closes, representing hope and longing. CRITICAL: Both women must be visibly Black.",
+        "negativePrompt": "Darkness, sadness, realistic setting, mother facing away",
+        "style": "Ethereal, dreamlike, fantasy, a representation of a deep longing for reunion",
+        "cameraMovement": "Floating forward, following the running daughter",
+        "lighting": "Soft, diffused, bright white, ethereal light",
+        "colorGrade": "High-key white, with pale gold highlights",
+        "culturalNotes": "The flowing white garment can be a simple, elegant traditional African dress."
+      },
+      "technicalParams": {
+        "aspectRatio": "16:9",
+        "fps": 60,
+        "resolution": "3840x2160",
+        "duration": 6,
+        "motionIntensity": "Medium",
+        "aiModel": "Runway Gen-3, Pika 2.0"
+      },
+      "audioSync": {
+        "beatSync": false,
+        "voiceSync": false,
+        "syncPoints": []
+      }
+    },
+    {
+      "id": "scene_027",
+      "section": "OUTRO_HEAVEN",
+      "timestamp": "3:55-4:02",
+      "lyric": "I'd sit at her feet",
+      "visualPrompt": {
+        "mainPrompt": "Intimate ethereal scene. The young Black West African daughter kneels at her mother's feet. The mother's face is gently obscured by light or soft focus, maintaining the dreamlike quality. The mother's hands gently touch her daughter's head in a blessing. A warm, golden, healing light surrounds them. A tender moment of reunion. The entire scene is in soft focus. The feeling is sacred and healing, an emotional release for the daughter. CRITICAL: Both women must be visibly Black.",
+        "negativePrompt": "Standing, no physical contact, sadness, clear focus on the mother's face",
+        "style": "Ethereal, sacred, healing, a symbolic representation of finding peace",
+        "cameraMovement": "Slow, gentle push-in",
+        "lighting": "Warm, golden glow, soft and healing",
+        "colorGrade": "Warm gold and soft whites, high-key lighting",
+        "culturalNotes": "The act of kneeling at an elder's feet is a sign of respect in many African cultures."
+      },
+      "technicalParams": {
+        "aspectRatio": "16:9",
+        "fps": 24,
+        "resolution": "3840x2160",
+        "duration": 7,
+        "motionIntensity": "Low",
+        "aiModel": "Runway Gen-3, Pika 2.0"
+      },
+      "audioSync": {
+        "beatSync": false,
+        "voiceSync": false,
+        "syncPoints": []
+      }
+    },
+    {
+      "id": "scene_028",
+      "section": "OUTRO_RESOLUTION",
+      "timestamp": "4:02-4:09",
+      "lyric": "But I'm still here",
+      "visualPrompt": {
+        "mainPrompt": "Return to the present. The young Black West African woman is standing at a window. The warm light of dawn or early morning breaks through, creating a warm glow. She takes her first genuine, full breath, her chest rising and falling completely. Her posture is slightly more upright and stronger. She looks out the window at the new day. A profile shot, lit by the window light. The scene is warmer than the earlier present-day scenes. She is not healed, but she is finding the strength to go on. CRITICAL: The woman must be visibly Black.",
+        "negativePrompt": "Night, sadness, weak posture, crying",
+        "style": "Hopeful, a new beginning, quiet strength",
+        "cameraMovement": "Slow push-in toward the window and the woman's profile",
+        "lighting": "Warm dawn light coming through the window",
+        "colorGrade": "Warmer, with a gentle increase in saturation",
+        "culturalNotes": "The view from the window could be a hint of a Ghanaian city waking up."
+      },
+      "technicalParams": {
+        "aspectRatio": "16:9",
+        "fps": 24,
+        "resolution": "3840x2160",
+        "duration": 7,
+        "motionIntensity": "Low",
+        "aiModel": "Runway Gen-3, Pika 2.0"
+      },
+      "audioSync": {
+        "beatSync": false,
+        "voiceSync": false,
+        "syncPoints": []
+      }
+    },
+    {
+      "id": "scene_029",
+      "section": "OUTRO_FINAL",
+      "timestamp": "4:09-4:15",
+      "lyric": "Even if she ain't here to say it back",
+      "visualPrompt": {
+        "mainPrompt": "Final intimate shot. A close-up of the young Black West African woman's hand touching her own chest, where her mother used to hold her. A small, private, genuine smile appears on her face. Her eyes are looking at a framed photograph of her mother on a nearby table. A candle flickers beside the photo, casting a soft, warm light. A peaceful atmosphere. She is not fully healed, but she is finding a way forward, carrying her mother's love within her. Slow fade to black. The final frame holds on the photograph and the flickering candle. CRITICAL: The woman and the photo of her mother must be of Black people.",
+        "negativePrompt": "Sadness, crying, no smile, dark room",
+        "style": "Peaceful acceptance, internal strength, a quiet and hopeful ending",
+        "cameraMovement": "Slow final push-in on the photograph, then fade to black",
+        "lighting": "Soft, warm, natural light, with the additional glow from the candle",
+        "colorGrade": "Warm, gentle, and slightly saturated",
+        "culturalNotes": "The framed photograph is the same one seen earlier in the video, providing a sense of closure."
+      },
+      "technicalParams": {
+        "aspectRatio": "16:9",
+        "fps": 24,
+        "resolution": "3840x2160",.
+        "duration": 6,
+        "motionIntensity": "Low",
+        "aiModel": "Runway Gen-3, Pika 2.0"
+      },
+      "audioSync": {
+        "beatSync": false,
+        "voiceSync": false,
+        "syncPoints": []
+      }
+    }
+  ]
+},
+  "culturalGuidelines": {
+    "representationPriority": "CRITICAL: All human subjects must be explicitly described as Black/African with dark skin tones",
+    "skinToneDescriptors": [
+      "dark brown skin",
+      "rich melanin skin",
+      "deep brown complexion",
+      "beautiful dark skin tones",
+      "Black African skin"
+    ],
+    "hairDescriptors": [
+      "natural hair",
+      "afro",
+      "braids",
+      "cornrows",
+      "protective style",
+      "traditional African hairstyle",
+      "natural coils",
+      "twists"
+    ],
+    "culturalElements": {
+      "ghanaian": [
+        "kente cloth",
+        "ankara print fabric",
+        "traditional mourning cloth",
+        "adinkra symbols",
+        "Ghanaian home interior",
+        "local architecture"
+      ],
+      "westAfrican": [
+        "African print textiles",
+        "traditional crafted furniture",
+        "family photo walls showing Black families",
+        "tropical window light",
+        "concrete/tile flooring",
+        "African decorative elements"
+      ],
+      "mourningPractices": [
+        "traditional mourning cloth",
+        "libation ceremony elements",
+        "family gathering spaces",
+        "ancestral photo displays",
+        "cultural grief rituals"
+      ]
+    },
+    "negativePromptDefaults": [
+      "Caucasian",
+      "white skin",
+      "light skin",
+      "pale skin",
+      "European features",
+      "Asian features",
+      "colorism",
+      "whitewashed",
+      "non-African"
+    ],
+    "lightingConsiderations": "Proper exposure and lighting for dark skin tones - avoid underexposure, ensure melanin richness is captured, highlight natural beauty",
+    "colorGradingConsiderations": "Authentic rendering of dark skin without washing out or artificial lightening, preserve melanin depth and warmth"
+  },
+  "productionNotes": {
+    "aiModelBias": "IMPORTANT: AI models tend to default to Caucasian subjects. ALWAYS explicitly specify 'Black African woman with dark skin' in every prompt. If model generates light-skinned or Caucasian subjects, regenerate with stronger racial descriptors.",
+    "iterativeGeneration": "May need multiple attempts to get proper representation. Be persistent and specific.",
+    "culturalAuthenticity": "Prioritize West African/Ghanaian cultural elements throughout. Avoid generic Western aesthetics.",
+    "representationCheckpoints": [
+      "Is the subject visibly Black with dark skin?",
+      "Are African cultural elements present?",
+      "Is the lighting appropriate for dark skin tones?",
+      "Are hair and features authentically African?",
+      "Does the setting reflect West African reality?"
+    ]
+  }
+}
+
+        // Icon Components
+        const CopyIcon = () => (
+            <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+            </svg>
+        );
+
+        const CheckIcon = () => (
+            <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+        );
+
+        const FilmIcon = () => (
+            <svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                <rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"></rect>
+                <line x1="7" y1="2" x2="7" y2="22"></line>
+                <line x1="17" y1="2" x2="17" y2="22"></line>
+                <line x1="2" y1="12" x2="22" y2="12"></line>
+                <line x1="2" y1="7" x2="7" y2="7"></line>
+                <line x1="2" y1="17" x2="7" y2="17"></line>
+                <line x1="17" y1="17" x2="22" y2="17"></line>
+                <line x1="17" y1="7" x2="22" y2="7"></line>
+            </svg>
+        );
+
+        const ClockIcon = () => (
+            <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="10"></circle>
+                <polyline points="12 6 12 12 16 14"></polyline>
+            </svg>
+        );
+
+        const CameraIcon = () => (
+            <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                <circle cx="12" cy="13" r="4"></circle>
+            </svg>
+        );
+
+        const PaletteIcon = () => (
+            <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                <circle cx="13.5" cy="6.5" r=".5"></circle>
+                <circle cx="17.5" cy="10.5" r=".5"></circle>
+                <circle cx="8.5" cy="7.5" r=".5"></circle>
+                <circle cx="6.5" cy="12.5" r=".5"></circle>
+                <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"></path>
+            </svg>
+        );
+
+        const DownloadIcon = () => (
+            <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="7 10 12 15 17 10"></polyline>
+                <line x1="12" y1="15" x2="12" y2="3"></line>
+            </svg>
+        );
+
+        // Main Dashboard Component
+        const StillHerBabyDashboard = () => {
+            const [scenes, setScenes] = useState([]);
+            const [selectedScene, setSelectedScene] = useState(null);
+            const [copiedId, setCopiedId] = useState(null);
+            const [filterSection, setFilterSection] = useState('ALL');
+            const [projectInfo, setProjectInfo] = useState(null);
+
+            useEffect(() => {
+                setScenes(PROMPT_DATA.scenes);
+                setProjectInfo(PROMPT_DATA.project);
+            }, []);
+
+            const sections = ['ALL', ...new Set(scenes.map(s => s.section))];
+            const filteredScenes = filterSection === 'ALL' 
+                ? scenes 
+                : scenes.filter(s => s.section === filterSection);
+
+            const copyToClipboard = async (scene) => {
+                const promptData = {
+                    id: scene.id,
+                    timestamp: scene.timestamp,
+                    lyric: scene.lyric,
+                    prompt: scene.prompt,
+                    duration: scene.duration,
+                    cameraMovement: scene.cameraMovement,
+                    cameraAngle: scene.cameraAngle,
+                    lighting: scene.lighting,
+                    colorGrade: scene.colorGrade,
+                    mood: scene.mood,
+                    visualElements: scene.visualElements,
+                    transition: scene.transition
+                };
+
+                try {
+                    await navigator.clipboard.writeText(JSON.stringify(promptData, null, 2));
+                    setCopiedId(scene.id);
+                    setTimeout(() => setCopiedId(null), 2000);
+                } catch (err) {
+                    console.error('Failed to copy:', err);
+                    alert('Copied to clipboard!');
+                }
+            };
+
+            const exportAllPrompts = () => {
+                const dataStr = JSON.stringify({ scenes: filteredScenes }, null, 2);
+                const dataBlob = new Blob([dataStr], { type: 'application/json' });
+                const url = URL.createObjectURL(dataBlob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = `still-her-baby-prompts-${filterSection.toLowerCase()}.json`;
+                link.click();
+            };
+
+            return (
+                <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white">
+                    {/* Header */}
+                    <div className="border-b border-slate-700 bg-slate-900/50 backdrop-blur-sm sticky top-0 z-50">
+                        <div className="max-w-7xl mx-auto px-4 py-6">
+                            <div className="flex items-center justify-between flex-wrap gap-4">
+                                <div className="flex items-center gap-3">
+                                    <FilmIcon />
+                                    <div>
+                                        <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+                                            Still Her Baby
+                                        </h1>
+                                        <p className="text-slate-400 text-sm">Video Generation Prompt Manager</p>
+                                    </div>
+                                </div>
+                                <div className="flex items-center gap-4">
+                                    <div className="text-right text-sm">
+                                        <div className="text-slate-400">Duration</div>
+                                        <div className="text-xl font-bold text-blue-400">4:15</div>
+                                    </div>
+                                    <div className="text-right text-sm">
+                                        <div className="text-slate-400">Scenes</div>
+                                        <div className="text-xl font-bold text-purple-400">{scenes.length}</div>
+                                    </div>
+                                    <button
+                                        onClick={exportAllPrompts}
+                                        className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors"
+                                    >
+                                        <DownloadIcon />
+                                        Export
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="max-w-7xl mx-auto px-4 py-8">
+                        {/* Filter Tabs */}
+                        <div className="mb-8 flex gap-2 overflow-x-auto pb-2">
+                            {sections.map(section => (
+                                <button
+                                    key={section}
+                                    onClick={() => setFilterSection(section)}
+                                    className={`px-4 py-2 rounded-lg whitespace-nowrap transition-all ${
+                                        filterSection === section
+                                            ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/50'
+                                            : 'bg-slate-800 text-slate-400 hover:bg-slate-700'
+                                    }`}
+                                >
+                                    {section.replace(/_/g, ' ')}
+                                </button>
+                            ))}
+                        </div>
+
+                        {/* Scene Grid */}
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            {filteredScenes.map((scene) => (
+                                <div
+                                    key={scene.id}
+                                    className="bg-slate-800/50 border border-slate-700 rounded-xl overflow-hidden hover:border-blue-500 transition-all hover:shadow-xl hover:shadow-blue-500/10 cursor-pointer"
+                                    onClick={() => setSelectedScene(scene)}
+                                >
+                                    {/* Scene Header */}
+                                    <div className="bg-gradient-to-r from-slate-800 to-slate-900 p-4 border-b border-slate-700">
+                                        <div className="flex items-start justify-between">
+                                            <div>
+                                                <h3 className="font-bold text-lg text-blue-400">{scene.id}</h3>
+                                                <p className="text-xs text-slate-400 uppercase mt-1">{scene.section}</p>
+                                            </div>
+                                            <button
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    copyToClipboard(scene);
+                                                }}
+                                                className={`p-2 rounded-lg transition-all ${
+                                                    copiedId === scene.id
+                                                        ? 'bg-green-600 text-white'
+                                                        : 'bg-slate-700 hover:bg-slate-600 text-slate-300'
+                                                }`}
+                                            >
+                                                {copiedId === scene.id ? <CheckIcon /> : <CopyIcon />}
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    {/* Scene Info */}
+                                    <div className="p-4 space-y-3">
+                                        <div className="flex items-center gap-2 text-sm">
+                                            <ClockIcon />
+                                            <span className="text-slate-300">{scene.timestamp}</span>
+                                            <span className="text-slate-500">({scene.duration}s)</span>
+                                        </div>
+
+                                        <div className="bg-slate-900/50 rounded-lg p-3 border border-slate-700">
+                                            <p className="text-sm italic text-slate-300">"{scene.lyric}"</p>
+                                        </div>
+
+                                        <div className="flex items-start gap-2 text-xs">
+                                            <CameraIcon />
+                                            <div className="flex-1">
+                                                <div className="text-slate-400">Camera</div>
+                                                <div className="text-slate-300">{scene.cameraMovement}</div>
+                                            </div>
+                                        </div>
+
+                                        <div className="flex items-start gap-2 text-xs">
+                                            <PaletteIcon />
+                                            <div className="flex-1">
+                                                <div className="text-slate-400">Mood</div>
+                                                <div className="text-slate-300">{scene.mood}</div>
+                                            </div>
+                                        </div>
+
+                                        <div className="bg-slate-900/50 rounded-lg p-3 border border-slate-700">
+                                            <div className="text-xs text-slate-400 mb-1">Prompt</div>
+                                            <p className="text-xs text-slate-300 line-clamp-3">
+                                                {scene.prompt}
+                                            </p>
+                                        </div>
+
+                                        <div className="flex flex-wrap gap-1">
+                                            {scene.visualElements.slice(0, 3).map((element, idx) => (
+                                                <span
+                                                    key={idx}
+                                                    className="px-2 py-1 bg-slate-700/50 rounded text-xs text-slate-400"
+                                                >
+                                                    {element}
+                                                </span>
+                                            ))}
+                                            {scene.visualElements.length > 3 && (
+                                                <span className="px-2 py-1 bg-slate-700/50 rounded text-xs text-slate-400">
+                                                    +{scene.visualElements.length - 3}
+                                                </span>
+                                            )}
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* Detail Modal */}
+                    {selectedScene && (
+                        <div
+                            className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+                            onClick={() => setSelectedScene(null)}
+                        >
+                            <div
+                                className="bg-slate-900 border border-slate-700 rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto"
+                                onClick={(e) => e.stopPropagation()}
+                            >
+                                <div className="sticky top-0 bg-slate-900 border-b border-slate-700 p-6 z-10">
+                                    <div className="flex items-start justify-between flex-wrap gap-4">
+                                        <div>
+                                            <h2 className="text-2xl font-bold text-blue-400">{selectedScene.id}</h2>
+                                            <p className="text-slate-400 mt-1">{selectedScene.section}</p>
+                                            <div className="flex items-center gap-4 mt-2 text-sm text-slate-400">
+                                                <span className="flex items-center gap-1">
+                                                    <ClockIcon />
+                                                    {selectedScene.timestamp}
+                                                </span>
+                                                <span>Duration: {selectedScene.duration}s</span>
+                                            </div>
+                                        </div>
+                                        <div className="flex gap-2">
+                                            <button
+                                                onClick={() => copyToClipboard(selectedScene)}
+                                                className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors"
+                                            >
+                                                {copiedId === selectedScene.id ? (
+                                                    <>
+                                                        <CheckIcon />
+                                                        Copied!
+                                                    </>
+                                                ) : (
+                                                    <>
+                                                        <CopyIcon />
+                                                        Copy JSON
+                                                    </>
+                                                )}
+                                            </button>
+                                            <button
+                                                onClick={() => setSelectedScene(null)}
+                                                className="px-4 py-2 bg-slate-700 hover:bg-slate-600 rounded-lg transition-colors"
+                                            >
+                                                Close
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="p-6 space-y-6">
+                                    <div>
+                                        <h3 className="text-sm font-semibold text-slate-400 mb-2">LYRIC</h3>
+                                        <div className="bg-slate-800 rounded-lg p-4 border border-slate-700">
+                                            <p className="text-lg italic text-slate-200">"{selectedScene.lyric}"</p>
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <h3 className="text-sm font-semibold text-slate-400 mb-2">PROMPT</h3>
+                                        <div className="bg-slate-800 rounded-lg p-4 border border-slate-700">
+                                            <p className="text-slate-200 leading-relaxed">{selectedScene.prompt}</p>
+                                        </div>
+                                    </div>
+
+                                    <div className="grid grid-cols-2 gap-4">
+                                        <div>
+                                            <h3 className="text-sm font-semibold text-slate-400 mb-2">CAMERA MOVEMENT</h3>
+                                            <div className="bg-slate-800 rounded-lg p-3 border border-slate-700">
+                                                <p className="text-slate-200">{selectedScene.cameraMovement}</p>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <h3 className="text-sm font-semibold text-slate-400 mb-2">CAMERA ANGLE</h3>
+                                            <div className="bg-slate-800 rounded-lg p-3 border border-slate-700">
+                                                <p className="text-slate-200">{selectedScene.cameraAngle}</p>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <h3 className="text-sm font-semibold text-slate-400 mb-2">LIGHTING</h3>
+                                            <div className="bg-slate-800 rounded-lg p-3 border border-slate-700">
+                                                <p className="text-slate-200">{selectedScene.lighting}</p>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <h3 className="text-sm font-semibold text-slate-400 mb-2">COLOR GRADE</h3>
+                                            <div className="bg-slate-800 rounded-lg p-3 border border-slate-700">
+                                                <p className="text-slate-200">{selectedScene.colorGrade}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <h3 className="text-sm font-semibold text-slate-400 mb-2">MOOD</h3>
+                                        <div className="bg-slate-800 rounded-lg p-3 border border-slate-700">
+                                            <p className="text-slate-200">{selectedScene.mood}</p>
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <h3 className="text-sm font-semibold text-slate-400 mb-2">VISUAL ELEMENTS</h3>
+                                        <div className="flex flex-wrap gap-2">
+                                            {selectedScene.visualElements.map((element, idx) => (
+                                                <span
+                                                    key={idx}
+                                                    className="px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-sm text-slate-200"
+                                                >
+                                                    {element}
+                                                </span>
+                                            ))}
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <h3 className="text-sm font-semibold text-slate-400 mb-2">TRANSITION</h3>
+                                        <div className="bg-slate-800 rounded-lg p-3 border border-slate-700">
+                                            <p className="text-slate-200">{selectedScene.transition}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+                </div>
+            );
+        };
+
+        // Render
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<StillHerBabyDashboard />);
+    </script>
+</body>
+</html>

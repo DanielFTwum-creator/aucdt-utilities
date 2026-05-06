@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+    <meta charset="UTF-8">
+    <!-- ── TUC Standard Meta ─────────────────────────────────────── -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <!-- SEO -->
+    <meta name="description" content="Techbridge University College (TUC) is a premier private institution in Accra pioneering innovative and progressive higher education in design and entrepreneurship." />
+    <meta name="keywords" content="Techbridge University College, TUC, design education, technology education, Accra university, Ghana university, product design, entrepreneurship, private university Ghana, design school" />
+    <meta name="author" content="Techbridge University College" />
+    <meta name="publisher" content="Techbridge University College" />
+    <link rel="canonical" href="https://www.techbridge.edu.gh/" />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    <!-- Geographic -->
+    <meta name="language" content="English" />
+    <meta name="geo.region" content="GH-AA" />
+    <meta name="geo.placename" content="Accra" />
+    <meta name="geo.position" content="5.6037;-0.1870" />
+    <meta name="ICBM" content="5.6037, -0.1870" />
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://www.techbridge.edu.gh/" />
+    <meta property="og:site_name" content="Techbridge University College" />
+    <meta property="og:title" content="AI Stand-up & Workshop Prep" />
+    <meta property="og:description" content="Techbridge University College (TUC) is a premier private institution in Accra pioneering innovative and progressive higher education in design and entrepreneurship." />
+    <meta property="og:image" content="https://techbridge.edu.gh/static/TUC_LOGO.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Techbridge University College Logo" />
+    <meta property="og:locale" content="en_GB" />
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@TUCGhana" />
+    <meta name="twitter:creator" content="@TUCGhana" />
+    <meta name="twitter:title" content="AI Stand-up & Workshop Prep" />
+    <meta name="twitter:description" content="Techbridge University College (TUC) is a premier private institution in Accra pioneering innovative and progressive higher education in design and entrepreneurship." />
+    <meta name="twitter:image" content="https://techbridge.edu.gh/static/TUC_LOGO.png" />
+    <meta name="twitter:image:alt" content="Techbridge University College Logo" />
+    <!-- Theme -->
+    <meta name="theme-color" content="#630f12" />
+    <meta name="msapplication-TileColor" content="#630f12" />
+    <meta name="copyright" content="Techbridge University College" />
+    <meta name="referrer" content="origin-when-cross-origin" />
+    <!-- ────────────────────────────────────────────────────────────── -->
+    <link rel="icon" type="image/png" href="https://techbridge.edu.gh/static/TUC_LOGO.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Stand-up & Workshop Prep</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --color-background: #F8F6F0;
+            --color-text-primary: #2C1810;
+            --color-text-secondary: #2C1810/0.9;
+            --color-text-muted: #2C1810/0.7;
+            --color-text-inverted: #FFFFFF;
+            --color-surface: #FFFFFF;
+            --color-primary: #8B1538;
+            --color-primary-dark: #6B1028;
+            --color-accent: #D4AF37;
+            --color-border: #E6D5C7;
+            --color-shadow: rgba(0,0,0,0.1);
+        }
+
+        html.dark {
+            --color-background: #1a1a1a;
+            --color-text-primary: #f0f0f0;
+            --color-text-secondary: #d1d1d1;
+            --color-text-muted: #a0a0a0;
+            --color-text-inverted: #1a1a1a;
+            --color-surface: #2a2a2a;
+            --color-primary: #b13e61;
+            --color-primary-dark: #c46281;
+            --color-accent: #e0c56c;
+            --color-border: #444444;
+            --color-shadow: rgba(255,255,255,0.1);
+        }
+
+        html.high-contrast {
+            --color-background: #000000;
+            --color-text-primary: #FFFFFF;
+            --color-text-secondary: #F0F0F0;
+            --color-text-muted: #d1d1d1;
+            --color-text-inverted: #000000;
+            --color-surface: #000000;
+            --color-primary: #FFFF00;
+            --color-primary-dark: #FFFF00;
+            --color-accent: #00FFFF;
+            --color-border: #FFFFFF;
+            --color-shadow: rgba(255,255,255,0.5);
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--color-background);
+            color: var(--color-text-primary);
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .details-arrow::after {
+            content: ' ▼';
+            font-size: 0.7em;
+            transition: transform 0.2s;
+        }
+        details[open] .details-arrow::after {
+            transform: rotate(180deg);
+        }
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border-width: 0;
+        }
+    </style>
+<script type="importmap">
+{
+  "imports": {
+    "react/": "https://aistudiocdn.com/react@^19.2.0/",
+    "react": "https://aistudiocdn.com/react@^19.2.0",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
+    "chart.js": "https://aistudiocdn.com/chart.js@^4.5.1"
+  }
+}
+</script>
+<link rel="stylesheet" href="/index.css">
+</head>
+<body class="bg-[var(--color-background)] text-[var(--color-text-primary)]">
+    <div id="root"></div>
+<script type="module" src="/index.tsx"></script>
+</body>
+</html>

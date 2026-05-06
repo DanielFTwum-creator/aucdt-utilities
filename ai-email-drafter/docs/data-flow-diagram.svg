@@ -1,0 +1,53 @@
+<svg width="800" height="450" xmlns="http://www.w3.org/2000/svg" font-family="Arial, sans-serif" font-size="14">
+    <style>
+        .entity { fill: #e6f7ff; stroke: #0050b3; stroke-width: 2; rx: 10; }
+        .process { fill: #f6ffed; stroke: #389e0d; stroke-width: 2; rx: 50; }
+        .datastore { fill: #fff1f0; stroke: #d4380d; stroke-width: 2; }
+        .arrow { stroke: #595959; stroke-width: 1.5; fill: none; marker-end: url(#arrowhead); }
+        .label { fill: #262626; text-anchor: middle; font-size: 12px; }
+        .title { font-size: 20px; font-weight: bold; text-anchor: middle; fill: #000; }
+    </style>
+    <defs>
+        <marker id="arrowhead" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#595959" />
+        </marker>
+    </defs>
+
+    <title>High-Level Data Flow Diagram</title>
+    <text x="400" y="30" class="title">AI Email Drafter - Data Flow Diagram</text>
+
+    <!-- Entities -->
+    <rect x="50" y="185" width="120" height="60" class="entity" />
+    <text x="110" y="220">User</text>
+
+    <rect x="630" y="100" width="120" height="60" class="entity" />
+    <text x="690" y="135">Gemini API</text>
+    
+    <!-- Process -->
+    <ellipse cx="370" cy="215" rx="120" ry="80" class="process"/>
+    <text x="370" y="210" font-weight="bold">AI Email Drafter</text>
+    <text x="370" y="230">(React Application)</text>
+
+    <!-- Data Store -->
+    <rect x="290" y="350" width="160" height="60" class="datastore" />
+    <rect x="285" y="350" width="160" height="60" class="datastore" />
+    <text x="365" y="385">Browser Storage</text>
+    <text x="365" y="400" font-size="10">(Local Storage/IndexedDB)</text>
+
+
+    <!-- Arrows -->
+    <path class="arrow" d="M 170 215 h 80" />
+    <text x="210" y="205" class="label">Email Input & Attachments</text>
+
+    <path class="arrow" d="M 490 195 q 70 -40 140 -75" />
+    <text x="560" y="130" class="label">Prompt & Image Data</text>
+    
+    <path class="arrow" d="M 630 140 q -100 40 -240 60" />
+    <text x="510" y="190" class="label">Generated Draft (Text)</text>
+    
+    <path class="arrow" d="M 250 245 q 80 50 100 105" />
+    <text x="280" y="300" class="label">Generated Draft Display</text>
+    
+    <path class="arrow" d="M 370 295 v 55" />
+    <text x="400" y="335" class="label">Save/Read Settings</text>
+</svg>

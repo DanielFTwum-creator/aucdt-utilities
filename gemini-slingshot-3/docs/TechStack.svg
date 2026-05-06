@@ -1,0 +1,32 @@
+<svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
+  <rect width="400" height="300" fill="#08080a" rx="10"/>
+  <text x="200" y="40" font-family="monospace" font-size="18" fill="#66bb6a" text-anchor="middle" font-weight="bold">CORE TECHNOLOGY STACK</text>
+  
+  <circle cx="200" cy="160" r="100" fill="none" stroke="#222" stroke-width="1" stroke-dasharray="5,5"/>
+  
+  <!-- Frontend -->
+  <g transform="translate(160, 80)">
+    <rect width="80" height="30" rx="15" fill="#4285f4"/>
+    <text x="40" y="20" font-family="monospace" font-size="10" fill="white" text-anchor="middle">REACT 19</text>
+  </g>
+  
+  <!-- AI -->
+  <g transform="translate(260, 140)">
+    <rect width="80" height="30" rx="15" fill="#ab47bc"/>
+    <text x="40" y="20" font-family="monospace" font-size="10" fill="white" text-anchor="middle">GEMINI 3</text>
+  </g>
+  
+  <!-- Vision -->
+  <g transform="translate(60, 140)">
+    <rect width="80" height="30" rx="15" fill="#66bb6a"/>
+    <text x="40" y="20" font-family="monospace" font-size="10" fill="white" text-anchor="middle">MEDIAPIPE</text>
+  </g>
+  
+  <!-- Styling -->
+  <g transform="translate(160, 200)">
+    <rect width="80" height="30" rx="15" fill="#0ea5e9"/>
+    <text x="40" y="20" font-family="monospace" font-size="10" fill="white" text-anchor="middle">TAILWIND</text>
+  </g>
+  
+  <text x="200" y="270" font-family="monospace" font-size="9" fill="#444" text-anchor="middle">Integrated Real-time AI Vision Pipeline</text>
+</svg>

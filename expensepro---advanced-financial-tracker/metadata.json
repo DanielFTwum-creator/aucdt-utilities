@@ -1,0 +1,7 @@
+{
+  "name": "ExpensePro - Advanced Financial Tracker",
+  "description": "A comprehensive expense management system featuring budget alerts, recurring transactions, smart receipt analysis via Gemini AI, and detailed financial analytics.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}

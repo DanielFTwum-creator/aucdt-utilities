@@ -1,0 +1,88 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="600" viewBox="0 0 900 600" style="background-color: #0f172a; font-family: sans-serif; color: #cbd5e1;">
+
+    <defs>
+        <marker id="arrow-dfd" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#fbbf24" />
+        </marker>
+        <style>
+            .title { font-size: 24px; font-weight: bold; fill: #e2e8f0; }
+            .subtitle { font-size: 14px; fill: #94a3b8; }
+            .actor { font-size: 16px; font-weight: bold; fill: #e2e8f0; }
+            .process { font-size: 14px; font-weight: bold; fill: #e2e8f0; }
+            .datastore { font-size: 14px; font-weight: bold; fill: #e2e8f0; }
+            .flow-label { font-size: 12px; fill: #fbbf24; }
+        </style>
+    </defs>
+
+    <text x="450" y="40" text-anchor="middle" class="title">Data Flow Diagram</text>
+    <text x="450" y="65" text-anchor="middle" class="subtitle">User Interaction and Data Persistence</text>
+
+    <!-- ACTOR: User -->
+    <g transform="translate(50, 250)">
+        <circle cx="40" cy="40" r="40" fill="#1e293b" stroke="#475569" />
+        <text x="40" y="45" text-anchor="middle" class="actor">User</text>
+    </g>
+
+    <!-- PROCESS 1: UI Interaction -->
+    <g transform="translate(250, 150)">
+        <ellipse cx="100" cy="50" rx="100" ry="50" fill="#1e293b" stroke="#475569" />
+        <text x="100" y="55" text-anchor="middle" class="process">1.0 UI Interaction</text>
+        <text x="100" y="75" text-anchor="middle" class="subtitle">(React Components)</text>
+    </g>
+
+    <!-- PROCESS 2: State Management -->
+    <g transform="translate(250, 350)">
+        <ellipse cx="100" cy="50" rx="100" ry="50" fill="#1e293b" stroke="#475569" />
+        <text x="100" y="55" text-anchor="middle" class="process">2.0 State Management</text>
+        <text x="100" y="75" text-anchor="middle" class="subtitle">(useState / useEffect)</text>
+    </g>
+
+    <!-- DATA STORE: localStorage -->
+    <g transform="translate(550, 240)">
+        <rect x="0" y="0" width="200" height="80" fill="#1e293b" stroke="#475569" />
+        <line x1="10" y1="0" x2="10" y2="80" stroke="#475569" />
+        <text x="105" y="45" text-anchor="middle" class="datastore">`localStorage`</text>
+    </g>
+
+    <!-- EXTERNAL: Gemini API -->
+    <g transform="translate(550, 50)">
+         <rect x="0" y="0" width="200" height="80" rx="10" fill="#1e293b" stroke="#475569" />
+         <text x="100" y="45" text-anchor="middle" class="actor">Google Gemini API</text>
+    </g>
+    
+    <!-- Flows -->
+    <!-- User -> UI Interaction -->
+    <line x1="130" y1="290" x2="250" y2="200" stroke="#fbbf24" stroke-width="2" marker-end="url(#arrow-dfd)" />
+    <text x="190" y="260" class="flow-label">User Input</text>
+    <text x="175" y="275" class="flow-label">(clicks, typing)</text>
+
+    <!-- UI Interaction -> User -->
+    <line x1="250" y1="150" x2="130" y2="250" stroke="#fbbf24" stroke-width="2" marker-end="url(#arrow-dfd)" />
+    <text x="175" y="185" class="flow-label">Visual Feedback</text>
+    <text x="190" y="200" class="flow-label">(UI updates)</text>
+    
+    <!-- UI Interaction -> State Management -->
+    <line x1="300" y1="200" x2="300" y2="350" stroke="#fbbf24" stroke-width="2" marker-end="url(#arrow-dfd)" />
+    <text x="310" y="270" class="flow-label">Set State</text>
+    
+    <!-- State Management -> UI Interaction -->
+    <line x1="320" y1="350" x2="320" y2="200" stroke="#fbbf24" stroke-width="2" marker-end="url(#arrow-dfd)" />
+    <text x="220" y="280" class="flow-label">Re-render</text>
+
+    <!-- State Management -> localStorage -->
+    <line x1="350" y1="390" x2="550" y2="310" stroke="#fbbf24" stroke-width="2" marker-end="url(#arrow-dfd)" />
+    <text x="450" y="365" class="flow-label">Save Progress / Theme</text>
+
+    <!-- localStorage -> State Management -->
+    <line x1="550" y1="290" x2="350" y2="370" stroke="#fbbf24" stroke-width="2" marker-end="url(#arrow-dfd)" />
+    <text x="440" y="315" class="flow-label">Load on Init</text>
+
+    <!-- UI Interaction -> Gemini API -->
+    <line x1="350" y1="170" x2="550" y2="110" stroke="#fbbf24" stroke-width="2" marker-end="url(#arrow-dfd)" />
+    <text x="450" y="125" class="flow-label">API Request</text>
+
+    <!-- Gemini API -> UI Interaction -->
+    <line x1="550" y1="90" x2="350" y2="150" stroke="#fbbf24" stroke-width="2" marker-end="url(#arrow-dfd)" />
+    <text x="440" y="155" class="flow-label">AI Response</text>
+
+</svg>

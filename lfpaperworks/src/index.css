@@ -1,0 +1,47 @@
+@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Playfair Display", ui-serif, Georgia, serif;
+
+  --color-tuc-maroon: #630f12;
+  --color-tuc-gold: #D4A017;
+  --color-tuc-ink: #1A1209;
+  --color-tuc-cream: #F5F0E8;
+  --color-tuc-silver: #8A8A8A;
+  
+  --color-brand-forest: #1A5C38;
+  --color-brand-midnight: #0F3D24;
+  --color-brand-leaf: #E8F5EE;
+  --color-brand-ivory: #F5F3EE;
+  --color-brand-charcoal: #1C1C1A;
+  --color-brand-stone: #5F5E5A;
+  --color-brand-linen: #D3D1C7;
+}
+
+@layer base {
+  body {
+    @apply bg-brand-ivory text-brand-charcoal font-sans antialiased;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-serif;
+  }
+}
+
+.editorial-heading {
+  @apply font-serif font-light tracking-tight;
+}
+
+.label-caps {
+  @apply font-sans text-[12px] uppercase tracking-[0.2em] font-medium;
+}
+
+.btn-primary {
+  @apply bg-tuc-gold text-brand-charcoal px-7 py-3 rounded-sm font-sans font-medium transition-all hover:opacity-90 active:scale-[0.98];
+}
+
+.btn-secondary {
+  @apply border border-brand-forest text-brand-forest px-7 py-3 rounded-sm font-sans font-medium transition-all hover:bg-brand-leaf;
+}

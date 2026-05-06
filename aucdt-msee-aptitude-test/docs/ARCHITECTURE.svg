@@ -1,0 +1,73 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600" font-family="Arial, sans-serif" font-size="14px">
+  <defs>
+    <style>
+      .box { fill: #fff; stroke: #333; stroke-width: 2; rx: 8; }
+      .client-box { fill: #E3F2FD; stroke: #2196F3; }
+      .server-box { fill: #E0F2F1; stroke: #009688; }
+      .db-box { fill: #F3E5F5; stroke: #8E24AA; }
+      .api-box { fill: #FCE4EC; stroke: #E91E63; }
+      .arrow { stroke: #333; stroke-width: 1.5; fill: none; marker-end: url(#arrowhead); }
+      .label { fill: #333; text-anchor: middle; }
+      .title { font-size: 20px; font-weight: bold; text-anchor: middle; }
+      .area-label { font-size: 16px; font-weight: bold; fill: #666; }
+    </style>
+    <marker id="arrowhead" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#333"/>
+    </marker>
+  </defs>
+
+  <rect x="1" y="1" width="798" height="598" fill="#F9FAFB" rx="10"/>
+  <text x="400" y="40" class="title">AUCDT MSEE Test App - Architecture Diagram</text>
+
+  <!-- Zones -->
+  <rect x="20" y="70" width="370" height="510" fill="#F0F4F8" rx="5" stroke-dasharray="5,5" stroke="#90A4AE"/>
+  <text x="205" y="95" class="area-label">User's Browser</text>
+  
+  <rect x="410" y="70" width="370" height="510" fill="#F0FBF4" rx="5" stroke-dasharray="5,5" stroke="#A5D6A7"/>
+  <text x="595" y="95" class="area-label">Ubuntu Server</text>
+
+  <!-- Client Application -->
+  <g id="react-app">
+    <rect x="50" y="250" width="310" height="150" class="box client-box"/>
+    <text x="205" y="275" class="label" font-weight="bold">React SPA (Served by Node.js)</text>
+    <text x="205" y="310" class="label">Student Exam Flow</text>
+    <text x="205" y="340" class="label">Admin Panel</text>
+    <text x="205" y="370" class="label">User Interface</text>
+  </g>
+  
+  <!-- Server -->
+   <g id="node-server">
+    <rect x="440" y="140" width="310" height="150" class="box server-box"/>
+    <text x="595" y="165" class="label" font-weight="bold">Node.js Backend (Express.js)</text>
+    <text x="595" y="200" class="label">API Endpoints (/api/...)</text>
+    <text x="595" y="225" class="label">Authentication (JWT)</text>
+    <text x="595" y="250" class="label">Static File Serving</text>
+  </g>
+
+  <!-- Database -->
+  <g id="mysql-db">
+    <rect x="440" y="380" width="310" height="150" class="box db-box"/>
+    <text x="595" y="405" class="label" font-weight="bold">MySQL Database</text>
+    <text x="595" y="440" class="label">Users & Roles</text>
+    <text x="595" y="465" class="label">Exams & Progress</text>
+    <text x="595" y="490" class="label">Audit Logs</text>
+  </g>
+  
+  <!-- Arrows -->
+  <path class="arrow" d="M 360 325 H 440"/>
+  <text x="400" y="320" class="label" font-size="12px">HTTP API Calls</text>
+  
+  <path class="arrow" d="M 595 290 V 380"/>
+  <text x="635" y="335" class="label" font-size="12px">DB Queries</text>
+  
+  <!-- External API -->
+  <g transform="translate(150, 450)">
+    <rect x="440" y="-130" width="200" height="100" class="box api-box"/>
+    <text x="540" y="-105" class="label" font-weight="bold">Google GenAI API</text>
+    <text x="540" y="-75" class="label">Gemini 2.5 Flash</text>
+    <path class="arrow" d="M 540 -180 V -130"/>
+    <text x="540" y="-150" class="label" font-size="12px">Secure API Call</text>
+  </g>
+  <path class="arrow" d="M 595 140 C 625 110, 625 80, 540 80 C 455 80, 455 110, 540 180" stroke="none" fill="none"/>
+  
+</svg>

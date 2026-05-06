@@ -1,0 +1,29 @@
+{
+  "name": "techbridge-strategy-dashboard-server",
+  "version": "0.1.0",
+  "description": "Backend API for TechBridge Strategy Dashboard (minimal scaffold)",
+  "main": "dist/index.js",
+  "scripts": {
+    "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
+    "build": "tsc -p tsconfig.json",
+    "start": "node dist/index.js",
+    "pm2": "pm2 start dist/index.js --name techbridge-strategy-dashboard-backend"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "express-validator": "^6.15.0",
+    "multer": "^1.4.5-lts.1",
+    "jsonwebtoken": "^9.0.0"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.17",
+    "@types/node": "^20.5.1",
+    "@types/cors": "^2.8.17",
+    "@types/multer": "^1.4.7",
+    "@types/jsonwebtoken": "^9.0.1",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.6.2"
+  }
+}
+

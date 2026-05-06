@@ -1,0 +1,53 @@
+<svg width="800" height="450" xmlns="http://www.w3.org/2000/svg" font-family="Arial, sans-serif" font-size="14">
+    <style>
+        .entity { fill: #e6f7ff; stroke: #0050b3; stroke-width: 2; rx: 10; }
+        .process { fill: #f6ffed; stroke: #389e0d; stroke-width: 2; rx: 50; }
+        .datastore { fill: #fff1f0; stroke: #d4380d; stroke-width: 2; }
+        .arrow { stroke: #595959; stroke-width: 1.5; fill: none; marker-end: url(#arrowhead); }
+        .label { fill: #262626; text-anchor: middle; font-size: 12px; }
+        .title { font-size: 20px; font-weight: bold; text-anchor: middle; fill: #000; }
+    </style>
+    <defs>
+        <marker id="arrowhead" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#595959" />
+        </marker>
+    </defs>
+
+    <title>GhanaRide - Data Flow Diagram</title>
+    <text x="400" y="30" class="title">GhanaRide - Data Flow Diagram</text>
+
+    <!-- Entities -->
+    <rect x="50" y="185" width="120" height="60" class="entity" />
+    <text x="110" y="220">User</text>
+
+    <rect x="630" y="100" width="120" height="60" class="entity" />
+    <text x="690" y="135">Gemini API</text>
+    
+    <rect x="630" y="280" width="120" height="60" class="entity" />
+    <text x="690" y="315">Browser Geolocation</text>
+
+    <!-- Process -->
+    <ellipse cx="370" cy="215" rx="120" ry="80" class="process"/>
+    <text x="370" y="210" font-weight="bold">GhanaRide Frontend</text>
+    <text x="370" y="230">(React Application)</text>
+
+    <!-- Arrows -->
+    <path class="arrow" d="M 170 215 h 80" />
+    <text x="220" y="205" class="label">Vehicle Search &amp; Trip Query</text>
+
+    <path class="arrow" d="M 490 195 q 70 -40 140 -75" />
+    <text x="560" y="130" class="label">Suggestion Query &amp; Coords</text>
+    
+    <path class="arrow" d="M 630 140 q -100 40 -240 60" />
+    <text x="510" y="190" class="label">Trip Suggestions &amp; Map Links</text>
+
+    <path class="arrow" d="M 490 250 q 70 15 140 30" />
+    <text x="560" y="275" class="label">Request Location</text>
+    
+    <path class="arrow" d="M 630 290 q -100 -20 -240 -50" />
+    <text x="510" y="255" class="label">Return Lat/Lng</text>
+
+    <path class="arrow" d="M 250 245 q 10 0 100 -30" />
+    <text x="260" y="260" class="label">Display Vehicles &amp; Suggestions</text>
+
+</svg>

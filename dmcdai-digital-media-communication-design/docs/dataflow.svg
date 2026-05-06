@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500">
+  <!-- Background -->
+  <rect width="800" height="500" fill="#0F0C07"/>
+  
+  <!-- Title -->
+  <text x="400" y="40" font-family="Playfair Display, serif" font-size="28" fill="#C8A84B" text-anchor="middle" font-weight="bold">dmcdAI GENERATION DATA FLOW</text>
+  <text x="400" y="65" font-family="Inter, sans-serif" font-size="14" fill="#F2EBD9" text-anchor="middle" opacity="0.7">Request Lifecycle & Diagnostic Interception</text>
+
+  <!-- Lifelines -->
+  <line x1="100" y1="100" x2="100" y2="450" stroke="#333" stroke-width="2" stroke-dasharray="4"/>
+  <text x="100" y="90" font-family="Inter, sans-serif" font-size="12" fill="#F2EBD9" text-anchor="middle">UI MODULE</text>
+
+  <line x1="250" y1="100" x2="250" y2="450" stroke="#333" stroke-width="2" stroke-dasharray="4"/>
+  <text x="250" y="90" font-family="Inter, sans-serif" font-size="12" fill="#C8A84B" text-anchor="middle">GEMINISERVICE</text>
+
+  <line x1="400" y1="100" x2="400" y2="450" stroke="#333" stroke-width="2" stroke-dasharray="4"/>
+  <text x="400" y="90" font-family="Inter, sans-serif" font-size="12" fill="#F2EBD9" text-anchor="middle">SIMULATOR</text>
+
+  <line x1="550" y1="100" x2="550" y2="450" stroke="#333" stroke-width="2" stroke-dasharray="4"/>
+  <text x="550" y="90" font-family="Inter, sans-serif" font-size="12" fill="#F2EBD9" text-anchor="middle">GOOGLE API</text>
+
+  <line x1="700" y1="100" x2="700" y2="450" stroke="#333" stroke-width="2" stroke-dasharray="4"/>
+  <text x="700" y="90" font-family="Inter, sans-serif" font-size="12" fill="#F2EBD9" text-anchor="middle">INDEXEDDB</text>
+
+  <!-- Flow 1: Initiation -->
+  <path d="M 100 130 L 250 130" stroke="#F2EBD9" stroke-width="2" fill="none" marker-end="url(#arrow-white)"/>
+  <text x="175" y="125" font-family="Inter, sans-serif" font-size="10" fill="#F2EBD9" text-anchor="middle">User Submits Prompt</text>
+
+  <!-- Flow 2: Simulator Check -->
+  <path d="M 250 160 L 400 160" stroke="#C8A84B" stroke-width="2" fill="none" marker-end="url(#arrow-gold)"/>
+  <text x="325" y="155" font-family="Inter, sans-serif" font-size="10" fill="#C8A84B" text-anchor="middle">isSimulatorEnabled()</text>
+
+  <!-- Flow 3: Simulator Response -->
+  <path d="M 400 190 L 250 190" stroke="#C8A84B" stroke-width="2" fill="none" marker-end="url(#arrow-gold)"/>
+  <text x="325" y="185" font-family="Inter, sans-serif" font-size="10" fill="#C8A84B" text-anchor="middle">Throws Mock Error (if enabled)</text>
+
+  <!-- Flow 4: Real API Call (Conditional) -->
+  <path d="M 250 240 L 550 240" stroke="#F2EBD9" stroke-width="2" fill="none" marker-end="url(#arrow-white)"/>
+  <text x="400" y="235" font-family="Inter, sans-serif" font-size="10" fill="#F2EBD9" text-anchor="middle">Real API Request (Disabled Simulator)</text>
+
+  <path d="M 550 280 L 250 280" stroke="#F2EBD9" stroke-width="2" fill="none" marker-end="url(#arrow-white)"/>
+  <text x="400" y="275" font-family="Inter, sans-serif" font-size="10" fill="#F2EBD9" text-anchor="middle">API Response / Content</text>
+
+  <!-- Flow 5: Logging -->
+  <path d="M 250 330 L 700 330" stroke="#C8A84B" stroke-width="2" fill="none" marker-end="url(#arrow-gold)"/>
+  <text x="475" y="325" font-family="Inter, sans-serif" font-size="10" fill="#C8A84B" text-anchor="middle">addLog() -> IndexedDB</text>
+
+  <!-- Flow 6: UI Update -->
+  <path d="M 250 380 L 100 380" stroke="#F2EBD9" stroke-width="2" fill="none" marker-end="url(#arrow-white)"/>
+  <text x="175" y="375" font-family="Inter, sans-serif" font-size="10" fill="#F2EBD9" text-anchor="middle">Render Result or Error</text>
+
+  <!-- Arrow markers -->
+  <defs>
+    <marker id="arrow-gold" markerWidth="8" markerHeight="8" refX="5" refY="4" orient="auto">
+      <path d="M 0 0 L 8 4 L 0 8 z" fill="#C8A84B" />
+    </marker>
+    <marker id="arrow-white" markerWidth="8" markerHeight="8" refX="5" refY="4" orient="auto">
+      <path d="M 0 0 L 8 4 L 0 8 z" fill="#F2EBD9" />
+    </marker>
+  </defs>
+</svg>

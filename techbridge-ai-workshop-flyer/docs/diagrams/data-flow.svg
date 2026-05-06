@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400">
+  <rect width="800" height="400" fill="#ffffff" />
+  <text x="400" y="30" font-family="sans-serif" font-size="20" text-anchor="middle" font-weight="bold" fill="#334155">Application Data Flow</text>
+
+  <!-- Actors -->
+  <circle cx="100" cy="200" r="40" fill="#e2e8f0" stroke="#475569" stroke-width="2"/>
+  <text x="100" y="205" text-anchor="middle" font-family="sans-serif" font-size="12">User</text>
+
+  <circle cx="700" cy="200" r="40" fill="#fee2e2" stroke="#b91c1c" stroke-width="2"/>
+  <text x="700" y="205" text-anchor="middle" font-family="sans-serif" font-size="12">Admin</text>
+
+  <!-- System Components -->
+  <rect x="250" y="150" width="300" height="100" rx="10" fill="#f0f9ff" stroke="#0ea5e9" stroke-width="2"/>
+  <text x="400" y="190" text-anchor="middle" font-family="sans-serif" font-size="14" font-weight="bold">React Application State</text>
+  <text x="400" y="210" text-anchor="middle" font-family="sans-serif" font-size="10" fill="#64748b">(Virtual DOM)</text>
+
+  <!-- Data Sources -->
+  <rect x="300" y="300" width="200" height="60" rx="5" fill="#fffbeb" stroke="#f59e0b" stroke-width="2"/>
+  <text x="400" y="335" text-anchor="middle" font-family="sans-serif" font-size="12">Constants.ts (Static Data)</text>
+
+  <!-- Flows -->
+  <!-- User to App -->
+  <path d="M140 200 L240 200" stroke="#475569" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="190" y="190" text-anchor="middle" font-family="sans-serif" font-size="10">View / Interact</text>
+
+  <!-- Admin to App -->
+  <path d="M660 200 L560 200" stroke="#b91c1c" stroke-width="2" marker-end="url(#arrow-red)"/>
+  <text x="610" y="190" text-anchor="middle" font-family="sans-serif" font-size="10">Auth / Diagnose</text>
+
+  <!-- Static Data to App -->
+  <path d="M400 300 L400 260" stroke="#f59e0b" stroke-width="2" marker-end="url(#arrow-orange)"/>
+  <text x="440" y="285" text-anchor="middle" font-family="sans-serif" font-size="10">Hydration</text>
+
+  <!-- Logger -->
+  <rect x="350" y="50" width="100" height="50" rx="5" fill="#f0fdf4" stroke="#16a34a" stroke-width="2"/>
+  <text x="400" y="80" text-anchor="middle" font-family="sans-serif" font-size="12">Audit Logger</text>
+
+  <!-- App to Logger -->
+  <path d="M400 150 L400 110" stroke="#16a34a" stroke-width="2" marker-end="url(#arrow-green)"/>
+  <text x="445" y="130" text-anchor="middle" font-family="sans-serif" font-size="10">Events</text>
+
+  <!-- Definitions -->
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#475569" />
+    </marker>
+    <marker id="arrow-red" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#b91c1c" />
+    </marker>
+    <marker id="arrow-orange" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#f59e0b" />
+    </marker>
+    <marker id="arrow-green" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#16a34a" />
+    </marker>
+  </defs>
+</svg>

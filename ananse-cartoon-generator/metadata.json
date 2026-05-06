@@ -1,0 +1,6 @@
+{
+  "name": "Ananse Cartoon Generator",
+  "description": "A web application that uses AI to generate cartoon scenes from the stories of Ananse the spider based on textual descriptions. Users can input a scene and the app creates a visual representation.",
+  "requestFramePermissions": [],
+  "prompt": ""
+}

@@ -1,0 +1,92 @@
+[3] Installing: academic-performance-app
+Lockfile is up to date, resolution step is skipped
+Progress: resolved 1, reused 0, downloaded 0, added 0
+Packages: +320
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Progress: resolved 320, reused 16, downloaded 0, added 0
+Progress: resolved 320, reused 36, downloaded 0, added 0
+Progress: resolved 320, reused 56, downloaded 0, added 0
+Progress: resolved 320, reused 80, downloaded 0, added 0
+Progress: resolved 320, reused 155, downloaded 0, added 0
+Progress: resolved 320, reused 270, downloaded 0, added 0
+Progress: resolved 320, reused 316, downloaded 0, added 1
+Progress: resolved 320, reused 317, downloaded 0, added 5
+Progress: resolved 320, reused 318, downloaded 0, added 10
+Progress: resolved 320, reused 318, downloaded 0, added 14
+Progress: resolved 320, reused 319, downloaded 0, added 25
+Progress: resolved 320, reused 319, downloaded 0, added 31
+Progress: resolved 320, reused 319, downloaded 0, added 37
+Progress: resolved 320, reused 320, downloaded 0, added 46
+Progress: resolved 320, reused 320, downloaded 0, added 57
+Progress: resolved 320, reused 320, downloaded 0, added 67
+Progress: resolved 320, reused 320, downloaded 0, added 72
+Progress: resolved 320, reused 320, downloaded 0, added 74
+Progress: resolved 320, reused 320, downloaded 0, added 75
+Progress: resolved 320, reused 320, downloaded 0, added 76
+Progress: resolved 320, reused 320, downloaded 0, added 82
+Progress: resolved 320, reused 320, downloaded 0, added 90
+Progress: resolved 320, reused 320, downloaded 0, added 99
+Progress: resolved 320, reused 320, downloaded 0, added 100
+Progress: resolved 320, reused 320, downloaded 0, added 101
+Progress: resolved 320, reused 320, downloaded 0, added 105
+Progress: resolved 320, reused 320, downloaded 0, added 111
+Progress: resolved 320, reused 320, downloaded 0, added 116
+Progress: resolved 320, reused 320, downloaded 0, added 122
+Progress: resolved 320, reused 320, downloaded 0, added 123
+Progress: resolved 320, reused 320, downloaded 0, added 128
+Progress: resolved 320, reused 320, downloaded 0, added 142
+Progress: resolved 320, reused 320, downloaded 0, added 148
+Progress: resolved 320, reused 320, downloaded 0, added 150
+Progress: resolved 320, reused 320, downloaded 0, added 154
+Progress: resolved 320, reused 320, downloaded 0, added 168
+Progress: resolved 320, reused 320, downloaded 0, added 173
+Progress: resolved 320, reused 320, downloaded 0, added 179
+Progress: resolved 320, reused 320, downloaded 0, added 184
+Progress: resolved 320, reused 320, downloaded 0, added 195
+Progress: resolved 320, reused 320, downloaded 0, added 197
+Progress: resolved 320, reused 320, downloaded 0, added 219
+Progress: resolved 320, reused 320, downloaded 0, added 227
+Progress: resolved 320, reused 320, downloaded 0, added 249
+Progress: resolved 320, reused 320, downloaded 0, added 257
+Progress: resolved 320, reused 320, downloaded 0, added 272
+Progress: resolved 320, reused 320, downloaded 0, added 284
+Progress: resolved 320, reused 320, downloaded 0, added 313
+Progress: resolved 320, reused 320, downloaded 0, added 316
+Progress: resolved 320, reused 320, downloaded 0, added 317
+Progress: resolved 320, reused 320, downloaded 0, added 319
+Progress: resolved 320, reused 320, downloaded 0, added 320
+Progress: resolved 320, reused 320, downloaded 0, added 320, done
+
+dependencies:
++ @testing-library/dom 10.4.0
++ @testing-library/jest-dom 6.6.3
++ @testing-library/react 16.3.0
++ @testing-library/user-event 13.5.0
++ lucide-react 0.400.0
++ react 19.2.4
++ react-dom 19.2.4
++ react-router-dom 7.13.1
++ web-vitals 2.1.4
+
+devDependencies:
++ @tailwindcss/vite 4.2.1
++ @types/react 19.2.14
++ @types/react-dom 19.2.3
++ @vitejs/plugin-react 5.1.4
++ @vitest/coverage-v8 3.2.4
++ @vitest/ui 3.2.4
++ jsdom 26.1.0
++ serve 14.2.5
++ tailwindcss 4.2.1
++ typescript 5.9.3
++ vite 7.3.1
++ vitest 3.2.4
+
+╭ Warning ─────────────────────────────────────────────────────────────────────╮
+│                                                                              │
+│   Ignored build scripts: esbuild@0.27.3.                                     │
+│   Run "pnpm approve-builds" to pick which dependencies should be allowed     │
+│   to run scripts.                                                            │
+│                                                                              │
+╰──────────────────────────────────────────────────────────────────────────────╯
+Done in 1m 50.6s using pnpm v10.30.1

@@ -1,0 +1,13 @@
+<svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
+  <rect width="400" height="300" fill="#111" rx="20"/>
+  <text x="200" y="60" font-family="sans-serif" font-weight="bold" font-size="24" fill="#E8BC50" text-anchor="middle">DADA TECH</text>
+  
+  <rect x="50" y="100" width="300" height="40" rx="5" fill="#eee"/>
+  <text x="200" y="127" font-family="sans-serif" font-weight="bold" font-size="16" fill="#000" text-anchor="middle">React 19 + TypeScript</text>
+  
+  <rect x="50" y="160" width="300" height="40" rx="5" fill="#E8BC50"/>
+  <text x="200" y="187" font-family="sans-serif" font-weight="bold" font-size="16" fill="#000" text-anchor="middle">Web Audio + Canvas API</text>
+  
+  <rect x="50" y="220" width="300" height="40" rx="5" fill="#555"/>
+  <text x="200" y="247" font-family="sans-serif" font-weight="bold" font-size="16" fill="#fff" text-anchor="middle">Tailwind CSS</text>
+</svg>

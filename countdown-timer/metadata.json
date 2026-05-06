@@ -1,0 +1,5 @@
+{
+  "name": "Countdown Timer",
+  "description": "A beautiful countdown timer application with a 3D abstract background and a dark timer panel.",
+  "requestFramePermissions": []
+}

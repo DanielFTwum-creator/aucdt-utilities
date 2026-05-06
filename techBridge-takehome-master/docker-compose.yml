@@ -1,0 +1,24 @@
+services:
+  mariadb:
+    image: mariadb:11.4-alpine
+    container_name: techbridge-mariadb
+    restart: always
+    environment:
+      MARIADB_ROOT_PASSWORD: root
+      MARIADB_DATABASE: techbridge
+      MARIADB_USER: admin
+      MARIADB_PASSWORD: "AdminPass#123!"
+    ports:
+      - "3307:3306"
+    volumes:
+      - mariadb_data:/var/lib/mysql
+
+  redis:
+    image: redis:7.2-alpine
+    container_name: techbridge-redis
+    restart: always
+    ports:
+      - "6379:6379"
+
+volumes:
+  mariadb_data:

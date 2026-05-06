@@ -1,0 +1,135 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "Space Mono", ui-monospace, SFMono-Regular, monospace;
+  --font-serif: "Playfair Display", Georgia, serif;
+}
+
+/* ─── Base ─────────────────────────────────────────────────────────────────── */
+
+@layer base {
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: #7A5520 #1C0E06;
+  }
+  *::-webkit-scrollbar { width: 5px; }
+  *::-webkit-scrollbar-track { background: #1C0E06; }
+  *::-webkit-scrollbar-thumb { background: #5A3A18; border-radius: 3px; }
+  *::-webkit-scrollbar-thumb:hover { background: #7A5520; }
+
+  body {
+    @apply min-h-screen font-sans;
+    background-color: #100804;
+    background-image:
+      radial-gradient(ellipse at 18% 45%, rgba(200, 120, 20, 0.18) 0%, transparent 55%),
+      radial-gradient(ellipse at 82% 20%, rgba(160, 90, 15, 0.12) 0%, transparent 50%),
+      radial-gradient(ellipse at 50% 95%, rgba(180, 100, 10, 0.10) 0%, transparent 55%);
+    color: #FAF0D8;
+  }
+
+  /* Subtle film-grain overlay */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.03;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23g)' opacity='1'/%3E%3C/svg%3E");
+  }
+
+  /* Range input thumb */
+  input[type="range"] { -webkit-appearance: none; appearance: none; }
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: #C8921E;
+    cursor: pointer;
+    box-shadow: 0 0 8px rgba(200, 146, 30, 0.5);
+    border: 2px solid #0A0603;
+  }
+  input[type="range"]::-moz-range-thumb {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: #C8921E;
+    cursor: pointer;
+    border: 2px solid #0A0603;
+  }
+
+  select option {
+    background: #1C0E06;
+    color: #F0D9A8;
+  }
+}
+
+/* ─── Animations ────────────────────────────────────────────────────────────── */
+
+@keyframes vu-pulse {
+  from { height: 3px; opacity: 0.35; }
+  to   { height: var(--bar-height, 18px); opacity: 1; }
+}
+
+@keyframes rec-blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.15; }
+}
+
+@keyframes level-l {
+  0%   { width: 42%; }
+  20%  { width: 76%; }
+  40%  { width: 58%; }
+  60%  { width: 88%; }
+  80%  { width: 63%; }
+  100% { width: 48%; }
+}
+
+@keyframes level-r {
+  0%   { width: 65%; }
+  25%  { width: 48%; }
+  50%  { width: 84%; }
+  75%  { width: 60%; }
+  100% { width: 72%; }
+}
+
+@keyframes shimmer-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ─── Component classes ─────────────────────────────────────────────────────── */
+
+.vu-bar {
+  width: 3px;
+  border-radius: 2px;
+  flex-shrink: 0;
+  background: linear-gradient(to top, #A07020 0%, #C8921E 65%, #FFD060 100%);
+  animation: vu-pulse var(--bar-duration, 0.45s) ease-in-out infinite alternate;
+}
+
+.rec-dot {
+  animation: rec-blink 0.75s ease-in-out infinite;
+}
+
+.level-meter-l {
+  animation: level-l 2.0s ease-in-out infinite;
+}
+
+.level-meter-r {
+  animation: level-r 2.3s ease-in-out infinite;
+}
+
+.studio-panel {
+  background: linear-gradient(145deg, #281608 0%, #1C1005 100%);
+  border: 1px solid #6A4020;
+  border-radius: 1rem;
+}
+
+.studio-panel-inner {
+  background: linear-gradient(145deg, #201205 0%, #180E04 100%);
+  border: 1px solid #4A2C12;
+  border-radius: 0.75rem;
+}

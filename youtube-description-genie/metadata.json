@@ -1,0 +1,5 @@
+{
+  "name": "YouTube Description Genie",
+  "description": "An AI-powered application to generate custom, professional YouTube video descriptions for musicians based on a proven template. Simply provide your song's details, and let the AI craft the perfect description to engage your audience.",
+  "requestFramePermissions": []
+}

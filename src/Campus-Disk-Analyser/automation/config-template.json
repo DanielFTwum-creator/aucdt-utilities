@@ -1,0 +1,100 @@
+{
+  "description": "Lab Automation Configuration Template",
+  "version": "1.0",
+  
+  "windows": {
+    "script_path": ".\\enhanced-disk-analyser.sh",
+    "git_bash_path": "C:\\Program Files\\Git\\bin\\bash.exe",
+    "output_directory": "C:\\LabData\\DiskAnalysis",
+    "central_share": "\\\\labserver\\disk-analysis",
+    "schedule_name": "LabDiskAnalysis",
+    "analysis_targets": [
+      "/c/Users",
+      "/c/Program Files"
+    ],
+    "schedule": {
+      "frequency": "Weekly",
+      "time": "02:00",
+      "days": ["Monday", "Wednesday", "Friday"]
+    }
+  },
+  
+  "macos": {
+    "script_path": "./test-enhanced-disk-analyser.sh",
+    "output_directory": "/Users/Shared/LabData/DiskAnalysis",
+    "central_share": "/Volumes/lab-analysis",
+    "analysis_targets": [
+      "/Users",
+      "/Applications",
+      "/System/Volumes/Data"
+    ],
+    "schedule": {
+      "hour": "02",
+      "minute": "00",
+      "days": "1,3,5"
+    }
+  },
+  
+  "central_collection": {
+    "data_directories": [
+      "/shared/disk-analysis",
+      "/Users/Shared/LabData/DiskAnalysis",
+      "C:\\LabData\\DiskAnalysis"
+    ],
+    "database_path": "/shared/lab-analysis.db",
+    "reports_directory": "/shared/reports",
+    "web_export_directory": "/shared/web-data",
+    "retention_days": 90
+  },
+  
+  "notifications": {
+    "email": {
+      "enabled": true,
+      "smtp_server": "mail.yourdomain.com",
+      "smtp_port": 587,
+      "username": "lab-monitoring@yourdomain.com",
+      "password": "your_email_password",
+      "recipients": [
+        "admin@yourdomain.com",
+        "it-support@yourdomain.com"
+      ]
+    },
+    "slack": {
+      "enabled": false,
+      "webhook_url": "https://hooks.slack.com/services/YOUR/SLACK/WEBHOOK"
+    }
+  },
+  
+  "thresholds": {
+    "disk_usage_warning": 80,
+    "disk_usage_critical": 90,
+    "large_directory_gb": 10,
+    "file_count_threshold": 100000
+  },
+  
+  "deployment": {
+    "windows": {
+      "computer_names": [
+        "WIN-LAB-01",
+        "WIN-LAB-02",
+        "WIN-LAB-03"
+      ],
+      "domain": "yourdomain.local"
+    },
+    "macos": {
+      "computer_names": [
+        "mac-lab-01.local",
+        "mac-lab-02.local",
+        "mac-lab-03.local"
+      ],
+      "ssh_user": "admin",
+      "ssh_key_path": "~/.ssh/id_rsa"
+    }
+  },
+  
+  "web_dashboard": {
+    "url": "https://64vrc4xoo7.space.minimax.io",
+    "auto_upload": true,
+    "export_formats": ["json", "csv"]
+  }
+}

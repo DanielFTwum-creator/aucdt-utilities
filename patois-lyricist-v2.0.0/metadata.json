@@ -1,0 +1,8 @@
+{
+  "name": "Patois Lyricist v2.0.0",
+  "description": "An AI-powered Reggae lyric generator that crafts authentic songs in Jamaican Patois based on your theme.",
+  "requestFramePermissions": [
+    "microphone"
+  ],
+  "majorCapabilities": []
+}

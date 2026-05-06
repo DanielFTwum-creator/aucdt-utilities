@@ -1,0 +1,1198 @@
+version: '3.9'
+
+# Master Docker Compose Orchestration for AUCDT Utilities
+# Production-ready stack for 36 backend services + monitoring infrastructure
+#
+# Usage:
+#   docker-compose -f docker-compose-all-12-services.yml up -d
+#
+# Includes:
+#   - 36 Production Backend Services (ports 4000-4035)
+#   - MariaDB 11.4 (shared database)
+#   - Prometheus (metrics)
+#   - Elasticsearch + Kibana (centralized logging)
+#   - Nginx (reverse proxy)
+
+services:
+
+  # ════════════════════════════════════════════════════════════════════════════
+  # SHARED DATABASE
+  # ════════════════════════════════════════════════════════════════════════════
+
+  mariadb:
+    image: mariadb:11.4-jammy
+    container_name: tuc-mariadb
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass123!
+      MYSQL_USER: appuser
+      MYSQL_PASSWORD: apppass123!
+      MYSQL_DATABASE: aucdt_main
+    ports:
+      - "3306:3306"
+    volumes:
+      - mariadb-data:/var/lib/mysql
+    healthcheck:
+      test: [ "CMD", "mariadb-admin", "ping", "-h", "localhost" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - tuc-network
+    restart: unless-stopped
+
+  # ════════════════════════════════════════════════════════════════════════════
+  # BACKEND SERVICES (8 Core + 4 Additional)
+  # ════════════════════════════════════════════════════════════════════════════
+
+  # 1. GhanaNewsAPI — News feed aggregation
+  ghana-news-api:
+    build:
+      context: ./services/ghana-news-api
+      dockerfile: Dockerfile.prod
+    container_name: ghana-news-api
+    environment:
+      PORT: 4000
+      DB_HOST: mariadb
+      DB_USER: appuser
+      DB_PASSWORD: apppass123!
+      DB_NAME: ghana_news
+      NODE_ENV: production
+      LOG_LEVEL: info
+    depends_on:
+      mariadb:
+        condition: service_healthy
+    ports:
+      - "4000:4000"
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:4000/health" ]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+        labels: "service=ghana-news-api"
+
+  # 2. Brand Checker — Design compliance validation
+  brand-checker-api:
+    build:
+      context: ./brand-guideline-checker
+      dockerfile: Dockerfile.prod
+    container_name: brand-checker-api
+    environment:
+      PORT: 4001
+      DB_HOST: mariadb
+      DB_USER: appuser
+      DB_PASSWORD: apppass123!
+      DB_NAME: brand_checker
+      NODE_ENV: production
+      LOG_LEVEL: info
+    depends_on:
+      mariadb:
+        condition: service_healthy
+    ports:
+      - "4001:4001"
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:4001/health" ]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+        labels: "service=brand-checker-api"
+
+  # 3. MSEE Aptitude Test — Assessment & scoring engine
+  msee-aptitude-api:
+    build:
+      context: ./tuc-msee-aptitude-test
+      dockerfile: Dockerfile.prod
+    container_name: msee-aptitude-api
+    environment:
+      PORT: 4002
+      DB_HOST: mariadb
+      DB_USER: appuser
+      DB_PASSWORD: apppass123!
+      DB_NAME: msee_aptitude
+      NODE_ENV: production
+      LOG_LEVEL: info
+    depends_on:
+      mariadb:
+        condition: service_healthy
+    ports:
+      - "4002:4002"
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:4002/health" ]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+        labels: "service=msee-aptitude-api"
+
+  # 4. Lecturer Assessment — Instructor grading portal
+  lecture-assessment-api:
+    build:
+      context: ./lecturer-assessment-portal
+      dockerfile: Dockerfile.prod
+    container_name: lecture-assessment-api
+    environment:
+      PORT: 4003
+      DB_HOST: mariadb
+      DB_USER: appuser
+      DB_PASSWORD: apppass123!
+      DB_NAME: lecture_assessment
+      NODE_ENV: production
+      LOG_LEVEL: info
+    depends_on:
+      mariadb:
+        condition: service_healthy
+    ports:
+      - "4003:4003"
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:4003/health" ]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+        labels: "service=lecture-assessment-api"
+
+  # 5. ASAPro — Task scheduling & automation
+  asapro-api:
+    build:
+      context: ./ai-utilities/asapro6
+      dockerfile: Dockerfile.prod
+    container_name: asapro-api
+    environment:
+      PORT: 4004
+      DB_HOST: mariadb
+      DB_USER: appuser
+      DB_PASSWORD: apppass123!
+      DB_NAME: asapro
+      NODE_ENV: production
+      LOG_LEVEL: info
+    depends_on:
+      mariadb:
+        condition: service_healthy
+    ports:
+      - "4004:4004"
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:4004/health" ]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+        labels: "service=asapro-api"
+
+  # 6. Techbridge Sentinel — AI monitoring agent
+  sentinel-api:
+    build:
+      context: ./techbridge-sentinel-agent
+      dockerfile: Dockerfile.prod
+    container_name: sentinel-api
+    environment:
+      PORT: 4005
+      DB_HOST: mariadb
+      DB_USER: appuser
+      DB_PASSWORD: apppass123!
+      DB_NAME: sentinel
+      NODE_ENV: production
+      LOG_LEVEL: info
+    depends_on:
+      mariadb:
+        condition: service_healthy
+    ports:
+      - "4005:4005"
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:4005/health" ]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+        labels: "service=sentinel-api"
+
+  # 7. Analytics Service — Data aggregation & reporting
+  analytics-api:
+    build:
+      context: ./analytics-refactor
+      dockerfile: Dockerfile.prod
+    container_name: analytics-api
+    environment:
+      PORT: 4006
+      DB_HOST: mariadb
+      DB_USER: appuser
+      DB_PASSWORD: apppass123!
+      DB_NAME: analytics
+      NODE_ENV: production
+      LOG_LEVEL: info
+    depends_on:
+      mariadb:
+        condition: service_healthy
+    ports:
+      - "4006:4006"
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:4006/health" ]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+        labels: "service=analytics-api"
+
+  # 8. TSAPro — Timetable scheduling service
+  tsapro-api:
+    build:
+      context: ./tsapro
+      dockerfile: Dockerfile.prod
+    container_name: tsapro-api
+    environment:
+      PORT: 4007
+      DB_HOST: mariadb
+      DB_USER: appuser
+      DB_PASSWORD: apppass123!
+      DB_NAME: tsapro
+      NODE_ENV: production
+      LOG_LEVEL: info
+    depends_on:
+      mariadb:
+        condition: service_healthy
+    ports:
+      - "4007:4007"
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:4007/health" ]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+        labels: "service=tsapro-api"
+
+  # 9. NEWSFEED — News aggregation & article management
+  newsfeed-api:
+    build:
+      context: ./NEWSFEED
+      dockerfile: Dockerfile.prod
+    container_name: newsfeed-api
+    environment:
+      PORT: 4008
+      DB_HOST: mariadb
+      DB_USER: appuser
+      DB_PASSWORD: apppass123!
+      DB_NAME: newsfeed
+      NODE_ENV: production
+      LOG_LEVEL: info
+    depends_on:
+      mariadb:
+        condition: service_healthy
+    ports:
+      - "4008:4008"
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:4008/health" ]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+        labels: "service=newsfeed-api"
+
+  # 10. TechBridge Dashboard — Widget & metrics visualization
+  dashboard-api:
+    build:
+      context: ./techbridge-dashboard
+      dockerfile: Dockerfile.prod
+    container_name: dashboard-api
+    environment:
+      PORT: 4009
+      DB_HOST: mariadb
+      DB_USER: appuser
+      DB_PASSWORD: apppass123!
+      DB_NAME: dashboard
+      NODE_ENV: production
+      LOG_LEVEL: info
+    depends_on:
+      mariadb:
+        condition: service_healthy
+    ports:
+      - "4009:4009"
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:4009/health" ]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+        labels: "service=dashboard-api"
+
+  # 11. Product Lifecycle — Project & phase management
+  product-lifecycle-api:
+    build:
+      context: ./modern-product-dev-lifecycle
+      dockerfile: Dockerfile.prod
+    container_name: product-lifecycle-api
+    environment:
+      PORT: 4010
+      DB_HOST: mariadb
+      DB_USER: appuser
+      DB_PASSWORD: apppass123!
+      DB_NAME: product_lifecycle
+      NODE_ENV: production
+      LOG_LEVEL: info
+    depends_on:
+      mariadb:
+        condition: service_healthy
+    ports:
+      - "4010:4010"
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:4010/health" ]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+        labels: "service=product-lifecycle-api"
+
+  # 12. TSAPro Mapping Review — Timetable mapping & conflict resolution
+  mapping-review-api:
+    build:
+      context: ./tsapro-mapping-review
+      dockerfile: Dockerfile.prod
+    container_name: mapping-review-api
+    environment:
+      PORT: 4011
+      DB_HOST: mariadb
+      DB_USER: appuser
+      DB_PASSWORD: apppass123!
+      DB_NAME: tsapro_mapping
+      NODE_ENV: production
+      LOG_LEVEL: info
+    depends_on:
+      mariadb:
+        condition: service_healthy
+    ports:
+      - "4011:4011"
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:4011/health" ]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+        labels: "service=mapping-review-api"
+
+  # 13. AUCDT Lead Generator — Lead management & scoring
+  lead-generator-api:
+    build:
+      context: ./tuc-lead-generator
+      dockerfile: Dockerfile.prod
+    container_name: lead-generator-api
+    environment:
+      PORT: 4018
+      DB_HOST: mariadb
+      DB_USER: appuser
+      DB_PASSWORD: apppass123!
+      DB_NAME: lead_generation
+      NODE_ENV: production
+      LOG_LEVEL: info
+    depends_on:
+      mariadb:
+        condition: service_healthy
+    ports:
+      - "4018:4018"
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:4018/health" ]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+        labels: "service=lead-generator-api"
+
+  # 14. AUCDT Analytics Dashboard — Event tracking & analytics
+  analytics-dashboard-api:
+    build:
+      context: ./tuc-analytics-dashboard
+      dockerfile: Dockerfile.prod
+    container_name: analytics-dashboard-api
+    environment:
+      PORT: 4019
+      DB_HOST: mariadb
+      DB_USER: appuser
+      DB_PASSWORD: apppass123!
+      DB_NAME: analytics_dashboard
+      NODE_ENV: production
+      LOG_LEVEL: info
+    depends_on:
+      mariadb:
+        condition: service_healthy
+    ports:
+      - "4019:4019"
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:4019/health" ]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+        labels: "service=analytics-dashboard-api"
+
+  # 15. Fees Comparison Dashboard — Institutional fees database
+  fees-comparison-api:
+    build:
+      context: ./fees-comparison-dashboard
+      dockerfile: Dockerfile.prod
+    container_name: fees-comparison-api
+    environment:
+      PORT: 4020
+      DB_HOST: mariadb
+      DB_USER: appuser
+      DB_PASSWORD: apppass123!
+      DB_NAME: fees_comparison
+      NODE_ENV: production
+      LOG_LEVEL: info
+    depends_on:
+      mariadb:
+        condition: service_healthy
+    ports:
+      - "4020:4020"
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:4020/health" ]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+        labels: "service=fees-comparison-api"
+
+  # 16. Timetable Management System — Schedule & conflict management
+  timetable-management-api:
+    build:
+      context: ./timetable-management-system
+      dockerfile: Dockerfile.prod
+    container_name: timetable-management-api
+    environment:
+      PORT: 4021
+      DB_HOST: mariadb
+      DB_USER: appuser
+      DB_PASSWORD: apppass123!
+      DB_NAME: timetable_mgmt
+      NODE_ENV: production
+      LOG_LEVEL: info
+    depends_on:
+      mariadb:
+        condition: service_healthy
+    ports:
+      - "4021:4021"
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:4021/health" ]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+        labels: "service=timetable-management-api"
+
+  # 17. Counselor Pro — Counseling sessions & notes
+  counselor-pro-api:
+    build:
+      context: ./counselor-pro
+      dockerfile: Dockerfile.prod
+    container_name: counselor-pro-api
+    environment:
+      PORT: 4022
+      DB_HOST: mariadb
+      DB_USER: appuser
+      DB_PASSWORD: apppass123!
+      DB_NAME: counselor_pro
+      NODE_ENV: production
+      LOG_LEVEL: info
+    depends_on:
+      mariadb:
+        condition: service_healthy
+    ports:
+      - "4022:4022"
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:4022/health" ]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+        labels: "service=counselor-pro-api"
+
+  # 18. Presentation Platform — Slide & content management
+  presentation-platform-api:
+    build:
+      context: ./smartscale-ai-presentation-platform
+      dockerfile: Dockerfile.prod
+    container_name: presentation-platform-api
+    environment:
+      PORT: 4023
+      DB_HOST: mariadb
+      DB_USER: appuser
+      DB_PASSWORD: apppass123!
+      DB_NAME: presentation_platform
+      NODE_ENV: production
+      LOG_LEVEL: info
+    depends_on:
+      mariadb:
+        condition: service_healthy
+    ports:
+      - "4023:4023"
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:4023/health" ]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+        labels: "service=presentation-platform-api"
+
+  # ════════════════════════════════════════════════════════════════════════════
+  # BACKEND SERVICES (Additional 12: 4024-4035)
+  # ════════════════════════════════════════════════════════════════════════════
+
+  # 19. Applicant Dashboard — Admission tracking
+  applicant-dashboard-api:
+    build:
+      context: ./applicant-dashboard
+      dockerfile: Dockerfile.prod
+    container_name: applicant-dashboard-api
+    environment:
+      PORT: 4024
+      DB_HOST: mariadb
+      DB_USER: appuser
+      DB_PASSWORD: apppass123!
+      DB_NAME: applicant_dashboard
+      NODE_ENV: production
+      LOG_LEVEL: info
+    depends_on:
+      mariadb:
+        condition: service_healthy
+    ports:
+      - "4024:4024"
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:4024/health" ]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+        labels: "service=applicant-dashboard-api"
+
+  # 20. Candidate Broadsheet — Exam results tracking
+  candidate-broadsheet-api:
+    build:
+      context: ./tuc-candidate-broadsheet
+      dockerfile: Dockerfile.prod
+    container_name: candidate-broadsheet-api
+    environment:
+      PORT: 4025
+      DB_HOST: mariadb
+      DB_USER: appuser
+      DB_PASSWORD: apppass123!
+      DB_NAME: candidate_broadsheet
+      NODE_ENV: production
+      LOG_LEVEL: info
+    depends_on:
+      mariadb:
+        condition: service_healthy
+    ports:
+      - "4025:4025"
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:4025/health" ]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+        labels: "service=candidate-broadsheet-api"
+
+  # 21. Institution Dashboard — Institutional metrics
+  institution-dashboard-api:
+    build:
+      context: ./tuc-dashboard
+      dockerfile: Dockerfile.prod
+    container_name: institution-dashboard-api
+    environment:
+      PORT: 4026
+      DB_HOST: mariadb
+      DB_USER: appuser
+      DB_PASSWORD: apppass123!
+      DB_NAME: institution_dashboard
+      NODE_ENV: production
+      LOG_LEVEL: info
+    depends_on:
+      mariadb:
+        condition: service_healthy
+    ports:
+      - "4026:4026"
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:4026/health" ]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+        labels: "service=institution-dashboard-api"
+
+  # 22. Timetable Insights — Schedule analytics
+  timetable-insights-api:
+    build:
+      context: ./timetable-insights
+      dockerfile: Dockerfile.prod
+    container_name: timetable-insights-api
+    environment:
+      PORT: 4027
+      DB_HOST: mariadb
+      DB_USER: appuser
+      DB_PASSWORD: apppass123!
+      DB_NAME: timetable_insights
+      NODE_ENV: production
+      LOG_LEVEL: info
+    depends_on:
+      mariadb:
+        condition: service_healthy
+    ports:
+      - "4027:4027"
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:4027/health" ]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+        labels: "service=timetable-insights-api"
+
+  # 23. Expense Tracker — Financial management
+  expense-tracker-api:
+    build:
+      context: ./expense-tracking-system
+      dockerfile: Dockerfile.prod
+    container_name: expense-tracker-api
+    environment:
+      PORT: 4028
+      DB_HOST: mariadb
+      DB_USER: appuser
+      DB_PASSWORD: apppass123!
+      DB_NAME: expense_tracker
+      NODE_ENV: production
+      LOG_LEVEL: info
+    depends_on:
+      mariadb:
+        condition: service_healthy
+    ports:
+      - "4028:4028"
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:4028/health" ]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+        labels: "service=expense-tracker-api"
+
+  # 24. Enrollment Management — Student lifecycle
+  enrollment-management-api:
+    build:
+      context: ./enrollment-management-system
+      dockerfile: Dockerfile.prod
+    container_name: enrollment-management-api
+    environment:
+      PORT: 4029
+      DB_HOST: mariadb
+      DB_USER: appuser
+      DB_PASSWORD: apppass123!
+      DB_NAME: enrollment_mgmt
+      NODE_ENV: production
+      LOG_LEVEL: info
+    depends_on:
+      mariadb:
+        condition: service_healthy
+    ports:
+      - "4029:4029"
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:4029/health" ]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+        labels: "service=enrollment-management-api"
+
+  # 25. Media Club Platform — Content management
+  media-club-api:
+    build:
+      context: ./media-club-platform
+      dockerfile: Dockerfile.prod
+    container_name: media-club-api
+    environment:
+      PORT: 4030
+      DB_HOST: mariadb
+      DB_USER: appuser
+      DB_PASSWORD: apppass123!
+      DB_NAME: media_club_platform
+      NODE_ENV: production
+      LOG_LEVEL: info
+    depends_on:
+      mariadb:
+        condition: service_healthy
+    ports:
+      - "4030:4030"
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:4030/health" ]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+        labels: "service=media-club-api"
+
+  # 26. AI Code Reviewer — Code quality analysis
+  code-reviewer-api:
+    build:
+      context: ./ai-code-reviewer
+      dockerfile: Dockerfile.prod
+    container_name: code-reviewer-api
+    environment:
+      PORT: 4031
+      DB_HOST: mariadb
+      DB_USER: appuser
+      DB_PASSWORD: apppass123!
+      DB_NAME: ai_code_reviewer
+      NODE_ENV: production
+      LOG_LEVEL: info
+    depends_on:
+      mariadb:
+        condition: service_healthy
+    ports:
+      - "4031:4031"
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:4031/health" ]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+        labels: "service=code-reviewer-api"
+
+  # 27. Kanban Task Management — Project management
+  kanban-tasks-api:
+    build:
+      context: ./kanban-task-management
+      dockerfile: Dockerfile.prod
+    container_name: kanban-tasks-api
+    environment:
+      PORT: 4032
+      DB_HOST: mariadb
+      DB_USER: appuser
+      DB_PASSWORD: apppass123!
+      DB_NAME: kanban_tasks
+      NODE_ENV: production
+      LOG_LEVEL: info
+    depends_on:
+      mariadb:
+        condition: service_healthy
+    ports:
+      - "4032:4032"
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:4032/health" ]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+        labels: "service=kanban-tasks-api"
+
+  # 28. Lecture Assessment — Course evaluation
+  lecture-assessment-api:
+    build:
+      context: ./lecture-assessment-system
+      dockerfile: Dockerfile.prod
+    container_name: lecture-assessment-api
+    environment:
+      PORT: 4033
+      DB_HOST: mariadb
+      DB_USER: appuser
+      DB_PASSWORD: apppass123!
+      DB_NAME: lecture_assessment
+      NODE_ENV: production
+      LOG_LEVEL: info
+    depends_on:
+      mariadb:
+        condition: service_healthy
+    ports:
+      - "4033:4033"
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:4033/health" ]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+        labels: "service=lecture-assessment-api"
+
+  # 29. PDF Document Extractor — Document processing
+  pdf-extractor-api:
+    build:
+      context: ./pdf-document-extractor
+      dockerfile: Dockerfile.prod
+    container_name: pdf-extractor-api
+    environment:
+      PORT: 4034
+      DB_HOST: mariadb
+      DB_USER: appuser
+      DB_PASSWORD: apppass123!
+      DB_NAME: pdf_extractor
+      NODE_ENV: production
+      LOG_LEVEL: info
+    depends_on:
+      mariadb:
+        condition: service_healthy
+    ports:
+      - "4034:4034"
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:4034/health" ]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+        labels: "service=pdf-extractor-api"
+
+  # 30. URL Monitoring Service — Service health monitoring
+  url-monitoring-api:
+    build:
+      context: ./url-monitoring-service
+      dockerfile: Dockerfile.prod
+    container_name: url-monitoring-api
+    environment:
+      PORT: 4035
+      DB_HOST: mariadb
+      DB_USER: appuser
+      DB_PASSWORD: apppass123!
+      DB_NAME: url_monitoring
+      NODE_ENV: production
+      LOG_LEVEL: info
+    depends_on:
+      mariadb:
+        condition: service_healthy
+    ports:
+      - "4035:4035"
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:4035/health" ]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+        labels: "service=url-monitoring-api"
+
+  # ════════════════════════════════════════════════════════════════════════════
+  # MONITORING & OBSERVABILITY STACK
+  # ════════════════════════════════════════════════════════════════════════════
+
+  # Prometheus — Metrics collection & storage
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: tuc-prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus-data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--storage.tsdb.retention.time=30d'
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # Elasticsearch — Centralized logging backend
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.11.0
+    container_name: tuc-elasticsearch
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - ES_JAVA_OPTS=-Xms512m -Xmx512m
+    ports:
+      - "9200:9200"
+    volumes:
+      - elasticsearch-data:/usr/share/elasticsearch/data
+    healthcheck:
+      test: [ "CMD-SHELL", "curl -f http://localhost:9200/_cluster/health || exit 1" ]
+      interval: 20s
+      timeout: 10s
+      retries: 5
+    networks:
+      - tuc-network
+    restart: unless-stopped
+
+  # Kibana — Log visualization & exploration
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.11.0
+    container_name: tuc-kibana
+    ports:
+      - "5601:5601"
+    environment:
+      ELASTICSEARCH_HOSTS: http://elasticsearch:9200
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
+    networks:
+      - tuc-network
+    restart: unless-stopped
+
+  # ════════════════════════════════════════════════════════════════════════════
+  # REVERSE PROXY & LOAD BALANCER
+  # ════════════════════════════════════════════════════════════════════════════
+
+  nginx:
+    image: nginx:alpine
+    container_name: tuc-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./monitoring/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./certs:/etc/nginx/certs:ro
+    depends_on:
+      - ghana-news-api
+      - brand-checker-api
+      - msee-aptitude-api
+      - lecture-assessment-api
+      - asapro-api
+      - sentinel-api
+      - analytics-api
+      - tsapro-api
+      - newsfeed-api
+      - dashboard-api
+      - product-lifecycle-api
+      - mapping-review-api
+      - lead-generator-api
+      - analytics-dashboard-api
+      - fees-comparison-api
+      - timetable-management-api
+      - counselor-pro-api
+      - presentation-platform-api
+      - applicant-dashboard-api
+      - candidate-broadsheet-api
+      - institution-dashboard-api
+      - timetable-insights-api
+      - expense-tracker-api
+      - enrollment-management-api
+      - media-club-api
+      - code-reviewer-api
+      - kanban-tasks-api
+      - lecture-assessment-api
+      - pdf-extractor-api
+      - url-monitoring-api
+      - prometheus
+      - kibana
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    healthcheck:
+      test: [ "CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+networks:
+  tuc-network:
+    driver: bridge
+
+volumes:
+  mariadb-data:
+    driver: local
+  prometheus-data:
+    driver: local
+  elasticsearch-data:
+    driver: local

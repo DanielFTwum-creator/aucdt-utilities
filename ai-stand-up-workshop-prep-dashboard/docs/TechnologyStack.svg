@@ -1,0 +1,50 @@
+<svg width="800" height="500" viewBox="0 0 800 500" xmlns="http://www.w3.org/2000/svg" font-family="Poppins, sans-serif" font-size="14">
+    <style>
+        .title { font-size: 24px; font-weight: bold; fill: #2C1810; }
+        .category-title { font-size: 18px; font-weight: 600; fill: #6B1028; text-anchor: middle; }
+        .box { stroke: #D4AF37; stroke-width: 2; fill: #FFFFFF; transition: transform 0.2s; }
+        .box:hover { transform: translateY(-5px); }
+        .logo-text { font-size: 22px; font-weight: bold; fill: #8B1538; text-anchor: middle; }
+        .desc-text { font-size: 14px; fill: #2C1810; text-anchor: middle; }
+    </style>
+
+    <text x="400" y="40" text-anchor="middle" class="title">Application Technology Stack</text>
+
+    <!-- Core Technologies -->
+    <g>
+        <text x="400" y="100" class="category-title">Core Frontend</text>
+        <!-- React -->
+        <g transform="translate(250, 130)">
+            <rect x="0" y="0" width="140" height="100" rx="10" class="box"/>
+            <text x="70" y="45" class="logo-text">React</text>
+            <text x="70" y="70" class="desc-text">UI Library</text>
+        </g>
+        <!-- TypeScript -->
+        <g transform="translate(410, 130)">
+            <rect x="0" y="0" width="140" height="100" rx="10" class="box"/>
+            <text x="70" y="45" class="logo-text">TypeScript</text>
+            <text x="70" y="70" class="desc-text">Language</text>
+        </g>
+    </g>
+
+    <!-- Libraries & Frameworks -->
+    <g>
+        <text x="400" y="280" class="category-title">Libraries & Frameworks</text>
+        <!-- Tailwind CSS -->
+        <g transform="translate(170, 310)">
+            <rect x="0" y="0" width="220" height="100" rx="10" class="box"/>
+            <text x="110" y="45" class="logo-text">Tailwind CSS</text>
+            <text x="110" y="70" class="desc-text">Styling & Responsiveness</text>
+        </g>
+        <!-- Chart.js -->
+        <g transform="translate(410, 310)">
+            <rect x="0" y="0" width="220" height="100" rx="10" class="box"/>
+            <text x="110" y="45" class="logo-text">Chart.js</text>
+            <text x="110" y="70" class="desc-text">Data Visualization</text>
+        </g>
+    </g>
+
+    <!-- Connectors -->
+    <path d="M 400 230 L 400 280" stroke="#6B1028" stroke-width="1.5" stroke-dasharray="5,5"/>
+
+</svg>

@@ -1,0 +1,71 @@
+[178] Installing: pdf-to-assessment-json-converter
+Lockfile is up to date, resolution step is skipped
+Progress: resolved 1, reused 0, downloaded 0, added 0
+Packages: +306
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Progress: resolved 306, reused 20, downloaded 0, added 0
+Progress: resolved 306, reused 71, downloaded 0, added 0
+Progress: resolved 306, reused 224, downloaded 0, added 0
+Progress: resolved 306, reused 302, downloaded 0, added 0
+Progress: resolved 306, reused 305, downloaded 0, added 11
+Progress: resolved 306, reused 306, downloaded 0, added 25
+Progress: resolved 306, reused 306, downloaded 0, added 31
+Progress: resolved 306, reused 306, downloaded 0, added 41
+Progress: resolved 306, reused 306, downloaded 0, added 42
+Progress: resolved 306, reused 306, downloaded 0, added 49
+Progress: resolved 306, reused 306, downloaded 0, added 57
+Progress: resolved 306, reused 306, downloaded 0, added 60
+Progress: resolved 306, reused 306, downloaded 0, added 65
+Progress: resolved 306, reused 306, downloaded 0, added 66
+Progress: resolved 306, reused 306, downloaded 0, added 71
+Progress: resolved 306, reused 306, downloaded 0, added 80
+Progress: resolved 306, reused 306, downloaded 0, added 95
+Progress: resolved 306, reused 306, downloaded 0, added 106
+Progress: resolved 306, reused 306, downloaded 0, added 107
+Progress: resolved 306, reused 306, downloaded 0, added 123
+Progress: resolved 306, reused 306, downloaded 0, added 127
+Progress: resolved 306, reused 306, downloaded 0, added 136
+Progress: resolved 306, reused 306, downloaded 0, added 140
+Progress: resolved 306, reused 306, downloaded 0, added 159
+Progress: resolved 306, reused 306, downloaded 0, added 174
+Progress: resolved 306, reused 306, downloaded 0, added 177
+Progress: resolved 306, reused 306, downloaded 0, added 197
+Progress: resolved 306, reused 306, downloaded 0, added 212
+Progress: resolved 306, reused 306, downloaded 0, added 224
+Progress: resolved 306, reused 306, downloaded 0, added 237
+Progress: resolved 306, reused 306, downloaded 0, added 238
+Progress: resolved 306, reused 306, downloaded 0, added 252
+Progress: resolved 306, reused 306, downloaded 0, added 258
+Progress: resolved 306, reused 306, downloaded 0, added 281
+Progress: resolved 306, reused 306, downloaded 0, added 285
+Progress: resolved 306, reused 306, downloaded 0, added 301
+Progress: resolved 306, reused 306, downloaded 0, added 302
+Progress: resolved 306, reused 306, downloaded 0, added 303
+Progress: resolved 306, reused 306, downloaded 0, added 304
+Progress: resolved 306, reused 306, downloaded 0, added 305
+Progress: resolved 306, reused 306, downloaded 0, added 306
+Progress: resolved 306, reused 306, downloaded 0, added 306, done
+
+dependencies:
++ @google/genai 1.15.0
++ lucide-react 0.400.0
++ pnpm 10.15.0
++ react 19.2.4
++ react-dom 19.2.4
++ react-router-dom 7.13.1
+
+devDependencies:
++ @testing-library/jest-dom 6.9.1
++ @testing-library/react 16.3.2
++ @testing-library/user-event 14.6.1
++ @types/node 24.3.0
++ @vitejs/plugin-react 5.0.1
++ @vitest/coverage-v8 3.2.4
++ @vitest/ui 3.2.4
++ jsdom 26.1.0
++ serve 14.2.5
++ typescript 5.9.2
++ vite 7.3.1
++ vitest 3.2.4
+
+Done in 1m 4.6s using pnpm v10.30.1

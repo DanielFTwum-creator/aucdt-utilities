@@ -1,0 +1,35 @@
+<svg width="800" height="400" viewBox="0 0 800 400" xmlns="http://www.w3.org/2000/svg" font-family="Inter, sans-serif" font-size="14px">
+    <title>Techbridge AI Portal Data Architecture (Local Storage)</title>
+    <style>
+        .title { font-weight: bold; font-size: 20px; fill: #2d3748; }
+        .table { fill: #ffffff; stroke: #4a5568; stroke-width: 1.5; }
+        .table-header { fill: #edf2f7; stroke: #4a5568; font-weight: bold; }
+        .table-text { fill: #4a5568; }
+        .col-type { fill: #718096; font-style: italic; }
+        .note { font-size: 11px; fill: #718096; }
+    </style>
+    <text x="400" y="40" text-anchor="middle" class="title">Local Storage Data Architecture (Key-Value Store)</text>
+    <g transform="translate(50, 100)">
+        <rect class="table" x="0" y="0" width="300" height="120" rx="5"/>
+        <rect class="table-header" x="0" y="0" width="300" height="40" rx="5"/>
+        <text class="table-text" x="150" y="25" text-anchor="middle" font-weight="bold">techbridge_theme</text>
+        <line x1="1" y1="80" x2="299" y2="80" stroke="#cbd5e0"/>
+        <text class="table-text" x="15" y="65">key</text>
+        <text class="col-type" x="290" y="65" text-anchor="end">string</text>
+        <text class="table-text" x="15" y="105" font-style="italic">Example: 'dark'</text>
+    </g>
+    <g transform="translate(450, 100)">
+        <rect class="table" x="0" y="0" width="300" height="200" rx="5"/>
+        <rect class="table-header" x="0" y="0" width="300" height="40" rx="5"/>
+        <text class="table-text" x="150" y="25" text-anchor="middle" font-weight="bold">techbridge_auditLog</text>
+        <text class="table-text" x="150" y="55" text-anchor="middle">(Stored as a JSON string)</text>
+        <line x1="1" y1="80" x2="299" y2="80" stroke="#cbd5e0"/>
+        <text class="table-text" x="15" y="105">timestamp</text>
+        <text class="col-type" x="290" y="105" text-anchor="end">ISOString</text>
+        <line x1="1" y1="120" x2="299" y2="120" stroke="#cbd5e0"/>
+        <text class="table-text" x="15" y="145">action</text>
+        <text class="col-type" x="290" y="145" text-anchor="end">string</text>
+        <line x1="1" y1="160" x2="299" y2="160" stroke="#cbd5e0"/>
+        <text class="note" x="150" y="180" text-anchor="middle">Stores admin actions (logins, tests)</text>
+    </g>
+</svg>

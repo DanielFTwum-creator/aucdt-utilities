@@ -1,0 +1,27 @@
+<svg viewBox="0 0 800 400" xmlns="http://www.w3.org/2000/svg">
+  <rect width="800" height="400" fill="#111" rx="10"/>
+  <text x="400" y="40" font-family="monospace" font-size="20" fill="#E8BC50" text-anchor="middle" font-weight="bold">SYSTEM ARCHITECTURE: DADA VISUALS</text>
+  
+  <!-- Boxes -->
+  <rect x="50" y="150" width="150" height="80" fill="#222" stroke="#E8BC50" stroke-width="2" rx="5"/>
+  <text x="125" y="195" font-family="monospace" font-size="14" fill="#eee" text-anchor="middle">MIC INPUT</text>
+  
+  <rect x="300" y="100" width="200" height="180" fill="#222" stroke="#E8BC50" stroke-width="2" rx="5"/>
+  <text x="400" y="130" font-family="monospace" font-size="14" fill="#E8BC50" text-anchor="middle" font-weight="bold">WEB CLIENT (React)</text>
+  <text x="400" y="165" font-family="monospace" font-size="12" fill="#aaa" text-anchor="middle">useAudioAnalyzer Hook</text>
+  <text x="400" y="200" font-family="monospace" font-size="12" fill="#aaa" text-anchor="middle">Visualizer State</text>
+  <text x="400" y="235" font-family="monospace" font-size="12" fill="#aaa" text-anchor="middle">VisualizerCanvas Component</text>
+  
+  <rect x="600" y="150" width="150" height="80" fill="#222" stroke="#E8BC50" stroke-width="2" rx="5"/>
+  <text x="675" y="195" font-family="monospace" font-size="14" fill="#eee" text-anchor="middle">GPU (Canvas 2D)</text>
+  
+  <!-- Arrows -->
+  <path d="M 200 190 L 300 190" stroke="#E8BC50" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <path d="M 500 190 L 600 190" stroke="#E8BC50" stroke-width="2" marker-end="url(#arrowhead)"/>
+  
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="0" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#E8BC50" />
+    </marker>
+  </defs>
+</svg>

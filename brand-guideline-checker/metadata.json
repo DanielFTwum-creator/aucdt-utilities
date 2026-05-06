@@ -1,0 +1,5 @@
+{
+  "name": "Brand Guideline Checker",
+  "description": "An intelligent tool that analyzes marketing materials and designs against the Asanska University College of Design and Technology brand guidelines using AI. Upload an image to ensure compliance with colors, typography, and logo usage.",
+  "requestFramePermissions": []
+}

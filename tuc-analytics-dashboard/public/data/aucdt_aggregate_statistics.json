@@ -1,0 +1,100 @@
+{
+  "summary": {
+    "total_applications": 523,
+    "processing_date": "2025-06-07T04:26:50.379572",
+    "data_period": {
+      "earliest_year": 2018,
+      "latest_year": 2025
+    }
+  },
+  "application_status": {
+    "distribution": {
+      "ACCEPTED": 203,
+      "REJECTED": 198,
+      "WAITLISTED": 74,
+      "REGISTERED": 47,
+      "": 1
+    },
+    "percentages": {
+      "ACCEPTED": 38.81,
+      "REJECTED": 37.86,
+      "WAITLISTED": 14.15,
+      "REGISTERED": 8.99,
+      "": 0.19
+    }
+  },
+  "yearly_trends": {
+    "applications_by_year": {
+      "2018": 1,
+      "2020": 8,
+      "2021": 1,
+      "2022": 58,
+      "2023": 148,
+      "2024": 181,
+      "2025": 126
+    },
+    "year_over_year_growth": {
+      "2020": 700.0,
+      "2021": -87.5,
+      "2022": 5700.0,
+      "2023": 155.17,
+      "2024": 22.3,
+      "2025": -30.39
+    }
+  },
+  "programme_analysis": {
+    "distribution": {
+      "10": 113,
+      "7": 88,
+      "9": 67,
+      "12": 53,
+      "1": 39,
+      "3": 36,
+      "4": 22,
+      "2": 20,
+      "31": 13,
+      "5": 12,
+      "33": 10,
+      "32": 9,
+      "35": 8,
+      "19": 5
+    },
+    "suppressed_categories": 16
+  },
+  "applicant_type": {
+    "distribution": {
+      "REGULAR": 522,
+      "MATURE": 1
+    },
+    "percentages": {
+      "REGULAR": 99.81,
+      "MATURE": 0.19
+    }
+  },
+  "seasonal_patterns": {
+    "monthly_distribution": {
+      "1": 110,
+      "2": 32,
+      "3": 30,
+      "4": 21,
+      "5": 23,
+      "6": 48,
+      "7": 34,
+      "8": 30,
+      "9": 28,
+      "10": 51,
+      "11": 60,
+      "12": 56
+    },
+    "peak_months": [
+      1,
+      11,
+      12
+    ],
+    "low_months": [
+      4,
+      5,
+      9
+    ]
+  }
+}

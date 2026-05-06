@@ -1,0 +1,5 @@
+{
+  "name": "AI Stand-up & Workshop Prep Dashboard",
+  "description": "An interactive dashboard that summarizes a team's stand-up meeting. It visualizes progress with charts, details team member statuses and blockers, outlines a strategy for an AI workshop, and explains key technical concepts discussed.",
+  "requestFramePermissions": []
+}

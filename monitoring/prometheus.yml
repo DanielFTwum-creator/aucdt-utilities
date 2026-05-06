@@ -1,0 +1,112 @@
+# Prometheus Configuration for AUCDT Services
+# Monitors all 8 backend services + infrastructure
+
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+  external_labels:
+    monitor: 'aucdt-monitor'
+
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets: []
+
+rule_files:
+  - /etc/prometheus/rules/*.yml
+
+scrape_configs:
+  # ────────────────────────────────────────────────────────────────────────
+  # Backend Services (Custom ports 4000-4007)
+  # ────────────────────────────────────────────────────────────────────────
+
+  - job_name: 'ghana-news-api'
+    static_configs:
+      - targets: ['localhost:4000']
+    metrics_path: '/metrics'
+    scrape_interval: 30s
+    scrape_timeout: 10s
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: instance
+        replacement: 'ghana-news-api'
+
+  - job_name: 'brand-checker-api'
+    static_configs:
+      - targets: ['localhost:4001']
+    metrics_path: '/metrics'
+    scrape_interval: 30s
+
+  - job_name: 'msee-aptitude-api'
+    static_configs:
+      - targets: ['localhost:4002']
+    metrics_path: '/metrics'
+    scrape_interval: 30s
+
+  - job_name: 'lecture-assessment-api'
+    static_configs:
+      - targets: ['localhost:4003']
+    metrics_path: '/metrics'
+    scrape_interval: 30s
+
+  - job_name: 'asapro-api'
+    static_configs:
+      - targets: ['localhost:4004']
+    metrics_path: '/metrics'
+    scrape_interval: 30s
+
+  - job_name: 'sentinel-api'
+    static_configs:
+      - targets: ['localhost:4005']
+    metrics_path: '/metrics'
+    scrape_interval: 30s
+
+  - job_name: 'analytics-api'
+    static_configs:
+      - targets: ['localhost:4006']
+    metrics_path: '/metrics'
+    scrape_interval: 30s
+
+  - job_name: 'tsapro-api'
+    static_configs:
+      - targets: ['localhost:4007']
+    metrics_path: '/metrics'
+    scrape_interval: 30s
+
+  # ────────────────────────────────────────────────────────────────────────
+  # Database Monitoring
+  # ────────────────────────────────────────────────────────────────────────
+
+  - job_name: 'mariadb'
+    static_configs:
+      - targets: ['mariadb:3306']
+    metrics_path: '/metrics'
+    scrape_interval: 30s
+
+  # ────────────────────────────────────────────────────────────────────────
+  # Container Metrics
+  # ────────────────────────────────────────────────────────────────────────
+
+  - job_name: 'docker'
+    static_configs:
+      - targets: ['docker.sock']
+    scrape_interval: 30s
+
+  # ────────────────────────────────────────────────────────────────────────
+  # Nginx Metrics
+  # ────────────────────────────────────────────────────────────────────────
+
+  - job_name: 'nginx'
+    static_configs:
+      - targets: ['localhost:8080']
+    metrics_path: '/nginx_status'
+    scrape_interval: 30s
+
+  # ────────────────────────────────────────────────────────────────────────
+  # Prometheus Self-Monitoring
+  # ────────────────────────────────────────────────────────────────────────
+
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+    scrape_interval: 15s

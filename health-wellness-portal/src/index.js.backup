@@ -1,0 +1,130 @@
+require('dotenv').config();
+const express = require('express');
+const cors = require('cors');
+const mysql = require('mysql2/promise');
+const { v4: uuidv4 } = require('uuid');
+
+const PORT = process.env.PORT || 4054;
+
+const app = express();
+app.use(cors());
+app.use(express.json());
+
+let pool;
+
+async function initDB() {
+  pool = mysql.createPool({
+    host: process.env.DB_HOST || 'localhost',
+    user: process.env.DB_USER || 'appuser',
+    password: process.env.DB_PASSWORD || 'apppass',
+    database: process.env.DB_NAME || 'health_wellness',
+    waitForConnections: true,
+    connectionLimit: 10,
+    queueLimit: 0,
+  });
+
+  const conn = await pool.getConnection();
+  await conn.query(`
+    CREATE TABLE IF NOT EXISTS health_records (
+      id VARCHAR(255) PRIMARY KEY,
+      patient_id VARCHAR(255),
+      patient_name VARCHAR(255),
+      age INT,
+      blood_type VARCHAR(10),
+      medical_history TEXT,
+      allergies TEXT,
+      last_checkup_date DATE,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
+  await conn.query(`
+    CREATE TABLE IF NOT EXISTS appointments (
+      id VARCHAR(255) PRIMARY KEY,
+      health_record_id VARCHAR(255),
+      appointment_date DATETIME,
+      doctor_name VARCHAR(255),
+      department VARCHAR(100),
+      reason_for_visit TEXT,
+      status VARCHAR(50),
+      notes TEXT,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (health_record_id) REFERENCES health_records(id)
+    )
+  `);
+  conn.release();
+  console.log('Health & Wellness DB initialized');
+}
+
+app.get('/health', (_req, res) => {
+  res.json({ status: 'ok', service: 'health-wellness-portal' });
+});
+
+// --- Health Records CRUD ---
+app.get('/api/health-records', async (_req, res) => {
+  const [rows] = await pool.query('SELECT * FROM health_records ORDER BY created_at DESC');
+  res.json(rows);
+});
+
+app.post('/api/health-records', async (req, res) => {
+  const { patient_id, patient_name, age, blood_type, medical_history, allergies, last_checkup_date } = req.body;
+  const id = `hrc_${uuidv4()}`;
+  await pool.query(
+    'INSERT INTO health_records (id, patient_id, patient_name, age, blood_type, medical_history, allergies, last_checkup_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+    [id, patient_id, patient_name, age || null, blood_type || '', medical_history || '', allergies || '', last_checkup_date || null]
+  );
+  res.status(201).json({ id });
+});
+
+app.put('/api/health-records/:id', async (req, res) => {
+  const { patient_id, patient_name, age, blood_type, medical_history, allergies, last_checkup_date } = req.body;
+  await pool.query(
+    'UPDATE health_records SET patient_id=?, patient_name=?, age=?, blood_type=?, medical_history=?, allergies=?, last_checkup_date=? WHERE id=?',
+    [patient_id, patient_name, age, blood_type, medical_history, allergies, last_checkup_date || null, req.params.id]
+  );
+  res.json({ updated: true });
+});
+
+app.delete('/api/health-records/:id', async (req, res) => {
+  await pool.query('DELETE FROM appointments WHERE health_record_id=?', [req.params.id]);
+  await pool.query('DELETE FROM health_records WHERE id=?', [req.params.id]);
+  res.json({ deleted: true });
+});
+
+// --- Appointments CRUD ---
+app.get('/api/appointments', async (_req, res) => {
+  const [rows] = await pool.query('SELECT * FROM appointments ORDER BY appointment_date DESC');
+  res.json(rows);
+});
+
+app.post('/api/appointments', async (req, res) => {
+  const { health_record_id, appointment_date, doctor_name, department, reason_for_visit, status, notes } = req.body;
+  const id = `appt_${uuidv4()}`;
+  await pool.query(
+    'INSERT INTO appointments (id, health_record_id, appointment_date, doctor_name, department, reason_for_visit, status, notes) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+    [id, health_record_id, appointment_date, doctor_name, department || '', reason_for_visit || '', status || 'scheduled', notes || '']
+  );
+  res.status(201).json({ id });
+});
+
+app.put('/api/appointments/:id', async (req, res) => {
+  const { health_record_id, appointment_date, doctor_name, department, reason_for_visit, status, notes } = req.body;
+  await pool.query(
+    'UPDATE appointments SET health_record_id=?, appointment_date=?, doctor_name=?, department=?, reason_for_visit=?, status=?, notes=? WHERE id=?',
+    [health_record_id, appointment_date, doctor_name, department, reason_for_visit, status, notes, req.params.id]
+  );
+  res.json({ updated: true });
+});
+
+app.delete('/api/appointments/:id', async (req, res) => {
+  await pool.query('DELETE FROM appointments WHERE id=?', [req.params.id]);
+  res.json({ deleted: true });
+});
+
+async function start() {
+  await initDB();
+  app.listen(PORT, () => {
+    console.log(`Health & Wellness Portal API running on port ${PORT}`);
+  });
+}
+
+start().catch(console.error);

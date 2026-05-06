@@ -1,0 +1,132 @@
+pipelines:
+  # This defines the default pipeline that runs on push to any branch.
+  default:
+    - parallel:
+        - step:
+            name: Build and Deploy Fees Comparison Dashboard
+            image: node:20-alpine
+            caches:
+              - node
+              - pnpm
+            script:
+              - cd fees-comparison-dashboard
+              - corepack enable
+              - corepack prepare pnpm@latest --activate
+              - pnpm install --frozen-lockfile
+              - pnpm run build
+              - echo "Checking dist directory..."
+              - ls -la dist/
+              - mkdir -p dist/WEB-INF
+              - cp -varf ./WEB-INF/* dist/WEB-INF/
+              - apk add --no-cache zip openssh-client
+              - cd ./dist/
+              - zip -r fees-comparison.war *
+              - scp fees-comparison.war root@66.226.72.199:/opt/tomcat/webapps/fees-comparison.war
+            artifacts:
+              - fees-comparison-dashboard/dist/**
+            changesets:
+              - include: 'fees-comparison-dashboard/**'
+              
+        - step:
+            name: Build and Deploy Lecture Assessment
+            image: node:20-alpine
+            caches:
+              - node
+              - pnpm
+            script:
+              - cd lecture-assessment
+              - corepack enable
+              - corepack prepare pnpm@latest --activate
+              - pnpm install --frozen-lockfile
+              - pnpm run build
+              - echo "Checking dist directory..."
+              - ls -la dist/
+              - mkdir -p dist/WEB-INF
+              - cp -varf ./WEB-INF/* dist/WEB-INF/
+              - apk add --no-cache zip openssh-client
+              - cd ./dist/
+              - zip -r lecture-assessment.war *
+              - scp lecture-assessment.war root@66.226.72.199:/opt/tomcat/webapps/lecture-assessment.war
+            artifacts:
+              - lecture-assessment/dist/**
+            changesets:
+              - include: 'lecture-assessment/**'
+              
+        - step:
+            name: Build and Deploy Math Adventure
+            image: node:20-alpine
+            caches:
+              - node
+              - pnpm
+            script:
+              - cd math-adventure
+              - corepack enable
+              - corepack prepare pnpm@latest --activate
+              - pnpm install --frozen-lockfile
+              - pnpm run build
+              - echo "Checking dist directory..."
+              - ls -la dist/
+              - mkdir -p dist/WEB-INF
+              - cp -varf ./WEB-INF/* dist/WEB-INF/
+              - apk add --no-cache zip openssh-client
+              - cd ./dist/
+              - zip -r math-adventure.war *
+              - scp math-adventure.war root@66.226.72.199:/opt/tomcat/webapps/math-adventure.war
+            artifacts:
+              - math-adventure/dist/**
+            changesets:
+              - include: 'math-adventure/**'
+              
+        - step:
+            name: Build and Deploy Applicant Dashboard
+            image: node:20-alpine
+            caches:
+              - node
+              - pnpm
+            script:
+              - cd applicant-dashboard
+              - corepack enable
+              - corepack prepare pnpm@latest --activate
+              - pnpm install --frozen-lockfile
+              - pnpm run build
+              - echo "Checking dist directory..."
+              - ls -la dist/
+              - mkdir -p dist/WEB-INF
+              - cp -varf ./WEB-INF/* dist/WEB-INF/
+              - apk add --no-cache zip openssh-client
+              - cd ./dist/
+              - zip -r applicant-dashboard.war *
+              - scp applicant-dashboard.war root@66.226.72.199:/opt/tomcat/webapps/applicant-dashboard.war
+            artifacts:
+              - applicant-dashboard/dist/**
+            changesets:
+              - include: 'applicant-dashboard/**'
+              
+        - step:
+            name: Build and Deploy AUCDT Applicant Dashboard
+            image: node:20-alpine
+            caches:
+              - node
+              - pnpm
+            script:
+              - cd aucdt-applicant-dashboard
+              - corepack enable
+              - corepack prepare pnpm@latest --activate
+              - pnpm install --frozen-lockfile
+              - pnpm run build
+              - echo "Checking dist directory..."
+              - ls -la ./dist/
+              - mkdir -p ./dist/WEB-INF
+              - cp -varf ./WEB-INF/* ./dist/WEB-INF/
+              - apk add --no-cache zip openssh-client
+              - cd ./dist/
+              - zip -r aucdt-applicant-dashboard.war *
+              - scp aucdt-applicant-dashboard.war root@66.226.72.199:/opt/tomcat/webapps/aucdt-applicant-dashboard.war
+            artifacts:
+              - aucdt-applicant-dashboard/dist/**
+            changesets:
+              - include: 'aucdt-applicant-dashboard/**'
+
+definitions:
+  caches:
+    pnpm: ~/.local/share/pnpm/store

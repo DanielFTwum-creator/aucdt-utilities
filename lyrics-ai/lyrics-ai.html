@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Roots Vibes | Interactive Guide</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Orbitron:wght@700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Calm Harmony (Warm Neutrals with Rastafari Accents) -->
+    <!-- Application Structure Plan: A single-page, scrolling infographic/landing page. Sections include: Hero, What Is It, How It Works (visual 3-step process), Key Features (icon grid), Tech Stack, and Design. This structure guides the user from a high-level concept to specific details in a logical flow, making it more engaging than a simple text document. -->
+    <!-- Visualization & Content Choices: Report Info: Core user workflow -> Goal: Explain the process -> Viz/Method: HTML/CSS 3-step diagram -> Interaction: Scroll-triggered animations -> Justification: More intuitive and visually appealing than a list of text. | Report Info: Key Features -> Goal: Inform about capabilities -> Viz/Method: Grid of cards with Unicode icons -> Interaction: Hover effects -> Justification: Easy to scan and digest. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F8F7F4;
+            color: #2c2c2c;
+        }
+        .font-orbitron {
+            font-family: 'Orbitron', sans-serif;
+        }
+        .rasta-gradient-text {
+            background: linear-gradient(90deg, #c00, #fc0, #060);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .section-title {
+            @apply text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl;
+        }
+        .section-subtitle {
+            @apply mt-4 text-lg leading-8 text-gray-600;
+        }
+        .feature-card, .step-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .feature-card:hover, .step-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.07);
+        }
+        .fade-in-section {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        .fade-in-section.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .step-connector {
+            flex-grow: 1;
+            height: 2px;
+            background: linear-gradient(90deg, #e0e0e0, #bdbdbd, #e0e0e0);
+            margin: 0 1rem;
+        }
+        @media (max-width: 768px) {
+            .step-connector {
+                width: 2px;
+                height: 50px;
+                margin: 1rem 0;
+            }
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Header -->
+    <header class="bg-white/80 backdrop-blur-md sticky top-0 z-50 border-b border-gray-200">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="text-2xl font-extrabold font-orbitron">
+                <a href="#" class="rasta-gradient-text">Roots Vibes</a>
+            </div>
+            <div class="hidden md:flex space-x-8">
+                <a href="#about" class="text-gray-600 hover:text-gray-900 transition-colors">About</a>
+                <a href="#how-it-works" class="text-gray-600 hover:text-gray-900 transition-colors">How It Works</a>
+                <a href="#features" class="text-gray-600 hover:text-gray-900 transition-colors">Features</a>
+                <a href="#tech" class="text-gray-600 hover:text-gray-900 transition-colors">Technology</a>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Hero Section -->
+        <section class="py-24 sm:py-32 bg-white">
+            <div class="container mx-auto px-6 text-center">
+                <h1 class="font-orbitron rasta-gradient-text text-4xl md:text-6xl font-bold tracking-tighter">
+                    Your Personal 3D AI Animation Studio
+                </h1>
+                <p class="mt-6 text-lg max-w-2xl mx-auto text-gray-600">
+                    An innovative web app that transforms your favorite lyrics into captivating 3D visual experiences using the power of AI. Bring your musical vision to life.
+                </p>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section id="about" class="py-24 sm:py-32 fade-in-section">
+            <div class="container mx-auto px-6">
+                <div class="text-center">
+                    <h2 class="section-title">What is Roots Vibes?</h2>
+                    <p class="section-subtitle">A unique tool for musicians, artists, and creators to visualize lyrics with dynamic, AI-augmented 3D animations.</p>
+                </div>
+                <div class="mt-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 text-center">
+                    <div class="p-6">
+                        <div class="text-4xl">🎨</div>
+                        <h3 class="mt-4 text-lg font-semibold text-gray-900">Generate Themes</h3>
+                        <p class="mt-2 text-gray-600">Choose from stunning presets or generate your own unique visual themes with a simple text prompt.</p>
+                    </div>
+                    <div class="p-6">
+                        <div class="text-4xl">🎵</div>
+                        <h3 class="mt-4 text-lg font-semibold text-gray-900">Animate Lyrics</h3>
+                        <p class="mt-2 text-gray-600">Input any lyrics and watch as they are animated line-by-line within a vibrant, interactive 3D scene.</p>
+                    </div>
+                    <div class="p-6">
+                        <div class="text-4xl">🎥</div>
+                        <h3 class="mt-4 text-lg font-semibold text-gray-900">Record & Share</h3>
+                        <p class="mt-2 text-gray-600">Each animated line is automatically recorded as a video, ready for you to save and share with the world.</p>
+                    </div>
+                    <div class="p-6">
+                        <div class="text-4xl">📚</div>
+                        <h3 class="mt-4 text-lg font-semibold text-gray-900">Track Creations</h3>
+                        <p class="mt-2 text-gray-600">A handy history feature saves your animations, allowing you to easily revisit and re-run past projects.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- How It Works Section -->
+        <section id="how-it-works" class="py-24 sm:py-32 bg-white fade-in-section">
+            <div class="container mx-auto px-6">
+                <div class="text-center">
+                    <h2 class="section-title">Create in Three Simple Steps</h2>
+                    <p class="section-subtitle">Follow this straightforward process to create your own 3D AI-augmented lyric animations in moments.</p>
+                </div>
+                <div class="mt-20 flex flex-col md:flex-row items-center justify-center">
+                    <!-- Step 1 -->
+                    <div class="step-card bg-gray-50 rounded-xl p-8 w-full max-w-sm text-center border border-gray-200">
+                        <div class="flex items-center justify-center w-16 h-16 mx-auto bg-green-100 rounded-full border-4 border-white shadow-sm">
+                            <span class="text-2xl font-bold text-green-700">1</span>
+                        </div>
+                        <h3 class="mt-6 text-xl font-semibold text-gray-900">Choose Your Visual Theme</h3>
+                        <p class="mt-2 text-gray-600">Select from a list of curated preset themes like 'Cosmos' or 'Forest', or type a custom prompt to let AI generate a unique background for you.</p>
+                    </div>
+
+                    <div class="step-connector"></div>
+
+                    <!-- Step 2 -->
+                    <div class="step-card bg-gray-50 rounded-xl p-8 w-full max-w-sm text-center border border-gray-200">
+                        <div class="flex items-center justify-center w-16 h-16 mx-auto bg-yellow-100 rounded-full border-4 border-white shadow-sm">
+                            <span class="text-2xl font-bold text-yellow-700">2</span>
+                        </div>
+                        <h3 class="mt-6 text-xl font-semibold text-gray-900">Enter Your Lyrics</h3>
+                        <p class="mt-2 text-gray-600">Paste or type your song lyrics into the text area. Each new line will be treated as a separate scene for the animation, giving you full control over the pacing.</p>
+                    </div>
+
+                    <div class="step-connector"></div>
+
+                    <!-- Step 3 -->
+                    <div class="step-card bg-gray-50 rounded-xl p-8 w-full max-w-sm text-center border border-gray-200">
+                        <div class="flex items-center justify-center w-16 h-16 mx-auto bg-red-100 rounded-full border-4 border-white shadow-sm">
+                            <span class="text-2xl font-bold text-red-700">3</span>
+                        </div>
+                        <h3 class="mt-6 text-xl font-semibold text-gray-900">Animate & Record</h3>
+                        <p class="mt-2 text-gray-600">Click the "Animate" button. The app processes each line, generating a dynamic 3D animation that is automatically recorded and downloaded as a video file.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Key Features Section -->
+        <section id="features" class="py-24 sm:py-32 fade-in-section">
+            <div class="container mx-auto px-6">
+                <div class="text-center max-w-3xl mx-auto">
+                    <h2 class="section-title">Powerful Features at Your Fingertips</h2>
+                    <p class="section-subtitle">Roots Vibes is packed with features designed to make the creative process seamless and inspiring.</p>
+                </div>
+                <div class="mt-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <div class="feature-card bg-white rounded-xl p-8 border border-gray-200">
+                        <h3 class="text-lg font-semibold text-gray-900 flex items-center"><span class="text-2xl mr-3">🌐</span>Interactive 3D Visualization</h3>
+                        <p class="mt-2 text-gray-600">Experience your lyrics in a dynamic 3D environment with floating symbols and a customizable background, all rendered in real-time.</p>
+                    </div>
+                    <div class="feature-card bg-white rounded-xl p-8 border border-gray-200">
+                        <h3 class="text-lg font-semibold text-gray-900 flex items-center"><span class="text-2xl mr-3">🤖</span>AI-Powered Theme Generation</h3>
+                        <p class="mt-2 text-gray-600">Utilizes Google's Imagen API to generate unique backgrounds, bringing a true augmented reality feel to your animations from any text prompt.</p>
+                    </div>
+                    <div class="feature-card bg-white rounded-xl p-8 border border-gray-200">
+                        <h3 class="text-lg font-semibold text-gray-900 flex items-center"><span class="text-2xl mr-3">✨</span>Preset & Custom Themes</h3>
+                        <p class="mt-2 text-gray-600">Jumpstart your creativity with beautiful pre-defined themes or unleash your imagination by creating a bespoke scene with your own words.</p>
+                    </div>
+                    <div class="feature-card bg-white rounded-xl p-8 border border-gray-200">
+                        <h3 class="text-lg font-semibold text-gray-900 flex items-center"><span class="text-2xl mr-3">⏱️</span>Real-time Progress & Status</h3>
+                        <p class="mt-2 text-gray-600">Monitor the animation and recording process with a clear progress bar and status messages, so you always know what's happening.</p>
+                    </div>
+                    <div class="feature-card bg-white rounded-xl p-8 border border-gray-200">
+                        <h3 class="text-lg font-semibold text-gray-900 flex items-center"><span class="text-2xl mr-3">🔄</span>Searchable Animation History</h3>
+                        <p class="mt-2 text-gray-600">All your creations are saved to your history. Easily reload, re-run, or search through your past animations to continue your work.</p>
+                    </div>
+                    <div class="feature-card bg-white rounded-xl p-8 border border-gray-200">
+                        <h3 class="text-lg font-semibold text-gray-900 flex items-center"><span class="text-2xl mr-3">📱</span>Fully Responsive Design</h3>
+                        <p class="mt-2 text-gray-600">The application provides an optimal and seamless user experience across all devices, from mobile phones to desktop computers.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Tech Stack Section -->
+        <section id="tech" class="py-24 sm:py-32 bg-white fade-in-section">
+            <div class="container mx-auto px-6">
+                 <div class="text-center">
+                    <h2 class="section-title">Built with Modern Technology</h2>
+                    <p class="section-subtitle">Roots Vibes leverages a powerful stack of web technologies to deliver a rich, reliable, and interactive experience.</p>
+                </div>
+                <div class="mt-16 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8 text-center items-center">
+                    <div class="p-4">
+                        <p class="font-semibold text-gray-800">Three.js</p>
+                        <p class="text-sm text-gray-500">For 3D Rendering</p>
+                    </div>
+                    <div class="p-4">
+                        <p class="font-semibold text-gray-800">Imagen API</p>
+                        <p class="text-sm text-gray-500">For AI Image Generation</p>
+                    </div>
+                     <div class="p-4">
+                        <p class="font-semibold text-gray-800">Firebase</p>
+                        <p class="text-sm text-gray-500">For History Storage</p>
+                    </div>
+                    <div class="p-4">
+                        <p class="font-semibold text-gray-800">CCapture.js</p>
+                        <p class="text-sm text-gray-500">For Video Recording</p>
+                    </div>
+                    <div class="p-4 col-span-2 lg:col-span-1">
+                        <p class="font-semibold text-gray-800">Tailwind CSS</p>
+                        <p class="text-sm text-gray-500">For Responsive UI</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+    </main>
+    
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white">
+        <div class="container mx-auto px-6 py-12 text-center">
+            <h3 class="font-orbitron text-2xl font-bold rasta-gradient-text">Roots Vibes</h3>
+            <p class="mt-4 max-w-md mx-auto text-gray-400">
+                Transforming lyrics into art through 3D and AI.
+            </p>
+            <div class="mt-8 text-sm text-gray-500">
+                &copy; 2024 Roots Vibes. All rights reserved. An interactive guide.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const sections = document.querySelectorAll('.fade-in-section');
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, {
+                threshold: 0.1
+            });
+
+            sections.forEach(section => {
+                observer.observe(section);
+            });
+            
+            const navLinks = document.querySelectorAll('nav a[href^="#"]');
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    let hash = this.getAttribute('href');
+                    let target = document.querySelector(hash);
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

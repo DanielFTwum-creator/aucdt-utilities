@@ -1,0 +1,139 @@
+import { AuthGate } from './AuthGate';
+require('dotenv').config();
+const express = require('express');
+const cors = require('cors');
+const mysql = require('mysql2/promise');
+const { v4: uuidv4 } = require('uuid');
+
+const PORT = process.env.PORT || 4052;
+
+const app = express();
+app.use(cors());
+app.use(express.json());
+
+
+// Serve admin UI from public directory
+app.use(express.static(path.join(__dirname, '../public')));
+let pool;
+
+async function initDB() {
+  pool = mysql.createPool({
+    host: process.env.DB_HOST || 'localhost',
+    user: process.env.DB_USER || 'appuser',
+    password: process.env.DB_PASSWORD || 'apppass',
+    database: process.env.DB_NAME || 'library_management',
+    waitForConnections: true,
+    connectionLimit: 10,
+    queueLimit: 0,
+  });
+
+  const conn = await pool.getConnection();
+  await conn.query(`
+    CREATE TABLE IF NOT EXISTS books (
+      id VARCHAR(255) PRIMARY KEY,
+      title VARCHAR(255),
+      author VARCHAR(255),
+      isbn VARCHAR(20),
+      publication_year INT,
+      total_copies INT,
+      available_copies INT,
+      category VARCHAR(100),
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
+  await conn.query(`
+    CREATE TABLE IF NOT EXISTS checkouts (
+      id VARCHAR(255) PRIMARY KEY,
+      book_id VARCHAR(255),
+      borrower_id VARCHAR(255),
+      checkout_date DATETIME,
+      due_date DATE,
+      return_date DATE,
+      status VARCHAR(50),
+      late_fee DECIMAL(10,2),
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (book_id) REFERENCES books(id)
+    )
+  `);
+  conn.release();
+  console.log('Library Management DB initialized');
+}
+
+
+// Serve admin UI at root
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, '../public', 'index.html'));
+});
+app.get('/health', (_req, res) => {
+  res.json({ status: 'ok', service: 'library-management' });
+});
+
+// --- Books CRUD ---
+app.get('/api/books', async (_req, res) => {
+  const [rows] = await pool.query('SELECT * FROM books ORDER BY created_at DESC');
+  res.json(rows);
+});
+
+app.post('/api/books', async (req, res) => {
+  const { title, author, isbn, publication_year, total_copies, available_copies, category } = req.body;
+  const id = `bk_${uuidv4()}`;
+  await pool.query(
+    'INSERT INTO books (id, title, author, isbn, publication_year, total_copies, available_copies, category) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+    [id, title, author, isbn || '', publication_year || null, total_copies || 1, available_copies ?? total_copies ?? 1, category || 'General']
+  );
+  res.status(201).json({ id });
+});
+
+app.put('/api/books/:id', async (req, res) => {
+  const { title, author, isbn, publication_year, total_copies, available_copies, category } = req.body;
+  await pool.query(
+    'UPDATE books SET title=?, author=?, isbn=?, publication_year=?, total_copies=?, available_copies=?, category=? WHERE id=?',
+    [title, author, isbn, publication_year, total_copies, available_copies, category, req.params.id]
+  );
+  res.json({ updated: true });
+});
+
+app.delete('/api/books/:id', async (req, res) => {
+  await pool.query('DELETE FROM checkouts WHERE book_id=?', [req.params.id]);
+  await pool.query('DELETE FROM books WHERE id=?', [req.params.id]);
+  res.json({ deleted: true });
+});
+
+// --- Checkouts CRUD ---
+app.get('/api/checkouts', async (_req, res) => {
+  const [rows] = await pool.query('SELECT * FROM checkouts ORDER BY created_at DESC');
+  res.json(rows);
+});
+
+app.post('/api/checkouts', async (req, res) => {
+  const { book_id, borrower_id, checkout_date, due_date, return_date, status, late_fee } = req.body;
+  const id = `chk_${uuidv4()}`;
+  await pool.query(
+    'INSERT INTO checkouts (id, book_id, borrower_id, checkout_date, due_date, return_date, status, late_fee) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+    [id, book_id, borrower_id, checkout_date || new Date(), due_date || null, return_date || null, status || 'active', late_fee || 0]
+  );
+  res.status(201).json({ id });
+});
+
+app.put('/api/checkouts/:id', async (req, res) => {
+  const { book_id, borrower_id, checkout_date, due_date, return_date, status, late_fee } = req.body;
+  await pool.query(
+    'UPDATE checkouts SET book_id=?, borrower_id=?, checkout_date=?, due_date=?, return_date=?, status=?, late_fee=? WHERE id=?',
+    [book_id, borrower_id, checkout_date, due_date, return_date || null, status, late_fee || 0, req.params.id]
+  );
+  res.json({ updated: true });
+});
+
+app.delete('/api/checkouts/:id', async (req, res) => {
+  await pool.query('DELETE FROM checkouts WHERE id=?', [req.params.id]);
+  res.json({ deleted: true });
+});
+
+async function start() {
+  await initDB();
+  app.listen(PORT, () => {
+    console.log(`Library Management API running on port ${PORT}`);
+  });
+}
+
+start().catch(console.error);

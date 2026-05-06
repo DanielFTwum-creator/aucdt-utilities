@@ -1,0 +1,79 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Bebas+Neue&family=Source+Sans+3:wght@200..900&family=JetBrains+Mono:wght@100..800&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-display: "Playfair Display", serif;
+  --font-label: "Bebas Neue", sans-serif;
+  --font-sans: "Source Sans 3", sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+
+  --color-tuc-maroon: #630f12;
+  --color-tuc-gold: #C9A84C;
+  --color-tuc-ink: var(--color-ink);
+  --color-tuc-cream: var(--color-bg);
+  --color-tuc-silver: #8A8A8A;
+  --color-tuc-red: #C0392B;
+  --color-tuc-rule: #C9A84C44;
+}
+
+:root {
+  --color-bg: #F5F0E8;
+  --color-ink: #1A1209;
+}
+
+:root[data-theme='dark'] {
+  --color-bg: #1A1209;
+  --color-ink: #F5F0E8;
+}
+
+:root[data-theme='high-contrast'] {
+  --color-bg: #000000;
+  --color-ink: #FFFFFF;
+}
+
+@layer base {
+  body {
+    @apply bg-tuc-cream text-tuc-ink font-sans antialiased;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-display;
+  }
+}
+
+@layer components {
+  .btn-gold {
+    @apply bg-tuc-gold text-tuc-ink font-label tracking-[0.2em] px-8 py-3 rounded-none transition-all hover:opacity-90 active:scale-95;
+  }
+
+  .input-editorial {
+    @apply bg-transparent border-b-2 border-tuc-gold font-display text-2xl focus:outline-none py-2;
+  }
+
+  .card-editorial {
+    @apply bg-white border border-tuc-rule p-6 shadow-sm;
+  }
+
+  .slider-premium {
+    @apply w-full h-3 appearance-none bg-white/20 rounded-full outline-none cursor-pointer transition-all;
+  }
+
+  .slider-premium::-webkit-slider-thumb {
+    @apply appearance-none w-8 h-8 bg-white border-4 border-tuc-gold rounded-full shadow-lg cursor-pointer transition-all hover:scale-110 active:scale-95;
+  }
+
+  .slider-premium::-moz-range-thumb {
+    @apply w-8 h-8 bg-white border-4 border-tuc-gold rounded-full shadow-lg cursor-pointer transition-all hover:scale-110 active:scale-95;
+  }
+}
+
+/* Custom animations for the game */
+@keyframes slide-up {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.animate-slide-up {
+  animation: slide-up 0.4s ease-out forwards;
+}
+
