@@ -1,1 +1,27 @@
 @import "tailwindcss";
+
+@theme {
+  /* Ghana flag colours */
+  --color-ghana-red: #CE1126;
+  --color-ghana-gold: #FCD116;
+  --color-ghana-green: #006B3F;
+  --color-ghana-black: #000000;
+
+  /* Techbridge brand colours */
+  --color-techbridge-navy: #0f2545;
+  --color-techbridge-blue: #1a4b8c;
+  --color-techbridge-gold: #FCD116;
+  --color-techbridge-green: #006B3F;
+  --color-techbridge-light: #f0f4fa;
+
+  /* Academic legacy colours */
+  --color-academic-navy: #1e3a5f;
+  --color-academic-blue: #2563eb;
+  --color-academic-amber: #f59e0b;
+  --color-academic-gold: #fbbf24;
+  --color-academic-slate: #475569;
+
+  /* Fonts */
+  --font-family-serif: 'Crimson Text', Georgia, serif;
+  --font-family-sans: Inter, system-ui, sans-serif;
+}
