@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+  <head>
+    <meta charset="UTF-8" />
+    <!-- ── TUC Standard Meta ─────────────────────────────────────── -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <!-- SEO -->
+    <meta name="description" content="Techbridge University College (TUC) is a premier private institution in Accra pioneering innovative and progressive higher education in design and entrepreneurship." />
+    <meta name="keywords" content="Techbridge University College, TUC, design education, technology education, Accra university, Ghana university, product design, entrepreneurship, private university Ghana, design school" />
+    <meta name="author" content="Techbridge University College" />
+    <meta name="publisher" content="Techbridge University College" />
+    <link rel="canonical" href="https://www.techbridge.edu.gh/" />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    <!-- Geographic -->
+    <meta name="language" content="English" />
+    <meta name="geo.region" content="GH-AA" />
+    <meta name="geo.placename" content="Accra" />
+    <meta name="geo.position" content="5.6037;-0.1870" />
+    <meta name="ICBM" content="5.6037, -0.1870" />
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://www.techbridge.edu.gh/" />
+    <meta property="og:site_name" content="Techbridge University College" />
+    <meta property="og:title" content="Visual Quiz Master" />
+    <meta property="og:description" content="Techbridge University College (TUC) is a premier private institution in Accra pioneering innovative and progressive higher education in design and entrepreneurship." />
+    <meta property="og:image" content="https://techbridge.edu.gh/static/TUC_LOGO.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Techbridge University College Logo" />
+    <meta property="og:locale" content="en_GB" />
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@TUCGhana" />
+    <meta name="twitter:creator" content="@TUCGhana" />
+    <meta name="twitter:title" content="Visual Quiz Master" />
+    <meta name="twitter:description" content="Techbridge University College (TUC) is a premier private institution in Accra pioneering innovative and progressive higher education in design and entrepreneurship." />
+    <meta name="twitter:image" content="https://techbridge.edu.gh/static/TUC_LOGO.png" />
+    <meta name="twitter:image:alt" content="Techbridge University College Logo" />
+    <!-- Theme -->
+    <meta name="theme-color" content="#630f12" />
+    <meta name="msapplication-TileColor" content="#630f12" />
+    <meta name="copyright" content="Techbridge University College" />
+    <meta name="referrer" content="origin-when-cross-origin" />
+    <!-- ────────────────────────────────────────────────────────────── -->
+    <link rel="icon" type="image/png" href="https://techbridge.edu.gh/static/TUC_LOGO.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Visual Quiz Master</title>
+    <script>
+      MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']],
+          displayMath: [['$$', '$$'], ['\\[', '\\]']]
+        },
+        svg: {
+          fontCache: 'global'
+        }
+      };
+    </script>
+    <script type="text/javascript" id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+      :root {
+        --font-sans: 'Poppins', sans-serif;
+      }
+      .theme-dark {
+        --bg-primary: #0D1117;
+        --bg-secondary: #161B22;
+        --bg-tertiary: #21262D;
+        --bg-overlay: rgba(13, 17, 23, 0.8);
+        --border-primary: #30363D;
+        --border-secondary: #21262D;
+        --text-primary: #E6EDF3;
+        --text-secondary: #8B949E;
+        --text-inverted: #0D1117;
+        --accent-primary: #58A6FF;
+        --accent-primary-hover: #388BFD;
+        --accent-primary-text: #FFFFFF;
+        --feedback-success: #56D364;
+        --feedback-success-bg: rgba(74, 222, 128, 0.15);
+        --feedback-success-glow: rgba(74, 222, 128, 0.5);
+        --feedback-error: #F85149;
+        --feedback-error-bg: rgba(248, 81, 73, 0.15);
+        --feedback-warn: #F0B72F;
+        --timer-urgent-glow: rgba(248, 81, 73, 0.7);
+      }
+      .theme-light {
+        --bg-primary: #F9FAFB;
+        --bg-secondary: #FFFFFF;
+        --bg-tertiary: #F3F4F6;
+        --bg-overlay: rgba(255, 255, 255, 0.8);
+        --border-primary: #D1D5DB;
+        --border-secondary: #E5E7EB;
+        --text-primary: #111827;
+        --text-secondary: #4B5563;
+        --text-inverted: #FFFFFF;
+        --accent-primary: #3B82F6;
+        --accent-primary-hover: #2563EB;
+        --accent-primary-text: #FFFFFF;
+        --feedback-success: #16A34A;
+        --feedback-success-bg: rgba(74, 222, 128, 0.2);
+        --feedback-success-glow: rgba(74, 222, 128, 0.5);
+        --feedback-error: #DC2626;
+        --feedback-error-bg: rgba(239, 68, 68, 0.2);
+        --feedback-warn: #F59E0B;
+        --timer-urgent-glow: rgba(220, 38, 38, 0.7);
+      }
+      .theme-high-contrast {
+        --bg-primary: #000000;
+        --bg-secondary: #000000;
+        --bg-tertiary: #000000;
+        --bg-overlay: rgba(0, 0, 0, 0.8);
+        --border-primary: #FFFFFF;
+        --border-secondary: #FFFFFF;
+        --text-primary: #FFFFFF;
+        --text-secondary: #FFFFFF;
+        --text-inverted: #000000;
+        --accent-primary: #00FFFF;
+        --accent-primary-hover: #00E5E5;
+        --accent-primary-text: #000000;
+        --feedback-success: #00FF00;
+        --feedback-success-bg: rgba(0, 255, 0, 0.3);
+        --feedback-success-glow: rgba(0, 255, 0, 0.6);
+        --feedback-error: #FF0000;
+        --feedback-error-bg: rgba(255, 0, 0, 0.3);
+        --feedback-warn: #FFFF00;
+        --timer-urgent-glow: rgba(255, 0, 0, 0.8);
+      }
+      body {
+        font-family: var(--font-sans);
+        background-color: var(--bg-primary);
+        color: var(--text-primary);
+        transition: background-color 0.3s ease, color 0.3s ease;
+      }
+      @keyframes pulse {
+        0%, 100% {
+          transform: scale(1);
+          filter: drop-shadow(0 0 3px var(--timer-urgent-glow));
+        }
+        50% {
+          transform: scale(1.05);
+          filter: drop-shadow(0 0 7px rgba(239, 68, 68, 0));
+        }
+      }
+      .timer-urgent {
+        animation: pulse 1.5s infinite;
+      }
+      .correct-glow {
+        box-shadow: 0 0 15px 5px var(--feedback-success-glow);
+        border-color: var(--feedback-success) !important;
+      }
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .question-card-animation {
+        animation: fadeInUp 0.5s ease-out forwards;
+      }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "react": "https://esm.sh/react@^19.1.1",
+    "react-dom/": "https://esm.sh/react-dom@^19.1.1/",
+    "react/": "https://esm.sh/react@^19.1.1/",
+    "chart.js": "https://esm.sh/chart.js@^4.5.0"
+  }
+}
+</script>
+<link rel="stylesheet" href="/index.css">
+</head>
+  <body class="theme-dark">
+    <div id="root"></div>
+  <script type="module" src="/index.tsx"></script>
+</body>
+</html>

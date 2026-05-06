@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 500">
+  <defs>
+    <style>
+      .lifeline { stroke: #94a3b8; stroke-width: 1; stroke-dasharray: 4; }
+      .box { fill: #ffffff; stroke: #0f172a; stroke-width: 2; }
+      .text { font-family: monospace; font-size: 11px; text-anchor: middle; fill: #1e293b; }
+      .message { stroke: #334155; stroke-width: 1.5; marker-end: url(#arrow); }
+      .activation { fill: #cbd5e1; stroke: #94a3b8; }
+    </marker>
+    <marker id="arrow" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#334155"/>
+    </marker>
+  </defs>
+  <line x1="100" y1="60" x2="100" y2="450" class="lifeline"/>
+  <line x1="280" y1="60" x2="280" y2="450" class="lifeline"/>
+  <line x1="460" y1="60" x2="460" y2="450" class="lifeline"/>
+  <line x1="620" y1="60" x2="620" y2="450" class="lifeline"/>
+  <rect x="50" y="20" width="100" height="40" rx="4" class="box"/><text x="100" y="45" class="text">Nexus Agent</text>
+  <rect x="230" y="20" width="100" height="40" rx="4" class="box"/><text x="280" y="45" class="text">Gemini AI</text>
+  <rect x="410" y="20" width="100" height="40" rx="4" class="box"/><text x="460" y="45" class="text">Persistence</text>
+  <rect x="570" y="20" width="100" height="40" rx="4" class="box"/><text x="620" y="45" class="text">Meta API</text>
+  <rect x="95" y="80" width="10" height="350" class="activation"/>
+  <line x1="105" y1="100" x2="275" y2="100" class="message"/><text x="190" y="95" class="text">searchGrounding()</text>
+  <rect x="275" y="100" width="10" height="60" class="activation"/>
+  <line x1="275" y1="150" x2="105" y2="150" class="message" stroke-dasharray="4"/><text x="190" y="145" class="text">rawContent</text>
+  <line x1="105" y1="180" x2="275" y2="180" class="message"/><text x="190" y="175" class="text">generateSummary()</text>
+  <rect x="275" y="180" width="10" height="60" class="activation"/>
+  <line x1="275" y1="230" x2="105" y2="230" class="message" stroke-dasharray="4"/><text x="190" y="225" class="text">JSON_Article</text>
+  <line x1="105" y1="260" x2="455" y2="260" class="message"/><text x="280" y="255" class="text">save(pending)</text>
+  <rect x="455" y="260" width="10" height="30" class="activation"/>
+  <text x="100" y="320" class="text" fill="#ef4444">[Approved/Scheduled]</text>
+  <line x1="105" y1="350" x2="615" y2="350" class="message"/><text x="360" y="345" class="text">postToFeed(caption)</text>
+  <rect x="615" y="350" width="10" height="40" class="activation"/>
+  <line x1="615" y1="380" x2="105" y2="380" class="message" stroke-dasharray="4"/><text x="360" y="375" class="text">success: 200 OK</text>
+</svg>

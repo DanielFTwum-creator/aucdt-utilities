@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="400" viewBox="0 0 600 400">
+    <style>
+        .box { fill: #FFFBF0; stroke: #5D001E; stroke-width: 2; }
+        .header { fill: #5D001E; }
+        .header-text { font-family: 'Poppins', sans-serif; font-size: 16px; fill: white; font-weight: bold; }
+        .text { font-family: 'Lato', sans-serif; font-size: 14px; fill: #3E1A00; }
+        .title { font-family: 'Poppins', sans-serif; font-size: 18px; font-weight: bold; fill: #5D001E; }
+        .desc { font-style: italic; font-size: 12px; }
+    </style>
+    
+    <rect x="10" y="10" width="580" height="380" fill="#f9f9f9" stroke="#ccc" />
+    <text x="300" y="40" text-anchor="middle" class="title">Data Storage Architecture Diagram</text>
+    <text x="300" y="65" text-anchor="middle" class="desc">The application does not use a traditional database. All persistence is handled by Browser Local Storage.</text>
+
+    <!-- Local Storage Table -->
+    <g transform="translate(150, 100)">
+        <rect x="0" y="0" width="300" height="200" class="box"/>
+        
+        <!-- Header -->
+        <rect x="0" y="0" width="300" height="40" class="header"/>
+        <text x="150" y="27" text-anchor="middle" class="header-text">Browser Local Storage</text>
+        
+        <!-- Key column -->
+        <rect x="1" y="41" width="148" height="30" fill="#FFC72C" stroke="#5D001E" stroke-width="1"/>
+        <text x="75" y="61" text-anchor="middle" class="text" font-weight="bold">Key</text>
+        
+        <!-- Value column -->
+        <rect x="150" y="41" width="149" height="30" fill="#FFC72C" stroke="#5D001E" stroke-width="1"/>
+        <text x="225" y="61" text-anchor="middle" class="text" font-weight="bold">Value</text>
+        
+        <!-- Row 1 -->
+        <line x1="1" y1="120" x2="299" y2="120" stroke="#5D001E" stroke-width="1" />
+        <line x1="150" y1="41" x2="150" y2="199" stroke="#5D001E" stroke-width="1" />
+        <text x="75" y="95" text-anchor="middle" class="text" font-family="monospace">'aucdt-theme'</text>
+        <text x="225" y="90" text-anchor="middle" class="text">String:</text>
+        <text x="225" y="105" text-anchor="middle" class="text" font-family="monospace">'light' | 'dark' | 'high-contrast'</text>
+        
+        <!-- Description -->
+        <text x="150" y="150" text-anchor="middle" class="desc">Stores the user's selected theme</text>
+        <text x="150" y="165" text-anchor="middle" class="desc">to persist across sessions.</text>
+        <text x="150" y="180" text-anchor="middle" class="desc">(No other data is stored)</text>
+    </g>
+
+</svg>

@@ -1,0 +1,31 @@
+@import "tailwindcss";
+
+.banner-preview-viewport {
+  overflow: hidden;
+  border-radius: 0.25rem;
+  height: calc(850px * var(--preview-scale, 0.55));
+}
+
+.banner-preview-scaler {
+  transform: scale(var(--preview-scale, 0.55));
+  transform-origin: top left;
+  width: 640px;
+  height: 850px;
+}
+
+/* TechbridgeBanner — dynamic theme tokens via CSS custom properties */
+.banner-accent-bar      { background-color: var(--b-primary); }
+.banner-header          { background-color: var(--b-primary); color: var(--b-text-primary); }
+.banner-heading         { font-family: var(--b-heading-font); }
+.banner-formerly        { color: var(--b-text-primary); font-family: var(--b-body-font); }
+.banner-programmes-bar  { background-color: var(--b-secondary); color: #fff; }
+.banner-bullet          { background-color: var(--b-primary); }
+.banner-programme-name  { color: var(--b-text-primary); font-family: var(--b-heading-font); }
+.banner-cert-line       { color: var(--b-primary); }
+.banner-admissions-bar  { background-color: var(--b-primary); color: var(--b-text-primary); }
+.banner-contact-box     { background-color: var(--b-secondary); color: #fff; }
+.banner-apply-box       { border: 3px solid var(--b-primary); }
+.banner-apply-label     { color: var(--b-primary); }
+.banner-apply-url       { color: var(--b-text-primary); }
+.banner-location        { color: var(--b-text-primary); }
+.banner-bottom-bar      { background-color: var(--b-secondary); }

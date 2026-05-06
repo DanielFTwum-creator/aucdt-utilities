@@ -1,0 +1,33 @@
+[259] Installing: thumbnail-generator
+Lockfile is up to date, resolution step is skipped
+Progress: resolved 1, reused 0, downloaded 0, added 0
+Packages: +151
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Progress: resolved 151, reused 150, downloaded 0, added 0
+Progress: resolved 151, reused 151, downloaded 0, added 23
+Progress: resolved 151, reused 151, downloaded 0, added 41
+Progress: resolved 151, reused 151, downloaded 0, added 58
+Progress: resolved 151, reused 151, downloaded 0, added 91
+Progress: resolved 151, reused 151, downloaded 0, added 123
+Progress: resolved 151, reused 151, downloaded 0, added 150
+Progress: resolved 151, reused 151, downloaded 0, added 151, done
+
+dependencies:
++ react 19.2.4
++ react-dom 19.2.4
+
+devDependencies:
++ @types/react 19.2.14
++ @types/react-dom 19.2.3
++ @vitejs/plugin-react 4.7.0
++ serve 14.2.5
++ vite 5.4.21
+
+╭ Warning ─────────────────────────────────────────────────────────────────────╮
+│                                                                              │
+│   Ignored build scripts: esbuild@0.21.5.                                     │
+│   Run "pnpm approve-builds" to pick which dependencies should be allowed     │
+│   to run scripts.                                                            │
+│                                                                              │
+╰──────────────────────────────────────────────────────────────────────────────╯
+Done in 12.6s using pnpm v10.32.1

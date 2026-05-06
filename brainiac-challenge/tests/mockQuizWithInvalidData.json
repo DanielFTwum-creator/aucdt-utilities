@@ -1,0 +1,45 @@
+
+{
+  "questions": [
+    {
+      "id": 1,
+      "question": "This is a valid question. What is the capital of France?",
+      "options": ["Berlin", "Madrid", "Paris", "Rome"],
+      "correct": 2,
+      "cognitive_level": "Knowledge",
+      "topic": "Geography"
+    },
+    {
+      "id": 2,
+      "question": "This question has a blank option, so it should be filtered out.",
+      "options": ["Valid", "  ", "Invalid"],
+      "correct": 0,
+      "cognitive_level": "Knowledge",
+      "topic": "Test Data"
+    },
+    {
+      "id": 3,
+      "question": "     ",
+      "options": ["Option A", "Option B"],
+      "correct": 1,
+      "cognitive_level": "Knowledge",
+      "topic": "Test Data"
+    },
+    {
+      "id": 4,
+      "question": "This is another valid question. Which planet is known as the Red Planet?",
+      "options": ["Earth", "Mars", "Jupiter", "Saturn"],
+      "correct": 1,
+      "cognitive_level": "Knowledge",
+      "topic": "Astronomy"
+    },
+    {
+      "id": 5,
+      "question": "What is the result of 5 * 5?",
+      "options": [25, 10, 5, "twenty-five"],
+      "correct": 0,
+      "cognitive_level": "Application",
+      "topic": "Mathematics"
+    }
+  ]
+}

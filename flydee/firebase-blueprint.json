@@ -1,0 +1,38 @@
+{
+  "entities": {
+    "AircraftCard": {
+      "title": "AircraftCard",
+      "description": "A digital collectable card representing a spotted aircraft.",
+      "type": "object",
+      "properties": {
+        "icao24": { "type": "string" },
+        "callsign": { "type": "string" },
+        "aircraftType": { "type": "string" },
+        "airline": { "type": "string" },
+        "origin": { "type": "string" },
+        "destination": { "type": "string" },
+        "altitude": { "type": "number" },
+        "speed": { "type": "number" },
+        "capturedAt": { "type": "number" },
+        "photoUrl": { "type": "string" },
+        "rarity": { "type": "string", "enum": ["Common", "Uncommon", "Rare", "Legendary"] },
+        "location": {
+          "type": "object",
+          "properties": {
+            "lat": { "type": "number" },
+            "lng": { "type": "number" }
+          }
+        },
+        "userId": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["icao24", "callsign", "userId", "capturedAt"]
+    }
+  },
+  "firestore": {
+    "/cards/{cardId}": {
+      "schema": "AircraftCard",
+      "description": "Collection of all captured aircraft cards."
+    }
+  }
+}

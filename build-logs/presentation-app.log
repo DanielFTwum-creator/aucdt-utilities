@@ -1,0 +1,23 @@
+[155] Building: presentation-app
+
+> presentation-app@0.1.0 build C:\Development\aucdt-utilities\presentation-app
+> vite build
+
+[36mvite v7.3.1 [32mbuilding client environment for production...[36m[39m
+transforming...
+[32m✓[39m 8 modules transformed.
+[31m✗[39m Build failed in 14.39s
+[31merror during build:
+[31m[vite:css] [postcss] postcss-import: C:\Development\aucdt-utilities\presentation-app\node_modules\.pnpm\tailwindcss@3.4.19\node_modules\tailwindcss\lib\index.js:1:1: Unknown word "use strict"[31m
+file: [36mC:\Development\aucdt-utilities\presentation-app\node_modules\.pnpm\tailwindcss@3.4.19\node_modules\tailwindcss\lib\index.js:1:0 (C:/Development/aucdt-utilities/presentation-app/src/index.css)[31m
+    at Input.error (C:\Development\aucdt-utilities\presentation-app\node_modules\.pnpm\postcss@8.5.8\node_modules\postcss\lib\input.js:135:16)
+    at Parser.unknownWord (C:\Development\aucdt-utilities\presentation-app\node_modules\.pnpm\postcss@8.5.8\node_modules\postcss\lib\parser.js:595:22)
+    at Parser.other (C:\Development\aucdt-utilities\presentation-app\node_modules\.pnpm\postcss@8.5.8\node_modules\postcss\lib\parser.js:437:12)
+    at Parser.parse (C:\Development\aucdt-utilities\presentation-app\node_modules\.pnpm\postcss@8.5.8\node_modules\postcss\lib\parser.js:472:16)
+    at parse (C:\Development\aucdt-utilities\presentation-app\node_modules\.pnpm\postcss@8.5.8\node_modules\postcss\lib\parse.js:11:12)
+    at get root (C:\Development\aucdt-utilities\presentation-app\node_modules\.pnpm\postcss@8.5.8\node_modules\postcss\lib\no-work-result.js:43:14)
+    at Result.get [as root] (C:\Development\aucdt-utilities\presentation-app\node_modules\.pnpm\postcss@8.5.8\node_modules\postcss\lib\no-work-result.js:76:21)
+    at loadImportContent (file:///C:/Development/aucdt-utilities/presentation-app/node_modules/.pnpm/vite@7.3.1_jiti@1.21.7_lightningcss@1.31.1/node_modules/vite/dist/node/chunks/postcss-import.js:408:33)
+    at async Promise.all (index 0)
+    at async resolveImportId (file:///C:/Development/aucdt-utilities/presentation-app/node_modules/.pnpm/vite@7.3.1_jiti@1.21.7_lightningcss@1.31.1/node_modules/vite/dist/node/chunks/postcss-import.js:387:20)[39m
+ ELIFECYCLE  Command failed with exit code 1.

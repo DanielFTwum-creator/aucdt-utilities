@@ -1,0 +1,38 @@
+<svg width="600" height="300" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif" font-size="14">
+    <style>
+        .box { fill: #1a1f3a; stroke: #64748b; stroke-width: 2; }
+        .box-title { font-weight: bold; fill: #f1f5f9; text-anchor: middle; }
+        .box-text { fill: #cbd5e1; text-anchor: middle; }
+        .arrow { stroke: #94a3b8; stroke-width: 2; marker-end: url(#arrowhead); }
+        .arrow-text { fill: #94a3b8; text-anchor: middle; }
+    </style>
+    <defs>
+        <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="0" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" fill="#94a3b8" />
+        </marker>
+    </defs>
+
+    <!-- User Browser -->
+    <rect x="20" y="100" width="160" height="100" rx="10" class="box" />
+    <text x="100" y="140" class="box-title">User's Browser</text>
+    <text x="100" y="165" class="box-text">React App (UI)</text>
+
+    <!-- LocalStorage -->
+    <rect x="220" y="180" width="160" height="80" rx="10" class="box" />
+    <text x="300" y="210" class="box-title">LocalStorage</text>
+    <text x="300" y="235" class="box-text">User & Creation Data</text>
+
+    <!-- Gemini API -->
+    <rect x="420" y="100" width="160" height="100" rx="10" class="box" />
+    <text x="500" y="140" class="box-title">Google Cloud</text>
+    <text x="500" y="165" class="box-text">Gemini API</text>
+
+    <!-- Arrows -->
+    <path d="M180,150 L420,150" class="arrow" />
+    <text x="300" y="140" class="arrow-text">HTTPS API Call</text>
+    <text x="300" y="125" class="arrow-text">(Generate Image)</text>
+    
+    <path d="M140,200 Q220,180 220,190" class="arrow" transform="translate(0, -10)"/>
+    <path d="M220,210 Q180,220 150,200" class="arrow" transform="translate(0, 10)"/>
+    <text x="180" y="195" class="arrow-text">R/W</text>
+</svg>

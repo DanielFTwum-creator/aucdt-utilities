@@ -1,0 +1,238 @@
+
+
+import React, { useState, useEffect, useRef } from 'react';
+import ProgressBar from './components/ProgressBar.tsx';
+import JurisdictionStep from './components/JurisdictionStep.tsx';
+import TestatorStep from './components/TestatorStep.tsx';
+import ExecutorStep from './components/ExecutorStep.tsx';
+import GuardianshipStep from './components/GuardianshipStep.tsx';
+import AssetsStep from './components/AssetsStep.tsx';
+import DistributionStep from './components/DistributionStep.tsx';
+import ResiduaryStep from './components/ResiduaryStep.tsx';
+import ReviewStep from './components/ReviewStep.tsx';
+import AuditLogModal from './components/AuditLogModal.tsx';
+
+export interface FormData {
+    jurisdiction: string;
+    testatorName: string;
+    testatorAddress: string;
+    testatorDob: string;
+    executorName: string;
+    alternateExecutorName: string;
+    hasMinorChildren: boolean;
+    guardianName: string;
+    alternateGuardianName: string;
+    realEstate: { description: string; location: string }[];
+    gifts: { beneficiary: string; item: string }[];
+    residuaryBeneficiaryName: string;
+}
+
+export interface AuditLog {
+    timestamp: string;
+    event: string;
+}
+
+const Logo = () => (
+    <div className="logo" aria-label="WillPro Logo">
+        <svg height="64" viewBox="0 0 300 80" xmlns="http://www.w3.org/2000/svg">
+          {/* Shield/Monogram Icon */}
+          <g transform="translate(15, 15)">
+            {/* Shield Base */}
+            <path d="M 25 5 C 10 5, 5 12, 5 22 L 5 35 C 5 45, 15 48, 25 50 C 35 48, 45 45, 45 35 L 45 22 C 45 12, 40 5, 25 5 Z" 
+                  fill="#0891b2"/>
+            
+            {/* W and P Monogram */}
+            <path d="M 12 15 L 15 35 L 20 25 L 25 35 L 28 15 M 28 15 L 28 35 M 28 15 L 38 15 C 40 15, 42 17, 42 19 L 42 21 C 42 23, 40 25, 38 25 L 28 25" 
+                  stroke="white" 
+                  strokeWidth="2.5" 
+                  fill="none" 
+                  strokeLinecap="round" 
+                  strokeLinejoin="round"/>
+            
+            {/* Fountain pen nib detail */}
+            <circle cx="25" cy="28" r="1" fill="white"/>
+          </g>
+          
+          {/* WillPro Wordmark */}
+          <g transform="translate(80, 25)">
+            <text x="0" y="25" 
+                  fontFamily="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" 
+                  fontSize="24" 
+                  fontWeight="600" 
+                  fill="#374151">Will</text>
+            
+            <text x="45" y="25" 
+                  fontFamily="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" 
+                  fontSize="24" 
+                  fontWeight="300" 
+                  fill="#0891b2">Pro</text>
+          </g>
+        </svg>
+    </div>
+);
+
+
+const App = () => {
+    const [currentStep, setCurrentStep] = useState(1);
+    const [formData, setFormData] = useState<FormData>({
+        jurisdiction: 'UK',
+        testatorName: '',
+        testatorAddress: '',
+        testatorDob: '',
+        executorName: '',
+        alternateExecutorName: '',
+        hasMinorChildren: false,
+        guardianName: '',
+        alternateGuardianName: '',
+        realEstate: [],
+        gifts: [],
+        residuaryBeneficiaryName: '',
+    });
+    const [auditLogs, setAuditLogs] = useState<AuditLog[]>([]);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const importFileRef = useRef<HTMLInputElement>(null);
+    
+    const totalSteps = 8;
+
+    const addAuditLog = (event: string) => {
+        const newLog = {
+            timestamp: new Date().toISOString(),
+            event,
+        };
+        setAuditLogs(prevLogs => [...prevLogs, newLog]);
+    };
+    
+    useEffect(() => {
+        addAuditLog('New will creation process started');
+    }, []);
+
+    const handleNext = () => setCurrentStep(prev => Math.min(prev + 1, totalSteps));
+    const handleBack = () => setCurrentStep(prev => Math.max(prev - 1, 1));
+    
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+        const { name, value, type } = e.target;
+        const isCheckbox = type === 'checkbox';
+        
+        setFormData(prev => ({ 
+            ...prev, 
+            [name]: isCheckbox ? (e.target as HTMLInputElement).checked : value 
+        }));
+    };
+
+    const handleListChange = (listName: 'realEstate' | 'gifts', data: any) => {
+        setFormData(prev => ({
+            ...prev,
+            [listName]: [...prev[listName], data]
+        }));
+    };
+
+    const handleRemoveItem = (listName: 'realEstate' | 'gifts', index: number) => {
+        setFormData(prev => ({
+            ...prev,
+            [listName]: prev[listName].filter((_, i) => i !== index)
+        }));
+    };
+    
+    const handleReset = () => {
+        setCurrentStep(1);
+        setFormData({
+            jurisdiction: 'UK',
+            testatorName: '',
+            testatorAddress: '',
+            testatorDob: '',
+            executorName: '',
+            alternateExecutorName: '',
+            hasMinorChildren: false,
+            guardianName: '',
+            alternateGuardianName: '',
+            realEstate: [],
+            gifts: [],
+            residuaryBeneficiaryName: '',
+        });
+        addAuditLog('New will creation process started');
+    };
+
+    const handleExportLogs = () => {
+        const blob = new Blob([JSON.stringify(auditLogs, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'audit_logs.json';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        addAuditLog('Audit logs exported');
+    };
+
+    const handleImportLogs = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files?.[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try {
+                    const content = e.target?.result as string;
+                    const importedLogs = JSON.parse(content);
+                    if (Array.isArray(importedLogs)) {
+                        setAuditLogs(importedLogs);
+                        addAuditLog(`Audit logs imported from ${file.name}`);
+                    }
+                } catch (error) {
+                    console.error("Failed to parse audit log file", error);
+                    alert("Error: Could not import logs. The file might be corrupted or in the wrong format.");
+                }
+            };
+            reader.readAsText(file);
+        }
+    };
+    
+    const triggerImport = () => {
+        importFileRef.current?.click();
+    };
+
+    const renderStep = () => {
+        switch (currentStep) {
+            case 1:
+                return <JurisdictionStep formData={formData} handleChange={handleChange} handleNext={handleNext} />;
+            case 2:
+                return <TestatorStep formData={formData} handleChange={handleChange} handleNext={handleNext} handleBack={handleBack} />;
+            case 3:
+                return <ExecutorStep formData={formData} handleChange={handleChange} handleNext={handleNext} handleBack={handleBack} />;
+            case 4:
+                return <GuardianshipStep formData={formData} handleChange={handleChange} handleNext={handleNext} handleBack={handleBack} />;
+            case 5:
+                return <AssetsStep formData={formData} handleListChange={handleListChange} handleRemoveItem={handleRemoveItem} handleNext={handleNext} handleBack={handleBack} />;
+            case 6:
+                return <DistributionStep formData={formData} handleListChange={handleListChange} handleRemoveItem={handleRemoveItem} handleNext={handleNext} handleBack={handleBack} />;
+            case 7:
+                 return <ResiduaryStep formData={formData} handleChange={handleChange} handleNext={handleNext} handleBack={handleBack} />;
+            case 8:
+                return <ReviewStep formData={formData} handleBack={handleBack} handleReset={handleReset} addAuditLog={addAuditLog} />;
+            default:
+                return <div>Unknown Step</div>;
+        }
+    };
+
+    return (
+        <div className="app-container">
+            <header className="header">
+                <Logo />
+                <button className="audit-logs-btn" onClick={() => setIsModalOpen(true)}>View Audit Logs</button>
+            </header>
+            <ProgressBar currentStep={currentStep} totalSteps={totalSteps} />
+            <main className="main-content">
+                {renderStep()}
+            </main>
+            <AuditLogModal 
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
+                logs={auditLogs}
+                onExport={handleExportLogs}
+                onImport={triggerImport}
+            />
+            <input type="file" ref={importFileRef} onChange={handleImportLogs} style={{ display: 'none' }} accept=".json" />
+        </div>
+    );
+};
+
+export default App;

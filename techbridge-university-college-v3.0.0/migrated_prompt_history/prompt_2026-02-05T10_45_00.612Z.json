@@ -1,0 +1,52 @@
+[
+  {
+    "id": 0,
+    "author": "user",
+    "payload": {
+      "type": "text",
+      "text": "I need some directives to share with another model on implementing the faculty page with image links\n",
+      "files": [],
+      "fileUploads": [],
+      "cssBlocks": [],
+      "cMarkNode": {}
+    },
+    "createdTimestamp": {
+      "seconds": 1770288245,
+      "nanos": 303000000
+    }
+  },
+  {
+    "id": 1,
+    "author": "model",
+    "payload": {
+      "type": "thinking",
+      "text": "**Defining the Core Task**\n\nI'm currently dissecting the user's request. My focus is on understanding the core goal: crafting directives for another AI. The context of a React application for the feature's implementation is also being noted. I'm zeroing in on the feature itself, and the image links that need to be made.\n\n\n**Analyzing the Implementation**\n\nI'm now examining the existing code. I see there's a good starting point: `FacultyDirectory.tsx` and `FacultyProfile.tsx` components. The data structure, `FACULTY_DATA` in `constants.ts`, is also clear. My goal is to determine the best way to leverage these existing elements. The user may need improvements on data structure, image handling, navigation or UI.\n\n\n**Refining the Directives**\n\nI'm now iterating on my directives, aiming for a polished set of instructions. I've drafted several versions, starting with a mental outline and progressing to more detailed, technical specifications. Currently, I'm focusing on incorporating \"best practices\" and adhering to a \"TUC identity\" for a professional final product. I am updating my directives to take into account aesthetics and user experience. I am adding UX requirements like hover effects on cards and a responsive grid layout. I am also planning on updating image loading to lazy loading to improve performance. I am also working on adding filtering (search by name/department).\n\n\n**Organizing the Output**\n\nI'm structuring the directives into sections now. I'm aiming for a clear checklist for the receiving model. I've broken it down into Context & Tech Stack, Data Management, Component Architecture, Image Strategy, UI/UX Design, and Routing. The goal is to provide a comprehensive, step-by-step guide. I'm focusing on clarity and ease of execution.\n\n\n",
+      "cMarkNode": {}
+    },
+    "createdTimestamp": {
+      "seconds": 1770288245,
+      "nanos": 303000000
+    },
+    "doneTimestamp": {
+      "seconds": 1770288287,
+      "nanos": 12000000
+    }
+  },
+  {
+    "id": 2,
+    "author": "model",
+    "payload": {
+      "type": "text",
+      "text": "Here is a set of precise directives you can share with another AI model to rebuild or refine the Faculty Page. These instructions ensure the implementation aligns with the existing architecture, styling, and best practices of the TUC application.\n\n***\n\n### 📋 Directives for Faculty Page Implementation\n\n**Role:** Senior Frontend Engineer (React/TypeScript)\n**Context:** Techbridge University College (TUC) Web App\n**Tech Stack:** React 18, TypeScript, Tailwind CSS, Lucide React, React Router DOM (HashRouter).\n\n#### 1. Data Structure & Type Definitions\n*   **Interface:** Strict adherence to the `FacultyMember` interface in `types.ts`.\n    ```typescript\n    interface FacultyMember {\n      id: string;\n      name: string;\n      slug: string; // URL-friendly identifier\n      title: string;\n      department: string;\n      image: string; // URL to headshot\n      bio: string;\n      email: string;\n      education: string[];\n      profileUrl?: string;\n    }\n    ```\n*   **Source of Truth:** Data **must** be imported from `constants.ts` (`FACULTY_DATA`). Do not hardcode data inside the component.\n\n#### 2. Component Architecture\n*   **Primary Component:** Create/Update `components/Academics/FacultyDirectory.tsx`.\n*   **Layout Strategy:**\n    *   Use a **Responsive Grid Layout**: 1 column (mobile), 2 columns (tablet), 3 columns (desktop), 4 columns (large screens).\n    *   Group faculty members by **Department** headers to improve readability.\n*   **Search/Filter:** Implement a client-side search input that filters by `name`, `department`, or `title` in real-time.\n\n#### 3. Image Handling (Critical)\n*   **Aspect Ratio:** Enforce a consistent aspect ratio (e.g., `aspect-[4/5]` or `aspect-square`) for all headshots using Tailwind classes to prevent layout shifts.\n*   **Object Fit:** Use `object-cover` and `object-top` to ensure faces are centered and containers are filled without distortion.\n*   **Error Handling (Fallback):** You **must** implement an `onError` handler for the `<img>` tag.\n    *   *Logic:* If the image fails to load, replace `src` with a generated avatar (e.g., `https://ui-avatars.com/api/?name={name}&background=630f12&color=ffcb05`).\n    *   *Visual:* Optionally, show a \"Image Unavailable\" placeholder icon from `lucide-react`.\n*   **Lazy Loading:** Add `loading=\"lazy\"` to all image tags for performance.\n*   **Accessibility:** The `alt` attribute must contain the faculty member's full name.\n\n#### 4. UI/UX & Branding\n*   **Color Palette:** Use `bg-white` or `bg-gray-800` (dark mode) for cards. Use `text-tuc-maroon` for names and `text-tuc-gold` for accents/titles.\n*   **Interactions:**\n    *   **Hover:** Slight scale up (`hover:scale-105`) and shadow increase (`hover:shadow-2xl`) on the card.\n    *   **Focus:** Visible focus rings (`focus:ring-tuc-gold`) for keyboard navigation.\n*   **Overlay:** On hover, display a call-to-action (e.g., \"View Profile\") over the image using a gradient overlay (`bg-gradient-to-t`).\n\n#### 5. Navigation & Routing\n*   **Interaction Model:** Implement a **Hybrid Approach**:\n    1.  **Modal/Quick View:** Clicking the card opens a Modal (Overlay) showing the full Bio and Education details without leaving the page.\n    2.  **Deep Linking:** Provide a specific link or button (e.g., \"Official Profile\") that routes to `/academics/faculty/:slug` for a dedicated page view.\n*   **Route Setup:** Ensure `AcademicsContainer.tsx` handles the route:\n    ```tsx\n    <Route path=\"faculty/:slug\" element={<FacultyProfile slug={slug} />} />\n    ```\n\n#### 6. Accessibility (A11y) Requirements\n*   **Semantic HTML:** Use `<article>` for individual faculty cards.\n*   **Keyboard Navigation:** Ensure cards are interactive (`tabIndex={0}`) and respond to `Enter` key presses to open the modal/profile.\n*   **Screen Readers:** Ensure the search input has an `aria-label`.\n\n---\n\n### Example Code Snippet for Image Handling (Reference)\n\n```tsx\nconst handleImageError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {\n  const target = e.target as HTMLImageElement;\n  const name = target.alt || 'Faculty';\n  // Fallback to TUC Brand Colors\n  target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=630f12&color=ffcb05&size=512`;\n};\n\n// In Render:\n<img \n  src={member.image} \n  alt={member.name} \n  loading=\"lazy\"\n  onError={handleImageError}\n  className=\"w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-105\" \n/>\n",
+      "cMarkNode": {}
+    },
+    "createdTimestamp": {
+      "seconds": 1770288287,
+      "nanos": 12000000
+    },
+    "doneTimestamp": {
+      "seconds": 1770288287,
+      "nanos": 330000000
+    }
+  }
+]

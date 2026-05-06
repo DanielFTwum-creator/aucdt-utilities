@@ -1,0 +1,8 @@
+
+{
+  "name": "SmartScale AI Presentation Platform",
+  "description": "A world-class, interactive, and accessible AI-powered presentation platform for the SmartScale Training program. Features include live Gemini-driven workshop tools, administrative auditing, and accessibility-first themes.",
+  "requestFramePermissions": [
+    "microphone"
+  ]
+}

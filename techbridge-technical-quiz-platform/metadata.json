@@ -1,0 +1,8 @@
+{
+  "name": "Techbridge Technical Quiz Platform",
+  "description": "A best-in-class technical assessment platform for full-stack developers featuring real-time evaluation, advanced analytics, and AI-powered question generation.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ]
+}

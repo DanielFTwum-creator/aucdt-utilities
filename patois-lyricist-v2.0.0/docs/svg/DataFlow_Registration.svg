@@ -1,0 +1,30 @@
+<svg width="800" height="450" viewBox="0 0 800 450" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="800" height="450" rx="16" fill="#111827"/>
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="0" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#9CA3AF" />
+    </marker>
+  </defs>
+  <text x="400" y="40" text-anchor="middle" fill="#D4AF37" font-family="Arial" font-size="22" font-weight="bold">Data Flow: User Registration &amp; Authentication</text>
+  
+  <rect x="50" y="180" width="120" height="60" rx="8" fill="#1F2937" stroke="#4B5563"/>
+  <text x="110" y="215" text-anchor="middle" fill="#F3F4F6" font-family="Arial" font-size="14">User</text>
+  
+  <rect x="250" y="180" width="160" height="60" rx="30" fill="#111827" stroke="#10B981"/>
+  <text x="330" y="215" text-anchor="middle" fill="#F3F4F6" font-family="Arial" font-size="14">Validation Process</text>
+  
+  <rect x="490" y="180" width="120" height="60" rx="8" fill="#1F2937" stroke="#3B82F6"/>
+  <text x="550" y="215" text-anchor="middle" fill="#F3F4F6" font-family="Arial" font-size="14">Security Layer</text>
+
+  <path d="M 690 150 Q 750 150 750 210 T 690 270 H 670 V 150 H 690" fill="#1F2937" stroke="#FBBF24" stroke-width="2"/>
+  <text x="710" y="215" text-anchor="middle" fill="#F3F4F6" font-family="Arial" font-size="12">Storage</text>
+
+  <line x1="170" y1="210" x2="245" y2="210" stroke="#9CA3AF" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <text x="210" y="200" text-anchor="middle" fill="#9CA3AF" font-family="Arial" font-size="10">Credentials</text>
+  
+  <line x1="410" y1="210" x2="485" y2="210" stroke="#9CA3AF" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <text x="450" y="200" text-anchor="middle" fill="#9CA3AF" font-family="Arial" font-size="10">Validated JSON</text>
+  
+  <line x1="610" y1="210" x2="665" y2="210" stroke="#9CA3AF" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <text x="640" y="200" text-anchor="middle" fill="#9CA3AF" font-family="Arial" font-size="10">Base64</text>
+</svg>

@@ -1,0 +1,125 @@
+{
+  "timestamp": "2026-03-23T01:48:13.327Z",
+  "total": 11,
+  "ok": 10,
+  "blank": 1,
+  "error": 0,
+  "adminOk": 10,
+  "adminError": 0,
+  "errors": [],
+  "blanks": [
+    "lems"
+  ],
+  "results": [
+    {
+      "app": "ai-scene-visualizer",
+      "port": 4100,
+      "status": "ok",
+      "path": "C:\\Development\\aucdt-utilities\\catalogue\\project-screenshots\\ai-scene-visualizer.png",
+      "sizePublic": 169453,
+      "sizeAdmin": 166664,
+      "adminStatus": "ok",
+      "size": 169453
+    },
+    {
+      "app": "ai-stand-up-workshop-prep-dashboard",
+      "port": 4101,
+      "status": "ok",
+      "path": "C:\\Development\\aucdt-utilities\\catalogue\\project-screenshots\\ai-stand-up-workshop-prep-dashboard.png",
+      "sizePublic": 128110,
+      "sizeAdmin": 128110,
+      "adminStatus": "ok",
+      "size": 128110
+    },
+    {
+      "app": "clipai",
+      "port": 4102,
+      "status": "ok",
+      "path": "C:\\Development\\aucdt-utilities\\catalogue\\project-screenshots\\clipai.png",
+      "sizePublic": 61092,
+      "sizeAdmin": 61092,
+      "adminStatus": "ok",
+      "size": 61092
+    },
+    {
+      "app": "creoai",
+      "port": 4103,
+      "status": "ok",
+      "path": "C:\\Development\\aucdt-utilities\\catalogue\\project-screenshots\\creoai.png",
+      "sizePublic": 90805,
+      "sizeAdmin": 90805,
+      "adminStatus": "ok",
+      "size": 90805
+    },
+    {
+      "app": "dmcdai-digital-media-communication-design",
+      "port": 4104,
+      "status": "ok",
+      "path": "C:\\Development\\aucdt-utilities\\catalogue\\project-screenshots\\dmcdai-digital-media-communication-design.png",
+      "sizePublic": 88326,
+      "sizeAdmin": 88330,
+      "adminStatus": "ok",
+      "size": 88326
+    },
+    {
+      "app": "entrainer-landing-page",
+      "port": 4105,
+      "status": "ok",
+      "path": "C:\\Development\\aucdt-utilities\\catalogue\\project-screenshots\\entrainer-landing-page.png",
+      "sizePublic": 775991,
+      "sizeAdmin": 775991,
+      "adminStatus": "ok",
+      "size": 775991
+    },
+    {
+      "app": "lems",
+      "port": 4106,
+      "status": "blank",
+      "path": "C:\\Development\\aucdt-utilities\\catalogue\\project-screenshots\\lems.png",
+      "sizePublic": 4713,
+      "sizeAdmin": 4713,
+      "adminStatus": "blank",
+      "size": 4713
+    },
+    {
+      "app": "modern-product-development-lifecycle",
+      "port": 4107,
+      "status": "ok",
+      "path": "C:\\Development\\aucdt-utilities\\catalogue\\project-screenshots\\modern-product-development-lifecycle.png",
+      "sizePublic": 268235,
+      "sizeAdmin": 547655,
+      "adminStatus": "ok",
+      "size": 268235
+    },
+    {
+      "app": "patois-lyricist-v1.8",
+      "port": 4108,
+      "status": "ok",
+      "path": "C:\\Development\\aucdt-utilities\\catalogue\\project-screenshots\\patois-lyricist-v1.8.png",
+      "sizePublic": 479911,
+      "sizeAdmin": 461054,
+      "adminStatus": "ok",
+      "size": 479911
+    },
+    {
+      "app": "playgrow-smart-fun-for-bright-minds",
+      "port": 4109,
+      "status": "ok",
+      "path": "C:\\Development\\aucdt-utilities\\catalogue\\project-screenshots\\playgrow-smart-fun-for-bright-minds.png",
+      "sizePublic": 126725,
+      "sizeAdmin": 126725,
+      "adminStatus": "ok",
+      "size": 126725
+    },
+    {
+      "app": "stand-up-workshop-prep-dashboard",
+      "port": 4110,
+      "status": "ok",
+      "path": "C:\\Development\\aucdt-utilities\\catalogue\\project-screenshots\\stand-up-workshop-prep-dashboard.png",
+      "sizePublic": 120795,
+      "sizeAdmin": 120795,
+      "adminStatus": "ok",
+      "size": 120795
+    }
+  ]
+}

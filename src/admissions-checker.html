@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>TUC Admission Qualification Checker</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script src="admissions.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon"
+        href="https://portal.techbridge.edu.gh/wp-content/uploads/2022/04/cropped-AsanSka-University-College-Logo-32x32.png"
+        sizes="32x32" />
+    <link rel="icon"
+        href="https://portal.techbridge.edu.gh/wp-content/uploads/2022/04/cropped-AsanSka-University-College-Logo-192x192.png"
+        sizes="192x192" />
+    <link rel="apple-touch-icon"
+        href="https://portal.techbridge.edu.gh/wp-content/uploads/2022/04/cropped-AsanSka-University-College-Logo-180x180.png" />
+</head>
+
+<body>
+    <h1 id="page-header" name="page-header">TUC Admission Qualification Checker </h1>
+
+    <form>
+
+        <div class="centered-input">
+            <label for="exams">Choose your exam:</label>
+            <select class="select-box" id="exams" name="exams[]" onchange="calculateResults()">
+                <option value="select">SELECT</option>
+                <option value="wassce">WASSCE</option>
+                <option value="sssce">SSSCE</option>
+                <option value="abce">ABCE</option>
+                <option value="gbce">GBCE</option>
+                <option value="gceolevel">GCE O'level</option>
+                <option value="gcealevel">GCE A'level</option>
+                <option value="hnd">HND</option>
+                <option value="diploma">Diploma</option>
+            </select>
+        </div>
+
+        <div class="styled-table">
+            <div class="table-row table-header">
+                <div class="table-cell">Core Subjects</div>
+                <div class="table-cell">Grades</div>
+                <div class="table-cell">Validation</div>
+                <div class="table-cell">Elective Subjects</div>
+                <div class="table-cell">Grades</div>
+                <div class="table-cell">Validation</div>
+            </div>
+            <div class="table-row">
+                <div class="table-cell">
+                    <label for="englishScore">English:</label>
+                </div>
+                <div class="table-cell">
+                    <input type="text" id="englishScore" name="englishScore" required title="Error message."
+                        onchange="toUpperCase(this);validateScore('englishScore');calculateResults();"
+                        class="centered-input" />
+                </div>
+                <div class="table-cell"><strong>
+                        <span id="englishScoreValidationMessage"></span></strong>
+                </div>
+                <div class="table-cell">
+                    <label for="elective1Score">Elective 1:</label>
+                </div>
+                <div class="table-cell">
+                    <input type="text" id="elective1Score" name="elective1Score" required
+                        onchange="toUpperCase(this);validateScore('elective1Score');calculateResults();"
+                        class="centered-input" />
+                </div>
+                <div class="table-cell">
+                    <strong>
+                        <span id="elective1ScoreValidationMessage"></span></strong>
+                </div>
+            </div>
+            <div class="table-row">
+                <div class="table-cell">
+                    <label for="mathsScore">Mathematics:</label>
+                </div>
+                <div class="table-cell">
+                    <input type="text" id="mathsScore" name="mathsScore" required
+                        onchange="toUpperCase(this);validateScore('mathsScore');calculateResults()"
+                        class="centered-input" />
+                </div>
+                <div class="table-cell"><strong>
+                        <span id="mathsScoreValidationMessage"></span></strong>
+                </div>
+                <div class="table-cell">
+                    <label for="elective2Score">Elective 2:</label>
+                </div>
+                <div class="table-cell">
+                    <input type="text" id="elective2Score" name="elective2Score" required
+                        onchange="toUpperCase(this);validateScore('elective2Score');calculateResults()"
+                        class="centered-input" />
+                </div>
+                <div class="table-cell"><strong>
+                        <span id="elective2ScoreValidationMessage"></span></strong>
+                </div>
+            </div>
+            <div class="table-row">
+                <div class="table-cell">
+                    <label for="socialScore">Social Studies:</label>
+                </div>
+                <div class="table-cell">
+                    <input type="text" id="socialScore" name="socialScore" required
+                        onchange="toUpperCase(this);validateScore('socialScore');calculateResults()"
+                        class="centered-input" />
+                </div>
+                <div class="table-cell"><strong>
+                        <span id="socialScoreValidationMessage"></span></strong>
+                </div>
+                <div class="table-cell">
+                    <label for="elective3Score">Elective 3:</label>
+                </div>
+                <div class="table-cell">
+                    <input type="text" id="elective3Score" name="elective3Score" required
+                        onchange="toUpperCase(this);validateScore('elective3Score');calculateResults()"
+                        class="centered-input" />
+                </div>
+                <div class="table-cell"><strong>
+                        <span id="elective3ScoreValidationMessage"></span></strong>
+                </div>
+            </div>
+            <div class="table-row">
+                <div class="table-cell">
+                    <label for="scienceScore">Integrated Science:</label>
+                </div>
+                <div class="table-cell">
+                    <input type="text" id="scienceScore" name="scienceScore" required
+                        onchange="toUpperCase(this);validateScore('scienceScore');calculateResults()"
+                        class="centered-input" />
+                </div>
+                <div class="table-cell"><strong>
+                        <span id="scienceScoreValidationMessage"></span></strong>
+                </div>
+                <div class="table-cell">
+                    <label for="elective4Score">Elective 4:</label>
+                </div>
+                <div class="table-cell">
+                    <input type="text" id="elective4Score" name="elective4Score" required
+                        onchange="toUpperCase(this);validateScore('elective4Score');calculateResults()"
+                        class="centered-input" />
+                </div>
+                <div class="table-cell"><strong>
+                        <span id="elective4ScoreValidationMessage"></span></strong>
+                </div>
+            </div>
+        </div>
+        <div class="styled-table">
+            <div class="table-row table-header">
+                <div class="table-cell">Results</div>
+                <div class="table-cell">Total</div>
+            </div>
+
+            <div class="table-row">
+                <div class="table-cell"><label for="coreTotal">Core Total</label></div>
+                <div class="table-cell"><label type="text" id='coreTotal'></label></div>
+            </div>
+            <div class="table-row">
+                <div class="table-cell"><label for="electivesTotal">Electives Total:</label></div>
+                <div class="table-cell"><label type="text" id='electivesTotal'></label></div>
+            </div>
+            <div class="table-row">
+                <div class="table-cell"><label for="totalScore">Total Score:</label></div>
+                <div class="table-cell"><label type="text" id='totalScore'></label> </div>
+            </div>
+            <div class="table-row">
+                <div class="table-cell"><label for="qualificationStatus">Qualification Status:</label></div>
+                <div class="table-cell"><label type="text" id='qualificationStatus'></label></div>
+            </div>
+        </div>
+    </form>
+</body>

@@ -1,0 +1,767 @@
+/* =================================================================
+   CLASS 4 MATHEMATICS LEARNING SYSTEM - RESPONSIVE STYLES
+   Mobile-first responsive design for tablets and phones
+   ================================================================= */
+
+/* Mobile-first approach: Base styles for mobile, then enhance for larger screens */
+
+/* Mobile Styles (default - up to 767px) */
+@media (max-width: 767px) {
+  .main-content {
+    padding: 1rem;
+    padding-top: 80px; /* Adjusted for mobile navigation */
+  }
+  
+  /* Navigation adjustments for mobile */
+  .nav-container {
+    padding: var(--space-2) var(--space-3);
+    min-height: 60px;
+  }
+  
+  .nav-brand {
+    font-size: var(--font-size-base);
+    gap: var(--space-1);
+  }
+  
+  .brand-icon {
+    font-size: var(--font-size-xl);
+  }
+  
+  .nav-menu {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: var(--white);
+    border-top: 1px solid var(--border-light);
+    padding: var(--space-2);
+    justify-content: space-around;
+    z-index: var(--z-fixed);
+    box-shadow: 0 -2px 12px var(--shadow-light);
+  }
+  
+  .nav-item {
+    flex-direction: column;
+    gap: var(--space-1);
+    padding: var(--space-1);
+    min-height: auto;
+    text-align: center;
+  }
+  
+  .nav-icon {
+    font-size: var(--font-size-xl);
+  }
+  
+  .nav-label {
+    display: block;
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-medium);
+  }
+  
+  .nav-user {
+    display: none; /* Hide user info on mobile nav */
+  }
+  
+  .role-switch {
+    display: none; /* Hide role switch on mobile */
+  }
+  
+  /* Main content spacing adjustments */
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-3);
+    margin-bottom: var(--space-4);
+  }
+  
+  .strands-grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-3);
+  }
+  
+  .lessons-grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-3);
+  }
+  
+  .assessments-container {
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+  }
+  
+  .progress-dashboard {
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+  }
+  
+  /* Continue learning card adjustments */
+  .lesson-preview {
+    flex-direction: column;
+    text-align: center;
+    gap: var(--space-2);
+  }
+  
+  .lesson-thumbnail {
+    margin-bottom: var(--space-2);
+  }
+  
+  .continue-btn {
+    width: 100%;
+  }
+  
+  /* Stats grid adjustments */
+  .stats-row {
+    grid-template-columns: 1fr;
+    gap: var(--space-2);
+  }
+  
+  .stat-item {
+    justify-content: center;
+    text-align: center;
+  }
+  
+  /* Overall progress adjustments */
+  .overall-progress {
+    flex-direction: column;
+    text-align: center;
+    gap: var(--space-4);
+  }
+  
+  .progress-visual {
+    flex-shrink: 0;
+  }
+  
+  /* Quiz adjustments for mobile */
+  .quiz-container {
+    margin: 0;
+    border-radius: 0;
+  }
+  
+  .quiz-header {
+    padding: var(--space-3);
+  }
+  
+  .quiz-content {
+    padding: var(--space-4);
+  }
+  
+  .quiz-progress {
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+  
+  .quiz-controls {
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+  
+  .btn-quiz {
+    width: 100%;
+  }
+  
+  /* Modal adjustments for mobile */
+  .modal-content {
+    margin: var(--space-2);
+    max-height: calc(100vh - 4rem);
+    overflow-y: auto;
+  }
+  
+  /* Form adjustments for mobile */
+  .form-group {
+    margin-bottom: var(--space-3);
+  }
+  
+  .form-input,
+  .form-select {
+    font-size: 16px; /* Prevent zoom on iOS */
+  }
+  
+  /* Button adjustments for mobile */
+  .btn {
+    min-height: 48px; /* Larger touch targets */
+    padding: var(--space-3) var(--space-4);
+  }
+  
+  .btn-sm {
+    min-height: 40px;
+    padding: var(--space-2) var(--space-3);
+  }
+  
+  .btn-lg {
+    min-height: 56px;
+    padding: var(--space-4) var(--space-6);
+  }
+  
+  /* Badge collection adjustments */
+  .badges-collection {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-2);
+  }
+  
+  /* Strand card adjustments */
+  .strand-card {
+    padding: var(--space-3);
+  }
+  
+  .strand-header {
+    flex-direction: column;
+    text-align: center;
+    gap: var(--space-1);
+  }
+  
+  .strand-icon {
+    font-size: var(--font-size-xl);
+    padding: var(--space-1);
+  }
+  
+  .strand-progress {
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+  
+  /* Filter buttons for mobile */
+  .lesson-filter {
+    gap: var(--space-1);
+    overflow-x: auto;
+    padding-bottom: var(--space-1);
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  .filter-btn {
+    white-space: nowrap;
+    padding: var(--space-1) var(--space-2);
+    font-size: var(--font-size-xs);
+  }
+  
+  /* Assessment meta for mobile */
+  .assessment-meta {
+    flex-direction: column;
+    gap: var(--space-2);
+    text-align: center;
+  }
+  
+  .start-assessment-btn {
+    width: 100%;
+    min-width: auto;
+  }
+  
+  .assessment-item {
+    flex-direction: column;
+    gap: var(--space-3);
+    text-align: center;
+  }
+  
+  .assessment-score {
+    width: 100%;
+  }
+  
+  /* Virtual manipulatives for mobile */
+  .base-ten-blocks {
+    grid-template-columns: repeat(5, 30px);
+    gap: 2px;
+  }
+  
+  .base-ten-block {
+    width: 26px;
+    height: 26px;
+    font-size: 10px;
+  }
+  
+  .number-token {
+    width: 25px;
+    height: 25px;
+    font-size: var(--font-size-xs);
+  }
+  
+  /* Results breakdown for mobile */
+  .results-breakdown {
+    grid-template-columns: 1fr;
+    gap: var(--space-3);
+  }
+}
+
+/* Tablet Styles (768px to 1023px) */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .main-content {
+    padding: var(--space-4);
+    padding-top: 90px;
+  }
+  
+  /* Navigation for tablets */
+  .nav-container {
+    padding: var(--space-3) var(--space-4);
+    min-height: 70px;
+  }
+  
+  .nav-brand {
+    font-size: var(--font-size-lg);
+  }
+  
+  .nav-item {
+    padding: var(--space-2);
+    font-size: var(--font-size-sm);
+  }
+  
+  .nav-label {
+    display: block;
+    font-size: var(--font-size-xs);
+  }
+  
+  .user-info {
+    display: flex;
+  }
+  
+  /* Grid adjustments for tablets */
+  .dashboard-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-4);
+  }
+  
+  .strands-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .lessons-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .assessments-container {
+    grid-template-columns: 1fr;
+    gap: var(--space-5);
+  }
+  
+  .progress-dashboard {
+    grid-template-columns: 1fr;
+    gap: var(--space-5);
+  }
+  
+  /* Overall progress for tablets */
+  .overall-progress {
+    gap: var(--space-5);
+  }
+  
+  /* Lesson preview for tablets */
+  .lesson-preview {
+    gap: var(--space-4);
+  }
+  
+  /* Stats row for tablets */
+  .stats-row {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  
+  /* Quiz adjustments for tablets */
+  .quiz-container {
+    max-width: 90%;
+  }
+  
+  .quiz-content {
+    padding: var(--space-5);
+  }
+  
+  .question-options {
+    gap: var(--space-4);
+  }
+  
+  /* Virtual manipulatives for tablets */
+  .base-ten-blocks {
+    grid-template-columns: repeat(8, 30px);
+  }
+  
+  .base-ten-block {
+    width: 28px;
+    height: 28px;
+  }
+  
+  /* Badge collection for tablets */
+  .badges-collection {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Desktop Styles (1024px and up) */
+@media (min-width: 1024px) {
+  .main-content {
+    padding: var(--space-6);
+    padding-top: 100px;
+  }
+  
+  /* Navigation for desktop */
+  .nav-container {
+    padding: var(--space-4) var(--space-6);
+    min-height: 80px;
+  }
+  
+  .nav-brand {
+    font-size: var(--font-size-xl);
+  }
+  
+  .nav-item {
+    padding: var(--space-3) var(--space-4);
+    font-size: var(--font-size-base);
+  }
+  
+  .nav-label {
+    display: inline;
+    font-size: var(--font-size-sm);
+  }
+  
+  .user-avatar {
+    width: 48px;
+    height: 48px;
+  }
+  
+  .user-info {
+    display: flex;
+  }
+  
+  .user-name {
+    font-size: var(--font-size-base);
+  }
+  
+  .user-level {
+    font-size: var(--font-size-sm);
+  }
+  
+  /* Grid adjustments for desktop */
+  .dashboard-grid {
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: var(--space-5);
+  }
+  
+  .strands-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  
+  .lessons-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  
+  .assessments-container {
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-6);
+  }
+  
+  .progress-dashboard {
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-6);
+  }
+  
+  /* Overall progress for desktop */
+  .overall-progress {
+    gap: var(--space-6);
+  }
+  
+  /* Quiz adjustments for desktop */
+  .quiz-container {
+    max-width: 800px;
+  }
+  
+  .quiz-content {
+    padding: var(--space-6);
+  }
+  
+  .question-options {
+    gap: var(--space-4);
+  }
+  
+  /* Virtual manipulatives for desktop */
+  .base-ten-blocks {
+    grid-template-columns: repeat(10, 32px);
+  }
+  
+  .base-ten-block {
+    width: 30px;
+    height: 30px;
+  }
+  
+  /* Badge collection for desktop */
+  .badges-collection {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  
+  /* Modal adjustments for desktop */
+  .modal-content {
+    max-width: 900px;
+    margin: var(--space-4) auto;
+  }
+}
+
+/* Large Desktop Styles (1200px and up) */
+@media (min-width: 1200px) {
+  .main-content {
+    padding: var(--space-8);
+    padding-top: 100px;
+    max-width: 1400px;
+  }
+  
+  .dashboard-grid {
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: var(--space-6);
+  }
+  
+  .lessons-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  
+  .strands-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  
+  .badges-collection {
+    grid-template-columns: repeat(6, 1fr);
+  }
+}
+
+/* High DPI / Retina Displays */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .btn,
+  .card,
+  .nav-item {
+    /* Crisp edges on high DPI displays */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+/* Landscape orientation for mobile */
+@media (max-width: 767px) and (orientation: landscape) {
+  .main-content {
+    padding: var(--space-2) var(--space-4);
+    padding-top: 60px;
+  }
+  
+  .nav-container {
+    min-height: 50px;
+    padding: var(--space-1) var(--space-3);
+  }
+  
+  .nav-brand {
+    font-size: var(--font-size-sm);
+  }
+  
+  .nav-menu {
+    padding: var(--space-1);
+  }
+  
+  .nav-icon {
+    font-size: var(--font-size-lg);
+  }
+  
+  .nav-label {
+    font-size: 10px;
+  }
+}
+
+/* Print styles */
+@media print {
+  .navigation,
+  .nav-menu,
+  .role-switch,
+  .quiz-controls,
+  .btn,
+  .modal {
+    display: none !important;
+  }
+  
+  .main-content {
+    padding: 0;
+    padding-top: 0;
+    max-width: none;
+  }
+  
+  .card,
+  .strand-card,
+  .lesson-card {
+    box-shadow: none;
+    border: 1px solid var(--border-light);
+    break-inside: avoid;
+    margin-bottom: var(--space-3);
+  }
+  
+  .dashboard-grid,
+  .strands-grid,
+  .lessons-grid {
+    display: block;
+  }
+  
+  .strand-card,
+  .lesson-card {
+    margin-bottom: var(--space-4);
+  }
+  
+  .progress-fill,
+  .progress-fill-large {
+    background: var(--text-primary) !important;
+  }
+}
+
+/* Reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* High contrast mode adjustments */
+@media (prefers-contrast: high) {
+  .card,
+  .strand-card,
+  .lesson-card {
+    border: 2px solid var(--text-primary);
+  }
+  
+  .btn {
+    border: 2px solid currentColor;
+  }
+  
+  .btn-primary {
+    background: var(--text-primary);
+    color: var(--background-warm);
+  }
+  
+  .progress-bar,
+  .progress-bar-large {
+    border: 1px solid var(--text-primary);
+  }
+  
+  .option {
+    border: 2px solid var(--text-primary);
+  }
+  
+  .option.selected {
+    background: var(--text-primary);
+    color: var(--background-warm);
+  }
+}
+
+/* Dark mode support (if needed) */
+@media (prefers-color-scheme: dark) {
+  /* Optional: Add dark mode styles here */
+  /* For now, keeping the warm, child-friendly color scheme */
+}
+
+/* Focus styles for keyboard navigation */
+@media (pointer: coarse) {
+  /* Larger touch targets for touch devices */
+  .btn {
+    min-height: 48px;
+    padding: var(--space-3) var(--space-4);
+  }
+  
+  .nav-item {
+    min-height: 48px;
+    padding: var(--space-3) var(--space-4);
+  }
+  
+  .option {
+    min-height: 48px;
+    padding: var(--space-3);
+  }
+}
+
+/* Accessibility improvements */
+@media (prefers-reduced-motion: no-preference) {
+  /* Only apply animations if user hasn't requested reduced motion */
+  .card:hover,
+  .strand-card:hover,
+  .lesson-card:hover {
+    transform: translateY(-4px);
+  }
+  
+  .btn:hover:not(:disabled) {
+    transform: translateY(-1px);
+  }
+}
+
+/* Specific component responsive adjustments */
+
+/* Loading screen responsive */
+@media (max-width: 767px) {
+  .loading-content {
+    padding: var(--space-4);
+    max-width: 300px;
+  }
+  
+  .logo-icon {
+    font-size: 3rem;
+  }
+  
+  .loading-title {
+    font-size: var(--font-size-3xl);
+  }
+}
+
+/* Navigation role switch responsive */
+@media (max-width: 767px) {
+  .role-switch {
+    display: none;
+  }
+}
+
+@media (min-width: 768px) {
+  .role-switch {
+    margin-left: var(--space-4);
+  }
+}
+
+/* Breadcrumb navigation for desktop */
+@media (min-width: 1024px) {
+  .breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    margin-bottom: var(--space-4);
+    font-size: var(--font-size-sm);
+    color: var(--text-secondary);
+  }
+  
+  .breadcrumb-item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+  }
+  
+  .breadcrumb-separator {
+    font-size: var(--font-size-sm);
+    color: var(--text-muted);
+  }
+  
+  .breadcrumb-link {
+    color: var(--text-secondary);
+    text-decoration: none;
+  }
+  
+  .breadcrumb-link:hover {
+    color: var(--primary-gold);
+  }
+}
+
+/* Sidebar for desktop */
+@media (min-width: 1200px) {
+  .app-layout {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: var(--space-6);
+    max-width: 1600px;
+    margin: 0 auto;
+  }
+  
+  .sidebar {
+    position: sticky;
+    top: 100px;
+    height: fit-content;
+    background: var(--white);
+    border-radius: var(--radius-xl);
+    padding: var(--space-4);
+    box-shadow: 0 4px 16px var(--shadow-light);
+  }
+  
+  .main-content {
+    padding: var(--space-6);
+  }
+}

@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TUC Scholarship Execution Bond | Digital Notary</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono&family=Playfair+Display:ital,wght@0,700;0,900;1,700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-primary: #0d0c0a;
+            --bg-surface: #141210;
+            --bg-elevated: #1c1a16;
+            --gold-primary: #c9a84c;
+            --gold-bright: #e8c96a;
+            --gold-muted: #7a6230;
+            --text-primary: #f0e8d5;
+            --text-secondary: #a09070;
+            --accent-seal: #8b0000;
+            
+            --font-display: 'Playfair Display', serif;
+            --font-body: 'Cormorant Garamond', serif;
+            --font-ui: 'Barlow Condensed', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+            
+            --transition-smooth: 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        /* Base Reset & Grain Overlay */
+        * { margin: 0; padding: 0; box-sizing: border-box; outline: none; }
+        
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: var(--font-body);
+            line-height: 1.8;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+            opacity: 0.04;
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        /* Accessibility: Focus Indicators */
+        :focus {
+            outline: 2px solid var(--gold-primary);
+            outline-offset: 4px;
+        }
+
+        /* Page Load Animations */
+        @keyframes fadeInDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeInLeft { from { opacity: 0; transform: translateX(-30px); } to { opacity: 1; transform: translateX(0); } }
+        @keyframes fadeInRight { from { opacity: 0; transform: translateX(30px); } to { opacity: 1; transform: translateX(0); } }
+        @keyframes drawLine { from { width: 0; } to { width: 100%; } }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes pulseGold { 0% { opacity: 0.4; } 50% { opacity: 1; } 100% { opacity: 0.4; } }
+        
+        /* Seal Stamp Animation */
+        @keyframes sealStamp {
+            0% { transform: scale(0); opacity: 0; }
+            70% { transform: scale(1.2); opacity: 1; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        /* Layout Structure */
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 0 40px;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 30px 0;
+            border-bottom: 1px solid rgba(122, 98, 48, 0.2);
+            animation: fadeInDown 0.8s ease forwards;
+        }
+
+        .logo-placeholder {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo-placeholder svg { width: 45px; height: 45px; fill: var(--gold-primary); }
+        .logo-text { font-family: var(--font-ui); font-weight: 700; letter-spacing: 0.2em; color: var(--gold-primary); }
+
+        .doc-id { font-family: var(--font-mono); font-size: 13px; color: var(--gold-muted); text-transform: uppercase; }
+        .year-badge { background: var(--bg-elevated); padding: 4px 12px; border: 1px solid var(--gold-muted); font-family: var(--font-ui); color: var(--gold-primary); border-radius: 2px; }
+
+        /* Hero Section */
+        .hero {
+            padding: 100px 0 60px;
+            text-align: center;
+            position: relative;
+        }
+
+        .hero h1 {
+            font-family: var(--font-display);
+            font-size: 72px;
+            line-height: 0.9;
+            text-transform: uppercase;
+            letter-spacing: -0.02em;
+            margin-bottom: 20px;
+        }
+
+        .hero h1 span.gold { color: var(--gold-primary); animation: fadeInRight 1s 0.12s ease both; display: inline-block; }
+        .hero h1 span.white { animation: fadeInLeft 1s ease both; display: inline-block; }
+
+        .drawing-rule {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--gold-muted), transparent);
+            width: 0;
+            margin: 40px auto;
+            animation: drawLine 0.8s 0.4s ease forwards;
+        }
+
+        /* Trust Badges */
+        .trust-row {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            margin-bottom: 80px;
+        }
+
+        .badge-pill {
+            background: var(--bg-elevated);
+            border: 1px solid var(--gold-muted);
+            padding: 12px 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: var(--transition-smooth);
+            animation: fadeInUp 0.6s both;
+        }
+
+        .badge-pill:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 24px rgba(201, 168, 76, 0.2);
+            border-color: var(--gold-primary);
+        }
+
+        .badge-pill .icon { font-size: 20px; }
+        .badge-pill .content { text-align: left; }
+        .badge-pill .title { font-family: var(--font-ui); font-weight: 700; font-size: 12px; letter-spacing: 0.1em; color: var(--gold-primary); text-transform: uppercase; }
+        .badge-pill .sub { font-family: var(--font-body); font-size: 11px; opacity: 0.6; }
+
+        /* Progress Stepper */
+        .stepper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 60px;
+        }
+
+        .step {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-family: var(--font-ui);
+            font-size: 13px;
+            letter-spacing: 0.1em;
+            padding: 8px 20px;
+            border-radius: 100px;
+            transition: var(--transition-smooth);
+        }
+
+        .step.active { background: var(--gold-primary); color: var(--bg-primary); font-weight: 700; }
+        .step.inactive { border: 1px solid var(--gold-muted); color: var(--gold-muted); }
+        .step.completed { background: var(--gold-muted); color: var(--text-primary); }
+        .connector { height: 1px; width: 40px; border-top: 1px dashed var(--gold-muted); }
+
+        /* Main Grid Layout */
+        .main-grid {
+            display: grid;
+            grid-template-columns: 20% 52% 28%;
+            gap: 60px;
+            align-items: start;
+            margin-bottom: 100px;
+        }
+
+        aside { position: sticky; top: 2rem; }
+
+        /* Panels Style */
+        .panel { background: var(--bg-surface); border: 1px solid rgba(122, 98, 48, 0.15); padding: 32px; }
+        .panel-header { font-family: var(--font-ui); font-size: 11px; letter-spacing: 0.3em; color: var(--gold-muted); border-bottom: 1px solid rgba(122, 98, 48, 0.1); padding-bottom: 12px; margin-bottom: 24px; text-transform: uppercase; }
+
+        /* Form Controls */
+        .form-group { margin-bottom: 24px; }
+        .label { font-family: var(--font-ui); font-size: 10px; letter-spacing: 0.2em; color: var(--text-secondary); text-transform: uppercase; display: block; margin-bottom: 8px; }
+        
+        input, select, textarea {
+            width: 100%;
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid var(--gold-muted);
+            color: var(--text-primary);
+            font-family: var(--font-body);
+            font-size: 16px;
+            padding: 8px 0;
+            transition: var(--transition-smooth);
+        }
+
+        input:focus, select:focus, textarea:focus {
+            border-bottom-color: var(--gold-bright);
+            box-shadow: 0 4px 12px -4px rgba(201,168,76,0.3);
+        }
+
+        /* Document Body (Center) */
+        .document-body { max-width: 680px; margin: 0 auto; }
+        .drop-cap::first-letter {
+            float: left;
+            font-family: var(--font-display);
+            font-size: 4rem;
+            line-height: 1;
+            padding-right: 12px;
+            color: var(--gold-primary);
+            font-weight: 900;
+        }
+
+        .document-body h2 { font-family: var(--font-display); font-size: 28px; color: var(--gold-primary); margin-bottom: 30px; text-align: center; text-transform: uppercase; letter-spacing: 0.1em; }
+        .legal-para { margin-bottom: 32px; text-align: justify; font-size: 19px; }
+        .highlight { color: var(--gold-primary); font-weight: 600; }
+
+        .chip { background: var(--gold-primary); color: var(--bg-primary); padding: 2px 10px; font-family: var(--font-ui); font-weight: 700; font-size: 12px; border-radius: 4px; display: inline-block; margin: 0 4px; vertical-align: middle; }
+
+        /* Right Summary Panel */
+        .summary-title { font-family: var(--font-display); font-size: 32px; color: var(--gold-primary); margin-bottom: 16px; }
+        .summary-intro { font-style: italic; font-size: 17px; margin-bottom: 24px; opacity: 0.8; }
+        
+        .parties-list { border-top: 1px solid rgba(122, 98, 48, 0.1); padding-top: 24px; margin-bottom: 32px; }
+        .party { font-family: var(--font-ui); font-size: 13px; letter-spacing: 0.1em; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+        .party::before { content: "•"; color: var(--gold-primary); }
+
+        .duration-display { margin-bottom: 40px; }
+        .duration-value { font-family: var(--font-display); font-size: 42px; color: var(--gold-primary); line-height: 1; }
+        .duration-label { font-family: var(--font-ui); font-size: 11px; letter-spacing: 0.2em; color: var(--text-secondary); text-transform: uppercase; }
+
+        .status-pill { display: flex; align-items: center; gap: 10px; font-family: var(--font-ui); letter-spacing: 0.1em; font-size: 13px; color: var(--gold-primary); }
+        .pulse-dot { width: 8px; height: 8px; background: var(--gold-primary); border-radius: 50%; animation: pulseGold 1.5s infinite; }
+
+        .quote-block { border-left: 2px solid var(--gold-muted); padding-left: 20px; margin-top: 60px; font-style: italic; opacity: 0.7; }
+
+        .cta-btn {
+            width: 100%;
+            background: transparent;
+            border: 1px solid var(--gold-primary);
+            color: var(--gold-primary);
+            font-family: var(--font-ui);
+            padding: 16px;
+            font-weight: 700;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-btn:hover { background: var(--gold-primary); color: var(--bg-primary); }
+        .cta-btn i { transition: transform 0.3s ease; }
+        .cta-btn:hover i { transform: translateX(4px); }
+        
+        /* Official Seal Component */
+        .seal-stamp {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            width: 120px; height: 120px;
+            border: 4px double var(--gold-primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(20, 18, 16, 0.95);
+            z-index: 10;
+            pointer-events: none;
+            opacity: 0;
+        }
+        .seal-stamp.animate { animation: sealStamp 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+        .seal-stamp svg { width: 60px; height: 60px; fill: var(--gold-primary); }
+
+        /* Mobile Drawer Logic */
+        .drawer-toggle {
+            display: none;
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 100;
+            background: var(--gold-primary);
+            color: var(--bg-primary);
+            width: 60px; height: 60px;
+            border-radius: 50%;
+            border: none;
+            box-shadow: 0 10px 30px rgba(201,168,76,0.4);
+            cursor: pointer;
+        }
+
+        /* Responsive Breakpoints */
+        @media (max-width: 1200px) {
+            .main-grid { grid-template-columns: 1fr; }
+            aside { position: relative; top: 0; }
+            .hero h1 { font-size: 48px; }
+            .trust-row { flex-wrap: wrap; }
+        }
+
+        @media (max-width: 768px) {
+            .container { padding: 0 20px; }
+            .hero h1 { font-size: 36px; }
+            .main-grid { grid-template-columns: 1fr; gap: 30px; }
+            .right-panel { order: -1; } /* Summary moves above doc on mobile */
+            
+            .left-panel {
+                position: fixed;
+                top: 0; left: -100%;
+                width: 85%; height: 100%;
+                z-index: 1000;
+                transition: var(--transition-smooth);
+                background: var(--bg-primary);
+                overflow-y: auto;
+                box-shadow: 20px 0 60px rgba(0,0,0,0.8);
+            }
+            .left-panel.open { left: 0; }
+            .drawer-toggle { display: block; }
+            .stepper .step span { display: none; } /* Icon-only stepper on mobile */
+        }
+
+        /* Print Styles */
+        @media print {
+            body { background: white; color: black; }
+            body::before { display: none; }
+            .panel, .badge-pill, .year-badge { border: 1px solid #333 !important; background: transparent !important; color: black !important; }
+            .gold, .gold-primary, .text-primary, .text-secondary { color: black !important; }
+            .cta-btn, .stepper, .pulse-dot, .drawing-rule, .drawer-toggle { display: none !important; }
+            .container { width: 100%; padding: 0; }
+            .main-grid { display: block; }
+            .legal-para { text-align: justify; page-break-inside: avoid; }
+            .document-body { max-width: 100%; }
+        }
+
+    </style>
+</head>
+<body>
+
+    <button class="drawer-toggle" id="drawerBtn" aria-label="Open Identity Panel">
+        <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
+            <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"></path>
+        </svg>
+    </button>
+
+    <div class="container">
+        <!-- HEADER -->
+        <header role="banner">
+            <div class="logo-placeholder">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
+                </svg>
+                <div class="logo-text">TECHBRIDGE UNIVERSITY</div>
+            </div>
+            <div class="doc-id">REF: TUC-BOND-2026-X4</div>
+            <div class="year-badge">2026 CODIFIED</div>
+        </header>
+
+        <!-- HERO -->
+        <section class="hero" aria-labelledby="hero-title">
+            <h1 id="hero-title">
+                <span class="white">SCHOLARSHIP</span><br>
+                <span class="gold">EXECUTION BOND</span>
+            </h1>
+            <div class="drawing-rule"></div>
+
+            <!-- TRUST BADGES -->
+            <div class="trust-row">
+                <div class="badge-pill" style="animation-delay: 0.1s">
+                    <span class="icon">⚖</span>
+                    <div class="content">
+                        <div class="title">Legal Binding</div>
+                        <div class="sub">Enforceable by Law</div>
+                    </div>
+                </div>
+                <div class="badge-pill" style="animation-delay: 0.16s">
+                    <span class="icon">🎓</span>
+                    <div class="content">
+                        <div class="title">Academic Tenure</div>
+                        <div class="sub">At Your Commitment</div>
+                    </div>
+                </div>
+                <div class="badge-pill" style="animation-delay: 0.22s">
+                    <span class="icon">🔗</span>
+                    <div class="content">
+                        <div class="title">Digital Witness</div>
+                        <div class="sub">Blockchain Verified</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PROGRESS STEPPER -->
+            <nav class="stepper" aria-label="Progress Stepper">
+                <div class="step active" id="step1" data-tooltip="Agreement">1. <span>AGREEMENT</span></div>
+                <div class="connector"></div>
+                <div class="step inactive" id="step2" data-tooltip="Bond">2. <span>BOND / UNDERTAKING</span></div>
+                <div class="connector"></div>
+                <div class="step inactive" id="step3" data-tooltip="Attestation">3. <span>ATTESTATION</span></div>
+            </nav>
+        </section>
+
+        <!-- MAIN GRID -->
+        <div class="main-grid">
+            
+            <!-- LEFT: IDENTITY & METADATA -->
+            <aside class="left-panel" id="sidePanel" role="complementary" aria-label="Scholar Identity and Metadata">
+                <div class="panel">
+                    <div class="panel-header">Agreement Metadata</div>
+                    <div class="form-group">
+                        <label class="label" for="doc-date">Date of Agreement</label>
+                        <input type="date" id="doc-date" aria-required="true">
+                    </div>
+                    <div class="form-group">
+                        <label class="label" for="doc-location">Location (City/Town)</label>
+                        <select id="doc-location" aria-required="true">
+                            <option value="">Select City</option>
+                            <option value="Accra">Accra (Oyibi Campus)</option>
+                            <option value="Kumasi">Kumasi</option>
+                            <option value="Tamale">Tamale</option>
+                        </select>
+                    </div>
+
+                    <div class="panel-header" style="margin-top: 40px;">Scholar Identity</div>
+                    <div class="form-group">
+                        <label class="label" for="sch-title">Title</label>
+                        <select id="sch-title" aria-required="true">
+                            <option value="Mr">Mr.</option>
+                            <option value="Ms">Ms.</option>
+                            <option value="Dr">Dr.</option>
+                            <option value="Prof">Prof.</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="label" for="sch-name">Full Legal Name</label>
+                        <input type="text" id="sch-name" placeholder="As it appears on Passport" aria-required="true">
+                    </div>
+                    <div class="form-group">
+                        <label class="label" for="sch-id">ID / Passport Number</label>
+                        <input type="text" id="sch-id" placeholder="GHA-XXXXXXX" aria-required="true">
+                    </div>
+                    <div class="form-group">
+                        <label class="label" for="sch-addr">Permanent Address</label>
+                        <textarea id="sch-addr" rows="3" placeholder="Enter residential address" aria-required="true"></textarea>
+                    </div>
+
+                    <button class="cta-btn" id="nextBtn" style="font-size: 11px; margin-top: 20px;">
+                        PROCEED TO CLAUSES <i>→</i>
+                    </button>
+                </div>
+            </aside>
+
+            <!-- CENTER: DOCUMENT BODY -->
+            <main class="document-body" role="main" aria-label="Scholarship Bond Document Content">
+                <div class="drop-cap legal-para">
+                    WHEREAS the <span class="highlight">Techbridge University College</span> (hereinafter referred to as the "Institution") has offered a scholarship for advanced studies within the <span class="chip">DMCD</span> faculty to the Scholar, and whereas the Scholar has accepted this mandate under the <span class="highlight">binding legal framework</span> established herein.
+                </div>
+
+                <h2>Conditions of Tenure</h2>
+
+                <div class="drop-cap legal-para">
+                    The Scholar hereby undertakes to complete the prescribed course of study within the duration of <span class="chip">3 Years</span>. Failure to maintain academic excellence or withdrawal from the Institution without prior written consent from the Registrar shall constitute a breach of this bond.
+                </div>
+
+                <div class="drop-cap legal-para">
+                    The Scholar covenants to provide a detailed research thesis on the following subject, which shall serve as a primary contribution to the Institution's knowledge base:
+                    <div class="form-group" style="margin-top: 20px;">
+                        <label class="label" for="sch-research">Proposed Research Topic</label>
+                        <input type="text" id="sch-research" placeholder="Enter specific research area" aria-label="Research Topic Input">
+                    </div>
+                </div>
+
+                <div class="drop-cap legal-para">
+                    Upon successful completion of the studies, the Scholar is legally bound to serve the Institution for the period specified in the summary panel. This service shall be rendered at the Oyibi Campus or any other facility designated by the Academic Board.
+                </div>
+            </main>
+
+            <!-- RIGHT: SUMMARY & STATUS -->
+            <aside class="right-panel" role="complementary" aria-label="Agreement Summary and Execution Status">
+                <div class="panel" style="position: relative;">
+                    <!-- OFFICIAL SEAL -->
+                    <div class="seal-stamp" id="officialSeal">
+                        <svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg>
+                    </div>
+
+                    <h3 class="summary-title">Agreement & Terms</h3>
+                    <p class="summary-intro">"A commitment to knowledge is the foundation of institutional growth."</p>
+                    
+                    <button class="cta-btn" style="font-size: 11px; padding: 10px; margin-bottom: 30px;" aria-label="Read Verified Edition">
+                        READ VERIFIED EDITION <i>→</i>
+                    </button>
+
+                    <div class="parties-list">
+                        <div class="label" style="margin-bottom: 15px;">Parties to Bond</div>
+                        <div class="party">The President, TUC</div>
+                        <div class="party">Scholarship Secretariat</div>
+                        <div class="party">Institutional Legal Dept.</div>
+                    </div>
+
+                    <div class="duration-display">
+                        <div class="duration-label">Mandatory Service Duration</div>
+                        <div class="duration-value">10 Years</div>
+                    </div>
+
+                    <div class="status-pill" id="statusBox" aria-live="polite">
+                        <div class="pulse-dot"></div>
+                        STATUS: PENDING ATTESTATION
+                    </div>
+
+                    <button class="cta-btn" style="border-width: 2px; margin-top: 40px; border-color: var(--gold-bright); color: var(--gold-bright);" id="executeBtn">
+                        ATTEST & EXECUTE <i>🛡</i>
+                    </button>
+
+                    <div class="quote-block">
+                        "Institutional excellence is built on the iron-clad commitment of its scholars."<br>
+                        <span style="font-size: 10px; opacity: 0.6; text-transform: uppercase; letter-spacing: 0.1em;">— Registrar, Techbridge University</span>
+                    </div>
+                </div>
+            </aside>
+
+        </div>
+    </div>
+
+    <script>
+        const executeBtn = document.getElementById('executeBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const statusBox = document.getElementById('statusBox');
+        const officialSeal = document.getElementById('officialSeal');
+        const drawerBtn = document.getElementById('drawerBtn');
+        const sidePanel = document.getElementById('sidePanel');
+        
+        const steps = [
+            document.getElementById('step1'),
+            document.getElementById('step2'),
+            document.getElementById('step3')
+        ];
+
+        // Mobile Drawer Toggle
+        drawerBtn.addEventListener('click', () => {
+            sidePanel.classList.toggle('open');
+        });
+
+        // Step Transition Logic
+        nextBtn.addEventListener('click', () => {
+            steps[0].classList.remove('active');
+            steps[0].classList.add('completed');
+            steps[1].classList.remove('inactive');
+            steps[1].classList.add('active');
+            
+            // Close drawer if open on mobile
+            sidePanel.classList.remove('open');
+            
+            // Scroll to doc body
+            document.querySelector('.document-body').scrollIntoView({ behavior: 'smooth' });
+        });
+
+        // Interactive Logic for Seal Animation
+        executeBtn.addEventListener('click', function() {
+            // Update Stepper
+            steps[1].classList.remove('active');
+            steps[1].classList.add('completed');
+            steps[2].classList.remove('inactive');
+            steps[2].classList.add('active');
+
+            this.innerHTML = "SEALING BOND... ⏳";
+            this.disabled = true;
+            this.style.opacity = "0.7";
+            
+            setTimeout(() => {
+                this.innerHTML = "BOND EXECUTED ✓";
+                this.style.backgroundColor = "var(--gold-primary)";
+                this.style.color = "var(--bg-primary)";
+                this.style.opacity = "1";
+                
+                statusBox.innerHTML = '<span style="color: #4ade80">✓ STATUS: DIGITALLY SIGNED</span>';
+                
+                // Trigger Seal Stamp Animation (0 -> 1.2 -> 1)
+                officialSeal.classList.add('animate');
+                
+            }, 1200);
+        });
+
+        // Respect Prefers-Reduced-Motion
+        const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+        if (mediaQuery.matches) {
+            document.querySelectorAll('*').forEach(el => {
+                el.style.animation = 'none';
+                el.style.transition = 'none';
+            });
+        }
+    </script>
+
+</body>
+</html>

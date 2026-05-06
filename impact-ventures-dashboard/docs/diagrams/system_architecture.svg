@@ -1,0 +1,73 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 560" font-family="monospace" font-size="12">
+  <rect width="900" height="560" fill="#0F0C07"/>
+  <!-- Title -->
+  <text x="450" y="36" fill="#C8A84B" font-size="16" font-weight="bold" text-anchor="middle">IMPACT VENTURES — SYSTEM ARCHITECTURE</text>
+  <text x="450" y="54" fill="#64748b" font-size="10" text-anchor="middle">Techbridge University College · v1.0.0 · April 2026</text>
+
+  <!-- Browser box -->
+  <rect x="60" y="80" width="780" height="360" rx="4" fill="none" stroke="#1e293b" stroke-width="1.5"/>
+  <text x="80" y="98" fill="#475569" font-size="10">BROWSER RUNTIME</text>
+
+  <!-- React App -->
+  <rect x="100" y="110" width="660" height="80" rx="3" fill="#141210" stroke="#22d3ee" stroke-width="1"/>
+  <text x="430" y="145" fill="#22d3ee" font-size="13" font-weight="bold" text-anchor="middle">React 19.2.4 SPA (Vite + TypeScript)</text>
+  <text x="430" y="163" fill="#64748b" font-size="10" text-anchor="middle">App.tsx · data.ts · lib/utils.ts</text>
+
+  <!-- Components row -->
+  <rect x="100" y="215" width="130" height="60" rx="3" fill="#0F0C07" stroke="#334155" stroke-width="1"/>
+  <text x="165" y="240" fill="#94a3b8" font-size="10" text-anchor="middle">Impact Matrix</text>
+  <text x="165" y="255" fill="#64748b" font-size="9" text-anchor="middle">Recharts Scatter</text>
+
+  <rect x="250" y="215" width="130" height="60" rx="3" fill="#0F0C07" stroke="#334155" stroke-width="1"/>
+  <text x="315" y="240" fill="#94a3b8" font-size="10" text-anchor="middle">Venture Registry</text>
+  <text x="315" y="255" fill="#64748b" font-size="9" text-anchor="middle">Filter + Search</text>
+
+  <rect x="400" y="215" width="130" height="60" rx="3" fill="#0F0C07" stroke="#334155" stroke-width="1"/>
+  <text x="465" y="240" fill="#94a3b8" font-size="10" text-anchor="middle">Detail Modal</text>
+  <text x="465" y="255" fill="#64748b" font-size="9" text-anchor="middle">AI Brief Gen</text>
+
+  <rect x="550" y="215" width="130" height="60" rx="3" fill="#0F0C07" stroke="#334155" stroke-width="1"/>
+  <text x="615" y="240" fill="#94a3b8" font-size="10" text-anchor="middle">Compare Matrix</text>
+  <text x="615" y="255" fill="#64748b" font-size="9" text-anchor="middle">Side-by-side</text>
+
+  <!-- Admin components -->
+  <rect x="100" y="305" width="190" height="60" rx="3" fill="#0F0C07" stroke="#ef4444" stroke-width="1"/>
+  <text x="195" y="330" fill="#f87171" font-size="10" text-anchor="middle">AdminLoginModal</text>
+  <text x="195" y="345" fill="#64748b" font-size="9" text-anchor="middle">sessionStorage auth</text>
+
+  <rect x="310" y="305" width="190" height="60" rx="3" fill="#0F0C07" stroke="#ef4444" stroke-width="1"/>
+  <text x="405" y="330" fill="#f87171" font-size="10" text-anchor="middle">AdminDashboard</text>
+  <text x="405" y="345" fill="#64748b" font-size="9" text-anchor="middle">Audit Log · Diagnostics</text>
+
+  <!-- External services -->
+  <rect x="100" y="470" width="200" height="60" rx="3" fill="#0F0C07" stroke="#10b981" stroke-width="1"/>
+  <text x="200" y="495" fill="#10b981" font-size="11" font-weight="bold" text-anchor="middle">Google Gemini API</text>
+  <text x="200" y="512" fill="#64748b" font-size="9" text-anchor="middle">gemini-3-flash-preview</text>
+
+  <rect x="340" y="470" width="200" height="60" rx="3" fill="#0F0C07" stroke="#475569" stroke-width="1"/>
+  <text x="440" y="495" fill="#94a3b8" font-size="11" font-weight="bold" text-anchor="middle">localStorage</text>
+  <text x="440" y="512" fill="#64748b" font-size="9" text-anchor="middle">Audit log (max 200)</text>
+
+  <rect x="580" y="470" width="200" height="60" rx="3" fill="#0F0C07" stroke="#475569" stroke-width="1"/>
+  <text x="680" y="495" fill="#94a3b8" font-size="11" font-weight="bold" text-anchor="middle">sessionStorage</text>
+  <text x="680" y="512" fill="#64748b" font-size="9" text-anchor="middle">Admin session token</text>
+
+  <!-- Arrows -->
+  <line x1="165" y1="190" x2="165" y2="215" stroke="#22d3ee" stroke-width="1" stroke-dasharray="3,2"/>
+  <line x1="315" y1="190" x2="315" y2="215" stroke="#22d3ee" stroke-width="1" stroke-dasharray="3,2"/>
+  <line x1="465" y1="190" x2="465" y2="215" stroke="#22d3ee" stroke-width="1" stroke-dasharray="3,2"/>
+  <line x1="615" y1="190" x2="615" y2="215" stroke="#22d3ee" stroke-width="1" stroke-dasharray="3,2"/>
+  <line x1="195" y1="275" x2="195" y2="305" stroke="#ef4444" stroke-width="1" stroke-dasharray="3,2"/>
+  <line x1="405" y1="275" x2="405" y2="305" stroke="#ef4444" stroke-width="1" stroke-dasharray="3,2"/>
+  <line x1="200" y1="440" x2="200" y2="470" stroke="#10b981" stroke-width="1" stroke-dasharray="3,2"/>
+  <line x1="440" y1="365" x2="440" y2="470" stroke="#475569" stroke-width="1" stroke-dasharray="3,2"/>
+  <line x1="680" y1="365" x2="680" y2="470" stroke="#475569" stroke-width="1" stroke-dasharray="3,2"/>
+
+  <!-- Legend -->
+  <rect x="60" y="460" width="12" height="12" fill="none" stroke="#22d3ee" stroke-width="1"/>
+  <text x="78" y="471" fill="#64748b" font-size="10">UI Component</text>
+  <rect x="60" y="480" width="12" height="12" fill="none" stroke="#ef4444" stroke-width="1"/>
+  <text x="78" y="491" fill="#64748b" font-size="10">Admin (protected)</text>
+  <rect x="60" y="500" width="12" height="12" fill="none" stroke="#10b981" stroke-width="1"/>
+  <text x="78" y="511" fill="#64748b" font-size="10">External API</text>
+</svg>

@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TUC Project Unpacker (v3 - Final)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root { --aucdt-gold: #D4AF37; --aucdt-deep-brown: #5C4033; --aucdt-green: #4CAF50; }
+        body { font-family: 'Inter', sans-serif; background-color: #f0f2f5; }
+        .file-card { background-color: white; border-left: 5px solid var(--tuc-deep-brown); }
+        .copy-btn { background-color: var(--aucdt-gold); color: var(--tuc-deep-brown); transition: all 0.2s; }
+        .copy-btn:hover { background-color: #c8a230; }
+        .copy-btn.copied { background-color: var(--aucdt-green); color: white; }
+    </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Merriweather:wght@700;900&display=swap" rel="stylesheet">
+</head>
+<body class="p-8">
+
+    <div class="max-w-5xl mx-auto">
+        <header class="text-center mb-12">
+            <img src="https://techbridge.edu.gh/wp-content/uploads/2022/04/aucdt-logo-for-web.png" alt="TUC Logo" class="h-20 mx-auto mb-4" />
+            <h1 class="text-4xl font-bold text-[var(--tuc-deep-brown)]" style="font-family: 'Merriweather', serif;">TUC Examination Portal - Project Unpacker</h1>
+            <p class="mt-2 text-lg text-gray-600">This version includes the complete project code with an improved UI.</p>
+        </header>
+
+        <section class="mb-12 p-6 bg-blue-50 border border-blue-300 rounded-lg">
+            <h2 class="text-2xl font-bold text-blue-800 mb-4">Instructions</h2>
+            <ol class="list-decimal list-inside space-y-2 text-lg">
+                <li>On your computer, create a main project folder named <code class="bg-gray-200 p-1 rounded">aucdt-exam-portal</code>.</li>
+                <li>Inside it, create two more folders: <code class="bg-gray-200 p-1 rounded">aucdt_api</code> and <code class="bg-gray-200 p-1 rounded">aucdt-client</code>.</li>
+                <li>For each file listed below, create a new file with the exact name in the correct folder, click the "Copy" button, and paste the code.</li>
+            </ol>
+        </section>
+
+        <div id="file-container" class="space-y-8"></div>
+    </div>
+
+<script>
+const projectFiles = [
+    {
+        path: "README.md",
+        content: `
+# TUC Examination Portal
+This project contains a full-stack web application for the TUC Examination Portal. It consists of a React frontend and a Python/Flask backend API.
+## Prerequisites
+- Python 3.8+
+- Node.js 16+ and npm
+## Backend Setup (aucdt_api)
+1.  **Navigate to the API directory:** \`cd aucdt_api\`
+2.  **Create a Python virtual environment (recommended):** \`python -m venv venv\` then \`source venv/bin/activate\`
+3.  **Install dependencies:** \`pip install -r requirements.txt\`
+4.  **Set up your API Key:** Rename \`.env.example\` to \`.env\` and add your Google Gemini API Key.
+5.  **Run the API server:** \`python api.py\`
+    The API will now be running at \`http://localhost:5000\`.
+## Frontend Setup (aucdt-client)
+**Open a new terminal for these steps.**
+1.  **Navigate to the client directory:** \`cd aucdt-client\`
+2.  **Install dependencies:** \`npm install\`
+3.  **Run the React development server:** \`npm start\`
+    This will open your browser to \`http://localhost:3000\`.
+`
+    },
+    {
+        path: "aucdt_api/requirements.txt",
+        content: `Flask\nFlask-Cors\nrequests\npython-dotenv`
+    },
+    {
+        path: "aucdt_api/.env.example",
+        content: `GEMINI_API_KEY="YOUR_API_KEY_HERE"`
+    },
+    {
+        path: "aucdt_api/questions.json",
+        content: `{
+    "Mathematics": [
+        { "id": 1, "question": "Evaluate the expression: $4a - 3b + 7$, when $a = -2$ and $b = 5$.", "options": ["-16", "-14", "-12", "-10", "None of these"], "correct": 0 },
+        { "id": 6, "question": "A 20-metre rope is cut according to the process shown in the flowchart. How many metres of rope remain?", "options": ["7 m", "8 m", "9 m", "11 m", "None of these"], "correct": 2, "mermaidCode": "flowchart TD\\n    A[Start with 20m rope] --> B{Cut 25%};\\n    B --> C{Cut 3/10};\\n    C --> D[Calculate remainder];" }
+    ],
+    "English": [
+        { "id": 1, "question": "Which of the following is a synonym for 'ubiquitous'?", "options": ["Rare", "Scarce", "Everywhere", "Hidden", "None of these"], "correct": 2 }
+    ]
+}`
+    },
+    {
+        path: "aucdt_api/api.py",
+        content: `
+import os
+import json
+import requests
+from flask import Flask, jsonify, request
+from flask_cors import CORS
+from dotenv import load_dotenv
+
+load_dotenv()
+app = Flask(__name__)
+CORS(app, resources={r"/api/*": {"origins": "http://localhost:3000"}}) 
+
+try:
+    with open('questions.json', 'r', encoding='utf-8') as f:
+        all_subject_questions = json.load(f)
+except FileNotFoundError:
+    all_subject_questions = {}
+
+@app.route('/api/subjects', methods=['GET'])
+def get_subjects():
+    return jsonify(list(all_subject_questions.keys()))
+
+@app.route('/api/questions/<subject>', methods=['GET'])
+def get_questions(subject):
+    return jsonify(all_subject_questions.get(subject, []))
+
+@app.route('/api/generate-ai-questions', methods=['POST'])
+def generate_ai_questions():
+    data = request.get_json()
+    subject = data.get('subject')
+    api_key = os.getenv('GEMINI_API_KEY')
+    if not api_key: return jsonify({"error": "API key not configured"}), 500
+
+    examples = json.dumps(all_subject_questions.get(subject, [])[:3]) 
+    prompt = f"""You are a Senior-High {subject} examiner in Ghana. Create 24 NEW questions with MANDATORY diagram integration where educationally appropriate.
+DIAGRAM REQUIREMENTS (IRONCLAD):
+1. MINIMUM 10 of 24 questions MUST include diagrams.
+2. For each diagram question, populate "mermaidCode" with valid Mermaid.js syntax using real newlines (\\\\n).
+OUTPUT RULES:
+1. Output ONLY a valid JSON array of 24 question objects. NO markdown wrapping.
+2. Mathematical formulas in KaTeX format: $E_k = \\\\\\\\frac{{1}}{{2}}mv^2$.
+REFERENCE EXAMPLES: {examples}
+OUTPUT ONLY THE JSON ARRAY."""
+
+    api_url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key={api_key}"
+    payload = {"contents": [{"parts": [{"text": prompt}]}], "generationConfig": {"responseMimeType": "application/json"}}
+
+    try:
+        response = requests.post(api_url, json=payload)
+        response.raise_for_status()
+        ai_data = response.json()
+        new_questions = json.loads(ai_data['candidates'][0]['content']['parts'][0]['text'])
+        return jsonify(new_questions)
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+if __name__ == '__main__':
+    app.run(port=5000, debug=True)
+`
+    },
+    {
+        path: "aucdt-client/package.json",
+        content: `{
+  "name": "aucdt-client",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": { "axios": "^1.7.2", "html2canvas": "^1.4.1", "jspdf": "^2.5.1", "katex": "^0.16.10", "mermaid": "^10.9.1", "react": "^18.3.1", "react-dom": "^18.3.1", "react-katex": "^3.0.1", "react-scripts": "5.0.1" },
+  "scripts": { "start": "react-scripts start", "build": "react-scripts build" },
+  "eslintConfig": { "extends": ["react-app"] },
+  "browserslist": { "production": [">0.2%", "not dead", "not op_mini all"], "development": ["last 1 chrome version"] }
+}`
+    },
+    {
+        path: "aucdt-client/public/index.html",
+        content: `<!DOCTYPE html><html lang="en"><head><title>TUC Examination Portal</title></head><body><div id="root"></div></body></html>`
+    },
+    {
+        path: "aucdt-client/src/App.css",
+        content: `
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Merriweather:wght@700;900&display=swap');
+:root { --gold: #D4AF37; --brown: #5C4033; --green: #4CAF50; --light-green: #E8F5E9; --white: #FFFFFF; --light-gray: #F0F2F5; --text: #374151; }
+body { margin: 0; font-family: 'Inter', sans-serif; background-color: var(--light-gray); color: var(--text); }
+.app-container { display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 2rem; }
+.home-card { background-color: var(--white); border-radius: 1rem; padding: 2.5rem; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1); max-width: 700px; width: 100%; text-align: center; }
+.home-card .logo { height: 80px; margin: 0 auto 1.5rem; }
+.home-card .main-title { font-family: 'Merriweather', serif; color: var(--brown); font-size: 2.25rem; font-weight: 900; }
+.home-card .sub-title { color: var(--green); font-size: 1.25rem; font-weight: 500; margin-top: 0.5rem; margin-bottom: 2rem; }
+.instructions-box { background-color: var(--light-green); border: 1px solid var(--green); border-radius: 0.5rem; padding: 1.5rem; text-align: left; margin-bottom: 2.5rem; }
+.instructions-box h3 { font-weight: 700; color: var(--brown); margin-bottom: 1rem; }
+.instructions-box ul { list-style-type: none; padding: 0; }
+.instructions-box li { display: flex; align-items: center; margin-bottom: 0.5rem; }
+.icon { color: var(--green); margin-right: 0.75rem; flex-shrink: 0; }
+.controls-section { display: flex; flex-direction: column; gap: 1.5rem; align-items: center; }
+.subject-select { padding: 0.75rem 1rem; border: 2px solid var(--brown); border-radius: 0.5rem; font-weight: 500; min-width: 200px; }
+.btn { border: none; padding: 0.75rem 1.5rem; border-radius: 0.5rem; font-weight: 700; cursor: pointer; transition: all 0.2s; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
+.btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.btn-primary { background-color: var(--gold); color: var(--brown); }
+.btn-secondary { background-color: var(--brown); color: var(--white); }
+.exam-container { max-width: 900px; margin: 2rem auto; }
+.exam-header { display: flex; justify-content: space-between; align-items: center; padding: 1rem; background-color: var(--brown); color: var(--gold); border-radius: 0.5rem; margin-bottom: 2rem; }
+.question-card { border: 1px solid #e5e7eb; margin-bottom: 1.5rem; padding: 1.5rem; border-radius: 8px; text-align: left; box-shadow: 0 1px 3px rgba(0,0,0,0.05); background-color: white; }
+.mermaid-diagram { display: flex; justify-content: center; margin: 1.5rem 0; padding: 1rem; background-color: #f9fafb; border-radius: 0.5rem; }
+.error-message { color: #dc2626; background-color: #fee2e2; padding: 1rem; border-radius: 5px; border: 1px solid #f87171; margin-top: 1rem; }
+`
+    },
+    {
+        path: "aucdt-client/src/App.js",
+        content: `
+import React, { useState } from 'react';
+import HomePage from './HomePage';
+import ExamPage from './ExamPage';
+import 'katex/dist/katex.min.css';
+import './App.css';
+
+function App() {
+    const [examConfig, setExamConfig] = useState(null);
+    const handleStartExam = (subject, useAI) => setExamConfig({ subject, useAI });
+    const handleEndExam = () => setExamConfig(null);
+
+    return (
+        <div className="app-container">
+            {!examConfig ? (
+                <HomePage onStartExam={handleStartExam} />
+            ) : (
+                <ExamPage subject={examConfig.subject} useAI={examConfig.useAI} onEndExam={handleEndExam} />
+            )}
+        </div>
+    );
+}
+export default App;
+`
+    },
+    {
+        path: "aucdt-client/src/HomePage.js",
+        content: `
+import React, { useState, useEffect } from 'react';
+import { getSubjects } from './apiService';
+
+const InstructionIcon = () => <svg className="icon" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9 12L11 14L15 10M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>;
+
+function HomePage({ onStartExam }) {
+    const [subjects, setSubjects] = useState([]);
+    const [selectedSubject, setSelectedSubject] = useState('');
+    const [useAI, setUseAI] = useState(false);
+    const [loading, setLoading] = useState(false);
+
+    useEffect(() => {
+        getSubjects().then(res => {
+            setSubjects(res.data);
+            if (res.data.length > 0) setSelectedSubject(res.data[0]);
+        }).catch(err => console.error("Could not fetch subjects:", err));
+    }, []);
+
+    const handleStart = () => {
+        if (!selectedSubject) return;
+        setLoading(true);
+        onStartExam(selectedSubject, useAI);
+    };
+
+    return (
+        <div className="home-card">
+            <img src="https://techbridge.edu.gh/wp-content/uploads/2022/04/aucdt-logo-for-web.png" alt="TUC Logo" className="logo" />
+            <h1 className="main-title">Mature Students Entrance Examination</h1>
+            <h2 className="sub-title">MSEE 112 {selectedSubject} Aptitude Test</h2>
+            <div className="instructions-box">
+                <h3>Examination Instructions:</h3>
+                <ul>
+                    <li><InstructionIcon /> Answer all questions in the selected section.</li>
+                    <li><InstructionIcon /> Your progress is saved automatically if you leave.</li>
+                    <li><InstructionIcon /> Switching tabs or applications will pause the exam.</li>
+                    <li><InstructionIcon /> Time limit: 2 hours. You can pause the timer if needed.</li>
+                </ul>
+            </div>
+            <div className="controls-section">
+                <div style={{display: 'flex', alignItems: 'center', gap: '1rem'}}>
+                    <label htmlFor="subject">Select Subject:</label>
+                    <select id="subject" value={selectedSubject} onChange={e => setSelectedSubject(e.target.value)} className="subject-select">
+                        {subjects.map(s => <option key={s} value={s}>{s}</option>)}
+                    </select>
+                </div>
+                <div style={{display: 'flex', alignItems: 'center', gap: '0.5rem'}}>
+                    <input type="checkbox" id="ai" checked={useAI} onChange={e => setUseAI(e.target.checked)} />
+                    <label htmlFor="ai">Generate New Questions (AI-Powered)</label>
+                </div>
+            </div>
+            <div style={{display: 'flex', gap: '1rem', marginTop: '2rem', justifyContent: 'center'}}>
+                <button onClick={handleStart} className="btn btn-primary" disabled={loading || !selectedSubject}>
+                    {loading ? 'Loading...' : 'Start Examination'}
+                </button>
+            </div>
+        </div>
+    );
+}
+export default HomePage;
+`
+    },
+    {
+        path: "aucdt-client/src/ExamPage.js",
+        content: `
+import React, { useState, useEffect, useRef } from 'react';
+import { getQuestions, generateAIQuestions } from './apiService';
+import { BlockMath } from 'react-katex';
+import mermaid from 'mermaid';
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
+
+mermaid.initialize({ startOnLoad: false, theme: 'base' });
+
+const Diagram = ({ code, id }) => {
+    const ref = useRef(null);
+    useEffect(() => {
+        if (code && ref.current) {
+            ref.current.removeAttribute('data-processed');
+            ref.current.innerHTML = code;
+            try { mermaid.run({ nodes: [ref.current] }); } catch (e) {}
+        }
+    }, [code, id]);
+    return code ? <div className="mermaid-diagram" ref={ref}></div> : null;
+};
+
+const ExamPage = ({ subject, useAI, onEndExam }) => {
+    const [questions, setQuestions] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState('');
+    const examRef = useRef(null);
+
+    useEffect(() => {
+        const fetchExamData = async () => {
+            setLoading(true);
+            try {
+                const response = useAI ? await generateAIQuestions(subject) : await getQuestions(subject);
+                setQuestions(Array.isArray(response.data) ? response.data : []);
+            } catch (err) {
+                setError(err.response?.data?.error || err.message);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchExamData();
+    }, [subject, useAI]);
+
+    const handleExportPDF = async () => {
+        if (!examRef.current) return;
+        alert("PDF export will begin. This may take a moment.");
+        const pdf = new jsPDF('p', 'mm', 'a4');
+        const cards = examRef.current.querySelectorAll('.question-card');
+        let y = 10;
+        for (let i = 0; i < cards.length; i++) {
+            const canvas = await html2canvas(cards[i], { scale: 2 });
+            const imgHeight = (canvas.height * 190) / canvas.width;
+            if (y + imgHeight > 280 && i > 0) { pdf.addPage(); y = 10; }
+            pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 10, y, 190, imgHeight);
+            y += imgHeight + 5;
+        }
+        pdf.save(\`TUC-Exam-\${subject}.pdf\`);
+    };
+
+    if (loading) return <div><p>Generating your exam...</p></div>;
+    if (error) return <div className="error-message">{error} <button onClick={onEndExam} className="btn btn-secondary">Go Back</button></div>;
+
+    return (
+        <div className="exam-container">
+            <header className="exam-header">
+                <h1>Exam: {subject} {useAI ? '(AI-Generated)' : ''}</h1>
+                <div>
+                    <button onClick={handleExportPDF} className="btn btn-secondary">Export PDF</button>
+                    <button onClick={onEndExam} className="btn btn-primary">&larr; Back Home</button>
+                </div>
+            </header>
+            <div ref={examRef}>
+                {questions.map((q, i) => (
+                    <div key={q.id || i} className="question-card">
+                        <p><b>Q{i + 1}:</b> {q.question}</p>
+                        <Diagram code={q.mermaidCode} id={\`\${subject}-\${q.id}\`} />
+                        <ul>{q.options.map((opt, j) => <li key={j}>{opt}</li>)}</ul>
+                    </div>
+                ))}
+            </div>
+        </div>
+    );
+};
+export default ExamPage;
+`
+    },
+    {
+        path: "aucdt-client/src/apiService.js",
+        content: `
+import axios from 'axios';
+const apiClient = axios.create({ baseURL: 'http://127.0.0.1:5000/api' });
+export const getSubjects = () => apiClient.get('/subjects');
+export const getQuestions = (subject) => apiClient.get(\`/questions/\${subject}\`);
+export const generateAIQuestions = (subject) => apiClient.post('/generate-ai-questions', { subject });
+`
+    }
+];
+
+// --- RENDER THE PAGE ---
+const container = document.getElementById('file-container');
+projectFiles.forEach((file) => {
+    const card = document.createElement('div');
+    card.className = 'file-card shadow-lg rounded-lg overflow-hidden';
+    const header = document.createElement('div');
+    header.className = 'p-4 flex justify-between items-center';
+    const title = document.createElement('h3');
+    title.className = 'text-xl font-bold text-gray-700';
+    title.innerHTML = `File: <code class="bg-gray-200 p-1 rounded text-lg">${file.path}</code>`;
+    const button = document.createElement('button');
+    button.className = 'copy-btn font-bold py-2 px-4 rounded-md';
+    button.textContent = 'Copy to Clipboard';
+    button.onclick = () => {
+        navigator.clipboard.writeText(file.content.trim()).then(() => {
+            button.textContent = 'Copied!';
+            button.classList.add('copied');
+            setTimeout(() => {
+                button.textContent = 'Copy to Clipboard';
+                button.classList.remove('copied');
+            }, 2000);
+        });
+    };
+    const pre = document.createElement('pre');
+    pre.className = 'p-4 bg-gray-800 text-white overflow-x-auto text-sm';
+    const code = document.createElement('code');
+    code.textContent = file.content.trim();
+    pre.appendChild(code);
+    header.appendChild(title);
+    header.appendChild(button);
+    card.appendChild(header);
+    card.appendChild(pre);
+    container.appendChild(card);
+});
+</script>
+</body>
+</html>

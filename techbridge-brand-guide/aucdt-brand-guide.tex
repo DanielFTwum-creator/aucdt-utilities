@@ -1,0 +1,286 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% AUCDT Brand Identity Guide v2.0
+% Designed for compilation with XeLaTeX on Overleaf
+% Author: Gemini
+% Date: 18 August 2025
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\documentclass[a4paper, 11pt]{article}
+
+%======= PACKAGE SETUP =======%
+\usepackage{geometry}           % For setting page margins
+\usepackage{fontspec}           % For using system fonts (Poppins)
+\usepackage[svgnames]{xcolor}   % For advanced colour definitions
+\usepackage{graphicx}           % For including images (the logo)
+\usepackage{hyperref}           % For clickable links and document metadata
+\usepackage[many]{tcolorbox}    % For creating coloured boxes and UI elements
+\usepackage{titlesec}           % For customising section titles
+\usepackage{enumitem}           % For customising lists
+\usepackage{fontawesome5}       % For icons (e.g., checklist)
+\usepackage{setspace}           % For line spacing control
+
+%======= PAGE GEOMETRY =======%
+\geometry{a4paper, left=2.5cm, right=2.5cm, top=2.5cm, bottom=2.5cm}
+\onehalfspacing % Set line spacing to 1.5 for better readability
+
+%======= BRAND COLOUR DEFINITIONS =======%
+\definecolor{AUCDTBurgundy}{RGB}{139, 21, 56}
+\definecolor{AUCDTBurgundyDark}{RGB}{107, 16, 40}
+\definecolor{AUCDTGold}{RGB}{212, 175, 55}
+\definecolor{AUCDTGoldLight}{RGB}{244, 228, 188}
+\definecolor{AUCDTCream}{RGB}{248, 246, 240}
+\definecolor{AUCDTWarmBeige}{RGB}{230, 213, 199}
+\definecolor{AUCDTCampusGreen}{RGB}{46, 64, 52}
+\definecolor{AUCDTPrimaryText}{RGB}{44, 24, 16}
+\definecolor{AUCDTWhite}{RGB}{255, 255, 255}
+
+% Set page background colour
+\pagecolor{AUCDTCream}
+
+%======= FONT SETUP (POPPINS) =======%
+% Poppins should be available on most Overleaf installations.
+% If not, you would need to upload the .ttf files to your project.
+\setmainfont{Poppins}[
+    Path = ./fonts/, % Assumes fonts are in a 'fonts' folder if uploaded
+    UprightFont = *-Regular,
+    BoldFont = *-Bold,
+    ItalicFont = *-Italic,
+    BoldItalicFont = *-BoldItalic
+]
+\newfontfamily\poppinslight{Poppins-Light}
+\newfontfamily\poppinsmedium{Poppins-Medium}
+\newfontfamily\poppinssemibold{Poppins-SemiBold}
+\newfontfamily\poppinsbold{Poppins-Bold}
+
+%======= HYPERLINK & DOCUMENT SETUP =======%
+\hypersetup{
+    colorlinks=true,
+    linkcolor=AUCDTBurgundy,
+    urlcolor=AUCDTBurgundy,
+    pdftitle={AUCDT Brand Identity Guide},
+    pdfauthor={Asanska University College of Design and Technology},
+    pdfsubject={Branding Guidelines}
+}
+
+%======= TITLE FORMATTING =======%
+\titleformat{\section}{\Large\poppinsbold\color{AUCDTBurgundy}}{\thesection.}{1em}{}[\titlerule]
+\titleformat{\subsection}{\large\poppinssemibold\color{AUCDTPrimaryText}}{\thesubsection}{1em}{}
+\titleformat{\subsubsection}{\normalsize\poppinsmedium\color{AUCDTPrimaryText}}{\thesubsubsection}{1em}{}
+\titlespacing*{\section}{0pt}{3.5ex plus 1ex minus .2ex}{2.3ex plus .2ex}
+
+%======= CUSTOM TCOLORBOX STYLES =======%
+% For colour swatches
+\newtcolorbox{colorswatch}[2][]{
+    sharp corners,
+    colback=#2,
+    coltext=AUCDTWhite,
+    fontupper=\poppinsmedium,
+    halign=center,
+    valign=center,
+    text width=3cm,
+    height=3cm,
+    #1
+}
+
+% For UI element demonstrations
+\tcbuselibrary{skins, gradients}
+% Primary Button
+\newtcolorbox{primarybutton}{
+    enhanced,
+    sharp corners,
+    boxrule=0pt,
+    borderRadius=12pt,
+    interior style={
+        linear gradient={AUCDTBurgundyDark}{AUCDTBurgundy}
+    },
+    coltext=AUCDTWhite,
+    fontupper=\poppinssemibold,
+    halign=center,
+    valign=center,
+    width=6cm,
+    boxsep=10pt
+}
+% Secondary Button
+\newtcolorbox{secondarybutton}{
+    enhanced,
+    sharp corners,
+    boxrule=0pt,
+    borderRadius=12pt,
+    colback=AUCDTGold,
+    coltext=AUCDTBurgundy,
+    fontupper=\poppinssemibold,
+    halign=center,
+    valign=center,
+    width=6cm,
+    boxsep=10pt
+}
+% Card Container
+\newtcolorbox{cardcontainer}{
+    enhanced,
+    sharp corners,
+    colback=AUCDTWhite,
+    colframe=AUCDTWarmBeige,
+    boxshadow={0mm}{1mm}{2mm}{0mm}{AUCDTBurgundy!20},
+    borderline west={2mm}{0mm}{AUCDTGold},
+    borderRadius=8pt,
+    pad at break=2mm,
+    toptitle=5pt,
+    bottomtitle=5pt,
+    title={{\poppinsmedium Card Title}},
+    coltitle=AUCDTPrimaryText
+}
+
+%======= DOCUMENT START =======%
+\begin{document}
+
+%======= TITLE PAGE =======%
+\begin{titlepage}
+    \centering
+    \vspace*{2cm}
+    
+    % The logo URL needs an internet connection during compilation.
+    % For offline use, download the logo and use a local path.
+    \includegraphics[width=6cm]{aucdt-logo.png}
+    
+    \vspace{2cm}
+    
+    {\poppinsbold\Huge\color{AUCDTBurgundy} Brand Identity Guide}
+    
+    \vspace{0.5cm}
+    
+    {\poppinssemibold\Large\color{AUCDTPrimaryText} Asanska University College of Design and Technology}
+    
+    \vspace{1.5cm}
+    
+    {\large Version 2.0}
+    
+    \vfill
+    
+    {\large August 2025}
+\end{titlepage}
+
+%======= TABLE OF CONTENTS =======%
+\tableofcontents
+\newpage
+
+%======= SECTIONS OF THE GUIDE =======%
+
+\section{Brand Overview}
+AUCDT represents excellence in higher education, combining traditional academic values with modern innovation in design and technology. Our brand identity reflects professionalism, creativity, and academic distinction whilst maintaining accessibility and contemporary appeal. This guide ensures our brand is presented cohesively and powerfully across all platforms.
+
+\section{Colour Palette}
+Our colours are the most recognisable aspect of our identity, conveying our core values.
+
+\subsection{Primary Brand Colours}
+\begin{center}
+    \begin{tcbraster}[raster columns=3, raster equal height, raster column skip=5mm]
+        \begin{colorswatch}{AUCDTBurgundy}
+            \textbf{Burgundy Primary} \\ \textsc{Hex:} \#8B1538 \\ \textsc{RGB:} 139, 21, 56
+        \end{colorswatch}
+        \begin{colorswatch}{AUCDTBurgundyDark}
+             \textbf{Burgundy Dark} \\ \textsc{Hex:} \#6B1028 \\ \textsc{RGB:} 107, 16, 40
+        \end{colorswatch}
+        \begin{colorswatch}[coltext=AUCDTPrimaryText]{AUCDTGold}
+             \textbf{Gold Accent} \\ \textsc{Hex:} \#D4AF37 \\ \textsc{RGB:} 212, 175, 55
+        \end{colorswatch}
+    \end{tcbraster}
+\end{center}
+
+\subsection{Secondary Brand Colours}
+\begin{center}
+    \begin{tcbraster}[raster columns=3, raster equal height, raster column skip=5mm]
+        \begin{colorswatch}[coltext=AUCDTPrimaryText]{AUCDTGoldLight}
+            \textbf{Gold Light} \\ \textsc{Hex:} \#F4E4BC \\ \textsc{RGB:} 244, 228, 188
+        \end{colorswatch}
+        \begin{colorswatch}[coltext=AUCDTPrimaryText]{AUCDTCream}
+             \textbf{Cream Background} \\ \textsc{Hex:} \#F8F6F0 \\ \textsc{RGB:} 248, 246, 240
+        \end{colorswatch}
+        \begin{colorswatch}[coltext=AUCDTPrimaryText]{AUCDTWarmBeige}
+             \textbf{Warm Beige} \\ \textsc{Hex:} \#E6D5C7 \\ \textsc{RGB:} 230, 213, 199
+        \end{colorswatch}
+    \end{tcbraster}
+\end{center}
+
+\subsection{Tertiary Accent Colour}
+\begin{center}
+    \begin{colorswatch}{AUCDTCampusGreen}
+         \textbf{Campus Green} \\ \textsc{Hex:} \#2E4034 \\ \textsc{RGB:} 46, 64, 52
+    \end{colorswatch}
+\end{center}
+
+\subsection{Text Colours}
+\begin{center}
+    \begin{tcbraster}[raster columns=2, raster equal height, raster column skip=5mm]
+        \begin{colorswatch}{AUCDTPrimaryText}
+            \textbf{Primary Text} \\ \textsc{Hex:} \#2C1810 \\ \textsc{RGB:} 44, 24, 16
+        \end{colorswatch}
+        \begin{colorswatch}[coltext=AUCDTPrimaryText]{AUCDTWhite}
+            \textbf{Light Text} \\ \textsc{Hex:} \#FFFFFF \\ \textsc{RGB:} 255, 255, 255
+        \end{colorswatch}
+    \end{tcbraster}
+\end{center}
+
+\section{Typography}
+Our typography ensures our communications are clear, legible, and professional. The primary font family is \textbf{Poppins}.
+
+\subsection{Font Hierarchy}
+\begin{description}[font=\normalfont\poppinsmedium, style=unboxed, leftmargin=2cm, labelwidth=1.5cm]
+    \item[H1:] {\poppinsbold\Large Main Headlines} \\
+    \textit{Font: Poppins Bold, Size: 2.5rem (40px)}
+    \item[H2:] {\poppinssemibold\large Section Headers} \\
+    \textit{Font: Poppins Semi-Bold, Size: 1.8rem (29px)}
+    \item[H3:] {\poppinsmedium\normalsize Subsections} \\
+    \textit{Font: Poppins Medium, Size: 1.5rem (24px)}
+    \item[Body:] {\normalsize Body Text for paragraphs and general content.} \\
+    \textit{Font: Poppins Regular, Size: 1rem (16px), Line Height: 1.6}
+\end{description}
+
+\section{UI Element Guidelines}
+Visual examples of common user interface components.
+
+\subsection{Buttons}
+\begin{center}
+    \begin{primarybutton}
+        Primary Action
+    \end{primarybutton}
+    \vspace{5mm}
+    \begin{secondarybutton}
+        Secondary Action
+    \end{secondarybutton}
+\end{center}
+
+\subsection{Cards \& Containers}
+\begin{cardcontainer}
+    This is an example of a content card. It has a white background, a subtle shadow, and a gold accent border on the left to draw attention. This style is used to contain distinct pieces of information like course summaries or news articles.
+\end{cardcontainer}
+
+\section{Brand Protection}
+
+\subsection{Logo Don'ts}
+\begin{itemize}[label={\color{AUCDTBurgundy}\faTimesCircle}]
+    \item Do not stretch, distort, or change the orientation of the logo.
+    \item Do not place on busy backgrounds without proper contrast.
+    \item Do not alter the logo colours or add unauthorised effects.
+    \item Do not crop or disassemble the logo components.
+\end{itemize}
+
+\subsection{Implementation Checklist}
+\begin{itemize}[label={\color{AUCDTGold}\faSquare[regular]}]
+    \item Logo correctly sized and positioned
+    \item Primary colours accurately reproduced
+    \item Poppins font family implemented
+    \item Proper contrast ratios maintained
+    \item Brand voice consistently applied
+\end{itemize}
+
+\vfill
+\hrule
+\vspace{2mm}
+\begin{center}
+    \poppinslight
+    For brand guideline questions, contact the AUCDT Marketing \& Communications Department. \\
+    URL: \href{https://portal.aucdt.edu.gh/branding/}{https://portal.aucdt.edu.gh/branding/} \\
+    Last Updated: August 2025
+\end{center}
+
+\end{document}

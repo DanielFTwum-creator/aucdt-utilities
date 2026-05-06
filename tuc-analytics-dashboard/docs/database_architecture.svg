@@ -1,0 +1,325 @@
+<svg viewBox="0 0 1400 1000" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      .table-box { fill: #e0f2fe; stroke: #0284c7; stroke-width: 2; }
+      .field-box { fill: #f0f9ff; stroke: #0ea5e9; stroke-width: 1; }
+      .key-field { fill: #fef3c7; stroke: #d97706; stroke-width: 1; }
+      .foreign-key { fill: #dbeafe; stroke: #3b82f6; stroke-width: 1; }
+      .text-label { font-family: Arial, sans-serif; font-size: 13px; font-weight: bold; }
+      .text-small { font-family: Arial, sans-serif; font-size: 11px; }
+      .text-tiny { font-family: monospace; font-size: 10px; }
+      .title { font-family: Arial, sans-serif; font-size: 20px; font-weight: bold; }
+      .subtitle { font-family: Arial, sans-serif; font-size: 12px; fill: #666; }
+      .arrow { stroke: #374151; stroke-width: 2; fill: none; marker-end: url(#arrowhead); }
+      .relationship { stroke: #6366f1; stroke-width: 2; fill: none; marker-end: url(#arrowhead-indigo); }
+    </style>
+    <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <polygon points="0 0, 10 3, 0 6" fill="#374151" />
+    </marker>
+    <marker id="arrowhead-indigo" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <polygon points="0 0, 10 3, 0 6" fill="#6366f1" />
+    </marker>
+  </defs>
+
+  <!-- Title -->
+  <text x="700" y="40" text-anchor="middle" class="title">AUCDT Analytics Dashboard - Data Models</text>
+  <text x="700" y="60" text-anchor="middle" class="subtitle">Entity Relationship Diagram (ERD)</text>
+
+  <!-- FunnelData Table -->
+  <g>
+    <rect x="50" y="100" width="280" height="280" class="table-box" rx="5"/>
+    <rect x="50" y="100" width="280" height="30" class="table-box" rx="5"/>
+    <text x="190" y="122" text-anchor="middle" class="text-label">FunnelData</text>
+    
+    <!-- Fields -->
+    <rect x="55" y="135" width="270" height="25" class="key-field"/>
+    <text x="65" y="153" class="text-small">🔑 id: string (UUID)</text>
+    
+    <rect x="55" y="162" width="270" height="25" class="field-box"/>
+    <text x="65" y="180" class="text-small">timestamp: Date</text>
+    
+    <rect x="55" y="189" width="270" height="25" class="field-box"/>
+    <text x="65" y="207" class="text-small">signups: number</text>
+    
+    <rect x="55" y="216" width="270" height="25" class="field-box"/>
+    <text x="65" y="234" class="text-small">applicants: number</text>
+    
+    <rect x="55" y="243" width="270" height="25" class="field-box"/>
+    <text x="65" y="261" class="text-small">accepted: number</text>
+    
+    <rect x="55" y="270" width="270" height="25" class="field-box"/>
+    <text x="65" y="288" class="text-small">registered: number</text>
+    
+    <rect x="55" y="297" width="270" height="25" class="field-box"/>
+    <text x="65" y="315" class="text-small">region: string</text>
+    
+    <rect x="55" y="324" width="270" height="25" class="field-box"/>
+    <text x="65" y="342" class="text-small">conversionRate: number</text>
+  </g>
+
+  <!-- DemographicData Table -->
+  <g>
+    <rect x="380" y="100" width="320" height="320" class="table-box" rx="5"/>
+    <rect x="380" y="100" width="320" height="30" class="table-box" rx="5"/>
+    <text x="540" y="122" text-anchor="middle" class="text-label">DemographicData</text>
+    
+    <!-- Fields -->
+    <rect x="385" y="135" width="310" height="25" class="key-field"/>
+    <text x="395" y="153" class="text-small">🔑 id: string</text>
+    
+    <rect x="385" y="162" width="310" height="25" class="foreign-key"/>
+    <text x="395" y="180" class="text-small">⬌ funnelDataId: string (FK)</text>
+    
+    <rect x="385" y="189" width="310" height="25" class="field-box"/>
+    <text x="395" y="207" class="text-small">region: string</text>
+    
+    <rect x="385" y="216" width="310" height="25" class="field-box"/>
+    <text x="395" y="234" class="text-small">country: string</text>
+    
+    <rect x="385" y="243" width="310" height="25" class="field-box"/>
+    <text x="395" y="261" class="text-small">kAnonymityLevel: number</text>
+    
+    <rect x="385" y="270" width="310" height="25" class="field-box"/>
+    <text x="395" y="288" class="text-small">diversityIndex: number</text>
+    
+    <rect x="385" y="297" width="310" height="25" class="field-box"/>
+    <text x="395" y="315" class="text-small">internationalRate: number</text>
+    
+    <rect x="385" y="324" width="310" height="25" class="field-box"/>
+    <text x="395" y="342" class="text-small">processingDate: Date</text>
+    
+    <rect x="385" y="351" width="310" height="25" class="field-box"/>
+    <text x="395" y="369" class="text-small">privacyCompliant: boolean</text>
+  </g>
+
+  <!-- AuditLog Table -->
+  <g>
+    <rect x="740" y="100" width="330" height="320" class="table-box" rx="5"/>
+    <rect x="740" y="100" width="330" height="30" class="table-box" rx="5"/>
+    <text x="905" y="122" text-anchor="middle" class="text-label">AuditLog</text>
+    
+    <!-- Fields -->
+    <rect x="745" y="135" width="320" height="25" class="key-field"/>
+    <text x="755" y="153" class="text-small">🔑 id: string</text>
+    
+    <rect x="745" y="162" width="320" height="25" class="field-box"/>
+    <text x="755" y="180" class="text-small">userId: string</text>
+    
+    <rect x="745" y="189" width="320" height="25" class="field-box"/>
+    <text x="755" y="207" class="text-small">action: string</text>
+    
+    <rect x="745" y="216" width="320" height="25" class="field-box"/>
+    <text x="755" y="234" class="text-small">timestamp: Date (ISO8601)</text>
+    
+    <rect x="745" y="243" width="320" height="25" class="field-box"/>
+    <text x="755" y="261" class="text-small">status: 'success' | 'failure' | 'warning'</text>
+    
+    <rect x="745" y="270" width="320" height="25" class="field-box"/>
+    <text x="755" y="288" class="text-small">details: JSON Object</text>
+    
+    <rect x="745" y="297" width="320" height="25" class="field-box"/>
+    <text x="755" y="315" class="text-small">ipAddress: string</text>
+    
+    <rect x="745" y="324" width="320" height="25" class="field-box"/>
+    <text x="755" y="342" class="text-small">userAgent: string</text>
+    
+    <rect x="745" y="351" width="320" height="25" class="field-box"/>
+    <text x="755" y="369" class="text-small">affectedResources: string[]</text>
+  </g>
+
+  <!-- TestResult Table -->
+  <g>
+    <rect x="1110" y="100" width="280" height="280" class="table-box" rx="5"/>
+    <rect x="1110" y="100" width="280" height="30" class="table-box" rx="5"/>
+    <text x="1250" y="122" text-anchor="middle" class="text-label">TestResult</text>
+    
+    <!-- Fields -->
+    <rect x="1115" y="135" width="270" height="25" class="key-field"/>
+    <text x="1125" y="153" class="text-small">🔑 testId: string</text>
+    
+    <rect x="1115" y="162" width="270" height="25" class="field-box"/>
+    <text x="1125" y="180" class="text-small">testName: string</text>
+    
+    <rect x="1115" y="189" width="270" height="25" class="field-box"/>
+    <text x="1125" y="207" class="text-small">status: TestStatus</text>
+    
+    <rect x="1115" y="216" width="270" height="25" class="field-box"/>
+    <text x="1125" y="234" class="text-small">duration: number (ms)</text>
+    
+    <rect x="1115" y="243" width="270" height="25" class="field-box"/>
+    <text x="1125" y="261" class="text-small">message: string</text>
+    
+    <rect x="1115" y="270" width="270" height="25" class="field-box"/>
+    <text x="1125" y="288" class="text-small">error: string | null</text>
+    
+    <rect x="1115" y="297" width="270" height="25" class="field-box"/>
+    <text x="1125" y="315" class="text-small">details: Record</text>
+    
+    <rect x="1115" y="324" width="270" height="25" class="field-box"/>
+    <text x="1125" y="342" class="text-small">timestamp: Date</text>
+  </g>
+
+  <!-- Seasonal Data Table -->
+  <g>
+    <rect x="50" y="450" width="300" height="250" class="table-box" rx="5"/>
+    <rect x="50" y="450" width="300" height="30" class="table-box" rx="5"/>
+    <text x="200" y="472" text-anchor="middle" class="text-label">SeasonalData</text>
+    
+    <!-- Fields -->
+    <rect x="55" y="485" width="290" height="25" class="key-field"/>
+    <text x="65" y="503" class="text-small">🔑 id: string</text>
+    
+    <rect x="55" y="512" width="290" height="25" class="foreign-key"/>
+    <text x="65" y="530" class="text-small">⬌ funnelDataId: string</text>
+    
+    <rect x="55" y="539" width="290" height="25" class="field-box"/>
+    <text x="65" y="557" class="text-small">month: number (1-12)</text>
+    
+    <rect x="55" y="566" width="290" height="25" class="field-box"/>
+    <text x="65" y="584" class="text-small">season: string</text>
+    
+    <rect x="55" y="593" width="290" height="25" class="field-box"/>
+    <text x="65" y="611" class="text-small">volume: number</text>
+    
+    <rect x="55" y="620" width="290" height="25" class="field-box"/>
+    <text x="65" y="638" class="text-small">trend: 'up' | 'down' | 'stable'</text>
+    
+    <rect x="55" y="647" width="290" height="25" class="field-box"/>
+    <text x="65" y="665" class="text-small">avgConversion: number</text>
+  </g>
+
+  <!-- Trendline Data Table -->
+  <g>
+    <rect x="390" y="450" width="300" height="250" class="table-box" rx="5"/>
+    <rect x="390" y="450" width="300" height="30" class="table-box" rx="5"/>
+    <text x="540" y="472" text-anchor="middle" class="text-label">TrendlineData</text>
+    
+    <!-- Fields -->
+    <rect x="395" y="485" width="290" height="25" class="key-field"/>
+    <text x="405" y="503" class="text-small">🔑 id: string</text>
+    
+    <rect x="395" y="512" width="290" height="25" class="foreign-key"/>
+    <text x="405" y="530" class="text-small">⬌ funnelDataId: string</text>
+    
+    <rect x="395" y="539" width="290" height="25" class="field-box"/>
+    <text x="405" y="557" class="text-small">type: TrendlineType</text>
+    
+    <rect x="395" y="566" width="290" height="25" class="field-box"/>
+    <text x="405" y="584" class="text-small">points: DataPoint[]</text>
+    
+    <rect x="395" y="593" width="290" height="25" class="field-box"/>
+    <text x="405" y="611" class="text-small">equation: string</text>
+    
+    <rect x="395" y="620" width="290" height="25" class="field-box"/>
+    <text x="405" y="638" class="text-small">rSquared: number</text>
+    
+    <rect x="395" y="647" width="290" height="25" class="field-box"/>
+    <text x="405" y="665" class="text-small">confidence: number (%)</text>
+  </g>
+
+  <!-- Admin User Table -->
+  <g>
+    <rect x="730" y="450" width="300" height="250" class="table-box" rx="5"/>
+    <rect x="730" y="450" width="300" height="30" class="table-box" rx="5"/>
+    <text x="880" y="472" text-anchor="middle" class="text-label">AdminUser</text>
+    
+    <!-- Fields -->
+    <rect x="735" y="485" width="290" height="25" class="key-field"/>
+    <text x="745" y="503" class="text-small">🔑 id: string</text>
+    
+    <rect x="735" y="512" width="290" height="25" class="field-box"/>
+    <text x="745" y="530" class="text-small">username: string (UNIQUE)</text>
+    
+    <rect x="735" y="539" width="290" height="25" class="field-box"/>
+    <text x="745" y="557" class="text-small">passwordHash: string</text>
+    
+    <rect x="735" y="566" width="290" height="25" class="field-box"/>
+    <text x="745" y="584" class="text-small">email: string (UNIQUE)</text>
+    
+    <rect x="735" y="593" width="290" height="25" class="field-box"/>
+    <text x="745" y="611" class="text-small">role: 'admin' | 'moderator'</text>
+    
+    <rect x="735" y="620" width="290" height="25" class="field-box"/>
+    <text x="745" y="638" class="text-small">lastLogin: Date</text>
+    
+    <rect x="735" y="647" width="290" height="25" class="field-box"/>
+    <text x="745" y="665" class="text-small">createdAt: Date</text>
+  </g>
+
+  <!-- Export Data Table -->
+  <g>
+    <rect x="1070" y="450" width="300" height="250" class="table-box" rx="5"/>
+    <rect x="1070" y="450" width="300" height="30" class="table-box" rx="5"/>
+    <text x="1220" y="472" text-anchor="middle" class="text-label">ExportData</text>
+    
+    <!-- Fields -->
+    <rect x="1075" y="485" width="290" height="25" class="key-field"/>
+    <text x="1085" y="503" class="text-small">🔑 exportId: string</text>
+    
+    <rect x="1075" y="512" width="290" height="25" class="foreign-key"/>
+    <text x="1085" y="530" class="text-small">⬌ userId: string (FK)</text>
+    
+    <rect x="1075" y="539" width="290" height="25" class="field-box"/>
+    <text x="1085" y="557" class="text-small">format: 'CSV' | 'JSON'</text>
+    
+    <rect x="1075" y="566" width="290" height="25" class="field-box"/>
+    <text x="1085" y="584" class="text-small">dataType: string</text>
+    
+    <rect x="1075" y="593" width="290" height="25" class="field-box"/>
+    <text x="1085" y="611" class="text-small">recordCount: number</text>
+    
+    <rect x="1075" y="620" width="290" height="25" class="field-box"/>
+    <text x="1085" y="638" class="text-small">exportedAt: Date</text>
+    
+    <rect x="1075" y="647" width="290" height="25" class="field-box"/>
+    <text x="1085" y="665" class="text-small">fileSize: number (bytes)</text>
+  </g>
+
+  <!-- Relationships -->
+  <path class="relationship" d="M 330 200 Q 355 200 380 200" stroke-dasharray="5,5"/>
+  <path class="relationship" d="M 700 200 Q 720 200 740 200"/>
+  <path class="relationship" d="M 1070 200 Q 1090 200 1110 200" stroke-dasharray="5,5"/>
+  <path class="relationship" d="M 190 380 Q 190 415 190 450"/>
+  <path class="relationship" d="M 540 420 Q 540 435 540 450"/>
+  <path class="relationship" d="M 880 420 Q 880 435 880 450"/>
+  <path class="relationship" d="M 1220 380 Q 1220 415 1220 450"/>
+
+  <!-- Legend -->
+  <g transform="translate(50, 750)">
+    <text x="0" y="0" class="text-label">Data Model Legend:</text>
+    
+    <rect x="0" y="15" width="20" height="20" class="key-field" rx="2"/>
+    <text x="30" y="30" class="text-small">Primary Key (🔑)</text>
+    
+    <rect x="250" y="15" width="20" height="20" class="foreign-key" rx="2"/>
+    <text x="280" y="30" class="text-small">Foreign Key (⬌)</text>
+    
+    <rect x="500" y="15" width="20" height="20" class="field-box" rx="2"/>
+    <text x="530" y="30" class="text-small">Regular Field</text>
+    
+    <line x1="0" y1="60" x2="30" y2="60" class="relationship"/>
+    <text x="40" y="65" class="text-small">One-to-Many Relationship</text>
+  </g>
+
+  <!-- Storage Information -->
+  <g transform="translate(50, 850)">
+    <text x="0" y="0" class="text-label">Storage Configuration:</text>
+    <text x="0" y="25" class="text-small">• FunnelData: LocalStorage + SessionCache</text>
+    <text x="0" y="45" class="text-small">• DemographicData: JSON File (public/data/)</text>
+    <text x="0" y="65" class="text-small">• AuditLog: IndexedDB + LocalStorage</text>
+    <text x="0" y="85" class="text-small">• TestResult: Memory + Export to File</text>
+    <text x="0" y="105" class="text-small">• SeasonalData: Computed from FunnelData</text>
+    <text x="0" y="125" class="text-small">• TrendlineData: Computed on-demand</text>
+    <text x="0" y="145" class="text-small">• AdminUser: Encrypted LocalStorage</text>
+  </g>
+
+  <!-- Data Privacy Notes -->
+  <g transform="translate(700, 850)">
+    <text x="0" y="0" class="text-label">Privacy & Security:</text>
+    <text x="0" y="25" class="text-small">• All PII is anonymized (k-anonymity ≥ 5)</text>
+    <text x="0" y="45" class="text-small">• Audit logs track all data access</text>
+    <text x="0" y="65" class="text-small">• Admin actions are encrypted &amp; logged</text>
+    <text x="0" y="85" class="text-small">• Exports include anonymization metadata</text>
+    <text x="0" y="105" class="text-small">• GDPR-compliant data retention policies</text>
+  </g>
+</svg>

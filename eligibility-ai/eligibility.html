@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TUC Eligibility Checker</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Define TUC Brand Colors */
+        :root {
+            --aucdt-primary: #6B2020; /* Deep Reddish-Brown */
+            --aucdt-accent: #E6B800;  /* Golden Yellow */
+            --aucdt-light-bg: #f8f8f8; /* A slightly off-white for main background */
+            --aucdt-dark-text: #333333; /* Darker text for contrast */
+        }
+
+        /* Custom styles for better aesthetics */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--aucdt-light-bg); /* Light background */
+            color: var(--aucdt-dark-text);
+        }
+        .container {
+            max-width: 800px;
+        }
+        .input-group label {
+            font-weight: 600;
+            color: var(--aucdt-dark-text);
+        }
+        .input-group select, .input-group input[type="number"], .input-group input[type="text"] {
+            border: 1px solid #cbd5e1; /* Slate 300 */
+            border-radius: 0.5rem; /* rounded-lg */
+            padding: 0.75rem 1rem; /* p-3 px-4 */
+            width: 100%;
+            transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+        .input-group select:focus, .input-group input:focus {
+            outline: none;
+            border-color: var(--aucdt-accent); /* Accent color for focus */
+            box-shadow: 0 0 0 3px rgba(230, 184, 0, 0.2); /* Accent color with opacity */
+        }
+        .btn-primary {
+            background-color: var(--aucdt-primary); /* Primary brand color */
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            transition: background-color 0.2s ease-in-out, transform 0.1s ease-in-out;
+        }
+        .btn-primary:hover {
+            background-color: #5A1B1B; /* Slightly darker primary on hover */
+            transform: translateY(-1px);
+        }
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+        .result-box {
+            background-color: #e0f2fe; /* Light blue 100 - kept for contrast, can be changed */
+            border: 1px solid #90cdf4; /* Light blue 300 - kept for contrast, can be changed */
+            border-radius: 0.75rem; /* rounded-xl */
+            padding: 1.5rem;
+        }
+        .result-eligible {
+            color: #16a34a; /* Green 600 - kept for success indication */
+            font-weight: 700;
+        }
+        .result-ineligible {
+            color: #dc2626; /* Red 600 - kept for failure indication */
+            font-weight: 700;
+        }
+        .info-message {
+            background-color: #fffbeb; /* Amber 50 - kept as a standard info color */
+            border: 1px solid #fcd34d; /* Amber 300 */
+            color: #b45309; /* Amber 800 */
+        }
+        .header-text {
+            color: var(--aucdt-primary); /* Apply primary color to heading */
+        }
+        .section-header {
+            color: var(--aucdt-primary); /* Apply primary color to section headings */
+        }
+        .bg-section {
+            background-color: #fcfcfc; /* A slightly whiter background for sections */
+            border: 1px solid #e0e0e0; /* Lighter border */
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center p-4">
+    <div class="container bg-white shadow-xl rounded-xl p-8 space-y-8">
+        <h1 class="text-3xl font-extrabold text-center mb-6 header-text">TUC Eligibility Checker</h1>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Programme of Interest -->
+            <div class="input-group col-span-full"> <!-- Make it span full width -->
+                <label for="programOfInterest" class="block text-sm mb-2">Programme of Interest:</label>
+                <select id="programOfInterest" class="p-3 w-full border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500">
+                    <option value="">Select a Programme</option>
+                    <option value="jewelleryDesign">Jewellery Design Technology</option>
+                    <option value="fashionDesign">Fashion Design Technology</option>
+                    <option value="digitalMedia">Digital Media & Communication Design</option>
+                    <option value="productDesign">Product Design & Entrepreneurship</option>
+                </select>
+            </div>
+
+            <!-- Admission Type -->
+            <div class="input-group">
+                <label for="programType" class="block text-sm mb-2">Admission Type:</label>
+                <select id="programType" class="p-3 w-full border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500">
+                    <option value="firstDegree">First Degree</option>
+                    <option value="diploma">Diploma</option>
+                </select>
+            </div>
+
+            <!-- Examination Type -->
+            <div class="input-group">
+                <label for="examType" class="block text-sm mb-2">Examination Type:</label>
+                <select id="examType" class="p-3 w-full border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500">
+                    <option value="wassce">WASSCE</option>
+                    <option value="sssce">SSSCE</option>
+                    <option value="gbce">GBCE (First Degree only)</option>
+                    <option value="gceAL">GCE Advanced Level (First Degree only)</option>
+                    <option value="hnd">HND (First Degree only)</option>
+                    <option value="mature">Mature Student (First Degree only)</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- WASSCE/SSSCE/GBCE Grades Section -->
+        <div id="gradesSection" class="space-y-6 p-6 bg-section rounded-lg">
+            <h2 class="text-xl font-semibold section-header">Subject Grades</h2>
+            <p class="text-sm text-gray-600 info-message p-3 rounded-lg">
+                Select your grades. For WASSCE, A1-C6 are credit passes. For SSSCE, A-D are credit passes.
+            </p>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Core Subjects -->
+                <div class="input-group">
+                    <label for="englishGrade" class="block text-sm mb-2">English Language (Core):</label>
+                    <select id="englishGrade" class="p-3 w-full border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500">
+                        <option value="">Select Grade</option>
+                        <option value="1">A1</option>
+                        <option value="2">B2</option>
+                        <option value="3">B3</option>
+                        <option value="4">C4</option>
+                        <option value="5">C5</option>
+                        <option value="6">C6</option>
+                        <option value="7">D7</option>
+                        <option value="8">E8</option>
+                        <option value="9">F9</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label for="mathGrade" class="block text-sm mb-2">Core Mathematics:</label>
+                    <select id="mathGrade" class="p-3 w-full border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500">
+                        <option value="">Select Grade</option>
+                        <option value="1">A1</option>
+                        <option value="2">B2</option>
+                        <option value="3">B3</option>
+                        <option value="4">C4</option>
+                        <option value="5">C5</option>
+                        <option value="6">C6</option>
+                        <option value="7">D7</option>
+                        <option value="8">E8</option>
+                        <option value="9">F9</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label for="scienceSocialGrade" class="block text-sm mb-2">Integrated Science / Social Studies:</label>
+                    <select id="scienceSocialGrade" class="p-3 w-full border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500">
+                        <option value="">Select Grade</option>
+                        <option value="1">A1</option>
+                        <option value="2">B2</option>
+                        <option value="3">B3</option>
+                        <option value="4">C4</option>
+                        <option value="5">C5</option>
+                        <option value="6">C6</option>
+                        <option value="7">D7</option>
+                        <option value="8">E8</option>
+                        <option value="9">F9</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Elective Subjects -->
+                <div class="input-group">
+                    <label for="elective1Grade" class="block text-sm mb-2">Elective Subject 1:</label>
+                    <select id="elective1Grade" class="p-3 w-full border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500">
+                        <option value="">Select Grade</option>
+                        <option value="1">A1</option>
+                        <option value="2">B2</option>
+                        <option value="3">B3</option>
+                        <option value="4">C4</option>
+                        <option value="5">C5</option>
+                        <option value="6">C6</option>
+                        <option value="7">D7</option>
+                        <option value="8">E8</option>
+                        <option value="9">F9</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label for="elective2Grade" class="block text-sm mb-2">Elective Subject 2:</label>
+                    <select id="elective2Grade" class="p-3 w-full border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500">
+                        <option value="">Select Grade</option>
+                        <option value="1">A1</option>
+                        <option value="2">B2</option>
+                        <option value="3">B3</option>
+                        <option value="4">C4</option>
+                        <option value="5">C5</option>
+                        <option value="6">C6</option>
+                        <option value="7">D7</option>
+                        <option value="8">E8</option>
+                        <option value="9">F9</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label for="elective3Grade" class="block text-sm mb-2">Elective Subject 3:</label>
+                    <select id="elective3Grade" class="p-3 w-full border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500">
+                        <option value="">Select Grade</option>
+                        <option value="1">A1</option>
+                        <option value="2">B2</option>
+                        <option value="3">B3</option>
+                        <option value="4">C4</option>
+                        <option value="5">C5</option>
+                        <option value="6">C6</option>
+                        <option value="7">D7</option>
+                        <option value="8">E8</option>
+                        <option value="9">F9</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- GCE Advanced Level Section -->
+        <div id="gceALSection" class="space-y-4 p-6 bg-section rounded-lg hidden">
+            <h2 class="text-xl font-semibold section-header">GCE Advanced Level Requirements</h2>
+            <div class="input-group">
+                <label for="gceALPasses" class="block text-sm mb-2">Number of A-Level Passes (A-E):</label>
+                <input type="number" id="gceALPasses" min="0" max="3" placeholder="e.g., 3" class="p-3">
+            </div>
+            <div class="input-group">
+                <label for="gceALGradeD" class="block text-sm mb-2">At least one pass Grade D or better?</label>
+                <select id="gceALGradeD" class="p-3 w-full border border-gray-300 rounded-lg">
+                    <option value="yes">Yes</option>
+                    <option value="no">No</option>
+                </select>
+            </div>
+            <h3 class="text-lg font-medium section-header mt-4">GCE Ordinary Level Requirements</h3>
+            <p class="text-sm text-gray-600 info-message p-3 rounded-lg">
+                Credit passes (Grade 6 or better) in 5 O-Level subjects.
+            </p>
+            <div class="input-group">
+                <label for="gceOLPasses" class="block text-sm mb-2">Number of O-Level Credit Passes (Grade 6 or better):</label>
+                <input type="number" id="gceOLPasses" min="0" max="5" placeholder="e.g., 5" class="p-3">
+            </div>
+            <div class="input-group">
+                <label for="gceOLEnglish" class="block text-sm mb-2">O-Level English Credit?</label>
+                <select id="gceOLEnglish" class="p-3 w-full border border-gray-300 rounded-lg">
+                    <option value="yes">Yes</option>
+                    <option value="no">No</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label for="gceOLMath" class="block text-sm mb-2">O-Level Mathematics Credit?</label>
+                <select id="gceOLMath" class="p-3 w-full border border-gray-300 rounded-lg">
+                    <option value="yes">Yes</option>
+                    <option value="no">No</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label for="gceOLScienceArts" class="block text-sm mb-2">O-Level Science/Arts Subject Credit?</label>
+                <select id="gceOLScienceArts" class="p-3 w-full border border-gray-300 rounded-lg">
+                    <option value="yes">Yes</option>
+                    <option value="no">No</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- HND Section -->
+        <div id="hndSection" class="space-y-4 p-6 bg-section rounded-lg hidden">
+            <h2 class="text-xl font-semibold section-header">HND Requirements</h2>
+            <div class="input-group">
+                <label for="hndClass" class="block text-sm mb-2">HND Class:</label>
+                <select id="hndClass" class="p-3 w-full border border-gray-300 rounded-lg">
+                    <option value="firstClass">First Class</option>
+                    <option value="secondClassUpper">Second Class Upper</option>
+                    <option value="secondClassLower">Second Class Lower</option>
+                    <option value="pass">Pass</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Mature Student Section -->
+        <div id="matureSection" class="space-y-4 p-6 bg-section rounded-lg hidden">
+            <h2 class="text-xl font-semibold section-header">Mature Student Requirements</h2>
+            <div class="input-group">
+                <label for="matureAge" class="block text-sm mb-2">Your Age:</label>
+                <input type="number" id="matureAge" min="0" placeholder="e.g., 28" class="p-3">
+            </div>
+            <div class="input-group flex items-center space-x-2">
+                <input type="checkbox" id="matureWorkExperience" class="form-checkbox h-5 w-5 text-indigo-600 rounded">
+                <label for="matureWorkExperience" class="text-sm">At least 5 years of work experience?</label>
+            </div>
+            <div class="input-group flex items-center space-x-2">
+                <input type="checkbox" id="matureEntranceExam" class="form-checkbox h-5 w-5 text-indigo-600 rounded">
+                <label for="matureEntranceExam" class="text-sm">Willing to pass an entrance examination?</label>
+            </div>
+        </div>
+
+        <button id="checkEligibilityBtn" class="btn-primary w-full mt-8">Check Eligibility</button>
+
+        <div id="result" class="result-box mt-8 p-6 text-center text-lg hidden">
+            <!-- Eligibility result will be displayed here -->
+        </div>
+
+        <div id="messageBox" class="fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center p-4 z-50 hidden">
+            <div class="bg-white rounded-lg p-6 shadow-lg max-w-sm w-full text-center">
+                <h3 class="text-xl font-bold mb-4 text-gray-800" id="messageBoxTitle"></h3>
+                <p class="text-gray-700 mb-6" id="messageBoxContent"></p>
+                <button id="messageBoxCloseBtn" class="btn-primary">Close</button>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // Function to show custom message box
+        function showMessageBox(title, message) {
+            document.getElementById('messageBoxTitle').innerText = title;
+            document.getElementById('messageBoxContent').innerText = message;
+            document.getElementById('messageBox').classList.remove('hidden');
+        }
+
+        // Event listener for closing the message box
+        document.getElementById('messageBoxCloseBtn').addEventListener('click', () => {
+            document.getElementById('messageBox').classList.add('hidden');
+        });
+
+        // Get DOM elements
+        const programOfInterestSelect = document.getElementById('programOfInterest');
+        const programTypeSelect = document.getElementById('programType');
+        const examTypeSelect = document.getElementById('examType');
+        const gradesSection = document.getElementById('gradesSection');
+        const gceALSection = document.getElementById('gceALSection');
+        const hndSection = document.getElementById('hndSection');
+        const matureSection = document.getElementById('matureSection');
+        const checkEligibilityBtn = document.getElementById('checkEligibilityBtn');
+        const resultDiv = document.getElementById('result');
+
+        // Grade mapping for WASSCE/SSSCE/GBCE
+        // WASSCE: A1-C6 are credit passes (1-6)
+        // SSSCE: A-D are credit passes (1-6 assuming A=1, B=2, C=3, D=4, E=5, F=6)
+        // GBCE: Credit passes are required (similar to SSSCE)
+        const isCreditPassWASSCE = (grade) => grade >= 1 && grade <= 6; // A1 to C6
+        const isCreditPassSSSCE = (grade) => grade >= 1 && grade <= 6; // A to D (assuming D is 4, E is 5, F is 6)
+
+        // Function to update section visibility based on exam type
+        function updateSectionVisibility() {
+            const selectedExamType = examTypeSelect.value;
+            const selectedProgramType = programTypeSelect.value;
+
+            // Hide all specific sections first
+            gradesSection.classList.add('hidden');
+            gceALSection.classList.add('hidden');
+            hndSection.classList.add('hidden');
+            matureSection.classList.add('hidden');
+
+            // Show relevant sections based on selection
+            if (selectedProgramType === 'firstDegree') {
+                if (['wassce', 'sssce', 'gbce'].includes(selectedExamType)) {
+                    gradesSection.classList.remove('hidden');
+                } else if (selectedExamType === 'gceAL') {
+                    gceALSection.classList.remove('hidden');
+                } else if (selectedExamType === 'hnd') {
+                    hndSection.classList.remove('hidden');
+                } else if (selectedExamType === 'mature') {
+                    matureSection.classList.remove('hidden');
+                }
+            } else if (selectedProgramType === 'diploma') {
+                if (['wassce', 'sssce'].includes(selectedExamType)) {
+                    gradesSection.classList.remove('hidden');
+                }
+                // Other exam types are not applicable for Diploma directly in this app
+            }
+
+            // Adjust exam type options based on program type
+            Array.from(examTypeSelect.options).forEach(option => {
+                option.disabled = false; // Enable all first
+                if (selectedProgramType === 'diploma') {
+                    if (['gbce', 'gceAL', 'hnd', 'mature'].includes(option.value)) {
+                        option.disabled = true;
+                    }
+                }
+            });
+
+            // If a disabled option is currently selected, reset to WASSCE
+            if (examTypeSelect.selectedOptions[0].disabled) {
+                examTypeSelect.value = 'wassce';
+                updateSectionVisibility(); // Re-run to show correct section
+            }
+        }
+
+        // Event listeners for programme and exam type changes
+        programTypeSelect.addEventListener('change', updateSectionVisibility);
+        examTypeSelect.addEventListener('change', updateSectionVisibility);
+
+        // Initial call to set up visibility on load
+        updateSectionVisibility();
+
+        checkEligibilityBtn.addEventListener('click', () => {
+            const programOfInterest = programOfInterestSelect.value;
+            const programType = programTypeSelect.value;
+            const examType = examTypeSelect.value;
+            let isEligible = false;
+            let message = "";
+
+            resultDiv.classList.add('hidden'); // Hide previous result
+            resultDiv.classList.remove('result-eligible', 'result-ineligible'); // Clear previous styling
+
+            // Validate Programme of Interest selection
+            if (!programOfInterest) {
+                showMessageBox("Input Error", "Please select a Programme of Interest.");
+                return;
+            }
+
+            try {
+                if (programType === 'firstDegree') {
+                    if (examType === 'wassce' || examType === 'sssce' || examType === 'gbce') {
+                        // Get values from dropdowns
+                        const englishGrade = parseInt(document.getElementById('englishGrade').value);
+                        const mathGrade = parseInt(document.getElementById('mathGrade').value);
+                        const scienceSocialGrade = parseInt(document.getElementById('scienceSocialGrade').value);
+                        const elective1Grade = parseInt(document.getElementById('elective1Grade').value);
+                        const elective2Grade = parseInt(document.getElementById('elective2Grade').value);
+                        const elective3Grade = parseInt(document.getElementById('elective3Grade').value);
+
+                        // Check if any grade is not selected (empty string results in NaN)
+                        if (isNaN(englishGrade) || isNaN(mathGrade) || isNaN(scienceSocialGrade) ||
+                            isNaN(elective1Grade) || isNaN(elective2Grade) || isNaN(elective3Grade)) {
+                            showMessageBox("Input Error", "Please select a grade for all 6 subjects.");
+                            return;
+                        }
+
+                        let creditPassCount = 0;
+                        const grades = [englishGrade, mathGrade, scienceSocialGrade, elective1Grade, elective2Grade, elective3Grade];
+
+                        if (examType === 'wassce') {
+                            if (isCreditPassWASSCE(englishGrade) && isCreditPassWASSCE(mathGrade) && isCreditPassWASSCE(scienceSocialGrade)) {
+                                creditPassCount += 3;
+                            }
+                            if (isCreditPassWASSCE(elective1Grade)) creditPassCount++;
+                            if (isCreditPassWASSCE(elective2Grade)) creditPassCount++;
+                            if (isCreditPassWASSCE(elective3Grade)) creditPassCount++;
+
+                            if (creditPassCount >= 6) {
+                                isEligible = true;
+                                message = `You appear to meet the minimum WASSCE/SSSCE/GBCE requirements for First Degree admission to ${programOfInterestSelect.options[programOfInterestSelect.selectedIndex].text}.`;
+                            } else {
+                                message = `You need credit passes in 6 subjects (3 core, 3 elective). You have ${creditPassCount} credit passes for First Degree admission to ${programOfInterestSelect.options[programOfInterestSelect.selectedIndex].text}.`;
+                            }
+                        } else if (examType === 'sssce' || examType === 'gbce') {
+                            if (isCreditPassSSSCE(englishGrade) && isCreditPassSSSCE(mathGrade) && isCreditPassSSSCE(scienceSocialGrade)) {
+                                creditPassCount += 3;
+                            }
+                            if (isCreditPassSSSCE(elective1Grade)) creditPassCount++;
+                            if (isCreditPassSSSCE(elective2Grade)) creditPassCount++;
+                            if (isCreditPassSSSCE(elective3Grade)) creditPassCount++;
+
+                            if (creditPassCount >= 6) {
+                                isEligible = true;
+                                message = `You appear to meet the minimum SSSCE/GBCE requirements for First Degree admission to ${programOfInterestSelect.options[programOfInterestSelect.selectedIndex].text}.`;
+                            } else {
+                                message = `You need credit passes in 6 subjects (3 core, 3 elective). You have ${creditPassCount} credit passes for First Degree admission to ${programOfInterestSelect.options[programOfInterestSelect.selectedIndex].text}.`;
+                            }
+                        }
+
+                    } else if (examType === 'gceAL') {
+                        const gceALPasses = parseInt(document.getElementById('gceALPasses').value);
+                        const gceALGradeD = document.getElementById('gceALGradeD').value === 'yes';
+                        const gceOLPasses = parseInt(document.getElementById('gceOLPasses').value);
+                        const gceOLEnglish = document.getElementById('gceOLEnglish').value === 'yes';
+                        const gceOLMath = document.getElementById('gceOLMath').value === 'yes';
+                        const gceOLScienceArts = document.getElementById('gceOLScienceArts').value === 'yes';
+
+                        if (isNaN(gceALPasses) || isNaN(gceOLPasses)) {
+                            showMessageBox("Input Error", "Please enter valid numbers for GCE A-Level and O-Level passes.");
+                            return;
+                        }
+
+                        if (gceALPasses >= 3 && gceALGradeD && gceOLPasses >= 5 && gceOLEnglish && gceOLMath && gceOLScienceArts) {
+                            isEligible = true;
+                            message = `You appear to meet the minimum GCE Advanced Level requirements for First Degree admission to ${programOfInterestSelect.options[programOfInterestSelect.selectedIndex].text}.`;
+                        } else {
+                            message = `You do not meet all GCE Advanced Level requirements for First Degree admission to ${programOfInterestSelect.options[programOfInterestSelect.selectedIndex].text}. Please ensure 3 A-Level passes (one D or better) and 5 O-Level credit passes (including English, Mathematics, and Science/Arts).`;
+                        }
+
+                    } else if (examType === 'hnd') {
+                        const hndClass = document.getElementById('hndClass').value;
+                        if (hndClass === 'firstClass' || hndClass === 'secondClassUpper' || hndClass === 'secondClassLower') {
+                            isEligible = true;
+                            message = `You appear to meet the minimum HND requirements for First Degree admission (Level 300) to ${programOfInterestSelect.options[programOfInterestSelect.selectedIndex].text}.`;
+                        } else {
+                            message = `Your HND class does not meet the minimum requirement (2nd Class Lower or better) for First Degree admission to ${programOfInterestSelect.options[programOfInterestSelect.selectedIndex].text}.`;
+                        }
+                    } else if (examType === 'mature') {
+                        const matureAge = parseInt(document.getElementById('matureAge').value);
+                        const matureWorkExperience = document.getElementById('matureWorkExperience').checked;
+                        const matureEntranceExam = document.getElementById('matureEntranceExam').checked;
+
+                        if (isNaN(matureAge)) {
+                            showMessageBox("Input Error", "Please enter your age for Mature Student application.");
+                            return;
+                        }
+
+                        if (matureAge >= 25 && matureWorkExperience && matureEntranceExam) {
+                            isEligible = true;
+                            message = `You appear to meet the basic Mature Student requirements for First Degree admission to ${programOfInterestSelect.options[programOfInterestSelect.selectedIndex].text}. You will need to pass an entrance examination.`;
+                        } else {
+                            message = `You do not meet all Mature Student requirements for First Degree admission to ${programOfInterestSelect.options[programOfInterestSelect.selectedIndex].text}. Please ensure you are at least 25, have 5 years work experience, and are willing to pass an entrance exam.`;
+                        }
+                    } else {
+                         message = `Please select an examination type to check eligibility for First Degree programmes to ${programOfInterestSelect.options[programOfInterestSelect.selectedIndex].text}.`;
+                    }
+
+                } else if (programType === 'diploma') {
+                    if (examType === 'wassce' || examType === 'sssce') {
+                        // Get values from dropdowns
+                        const englishGrade = parseInt(document.getElementById('englishGrade').value);
+                        const mathGrade = parseInt(document.getElementById('mathGrade').value);
+                        const scienceSocialGrade = parseInt(document.getElementById('scienceSocialGrade').value); // Not strictly required for diploma, but good to have
+                        const elective1Grade = parseInt(document.getElementById('elective1Grade').value);
+                        const elective2Grade = parseInt(document.getElementById('elective2Grade').value);
+                        const elective3Grade = parseInt(document.getElementById('elective3Grade').value);
+
+                        // Check if core grades are selected
+                        if (isNaN(englishGrade) || isNaN(mathGrade)) {
+                             showMessageBox("Input Error", "Please select grades for English Language and Core Mathematics.");
+                            return;
+                        }
+
+                        if (examType === 'wassce') {
+                            let creditPassCount = 0;
+                            if (isCreditPassWASSCE(englishGrade)) creditPassCount++;
+                            if (isCreditPassWASSCE(mathGrade)) creditPassCount++;
+                            if (isCreditPassWASSCE(scienceSocialGrade)) creditPassCount++; // Include if entered
+                            if (isCreditPassWASSCE(elective1Grade)) creditPassCount++;
+                            if (isCreditPassWASSCE(elective2Grade)) creditPassCount++;
+                            if (isCreditPassWASSCE(elective3Grade)) creditPassCount++;
+
+                            if (creditPassCount >= 3) { // WASSCE: 6 passes with credit in 3 subjects
+                                isEligible = true;
+                                message = `You appear to meet the minimum WASSCE requirements for Diploma admission to ${programOfInterestSelect.options[programOfInterestSelect.selectedIndex].text}.`;
+                            } else {
+                                message = `You need credit passes in at least 3 subjects for Diploma. You have ${creditPassCount} credit passes for Diploma admission to ${programOfInterestSelect.options[programOfInterestSelect.selectedIndex].text}.`;
+                            }
+                        } else if (examType === 'sssce') {
+                            const englishPass = englishGrade >= 1 && englishGrade <= 5; // SSSCE: A-E passes
+                            const mathPass = mathGrade >= 1 && mathGrade <= 5; // SSSCE: A-E passes
+
+                            if (englishPass && mathPass) { // SSSCE: 6 passes including English and Math
+                                isEligible = true;
+                                message = `You appear to meet the minimum SSSCE requirements for Diploma admission to ${programOfInterestSelect.options[programOfInterestSelect.selectedIndex].text}.`;
+                            } else {
+                                message = `You need passes (A-E) in English Language and Core Mathematics for Diploma admission to ${programOfInterestSelect.options[programOfInterestSelect.selectedIndex].text}.`;
+                            }
+                        }
+                    } else {
+                        message = `Please select WASSCE or SSSCE to check eligibility for Diploma programmes to ${programOfInterestSelect.options[programOfInterestSelect.selectedIndex].text}.`;
+                    }
+                }
+            } catch (error) {
+                console.error("Eligibility check error:", error);
+                showMessageBox("Application Error", "An unexpected error occurred. Please try again.");
+                return;
+            }
+
+            resultDiv.classList.remove('hidden');
+            if (isEligible) {
+                resultDiv.classList.add('result-eligible');
+                resultDiv.innerHTML = `<p class="text-xl font-bold mb-2">Likely Eligible!</p><p>${message}</p><p class="text-sm mt-4">This is an indicative check. Final admission is subject to verification of documents and specific programme requirements. Please contact the TUC admissions office for detailed information.</p>`;
+            } else {
+                resultDiv.classList.add('result-ineligible');
+                resultDiv.innerHTML = `<p class="text-xl font-bold mb-2">Not Yet Eligible</p><p>${message}</p><p class="text-sm mt-4">This is an indicative check. Please review the official entry requirements or contact the TUC admissions office for detailed information and alternative pathways.</p><p class="text-sm mt-4 font-semibold text-gray-700">If you do not meet the requirements for this programme, please consider applying for a Certificate programme.</p>`;
+            }
+        });
+    </script>
+</body>
+</html>

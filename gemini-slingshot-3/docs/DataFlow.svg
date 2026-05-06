@@ -1,0 +1,42 @@
+<svg viewBox="0 0 800 200" xmlns="http://www.w3.org/2000/svg">
+  <rect width="800" height="200" fill="#08080a" rx="10"/>
+  <text x="400" y="30" font-family="monospace" font-size="16" fill="#4285f4" text-anchor="middle" font-weight="bold">END-TO-END DATA FLOW</text>
+  
+  <!-- Nodes -->
+  <g transform="translate(40, 70)">
+    <rect width="120" height="60" rx="5" fill="#121214" stroke="#888"/>
+    <text x="60" y="35" font-family="monospace" font-size="10" fill="#fff" text-anchor="middle">USER GESTURE</text>
+  </g>
+  
+  <g transform="translate(190, 70)">
+    <rect width="120" height="60" rx="5" fill="#121214" stroke="#66bb6a"/>
+    <text x="60" y="35" font-family="monospace" font-size="10" fill="#66bb6a" text-anchor="middle">MEDIAPIPE (VISION)</text>
+  </g>
+  
+  <g transform="translate(340, 70)">
+    <rect width="120" height="60" rx="5" fill="#121214" stroke="#ef5350"/>
+    <text x="60" y="35" font-family="monospace" font-size="10" fill="#ef5350" text-anchor="middle">PHYSICS ENGINE</text>
+  </g>
+  
+  <g transform="translate(490, 70)">
+    <rect width="120" height="60" rx="5" fill="#121214" stroke="#4285f4"/>
+    <text x="60" y="35" font-family="monospace" font-size="10" fill="#4285f4" text-anchor="middle">GEMINI 3 (AI)</text>
+  </g>
+  
+  <g transform="translate(640, 70)">
+    <rect width="120" height="60" rx="5" fill="#121214" stroke="#ffa726"/>
+    <text x="60" y="35" font-family="monospace" font-size="10" fill="#ffa726" text-anchor="middle">STRATEGIC HUD</text>
+  </g>
+  
+  <!-- Connectors -->
+  <path d="M 160 100 L 190 100" stroke="#444" stroke-width="2" marker-end="url(#arrow)"/>
+  <path d="M 310 100 L 340 100" stroke="#444" stroke-width="2" marker-end="url(#arrow)"/>
+  <path d="M 460 100 L 490 100" stroke="#444" stroke-width="2" marker-end="url(#arrow)"/>
+  <path d="M 610 100 L 640 100" stroke="#444" stroke-width="2" marker-end="url(#arrow)"/>
+  
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L9,3 z" fill="#444" />
+    </marker>
+  </defs>
+</svg>

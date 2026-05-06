@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Deployment Guide for React Apps</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Stone & Indigo -->
+    <!-- Application Structure Plan: The application is structured as a task-oriented interactive guide. It starts with the initial React project setup, including a code snippet for the core App component. Then it covers the universal prerequisite (the build step), followed by a visual comparison of hosting platforms to aid user decision-making. The core interaction is a selector that dynamically displays the step-by-step guide for the chosen platform, hiding irrelevant information. This structure was chosen to transform a linear document into a user-driven tool, reducing cognitive load and making the information more digestible and actionable. The final section provides general tips applicable to all choices. -->
+    <!-- Visualization & Content Choices: 
+        - Report Info: Main deployment steps for Netlify, Vercel, GitHub Pages. -> Goal: Organize & Inform. -> Viz/Presentation: Interactive cards/buttons to select a platform, and dynamic content panels that show/hide based on selection. -> Interaction: User click on a platform card reveals the corresponding guide. -> Justification: This is more user-friendly than a long-scrolling document, allowing users to focus only on the process they need. -> Library/Method: Vanilla JS for DOM manipulation (toggling visibility).
+        - Report Info: Comparing the platforms. -> Goal: Compare & Decide. -> Viz/Presentation: A horizontal bar chart. -> Interaction: Static visual comparison. -> Justification: Chart.js provides a clear, quantitative visual summary of qualitative features (like 'ease of use'), which helps users make an informed choice quickly. -> Library/Method: Chart.js.
+        - Report Info: Code blocks for commands. -> Goal: Inform. -> Viz/Presentation: Styled `<pre><code>` blocks. -> Interaction: Copy to clipboard functionality for code blocks. -> Justification: Clear, standard way to present code, with added utility for users. -> Library/Method: HTML/Tailwind, Vanilla JS for copy.
+        - CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+        .platform-btn.active {
+            background-color: #4338ca; /* indigo-700 */
+            color: white;
+            border-color: #4f46e5; /* indigo-600 */
+        }
+        .platform-btn.active h3 {
+            color: white;
+        }
+        .platform-btn.active p {
+            color: #c7d2fe; /* indigo-200 */
+        }
+        .code-block {
+            background-color: #1f2937;
+            color: #d1d5db;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+    </style>
+</head>
+<body class="bg-stone-50 text-stone-800">
+
+    <div class="container mx-auto p-4 md:p-8 max-w-7xl">
+        <header class="text-center mb-12">
+            <h1 class="text-4xl md:text-5xl font-bold text-indigo-700 mb-2">Interactive Deployment Guide</h1>
+            <p class="text-lg text-stone-600">Your step-by-step guide to deploying a modern React application.</p>
+        </header>
+
+        <main class="space-y-16">
+
+            <section id="project-setup-section" class="bg-white p-8 rounded-2xl shadow-lg border border-stone-200">
+                <h2 class="text-3xl font-semibold text-stone-800 mb-4 flex items-center">
+                    <span class="bg-indigo-600 text-white rounded-full h-8 w-8 text-lg font-bold flex items-center justify-center mr-4">0</span>
+                    Project Setup: Create Your React App
+                </h2>
+                <p class="text-stone-600 mb-6">Before you deploy, you'll need a React project. If you haven't already, you can create a new React application using `pnpm create react-app` (or `npx create-react-app` if you prefer npm). Replace `my-react-app` with your desired project name.</p>
+                <div class="code-block"><code>pnpm create react-app my-react-app</code></div>
+                <p class="mt-6 text-stone-600 mb-6">Once created, navigate into your new project directory:</p>
+                <div class="code-block"><code>cd my-react-app</code></div>
+                
+                <h3 class="text-2xl font-semibold text-stone-800 mt-8 mb-4 flex items-center">
+                    Your React App Code
+                </h3>
+                <p class="text-stone-600 mb-6">You can replace the contents of `src/App.js` in your new project with the following code for the Academic Performance Dashboard. Remember to also install Tailwind CSS if you haven't already, as this code uses Tailwind classes.</p>
+                <div class="relative">
+                    <div id="app-code" class="code-block"><code>import React, { useState, useEffect } from 'react';
+
+const gradingSystem = [
+    { grade: "A", scoreRange: "80-100", gp: 4.00, performance: "Excellent" },
+    { grade: "B+", scoreRange: "75-79", gp: 3.50, performance: "Very Good" },
+    { grade: "B", scoreRange: "70-74", gp: 3.00, performance: "Good" },
+    { grade: "C+", scoreRange: "65-69", gp: 2.50, performance: "Very Fair" },
+    { grade: "C", scoreRange: "60-64", gp: 2.00, performance: "Fair" },
+    { grade: "D+", scoreRange: "55-59", gp: 1.50, performance: "Satisfactory" },
+    { grade: "D", scoreRange: "50-54", gp: 1.00, performance: "Barely Satisfactory" },
+    { grade: "E", scoreRange: "0-49", gp: 0.00, performance: "Fail" },
+];
+
+const studentsData = [
+    {
+        name: "Solomon Boamah Acheampong",
+        indexNumber: "100049",
+        courses: [
+            { name: "BJDT 111 INTRO. TO JEW. DESIGN", marks: 84, grade: "A", gp: 4.00, creditHours: 3 },
+            { name: "BJDT 114 BASIC DRAWING", marks: 77, grade: "B+", gp: 3.50, creditHours: 3 },
+            { name: "ACDT 112 WORKSHOP SAFETY PRACTICES", marks: 71, grade: "B", gp: 3.00, creditHours: 3 },
+            { name: "ACDT 113 FOUND. IN TECH. DRAW", marks: 73, grade: "B", gp: 3.00, creditHours: 3 },
+            { name: "ACDT 115 INTRO. TO AFRI. ART AND CUL.", marks: 78, grade: "B+", gp: 3.50, creditHours: 3 },
+            { name: "ACDT 116 COMM. AND STUDY SKILLS I", marks: 80, grade: "A", gp: 4.00, creditHours: 3 },
+            { name: "ACDT 117 INFO. & COMM. TECH. 1", marks: 85, grade: "A", gp: 4.00, creditHours: 3 },
+        ],
+        overall: {
+            tcr: 21,
+            tgp: 75.0,
+            sgpa: 3.57,
+            ccr: 21,
+            cgv: 75.0,
+            cgpa: 3.57,
+        },
+    },
+    {
+        name: "Erica Eyram Amevor",
+        indexNumber: "100059",
+        courses: [
+            { name: "BJDT 111 INTRO. TO JEW. DESIGN", marks: 86, grade: "A", gp: 4.00, creditHours: 3 },
+            { name: "BJDT 114 BASIC DRAWING", marks: 83, grade: "A", gp: 4.00, creditHours: 3 },
+            { name: "ACDT 117 INFO. & COMM. TECH. 1", marks: 80, grade: "A", gp: 4.00, creditHours: 3 },
+            { name: "ACDT 115 INTRO. TO AFRI. ART AND CUL.", marks: 75, grade: "B+", gp: 3.50, creditHours: 3 },
+            { name: "ACDT 116 COMM. AND STUDY SKILLS I", marks: 75, grade: "B+", gp: 3.50, creditHours: 3 },
+            { name: "ACDT 112 WORKSHOP SAFETY PRACTICES", marks: 71, grade: "B", gp: 3.00, creditHours: 3 },
+            { name: "ACDT 113 FOUND. IN TECH. DRAW", marks: 57, grade: "D+", gp: 1.50, creditHours: 3 },
+        ],
+        overall: {
+            tcr: 21,
+            tgp: 70.5,
+            sgpa: 3.36,
+            ccr: 21,
+            cgv: 70.5,
+            cgpa: 3.36,
+        },
+    },
+    {
+        name: "Samuel Nii Antiea Quarshie",
+        indexNumber: "100062",
+        courses: [
+            { name: "BJDT 111 INTRO. TO JEW. DESIGN", marks: 86, grade: "A", gp: 4.00, creditHours: 3 },
+            { name: "BJDT 114 BASIC DRAWING", marks: 77, grade: "B+", gp: 3.50, creditHours: 3 },
+            { name: "ACDT 112 WORKSHOP SAFETY PRACTICES", marks: 64, grade: "C", gp: 2.00, creditHours: 3 },
+            { name: "ACDT 113 FOUND. IN TECH. DRAW", marks: 57, grade: "D+", gp: 1.50, creditHours: 3 },
+            { name: "ACDT 115 INTRO. TO AFRI. ART AND CUL.", marks: 51, grade: "D", gp: 1.00, creditHours: 3 },
+            { name: "ACDT 116 COMM. AND STUDY SKILLS I", marks: 54, grade: "D", gp: 1.00, creditHours: 3 },
+            { name: "ACDT 117 INFO. & COMM. TECH. 1", marks: 70, grade: "B", gp: 3.00, creditHours: 3 },
+        ],
+        overall: {
+            tcr: 21,
+            tgp: 46.5,
+            sgpa: 2.21,
+            ccr: 21,
+            cgv: 46.5,
+            cgpa: 2.21,
+        },
+    },
+    {
+        name: "YIRENKYI JOSEPHINE AKUFFO",
+        indexNumber: "TUC.01.2020.06",
+        courses: [
+            { name: "BJDT 111 INTRO. TO JEW. DESIGN", marks: 84, grade: "A", gp: 4.00, creditHours: 3 },
+            { name: "BJDT 114 BASIC DRAWING", marks: 81, grade: "A", gp: 4.00, creditHours: 3 },
+            { name: "ACDT 115 INTRO. TO AFRI. ART AND CUL.", marks: 85, grade: "A", gp: 4.00, creditHours: 3 },
+            { name: "ACDT 116 COMM. AND STUDY SKILLS I", marks: 83, grade: "A", gp: 4.00, creditHours: 3 },
+            { name: "ACDT 117 INFO. & COMM. TECH. 1", marks: 82, grade: "A", gp: 4.00, creditHours: 3 },
+            { name: "ACDT 112 WORKSHOP SAFETY PRACTICES", marks: 75, grade: "B+", gp: 3.50, creditHours: 3 },
+        ],
+        overall: {
+            tcr: 18,
+            tgp: 70.5,
+            sgpa: 3.92,
+            ccr: 18,
+            cgv: 70.5,
+            cgpa: 3.92,
+        },
+    },
+];
+
+function App() {
+    const [selectedStudent, setSelectedStudent] = useState(studentsData[0]);
+
+    const calculateGPA = (courses) => {
+        let totalGradePoints = 0;
+        let totalCreditHours = 0;
+
+        courses.forEach(course => {
+            totalGradePoints += course.gp * course.creditHours;
+            totalCreditHours += course.creditHours;
+        });
+
+        return totalCreditHours > 0 ? (totalGradePoints / totalCreditHours).toFixed(2) : '0.00';
+    };
+
+    return (
+        &lt;div className="min-h-screen bg-gradient-to-br from-blue-100 to-indigo-200 p-4 font-inter text-gray-800"&gt;
+            &lt;script src="https://cdn.tailwindcss.com"&gt;&lt;/script&gt;
+            &lt;style&gt;
+                {`
+                @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+                .font-inter {
+                    font-family: 'Inter', sans-serif;
+                }
+                `}
+            &lt;/style&gt;
+
+            &lt;header className="text-center mb-8 bg-white p-6 rounded-xl shadow-lg border border-blue-200"&gt;
+                &lt;h1 className="text-4xl font-bold text-indigo-700 mb-2"&gt;Academic Performance Dashboard&lt;/h1&gt;
+                &lt;p className="text-lg text-gray-600"&gt;Illustrating student records for BA Jewellery programs, Year 1, Semester 1.&lt;/p&gt;
+            &lt;/header&gt;
+
+            &lt;div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8"&gt;
+
+                &lt;div className="lg:col-span-1 space-y-8"&gt;
+                    &lt;div className="bg-white p-6 rounded-xl shadow-lg border border-blue-200"&gt;
+                        &lt;h2 className="text-2xl font-semibold text-indigo-600 mb-4 border-b pb-2"&gt;Select a Student&lt;/h2&gt;
+                        &lt;select
+                            onChange={(e) => setSelectedStudent(studentsData.find(student => student.indexNumber === e.target.value))}
+                            value={selectedStudent.indexNumber}
+                            className="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-lg"
+                        &gt;
+                            {studentsData.map((student) => (
+                                &lt;option key={student.indexNumber} value={student.indexNumber}&gt;
+                                    {student.name} ({student.indexNumber})
+                                &lt;/option&gt;
+                            ))}
+                        &lt;/select&gt;
+                    &lt;/div&gt;
+
+                    &lt;div className="bg-white p-6 rounded-xl shadow-lg border border-blue-200"&gt;
+                        &lt;h2 className="text-2xl font-semibold text-indigo-600 mb-4 border-b pb-2"&gt;Grading System&lt;/h2&gt;
+                        &lt;div className="overflow-x-auto rounded-lg border border-gray-200"&gt;
+                            &lt;table className="min-w-full divide-y divide-gray-200"&gt;
+                                &lt;thead className="bg-blue-50"&gt;
+                                    &lt;tr&gt;
+                                        &lt;th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider rounded-tl-lg"&gt;Grade&lt;/th&gt;
+                                        &lt;th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"&gt;Score Range&lt;/th&gt;
+                                        &lt;th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"&gt;GP&lt;/th&gt;
+                                        &lt;th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider rounded-tr-lg"&gt;Performance&lt;/th&gt;
+                                    &lt;/tr&gt;
+                                &lt;/thead&gt;
+                                &lt;tbody className="bg-white divide-y divide-gray-200"&gt;
+                                    {gradingSystem.map((grade, index) => (
+                                        &lt;tr key={index} className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}&gt;
+                                            &lt;td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900"&gt;{grade.grade}&lt;/td&gt;
+                                            &lt;td className="px-4 py-3 whitespace-nowrap text-sm text-gray-700"&gt;{grade.scoreRange}&lt;/td&gt;
+                                            &lt;td className="px-4 py-3 whitespace-nowrap text-sm text-gray-700"&gt;{grade.gp.toFixed(2)}&lt;/td&gt;
+                                            &lt;td className="px-4 py-3 whitespace-nowrap text-sm text-gray-700"&gt;{grade.performance}&lt;/td&gt;
+                                        &lt;/tr&gt;
+                                    ))}
+                                &lt;/tbody&gt;
+                            &lt;/table&gt;
+                        &lt;/div&gt;
+                    &lt;/div&gt;
+                &lt;/div&gt;
+
+                &lt;div className="lg:col-span-2 bg-white p-6 rounded-xl shadow-lg border border-blue-200"&gt;
+                    &lt;h2 className="text-2xl font-semibold text-indigo-600 mb-4 border-b pb-2"&gt;
+                        Performance Details: {selectedStudent.name} (Index: {selectedStudent.indexNumber})
+                    &lt;/h2&gt;
+
+                    &lt;div className="mb-6"&gt;
+                        &lt;h3 className="text-xl font-medium text-blue-700 mb-3"&gt;Overall Semester Results&lt;/h3&gt;
+                        &lt;div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm bg-blue-50 p-4 rounded-lg shadow-inner"&gt;
+                            &lt;p&gt;&lt;strong className="text-gray-700"&gt;Total Credit Hours (TCR):&lt;/strong&gt; {selectedStudent.overall.tcr}&lt;/p&gt;
+                            &lt;p&gt;&lt;strong className="text-gray-700"&gt;Total Grade Points (TGP):&lt;/strong&gt; {selectedStudent.overall.tgp.toFixed(2)}&lt;/p&gt;
+                            &lt;p&gt;&lt;strong className="text-gray-700"&gt;Semester Grade Point Average (SGPA):&lt;/strong&gt; &lt;span className="font-bold text-green-700 text-lg"&gt;{selectedStudent.overall.sgpa.toFixed(2)}&lt;/span&gt;&lt;/p&gt;
+                            &lt;p&gt;&lt;strong className="text-gray-700"&gt;Cumulative Credit Hours (CCR):&lt;/strong&gt; {selectedStudent.overall.ccr}&lt;/p&gt;
+                            &lt;p&gt;&lt;strong className="text-gray-700"&gt;Cumulative Grade Value (CGV):&lt;/strong&gt; {selectedStudent.overall.cgv.toFixed(2)}&lt;/p&gt;
+                            &lt;p&gt;&lt;strong className="text-gray-700"&gt;Cumulative Grade Point Average (CGPA):&lt;/strong&gt; &lt;span className="font-bold text-green-700 text-lg"&gt;{selectedStudent.overall.cgpa.toFixed(2)}&lt;/span&gt;&lt;/p&gt;
+                        &lt;/div&gt;
+                    &lt;/div&gt;
+
+                    &lt;div&gt;
+                        &lt;h3 className="text-xl font-medium text-blue-700 mb-3"&gt;Course Performance&lt;/h3&gt;
+                        &lt;div className="overflow-x-auto rounded-lg border border-gray-200"&gt;
+                            &lt;table className="min-w-full divide-y divide-gray-200"&gt;
+                                &lt;thead className="bg-blue-50"&gt;
+                                    &lt;tr&gt;
+                                        &lt;th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider rounded-tl-lg"&gt;Course&lt;/th&gt;
+                                        &lt;th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"&gt;Marks&lt;/th&gt;
+                                        &lt;th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"&gt;Grade&lt;/th&gt;
+                                        &lt;th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider rounded-tr-lg"&gt;GP&lt;/th&gt;
+                                    &lt;/tr&gt;
+                                &lt;/thead&gt;
+                                &lt;tbody className="bg-white divide-y divide-gray-200"&gt;
+                                    {selectedStudent.courses.map((course, index) => (
+                                        &lt;tr key={index} className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}&gt;
+                                            &lt;td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900"&gt;{course.name}&lt;/td&gt;
+                                            &lt;td className="px-4 py-3 whitespace-nowrap text-sm text-gray-700"&gt;{course.marks}&lt;/td&gt;
+                                            &lt;td className="px-4 py-3 whitespace-nowrap text-sm text-gray-700"&gt;{course.grade}&lt;/td&gt;
+                                            &lt;td className="px-4 py-3 whitespace-nowrap text-sm text-gray-700"&gt;{course.gp.toFixed(2)}&lt;/td&gt;
+                                        &lt;/tr&gt;
+                                    ))}
+                                &lt;/tbody&gt;
+                            &lt;/table&gt;
+                        &lt;/div&gt;
+                    &lt;/div&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+    );
+}
+
+export default App;</code></div>
+                    <button id="copy-app-code-btn" class="absolute top-4 right-4 bg-indigo-600 text-white p-2 rounded-lg text-sm hover:bg-indigo-700 transition-colors duration-300">Copy Code</button>
+                </div>
+            </section>
+            
+            <section id="build-step" class="bg-white p-8 rounded-2xl shadow-lg border border-stone-200">
+                <h2 class="text-3xl font-semibold text-stone-800 mb-4 flex items-center">
+                    <span class="bg-indigo-600 text-white rounded-full h-8 w-8 text-lg font-bold flex items-center justify-center mr-4">1</span>
+                    First: Build Your Application
+                </h2>
+                <p class="text-stone-600 mb-6">Before you can deploy your site, you need to create a production-ready build. This process compiles and optimizes your code into a set of static files. Navigate to your project's root directory in your terminal and run the following command.</p>
+                <div class="code-block"><code>pnpm build</code></div>
+                <p class="mt-6 text-sm text-stone-500">This will create a `build` or `dist` folder in your project. This is the folder you will deploy.</p>
+            </section>
+            
+            <section id="comparison">
+                <h2 class="text-3xl font-semibold text-center text-stone-800 mb-2">Compare Hosting Platforms</h2>
+                <p class="text-center text-stone-600 mb-8">Not sure which to choose? This chart compares popular options on key features.</p>
+                <div class="bg-white p-4 sm:p-8 rounded-2xl shadow-lg border border-stone-200">
+                    <div class="chart-container">
+                        <canvas id="platformComparisonChart"></canvas>
+                    </div>
+                </div>
+            </section>
+
+            <section id="platform-selector">
+                <h2 class="text-3xl font-semibold text-stone-800 text-center mb-2 flex items-center justify-center gap-4">
+                     <span class="bg-indigo-600 text-white rounded-full h-8 w-8 text-lg font-bold flex items-center justify-center">2</span>
+                    Choose Your Platform
+                </h2>
+                <p class="text-center text-stone-600 mb-8">Select a platform below to view the specific deployment instructions.</p>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <button id="btn-netlify" class="platform-btn text-left bg-white p-6 rounded-2xl shadow-md border-2 border-transparent hover:border-indigo-500 transition-all duration-300 transform hover:scale-105 active">
+                        <h3 class="text-2xl font-bold text-indigo-700 mb-2">Netlify</h3>
+                        <p class="text-stone-600">A powerful and popular platform with seamless continuous deployment from Git.</p>
+                    </button>
+                    <button id="btn-vercel" class="platform-btn text-left bg-white p-6 rounded-2xl shadow-md border-2 border-transparent hover:border-indigo-500 transition-all duration-300 transform hover:scale-105">
+                        <h3 class="text-2xl font-bold text-indigo-700 mb-2">Vercel</h3>
+                        <p class="text-stone-600">Optimized for frontend frameworks like React, created by the team behind Next.js.</p>
+                    </button>
+                    <button id="btn-github" class="platform-btn text-left bg-white p-6 rounded-2xl shadow-md border-2 border-transparent hover:border-indigo-500 transition-all duration-300 transform hover:scale-105">
+                        <h3 class="text-2xl font-bold text-indigo-700 mb-2">GitHub Pages</h3>
+                        <p class="text-stone-600">A free and simple way to host static sites directly from your GitHub repository.</p>
+                    </button>
+                </div>
+            </section>
+
+            <section id="instructions-display">
+                <div id="guide-netlify" class="space-y-6 bg-white p-8 rounded-2xl shadow-lg border border-stone-200">
+                    <h3 class="text-2xl font-semibold text-stone-800 border-b pb-4">Deploying with Netlify</h3>
+                    <div class="step"><strong>Step 1: Create Account & Connect Git.</strong> Sign up for a free account at netlify.com and connect it to your GitHub, GitLab, or Bitbucket account.</div>
+                    <div class="step"><strong>Step 2: Import Project.</strong> From your dashboard, click "Add new site" > "Import an existing project". Select your Git provider and choose the repository for your project.</div>
+                    <div class="step"><strong>Step 3: Configure Build Settings.</strong> Netlify usually auto-detects Create React App settings. Confirm they match the following:
+                        <ul class="list-disc list-inside mt-2 space-y-1 text-stone-600 bg-stone-100 p-4 rounded-lg">
+                            <li><strong>Branch to deploy:</strong> `main` (or your primary branch)</li>
+                            <li><strong>Build command:</strong> `pnpm build`</li>
+                            <li><strong>Publish directory:</strong> `build`</li>
+                        </ul>
+                    </div>
+                    <div class="step"><strong>Step 4: Deploy.</strong> Click "Deploy site". Netlify will build and deploy your application. Any future pushes to the connected branch will automatically trigger a new deployment.</div>
+                </div>
+
+                <div id="guide-vercel" class="space-y-6 bg-white p-8 rounded-2xl shadow-lg border border-stone-200 hidden">
+                    <h3 class="text-2xl font-semibold text-stone-800 border-b pb-4">Deploying with Vercel</h3>
+                    <div class="step"><strong>Step 1: Create Account & Import Project.</strong> Sign up for a free account at vercel.com. From the dashboard, click "New Project" and import your desired Git repository.</div>
+                    <div class="step"><strong>Step 2: Configure Project.</strong> Vercel will auto-detect that you are using a React application and configure the settings for you. Verify them:
+                        <ul class="list-disc list-inside mt-2 space-y-1 text-stone-600 bg-stone-100 p-4 rounded-lg">
+                            <li><strong>Framework Preset:</strong> `Create React App`</li>
+                            <li><strong>Build Command:</strong> `pnpm build`</li>
+                            <li><strong>Output Directory:</strong> `build`</li>
+                        </ul>
+                    </div>
+                    <div class="step"><strong>Step 3: Deploy.</strong> Click "Deploy". Vercel will handle the rest. Continuous deployment is automatically enabled for your production branch.</div>
+                </div>
+
+                <div id="guide-github" class="space-y-6 bg-white p-8 rounded-2xl shadow-lg border border-stone-200 hidden">
+                    <h3 class="text-2xl font-semibold text-stone-800 border-b pb-4">Deploying with GitHub Pages</h3>
+                    <div class="step"><strong>Step 1: Install `gh-pages` package.</strong> This helper package simplifies deploying to GitHub Pages.
+                        <div class="code-block mt-2"><code>pnpm install --save-dev gh-pages</code></div>
+                    </div>
+                    <div class="step"><strong>Step 2: Update `package.json`.</strong> You need to add two new entries to your `package.json` file.
+                        <p class="mt-2 mb-1 font-medium">Add a `homepage` property at the top level:</p>
+                        <div class="code-block"><code>"homepage": "https://&lt;username&gt;.github.io/&lt;repo-name&gt;",</code></div>
+                         <p class="mt-4 mb-1 font-medium">Add `predeploy` and `deploy` scripts inside the `scripts` object:</p>
+                        <div class="code-block"><code>"scripts": {
+    "predeploy": "pnpm build",
+    "deploy": "gh-pages -d build"
+}</code></div>
+                        <p class="mt-2 text-sm text-stone-500">Remember to replace `&lt;username&gt;` and `&lt;repo-name&gt;` accordingly.</p>
+                    </div>
+                    <div class="step"><strong>Step 3: Deploy.</strong> Run the deploy script from your terminal.
+                         <div class="code-block mt-2"><code>pnpm deploy</code></div>
+                    </div>
+                     <div class="step"><strong>Step 4: Configure Repository Settings.</strong> In your GitHub repository settings, go to the "Pages" section. Ensure the source is set to deploy from the `gh-pages` branch. Your site will be live after a few minutes.</div>
+                </div>
+            </section>
+            
+            <section id="general-tips">
+                <h2 class="text-3xl font-semibold text-center text-stone-800 mb-8">General Tips</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="bg-white p-6 rounded-2xl shadow-lg border border-stone-200">
+                        <h3 class="text-xl font-semibold text-indigo-700 mb-2">Environment Variables</h3>
+                        <p class="text-stone-600">For sensitive data like API keys, use your hosting provider's environment variable settings instead of hardcoding them in your app. This keeps your secrets safe.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl shadow-lg border border-stone-200">
+                        <h3 class="text-xl font-semibold text-indigo-700 mb-2">Custom Domains</h3>
+                        <p class="text-stone-600">All of these platforms allow you to connect a custom domain. Check their documentation for specific instructions on how to point your domain to your new site.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl shadow-lg border border-stone-200">
+                        <h3 class="text-xl font-semibold text-indigo-700 mb-2">Troubleshooting</h3>
+                        <p class="text-stone-600">If a deployment fails, the first place to look is the build logs on your hosting platform. They provide detailed error messages that can help you diagnose the issue.</p>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+
+        <footer class="text-center mt-16 py-8 border-t border-stone-200">
+            <p class="text-stone-500">Interactive Guide created from source documentation.</p>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const platformButtons = {
+                netlify: document.getElementById('btn-netlify'),
+                vercel: document.getElementById('btn-vercel'),
+                github: document.getElementById('btn-github')
+            };
+
+            const guides = {
+                netlify: document.getElementById('guide-netlify'),
+                vercel: document.getElementById('guide-vercel'),
+                github: document.getElementById('guide-github')
+            };
+
+            const allButtons = Object.values(platformButtons);
+            const allGuides = Object.values(guides);
+
+            function setActivePlatform(platform) {
+                allGuides.forEach(guide => guide.classList.add('hidden'));
+                if (guides[platform]) {
+                    guides[platform].classList.remove('hidden');
+                }
+                
+                allButtons.forEach(btn => btn.classList.remove('active'));
+                if (platformButtons[platform]) {
+                    platformButtons[platform].classList.add('active');
+                }
+            }
+
+            Object.keys(platformButtons).forEach(platform => {
+                if (platformButtons[platform]) {
+                    platformButtons[platform].addEventListener('click', () => {
+                        setActivePlatform(platform);
+                    });
+                }
+            });
+
+            setActivePlatform('netlify');
+
+            const ctx = document.getElementById('platformComparisonChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Netlify', 'Vercel', 'GitHub Pages'],
+                    datasets: [{
+                        label: 'Ease of Use',
+                        data: [9, 9, 7],
+                        backgroundColor: 'rgba(79, 70, 229, 0.7)',
+                        borderColor: 'rgba(79, 70, 229, 1)',
+                        borderWidth: 1
+                    }, {
+                        label: 'Feature Set (Free Tier)',
+                        data: [8, 8, 5],
+                        backgroundColor: 'rgba(99, 102, 241, 0.7)',
+                        borderColor: 'rgba(99, 102, 241, 1)',
+                        borderWidth: 1
+                    }, {
+                        label: 'Deployment Speed',
+                        data: [9, 9, 6],
+                        backgroundColor: 'rgba(129, 140, 248, 0.7)',
+                        borderColor: 'rgba(129, 140, 248, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            max: 10,
+                             grid: {
+                                color: '#e7e5e4' // stone-200
+                            },
+                             ticks: {
+                                color: '#57534e' // stone-600
+                            }
+                        },
+                        y: {
+                             grid: {
+                                display: false
+                            },
+                            ticks: {
+                                color: '#57534e', // stone-600
+                                font: {
+                                    size: 14,
+                                    weight: '500'
+                                }
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                            labels: {
+                                color: '#57534e' // stone-600
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: '#1f2937',
+                            titleColor: '#f9fafb',
+                            bodyColor: '#d1d5db',
+                            footerColor: '#9ca3af',
+                            displayColors: true,
+                            boxPadding: 4,
+                            callbacks: {
+                                footer: (tooltipItems) => 'Rated out of 10'
+                            }
+                        }
+                    }
+                }
+            });
+
+            const copyAppCodeBtn = document.getElementById('copy-app-code-btn');
+            const appCodeBlock = document.getElementById('app-code');
+
+            if (copyAppCodeBtn && appCodeBlock) {
+                copyAppCodeBtn.addEventListener('click', () => {
+                    const codeToCopy = appCodeBlock.innerText;
+                    
+                    const textarea = document.createElement('textarea');
+                    textarea.value = codeToCopy;
+                    document.body.appendChild(textarea);
+                    textarea.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(textarea);
+
+                    copyAppCodeBtn.textContent = 'Copied!';
+                    setTimeout(() => {
+                        copyAppCodeBtn.textContent = 'Copy Code';
+                    }, 2000);
+                });
+            }
+        });
+    </script>
+
+</body>
+</html>

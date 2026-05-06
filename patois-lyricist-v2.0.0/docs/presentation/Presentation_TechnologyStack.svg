@@ -1,0 +1,35 @@
+<svg width="800" height="400" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif">
+    <style>
+        .bg { fill: #f7fafc; }
+        .container { fill: #ffffff; stroke: #cbd5e0; rx: 10; stroke-width: 2;}
+        .header { font-size: 22px; font-weight: bold; fill: #2d3748; text-anchor: middle; }
+        .item-text { fill: #4a5568; font-size: 18px; text-anchor: middle; }
+    </style>
+    <title>Presentation - Technology Stack</title>
+    <rect width="100%" height="100%" class="bg"/>
+
+    <g transform="translate(50, 50)">
+        <rect width="200" height="300" class="container"/>
+        <text x="100" y="45" class="header">Frontend</text>
+        <line x1="30" y1="70" x2="170" y2="70" stroke="#e2e8f0" stroke-width="2"/>
+        <text x="100" y="120" class="item-text">React</text>
+        <text x="100" y="170" class="item-text">TypeScript</text>
+        <text x="100" y="220" class="item-text">Tailwind CSS</text>
+    </g>
+
+    <g transform="translate(300, 50)">
+        <rect width="200" height="300" class="container"/>
+        <text x="100" y="45" class="header">Data</text>
+        <line x1="30" y1="70" x2="170" y2="70" stroke="#e2e8f0" stroke-width="2"/>
+        <text x="100" y="150" class="item-text">Browser</text>
+        <text x="100" y="180" class="item-text">Local Storage</text>
+    </g>
+
+    <g transform="translate(550, 50)">
+        <rect width="200" height="300" class="container"/>
+        <text x="100" y="45" class="header">Services</text>
+        <line x1="30" y1="70" x2="170" y2="70" stroke="#e2e8f0" stroke-width="2"/>
+        <text x="100" y="150" class="item-text">Google</text>
+        <text x="100" y="180" class="item-text">Gemini API</text>
+    </g>
+</svg>

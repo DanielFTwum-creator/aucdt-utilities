@@ -1,0 +1,39 @@
+<svg width="800" height="600" viewBox="0 0 800 600" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="800" height="600" rx="16" fill="#111827"/>
+  <text x="400" y="40" text-anchor="middle" fill="#D4AF37" font-family="Arial" font-size="22" font-weight="bold">UML Use Case Diagram</text>
+  
+  <rect x="200" y="80" width="400" height="480" fill="#1F2937" stroke="#4B5563" stroke-width="2" stroke-dasharray="8 4"/>
+  <text x="400" y="105" text-anchor="middle" fill="#9CA3AF" font-family="Arial" font-size="14" font-weight="bold">Patois Lyricist System</text>
+
+  <text x="80" y="280" font-family="Arial" font-size="40">👤</text>
+  <text x="95" y="330" text-anchor="middle" fill="#F3F4F6" font-family="Arial" font-size="14">User</text>
+
+  <text x="700" y="280" font-family="Arial" font-size="40">👑</text>
+  <text x="715" y="330" text-anchor="middle" fill="#F3F4F6" font-family="Arial" font-size="14">Admin</text>
+
+  <ellipse cx="400" cy="150" rx="100" ry="25" fill="#111827" stroke="#D4AF37"/>
+  <text x="400" y="155" text-anchor="middle" fill="#F3F4F6" font-family="Arial" font-size="12">Register / Login</text>
+
+  <ellipse cx="400" cy="220" rx="100" ry="25" fill="#111827" stroke="#D4AF37"/>
+  <text x="400" y="225" text-anchor="middle" fill="#F3F4F6" font-family="Arial" font-size="12">Generate Riddim</text>
+
+  <ellipse cx="400" cy="290" rx="100" ry="25" fill="#111827" stroke="#D4AF37"/>
+  <text x="400" y="295" text-anchor="middle" fill="#F3F4F6" font-family="Arial" font-size="12">Export Lyrics (PDF/MD)</text>
+
+  <ellipse cx="400" cy="360" rx="100" ry="25" fill="#111827" stroke="#D4AF37"/>
+  <text x="400" y="365" text-anchor="middle" fill="#F3F4F6" font-family="Arial" font-size="12">Self-Service Erasure</text>
+
+  <ellipse cx="400" cy="450" rx="100" ry="25" fill="#111827" stroke="#EF4444"/>
+  <text x="400" y="455" text-anchor="middle" fill="#F3F4F6" font-family="Arial" font-size="12">View Audit Logs</text>
+
+  <ellipse cx="400" cy="510" rx="100" ry="25" fill="#111827" stroke="#EF4444"/>
+  <text x="400" y="515" text-anchor="middle" fill="#F3F4F6" font-family="Arial" font-size="12">Admin Data Purge</text>
+
+  <line x1="120" y1="300" x2="300" y2="150" stroke="#4B5563"/>
+  <line x1="120" y1="300" x2="300" y2="220" stroke="#4B5563"/>
+  <line x1="120" y1="300" x2="300" y2="290" stroke="#4B5563"/>
+  <line x1="120" y1="300" x2="300" y2="360" stroke="#4B5563"/>
+
+  <line x1="680" y1="300" x2="500" y2="450" stroke="#4B5563"/>
+  <line x1="680" y1="300" x2="500" y2="510" stroke="#4B5563"/>
+</svg>

@@ -1,0 +1,5 @@
+{
+  "name": "Groove Streamer",
+  "description": "A 160 BPM groove streaming application.",
+  "requestFramePermissions": []
+}

@@ -1,0 +1,72 @@
+
+<svg width="800" height="550" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif" font-size="12">
+    <title>Techbridge TSAP Data Architecture V3.1 (localStorage)</title>
+    <style>
+        .table-header { font-weight: bold; fill: #1e3a8a; font-size: 13px; }
+        .column-name { font-weight: bold; fill: #1e293b; }
+        .column-type { fill: #64748b; font-style: italic; }
+        .table-bg { fill: #f8fafc; stroke: #3b82f6; stroke-width: 2; rx: 6; }
+        .title { font-size: 20px; font-weight: bold; text-anchor: middle; fill: #0f172a; }
+        .key-label { font-weight: 800; fill: #d97706; }
+    </style>
+    
+    <text x="400" y="40" class="title">localStorage Schema Definition (v3.1)</text>
+
+    <!-- Key 1: aucdt-salary-password -->
+    <g transform="translate(40, 80)">
+        <rect width="340" height="90" class="table-bg" />
+        <text x="15" y="25" class="table-header">KEY: <tspan class="key-label">'aucdt-salary-password'</tspan></text>
+        <line x1="10" y1="35" x2="330" y2="35" stroke="#cbd5e1" />
+        <text x="15" y="60"><tspan class="column-name">value</tspan>: <tspan class="column-type">string (hashed/plain)</tspan></text>
+        <text x="15" y="78" font-size="10" fill="#94a3b8">Persistent admin credential for session validation.</text>
+    </g>
+
+    <!-- Key 2: aucdt-salary-theme -->
+    <g transform="translate(40, 190)">
+        <rect width="340" height="90" class="table-bg" />
+        <text x="15" y="25" class="table-header">KEY: <tspan class="key-label">'aucdt-salary-theme'</tspan></text>
+        <line x1="10" y1="35" x2="330" y2="35" stroke="#cbd5e1" />
+        <text x="15" y="60"><tspan class="column-name">value</tspan>: <tspan class="column-type">'light' | 'dark' | 'high-contrast'</tspan></text>
+        <text x="15" y="78" font-size="10" fill="#94a3b8">UI accessibility preference.</text>
+    </g>
+
+    <!-- Key 3: aucdt-salary-step-codes -->
+    <g transform="translate(420, 80)">
+        <rect width="340" height="230" class="table-bg" style="stroke: #10b981;" />
+        <text x="15" y="25" class="table-header">KEY: <tspan class="key-label" style="fill: #059669;">'aucdt-salary-step-codes'</tspan></text>
+        <line x1="10" y1="35" x2="330" y2="35" stroke="#cbd5e1" />
+        <text x="15" y="55" font-weight="bold">StepCodeData Object Array:</text>
+        <g transform="translate(15, 70)">
+            <text y="15"><tspan class="column-name">empCode</tspan>: <tspan class="column-type">string</tspan></text>
+            <text y="32"><tspan class="column-name">code</tspan>: <tspan class="column-type">string (e.g. SM0101/1)</tspan></text>
+            <text y="49"><tspan class="column-name">status</tspan>: <tspan class="column-type">string (Title)</tspan></text>
+            <text y="66"><tspan class="column-name">annualSalary</tspan>: <tspan class="column-type">number (GHS)</tspan></text>
+            <text y="83"><tspan class="column-name">allowance</tspan>: <tspan class="column-type">number (Monthly)</tspan></text>
+            <text y="100"><tspan class="column-name">isSsnitExempt</tspan>: <tspan class="column-type">boolean</tspan></text>
+            <text y="117"><tspan class="column-name">studentLoanInSheet</tspan>: <tspan class="column-type">number | null</tspan></text>
+            <text y="134"><tspan class="column-name">netSalaryInSheet</tspan>: <tspan class="column-type">number (Validation)</tspan></text>
+        </g>
+    </g>
+    
+    <!-- Key 4: aucdt-salary-audit-log -->
+    <g transform="translate(40, 330)">
+        <rect width="720" height="180" class="table-bg" style="stroke: #ef4444;" />
+        <text x="15" y="25" class="table-header">KEY: <tspan class="key-label" style="fill: #dc2626;">'aucdt-salary-audit-log'</tspan></text>
+        <line x1="10" y1="35" x2="710" y2="35" stroke="#cbd5e1" />
+        <text x="15" y="55" font-weight="bold">AuditLogEntry Object Array:</text>
+        <g transform="translate(15, 75)">
+            <text y="0"><tspan class="column-name">id</tspan>: <tspan class="column-type">UUID v4</tspan></text>
+            <text y="17"><tspan class="column-name">timestamp</tspan>: <tspan class="column-type">ISO 8601 String</tspan></text>
+            <text y="34"><tspan class="column-name">event</tspan>: <tspan class="column-type">AuditLogEvent (Enum)</tspan></text>
+            <text y="51"><tspan class="column-name">details</tspan>: <tspan class="column-type">string (JSON Serialized SalaryCalculationLogDetails)</tspan></text>
+            
+            <rect x="350" y="-15" width="340" height="95" rx="4" fill="#fef2f2" stroke="#fecaca" />
+            <text x="360" y="5" font-size="10" font-weight="bold" fill="#991b1b">Calculation Log Details Schema:</text>
+            <text x="360" y="22" font-size="9" fill="#b91c1c">recruitName, annualSalary, stepCode, wasSalaryOverridden,</text>
+            <text x="360" y="34" font-size="9" fill="#b91c1c">wasAllowanceOverridden, grossMonthly, taxableMonthly,</text>
+            <text x="360" y="46" font-size="9" fill="#b91c1c">additionalAllowance, studentLoanDeduction,</text>
+            <text x="360" y="58" font-size="9" fill="#b91c1c">ssnit, paye, netSalary, ssnitDetails{}, payeBreakdown[]</text>
+        </g>
+    </g>
+
+</svg>

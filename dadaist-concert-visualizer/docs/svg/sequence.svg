@@ -1,0 +1,46 @@
+<svg viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg">
+  <rect width="800" height="600" fill="#111" rx="10"/>
+  <text x="400" y="40" font-family="monospace" font-size="20" fill="#E8BC50" text-anchor="middle" font-weight="bold">SEQUENCE: VISUALIZATION LOOP</text>
+  
+  <!-- Lifelines -->
+  <g transform="translate(100, 80)">
+    <text x="0" y="0" font-family="monospace" font-size="14" fill="#eee" text-anchor="middle">Mic</text>
+    <line x1="0" y1="20" x2="0" y2="480" stroke="#444" stroke-width="2" stroke-dasharray="5,5"/>
+  </g>
+  
+  <g transform="translate(300, 80)">
+    <text x="0" y="0" font-family="monospace" font-size="14" fill="#eee" text-anchor="middle">Analyser</text>
+    <line x1="0" y1="20" x2="0" y2="480" stroke="#444" stroke-width="2" stroke-dasharray="5,5"/>
+  </g>
+  
+  <g transform="translate(500, 80)">
+    <text x="0" y="0" font-family="monospace" font-size="14" fill="#eee" text-anchor="middle">App Hook</text>
+    <line x1="0" y1="20" x2="0" y2="480" stroke="#444" stroke-width="2" stroke-dasharray="5,5"/>
+  </g>
+  
+  <g transform="translate(700, 80)">
+    <text x="0" y="0" font-family="monospace" font-size="14" fill="#eee" text-anchor="middle">Canvas</text>
+    <line x1="0" y1="20" x2="0" y2="480" stroke="#444" stroke-width="2" stroke-dasharray="5,5"/>
+  </g>
+  
+  <!-- Interaction Arrows -->
+  <path d="M 100 150 L 290 150" stroke="#E8BC50" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="195" y="140" font-family="monospace" font-size="12" fill="#aaa" text-anchor="middle">AudioStream</text>
+  
+  <path d="M 300 180 L 490 180" stroke="#E8BC50" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="395" y="170" font-family="monospace" font-size="12" fill="#aaa" text-anchor="middle">getByteFrequencyData()</text>
+  
+  <path d="M 500 210 L 300 230" stroke="#aaa" stroke-width="1" stroke-dasharray="3,3" marker-end="url(#arrow)"/>
+  
+  <path d="M 500 260 L 690 260" stroke="#E8BC50" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="595" y="250" font-family="monospace" font-size="12" fill="#aaa" text-anchor="middle">Update Shards (AudioData)</text>
+  
+  <path d="M 700 290 L 700 340 L 730 340 L 730 290 Z" fill="#222" stroke="#E8BC50" stroke-width="2"/>
+  <text x="740" y="320" font-family="monospace" font-size="12" fill="#aaa" text-anchor="start">requestAnimationFrame()</text>
+  
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="7" refX="0" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#E8BC50" />
+    </marker>
+  </defs>
+</svg>

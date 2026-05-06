@@ -1,0 +1,57 @@
+<svg viewBox="0 0 800 550" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="800" height="550" fill="#0b0b0d" rx="16"/>
+  
+  <text x="400" y="40" font-family="Arial, sans-serif" font-size="24" fill="#66bb6a" text-anchor="middle" font-weight="bold">LOGICAL STATE ARCHITECTURE (SCHEMA)</text>
+
+  <!-- Bubble Entity -->
+  <g transform="translate(50, 80)">
+    <rect width="220" height="200" rx="8" fill="#161618" stroke="#ef5350" stroke-width="2"/>
+    <rect width="220" height="35" rx="8" fill="#ef5350"/>
+    <text x="110" y="23" font-family="Arial, sans-serif" font-size="14" fill="#fff" text-anchor="middle" font-weight="bold">ENTITY: BUBBLE</text>
+    
+    <text x="10" y="60" font-family="Arial, sans-serif" font-size="12" fill="#ef5350" font-weight="bold">id: string [PK]</text>
+    <text x="10" y="80" font-family="Arial, sans-serif" font-size="12" fill="#ccc">row: number</text>
+    <text x="10" y="100" font-family="Arial, sans-serif" font-size="12" fill="#ccc">col: number</text>
+    <text x="10" y="120" font-family="Arial, sans-serif" font-size="12" fill="#ccc">x: number</text>
+    <text x="10" y="140" font-family="Arial, sans-serif" font-size="12" fill="#ccc">y: number</text>
+    <text x="10" y="160" font-family="Arial, sans-serif" font-size="12" fill="#ccc">color: string</text>
+    <text x="10" y="180" font-family="Arial, sans-serif" font-size="12" fill="#ccc">active: boolean</text>
+  </g>
+
+  <!-- Audit Log Entity -->
+  <g transform="translate(530, 80)">
+    <rect width="220" height="160" rx="8" fill="#161618" stroke="#ffa726" stroke-width="2"/>
+    <rect width="220" height="35" rx="8" fill="#ffa726"/>
+    <text x="110" y="23" font-family="Arial, sans-serif" font-size="14" fill="#fff" text-anchor="middle" font-weight="bold">ENTITY: AUDIT_LOG</text>
+    
+    <text x="10" y="60" font-family="Arial, sans-serif" font-size="12" fill="#ffa726" font-weight="bold">id: string [PK]</text>
+    <text x="10" y="85" font-family="Arial, sans-serif" font-size="12" fill="#ccc">timestamp: string (ISO)</text>
+    <text x="10" y="110" font-family="Arial, sans-serif" font-size="12" fill="#ccc">action: string</text>
+    <text x="10" y="135" font-family="Arial, sans-serif" font-size="12" fill="#ccc">user: string (Admin|Sys)</text>
+  </g>
+
+  <!-- Test Result Entity -->
+  <g transform="translate(50, 320)">
+    <rect width="220" height="180" rx="8" fill="#161618" stroke="#fdd835" stroke-width="2"/>
+    <rect width="220" height="35" rx="8" fill="#fdd835"/>
+    <text x="110" y="23" font-family="Arial, sans-serif" font-size="14" fill="#000" text-anchor="middle" font-weight="bold">ENTITY: TEST_RESULT</text>
+    
+    <text x="10" y="60" font-family="Arial, sans-serif" font-size="12" fill="#000" font-weight="bold">id: string [PK]</text>
+    <text x="10" y="85" font-family="Arial, sans-serif" font-size="12" fill="#333">name: string</text>
+    <text x="10" y="110" font-family="Arial, sans-serif" font-size="12" fill="#333">status: string (P|F)</text>
+    <text x="10" y="135" font-family="Arial, sans-serif" font-size="12" fill="#333">message: string [opt]</text>
+    <text x="10" y="160" font-family="Arial, sans-serif" font-size="12" fill="#333">screenshot: base64</text>
+  </g>
+
+  <!-- State Context -->
+  <g transform="translate(320, 200)">
+    <circle cx="80" cy="80" r="70" fill="#1a1a1c" stroke="#4285f4" stroke-width="3" stroke-dasharray="8,4"/>
+    <text x="80" y="85" font-family="Arial, sans-serif" font-size="16" fill="#4285f4" text-anchor="middle" font-weight="bold">GAME STATE</text>
+  </g>
+
+  <!-- Relationships -->
+  <path d="M 270 180 Q 320 200 320 280" stroke="#444" stroke-width="2" fill="none" stroke-dasharray="5,5"/>
+  <path d="M 530 160 Q 470 200 460 280" stroke="#444" stroke-width="2" fill="none" stroke-dasharray="5,5"/>
+  <path d="M 270 410 Q 320 380 320 280" stroke="#444" stroke-width="2" fill="none" stroke-dasharray="5,5"/>
+</svg>

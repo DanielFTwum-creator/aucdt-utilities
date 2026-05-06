@@ -1,0 +1,114 @@
+[101] Installing: dns-copy-utility
+Lockfile is up to date, resolution step is skipped
+Progress: resolved 1, reused 0, downloaded 0, added 0
+Packages: +324
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Progress: resolved 324, reused 10, downloaded 0, added 0
+Progress: resolved 324, reused 71, downloaded 0, added 0
+Progress: resolved 324, reused 107, downloaded 0, added 0
+Progress: resolved 324, reused 196, downloaded 0, added 0
+Progress: resolved 324, reused 219, downloaded 0, added 0
+Progress: resolved 324, reused 244, downloaded 0, added 0
+Progress: resolved 324, reused 270, downloaded 0, added 0
+Progress: resolved 324, reused 289, downloaded 0, added 0
+Progress: resolved 324, reused 309, downloaded 0, added 0
+Progress: resolved 324, reused 313, downloaded 0, added 0
+Progress: resolved 324, reused 322, downloaded 0, added 1
+Progress: resolved 324, reused 323, downloaded 0, added 3
+Progress: resolved 324, reused 323, downloaded 0, added 8
+Progress: resolved 324, reused 323, downloaded 0, added 12
+Progress: resolved 324, reused 323, downloaded 0, added 17
+Progress: resolved 324, reused 323, downloaded 0, added 22
+Progress: resolved 324, reused 323, downloaded 0, added 30
+Progress: resolved 324, reused 323, downloaded 0, added 34
+Progress: resolved 324, reused 324, downloaded 0, added 38
+Progress: resolved 324, reused 324, downloaded 0, added 41
+Progress: resolved 324, reused 324, downloaded 0, added 42
+Progress: resolved 324, reused 324, downloaded 0, added 47
+Progress: resolved 324, reused 324, downloaded 0, added 48
+Progress: resolved 324, reused 324, downloaded 0, added 56
+Progress: resolved 324, reused 324, downloaded 0, added 62
+Progress: resolved 324, reused 324, downloaded 0, added 65
+Progress: resolved 324, reused 324, downloaded 0, added 74
+Progress: resolved 324, reused 324, downloaded 0, added 86
+Progress: resolved 324, reused 324, downloaded 0, added 87
+Progress: resolved 324, reused 324, downloaded 0, added 93
+Progress: resolved 324, reused 324, downloaded 0, added 107
+Progress: resolved 324, reused 324, downloaded 0, added 114
+Progress: resolved 324, reused 324, downloaded 0, added 124
+Progress: resolved 324, reused 324, downloaded 0, added 131
+Progress: resolved 324, reused 324, downloaded 0, added 150
+Progress: resolved 324, reused 324, downloaded 0, added 152
+Progress: resolved 324, reused 324, downloaded 0, added 163
+Progress: resolved 324, reused 324, downloaded 0, added 168
+Progress: resolved 324, reused 324, downloaded 0, added 170
+Progress: resolved 324, reused 324, downloaded 0, added 174
+Progress: resolved 324, reused 324, downloaded 0, added 181
+Progress: resolved 324, reused 324, downloaded 0, added 195
+Progress: resolved 324, reused 324, downloaded 0, added 200
+Progress: resolved 324, reused 324, downloaded 0, added 211
+Progress: resolved 324, reused 324, downloaded 0, added 216
+Progress: resolved 324, reused 324, downloaded 0, added 219
+Progress: resolved 324, reused 324, downloaded 0, added 223
+Progress: resolved 324, reused 324, downloaded 0, added 224
+Progress: resolved 324, reused 324, downloaded 0, added 230
+Progress: resolved 324, reused 324, downloaded 0, added 232
+Progress: resolved 324, reused 324, downloaded 0, added 233
+Progress: resolved 324, reused 324, downloaded 0, added 238
+Progress: resolved 324, reused 324, downloaded 0, added 241
+Progress: resolved 324, reused 324, downloaded 0, added 242
+Progress: resolved 324, reused 324, downloaded 0, added 247
+Progress: resolved 324, reused 324, downloaded 0, added 255
+Progress: resolved 324, reused 324, downloaded 0, added 266
+Progress: resolved 324, reused 324, downloaded 0, added 270
+Progress: resolved 324, reused 324, downloaded 0, added 296
+Progress: resolved 324, reused 324, downloaded 0, added 298
+Progress: resolved 324, reused 324, downloaded 0, added 311
+Progress: resolved 324, reused 324, downloaded 0, added 313
+Progress: resolved 324, reused 324, downloaded 0, added 314
+Progress: resolved 324, reused 324, downloaded 0, added 317
+Progress: resolved 324, reused 324, downloaded 0, added 320
+Progress: resolved 324, reused 324, downloaded 0, added 321
+Progress: resolved 324, reused 324, downloaded 0, added 322
+Progress: resolved 324, reused 324, downloaded 0, added 323
+Progress: resolved 324, reused 324, downloaded 0, added 324
+Progress: resolved 324, reused 324, downloaded 0, added 324, done
+
+dependencies:
++ clsx 2.1.1
++ framer-motion 12.34.3
++ lucide-react 0.575.0
++ react 19.2.4
++ react-dom 19.2.4
++ react-router-dom 7.13.1
++ tailwind-merge 3.5.0
+
+devDependencies:
++ @eslint/js 9.39.3
++ @testing-library/jest-dom 6.9.1
++ @testing-library/react 16.3.2
++ @testing-library/user-event 14.6.1
++ @types/node 24.10.13
++ @types/react 19.2.14
++ @types/react-dom 19.2.3
++ @vitejs/plugin-react 5.1.4
++ @vitest/coverage-v8 3.2.4
++ @vitest/ui 3.2.4
++ eslint 9.39.3
++ eslint-plugin-react-hooks 7.0.1
++ eslint-plugin-react-refresh 0.4.26
++ globals 16.5.0
++ jsdom 26.1.0
++ typescript 5.9.3
++ typescript-eslint 8.56.0
++ vite 7.3.1
++ vitest 3.2.4
+
+╭ Warning ─────────────────────────────────────────────────────────────────────╮
+│                                                                              │
+│   Ignored build scripts: esbuild@0.27.3.                                     │
+│   Run "pnpm approve-builds" to pick which dependencies should be allowed     │
+│   to run scripts.                                                            │
+│                                                                              │
+╰──────────────────────────────────────────────────────────────────────────────╯
+Done in 2m 1.6s using pnpm v10.32.1

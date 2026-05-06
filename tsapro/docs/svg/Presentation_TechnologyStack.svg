@@ -1,0 +1,32 @@
+<svg width="800" height="400" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif">
+    <title>Presentation: Technology Stack</title>
+    <style>
+        .cat-title { font-size: 18px; font-weight:bold; fill: #1e3a8a; }
+        .tech-item { font-size: 16px; fill: #334155; }
+    </style>
+    
+    <rect x="0" y="0" width="800" height="400" fill="#f8fafc" />
+    <text x="400" y="40" text-anchor="middle" font-size="24" font-weight="bold" fill="#1e293b">ASAPro Technology Stack</text>
+
+    <g transform="translate(100, 100)">
+        <!-- Frontend -->
+        <rect x="0" y="0" width="250" height="200" rx="10" fill="#e0f2fe" stroke="#7dd3fc" stroke-width="2" />
+        <text x="125" y="35" text-anchor="middle" class="cat-title">Frontend</text>
+        <line x1="20" y1="50" x2="230" y2="50" stroke="#7dd3fc" stroke-width="1.5" />
+        <text x="125" y="80" text-anchor="middle" class="tech-item">React 18</text>
+        <text x="125" y="110" text-anchor="middle" class="tech-item">TypeScript</text>
+        <text x="125" y="140" text-anchor="middle" class="tech-item">React Router</text>
+        <text x="125" y="170" text-anchor="middle" class="tech-item">Tailwind CSS</text>
+    </g>
+    
+    <g transform="translate(450, 100)">
+        <!-- State & Data -->
+        <rect x="0" y="0" width="250" height="200" rx="10" fill="#fefce8" stroke="#fde047" stroke-width="2" />
+        <text x="125" y="35" text-anchor="middle" class="cat-title">State & Data</text>
+        <line x1="20" y1="50" x2="230" y2="50" stroke="#fde047" stroke-width="1.5" />
+        <text x="125" y="100" text-anchor="middle" class="tech-item">React Hooks</text>
+        <text x="125" y="130" text-anchor="middle" class="tech-item">(Context API)</text>
+        <text x="125" y="170" text-anchor="middle" class="tech-item">Browser localStorage</text>
+    </g>
+    
+</svg>

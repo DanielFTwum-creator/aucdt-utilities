@@ -1,0 +1,905 @@
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
+## Repository Overview
+
+**aucdt-utilities** is a monorepo containing 109 web applications and tools for **Techbridge University College (TUC)**. The institution was formerly known as AUCDT (Asanka University College of Design & Technology) — the official name change to Techbridge University College is now complete (Feb 2026). This is a flat monorepo where each subdirectory is a standalone project.
+
+**Key Statistics:**
+- 109 independent projects (100 Vite/React + 9 Backend Services)
+- Mix of React frontends and Node.js backends
+- Migrated from Create React App to Vite (8 projects in Feb 2026)
+- **Docker-ready: 109 services configured (100% COVERAGE ACHIEVED!)**
+- Automated CI/CD via Bitbucket Pipelines
+- **THE AGENT Book Project: Foundation for scaling to 256 managed applications**
+
+## Technology Stack
+
+### Frontend Stack
+- **Framework**: React 19
+- **Build Tools**: Vite 7.3.1 (primary), React Scripts (legacy)
+- **Package Managers**: pnpm (preferred), npm
+- **UI Libraries**: Tailwind CSS 4.1.18, Lucide React, Heroicons
+- **Charts**: Recharts 3.7.0
+- **State Management**: React hooks, custom hooks pattern
+
+### Backend Stack
+- **Runtime**: Node.js 20
+- **Framework**: Express 5.2.1
+- **Language**: TypeScript 5.9.3
+- **Database**: MySQL2 3.17.4
+- **Auth**: JWT (jsonwebtoken 9.0.3), bcryptjs 3.0.3
+- **Security**: Helmet 8.1.0, express-rate-limit 8.2.1, CORS 2.8.6
+
+### Testing & Quality
+- **Unit Testing**: Vitest 3.0.0, Jest
+- **E2E Testing**: Playwright (aucdt-portal-tests), Puppeteer 24.37.3
+- **Test Libraries**: @testing-library/react 16.3.2
+
+### DevOps & Deployment
+- **Containerization**: Docker (multi-stage builds)
+- **Orchestration**: Docker Compose 3.8
+- **CI/CD**: Bitbucket Pipelines (parallel builds)
+- **Deployment**: Tomcat 9 (WAR files to 66.226.72.199), Docker containers
+- **Reverse Proxy**: Nginx Alpine
+
+### Additional Technologies
+- **Python**: Flask/FastAPI (ai-utilities/)
+- **Java**: Spring Boot (ai-utilities/lems/)
+- **Databases**: SQLite, MariaDB, JSON files
+- **Jupyter**: Data analysis notebooks
+
+## Repository Structure
+
+```
+aucdt-utilities/
+├── backend/                      # NEW: Express + TypeScript auth API
+│   ├── src/
+│   │   ├── controllers/          # Request handlers
+│   │   ├── routes/               # API routes
+│   │   ├── middleware/           # Auth, validation, rate limiting
+│   │   ├── models/               # Database models
+│   │   ├── services/             # Business logic
+│   │   ├── utils/                # Helpers
+│   │   └── server.ts             # Entry point
+│   └── package.json              # tuc-auth-api
+├── docker/
+│   └── nginx/
+│       ├── nginx.conf            # Reverse proxy configuration
+│       └── html/index.html       # Gateway landing page
+├── src/                          # Shared utilities and templates
+├── analytics-refactor/           # Advanced analytics (Phase 1-2 complete)
+├── aucdt-portal-tests/           # Playwright E2E test suite
+├── aucdt-website-react/          # Main website (Vite)
+├── fees-comparison-dashboard/    # WAR deployment project
+├── kanban-app/                   # WAR deployment project
+├── [100+ other projects]/
+├── bitbucket-pipelines.yml       # CI/CD pipeline (parallel builds)
+├── docker-compose.yml            # 6 high-priority apps
+├── docker-compose-all-apps.yml   # All services
+├── Dockerfile.vite               # Multi-stage Vite build
+├── Dockerfile.dev                # Dev mode with hot reload
+├── cleanup.sh                    # Remove node_modules/dist
+├── migrate-cra-to-vite.sh        # CRA → Vite migration script
+└── START_HERE.md                 # Quick start guide
+```
+
+## Common Commands
+
+### Frontend Development
+
+```bash
+# Most Vite projects
+cd <project-name>
+pnpm install              # Install dependencies (preferred)
+pnpm run dev              # Start dev server (port 5173 by default)
+pnpm run build            # Production build to dist/
+pnpm run preview          # Preview production build
+pnpm test                 # Run tests
+
+# Alternative with npm
+npm install
+npm run dev
+npm run build
+
+# CRA projects (legacy, being phased out)
+npm start                 # Dev server (port 3000)
+npm run build             # Production build
+```
+
+### Backend Development
+
+```bash
+cd backend
+npm install               # Install dependencies
+npm run dev               # Development with ts-node-dev (hot reload)
+npm run build             # Compile TypeScript to dist/
+npm start                 # Run compiled production build
+```
+
+**Backend API runs on port 3000 by default.**
+
+### Testing
+
+```bash
+# Unit tests (project-specific)
+npm test                  # Run all tests
+npm run test:coverage     # With coverage report
+npm run test:ui           # Vitest UI mode
+
+# E2E tests (aucdt-portal-tests)
+cd aucdt-portal-tests
+npm run test              # Run Playwright tests
+npm run test:ui           # Interactive UI mode
+npm run test:headed       # Run with visible browser
+npm run test:debug        # Debug mode
+npm run test:report       # Show HTML report
+```
+
+### Docker Operations
+
+```bash
+# Start services
+docker-compose up                     # 19 high-priority apps (core + standard)
+docker-compose up -d                  # Detached mode
+docker-compose -f docker-compose-all-apps.yml up  # All 101 services (recommended)
+docker-compose --profile full up      # 69 apps (legacy file)
+docker-compose --profile dev up <app>-dev  # Dev mode with hot reload
+
+# Access gateway
+open http://localhost:8080
+
+# Logs and debugging
+docker-compose logs -f <service-name>
+docker-compose ps
+docker stats
+
+# Rebuild after changes
+docker-compose up --build
+docker-compose build --no-cache
+
+# Stop and cleanup
+docker-compose down
+docker-compose down -v                # Also remove volumes
+docker system prune -a                # Deep clean
+```
+
+### Repository Maintenance
+
+```bash
+# Clean all node_modules and dist
+./cleanup.sh              # Interactive with confirmation
+./clean-dirs.sh           # Direct cleanup
+
+# Find all projects
+find . -maxdepth 2 -name "package.json"
+
+# Migrate CRA to Vite
+./migrate-cra-to-vite.sh <project-name>
+
+# Update all vite configs
+./update-vite-configs.sh
+
+# Generate Docker Compose for all apps
+bash generate-docker-compose.sh
+```
+
+### CI/CD
+
+```bash
+# Pipelines are triggered automatically on push
+# Manual pipeline triggers available in Bitbucket
+
+# Custom pipeline: Build all projects
+# Run via Bitbucket UI: Pipelines → Run Pipeline → custom: build-all-projects
+
+# Custom pipeline: Deploy all WAR projects
+# Run via Bitbucket UI: Pipelines → Run Pipeline → custom: deploy-all-war-projects
+```
+
+## Build & Deployment Architecture
+
+### Vite Projects (Standard)
+
+**Development:**
+- Dev server starts in 1-3 seconds (vs 15-30s with CRA)
+- Hot Module Replacement (HMR) updates in <100ms
+- Runs on port 5173 by default
+
+**Production Build:**
+1. `pnpm run build` → Compiles to `dist/`
+2. Optimized, minified, tree-shaken bundles
+3. Assets include hash for cache busting
+
+**Docker Deployment:**
+1. Multi-stage build (node:20-alpine → nginx:alpine)
+2. Build stage: Install deps → Build → ~3-5 minutes
+3. Runtime stage: Nginx serves static files → ~20MB image
+4. Health checks every 30s
+5. Access via gateway at http://localhost:8080/<app-name>/
+
+### WAR Deployment to Tomcat
+
+**Projects with WAR deployment:**
+- fees-comparison-dashboard
+- aucdt-analytics-dashboard
+- kanban-app
+- applicant-dashboard
+- lecturer-assessment-system
+
+**Build Process (Bitbucket Pipelines):**
+```bash
+1. cd $PROJECT_DIR
+2. corepack enable && corepack prepare pnpm@latest --activate
+3. pnpm install --frozen-lockfile
+4. pnpm run build                    # → dist/
+5. mkdir -p dist/WEB-INF
+6. cp -varf ./WEB-INF/* dist/WEB-INF/
+7. cd dist && zip -r app.war *
+8. scp app.war root@66.226.72.199:/opt/tomcat/webapps/
+```
+
+**WEB-INF Structure:**
+```
+project/
+├── WEB-INF/
+│   └── web.xml              # Servlet configuration for Tomcat
+├── dist/                    # Build output (created during build)
+├── src/
+└── package.json
+```
+
+**Deployment Target:**
+- Server: 66.226.72.199
+- Container: Tomcat 9
+- Path: /opt/tomcat/webapps/
+- Access: https://[domain]/[app-name]/
+
+### Backend API Deployment
+
+**Development:**
+```bash
+cd backend
+npm run dev                  # ts-node-dev with hot reload
+# Access: http://localhost:3000
+```
+
+**Production:**
+```bash
+npm run build                # TypeScript → dist/
+npm start                    # node dist/server.js
+```
+
+**Docker:**
+```bash
+# Via docker-compose-all-apps.yml (includes backend)
+docker-compose -f docker-compose-all-apps.yml up tuc-auth-api
+
+# Standalone
+cd backend
+docker build -t tuc-auth-api .
+docker run -p 3000:3000 --env-file .env tuc-auth-api
+```
+
+**API Endpoints (typical):**
+```
+POST /api/auth/register      # User registration
+POST /api/auth/login         # User login
+GET  /api/auth/verify        # JWT verification
+POST /api/auth/refresh       # Refresh token
+GET  /health                 # Health check endpoint
+```
+
+## Key Architectural Patterns
+
+### Frontend: Custom Hooks Pattern
+
+```javascript
+// hooks/useAnalyticsData.js
+import { useState, useEffect, useMemo } from 'react';
+
+export const useAnalyticsData = (filters) => {
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    // Fetch and validate data
+  }, [filters]);
+
+  const processedMetrics = useMemo(() => {
+    // Expensive calculations memoized
+    return calculateMetrics(data);
+  }, [data]);
+
+  return { data, loading, error, processedMetrics };
+};
+```
+
+### Frontend: State Management
+
+```javascript
+// Loading, Error, Empty states pattern
+{loading && <LoadingState />}
+{error && <ErrorState error={error} onRetry={retry} />}
+{!loading && !error && !data?.length && <EmptyState />}
+{data && <MainContent data={data} />}
+```
+
+### Frontend: Utility-Based Calculations
+
+```javascript
+// utils/analyticsCalculations.js
+export const processRawData = (data) => { /* pure function */ };
+export const calculateYearlyData = (data) => { /* pure function */ };
+export const calculateTrends = (data) => { /* pure function */ };
+```
+
+### Backend: MVC with Services
+
+```
+routes/authRoutes.ts         → Define endpoints
+controllers/authController.ts → Handle requests
+services/authService.ts      → Business logic
+models/User.ts               → Data models
+middleware/auth.ts           → JWT verification
+```
+
+### Testing: Page Object Model (Playwright)
+
+```typescript
+// utils/BasePage.ts
+export class BasePage {
+  constructor(protected page: Page) {}
+
+  async navigateTo(url: string) {
+    await this.page.goto(url);
+  }
+}
+
+// utils/LoginPage.ts
+export class LoginPage extends BasePage {
+  private emailInput = '#email';
+
+  async login(email: string, password: string) {
+    await this.page.fill(this.emailInput, email);
+    await this.page.fill('#password', password);
+    await this.page.click('button[type="submit"]');
+  }
+}
+```
+
+## Docker Coverage Status
+
+### 100% COVERAGE ACHIEVED! (Feb 27, 2026)
+
+**Total Projects:** 109
+- **Configured in Docker:** 109 services (**100% COVERAGE**)
+- **Missing from Docker:** 0 projects
+
+**Docker Compose Files:**
+- `docker-compose.yml` - 19 services (high-priority apps)
+- `docker-compose-all-apps.yml` - **109 services (COMPLETE - USE THIS!)**
+- `docker-compose-full.yml` - 69 services (legacy, partial coverage)
+
+**Recently Containerized (Feb 27, 2026 - Final 8 Projects):**
+
+All 8 previously missing backend services are now containerized:
+
+1. **accommodation-management** (Express + React/Vite) - Port 4053
+2. **alumni-network** (Express + React/Vite) - Port 4050
+3. **career-services** (Express + React/Vite) - Port 4051
+4. **complaint-resolution-system** (Express + React/Vite) - Port 4055
+5. **health-wellness-portal** (Express + React/Vite) - Port 4054
+6. **internship-program** (Node.js HTTP only) - Port 4058
+7. **library-management** (Express + React/Vite) - Port 4052
+8. **mentorship-program** (Express + React/Vite) - Port 4056
+
+**New Infrastructure:**
+- `Dockerfile.fullstack` - Multi-stage build for Express + React/Vite full-stack apps
+- `tuc-mysql` service - Shared MySQL 8.0 database for all backend services
+- Individual database per service (accommodation_management, alumni_network, etc.)
+
+**Previously Added (Feb 27, 2026 - First Wave):**
+- Backend API (tuc-auth-api) - Express + TypeScript authentication service
+- 19 Vite projects: countdown-timer, fashionprompt-ai, patois-lyricist-v1.7-(5000-chars), expensepro-advanced-financial-tracker, ai-transformation-framework, and 14 more
+
+### THE AGENT Book Project: Path to 256 Applications
+
+**Current Status:** 109/256 (42.6%)
+
+**Mission:** Demonstrate AI-powered infrastructure management at scale. The Sentinel (AI agent) managing 255 applications + 1 master orchestrator = 256 total.
+
+**Phase 1 (COMPLETE): Foundation - 109 Apps**
+- ✅ 100% Docker coverage achieved
+- ✅ Multi-stage build patterns established
+- ✅ Nginx gateway with reverse proxy
+- ✅ MySQL database infrastructure
+- ✅ Health checks and restart policies
+- ✅ Profile-based orchestration (core/standard/full)
+
+**Phase 2 (NEXT): Expansion - 109 → 256 Apps**
+
+Strategy to reach 256 applications:
+1. **Domain Expansion** (50 apps) - Add missing university services:
+   - Student information system modules (registration, grades, attendance, transcripts, graduation)
+   - Financial services (tuition, scholarships, financial aid, budgeting, payments)
+   - Faculty management (hiring, evaluation, research, publications)
+   - Facilities (maintenance, room booking, asset management, security)
+   - Events (calendar, booking, ticketing, livestreaming)
+
+2. **Microservice Decomposition** (40 apps) - Break existing monoliths:
+   - Split large apps into focused microservices
+   - Separate frontend/backend where currently combined
+   - Extract shared utilities into services
+
+3. **AI/ML Services** (20 apps) - Add intelligent capabilities:
+   - Predictive analytics (enrollment, retention, resource allocation)
+   - Natural language processing (chatbots, document analysis, translation)
+   - Computer vision (ID verification, attendance tracking, security)
+   - Recommendation engines (courses, mentors, career paths, resources)
+
+4. **Integration Services** (15 apps) - Connect external systems:
+   - Payment gateways (Stripe, PayPal, mobile money)
+   - Email/SMS providers (SendGrid, Twilio, AWS SES)
+   - Cloud storage (AWS S3, Google Drive, Dropbox)
+   - Authentication providers (OAuth, SAML, LDAP)
+
+5. **DevOps & Monitoring** (15 apps) - Infrastructure services:
+   - CI/CD pipelines (build, test, deploy orchestrators)
+   - Monitoring (metrics, logs, traces, alerting)
+   - Service mesh (traffic management, security, observability)
+   - Backup & disaster recovery
+
+6. **Developer Tools** (7 apps) - Support development:
+   - Code generators and scaffolding
+   - Documentation generators
+   - Testing utilities
+   - Performance profiling
+
+**Architecture Evolution:**
+- **Current:** Docker Compose (flat orchestration)
+- **Target:** Kubernetes (scalable orchestration) + Service Mesh (Istio/Linkerd)
+- **Monitoring:** Prometheus + Grafana + Loki stack
+- **CI/CD:** GitLab/GitHub Actions with automated testing and deployment
+- **The Sentinel:** AI orchestrator that monitors, manages, and optimizes all 255 applications
+
+**Key Metrics for THE AGENT Book:**
+- Lines of infrastructure code managed
+- Services auto-scaled in response to load
+- Incidents detected and resolved autonomously
+- Cost optimization achieved through intelligent resource allocation
+- Developer productivity improvement (deployment time, debugging time, etc.)
+
+## Docker Architecture
+
+### Multi-Stage Vite Dockerfile
+
+**Stage 1: Builder (node:20-alpine)**
+- Install dependencies with npm (avoids pnpm symlink issues)
+- Run build command
+- Output: dist/ directory
+
+**Stage 2: Runtime (nginx:alpine)**
+- Copy built assets from builder
+- Configure nginx with gzip, security headers, SPA routing
+- Expose port 80
+- Health check endpoint: /health
+
+**Final Image Size:** ~20MB per app
+
+### Docker Compose Profiles
+
+**Default (no flag):** 19 high-priority apps (core + standard profile)
+```bash
+docker-compose up
+```
+
+**All Services (Recommended):** All 109 services (100% coverage)
+```bash
+docker-compose -f docker-compose-all-apps.yml up
+```
+
+**Full Profile (Legacy):** 69 apps
+```bash
+docker-compose --profile full up
+```
+
+**Dev Profile:** Hot reload with volume mounts
+```bash
+docker-compose --profile dev up analytics-refactor-dev
+# Source code mounted: ./analytics-refactor:/app:cached
+# Access: http://localhost:3001
+```
+
+### Networking
+
+**Bridge Network:** aucdt-network (172.20.0.0/16)
+- All containers communicate internally
+- Nginx gateway handles external traffic
+- Single entry point: http://localhost:8080
+
+## Environment Variables
+
+### Frontend (Vite Projects)
+
+```bash
+# .env file (project root)
+VITE_API_KEY=your_key
+VITE_API_URL=http://api.example.com
+VITE_ENV=production
+
+# Access in code
+const apiKey = import.meta.env.VITE_API_KEY;
+```
+
+**Important:** Vite uses `VITE_` prefix (not `REACT_APP_`)
+
+### Backend
+
+```bash
+# backend/.env
+PORT=3000
+NODE_ENV=development
+JWT_SECRET=your_secret_key
+JWT_EXPIRE=7d
+DB_HOST=localhost
+DB_USER=root
+DB_PASSWORD=password
+DB_NAME=tuc_auth
+```
+
+**Access in code:**
+```typescript
+import dotenv from 'dotenv';
+dotenv.config();
+
+const port = process.env.PORT || 3000;
+```
+
+## Testing Strategy
+
+### Unit Tests (Vitest/Jest)
+
+```bash
+# Run tests
+npm test
+
+# Coverage
+npm run test:coverage
+
+# Watch mode
+npm run test:watch
+
+# Target >70% coverage for core utilities
+```
+
+**Example Test:**
+```javascript
+// __tests__/analyticsCalculations.test.js
+import { processRawData } from '../utils/analyticsCalculations';
+
+describe('Analytics Calculations', () => {
+  test('calculates acceptance rate correctly', () => {
+    const data = [{ ACCEPTED: "8", APPLICANTS: "24" }];
+    const result = processRawData(data);
+    expect(result[0].acceptanceRate).toBe(33.3);
+  });
+});
+```
+
+### E2E Tests (Playwright)
+
+```bash
+cd aucdt-portal-tests
+npm run test              # Headless mode
+npm run test:ui           # Interactive mode
+npm run test:headed       # Visible browser
+npm run test:debug        # Debug specific test
+```
+
+**Example Test:**
+```typescript
+// tests/login.spec.ts
+import { test, expect } from '@playwright/test';
+import { LoginPage } from '../utils/LoginPage';
+
+test('user can login', async ({ page }) => {
+  const loginPage = new LoginPage(page);
+  await loginPage.navigateTo('http://localhost:3000/login');
+  await loginPage.login('user@example.com', 'password');
+  await expect(page).toHaveURL(/.*dashboard/);
+});
+```
+
+## CI/CD Pipeline (Bitbucket)
+
+### Pipeline Structure
+
+**Parallel Execution:**
+- WAR deployments (5 projects) run in parallel
+- Static builds (10+ projects) run in parallel
+- Only builds projects with changes (changesets)
+
+**Node Image:** node:20-alpine
+
+**Caches:**
+- node (npm cache)
+- pnpm (~/.local/share/pnpm/store)
+
+### Pipeline Steps (WAR Deployment)
+
+```yaml
+1. cd $PROJECT_DIR
+2. Enable corepack and prepare pnpm
+3. pnpm install --frozen-lockfile
+4. pnpm run build
+5. Copy WEB-INF to dist/
+6. Create WAR file
+7. SCP to Tomcat server
+8. Artifacts: dist/ directory
+```
+
+### Changesets
+
+Projects only build if their directory has changes:
+```yaml
+changesets:
+  includePaths:
+    - 'fees-comparison-dashboard/**'
+```
+
+### Custom Pipelines
+
+**build-all-projects:**
+- Builds all 89 Vite projects
+- Size: 2x (larger build agent)
+- Generates build summary with success/fail counts
+
+**deploy-all-war-projects:**
+- Deploys all WAR projects to Tomcat
+- Manual trigger only
+
+## Common Issues & Solutions
+
+### Build Failures
+
+**Problem:** `pnpm install` fails
+```bash
+# Solution 1: Clear lockfile and reinstall
+rm -rf node_modules pnpm-lock.yaml package-lock.json
+npm install
+
+# Solution 2: Use npm instead
+npm install --legacy-peer-deps
+```
+
+**Problem:** Vite build fails with memory error
+```bash
+# Solution: Increase Node memory
+NODE_OPTIONS=--max-old-space-size=4096 npm run build
+```
+
+### Docker Issues
+
+**Problem:** Port 8080 already in use
+```bash
+# Find process using port
+netstat -ano | findstr :8080  # Windows
+lsof -i :8080                 # Mac/Linux
+
+# Or change port in docker-compose.yml
+ports:
+  - "8081:80"
+```
+
+**Problem:** Container keeps restarting
+```bash
+# Check logs
+docker-compose logs <service-name>
+
+# Check health status
+docker inspect <container-name>
+
+# Rebuild without cache
+docker-compose build --no-cache <service-name>
+docker-compose up
+```
+
+**Problem:** Out of memory
+```bash
+# Increase Docker Desktop memory (Settings → Resources → 8GB+)
+# Or run fewer apps:
+docker-compose up analytics-refactor fees-comparison-dashboard
+```
+
+### Migration Issues
+
+**Problem:** CRA → Vite migration breaks imports
+```bash
+# Update index.html location (root instead of public/)
+# Rename src/index.js → src/index.jsx
+# Update env vars: REACT_APP_ → VITE_
+# Update env access: process.env → import.meta.env
+```
+
+### Test Failures
+
+**Playwright:**
+```bash
+# Update browsers
+npx playwright install
+
+# Run in headed mode to debug
+npm run test:headed
+
+# Generate test report
+npm run test:report
+```
+
+## Project-Specific Notes
+
+### analytics-refactor
+
+**Status:** Phase 1-2 complete (70% overall)
+**Technology:** React 19, Vite, Recharts, Tailwind CSS
+**Features:**
+- 5 deep-dive visualizations
+- Custom hooks for data management
+- Loading/Error/Empty states
+- Data validation layer
+
+**Next Steps:** Phase 3 (Enhanced functionality), Phase 4 (Testing)
+**Documentation:** See analytics-refactor/CLAUDE.md
+
+### aucdt-portal-tests
+
+**Technology:** Playwright, TypeScript
+**Pattern:** Page Object Model
+**Target:** portal.aucdt.edu.gh
+**Test Types:** Login, navigation, form submission, data validation
+
+### backend (tuc-auth-api)
+
+**Technology:** Express 5, TypeScript, JWT, MySQL
+**Features:**
+- User registration and authentication
+- JWT token generation and verification
+- Rate limiting (express-rate-limit)
+- Security headers (helmet)
+- CORS configuration
+- Input validation
+- Password hashing (bcryptjs)
+
+**Recent:** Added with jsonwebtoken (commit 367163d)
+
+## Data Validation Best Practices
+
+When working with analytics data:
+
+```javascript
+import { validateDataIntegrity } from './utils/dataValidation';
+
+const result = validateDataIntegrity(rawData);
+if (!result.valid) {
+  console.error('Data validation failed:', result.errors);
+  // Handle errors - show ErrorState
+}
+```
+
+**Required fields for analytics data:**
+- MONTH (format: YYYY-MM)
+- SIGNUPS, APPLICANTS, ACCEPTED, REJECTED, WAITLISTED, REGISTERED (numeric strings)
+
+## Browser Support
+
+**Production:**
+- >0.2% market share
+- Not dead browsers
+- Not Opera Mini
+
+**Development:**
+- Last Chrome version
+- Last Firefox version
+- Last Safari version
+
+## Accessibility (WCAG 2.1 AA)
+
+Several projects target WCAG 2.1 AA compliance:
+
+- Keyboard navigation support
+- ARIA labels and roles
+- Color contrast ratios (4.5:1 for text, 3:1 for UI)
+- Alternative data access (tables for charts)
+- Screen reader compatibility
+- Focus indicators
+
+## Performance Guidelines
+
+- **Bundle Size:** Monitor with source-map-explorer
+- **Loading States:** Always show for async operations
+- **Error Boundaries:** Implement with retry functionality
+- **Memoization:** Use useMemo/useCallback for expensive calculations
+- **Code Splitting:** Lazy load large components
+- **Target:** <2s page load, <100ms render per chart
+
+## Git Workflow
+
+**Main Branch:** master
+
+```bash
+# Standard workflow
+git checkout -b feature/my-feature
+git add .
+git commit -m "feat: descriptive message"
+git push origin feature/my-feature
+# Create pull request in Bitbucket
+```
+
+**Commit Convention:**
+- feat: New feature
+- fix: Bug fix
+- refactor: Code refactoring
+- docs: Documentation
+- test: Testing
+- chore: Maintenance
+
+## External Resources
+
+**Techbridge:**
+- Website: https://techbridge.edu.gh
+- AUCDT Website: https://aucdt.edu.gh
+- Portal: https://portal.aucdt.edu.gh
+
+**Deployment:**
+- Tomcat Server: 66.226.72.199
+- Path: /opt/tomcat/webapps/
+
+**Documentation:**
+- Vite: https://vitejs.dev
+- React: https://react.dev
+- Playwright: https://playwright.dev
+- Docker: https://docs.docker.com
+- Express: https://expressjs.com
+
+## Node Version
+
+**Required:** Node.js >= 18.0.0
+**Recommended:** Node.js 20.x LTS
+
+Check version:
+```bash
+node --version
+```
+
+## Quick Reference
+
+**New Frontend Project:**
+```bash
+npm create vite@latest project-name -- --template react
+cd project-name
+npm install
+npm run dev
+```
+
+**New Backend Project:**
+```bash
+mkdir backend
+cd backend
+npm init -y
+npm install express cors dotenv
+npm install -D typescript @types/express @types/node ts-node-dev
+npx tsc --init
+```
+
+**Add to Docker:**
+1. Ensure Dockerfile.vite exists in root
+2. Add service to docker-compose.yml
+3. Run: `docker-compose build <service-name>`
+4. Run: `docker-compose up <service-name>`
+
+**Add to CI/CD:**
+1. Add step to bitbucket-pipelines.yml
+2. Define changesets for the project directory
+3. Push to trigger build

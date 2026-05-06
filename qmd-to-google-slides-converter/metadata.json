@@ -1,0 +1,5 @@
+{
+  "name": "QMD to Google Slides Converter",
+  "description": "An application that takes structured data and generates a Google Apps Script to automatically create a Google Slides presentation. It provides a UI to preview the slides, copy the script, and download it.",
+  "requestFramePermissions": []
+}

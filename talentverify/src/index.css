@@ -1,0 +1,52 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@700&family=DM+Sans:wght@400;500;600;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-display: "Cormorant Garamond", serif;
+  --font-body: "DM Sans", sans-serif;
+  --color-brand-primary: var(--brand-primary);
+  --color-bg-warm: var(--bg-warm);
+  --color-text-primary: var(--text-primary);
+  --color-text-muted: var(--text-muted);
+  --color-bg-card: var(--bg-card);
+  --color-border: var(--border-color);
+}
+
+:root {
+  /* Light Theme (Default) */
+  --brand-primary: #3D35C8;
+  --bg-warm: #F5F0EB;
+  --text-primary: #1A1A2E;
+  --text-muted: #6B6B80;
+  --bg-card: #FFFFFF;
+  --border-color: rgba(0, 0, 0, 0.1);
+}
+
+.dark {
+  --brand-primary: #6366f1;
+  --bg-warm: #1a1a2e;
+  --text-primary: #F5F0EB;
+  --text-muted: #a1a1aa;
+  --bg-card: #2d2d42;
+  --border-color: rgba(255, 255, 255, 0.1);
+}
+
+.high-contrast {
+  --brand-primary: #0000FF;
+  --bg-warm: #FFFFFF;
+  --text-primary: #000000;
+  --text-muted: #000000;
+  --bg-card: #FFFFFF;
+  --border-color: #000000;
+}
+
+body {
+  font-family: var(--font-body);
+  background-color: var(--bg-warm);
+  color: var(--text-primary);
+  transition: background-color 0.3s, color 0.3s;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+}

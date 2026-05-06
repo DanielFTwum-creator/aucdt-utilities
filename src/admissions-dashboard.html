@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Admissions Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Professional Blue & Gray -->
+    <!-- Application Structure Plan: A single-page dashboard design was chosen to provide a comprehensive, at-a-glance overview of the admissions data. The structure prioritizes immediate insight through top-level KPI cards (Total Applicants, Acceptance Rate), followed by a detailed, interactive time-series chart for trend analysis. Users can toggle data series on the chart to reduce complexity and focus on specific comparisons (e.g., Signups vs. Accepted). Finally, a raw data table offers transparency and access to the exact figures. This top-down flow (summary -> trends -> details) is a standard and highly effective usability pattern for data dashboards. -->
+    <!-- Visualization & Content Choices: 
+    - Report Info: Total/average admissions stats -> Goal: Inform -> Viz: KPI Cards (HTML/Tailwind) -> Interaction: None -> Justification: Provides a quick, high-level summary of the entire dataset.
+    - Report Info: Monthly totals for Signups, Applicants, Accepted, Rejected, Waitlisted -> Goal: Compare/Change -> Viz: Combined Bar & Line Chart (Chart.js/Canvas) with Trendlines -> Interaction: Buttons to toggle visibility of each dataset and a global toggle for all trendlines -> Justification: Allows users to visualize raw trends and overlaid smoothed trends over time, and explore relationships between different metrics. Trendlines offer a quick understanding of long-term direction. Using lines for leading indicators (Applicants) and bars for outcomes (Accepted/Rejected) creates a clear visual distinction.
+    - Report Info: Raw monthly data -> Goal: Organize/Details -> Viz: HTML Table -> Interaction: Hover styles for readability -> Justification: Provides full data transparency and allows users to look up specific monthly figures.
+    - Library/Method: Chart.js is used for its flexibility, responsiveness, and canvas-based rendering, which aligns with the technical requirements. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc; /* slate-50 */
+        }
+        .chart-container {
+            position: relative;
+            margin: auto;
+            height: 50vh;
+            width: 100%;
+            max-height: 500px;
+        }
+        .kpi-card {
+            background-color: white;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            border: 1px solid #e2e8f0; /* slate-200 */
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+        .kpi-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
+        .toggle-btn {
+            transition: all 0.2s ease-in-out;
+        }
+    </style>
+</head>
+<body class="text-slate-800">
+
+    <div class="container mx-auto p-4 sm:p-6 lg:p-8 max-w-7xl">
+        
+        <!-- Header -->
+        <header class="text-center mb-8 md:mb-12">
+            <h1 class="text-4xl md:text-5xl font-bold text-slate-900">Admissions Dashboard</h1>
+            <p class="mt-2 text-lg text-slate-600">Interactive Analysis of Applicant Data (2023 - 2025)</p>
+        </header>
+
+        <!-- KPI Section -->
+        <section id="kpi-section" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8 md:mb-12">
+            <!-- Cards will be injected by JavaScript -->
+        </section>
+
+        <!-- Main Chart Section -->
+        <main class="bg-white p-4 sm:p-6 rounded-xl shadow-lg border border-slate-200">
+            <div class="text-center mb-6">
+                <h2 class="text-2xl font-bold text-slate-900">Applicant Trends Over Time</h2>
+                <p class="mt-1 text-slate-600 max-w-3xl mx-auto">
+                    This chart displays applicant trends from June 2023 to June 2025. Use the buttons below to show or hide specific data series and toggle their overall trendlines.
+                </p>
+            </div>
+            
+            <div class="chart-container mb-6">
+                <canvas id="admissionsChart"></canvas>
+            </div>
+            
+            <div id="chart-toggles" class="flex flex-wrap justify-center gap-2 sm:gap-4">
+                <!-- Toggle buttons will be injected by JavaScript -->
+            </div>
+            <div class="flex justify-center mt-4">
+                <button id="toggleTrendlinesBtn" class="toggle-btn px-4 py-2 text-sm font-medium rounded-full shadow-sm bg-blue-500 text-white">
+                    Show All Trendlines
+                </button>
+            </div>
+        </main>
+        
+        <!-- Data Table Section -->
+        <section class="mt-8 md:mt-12">
+            <h2 class="text-2xl font-bold text-center mb-6 text-slate-900">Detailed Monthly Data</h2>
+            <div class="bg-white rounded-xl shadow-lg border border-slate-200 overflow-x-auto">
+                <table class="w-full text-left">
+                    <thead class="bg-slate-50 border-b border-slate-200">
+                        <tr>
+                            <th class="p-4 text-sm font-semibold text-slate-600">Month</th>
+                            <th class="p-4 text-sm font-semibold text-slate-600 text-right">Applicants</th>
+                            <th class="p-4 text-sm font-semibold text-slate-600 text-right">Signups</th>
+                            <th class="p-4 text-sm font-semibold text-slate-600 text-right">Accepted</th>
+                            <th class="p-4 text-sm font-semibold text-slate-600 text-right">Rejected</th>
+                            <th class="p-4 text-sm font-semibold text-slate-600 text-right">Waitlisted</th>
+                        </tr>
+                    </thead>
+                    <tbody id="data-table-body">
+                        <!-- Table rows will be injected by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="text-center mt-12 py-6 border-t border-slate-200">
+            <p class="text-sm text-slate-500">Dashboard generated on <span id="current-date"></span>. Data based on the provided admissions report.</p>
+        </footer>
+
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Removed .reverse() to display data chronologically (2023-06 to 2025-06)
+            const admissionsData = [
+              { month: "2023-06", signups: 19, accepted: 5, rejected: 9, waitlisted: 0, applicants: 18 },
+              { month: "2023-07", signups: 13, accepted: 3, rejected: 7, waitlisted: 0, applicants: 12 },
+              { month: "2023-08", signups: 7, accepted: 0, rejected: 2, waitlisted: 0, applicants: 5 },
+              { month: "2023-09", signups: 10, accepted: 1, rejected: 6, waitlisted: 0, applicants: 8 },
+              { month: "2023-10", signups: 15, accepted: 0, rejected: 11, waitlisted: 0, applicants: 14 },
+              { month: "2023-11", signups: 12, accepted: 3, rejected: 6, waitlisted: 0, applicants: 13 },
+              { month: "2023-12", signups: 19, accepted: 6, rejected: 7, waitlisted: 1, applicants: 18 },
+              { month: "2024-01", signups: 33, accepted: 12, rejected: 3, waitlisted: 4, applicants: 29 },
+              { month: "2024-02", signups: 9, accepted: 0, rejected: 2, waitlisted: 4, applicants: 8 },
+              { month: "2024-03", signups: 6, accepted: 0, rejected: 2, waitlisted: 2, applicants: 5 },
+              { month: "2024-04", signups: 6, accepted: 1, rejected: 2, waitlisted: 0, applicants: 4 },
+              { month: "2024-05", signups: 10, accepted: 3, rejected: 2, waitlisted: 4, applicants: 10 },
+              { month: "2024-06", signups: 12, accepted: 2, rejected: 3, waitlisted: 5, applicants: 12 },
+              { month: "2024-07", signups: 16, accepted: 3, rejected: 10, waitlisted: 1, applicants: 15 },
+              { month: "2024-08", signups: 17, accepted: 3, rejected: 4, waitlisted: 2, applicants: 13 },
+              { month: "2024-09", signups: 25, accepted: 4, rejected: 6, waitlisted: 5, applicants: 18 },
+              { month: "2024-10", signups: 35, accepted: 3, rejected: 16, waitlisted: 7, applicants: 30 },
+              { month: "2024-11", signups: 32, accepted: 5, rejected: 11, waitlisted: 5, applicants: 24 },
+              { month: "2024-12", signups: 24, accepted: 6, rejected: 5, waitlisted: 2, applicants: 17 },
+              { month: "2025-01", signups: 47, accepted: 19, rejected: 18, waitlisted: 0, applicants: 46 },
+              { month: "2025-02", signups: 18, accepted: 8, rejected: 6, waitlisted: 0, applicants: 14 },
+              { month: "2025-03", signups: 14, accepted: 7, rejected: 4, waitlisted: 1, applicants: 12 },
+              { month: "2025-04", signups: 15, accepted: 4, rejected: 5, waitlisted: 0, applicants: 9 },
+              { month: "2025-05", signups: 23, accepted: 3, rejected: 3, waitlisted: 0, applicants: 6 },
+              { month: "2025-06", signups: 17, accepted: 18, rejected: 6, waitlisted: 0, applicants: 24 }
+            ];
+
+            const labels = admissionsData.map(d => d.month);
+            
+            // Linear regression function for trendlines
+            function calculateLinearRegression(data, dataKey) {
+                const n = data.length;
+                let sumX = 0;
+                let sumY = 0;
+                let sumXY = 0;
+                let sumXX = 0;
+
+                data.forEach((d, i) => {
+                    sumX += i;
+                    sumY += d[dataKey];
+                    sumXY += i * d[dataKey];
+                    sumXX += i * i;
+                });
+
+                const slope = (n * sumXY - sumX * sumY) / (n * sumXX - sumX * sumX);
+                const intercept = (sumY - slope * sumX) / n;
+
+                return data.map((d, i) => slope * i + intercept);
+            }
+
+            // Define datasets for Chart.js, including placeholder for trendlines
+            const datasetsConfig = {
+                applicants: { label: 'Applicants', data: admissionsData.map(d => d.applicants), type: 'line', borderColor: '#3b82f6', backgroundColor: '#3b82f620', tension: 0.1, hidden: false, yAxisID: 'y' },
+                applicantsTrend: { label: 'Applicants Trend', data: calculateLinearRegression(admissionsData, 'applicants'), type: 'line', borderColor: '#3b82f6', borderWidth: 3, borderDash: [5, 5], hidden: true, yAxisID: 'y', order: 0 }, // Trendlines higher order to appear on top
+                
+                signups: { label: 'Signups', data: admissionsData.map(d => d.signups), type: 'line', borderColor: '#16a34a', backgroundColor: '#16a34a20', tension: 0.1, hidden: false, yAxisID: 'y' },
+                signupsTrend: { label: 'Signups Trend', data: calculateLinearRegression(admissionsData, 'signups'), type: 'line', borderColor: '#16a34a', borderWidth: 3, borderDash: [5, 5], hidden: true, yAxisID: 'y', order: 0 },
+
+                accepted: { label: 'Accepted', data: admissionsData.map(d => d.accepted), type: 'bar', borderColor: '#10b981', backgroundColor: '#10b98180', hidden: false, yAxisID: 'y', stack: 'outcomes' },
+                acceptedTrend: { label: 'Accepted Trend', data: calculateLinearRegression(admissionsData, 'accepted'), type: 'line', borderColor: '#10b981', borderWidth: 3, borderDash: [5, 5], hidden: true, yAxisID: 'y', order: 0 },
+
+                rejected: { label: 'Rejected', data: admissionsData.map(d => d.rejected), type: 'bar', borderColor: '#ef4444', backgroundColor: '#ef444480', hidden: false, yAxisID: 'y', stack: 'outcomes' },
+                rejectedTrend: { label: 'Rejected Trend', data: calculateLinearRegression(admissionsData, 'rejected'), type: 'line', borderColor: '#ef4444', borderWidth: 3, borderDash: [5, 5], hidden: true, yAxisID: 'y', order: 0 },
+
+                waitlisted: { label: 'Waitlisted', data: admissionsData.map(d => d.waitlisted), type: 'bar', borderColor: '#f97316', backgroundColor: '#f9731680', hidden: false, yAxisID: 'y', stack: 'outcomes' },
+                waitlistedTrend: { label: 'Waitlisted Trend', data: calculateLinearRegression(admissionsData, 'waitlisted'), type: 'line', borderColor: '#f97316', borderWidth: 3, borderDash: [5, 5], hidden: true, yAxisID: 'y', order: 0 }
+            };
+
+            const initialDatasets = Object.values(datasetsConfig);
+
+            const ctx = document.getElementById('admissionsChart').getContext('2d');
+            const admissionsChart = new Chart(ctx, {
+                type: 'bar', // Default type, individual datasets specify their type
+                data: {
+                    labels: labels,
+                    datasets: initialDatasets
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false,
+                    },
+                    scales: {
+                        x: {
+                            stacked: true,
+                            grid: { display: false }
+                        },
+                        y: {
+                            stacked: true,
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Number of People'
+                            }
+                        }
+                    },
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                title: function(context) {
+                                    return `Month: ${context[0].label}`;
+                                },
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed.y !== null) {
+                                        label += context.parsed.y.toFixed(0); // Round for whole numbers
+                                    }
+                                    return label;
+                                }
+                            }
+                        },
+                        legend: {
+                           display: false // Hide default legend as we have custom toggle buttons
+                        }
+                    }
+                }
+            });
+
+            function updateToggleButtonState(button, isVisible, config) {
+                if (isVisible) {
+                    button.classList.add('bg-opacity-100', 'text-white');
+                    button.style.backgroundColor = config.borderColor;
+                    button.style.color = 'white'; // Ensure text is white
+                } else {
+                    button.classList.remove('bg-opacity-100', 'text-white');
+                    // Use a slightly lighter version of the borderColor for inactive buttons' background
+                    // and keep the text color the same as borderColor for contrast
+                    button.style.backgroundColor = config.borderColor + '20'; // Adding transparency for lighter background
+                    button.style.color = config.borderColor;
+                }
+            }
+
+            function createToggleButtons() {
+                const container = document.getElementById('chart-toggles');
+                // Use a defined order for buttons for consistency
+                const orderedKeys = ['applicants', 'signups', 'accepted', 'rejected', 'waitlisted'];
+
+                orderedKeys.forEach((key) => {
+                    const config = datasetsConfig[key];
+                    const datasetIndex = admissionsChart.data.datasets.findIndex(ds => ds.label === config.label);
+                    
+                    const button = document.createElement('button');
+                    button.textContent = config.label; // Set the button text here
+                    button.className = 'toggle-btn px-4 py-2 text-sm font-medium rounded-full shadow-sm';
+                    
+                    // Initialize button state based on dataset's initial hidden state
+                    updateToggleButtonState(button, !config.hidden, config);
+
+                    button.onclick = () => {
+                        const currentMainDatasetIsVisible = admissionsChart.isDatasetVisible(datasetIndex);
+                        const newMainDatasetVisibility = !currentMainDatasetIsVisible;
+
+                        admissionsChart.setDatasetVisibility(datasetIndex, newMainDatasetVisibility);
+                        
+                        const trendKey = `${key}Trend`;
+                        if (datasetsConfig[trendKey]) {
+                            const trendDatasetIndex = admissionsChart.data.datasets.findIndex(ds => ds.label === datasetsConfig[trendKey].label);
+                            if (trendDatasetIndex !== -1) {
+                                const areTrendlinesGloballyActive = document.getElementById('toggleTrendlinesBtn').dataset.active === 'true';
+                                admissionsChart.setDatasetVisibility(trendDatasetIndex, newMainDatasetVisibility && areTrendlinesGloballyActive);
+                            }
+                        }
+                        
+                        admissionsChart.update();
+                        updateToggleButtonState(button, newMainDatasetVisibility, config);
+                    };
+                    container.appendChild(button);
+                });
+            }
+
+            function setupTrendlineToggle() {
+                const toggleBtn = document.getElementById('toggleTrendlinesBtn');
+                // Get initial visibility from the first trendline dataset, or default to false
+                let areTrendlinesGloballyVisible = admissionsChart.isDatasetVisible(
+                    admissionsChart.data.datasets.findIndex(ds => ds.label.includes('Trend'))
+                );
+                toggleBtn.dataset.active = areTrendlinesGloballyVisible ? 'true' : 'false';
+
+                // Set initial button text based on the initial state
+                if (areTrendlinesGloballyVisible) {
+                    toggleBtn.textContent = 'Hide All Trendlines';
+                    toggleBtn.style.backgroundColor = '#3b82f6'; // blue-500
+                    toggleBtn.style.color = 'white';
+                } else {
+                    toggleBtn.textContent = 'Show All Trendlines';
+                    toggleBtn.style.backgroundColor = '#cbd5e1'; // slate-300 for inactive
+                    toggleBtn.style.color = '#475569'; // slate-600 for inactive text
+                }
+
+                toggleBtn.onclick = () => {
+                    areTrendlinesGloballyVisible = !areTrendlinesGloballyVisible;
+                    toggleBtn.dataset.active = areTrendlinesGloballyVisible ? 'true' : 'false';
+
+                    admissionsChart.data.datasets.forEach((dataset, index) => {
+                        if (dataset.label.includes('Trend')) { // Identify trendline datasets by label
+                            const mainDatasetLabel = dataset.label.replace(' Trend', ''); // Get corresponding main dataset label
+                            const mainDatasetIndex = admissionsChart.data.datasets.findIndex(ds => ds.label === mainDatasetLabel);
+                            
+                            // Check if the main dataset is visible. Trendline should only show if main is visible.
+                            const isMainVisible = (mainDatasetIndex !== -1) ? admissionsChart.isDatasetVisible(mainDatasetIndex) : false;
+                            
+                            admissionsChart.setDatasetVisibility(index, areTrendlinesGloballyVisible && isMainVisible);
+                        }
+                    });
+                    admissionsChart.update();
+
+                    // Update button text and style
+                    if (areTrendlinesGloballyVisible) {
+                        toggleBtn.textContent = 'Hide All Trendlines';
+                        toggleBtn.style.backgroundColor = '#3b82f6'; // blue-500
+                        toggleBtn.style.color = 'white';
+                    } else {
+                        toggleBtn.textContent = 'Show All Trendlines';
+                        toggleBtn.style.backgroundColor = '#cbd5e1'; // slate-300
+                        toggleBtn.style.color = '#475569'; // slate-600
+                    }
+                };
+            }
+
+
+            function populateKpiCards() {
+                const totalApplicants = admissionsData.reduce((sum, d) => sum + d.applicants, 0);
+                const totalAccepted = admissionsData.reduce((sum, d) => sum + d.accepted, 0);
+                const totalSignups = admissionsData.reduce((sum, d) => sum + d.signups, 0);
+                const totalRejected = admissionsData.reduce((sum, d) => sum + d.rejected, 0);
+                const totalWaitlisted = admissionsData.reduce((sum, d) => sum + d.waitlisted, 0);
+
+                const acceptanceRate = totalApplicants > 0 ? (totalAccepted / totalApplicants * 100).toFixed(1) : 0;
+                const rejectionRate = totalApplicants > 0 ? (totalRejected / totalApplicants * 100).toFixed(1) : 0;
+
+
+                const kpis = [
+                    { label: 'Total Applicants', value: totalApplicants.toLocaleString(), icon: '👥' },
+                    { label: 'Total Signups', value: totalSignups.toLocaleString(), icon: '📝' },
+                    { label: 'Total Accepted', value: totalAccepted.toLocaleString(), icon: '✅' },
+                    { label: 'Total Rejected', value: totalRejected.toLocaleString(), icon: '❌' },
+                    { label: 'Total Waitlisted', value: totalWaitlisted.toLocaleString(), icon: '⏳' },
+                    { label: 'Acceptance Rate', value: `${acceptanceRate}%`, icon: '📈' },
+                    { label: 'Rejection Rate', value: `${rejectionRate}%`, icon: '📉' }
+                ];
+
+                const container = document.getElementById('kpi-section');
+                container.innerHTML = ''; // Clear existing content
+                kpis.forEach(kpi => {
+                    const card = document.createElement('div');
+                    card.className = 'kpi-card flex items-start justify-between';
+                    card.innerHTML = `
+                        <div>
+                            <p class="text-slate-500 text-sm font-medium">${kpi.label}</p>
+                            <p class="text-3xl font-bold text-slate-900 mt-1">${kpi.value}</p>
+                        </div>
+                        <div class="text-3xl bg-slate-100 p-3 rounded-lg">${kpi.icon}</div>
+                    `;
+                    container.appendChild(card);
+                });
+            }
+
+            function populateDataTable() {
+                const tbody = document.getElementById('data-table-body');
+                tbody.innerHTML = ''; // Clear existing content
+                admissionsData.forEach((d, index) => {
+                    const row = document.createElement('tr');
+                    row.className = `border-b border-slate-200 hover:bg-slate-50 ${index === admissionsData.length - 1 ? 'border-b-0' : ''}`;
+                    row.innerHTML = `
+                        <td class="p-4 font-medium">${d.month}</td>
+                        <td class="p-4 text-right">${d.applicants.toLocaleString()}</td>
+                        <td class="p-4 text-right">${d.signups.toLocaleString()}</td>
+                        <td class="p-4 text-right">${d.accepted.toLocaleString()}</td>
+                        <td class="p-4 text-right">${d.rejected.toLocaleString()}</td>
+                        <td class="p-4 text-right">${d.waitlisted.toLocaleString()}</td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            }
+            
+            function setDate() {
+                document.getElementById('current-date').textContent = new Date().toLocaleDateString('en-US', {
+                    year: 'numeric', month: 'long', day: 'numeric'
+                });
+            }
+
+            // Initialize all parts of the dashboard
+            populateKpiCards();
+            createToggleButtons();
+            setupTrendlineToggle();
+            populateDataTable();
+            setDate();
+        });
+    </script>
+</body>
+</html>

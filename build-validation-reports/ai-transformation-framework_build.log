@@ -1,0 +1,15 @@
+
+> react-example@0.0.0 build
+> vite build
+
+[36mvite v7.3.1 [32mbuilding client environment for production...[36m[39m
+[32m✓[39m 0 modules transformed.
+[31m✗[39m Build failed in 369ms
+[31merror during build:
+[31m[vite:build-html] Failed to resolve /index.tsx from C:/Users/DELL/OneDrive/Documents/Downloads/Development/aucdt-utilities/ai-transformation-framework/index.html[31m
+file: [36mC:/Users/DELL/OneDrive/Documents/Downloads/Development/aucdt-utilities/ai-transformation-framework/index.html[31m
+    at file:///C:/Users/DELL/OneDrive/Documents/Downloads/Development/aucdt-utilities/ai-transformation-framework/node_modules/.pnpm/vite@7.3.1_@types+node@25.3_b8ae373d106a340cf488bf12dd1574b9/node_modules/vite/dist/node/chunks/config.js:23919:64
+    at async Promise.all (index 0)
+    at async Object.handler (file:///C:/Users/DELL/OneDrive/Documents/Downloads/Development/aucdt-utilities/ai-transformation-framework/node_modules/.pnpm/vite@7.3.1_@types+node@25.3_b8ae373d106a340cf488bf12dd1574b9/node_modules/vite/dist/node/chunks/config.js:24016:5)
+    at async transform (file:///C:/Users/DELL/OneDrive/Documents/Downloads/Development/aucdt-utilities/ai-transformation-framework/node_modules/.pnpm/rollup@4.59.0/node_modules/rollup/dist/es/shared/node-entry.js:21269:16)
+    at async ModuleLoader.addModuleSource (file:///C:/Users/DELL/OneDrive/Documents/Downloads/Development/aucdt-utilities/ai-transformation-framework/node_modules/.pnpm/rollup@4.59.0/node_modules/rollup/dist/es/shared/node-entry.js:21497:36)[39m

@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="500" viewBox="0 0 800 500" style="background-color: #0f172a; font-family: sans-serif; color: #e2e8f0;">
+
+    <defs>
+        <style>
+            .title { font-size: 24px; font-weight: bold; fill: #e2e8f0; }
+            .subtitle { font-size: 14px; fill: #94a3b8; }
+            .category-title { font-size: 18px; font-weight: bold; fill: #60a5fa; }
+            .tech-box { fill: #1e293b; stroke: #475569; stroke-width: 1.5; }
+            .tech-name { font-size: 16px; font-weight: bold; fill: #e2e8f0; }
+            .tech-desc { font-size: 12px; fill: #94a3b8; }
+        </style>
+    </defs>
+
+    <text x="400" y="40" text-anchor="middle" class="title">Technology Stack</text>
+    <text x="400" y="65" text-anchor="middle" class="subtitle">Interactive Product Development Workbook</text>
+
+    <!-- Column 1: Frontend Framework -->
+    <g transform="translate(50, 100)">
+        <text x="130" y="25" text-anchor="middle" class="category-title">Frontend Framework</text>
+        <rect x="0" y="50" width="260" height="100" rx="10" class="tech-box" />
+        <text x="130" y="90" text-anchor="middle" class="tech-name">React</text>
+        <text x="130" y="115" text-anchor="middle" class="tech-desc">Component-based UI library</text>
+    </g>
+
+    <!-- Column 2: Language & Styling -->
+    <g transform="translate(350, 100)">
+        <text x="100" y="25" text-anchor="middle" class="category-title">Language & Styling</text>
+        <rect x="0" y="50" width="200" height="100" rx="10" class="tech-box" />
+        <text x="100" y="90" text-anchor="middle" class="tech-name">TypeScript</text>
+        <text x="100" y="115" text-anchor="middle" class="tech-desc">Static typing for JavaScript</text>
+
+        <rect x="0" y="170" width="200" height="100" rx="10" class="tech-box" />
+        <text x="100" y="210" text-anchor="middle" class="tech-name">Tailwind CSS</text>
+        <text x="100" y="235" text-anchor="middle" class="tech-desc">Utility-first CSS framework</text>
+    </g>
+    
+    <!-- Column 3: External Services & Storage -->
+    <g transform="translate(590, 100)">
+        <text x="105" y="25" text-anchor="middle" class="category-title">Services & Storage</text>
+        <rect x="0" y="50" width="210" height="100" rx="10" class="tech-box" />
+        <text x="105" y="90" text-anchor="middle" class="tech-name">Google Gemini API</text>
+        <text x="105" y="115" text-anchor="middle" class="tech-desc">AI-powered content generation</text>
+
+        <rect x="0" y="170" width="210" height="100" rx="10" class="tech-box" />
+        <text x="105" y="210" text-anchor="middle" class="tech-name">Browser localStorage</text>
+        <text x="105" y="235" text-anchor="middle" class="tech-desc">Client-side data persistence</text>
+    </g>
+    
+    <!-- Overall Platform -->
+     <g transform="translate(50, 300)">
+        <text x="350" y="25" text-anchor="middle" class="category-title">Platform & Deployment</text>
+        <rect x="0" y="50" width="700" height="100" rx="10" class="tech-box" />
+        <text x="350" y="90" text-anchor="middle" class="tech-name">Web Browser</text>
+        <text x="350" y="115" text-anchor="middle" class="tech-desc">Deployed as a static site (e.g., on Vercel, Netlify)</text>
+    </g>
+
+</svg>

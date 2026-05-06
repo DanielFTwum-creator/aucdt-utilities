@@ -1,0 +1,5 @@
+{
+  "name": "Container Health Auditor",
+  "description": "AI-powered health monitoring system (App ID 110). 100% SRS Alignment Verified. Features real-time health scoring, anomaly detection, and predictive failure analysis.",
+  "requestFramePermissions": []
+}

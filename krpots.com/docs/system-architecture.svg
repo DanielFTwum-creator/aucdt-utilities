@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="100%" height="100%">
+  <defs>
+    <style>
+      .bg { fill: #0F0C07; }
+      .text-title { fill: #C8A84B; font-family: 'Playfair Display', serif; font-size: 24px; font-weight: bold; }
+      .text-subtitle { fill: #F2EBD9; font-family: 'Cormorant Garamond', serif; font-size: 16px; font-style: italic; }
+      .text-node { fill: #0F0C07; font-family: 'Bebas Neue', sans-serif; font-size: 18px; letter-spacing: 2px; }
+      .text-label { fill: #F2EBD9; font-family: 'Inter', sans-serif; font-size: 12px; }
+      .box-gold { fill: #C8A84B; stroke: #E8C96A; stroke-width: 2; rx: 4; }
+      .box-outline { fill: transparent; stroke: #C8A84B; stroke-width: 2; stroke-dasharray: 4 4; rx: 4; }
+      .line { stroke: #C8A84B; stroke-width: 2; fill: none; }
+      .arrow { fill: #C8A84B; }
+    </style>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" class="arrow" />
+    </marker>
+  </defs>
+
+  <!-- Background -->
+  <rect width="100%" height="100%" class="bg" />
+
+  <!-- Title -->
+  <text x="400" y="50" text-anchor="middle" class="text-title">SYSTEM ARCHITECTURE</text>
+  <text x="400" y="75" text-anchor="middle" class="text-subtitle">TechBridge University College - Retrospective Archive</text>
+
+  <!-- Client Layer -->
+  <rect x="50" y="120" width="700" height="420" class="box-outline" />
+  <text x="60" y="145" class="text-title" style="font-size: 16px;">CLIENT TIER (BROWSER)</text>
+
+  <!-- React App Container -->
+  <rect x="100" y="180" width="600" height="200" class="box-outline" style="stroke:#E8C96A; stroke-dasharray:none;" />
+  <text x="110" y="205" class="text-title" style="font-size: 14px;">REACT 19.2.4 APPLICATION</text>
+
+  <!-- Nodes -->
+  <!-- Router -->
+  <rect x="150" y="240" width="140" height="50" class="box-gold" />
+  <text x="220" y="270" text-anchor="middle" class="text-node">REACT ROUTER</text>
+
+  <!-- Pages -->
+  <rect x="150" y="320" width="140" height="40" class="box-gold" style="fill:#E8C96A;" />
+  <text x="220" y="345" text-anchor="middle" class="text-node">PUBLIC PAGES</text>
+
+  <rect x="330" y="320" width="140" height="40" class="box-gold" style="fill:#E8C96A;" />
+  <text x="400" y="345" text-anchor="middle" class="text-node">ADMIN PORTAL</text>
+
+  <!-- Context -->
+  <rect x="500" y="240" width="160" height="50" class="box-gold" />
+  <text x="580" y="270" text-anchor="middle" class="text-node">APP CONTEXT</text>
+
+  <!-- LocalStorage -->
+  <rect x="500" y="440" width="160" height="50" class="box-gold" style="fill:#F5E6B8;" />
+  <text x="580" y="470" text-anchor="middle" class="text-node">LOCAL STORAGE</text>
+
+  <!-- Connections -->
+  <!-- Router to Pages -->
+  <path d="M 220 290 L 220 320" class="line" marker-end="url(#arrowhead)" />
+  <path d="M 220 305 L 400 305 L 400 320" class="line" marker-end="url(#arrowhead)" />
+
+  <!-- Pages to Context -->
+  <path d="M 290 340 L 580 340 L 580 290" class="line" marker-end="url(#arrowhead)" />
+  <text x="430" y="330" class="text-label">Read/Write State</text>
+
+  <!-- Context to LocalStorage -->
+  <path d="M 580 290 L 580 440" class="line" marker-end="url(#arrowhead)" />
+  <path d="M 560 440 L 560 290" class="line" marker-end="url(#arrowhead)" />
+  <text x="590" y="380" class="text-label">Persist &amp; Hydrate</text>
+
+  <!-- External Assets -->
+  <rect x="150" y="440" width="140" height="50" class="box-gold" style="fill:#F5E6B8;" />
+  <text x="220" y="470" text-anchor="middle" class="text-node">CDN ASSETS</text>
+  <path d="M 220 360 L 220 440" class="line" marker-end="url(#arrowhead)" />
+  <text x="230" y="410" class="text-label">Fetch Images</text>
+
+</svg>

@@ -1,0 +1,84 @@
+@import "tailwindcss";
+
+@theme {
+  --color-techbridge-burgundy: #8B1538;
+  --color-techbridge-burgundy-dark: #6B1028;
+  --color-techbridge-gold: #D4AF37;
+  --color-techbridge-gold-light: #F4E4BC;
+  --color-techbridge-cream: #F8F6F0;
+  --color-techbridge-beige: #E6D5C7;
+  --color-techbridge-contrast: #ffff00;
+
+  --radius-4xl: 2.5rem;
+
+  --font-serif: "Playfair Display", serif;
+  --font-sans: "Inter", sans-serif;
+}
+
+@layer base {
+  body {
+    @apply bg-techbridge-cream dark:bg-slate-900 transition-colors duration-300 font-sans;
+  }
+}
+
+@layer components {
+  .brand-shadow {
+    box-shadow: 0 10px 40px -10px rgba(139, 21, 56, 0.15);
+  }
+  
+  .brand-shadow-gold {
+    box-shadow: 0 10px 40px -10px rgba(212, 175, 55, 0.3);
+  }
+}
+
+@layer utilities {
+  .animate-slow-bounce {
+    animation: bounce 3s infinite;
+  }
+  
+  .animate-shell-breathe {
+    animation: shell-breathe 6s ease-in-out infinite;
+    transform-box: fill-box;
+    transform-origin: center;
+  }
+  
+  .animate-wireframe-pulse {
+    animation: wireframe-pulse 6s ease-in-out infinite;
+  }
+  
+  .animate-fade-in-up {
+    animation: fade-in-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+}
+
+@keyframes fade-in-up {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes shell-breathe {
+  0%, 100% { transform: scale(0.98); opacity: 0.8; }
+  50% { transform: scale(1.03); opacity: 1; }
+}
+
+@keyframes wireframe-pulse {
+  0%, 100% { stroke-width: 0.5px; opacity: 0.4; stroke-dashoffset: 0; }
+  50% { stroke-width: 1.5px; opacity: 0.8; stroke-dashoffset: 10; }
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(-5%); animation-timing-function: cubic-bezier(0.8, 0, 1, 1); }
+  50% { transform: translateY(0); animation-timing-function: cubic-bezier(0, 0, 0.2, 1); }
+}
+
+.high-contrast {
+  @apply bg-black! text-white!;
+}
+
+.high-contrast * {
+  @apply border-white!;
+}
+
+.high-contrast button, .high-contrast a {
+  @apply bg-white! text-black! outline-white! outline-2;
+}

@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400">
+  <!-- Background -->
+  <rect width="600" height="400" fill="#ffffff" />
+  
+  <!-- Title -->
+  <text x="300" y="30" font-family="sans-serif" font-size="20" text-anchor="middle" font-weight="bold" fill="#333">AUCDT Data Schema (Local Storage)</text>
+
+  <!-- Table: Admin Config -->
+  <g transform="translate(50, 80)">
+    <rect width="200" height="120" rx="0" fill="#f0f4c3" stroke="#827717" stroke-width="2" />
+    <rect width="200" height="30" fill="#c0ca33" stroke="#827717" stroke-width="1" />
+    <text x="100" y="20" text-anchor="middle" font-family="monospace" font-size="14" font-weight="bold" fill="#000">AdminCredentials</text>
+    
+    <text x="10" y="50" font-family="monospace" font-size="12" fill="#333">key: "aucdt_admin_pass"</text>
+    <line x1="0" y1="60" x2="200" y2="60" stroke="#827717" stroke-width="1" />
+    <text x="10" y="80" font-family="monospace" font-size="12" fill="#333">value: string (Hash)</text>
+  </g>
+
+  <!-- Table: Theme Config -->
+  <g transform="translate(350, 80)">
+    <rect width="200" height="120" rx="0" fill="#bbdefb" stroke="#0d47a1" stroke-width="2" />
+    <rect width="200" height="30" fill="#64b5f6" stroke="#0d47a1" stroke-width="1" />
+    <text x="100" y="20" text-anchor="middle" font-family="monospace" font-size="14" font-weight="bold" fill="#000">ThemeSettings</text>
+    
+    <text x="10" y="50" font-family="monospace" font-size="12" fill="#333">key: "aucdt_theme"</text>
+    <line x1="0" y1="60" x2="200" y2="60" stroke="#0d47a1" stroke-width="1" />
+    <text x="10" y="80" font-family="monospace" font-size="12" fill="#333">value: 'light'|'dark'</text>
+    <text x="10" y="95" font-family="monospace" font-size="12" fill="#333">       |'high-contrast'</text>
+  </g>
+
+  <!-- Table: Audit Logs -->
+  <g transform="translate(200, 240)">
+    <rect width="220" height="140" rx="0" fill="#ffccbc" stroke="#bf360c" stroke-width="2" />
+    <rect width="220" height="30" fill="#ff8a65" stroke="#bf360c" stroke-width="1" />
+    <text x="110" y="20" text-anchor="middle" font-family="monospace" font-size="14" font-weight="bold" fill="#000">AuditLogs</text>
+    
+    <text x="10" y="50" font-family="monospace" font-size="12" fill="#333">key: "aucdt_audit_logs"</text>
+    <line x1="0" y1="60" x2="220" y2="60" stroke="#bf360c" stroke-width="1" />
+    <text x="10" y="80" font-family="monospace" font-size="12" fill="#333">id: number (PK)</text>
+    <text x="10" y="95" font-family="monospace" font-size="12" fill="#333">action: string</text>
+    <text x="10" y="110" font-family="monospace" font-size="12" fill="#333">timestamp: string</text>
+    <text x="10" y="125" font-family="monospace" font-size="12" fill="#333">details: string</text>
+  </g>
+
+  <!-- Relationships -->
+  <path d="M150 200 L200 240" stroke="#999" stroke-width="2" stroke-dasharray="5,5" />
+  <text x="130" y="220" font-family="sans-serif" font-size="10" fill="#666">Manages</text>
+
+</svg>
