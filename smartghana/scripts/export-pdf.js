@@ -97,12 +97,14 @@ async function main() {
     console.log(`\n📄 Capturing Alliance Brief from ${briefUrl}...`);
     await page.goto(briefUrl, { waitUntil: 'networkidle', timeout: 30000 });
 
-    // Allow fonts and images to settle
-    await sleep(1500);
+    // Wait for all resources and allow fonts/images to settle
+    await page.waitForLoadState('networkidle');
+    await sleep(2000);
 
     const pdfBuffer = await page.pdf({
       format: 'A4',
       printBackground: true,
+      preferCSSPageSize: true,
       margin: { top: '0mm', right: '0mm', bottom: '0mm', left: '0mm' },
       displayHeaderFooter: false,
     });
