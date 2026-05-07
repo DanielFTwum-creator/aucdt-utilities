@@ -1,5 +1,7 @@
 # CLAUDE.md — SmartGhana
 
+> Inherits standards from parent `aucdt-utilities/CLAUDE.md`. See there for task delegation, operating principles, and TUC institutional standards.
+
 AI Studio app for Ghana — Powered by Google Gemini API.
 
 ---
@@ -126,6 +128,33 @@ Server proxies `/api` to `http://localhost:8080` (config in vite.config.ts).
 
 ---
 
+## Standards & Conventions
+
+### Code Style
+Inherits from parent project:
+- **Language:** UK British English in all comments and docs
+- **Framework:** React 19 + TypeScript 5.9
+- **Styling:** Tailwind CSS v4 (see parent for theme conventions)
+- **No placeholders:** Production-ready code only
+
+### Frontend Patterns (TUC Standard)
+Apply these to `index.html` and components:
+- Meta tags: charset, viewport, SEO (description, keywords, author), OG, Twitter Card
+- Font preconnect: `fonts.googleapis.com`, `fonts.gstatic.com` before styles
+- Analytics: Google Analytics (ID `G-FKXTELQ71R` for TUC properties)
+- Theme: `:root`, `[data-theme='dark']`, `[data-theme='light']`, `[data-theme='high-contrast']`
+- Typography: Inter (body), Crimson Text or Playfair (headings)
+- Animations: `fadeIn`, `slideIn` keyframes preferred
+
+### Documentation Standards
+See parent `CLAUDE.md` section 6 for full standards:
+- IEEE 830 / 29148 SRS format for specifications
+- Document names: `TUC-ICT-SRS-YYYY-NNN`
+- Diagrams: SVG format, embedded in docs
+- Organization: All docs in `/docs` directory
+
+---
+
 ## Known Issues & Limitations
 
 1. **Large JS bundle:** Single 767 KB chunk may be slow on 3G connections. Consider route-based code splitting in future iterations.
@@ -134,35 +163,8 @@ Server proxies `/api` to `http://localhost:8080` (config in vite.config.ts).
 ---
 
 ## File Structure
+
 ```
 smartghana/
 ├── src/
-│   ├── App.tsx           — Root component
-│   ├── main.tsx          — Entry point
-│   └── index.css         — Global styles + Tailwind directives
-├── public/               — Static assets
-├── dist/                 — Production build output (generated)
-├── vite.config.ts        — Vite configuration
-├── tailwind.config.js    — Tailwind theme config
-├── playwright.config.ts  — E2E test configuration
-├── .env.example          — Environment template
-├── .env.local            — Local secrets (git-ignored)
-├── package.json          — Dependencies & scripts
-└── CLAUDE.md             — This file
-```
-
----
-
-## Next Steps
-
-- [ ] Optimize bundle size (code splitting)
-- [ ] Add comprehensive error handling for API failures
-- [ ] Implement caching strategy for API responses
-- [ ] Add PWA support (service worker, manifest)
-- [ ] Set up CI/CD pipeline for automated testing
-- [ ] Configure production deployment
-
----
-
-*Last updated: 2026-05-07*
-*Status: Dev-ready, build tested, deployment ready*
+│   ├
