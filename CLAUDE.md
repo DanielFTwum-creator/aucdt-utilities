@@ -5,6 +5,34 @@
 
 ---
 
+## Task Delegation
+
+When spawning subagents, use the cheapest model that can handle the task:
+- Haiku: bulk mechanical tasks - file ops, formatting, renaming, 
+  simple transformations. No judgment required.
+- Sonnet: scoped research, code exploration, summarization, 
+  synthesis across sources.
+- Opus: only when real planning or tradeoffs are involved - 
+  architecture, ambiguous requirements, high-stakes decisions.
+
+### Spawn rules:
+- Haiku subagents cannot spawn further subagents. 
+  If they need to, the task was wrong-sized - return to parent.
+- Max spawn depth: 2 (parent → subagent → one more tier, no deeper)
+- If a subagent realizes it needs a smarter model, 
+  it returns to the parent instead of escalating on its own.
+
+## Preferred Tools (cheapest effective option first)
+
+- Public pages: use WebFetch - free, text-only, fast
+- Dynamic pages or auth-walled content: use agent-browser CLI 
+  (~82% fewer tokens than screenshot-based tools)
+- PDFs: use pdftotext instead of the Read tool
+When the same fetch pattern repeats more than twice, 
+wrap it as a reusable tool instead of re-running it each time.
+
+
+
 ## CORE OPERATING PRINCIPLES
 
 ### 1. Don't Assume. Don't Hide Confusion. Surface Tradeoffs.
