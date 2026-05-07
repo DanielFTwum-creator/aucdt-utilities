@@ -1,0 +1,11 @@
+<svg width="192" height="192" viewBox="0 0 192 192" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="192" height="192" fill="#0f2545"/>
+  <!-- Ghana flag stripes top -->
+  <rect width="192" height="18" y="0" fill="#ce1126"/>
+  <rect width="192" height="18" y="18" fill="#fcd116"/>
+  <!-- Gold "S" monogram -->
+  <g transform="translate(96, 96)" fill="none" stroke="#fcd116" stroke-width="15" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M -36 -24 Q -36 -36 -24 -36 L 12 -36 Q 24 -36 24 -24 Q 24 -12 12 -12 L -24 -12 Q -36 -12 -36 0 L -36 24 Q -36 36 -24 36 L 12 36 Q 24 36 24 24" transform="translate(-6, 0)"/>
+  </g>
+</svg>
