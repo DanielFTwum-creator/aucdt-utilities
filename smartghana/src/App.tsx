@@ -49,21 +49,21 @@ interface SynergyPoint {
 const SYNERGY_DATA: SynergyPoint[] = [
   {
     dimension: "Operational Delivery",
-    smartbridge: "Global Scalable Platform",
+    smartbridge: "Skill Wallet Platform (100K+ concurrent learners)",
     techbridge: "Local 15k+ Daily Ops",
     outcome: "Immediate 8-Week Launch",
     icon: <Zap className="w-5 h-5" />
   },
   {
     dimension: "User Experience",
-    smartbridge: "International Curriculum",
+    smartbridge: "Experiential Learning Ecosystem (2M+ learners globally)",
     techbridge: "Ghanaian Context & Support",
     outcome: "High Retention & Relevance",
     icon: <Users className="w-5 h-5" />
   },
   {
     dimension: "Data & Hosting",
-    smartbridge: "Cloud-Native Infrastructure",
+    smartbridge: "Multi-institution Cloud Platform (3,000+ institutions)",
     techbridge: "Local Sovereignty & GDPR",
     outcome: "Compliant & Low Latency",
     icon: <Database className="w-5 h-5" />
@@ -324,7 +324,7 @@ const Navbar = () => (
         </div>
         <div className="flex flex-col">
           <span className="text-[8px] font-black tracking-widest text-[#AAA] uppercase">Strategic Alliance</span>
-          <span className="text-[7px] font-bold text-[#CCC] uppercase">SmartBridge Global</span>
+          <span className="text-[7px] font-bold text-[#CCC] uppercase">SmartBridge</span>
         </div>
       </div>
     </div>
@@ -373,7 +373,7 @@ const SynergyGrid = () => (
           <div className="flex items-start gap-3">
             <div className="w-1.5 h-1.5 bg-[#AAA] rounded-full mt-1.5 flex-shrink-0" />
             <div>
-              <span className="text-[9px] font-bold text-[#AAA] uppercase tracking-tighter">SmartBridge Global</span>
+              <span className="text-[9px] font-bold text-[#AAA] uppercase tracking-tighter">SmartBridge</span>
               <p className="text-xs font-medium text-[#555] mt-0.5">{point.smartbridge}</p>
             </div>
           </div>
@@ -421,7 +421,7 @@ export default function App() {
 
       {/* Partnership Strip */}
       <div className="bg-espresso text-white py-2 overflow-hidden whitespace-nowrap border-y border-gold/20">
-        <motion.div 
+        <motion.div
           animate={{ x: [0, -1200] }}
           transition={{ repeat: Infinity, duration: 40, ease: "linear" }}
           className="flex gap-16 text-[9px] font-bold tracking-[0.2em] uppercase items-center"
@@ -431,12 +431,26 @@ export default function App() {
               <span className="text-gold">✦</span>
               <span>Unified Delivery Model</span>
               <span className="text-crimson">✦</span>
-              <span>Global Standards × Local Trust</span>
+              <span>SmartBridge India × SmartBridge Ghana × Techbridge</span>
               <span className="text-gold">✦</span>
-              <span>100% Data Sovereignty</span>
+              <span>Skill Wallet Platform · 2M+ Learners</span>
             </React.Fragment>
           ))}
         </motion.div>
+      </div>
+
+      {/* SmartBridge Global Tech Partners */}
+      <div className="bg-white/50 border-b border-[#E5E1D5] py-6 px-6">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-[9px] font-bold uppercase tracking-widest text-[#777] mb-4">SmartBridge Global Technology Ecosystem Partners</div>
+          <div className="flex flex-wrap gap-3">
+            {['IBM', 'Google', 'Salesforce', 'ServiceNow', 'AWS', 'MongoDB', 'Zscaler', 'Katalon', 'Tableau', 'Zoho'].map((partner, i) => (
+              <span key={i} className="px-3 py-2 bg-white border border-[#E5E1D5] rounded-sm text-[8px] font-bold text-espresso uppercase tracking-wider">
+                {partner}
+              </span>
+            ))}
+          </div>
+        </div>
       </div>
 
       <main className="max-w-7xl mx-auto px-6 py-16">
@@ -448,8 +462,9 @@ export default function App() {
               The Synergy of <span className="heading-italic">Global Tech</span> and <span className="heading-italic">Local Execution.</span>
             </h2>
             <p className="text-lg text-[#555] leading-relaxed max-w-xl mb-12">
-              Techbridge partners with SmartBridge to deliver a comprehensive, Ghana-first solution. 
-              We combine world-class learning platforms with locally-verified operations, physical campuses, 
+              Techbridge partners with SmartBridge — implemented in Ghana through SmartBridge Ghana,
+              powered by SmartBridge India's Skill Wallet platform — to deliver a comprehensive, Ghana-first solution.
+              We combine world-class learning platforms with locally-verified operations, physical campuses,
               and strict data sovereignty compliance.
             </p>
             <div className="flex flex-wrap gap-6">
@@ -683,7 +698,7 @@ export default function App() {
               <div>
                 <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-crimson mb-8">One Million Coders Deployment Framework</h3>
                 <p className="text-sm text-[#555] mb-8 leading-relaxed">
-                  The Techbridge-SmartBridge Alliance represents a dual-engine approach to the <span className="font-bold text-espresso underline decoration-gold/50">One Million Coders Programme.</span> Every 'R' in our strategic framework translates into a sequence of actionable deployment steps—moving from precise demand mapping to the mass regeneration of local intellectual property.
+                  The Techbridge–SmartBridge Alliance brings together three complementary entities: SmartBridge India (providing the Skill Wallet platform and global learning engine), SmartBridge Ghana (managing in-country implementation and government liaison), and Techbridge (supplying campus infrastructure and sovereign data stewardship). This tripartite approach to the <span className="font-bold text-espresso underline decoration-gold/50">One Million Coders Programme</span> ensures every 'R' in our strategic framework translates into actionable deployment steps—from precise demand mapping to the mass regeneration of local intellectual property.
                 </p>
                 <ul className="space-y-6">
                   {COLLABORATION_STRATEGY.map((item, i) => (
@@ -726,7 +741,7 @@ export default function App() {
                 </ul>
                 <div className="mt-12 pt-8 border-t border-[#E5E1D5]">
                   <p className="text-[10px] text-[#888] leading-relaxed">
-                    Each track is engineered to merge SmartBridge AI platform capabilities with Techbridge's industrial design focus.
+                    Each track merges SmartBridge's Skill Wallet platform capabilities with Techbridge's industrial design focus.
                   </p>
                 </div>
               </div>
@@ -743,7 +758,7 @@ export default function App() {
               </div>
             </div>
             <p className="text-lg text-[#555] leading-relaxed mb-10">
-              Techbridge serves as the <span className="font-bold text-espresso">Local Data Steward</span> in the alliance. While SmartBridge provides the delivery platform, all student PII, learning pathways, and assessment data are anchored in Ghanaian jurisdiction.
+              Techbridge serves as the <span className="font-bold text-espresso">Local Data Steward</span> in the alliance. While SmartBridge (India & Ghana) provides the Skill Wallet platform and delivery infrastructure, all student PII, learning pathways, and assessment data are anchored in Ghanaian jurisdiction.
             </p>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {[
