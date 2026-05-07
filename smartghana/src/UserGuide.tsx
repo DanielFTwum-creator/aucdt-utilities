@@ -15,8 +15,8 @@ export default function UserGuide({ isOpen, onClose }: UserGuideProps) {
       icon: <Eye className="w-6 h-6" />,
       title: 'Understanding the Proposal',
       content: [
-        'SmartGhana presents a strategic alliance between Techbridge (Ghana-based) and SmartBridge (India-based) to deliver Ghana\'s One Million Coders Programme.',
-        'The interactive proposal showcases how both organizations\' strengths complement each other to create a locally-responsive, globally-scalable solution.'
+        'SmartGhana presents a strategic alliance between Techbridge University College and SmartBridge — comprising SmartBridge India (the global Skill Wallet platform provider) and SmartBridge Ghana (the in-country implementation arm) — to deliver Ghana\'s One Million Coders Programme.',
+        'The interactive proposal showcases how all three entities\' strengths complement each other to create a locally-responsive, globally-scalable, and sovereignly-operated solution.'
       ]
     },
     {
