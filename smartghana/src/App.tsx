@@ -50,7 +50,7 @@ const SYNERGY_DATA: SynergyPoint[] = [
   {
     dimension: "Operational Delivery",
     smartbridge: "Skill Wallet Platform (100K+ concurrent learners)",
-    techbridge: "Local 15k+ Daily Ops",
+    techbridge: "Quality-Focused Delivery & Institutional Infrastructure",
     outcome: "Immediate 8-Week Launch",
     icon: <Zap className="w-5 h-5" />
   },
@@ -514,7 +514,7 @@ export default function App() {
                   <div className="max-w-[200px]">
                     <div className="text-[9px] font-black uppercase tracking-widest text-gold mb-1">Oyibi Tech Hub</div>
                     <p className="text-[10px] text-white/50 leading-tight uppercase font-bold tracking-tighter">
-                      15,000+ Students actively engaged in industrial technical mastery.
+                      ~200 Students. Quality-focused. Industry-aligned. Ready to scale.
                     </p>
                   </div>
                   <div className="w-12 h-12 bg-white/10 backdrop-blur-md rounded-full flex items-center justify-center border border-white/20">
@@ -820,7 +820,7 @@ export default function App() {
                  <div className="text-2xl font-serif italic text-crimson">8 Weeks to Launch</div>
                </div>
                <p className="text-[10px] text-[#777] max-w-[180px] leading-relaxed">
-                 Leveraging Techbridge's existing 15k student infrastructure for instant SmartBridge platform rollout.
+                 Leveraging Techbridge's existing campus infrastructure and proven processes for instant SmartBridge platform rollout.
                </p>
              </div>
           </div>

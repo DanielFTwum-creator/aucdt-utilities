@@ -10,7 +10,7 @@ Dear **[Minister/Director Name]**,
 
 I write from Techbridge University College to introduce a strategic partnership opportunity for Ghana's One Million Coders Programme.
 
-**Techbridge** is Ghana's leading technical institution (Oyibi, Greater Accra) with 15,000+ active students, four accredited industrial-aligned degree programmes, and proven delivery across Product Design, Fashion Technology, Jewellery Design, and Digital Media. We bring operational readiness, institutional credibility, and deep local policy alignment.
+**Techbridge** is Ghana's leading technical institution (Oyibi, Greater Accra) with ~200 quality-focused students, four accredited industrial-aligned degree programmes, and proven delivery across Product Design, Fashion Technology, Jewellery Design, and Digital Media. We bring operational readiness, institutional credibility, and deep local policy alignment—plus campus infrastructure ready to scale.
 
 **SmartBridge** brings a global AI-native learning platform (Skill Wallet) proven across 3,000+ institutions and 2+ million learners worldwide.
 

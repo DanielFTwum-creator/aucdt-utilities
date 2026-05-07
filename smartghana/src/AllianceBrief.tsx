@@ -123,7 +123,7 @@ export default function AllianceBrief() {
             more than a decade. SmartBridge Ghana, headquartered in Accra, manages in-country
             deployment and government liaison. Techbridge University College provides the institutional
             anchor: established local infrastructure, validated delivery experience, active operational
-            capacity of 15,000+ enrolled students, and proven alignment with national digital policy.
+            capacity of ~200 enrolled students (quality-focused model), and proven alignment with national digital policy.
           </p>
           <p className="brief-body">
             This alliance moves beyond the standard SaaS procurement model. By combining SmartBridge's
