@@ -16,6 +16,7 @@
     "test:ui": "vitest --ui",
     "test:coverage": "vitest --coverage",
     "export-pdf": "pnpm run build && node scripts/export-pdf.js",
+    "generate-intro-pdfs": "node scripts/generate-intro-pdfs.js",
     "deploy": "pnpm build && scp -r dist/ root@techbridge.edu.gh:/var/www/vhosts/techbridge.edu.gh/httpdocs/smart/"
   },
   "dependencies": {
