@@ -3,7 +3,23 @@
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
 ---
+## Task Delegation
 
+When spawning subagents, use the cheapest model that can handle the task:
+- Haiku: bulk mechanical tasks - file ops, formatting, renaming, 
+  simple transformations. No judgment required.
+- Sonnet: scoped research, code exploration, summarization, 
+  synthesis across sources.
+- Opus: only when real planning or tradeoffs are involved - 
+  architecture, ambiguous requirements, high-stakes decisions.
+
+### Spawn rules:
+- Haiku subagents cannot spawn further subagents. 
+  If they need to, the task was wrong-sized - return to parent.
+- Max spawn depth: 2 (parent → subagent → one more tier, no deeper)
+- If a subagent realizes it needs a smarter model, 
+  it returns to the parent instead of escalating on its own.
+  
 ## Quick Commands
 
 **Package manager:** pnpm 8.15.0 (required)
