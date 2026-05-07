@@ -1,7 +1,7 @@
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Menu, X } from 'lucide-react'
+import { Menu, X, Download, ChevronDown } from 'lucide-react'
 
 const navLinks = [
   { label: 'Home', path: '/' },
@@ -15,7 +15,51 @@ const navLinks = [
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false)
+  const [downloadOpen, setDownloadOpen] = useState(false)
+  const downloadRef = useRef<HTMLDivElement>(null)
   const { pathname } = useLocation()
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (downloadRef.current && !downloadRef.current.contains(event.target as Node)) {
+        setDownloadOpen(false)
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [])
+
+  const downloadDocuments = [
+    {
+      label: 'Alliance Brief PDF',
+      fileName: 'Techbridge-SmartBridge-Alliance-Brief.pdf',
+      description: 'Formal 3-page proposal document'
+    },
+    {
+      label: 'Introductory Letter',
+      fileName: 'Techbridge-Intro-Letter.pdf',
+      description: 'Formal government introduction'
+    },
+    {
+      label: 'Introductory Email',
+      fileName: 'Techbridge-Intro-Email.pdf',
+      description: 'Executive summary version'
+    }
+  ]
+
+  const handleDownload = (fileName: string) => {
+    const link = document.createElement('a')
+    // Use relative path that works in both dev and production
+    const basePath = window.location.pathname.startsWith('/smart') ? '/smart' : ''
+    link.href = `${basePath}/documents/${fileName}`
+    link.download = fileName
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+    setDownloadOpen(false)
+  }
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-techbridge-navy/97 backdrop-blur-md shadow-lg">
@@ -54,6 +98,44 @@ export default function Navbar() {
               {link.label}
             </Link>
           ))}
+
+          {/* Download Dropdown */}
+          <div ref={downloadRef} className="relative ml-2">
+            <button
+              type="button"
+              onClick={() => setDownloadOpen(!downloadOpen)}
+              className="flex items-center gap-1 px-3 py-2 rounded-lg text-[13px] font-medium text-white/75 hover:text-white hover:bg-white/10 transition-all"
+            >
+              <Download className="w-4 h-4" />
+              Documents
+              <ChevronDown className={`w-4 h-4 transition-transform ${downloadOpen ? 'rotate-180' : ''}`} />
+            </button>
+
+            <AnimatePresence>
+              {downloadOpen && (
+                <motion.div
+                  initial={{ opacity: 0, y: -8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -8 }}
+                  transition={{ duration: 0.2 }}
+                  className="absolute right-0 mt-1 w-56 bg-techbridge-navy border border-white/20 rounded-lg shadow-xl overflow-hidden z-50"
+                >
+                  {downloadDocuments.map(doc => (
+                    <button
+                      key={doc.fileName}
+                      type="button"
+                      onClick={() => handleDownload(doc.fileName)}
+                      className="w-full px-4 py-3 text-left hover:bg-white/10 border-b border-white/10 last:border-b-0 transition-colors"
+                    >
+                      <p className="text-white font-medium text-sm">{doc.label}</p>
+                      <p className="text-slate-400 text-xs mt-1">{doc.description}</p>
+                    </button>
+                  ))}
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+
           <Link
             to="/contact"
             className="ml-3 bg-ghana-green hover:bg-ghana-green/80 text-white px-5 py-2 rounded-lg font-semibold text-sm transition-all shadow-md"
@@ -64,6 +146,7 @@ export default function Navbar() {
 
         {/* Mobile Hamburger */}
         <button
+          type="button"
           className="lg:hidden text-white p-2 rounded-lg hover:bg-white/10"
           onClick={() => setMenuOpen(!menuOpen)}
         >
@@ -95,6 +178,46 @@ export default function Navbar() {
                   {link.label}
                 </Link>
               ))}
+
+              {/* Mobile Download Menu */}
+              <div className="mt-3 pt-3 border-t border-white/10">
+                <button
+                  type="button"
+                  onClick={() => setDownloadOpen(!downloadOpen)}
+                  className="w-full flex items-center justify-between px-4 py-3 rounded-lg text-white/80 hover:text-white hover:bg-white/10 transition-all text-sm font-medium"
+                >
+                  <span className="flex items-center gap-2">
+                    <Download className="w-4 h-4" />
+                    Documents
+                  </span>
+                  <ChevronDown className={`w-4 h-4 transition-transform ${downloadOpen ? 'rotate-180' : ''}`} />
+                </button>
+
+                <AnimatePresence>
+                  {downloadOpen && (
+                    <motion.div
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: 'auto' }}
+                      exit={{ opacity: 0, height: 0 }}
+                      transition={{ duration: 0.2 }}
+                      className="overflow-hidden"
+                    >
+                      {downloadDocuments.map(doc => (
+                        <button
+                          key={doc.fileName}
+                          type="button"
+                          onClick={() => handleDownload(doc.fileName)}
+                          className="w-full px-4 py-3 text-left hover:bg-white/10 transition-colors border-t border-white/10 first:border-t-0"
+                        >
+                          <p className="text-white font-medium text-sm">{doc.label}</p>
+                          <p className="text-slate-400 text-xs mt-1">{doc.description}</p>
+                        </button>
+                      ))}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+
               <Link
                 to="/contact"
                 onClick={() => setMenuOpen(false)}
