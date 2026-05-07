@@ -10,7 +10,8 @@
     "clean": "rm -rf dist",
     "lint": "tsc --noEmit",
     "test:e2e": "playwright test",
-    "deploy": "pnpm build && scp -r dist/ root@techbridge.edu.gh:/var/www/vhosts/techbridge.edu.gh/httpdocs/smartghana/"
+    "deploy": "pnpm build && scp -r dist/ root@techbridge.edu.gh:/var/www/vhosts/techbridge.edu.gh/httpdocs/smartghana/",
+    "export-pdf": "node scripts/export-pdf.js"
   },
   "dependencies": {
     "@capacitor/android": "^8.3.1",
