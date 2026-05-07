@@ -55,3 +55,7 @@
 .multiplier-dot {
   @apply w-2 h-2 rounded-full bg-gold inline-block mr-2;
 }
+
+.serif-italic {
+  @apply font-serif italic;
+}
