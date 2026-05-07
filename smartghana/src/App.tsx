@@ -336,13 +336,56 @@ const Navbar = () => (
         <a href="#delivery" className="hover:text-crimson transition-colors">Delivery</a>
         <a href="#economic" className="hover:text-crimson transition-colors">Economic Impact</a>
       </div>
-      <button
-        onClick={() => window.open('?brief=1&print=1', '_blank')}
-        className="text-[9px] font-bold uppercase tracking-widest px-4 py-2 border border-crimson text-crimson rounded-sm hover:bg-crimson hover:text-white transition-all flex items-center gap-2"
-      >
-        <Download className="w-3 h-3" />
-        Alliance Brief
-      </button>
+      <div className="relative group">
+        <button
+          type="button"
+          className="text-[9px] font-bold uppercase tracking-widest px-4 py-2 border border-crimson text-crimson rounded-sm hover:bg-crimson hover:text-white transition-all flex items-center gap-2"
+        >
+          <Download className="w-3 h-3" />
+          Download
+        </button>
+        <div className="absolute right-0 mt-0 w-48 bg-white border border-crimson rounded-sm shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-20">
+          <button
+            type="button"
+            onClick={() => window.open('?brief=1&print=1', '_blank')}
+            className="w-full text-left px-4 py-3 text-[9px] font-bold uppercase tracking-widest text-crimson hover:bg-crimson hover:text-white transition-colors border-b border-crimson/20"
+          >
+            Alliance Brief PDF
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              const introLetter = `INTRODUCTORY LETTER TO GOVERNMENT OF GHANA & SMARTBRIDGE\n\n[See INTRO-LETTER-GOVERNMENT.md in project root]\n\nTechbridge University College\nOyibi, Greater Accra, Ghana\nTel: +233-302788895\nEmail: daniel.twum@techbridge.edu.gh`;
+              const element = document.createElement('a');
+              element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(introLetter));
+              element.setAttribute('download', 'Techbridge-Intro-Letter-Government.txt');
+              element.style.display = 'none';
+              document.body.appendChild(element);
+              element.click();
+              document.body.removeChild(element);
+            }}
+            className="w-full text-left px-4 py-3 text-[9px] font-bold uppercase tracking-widest text-crimson hover:bg-crimson hover:text-white transition-colors border-b border-crimson/20"
+          >
+            Introductory Letter
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              const introEmail = `INTRODUCTORY EMAIL TO GOVERNMENT & SMARTBRIDGE\n\nSubject: Strategic Partnership Proposal — Ghana's One Million Coders Programme\n\n[See INTRO-EMAIL-GOVERNMENT.md in project root]\n\nDear Government of Ghana,\n\nTechbridge University College proposes a strategic partnership...\n\nBest regards,\nDaniel Frempong Twum\nHead of ICT & Special Adviser to the Founder\nTechbridge University College`;
+              const element = document.createElement('a');
+              element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(introEmail));
+              element.setAttribute('download', 'Techbridge-Intro-Email-Government.txt');
+              element.style.display = 'none';
+              document.body.appendChild(element);
+              element.click();
+              document.body.removeChild(element);
+            }}
+            className="w-full text-left px-4 py-3 text-[9px] font-bold uppercase tracking-widest text-crimson hover:bg-crimson hover:text-white transition-colors"
+          >
+            Introductory Email
+          </button>
+        </div>
+      </div>
     </div>
   </nav>
 );
