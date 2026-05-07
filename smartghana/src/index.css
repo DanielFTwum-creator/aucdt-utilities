@@ -70,13 +70,11 @@
 
 .brief-page {
   width: 210mm;
-  min-height: 297mm;
+  height: 297mm;
   padding: 18mm 22mm 14mm;
   background: white;
   box-sizing: border-box;
   position: relative;
-  display: flex;
-  flex-direction: column;
   page-break-after: always;
   break-after: page;
 }
@@ -181,6 +179,8 @@
 /* Sections */
 .brief-section {
   margin-bottom: 6mm;
+  break-inside: avoid;
+  page-break-inside: avoid;
 }
 
 .brief-section-header {
@@ -324,7 +324,7 @@
 
 /* Footer */
 .brief-footer {
-  margin-top: auto;
+  margin-top: 4mm;
   padding-top: 4mm;
   border-top: 1px solid #E5E1D5;
 }
