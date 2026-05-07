@@ -4,6 +4,7 @@
  */
 
 import React, { useState, useEffect, useRef } from 'react';
+import AllianceBrief from './AllianceBrief';
 import { 
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, 
   Cell, AreaChart, Area, LineChart, Line, Legend
@@ -333,7 +334,7 @@ const Navbar = () => (
         <a href="#economic" className="hover:text-crimson transition-colors">Economic Impact</a>
       </div>
       <button
-        onClick={() => window.print()}
+        onClick={() => window.open('?brief=1&print=1', '_blank')}
         className="text-[9px] font-bold uppercase tracking-widest px-4 py-2 border border-crimson text-crimson rounded-sm hover:bg-crimson hover:text-white transition-all flex items-center gap-2"
       >
         <Download className="w-3 h-3" />
@@ -393,6 +394,11 @@ const SynergyGrid = () => (
 );
 
 export default function App() {
+  const params = new URLSearchParams(window.location.search);
+  if (params.get('brief') === '1') {
+    return <AllianceBrief />;
+  }
+
   const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
