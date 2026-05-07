@@ -40,8 +40,8 @@ function testPort(port) {
 function startPreviewServer() {
   return new Promise((resolve, reject) => {
     const proc = spawn(
-      'node',
-      ['node_modules/.bin/vite', 'preview', '--port', String(PORT)],
+      'pnpm',
+      ['exec', 'vite', 'preview', '--port', String(PORT)],
       { cwd: ROOT, shell: process.platform === 'win32', stdio: 'inherit' }
     );
 
@@ -77,7 +77,7 @@ async function main() {
 
   console.log('\n⚙  Building production bundle...');
   const { execSync } = await import('child_process');
-  execSync('node node_modules/.bin/vite build', { cwd: ROOT, stdio: 'inherit' });
+  execSync('pnpm exec vite build', { cwd: ROOT, stdio: 'inherit' });
 
   console.log('\n🚀 Starting preview server...');
   const server = await startPreviewServer();
