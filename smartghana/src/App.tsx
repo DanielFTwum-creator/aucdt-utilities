@@ -355,14 +355,12 @@ const Navbar = () => (
           <button
             type="button"
             onClick={() => {
-              const introLetter = `INTRODUCTORY LETTER TO GOVERNMENT OF GHANA & SMARTBRIDGE\n\n[See INTRO-LETTER-GOVERNMENT.md in project root]\n\nTechbridge University College\nOyibi, Greater Accra, Ghana\nTel: +233-302788895\nEmail: daniel.twum@techbridge.edu.gh`;
-              const element = document.createElement('a');
-              element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(introLetter));
-              element.setAttribute('download', 'Techbridge-Intro-Letter-Government.txt');
-              element.style.display = 'none';
-              document.body.appendChild(element);
-              element.click();
-              document.body.removeChild(element);
+              const link = document.createElement('a');
+              link.href = '/documents/Techbridge-Intro-Letter.pdf';
+              link.download = 'Techbridge-Intro-Letter.pdf';
+              document.body.appendChild(link);
+              link.click();
+              document.body.removeChild(link);
             }}
             className="w-full text-left px-4 py-3 text-[9px] font-bold uppercase tracking-widest text-crimson hover:bg-crimson hover:text-white transition-colors border-b border-crimson/20"
           >
@@ -371,14 +369,12 @@ const Navbar = () => (
           <button
             type="button"
             onClick={() => {
-              const introEmail = `INTRODUCTORY EMAIL TO GOVERNMENT & SMARTBRIDGE\n\nSubject: Strategic Partnership Proposal — Ghana's One Million Coders Programme\n\n[See INTRO-EMAIL-GOVERNMENT.md in project root]\n\nDear Government of Ghana,\n\nTechbridge University College proposes a strategic partnership...\n\nBest regards,\nDaniel Frempong Twum\nHead of ICT & Special Adviser to the Founder\nTechbridge University College`;
-              const element = document.createElement('a');
-              element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(introEmail));
-              element.setAttribute('download', 'Techbridge-Intro-Email-Government.txt');
-              element.style.display = 'none';
-              document.body.appendChild(element);
-              element.click();
-              document.body.removeChild(element);
+              const link = document.createElement('a');
+              link.href = '/documents/Techbridge-Intro-Email.pdf';
+              link.download = 'Techbridge-Intro-Email.pdf';
+              document.body.appendChild(link);
+              link.click();
+              document.body.removeChild(link);
             }}
             className="w-full text-left px-4 py-3 text-[9px] font-bold uppercase tracking-widest text-crimson hover:bg-crimson hover:text-white transition-colors"
           >
