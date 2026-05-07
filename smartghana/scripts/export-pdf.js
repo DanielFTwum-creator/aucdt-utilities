@@ -109,9 +109,16 @@ async function main() {
       displayHeaderFooter: false,
     });
 
-    const outPath = resolve(EXPORTS, 'Techbridge-SmartBridge-Alliance-Brief.pdf');
+    // Generate timestamp (ISO format: YYYY-MM-DD-HHmmss)
+    const now = new Date();
+    const timestamp = now.toISOString().split('T')[0] + '-' +
+      String(now.getHours()).padStart(2, '0') +
+      String(now.getMinutes()).padStart(2, '0') +
+      String(now.getSeconds()).padStart(2, '0');
+
+    const outPath = resolve(EXPORTS, `Techbridge-SmartBridge-Alliance-Brief-${timestamp}.pdf`);
     writeFileSync(outPath, pdfBuffer);
-    console.log('  ✅ Saved → exports/Techbridge-SmartBridge-Alliance-Brief.pdf');
+    console.log(`  ✅ Saved → exports/Techbridge-SmartBridge-Alliance-Brief-${timestamp}.pdf`);
 
   } finally {
     await browser.close();
