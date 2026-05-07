@@ -158,9 +158,9 @@ export default function AllianceBrief() {
               Design sectors — Ghana's highest-value industrial export categories.
             </BulletItem>
             <BulletItem label="Reuse — Node Activation">
-              Deployment of Techbridge's eight regional campus clusters as Sovereign Access
-              Nodes, providing high-bandwidth infrastructure and GPU rendering capacity
-              throughout Greater Accra, Kumasi, and the Northern Region.
+              Deployment of Techbridge's Oyibi campus as the primary Sovereign Access Node,
+              providing high-bandwidth infrastructure and GPU rendering capacity for the
+              One Million Coders Programme in Greater Accra and surrounding regions.
             </BulletItem>
             <BulletItem label="Regenerate — IP Genesis">
               Establishment of joint Sovereign Tooling Laboratories in which students
