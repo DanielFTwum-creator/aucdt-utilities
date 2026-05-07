@@ -5,19 +5,21 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import AllianceBrief from './AllianceBrief';
+import UserGuide from './UserGuide';
+import AdminGuide from './AdminGuide';
 import { 
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, 
   Cell, AreaChart, Area, LineChart, Line, Legend
 } from 'recharts';
-import { 
-  ShieldCheck, 
-  Zap, 
-  Users, 
-  Globe, 
-  TrendingUp, 
-  Handshake, 
-  ArrowRight, 
-  Scale, 
+import {
+  ShieldCheck,
+  Zap,
+  Users,
+  Globe,
+  TrendingUp,
+  Handshake,
+  ArrowRight,
+  Scale,
   Database,
   Building,
   Download,
@@ -27,7 +29,8 @@ import {
   Search,
   MinusCircle,
   Sparkles,
-  RefreshCw
+  RefreshCw,
+  HelpCircle
 } from 'lucide-react';
 import { motion } from 'motion/react';
 
@@ -399,6 +402,8 @@ export default function App() {
     return <AllianceBrief />;
   }
 
+  const [isUserGuideOpen, setIsUserGuideOpen] = useState(false);
+  const [isAdminGuideOpen, setIsAdminGuideOpen] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
@@ -1235,6 +1240,34 @@ export default function App() {
           </div>
         </div>
       </footer>
+
+      {/* Guides */}
+      <UserGuide isOpen={isUserGuideOpen} onClose={() => setIsUserGuideOpen(false)} />
+      <AdminGuide isOpen={isAdminGuideOpen} onClose={() => setIsAdminGuideOpen(false)} />
+
+      {/* Help button floating in bottom right */}
+      <div className="fixed bottom-6 right-6 flex gap-3 z-30">
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          onClick={() => setIsAdminGuideOpen(true)}
+          className="p-3 bg-red-700 text-white rounded-full shadow-lg hover:bg-red-800 transition-colors"
+          title="Admin Guide (Password Required)"
+          aria-label="Open admin guide"
+        >
+          <Lock className="w-5 h-5" />
+        </motion.button>
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          onClick={() => setIsUserGuideOpen(true)}
+          className="p-3 bg-[#0f2545] text-white rounded-full shadow-lg hover:bg-[#1a3a5c] transition-colors"
+          title="User Guide"
+          aria-label="Open user guide"
+        >
+          <HelpCircle className="w-5 h-5" />
+        </motion.button>
+      </div>
     </div>
   );
 }
