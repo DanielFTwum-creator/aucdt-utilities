@@ -11,7 +11,7 @@ function ConfidentialFooter() {
       <div className="brief-footer-inner">
         <span>Confidential</span>
         <span className="brief-footer-dot">✦</span>
-        <span>Techbridge University College × SmartBridge AI Core</span>
+        <span>Techbridge University College × SmartBridge (India & Ghana)</span>
         <span className="brief-footer-dot">✦</span>
         <span>TUC-ICT-PROP-2026-002</span>
       </div>
@@ -80,7 +80,7 @@ export default function AllianceBrief() {
           <tbody>
             <tr>
               <td className="brief-header-label">To:</td>
-              <td className="brief-header-value">The Executive Board, SmartBridge AI Core</td>
+              <td className="brief-header-value">The Executive Boards, SmartBridge India & SmartBridge Ghana</td>
             </tr>
             <tr>
               <td className="brief-header-label">From:</td>
@@ -109,27 +109,27 @@ export default function AllianceBrief() {
         <section className="brief-section">
           <SectionHeader number={1} title="STRATEGIC VISION" />
           <p className="brief-body">
-            Techbridge University College proposes a structured alliance with SmartBridge AI Core
-            to serve as the unified technical and operational partner for the One Million Coders
-            Programme in Ghana. This proposal sets out the framework, delivery model, and projected
-            outcomes of a collaboration designed to transform the initiative from a generic
-            skills-delivery exercise into a nationally-aligned programme of industrial and digital
-            capacity building.
+            Techbridge University College proposes a structured alliance with SmartBridge — delivered
+            through SmartBridge Educational Services Ltd. (Ghana), under the strategic direction of
+            SmartBridge Education Services Pvt. Ltd. (India) — to serve as the unified technical
+            and operational partner for the One Million Coders Programme in Ghana. This proposal sets
+            out the framework, delivery model, and projected outcomes of a three-entity collaboration
+            designed to transform the initiative from a generic skills-delivery exercise into a
+            nationally-aligned programme of industrial and digital capacity building.
           </p>
           <p className="brief-body">
-            The Government of Ghana's ambition is not simply to produce coders — it is to cultivate
-            a generation of sovereign industrial architects capable of building, owning, and
-            exporting technology rooted in Ghanaian industrial context. Achieving this requires a
-            partner with established local infrastructure, validated delivery experience, and deep
-            alignment with national policy. Techbridge provides each of these, having already trained
-            over 100 students under the CTVET programme and operating an active cohort of 15,000
-            enrolled across our Oyibi campus.
+            SmartBridge India provides the Skill Wallet platform — a proven experiential learning
+            ecosystem that has trained 2 million+ learners across 3,000+ institutions globally over
+            more than a decade. SmartBridge Ghana, headquartered in Accra, manages in-country
+            deployment and government liaison. Techbridge University College provides the institutional
+            anchor: established local infrastructure, validated delivery experience, active operational
+            capacity of 15,000+ enrolled students, and proven alignment with national digital policy.
           </p>
           <p className="brief-body">
-            This alliance moves beyond the standard SaaS procurement model. By combining
-            SmartBridge's AI-native learning platform with Techbridge's institutional infrastructure
-            and regional reach, the partnership creates a delivery model that is simultaneously
-            world-class in technical capability and sovereign in its operation.
+            This alliance moves beyond the standard SaaS procurement model. By combining SmartBridge's
+            Skill Wallet platform and global experiential learning methodology with Techbridge's
+            institutional infrastructure and regional reach, the partnership creates a delivery model
+            that is simultaneously world-class in technical capability and sovereign in its operation.
           </p>
         </section>
 
@@ -185,8 +185,13 @@ export default function AllianceBrief() {
         <section className="brief-section">
           <SectionHeader number={3} title="PROGRAMME DELIVERY AND OPERATIONAL SYNERGY" />
           <p className="brief-body">
-            The alliance will operate under a Sovereign Execution Model structured around
-            four core principles:
+            The alliance will operate under a Sovereign Execution Model structured across three
+            complementary entities. SmartBridge India provides the Skill Wallet platform, global
+            curriculum engine, and AI-native tutoring systems (Kibo bots for knowledge support).
+            SmartBridge Ghana manages in-country implementation, government liaison, and regulatory
+            alignment. Techbridge provides physical campus infrastructure, accredited degree programmes,
+            and sovereign data stewardship under Ghana Data Protection Act compliance. This tripartite
+            structure is aligned around four core operational principles:
           </p>
           <div className="brief-bullets">
             <BulletItem label="Joint Curriculum Engineering">
