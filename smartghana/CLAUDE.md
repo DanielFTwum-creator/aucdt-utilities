@@ -155,10 +155,49 @@ See parent `CLAUDE.md` section 6 for full standards:
 
 ---
 
+## PWA & Mobile Support
+
+### Current Status (Phase 1 Complete)
+SmartGhana is now a fully functional Progressive Web App:
+- ✅ Service worker (`dist/sw.js`) provides offline caching via Workbox
+- ✅ Manifest (`public/manifest.json`) enables "Add to Home Screen" on iOS/Android
+- ✅ Icons (SVG-based, 192×192 and 512×512 px) use Techbridge branding
+- ✅ Auto-update enabled — users get new versions automatically when you redeploy
+- ✅ Precaches 10 static assets (795 KiB) on first visit
+- ✅ Caches Google Fonts for 1 year (offline-ready after first load)
+
+### Testing PWA Locally
+```bash
+pnpm build && pnpm preview
+# In DevTools (F12):
+#   → Application → Service Workers (should show "active")
+#   → Application → Manifest (shows app metadata)
+#   → Network → Offline (toggle)
+#   → Refresh page — should load from cache
+```
+
+### Roadmap for App Store / Play Store
+
+**Phase 2 (In Progress):** Capacitor setup for native Android/iOS packages
+- Install `@capacitor/core`, `@capacitor/cli`, `@capacitor/android`
+- Create `capacitor.config.ts`
+- Build native `.aab` for Play Store
+
+**Phase 3 (Planned):** Resolve critical blockers before store submission
+- **Blocker #1:** Gemini API key embedded in JS bundle → Move to Express backend proxy
+- **Blocker #2:** External assets (logos, video) from techbridge.edu.gh → Download locally
+- **Blocker #3:** `window.print()` won't work in Capacitor → Replace with `@capacitor/share`
+
+**Full gap analysis:** See `GAP-ANALYSIS-MOBILE.md` for 20-step roadmap, costs, and detailed requirements.
+
+---
+
 ## Known Issues & Limitations
 
 1. **Large JS bundle:** Single 767 KB chunk may be slow on 3G connections. Consider route-based code splitting in future iterations.
-2. **API key exposure:** Hardcoded into browser bundle. Use caution with production keys; consider backend proxy for sensitive keys.
+2. **API key exposure (Phase 3 blocker):** Embedded in browser bundle via `define` in `vite.config.ts`. Both App Store and Play Store reject apps with exposed credentials. Must move to backend proxy before submission.
+3. **External asset dependencies (Phase 3 blocker):** Logos and video from `techbridge.edu.gh` break in restricted networks. Play Store / App Store test for this — must download locally before submission.
+4. **Print mechanism (Phase 3 blocker):** `window.print()` fails silently in Capacitor WebView. Must replace with `@capacitor/share` for native experience.
 
 ---
 
@@ -185,14 +224,16 @@ smartghana/
 
 ## Next Steps
 
+- [x] Add PWA support (service worker, manifest) — **Phase 1 Complete**
+- [ ] Set up Capacitor for Android/iOS native builds — **Phase 2 In Progress**
+- [ ] Resolve API key security blocker (backend proxy) — **Phase 3 Planned**
+- [ ] Download assets locally (logos, video) — **Phase 3 Planned**
+- [ ] Replace `window.print()` with Capacitor share — **Phase 3 Planned**
 - [ ] Optimize bundle size (code splitting)
 - [ ] Add comprehensive error handling for API failures
-- [ ] Implement caching strategy for API responses
-- [ ] Add PWA support (service worker, manifest)
 - [ ] Set up CI/CD pipeline for automated testing
-- [ ] Configure production deployment
 
 ---
 
-*Last updated: 2026-05-07*
-*Status: Dev-ready, build tested, deployment ready*
+*Last updated: 2026-05-07 (Phase 1 PWA complete, Phase 2 in progress)*  
+*See `GAP-ANALYSIS-MOBILE.md` for complete 20-step mobile app roadmap*
