@@ -10,11 +10,20 @@ View your app in AI Studio: https://ai.studio/apps/5f648a42-e402-451d-a3f7-3af91
 
 ## Run Locally
 
-**Prerequisites:**  Node.js
-
+**Prerequisites:**  Node.js and pnpm 8.15.0+
 
 1. Install dependencies:
-   `npm install`
+   `pnpm install`
 2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
 3. Run the app:
-   `npm run dev`
+   `pnpm dev`
+
+**Available Commands:**
+- `pnpm dev` — Start dev server (port 3000)
+- `pnpm build` — Build for production
+- `pnpm preview` — Preview production build
+- `pnpm lint` — TypeScript type checking
+- `pnpm test:e2e` — Run Playwright E2E tests
+- `pnpm clean` — Remove dist/ directory
+
+**Note:** This project uses pnpm exclusively. Do not use npm or yarn.
