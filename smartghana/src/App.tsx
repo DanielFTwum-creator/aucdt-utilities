@@ -332,7 +332,10 @@ const Navbar = () => (
         <a href="#delivery" className="hover:text-crimson transition-colors">Delivery</a>
         <a href="#economic" className="hover:text-crimson transition-colors">Economic Impact</a>
       </div>
-      <button className="text-[9px] font-bold uppercase tracking-widest px-4 py-2 border border-crimson text-crimson rounded-sm hover:bg-crimson hover:text-white transition-all flex items-center gap-2">
+      <button
+        onClick={() => window.print()}
+        className="text-[9px] font-bold uppercase tracking-widest px-4 py-2 border border-crimson text-crimson rounded-sm hover:bg-crimson hover:text-white transition-all flex items-center gap-2"
+      >
         <Download className="w-3 h-3" />
         Alliance Brief
       </button>
@@ -798,7 +801,7 @@ export default function App() {
         </section>
 
         {/* Economic Multiplier */}
-        <section id="economic" className="mb-32">
+        <section id="economic-multiplier" className="mb-32">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-20 items-center">
             <div className="lg:col-span-5 order-2 lg:order-1">
               <div className="bg-espresso text-white p-12 rounded-tech-lg relative">
@@ -839,7 +842,10 @@ export default function App() {
                   <div className="text-xl font-bold text-espresso">GHS 420M</div>
                 </div>
               </div>
-              <button className="mt-12 group flex items-center gap-4 text-[11px] font-bold uppercase tracking-widest text-espresso hover:text-crim transition-colors">
+              <button
+                onClick={() => document.getElementById('economic')?.scrollIntoView({ behavior: 'smooth' })}
+                className="mt-12 group flex items-center gap-4 text-[11px] font-bold uppercase tracking-widest text-espresso hover:text-crimson transition-colors"
+              >
                 View Full Economic Impact Model <ArrowRight className="w-4 h-4 group-hover:translate-x-2 transition-transform" />
               </button>
             </div>
@@ -870,7 +876,10 @@ export default function App() {
             Selecting the <span className="text-gold">Techbridge × SmartBridge Alliance</span> ensures Ghana secures world-class technology with absolute sovereign control and local economic impact.
           </h2>
           <div className="flex flex-col items-center gap-12 mt-12 mb-16">
-            <button className="bg-crimson px-12 py-5 rounded-sm text-[12px] font-bold uppercase tracking-widest hover:bg-white hover:text-espresso transition-all flex items-center gap-3 shadow-xl">
+            <button
+              onClick={() => window.open('mailto:partnership@techbridge.edu.gh?subject=One Million Coders: Alliance Protocol Activation', '_blank')}
+              className="bg-crimson px-12 py-5 rounded-sm text-[12px] font-bold uppercase tracking-widest hover:bg-white hover:text-espresso transition-all flex items-center gap-3 shadow-xl"
+            >
               Activate Alliance Protocol <CheckCircle2 className="w-4 h-4" />
             </button>
             <div className="flex flex-col items-center gap-3">
@@ -1136,7 +1145,10 @@ export default function App() {
                 <p className="text-[10px] text-[#777]">Certified by Ministry of Trade and Industrial Relations</p>
               </div>
             </div>
-            <button className="px-6 py-3 border border-espresso text-espresso text-[10px] font-black uppercase tracking-widest hover:bg-espresso hover:text-white transition-all">
+            <button
+              onClick={() => window.print()}
+              className="px-6 py-3 border border-espresso text-espresso text-[10px] font-black uppercase tracking-widest hover:bg-espresso hover:text-white transition-all"
+            >
               Download Full Impact Report
             </button>
           </div>
