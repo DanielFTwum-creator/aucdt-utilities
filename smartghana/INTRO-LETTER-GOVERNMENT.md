@@ -26,13 +26,13 @@ Techbridge University College writes to formally introduce ourselves as a strate
 
 #### **WHO WE ARE**
 
-Techbridge University College is Ghana's leading technical institution, headquartered in Oyibi, Greater Accra. For over a decade, we have trained thousands of students in industry-aligned digital and engineering disciplines through accredited degree programmes and hands-on, project-based learning methodologies. Our four specialised programmes — Product Design and Entrepreneurship, Fashion Design Technology, Jewellery Design Technology, and Digital Media & Communications Design — address Ghana's highest-value industrial sectors and export opportunities.
+Techbridge University College is Ghana's leading technical institution, headquartered in Oyibi, Greater Accra. We specialise in industry-aligned digital and engineering disciplines through accredited degree programmes and hands-on, project-based learning methodologies. Our four specialised programmes — Product Design and Entrepreneurship, Fashion Design Technology, Jewellery Design Technology, and Digital Media & Communications Design — address Ghana's highest-value industrial sectors and export opportunities.
 
-Our current enrolment exceeds 15,000 students, with demonstrable track records in:
-- **Industrial Partnership:** Direct collaboration with Ghanaian SMEs and enterprises
-- **Curriculum Innovation:** Bridging academic theory with real-world technology applications
+As a quality-focused institution, we maintain an excellence-driven enrolment of approximately 200 students, with demonstrable track records in:
+- **Industrial Partnership:** Direct collaboration with Ghanaian SMEs and enterprises on live projects
+- **Curriculum Innovation:** Bridging academic theory with real-world technology applications and industry standards
 - **Data Sovereignty:** Full compliance with Ghana's Data Protection Act and national digital policy
-- **Regional Impact:** Serving students from Greater Accra, Kumasi, and beyond
+- **Institutional Credibility:** Accredited programmes, proven delivery, and strong employer partnerships
 
 #### **THE OPPORTUNITY**
 
