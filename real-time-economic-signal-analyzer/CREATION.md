@@ -1,4 +1,4 @@
-# CREATION.md — Real-Time Economic Signal Analyzer
+﻿# CREATION.md â€” Real-Time Economic Signal Analyzer
 **Purpose:** Complete build specification for any agent to implement this application from scratch.
 **Target:** Functional parity with `C:/Development/aucdt-utilities/real-time-economic-signal-analyzer/`
 **Last verified:** 2026-04-26
@@ -9,7 +9,7 @@
 
 The Real-Time Economic Signal Analyzer is a **full-stack autonomous operations and management platform** (App ID 229) that monitors, analyzes, and forecasts economic indicators in real-time. It integrates Google Generative AI for signal analysis, real-time data feeds, and interactive dashboards for financial decision-makers.
 
-The app features a **React 19.2.4 frontend** with Recharts visualizations, a **Node.js/Express backend** using SQLite/better-sqlite3 for persistence, and autonomous signal processing via AI-driven insights.
+The app features a **React 19.2.5 frontend** with Recharts visualizations, a **Node.js/Express backend** using SQLite/better-sqlite3 for persistence, and autonomous signal processing via AI-driven insights.
 
 ---
 
@@ -17,7 +17,7 @@ The app features a **React 19.2.4 frontend** with Recharts visualizations, a **N
 
 | Layer | Technology | Version |
 |---|---|---|
-| Frontend Runtime | React | **19.2.4** |
+| Frontend Runtime | React | **19.2.5** |
 | Frontend Build | Vite | ^6.2.0 |
 | Language | TypeScript | ~5.8.2 |
 | Styling | Tailwind CSS | ^4.1.14 |
@@ -35,7 +35,7 @@ The app features a **React 19.2.4 frontend** with Recharts visualizations, a **N
 | Env Vars | dotenv | ^17.2.3 |
 | Unit Tests | Vitest | ^3.0.0 |
 | E2E Tests | Vitest E2E | ^3.0.0 |
-| Container | node:24-alpine | — |
+| Container | node:24-alpine | â€” |
 
 ---
 
@@ -43,58 +43,58 @@ The app features a **React 19.2.4 frontend** with Recharts visualizations, a **N
 
 ```
 real-time-economic-signal-analyzer/
-├── index.html
-├── package.json                 # name: real-time-economic-signal-analyzer, version: 2.0.0
-├── vite.config.ts
-├── vitest.config.ts
-├── vitest.e2e.config.ts
-├── tsconfig.json
-├── tailwind.config.js
-├── postcss.config.js
-├── Dockerfile                   # multi-stage node:24-alpine → node:24-alpine
-├── .env.example
-├── .gitignore
-├── server.ts                    # Express entry point
-├── CREATION.md
-├── public/
-├── src/
-│   ├── index.tsx
-│   ├── App.tsx
-│   ├── server.ts
-│   ├── types.ts
-│   ├── pages/
-│   │   ├── Dashboard.tsx
-│   │   ├── SignalAnalysis.tsx
-│   │   ├── Forecasting.tsx
-│   │   └── Admin.tsx
-│   ├── components/
-│   │   ├── RealTimeChart.tsx
-│   │   ├── SignalIndicator.tsx
-│   │   ├── AIInsights.tsx
-│   │   ├── DataImport.tsx
-│   │   └── LoadingState.tsx
-│   ├── hooks/
-│   │   ├── useEconomicSignals.ts
-│   │   ├── useAIAnalysis.ts
-│   │   └── useRealtimeUpdates.ts
-│   ├── services/
-│   │   ├── api.ts
-│   │   ├── economicDataService.ts
-│   │   ├── aiService.ts
-│   │   ├── database.ts
-│   │   └── signalProcessor.ts
-│   ├── utils/
-│   │   ├── calculations.ts
-│   │   ├── formatters.ts
-│   │   └── validators.ts
-│   └── styles/
-│       ├── index.css
-│       └── globals.css
-├── db/                          # SQLite database files
-└── __tests__/
-    ├── api.test.ts
-    ├── signals.test.ts
-    └── ai.test.ts
+â”œâ”€â”€ index.html
+â”œâ”€â”€ package.json                 # name: real-time-economic-signal-analyzer, version: 2.0.0
+â”œâ”€â”€ vite.config.ts
+â”œâ”€â”€ vitest.config.ts
+â”œâ”€â”€ vitest.e2e.config.ts
+â”œâ”€â”€ tsconfig.json
+â”œâ”€â”€ tailwind.config.js
+â”œâ”€â”€ postcss.config.js
+â”œâ”€â”€ Dockerfile                   # multi-stage node:24-alpine â†’ node:24-alpine
+â”œâ”€â”€ .env.example
+â”œâ”€â”€ .gitignore
+â”œâ”€â”€ server.ts                    # Express entry point
+â”œâ”€â”€ CREATION.md
+â”œâ”€â”€ public/
+â”œâ”€â”€ src/
+â”‚   â”œâ”€â”€ index.tsx
+â”‚   â”œâ”€â”€ App.tsx
+â”‚   â”œâ”€â”€ server.ts
+â”‚   â”œâ”€â”€ types.ts
+â”‚   â”œâ”€â”€ pages/
+â”‚   â”‚   â”œâ”€â”€ Dashboard.tsx
+â”‚   â”‚   â”œâ”€â”€ SignalAnalysis.tsx
+â”‚   â”‚   â”œâ”€â”€ Forecasting.tsx
+â”‚   â”‚   â””â”€â”€ Admin.tsx
+â”‚   â”œâ”€â”€ components/
+â”‚   â”‚   â”œâ”€â”€ RealTimeChart.tsx
+â”‚   â”‚   â”œâ”€â”€ SignalIndicator.tsx
+â”‚   â”‚   â”œâ”€â”€ AIInsights.tsx
+â”‚   â”‚   â”œâ”€â”€ DataImport.tsx
+â”‚   â”‚   â””â”€â”€ LoadingState.tsx
+â”‚   â”œâ”€â”€ hooks/
+â”‚   â”‚   â”œâ”€â”€ useEconomicSignals.ts
+â”‚   â”‚   â”œâ”€â”€ useAIAnalysis.ts
+â”‚   â”‚   â””â”€â”€ useRealtimeUpdates.ts
+â”‚   â”œâ”€â”€ services/
+â”‚   â”‚   â”œâ”€â”€ api.ts
+â”‚   â”‚   â”œâ”€â”€ economicDataService.ts
+â”‚   â”‚   â”œâ”€â”€ aiService.ts
+â”‚   â”‚   â”œâ”€â”€ database.ts
+â”‚   â”‚   â””â”€â”€ signalProcessor.ts
+â”‚   â”œâ”€â”€ utils/
+â”‚   â”‚   â”œâ”€â”€ calculations.ts
+â”‚   â”‚   â”œâ”€â”€ formatters.ts
+â”‚   â”‚   â””â”€â”€ validators.ts
+â”‚   â””â”€â”€ styles/
+â”‚       â”œâ”€â”€ index.css
+â”‚       â””â”€â”€ globals.css
+â”œâ”€â”€ db/                          # SQLite database files
+â””â”€â”€ __tests__/
+    â”œâ”€â”€ api.test.ts
+    â”œâ”€â”€ signals.test.ts
+    â””â”€â”€ ai.test.ts
 ```
 
 ---
@@ -226,7 +226,7 @@ export class AIService {
   }
 
   async generateForecast(signalId: string, horizon: number): Promise<ForecastData[]> {
-    // Similar pattern: prompt → generate → parse
+    // Similar pattern: prompt â†’ generate â†’ parse
   }
 }
 ```
@@ -271,9 +271,9 @@ export class SignalProcessor {
 
 ## 9. Frontend State & Hooks
 
-**useEconomicSignals** — Fetch and filter signals with real-time updates.
-**useAIAnalysis** — Trigger and cache AI analyses.
-**useRealtimeUpdates** — WebSocket or polling for live signal feeds.
+**useEconomicSignals** â€” Fetch and filter signals with real-time updates.
+**useAIAnalysis** â€” Trigger and cache AI analyses.
+**useRealtimeUpdates** â€” WebSocket or polling for live signal feeds.
 
 ---
 

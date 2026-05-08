@@ -1,4 +1,4 @@
-# Changelog
+﻿# Changelog
 
 All notable changes to the Federated Learning Coordinator (App ID 163) project will be documented in this file.
 
@@ -14,7 +14,7 @@ All notable changes to the Federated Learning Coordinator (App ID 163) project w
 - **Production-ready**: Docker deployment, Kubernetes support
 
 ### Tech Stack
-- React 19.2.4
+- React 19.2.5
 - TypeScript 5.8.2
 - Express 4.21.2
 - SQLite (better-sqlite3 12.4.1)

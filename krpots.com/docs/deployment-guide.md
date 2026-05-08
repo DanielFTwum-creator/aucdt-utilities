@@ -1,7 +1,7 @@
-# TechBridge University College - Deployment Guide
+﻿# TechBridge University College - Deployment Guide
 
 ## Overview
-This guide outlines the process for deploying the Retrospective Archive application. The application is a React 19.2.4 Single Page Application (SPA) built with Vite and styled with Tailwind CSS 4.0.
+This guide outlines the process for deploying the Retrospective Archive application. The application is a React 19.2.5 Single Page Application (SPA) built with Vite and styled with Tailwind CSS 4.0.
 
 ## Prerequisites
 - Node.js (v18 or higher)

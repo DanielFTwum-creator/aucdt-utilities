@@ -1,10 +1,10 @@
-# Automated Compliance Monitor
+﻿# Automated Compliance Monitor
 
 ## Purpose
 Real-time compliance monitoring and alerts system ensuring adherence to institutional policies, regulations, and standards. Flags violations, automates remediation workflows, and provides audit trails for regulatory reporting.
 
 ## Stack
-- React 19.2.4
+- React 19.2.5
 - TypeScript 5.8.2
 - Express 4.21.2
 - Vite 6.2.0

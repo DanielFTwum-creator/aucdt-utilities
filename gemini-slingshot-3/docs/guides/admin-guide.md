@@ -1,6 +1,6 @@
-# Administrator Guide: Gemini Slingshot
+﻿# Administrator Guide: Gemini Slingshot
 **Project:** Gemini Slingshot (v3.0.0)
-**Core Requirement:** Strict React 19.2.4 Production Build
+**Core Requirement:** Strict React 19.2.5 Production Build
 
 ## 1. Overview
 Gemini Slingshot is a high-velocity AI cockpit designed for institutional payload management and prompt engineering. It features real-time tactical scanning and an integrated refresh protocol tracker.
@@ -8,7 +8,7 @@ Gemini Slingshot is a high-velocity AI cockpit designed for institutional payloa
 ## 2. Refresh Protocol Monitoring
 - **Access**: Authorized administrators can click the "Refresh Protocol" button in the security portal (Right HUD).
 - **Phases**: Track the 5-phase refinement process from Foundation through Final Alignment.
-- **Compliance**: All institutional updates must maintain the React 19.2.4 version mandate.
+- **Compliance**: All institutional updates must maintain the React 19.2.5 version mandate.
 
 ## 3. Security Authentication
 - **Access URL**: Restricted Staff Access within the main portal suite.

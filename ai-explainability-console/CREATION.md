@@ -1,10 +1,10 @@
-# AI Explainability Console
+﻿# AI Explainability Console
 
 ## Purpose
 XAI (Explainable AI) dashboard for monitoring model interpretability, fairness metrics, feature importance, and algorithmic decision explanations. Enables stakeholders to understand and audit AI model behavior.
 
 ## Stack
-- React 19.2.4
+- React 19.2.5
 - TypeScript 5.8.2
 - Express 4.21.2
 - Vite 6.2.0

@@ -1,10 +1,10 @@
-# academic-performance-app
+﻿# academic-performance-app
 
 ## Purpose
 A web application for Techbridge University College (TUC) designed to track and analyze academic performance metrics for students and staff. It provides institutional utility for monitoring educational outcomes and student progress.
 
 ## Stack
-- React 19.2.4
+- React 19.2.5
 - TypeScript 5.7+
 - Vite 7.3.1
 - Tailwind CSS 4.2+
@@ -23,7 +23,7 @@ A web application for Techbridge University College (TUC) designed to track and 
 6. Build for production: `pnpm run build`
 
 ## Key Decisions
-- **Strict Version Locking:** Adheres to the TUC institutional mandate of React 19.2.4 and Vite 7.3.1 to ensure stability across the monorepo.
+- **Strict Version Locking:** Adheres to the TUC institutional mandate of React 19.2.5 and Vite 7.3.1 to ensure stability across the monorepo.
 - **Auth-Gated Architecture:** Implements a centralized `AuthGate` and `ProtectedRoute` pattern to secure institutional data and the administrative section.
 - **Containerized Delivery:** Uses a multi-stage Docker build targeting `nginx:alpine` to maintain a minimal image footprint (target ~20 MB).
 

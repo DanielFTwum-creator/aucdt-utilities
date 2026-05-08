@@ -1,9 +1,9 @@
-# Deployment Guide
+﻿# Deployment Guide
 ## Shortcut Master Application
 
 ### 1. Requirements
 - **Node.js**: Version 18 or higher.
-- **Framework**: React 19.2.4 (Strict requirement).
+- **Framework**: React 19.2.5 (Strict requirement).
 - **Environment Variables**:
   - `GEMINI_API_KEY`: Required for the AI Assistant.
   - `APP_URL`: Required for the Playwright self-testing suite.

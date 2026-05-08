@@ -1,10 +1,10 @@
-# AI Knowledge Compression Lab
+﻿# AI Knowledge Compression Lab
 
 ## Purpose
 Knowledge extraction and compression laboratory for distilling large datasets into efficient, interpretable representations. Focuses on model distillation, feature extraction, and information density optimization for resource-constrained environments.
 
 ## Stack
-- React 19.2.4
+- React 19.2.5
 - TypeScript 5.8.2
 - Express 4.21.2
 - Vite 6.2.0

@@ -1,4 +1,4 @@
-# Software Requirements Specification
+﻿# Software Requirements Specification
 ## Impact Ventures Dashboard
 **Version:** 1.0.0  
 **Date:** April 24, 2026  
@@ -16,9 +16,9 @@ This document specifies the software requirements for the Impact Ventures Dashbo
 The system provides: portfolio visualisation via scatter matrix, venture registry with multi-filter search, AI-generated strategic briefs (Gemini), side-by-side venture comparison, and a password-protected admin dashboard with audit logging.
 
 ### 1.3 Definitions
-- **Tier**: Classification bracket (T1–T4) based on combined M+G scores
-- **M-Score**: Monetisation / ROI capacity index (1–5)
-- **G-Score**: Societal good / AI-for-Good index (1–5)
+- **Tier**: Classification bracket (T1â€“T4) based on combined M+G scores
+- **M-Score**: Monetisation / ROI capacity index (1â€“5)
+- **G-Score**: Societal good / AI-for-Good index (1â€“5)
 - **Brief**: AI-synthesised 4-point strategic analysis per venture
 
 ---
@@ -41,7 +41,7 @@ Single-page React application. Static deployment via Nginx. Gemini API integrati
 | FR-001 | Display scatter matrix (M vs G axes) with tier colour coding |
 | FR-002 | Render venture registry with rank, tier, category, M/G scores |
 | FR-003 | Full-text search across venture name and rationale |
-| FR-004 | Filter by tier (ALL, T1–T4), category, M-range, G-range |
+| FR-004 | Filter by tier (ALL, T1â€“T4), category, M-range, G-range |
 | FR-005 | Click venture card to open detail modal |
 | FR-006 | Generate AI strategic brief per venture via Gemini API |
 | FR-007 | Select up to 4 ventures for side-by-side comparison matrix |
@@ -58,7 +58,7 @@ Single-page React application. Static deployment via Nginx. Gemini API integrati
 
 | ID | Requirement |
 |---|---|
-| NFR-001 | React 19.2.4 (pinned, no caret) |
+| NFR-001 | React 19.2.5 (pinned, no caret) |
 | NFR-002 | Zero broken links (`href="#"` prohibited) |
 | NFR-003 | 100% ARIA coverage on interactive elements |
 | NFR-004 | Build output < 2MB gzipped |
@@ -69,7 +69,7 @@ Single-page React application. Static deployment via Nginx. Gemini API integrati
 
 ## 5. Architecture
 
-- **Frontend:** React 19.2.4, TypeScript, Vite, Tailwind CSS, Framer Motion, Recharts
+- **Frontend:** React 19.2.5, TypeScript, Vite, Tailwind CSS, Framer Motion, Recharts
 - **AI:** Google Gemini API (`gemini-3-flash-preview`) for brief generation
 - **State:** React hooks (useState, useMemo, useEffect, useCallback)
 - **Persistence:** localStorage (audit logs), sessionStorage (admin session)

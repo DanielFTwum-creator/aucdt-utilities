@@ -1,4 +1,4 @@
-# Software Requirements Specification (SRS) v1.6
+﻿# Software Requirements Specification (SRS) v1.6
 **Project:** Techbridge Media Club Platform
 **Version:** 1.6
 **Date:** February 17, 2026
@@ -16,7 +16,7 @@ The Techbridge Media Club Platform (TMCP) is a centralized system designed to fa
 
 ### 2.2 Operational Documentation
 *   **REQ-DOC-03**: An Administrator Guide must be provided detailing access control and diagnostics.
-*   **REQ-DOC-04**: A Deployment Guide must be provided detailing the ESM-based architecture and dependency versions (React 19.2.4).
+*   **REQ-DOC-04**: A Deployment Guide must be provided detailing the ESM-based architecture and dependency versions (React 19.2.5).
 *   **REQ-DOC-05**: A Testing Guide must provided manual checklists and automated script usage instructions.
 
 ## 3. Implementation Status

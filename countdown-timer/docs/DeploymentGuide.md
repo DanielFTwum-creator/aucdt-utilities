@@ -1,4 +1,4 @@
-# Deployment Guide
+﻿# Deployment Guide
 
 ## 1. Introduction
 This guide provides instructions for deploying the Countdown Timer application.
@@ -16,7 +16,7 @@ This guide provides instructions for deploying the Countdown Timer application.
    ```
 
 ## 4. Configuration
-1. Ensure the `package.json` file specifies React version 19.2.4.
+1. Ensure the `package.json` file specifies React version 19.2.5.
 2. Verify the `vite.config.ts` file is configured for a React SPA.
 3. Ensure the `server.ts` file is configured to serve the built assets in production.
 

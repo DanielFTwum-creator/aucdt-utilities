@@ -1,4 +1,4 @@
-# Software Requirements Specification (SRS)
+﻿# Software Requirements Specification (SRS)
 ## Ajumapro Student Management System
 **Version:** 3.0.0
 **Date:** March 2026
@@ -12,7 +12,7 @@ The Ajumapro SMS is a web-based platform designed to manage student data, facili
 
 ### 2. Overall Description
 #### 2.1 Product Perspective
-The system operates as a Single Page Application (SPA) built with React 19.2.4, Vite, and Tailwind CSS. It communicates with a backend Application Tier (Django/Node.js) and a Data Tier (PostgreSQL/Redis).
+The system operates as a Single Page Application (SPA) built with React 19.2.5, Vite, and Tailwind CSS. It communicates with a backend Application Tier (Django/Node.js) and a Data Tier (PostgreSQL/Redis).
 
 #### 2.2 System Architecture
 The architecture follows a three-tier model: Presentation, Application, and Data.
@@ -36,7 +36,7 @@ User requests are routed through an API Gateway, which handles authentication an
 - **FR8:** The system shall support Light, Dark, and High-Contrast themes.
 
 #### 3.2 Non-Functional Requirements
-- **NFR1 (Technology):** The frontend MUST be built using React 19.2.4.
+- **NFR1 (Technology):** The frontend MUST be built using React 19.2.5.
 - **NFR2 (Accessibility):** The system MUST achieve 100% ARIA/Tooltip coverage for all interactive elements.
 - **NFR3 (Performance):** The system MUST load the initial cover page in under 2 seconds.
 - **NFR4 (Security):** All diagnostic and testing features MUST be isolated to `/admin/*` routes.

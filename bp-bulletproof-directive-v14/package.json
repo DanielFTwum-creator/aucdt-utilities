@@ -1,4 +1,4 @@
-{
+﻿{
   "name": "bp-bulletproof-directive-v1402026-1053",
   "private": true,
   "version": "0.0.0",
@@ -15,8 +15,8 @@
     "idb": "^8.0.3",
     "jspdf": "^4.2.1",
     "motion": "^12.38.0",
-    "react": "19.2.4",
-    "react-dom": "19.2.4"
+    "react": "19.2.5",
+    "react-dom": "19.2.5"
   },
   "devDependencies": {
     "@playwright/test": "^1.59.1",

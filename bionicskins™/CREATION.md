@@ -1,13 +1,13 @@
-# CREATION.md — BionicSkins™
+﻿# CREATION.md â€” BionicSkinsâ„¢
 **Purpose:** Complete build specification for any agent to implement this application from scratch.
-**Target:** Functional parity with `C:/Development/aucdt-utilities/bionicskins™/`
+**Target:** Functional parity with `C:/Development/aucdt-utilities/bionicskinsâ„¢/`
 **Last verified:** 2026-04-25
 
 ---
 
 ## 1. What This App Is
 
-BionicSkins™ is a **medical technology company website** for a prosthetic skin/limb solutions brand. It is a multi-page marketing site with content management via Firebase Firestore. Admins can create/edit blog posts and amputee resources. Patients can submit referral forms and contact requests. All data flows through Firebase — there is no separate backend server.
+BionicSkinsâ„¢ is a **medical technology company website** for a prosthetic skin/limb solutions brand. It is a multi-page marketing site with content management via Firebase Firestore. Admins can create/edit blog posts and amputee resources. Patients can submit referral forms and contact requests. All data flows through Firebase â€” there is no separate backend server.
 
 ---
 
@@ -15,7 +15,7 @@ BionicSkins™ is a **medical technology company website** for a prosthetic skin
 
 | Layer | Technology | Version |
 |---|---|---|
-| Runtime | React | **19.2.4** |
+| Runtime | React | **19.2.5** |
 | Build | Vite | ^7 |
 | Language | TypeScript | ~5.8 |
 | Router | React Router DOM | ^7 |
@@ -26,7 +26,7 @@ BionicSkins™ is a **medical technology company website** for a prosthetic skin
 | Database | Firebase Firestore | latest |
 | Auth | Firebase Auth | latest |
 | Package manager | pnpm | 10.30+ |
-| Container | node:24-alpine → nginx:alpine | — |
+| Container | node:24-alpine â†’ nginx:alpine | â€” |
 
 ---
 
@@ -34,34 +34,34 @@ BionicSkins™ is a **medical technology company website** for a prosthetic skin
 
 ```
 src/
-├── App.tsx               # React Router routes (no auth wrapper — admin page self-guards)
-├── main.tsx
-├── index.css
-├── lib/
-│   └── firebase.ts       # initializeApp(config) → export db, auth
-├── components/
-│   ├── Header.tsx        # Top nav: logo + navigation links + mobile hamburger
-│   ├── Footer.tsx        # Contact info + social links + copyright
-│   ├── HeroSection.tsx   # Large image hero with CTA
-│   ├── ContentSection.tsx # Reusable text + image section
-│   ├── ValuesAccordion.tsx # Expandable values/FAQs
-│   ├── NewsSection.tsx   # Latest blog posts preview
-│   ├── BlogList.tsx      # All blog posts grid
-│   ├── BlogEditor.tsx    # Firestore-backed blog post editor (admin)
-│   ├── ResourceList.tsx  # Amputee resources list
-│   ├── ResourceEditor.tsx # Firestore-backed resource editor (admin)
-│   └── ui/               # Shared UI primitives (Button, Card, Badge, etc.)
-└── pages/
-    ├── Home.tsx              # Hero + company overview + blog preview
-    ├── Technology.tsx        # Product/tech showcase
-    ├── OurBlog.tsx           # Blog listing (BlogList component)
-    ├── BecomeAPatient.tsx    # Patient intake form (saves to Firestore)
-    ├── AmputeeResources.tsx  # Resource library (ResourceList)
-    ├── ReferAPatient.tsx     # Clinician referral form (saves to Firestore)
-    ├── ClinicalTrials.tsx    # Clinical trial information + sign-up form
-    ├── ContactUs.tsx         # Contact form (saves to Firestore)
-    ├── Policies.tsx          # Privacy policy and terms
-    └── AdminDashboard.tsx    # CMS: blog + resources + form submissions
+â”œâ”€â”€ App.tsx               # React Router routes (no auth wrapper â€” admin page self-guards)
+â”œâ”€â”€ main.tsx
+â”œâ”€â”€ index.css
+â”œâ”€â”€ lib/
+â”‚   â””â”€â”€ firebase.ts       # initializeApp(config) â†’ export db, auth
+â”œâ”€â”€ components/
+â”‚   â”œâ”€â”€ Header.tsx        # Top nav: logo + navigation links + mobile hamburger
+â”‚   â”œâ”€â”€ Footer.tsx        # Contact info + social links + copyright
+â”‚   â”œâ”€â”€ HeroSection.tsx   # Large image hero with CTA
+â”‚   â”œâ”€â”€ ContentSection.tsx # Reusable text + image section
+â”‚   â”œâ”€â”€ ValuesAccordion.tsx # Expandable values/FAQs
+â”‚   â”œâ”€â”€ NewsSection.tsx   # Latest blog posts preview
+â”‚   â”œâ”€â”€ BlogList.tsx      # All blog posts grid
+â”‚   â”œâ”€â”€ BlogEditor.tsx    # Firestore-backed blog post editor (admin)
+â”‚   â”œâ”€â”€ ResourceList.tsx  # Amputee resources list
+â”‚   â”œâ”€â”€ ResourceEditor.tsx # Firestore-backed resource editor (admin)
+â”‚   â””â”€â”€ ui/               # Shared UI primitives (Button, Card, Badge, etc.)
+â””â”€â”€ pages/
+    â”œâ”€â”€ Home.tsx              # Hero + company overview + blog preview
+    â”œâ”€â”€ Technology.tsx        # Product/tech showcase
+    â”œâ”€â”€ OurBlog.tsx           # Blog listing (BlogList component)
+    â”œâ”€â”€ BecomeAPatient.tsx    # Patient intake form (saves to Firestore)
+    â”œâ”€â”€ AmputeeResources.tsx  # Resource library (ResourceList)
+    â”œâ”€â”€ ReferAPatient.tsx     # Clinician referral form (saves to Firestore)
+    â”œâ”€â”€ ClinicalTrials.tsx    # Clinical trial information + sign-up form
+    â”œâ”€â”€ ContactUs.tsx         # Contact form (saves to Firestore)
+    â”œâ”€â”€ Policies.tsx          # Privacy policy and terms
+    â””â”€â”€ AdminDashboard.tsx    # CMS: blog + resources + form submissions
 ```
 
 ---
@@ -69,17 +69,17 @@ src/
 ## 4. Routes
 
 ```
-/                   → Home
-/about              → Home (same component, scrolls to about section)
-/technology         → Technology
-/our-blog           → OurBlog
-/become-a-patient   → BecomeAPatient
-/amputee-resources  → AmputeeResources
-/refer-a-patient    → ReferAPatient
-/clinical-trials    → ClinicalTrials
-/contact-us         → ContactUs
-/policies           → Policies
-/admin              → AdminDashboard (guarded: Firebase Auth sign-in required)
+/                   â†’ Home
+/about              â†’ Home (same component, scrolls to about section)
+/technology         â†’ Technology
+/our-blog           â†’ OurBlog
+/become-a-patient   â†’ BecomeAPatient
+/amputee-resources  â†’ AmputeeResources
+/refer-a-patient    â†’ ReferAPatient
+/clinical-trials    â†’ ClinicalTrials
+/contact-us         â†’ ContactUs
+/policies           â†’ Policies
+/admin              â†’ AdminDashboard (guarded: Firebase Auth sign-in required)
 ```
 
 ---
@@ -126,14 +126,14 @@ Features:
 - **Resources tab:** List/edit amputee resources via `ResourceEditor`.
 - **Submissions tab:** View all form submissions (patient, referral, contact, trials).
 
-**Admin Auth guard:** Check `firebase.auth().currentUser` on mount. If null → redirect to `/admin` sign-in form.
+**Admin Auth guard:** Check `firebase.auth().currentUser` on mount. If null â†’ redirect to `/admin` sign-in form.
 
 ---
 
 ## 8. Gemini AI Feature
 
 Used in `BlogEditor.tsx`:
-- "✨ Draft with AI" button: sends post title/topic to Gemini → returns full blog post draft
+- "âœ¨ Draft with AI" button: sends post title/topic to Gemini â†’ returns full blog post draft
 - User edits before saving to Firestore
 
 ---

@@ -1,4 +1,4 @@
-# SashMade: Afro-Chic Studio - Software Requirements Specification
+﻿# SashMade: Afro-Chic Studio - Software Requirements Specification
 **IEEE Std 830-1998 Compliant**
 
 | Field | Detail |
@@ -8,7 +8,7 @@
 | **Status** | Production Ready |
 | **Prepared For** | sashmade.com Development Team |
 | **Prepared By** | Technical Architecture Team |
-| **Classification** | Internal – Confidential |
+| **Classification** | Internal â€“ Confidential |
 
 ---
 
@@ -52,16 +52,16 @@ The platform is explicitly out of scope for: physical inventory management hardw
 
 ### 1.4 References
 *   IEEE Std 830-1998: Recommended Practice for Software Requirements Specifications.
-*   Google Gemini API Documentation — Multimodal Vision & Chat (2025).
+*   Google Gemini API Documentation â€” Multimodal Vision & Chat (2025).
 *   Hubtel Developer Portal: Payment Gateway API v3.
-*   Techbridge Integration Manual — Direct Debit & Mobile Money (2025).
-*   WCAG 2.2 — W3C Web Content Accessibility Guidelines.
-*   NDPC Guidelines for Online Data Processors — Ghana, 2023.
+*   Techbridge Integration Manual â€” Direct Debit & Mobile Money (2025).
+*   WCAG 2.2 â€” W3C Web Content Accessibility Guidelines.
+*   NDPC Guidelines for Online Data Processors â€” Ghana, 2023.
 *   React 19 Official Documentation.
-*   OWASP Top 10 2021 — Application Security Risks.
+*   OWASP Top 10 2021 â€” Application Security Risks.
 
 ### 1.5 Document Overview
-Section 2 provides product context. Section 3 specifies all functional requirements. Section 4 covers external interface requirements. Section 5 defines system features. Sections 6–14 address non-functional requirements, data management, security, e-commerce specifics, payment processing, deployment, testing, and appendices.
+Section 2 provides product context. Section 3 specifies all functional requirements. Section 4 covers external interface requirements. Section 5 defines system features. Sections 6â€“14 address non-functional requirements, data management, security, e-commerce specifics, payment processing, deployment, testing, and appendices.
 
 ---
 
@@ -77,7 +77,7 @@ SashMade operates as a vertically integrated AI-enhanced e-commerce platform. It
 
 The system is decomposed into four high-level subsystems: (1) the AI Design Studio, (2) the E-Commerce Storefront, (3) the Order & Fulfilment Engine, and (4) the Admin Console.
 
-### 2.2 Product Functions — High Level
+### 2.2 Product Functions â€” High Level
 | Subsystem | Key Functions |
 | :--- | :--- |
 | **AI Design Studio** | Image analysis, seamless pattern generation, AI chatbot 'Sash' |
@@ -111,7 +111,7 @@ Full-access internal user responsible for system configuration, user management,
 *   **Connectivity:** Requires active internet; offline mode is not supported.
 
 ### 2.5 Design and Implementation Constraints
-*   **Frontend framework:** React 19.2.4 (strict requirement; no downgrade permitted).
+*   **Frontend framework:** React 19.2.5 (strict requirement; no downgrade permitted).
 *   **AI provider:** Google Gemini API (gemini-2.5-flash for vision/generation; gemini-3-flash-preview for chat).
 *   **Payment PSP:** Hubtel Gateway (Techbridge) exclusively for primary transactions.
 *   **Compliance:** NDPC (Ghana), GDPR (diaspora customers in EU), PCI-DSS SAQ-A for card data handling.
@@ -137,11 +137,11 @@ Full-access internal user responsible for system configuration, user management,
 ### 3.1 Splash Homepage
 | ID | Requirement | Priority | Source |
 | :--- | :--- | :--- | :--- |
-| **FR-01** | Display a Hero section with auto-rotating image carousel (3–5 curated fabric images, 5-second interval, manual nav arrows) and a primary Call-To-Action button linking to the storefront. | MUST | Business |
+| **FR-01** | Display a Hero section with auto-rotating image carousel (3â€“5 curated fabric images, 5-second interval, manual nav arrows) and a primary Call-To-Action button linking to the storefront. | MUST | Business |
 | **FR-02** | Display an 'About SashMade' section with brand heritage narrative, founder story, and cultural context. | MUST | Marketing |
 | **FR-03** | Display a 'Features at a Glance' section summarising the AI Studio, Storefront, and Chatbot. | SHOULD | Marketing |
 | **FR-04** | Display a customer testimonials carousel with star ratings and reviewer attribution. | SHOULD | Marketing |
-| **FR-05** | Display a product gallery grid (8–12 items) pulling from the live catalogue API. | MUST | Business |
+| **FR-05** | Display a product gallery grid (8â€“12 items) pulling from the live catalogue API. | MUST | Business |
 | **FR-06** | Render a responsive navigation bar with logo, links (Shop, AI Studio, About), Cart icon with item count badge, and Login/Account button. | MUST | UX |
 | **FR-07** | Display a footer with social links, legal pages (Privacy Policy, Terms & Conditions, Refund Policy), contact details, and payment method icons. | MUST | Legal/UX |
 
@@ -162,7 +162,7 @@ Full-access internal user responsible for system configuration, user management,
 | :--- | :--- | :--- | :--- |
 | **FR-20** | Accept free-text prompts for AI-driven textile pattern generation. | MUST | AI |
 | **FR-21** | Provide a library of at least 12 preset prompt templates (e.g., 'Kente Royale', 'Adinkra Minimal', 'Batik Coastal'). | MUST | UX |
-| **FR-22** | Generate high-resolution (1024×1024 px minimum) seamless pattern images via Gemini image generation. | MUST | AI |
+| **FR-22** | Generate high-resolution (1024Ã—1024 px minimum) seamless pattern images via Gemini image generation. | MUST | AI |
 | **FR-23** | Display generated image with prompt history (last 10 prompts in session). | MUST | UX |
 | **FR-24** | Allow download of generated pattern as PNG. | MUST | UX |
 | **FR-25** | Allow authenticated users to add a generated pattern to the marketplace for sale (triggers designer vetting workflow). | COULD | Business |
@@ -186,7 +186,7 @@ Full-access internal user responsible for system configuration, user management,
 | **FR-40** | Display a paginated product grid (24 items per page) with image, name, price (GHS primary), and 'Add to Cart' button. | MUST | E-Commerce |
 | **FR-41** | Support filtering by category, origin, price range, and availability. | MUST | E-Commerce |
 | **FR-42** | Support full-text keyword search with debounced API calls (300ms debounce). | MUST | E-Commerce |
-| **FR-43** | Support sorting by Newest, Price Low–High, Price High–Low, Most Popular, Top Rated. | MUST | E-Commerce |
+| **FR-43** | Support sorting by Newest, Price Lowâ€“High, Price Highâ€“Low, Most Popular, Top Rated. | MUST | E-Commerce |
 | **FR-44** | Display a Product Detail Page (PDP) with: image gallery, description, size chart, material composition, cultural story, reviews, and related products. | MUST | E-Commerce |
 | **FR-45** | Allow customers to select size, colour variant, and quantity on the PDP. | MUST | E-Commerce |
 | **FR-46** | Display real-time stock availability status. | MUST | E-Commerce |
@@ -221,7 +221,7 @@ Full-access internal user responsible for system configuration, user management,
 ### 3.5 Order Management
 | ID | Requirement | Priority | Source |
 | :--- | :--- | :--- | :--- |
-| **FR-80** | Maintain order lifecycle states: Pending Payment → Confirmed → Processing → Shipped → Delivered → Completed / Cancelled / Refunded. | MUST | E-Commerce |
+| **FR-80** | Maintain order lifecycle states: Pending Payment â†’ Confirmed â†’ Processing â†’ Shipped â†’ Delivered â†’ Completed / Cancelled / Refunded. | MUST | E-Commerce |
 | **FR-81** | Allow authenticated customers to view full order history. | MUST | E-Commerce |
 | **FR-82** | Allow customers to view shipment tracking status. | MUST | E-Commerce |
 | **FR-83** | Allow customers to submit a return/refund request within 14 days. | MUST | E-Commerce |
@@ -273,7 +273,7 @@ Full-access internal user responsible for system configuration, user management,
 
 ---
 
-## 5. Payment Processing — Hubtel / Techbridge Gateway
+## 5. Payment Processing â€” Hubtel / Techbridge Gateway
 *   **MoMo Flow:** Initiate -> USSD Prompt -> Callback -> Verify.
 *   **Card Flow:** Initiate -> Redirect to Hubtel -> 3DS -> Redirect Back -> Verify.
 *   **Security:** API credentials server-side only, HMAC-SHA256 callback validation, Idempotency keys, PCI-DSS SAQ-A (hosted pages).

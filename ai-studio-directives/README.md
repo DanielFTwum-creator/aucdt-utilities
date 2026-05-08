@@ -1,6 +1,6 @@
-# AI Studio Directive Workflow
+﻿# AI Studio Directive Workflow
 
-A guided workflow application for managing AI Studio project phases with built-in directives for React 19.2.4 projects.
+A guided workflow application for managing AI Studio project phases with built-in directives for React 19.2.5 projects.
 
 ## Setup
 ```bash

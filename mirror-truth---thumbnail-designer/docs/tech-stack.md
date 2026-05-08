@@ -1,12 +1,12 @@
-# Technology Stack — Mirror Truth
+﻿# Technology Stack â€” Mirror Truth
 
 ## Overview
 Mirror Truth is a client-side React application designed for high-fidelity, interactive image manipulation and export. It utilizes a modern, build-less architecture relying on ES Modules delivered via CDN.
 
 ## Core Framework
 *   **Runtime:** Browser (ES6+ Support required)
-*   **Library:** React 19.2.4
-*   **DOM Manipulation:** React DOM 19.2.4
+*   **Library:** React 19.2.5
+*   **DOM Manipulation:** React DOM 19.2.5
 *   **Module Loading:** Native ES Modules (via `importmap`)
 
 ## Styling & UI

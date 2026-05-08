@@ -1,4 +1,4 @@
-# IEEE SRS — What Colour Is Your Parachute? Personality Quiz
+﻿# IEEE SRS â€” What Colour Is Your Parachute? Personality Quiz
 **Version:** 1.0.0 (as-built)
 **Institution:** Techbridge University College
 **Status:** Active
@@ -22,10 +22,10 @@ Single-page React application. No backend required. State lives in React hooks; 
 ## 4. Non-Functional Requirements
 - ARIA 100% coverage on all interactive elements
 - Responsive: mobile-first Tailwind layout
-- React 19.2.4
+- React 19.2.5
 
 ## 5. Architecture
 - **Framework:** Vite + React + TypeScript
 - **Styling:** Tailwind CSS 4
 - **State:** useState + useCallback
-- **Admin:** `#/admin` hash route → AdminLoginModal → AdminDashboard
+- **Admin:** `#/admin` hash route â†’ AdminLoginModal â†’ AdminDashboard

@@ -1,4 +1,4 @@
-# Software Requirements Specification (SRS) v1.3
+﻿# Software Requirements Specification (SRS) v1.3
 **Project:** Techbridge Media Club Platform
 **Version:** 1.3
 **Date:** February 17, 2026
@@ -12,7 +12,7 @@ The Techbridge Media Club Platform (TMCP) is a centralized system designed to fa
 The system acts as a Single Page Application (SPA) serving four primary user roles: Admin, Editor, Creator, and Member. It includes modules for content authoring (with simulated real-time collaboration), asset management, and system administration.
 
 ### 1.3 Technology Stack (Permanent)
-*   **Frontend Library**: React 19.2.4
+*   **Frontend Library**: React 19.2.5
 *   **Styling**: Tailwind CSS v3.4 (Dark Mode enabled)
 *   **Build Tooling**: Babel Standalone (In-browser transformation)
 *   **Icons**: Lucide React

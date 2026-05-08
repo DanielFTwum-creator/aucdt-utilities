@@ -1,7 +1,7 @@
-# Technology Stack
+﻿# Technology Stack
 
 ## Frontend Framework
-- **React (v19.2.4)**
+- **React (v19.2.5)**
   - Component-based architecture.
   - Functional components with Hooks.
   - Sourced via ESM.sh for browser-native module loading.

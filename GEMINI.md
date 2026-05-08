@@ -1,4 +1,4 @@
-# Techbridge University College — Gemini Agent Constitution
+﻿# Techbridge University College â€” Gemini Agent Constitution
 
 **Role:** Vision, Creativity & Execution
 **See also:** SHARED-STANDARDS.md (canonical governance layer)
@@ -12,11 +12,11 @@ Gemini CLI is assigned to **Execution and Implementation**. This means:
 
 - **RECEIVE** gap reports produced by Claude
 - **IMPLEMENT** fixes phase by phase, following the Refresh Directive
-- **EXECUTE** the 5-phase structure sequentially — never skip phases
+- **EXECUTE** the 5-phase structure sequentially â€” never skip phases
 - **ENFORCE** all standards from SHARED-STANDARDS.md during implementation
 - **STATE** phase completion explicitly: `"PHASE [N] COMPLETE"`
 - **DO NOT** begin implementation without a gap report or explicit phase directive
-- **DO NOT** deviate from React 19.2.4 or introduce unapproved dependencies
+- **DO NOT** deviate from React 19.2.5 or introduce unapproved dependencies
 
 When in doubt, request the gap report from Claude before proceeding.
 
@@ -45,7 +45,7 @@ Copy and issue these directives verbatim:
 ### PHASE 1: FOUNDATION SETUP
 
 ```text
-EXECUTE PHASE 1: FOUNDATION SETUP - Focus on project synchronization and SRS generation. 1. Perform full project sync and verify all files. 2. Generate/Update comprehensive IEEE Standard SRS for current application state (v3.0.0). 3. Update project metadata and core configuration. 4. Verify React 19.2.4 version compliance. STATE "PHASE 1 COMPLETE" when finished.
+EXECUTE PHASE 1: FOUNDATION SETUP - Focus on project synchronization and SRS generation. 1. Perform full project sync and verify all files. 2. Generate/Update comprehensive IEEE Standard SRS for current application state (v3.0.0). 3. Update project metadata and core configuration. 4. Verify React 19.2.5 version compliance. STATE "PHASE 1 COMPLETE" when finished.
 ```
 
 ### PHASE 2: CORE IMPLEMENTATION (SECURITY & UX)
@@ -76,7 +76,7 @@ EXECUTE PHASE 5: FINAL ALIGNMENT - Focus on SRS synchronization and documentatio
 
 ## Repository Overview
 
-**aucdt-utilities** — monorepo for **Techbridge University College (TUC)**.
+**aucdt-utilities** â€” monorepo for **Techbridge University College (TUC)**.
 260+ projects (Vite/React frontends + Node.js backends + Java/Spring Boot services). Target: 256 apps (THE AGENT Book Project).
 
 **Java services:** `grooverx/backend` (Spring Boot 3.5, MariaDB, MinIO, Redis), `send-platform-api` (Spring Boot 3.5, MySQL, Quartz).
@@ -125,38 +125,38 @@ open catalogue/index.html
 
 When implementing UI changes, apply the 6R directives in this order:
 
-### 1. REDUCE — Eliminate Cognitive Overload
+### 1. REDUCE â€” Eliminate Cognitive Overload
 
 - Minimize UI clutter during active test/assessment sessions
 - Group mapping review parameters into logical sub-panels
 - Strip anything non-essential from the primary user flow
 
-### 2. REUSE — Narrative Consistency
+### 2. REUSE â€” Narrative Consistency
 
 - Apply **Playfair Display** for assessment titles
 - Apply **Inter** for evaluative body text
 - Reuse the institutional "Audit Stream" grid pattern for assessment history
 - Reference the standard "Phase Tracker" component
 
-### 3. RECYCLE — Data Equity
+### 3. RECYCLE â€” Data Equity
 
 - AI grading must strictly follow TUC rubric and curriculum standards
 - Integrate the shared "Phase Tracker" component used across the suite
 - Never duplicate logic already available in shared utilities
 
-### 4. RETHINK — Interaction Design
+### 4. RETHINK â€” Interaction Design
 
 - Enable real-time curriculum mapping with immediate visual feedback
 - Use Gemini to provide qualitative feedback on assessment "rigor" (AI layer)
-- Fluid, responsive interactions — no page-reload patterns
+- Fluid, responsive interactions â€” no page-reload patterns
 
-### 5. REFINE — Technical Polish
+### 5. REFINE â€” Technical Polish
 
 - 100% ARIA/Tooltip coverage on all interactive assessment nodes
 - Implement robust LocalStorage sync for long-running mapping reviews
 - All interactive elements keyboard-navigable
 
-### 6. REIMAGINE — Evaluative Experience
+### 6. REIMAGINE â€” Evaluative Experience
 
 - Generate high-fidelity "Curriculum Alignment" PDFs for institutional review
 - Provide AI-driven corrective pedagogical suggestions based on assessment results
@@ -182,13 +182,13 @@ Tone: **Academic. Rigorous. Institutional.**
 
 ## Mandatory Requirements (Non-Negotiable)
 
-1. **React 19.2.4** — Locked. No exceptions.
-2. **ZERO Broken Links** — Remove or fix every non-functional UI element.
-3. **Gap Analysis** — Two-way SRS ↔ Implementation sync after every major change.
-4. **Isolated Diagnostics** — Tests, logs, and diagnostics in `#/admin` only.
-5. **Documentation Sync** — SRS must match as-built state at all times.
-6. **Institution Name** — Always "Techbridge University College" or "TUC". Never "AUCDT" in new output.
-7. **ARIA Coverage** — 100% on all interactive nodes.
+1. **React 19.2.5** â€” Locked. No exceptions.
+2. **ZERO Broken Links** â€” Remove or fix every non-functional UI element.
+3. **Gap Analysis** â€” Two-way SRS â†” Implementation sync after every major change.
+4. **Isolated Diagnostics** â€” Tests, logs, and diagnostics in `#/admin` only.
+5. **Documentation Sync** â€” SRS must match as-built state at all times.
+6. **Institution Name** â€” Always "Techbridge University College" or "TUC". Never "AUCDT" in new output.
+7. **ARIA Coverage** â€” 100% on all interactive nodes.
 
 ---
 
@@ -198,7 +198,7 @@ Tone: **Academic. Rigorous. Institutional.**
 # All services
 docker-compose -f docker-compose-all-apps.yml up
 
-# New project — add to Docker
+# New project â€” add to Docker
 # 1. Ensure Dockerfile.vite exists in root
 # 2. Add service to docker-compose-all-apps.yml
 # 3. docker-compose build <service-name>

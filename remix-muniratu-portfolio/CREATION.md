@@ -1,4 +1,4 @@
-# CREATION.md — Remix Muniratu Portfolio
+﻿# CREATION.md â€” Remix Muniratu Portfolio
 **Purpose:** Complete build specification for any agent to implement this application from scratch.
 **Target:** Functional parity with `C:/Development/aucdt-utilities/remix-muniratu-portfolio/`
 **Last verified:** 2026-04-26
@@ -9,7 +9,7 @@
 
 The Remix Muniratu Portfolio is a **personal portfolio and project showcase website** for creative professional Muniratu. It displays project case studies, skills, experience timeline, and contact information in a modern, responsive single-page application.
 
-Built with **React 19.2.4**, **Vite**, and **Tailwind CSS**.
+Built with **React 19.2.5**, **Vite**, and **Tailwind CSS**.
 
 ---
 
@@ -17,7 +17,7 @@ Built with **React 19.2.4**, **Vite**, and **Tailwind CSS**.
 
 | Layer | Technology | Version |
 |---|---|---|
-| Frontend | React | **19.2.4** |
+| Frontend | React | **19.2.5** |
 | Build | Vite | ^6.2.0 |
 | Language | TypeScript | ~5.8.2 |
 | Styling | Tailwind CSS | ^4.1.14 |
@@ -30,13 +30,13 @@ Built with **React 19.2.4**, **Vite**, and **Tailwind CSS**.
 
 ## 3. Key Features
 
-- **Project showcase** — Case studies with images, descriptions, outcomes
-- **Timeline** — Career/project progression
-- **Skills matrix** — Technical and soft skills with proficiency levels
-- **Contact form** — Email collection with validation
-- **Dark/light theme** — Theme toggle with localStorage persistence
-- **Responsive design** — Mobile-first layout
-- **Smooth animations** — Framer Motion interactions
+- **Project showcase** â€” Case studies with images, descriptions, outcomes
+- **Timeline** â€” Career/project progression
+- **Skills matrix** â€” Technical and soft skills with proficiency levels
+- **Contact form** â€” Email collection with validation
+- **Dark/light theme** â€” Theme toggle with localStorage persistence
+- **Responsive design** â€” Mobile-first layout
+- **Smooth animations** â€” Framer Motion interactions
 
 ---
 
@@ -74,10 +74,10 @@ interface TimelineEntry {
 
 ## 5. Pages
 
-- `/` — Hero + featured projects
-- `/projects` — Full project gallery
-- `/about` — Timeline + skills + bio
-- `/contact` — Contact form
+- `/` â€” Hero + featured projects
+- `/projects` â€” Full project gallery
+- `/about` â€” Timeline + skills + bio
+- `/contact` â€” Contact form
 
 ---
 

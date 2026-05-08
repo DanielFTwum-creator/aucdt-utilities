@@ -1,10 +1,10 @@
-# Attendance Tracking System
+﻿# Attendance Tracking System
 
 ## Purpose
 Student attendance and engagement tracking system for monitoring class participation, identifying at-risk students, and generating attendance reports for academic advisors and instructors.
 
 ## Stack
-- React 19.2.4
+- React 19.2.5
 - TypeScript 5.8.2
 - Vite 7.3.1
 - Tailwind CSS 4.2.1

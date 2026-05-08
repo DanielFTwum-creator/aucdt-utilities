@@ -1,4 +1,4 @@
-# CREATION.md — PDF Extractor App
+﻿# CREATION.md â€” PDF Extractor App
 
 **Purpose:** Complete build specification for any agent to implement this application from scratch.
 **Target:** Functional parity with `C:/Development/aucdt-utilities/pdf-extractor-app/`
@@ -10,7 +10,7 @@
 
 The PDF Extractor App (`pdf-extractor-app` v0.1.0) is a **client-side PDF email-extraction utility SPA** for Techbridge University College (TUC). The user uploads a PDF; the app reads it entirely in-browser using PDF.js, walks every page's text content, and runs a regex against the concatenated string to surface unique email addresses. Results render as a click-to-copy list with bulk **Copy All** and **Download as TXT** actions.
 
-Critically, the app **does not call any backend** to process PDFs — PDF.js is loaded from a CDN at boot, the worker is wired up to the same CDN, and the file never leaves the browser. The app is **gated by a session-storage login** (`admin` / `admin`) before the upload UI renders, and exposes a protected `/admin` route inside an inner React Router for compliance/audit dashboards. It is part of the TUC monorepo gateway, deployed via the `pdf-extractor-app` service in `docker-compose-all-apps.yml`.
+Critically, the app **does not call any backend** to process PDFs â€” PDF.js is loaded from a CDN at boot, the worker is wired up to the same CDN, and the file never leaves the browser. The app is **gated by a session-storage login** (`admin` / `admin`) before the upload UI renders, and exposes a protected `/admin` route inside an inner React Router for compliance/audit dashboards. It is part of the TUC monorepo gateway, deployed via the `pdf-extractor-app` service in `docker-compose-all-apps.yml`.
 
 ---
 
@@ -18,15 +18,15 @@ Critically, the app **does not call any backend** to process PDFs — PDF.js is 
 
 | Layer | Technology | Version |
 |---|---|---|
-| Runtime | React | **19.2.4** (never change) |
-| DOM | react-dom | 19.2.4 |
+| Runtime | React | **19.2.5** (never change) |
+| DOM | react-dom | 19.2.5 |
 | Build | Vite | 7.3.1 |
 | React plugin | @vitejs/plugin-react | ^5.1.4 |
 | Language | TypeScript | ^5.7.2 |
 | Routing | react-router-dom | ^7.1.0 |
 | Styling | Tailwind CSS | ^4.2.1 (via `@tailwindcss/vite`) + custom `App.css` |
 | Icons | lucide-react | ^0.400.0 |
-| PDF parsing | **pdf.js 3.11.174** (CDN: `cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js` + matching `pdf.worker.min.js`) — runtime-injected, NOT bundled |
+| PDF parsing | **pdf.js 3.11.174** (CDN: `cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js` + matching `pdf.worker.min.js`) â€” runtime-injected, NOT bundled |
 | Web vitals | web-vitals | ^2.1.4 |
 | Static server | serve | 14.2.5 |
 | Unit tests | Vitest + @testing-library/react + jsdom | ^3.0.0 / ^16.3.2 / ^26.1.0 |
@@ -34,7 +34,7 @@ Critically, the app **does not call any backend** to process PDFs — PDF.js is 
 | User-event | @testing-library/user-event | ^14.6.1 |
 | Coverage | @vitest/coverage-v8 | ^3.0.0 |
 | Package manager | pnpm | 10.30.1 (declared in `packageManager`) |
-| Container | node:24-alpine → nginx:alpine | — |
+| Container | node:24-alpine â†’ nginx:alpine | â€” |
 
 ---
 
@@ -42,49 +42,49 @@ Critically, the app **does not call any backend** to process PDFs — PDF.js is 
 
 ```
 pdf-extractor-app/
-├── index.html
-├── index.css
-├── package.json                # name: pdf-extractor-app, version: 0.1.0
-├── pnpm-lock.yaml
-├── pnpm-workspace.yaml
-├── vite.config.ts              # dev port 3000, base './'
-├── vitest.config.ts
-├── vitest.e2e.config.ts
-├── tsconfig.json
-├── Dockerfile                  # node:24-alpine multi-stage → serve dist :4173
-├── nginx.conf                  # SPA fallback, /health endpoint
-├── DEPLOYMENT.md
-├── README.md
-├── public/
-├── docs/
-│   ├── ADMIN_GUIDE.md
-│   ├── architecture.svg
-│   ├── dataflow.svg
-│   ├── DEPLOYMENT.md
-│   ├── SRS.md
-│   └── TESTING.md
-└── src/
-    ├── index.tsx               # createRoot + AuthGate + AppWithAuth
-    ├── index.css
-    ├── App.tsx                 # extractor root (~310 LOC)
-    ├── App.css                 # custom styles for upload, results, message-box
-    ├── App.test.js
-    ├── AppWithAuth.tsx         # router with /login, /admin, /*
-    ├── AuthGate.tsx
-    ├── reportWebVitals.js
-    ├── setupTests.js
-    ├── logo.svg
-    ├── vite-env.d.ts
-    ├── __tests__/
-    ├── components/
-    │   └── ProtectedRoute.tsx
-    ├── contexts/
-    │   └── AuthContext.tsx
-    ├── pages/
-    │   ├── LoginPage.tsx
-    │   └── AdminPage.tsx
-    └── services/
-        └── AuthService.ts
+â”œâ”€â”€ index.html
+â”œâ”€â”€ index.css
+â”œâ”€â”€ package.json                # name: pdf-extractor-app, version: 0.1.0
+â”œâ”€â”€ pnpm-lock.yaml
+â”œâ”€â”€ pnpm-workspace.yaml
+â”œâ”€â”€ vite.config.ts              # dev port 3000, base './'
+â”œâ”€â”€ vitest.config.ts
+â”œâ”€â”€ vitest.e2e.config.ts
+â”œâ”€â”€ tsconfig.json
+â”œâ”€â”€ Dockerfile                  # node:24-alpine multi-stage â†’ serve dist :4173
+â”œâ”€â”€ nginx.conf                  # SPA fallback, /health endpoint
+â”œâ”€â”€ DEPLOYMENT.md
+â”œâ”€â”€ README.md
+â”œâ”€â”€ public/
+â”œâ”€â”€ docs/
+â”‚   â”œâ”€â”€ ADMIN_GUIDE.md
+â”‚   â”œâ”€â”€ architecture.svg
+â”‚   â”œâ”€â”€ dataflow.svg
+â”‚   â”œâ”€â”€ DEPLOYMENT.md
+â”‚   â”œâ”€â”€ SRS.md
+â”‚   â””â”€â”€ TESTING.md
+â””â”€â”€ src/
+    â”œâ”€â”€ index.tsx               # createRoot + AuthGate + AppWithAuth
+    â”œâ”€â”€ index.css
+    â”œâ”€â”€ App.tsx                 # extractor root (~310 LOC)
+    â”œâ”€â”€ App.css                 # custom styles for upload, results, message-box
+    â”œâ”€â”€ App.test.js
+    â”œâ”€â”€ AppWithAuth.tsx         # router with /login, /admin, /*
+    â”œâ”€â”€ AuthGate.tsx
+    â”œâ”€â”€ reportWebVitals.js
+    â”œâ”€â”€ setupTests.js
+    â”œâ”€â”€ logo.svg
+    â”œâ”€â”€ vite-env.d.ts
+    â”œâ”€â”€ __tests__/
+    â”œâ”€â”€ components/
+    â”‚   â””â”€â”€ ProtectedRoute.tsx
+    â”œâ”€â”€ contexts/
+    â”‚   â””â”€â”€ AuthContext.tsx
+    â”œâ”€â”€ pages/
+    â”‚   â”œâ”€â”€ LoginPage.tsx
+    â”‚   â””â”€â”€ AdminPage.tsx
+    â””â”€â”€ services/
+        â””â”€â”€ AuthService.ts
 ```
 
 ---
@@ -143,7 +143,7 @@ script.onload = () => {
 script.onerror = () => setError('Failed to load PDF.js library. Please check your internet connection.');
 ```
 
-The file input is `disabled` and the label reads **"⏳ Loading PDF.js..."** until `isPdfjsLoaded === true`, at which point it switches to **"📄 Choose PDF File"**.
+The file input is `disabled` and the label reads **"â³ Loading PDF.js..."** until `isPdfjsLoaded === true`, at which point it switches to **"ðŸ“„ Choose PDF File"**.
 
 ---
 
@@ -190,11 +190,11 @@ Notes:
 `copyToClipboard(text, event, successMessage)`:
 1. Try `navigator.clipboard.writeText(text)`.
 2. On failure, call `fallbackCopyToClipboard(text, target, message)` which renders an off-screen `<textarea>`, calls `document.execCommand('copy')`, and removes the textarea.
-3. On success, `applyCopyFeedback(target, message)` flashes the button label to `"✓ Copied!"` and the background to `linear-gradient(135deg, #228B22 0%, #3CB371 100%)` for 1500 ms.
+3. On success, `applyCopyFeedback(target, message)` flashes the button label to `"âœ“ Copied!"` and the background to `linear-gradient(135deg, #228B22 0%, #3CB371 100%)` for 1500 ms.
 
 `downloadEmails()`:
 - Joins `extractedEmails` with `\n`, builds `Blob([content], { type: 'text/plain;charset=utf-8' })`, creates an `<a download="extracted_unique_emails.txt">`, programmatically clicks it, then revokes the object URL after 200 ms.
-- Visual feedback: button briefly shows `"✓ Downloaded!"` and the green gradient for 2000 ms.
+- Visual feedback: button briefly shows `"âœ“ Downloaded!"` and the green gradient for 2000 ms.
 
 `copyAllEmails(event)` joins the array with `\n` and pushes through `copyToClipboard` with message `"All emails copied to clipboard!"`.
 
@@ -204,16 +204,16 @@ Notes:
 
 The page uses a centred `.container` card. Section structure:
 
-1. `.header` — purple gradient banner with `📧 PDF Email Extractor` title and subtitle `"Extract unique email addresses from PDF documents with ease"`.
-2. `.upload-section` — the file input + label, plus a `.file-info` row when a file is chosen.
-3. `.loading` — inline spinner with `"Processing PDF file..."` while the extraction promise is pending.
-4. `.error` — red alert banner.
-5. `.results` — heading `"📋 Extracted Email Addresses"`, an `.email-count` row, a vertical `.email-list` of clickable `.email-item` chips (each click copies that single address), and a `.download-section` with two buttons:
-   - `#downloadBtn` `💾 Download as TXT`
-   - `#copyBtn` `📋 Copy All`
-6. `.message-box-overlay` / `.message-box` — modal for status messages, dismissed by an `OK` button bound to `hideCustomMessageBox()`.
+1. `.header` â€” purple gradient banner with `ðŸ“§ PDF Email Extractor` title and subtitle `"Extract unique email addresses from PDF documents with ease"`.
+2. `.upload-section` â€” the file input + label, plus a `.file-info` row when a file is chosen.
+3. `.loading` â€” inline spinner with `"Processing PDF file..."` while the extraction promise is pending.
+4. `.error` â€” red alert banner.
+5. `.results` â€” heading `"ðŸ“‹ Extracted Email Addresses"`, an `.email-count` row, a vertical `.email-list` of clickable `.email-item` chips (each click copies that single address), and a `.download-section` with two buttons:
+   - `#downloadBtn` `ðŸ’¾ Download as TXT`
+   - `#copyBtn` `ðŸ“‹ Copy All`
+6. `.message-box-overlay` / `.message-box` â€” modal for status messages, dismissed by an `OK` button bound to `hideCustomMessageBox()`.
 
-The success-state gradient is `linear-gradient(135deg, #228B22 0%, #3CB371 100%)` (forest green → medium spring green).
+The success-state gradient is `linear-gradient(135deg, #228B22 0%, #3CB371 100%)` (forest green â†’ medium spring green).
 
 ---
 
@@ -224,7 +224,7 @@ The success-state gradient is `linear-gradient(135deg, #228B22 0%, #3CB371 100%)
 - **Session key:** `sessionStorage["tuc_auth_pdf_extractor_app"] === "1"`.
 - **Accent colour (login icon + button):** `#0891b2` (cyan-600).
 - Hard-coded credentials: `admin` / `admin`. Failure: `"Invalid credentials. Use admin / admin"`.
-- Login card title: `"Pdf Extractor App"`. Footer: `"Techbridge University College · admin / admin"`.
+- Login card title: `"Pdf Extractor App"`. Footer: `"Techbridge University College Â· admin / admin"`.
 
 ### Inner router (`AuthContext` + `AuthService`)
 
@@ -240,12 +240,12 @@ The success-state gradient is `linear-gradient(135deg, #228B22 0%, #3CB371 100%)
 
 Two-pane layout consistent with the rest of the monorepo:
 - **Sidebar** `bg-[#0f172a]` slate, with a yellow `bg-[#ffcb05]` shield, app title `Pdf Extractor App`, two tabs (`overview`, `logs`), Sign-Out at the bottom.
-- **Main pane** header `Pdf Extractor App — Admin · Techbridge University College · Staff Portal`.
+- **Main pane** header `Pdf Extractor App â€” Admin Â· Techbridge University College Â· Staff Portal`.
 
 Tabs:
 
-1. **Overview** — six compliance tiles: `React Version 19.2.4`, `Docker Configured`, `SRS docs/SRS.md`, `Tests vitest.config.ts`, `Auth Active`, `Phase Phase 2 Complete`.
-2. **Activity Log** — table of `{ id, time, action, detail }`; seeded with one `SESSION_START` entry.
+1. **Overview** â€” six compliance tiles: `React Version 19.2.5`, `Docker Configured`, `SRS docs/SRS.md`, `Tests vitest.config.ts`, `Auth Active`, `Phase Phase 2 Complete`.
+2. **Activity Log** â€” table of `{ id, time, action, detail }`; seeded with one `SESSION_START` entry.
 
 All future diagnostics (e.g. PDF parse benchmarks, regex coverage tests) MUST live exclusively under `/admin`.
 
@@ -256,7 +256,7 @@ All future diagnostics (e.g. PDF parse benchmarks, regex coverage tests) MUST li
 ```bash
 pnpm install
 pnpm run dev            # vite, port 3000
-pnpm run build          # → dist/
+pnpm run build          # â†’ dist/
 pnpm run preview
 pnpm run serve          # serve -s dist -l 3000
 pnpm test
@@ -269,9 +269,9 @@ pnpm run test:e2e
 
 ## 13. Docker
 
-- **Dockerfile** — node:24-alpine multi-stage. Stage 1: corepack pnpm + `pnpm install --frozen-lockfile || npm install` + `pnpm run build`. Stage 2: `pnpm add -g serve`, copy `dist/`, expose **4173**, healthcheck `wget --spider http://localhost:4173/health`.
-- **nginx.conf** — `listen 80; root /usr/share/nginx/html; try_files $uri $uri/ /index.html;`. Security headers: `X-Frame-Options SAMEORIGIN`, `X-Content-Type-Options nosniff`, `X-XSS-Protection 1; mode=block`, `Referrer-Policy strict-origin-when-cross-origin`. Static assets cached 1 year immutable. Gzip enabled. `/health` returns `healthy`.
-- **docker-compose-all-apps.yml** — service `pdf-extractor-app`, context `./pdf-extractor-app`, dockerfile `../Dockerfile.vite`, network `tuc-network`.
+- **Dockerfile** â€” node:24-alpine multi-stage. Stage 1: corepack pnpm + `pnpm install --frozen-lockfile || npm install` + `pnpm run build`. Stage 2: `pnpm add -g serve`, copy `dist/`, expose **4173**, healthcheck `wget --spider http://localhost:4173/health`.
+- **nginx.conf** â€” `listen 80; root /usr/share/nginx/html; try_files $uri $uri/ /index.html;`. Security headers: `X-Frame-Options SAMEORIGIN`, `X-Content-Type-Options nosniff`, `X-XSS-Protection 1; mode=block`, `Referrer-Policy strict-origin-when-cross-origin`. Static assets cached 1 year immutable. Gzip enabled. `/health` returns `healthy`.
+- **docker-compose-all-apps.yml** â€” service `pdf-extractor-app`, context `./pdf-extractor-app`, dockerfile `../Dockerfile.vite`, network `tuc-network`.
 
 ---
 
@@ -308,7 +308,7 @@ Typography: Playfair Display (titles), Bebas Neue (display), Inter / Cormorant G
 - Modal (`.message-box-overlay`) should set `role="dialog" aria-modal="true"` and trap focus to the OK button.
 - `.email-item` rows are clickable; add `role="button" tabIndex={0}` and `onKeyDown` for Enter/Space when refactoring for full WCAG 2.1 AA.
 - All buttons must have visible focus rings.
-- Colour-only state (the green gradient on success) must be paired with text feedback ("✓ Copied!" / "✓ Downloaded!").
+- Colour-only state (the green gradient on success) must be paired with text feedback ("âœ“ Copied!" / "âœ“ Downloaded!").
 
 ---
 
@@ -319,7 +319,7 @@ Typography: Playfair Display (titles), Bebas Neue (display), Inter / Cormorant G
 | AC-1 | App builds with zero TypeScript errors |
 | AC-2 | `AuthGate` blocks the extractor until session login succeeds with `admin/admin` |
 | AC-3 | PDF.js (3.11.174) loads from CDN at boot and the worker is wired to the matching `pdf.worker.min.js` |
-| AC-4 | The file input is disabled until `isPdfjsLoaded === true`; label switches from `⏳ Loading PDF.js...` to `📄 Choose PDF File` |
+| AC-4 | The file input is disabled until `isPdfjsLoaded === true`; label switches from `â³ Loading PDF.js...` to `ðŸ“„ Choose PDF File` |
 | AC-5 | Choosing a PDF triggers `extractEmails`, which iterates `pdf.numPages` and concatenates `getTextContent` results |
 | AC-6 | The email regex `/\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b/g` is used to find addresses |
 | AC-7 | Results are deduplicated case-insensitively and sorted alphabetically |
@@ -327,9 +327,9 @@ Typography: Playfair Display (titles), Bebas Neue (display), Inter / Cormorant G
 | AC-9 | Single-email click and `Copy All` button both copy via `navigator.clipboard` with execCommand fallback |
 | AC-10 | `Download as TXT` produces `extracted_unique_emails.txt` with one email per line |
 | AC-11 | `/admin` is protected; unauthenticated visits redirect to `/login` |
-| AC-12 | Admin Overview shows the six compliance tiles in §11 |
+| AC-12 | Admin Overview shows the six compliance tiles in Â§11 |
 | AC-13 | Dockerfile produces a healthy image; `/health` returns `healthy` |
 | AC-14 | Service appears under `pdf-extractor-app:` in `docker-compose-all-apps.yml` on `tuc-network` |
-| AC-15 | No PDF bytes are uploaded to any server — extraction stays local to the browser |
+| AC-15 | No PDF bytes are uploaded to any server â€” extraction stays local to the browser |
 | AC-16 | Institution name in any new chrome is **Techbridge University College** / **TUC** |
 | AC-17 | Tests run via `pnpm test`; coverage achievable via `pnpm test:coverage` |

@@ -1,6 +1,6 @@
-# Testing Guide: Cinematic Triptych Generator
+﻿# Testing Guide: Cinematic Triptych Generator
 **Project:** Cinematic Triptych (v3.0.0)
-**Core Requirement:** Logic validation against React 19.2.4
+**Core Requirement:** Logic validation against React 19.2.5
 
 ## 1. Testing Framework
 The platform employs a robust three-tier testing framework:
@@ -21,4 +21,4 @@ The platform employs a robust three-tier testing framework:
 - **ARIA Standards**: Use VoiceOver or NVDA to navigate the generator. Ensure all creative variation selects are keyboard-accessible and announce their labels.
 
 ## 4. Institutional Compliance
-Every test run must be verified against the React 19.2.4 mandate. Any creative deviations from the institutional storyboard standards must be flagged as a regression.
+Every test run must be verified against the React 19.2.5 mandate. Any creative deviations from the institutional storyboard standards must be flagged as a regression.

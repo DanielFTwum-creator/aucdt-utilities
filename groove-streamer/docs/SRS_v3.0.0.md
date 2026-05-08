@@ -1,11 +1,11 @@
-# Software Requirements Specification (SRS) - Groove Streamer v3.0.0
+﻿# Software Requirements Specification (SRS) - Groove Streamer v3.0.0
 
 ## 1. Introduction
 Groove Streamer is a high-performance web application designed to generate, stream, and manage groove-based music using the Google Gemini Lyria model. This document outlines the functional and non-functional requirements for version 3.0.0.
 
 ## 2. Overall Description
 The application provides a robust user interface for:
-- **Music Generation**: Generating custom grooves with adjustable BPM (40–300 BPM).
+- **Music Generation**: Generating custom grooves with adjustable BPM (40â€“300 BPM).
 - **Admin Management**: A password-protected administrative dashboard for system monitoring and testing.
 - **Testing**: An integrated E2E testing suite using Playwright.
 
@@ -53,5 +53,5 @@ The application provides a robust user interface for:
 
 ## 6. Compliance
 - **Techbridge University College Standards**: Adheres to the master project directive and shared standards.
-- **Version Compliance**: Strictly uses React 19.2.4.
+- **Version Compliance**: Strictly uses React 19.2.5.
 - **Documentation**: All guides and diagrams are maintained in the `/docs` directory.

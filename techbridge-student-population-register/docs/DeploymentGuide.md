@@ -1,11 +1,11 @@
-# Deployment Guide: Student Population Register
+﻿# Deployment Guide: Student Population Register
 **Project:** TUC Population Register (v3.0.0)
-**Core Requirement:** MUST compile with React 19.2.4
+**Core Requirement:** MUST compile with React 19.2.5
 
 ## 1. Environment Preparation
 - **Node.js**: v18+ required.
 - **Package Manager**: `pnpm` (recommended) or `npm`.
-- **Constraint**: Ensure `package.json` pins `react` and `react-dom` to **19.2.4**.
+- **Constraint**: Ensure `package.json` pins `react` and `react-dom` to **19.2.5**.
 
 ## 2. Institutional Metadata
 - Ensure `metadata.json` in the root correctly identifies the application as the "Student Population Register".

@@ -1,4 +1,4 @@
-# Administrator Guide
+﻿# Administrator Guide
 
 ## Overview
 This guide provides instructions for administrators to manage the Flydee application.
@@ -13,4 +13,4 @@ Access the admin panel via the `/admin` route. You will be prompted for a passwo
 - **Testing Suite**: Run E2E tests.
 
 ## React Version
-This application requires React 19.2.4.
+This application requires React 19.2.5.

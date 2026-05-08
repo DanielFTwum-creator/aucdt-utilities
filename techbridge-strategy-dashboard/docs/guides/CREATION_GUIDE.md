@@ -1,4 +1,4 @@
-# TechBridge Dashboard - Model Creation Guide
+﻿# TechBridge Dashboard - Model Creation Guide
 
 ## OBJECTIVE
 Recreate the TechBridge Strategic Dashboard application from scratch following these exact steps.
@@ -29,8 +29,8 @@ Create file `package.json` with this exact content:
   },
   "dependencies": {
     "lucide-react": "^0.563.0",
-    "react": "^19.2.4",
-    "react-dom": "^19.2.4",
+    "react": "^19.2.5",
+    "react-dom": "^19.2.5",
     "recharts": "^3.7.0"
   },
   "devDependencies": {

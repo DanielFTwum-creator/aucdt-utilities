@@ -1,4 +1,4 @@
-
+﻿
 # System Requirements Specification
 ## Project: TECHBRIDGE Scholarship Portal
 **Version**: 2.0 - Final Institutional Edition
@@ -9,7 +9,7 @@
 ## 1. Introduction
 
 ### 1.1 Purpose
-The purpose of this document is to define the "as-built" system requirements for the TECHBRIDGE Scholarship Portal. This web-based application is built with **React 19.2.4** to digitize the scholarship agreement process for PhD scholars, replacing manual paperwork with a validated, secure, and efficient digital workflow.
+The purpose of this document is to define the "as-built" system requirements for the TECHBRIDGE Scholarship Portal. This web-based application is built with **React 19.2.5** to digitize the scholarship agreement process for PhD scholars, replacing manual paperwork with a validated, secure, and efficient digital workflow.
 
 ### 1.2 Scope
 The TECHBRIDGE Scholarship Portal allows scholars to:
@@ -81,4 +81,4 @@ This is a premium standalone web application (Client-Side SPA) communicating wit
 
 ## 4. Appendices
 - **A. Data Dictionary**: See `src/types.ts` for schema definitions.
-- **B. Tech Stack**: React 19.2.4, TypeScript, Tailwind CSS v4, jsPDF, html2canvas.
+- **B. Tech Stack**: React 19.2.5, TypeScript, Tailwind CSS v4, jsPDF, html2canvas.

@@ -1,4 +1,4 @@
-# Software Requirements Specification
+﻿# Software Requirements Specification
 
 **Project:** Fraud Detection Engine  
 **App ID:** 137  
@@ -53,10 +53,10 @@ The Fraud Detection Engine is a full-stack TypeScript application providing:
 
 ### 1.4 References
 
-- SHARED-STANDARDS.md — TUC Canonical AI Governance Layer
-- GEMINI.md — Execution Agent Constitution
-- CLAUDE.md — Audit & Analysis Agent Constitution
-- IEEE 29148-2018 — Systems and Software Engineering Requirements
+- SHARED-STANDARDS.md â€” TUC Canonical AI Governance Layer
+- GEMINI.md â€” Execution Agent Constitution
+- CLAUDE.md â€” Audit & Analysis Agent Constitution
+- IEEE 29148-2018 â€” Systems and Software Engineering Requirements
 - TUC Refresh Directive: <https://ai-tools.aucdt.edu.gh/refresh>
 
 ### 1.5 Overview
@@ -70,7 +70,7 @@ Section 2 describes the overall product context. Section 3 lists system features
 ### 2.1 Product Perspective
 
 The Fraud Detection Engine is a standalone full-stack application within the TUC monorepo (`aucdt-utilities`). It consists of:
-- **Frontend:** React 19.2.4 SPA with Vite, Tailwind CSS 4, Zustand state management, and Recharts data visualisation
+- **Frontend:** React 19.2.5 SPA with Vite, Tailwind CSS 4, Zustand state management, and Recharts data visualisation
 - **Backend:** Express server with SQLite persistence, REST API, and background metric simulation
 - **Infrastructure:** Docker deployment with nginx:alpine
 
@@ -78,15 +78,15 @@ The application communicates with The Sentinel AI Orchestrator via REST endpoint
 
 ### 2.2 Product Functions
 
-1. **Entity Management** — CRUD operations for monitored financial entities
-2. **Health Scoring** — Automated health score computation with 5-second refresh cycles
-3. **Dashboard Visualisation** — Real-time stat cards, area charts, and trend analysis
-4. **Alert System** — Severity-coded alerts derived from health score thresholds with acknowledgement workflow
-5. **Health Monitoring** — Per-entity health distribution, bar charts, and status grid
-6. **Admin Panel** — Protected admin section with 6 operational sub-routes
-7. **Sentinel Integration** — Health reporting and autonomous remediation via REST API
-8. **Theme Support** — Dark/Light mode toggle with persistence
-9. **AI/ML Endpoint** — Placeholder for Gemini-powered fraud prediction
+1. **Entity Management** â€” CRUD operations for monitored financial entities
+2. **Health Scoring** â€” Automated health score computation with 5-second refresh cycles
+3. **Dashboard Visualisation** â€” Real-time stat cards, area charts, and trend analysis
+4. **Alert System** â€” Severity-coded alerts derived from health score thresholds with acknowledgement workflow
+5. **Health Monitoring** â€” Per-entity health distribution, bar charts, and status grid
+6. **Admin Panel** â€” Protected admin section with 6 operational sub-routes
+7. **Sentinel Integration** â€” Health reporting and autonomous remediation via REST API
+8. **Theme Support** â€” Dark/Light mode toggle with persistence
+9. **AI/ML Endpoint** â€” Placeholder for Gemini-powered fraud prediction
 
 ### 2.3 User Classes and Characteristics
 
@@ -107,7 +107,7 @@ The application communicates with The Sentinel AI Orchestrator via REST endpoint
 
 ### 2.5 Design and Implementation Constraints
 
-- **React version:** Exactly 19.2.4 — locked, no exceptions
+- **React version:** Exactly 19.2.5 â€” locked, no exceptions
 - **Build tool:** Vite 8.x (dev dependency) / Vite 6.x (dev server middleware)
 - **Package manager:** pnpm (preferred), npm (fallback)
 - **Styling:** Tailwind CSS 4.x with TUC design tokens
@@ -130,112 +130,112 @@ The application communicates with The Sentinel AI Orchestrator via REST endpoint
 
 | ID | Requirement | Status |
 |---|---|---|
-| FR-001 | The application shall render without errors in all supported browsers | ✅ Implemented |
-| FR-002 | The application shall display a loading state during async operations | ✅ Implemented |
-| FR-003 | The application shall display error states on API failure | ⚠️ Partial (store sets error, no UI display) |
-| FR-004 | The application shall display empty states when no data is available | ✅ Implemented (Alerts "All Clear") |
+| FR-001 | The application shall render without errors in all supported browsers | âœ… Implemented |
+| FR-002 | The application shall display a loading state during async operations | âœ… Implemented |
+| FR-003 | The application shall display error states on API failure | âš ï¸ Partial (store sets error, no UI display) |
+| FR-004 | The application shall display empty states when no data is available | âœ… Implemented (Alerts "All Clear") |
 
 ### 3.2 Navigation and Routing
 
 | ID | Requirement | Status |
 |---|---|---|
-| FR-010 | Client-side routing without full page reloads (React Router) | ✅ Implemented |
-| FR-011 | All navigation links shall be functional and lead to valid routes | ✅ Implemented |
-| FR-012 | 404 routes handled with redirect to Dashboard | ✅ Implemented |
-| FR-013 | Sidebar shall correctly highlight the active route | ✅ Implemented (fixed exact match for `/`) |
+| FR-010 | Client-side routing without full page reloads (React Router) | âœ… Implemented |
+| FR-011 | All navigation links shall be functional and lead to valid routes | âœ… Implemented |
+| FR-012 | 404 routes handled with redirect to Dashboard | âœ… Implemented |
+| FR-013 | Sidebar shall correctly highlight the active route | âœ… Implemented (fixed exact match for `/`) |
 
 ### 3.3 Dashboard
 
 | ID | Requirement | Status |
 |---|---|---|
-| FR-020 | Display total entities, healthy, warning, and critical counts | ✅ Implemented |
-| FR-021 | Display average health score banner | ✅ Implemented |
-| FR-022 | Display health score trends area chart (Recharts) | ✅ Implemented |
-| FR-023 | Auto-refresh entity data every 5 seconds | ✅ Implemented |
+| FR-020 | Display total entities, healthy, warning, and critical counts | âœ… Implemented |
+| FR-021 | Display average health score banner | âœ… Implemented |
+| FR-022 | Display health score trends area chart (Recharts) | âœ… Implemented |
+| FR-023 | Auto-refresh entity data every 5 seconds | âœ… Implemented |
 
 ### 3.4 Entity Management
 
 | ID | Requirement | Status |
 |---|---|---|
-| FR-030 | List all entities with health score and status | ✅ Implemented |
-| FR-031 | Display color-coded health scores (green/yellow/red) | ✅ Implemented |
-| FR-032 | Entity detail view via REST API | ✅ Implemented (API endpoint) |
-| FR-033 | Entity metrics history via REST API | ✅ Implemented (fixed SQL bug) |
+| FR-030 | List all entities with health score and status | âœ… Implemented |
+| FR-031 | Display color-coded health scores (green/yellow/red) | âœ… Implemented |
+| FR-032 | Entity detail view via REST API | âœ… Implemented (API endpoint) |
+| FR-033 | Entity metrics history via REST API | âœ… Implemented (fixed SQL bug) |
 
 ### 3.5 Health Monitoring
 
 | ID | Requirement | Status |
 |---|---|---|
-| FR-040 | Display health distribution summary (Healthy/Warning/Critical) | ✅ Implemented |
-| FR-041 | Display per-entity horizontal bar chart | ✅ Implemented |
-| FR-042 | Display entity status grid with trend indicators | ✅ Implemented |
-| FR-043 | Auto-refresh health data every 5 seconds | ✅ Implemented |
+| FR-040 | Display health distribution summary (Healthy/Warning/Critical) | âœ… Implemented |
+| FR-041 | Display per-entity horizontal bar chart | âœ… Implemented |
+| FR-042 | Display entity status grid with trend indicators | âœ… Implemented |
+| FR-043 | Auto-refresh health data every 5 seconds | âœ… Implemented |
 
 ### 3.6 Alert System
 
 | ID | Requirement | Status |
 |---|---|---|
-| FR-050 | Generate alerts for entities with health score < 80 | ✅ Implemented |
-| FR-051 | Classify alerts as Critical (<50) or Warning (<80) | ✅ Implemented |
-| FR-052 | Display active alert count | ✅ Implemented |
-| FR-053 | Allow alert acknowledgement | ✅ Implemented |
-| FR-054 | Display "All Clear" when no active alerts | ✅ Implemented |
+| FR-050 | Generate alerts for entities with health score < 80 | âœ… Implemented |
+| FR-051 | Classify alerts as Critical (<50) or Warning (<80) | âœ… Implemented |
+| FR-052 | Display active alert count | âœ… Implemented |
+| FR-053 | Allow alert acknowledgement | âœ… Implemented |
+| FR-054 | Display "All Clear" when no active alerts | âœ… Implemented |
 
 ### 3.7 Theme Support
 
 | ID | Requirement | Status |
 |---|---|---|
-| FR-060 | Support Light and Dark themes | ✅ Implemented |
-| FR-061 | All pages and components respect theme state | ✅ Implemented |
-| FR-062 | Theme toggle accessible from header | ✅ Implemented |
-| FR-063 | Theme preference persistence via localStorage | ✅ Implemented (Phase 2) |
-| FR-064 | High-Contrast theme support | ✅ Implemented (Phase 2) |
+| FR-060 | Support Light and Dark themes | âœ… Implemented |
+| FR-061 | All pages and components respect theme state | âœ… Implemented |
+| FR-062 | Theme toggle accessible from header | âœ… Implemented |
+| FR-063 | Theme preference persistence via localStorage | âœ… Implemented (Phase 2) |
+| FR-064 | High-Contrast theme support | âœ… Implemented (Phase 2) |
 
 ### 3.8 Authentication & Admin Section
 
 | ID | Requirement | Status |
 |---|---|---|
-| FR-070 | Password-protected login page | ✅ Implemented |
-| FR-071 | Protected admin routes requiring authentication | ✅ Implemented (RequireAuth guard) |
-| FR-072 | Admin Diagnostics sub-route | ✅ Implemented (Phase 2) |
-| FR-073 | Admin Database Monitor sub-route | ✅ Implemented (Phase 2) |
-| FR-074 | Admin System Logs sub-route | ✅ Implemented (Phase 2) |
-| FR-075 | Admin Performance sub-route | ✅ Implemented (Phase 2) |
-| FR-076 | Admin Testing sub-route | ✅ Implemented (Phase 2) |
-| FR-077 | Admin Sentinel Console sub-route | ✅ Implemented |
+| FR-070 | Password-protected login page | âœ… Implemented |
+| FR-071 | Protected admin routes requiring authentication | âœ… Implemented (RequireAuth guard) |
+| FR-072 | Admin Diagnostics sub-route | âœ… Implemented (Phase 2) |
+| FR-073 | Admin Database Monitor sub-route | âœ… Implemented (Phase 2) |
+| FR-074 | Admin System Logs sub-route | âœ… Implemented (Phase 2) |
+| FR-075 | Admin Performance sub-route | âœ… Implemented (Phase 2) |
+| FR-076 | Admin Testing sub-route | âœ… Implemented (Phase 2) |
+| FR-077 | Admin Sentinel Console sub-route | âœ… Implemented |
 
 ### 3.9 Sentinel Integration
 
 | ID | Requirement | Status |
 |---|---|---|
-| FR-080 | Health report endpoint (`GET /api/v1/sentinel/health-report`) | ✅ Implemented |
-| FR-081 | Remediation action endpoint (`POST /api/v1/sentinel/remediation`) | ✅ Implemented |
-| FR-082 | Sentinel Console UI with live health report display | ✅ Implemented |
-| FR-083 | Remediation simulation from UI | ✅ Implemented |
-| FR-084 | WebSocket real-time connection | ❌ Pending (future enhancement) |
+| FR-080 | Health report endpoint (`GET /api/v1/sentinel/health-report`) | âœ… Implemented |
+| FR-081 | Remediation action endpoint (`POST /api/v1/sentinel/remediation`) | âœ… Implemented |
+| FR-082 | Sentinel Console UI with live health report display | âœ… Implemented |
+| FR-083 | Remediation simulation from UI | âœ… Implemented |
+| FR-084 | WebSocket real-time connection | âŒ Pending (future enhancement) |
 
 ### 3.10 Backend / API
 
 | ID | Requirement | Status |
 |---|---|---|
-| FR-090 | Health check endpoint (`GET /api/health`) | ✅ Implemented |
-| FR-091 | Entity list endpoint (`GET /api/v1/entities`) | ✅ Implemented |
-| FR-092 | Entity detail endpoint (`GET /api/v1/entities/:id`) | ✅ Implemented |
-| FR-093 | Entity metrics endpoint (`GET /api/v1/entities/:id/metrics`) | ✅ Implemented (SQL fixed) |
-| FR-094 | Dashboard overview endpoint (`GET /api/v1/dashboard/overview`) | ✅ Implemented |
-| FR-095 | AI prediction endpoint (`POST /api/v1/ai/predict`) | ⚠️ Placeholder |
-| FR-096 | Background metric simulation (5-second interval) | ✅ Implemented |
-| FR-097 | Database schema auto-creation | ✅ Implemented |
-| FR-098 | Seed data generation (10 entities) | ✅ Implemented |
+| FR-090 | Health check endpoint (`GET /api/health`) | âœ… Implemented |
+| FR-091 | Entity list endpoint (`GET /api/v1/entities`) | âœ… Implemented |
+| FR-092 | Entity detail endpoint (`GET /api/v1/entities/:id`) | âœ… Implemented |
+| FR-093 | Entity metrics endpoint (`GET /api/v1/entities/:id/metrics`) | âœ… Implemented (SQL fixed) |
+| FR-094 | Dashboard overview endpoint (`GET /api/v1/dashboard/overview`) | âœ… Implemented |
+| FR-095 | AI prediction endpoint (`POST /api/v1/ai/predict`) | âš ï¸ Placeholder |
+| FR-096 | Background metric simulation (5-second interval) | âœ… Implemented |
+| FR-097 | Database schema auto-creation | âœ… Implemented |
+| FR-098 | Seed data generation (10 entities) | âœ… Implemented |
 
 ### 3.11 Accessibility
 
 | ID | Requirement | Status |
 |---|---|---|
-| FR-100 | All interactive elements shall have ARIA labels | ✅ Implemented (Phase 2 — 100% coverage) |
-| FR-101 | Application navigable via keyboard alone | ✅ Implemented (Phase 2) |
-| FR-102 | Skip-to-content link | ✅ Implemented |
-| FR-103 | Focus indicators visible on all focusable elements | ✅ Implemented (Phase 2) |
+| FR-100 | All interactive elements shall have ARIA labels | âœ… Implemented (Phase 2 â€” 100% coverage) |
+| FR-101 | Application navigable via keyboard alone | âœ… Implemented (Phase 2) |
+| FR-102 | Skip-to-content link | âœ… Implemented |
+| FR-103 | Focus indicators visible on all focusable elements | âœ… Implemented (Phase 2) |
 
 ---
 
@@ -243,7 +243,7 @@ The application communicates with The Sentinel AI Orchestrator via REST endpoint
 
 ### 4.1 User Interface
 
-- Responsive layout: 320px (mobile) → 1920px (desktop)
+- Responsive layout: 320px (mobile) â†’ 1920px (desktop)
 - TUC splash screen on initial load with gold loading bar
 - Sidebar navigation with collapsible layout
 - Header with system status, version, and theme toggle
@@ -323,19 +323,19 @@ The application communicates with The Sentinel AI Orchestrator via REST endpoint
 
 | Requirement | Status |
 |---|---|
-| React 19.2.4 exact version | ✅ Compliant |
-| TUC branding applied (splash, favicon, meta) | ✅ Compliant |
-| ARIA 100% coverage | ✅ Compliant (Phase 2) |
-| Docker service configured | ✅ Compliant |
-| SRS matches as-built state | ✅ Compliant (Phase 4 as-built) |
-| Zero broken links | ✅ Compliant |
-| Admin section isolated | ✅ Compliant (RequireAuth guard) |
-| Test suite present | ✅ Compliant (Vitest + Playwright configured) |
-| Dark/Light theme | ✅ Compliant |
-| High-Contrast theme | ✅ Compliant (Phase 2) |
-| Audit logging | ✅ Compliant (Phase 3) |
-| Admin page implementations | ✅ All 6 fully implemented (Phase 2) |
-| E2E tests (Playwright) | ✅ Compliant (Phase 3) |
+| React 19.2.5 exact version | âœ… Compliant |
+| TUC branding applied (splash, favicon, meta) | âœ… Compliant |
+| ARIA 100% coverage | âœ… Compliant (Phase 2) |
+| Docker service configured | âœ… Compliant |
+| SRS matches as-built state | âœ… Compliant (Phase 4 as-built) |
+| Zero broken links | âœ… Compliant |
+| Admin section isolated | âœ… Compliant (RequireAuth guard) |
+| Test suite present | âœ… Compliant (Vitest + Playwright configured) |
+| Dark/Light theme | âœ… Compliant |
+| High-Contrast theme | âœ… Compliant (Phase 2) |
+| Audit logging | âœ… Compliant (Phase 3) |
+| Admin page implementations | âœ… All 6 fully implemented (Phase 2) |
+| E2E tests (Playwright) | âœ… Compliant (Phase 3) |
 
 ---
 
@@ -343,7 +343,7 @@ The application communicates with The Sentinel AI Orchestrator via REST endpoint
 
 ```
 Frontend:
-  React 19.2.4 (locked)
+  React 19.2.5 (locked)
   TypeScript ~6.0.3
   Vite 8.x (build) / Express+Vite middleware (dev)
   Tailwind CSS 4.x
@@ -380,7 +380,7 @@ Network: aucdt-network (172.20.0.0/16)
 
 ---
 
-*Generated by Phase 1 SRS Generator — TUC Refresh Directive*  
-*Document version 3.0.0 — 2026-04-27 (updated with Phase 4 completions)*  
-*Status: Phase 4 Complete — All functional requirements implemented*  
+*Generated by Phase 1 SRS Generator â€” TUC Refresh Directive*  
+*Document version 3.0.0 â€” 2026-04-27 (updated with Phase 4 completions)*  
+*Status: Phase 4 Complete â€” All functional requirements implemented*  
 *Techbridge University College*

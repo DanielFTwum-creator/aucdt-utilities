@@ -1,4 +1,4 @@
-# Administrator Guide
+﻿# Administrator Guide
 ## AI Agent Masterclass Portal
 
 ### Accessing the Dashboard
@@ -17,7 +17,7 @@
 
 #### 1. System Diagnostics
 - **API Proxy**: Routes traffic to `portal.aucdt.edu.gh` through `/api/send-email`.
-- **Client Environment**: Verifies React version (19.2.4) and browser compatibility.
+- **Client Environment**: Verifies React version (19.2.5) and browser compatibility.
 - **Service Status**: Real-time status indicators for critical subsystems.
 
 #### 2. Audit Logs

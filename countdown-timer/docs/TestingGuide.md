@@ -1,4 +1,4 @@
-# Testing Guide
+﻿# Testing Guide
 
 ## 1. Introduction
 This guide outlines the testing strategy and procedures for the Countdown Timer application.
@@ -25,7 +25,7 @@ The suite executes the following scenarios:
 
 ## 4. Manual Testing Checklist
 In addition to the automated suite, the following manual checks should be performed after significant changes:
-- Verify React version 19.2.4 is actively in use (check `package.json` and the Admin Dashboard diagnostics).
+- Verify React version 19.2.5 is actively in use (check `package.json` and the Admin Dashboard diagnostics).
 - Verify all links (e.g., "Admin", "Return to Timer") are functional and lead to the correct destinations.
 - Verify the countdown timer updates every second without requiring a page refresh.
 - Verify the theme settings (Light, Dark, High-contrast) apply correctly and persist across page loads (using `localStorage`).

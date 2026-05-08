@@ -1,10 +1,10 @@
-# Applicant Dashboard
+﻿# Applicant Dashboard
 
 ## Purpose
 University applicant tracking and management dashboard providing real-time insights into admissions pipeline. Displays key performance indicators, interactive charts, filtering capabilities, and export functionality for admissions officers and administrators.
 
 ## Stack
-- React 19.2.4
+- React 19.2.5
 - TypeScript 5.8.2
 - Express (backend)
 - Vite 7.3.1

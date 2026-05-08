@@ -1,10 +1,10 @@
-# AI Log Pattern Analyzer
+﻿# AI Log Pattern Analyzer
 
 ## Purpose
 Log analysis and anomaly detection system using AI for identifying patterns, root causes, and operational issues in application and infrastructure logs. Reduces mean time to resolution (MTTR) for production incidents.
 
 ## Stack
-- React 19.2.4
+- React 19.2.5
 - TypeScript 5.8.2
 - Express 4.21.2
 - Vite 6.2.0

@@ -1,8 +1,8 @@
-# SashMade Testing Guide
+﻿# SashMade Testing Guide
 
 **Version:** 2.0
 **Date:** 2026-04-14
-**Required React Version:** 19.2.4
+**Required React Version:** 19.2.5
 **Test Framework:** Playwright (Chromium)
 
 ## 1. Overview
@@ -28,7 +28,7 @@ pnpm test:e2e:report            # open last HTML report
 ```
 
 **From Admin Console:**
-Navigate to `/admin/testing` → click **Run All Tests** or **Rerun** on individual cards.
+Navigate to `/admin/testing` â†’ click **Run All Tests** or **Rerun** on individual cards.
 
 ### 2.3 Configuration
 `playwright.config.ts`:
@@ -43,9 +43,9 @@ Navigate to `/admin/testing` → click **Run All Tests** or **Rerun** on individ
 
 ### 3.1 Public Pages
 - [ ] **Home:** Hero loads, mood board images visible, How to Order steps render, WhatsApp link present.
-- [ ] **Shop:** All 5 products display (₵ prices), colour filters work, sidebar How to Order visible, Payment Options banner renders.
+- [ ] **Shop:** All 5 products display (â‚µ prices), colour filters work, sidebar How to Order visible, Payment Options banner renders.
 - [ ] **About:** Flyer image loads, founder quote visible, team grid renders, contact links correct.
-- [ ] **SPA routing:** Refresh `/shop`, `/about`, `/privacy` — no 404.
+- [ ] **SPA routing:** Refresh `/shop`, `/about`, `/privacy` â€” no 404.
 
 ### 3.2 Admin Console
 - [ ] **Auth guard:** Visiting `/admin/dashboard` unauthenticated redirects to `/admin/login`.
@@ -60,7 +60,7 @@ Navigate to `/admin/testing` → click **Run All Tests** or **Rerun** on individ
 - [ ] All nav buttons have `aria-label`.
 - [ ] Mobile hamburger has `aria-expanded`.
 - [ ] Images have `alt` text.
-- [ ] Keyboard: Tab through nav → cart → login without mouse.
+- [ ] Keyboard: Tab through nav â†’ cart â†’ login without mouse.
 
 ## 4. Troubleshooting
 - **`Error: No tests found`:** Confirm `testDir: './tests/e2e'` in `playwright.config.ts` and files end in `.test.ts`.

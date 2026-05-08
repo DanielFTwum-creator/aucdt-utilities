@@ -1,4 +1,4 @@
-# Creation Guide: TECHBRIDGE Scholarship Portal (v1.2)
+﻿# Creation Guide: TECHBRIDGE Scholarship Portal (v1.2)
 
 This comprehensive guide provides the complete blueprint for reproducing the TECHBRIDGE Scholarship Portal from scratch. It integrates all functional requirements from the SRS and technical specifications from the project's architecture.
 
@@ -10,7 +10,7 @@ This comprehensive guide provides the complete blueprint for reproducing the TEC
 Create a best-in-class, accessible Single Page Application (SPA) for digitizing scholarship bonds with legal attestation, AI-powered form auditing, and automated administrative diagnostics.
 
 ### 1.2 Tech Stack
-- **Framework**: React 19.2.4 (ESM native import via esm.sh)
+- **Framework**: React 19.2.5 (ESM native import via esm.sh)
 - **Styling**: Tailwind CSS (CDN) with custom config.
 - **AI Engine**: Google Gemini API (@google/genai).
 - **Icons**: Lucide React.

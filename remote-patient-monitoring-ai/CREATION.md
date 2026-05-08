@@ -1,4 +1,4 @@
-# CREATION.md — Remote Patient Monitoring AI
+﻿# CREATION.md â€” Remote Patient Monitoring AI
 **Purpose:** Complete build specification for any agent to implement this application from scratch.
 **Target:** Functional parity with `C:/Development/aucdt-utilities/remote-patient-monitoring-ai/`
 **Last verified:** 2026-04-26
@@ -9,7 +9,7 @@
 
 The Remote Patient Monitoring AI system tracks patient vital signs (heart rate, blood pressure, temperature, SpO2, glucose) from wearable devices and IoT sensors, analyzes them with AI-powered anomaly detection, alerts healthcare providers to concerning trends, and maintains a secure patient health record.
 
-Built with **React 19.2.4**, **Node.js/Express**, **SQLite**, and **medical AI**.
+Built with **React 19.2.5**, **Node.js/Express**, **SQLite**, and **medical AI**.
 
 ---
 
@@ -17,7 +17,7 @@ Built with **React 19.2.4**, **Node.js/Express**, **SQLite**, and **medical AI**
 
 | Layer | Technology | Version |
 |---|---|---|
-| Frontend | React | **19.2.4** |
+| Frontend | React | **19.2.5** |
 | Build | Vite | ^6.2.0 |
 | Language | TypeScript | ~5.8.2 |
 | Styling | Tailwind CSS | ^4.1.14 |
@@ -32,14 +32,14 @@ Built with **React 19.2.4**, **Node.js/Express**, **SQLite**, and **medical AI**
 
 ## 3. Key Features
 
-- **Real-time vital sign ingestion** — Accepts data from wearables/sensors
-- **Anomaly detection** — Flags concerning vital sign combinations
-- **Clinical decision support** — AI-generated observations for providers
-- **Patient dashboard** — Personal health record with historical trends
-- **Provider console** — Patient caseload with alert queue
-- **Secure messaging** — Provider-patient communication
-- **Audit logging** — HIPAA-compliant access logs
-- **Data export** — PDF health summaries for records
+- **Real-time vital sign ingestion** â€” Accepts data from wearables/sensors
+- **Anomaly detection** â€” Flags concerning vital sign combinations
+- **Clinical decision support** â€” AI-generated observations for providers
+- **Patient dashboard** â€” Personal health record with historical trends
+- **Provider console** â€” Patient caseload with alert queue
+- **Secure messaging** â€” Provider-patient communication
+- **Audit logging** â€” HIPAA-compliant access logs
+- **Data export** â€” PDF health summaries for records
 
 ---
 
@@ -108,17 +108,17 @@ const NORMAL_RANGES = {
   spO2: { min: 95, max: 100 }
 };
 
-// Composite alerts (e.g., elevated HR + temp + low SpO2 → infection risk)
+// Composite alerts (e.g., elevated HR + temp + low SpO2 â†’ infection risk)
 ```
 
 ---
 
 ## 7. Privacy & Security
 
-- **Authentication** — JWT-based access for patients/providers
-- **HIPAA compliance** — Audit logs, data encryption at rest
-- **Role-based access** — Patients see only their data; providers see assigned patients
-- **Data retention** — Configurable archival after clinical utility period
+- **Authentication** â€” JWT-based access for patients/providers
+- **HIPAA compliance** â€” Audit logs, data encryption at rest
+- **Role-based access** â€” Patients see only their data; providers see assigned patients
+- **Data retention** â€” Configurable archival after clinical utility period
 
 ---
 

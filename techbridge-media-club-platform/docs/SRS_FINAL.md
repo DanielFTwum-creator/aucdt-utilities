@@ -1,4 +1,4 @@
-# Software Requirements Specification (SRS) - FINAL
+﻿# Software Requirements Specification (SRS) - FINAL
 **Project:** Techbridge Media Club Platform
 **Version:** 1.0 (Release)
 **Date:** February 17, 2026
@@ -9,7 +9,7 @@
 The Techbridge Media Club Platform (TMCP) is a centralized, cloud-accessible web application designed to manage the digital media operations of Techbridge University College's media club. It serves as the primary hub for content creation, editorial review, event coordination, and member management.
 
 ### 1.2 Scope
-The system is a Single Page Application (SPA) built on React 19.2.4. It facilitates:
+The system is a Single Page Application (SPA) built on React 19.2.5. It facilitates:
 *   **Content Management**: Drafting, reviewing, and publishing articles and media.
 *   **Collaboration**: Real-time co-authoring of documents.
 *   **Asset Management**: Organization of digital files (images, videos).
@@ -32,7 +32,7 @@ TMCP functions as a client-side prototype with simulated backend services. It ru
 
 ### 2.3 Operating Environment
 *   **Browser**: Chrome 110+, Firefox 110+, Safari 16+, Edge 110+.
-*   **Runtime**: React 19.2.4 via ESM.sh.
+*   **Runtime**: React 19.2.5 via ESM.sh.
 *   **Storage**: Browser `localStorage` for state persistence.
 
 ## 3. Specific Requirements (Functional)
@@ -88,7 +88,7 @@ TMCP functions as a client-side prototype with simulated backend services. It ru
 See `docs/ARCHITECTURE.md` for full SVG diagrams.
 
 ### 5.2 Technology Stack
-*   **Frontend**: React 19.2.4
+*   **Frontend**: React 19.2.5
 *   **Styles**: Tailwind CSS 3.4
 *   **State**: React Context API + LocalStorage
 *   **Icons**: Lucide React 0.574

@@ -1,4 +1,4 @@
-# Deployment Guide
+﻿# Deployment Guide
 
 ## Prerequisites
 - Node.js `v20.x` or higher
@@ -24,7 +24,7 @@ VITE_API_URL=http://localhost:3000
    ```bash
    pnpm run build
    ```
-   *This compiles the React 19.2.4 Vite application into the `/dist` directory.*
+   *This compiles the React 19.2.5 Vite application into the `/dist` directory.*
 
 3. **Start the Production Server**
    ```bash

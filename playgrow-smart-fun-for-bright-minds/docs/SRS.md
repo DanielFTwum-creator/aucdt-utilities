@@ -1,6 +1,6 @@
-# Software Requirements Specification
+﻿# Software Requirements Specification
 
-**Project:** Playgrow – Smart Fun For Bright Minds
+**Project:** Playgrow â€“ Smart Fun For Bright Minds
 **Version:** 3.0.0
 **Status:** As-Built
 **Institution:** Techbridge University College (TUC)
@@ -13,11 +13,11 @@
 
 ### 1.1 Purpose
 
-This Software Requirements Specification (SRS) documents the requirements for **Playgrow – Smart Fun For Bright Minds**, a web application deployed as part of the Techbridge University College (TUC) institutional utility suite. It serves as the authoritative reference for developers, testers, and stakeholders.
+This Software Requirements Specification (SRS) documents the requirements for **Playgrow â€“ Smart Fun For Bright Minds**, a web application deployed as part of the Techbridge University College (TUC) institutional utility suite. It serves as the authoritative reference for developers, testers, and stakeholders.
 
 ### 1.2 Scope
 
-**Playgrow – Smart Fun For Bright Minds** is a TypeScript-based React 19 single-page application (SPA) built with Vite and deployed via Docker/Nginx. It operates within the TUC monorepo (`aucdt-utilities`) and conforms to the Techbridge University College Shared Standards.
+**Playgrow â€“ Smart Fun For Bright Minds** is a TypeScript-based React 19 single-page application (SPA) built with Vite and deployed via Docker/Nginx. It operates within the TUC monorepo (`aucdt-utilities`) and conforms to the Techbridge University College Shared Standards.
 
 **In scope:**
 - All functional UI components and user flows
@@ -44,10 +44,10 @@ This Software Requirements Specification (SRS) documents the requirements for **
 
 ### 1.4 References
 
-- SHARED-STANDARDS.md — TUC Canonical AI Governance Layer
-- CLAUDE.md — Audit & Analysis Agent Constitution
-- GEMINI.md — Execution Agent Constitution
-- IEEE 29148-2018 — Systems and Software Engineering Requirements
+- SHARED-STANDARDS.md â€” TUC Canonical AI Governance Layer
+- CLAUDE.md â€” Audit & Analysis Agent Constitution
+- GEMINI.md â€” Execution Agent Constitution
+- IEEE 29148-2018 â€” Systems and Software Engineering Requirements
 - TUC Refresh Directive: <https://ai-tools.aucdt.edu.gh/refresh>
 
 ### 1.5 Overview
@@ -60,7 +60,7 @@ Section 2 describes the overall product context. Section 3 lists system features
 
 ### 2.1 Product Perspective
 
-**Playgrow – Smart Fun For Bright Minds** is a standalone module within the TUC institutional web application suite. It communicates with TUC backend services via REST APIs and shares the TUC design system (Tailwind CSS, Playfair Display, Bebas Neue, Cormorant Garamond).
+**Playgrow â€“ Smart Fun For Bright Minds** is a standalone module within the TUC institutional web application suite. It communicates with TUC backend services via REST APIs and shares the TUC design system (Tailwind CSS, Playfair Display, Bebas Neue, Cormorant Garamond).
 
 ### 2.2 Product Functions
 
@@ -85,7 +85,7 @@ Section 2 describes the overall product context. Section 3 lists system features
 
 ### 2.5 Design and Implementation Constraints
 
-- **React version:** Exactly 19.2.4 — locked, no exceptions
+- **React version:** Exactly 19.2.5 â€” locked, no exceptions
 - **Build tool:** Vite 7.3.1
 - **Package manager:** pnpm (preferred), npm (fallback)
 - **Styling:** Tailwind CSS 4.x with TUC design tokens
@@ -96,7 +96,7 @@ Section 2 describes the overall product context. Section 3 lists system features
 ### 2.6 Assumptions and Dependencies
 
 - TUC Auth API available at `http://localhost:5000/api/auth/*` (when auth required)
-- Mail API at `https://portal.aucdt.edu.gh` (live — do not change URL)
+- Mail API at `https://portal.aucdt.edu.gh` (live â€” do not change URL)
 - Docker and Docker Compose available in deployment environment
 - Google Analytics tag G-FKXTELQ71R injected via `index.html`
 
@@ -141,7 +141,7 @@ Section 2 describes the overall product context. Section 3 lists system features
 
 ### 4.1 User Interface
 
-- Responsive layout: 320px (mobile) → 1920px (desktop)
+- Responsive layout: 320px (mobile) â†’ 1920px (desktop)
 - TUC branding applied consistently (colours, typography, logo)
 - No broken links or dead UI elements
 
@@ -199,21 +199,21 @@ Section 2 describes the overall product context. Section 3 lists system features
 
 | Requirement | Status |
 |---|---|
-| React 19.2.4 exact version | ✅ Compliant |
-| TUC branding applied | ❌ Non-compliant |
-| ARIA 100% coverage | ❌ Non-compliant |
-| Docker service configured | ❌ Non-compliant |
-| SRS matches as-built state | ✅ Compliant |
-| Zero broken links | ⏳ Verify |
-| Admin section isolated | ❌ Non-compliant |
-| Test suite present | ✅ Compliant |
+| React 19.2.5 exact version | âœ… Compliant |
+| TUC branding applied | âŒ Non-compliant |
+| ARIA 100% coverage | âŒ Non-compliant |
+| Docker service configured | âŒ Non-compliant |
+| SRS matches as-built state | âœ… Compliant |
+| Zero broken links | â³ Verify |
+| Admin section isolated | âŒ Non-compliant |
+| Test suite present | âœ… Compliant |
 
 ---
 
-## 7. Appendix — Tech Stack Reference
+## 7. Appendix â€” Tech Stack Reference
 
 ```
-Stack: React 19.2.4 + TypeScript, Vite 7.3.1
+Stack: React 19.2.5 + TypeScript, Vite 7.3.1
 Build output: dist/
 Docker: nginx:alpine
 Network: aucdt-network (172.20.0.0/16)
@@ -237,5 +237,5 @@ CI/CD: Bitbucket Pipelines
 
 ---
 
-*Generated by Phase 1b SRS Generator — TUC Refresh Directive*
-*Document version 3.0.0 — 2026-03-07*
+*Generated by Phase 1b SRS Generator â€” TUC Refresh Directive*
+*Document version 3.0.0 â€” 2026-03-07*

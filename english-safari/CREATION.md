@@ -1,4 +1,4 @@
-# CREATION.md — English Safari
+﻿# CREATION.md â€” English Safari
 
 **Purpose:** Complete build specification for any agent to implement this application from scratch.
 **Target:** Functional parity with `C:/Development/aucdt-utilities/english-safari/`
@@ -8,11 +8,11 @@
 
 ## 1. What This App Is
 
-English Safari (`english-safari` v0.1.0) is a **20-question English-grammar learning quiz SPA** for Techbridge University College (TUC). It targets junior Ghanaian learners and drills the difference between the present-tense verb **"has"** and the future-tense **"will have"** through two recurring characters — **Ama** and **Kofi**. Each question has either three multiple-choice options or a free-text fill-in field, accompanied by an emoji visual cue (👧🏾🎒, 👦🏾⚽, etc.).
+English Safari (`english-safari` v0.1.0) is a **20-question English-grammar learning quiz SPA** for Techbridge University College (TUC). It targets junior Ghanaian learners and drills the difference between the present-tense verb **"has"** and the future-tense **"will have"** through two recurring characters â€” **Ama** and **Kofi**. Each question has either three multiple-choice options or a free-text fill-in field, accompanied by an emoji visual cue (ðŸ‘§ðŸ¾ðŸŽ’, ðŸ‘¦ðŸ¾âš½, etc.).
 
 Mechanics:
 - 20 sequential questions tracked by index (`currentQuestion`).
-- Live feedback: green "Correct! 🎉" / "Perfect! 🌟" or red message disclosing the right answer.
+- Live feedback: green "Correct! ðŸŽ‰" / "Perfect! ðŸŒŸ" or red message disclosing the right answer.
 - Per-question score increment; final celebration screen with confetti emoji and a `Play Again` button.
 
 The app is **gated by a session-storage login** (`admin` / `admin`) before the quiz renders, and ships with an Admin route (`/admin`) inside an inner React Router that hosts compliance/log dashboards. It is part of the TUC monorepo gateway, deployed via the `english-safari` service in `docker-compose-all-apps.yml`.
@@ -23,13 +23,13 @@ The app is **gated by a session-storage login** (`admin` / `admin`) before the q
 
 | Layer | Technology | Version |
 |---|---|---|
-| Runtime | React | **19.2.4** (never change) |
-| DOM | react-dom | 19.2.4 |
+| Runtime | React | **19.2.5** (never change) |
+| DOM | react-dom | 19.2.5 |
 | Build | Vite | 7.3.1 |
 | React plugin | @vitejs/plugin-react | ^5.1.4 |
 | Language | TypeScript | ^5.7.2 |
 | Routing | react-router-dom | ^7.1.0 |
-| Styling | Tailwind CSS | ^4.2.1 (via `@tailwindcss/vite`) — plus inline `<style>` block for the quiz |
+| Styling | Tailwind CSS | ^4.2.1 (via `@tailwindcss/vite`) â€” plus inline `<style>` block for the quiz |
 | Icons | lucide-react | ^0.400.0 |
 | Web vitals | web-vitals | ^2.1.4 |
 | Static server | serve | 14.2.5 |
@@ -38,7 +38,7 @@ The app is **gated by a session-storage login** (`admin` / `admin`) before the q
 | User-event | @testing-library/user-event | ^14.6.1 |
 | Coverage | @vitest/coverage-v8 | ^3.0.0 |
 | Package manager | pnpm | 10.30.1 (declared in `packageManager`) |
-| Container | node:24-alpine → nginx:alpine | — |
+| Container | node:24-alpine â†’ nginx:alpine | â€” |
 
 ---
 
@@ -46,50 +46,50 @@ The app is **gated by a session-storage login** (`admin` / `admin`) before the q
 
 ```
 english-safari/
-├── index.html
-├── index.css
-├── package.json                # name: english-safari, version: 0.1.0
-├── pnpm-lock.yaml
-├── pnpm-workspace.yaml
-├── vite.config.ts              # dev port 3000, base './'
-├── vitest.config.ts
-├── vitest.e2e.config.ts
-├── tsconfig.json
-├── Dockerfile                  # node:24-alpine multi-stage → serve dist :4173
-├── nginx.conf                  # SPA fallback /index.html, /health endpoint
-├── DEPLOYMENT.md
-├── README.md
-├── public/
-├── docs/
-│   ├── ADMIN_GUIDE.md
-│   ├── architecture.svg
-│   ├── dataflow.svg
-│   ├── DEPLOYMENT.md
-│   ├── SRS.md
-│   └── TESTING.md
-└── src/
-    ├── index.tsx               # createRoot + AuthGate + AppWithAuth
-    ├── index.css
-    ├── App.tsx                 # quiz root (~520 LOC, embedded <style> block)
-    ├── App.css
-    ├── App.test.js
-    ├── AppWithAuth.tsx         # router with /login, /admin, /*
-    ├── AuthGate.tsx
-    ├── reportWebVitals.js
-    ├── setupTests.js
-    ├── logo.svg
-    ├── marketing-plan.html     # static marketing artefact
-    ├── vite-env.d.ts
-    ├── __tests__/
-    ├── components/
-    │   └── ProtectedRoute.tsx
-    ├── contexts/
-    │   └── AuthContext.tsx
-    ├── pages/
-    │   ├── LoginPage.tsx
-    │   └── AdminPage.tsx
-    └── services/
-        └── AuthService.ts
+â”œâ”€â”€ index.html
+â”œâ”€â”€ index.css
+â”œâ”€â”€ package.json                # name: english-safari, version: 0.1.0
+â”œâ”€â”€ pnpm-lock.yaml
+â”œâ”€â”€ pnpm-workspace.yaml
+â”œâ”€â”€ vite.config.ts              # dev port 3000, base './'
+â”œâ”€â”€ vitest.config.ts
+â”œâ”€â”€ vitest.e2e.config.ts
+â”œâ”€â”€ tsconfig.json
+â”œâ”€â”€ Dockerfile                  # node:24-alpine multi-stage â†’ serve dist :4173
+â”œâ”€â”€ nginx.conf                  # SPA fallback /index.html, /health endpoint
+â”œâ”€â”€ DEPLOYMENT.md
+â”œâ”€â”€ README.md
+â”œâ”€â”€ public/
+â”œâ”€â”€ docs/
+â”‚   â”œâ”€â”€ ADMIN_GUIDE.md
+â”‚   â”œâ”€â”€ architecture.svg
+â”‚   â”œâ”€â”€ dataflow.svg
+â”‚   â”œâ”€â”€ DEPLOYMENT.md
+â”‚   â”œâ”€â”€ SRS.md
+â”‚   â””â”€â”€ TESTING.md
+â””â”€â”€ src/
+    â”œâ”€â”€ index.tsx               # createRoot + AuthGate + AppWithAuth
+    â”œâ”€â”€ index.css
+    â”œâ”€â”€ App.tsx                 # quiz root (~520 LOC, embedded <style> block)
+    â”œâ”€â”€ App.css
+    â”œâ”€â”€ App.test.js
+    â”œâ”€â”€ AppWithAuth.tsx         # router with /login, /admin, /*
+    â”œâ”€â”€ AuthGate.tsx
+    â”œâ”€â”€ reportWebVitals.js
+    â”œâ”€â”€ setupTests.js
+    â”œâ”€â”€ logo.svg
+    â”œâ”€â”€ marketing-plan.html     # static marketing artefact
+    â”œâ”€â”€ vite-env.d.ts
+    â”œâ”€â”€ __tests__/
+    â”œâ”€â”€ components/
+    â”‚   â””â”€â”€ ProtectedRoute.tsx
+    â”œâ”€â”€ contexts/
+    â”‚   â””â”€â”€ AuthContext.tsx
+    â”œâ”€â”€ pages/
+    â”‚   â”œâ”€â”€ LoginPage.tsx
+    â”‚   â””â”€â”€ AdminPage.tsx
+    â””â”€â”€ services/
+        â””â”€â”€ AuthService.ts
 ```
 
 ---
@@ -171,10 +171,10 @@ const [feedback, setFeedback]               = useState('');
 
 Handlers:
 
-- `handleOptionClick(option)` — sets `selectedOption`, awards a point if `option === questions[currentQuestion].answer`, sets feedback to `"Correct! 🎉"` else `"Try again! The answer is: <answer>"`.
-- `handleFillSubmit()` — case-insensitive compare; correct → `"Perfect! 🌟"` else `"Almost! It should be: <answer>"`.
-- `handleNext()` — advance index; on last question, set `showScore = true`.
-- `resetQuiz()` — zero `currentQuestion`, `score`; clear `feedback`; flip `showScore = false`.
+- `handleOptionClick(option)` â€” sets `selectedOption`, awards a point if `option === questions[currentQuestion].answer`, sets feedback to `"Correct! ðŸŽ‰"` else `"Try again! The answer is: <answer>"`.
+- `handleFillSubmit()` â€” case-insensitive compare; correct â†’ `"Perfect! ðŸŒŸ"` else `"Almost! It should be: <answer>"`.
+- `handleNext()` â€” advance index; on last question, set `showScore = true`.
+- `resetQuiz()` â€” zero `currentQuestion`, `score`; clear `feedback`; flip `showScore = false`.
 
 A row turns green when feedback contains `"Correct"` or `"Perfect"`; otherwise red.
 
@@ -182,7 +182,7 @@ A row turns green when feedback contains `"Correct"` or `"Perfect"`; otherwise r
 
 ## 7. Visual Theme (verbatim CSS in inline `<style>`)
 
-Theme is inlined directly in `App.tsx` via a `<style>{` … `}</style>` JSX block:
+Theme is inlined directly in `App.tsx` via a `<style>{` â€¦ `}</style>` JSX block:
 
 | Token | Value | Usage |
 |---|---|---|
@@ -192,17 +192,17 @@ Theme is inlined directly in `App.tsx` via a `<style>{` … `}</style>` JSX bloc
 | Question count colour | `#4e9af1` | label |
 | Option button background | `#f0f7ff`, border `#4e9af1` | unselected |
 | Option button selected | `#4e9af1` text white bold | active |
-| Submit / Next / Reset background | `#ff9800` → hover `#e68900` | CTAs |
+| Submit / Next / Reset background | `#ff9800` â†’ hover `#e68900` | CTAs |
 | Correct feedback | bg `#e8f5e9`, fg `#2e7d32` | green tint |
 | Incorrect feedback | bg `#ffebee`, fg `#c62828` | red tint |
 | Score-section heading | `#4e9af1` | celebration |
 | Font | `'Comic Sans MS', 'Chalkboard SE', sans-serif` | playful |
 
 Responsive breakpoints (verbatim):
-- `@media (max-width: 768px)` — question text 1.6 rem, header 2 rem, button padding 15 px.
-- `@media (max-width: 480px)` — question text 1.4 rem, image 3 rem, button padding 12 px.
+- `@media (max-width: 768px)` â€” question text 1.6 rem, header 2 rem, button padding 15 px.
+- `@media (max-width: 480px)` â€” question text 1.4 rem, image 3 rem, button padding 12 px.
 
-The header text is `English Safari 🦁` with subtitle `Learn "has" and "will have" with Ama & Kofi!`. Footer reads `Made for Ghanaian learners 🇬🇭 | Happy Friday!`.
+The header text is `English Safari ðŸ¦` with subtitle `Learn "has" and "will have" with Ama & Kofi!`. Footer reads `Made for Ghanaian learners ðŸ‡¬ðŸ‡­ | Happy Friday!`.
 
 ---
 
@@ -213,7 +213,7 @@ The header text is `English Safari 🦁` with subtitle `Learn "has" and "will ha
 - **Session key:** `sessionStorage["tuc_auth_english_safari"] === "1"`.
 - **Accent colour (login icon + button):** `#d97706` (amber-600).
 - Hard-coded credentials: `admin` / `admin`. Failure: `"Invalid credentials. Use admin / admin"`.
-- Login card title: `"English Safari"`. Footer: `"Techbridge University College · admin / admin"`.
+- Login card title: `"English Safari"`. Footer: `"Techbridge University College Â· admin / admin"`.
 
 ### Inner router (`AuthContext` + `AuthService`)
 
@@ -229,12 +229,12 @@ The header text is `English Safari 🦁` with subtitle `Learn "has" and "will ha
 
 Identical layout pattern to other TUC apps:
 - **Sidebar** `bg-[#0f172a]` (slate-900), branded shield icon `bg-[#ffcb05]`, app title `English Safari`, two tabs (`overview`, `logs`), Sign-Out at the bottom.
-- **Main pane** header `English Safari — Admin · Techbridge University College · Staff Portal`.
+- **Main pane** header `English Safari â€” Admin Â· Techbridge University College Â· Staff Portal`.
 
 Tabs:
 
-1. **Overview** — six compliance tiles: `React Version 19.2.4`, `Docker Configured`, `SRS docs/SRS.md`, `Tests vitest.config.ts`, `Auth Active`, `Phase Phase 2 Complete`.
-2. **Activity Log** — table of `{ id, time, action, detail }`; seeded with one `SESSION_START` entry on mount.
+1. **Overview** â€” six compliance tiles: `React Version 19.2.5`, `Docker Configured`, `SRS docs/SRS.md`, `Tests vitest.config.ts`, `Auth Active`, `Phase Phase 2 Complete`.
+2. **Activity Log** â€” table of `{ id, time, action, detail }`; seeded with one `SESSION_START` entry on mount.
 
 The internal "test panel" / diagnostic tools, when added, must live exclusively under `/admin` per repo policy.
 
@@ -245,7 +245,7 @@ The internal "test panel" / diagnostic tools, when added, must live exclusively 
 ```bash
 pnpm install
 pnpm run dev            # vite, port 3000, opens browser
-pnpm run build          # → dist/
+pnpm run build          # â†’ dist/
 pnpm run preview
 pnpm run serve          # serve -s dist -l 3000
 pnpm test
@@ -258,9 +258,9 @@ pnpm run test:e2e
 
 ## 11. Docker
 
-- **Dockerfile** — node:24-alpine multi-stage; corepack pnpm; `pnpm run build`; second stage runs `serve -s dist -l 4173`; healthcheck `wget --spider http://localhost:4173/health`.
-- **nginx.conf** — `listen 80; root /usr/share/nginx/html; try_files $uri $uri/ /index.html;` plus security headers `X-Frame-Options SAMEORIGIN`, `X-Content-Type-Options nosniff`, `X-XSS-Protection 1; mode=block`, `Referrer-Policy strict-origin-when-cross-origin`. `/health` returns `healthy`. Gzip enabled. Static assets cached 1 year immutable.
-- **docker-compose-all-apps.yml** — service `english-safari`, context `./english-safari`, dockerfile `../Dockerfile.vite`, network `tuc-network`, healthcheck against `http://localhost/health`.
+- **Dockerfile** â€” node:24-alpine multi-stage; corepack pnpm; `pnpm run build`; second stage runs `serve -s dist -l 4173`; healthcheck `wget --spider http://localhost:4173/health`.
+- **nginx.conf** â€” `listen 80; root /usr/share/nginx/html; try_files $uri $uri/ /index.html;` plus security headers `X-Frame-Options SAMEORIGIN`, `X-Content-Type-Options nosniff`, `X-XSS-Protection 1; mode=block`, `Referrer-Policy strict-origin-when-cross-origin`. `/health` returns `healthy`. Gzip enabled. Static assets cached 1 year immutable.
+- **docker-compose-all-apps.yml** â€” service `english-safari`, context `./english-safari`, dockerfile `../Dockerfile.vite`, network `tuc-network`, healthcheck against `http://localhost/health`.
 
 ---
 
@@ -285,19 +285,19 @@ NODE_ENV=development
 | Cream | `#F2EBD9` |
 | Paper | `#141210` |
 
-Typography: Playfair Display (titles), Bebas Neue (display), Inter / Cormorant Garamond (body). Always refer to the institution as **Techbridge University College** or **TUC** — never AUCDT — in any new content.
+Typography: Playfair Display (titles), Bebas Neue (display), Inter / Cormorant Garamond (body). Always refer to the institution as **Techbridge University College** or **TUC** â€” never AUCDT â€” in any new content.
 
 ---
 
 ## 14. Accessibility Requirements
 
-- Each option button has a clear label and large click target (≥ 18 px padding).
+- Each option button has a clear label and large click target (â‰¥ 18 px padding).
 - Fill input has `placeholder="Type your answer"` and is centred to the card.
 - Feedback region must convey state visually (colour) AND textually (message); add `role="status" aria-live="polite"` when refactoring.
 - Question text minimum height ensures consistent layout (`min-height:80px`).
 - Quiz card is keyboard navigable; Tab cycles through option buttons in DOM order.
 - Add `aria-label="Correct!"` / `aria-label="Incorrect"` to feedback banner when refactoring for full WCAG 2.1 AA.
-- Score celebration uses `🎉✨👏🏾` — must remain decorative (`aria-hidden="true"` recommended).
+- Score celebration uses `ðŸŽ‰âœ¨ðŸ‘ðŸ¾` â€” must remain decorative (`aria-hidden="true"` recommended).
 
 ---
 
@@ -307,16 +307,16 @@ Typography: Playfair Display (titles), Bebas Neue (display), Inter / Cormorant G
 |---|---|
 | AC-1 | App builds with zero TypeScript errors |
 | AC-2 | `AuthGate` blocks the quiz until session login succeeds with `admin/admin` |
-| AC-3 | Quiz contains exactly 20 questions in the order specified in §5 |
-| AC-4 | Multiple-choice questions show 2–3 buttons; fill questions show a single text input |
+| AC-3 | Quiz contains exactly 20 questions in the order specified in Â§5 |
+| AC-4 | Multiple-choice questions show 2â€“3 buttons; fill questions show a single text input |
 | AC-5 | Correct answer increments `score` by 1; incorrect answers do not |
 | AC-6 | Fill answers are matched case-insensitively |
 | AC-7 | Final celebration screen shows `You scored X out of 20` and a `Play Again` button |
 | AC-8 | `Play Again` resets `currentQuestion`, `score`, and `feedback` |
-| AC-9 | Visual theme uses the colour palette in §7 (header `#4e9af1`, CTAs `#ff9800`) |
+| AC-9 | Visual theme uses the colour palette in Â§7 (header `#4e9af1`, CTAs `#ff9800`) |
 | AC-10 | `/admin` is protected; unauthenticated visits redirect to `/login` |
-| AC-11 | Admin Overview shows the six compliance tiles in §9 |
+| AC-11 | Admin Overview shows the six compliance tiles in Â§9 |
 | AC-12 | Dockerfile produces a healthy image; `/health` returns `healthy` |
 | AC-13 | Service appears under `english-safari:` in `docker-compose-all-apps.yml` on `tuc-network` |
 | AC-14 | Institution name in any new chrome is **Techbridge University College** / **TUC** |
-| AC-15 | Tests run via `pnpm test`; coverage ≥ 70% achievable via `pnpm test:coverage` |
+| AC-15 | Tests run via `pnpm test`; coverage â‰¥ 70% achievable via `pnpm test:coverage` |

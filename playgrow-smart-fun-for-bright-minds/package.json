@@ -1,5 +1,5 @@
-{
-  "name": "playgrow-–-smart-fun-for-bright-minds",
+﻿{
+  "name": "playgrow-â€“-smart-fun-for-bright-minds",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -13,8 +13,8 @@
     "test:e2e": "vitest run --config vitest.e2e.config.ts"
   },
   "dependencies": {
-    "react": "19.2.4",
-    "react-dom": "19.2.4"
+    "react": "19.2.5",
+    "react-dom": "19.2.5"
   },
   "devDependencies": {
     "@types/node": "^24.10.1",

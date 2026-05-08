@@ -1,4 +1,4 @@
-# Software Requirements Specification (SRS) for Compliance Workflow Dashboard
+﻿# Software Requirements Specification (SRS) for Compliance Workflow Dashboard
 
 ## 1. Introduction
 ### 1.1 Purpose
@@ -22,7 +22,7 @@ The system provides a framework for managing compliance frameworks (HIPAA, PCI-D
 
 ## 3. Non-Functional Requirements
 ### 3.1 Technology Stack
-- React 19.2.4
+- React 19.2.5
 - Tailwind CSS
 - TypeScript
 

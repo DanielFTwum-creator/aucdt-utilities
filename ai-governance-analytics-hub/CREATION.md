@@ -1,10 +1,10 @@
-# AI Governance Analytics Hub
+﻿# AI Governance Analytics Hub
 
 ## Purpose
 AI governance and compliance monitoring platform for policy enforcement, risk assessment, and regulatory reporting. Tracks deployment policies, audit trails, and ensures alignment with institutional AI ethics standards.
 
 ## Stack
-- React 19.2.4
+- React 19.2.5
 - TypeScript 5.8.2
 - Express 4.21.2
 - Vite 6.2.0

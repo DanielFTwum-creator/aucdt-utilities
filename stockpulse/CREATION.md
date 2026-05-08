@@ -1,4 +1,4 @@
-# CREATION.md — StockPulse
+﻿# CREATION.md â€” StockPulse
 **Purpose:** Complete build specification for any agent to implement this application from scratch.
 **Target:** Functional parity with `C:/Development/aucdt-utilities/stockpulse/`
 **Last verified:** 2026-04-25
@@ -15,7 +15,7 @@ StockPulse is a **real-time stock market analytics dashboard** with a full-stack
 
 | Layer | Technology | Version |
 |---|---|---|
-| Frontend runtime | React | **19.2.4** |
+| Frontend runtime | React | **19.2.5** |
 | Build | Vite | ^6 |
 | Language | TypeScript | ~5.8 |
 | Styling | Tailwind CSS | ^4.2 |
@@ -23,11 +23,11 @@ StockPulse is a **real-time stock market analytics dashboard** with a full-stack
 | Animation | framer-motion | latest |
 | Icons | lucide-react | latest |
 | AI signals | `@google/genai` | latest |
-| Backend | Express 5 + Node.js 24 | — |
-| Auth | JWT + bcrypt | — |
-| Database | SQLite (via better-sqlite3 or equivalent) | — |
+| Backend | Express 5 + Node.js 24 | â€” |
+| Auth | JWT + bcrypt | â€” |
+| Database | SQLite (via better-sqlite3 or equivalent) | â€” |
 | Package manager | pnpm | 10.30+ |
-| Container | node:24-alpine → nginx:alpine (frontend) | — |
+| Container | node:24-alpine â†’ nginx:alpine (frontend) | â€” |
 
 ---
 
@@ -35,32 +35,32 @@ StockPulse is a **real-time stock market analytics dashboard** with a full-stack
 
 ```
 src/
-├── App.tsx               # Hash router, auth gate, view switcher
-├── main.tsx
-├── index.css             # Tailwind
-├── types/                # TypeScript interfaces
-├── hooks/
-│   ├── useAuth.ts        # login, register, logout, authFetch, upgradeToPremiun
-│   └── useTheme.ts       # dark/light toggle, persisted to localStorage
-├── components/
-│   ├── Auth/
-│   │   └── AuthModal.tsx       # Login / register modal
-│   ├── Layout/
-│   │   ├── Navbar.tsx          # Top bar: index tickers + user actions
-│   │   └── Sidebar.tsx         # Left nav: 8 views
-│   ├── Admin/
-│   │   └── AdminPanel.tsx      # Admin panel (view: 'admin' hash)
-│   ├── Watchlist.tsx           # Saved symbols + live price cards
-│   ├── Portfolio.tsx           # Holdings with P&L
-│   ├── PaperTrading.tsx        # Simulated buy/sell with virtual cash
-│   ├── AlertsPanel.tsx         # Price alert management
-│   ├── AISignals.tsx           # Gemini-powered trade signal analysis
-│   ├── NewsPanel.tsx           # Market news feed
-│   ├── StockChart.tsx          # Price chart (Recharts)
-│   ├── ComparativeChart.tsx    # Multi-symbol comparison chart
-│   ├── SubscriptionModal.tsx   # Premium upgrade prompt
-│   └── ErrorBoundary.tsx
-└── utils/                # Formatters, helpers
+â”œâ”€â”€ App.tsx               # Hash router, auth gate, view switcher
+â”œâ”€â”€ main.tsx
+â”œâ”€â”€ index.css             # Tailwind
+â”œâ”€â”€ types/                # TypeScript interfaces
+â”œâ”€â”€ hooks/
+â”‚   â”œâ”€â”€ useAuth.ts        # login, register, logout, authFetch, upgradeToPremiun
+â”‚   â””â”€â”€ useTheme.ts       # dark/light toggle, persisted to localStorage
+â”œâ”€â”€ components/
+â”‚   â”œâ”€â”€ Auth/
+â”‚   â”‚   â””â”€â”€ AuthModal.tsx       # Login / register modal
+â”‚   â”œâ”€â”€ Layout/
+â”‚   â”‚   â”œâ”€â”€ Navbar.tsx          # Top bar: index tickers + user actions
+â”‚   â”‚   â””â”€â”€ Sidebar.tsx         # Left nav: 8 views
+â”‚   â”œâ”€â”€ Admin/
+â”‚   â”‚   â””â”€â”€ AdminPanel.tsx      # Admin panel (view: 'admin' hash)
+â”‚   â”œâ”€â”€ Watchlist.tsx           # Saved symbols + live price cards
+â”‚   â”œâ”€â”€ Portfolio.tsx           # Holdings with P&L
+â”‚   â”œâ”€â”€ PaperTrading.tsx        # Simulated buy/sell with virtual cash
+â”‚   â”œâ”€â”€ AlertsPanel.tsx         # Price alert management
+â”‚   â”œâ”€â”€ AISignals.tsx           # Gemini-powered trade signal analysis
+â”‚   â”œâ”€â”€ NewsPanel.tsx           # Market news feed
+â”‚   â”œâ”€â”€ StockChart.tsx          # Price chart (Recharts)
+â”‚   â”œâ”€â”€ ComparativeChart.tsx    # Multi-symbol comparison chart
+â”‚   â”œâ”€â”€ SubscriptionModal.tsx   # Premium upgrade prompt
+â”‚   â””â”€â”€ ErrorBoundary.tsx
+â””â”€â”€ utils/                # Formatters, helpers
 ```
 
 ---
@@ -73,10 +73,10 @@ src/
 | `#/portfolio` | Portfolio | Holdings table with P&L calculation. |
 | `#/paper` | Paper Trading | Virtual buy/sell with $10,000 starting cash. |
 | `#/alerts` | Alerts | Create/manage price threshold alerts. |
-| `#/ai` | AI Signals | Enter a ticker → Gemini returns signal analysis. |
+| `#/ai` | AI Signals | Enter a ticker â†’ Gemini returns signal analysis. |
 | `#/news` | News | Market news feed from backend. |
 | `#/screener` | Screener | Filter stocks by criteria (premium gating). |
-| `#/admin` | Admin | Admin panel — user management, system logs. |
+| `#/admin` | Admin | Admin panel â€” user management, system logs. |
 
 ---
 
@@ -100,11 +100,11 @@ src/
 
 ## 6. Authentication
 
-- **Registration:** email + password → bcrypt hash → SQLite user record
-- **Login:** email + password → verify hash → return JWT (7d expiry)
+- **Registration:** email + password â†’ bcrypt hash â†’ SQLite user record
+- **Login:** email + password â†’ verify hash â†’ return JWT (7d expiry)
 - **Client:** JWT stored in localStorage; sent as `Authorization: Bearer <token>` on all protected requests
 - **Admin access:** Users with `role = 'admin'` in the database can access `#/admin`
-- **Premium:** `upgradeToPremiun()` function (note: intentional typo in the codebase — preserve it) sets user tier to unlock Screener
+- **Premium:** `upgradeToPremiun()` function (note: intentional typo in the codebase â€” preserve it) sets user tier to unlock Screener
 
 ---
 

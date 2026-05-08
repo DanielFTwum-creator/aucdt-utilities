@@ -1,7 +1,7 @@
-
+﻿
 # Deployment Guide
 **Project**: TVET Assessment Progress Dashboard  
-**Framework**: React 19.2.4 (No-Build ESM)
+**Framework**: React 19.2.5 (No-Build ESM)
 
 ## 1. Architecture Overview
 This application utilizes a **Zero-Build Architecture**. It runs directly in the browser using ES Modules (ESM) and Babel Standalone for runtime JSX compilation. 
@@ -10,7 +10,7 @@ This application utilizes a **Zero-Build Architecture**. It runs directly in the
 
 ## 2. Requirements
 - **Runtime**: Any modern web browser (Chrome 90+, Firefox 90+, Safari 14+, Edge).
-- **React Version**: 19.2.4 (Strict dependency).
+- **React Version**: 19.2.5 (Strict dependency).
 - **Hosting**: Any static file server.
 
 ## 3. Deployment Steps
@@ -30,7 +30,7 @@ This application utilizes a **Zero-Build Architecture**. It runs directly in the
 After deployment:
 1. Open the URL.
 2. Verify the application loads without console errors.
-3. Check the **React Version** in the Admin Panel Diagnostics to confirm `19.2.4`.
+3. Check the **React Version** in the Admin Panel Diagnostics to confirm `19.2.5`.
 4. Test URL state persistence by changing a value and refreshing the page.
 
 ## 5. Dependency Management
@@ -38,7 +38,7 @@ Dependencies are loaded via `importmap` in `index.html`.
 - **Source**: `esm.sh` CDN.
 - **Versioning**: Pinned to specific versions to ensure stability.
 ```json
-"react": "https://esm.sh/react@19.2.4",
-"react-dom": "https://esm.sh/react-dom@19.2.4"
+"react": "https://esm.sh/react@19.2.5",
+"react-dom": "https://esm.sh/react-dom@19.2.5"
 ```
 *To upgrade dependencies, edit the `importmap` in `index.html`.*

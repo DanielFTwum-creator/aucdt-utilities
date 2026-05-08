@@ -1,4 +1,4 @@
-# Deployment Guide
+﻿# Deployment Guide
 
 ## Prerequisites
 - Node.js (latest LTS)
@@ -9,4 +9,4 @@
 2. Deploy the `dist` folder to your preferred hosting provider.
 
 ## React Version
-This application requires React 19.2.4.
+This application requires React 19.2.5.
