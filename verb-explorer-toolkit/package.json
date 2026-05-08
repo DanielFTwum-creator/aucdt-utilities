@@ -1,8 +1,11 @@
 {
-  "name": "react-example",
+  "name": "verb-explorer-toolkit",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
+  "description": "Interactive toolkit for Class 4 students to discover and research verbs",
+  "author": "Techbridge Education Services Ghana",
+  "license": "PROPRIETARY",
   "scripts": {
     "dev": "vite --port=3000 --host=0.0.0.0",
     "build": "vite build",
