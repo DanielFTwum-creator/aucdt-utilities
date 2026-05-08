@@ -36,7 +36,7 @@ npm run cap:android  # Open Android Studio project
 **Deployment Path:**
 ```
 /var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/vet/
-https://techbridge.edu.gh/ai-tools.techbridge.edu.gh/vet/
+https://ai-tools.techbridge.edu.gh/vet/
 ```
 
 **vite.config.ts MUST have:**
@@ -113,6 +113,8 @@ ssh -o StrictHostKeyChecking=no root@ai-tools.techbridge.edu.gh \
 ```
 
 Files should show owner `techbridge.edu.gh_md` and permissions starting with `rw-r--r--` (644).
+
+**Live URL:** https://ai-tools.techbridge.edu.gh/vet/
 
 ---
 
