@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
 import {
   Dices, BookOpen, Globe, PenTool, Lightbulb,
-  Printer, ListChecks, ArrowLeft, ArrowRight, HelpCircle
+  Printer, ListChecks, ArrowLeft, ArrowRight, HelpCircle, Zap
 } from 'lucide-react';
 import { UserGuide } from './components/UserGuide';
+import { OnboardingCarousel } from './components/OnboardingCarousel';
+import { DemoMode } from './components/DemoMode';
 
 export default function App() {
   const [step, setStep] = useState(1);
@@ -19,6 +21,44 @@ export default function App() {
   const [timeLeft, setTimeLeft] = useState(180);
   const [isTimerActive, setIsTimerActive] = useState(false);
   const [showGuide, setShowGuide] = useState(false);
+  const [showOnboarding, setShowOnboarding] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return !localStorage.getItem('verb-explorer-onboarded');
+    }
+    return true;
+  });
+  const [isDemoMode, setIsDemoMode] = useState(false);
+  const [showHints, setShowHints] = useState(true);
+
+  const handleCompleteOnboarding = () => {
+    localStorage.setItem('verb-explorer-onboarded', 'true');
+    setShowOnboarding(false);
+  };
+
+  const handleStartDemo = () => {
+    setShowOnboarding(false);
+    handleCompleteOnboarding();
+    setIsDemoMode(true);
+    setVerb('Discover');
+    setStudentName('Demo - Class 4');
+    setResearch({
+      definition: 'To find or learn about something for the first time',
+      origin: 'From Latin "discooperire" meaning to uncover',
+      sentences: '1. I will discover new things every day. 2. Scientists discover new species in the rainforest.',
+      interesting: 'Synonyms: Find, uncover, reveal. The word has been used since the 1300s!'
+    });
+    setStep(1);
+    setShowHints(true);
+  };
+
+  const handleExitDemo = () => {
+    setIsDemoMode(false);
+    setStep(1);
+    setVerb('');
+    setStudentName('');
+    setResearch({ definition: '', origin: '', sentences: '', interesting: '' });
+    setShowHints(false);
+  };
 
   const verbCategories = {
     action: ['Run', 'Dance', 'Explore', 'Discover', 'Create', 'Jump', 'Swim'],
@@ -111,14 +151,41 @@ export default function App() {
     <div className="max-w-5xl mx-auto px-4 py-8">
       {/* Header */}
       <div className="text-center mb-10 print:hidden relative">
-        <button
-          type="button"
-          onClick={() => setShowGuide(true)}
-          className="absolute top-0 right-0 p-2 rounded-full bg-blue-100 hover:bg-blue-200 text-blue-600 transition-colors"
-          title="Help & Instructions"
-        >
-          <HelpCircle className="w-6 h-6" />
-        </button>
+        {isDemoMode && (
+          <div className="absolute top-0 left-0 bg-gradient-to-r from-green-400 to-emerald-500 text-white px-4 py-2 rounded-full text-xs font-bold flex items-center gap-2">
+            <Zap className="w-4 h-4" /> DEMO MODE
+          </div>
+        )}
+        <div className="absolute top-0 right-0 flex gap-2">
+          {!isDemoMode && (
+            <button
+              type="button"
+              onClick={handleStartDemo}
+              className="p-2 rounded-full bg-green-100 hover:bg-green-200 text-green-600 transition-colors"
+              title="Try demo mode"
+            >
+              <Zap className="w-6 h-6" />
+            </button>
+          )}
+          {isDemoMode && (
+            <button
+              type="button"
+              onClick={handleExitDemo}
+              className="p-2 rounded-full bg-red-100 hover:bg-red-200 text-red-600 transition-colors text-xs font-bold"
+              title="Exit demo mode"
+            >
+              ✕ Exit
+            </button>
+          )}
+          <button
+            type="button"
+            onClick={() => setShowGuide(true)}
+            className="p-2 rounded-full bg-blue-100 hover:bg-blue-200 text-blue-600 transition-colors"
+            title="Help & Instructions"
+          >
+            <HelpCircle className="w-6 h-6" />
+          </button>
+        </div>
         <div className="inline-block bg-white px-8 py-4 rounded-3xl card-shadow border-b-4 border-primary mb-4 transform -rotate-1">
           <h1 className="text-4xl md:text-5xl font-extrabold text-gray-800 comic-font">
             <span className="text-primary">Verb</span> Discovery <span className="text-secondary">Project</span>
@@ -415,6 +482,24 @@ export default function App() {
         )}
         {step === 3 && renderDigitalCard()}
       </div>
+
+      {/* Onboarding Carousel */}
+      {showOnboarding && (
+        <OnboardingCarousel
+          onComplete={handleCompleteOnboarding}
+          onStartDemo={handleStartDemo}
+        />
+      )}
+
+      {/* Demo Mode Hints */}
+      {isDemoMode && (
+        <DemoMode
+          step={step}
+          showHints={showHints}
+          onToggleHints={() => setShowHints(!showHints)}
+          onClose={handleExitDemo}
+        />
+      )}
 
       {/* User Guide Modal */}
       {showGuide && <UserGuide onClose={() => setShowGuide(false)} />}
