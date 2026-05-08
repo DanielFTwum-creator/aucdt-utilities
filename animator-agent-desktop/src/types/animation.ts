@@ -71,13 +71,15 @@ export interface AnimatorContextType {
 
   // Playback
   playback: PlaybackState;
-  togglePlayback: () => void;
-  stopPlayback: () => void;
-  applyInstruction: (instruction: string) => Promise<void>;
-  undo: () => void;
+  play: () => void;
+  pause: () => void;
+  stop: () => void;
   setFrame: (frame: number) => void;
   setPlayheadPos: (pos: number) => void;
   setIsScrubbing: (scrubbing: boolean) => void;
+
+  // AI Assistant
+  applyInstruction: (instruction: string) => Promise<void>;
 
   // Profile
   profilePhoto: string | null;

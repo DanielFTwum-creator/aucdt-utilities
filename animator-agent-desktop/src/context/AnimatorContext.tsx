@@ -230,6 +230,7 @@ export function AnimatorProvider({ children }: { children: ReactNode }) {
     setFrame,
     setPlayheadPos,
     setIsScrubbing,
+    applyInstruction,
     profilePhoto,
     setProfilePhoto,
     lastSavedAt,

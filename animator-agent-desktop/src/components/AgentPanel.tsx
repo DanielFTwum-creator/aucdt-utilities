@@ -82,7 +82,7 @@ export function AgentPanel() {
           disabled={isProcessing}
           className="px-5 py-2 bg-[var(--c-accent-strong)] hover:opacity-90 disabled:opacity-50 rounded-lg text-sm font-bold text-white transition-opacity whitespace-nowrap"
         >
-          {isProcessing ? '...' : 'Send'}
+          {isProcessing ? 'Processing...' : 'Send'}
         </button>
       </form>
     </div>
