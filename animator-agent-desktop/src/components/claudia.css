@@ -4,36 +4,45 @@
   inset: 0;
   width: 100%;
   height: 100%;
-  background: radial-gradient(ellipse at 50% 30%, #ffffff 0%, #fff8fc 35%, #ffedf6 65%, #ffe4f1 100%);
+  background:
+    radial-gradient(ellipse 80% 55% at 50% 0%, rgba(59,107,255,0.07) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 40% at 50% 100%, rgba(59,107,255,0.05) 0%, transparent 55%),
+    linear-gradient(180deg, #0d1220 0%, #091018 40%, #060c14 100%);
   overflow: hidden;
   container-type: size;
 }
 
-/* Light rays */
-.claudia-rays {
+/* Perspective floor grid */
+.claudia-grid {
   position: absolute;
-  inset: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 38%;
+  background-image:
+    linear-gradient(rgba(59,107,255,0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(59,107,255,0.06) 1px, transparent 1px);
+  background-size: 40px 40px;
+  -webkit-mask-image: linear-gradient(to top, rgba(0,0,0,0.4) 0%, transparent 100%);
+  mask-image: linear-gradient(to top, rgba(0,0,0,0.4) 0%, transparent 100%);
   pointer-events: none;
-  overflow: hidden;
 }
+
+/* Light rays */
 .claudia-ray {
   position: absolute;
   bottom: -10%;
   width: 2px;
   height: 70%;
-  background: linear-gradient(to top, rgba(255,45,157,0) 0%, rgba(255,45,157,0.12) 40%, rgba(255,45,157,0) 100%);
-  filter: blur(2px);
+  background: linear-gradient(to top, rgba(59,107,255,0) 0%, rgba(59,107,255,0.06) 40%, rgba(59,107,255,0) 100%);
+  filter: blur(3px);
   transform-origin: bottom center;
-  opacity: 0.6;
+  opacity: 0.5;
   animation: claudiaRayPulse 7s ease-in-out infinite;
 }
 .claudia-ray:nth-child(1){ left:15%; transform: rotate(8deg); animation-delay: -1s; height:60%; }
 .claudia-ray:nth-child(2){ left:28%; transform: rotate(-5deg); animation-delay: -2.5s; }
 .claudia-ray:nth-child(3){ left:42%; transform: rotate(3deg); animation-delay: -0.5s; height:75%; }
-.claudia-ray:nth-child(4){ left:50%; transform: rotate(-2deg); animation-delay: -3s; }
-.claudia-ray:nth-child(5){ left:62%; transform: rotate(6deg); animation-delay: -1.8s; height:65%; }
-.claudia-ray:nth-child(6){ left:74%; transform: rotate(-7deg); animation-delay: -2.2s; }
-.claudia-ray:nth-child(7){ left:86%; transform: rotate(4deg); animation-delay: -0.8s; height:62%; }
 
 @keyframes claudiaRayPulse {
   0%,100% { opacity: 0.3; transform: scaleY(0.9) rotate(var(--r,0deg)); }
@@ -58,7 +67,7 @@
   100% { transform: translateX(-50%) scale(1); }
 }
 
-.claudia-down, .claudia-up {
+.claudia-robot-wrapper {
   position: absolute;
   bottom: 8%;
   left: 50%;
@@ -69,12 +78,12 @@
   user-select: none;
   pointer-events: none;
   transition: opacity 0.6s ease;
+  z-index: 3;
+  opacity: 1;
 }
-.claudia-down { z-index: 3; opacity: 1; filter: drop-shadow(0 20px 30px rgba(255,45,157,0.15)); }
-.claudia-up {
+.claudia-robot-up {
   z-index: 4;
   opacity: 0;
-  filter: drop-shadow(0 20px 30px rgba(255,45,157,0.18));
 }
 
 .claudia-glow-under {
@@ -84,7 +93,7 @@
   transform: translateX(-50%);
   width: 65%;
   height: 18%;
-  background: radial-gradient(ellipse at center, rgba(255,45,157,0.40) 0%, rgba(255,45,157,0.22) 30%, rgba(255,45,157,0) 70%);
+  background: radial-gradient(ellipse at center, rgba(59,107,255,0.30) 0%, rgba(59,107,255,0.12) 35%, transparent 70%);
   filter: blur(12px);
   opacity: 0;
   border-radius: 50%;
@@ -121,17 +130,17 @@
 .claudia-suitcase-front {
   position: absolute;
   inset: 0;
-  background: linear-gradient(155deg, #ff7ac3 0%, #FF2D9D 55%, #e01284 100%);
+  background: linear-gradient(155deg, #2a4baa 0%, #1e3a8a 55%, #172d70 100%);
   border-radius: 14px 14px 18px 18px;
-  border: 2px solid #ff4ca9;
-  box-shadow: 0 10px 24px rgba(255,45,157,0.28), inset 0 -6px 10px rgba(0,0,0,0.18), inset 0 4px 8px rgba(255,255,255,0.25);
+  border: 1.5px solid rgba(90,133,255,0.4);
+  box-shadow: 0 8px 20px rgba(30,58,138,0.35), inset 0 -5px 10px rgba(0,0,0,0.22), inset 0 3px 8px rgba(255,255,255,0.08);
   overflow: hidden;
 }
 .claudia-suitcase-front::before {
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.15) 50%, transparent 100%);
+  background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.08) 50%, transparent 100%);
   transform: translateX(-100%);
   animation: claudiaSheen 4s ease-in-out infinite;
 }
@@ -144,10 +153,10 @@
   transform: translateX(-50%);
   width: 28px;
   height: 14px;
-  background: linear-gradient(#fff4b0, #FFD700 40%, #d4a600);
+  background: linear-gradient(#f4c55a, #f9d87a 40%, #c9922a);
   border-radius: 0 0 6px 6px;
-  border: 1.5px solid #c99700;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.25), inset 0 1px 2px rgba(255,255,255,0.7);
+  border: 1.5px solid #a67a00;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.25), inset 0 1px 2px rgba(255,255,255,0.5);
 }
 .claudia-suitcase-lid {
   position: absolute;
@@ -164,22 +173,22 @@
 .claudia-lid-outer {
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, #ff5db3 0%, #FF2D9D 60%, #d3167a 100%);
+  background: linear-gradient(180deg, #2e55c4 0%, #1e3a8a 60%, #142d75 100%);
   border-radius: 18px 18px 10px 10px;
-  border: 2px solid #ff4ca9;
-  box-shadow: 0 -6px 16px rgba(0,0,0,0.12), inset 0 4px 6px rgba(255,255,255,0.2);
+  border: 1.5px solid rgba(90,133,255,0.35);
+  box-shadow: 0 -6px 16px rgba(0,0,0,0.12), inset 0 4px 6px rgba(255,255,255,0.08);
   backface-visibility: hidden;
 }
 .claudia-lid-inner {
   position: absolute;
   inset: 5px;
-  background: radial-gradient(ellipse at 50% 0%, #fff5fb 0%, #ffd0e9 20%, #ff9bd2 45%, #FF2D9D 85%);
+  background: radial-gradient(ellipse at 50% 0%, rgba(120,160,255,0.15) 0%, rgba(59,107,255,0.1) 25%, rgba(30,58,138,0.95) 70%);
   border-radius: 14px;
   transform: rotateX(180deg) translateZ(0.5px);
   backface-visibility: hidden;
   opacity: 0;
   transition: opacity 0.3s ease;
-  box-shadow: inset 0 0 30px rgba(255,255,255,0.9), inset 0 0 60px rgba(255,45,157,0.5);
+  box-shadow: inset 0 0 30px rgba(59,107,255,0.3), inset 0 0 60px rgba(30,58,138,0.4);
 }
 .claudia-suitcase.open .claudia-suitcase-lid { transform: rotateX(-118deg); }
 .claudia-suitcase.open .claudia-lid-inner { opacity: 1; }
@@ -190,7 +199,7 @@
   transform: translateX(-50%);
   width: 140%;
   height: 180%;
-  background: radial-gradient(ellipse, rgba(255,45,157,0.55) 0%, rgba(255,45,157,0.25) 35%, transparent 70%);
+  background: radial-gradient(ellipse, rgba(59,107,255,0.45) 0%, rgba(59,107,255,0.18) 40%, transparent 70%);
   filter: blur(18px);
   opacity: 0;
   transition: opacity 0.6s ease;
@@ -204,7 +213,7 @@
   transform: translateX(-50%) translateY(18px) rotate(-7deg) scale(0.95);
 }
 
-/* Hearts & Fizz */
+/* Particles & Fizz */
 .claudia-hearts-container, .claudia-fizz-container {
   position: absolute;
   inset: 0;
@@ -212,48 +221,34 @@
   pointer-events: none;
   z-index: 8;
 }
-.claudia-heart {
+
+.claudia-particle {
   position: absolute;
   bottom: 24%;
   left: 50%;
   width: var(--size);
   height: var(--size);
+  border-radius: 50%;
   transform: translateX(-50%);
   animation: claudiaRise var(--dur) cubic-bezier(0.2,0.6,0.3,1) forwards;
   opacity: 0;
   will-change: transform, opacity;
 }
-.claudia-heart-inner {
+
+.claudia-particle-inner {
   width: 100%;
   height: 100%;
-  position: relative;
-  transform: rotate(-45deg) rotate3d(1,0.4,0, var(--tilt,12deg));
-  filter: drop-shadow(0 6px 10px rgba(255,45,157,0.25));
-}
-.claudia-heart-inner::before, .claudia-heart-inner::after {
-  content: '';
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  background: radial-gradient(circle at 28% 22%, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.6) 6%, rgba(255,255,255,0.15) 14%, #ff7ac3 22%, #FF2D9D 55%, #cc1f7d 100%);
   border-radius: 50%;
-  box-shadow: inset -4px -6px 12px rgba(190,0,100,0.35), inset 4px 4px 10px rgba(255,255,255,0.4);
+  background: radial-gradient(circle at 35% 30%,
+    rgba(255,255,255,0.9) 0%,
+    rgba(160,180,255,0.7) 15%,
+    rgba(100,140,255,0.5) 40%,
+    rgba(59,107,255,0.2) 70%,
+    transparent 100%);
+  box-shadow: 0 0 8px rgba(59,107,255,0.3), inset 0 1px 2px rgba(255,255,255,0.4);
+  backdrop-filter: blur(1px);
 }
-.claudia-heart-inner::before { left: 50%; top: 0; transform: translateX(-50%); }
-.claudia-heart-inner::after { top: 50%; left: 0; transform: translateY(-50%); }
-.claudia-heart-spec {
-  position: absolute;
-  width: 24%;
-  height: 24%;
-  top: 18%;
-  left: 68%;
-  background: radial-gradient(circle, #fff 0%, rgba(255,255,255,0.9) 30%, rgba(255,255,255,0) 70%);
-  border-radius: 50%;
-  transform: translate(-50%,-50%) rotate(45deg);
-  filter: blur(0.3px);
-  z-index: 3;
-  opacity: 0.95;
-}
+
 @keyframes claudiaRise {
   0% { transform: translate(-50%, 0) translateX(0) scale(0.7) rotate(var(--rot)); opacity: 0; }
   8% { opacity: 0.85; }
@@ -268,7 +263,10 @@
   bottom: 24%;
   width: var(--s);
   height: var(--s);
-  background: radial-gradient(circle, rgba(255,255,255,1) 0%, rgba(255,255,255,0.8) 40%, rgba(255,255,255,0) 70%);
+  background: radial-gradient(circle,
+    rgba(180,210,255,1) 0%,
+    rgba(120,170,255,0.6) 40%,
+    transparent 70%);
   border-radius: 50%;
   opacity: 0.9;
   filter: blur(0.2px);
@@ -283,9 +281,9 @@
   position: absolute;
   width: 4px;
   height: 4px;
-  background: #FFD700;
+  background: #f4c55a;
   border-radius: 50%;
-  box-shadow: 0 0 8px #FFD700, 0 0 14px #FF2D9D;
+  box-shadow: 0 0 8px rgba(244,197,90,0.8), 0 0 14px rgba(244,197,90,0.4);
   animation: claudiaPop 0.8s ease-out forwards;
   z-index: 12;
 }
@@ -299,16 +297,16 @@
   bottom: max(4%, 24px);
   left: 50%;
   transform: translateX(-50%) translateY(16px);
-  font-size: clamp(13px, 5cqw, 18px);
-  letter-spacing: 0.28em;
+  font-size: clamp(12px, 4.5cqw, 16px);
+  letter-spacing: 0.22em;
   text-transform: lowercase;
   font-weight: 500;
-  color: #FF2D9D;
+  color: var(--c-accent-soft, #7da0ff);
   opacity: 0;
   transition: all 1.2s cubic-bezier(0.2,0.8,0.2,1);
-  text-shadow: 0 2px 12px rgba(255,45,157,0.2);
+  text-shadow: 0 2px 16px rgba(59,107,255,0.18);
   white-space: nowrap;
   z-index: 20;
 }
 .claudia-caption.show { opacity: 0.85; transform: translateX(-50%) translateY(0); }
-.claudia-caption span { font-weight: 700; letter-spacing: 0.32em; }
+.claudia-caption span { font-weight: 700; letter-spacing: 0.28em; }

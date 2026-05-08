@@ -25,21 +25,21 @@ export function CameraModal({ onClose, onPhotoTaken }: CameraModalProps) {
 
   return (
     <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[100] flex items-center justify-center">
-      <div className="bg-[#111113] border border-[#27272a] rounded-xl p-6 w-[400px] flex flex-col gap-4 shadow-2xl">
+      <div className="bg-[var(--c-bg-panel)] border border-[var(--c-border-default)] rounded-xl p-6 w-[400px] flex flex-col gap-4 shadow-2xl">
         <div className="flex justify-between items-center">
-          <h2 className="text-white font-semibold tracking-tight">Update Profile Photo</h2>
-          <button className="text-zinc-500 hover:text-white transition-colors" onClick={onClose}>
+          <h2 className="text-[var(--c-text-primary)] text-sm font-semibold tracking-tight">Update Profile Photo</h2>
+          <button type="button" className="text-[var(--c-text-secondary)] hover:text-[var(--c-text-primary)] transition-colors" onClick={onClose}>
             ✕
           </button>
         </div>
 
-        <div className="relative w-full aspect-square bg-[#09090b] rounded-lg overflow-hidden border border-[#27272a]">
+        <div className="relative w-full aspect-square bg-[var(--c-bg-base)] rounded-lg overflow-hidden border border-[var(--c-border-default)]">
           <video ref={videoRef} autoPlay playsInline muted className="w-full h-full object-cover transform scale-x-[-1]" />
-          <div className="absolute inset-0 border-2 border-indigo-500/30 border-dashed rounded-lg pointer-events-none m-4" />
+          <div className="absolute inset-0 border-2 border-[var(--c-accent-soft)]/20 border-dashed rounded-lg pointer-events-none m-4" />
         </div>
 
-        <button className="w-full py-3 bg-indigo-600 hover:bg-indigo-500 text-white rounded font-bold transition-colors" onClick={takePhoto}>
-          TAKE PHOTO
+        <button type="button" className="w-full py-3 bg-[var(--c-accent-strong)] hover:bg-[var(--c-accent-mid)] text-white rounded font-medium transition-colors" onClick={takePhoto}>
+          Take photo
         </button>
         <canvas ref={canvasRef} className="hidden" />
       </div>

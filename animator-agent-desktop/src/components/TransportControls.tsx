@@ -11,10 +11,10 @@ export function TransportControls({ isPlaying, onPlay, onPause, onStop, variant 
   if (variant === 'compact') {
     return (
       <div className="flex gap-2">
-        <button onClick={onStop} className="w-6 h-6 flex items-center justify-center bg-zinc-800 hover:bg-zinc-700 transition-colors rounded text-xs" title="Stop">
+        <button type="button" onClick={onStop} className="w-6 h-6 flex items-center justify-center bg-[var(--c-border-default)] hover:bg-[var(--c-border-hover)] transition-colors rounded text-xs text-[var(--c-text-primary)]" title="Stop">
           ⏹
         </button>
-        <button onClick={isPlaying ? onPause : onPlay} className={`w-6 h-6 flex items-center justify-center transition-colors text-white rounded text-xs ${isPlaying ? 'bg-zinc-700 hover:bg-zinc-600' : 'bg-indigo-600 hover:bg-indigo-500 shadow-[0_0_10px_rgba(79,70,229,0.3)]'}`} title={isPlaying ? 'Pause' : 'Play'}>
+        <button type="button" onClick={isPlaying ? onPause : onPlay} className={`w-6 h-6 flex items-center justify-center transition-colors text-white rounded text-xs ${isPlaying ? 'bg-[var(--c-border-hover)] hover:bg-[var(--c-border-default)]' : 'bg-[var(--c-accent-strong)] hover:bg-[var(--c-accent-mid)] shadow-[0_0_10px_var(--c-accent-glow)]'}`} title={isPlaying ? 'Pause' : 'Play'}>
           {isPlaying ? '⏸' : '▶'}
         </button>
       </div>
@@ -22,24 +22,27 @@ export function TransportControls({ isPlaying, onPlay, onPause, onStop, variant 
   }
 
   return (
-    <div className="flex items-center gap-2 border border-[#27272a] rounded overflow-hidden bg-[#18181b] p-0.5">
+    <div className="flex items-center gap-1 border border-[var(--c-border-default)] rounded-md bg-[var(--c-bg-raised)] p-0.5">
       <button
+        type="button"
         onClick={onPlay}
-        className={`w-8 h-7 flex items-center justify-center rounded-sm transition-colors text-xs ${isPlaying ? 'bg-indigo-600 text-white shadow-sm' : 'text-zinc-500 hover:text-white hover:bg-zinc-800'}`}
+        className={`w-8 h-7 flex items-center justify-center rounded-sm transition-colors text-xs ${isPlaying ? 'bg-[var(--c-accent-strong)] text-white shadow-sm' : 'text-[var(--c-text-secondary)] hover:text-[var(--c-text-primary)] hover:bg-[var(--c-border-default)]'}`}
         title="Play"
       >
         ▶
       </button>
       <button
+        type="button"
         onClick={onPause}
-        className={`w-8 h-7 flex items-center justify-center rounded-sm transition-colors text-xs ${!isPlaying ? 'bg-zinc-700 text-white' : 'text-zinc-500 hover:text-white hover:bg-zinc-800'}`}
+        className={`w-8 h-7 flex items-center justify-center rounded-sm transition-colors text-xs ${!isPlaying ? 'bg-[var(--c-border-hover)] text-white' : 'text-[var(--c-text-secondary)] hover:text-[var(--c-text-primary)] hover:bg-[var(--c-border-default)]'}`}
         title="Pause"
       >
         ⏸
       </button>
       <button
+        type="button"
         onClick={onStop}
-        className="w-8 h-7 flex items-center justify-center rounded-sm transition-colors text-xs text-zinc-500 hover:text-white hover:bg-zinc-800"
+        className="w-8 h-7 flex items-center justify-center rounded-sm transition-colors text-xs text-[var(--c-text-secondary)] hover:text-[var(--c-text-primary)] hover:bg-[var(--c-border-default)]"
         title="Stop"
       >
         ⏹
