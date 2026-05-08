@@ -1,14 +1,21 @@
 import { useState } from 'react';
+import { useAnimator } from '../context/AnimatorContext';
 
 export function AgentPanel() {
+  const { applyInstruction } = useAnimator();
   const [instruction, setInstruction] = useState('');
+  const [isProcessing, setIsProcessing] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (instruction.trim()) {
-      // Future: send to Gemini API
-      console.log('[Agent] Instruction submitted:', instruction);
-      setInstruction('');
+    if (instruction.trim() && !isProcessing) {
+      setIsProcessing(true);
+      try {
+        await applyInstruction(instruction);
+        setInstruction('');
+      } finally {
+        setIsProcessing(false);
+      }
     }
   };
 
@@ -55,8 +62,8 @@ export function AgentPanel() {
           </div>
         </div>
       </div>
-      <form className="mt-4 shrink-0" onSubmit={handleSubmit}>
-        <div className="relative">
+      <form className="mt-4 shrink-0 flex gap-2" onSubmit={handleSubmit}>
+        <div className="relative flex-1">
           <input
             type="text"
             value={instruction}
@@ -70,6 +77,13 @@ export function AgentPanel() {
             <kbd className="text-[10px] bg-[var(--c-bg-panel)] px-1.5 py-1 rounded text-[var(--c-text-muted)] font-mono tracking-wider" aria-hidden="true">CMD+K</kbd>
           </div>
         </div>
+        <button
+          type="submit"
+          disabled={isProcessing}
+          className="px-5 py-2 bg-[var(--c-accent-strong)] hover:opacity-90 disabled:opacity-50 rounded-lg text-sm font-bold text-white transition-opacity whitespace-nowrap"
+        >
+          {isProcessing ? '...' : 'Send'}
+        </button>
       </form>
     </div>
   );
