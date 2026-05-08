@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react';
-import { BrowserRouter, Routes, Route, Navigate, Link } from 'react-router';
+import { HashRouter, Routes, Route, Navigate, Link } from 'react-router';
 import Animator from './Animator';
 import { useAudit, type AuditEntry } from './context/AuditLog';
 import { useTheme } from './context/ThemeProvider';
@@ -345,7 +345,7 @@ function AdminAuditLog() {
    ============================================ */
 export default function App() {
   return (
-    <BrowserRouter>
+    <HashRouter>
       <Routes>
         <Route path="/" element={<Animator />} />
 
@@ -366,6 +366,6 @@ export default function App() {
           }
         />
       </Routes>
-    </BrowserRouter>
+    </HashRouter>
   );
 }
