@@ -1,0 +1,6 @@
+{
+  "name": "Animator Agent Desktop",
+  "description": "Desktop animation application with a robotic helper and a timeline, allowing users to modify keyframes and take a profile photo.",
+  "requestFramePermissions": ["camera"],
+  "majorCapabilities": []
+}
