@@ -1,55 +1,16 @@
 import { X, ChevronRight, Lightbulb } from 'lucide-react';
+import { getHintsByLevel, type ClassLevel } from '../utils/hintsByLevel';
 
 interface DemoModeProps {
   step: number;
   showHints: boolean;
   onToggleHints: () => void;
   onClose: () => void;
+  classLevel: ClassLevel;
 }
 
-export function DemoMode({ step, showHints, onToggleHints, onClose }: DemoModeProps) {
-  const hints = {
-    1: {
-      title: '💡 Demo Hint: Choose a Verb',
-      tips: [
-        'Click on any verb in the categories, or',
-        'Type "discover" in the text box to try a verb, or',
-        'Click the dice 🎲 to pick a random verb',
-      ],
-      tip_title: 'Try choosing "Discover" to see how the app works!',
-    },
-    2: {
-      title: '💡 Demo Hint: Research Your Verb',
-      tips: [
-        'Fill in the definition in your own words',
-        'Find where the word comes from (origin)',
-        'Write 2 sentences using the verb',
-        'Share interesting facts or synonyms',
-      ],
-      tip_title: 'Example: "Discover" means to find something new!',
-    },
-    3: {
-      title: '💡 Demo Hint: Create Your Card',
-      tips: [
-        'Enter your name and class (e.g., "Demo - Class 4")',
-        'Pick a card colour (yellow, blue, pink, or green)',
-        'Click the Print button to see your card',
-      ],
-      tip_title: 'Your profile card displays all your research beautifully!',
-    },
-    4: {
-      title: '💡 Demo Hint: Practice Presentation',
-      tips: [
-        'Click Start to begin the 2-3 minute timer',
-        'Practice explaining your verb to the class',
-        'Use the checklist to make sure you\'re ready',
-        'When done, present to your actual class!',
-      ],
-      tip_title: 'Speak clearly and with confidence!',
-    },
-  };
-
-  const hint = hints[step as keyof typeof hints];
+export function DemoMode({ step, showHints, onToggleHints, onClose, classLevel }: DemoModeProps) {
+  const hint = getHintsByLevel(step, classLevel);
 
   if (!showHints || !hint) return null;
 

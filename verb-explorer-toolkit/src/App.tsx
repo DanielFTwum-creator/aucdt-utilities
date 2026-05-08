@@ -6,6 +6,8 @@ import {
 import { UserGuide } from './components/UserGuide';
 import { OnboardingCarousel } from './components/OnboardingCarousel';
 import { DemoMode } from './components/DemoMode';
+import { ClassLevelSelector } from './components/ClassLevelSelector';
+import { type ClassLevel } from './utils/hintsByLevel';
 
 export default function App() {
   const [step, setStep] = useState(1);
@@ -27,8 +29,27 @@ export default function App() {
     }
     return true;
   });
+  const [classLevel, setClassLevel] = useState<ClassLevel>(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('verb-explorer-class-level');
+      return (saved as ClassLevel) || 'class-4-6';
+    }
+    return 'class-4-6';
+  });
+  const [showClassLevelSelector, setShowClassLevelSelector] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return !localStorage.getItem('verb-explorer-class-level');
+    }
+    return false;
+  });
   const [isDemoMode, setIsDemoMode] = useState(false);
   const [showHints, setShowHints] = useState(true);
+
+  const handleSelectClassLevel = (level: ClassLevel) => {
+    localStorage.setItem('verb-explorer-class-level', level);
+    setClassLevel(level);
+    setShowClassLevelSelector(false);
+  };
 
   const handleCompleteOnboarding = () => {
     localStorage.setItem('verb-explorer-onboarded', 'true');
@@ -157,6 +178,14 @@ export default function App() {
           </div>
         )}
         <div className="absolute top-0 right-0 flex gap-2">
+          <button
+            type="button"
+            onClick={() => setShowClassLevelSelector(true)}
+            className="px-3 py-1 rounded-full bg-purple-100 hover:bg-purple-200 text-purple-600 transition-colors text-xs font-bold"
+            title="Change class level"
+          >
+            📚 {classLevel === 'class-1-3' ? 'Class 1-3' : classLevel === 'class-4-6' ? 'Class 4-6' : 'JHS'}
+          </button>
           {!isDemoMode && (
             <button
               type="button"
@@ -171,7 +200,7 @@ export default function App() {
             <button
               type="button"
               onClick={handleExitDemo}
-              className="p-2 rounded-full bg-red-100 hover:bg-red-200 text-red-600 transition-colors text-xs font-bold"
+              className="p-2 rounded-full bg-red-100 hover:bg-red-200 text-red-600transition-colors text-xs font-bold"
               title="Exit demo mode"
             >
               ✕ Exit
@@ -491,6 +520,11 @@ export default function App() {
         />
       )}
 
+      {/* Class Level Selector */}
+      {showClassLevelSelector && (
+        <ClassLevelSelector onSelect={handleSelectClassLevel} />
+      )}
+
       {/* Demo Mode Hints */}
       {isDemoMode && (
         <DemoMode
@@ -498,6 +532,7 @@ export default function App() {
           showHints={showHints}
           onToggleHints={() => setShowHints(!showHints)}
           onClose={handleExitDemo}
+          classLevel={classLevel}
         />
       )}
 
