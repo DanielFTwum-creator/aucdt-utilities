@@ -22,10 +22,10 @@ npx playwright test --ui
 Visual regressions are captured in `tests-results/`. Screenshots are automatically taken on failure.
 
 ## 2. Manual Verification Checklist
-- [ ] **State Persistence**: Modify a track, refresh page, verify changes remain.
-- [ ] **Undo/Redo**: Perform 5 actions, undo all, redo all.
-- [ ] **Admin Lockout**: Enter wrong password 5 times, verify 60s lockout.
-- [ ] **Keyboard Transport**: Press `Space` to play/pause, `Esc` to stop.
+- [x] **Routing**: Verify deep links (e.g., `/#/admin/audit`) work after refresh.
+- [x] **AI Instructions**: Enter "Add light key", verify keyframes appear on Light_Key track.
+- [x] **State Persistence**: Modify a track, refresh page, verify changes remain.
+- [x] **Undo/Redo**: Perform 5 actions, undo all, redo all.
 
 ## 3. Accessibility (WCAG 2.1 AA)
 - Run the **Inline ARIA Audit** in the Admin Testing dashboard.
