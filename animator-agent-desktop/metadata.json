@@ -1,6 +1,16 @@
 {
   "name": "Animator Agent Desktop",
-  "description": "Desktop animation application with a robotic helper and a timeline, allowing users to modify keyframes and take a profile photo.",
+  "version": "3.0.0",
+  "description": "Desktop animation studio for creating AI agent videos with multi-track timeline editor, undo/redo history, localStorage persistence, admin diagnostics, audit logging, and theme system.",
   "requestFramePermissions": ["camera"],
-  "majorCapabilities": []
+  "majorCapabilities": [
+    "timeline-editor",
+    "undo-redo",
+    "localStorage-persistence",
+    "admin-dashboard",
+    "audit-logging",
+    "theme-system",
+    "aria-accessibility",
+    "keyboard-shortcuts"
+  ]
 }

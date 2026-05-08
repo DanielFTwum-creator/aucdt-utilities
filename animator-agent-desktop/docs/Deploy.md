@@ -1,19 +1,42 @@
-# Deployment Guide
+# Deployment Guide: Animator Agent Desktop
+## Version: 3.0.0
 
-## Production Build
+---
 
-To prepare the Animator Agent for production hosting:
+## 1. Prerequisites
+- **Node.js**: 18.x or higher
+- **Package Manager**: `pnpm` (mandatory)
+- **Environment**: `.env.local` must contain `GEMINI_API_KEY` for AI features.
 
+## 2. Build Process
+Run the following command to generate the production bundle:
 ```bash
-npm run build
+pnpm build
+```
+The output will be located in the `/dist` directory.
+
+## 3. Local Preview
+To test the production build locally:
+```bash
+pnpm preview
 ```
 
-The system is configured via Vite to build the application into the `dist/` directory.
+## 4. Institutional Deployment (TUC)
+The application is deployed via SCP to the Techbridge University College production environment:
+```bash
+pnpm deploy
+```
+*Note: This script requires appropriate SSH keys configured in the deployment environment.*
 
-## Environment Variables
+## 5. Metadata Compliance
+Ensure `metadata.json` is synchronized with the latest version before deployment.
+```json
+{
+  "name": "Animator Agent Desktop",
+  "version": "3.0.0",
+  "majorCapabilities": [...]
+}
+```
 
-All secrets should be maintained remotely. 
-If running end-to-end tests inside the CI/CD pipeline, ensure `PUPPETEER_SKIP_CHROMIUM_DOWNLOAD` is adjusted based on your containerization strategy.
-
-## Deployment Target
-The application is fully static (React Router is using client-side routing, so your host should redirect everything to `index.html`), making it perfect for deployment to Firebase Hosting, Vercel, or standard NGINX containers.
+---
+*Verified for TUC Infrastructure v2026.05*
