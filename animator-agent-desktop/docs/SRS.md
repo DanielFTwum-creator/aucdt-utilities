@@ -24,53 +24,44 @@ Animator Agent Desktop is a standalone web-based desktop application built with 
 
 ### 2.2 Product Functions
 - **Timeline Editing**: Frame-accurate manipulation of animation tracks.
-- **AI Agent Integration**: Natural language interface for generating animation instructions.
+- **AI Agent Integration**: Natural language interface using Gemini 2.0 for generating animation instructions.
 - **Undo/Redo System**: 50-step history for all project modifications.
-- **Persistence**: Automatic project saving via local storage.
+- **Persistence**: Automatic project saving via local storage with History Stack.
 - **Admin Hardening**: Secure diagnostic dashboard with audit logging.
 - **Theming**: Support for Dark, Light, and High-Contrast modes.
 
-### 2.3 User Classes and Characteristics
-- **Creators**: Students and faculty creating educational animations.
-- **Administrators**: System maintainers monitoring application health and audit logs.
-
-### 2.4 Design and Implementation Constraints
+### 2.3 Design and Implementation Constraints
 - Must use **React 19.2.5**.
+- Must use **HashRouter** for robust subdirectory deployment (e.g., `/animator`).
 - Must adhere to **TUC Branding** (Ink, Gold, Cream).
 - Must maintain **100% ARIA coverage**.
 
 ## 3. System Features
 ### 3.1 Centralized State Management
 - **Requirement**: All UI components must consume state from a unified `AnimatorContext`.
-- **Validation**: Verified by component refactoring in Phase 1.
+- **Validation**: Verified by component refactoring.
 
-### 3.2 Audit Logging
-- **Requirement**: All administrative actions (login, test runs, log clears) must be recorded in a persistent audit trail.
+### 3.2 AI Animation Assistant
+- **Engine**: Google Gemini 2.0 Flash (`@google/generative-ai`).
+- **Function**: Translates natural language into track-specific keyframe modifications.
+
+### 3.3 Audit Logging
+- **Requirement**: All administrative actions must be recorded in a persistent audit trail.
 - **Validation**: Audit log viewer available in `#/admin/audit`.
-
-### 3.3 Automated Testing
-- **Requirement**: Full E2E coverage using Playwright.
-- **Validation**: Playwright test suite and diagnostic dashboard.
 
 ## 4. External Interface Requirements
 ### 4.1 User Interfaces
-- **Header**: Contains project metadata, playback controls, and profile management.
+- **Header**: Project metadata, playback controls, profile management.
 - **Preview Panel**: High-performance character rendering (ClaudiaScene).
 - **Timeline**: Multi-track scrubber with keyframe toggles.
-- **Agent Panel**: Interactive prompt input for AI-driven modifications.
+- **Agent Panel**: Interactive prompt input with real-time processing feedback.
 
 ## 5. Non-Functional Requirements
 ### 5.1 Security
-- Password-protected admin section (`#/admin`).
-- 5-attempt lockout mechanism for failed logins.
+- Password-protected admin section (`#/admin`) with 5-attempt lockout.
 
 ### 5.2 Accessibility
-- 100% WCAG 2.1 Level AA compliance.
-- Keyboard shortcuts for all primary transport controls.
-
-### 5.3 Performance
-- 60 FPS UI responsiveness.
-- GPU-accelerated rendering for character animations.
+- 100% WCAG 2.1 Level AA compliance and global keyboard shortcuts.
 
 ## 6. Architecture & Data Flow
 ### 6.1 System Architecture
@@ -78,11 +69,6 @@ Animator Agent Desktop is a standalone web-based desktop application built with 
 
 ### 6.2 Data Flow
 ![Data Flow](c:\Development\github\aucdt-utilities\animator-agent-desktop\docs\DataFlow.svg)
-
-### 6.3 State Flow
-`AnimatorContext` -> `HistoryState` -> `LocalStorage`.
-### 6.4 Security Flow
-`AdminAuth` -> `VITE_ADMIN_PASSWORD` -> `AuditLog`.
 
 ---
 *End of SRS v3.0.0*

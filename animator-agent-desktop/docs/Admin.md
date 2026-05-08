@@ -22,12 +22,17 @@ Every sensitive action is recorded in the Audit Log (`#/admin/audit`):
 - **Persistence**: Logs are saved to browser local storage (max 500 entries).
 - **Clearing**: Only authorized admins can clear the log.
 
-## 4. Testing & Diagnostics
-The Testing dashboard (`#/admin/testing`) allows for:
-- **ARIA Audit**: Scans the DOM for interactive elements lacking labels or roles.
-- **E2E Simulation**: Runs a client-side simulation of common user workflows to verify logic integrity.
+## 4. AI Instruction Processing
+Admins can monitor AI-driven scene modifications:
+- **Engine**: Gemini 2.0 Flash integration.
+- **Diagnostics**: The simulation tool in `#/admin/testing` verifies AI logic integrity.
 
-## 5. Keyboard Shortcuts for Admins
+## 5. Routing & Subdirectory Support
+The application uses **HashRouter** to ensure that deep links work correctly even when deployed in subdirectories (e.g., `techbridge.edu.gh/animator/`).
+- **Standard URL**: `#/`
+- **Admin URL**: `#/admin`
+
+## 6. Keyboard Shortcuts for Admins
 - **Cycle Theme**: Available via the theme icon in the admin header.
 - **Global Stop**: `Escape` (also works in admin views if the Animator is active in the background).
 

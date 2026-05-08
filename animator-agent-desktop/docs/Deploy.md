@@ -15,18 +15,19 @@ pnpm build
 ```
 The output will be located in the `/dist` directory.
 
-## 3. Local Preview
+## 3. Local Preview & Routing
 To test the production build locally:
 ```bash
 pnpm preview
 ```
+*Note: The app uses **HashRouter** and `base: './'` in `vite.config.ts` to support subdirectory deployments.*
 
 ## 4. Institutional Deployment (TUC)
 The application is deployed via SCP to the Techbridge University College production environment:
 ```bash
 pnpm deploy
 ```
-*Note: This script requires appropriate SSH keys configured in the deployment environment.*
+**Destination Path**: `root@techbridge.edu.gh:/var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/animator/`
 
 ## 5. Metadata Compliance
 Ensure `metadata.json` is synchronized with the latest version before deployment.
