@@ -1,7 +1,28 @@
 @import "tailwindcss";
 
+:root {
+  --c-bg-base:        #0a0b0e;
+  --c-bg-panel:       #0f1117;
+  --c-bg-raised:      #161b27;
+  --c-border-default: #1e2433;
+  --c-border-hover:   #2d3650;
+  --c-text-primary:   #e2e8f0;
+  --c-text-secondary: #8b9ab7;
+  --c-text-muted:     #4a5568;
+  --c-accent-strong:  #3b6bff;
+  --c-accent-mid:     #5a85ff;
+  --c-accent-soft:    #7da0ff;
+  --c-accent-tint:    rgba(59, 107, 255, 0.08);
+  --c-accent-glow:    rgba(59, 107, 255, 0.35);
+  --c-status-ok:      #34d399;
+  --c-char-core:      #f4c55a;
+  --c-char-body-hi:   #dde6f0;
+  --c-char-body-mid:  #b8cce0;
+  --c-char-body-lo:   #8fa8c4;
+}
+
 .custom-scrollbar::-webkit-scrollbar {
-  width: 4px;
+  width: 3px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-track {
@@ -9,12 +30,12 @@
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: #27272a;
-  border-radius: 4px;
+  background: var(--c-border-hover, #2d3650);
+  border-radius: 3px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: #3f3f46;
+  background: var(--c-text-muted, #4a5568);
 }
 
 .text-shadow {

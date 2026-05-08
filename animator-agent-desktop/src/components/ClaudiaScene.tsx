@@ -8,33 +8,152 @@ interface SVGProps {
 
 const RobotDown = ({ className, style }: SVGProps) => (
   <svg className={className} style={style} width="200" height="300" viewBox="0 0 200 300" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <rect x="50" y="80" width="100" height="220" rx="50" fill="#E5E5E5"/>
-    <circle cx="100" cy="180" r="30" fill="#FF2D9D"/>
-    <circle cx="80" cy="120" r="10" fill="white"/>
-    <circle cx="120" cy="120" r="10" fill="white"/>
-    <circle cx="78" cy="118" r="4" fill="black"/>
-    <circle cx="118" cy="118" r="4" fill="black"/>
-    <line x1="100" y1="80" x2="100" y2="40" stroke="#E5E5E5" strokeWidth="6"/>
-    <circle cx="100" cy="30" r="12" fill="#FF2D9D"/>
-    <rect x="70" y="240" width="60" height="20" rx="4" fill="white" stroke="#008080" strokeWidth="2"/>
-    <text x="100" y="254" fontSize="10" fill="black" textAnchor="middle" fontWeight="bold">CLAUDIA</text>
+    <defs>
+      <linearGradient id="bodyGrad" x1="0.15" y1="0.05" x2="0.85" y2="0.95">
+        <stop offset="0%" stopColor="#dde6f0" />
+        <stop offset="35%" stopColor="#b8cce0" />
+        <stop offset="70%" stopColor="#7a9dbf" />
+        <stop offset="100%" stopColor="#4a6d8f" />
+      </linearGradient>
+      <radialGradient id="bodyAO" cx="50%" cy="50%" r="55%">
+        <stop offset="55%" stopColor="transparent" />
+        <stop offset="100%" stopColor="rgba(0,0,0,0.22)" />
+      </radialGradient>
+      <radialGradient id="orbGrad" cx="35%" cy="28%" r="65%">
+        <stop offset="0%" stopColor="#fff8e0" />
+        <stop offset="18%" stopColor="#f9d87a" />
+        <stop offset="55%" stopColor="#f4c55a" />
+        <stop offset="100%" stopColor="#c9922a" />
+      </radialGradient>
+      <radialGradient id="eyeSocketGrad" cx="50%" cy="40%" r="60%">
+        <stop offset="0%" stopColor="#1a2540" />
+        <stop offset="100%" stopColor="#0d1520" />
+      </radialGradient>
+      <radialGradient id="irisGrad" cx="40%" cy="35%" r="65%">
+        <stop offset="0%" stopColor="#a8d4ff" />
+        <stop offset="40%" stopColor="#3b8bff" />
+        <stop offset="100%" stopColor="#1a4fcc" />
+      </radialGradient>
+      <radialGradient id="antennaGrad" cx="38%" cy="30%" r="62%">
+        <stop offset="0%" stopColor="#fffce8" />
+        <stop offset="30%" stopColor="#f9d87a" />
+        <stop offset="100%" stopColor="#c9922a" />
+      </radialGradient>
+      <linearGradient id="badgeGrad" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stopColor="#1e2d45" />
+        <stop offset="100%" stopColor="#141e30" />
+      </linearGradient>
+      <filter id="bodyShad" x="-20%" y="-10%" width="140%" height="130%">
+        <feDropShadow dx="0" dy="8" stdDeviation="12" floodColor="#0a1628" floodOpacity="0.55" />
+      </filter>
+      <linearGradient id="rimLight" x1="1" y1="0.3" x2="0.7" y2="1">
+        <stop offset="0%" stopColor="rgba(160,200,255,0.18)" />
+        <stop offset="100%" stopColor="transparent" />
+      </linearGradient>
+    </defs>
+
+    <rect x="50" y="80" width="100" height="220" rx="50" fill="url(#bodyGrad)" filter="url(#bodyShad)" />
+    <rect x="50" y="80" width="100" height="220" rx="50" fill="url(#bodyAO)" />
+    <rect x="50" y="80" width="100" height="220" rx="50" fill="url(#rimLight)" />
+
+    <circle cx="100" cy="185" r="28" fill="url(#orbGrad)" />
+    <circle cx="100" cy="185" r="28" fill="none" stroke="rgba(249,216,122,0.35)" strokeWidth="1.5" />
+    <ellipse cx="92" cy="177" rx="7" ry="4" fill="rgba(255,255,255,0.55)" transform="rotate(-20 92 177)" />
+
+    <circle cx="80" cy="128" r="12" fill="url(#eyeSocketGrad)" />
+    <circle cx="80" cy="128" r="7" fill="url(#irisGrad)" />
+    <circle cx="77" cy="125" r="2" fill="rgba(255,255,255,0.9)" />
+
+    <circle cx="120" cy="128" r="12" fill="url(#eyeSocketGrad)" />
+    <circle cx="120" cy="128" r="7" fill="url(#irisGrad)" />
+    <circle cx="117" cy="125" r="2" fill="rgba(255,255,255,0.9)" />
+
+    <line x1="100" y1="80" x2="100" y2="45" stroke="#7a9dbf" strokeWidth="5" strokeLinecap="round" />
+    <circle cx="100" cy="34" r="11" fill="url(#antennaGrad)" />
+    <circle cx="100" cy="34" r="11" fill="none" stroke="rgba(249,216,122,0.4)" strokeWidth="1" />
+
+    <rect x="68" y="248" width="64" height="22" rx="5" fill="url(#badgeGrad)" stroke="#2d4a6e" strokeWidth="1.5" />
+    <text x="100" y="263" fontSize="9" fill="#7da0ff" textAnchor="middle" fontWeight="600" letterSpacing="0.06em" fontFamily="system-ui, -apple-system, sans-serif">
+      Claudia
+    </text>
   </svg>
 );
 
 const RobotUp = ({ className, style }: SVGProps) => (
   <svg className={className} style={style} width="300" height="300" viewBox="0 0 300 300" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M50 160 Q 20 100 40 50" stroke="#E5E5E5" strokeWidth="16" strokeLinecap="round" fill="none"/>
-    <path d="M150 160 Q 180 100 160 50" stroke="#E5E5E5" strokeWidth="16" strokeLinecap="round" fill="none"/>
-    <rect x="50" y="80" width="100" height="220" rx="50" fill="#E5E5E5"/>
-    <circle cx="100" cy="180" r="30" fill="#FF2D9D"/>
-    <circle cx="80" cy="120" r="10" fill="white"/>
-    <circle cx="120" cy="120" r="10" fill="white"/>
-    <circle cx="80" cy="118" r="4" fill="black"/>
-    <circle cx="120" cy="118" r="4" fill="black"/>
-    <line x1="100" y1="80" x2="100" y2="40" stroke="#E5E5E5" strokeWidth="6"/>
-    <circle cx="100" cy="30" r="14" fill="#FF2D9D" filter="drop-shadow(0 0 8px #FF2D9D)"/>
-    <rect x="70" y="240" width="60" height="20" rx="4" fill="white" stroke="#008080" strokeWidth="2"/>
-    <text x="100" y="254" fontSize="10" fill="black" textAnchor="middle" fontWeight="bold">CLAUDIA</text>
+    <defs>
+      <linearGradient id="bodyGrad-up" x1="0.15" y1="0.05" x2="0.85" y2="0.95">
+        <stop offset="0%" stopColor="#dde6f0" />
+        <stop offset="35%" stopColor="#b8cce0" />
+        <stop offset="70%" stopColor="#7a9dbf" />
+        <stop offset="100%" stopColor="#4a6d8f" />
+      </linearGradient>
+      <radialGradient id="bodyAO-up" cx="50%" cy="50%" r="55%">
+        <stop offset="55%" stopColor="transparent" />
+        <stop offset="100%" stopColor="rgba(0,0,0,0.22)" />
+      </radialGradient>
+      <radialGradient id="orbGrad-up" cx="35%" cy="28%" r="65%">
+        <stop offset="0%" stopColor="#fff8e0" />
+        <stop offset="18%" stopColor="#f9d87a" />
+        <stop offset="55%" stopColor="#f4c55a" />
+        <stop offset="100%" stopColor="#c9922a" />
+      </radialGradient>
+      <radialGradient id="eyeSocketGrad-up" cx="50%" cy="40%" r="60%">
+        <stop offset="0%" stopColor="#1a2540" />
+        <stop offset="100%" stopColor="#0d1520" />
+      </radialGradient>
+      <radialGradient id="irisGrad-up" cx="40%" cy="35%" r="65%">
+        <stop offset="0%" stopColor="#a8d4ff" />
+        <stop offset="40%" stopColor="#3b8bff" />
+        <stop offset="100%" stopColor="#1a4fcc" />
+      </radialGradient>
+      <radialGradient id="antennaGrad-up" cx="38%" cy="30%" r="62%">
+        <stop offset="0%" stopColor="#fffce8" />
+        <stop offset="30%" stopColor="#f9d87a" />
+        <stop offset="100%" stopColor="#c9922a" />
+      </radialGradient>
+      <linearGradient id="badgeGrad-up" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stopColor="#1e2d45" />
+        <stop offset="100%" stopColor="#141e30" />
+      </linearGradient>
+      <filter id="bodyShad-up" x="-20%" y="-10%" width="140%" height="130%">
+        <feDropShadow dx="0" dy="8" stdDeviation="12" floodColor="#0a1628" floodOpacity="0.55" />
+      </filter>
+      <linearGradient id="rimLight-up" x1="1" y1="0.3" x2="0.7" y2="1">
+        <stop offset="0%" stopColor="rgba(160,200,255,0.18)" />
+        <stop offset="100%" stopColor="transparent" />
+      </linearGradient>
+    </defs>
+
+    <path d="M50 158 Q 18 100 36 52" stroke="url(#bodyGrad-up)" strokeWidth="15" strokeLinecap="round" fill="none" />
+    <path d="M50 158 Q 18 100 36 52" stroke="rgba(0,0,0,0.18)" strokeWidth="15" strokeLinecap="round" fill="none" />
+    <path d="M150 158 Q 182 100 164 52" stroke="url(#bodyGrad-up)" strokeWidth="15" strokeLinecap="round" fill="none" />
+    <path d="M150 158 Q 182 100 164 52" stroke="rgba(0,0,0,0.18)" strokeWidth="15" strokeLinecap="round" fill="none" />
+
+    <rect x="50" y="80" width="100" height="220" rx="50" fill="url(#bodyGrad-up)" filter="url(#bodyShad-up)" />
+    <rect x="50" y="80" width="100" height="220" rx="50" fill="url(#bodyAO-up)" />
+    <rect x="50" y="80" width="100" height="220" rx="50" fill="url(#rimLight-up)" />
+
+    <circle cx="100" cy="185" r="28" fill="url(#orbGrad-up)" />
+    <circle cx="100" cy="185" r="28" fill="none" stroke="rgba(249,216,122,0.35)" strokeWidth="1.5" />
+    <ellipse cx="92" cy="177" rx="7" ry="4" fill="rgba(255,255,255,0.55)" transform="rotate(-20 92 177)" />
+
+    <circle cx="80" cy="128" r="12" fill="url(#eyeSocketGrad-up)" />
+    <circle cx="80" cy="128" r="7" fill="url(#irisGrad-up)" />
+    <circle cx="77" cy="125" r="2" fill="rgba(255,255,255,0.9)" />
+
+    <circle cx="120" cy="128" r="12" fill="url(#eyeSocketGrad-up)" />
+    <circle cx="120" cy="128" r="7" fill="url(#irisGrad-up)" />
+    <circle cx="117" cy="125" r="2" fill="rgba(255,255,255,0.9)" />
+
+    <line x1="100" y1="80" x2="100" y2="45" stroke="#7a9dbf" strokeWidth="5" strokeLinecap="round" />
+    <circle cx="100" cy="34" r="13" fill="url(#antennaGrad-up)" filter="drop-shadow(0 0 6px rgba(244,197,90,0.6))" />
+    <circle cx="100" cy="34" r="13" fill="none" stroke="rgba(249,216,122,0.4)" strokeWidth="1" />
+
+    <rect x="68" y="248" width="64" height="22" rx="5" fill="url(#badgeGrad-up)" stroke="#2d4a6e" strokeWidth="1.5" />
+    <text x="100" y="263" fontSize="9" fill="#7da0ff" textAnchor="middle" fontWeight="600" letterSpacing="0.06em" fontFamily="system-ui, -apple-system, sans-serif">
+      Claudia
+    </text>
   </svg>
 );
 
@@ -50,169 +169,149 @@ export function ClaudiaScene() {
 
   useEffect(() => {
     let bubbling = false;
-    let heartInterval: any;
+    let heartInterval: NodeJS.Timeout;
 
-    const createFizz = (left: string, bottom: string) => {
-      if (!fizzContainerRef.current) return;
-      const f = document.createElement('div');
-      f.className = 'claudia-fizz';
-      const s = Math.random() * 2.5 + 1.5;
-      f.style.setProperty('--s', s + 'px');
-      f.style.setProperty('--d', (Math.random() * 0.8 + 1.8) + 's');
-      f.style.setProperty('--tx', (Math.random() * 30 - 15) + 'px');
-      f.style.left = left;
-      f.style.bottom = bottom;
-      fizzContainerRef.current.appendChild(f);
-      setTimeout(() => f.remove(), 2600);
-    };
+    const createParticle = (isBurst = false) => {
+      const container = heartsContainerRef.current;
+      if (!container || !sceneRef.current) return;
 
-    const createHeart = (burst = false) => {
-      if (!heartsContainerRef.current || !sceneRef.current || !suitcaseRef.current) return;
       const h = document.createElement('div');
-      h.className = 'claudia-heart';
-      const size = burst ? (Math.random() * 14 + 28) : (Math.random() * 22 + 16);
-      const duration = burst ? (Math.random() * 1.2 + 3.5) : (Math.random() * 2.2 + 4.2);
-      const xDrift = (Math.random() * 180 - 90);
-      const rot = (Math.random() * 40 - 20);
-      const wobble = (Math.random() * 40 - 20);
-      const tilt = (Math.random() * 20 + 8);
-      
-      h.style.setProperty('--size', size + 'px');
-      h.style.setProperty('--dur', duration + 's');
-      h.style.setProperty('--x', xDrift + 'px');
-      h.style.setProperty('--rot', rot + 'deg');
-      h.style.setProperty('--wobble', wobble + 'px');
-      h.style.setProperty('--tilt', tilt + 'deg');
-      
-      const suitcaseRect = suitcaseRef.current.getBoundingClientRect();
-      const sceneRect = sceneRef.current.getBoundingClientRect();
-      const leftPercent = ((suitcaseRect.left + suitcaseRect.width / 2 - sceneRect.left) / sceneRect.width) * 100;
-      const bottomPercent = 100 - ((suitcaseRect.top + 10 - sceneRect.top) / sceneRect.height * 100);
-      
-      h.style.left = `calc(${leftPercent}% + ${Math.random() * 40 - 20}px)`;
-      h.style.bottom = `calc(${Math.max(18, bottomPercent)}% + ${Math.random() * 6}px)`;
-      h.innerHTML = '<div class="claudia-heart-inner"><div class="claudia-heart-spec"></div></div>';
-      
-      heartsContainerRef.current.appendChild(h);
-      setTimeout(() => h.remove(), duration * 1000 + 200);
-      
-      if (Math.random() > 0.25) createFizz(h.style.left, h.style.bottom);
-    };
+      h.className = 'claudia-particle';
 
-    const createBurst = () => {
-      if (!suitcaseRef.current || !sceneRef.current) return;
-      const rect = suitcaseRef.current.getBoundingClientRect();
-      const sceneRect = sceneRef.current.getBoundingClientRect();
-      const cx = rect.left + rect.width / 2 - sceneRect.left;
-      const cy = rect.top - sceneRect.top;
-      
-      for (let i = 0; i < 24; i++) {
-        const s = document.createElement('div');
-        s.className = 'claudia-sparkle';
-        const angle = (i / 24) * Math.PI * 2;
-        const dist = 40 + Math.random() * 60;
-        s.style.left = cx + 'px';
-        s.style.top = cy + 'px';
-        s.style.setProperty('--dx', Math.cos(angle) * dist + 'px');
-        s.style.setProperty('--dy', Math.sin(angle) * dist - Math.random() * 40 + 'px');
-        sceneRef.current.appendChild(s);
-        setTimeout(() => s.remove(), 800);
-      }
-      for (let i = 0; i < 18; i++) {
-        setTimeout(() => createHeart(true), i * 35);
-      }
+      const size = isBurst ? Math.random() * 4 + 6 : Math.random() * 3 + 4;
+      const x = Math.random() * 100;
+      const dur = Math.random() * 3 + 3;
+      const wobble = Math.random() * 8 + 12;
+      const tilt = Math.random() * 90 - 45;
+      const rot = Math.random() * 360;
+
+      h.style.setProperty('--size', `${size}px`);
+      h.style.setProperty('--dur', `${dur}s`);
+      h.style.setProperty('--x', `${Math.random() * 40 - 20}px`);
+      h.style.setProperty('--wobble', `${wobble}px`);
+      h.style.setProperty('--tilt', `${tilt}deg`);
+      h.style.setProperty('--rot', `${rot}deg`);
+      h.style.left = `${x}%`;
+      h.style.bottom = '-20px';
+
+      container.appendChild(h);
+
+      setTimeout(() => {
+        h.style.opacity = '1';
+      }, 16);
+
+      setTimeout(() => {
+        if (container.contains(h)) container.removeChild(h);
+      }, dur * 1000);
     };
 
     const startBubbling = () => {
       if (bubbling) return;
       bubbling = true;
-      for (let i = 0; i < 8; i++) setTimeout(() => createHeart(), i * 120);
+
+      for (let i = 0; i < 5; i++) {
+        setTimeout(() => createParticle(), i * 200);
+      }
+
       heartInterval = setInterval(() => {
-        createHeart();
-        if (Math.random() > 0.6) createHeart();
-      }, 140);
+        createParticle();
+        if (Math.random() > 0.75) createParticle();
+      }, 600);
     };
 
-    let timeouts: any[] = [];
-    
-    // Timeline
-    timeouts.push(setTimeout(() => {
+    const createBurst = () => {
+      for (let i = 0; i < 8; i++) {
+        setTimeout(() => createParticle(true), i * 60);
+      }
+
+      for (let i = 0; i < 24; i++) {
+        const angle = (i / 24) * Math.PI * 2;
+        const distance = Math.random() * 60 + 40;
+        const dx = Math.cos(angle) * distance;
+        const dy = Math.sin(angle) * distance;
+
+        const s = document.createElement('div');
+        s.className = 'claudia-sparkle';
+        s.style.setProperty('--dx', `${dx}px`);
+        s.style.setProperty('--dy', `${dy}px`);
+        s.style.left = '50%';
+        s.style.bottom = '50%';
+        s.style.opacity = '1';
+
+        if (fizzContainerRef.current) {
+          fizzContainerRef.current.appendChild(s);
+        }
+
+        setTimeout(() => {
+          if (fizzContainerRef.current?.contains(s)) fizzContainerRef.current.removeChild(s);
+        }, 900);
+      }
+    };
+
+    const timeline = async () => {
+      await new Promise((resolve) => setTimeout(resolve, 2000));
       if (suitcaseRef.current) suitcaseRef.current.classList.add('open');
-    }, 2000));
 
-    timeouts.push(setTimeout(() => {
+      await new Promise((resolve) => setTimeout(resolve, 500));
       startBubbling();
-    }, 2500));
 
-    timeouts.push(setTimeout(() => {
-      if (downImgRef.current && upImgRef.current && stageRef.current && suitcaseRef.current) {
+      await new Promise((resolve) => setTimeout(resolve, 500));
+      if (downImgRef.current && upImgRef.current) {
         downImgRef.current.style.opacity = '0';
         upImgRef.current.style.opacity = '1';
-        stageRef.current.classList.add('levitating');
-        suitcaseRef.current.classList.add('levitate');
-        createBurst();
-        
-        setTimeout(() => {
-          if (stageRef.current) stageRef.current.classList.add('floating');
-        }, 800);
       }
-    }, 3000));
+      if (stageRef.current) stageRef.current.classList.add('levitating');
+      if (suitcaseRef.current) suitcaseRef.current.classList.add('levitate');
+      createBurst();
 
-    timeouts.push(setTimeout(() => {
+      await new Promise((resolve) => setTimeout(resolve, 300));
+      if (stageRef.current) stageRef.current.classList.add('floating');
+
+      await new Promise((resolve) => setTimeout(resolve, 300));
       if (captionRef.current) captionRef.current.classList.add('show');
-    }, 4100));
-
-    const handleVisibility = () => {
-      if (!document.hidden && !bubbling) startBubbling();
     };
-    document.addEventListener('visibilitychange', handleVisibility);
 
-    for (let i = 0; i < 3; i++) createFizz('50%', '24%');
+    timeline();
 
     return () => {
-      timeouts.forEach(clearTimeout);
-      clearInterval(heartInterval);
-      document.removeEventListener('visibilitychange', handleVisibility);
+      if (heartInterval) clearInterval(heartInterval);
     };
   }, []);
 
   return (
-    <div className="claudia-scene" ref={sceneRef}>
-      <div className="claudia-rays">
-        <div className="claudia-ray"></div>
-        <div className="claudia-ray"></div>
-        <div className="claudia-ray"></div>
-        <div className="claudia-ray"></div>
-        <div className="claudia-ray"></div>
-        <div className="claudia-ray"></div>
-        <div className="claudia-ray"></div>
-      </div>
-
-      <div className="claudia-hearts-container" ref={heartsContainerRef}></div>
-      <div className="claudia-fizz-container" ref={fizzContainerRef}></div>
-
-      <div className="claudia-stage" id="stage" ref={stageRef}>
-        <div className="claudia-glow-under"></div>
-        <div ref={downImgRef} className="claudia-down">
-          <RobotDown />
-        </div>
-        <div ref={upImgRef} className="claudia-up">
-          <RobotUp />
-        </div>
-        
-        <div className="claudia-suitcase" id="suitcase" ref={suitcaseRef}>
-          <div className="claudia-suitcase-glow"></div>
-          <div className="claudia-suitcase-body">
-            <div className="claudia-suitcase-lid">
-              <div className="claudia-lid-outer"></div>
-              <div className="claudia-lid-inner"></div>
-            </div>
-            <div className="claudia-suitcase-front"></div>
+    <div ref={sceneRef} className="claudia-scene">
+      <div className="claudia-grid" />
+      <div ref={stageRef} className="claudia-stage">
+        <div ref={suitcaseRef} className="claudia-suitcase">
+          <div className="claudia-suitcase-glow" />
+          <div className="claudia-suitcase-front" />
+          <div className="claudia-lid-outer">
+            <div className="claudia-lid-inner" />
+            <div className="claudia-sheen" />
           </div>
         </div>
+
+        <div ref={downImgRef} className="claudia-robot-wrapper">
+          <RobotDown />
+        </div>
+
+        <div ref={upImgRef} className="claudia-robot-wrapper claudia-robot-up">
+          <RobotUp />
+        </div>
+
+        <div className="claudia-glow-under" />
+
+        {Array.from({ length: 3 }).map((_, i) => (
+          <div key={i} className="claudia-ray" style={{ '--r': `${i * 45}deg` } as React.CSSProperties} />
+        ))}
       </div>
 
-      <div className="claudia-caption" ref={captionRef}><span>chaos:</span> organized</div>
+      <div ref={heartsContainerRef} className="claudia-hearts-container" />
+      <div ref={fizzContainerRef} className="claudia-fizz-container" />
+
+      <div ref={captionRef} className="claudia-caption">
+        <span className="font-bold tracking-wider">chaos:</span> organized
+      </div>
     </div>
   );
 }
