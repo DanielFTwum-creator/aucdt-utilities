@@ -1,12 +1,35 @@
-# Admin Guide
+# Admin Guide: Animator Agent Desktop
+## Version: 3.0.0
 
-## Overview
+---
 
-The `/admin` routes in the Animator Agent are protected by an authentication wall. Accessing these panels gives administrators access to critical diagnostic data and the testing suite.
+## 1. Accessing the Admin Section
+The admin section is located at `#/admin`. Access is restricted via a password-protected gateway.
 
-## Routes
-- `/admin/dashboard`: Monitors system vitals including the React version, testing tool status, and gap analysis results.
-- `/admin/testing`: Interfaces with Puppeteer integration for rendering tests and automated WCAG accessibility audits.
+### 1.1 Authentication
+- **URL**: `http://localhost:3000/#/admin`
+- **Default Password**: `admin` (Configurable via `VITE_ADMIN_PASSWORD` in `.env.local`)
+- **Lockout Policy**: After 5 failed attempts, the system will lock the admin section for 60 seconds.
 
-## Authentication
-Currently, the admin portal can be accessed using the static password `admin`. In production, this should be superseded by an OAuth or token-based backend mechanism.
+## 2. Admin Dashboard
+The dashboard provides a high-level overview of the system state:
+- **System Status**: Verifies React version, Playwright integration, and state persistence.
+- **Recent Auth Activity**: Lists the last 5 authentication events.
+
+## 3. Audit Logging
+Every sensitive action is recorded in the Audit Log (`#/admin/audit`):
+- **Categories**: `auth`, `project`, `track`, `export`, `admin`, `system`.
+- **Persistence**: Logs are saved to browser local storage (max 500 entries).
+- **Clearing**: Only authorized admins can clear the log.
+
+## 4. Testing & Diagnostics
+The Testing dashboard (`#/admin/testing`) allows for:
+- **ARIA Audit**: Scans the DOM for interactive elements lacking labels or roles.
+- **E2E Simulation**: Runs a client-side simulation of common user workflows to verify logic integrity.
+
+## 5. Keyboard Shortcuts for Admins
+- **Cycle Theme**: Available via the theme icon in the admin header.
+- **Global Stop**: `Escape` (also works in admin views if the Animator is active in the background).
+
+---
+*TUC Institutional Standards Applied*

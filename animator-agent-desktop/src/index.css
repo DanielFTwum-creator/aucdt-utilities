@@ -1,6 +1,10 @@
 @import "tailwindcss";
 
-:root {
+/* ============================================
+   DARK THEME (default)
+   ============================================ */
+:root,
+[data-theme="dark"] {
   --c-bg-base:        #0a0b0e;
   --c-bg-panel:       #0f1117;
   --c-bg-raised:      #161b27;
@@ -15,12 +19,69 @@
   --c-accent-tint:    rgba(59, 107, 255, 0.08);
   --c-accent-glow:    rgba(59, 107, 255, 0.35);
   --c-status-ok:      #34d399;
+  --c-status-warn:    #fbbf24;
+  --c-status-error:   #f87171;
   --c-char-core:      #f4c55a;
   --c-char-body-hi:   #dde6f0;
   --c-char-body-mid:  #b8cce0;
   --c-char-body-lo:   #8fa8c4;
 }
 
+/* ============================================
+   LIGHT THEME
+   ============================================ */
+[data-theme="light"] {
+  --c-bg-base:        #f8f9fc;
+  --c-bg-panel:       #ffffff;
+  --c-bg-raised:      #f0f2f7;
+  --c-border-default: #d4d8e3;
+  --c-border-hover:   #b0b8cc;
+  --c-text-primary:   #1a1e2e;
+  --c-text-secondary: #4a5068;
+  --c-text-muted:     #8890a4;
+  --c-accent-strong:  #2b54db;
+  --c-accent-mid:     #4570f5;
+  --c-accent-soft:    #6b8fff;
+  --c-accent-tint:    rgba(43, 84, 219, 0.06);
+  --c-accent-glow:    rgba(43, 84, 219, 0.2);
+  --c-status-ok:      #059669;
+  --c-status-warn:    #d97706;
+  --c-status-error:   #dc2626;
+  --c-char-core:      #d4a134;
+  --c-char-body-hi:   #4a5568;
+  --c-char-body-mid:  #6b7e96;
+  --c-char-body-lo:   #8fa8c4;
+}
+
+/* ============================================
+   HIGH CONTRAST THEME
+   ============================================ */
+[data-theme="high-contrast"] {
+  --c-bg-base:        #000000;
+  --c-bg-panel:       #0a0a0a;
+  --c-bg-raised:      #1a1a1a;
+  --c-border-default: #555555;
+  --c-border-hover:   #888888;
+  --c-text-primary:   #ffffff;
+  --c-text-secondary: #e0e0e0;
+  --c-text-muted:     #aaaaaa;
+  --c-accent-strong:  #5599ff;
+  --c-accent-mid:     #77bbff;
+  --c-accent-soft:    #99ccff;
+  --c-accent-tint:    rgba(85, 153, 255, 0.15);
+  --c-accent-glow:    rgba(85, 153, 255, 0.5);
+  --c-status-ok:      #00ff88;
+  --c-status-warn:    #ffcc00;
+  --c-status-error:   #ff4444;
+  --c-char-core:      #ffdd55;
+  --c-char-body-hi:   #ffffff;
+  --c-char-body-mid:  #dddddd;
+  --c-char-body-lo:   #bbbbbb;
+}
+
+/* ============================================
+   SCROLLBAR
+   ============================================ */
 .custom-scrollbar::-webkit-scrollbar {
   width: 3px;
 }
@@ -38,6 +99,28 @@
   background: var(--c-text-muted, #4a5568);
 }
 
+/* ============================================
+   UTILITIES
+   ============================================ */
 .text-shadow {
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+/* Screen-reader only */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* Focus ring for keyboard navigation */
+:focus-visible {
+  outline: 2px solid var(--c-accent-mid);
+  outline-offset: 2px;
 }
