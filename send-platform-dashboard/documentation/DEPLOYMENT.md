@@ -1,6 +1,6 @@
-# Deployment Guide
+﻿# Deployment Guide
 **Project:** SEND Platform Admin Console  
-**Framework:** React 19.2.4  
+**Framework:** React 19.2.5  
 
 ## 1. Prerequisites
 *   **Node.js**: Version 18.x or higher.
@@ -35,13 +35,13 @@ The build artifacts will be generated in the `dist/` (or `build/`) directory.
 *   `index.html`: Entry point.
 *   `assets/`: Compiled JavaScript and CSS bundles.
 
-### 4.3 React 19.2.4 Requirement
+### 4.3 React 19.2.5 Requirement
 Ensure your build environment supports React 19.
 *   Verify `package.json`:
     ```json
     "dependencies": {
-      "react": "^19.2.4",
-      "react-dom": "^19.2.4"
+      "react": "^19.2.5",
+      "react-dom": "^19.2.5"
     }
     ```
 *   This project uses ES Modules. Ensure your serving infrastructure correctly handles `.mjs` or `.js` modules if using specific bundlers.

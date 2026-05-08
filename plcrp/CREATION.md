@@ -1,4 +1,4 @@
-# CREATION.md — PLCRP: Production-Level Content Rights Platform
+﻿# CREATION.md â€” PLCRP: Production-Level Content Rights Platform
 **Purpose:** Complete build specification for any agent to implement this application from scratch.
 **Target:** Functional parity with `C:/Development/aucdt-utilities/plcrp/`
 **Last verified:** 2026-04-25
@@ -7,9 +7,9 @@
 
 ## 1. What This App Is
 
-PLCRP is a **content rights management SPA** for music tracks. It enforces hard stage gates on AI-generated and human-authored tracks as they progress through a 5-stage production pipeline (S1 → S5). The core invariant is: **free-tier AI-generated tracks (NON_COMMERCIAL) are permanently blocked at Stage 2 and can never reach distribution**.
+PLCRP is a **content rights management SPA** for music tracks. It enforces hard stage gates on AI-generated and human-authored tracks as they progress through a 5-stage production pipeline (S1 â†’ S5). The core invariant is: **free-tier AI-generated tracks (NON_COMMERCIAL) are permanently blocked at Stage 2 and can never reach distribution**.
 
-It is an **educational institutional sandbox** — all data lives in `localStorage`, there is no backend.
+It is an **educational institutional sandbox** â€” all data lives in `localStorage`, there is no backend.
 
 ---
 
@@ -17,14 +17,14 @@ It is an **educational institutional sandbox** — all data lives in `localStora
 
 | Layer | Technology | Version |
 |---|---|---|
-| Runtime | React | **19.2.4** (never change) |
+| Runtime | React | **19.2.5** (never change) |
 | Build | Vite | ^6.2.0 |
 | Language | TypeScript | ~5.8.2 |
 | Styling | Tailwind CSS | ^4.2.2 (via `@tailwindcss/vite`) |
-| Icons | Inline SVG only — no icon library | — |
+| Icons | Inline SVG only â€” no icon library | â€” |
 | Testing | Playwright | ^1.59.1 |
 | Package manager | pnpm | 10.30+ |
-| Container | node:24-alpine → nginx:alpine | — |
+| Container | node:24-alpine â†’ nginx:alpine | â€” |
 
 ---
 
@@ -32,44 +32,44 @@ It is an **educational institutional sandbox** — all data lives in `localStora
 
 ```
 plcrp/
-├── index.html              # TUC brand meta, Google Fonts, CSS variable themes
-├── index.css               # @import "tailwindcss" + @theme font vars
-├── index.tsx               # createRoot → ThemeProvider → AuthProvider → App
-├── App.tsx                 # Hash router, auth gate, module switcher
-├── types.ts                # All TypeScript types (copy verbatim — see §6)
-├── constants.tsx           # MODULES[], STAGES[], RIGHTS_STATUS_COLORS
-├── vite.config.ts          # port 5184, base './', no API proxy
-├── tsconfig.json           # Standard TUC tsconfig (bundler resolution)
-├── playwright.config.ts    # baseURL localhost:5184, tests/ dir
-├── Dockerfile              # node:24-alpine build → nginx:alpine serve
-├── nginx.conf              # SPA fallback: try_files $uri /index.html
-├── contexts/
-│   ├── AuthContext.tsx     # TUC 2FA + admin password (see §7.1)
-│   └── ThemeContext.tsx    # dark/light/high-contrast via data-theme attr
-├── components/
-│   ├── Sidebar.tsx         # Left nav: Dashboard + 6 modules + Admin + theme switcher
-│   ├── Header.tsx          # Breadcrumb title + user email + logout button
-│   ├── Dashboard.tsx       # KPI strip (4 stats) + stage pipeline bar + module grid
-│   ├── Admin.tsx           # Tabbed: Audit Log | Diagnostics
-│   ├── LoginModal.tsx      # Modal: 2FA (email→OTP) or admin password
-│   └── Loader.tsx          # Spinner with role="status" aria-live="polite"
-├── modules/
-│   ├── Module1_Tracks.tsx          # Track Library: table + add form
-│   ├── Module2_Releases.tsx        # Release bundler (blocks NON_COMMERCIAL)
-│   ├── Module3_RightsAudit.tsx     # Track detail + promote button (gate enforced)
-│   ├── Module4_StagePipeline.tsx   # Kanban columns S1→S5
-│   ├── Module5_AuthorshipRegistry.tsx  # Checkbox form: record human elements
-│   └── Module6_Distribution.tsx   # DSP submission (COMMERCIAL S5 only)
-├── services/
-│   ├── auditLogService.ts  # getLogs / addLog / clearLogs → localStorage
-│   └── trackService.ts     # getTracks / saveTrack / addTrack / canPromote
-├── tests/
-│   ├── auth.spec.ts        # Login flow E2E
-│   ├── rights-gate.spec.ts # E2 (NON_COMMERCIAL blocked) + E5 (authorship gate)
-│   └── audit-log.spec.ts   # E8 (audit chain, diagnostics panel)
-└── docs/
-    ├── srs/plcrp_srs_v1.0.md
-    └── admin_guide.md
+â”œâ”€â”€ index.html              # TUC brand meta, Google Fonts, CSS variable themes
+â”œâ”€â”€ index.css               # @import "tailwindcss" + @theme font vars
+â”œâ”€â”€ index.tsx               # createRoot â†’ ThemeProvider â†’ AuthProvider â†’ App
+â”œâ”€â”€ App.tsx                 # Hash router, auth gate, module switcher
+â”œâ”€â”€ types.ts                # All TypeScript types (copy verbatim â€” see Â§6)
+â”œâ”€â”€ constants.tsx           # MODULES[], STAGES[], RIGHTS_STATUS_COLORS
+â”œâ”€â”€ vite.config.ts          # port 5184, base './', no API proxy
+â”œâ”€â”€ tsconfig.json           # Standard TUC tsconfig (bundler resolution)
+â”œâ”€â”€ playwright.config.ts    # baseURL localhost:5184, tests/ dir
+â”œâ”€â”€ Dockerfile              # node:24-alpine build â†’ nginx:alpine serve
+â”œâ”€â”€ nginx.conf              # SPA fallback: try_files $uri /index.html
+â”œâ”€â”€ contexts/
+â”‚   â”œâ”€â”€ AuthContext.tsx     # TUC 2FA + admin password (see Â§7.1)
+â”‚   â””â”€â”€ ThemeContext.tsx    # dark/light/high-contrast via data-theme attr
+â”œâ”€â”€ components/
+â”‚   â”œâ”€â”€ Sidebar.tsx         # Left nav: Dashboard + 6 modules + Admin + theme switcher
+â”‚   â”œâ”€â”€ Header.tsx          # Breadcrumb title + user email + logout button
+â”‚   â”œâ”€â”€ Dashboard.tsx       # KPI strip (4 stats) + stage pipeline bar + module grid
+â”‚   â”œâ”€â”€ Admin.tsx           # Tabbed: Audit Log | Diagnostics
+â”‚   â”œâ”€â”€ LoginModal.tsx      # Modal: 2FA (emailâ†’OTP) or admin password
+â”‚   â””â”€â”€ Loader.tsx          # Spinner with role="status" aria-live="polite"
+â”œâ”€â”€ modules/
+â”‚   â”œâ”€â”€ Module1_Tracks.tsx          # Track Library: table + add form
+â”‚   â”œâ”€â”€ Module2_Releases.tsx        # Release bundler (blocks NON_COMMERCIAL)
+â”‚   â”œâ”€â”€ Module3_RightsAudit.tsx     # Track detail + promote button (gate enforced)
+â”‚   â”œâ”€â”€ Module4_StagePipeline.tsx   # Kanban columns S1â†’S5
+â”‚   â”œâ”€â”€ Module5_AuthorshipRegistry.tsx  # Checkbox form: record human elements
+â”‚   â””â”€â”€ Module6_Distribution.tsx   # DSP submission (COMMERCIAL S5 only)
+â”œâ”€â”€ services/
+â”‚   â”œâ”€â”€ auditLogService.ts  # getLogs / addLog / clearLogs â†’ localStorage
+â”‚   â””â”€â”€ trackService.ts     # getTracks / saveTrack / addTrack / canPromote
+â”œâ”€â”€ tests/
+â”‚   â”œâ”€â”€ auth.spec.ts        # Login flow E2E
+â”‚   â”œâ”€â”€ rights-gate.spec.ts # E2 (NON_COMMERCIAL blocked) + E5 (authorship gate)
+â”‚   â””â”€â”€ audit-log.spec.ts   # E8 (audit chain, diagnostics panel)
+â””â”€â”€ docs/
+    â”œâ”€â”€ srs/plcrp_srs_v1.0.md
+    â””â”€â”€ admin_guide.md
 ```
 
 ---
@@ -77,27 +77,27 @@ plcrp/
 ## 4. UI Layout
 
 ```
-┌─────────────────────────────────────────────────────────┐
-│  SIDEBAR (w-64, fixed)     │  HEADER (h-20, sticky top) │
-│  ─────────────────────     │  ─────────────────────────  │
-│  PLCRP logo (Playfair)     │  🏠 / Module title + desc   │
-│                            │  [user email]  [Sign out]   │
-│  > Dashboard               │                             │
-│  > Track Library      ─────┼─────────────────────────── │
-│  > Release Manager         │  MAIN CONTENT (flex-1,      │
-│  > Rights Audit            │  overflow-y-auto, p-6 lg:p-8│
-│  > Stage Pipeline          │                             │
-│  > Authorship Registry     │  <ActiveModule />           │
-│  > Distribution            │                             │
-│  ────────────────          │                             │
-│  > Admin Panel             │                             │
-│                            │                             │
-│  [Theme: Dark ▾]           │                             │
-│  © 2026 TUC                │                             │
-└─────────────────────────────────────────────────────────┘
+â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
+â”‚  SIDEBAR (w-64, fixed)     â”‚  HEADER (h-20, sticky top) â”‚
+â”‚  â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€     â”‚  â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€  â”‚
+â”‚  PLCRP logo (Playfair)     â”‚  ðŸ  / Module title + desc   â”‚
+â”‚                            â”‚  [user email]  [Sign out]   â”‚
+â”‚  > Dashboard               â”‚                             â”‚
+â”‚  > Track Library      â”€â”€â”€â”€â”€â”¼â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ â”‚
+â”‚  > Release Manager         â”‚  MAIN CONTENT (flex-1,      â”‚
+â”‚  > Rights Audit            â”‚  overflow-y-auto, p-6 lg:p-8â”‚
+â”‚  > Stage Pipeline          â”‚                             â”‚
+â”‚  > Authorship Registry     â”‚  <ActiveModule />           â”‚
+â”‚  > Distribution            â”‚                             â”‚
+â”‚  â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€          â”‚                             â”‚
+â”‚  > Admin Panel             â”‚                             â”‚
+â”‚                            â”‚                             â”‚
+â”‚  [Theme: Dark â–¾]           â”‚                             â”‚
+â”‚  Â© 2026 TUC                â”‚                             â”‚
+â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
 ```
 
-Unauthenticated users see **only** the LoginModal (full-screen overlay) — the sidebar and header are not rendered.
+Unauthenticated users see **only** the LoginModal (full-screen overlay) â€” the sidebar and header are not rendered.
 
 ---
 
@@ -107,15 +107,15 @@ Unauthenticated users see **only** the LoginModal (full-screen overlay) — the 
 
 | Mode | Trigger | Mechanism |
 |---|---|---|
-| `access` | Default on load | TUC email (`@techbridge.edu.gh`) → OTP → verify |
+| `access` | Default on load | TUC email (`@techbridge.edu.gh`) â†’ OTP â†’ verify |
 | `admin` | Visiting `#/admin` unauthenticated, or clicking Admin in sidebar | Password prompt |
 
 ### 5.2 Session storage keys
 
 ```
-plcrp-admin-session  → 'true'   (sessionStorage)
-plcrp-auth-session   → 'true'   (sessionStorage)
-plcrp-auth-email     → email    (sessionStorage)
+plcrp-admin-session  â†’ 'true'   (sessionStorage)
+plcrp-auth-session   â†’ 'true'   (sessionStorage)
+plcrp-auth-email     â†’ email    (sessionStorage)
 ```
 
 ### 5.3 Admin password
@@ -124,15 +124,15 @@ plcrp-admin-2025
 ```
 
 ### 5.4 Hash routing logic (in App.tsx)
-- `#/admin` + isAdmin → show Admin module
-- `#/admin` + isAuthenticated (not admin) → show LoginModal (admin mode)
-- `#/admin` + unauthenticated → show LoginModal (access mode, redirect after login)
-- `#/<module-id>` → activate that module
-- `#/` or empty → Dashboard
+- `#/admin` + isAdmin â†’ show Admin module
+- `#/admin` + isAuthenticated (not admin) â†’ show LoginModal (admin mode)
+- `#/admin` + unauthenticated â†’ show LoginModal (access mode, redirect after login)
+- `#/<module-id>` â†’ activate that module
+- `#/` or empty â†’ Dashboard
 
 ---
 
-## 6. Data Types (types.ts — implement verbatim)
+## 6. Data Types (types.ts â€” implement verbatim)
 
 ```typescript
 export type ModuleId =
@@ -150,9 +150,9 @@ export interface Track {
   artist: string;
   sourcePlatform: SourcePlatform;
   sourceAccountTier: SourceAccountTier;
-  rightsStatus: RightsStatus;   // auto-resolved: suno/udio + free → NON_COMMERCIAL
+  rightsStatus: RightsStatus;   // auto-resolved: suno/udio + free â†’ NON_COMMERCIAL
   currentStage: StageId;
-  humanAuthorshipElements: number;  // 0..n; gate requires ≥2 at S4
+  humanAuthorshipElements: number;  // 0..n; gate requires â‰¥2 at S4
   createdAt: string;   // ISO 8601
   updatedAt: string;   // ISO 8601
   auditHash: string;   // 8-char hex, recomputed on every save
@@ -179,29 +179,29 @@ export interface AuditLog {
 
 ### 7.1 Rights auto-resolution (trackService.ts: `resolveRightsStatus`)
 ```
-platform=suno  + tier=free        → NON_COMMERCIAL
-platform=udio  + tier=free        → NON_COMMERCIAL
-platform=original                 → COMMERCIAL
-platform=licensed                 → COMMERCIAL
-tier=pro OR tier=enterprise       → COMMERCIAL
-otherwise                         → PENDING
+platform=suno  + tier=free        â†’ NON_COMMERCIAL
+platform=udio  + tier=free        â†’ NON_COMMERCIAL
+platform=original                 â†’ COMMERCIAL
+platform=licensed                 â†’ COMMERCIAL
+tier=pro OR tier=enterprise       â†’ COMMERCIAL
+otherwise                         â†’ PENDING
 ```
 
 ### 7.2 Stage gate (trackService.ts: `canPromote`)
 ```
 1. rightsStatus === 'NON_COMMERCIAL' AND currentStage === 'S2'
-   → blocked, reason: "Free-tier source — non-commercial. Cannot promote past S2."
+   â†’ blocked, reason: "Free-tier source â€” non-commercial. Cannot promote past S2."
 
 2. currentStage === 'S4' AND humanAuthorshipElements < 2
-   → blocked, reason: "Insufficient human authorship elements (N/2 required)."
+   â†’ blocked, reason: "Insufficient human authorship elements (N/2 required)."
 
 3. currentStage === 'S5'
-   → blocked, reason: "Track is already at the final stage."
+   â†’ blocked, reason: "Track is already at the final stage."
 
 4. rightsStatus !== 'COMMERCIAL'
-   → blocked, reason: "Rights status must be COMMERCIAL to promote."
+   â†’ blocked, reason: "Rights status must be COMMERCIAL to promote."
 
-5. Otherwise → allowed
+5. Otherwise â†’ allowed
 ```
 
 ### 7.3 Release creation gate
@@ -213,7 +213,7 @@ otherwise                         → PENDING
 
 ---
 
-## 8. Seed Data (5 tracks — pre-loaded on first visit)
+## 8. Seed Data (5 tracks â€” pre-loaded on first visit)
 
 | id | title | artist | platform | tier | rights | stage | humanElements |
 |---|---|---|---|---|---|---|---|
@@ -223,7 +223,7 @@ otherwise                         → PENDING
 | track-004 | Gold Coast Drift | Kofi Mensah | udio | pro | COMMERCIAL | S5 | 3 |
 | track-005 | Synthetic Horizon | AI Composer | udio | free | NON_COMMERCIAL | S1 | 0 |
 
-> The name `Fixture-NonCommercial-Track-001` is **required** — Playwright tests reference it by this exact name.
+> The name `Fixture-NonCommercial-Track-001` is **required** â€” Playwright tests reference it by this exact name.
 
 ---
 
@@ -256,8 +256,8 @@ Applied via `data-theme` attribute on `<html>`. Dark theme is the default.
 --color-primary:               #C8A84B;   /* TUC Gold */
 --color-primary-hover:         #b6963a;
 
-/* light — swap backgrounds/foregrounds, keep gold */
-/* high-contrast — black bg, white fg, yellow primary (#ffff00) */
+/* light â€” swap backgrounds/foregrounds, keep gold */
+/* high-contrast â€” black bg, white fg, yellow primary (#ffff00) */
 ```
 
 ---
@@ -265,10 +265,10 @@ Applied via `data-theme` attribute on `<html>`. Dark theme is the default.
 ## 11. Typography (Google Fonts)
 
 ```
-Playfair Display  → h1/h2/h3, module titles, dashboard headings
-Bebas Neue        → KPI numbers, stage labels (font-bebas class)
-Inter             → body text, labels, UI chrome
-Cormorant Garamond → optional editorial use
+Playfair Display  â†’ h1/h2/h3, module titles, dashboard headings
+Bebas Neue        â†’ KPI numbers, stage labels (font-bebas class)
+Inter             â†’ body text, labels, UI chrome
+Cormorant Garamond â†’ optional editorial use
 ```
 
 ---
@@ -291,7 +291,7 @@ Cormorant Garamond → optional editorial use
 
 ## 13. Admin Panel (components/Admin.tsx)
 
-Two tabs — **Audit Log** and **Diagnostics**.
+Two tabs â€” **Audit Log** and **Diagnostics**.
 
 **Audit Log tab:**
 - Shows all entries from `getLogs()`, newest first
@@ -301,7 +301,7 @@ Two tabs — **Audit Log** and **Diagnostics**.
 
 **Diagnostics tab:**
 - Static gate status table (4 rows, all ACTIVE)
-- "Run Diagnostic" button → 1200ms timeout → appends a text result to the log and shows inline
+- "Run Diagnostic" button â†’ 1200ms timeout â†’ appends a text result to the log and shows inline
 - On load: calls `addLog('Admin Panel loaded.')` with `result: 'info'`
 
 ---
@@ -318,20 +318,20 @@ async function loginAsAdmin(page) {
 }
 ```
 
-**auth.spec.ts** — 4 tests:
+**auth.spec.ts** â€” 4 tests:
 1. Login modal visible on load
 2. Admin login succeeds via `/#/admin`
 3. Wrong password shows error
 4. Non-Techbridge email rejected
 
-**rights-gate.spec.ts** — 5 tests:
+**rights-gate.spec.ts** â€” 5 tests:
 1. `Fixture-NonCommercial-Track-001` has `[data-test="promote-to-s3"]` disabled
 2. Disabled promote button has `title` containing "Free-tier source"
 3. No `[data-test*="override"]` element exists in the UI
 4. A COMMERCIAL track (`Neon Frequencies`) has its promote button enabled
 5. `Accra Midnight` (S4, 2 elements) is visible in Rights Audit
 
-**audit-log.spec.ts** — 4 tests:
+**audit-log.spec.ts** â€” 4 tests:
 1. After admin login, audit log contains "Admin login successful"
 2. Navigating to `/#/tracks` then back to admin shows "Track Library" in log
 3. After visiting rights-audit, admin panel shows entries

@@ -1,4 +1,4 @@
-{
+﻿{
   "name": "aucdt-msee-aptitude-test",
   "private": true,
   "version": "0.0.0",
@@ -17,8 +17,8 @@
     "@vitejs/plugin-react": "^5.1.0",
     "firebase": "^11.10.0",
     "lucide-react": "^0.525.0",
-    "react": "19.2.4",
-    "react-dom": "19.2.4"
+    "react": "19.2.5",
+    "react-dom": "19.2.5"
   },
   "devDependencies": {
     "@types/node": "^22.14.0",

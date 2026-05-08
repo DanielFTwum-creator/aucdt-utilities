@@ -1,6 +1,6 @@
-# Testing Guide: University Fees Dashboard
+﻿# Testing Guide: University Fees Dashboard
 **Project:** Ghana University Fees (v3.0.0)
-**Core Requirement:** Logic validation against React 19.2.4
+**Core Requirement:** Logic validation against React 19.2.5
 
 ## 1. Testing Framework
 The platform employs a robust three-tier testing framework:
@@ -20,4 +20,4 @@ The platform employs a robust three-tier testing framework:
 - **ARIA Standards**: Use VoiceOver or NVDA to navigate the dashboard. Ensure all interactive chart segments and segmented control buttons announce their state correctly.
 
 ## 4. Institutional Compliance
-Every test run must be verified against the React 19.2.4 mandate. Any functional deviations from the institutional financial transparency standards must be flagged as a regression.
+Every test run must be verified against the React 19.2.5 mandate. Any functional deviations from the institutional financial transparency standards must be flagged as a regression.

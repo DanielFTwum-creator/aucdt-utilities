@@ -1,6 +1,6 @@
-# Administrator Guide
+﻿# Administrator Guide
 **Project:** Techbridge Scholarship Portal (v2.0)
-**Core Requirement:** Must run on React 19.2.4
+**Core Requirement:** Must run on React 19.2.5
 
 ## 1. Overview
 The Admin Dashboard is a restricted portal (`#/admin`) designed for legal staff and IT diagnostics. It features a password-protected entry, audit logging, and an integrated E2E testing simulator.
@@ -24,4 +24,4 @@ The Admin Dashboard is a restricted portal (`#/admin`) designed for legal staff 
 If the Simulator fails:
 1. Check the Activity Stream for specific `SIMULATION_FAILED` context.
 2. Verify network connectivity for the Gemini AI and SMTP endpoints.
-3. Ensure React 19.2.4 dependencies are intact.
+3. Ensure React 19.2.5 dependencies are intact.

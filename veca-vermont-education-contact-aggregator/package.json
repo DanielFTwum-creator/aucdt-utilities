@@ -1,4 +1,4 @@
-{
+﻿{
   "packageManager": "pnpm@10.30.1",
   "name": "veca---vermont-education-contact-aggregator",
   "private": true,
@@ -16,8 +16,8 @@
   "dependencies": {
     "@google/genai": "^1.30.0",
     "lucide-react": "^0.554.0",
-    "react": "19.2.4",
-    "react-dom": "19.2.4",
+    "react": "19.2.5",
+    "react-dom": "19.2.5",
     "react-router-dom": "^7.1.0"
   },
   "devDependencies": {

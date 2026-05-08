@@ -1,4 +1,4 @@
-# Administrator Guide
+﻿# Administrator Guide
 
 ## 1. Introduction
 This guide provides instructions for administrators of the Compliance Workflow Dashboard, including the management of the Bulletproof Directive framework.
@@ -16,5 +16,5 @@ This guide provides instructions for administrators of the Compliance Workflow D
 - **Directive Control**: Manage directive-based constraint strings and multi-agent triad roles.
 
 ## 4. Requirements
-- This application requires React 19.2.4.
+- This application requires React 19.2.5.
 - Gemini API key must be configured for AI-assisted operations.

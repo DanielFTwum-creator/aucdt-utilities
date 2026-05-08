@@ -1,4 +1,4 @@
-# System Requirements Specification (SRS) - v3.0.0
+﻿# System Requirements Specification (SRS) - v3.0.0
 ## Project: Techbridge University College (TUC) Utilities Suite
 **Date:** March 11, 2026
 **Status:** AS-BUILT
@@ -9,7 +9,7 @@
 This suite consists of 261 applications (245 Frontend, 16 Backend) serving the Techbridge University College ecosystem. This version (v3.0.0) marks the completion of the "Refactor & Integration" phase, ensuring full containerization and administrative oversight.
 
 ## 2. Institutional Compliance Mandates
-- **React Version:** React 19.2.4 (Locked).
+- **React Version:** React 19.2.5 (Locked).
 - **Styling:** Material Design / Tailwind v4 / 6R Methodology.
 - **Accessibility:** 100% ARIA/Tooltip coverage.
 - **Branding:** TUC Gold (#C8A84B), Ink (#0F0C07), Cream (#F2EBD9).
@@ -17,7 +17,7 @@ This suite consists of 261 applications (245 Frontend, 16 Backend) serving the T
 ## 3. Architecture & Infrastructure
 - **Infrastructure:** Docker Compose (262 services).
 - **Gateway:** Nginx (Port 8080) serving as a centralized proxy and catalogue host.
-- **Frontend:** React 19.2.4 + Vite 7.3.1.
+- **Frontend:** React 19.2.5 + Vite 7.3.1.
 - **Backend:** Node.js 20+ / Express with integrated Admin Dashboards.
 - **Database:** PostgreSQL/MySQL (Project-specific).
 

@@ -1,4 +1,4 @@
-# CREATION.md — Umoja React App
+﻿# CREATION.md â€” Umoja React App
 
 **Purpose:** Complete build specification for any agent to implement this application from scratch.
 **Target:** Functional parity with `C:/Development/aucdt-utilities/umoja-react-app/`
@@ -10,14 +10,14 @@
 
 The Umoja React App (`umoja-react-app` v1.0.0) is a **four-pillar African-community services landing SPA** for Techbridge University College (TUC). "Umoja" (Swahili for *unity*) showcases four sister product propositions across the African development stack:
 
-1. **UmojaAgri 🌾** — agricultural commerce: market prices, weather forecasts & pest alerts, downloadable farming guides, farmer forum.
-2. **UmojaHealth 🏥** — telemedicine chat / voice / video, offline health library, nearby clinics & pharmacies.
-3. **UmojaEd 📚** — e-learning & skills development, downloadable courses, certificates of completion.
-4. **UmojaSoko 🛍️** — e-commerce marketplace, freelance & artisan hub, secure mobile payments.
+1. **UmojaAgri ðŸŒ¾** â€” agricultural commerce: market prices, weather forecasts & pest alerts, downloadable farming guides, farmer forum.
+2. **UmojaHealth ðŸ¥** â€” telemedicine chat / voice / video, offline health library, nearby clinics & pharmacies.
+3. **UmojaEd ðŸ“š** â€” e-learning & skills development, downloadable courses, certificates of completion.
+4. **UmojaSoko ðŸ›ï¸** â€” e-commerce marketplace, freelance & artisan hub, secure mobile payments.
 
 The current build is a static placeholder/marketing surface: each route renders a heading and a bullet list of planned features. The app has no data fetching or persistence yet, but ships the full TUC auth/admin scaffolding so it can graduate into a real product without re-plumbing.
 
-The app is **gated by a session-storage login** (`admin` / `admin`) before any view renders, then mounts an inner React Router. Notably, `umoja-react-app` ships a **second `App.js`** at the project root (alongside `src/App.tsx`) — the legacy `App.js` defines the four-pillar Umoja showcase routes (`/`, `/agri`, `/health`, `/ed`, `/soko`); the TS `src/App.tsx` is the auth-aware shell that exposes the admin dashboard. The two are intended to be merged in a future refresh phase.
+The app is **gated by a session-storage login** (`admin` / `admin`) before any view renders, then mounts an inner React Router. Notably, `umoja-react-app` ships a **second `App.js`** at the project root (alongside `src/App.tsx`) â€” the legacy `App.js` defines the four-pillar Umoja showcase routes (`/`, `/agri`, `/health`, `/ed`, `/soko`); the TS `src/App.tsx` is the auth-aware shell that exposes the admin dashboard. The two are intended to be merged in a future refresh phase.
 
 The app is part of the TUC monorepo gateway and deployed via the `umoja-react-app` service in `docker-compose-all-apps.yml`.
 
@@ -27,8 +27,8 @@ The app is part of the TUC monorepo gateway and deployed via the `umoja-react-ap
 
 | Layer | Technology | Version |
 |---|---|---|
-| Runtime | React | **19.2.4** (never change) |
-| DOM | react-dom | 19.2.4 |
+| Runtime | React | **19.2.5** (never change) |
+| DOM | react-dom | 19.2.5 |
 | Build | Vite | 7.3.1 |
 | React plugin | @vitejs/plugin-react | ^5.1.4 |
 | Tailwind plugin | @tailwindcss/vite | ^4.2.2 |
@@ -42,9 +42,9 @@ The app is part of the TUC monorepo gateway and deployed via the `umoja-react-ap
 | User-event | @testing-library/user-event | ^14.6.1 |
 | Coverage | @vitest/coverage-v8 | ^3.0.0 |
 | Package manager | pnpm | 10.30.1 (declared in `packageManager`) |
-| Container | node:24-alpine → nginx:alpine | — |
+| Container | node:24-alpine â†’ nginx:alpine | â€” |
 
-Note: `umoja-react-app` does NOT depend on `react-app-polyfill`, `web-vitals`, `@testing-library/dom`, or `@testing-library/user-event@13` — its `package.json` is leaner than `drone-showcase` / `english-safari` / `pdf-extractor-app`.
+Note: `umoja-react-app` does NOT depend on `react-app-polyfill`, `web-vitals`, `@testing-library/dom`, or `@testing-library/user-event@13` â€” its `package.json` is leaner than `drone-showcase` / `english-safari` / `pdf-extractor-app`.
 
 ---
 
@@ -52,44 +52,44 @@ Note: `umoja-react-app` does NOT depend on `react-app-polyfill`, `web-vitals`, `
 
 ```
 umoja-react-app/
-├── index.html
-├── index.css
-├── package.json                # name: umoja-react-app, version: 1.0.0
-├── pnpm-lock.yaml
-├── pnpm-workspace.yaml
-├── vite.config.ts              # dev port 3000, base './'
-├── vitest.config.ts
-├── vitest.e2e.config.ts
-├── tsconfig.json
-├── App.js                      # legacy four-pillar showcase (project root, NOT src/)
-├── Dockerfile                  # node:24-alpine multi-stage → serve dist :4173
-├── nginx.conf                  # SPA fallback /index.html, /health endpoint
-├── DEPLOYMENT.md
-├── public/
-├── docs/
-│   ├── ADMIN_GUIDE.md
-│   ├── architecture.svg
-│   ├── dataflow.svg
-│   ├── DEPLOYMENT.md
-│   ├── SRS.md
-│   └── TESTING.md
-└── src/
-    ├── index.tsx               # createRoot + AuthGate + App
-    ├── App.tsx                 # auth-aware shell with /login, /admin, /*
-    ├── AuthGate.tsx            # session-storage username/password gate
-    ├── __tests__/
-    ├── components/
-    │   └── ProtectedRoute.tsx
-    ├── contexts/
-    │   └── AuthContext.tsx
-    ├── pages/
-    │   ├── LoginPage.tsx
-    │   └── AdminPage.tsx
-    └── services/
-        └── AuthService.ts
+â”œâ”€â”€ index.html
+â”œâ”€â”€ index.css
+â”œâ”€â”€ package.json                # name: umoja-react-app, version: 1.0.0
+â”œâ”€â”€ pnpm-lock.yaml
+â”œâ”€â”€ pnpm-workspace.yaml
+â”œâ”€â”€ vite.config.ts              # dev port 3000, base './'
+â”œâ”€â”€ vitest.config.ts
+â”œâ”€â”€ vitest.e2e.config.ts
+â”œâ”€â”€ tsconfig.json
+â”œâ”€â”€ App.js                      # legacy four-pillar showcase (project root, NOT src/)
+â”œâ”€â”€ Dockerfile                  # node:24-alpine multi-stage â†’ serve dist :4173
+â”œâ”€â”€ nginx.conf                  # SPA fallback /index.html, /health endpoint
+â”œâ”€â”€ DEPLOYMENT.md
+â”œâ”€â”€ public/
+â”œâ”€â”€ docs/
+â”‚   â”œâ”€â”€ ADMIN_GUIDE.md
+â”‚   â”œâ”€â”€ architecture.svg
+â”‚   â”œâ”€â”€ dataflow.svg
+â”‚   â”œâ”€â”€ DEPLOYMENT.md
+â”‚   â”œâ”€â”€ SRS.md
+â”‚   â””â”€â”€ TESTING.md
+â””â”€â”€ src/
+    â”œâ”€â”€ index.tsx               # createRoot + AuthGate + App
+    â”œâ”€â”€ App.tsx                 # auth-aware shell with /login, /admin, /*
+    â”œâ”€â”€ AuthGate.tsx            # session-storage username/password gate
+    â”œâ”€â”€ __tests__/
+    â”œâ”€â”€ components/
+    â”‚   â””â”€â”€ ProtectedRoute.tsx
+    â”œâ”€â”€ contexts/
+    â”‚   â””â”€â”€ AuthContext.tsx
+    â”œâ”€â”€ pages/
+    â”‚   â”œâ”€â”€ LoginPage.tsx
+    â”‚   â””â”€â”€ AdminPage.tsx
+    â””â”€â”€ services/
+        â””â”€â”€ AuthService.ts
 ```
 
-Note the absence of `App.css`, `App.test.js`, `index.css` (in `src/`), `logo.svg`, `setupTests.js`, `reportWebVitals.js`, `vite-env.d.ts` and `AppWithAuth.tsx` — this project is structurally simpler than its siblings. There is also no `__tests__` content scaffolded under `src/__tests__` beyond the directory.
+Note the absence of `App.css`, `App.test.js`, `index.css` (in `src/`), `logo.svg`, `setupTests.js`, `reportWebVitals.js`, `vite-env.d.ts` and `AppWithAuth.tsx` â€” this project is structurally simpler than its siblings. There is also no `__tests__` content scaffolded under `src/__tests__` beyond the directory.
 
 ---
 
@@ -109,7 +109,7 @@ root.render(
 );
 ```
 
-(`umoja-react-app/src/index.tsx` does not import `index.css`, does not call `reportWebVitals`, and does not strip `tuc-splash-styles` — diverging from the rest of the monorepo. Refresh phases should normalise this.)
+(`umoja-react-app/src/index.tsx` does not import `index.css`, does not call `reportWebVitals`, and does not strip `tuc-splash-styles` â€” diverging from the rest of the monorepo. Refresh phases should normalise this.)
 
 ---
 
@@ -137,7 +137,7 @@ export default function App() {
 }
 ```
 
-So the `/*` catch-all currently routes to `AdminPage` (gated by `ProtectedRoute`). The legacy four-pillar showcase in the root-level `App.js` is intended to be wired into a `/dashboard/*` (or unprotected `/*`) route in a future refresh — but it is NOT mounted by the current TS `App.tsx`. Treat the four-pillar copy in §6 as authoritative product surface to restore.
+So the `/*` catch-all currently routes to `AdminPage` (gated by `ProtectedRoute`). The legacy four-pillar showcase in the root-level `App.js` is intended to be wired into a `/dashboard/*` (or unprotected `/*`) route in a future refresh â€” but it is NOT mounted by the current TS `App.tsx`. Treat the four-pillar copy in Â§6 as authoritative product surface to restore.
 
 ---
 
@@ -145,21 +145,21 @@ So the `/*` catch-all currently routes to `AdminPage` (gated by `ProtectedRoute`
 
 The project root holds `App.js` defining the original Umoja showcase. Restoration spec (when re-mounting):
 
-- **Header** — `bg-green-600 text-white p-4 shadow-md`, title `Umoja` (text-2xl font-bold), nav row of four `<Link>`s:
-  - `/agri` → `🌾 Agri`
-  - `/health` → `🏥 Health`
-  - `/ed` → `📚 Education`
-  - `/soko` → `🛍️ Soko`
-- **Footer** — centred, `bg-gray-200 text-sm`, `Umoja App © 2025`.
-- **Routes** —
+- **Header** â€” `bg-green-600 text-white p-4 shadow-md`, title `Umoja` (text-2xl font-bold), nav row of four `<Link>`s:
+  - `/agri` â†’ `ðŸŒ¾ Agri`
+  - `/health` â†’ `ðŸ¥ Health`
+  - `/ed` â†’ `ðŸ“š Education`
+  - `/soko` â†’ `ðŸ›ï¸ Soko`
+- **Footer** â€” centred, `bg-gray-200 text-sm`, `Umoja App Â© 2025`.
+- **Routes** â€”
 
 | Path | Component | Heading | Bullets |
 |---|---|---|---|
-| `/` | `Home` | `Welcome to Umoja 🌍` | "Empowering African communities through agriculture, healthcare, education, and commerce." |
-| `/agri` | `UmojaAgri` | `UmojaAgri 🌾` | 📈 Market Prices · 🌦️ Weather Forecasts & Pest Alerts · 📘 Farming Guides (Downloadable) · 👥 Farmer Forum |
-| `/health` | `UmojaHealth` | `UmojaHealth 🏥` | 💬 Telemedicine Chat / Voice / Video · 📚 Health Library (Offline Access) · 🗺️ Nearby Clinics & Pharmacies |
-| `/ed` | `UmojaEd` | `UmojaEd 📚` | 🎓 E-Learning & Skills Development · 📥 Downloadable Courses · 📜 Certificate of Completion |
-| `/soko` | `UmojaSoko` | `UmojaSoko 🛍️` | 🛒 E-Commerce Marketplace · 🎨 Freelance & Artisan Hub · 💳 Secure Mobile Payments |
+| `/` | `Home` | `Welcome to Umoja ðŸŒ` | "Empowering African communities through agriculture, healthcare, education, and commerce." |
+| `/agri` | `UmojaAgri` | `UmojaAgri ðŸŒ¾` | ðŸ“ˆ Market Prices Â· ðŸŒ¦ï¸ Weather Forecasts & Pest Alerts Â· ðŸ“˜ Farming Guides (Downloadable) Â· ðŸ‘¥ Farmer Forum |
+| `/health` | `UmojaHealth` | `UmojaHealth ðŸ¥` | ðŸ’¬ Telemedicine Chat / Voice / Video Â· ðŸ“š Health Library (Offline Access) Â· ðŸ—ºï¸ Nearby Clinics & Pharmacies |
+| `/ed` | `UmojaEd` | `UmojaEd ðŸ“š` | ðŸŽ“ E-Learning & Skills Development Â· ðŸ“¥ Downloadable Courses Â· ðŸ“œ Certificate of Completion |
+| `/soko` | `UmojaSoko` | `UmojaSoko ðŸ›ï¸` | ðŸ›’ E-Commerce Marketplace Â· ðŸŽ¨ Freelance & Artisan Hub Â· ðŸ’³ Secure Mobile Payments |
 
 Page wrapper: `min-h-screen bg-gray-50 text-gray-800`. Each pillar renders a `<h2 class="text-xl font-semibold">` and an unordered `list-disc list-inside` of bullet items.
 
@@ -172,7 +172,7 @@ Page wrapper: `min-h-screen bg-gray-50 text-gray-800`. Each pillar renders a `<h
 - **Session key:** `sessionStorage["tuc_auth_umoja_react_app"] === "1"`.
 - **Accent colour (login icon + button):** `#db2777` (pink-600).
 - Hard-coded credentials: `admin` / `admin`. Failure: `"Invalid credentials. Use admin / admin"`.
-- Login card title: `"Umoja React App"`. Footer: `"Techbridge University College · admin / admin"`.
+- Login card title: `"Umoja React App"`. Footer: `"Techbridge University College Â· admin / admin"`.
 
 ### Inner router (`AuthContext` + `AuthService`)
 
@@ -189,12 +189,12 @@ Page wrapper: `min-h-screen bg-gray-50 text-gray-800`. Each pillar renders a `<h
 
 Standard TUC two-pane layout:
 - **Sidebar** `bg-[#0f172a]` (slate-900), with a yellow `bg-[#ffcb05]` shield, app title `Umoja React App`, two tabs (`overview`, `logs`), Sign-Out at the bottom.
-- **Main pane** header `Umoja React App — Admin · Techbridge University College · Staff Portal`.
+- **Main pane** header `Umoja React App â€” Admin Â· Techbridge University College Â· Staff Portal`.
 
 Tabs:
 
-1. **Overview** — six compliance tiles: `React Version 19.2.4`, `Docker Configured`, `SRS docs/SRS.md`, `Tests vitest.config.ts`, `Auth Active`, `Phase Phase 2 Complete`. Each tile renders `✓ compliant` (emerald-600) or `✗ gap` (red-500).
-2. **Activity Log** — table of `{ id: string; time: string; action: string; detail: string }`; seeded with one `SESSION_START` entry on mount (`time` = `new Date().toLocaleTimeString()`).
+1. **Overview** â€” six compliance tiles: `React Version 19.2.5`, `Docker Configured`, `SRS docs/SRS.md`, `Tests vitest.config.ts`, `Auth Active`, `Phase Phase 2 Complete`. Each tile renders `âœ“ compliant` (emerald-600) or `âœ— gap` (red-500).
+2. **Activity Log** â€” table of `{ id: string; time: string; action: string; detail: string }`; seeded with one `SESSION_START` entry on mount (`time` = `new Date().toLocaleTimeString()`).
 
 When the four-pillar showcase is re-mounted, future diagnostics (data integrity, market-price feed validation) MUST live exclusively under `/admin`.
 
@@ -205,7 +205,7 @@ When the four-pillar showcase is re-mounted, future diagnostics (data integrity,
 ```bash
 pnpm install
 pnpm run dev            # vite, port 3000
-pnpm run build          # → dist/
+pnpm run build          # â†’ dist/
 pnpm run preview
 pnpm run serve          # serve -s dist -l 3000
 pnpm test
@@ -218,9 +218,9 @@ pnpm run test:e2e
 
 ## 10. Docker
 
-- **Dockerfile** — node:24-alpine multi-stage. Stage 1: corepack pnpm + `pnpm install --frozen-lockfile || npm install` + `pnpm run build`. Stage 2: `pnpm add -g serve`, copy `dist/`, expose **4173**, healthcheck `wget --spider http://localhost:4173/health`.
-- **nginx.conf** — `listen 80; root /usr/share/nginx/html; try_files $uri $uri/ /index.html;` plus security headers `X-Frame-Options SAMEORIGIN`, `X-Content-Type-Options nosniff`, `X-XSS-Protection 1; mode=block`, `Referrer-Policy strict-origin-when-cross-origin`. `/health` returns `healthy`. Static assets cached 1 year immutable. Gzip enabled.
-- **docker-compose-all-apps.yml** — service `umoja-react-app`, build context `./umoja-react-app`, dockerfile `../Dockerfile.vite`, network `tuc-network`, healthcheck against `http://localhost/health`.
+- **Dockerfile** â€” node:24-alpine multi-stage. Stage 1: corepack pnpm + `pnpm install --frozen-lockfile || npm install` + `pnpm run build`. Stage 2: `pnpm add -g serve`, copy `dist/`, expose **4173**, healthcheck `wget --spider http://localhost:4173/health`.
+- **nginx.conf** â€” `listen 80; root /usr/share/nginx/html; try_files $uri $uri/ /index.html;` plus security headers `X-Frame-Options SAMEORIGIN`, `X-Content-Type-Options nosniff`, `X-XSS-Protection 1; mode=block`, `Referrer-Policy strict-origin-when-cross-origin`. `/health` returns `healthy`. Static assets cached 1 year immutable. Gzip enabled.
+- **docker-compose-all-apps.yml** â€” service `umoja-react-app`, build context `./umoja-react-app`, dockerfile `../Dockerfile.vite`, network `tuc-network`, healthcheck against `http://localhost/health`.
 
 ---
 
@@ -245,13 +245,13 @@ NODE_ENV=development
 | Cream | `#F2EBD9` |
 | Paper | `#141210` |
 
-Typography: Playfair Display (titles), Bebas Neue (display), Inter / Cormorant Garamond (body). The legacy `App.js` uses `bg-green-600` (Tailwind emerald) and `bg-gray-50` — when refreshing, transition the header to the TUC palette while keeping the green accent for the **Agri** pillar where it carries semantic meaning. Footer year string `© 2025` should be updated to `© 2026 Techbridge University College`.
+Typography: Playfair Display (titles), Bebas Neue (display), Inter / Cormorant Garamond (body). The legacy `App.js` uses `bg-green-600` (Tailwind emerald) and `bg-gray-50` â€” when refreshing, transition the header to the TUC palette while keeping the green accent for the **Agri** pillar where it carries semantic meaning. Footer year string `Â© 2025` should be updated to `Â© 2026 Techbridge University College`.
 
 ---
 
 ## 13. Accessibility Requirements
 
-- Header `<nav>` should expose `aria-label="Pillar navigation"`. Each `<Link>` should have unambiguous text — emoji decorations need `aria-hidden="true"`.
+- Header `<nav>` should expose `aria-label="Pillar navigation"`. Each `<Link>` should have unambiguous text â€” emoji decorations need `aria-hidden="true"`.
 - Pillar pages should declare `role="region" aria-labelledby="pillar-heading"`.
 - Bullet lists should remain real `<ul>` elements (not pseudo-bullets).
 - Every interactive button (admin sidebar, login form) needs a visible focus ring (`focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-offset-2`).
@@ -270,11 +270,11 @@ Typography: Playfair Display (titles), Bebas Neue (display), Inter / Cormorant G
 | AC-3 | Outer login uses pink accent `#db2777` and writes `sessionStorage["tuc_auth_umoja_react_app"] = "1"` on success |
 | AC-4 | `/` redirects to `/login` for unauthenticated users; `/login` is reachable |
 | AC-5 | `/*` (catch-all) is wrapped in `<ProtectedRoute>` and renders `AdminPage` when authenticated |
-| AC-6 | Admin Overview shows the six compliance tiles (React 19.2.4, Docker, SRS, Tests, Auth, Phase) |
+| AC-6 | Admin Overview shows the six compliance tiles (React 19.2.5, Docker, SRS, Tests, Auth, Phase) |
 | AC-7 | Admin Activity Log seeds at least one `SESSION_START` entry on mount |
 | AC-8 | Sidebar Sign-Out clears the JWT and navigates back to `/login` |
-| AC-9 | The legacy four-pillar showcase routes (`/agri`, `/health`, `/ed`, `/soko`) are restorable from `App.js` per §6 |
-| AC-10 | Each pillar renders the exact bullet list specified in §6 |
+| AC-9 | The legacy four-pillar showcase routes (`/agri`, `/health`, `/ed`, `/soko`) are restorable from `App.js` per Â§6 |
+| AC-10 | Each pillar renders the exact bullet list specified in Â§6 |
 | AC-11 | `react-router-dom` is held at `^6.0.0` (deliberately one major behind the rest of the monorepo until the merge refresh) |
 | AC-12 | Dockerfile produces a healthy image; `/health` returns `healthy` |
 | AC-13 | Service appears under `umoja-react-app:` in `docker-compose-all-apps.yml` on `tuc-network` |

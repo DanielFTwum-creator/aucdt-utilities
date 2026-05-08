@@ -1,4 +1,4 @@
-# Testing Guide
+﻿# Testing Guide
 
 ## 1. Diagnostic Suite
 - Access via `/admin/diagnostics`.
@@ -14,5 +14,5 @@
 - Review QA logs in the Admin Panel for detailed validation results.
 
 ## 4. Requirements
-- This application requires React 19.2.4.
+- This application requires React 19.2.5.
 - Playwright/Puppeteer must be configured in the environment.

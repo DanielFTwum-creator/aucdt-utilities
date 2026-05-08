@@ -1,4 +1,4 @@
-# Software Requirements Specification (SRS)
+﻿# Software Requirements Specification (SRS)
 ## Project: Advanced Analytics Dashboard (v3.0.0)
 ## Version: 3.0.0 - Institutional Edition
 **Project Type:** Analytics Dashboard
@@ -9,7 +9,7 @@
 ## 1. Introduction
 
 ### 1.1 Purpose
-The Advanced Analytics Dashboard (analytics-refactor) is a premium **React 19.2.4** application designed to provide TECHBRIDGE University College with real-time, high-fidelity data visualization and analytical insights into student admissions, performance, and demographic trends.
+The Advanced Analytics Dashboard (analytics-refactor) is a premium **React 19.2.5** application designed to provide TECHBRIDGE University College with real-time, high-fidelity data visualization and analytical insights into student admissions, performance, and demographic trends.
 
 ### 1.2 Scope
 The dashboard replaces legacy reporting tools with a modern, accessible, and AI-enhanced analytical suite featuring:
@@ -36,10 +36,10 @@ The dashboard replaces legacy reporting tools with a modern, accessible, and AI-
   </defs>
   <rect width="1000" height="600" class="bg" />
   <text x="400" y="40" fill="#818cf8" font-family="Inter" font-size="24" font-weight="bold" text-anchor="middle" letter-spacing="4">ADVANCED ANALYTICS DASHBOARD</text>
-  <text x="400" y="60" fill="#ffffff" opacity="0.6" font-family="Inter" font-size="10" text-anchor="middle" letter-spacing="2">SYSTEM ARCHITECTURE • REACT 19.2.4</text>
+  <text x="400" y="60" fill="#ffffff" opacity="0.6" font-family="Inter" font-size="10" text-anchor="middle" letter-spacing="2">SYSTEM ARCHITECTURE â€¢ REACT 19.2.5</text>
   <rect x="50" y="100" width="200" height="300" class="box" />
   <text x="150" y="130" class="text-title">Presentation</text>
-  <text x="150" y="150" class="text-sub">REACT 19.2.4 SPA</text>
+  <text x="150" y="150" class="text-sub">REACT 19.2.5 SPA</text>
   <rect x="70" y="180" width="160" height="40" fill="rgba(255,255,255,0.1)" rx="4" />
   <text x="150" y="205" fill="#fff" font-family="Inter" font-size="12" text-anchor="middle">AdvancedAnalytics UI</text>
   <rect x="70" y="240" width="160" height="40" fill="rgba(255,255,255,0.1)" rx="4" />
@@ -148,7 +148,7 @@ The dashboard replaces legacy reporting tools with a modern, accessible, and AI-
 ## 3. Non-Functional Requirements
 
 - **NFR-01**: **Performance**: Initial load time < 2 seconds; chart re-renders < 300ms.
-- **NFR-02**: **React Version**: STRICT ADHERENCE to **React 19.2.4**.
+- **NFR-02**: **React Version**: STRICT ADHERENCE to **React 19.2.5**.
 - **NFR-03**: **Zero Broken Links**: All buttons, links, and toggles must be fully functional or removed.
 - **NFR-04**: **PWA Support**: Offline capability for viewing cached report data.
 - **NFR-05**: **6R Design**: Adherence to the 6R Methodology (Reduce, Reuse, Recycle, Rethink, Refine, Reimagine).
@@ -157,7 +157,7 @@ The dashboard replaces legacy reporting tools with a modern, accessible, and AI-
 
 ## 4. Technology Stack
 
-- **Frontend:** React 19.2.4 (TypeScript/Vite)
+- **Frontend:** React 19.2.5 (TypeScript/Vite)
 - **Styling:** Tailwind CSS v4 / Material UI
 - **Charts:** Recharts 3.x
 - **Testing:** Vitest / Playwright

@@ -1,6 +1,6 @@
-# Testing Guide: Brainiac Challenge
+﻿# Testing Guide: Brainiac Challenge
 **Project:** Brainiac Challenge AI Quiz (v3.0.0)
-**Core Requirement:** Logic validation against React 19.2.4
+**Core Requirement:** Logic validation against React 19.2.5
 
 ## 1. Testing Framework
 The platform employs a robust three-tier testing framework:
@@ -22,4 +22,4 @@ The platform employs a robust three-tier testing framework:
 - **ARIA Standards**: Use VoiceOver or NVDA to navigate the quiz. Ensure all options are keyboard-accessible and announce their state correctly.
 
 ## 4. Institutional Compliance
-Every test run must be verified against the React 19.2.4 mandate. Ensure that any logic changes maintain perfect alignment with the institutional SRS v3.0.0.
+Every test run must be verified against the React 19.2.5 mandate. Ensure that any logic changes maintain perfect alignment with the institutional SRS v3.0.0.

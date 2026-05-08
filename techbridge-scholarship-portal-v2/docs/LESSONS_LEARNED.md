@@ -1,4 +1,4 @@
-# AUCDT Utilities: Master Migration & Best Practices Guide
+﻿# AUCDT Utilities: Master Migration & Best Practices Guide
 **Source Project:** Techbridge Scholarship Portal (v2.0)
 **Application Scope:** All projects within `../aucdt-utilities`
 
@@ -6,7 +6,7 @@
 To ensure institutional consistency and stability across all AUCDT utilities, the following environmental constraints must be enforced:
 
 ### 1.1 Version Locking
-- **React Version:** Strictly **19.2.4**.
+- **React Version:** Strictly **19.2.5**.
 - **Reasoning:** Ensures compatibility with modern React features while maintaining a stable, audited dependency tree across all tools.
 
 ### 1.2 Pathing Strategy

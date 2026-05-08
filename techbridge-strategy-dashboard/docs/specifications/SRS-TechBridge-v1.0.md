@@ -1,4 +1,4 @@
-# Software Requirements Specification (IEEE Std 830-1998)
+﻿# Software Requirements Specification (IEEE Std 830-1998)
 ## Sentinel Agent System v1.0
 
 ### Document Control
@@ -78,7 +78,7 @@ The Sentinel Agent System operates as a standalone full-stack application with t
 ### 2.2 System Architecture
 
 **Technology Stack**:
-- **Frontend**: React 19.2.4, TypeScript 4.9.5, Vite 7.3.1
+- **Frontend**: React 19.2.5, TypeScript 4.9.5, Vite 7.3.1
 - **Backend**: Node.js, Express 5.2.1, TypeScript
 - **Package Manager**: pnpm 10.22.0
 - **Process Management**: Concurrently, PM2 (production)
@@ -88,28 +88,28 @@ The Sentinel Agent System operates as a standalone full-stack application with t
 **Architecture Pattern**: Client-Server with REST API
 
 ```
-┌─────────────────────────────────────┐
-│        Frontend (React SPA)         │
-│  - Agent Dashboard                  │
-│  - Requirements Matrix              │
-│  - PDF Management UI                │
-│  - Notification System              │
-└──────────────┬──────────────────────┘
-               │ HTTP/REST
-┌──────────────▼──────────────────────┐
-│      Backend API (Express)          │
-│  - RESTful Endpoints                │
-│  - CORS Middleware                  │
-│  - Data Management                  │
-│  - Agent Coordination               │
-└──────────────┬──────────────────────┘
-               │
-┌──────────────▼──────────────────────┐
-│        Data Layer                   │
-│  - In-memory data store             │
-│  - PDF file storage                 │
-│  - Agent status tracking            │
-└─────────────────────────────────────┘
+â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
+â”‚        Frontend (React SPA)         â”‚
+â”‚  - Agent Dashboard                  â”‚
+â”‚  - Requirements Matrix              â”‚
+â”‚  - PDF Management UI                â”‚
+â”‚  - Notification System              â”‚
+â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
+               â”‚ HTTP/REST
+â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â–¼â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
+â”‚      Backend API (Express)          â”‚
+â”‚  - RESTful Endpoints                â”‚
+â”‚  - CORS Middleware                  â”‚
+â”‚  - Data Management                  â”‚
+â”‚  - Agent Coordination               â”‚
+â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
+               â”‚
+â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â–¼â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
+â”‚        Data Layer                   â”‚
+â”‚  - In-memory data store             â”‚
+â”‚  - PDF file storage                 â”‚
+â”‚  - Agent status tracking            â”‚
+â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
 ```
 
 ### 2.3 Product Functions
@@ -177,7 +177,7 @@ The Sentinel Agent System provides the following major functions:
 - Server has sufficient resources for concurrent agent operations
 
 **Dependencies**:
-- React 19.2.4 and React DOM
+- React 19.2.5 and React DOM
 - Express 5.2.1 framework
 - TypeScript compiler
 - Vite build tool
@@ -410,7 +410,7 @@ interface Notification {
 5. **DeepSeek-V3**: IEEE-compliant documentation generation
 
 ### 6.2 Technology Versions
-- React: 19.2.4
+- React: 19.2.5
 - Express: 5.2.1
 - TypeScript: 4.9.5
 - Vite: 7.3.1
@@ -420,20 +420,20 @@ interface Notification {
 ### 6.3 File Structure
 ```
 sentinel-agent/
-├── src/                    # Frontend source
-│   ├── App.tsx            # Main application component
-│   ├── components/        # React components
-│   ├── index.tsx          # Entry point
-│   └── App.css            # Styles
-├── server/                # Backend source
-│   ├── index.ts           # Express server
-│   └── routes.ts          # API routes
-├── public/                # Static assets
-├── docs/                  # Documentation
-│   └── CREATION_GUIDE.md  # Setup instructions
-├── package.json           # Dependencies
-├── vite.config.ts         # Build configuration
-└── index.html             # HTML template
+â”œâ”€â”€ src/                    # Frontend source
+â”‚   â”œâ”€â”€ App.tsx            # Main application component
+â”‚   â”œâ”€â”€ components/        # React components
+â”‚   â”œâ”€â”€ index.tsx          # Entry point
+â”‚   â””â”€â”€ App.css            # Styles
+â”œâ”€â”€ server/                # Backend source
+â”‚   â”œâ”€â”€ index.ts           # Express server
+â”‚   â””â”€â”€ routes.ts          # API routes
+â”œâ”€â”€ public/                # Static assets
+â”œâ”€â”€ docs/                  # Documentation
+â”‚   â””â”€â”€ CREATION_GUIDE.md  # Setup instructions
+â”œâ”€â”€ package.json           # Dependencies
+â”œâ”€â”€ vite.config.ts         # Build configuration
+â””â”€â”€ index.html             # HTML template
 ```
 
 ---

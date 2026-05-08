@@ -1,6 +1,6 @@
-# Testing Guide: Student Population Register
+﻿# Testing Guide: Student Population Register
 **Project:** TUC Population Register (v3.0.0)
-**Core Requirement:** Logic validation against React 19.2.4
+**Core Requirement:** Logic validation against React 19.2.5
 
 ## 1. Testing Strategy
 The register employs a robust three-tier validation framework:

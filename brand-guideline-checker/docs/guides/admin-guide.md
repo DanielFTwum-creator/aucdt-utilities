@@ -1,6 +1,6 @@
-# Administrator Guide: Brand Guideline Checker
+﻿# Administrator Guide: Brand Guideline Checker
 **Project:** Brand Checker (v3.0.0)
-**Core Requirement:** Strict React 19.2.4 Production Build
+**Core Requirement:** Strict React 19.2.5 Production Build
 
 ## 1. Overview
 The Brand Guideline Checker is an institutional tool for verifying that all marketing and creative assets adhere to the official TECHBRIDGE University College visual standards.
@@ -8,7 +8,7 @@ The Brand Guideline Checker is an institutional tool for verifying that all mark
 ## 2. Accessing the Refresh Protocol
 - **Navigation**: Click the "Refresh Protocol" button in the application header.
 - **Monitoring**: The phase tracker provides real-time visibility into the sequential refinement of the application core.
-- **Institutional Standard**: All updates must maintain the React 19.2.4 mandate and zero-broken-link policy.
+- **Institutional Standard**: All updates must maintain the React 19.2.5 mandate and zero-broken-link policy.
 
 ## 3. Compliance Analysis
 - **Upload Process**: Drag and drop or browse for institutional assets (PNG, JPG, SVG).
@@ -22,4 +22,4 @@ All analysis requests and institutional compliance results are recorded in the p
 If analysis fails:
 1. Verify the Gemini API key configuration.
 2. Ensure the asset is in a supported format (Max 5MB).
-3. Confirm that the React 19.2.4 environment is correctly initialized.
+3. Confirm that the React 19.2.5 environment is correctly initialized.

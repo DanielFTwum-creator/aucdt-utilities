@@ -1,11 +1,11 @@
-# Deployment Guide: Eligibility Checker
+﻿# Deployment Guide: Eligibility Checker
 **Project:** TUC Eligibility Checker (v3.0.0)
-**Core Requirement:** MUST compile with React 19.2.4
+**Core Requirement:** MUST compile with React 19.2.5
 
 ## 1. Environment Preparation
 - **Node.js**: v18+ required.
 - **Package Manager**: `pnpm` recommended.
-- **React Constraint**: Ensure `package.json` pins `react` and `react-dom` to **19.2.4**.
+- **React Constraint**: Ensure `package.json` pins `react` and `react-dom` to **19.2.5**.
 
 ## 2. Configuration
 Create a `.env` file if external APIs are integrated:

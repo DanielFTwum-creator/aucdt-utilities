@@ -1,11 +1,11 @@
-# Deployment Guide
+﻿# Deployment Guide
 **Project:** Techbridge Scholarship Portal (v2.0)
-**Core Requirement:** MUST compile with React 19.2.4
+**Core Requirement:** MUST compile with React 19.2.5
 
 ## 1. Prerequisites
 - Node.js (v18 or higher recommended)
 - `pnpm` or `npm`
-- **Strict Requirement:** React version MUST be `19.2.4`. Do not upgrade or downgrade.
+- **Strict Requirement:** React version MUST be `19.2.5`. Do not upgrade or downgrade.
 
 ## 2. Environment Variables
 Create a `.env` file in the root directory:
@@ -19,7 +19,7 @@ VITE_SMTP_ENDPOINT=https://api.techbridge.edu.gh/aucdt-dev/sendMail
    ```bash
    npm install
    ```
-   *Verify that `react` and `react-dom` are pinned to `19.2.4`.*
+   *Verify that `react` and `react-dom` are pinned to `19.2.5`.*
 
 2. **Run Linter:**
    ```bash

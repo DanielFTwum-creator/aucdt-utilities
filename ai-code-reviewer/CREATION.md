@@ -1,10 +1,10 @@
-# AI Code Reviewer
+﻿# AI Code Reviewer
 
 ## Purpose
 AI-powered code review tool leveraging LLM (Google GenAI) to analyze code quality, identify bugs, suggest refactoring, and enforce best practices across development teams. Integrates with version control workflows.
 
 ## Stack
-- React 19.2.4
+- React 19.2.5
 - TypeScript 5.8.2
 - Vite 7.3.1
 - Google GenAI API 1.9.0

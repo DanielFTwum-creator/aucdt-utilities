@@ -1,4 +1,4 @@
-# CREATION.md — MannequinAI Platform Console
+﻿# CREATION.md â€” MannequinAI Platform Console
 
 **Purpose:** Complete build specification for any agent to implement this application from scratch.
 **Target:** Functional parity with `C:/Development/aucdt-utilities/mannequin-ai/`
@@ -12,7 +12,7 @@ MannequinAI (`mannequin-ai` v0.0.0) is a **single-page platform console** for Te
 
 The app boots into a **Hero "Enter Platform"** landing screen, then transitions into a left-rail **Sidebar + Main** layout. Users can browse 8 modules (MAS, FDG, VTO, FabricForge, DesignVault, FashionAcademy, IAM, Admin Console). Each module surfaces tagline, status badge (`active`/`beta`/`protected`), feature list, hardcoded stats, and 5 generated SRS requirements.
 
-There is **no backend** — every value is sourced from `src/constants/index.ts`. State persists only the chosen colour theme (`localStorage["mannequin-theme"]`). A separate `AuthGate.tsx` exists in source but is **not currently mounted** — see §5 for the documented intent.
+There is **no backend** â€” every value is sourced from `src/constants/index.ts`. State persists only the chosen colour theme (`localStorage["mannequin-theme"]`). A separate `AuthGate.tsx` exists in source but is **not currently mounted** â€” see Â§5 for the documented intent.
 
 ---
 
@@ -20,18 +20,18 @@ There is **no backend** — every value is sourced from `src/constants/index.ts`
 
 | Layer | Technology | Version |
 |---|---|---|
-| Runtime | React | **19.2.4** (never change) |
+| Runtime | React | **19.2.5** (never change) |
 | Build | Vite | ^7.3.1 |
 | React plugin | @vitejs/plugin-react | ^5.1.1 |
 | Language | TypeScript | ~5.9.3 |
 | Styling | Tailwind CSS | ^4.2.1 (via `@tailwindcss/vite`) |
-| Class merging | clsx ^2.1.1 + tailwind-merge ^3.5.0 | — |
+| Class merging | clsx ^2.1.1 + tailwind-merge ^3.5.0 | â€” |
 | Icons | lucide-react | ^0.575.0 |
 | Animation | framer-motion | ^12.34.3 (declared, not yet wired) |
 | Unit tests | Vitest + @testing-library/react + jsdom | ^3.0.0 / ^16.3.2 / ^26.1.0 |
 | Lint | ESLint 9 + typescript-eslint 8 | ^9.39.1 / ^8.48.0 |
 | Package manager | pnpm | 10.30+ |
-| Container | node:24-alpine → node:24-alpine + `serve` | — |
+| Container | node:24-alpine â†’ node:24-alpine + `serve` | â€” |
 
 `package.json` exposes scripts: `dev`, `build` (`tsc -b && vite build`), `lint`, `preview`, `test`, `test:ui`, `test:coverage`, `test:e2e` (uses `vitest.e2e.config.ts`).
 
@@ -41,53 +41,53 @@ There is **no backend** — every value is sourced from `src/constants/index.ts`
 
 ```
 mannequin-ai/
-├── index.html               # TUC meta + Inter font + tuc-splash hero
-├── index.css                # @import "tailwindcss";
-├── package.json             # name: mannequin-ai, version: 0.0.0
-├── pnpm-lock.yaml
-├── pnpm-workspace.yaml
-├── vite.config.ts           # base './', manualChunks: react-vendor
-├── tsconfig.json / tsconfig.app.json / tsconfig.node.json
-├── eslint.config.js
-├── vitest.config.ts / vitest.e2e.config.ts
-├── Dockerfile               # multi-stage node:24-alpine, runs `serve` on :4173
-├── nginx.conf               # SPA fallback + /health + cache headers (alt deploy)
-├── .dockerignore / .gitignore
-├── DEPLOYMENT.md / README.md
-├── public/
-├── docs/
-└── src/
-    ├── main.tsx                  # createRoot → <App />
-    ├── App.tsx                   # Hero → Sidebar+main layout
-    ├── App.css
-    ├── index.css                 # @import "tailwindcss";
-    ├── AuthGate.tsx              # admin/admin gate (declared, unused)
-    ├── styles/
-    │   └── global.css            # CSS vars, font-display, kente-bg, gold-shimmer
-    ├── constants/
-    │   └── index.ts              # THEMES, MODULES (8), CURRICULUM (12), AUDIT_LOGS (5)
-    ├── types/
-    │   └── index.ts              # ThemeType, ColorPalette, Module, CurriculumItem, AuditLog
-    ├── hooks/
-    │   └── useTheme.tsx          # ThemeProvider + useTheme + CSS-var injection
-    ├── services/                 # (empty placeholder)
-    ├── a11y/                     # (skip-link / accessible primitives placeholder)
-    ├── layouts/                  # (placeholder)
-    ├── assets/
-    ├── __tests__/
-    └── components/
-        ├── Sidebar.tsx           # left rail, nav buttons, theme switcher
-        ├── Dashboard.tsx         # KPI strip + module grid + SRS banner
-        ├── ModuleDetail.tsx      # module hero + stats + features + SRS
-        ├── AccessibleLayout.tsx  # skip-link + main landmark wrapper
-        ├── SkipLink.tsx          # sr-only "Skip to main content"
-        └── ui/
-            └── Cards.tsx         # Card, MetricCard
+â”œâ”€â”€ index.html               # TUC meta + Inter font + tuc-splash hero
+â”œâ”€â”€ index.css                # @import "tailwindcss";
+â”œâ”€â”€ package.json             # name: mannequin-ai, version: 0.0.0
+â”œâ”€â”€ pnpm-lock.yaml
+â”œâ”€â”€ pnpm-workspace.yaml
+â”œâ”€â”€ vite.config.ts           # base './', manualChunks: react-vendor
+â”œâ”€â”€ tsconfig.json / tsconfig.app.json / tsconfig.node.json
+â”œâ”€â”€ eslint.config.js
+â”œâ”€â”€ vitest.config.ts / vitest.e2e.config.ts
+â”œâ”€â”€ Dockerfile               # multi-stage node:24-alpine, runs `serve` on :4173
+â”œâ”€â”€ nginx.conf               # SPA fallback + /health + cache headers (alt deploy)
+â”œâ”€â”€ .dockerignore / .gitignore
+â”œâ”€â”€ DEPLOYMENT.md / README.md
+â”œâ”€â”€ public/
+â”œâ”€â”€ docs/
+â””â”€â”€ src/
+    â”œâ”€â”€ main.tsx                  # createRoot â†’ <App />
+    â”œâ”€â”€ App.tsx                   # Hero â†’ Sidebar+main layout
+    â”œâ”€â”€ App.css
+    â”œâ”€â”€ index.css                 # @import "tailwindcss";
+    â”œâ”€â”€ AuthGate.tsx              # admin/admin gate (declared, unused)
+    â”œâ”€â”€ styles/
+    â”‚   â””â”€â”€ global.css            # CSS vars, font-display, kente-bg, gold-shimmer
+    â”œâ”€â”€ constants/
+    â”‚   â””â”€â”€ index.ts              # THEMES, MODULES (8), CURRICULUM (12), AUDIT_LOGS (5)
+    â”œâ”€â”€ types/
+    â”‚   â””â”€â”€ index.ts              # ThemeType, ColorPalette, Module, CurriculumItem, AuditLog
+    â”œâ”€â”€ hooks/
+    â”‚   â””â”€â”€ useTheme.tsx          # ThemeProvider + useTheme + CSS-var injection
+    â”œâ”€â”€ services/                 # (empty placeholder)
+    â”œâ”€â”€ a11y/                     # (skip-link / accessible primitives placeholder)
+    â”œâ”€â”€ layouts/                  # (placeholder)
+    â”œâ”€â”€ assets/
+    â”œâ”€â”€ __tests__/
+    â””â”€â”€ components/
+        â”œâ”€â”€ Sidebar.tsx           # left rail, nav buttons, theme switcher
+        â”œâ”€â”€ Dashboard.tsx         # KPI strip + module grid + SRS banner
+        â”œâ”€â”€ ModuleDetail.tsx      # module hero + stats + features + SRS
+        â”œâ”€â”€ AccessibleLayout.tsx  # skip-link + main landmark wrapper
+        â”œâ”€â”€ SkipLink.tsx          # sr-only "Skip to main content"
+        â””â”€â”€ ui/
+            â””â”€â”€ Cards.tsx         # Card, MetricCard
 ```
 
 ---
 
-## 4. Provider Composition (`src/main.tsx` → `src/App.tsx`)
+## 4. Provider Composition (`src/main.tsx` â†’ `src/App.tsx`)
 
 ```tsx
 // main.tsx
@@ -138,14 +138,14 @@ const AppContent = () => {
 | Storage key | `sessionStorage["tuc_auth_mannequin_ai"]` (set to `"1"`) |
 | Accent colour | `#e11d48` (rose-600) |
 | Credentials | `admin` / `admin` (hardcoded) |
-| UI | Centred 420px white card, Inter font, lightning-bolt logo, "Techbridge University College · admin / admin" footer |
+| UI | Centred 420px white card, Inter font, lightning-bolt logo, "Techbridge University College Â· admin / admin" footer |
 | Failure copy | `"Invalid credentials. Use admin / admin"` |
 
 To enable it: wrap `<App />` in `<AuthGate>` inside `main.tsx`.
 
 ---
 
-## 6. Data Model (`src/types/index.ts` — implement verbatim)
+## 6. Data Model (`src/types/index.ts` â€” implement verbatim)
 
 ```ts
 export type ThemeType = "dark" | "light" | "highContrast";
@@ -178,18 +178,18 @@ export interface AuditLog { id: string; timestamp: string; user: string; action:
 
 ## 7. Seed Constants (`src/constants/index.ts`)
 
-### 7.1 MODULES (8 entries — copy verbatim by `id`)
+### 7.1 MODULES (8 entries â€” copy verbatim by `id`)
 
 | id | code | name | icon | color | status |
 |---|---|---|---|---|---|
-| `mas` | MAS | Mannequin AI Studio | ◈ | gold | active |
-| `fdg` | FDG | Fashion Design Generator | ✦ | terracotta | active |
-| `vto` | VTO | Virtual Try-On | ⬡ | accent | active |
-| `fabricforge` | FF | FabricForge | ◎ | success | active |
-| `designvault` | DV | DesignVault | ▣ | gold | active |
-| `fashionacademy` | FA | FashionAcademy | ◉ | terracotta | beta |
-| `iam` | IAM | Identity & Access | ⬟ | accent | active |
-| `admin` | ADM | Admin Console | ⬢ | error | protected |
+| `mas` | MAS | Mannequin AI Studio | â—ˆ | gold | active |
+| `fdg` | FDG | Fashion Design Generator | âœ¦ | terracotta | active |
+| `vto` | VTO | Virtual Try-On | â¬¡ | accent | active |
+| `fabricforge` | FF | FabricForge | â—Ž | success | active |
+| `designvault` | DV | DesignVault | â–£ | gold | active |
+| `fashionacademy` | FA | FashionAcademy | â—‰ | terracotta | beta |
+| `iam` | IAM | Identity & Access | â¬Ÿ | accent | active |
+| `admin` | ADM | Admin Console | â¬¢ | error | protected |
 
 Each entry carries 4 `features` and a `stats: Record<string,string>` of 3 key/value strings (e.g. `{ generated: "12,450", accuracy: "97.3%", diversity: "A+" }`).
 
@@ -210,7 +210,7 @@ Three palettes in `THEMES` constant, keyed by `ThemeType`. Provider behaviour:
 1. Initial state read from `localStorage["mannequin-theme"]`, default `"dark"`.
 2. `useEffect` on `[theme, colors]`:
    - Persist `theme` to `localStorage["mannequin-theme"]`.
-   - For each `[key, value]` in `colors`, set CSS variable `--<kebab-key>` on `document.documentElement.style` (camelCase → kebab-case, e.g. `surfaceAlt` → `--surface-alt`).
+   - For each `[key, value]` in `colors`, set CSS variable `--<kebab-key>` on `document.documentElement.style` (camelCase â†’ kebab-case, e.g. `surfaceAlt` â†’ `--surface-alt`).
    - Set `document.documentElement.dataset.theme = theme`.
 3. `useTheme()` throws if used outside `<ThemeProvider>`.
 
@@ -246,18 +246,18 @@ Three palettes in `THEMES` constant, keyed by `ThemeType`. Provider behaviour:
 
 ### 8.4 TUC institutional overlay (in `index.html` splash)
 
-`#0F0C07` (Ink) backdrop, `#141210` (Paper) card, `#C8A84B` (Gold) accents — these match the canonical TUC tokens and are used only in the boot splash before React mounts.
+`#0F0C07` (Ink) backdrop, `#141210` (Paper) card, `#C8A84B` (Gold) accents â€” these match the canonical TUC tokens and are used only in the boot splash before React mounts.
 
 ---
 
 ## 9. Typography
 
-`index.html` preconnects Google Fonts and loads **Inter** at weights 400/500/600/700/900. `src/styles/global.css` declares `--font-display` (Playfair Display–style serif) consumed by `style={{ fontFamily: "var(--font-display)" }}` on every `h1`/`h2`/module name. Body chrome uses Inter. Decorative classes referenced from JSX:
+`index.html` preconnects Google Fonts and loads **Inter** at weights 400/500/600/700/900. `src/styles/global.css` declares `--font-display` (Playfair Displayâ€“style serif) consumed by `style={{ fontFamily: "var(--font-display)" }}` on every `h1`/`h2`/module name. Body chrome uses Inter. Decorative classes referenced from JSX:
 
-- `kente-bg` — patterned hero background
-- `gold-shimmer` — animated gold gradient for the italic "AI"
-- `font-display` — Playfair-style serif for titles
-- `animate-in` — page-mount fade
+- `kente-bg` â€” patterned hero background
+- `gold-shimmer` â€” animated gold gradient for the italic "AI"
+- `font-display` â€” Playfair-style serif for titles
+- `animate-in` â€” page-mount fade
 
 ---
 
@@ -267,50 +267,50 @@ Three palettes in `THEMES` constant, keyed by `ThemeType`. Provider behaviour:
 
 `<aside className="w-60 shrink-0 border-r flex flex-col h-screen sticky top-0">` containing:
 
-1. **Logo block** — 36-px gold→terracotta gradient square with letter `M`, name "MannequinAI", subline `v1.0.0 · IEEE SRS`.
-2. **Modules nav** — `MODULES.filter(m => m.id !== "admin").map(...)` rendered as buttons. Active state = gold text + 10% gold background. Beta modules show a `BETA` pill (`colors.warning`).
-3. **System block** — `Admin Console` button (red on active) + `Dashboard` button (gold on active). When `isAdmin` is true, an animated success dot appears next to Admin.
-4. **Theme switcher** — three icon buttons (`Moon` / `Sun` / `Contrast` from lucide). Active state outlined in gold + 15% gold background.
-5. **Status footer** — pulsing green dot + "All systems operational".
+1. **Logo block** â€” 36-px goldâ†’terracotta gradient square with letter `M`, name "MannequinAI", subline `v1.0.0 Â· IEEE SRS`.
+2. **Modules nav** â€” `MODULES.filter(m => m.id !== "admin").map(...)` rendered as buttons. Active state = gold text + 10% gold background. Beta modules show a `BETA` pill (`colors.warning`).
+3. **System block** â€” `Admin Console` button (red on active) + `Dashboard` button (gold on active). When `isAdmin` is true, an animated success dot appears next to Admin.
+4. **Theme switcher** â€” three icon buttons (`Moon` / `Sun` / `Contrast` from lucide). Active state outlined in gold + 15% gold background.
+5. **Status footer** â€” pulsing green dot + "All systems operational".
 
 ### 10.2 Dashboard (`src/components/Dashboard.tsx`)
 
-1. Header: 11-px uppercase eyebrow `Good morning — TECHBRIDGE University College` + 4xl `Platform Overview` + subline.
-2. **KPI row** — 4 `MetricCard`s: `Active Designers 1,240 (+18% MoM)`, `Designs Generated 45,210 (+32% MoM)`, `VTO Sessions 24,100 (+41% MoM)`, `Academy Enrolments 3,200 (+12% MoM)`.
-3. **Module grid** — full `MODULES` array, 1/2/3-col responsive. Each card resolves accent colour from `m.color` keyword and shows icon, status pill, name, tagline, divider, and 2 `stats` entries.
-4. **SRS Compliance Banner** — gold-left-bordered card. Title "IEEE SRS v1.0.0 — MannequinAI", subline `60+ functional requirements · 8 modules · Ghana Data Protection Act compliant · GDPR aligned`, two pills (`Validated`, `880 Paragraphs`), and a 4-column progress bar grid: `Functional Req. 60+ (100%)`, `Security Req. OWASP A+ (100%)`, `Performance SLAs < 200ms (95%)`, `Cultural Compliance West Africa (100%)`.
+1. Header: 11-px uppercase eyebrow `Good morning â€” TECHBRIDGE University College` + 4xl `Platform Overview` + subline.
+2. **KPI row** â€” 4 `MetricCard`s: `Active Designers 1,240 (+18% MoM)`, `Designs Generated 45,210 (+32% MoM)`, `VTO Sessions 24,100 (+41% MoM)`, `Academy Enrolments 3,200 (+12% MoM)`.
+3. **Module grid** â€” full `MODULES` array, 1/2/3-col responsive. Each card resolves accent colour from `m.color` keyword and shows icon, status pill, name, tagline, divider, and 2 `stats` entries.
+4. **SRS Compliance Banner** â€” gold-left-bordered card. Title "IEEE SRS v1.0.0 â€” MannequinAI", subline `60+ functional requirements Â· 8 modules Â· Ghana Data Protection Act compliant Â· GDPR aligned`, two pills (`Validated`, `880 Paragraphs`), and a 4-column progress bar grid: `Functional Req. 60+ (100%)`, `Security Req. OWASP A+ (100%)`, `Performance SLAs < 200ms (95%)`, `Cultural Compliance West Africa (100%)`.
 
 ### 10.3 ModuleDetail (`src/components/ModuleDetail.tsx`)
 
 Renders a hero (16-px-square accent tile + module code eyebrow + status pill + 4xl name + italic tagline), 4 `MetricCard`s from `Object.entries(module.stats)`, and a 2-col grid:
 
-1. **Core Features** card — bullet list of `module.features`.
-2. **SRS Requirements card** — auto-generated 5-line REQ list: `REQ-${code}-001..005`, displayed monospace with green check icons.
+1. **Core Features** card â€” bullet list of `module.features`.
+2. **SRS Requirements card** â€” auto-generated 5-line REQ list: `REQ-${code}-001..005`, displayed monospace with green check icons.
 
 ### 10.4 ui/Cards (`src/components/ui/Cards.tsx`)
 
-- `Card({ children, onClick?, borderLeft?, className? })` — applies `surface` background, optional 4-px `borderLeft` accent.
-- `MetricCard({ label, value, delta?, color })` — displays label (uppercase, dim), value (3xl, accent), and optional delta (small, success).
+- `Card({ children, onClick?, borderLeft?, className? })` â€” applies `surface` background, optional 4-px `borderLeft` accent.
+- `MetricCard({ label, value, delta?, color })` â€” displays label (uppercase, dim), value (3xl, accent), and optional delta (small, success).
 
 ---
 
 ## 11. UI Layout Sketch
 
 ```
-┌───────────────────────────────────────────────────────────┐
-│ [Hero on first load — h-screen, kente-bg]                 │
-│ "Mannequin AI"  [Enter Platform →]                        │
-└───────────────────────────────────────────────────────────┘
-       ↓ click Enter
-┌──────────────┬────────────────────────────────────────────┐
-│ Sidebar (w-60│ <Dashboard /> or <ModuleDetail/>           │
-│  - Modules×7 │ Header + KPI strip + Module grid + SRS bar │
-│  - Admin     │                                            │
-│  - Dashboard │                                            │
-│  - Theme:    │                                            │
-│    [☾][☀][⬣]│                                            │
-│  status●ok   │                                            │
-└──────────────┴────────────────────────────────────────────┘
+â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
+â”‚ [Hero on first load â€” h-screen, kente-bg]                 â”‚
+â”‚ "Mannequin AI"  [Enter Platform â†’]                        â”‚
+â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
+       â†“ click Enter
+â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
+â”‚ Sidebar (w-60â”‚ <Dashboard /> or <ModuleDetail/>           â”‚
+â”‚  - ModulesÃ—7 â”‚ Header + KPI strip + Module grid + SRS bar â”‚
+â”‚  - Admin     â”‚                                            â”‚
+â”‚  - Dashboard â”‚                                            â”‚
+â”‚  - Theme:    â”‚                                            â”‚
+â”‚    [â˜¾][â˜€][â¬£]â”‚                                            â”‚
+â”‚  statusâ—ok   â”‚                                            â”‚
+â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”´â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
 ```
 
 ---
@@ -319,8 +319,8 @@ Renders a hero (16-px-square accent tile + module code eyebrow + status pill + 4
 
 - `index.html` includes `<a href="#main-content" class="skip-to-main">` rendered visually hidden until focus.
 - `<div id="root" role="main" aria-label="Mannequin Ai">` is the main landmark.
-- Sidebar should be `<aside aria-label="Main navigation">` (currently a plain `<aside>` — wrap if you re-implement).
-- Every interactive `<button>` should carry an `aria-label` (current implementation passes visible text — preserve that).
+- Sidebar should be `<aside aria-label="Main navigation">` (currently a plain `<aside>` â€” wrap if you re-implement).
+- Every interactive `<button>` should carry an `aria-label` (current implementation passes visible text â€” preserve that).
 - Theme buttons in Sidebar must include `aria-pressed` indicating the active theme.
 - All decorative icons should have `aria-hidden="true"`.
 
@@ -332,7 +332,7 @@ Renders a hero (16-px-square accent tile + module code eyebrow + status pill + 4
 cd mannequin-ai
 pnpm install
 pnpm run dev          # Vite default :5173
-pnpm run build        # tsc -b && vite build → dist/
+pnpm run build        # tsc -b && vite build â†’ dist/
 pnpm run preview
 pnpm test             # Vitest
 pnpm test:coverage
@@ -384,11 +384,11 @@ The service must be registered in `docker-compose-all-apps.yml` under the `tuc-n
 | AC-5 | Selecting any non-admin module routes to `<ModuleDetail>` with hero + stats + features + auto-generated REQ list |
 | AC-6 | Theme switcher cycles `dark`/`light`/`highContrast`; selection persists in `localStorage["mannequin-theme"]` |
 | AC-7 | Theme change instantly updates every CSS variable on `document.documentElement` AND sets `data-theme` attribute |
-| AC-8 | No production network calls — all data is local to `src/constants/index.ts` |
+| AC-8 | No production network calls â€” all data is local to `src/constants/index.ts` |
 | AC-9 | Skip-to-main link is present in `index.html` and visible only on focus |
 | AC-10 | `tuc-splash-styles` element is removed by `main.tsx` after React mounts (no flicker) |
 | AC-11 | Docker image builds clean, exposes `:4173`, and `/health` returns 200 |
-| AC-12 | All `MODULES` icons render as their original Unicode glyphs (◈ ✦ ⬡ ◎ ▣ ◉ ⬟ ⬢) |
+| AC-12 | All `MODULES` icons render as their original Unicode glyphs (â—ˆ âœ¦ â¬¡ â—Ž â–£ â—‰ â¬Ÿ â¬¢) |
 | AC-13 | Beta modules (FashionAcademy) display the `BETA` pill in both sidebar and grid card |
 | AC-14 | `MetricCard` accepts `(label, value, delta?, color)` and renders without runtime warnings |
 | AC-15 | Bundle size < 500 KB gzipped; `react-vendor` chunk is split via `manualChunks` |

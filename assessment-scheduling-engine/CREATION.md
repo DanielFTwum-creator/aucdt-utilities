@@ -1,10 +1,10 @@
-# Assessment Scheduling Engine
+﻿# Assessment Scheduling Engine
 
 ## Purpose
 Educational assessment scheduling and calendar management system for managing exams, quizzes, assignments, and course evaluations. Coordinates scheduling across departments, manages room allocation, and prevents scheduling conflicts.
 
 ## Stack
-- React 19.2.4
+- React 19.2.5
 - TypeScript 5.8.2
 - Vite 7.3.1
 - Tailwind CSS 4.2.1

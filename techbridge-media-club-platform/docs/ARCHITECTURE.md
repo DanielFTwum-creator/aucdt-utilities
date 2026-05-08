@@ -1,4 +1,4 @@
-# System Architecture
+﻿# System Architecture
 
 ## 1. High-Level System Architecture
 
@@ -11,7 +11,7 @@ The Techbridge Media Club Platform acts as a client-side Single Page Application
   
   <!-- Client Container -->
   <rect x="50" y="50" width="700" height="400" rx="10" fill="#ffffff" stroke="#2d3748" stroke-width="2"/>
-  <text x="400" y="80" text-anchor="middle" font-family="sans-serif" font-weight="bold" font-size="18" fill="#2d3748">Client Browser (React 19.2.4)</text>
+  <text x="400" y="80" text-anchor="middle" font-family="sans-serif" font-weight="bold" font-size="18" fill="#2d3748">Client Browser (React 19.2.5)</text>
 
   <!-- Context Layer -->
   <g transform="translate(100, 120)">

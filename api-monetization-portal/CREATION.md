@@ -1,10 +1,10 @@
-# API Monetization Portal
+﻿# API Monetization Portal
 
 ## Purpose
 API marketplace and monetization platform enabling institutions and developers to publish, discover, subscribe to, and monetize APIs. Supports usage metering, billing, developer documentation, and API lifecycle management.
 
 ## Stack
-- React 19.2.4
+- React 19.2.5
 - TypeScript 5.8.2
 - Express 4.21.2
 - Vite 6.2.0

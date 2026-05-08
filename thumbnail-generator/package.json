@@ -1,4 +1,4 @@
-{
+﻿{
   "name": "thumbnail-generator",
   "private": true,
   "version": "0.1.0",
@@ -10,8 +10,8 @@
     "serve": "serve dist"
   },
   "dependencies": {
-    "react": "19.2.4",
-    "react-dom": "19.2.4"
+    "react": "19.2.5",
+    "react-dom": "19.2.5"
   },
   "devDependencies": {
     "@types/react": "^19.1.8",

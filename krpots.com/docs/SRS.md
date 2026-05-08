@@ -1,4 +1,4 @@
-# Software Requirements Specification (SRS)
+﻿# Software Requirements Specification (SRS)
 ## TechBridge University College - Retrospective Archive (v3.0.0)
 
 ### 1. Introduction
@@ -15,7 +15,7 @@ The system provides a public-facing digital exhibition space (Home, Collection, 
 
 #### 2.2 Operating Environment
 - **Client**: Modern web browsers (Chrome, Firefox, Safari, Edge).
-- **Framework**: React 19.2.4 (Strict requirement).
+- **Framework**: React 19.2.5 (Strict requirement).
 - **Styling**: Tailwind CSS 4.0.
 
 ### 3. System Features

@@ -1,10 +1,10 @@
-# autonomous-refactoring-ai
+﻿# autonomous-refactoring-ai
 
 ## Purpose
 Meta-level AI system for automated code refactoring and architectural optimization across the monorepo. Manages AI-driven improvements to infrastructure and service-level systems at Techbridge University College.
 
 ## Stack
-- React 19.2.4
+- React 19.2.5
 - TypeScript 5.8
 - Vite 6.2.0
 - Tailwind CSS 4.1.14

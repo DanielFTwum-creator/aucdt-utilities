@@ -1,8 +1,8 @@
-# Deployment Guide
+﻿# Deployment Guide
 
 ## 1. Prerequisites
 - Node.js 18+
-- React 19.2.4
+- React 19.2.5
 - Firebase project (for Firestore and Auth)
 
 ## 2. Deployment Steps

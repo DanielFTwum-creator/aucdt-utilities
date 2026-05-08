@@ -1,4 +1,4 @@
-# Techbridge University College — Canonical AI Governance Layer
+﻿# Techbridge University College â€” Canonical AI Governance Layer
 
 **Referenced by:** CLAUDE.md and GEMINI.md
 **Refresh Directive:** <https://ai-tools.aucdt.edu.gh/refresh>
@@ -23,11 +23,11 @@
 ## Monorepo Identity
 
 - **Repository:** aucdt-utilities
-- **Structure:** Flat monorepo — each subdirectory is a standalone project
-- **Scale:** ~300 active projects (target: 256 curated — THE AGENT Book Project)
-- **Composition:** ~300 apps — Vite/React frontends + Node.js backends + Java/Spring Boot services
+- **Structure:** Flat monorepo â€” each subdirectory is a standalone project
+- **Scale:** ~300 active projects (target: 256 curated â€” THE AGENT Book Project)
+- **Composition:** ~300 apps â€” Vite/React frontends + Node.js backends + Java/Spring Boot services
 - **Java Projects:** `lems` (Spring Boot, lecturer evaluation), `send-platform-api` (Spring Boot 3.5, MySQL, Quartz), `lyriastream/gateway` (Spring Boot gateway), `techBridge-takehome-master`
-- **Docker:** 100% coverage achieved (March 2026) — all services configured
+- **Docker:** 100% coverage achieved (March 2026) â€” all services configured
 - **CI/CD:** Bitbucket Pipelines (parallel builds)
 - **Deployment:** Tomcat 9 @ 66.226.72.199 (WAR), Docker containers (Nginx)
 
@@ -37,12 +37,12 @@
 
 ### React Version Lock
 ```
-React: 19.2.4 — MANDATORY. Never downgrade. Never upgrade without explicit approval.
+React: 19.2.5 â€” MANDATORY. Never downgrade. Never upgrade without explicit approval.
 ```
 
 ### Frontend Stack
 - **Framework:** React 19 with TypeScript
-- **Build Tool:** Vite 7.3.1 (primary) — React Scripts legacy only for unmigrated projects
+- **Build Tool:** Vite 7.3.1 (primary) â€” React Scripts legacy only for unmigrated projects
 - **Package Manager:** pnpm (preferred), npm (fallback)
 - **UI:** Tailwind CSS 4.2+, Lucide React, Heroicons
 - **Charts:** Recharts 3.7.0
@@ -63,7 +63,7 @@ React: 19.2.4 — MANDATORY. Never downgrade. Never upgrade without explicit app
 - **Coverage Target:** >70% for core utilities
 
 ### DevOps
-- **Containerization:** Docker multi-stage builds (node:24-alpine → nginx:alpine)
+- **Containerization:** Docker multi-stage builds (node:24-alpine â†’ nginx:alpine)
 - **Orchestration:** Docker Compose 3.8
 - **CI/CD:** Bitbucket Pipelines
 - **Reverse Proxy:** Nginx Alpine
@@ -100,12 +100,12 @@ Academic, rigorous, institutional. Never casual in client-facing output.
 
 All UI work must align with the 6R directives:
 
-1. **REDUCE** — Eliminate cognitive overload. Minimize clutter during active sessions. Streamline parameters into logical sub-panels.
-2. **REUSE** — Narrative consistency. Standardized grids and the institutional "Audit Stream" pattern across the suite.
-3. **RECYCLE** — Data equity. AI grading strictly follows TUC rubric. Shared "Phase Tracker" component used across all projects.
-4. **RETHINK** — Interaction design. Fluid real-time adjustments with immediate visual feedback.
-5. **REFINE** — Technical polish. 100% ARIA/Tooltip coverage. Robust state persistence.
-6. **REIMAGINE** — Evaluative experience. High-fidelity PDF reports. Smart AI-driven remediation suggestions.
+1. **REDUCE** â€” Eliminate cognitive overload. Minimize clutter during active sessions. Streamline parameters into logical sub-panels.
+2. **REUSE** â€” Narrative consistency. Standardized grids and the institutional "Audit Stream" pattern across the suite.
+3. **RECYCLE** â€” Data equity. AI grading strictly follows TUC rubric. Shared "Phase Tracker" component used across all projects.
+4. **RETHINK** â€” Interaction design. Fluid real-time adjustments with immediate visual feedback.
+5. **REFINE** â€” Technical polish. 100% ARIA/Tooltip coverage. Robust state persistence.
+6. **REIMAGINE** â€” Evaluative experience. High-fidelity PDF reports. Smart AI-driven remediation suggestions.
 
 ---
 
@@ -114,7 +114,7 @@ All UI work must align with the 6R directives:
 All projects follow this 5-phase refresh sequence. Execute phases sequentially.
 
 ### PHASE 1: FOUNDATION SETUP
-Sync project, verify all files, generate/update IEEE SRS (v3.0.0), verify React 19.2.4 compliance.
+Sync project, verify all files, generate/update IEEE SRS (v3.0.0), verify React 19.2.5 compliance.
 `STATE "PHASE 1 COMPLETE" when finished.`
 
 ### PHASE 2: CORE IMPLEMENTATION (SECURITY & UX)
@@ -137,19 +137,19 @@ Gap Analysis (SRS vs Implementation), SRS sync to as-built state (v3.0.0), embed
 
 ## Mandatory Project Requirements (Non-Negotiable)
 
-1. **React 19.2.4** — Must remain strictly locked at this version.
-2. **ZERO Broken Links** — Every UI element must be fully functional or explicitly removed.
-3. **Gap Analysis** — Two-way SRS ↔ Implementation sync required after every major change.
-4. **Isolated Diagnostics** — All test simulations, audit logs, and diagnostic tools reside exclusively in the password-protected `#/admin` section.
-5. **Documentation Sync** — SRS must always match the as-built application state.
-6. **Institution Name** — Use "Techbridge University College" or "TUC" in all new output. AUCDT is legacy only.
-7. **ARIA Coverage** — 100% coverage for all interactive nodes and navigation links.
+1. **React 19.2.5** â€” Must remain strictly locked at this version.
+2. **ZERO Broken Links** â€” Every UI element must be fully functional or explicitly removed.
+3. **Gap Analysis** â€” Two-way SRS â†” Implementation sync required after every major change.
+4. **Isolated Diagnostics** â€” All test simulations, audit logs, and diagnostic tools reside exclusively in the password-protected `#/admin` section.
+5. **Documentation Sync** â€” SRS must always match the as-built application state.
+6. **Institution Name** â€” Use "Techbridge University College" or "TUC" in all new output. AUCDT is legacy only.
+7. **ARIA Coverage** â€” 100% coverage for all interactive nodes and navigation links.
 
 ---
 
 ## Compliance Checklist (Run Before Any Commit)
 
-- [ ] React version is 19.2.4
+- [ ] React version is 19.2.5
 - [ ] No broken links or dead UI elements
 - [ ] SRS updated to match as-built state
 - [ ] Institution referred to as Techbridge University College / TUC
@@ -160,16 +160,16 @@ Gap Analysis (SRS vs Implementation), SRS sync to as-built state (v3.0.0), embed
 
 ---
 
-## THE AGENT Book Project — Path to 256
+## THE AGENT Book Project â€” Path to 256
 
 | Milestone | Status |
 |---|---|
-| Phase 1: 109 apps, 100% Docker | ✅ Complete (Feb 2026) |
-| Phase 2: Expand to 256 apps | ✅ Complete (Mar 2026) |
-| Phase 3: Refresh & polish all 256 apps | 🔄 In Progress |
-| Java services (grooverx, send-platform-api) | ✅ Complete (Mar 2026) |
-| Portfolio pipeline (build → serve → screenshot) | ✅ Complete (Mar 2026) |
-| Final: The Sentinel (App #256) | ⏳ Pending |
+| Phase 1: 109 apps, 100% Docker | âœ… Complete (Feb 2026) |
+| Phase 2: Expand to 256 apps | âœ… Complete (Mar 2026) |
+| Phase 3: Refresh & polish all 256 apps | ðŸ”„ In Progress |
+| Java services (grooverx, send-platform-api) | âœ… Complete (Mar 2026) |
+| Portfolio pipeline (build â†’ serve â†’ screenshot) | âœ… Complete (Mar 2026) |
+| Final: The Sentinel (App #256) | â³ Pending |
 
 **The Sentinel:** AI orchestrator (`sentinel-agent`) that autonomously monitors, manages, and repairs all applications. Currently deployed as a submodule at `sentinel-agent/`.
 
@@ -200,7 +200,7 @@ open catalogue/index.html
 - Report written to `catalogue/build-serve-screenshot-report.json`
 - Gallery at `catalogue/index.html` with live search
 
-**pnpm in scripts / non-interactive contexts — always set `CI=true`**
+**pnpm in scripts / non-interactive contexts â€” always set `CI=true`**
 
 pnpm refuses to remove stale `node_modules` without a TTY unless `CI=true` is set.
 This applies to all automation scripts, spawn calls, and pipeline steps:
@@ -212,7 +212,7 @@ CI=true pnpm install --no-frozen-lockfile
 # In Node.js scripts (spawn/exec)
 env: { ...process.env, CI: 'true' }
 
-# In Bitbucket Pipelines — already injected by the runner; no action needed
+# In Bitbucket Pipelines â€” already injected by the runner; no action needed
 ```
 
 ---
@@ -248,7 +248,7 @@ When dispatching a documentation subagent, the task must include all three:
 [2 bullet points. Unresolved issues or next decisions needed.]
 ```
 
-**Output rules:** No preamble. No closing summary. Start with `#`. Unknown sections → `Unknown — needs owner input.` Filename: `CREATION.md`.
+**Output rules:** No preamble. No closing summary. Start with `#`. Unknown sections â†’ `Unknown â€” needs owner input.` Filename: `CREATION.md`.
 
 **API caching:** When making API calls from subagents/scripts, enable `cache_control: { type: "ephemeral" }` on large reused static context blocks (system prompts, large doc context). Do not apply to dynamic or user-specific content.
 
@@ -264,7 +264,7 @@ When dispatching a documentation subagent, the task must include all three:
 
 ## Git Workflow
 
-**Branch:** `feature/descriptive-name` → PR to `master`
+**Branch:** `feature/descriptive-name` â†’ PR to `master`
 
 **Commit Convention:**
 - `feat:` New feature
@@ -284,4 +284,4 @@ When dispatching a documentation subagent, the task must include all three:
 | TUC Website | https://techbridge.edu.gh |
 | AUCDT Website | https://aucdt.edu.gh |
 | Portal | https://portal.aucdt.edu.gh |
-| Tomcat Server | 66.226.72.199 → /opt/tomcat/webapps/ |
+| Tomcat Server | 66.226.72.199 â†’ /opt/tomcat/webapps/ |

@@ -1,10 +1,10 @@
-# AI Transformation Framework
+﻿# AI Transformation Framework
 
 ## Purpose
 Enterprise AI adoption and digital transformation framework providing structured methodology, best practices, and tools for organizations implementing AI across business processes. Includes roadmapping, risk assessment, and change management guidance.
 
 ## Stack
-- React 19.2.4
+- React 19.2.5
 - TypeScript 5.9.3
 - Vite 7.3.1 and 6.2.0
 - Express 5.2.1

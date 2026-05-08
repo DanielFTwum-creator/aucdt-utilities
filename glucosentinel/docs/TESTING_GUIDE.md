@@ -1,4 +1,4 @@
-# TechBridge Clinical Platform - Testing Guide
+﻿# TechBridge Clinical Platform - Testing Guide
 
 ## 1. Overview
 This guide details the testing strategies employed to ensure the reliability, security, and clinical accuracy of the TechBridge platform.
@@ -46,5 +46,5 @@ node tests/e2e.test.js
 - [ ] **Screen Reader**: Verify ARIA labels on buttons.
 
 ## 4. React Compliance
-- **Requirement**: React 19.2.4
+- **Requirement**: React 19.2.5
 - **Verification**: Check `package.json` and browser console for version warnings.

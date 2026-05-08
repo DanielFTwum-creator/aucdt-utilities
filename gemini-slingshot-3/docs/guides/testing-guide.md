@@ -1,6 +1,6 @@
-# Testing Guide: Gemini Slingshot
+﻿# Testing Guide: Gemini Slingshot
 **Project:** Gemini Slingshot (v3.0.0)
-**Core Requirement:** Logic validation against React 19.2.4
+**Core Requirement:** Logic validation against React 19.2.5
 
 ## 1. Testing Framework
 The platform employs a technical three-tier testing framework:

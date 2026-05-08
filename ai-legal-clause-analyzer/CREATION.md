@@ -1,10 +1,10 @@
-# AI Legal Clause Analyzer
+﻿# AI Legal Clause Analyzer
 
 ## Purpose
 Legal document analysis and clause extraction tool powered by LLMs. Identifies key contractual terms, highlights risks, flags non-standard clauses, and supports legal review workflows for institutional contracts and agreements.
 
 ## Stack
-- React 19.2.4
+- React 19.2.5
 - TypeScript 5.8.2
 - Express 4.21.2
 - Vite 6.2.0

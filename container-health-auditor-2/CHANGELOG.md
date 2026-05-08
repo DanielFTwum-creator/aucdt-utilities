@@ -1,4 +1,4 @@
-# Changelog
+﻿# Changelog
 
 All notable changes to the Container Health Auditor (CHA-110) project will be documented in this file.
 
@@ -17,7 +17,7 @@ All notable changes to the Container Health Auditor (CHA-110) project will be do
 
 ## [1.0.0] - 2026-02-27
 ### Added
-- **Core Foundation**: React 19.2.4 setup with Tailwind CSS and Vite.
+- **Core Foundation**: React 19.2.5 setup with Tailwind CSS and Vite.
 - **Dashboard**: Real-time monitoring of 109+ containers.
 - **Health Scoring**: Weighted algorithm (CPU/Mem/Restarts) for health calculation.
 - **Security**: Admin authentication (`/login`) and protected routes.

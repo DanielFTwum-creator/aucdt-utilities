@@ -1,4 +1,4 @@
-
+﻿
 # IEEE Software Requirements Specification (SRS)
 ## Techbridge University College (TUC) Digital Ecosystem
 **Version:** 3.0.0 (Final Architecture)
@@ -23,7 +23,7 @@ The application is a high-fidelity Single Page Application (SPA) providing insti
 The platform utilizes a decentralized frontend architecture to maximize performance and scalability.
 
 #### 2.1 Technology Stack
-- **Frontend Framework:** React 19.2.4
+- **Frontend Framework:** React 19.2.5
 - **Type Safety:** TypeScript
 - **Styling Engine:** Tailwind CSS
 - **AI Integration:** Google Gemini 3.1 Pro via `@google/genai`

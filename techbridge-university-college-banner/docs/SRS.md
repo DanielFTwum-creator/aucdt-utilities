@@ -1,4 +1,4 @@
-# IEEE Software Requirements Specification (SRS)
+﻿# IEEE Software Requirements Specification (SRS)
 ## Techbridge University College Banner Utility
 **Version:** 3.0.0
 **Status:** Foundation Phase
@@ -22,7 +22,7 @@ The Banner Utility is a static React-based component used for high-visibility di
 The banner is a standalone utility within the `aucdt-utilities` monorepo.
 
 #### 2.2 Design Constraints
-- **React version:** 19.2.4
+- **React version:** 19.2.5
 - **Branding:** TUC Gold (`#C8A84B`), Ink (`#0F0C07`), Cream (`#F2EBD9`)
 - **Typography:** Bebas Neue / Inter
 

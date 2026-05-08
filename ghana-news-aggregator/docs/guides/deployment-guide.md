@@ -1,11 +1,11 @@
-# Deployment Guide: Ghana News Aggregator
+﻿# Deployment Guide: Ghana News Aggregator
 **Project:** Ghana News Aggregator (v3.0.0)
-**Core Requirement:** MUST compile with React 19.2.4
+**Core Requirement:** MUST compile with React 19.2.5
 
 ## 1. Prerequisites
 - **Node.js**: v18 or higher recommended.
 - **Package Manager**: `pnpm` (recommended) or `npm`.
-- **Constraint**: Ensure `package.json` pins `react` and `react-dom` to **19.2.4**.
+- **Constraint**: Ensure `package.json` pins `react` and `react-dom` to **19.2.5**.
 
 ## 2. Environment Configuration
 Create a `.env` file in the root directory:

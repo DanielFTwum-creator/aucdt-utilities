@@ -1,6 +1,6 @@
-# Administrator Guide: Eligibility Checker
+﻿# Administrator Guide: Eligibility Checker
 **Project:** TUC Eligibility Checker (v3.0.0)
-**Core Requirement:** Strict React 19.2.4 Execution
+**Core Requirement:** Strict React 19.2.5 Execution
 
 ## 1. Overview
 The Staff Portal (`#/admin`) is the administrative hub for monitoring the TUC Eligibility Checker. It provides tools for project refresh monitoring, logic simulation, and institutional audit tracking.

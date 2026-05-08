@@ -1,10 +1,10 @@
-# autonomous-robotics-coordination-engine
+﻿# autonomous-robotics-coordination-engine
 
 ## Purpose
 Distributed coordination and orchestration system for autonomous robotics and multi-agent systems at Techbridge University College. Manages real-time system state and AI-driven autonomous decision-making across interconnected services.
 
 ## Stack
-- React 19.2.4
+- React 19.2.5
 - TypeScript 5.8
 - Vite 6.2.0
 - Tailwind CSS 4.1.14

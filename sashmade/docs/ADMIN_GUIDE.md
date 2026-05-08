@@ -1,8 +1,8 @@
-# SashMade Administrator Guide
+﻿# SashMade Administrator Guide
 
 **Version:** 2.0
 **Date:** 2026-04-14
-**Required React Version:** 19.2.4
+**Required React Version:** 19.2.5
 
 ## 1. Introduction
 This guide provides instructions for administrators to manage the SashMade e-commerce platform. The Admin Console is a secure, password-protected area for monitoring system health, managing inventory, and viewing audit logs.

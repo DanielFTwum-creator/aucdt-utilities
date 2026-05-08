@@ -1,10 +1,10 @@
-# autonomous-system-governance-core
+﻿# autonomous-system-governance-core
 
 ## Purpose
 Central governance and policy enforcement engine for autonomous systems at Techbridge University College. Monitors system behavior, validates compliance with institutional directives, and enforces safety constraints across all autonomous operations.
 
 ## Stack
-- React 19.2.4
+- React 19.2.5
 - TypeScript 5.8
 - Vite 6.2.0
 - Tailwind CSS 4.1.14

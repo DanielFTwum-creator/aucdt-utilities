@@ -1,4 +1,4 @@
-# Administrator Guide
+﻿# Administrator Guide
 ## Shortcut Master Application
 
 ### 1. Introduction
@@ -10,7 +10,7 @@ This guide is intended for teachers and system administrators responsible for ma
 3. Upon successful authentication, you will be redirected to the Admin Dashboard.
 
 ### 3. Dashboard Features
-- **Diagnostics**: View real-time system health, including React version (19.2.4), API connectivity, and uptime.
+- **Diagnostics**: View real-time system health, including React version (19.2.5), API connectivity, and uptime.
 - **Audit Logs**: Monitor all administrative actions, including login attempts and test executions.
 - **Self-Testing**: Access the "Self-Testing" tab to run automated browser tests.
 

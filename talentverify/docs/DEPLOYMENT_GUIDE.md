@@ -1,15 +1,15 @@
-# Deployment Guide - TalentVerify
+﻿# Deployment Guide - TalentVerify
 
 **Version:** 1.0
 **Date:** 2026-03-01
 
 ## 1. Overview
-This document outlines the steps to deploy the TalentVerify application. The system is a full-stack application using **React 19.2.4** (Frontend) and **Node.js/Express** (Backend).
+This document outlines the steps to deploy the TalentVerify application. The system is a full-stack application using **React 19.2.5** (Frontend) and **Node.js/Express** (Backend).
 
 ## 2. Prerequisites
 - **Node.js**: Version 18 or higher (v20+ recommended).
 - **npm**: Version 9 or higher.
-- **React**: Version 19.2.4 (strictly enforced).
+- **React**: Version 19.2.5 (strictly enforced).
 - **Google Gemini API Key**: Required for AI features.
 
 ## 3. Installation
@@ -73,6 +73,6 @@ After deployment:
 3. Log in as Admin (`admin123`) and run the **Testing Suite** at `/admin/testing` to validate core workflows.
 
 ## 8. Troubleshooting
-- **"React version mismatch"**: Ensure `package.json` specifies `"react": "19.2.4"`.
+- **"React version mismatch"**: Ensure `package.json` specifies `"react": "19.2.5"`.
 - **"Playwright launch failed"**: If running in a Docker container, ensure necessary system libraries are installed and use `--no-sandbox` args (already configured in `src/services/testRunner.ts`).
 - **"Database locked"**: Ensure only one process is accessing `talentverify.db` at a time.

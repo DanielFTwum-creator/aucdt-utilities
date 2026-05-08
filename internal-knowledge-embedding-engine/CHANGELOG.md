@@ -1,4 +1,4 @@
-# Changelog
+﻿# Changelog
 
 All notable changes to the Internal Knowledge Embedding Engine (App ID 126) project will be documented in this file.
 
@@ -14,7 +14,7 @@ All notable changes to the Internal Knowledge Embedding Engine (App ID 126) proj
 - **Production-ready**: Docker deployment, Kubernetes support
 
 ### Tech Stack
-- React 19.2.4
+- React 19.2.5
 - TypeScript 5.8.2
 - Express 4.21.2
 - SQLite (better-sqlite3 12.4.1)

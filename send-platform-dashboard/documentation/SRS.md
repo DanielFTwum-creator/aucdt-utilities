@@ -1,4 +1,4 @@
-# Software Requirements Specification (SRS)
+﻿# Software Requirements Specification (SRS)
 **Project:** SEND Platform Admin Console  
 **Version:** 2.0.0 (Final)  
 **Date:** 2026-03-02  
@@ -48,7 +48,7 @@ The following diagrams illustrate the system's structure and data flow.
 ## 3. Specific Requirements
 
 ### 3.1 External Interface Requirements
-*   **Framework**: **React 19.2.4** (Mandatory).
+*   **Framework**: **React 19.2.5** (Mandatory).
 *   **Styling**: Tailwind CSS with Dark Mode support.
 *   **Icons**: Lucide React.
 *   **Routing**: React Router DOM v7.

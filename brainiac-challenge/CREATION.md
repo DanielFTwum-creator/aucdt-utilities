@@ -1,4 +1,4 @@
-# brainiac-challenge
+﻿# brainiac-challenge
 
 ## Purpose
 Gamified cognitive challenge and assessment platform for Techbridge University College. Delivers adaptive difficulty brain teasers and analytical problems to assess student cognitive aptitude, reasoning ability, and problem-solving skills with real-time scoring and leaderboard functionality.
@@ -8,7 +8,7 @@ Gamified cognitive challenge and assessment platform for Techbridge University C
 - Node.js 24.x
 - TypeScript 5.8+
 - Vite 6.2.0+
-- React 19.2.4
+- React 19.2.5
 - Tailwind CSS 4.2+
 - Recharts 3.7.0
 

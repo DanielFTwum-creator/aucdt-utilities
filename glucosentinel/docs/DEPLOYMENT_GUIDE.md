@@ -1,8 +1,8 @@
-# TechBridge Clinical Platform - Deployment Guide
+﻿# TechBridge Clinical Platform - Deployment Guide
 
 ## 1. System Requirements
 - **Runtime**: Node.js v20+
-- **Framework**: React 19.2.4 (Strict Requirement)
+- **Framework**: React 19.2.5 (Strict Requirement)
 - **Database**: SQLite (Development) / MariaDB (Production recommended)
 - **Browser**: Chrome/Edge (for Playwright testing)
 
@@ -24,7 +24,7 @@ npm install
 
 # Verify React version
 npm list react
-# Output must be 19.2.4
+# Output must be 19.2.5
 ```
 
 ## 4. Build Process
