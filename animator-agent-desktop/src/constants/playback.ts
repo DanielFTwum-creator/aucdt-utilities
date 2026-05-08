@@ -7,25 +7,25 @@ export const INITIAL_TRACKS: Track[] = [
   {
     id: 'track-camera',
     name: 'Camera_Main',
-    bg: 'bg-indigo-500/10',
+    bg: 'bg-[rgba(59,107,255,0.10)]',
     segments: [{ left: 10, width: 60, keys: [{ pos: 2, enabled: true }, { pos: 25, enabled: true }, { pos: 55, enabled: true }] }],
   },
   {
     id: 'track-subject',
     name: 'Subj_Alpha',
-    bg: 'bg-purple-500/10',
+    bg: 'bg-[rgba(140,100,255,0.10)]',
     segments: [{ left: 20, width: 30, keys: [{ pos: 5, enabled: true }] }],
   },
   {
     id: 'track-vfx',
     name: 'VFX_Bloom',
-    bg: 'bg-amber-500/10',
+    bg: 'bg-[rgba(244,197,90,0.10)]',
     segments: [{ left: 38, width: 50, keys: [{ pos: 2, enabled: true }, { pos: 42, enabled: true }] }],
   },
   {
     id: 'track-lighting',
     name: 'Light_Key',
-    bg: 'bg-emerald-500/10',
+    bg: 'bg-[rgba(52,211,153,0.10)]',
     segments: [{ left: 5, width: 90, keys: [{ pos: 15, enabled: true }, { pos: 30, enabled: true }, { pos: 45, enabled: true }, { pos: 80, enabled: true }] }],
   },
 ];

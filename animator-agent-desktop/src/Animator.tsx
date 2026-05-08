@@ -131,8 +131,8 @@ export default function App() {
   };
 
   return (
-    <div className="w-full min-h-screen h-screen bg-[#09090b] text-[#a1a1aa] flex flex-col font-sans overflow-hidden">
-      <header className="h-14 border-b border-[#27272a] px-6 flex items-center justify-between bg-[#09090b] shrink-0">
+    <div className="w-full min-h-screen h-screen bg-[var(--c-bg-base)] text-[var(--c-text-secondary)] flex flex-col font-sans overflow-hidden">
+      <header className="h-14 border-b border-[var(--c-border-default)] px-6 flex items-center justify-between bg-[var(--c-bg-base)] shrink-0">
         <div className="flex items-center gap-4">
           <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center text-white font-bold">A</div>
           <span className="text-white font-semibold tracking-tight">
@@ -192,40 +192,36 @@ export default function App() {
 
       <main className="flex-1 p-4 grid grid-cols-1 lg:grid-cols-12 grid-rows-none lg:grid-rows-6 gap-4 overflow-hidden min-h-0">
         {/* Preview Container */}
-        <div className="lg:col-span-8 lg:row-span-4 bg-[#111113] border border-[#27272a] rounded-xl relative flex items-center justify-center overflow-hidden min-h-[300px]">
+        <div className="lg:col-span-8 lg:row-span-4 bg-[var(--c-bg-panel)] border border-[var(--c-border-default)] rounded-xl relative flex items-center justify-center overflow-hidden min-h-[300px]">
           <div className="absolute top-4 left-4 flex gap-2 z-50">
-            <div className="bg-black/50 backdrop-blur px-3 py-1 rounded-full text-[10px] text-white border border-white/10 uppercase tracking-wider">
+            <div className="bg-[var(--c-bg-raised)]/80 backdrop-blur px-3 py-1 rounded-md text-[10px] text-[var(--c-text-secondary)] border border-[var(--c-border-default)]">
               4K Preview
             </div>
-            <div className="bg-emerald-500/10 text-emerald-400 px-3 py-1 rounded-full text-[10px] border border-emerald-500/20 uppercase tracking-wider">
+            <div className="bg-[var(--c-status-ok)]/8 text-[var(--c-status-ok)] px-3 py-1 rounded-md text-[10px] border border-[var(--c-status-ok)]/15">
               Active Loop
             </div>
           </div>
           
           {/* Here we embed the Claudia Scene */}
-          <div className="absolute inset-2 border-2 border-indigo-500/10 rounded-lg overflow-hidden isolate">
+          <div className="absolute inset-2 border border-[var(--c-border-default)]/30 rounded-lg overflow-hidden isolate">
             <ClaudiaScene />
           </div>
 
-          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full h-[60%] border-x-2 border-indigo-500/0 flex flex-col items-center justify-center relative pointer-events-none z-40">
-            <div className="absolute -top-3 -left-3 w-6 h-6 border-t-2 border-l-2 border-indigo-500/50 mix-blend-screen"></div>
-            <div className="absolute -bottom-3 -right-3 w-6 h-6 border-b-2 border-r-2 border-indigo-500/50 mix-blend-screen"></div>
+          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full h-[60%] border-x-2 border-transparent flex flex-col items-center justify-center relative pointer-events-none z-40">
+            <div className="absolute -top-3 -left-3 w-6 h-6 border-t-2 border-l-2 border-[var(--c-accent-soft)] mix-blend-screen opacity-30"></div>
+            <div className="absolute -bottom-3 -right-3 w-6 h-6 border-b-2 border-r-2 border-[var(--c-accent-soft)] mix-blend-screen opacity-30"></div>
           </div>
 
           <div className="absolute bottom-4 left-4 z-50">
-            <div className="text-zinc-500 font-mono text-sm bg-black/40 px-2 py-1 rounded backdrop-blur">[RENDERING_FRAME_{frame}]</div>
-            <div className="mt-4 flex gap-1 items-end pl-2">
-              <div className="w-1 bg-indigo-500 h-8 opacity-60"></div>
-              <div className="w-1 bg-indigo-500 h-12"></div>
-              <div className="w-1 bg-indigo-500 h-6 opacity-80"></div>
-              <div className="w-1 bg-indigo-500 h-16 text-xs text-white pl-2 leading-none">SYNC</div>
-            </div>
+            <div className="text-[var(--c-text-muted)] font-mono text-[10px] bg-black/50 px-2.5 py-1 rounded-md backdrop-blur">Frame {frame}</div>
           </div>
 
-          <div className="absolute bottom-4 right-4 flex gap-4 text-[10px] font-mono text-zinc-500 bg-black/40 px-3 py-1 rounded-full backdrop-blur z-50 shadow text-shadow">
-            <span>FPS: 24.0</span>
-            <span>DUR: 00:12:04</span>
-            <span>RES: 3840x2160</span>
+          <div className="absolute bottom-4 right-4 flex gap-3 text-[10px] font-mono text-[var(--c-text-muted)] bg-black/50 px-3 py-1 rounded-md backdrop-blur border border-[var(--c-border-default)]/40 z-50">
+            <span>24 fps</span>
+            <span className="text-[var(--c-border-hover)]">·</span>
+            <span>12:04</span>
+            <span className="text-[var(--c-border-hover)]">·</span>
+            <span>3840 × 2160</span>
           </div>
         </div>
 
@@ -335,18 +331,19 @@ export default function App() {
         </div>
       </main>
 
-      <footer className="h-10 bg-[#09090b] border-t border-[#27272a] px-6 flex items-center justify-between text-[10px] shrink-0">
-        <div className="flex gap-5">
-          <span className="text-emerald-500 flex items-center gap-1.5 font-medium tracking-wide">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.8)] animate-pulse"></span> 
-            System Stable
+      <footer className="h-10 bg-[var(--c-bg-base)] border-t border-[var(--c-border-default)] px-6 flex items-center justify-between text-[10px] shrink-0">
+        <div className="flex items-center gap-4">
+          <span className="text-[var(--c-status-ok)] flex items-center gap-1.5 text-[11px] font-medium tracking-tight">
+            <span className="w-1.5 h-1.5 rounded-full bg-[var(--c-status-ok)]"></span>
+            Stable
           </span>
-          <span className="text-zinc-500 font-mono bg-[#111113] px-2 py-0.5 rounded border border-[#27272a]">GPU: 42%</span>
-          <span className="text-zinc-500 font-mono bg-[#111113] px-2 py-0.5 rounded border border-[#27272a]">VRAM: 6.2GB / 16GB</span>
+          <span className="text-[var(--c-text-muted)] font-mono text-[10px] bg-[var(--c-bg-panel)] px-2 py-0.5 rounded border border-[var(--c-border-default)]">GPU 42%</span>
+          <span className="text-[var(--c-text-muted)] font-mono text-[10px] bg-[var(--c-bg-panel)] px-2 py-0.5 rounded border border-[var(--c-border-default)]">VRAM 6.2 / 16 GB</span>
         </div>
-        <div className="flex gap-5 text-zinc-500 font-mono">
-          <span>Project: /users/dev/anim/cyber_v1</span>
-          <span>Auto-save: 2m ago</span>
+        <div className="flex items-center gap-5 text-[var(--c-text-muted)] text-[10px] font-mono">
+          <span>Studio_Intro_01</span>
+          <span className="text-[var(--c-border-hover)]">•</span>
+          <span>Saved 2m ago</span>
         </div>
       </footer>
 
