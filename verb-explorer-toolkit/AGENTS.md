@@ -143,7 +143,7 @@ After deployment completes:
    Should show owner `techbridge.edu.gh_md` (NOT `root`)
 
 3. **Test in browser:**
-   - Open: https://techbridge.edu.gh/ai-tools.techbridge.edu.gh/vet/
+   - Open: https://ai-tools.techbridge.edu.gh/vet/
    - Check DevTools → Network tab
    - All assets should load (status 200, not 404)
    - App should render (not blank page)
