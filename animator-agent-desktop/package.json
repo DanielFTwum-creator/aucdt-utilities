@@ -11,13 +11,13 @@
     "clean": "rm -rf dist",
     "lint": "tsc --noEmit",
     "test": "playwright test",
-    "deploy": "pnpm build && scp -r dist/ root@techbridge.edu.gh:/var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/animator/"
+    "deploy": "pnpm build && scp -r dist/* root@techbridge.edu.gh:/var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/animator/"
   },
   "dependencies": {
     "@capacitor/android": "^8.3.1",
     "@capacitor/cli": "^8.3.1",
     "@capacitor/core": "^8.3.1",
-    "@google/genai": "^1.29.0",
+    "@google/generative-ai": "^0.24.1",
     "@tailwindcss/vite": "^4.1.14",
     "@vitejs/plugin-react": "^5.0.4",
     "dotenv": "^17.2.3",
