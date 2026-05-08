@@ -1,24 +1,88 @@
-# Software Requirements Specification (SRS) - Animator Agent
+# Software Requirements Specification (SRS)
+## Project: Animator Agent Desktop
+## Version: 3.0.0 (Production Hardened)
+## Date: 2026-05-08
+
+---
 
 ## 1. Introduction
-This document defines the software requirements for the Animator Agent Desktop App.
+### 1.1 Purpose
+This document specifies the software requirements for the Animator Agent Desktop v3.0.0. It is intended for developers, project managers, and institutional auditors at Techbridge University College (TUC).
 
-## 2. Permanent System Requirements
-1. **React Version**: 19.2.5
-2. **Link Integrity**: ZERO broken links across the application.
-3. **Continuous Verification**: Gap analysis required after each section.
-4. **Diagnostics**: All diagnostics must reside within `/admin/*` routes.
+### 1.2 Scope
+The Animator Agent Desktop is a high-fidelity animation studio designed for creating AI-driven agent videos. It features a multi-track timeline editor, centralized state management with undo/redo, and institutional-grade security features.
 
-## 3. Phased Implementation
-- **FOUNDATION**: React 19.2.5 validation, IEEE SRS standard alignment, gap analysis tracking.
-- **SECURITY**: Admin authentication, `/admin` route protection, WCAG accessibility, dynamic themes.
-- **TESTING**: Puppeteer suite integration, `/admin/testing` route, automated screenshot capture.
-- **DOCUMENTATION**: SVG diagrams, Admin Guide, Deploy Guide, Test Guide.
-- **FINAL**: SRS synchronization, `/docs` directory completion, 100% alignment report.
+### 1.3 Definitions, Acronyms, and Abbreviations
+- **TUC**: Techbridge University College
+- **SRS**: Software Requirements Specification
+- **ARIA**: Accessible Rich Internet Applications
+- **E2E**: End-to-End Testing
 
-## 4. Feature Requirements (Animator Agent)
-1. **Robotic Scene**: "Claudia" robotic helper with CSS/SVG animations.
-2. **Keyframe Timeline**: Interactive timeline with track and segment visualizations.
-3. **Keyframe Toggling**: Allow enabling/disabling of individual keyframes.
-4. **Scrubbing**: Real-time dragging of the playhead to scrub animation state.
-5. **Camera Access**: User profile photo capture via WebRTC.
+## 2. Overall Description
+### 2.1 Product Perspective
+Animator Agent Desktop is a standalone web-based desktop application built with React 19 and Vite. It is part of the TUC "THE AGENT Book" project portfolio.
+
+### 2.2 Product Functions
+- **Timeline Editing**: Frame-accurate manipulation of animation tracks.
+- **AI Agent Integration**: Natural language interface for generating animation instructions.
+- **Undo/Redo System**: 50-step history for all project modifications.
+- **Persistence**: Automatic project saving via local storage.
+- **Admin Hardening**: Secure diagnostic dashboard with audit logging.
+- **Theming**: Support for Dark, Light, and High-Contrast modes.
+
+### 2.3 User Classes and Characteristics
+- **Creators**: Students and faculty creating educational animations.
+- **Administrators**: System maintainers monitoring application health and audit logs.
+
+### 2.4 Design and Implementation Constraints
+- Must use **React 19.2.5**.
+- Must adhere to **TUC Branding** (Ink, Gold, Cream).
+- Must maintain **100% ARIA coverage**.
+
+## 3. System Features
+### 3.1 Centralized State Management
+- **Requirement**: All UI components must consume state from a unified `AnimatorContext`.
+- **Validation**: Verified by component refactoring in Phase 1.
+
+### 3.2 Audit Logging
+- **Requirement**: All administrative actions (login, test runs, log clears) must be recorded in a persistent audit trail.
+- **Validation**: Audit log viewer available in `#/admin/audit`.
+
+### 3.3 Automated Testing
+- **Requirement**: Full E2E coverage using Playwright.
+- **Validation**: Playwright test suite and diagnostic dashboard.
+
+## 4. External Interface Requirements
+### 4.1 User Interfaces
+- **Header**: Contains project metadata, playback controls, and profile management.
+- **Preview Panel**: High-performance character rendering (ClaudiaScene).
+- **Timeline**: Multi-track scrubber with keyframe toggles.
+- **Agent Panel**: Interactive prompt input for AI-driven modifications.
+
+## 5. Non-Functional Requirements
+### 5.1 Security
+- Password-protected admin section (`#/admin`).
+- 5-attempt lockout mechanism for failed logins.
+
+### 5.2 Accessibility
+- 100% WCAG 2.1 Level AA compliance.
+- Keyboard shortcuts for all primary transport controls.
+
+### 5.3 Performance
+- 60 FPS UI responsiveness.
+- GPU-accelerated rendering for character animations.
+
+## 6. Architecture & Data Flow
+### 6.1 System Architecture
+![System Architecture](file:///c:/Development/github/aucdt-utilities/animator-agent-desktop/docs/Architecture.svg)
+
+### 6.2 Data Flow
+![Data Flow](file:///c:/Development/github/aucdt-utilities/animator-agent-desktop/docs/DataFlow.svg)
+
+### 6.3 State Flow
+`AnimatorContext` -> `HistoryState` -> `LocalStorage`.
+### 6.4 Security Flow
+`AdminAuth` -> `VITE_ADMIN_PASSWORD` -> `AuditLog`.
+
+---
+*End of SRS v3.0.0*
