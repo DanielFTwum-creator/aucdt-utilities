@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
-import { 
-  Dices, BookOpen, Globe, PenTool, Lightbulb, 
-  Printer, ListChecks, ArrowLeft, ArrowRight 
+import {
+  Dices, BookOpen, Globe, PenTool, Lightbulb,
+  Printer, ListChecks, ArrowLeft, ArrowRight, HelpCircle
 } from 'lucide-react';
+import { UserGuide } from './components/UserGuide';
 
 export default function App() {
   const [step, setStep] = useState(1);
@@ -17,6 +18,7 @@ export default function App() {
   const [cardColor, setCardColor] = useState('bg-yellow-100');
   const [timeLeft, setTimeLeft] = useState(180);
   const [isTimerActive, setIsTimerActive] = useState(false);
+  const [showGuide, setShowGuide] = useState(false);
 
   const verbCategories = {
     action: ['Run', 'Dance', 'Explore', 'Discover', 'Create', 'Jump', 'Swim'],
@@ -108,7 +110,15 @@ export default function App() {
   return (
     <div className="max-w-5xl mx-auto px-4 py-8">
       {/* Header */}
-      <div className="text-center mb-10 print:hidden">
+      <div className="text-center mb-10 print:hidden relative">
+        <button
+          type="button"
+          onClick={() => setShowGuide(true)}
+          className="absolute top-0 right-0 p-2 rounded-full bg-blue-100 hover:bg-blue-200 text-blue-600 transition-colors"
+          title="Help & Instructions"
+        >
+          <HelpCircle className="w-6 h-6" />
+        </button>
         <div className="inline-block bg-white px-8 py-4 rounded-3xl card-shadow border-b-4 border-primary mb-4 transform -rotate-1">
           <h1 className="text-4xl md:text-5xl font-extrabold text-gray-800 comic-font">
             <span className="text-primary">Verb</span> Discovery <span className="text-secondary">Project</span>
@@ -405,6 +415,9 @@ export default function App() {
         )}
         {step === 3 && renderDigitalCard()}
       </div>
+
+      {/* User Guide Modal */}
+      {showGuide && <UserGuide onClose={() => setShowGuide(false)} />}
     </div>
   );
 }
