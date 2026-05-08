@@ -71,9 +71,10 @@ export interface AnimatorContextType {
 
   // Playback
   playback: PlaybackState;
-  play: () => void;
-  pause: () => void;
-  stop: () => void;
+  togglePlayback: () => void;
+  stopPlayback: () => void;
+  applyInstruction: (instruction: string) => Promise<void>;
+  undo: () => void;
   setFrame: (frame: number) => void;
   setPlayheadPos: (pos: number) => void;
   setIsScrubbing: (scrubbing: boolean) => void;

@@ -2,6 +2,7 @@ import { createContext, useContext, useState, useCallback, ReactNode } from 'rea
 import type { ProjectState, HistoryState, AnimatorContextType, Track, PlaybackState } from '../types/animation';
 import { useLocalStorage } from '../hooks/useLocalStorage';
 import { INITIAL_TRACKS, TOTAL_FRAMES, FPS } from '../constants/playback';
+import { getAnimationSuggestions } from '../services/aiService';
 
 const HISTORY_CAP = 50;
 
@@ -124,6 +125,41 @@ export function AnimatorProvider({ children }: { children: ReactNode }) {
     });
     setLastSavedAt(Date.now());
   }, [setHistory]);
+
+  const applyInstruction = useCallback(async (instruction: string) => {
+    const trackNames = history.present.tracks.map((t: Track) => t.name);
+    const suggestions = await getAnimationSuggestions(instruction, trackNames);
+    
+    if (suggestions.length > 0) {
+      setHistory((prev: HistoryState) => {
+        const nextTracks = [...prev.present.tracks];
+        suggestions.forEach((s: any) => {
+          const trackIdx = nextTracks.findIndex((t: Track) => t.name === s.trackName);
+          if (trackIdx !== -1) {
+            const track = { ...nextTracks[trackIdx] };
+            const segment = { ...track.segments[s.segmentIdx] };
+            if (segment) {
+              if (s.action === 'add_key') {
+                segment.keys = [...segment.keys, { pos: s.pos, enabled: true }];
+              } else if (s.action === 'toggle_key') {
+                segment.keys = segment.keys.map((k: any) => 
+                  k.pos === s.pos ? { ...k, enabled: !k.enabled } : k
+                );
+              }
+              track.segments[s.segmentIdx] = segment;
+              nextTracks[trackIdx] = track;
+            }
+          }
+        });
+        return {
+          past: [...prev.past.slice(-HISTORY_CAP + 1), prev.present],
+          present: { ...prev.present, tracks: nextTracks, updatedAt: Date.now() },
+          future: [],
+        };
+      });
+      setLastSavedAt(Date.now());
+    }
+  }, [history.present.tracks, setHistory]);
 
   const saveProject = useCallback(() => {
     setLastSavedAt(Date.now());
