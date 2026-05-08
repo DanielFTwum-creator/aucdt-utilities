@@ -1,7 +1,7 @@
-# Architecture Overview
+﻿# Architecture Overview
 
 ## System Architecture
-The application follows a client-side SPA architecture using React 19.2.4, Vite, and Tailwind CSS. Firebase is used for authentication and Firestore for data storage.
+The application follows a client-side SPA architecture using React 19.2.5, Vite, and Tailwind CSS. Firebase is used for authentication and Firestore for data storage.
 
 ```mermaid
 graph TD

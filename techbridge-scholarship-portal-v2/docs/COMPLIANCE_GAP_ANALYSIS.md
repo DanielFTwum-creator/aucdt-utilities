@@ -1,24 +1,24 @@
-# AUCDT Utilities: Comprehensive Compliance Gap Analysis
+﻿# AUCDT Utilities: Comprehensive Compliance Gap Analysis
 **Date:** March 6, 2026
 **Reference Standard:** Techbridge Scholarship Portal v2.0 (Blueprint)
 
 ## 1. Executive Summary
-An audit of the `../aucdt-utilities` ecosystem reveals significant architectural and linguistic drift. While the projects are functional, they do not adhere to the "Notarial Luxury" standards or the strict technical constraints (React 19.2.4, relative pathing, UK English) established in the master refresh.
+An audit of the `../aucdt-utilities` ecosystem reveals significant architectural and linguistic drift. While the projects are functional, they do not adhere to the "Notarial Luxury" standards or the strict technical constraints (React 19.2.5, relative pathing, UK English) established in the master refresh.
 
 ## 2. Compliance Scorecard (Sampled Projects)
 
-| Project | React 19.2.4 | UK English | Relative Paths | Admin Isolation | UX (6R) |
+| Project | React 19.2.5 | UK English | Relative Paths | Admin Isolation | UX (6R) |
 | :--- | :---: | :---: | :---: | :---: | :---: |
-| **Scholarship Portal (v2.0)** | ✅ | ✅ | ✅ | ✅ | ✅ |
-| **Academic Performance App** | ❌ (19.1.0) | ❌ (US) | ✅ (./) | ❌ (Inline) | ❌ (Indigo) |
-| **Lecturer Assessment Portal** | ❌ (Legacy) | ❌ (US) | ❌ (/) | ❌ (None) | ❌ (Generic) |
-| **Techbridge Dashboard** | ❌ (Legacy) | ❌ (US) | ❌ (/) | ❌ (None) | ❌ (Generic) |
+| **Scholarship Portal (v2.0)** | âœ… | âœ… | âœ… | âœ… | âœ… |
+| **Academic Performance App** | âŒ (19.1.0) | âŒ (US) | âœ… (./) | âŒ (Inline) | âŒ (Indigo) |
+| **Lecturer Assessment Portal** | âŒ (Legacy) | âŒ (US) | âŒ (/) | âŒ (None) | âŒ (Generic) |
+| **Techbridge Dashboard** | âŒ (Legacy) | âŒ (US) | âŒ (/) | âŒ (None) | âŒ (Generic) |
 
 ## 3. Identified Gaps & Corrective Actions
 
 ### 3.1 Technical Gaps
 - **Gap:** Inconsistent React versions (18.x - 19.1.x).
-- **Action:** Forced migration to **React 19.2.4** with strict peer dependency resolution.
+- **Action:** Forced migration to **React 19.2.5** with strict peer dependency resolution.
 - **Gap:** Pathing fragility in deployment.
 - **Action:** Update all `vite.config.ts` files to `base: './'`.
 

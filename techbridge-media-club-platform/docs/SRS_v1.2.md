@@ -1,4 +1,4 @@
-# Software Requirements Specification (SRS) v1.2
+﻿# Software Requirements Specification (SRS) v1.2
 **Project:** Techbridge Media Club Platform
 **Date:** February 2026
 
@@ -34,7 +34,7 @@ The Techbridge Media Club Platform (TMCP) is a centralized system for managing d
 
 ## 4. Architecture
 The system follows a modern SPA (Single Page Application) architecture.
-- **Frontend**: React 19.2.4 + Tailwind CSS
+- **Frontend**: React 19.2.5 + Tailwind CSS
 - **State Management**: React Context (Theme, Auth)
 - **Data Visualization**: Recharts
 - **Icons**: Lucide React

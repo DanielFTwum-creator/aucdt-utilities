@@ -1,4 +1,4 @@
-# TechBridge Dashboard Setup Guide
+﻿# TechBridge Dashboard Setup Guide
 
 ## Prerequisites
 
@@ -43,7 +43,7 @@ pnpm preview
 
 | Technology | Version | Purpose |
 |------------|---------|---------|
-| React | 19.2.4 | UI framework |
+| React | 19.2.5 | UI framework |
 | Vite | 7.3.1 | Build tool and dev server |
 | TypeScript | 5.9.3 | Type safety |
 | Recharts | 3.7.0 | Charts and data visualization |
@@ -55,26 +55,26 @@ pnpm preview
 
 ```
 techbridge-strategy-dashboard/
-├── components/          # React components
-│   ├── Overview.tsx        # REQ-1.x: Executive briefing
-│   ├── StrategyView.tsx    # REQ-2.x: Strategic planning
-│   ├── Financials.tsx      # REQ-3.x: Financial projections
-│   ├── MarketingView.tsx   # REQ-4.x: Marketing & operations
-│   ├── RisksView.tsx       # REQ-5.x: Risk management
-│   ├── AdminView.tsx       # REQ-6.x: Admin & security
-│   ├── Sidebar.tsx         # Navigation
-│   └── MetricCard.tsx      # Reusable card component
-├── App.tsx             # Main application
-├── index.tsx           # Entry point
-├── index.css           # Global styles
-├── data.ts             # Static data models
-├── types.ts            # TypeScript interfaces
-├── vite.config.ts      # Build configuration
-├── index.html          # HTML template
-└── docs/               # Documentation
-    ├── SRS-TechBridge-Dashboard-v1.2.md
-    ├── guides/
-    └── diagrams/
+â”œâ”€â”€ components/          # React components
+â”‚   â”œâ”€â”€ Overview.tsx        # REQ-1.x: Executive briefing
+â”‚   â”œâ”€â”€ StrategyView.tsx    # REQ-2.x: Strategic planning
+â”‚   â”œâ”€â”€ Financials.tsx      # REQ-3.x: Financial projections
+â”‚   â”œâ”€â”€ MarketingView.tsx   # REQ-4.x: Marketing & operations
+â”‚   â”œâ”€â”€ RisksView.tsx       # REQ-5.x: Risk management
+â”‚   â”œâ”€â”€ AdminView.tsx       # REQ-6.x: Admin & security
+â”‚   â”œâ”€â”€ Sidebar.tsx         # Navigation
+â”‚   â””â”€â”€ MetricCard.tsx      # Reusable card component
+â”œâ”€â”€ App.tsx             # Main application
+â”œâ”€â”€ index.tsx           # Entry point
+â”œâ”€â”€ index.css           # Global styles
+â”œâ”€â”€ data.ts             # Static data models
+â”œâ”€â”€ types.ts            # TypeScript interfaces
+â”œâ”€â”€ vite.config.ts      # Build configuration
+â”œâ”€â”€ index.html          # HTML template
+â””â”€â”€ docs/               # Documentation
+    â”œâ”€â”€ SRS-TechBridge-Dashboard-v1.2.md
+    â”œâ”€â”€ guides/
+    â””â”€â”€ diagrams/
 ```
 
 ## Key Features

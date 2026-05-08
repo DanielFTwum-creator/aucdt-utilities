@@ -1,10 +1,10 @@
-# Technology Stack Documentation
+﻿# Technology Stack Documentation
 
 ## 1. Frontend Architecture
 The TechBridge Strategic Dashboard is built as a **Single Page Application (SPA)** using a lightweight, no-build-step architecture for maximum portability and ease of editing.
 
 ### Core Framework
--   **Library**: **React v19.2.4**
+-   **Library**: **React v19.2.5**
 -   **Runtime**: Browser-native ES Modules (ESM).
 -   **Language**: **TypeScript** (transpiled on-the-fly or pre-typed for robust development).
 
@@ -12,8 +12,8 @@ The TechBridge Strategic Dashboard is built as a **Single Page Application (SPA)
 
 | Category | Library | Version | Purpose |
 | :--- | :--- | :--- | :--- |
-| **UI Framework** | **React** | ^19.2.4 | Component-based view layer. |
-| **DOM Manipulation** | **ReactDOM** | ^19.2.4 | Rendering React components to the DOM. |
+| **UI Framework** | **React** | ^19.2.5 | Component-based view layer. |
+| **DOM Manipulation** | **ReactDOM** | ^19.2.5 | Rendering React components to the DOM. |
 | **Styling** | **Tailwind CSS** | v3.4 (CDN) | Utility-first CSS framework for rapid UI development. |
 | **Data Visualization** | **Recharts** | ^3.7.0 | Composable charting library based on React components. |
 | **Icons** | **Lucide React** | ^0.563.0 | Consistent, lightweight SVG icons. |

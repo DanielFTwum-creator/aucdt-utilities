@@ -1,7 +1,7 @@
-# Technology Stack Documentation
+﻿# Technology Stack Documentation
 
 ## Frontend Architecture
-*   **Core Library**: React 19.2.4
+*   **Core Library**: React 19.2.5
 *   **Bundler/Runtime**: ES Modules (via `esm.sh` for browser-native import)
 *   **Language**: TypeScript (Strict Mode)
 

@@ -1,4 +1,4 @@
-# Software Requirements Specification
+﻿# Software Requirements Specification
 ## TechBridge Strategic Dashboard v1.2
 
 ### 1. Introduction
@@ -31,7 +31,7 @@ The dashboard functions as a standalone client-side application utilizing a modu
 The system follows a client-side component architecture built with React 19, TypeScript 5.9, and Vite 7.
 
 **Technology Stack:**
-- **Frontend**: React 19.2.4, TypeScript 5.9.3
+- **Frontend**: React 19.2.5, TypeScript 5.9.3
 - **Build Tool**: Vite 7.3.1
 - **Package Manager**: pnpm 10.22.0
 - **Charts**: Recharts 3.7.0

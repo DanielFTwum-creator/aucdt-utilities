@@ -1,4 +1,4 @@
-{
+﻿{
   "name": "biochemai-v151120252049",
   "private": true,
   "version": "0.0.0",
@@ -15,8 +15,8 @@
   "dependencies": {
     "@google/genai": "^1.29.1",
     "jspdf": "^3.0.3",
-    "react": "19.2.4",
-    "react-dom": "19.2.4"
+    "react": "19.2.5",
+    "react-dom": "19.2.5"
   },
   "devDependencies": {
     "@types/node": "^24.10.1",

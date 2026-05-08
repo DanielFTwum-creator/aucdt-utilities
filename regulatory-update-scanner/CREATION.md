@@ -1,4 +1,4 @@
-# CREATION.md — Regulatory Update Scanner
+﻿# CREATION.md â€” Regulatory Update Scanner
 **Purpose:** Complete build specification for any agent to implement this application from scratch.
 **Target:** Functional parity with `C:/Development/aucdt-utilities/regulatory-update-scanner/`
 **Last verified:** 2026-04-26
@@ -9,7 +9,7 @@
 
 The Regulatory Update Scanner monitors government and institutional regulatory feeds, parses policy changes, extracts compliance requirements, and alerts organizations to requirements that affect their operations. It integrates with legal/compliance workflows and provides impact assessments.
 
-Built with **React 19.2.4**, **Node.js/Express**, **SQLite**, and **AI-powered document analysis**.
+Built with **React 19.2.5**, **Node.js/Express**, **SQLite**, and **AI-powered document analysis**.
 
 ---
 
@@ -17,7 +17,7 @@ Built with **React 19.2.4**, **Node.js/Express**, **SQLite**, and **AI-powered d
 
 | Layer | Technology | Version |
 |---|---|---|
-| Frontend | React | **19.2.4** |
+| Frontend | React | **19.2.5** |
 | Build | Vite | ^6.2.0 |
 | Language | TypeScript | ~5.8.2 |
 | Styling | Tailwind CSS | ^4.1.14 |
@@ -31,13 +31,13 @@ Built with **React 19.2.4**, **Node.js/Express**, **SQLite**, and **AI-powered d
 
 ## 3. Key Features
 
-- **Feed monitoring** — Crawl gov/institutional regulatory sources
-- **Document parsing** — Extract policy text, effective dates, requirements
-- **Relevance scoring** — ML-based filtering for organization-specific impact
-- **Compliance extraction** — AI-powered requirement identification
-- **Impact assessment** — Analyze implications for operations
-- **Alert routing** — Notify compliance teams with triage
-- **Audit trail** — Immutable record of all updates and responses
+- **Feed monitoring** â€” Crawl gov/institutional regulatory sources
+- **Document parsing** â€” Extract policy text, effective dates, requirements
+- **Relevance scoring** â€” ML-based filtering for organization-specific impact
+- **Compliance extraction** â€” AI-powered requirement identification
+- **Impact assessment** â€” Analyze implications for operations
+- **Alert routing** â€” Notify compliance teams with triage
+- **Audit trail** â€” Immutable record of all updates and responses
 
 ---
 

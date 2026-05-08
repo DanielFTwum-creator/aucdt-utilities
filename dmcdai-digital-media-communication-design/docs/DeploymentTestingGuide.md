@@ -1,7 +1,7 @@
-# Deployment & Testing Guide — dmcdAI Platform
+﻿# Deployment & Testing Guide â€” dmcdAI Platform
 
 **Version:** 1.0.0  
-**Framework:** React 19.2.4 / Vite 6.2.0  
+**Framework:** React 19.2.5 / Vite 6.2.0  
 **Testing:** Playwright E2E / Vitest Unit
 
 ---

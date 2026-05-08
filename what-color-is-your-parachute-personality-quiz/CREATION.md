@@ -1,4 +1,4 @@
-# CREATION.md — What Colour Is Your Parachute? Personality Quiz
+﻿# CREATION.md â€” What Colour Is Your Parachute? Personality Quiz
 **Purpose:** Complete build specification for any agent to implement this application from scratch.
 **Target:** Functional parity with `C:/Development/aucdt-utilities/what-color-is-your-parachute-personality-quiz/`
 **Last verified:** 2026-04-25
@@ -7,7 +7,7 @@
 
 ## 1. What This App Is
 
-A 3-phase personality quiz based on the *What Colour Is Your Parachute?* career-guidance framework. Users work through two selection phases, then receive a personalised archetype reveal. No backend, no login wall — the quiz is fully public. An admin panel is hidden behind a footer link.
+A 3-phase personality quiz based on the *What Colour Is Your Parachute?* career-guidance framework. Users work through two selection phases, then receive a personalised archetype reveal. No backend, no login wall â€” the quiz is fully public. An admin panel is hidden behind a footer link.
 
 ---
 
@@ -15,12 +15,12 @@ A 3-phase personality quiz based on the *What Colour Is Your Parachute?* career-
 
 | Layer | Technology | Version |
 |---|---|---|
-| Runtime | React | **19.2.4** |
+| Runtime | React | **19.2.5** |
 | Build | Vite | ^6 |
 | Language | TypeScript | ~5.8 |
 | Styling | Tailwind CSS | ^4.2 |
 | Package manager | pnpm | 10.30+ |
-| Container | node:24-alpine → nginx:alpine | — |
+| Container | node:24-alpine â†’ nginx:alpine | â€” |
 
 ---
 
@@ -28,15 +28,15 @@ A 3-phase personality quiz based on the *What Colour Is Your Parachute?* career-
 
 ```
 src/
-├── App.tsx               # 3-phase state machine + admin overlay
-├── main.tsx              # createRoot → App
-├── types.ts              # Trait, Profile interfaces
-├── constants.ts          # PREDEFINED_TRAITS[] (27 traits with emoji)
-├── index.css             # Tailwind + CSS custom properties
-└── components/
-    ├── Phase1.tsx        # Trait token pool (multi-select, click to toggle)
-    ├── Phase2.tsx        # Refine selection from Phase 1 picks
-    └── TraitPool.tsx     # Reusable token grid component
+â”œâ”€â”€ App.tsx               # 3-phase state machine + admin overlay
+â”œâ”€â”€ main.tsx              # createRoot â†’ App
+â”œâ”€â”€ types.ts              # Trait, Profile interfaces
+â”œâ”€â”€ constants.ts          # PREDEFINED_TRAITS[] (27 traits with emoji)
+â”œâ”€â”€ index.css             # Tailwind + CSS custom properties
+â””â”€â”€ components/
+    â”œâ”€â”€ Phase1.tsx        # Trait token pool (multi-select, click to toggle)
+    â”œâ”€â”€ Phase2.tsx        # Refine selection from Phase 1 picks
+    â””â”€â”€ TraitPool.tsx     # Reusable token grid component
 ```
 
 ---
@@ -65,15 +65,15 @@ export interface Profile {
 
 ---
 
-## 5. 27 Predefined Traits (constants.ts — use these exact IDs and labels)
+## 5. 27 Predefined Traits (constants.ts â€” use these exact IDs and labels)
 
 ```
-creative/🎨  analytical/🔬  empathetic/💛  ambitious/🚀  adventurous/🧭
-organized/📋  curious/🔍  loyal/🛡️  visionary/🌅  humorous/😄
-strategic/♟️  nurturing/🌿  independent/🦅  disciplined/⚖️  passionate/🔥
-resilient/💪  intuitive/✨  collaborative/🤝  authentic/🪞  patient/🕊️
-bold/⚡  thoughtful/📚  optimistic/🌈  competitive/🏆  compassionate/❤️
-innovative/💡  grounded/🌍
+creative/ðŸŽ¨  analytical/ðŸ”¬  empathetic/ðŸ’›  ambitious/ðŸš€  adventurous/ðŸ§­
+organized/ðŸ“‹  curious/ðŸ”  loyal/ðŸ›¡ï¸  visionary/ðŸŒ…  humorous/ðŸ˜„
+strategic/â™Ÿï¸  nurturing/ðŸŒ¿  independent/ðŸ¦…  disciplined/âš–ï¸  passionate/ðŸ”¥
+resilient/ðŸ’ª  intuitive/âœ¨  collaborative/ðŸ¤  authentic/ðŸªž  patient/ðŸ•Šï¸
+bold/âš¡  thoughtful/ðŸ“š  optimistic/ðŸŒˆ  competitive/ðŸ†  compassionate/â¤ï¸
+innovative/ðŸ’¡  grounded/ðŸŒ
 ```
 
 ---
@@ -87,11 +87,11 @@ selectedTraits: Trait[]    (built up across phases)
 
 | Phase | What happens |
 |---|---|
-| **Phase 1** | Show all 27 traits as clickable tokens. User picks any number. "Continue" → Phase 2. |
-| **Phase 2** | Show only the Phase 1 selections. User narrows down to their top picks. "Reveal" → Phase 3. |
+| **Phase 1** | Show all 27 traits as clickable tokens. User picks any number. "Continue" â†’ Phase 2. |
+| **Phase 2** | Show only the Phase 1 selections. User narrows down to their top picks. "Reveal" â†’ Phase 3. |
 | **Phase 3 (reveal)** | Show personality archetype card derived from final selections. "Start Over" button resets to Phase 1. |
 
-The archetype is derived from the `top3` traits — display their labels, emojis, taglines, and careerSuggestions.
+The archetype is derived from the `top3` traits â€” display their labels, emojis, taglines, and careerSuggestions.
 
 ---
 
@@ -105,7 +105,7 @@ ADMIN_SESSION_KEY = 'parachute-quiz-admin'   (sessionStorage)
 AUDIT_LOG_KEY = 'parachute-quiz-audit'       (localStorage, max 200)
 ```
 
-**Access:** Footer button labelled "Admin" → `window.location.hash = '#/admin'`
+**Access:** Footer button labelled "Admin" â†’ `window.location.hash = '#/admin'`
 
 **AuditEntry interface:**
 ```typescript
@@ -118,7 +118,7 @@ interface AuditEntry { id: string; timestamp: string; action: string; details?: 
 
 **AdminDashboard two tabs:**
 - Audit Log: table with timestamp / action / details columns
-- Diagnostics: "LocalStorage Access" test → writes `__diag__` key → removes it → PASS/FAIL badge
+- Diagnostics: "LocalStorage Access" test â†’ writes `__diag__` key â†’ removes it â†’ PASS/FAIL badge
 
 ---
 
@@ -131,7 +131,7 @@ interface AuditEntry { id: string; timestamp: string; action: string; details?: 
 --color-text-main:    #1A1A1A;
 --color-text-dim:     #6B6B6B;
 --color-border:       #E0DDD8;
---color-accent:       #8B4513;   /* warm brown — parachute theme */
+--color-accent:       #8B4513;   /* warm brown â€” parachute theme */
 ```
 
 Apply via `bg-bg`, `text-text-main`, `text-accent` etc. using Tailwind's `@theme` mapping.

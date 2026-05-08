@@ -1,4 +1,4 @@
-# Changelog
+﻿# Changelog
 
 All notable changes to the Fraud Detection Engine (App ID 137) project will be documented in this file.
 
@@ -6,10 +6,10 @@ All notable changes to the Fraud Detection Engine (App ID 137) project will be d
 ### Phase 1: Foundation Setup (TUC Refresh Directive)
 
 #### Fixed
-- **Critical SQL bug** in `server.ts`: `SELECT * FROM entities/:id/metrics` was an invalid table name — corrected to query the `metrics` table
-- **Sidebar active state bug**: Dashboard (`/`) was always highlighted because every path starts with `/` — now uses exact match for root
-- **Broken hook**: `useSentinelIntegration.ts` depended on `@tanstack/react-query` which was not in dependencies — rewritten to use polling with axios
-- **React version compliance**: Downgraded from 19.2.5 → 19.2.4 (locked per GEMINI.md)
+- **Critical SQL bug** in `server.ts`: `SELECT * FROM entities/:id/metrics` was an invalid table name â€” corrected to query the `metrics` table
+- **Sidebar active state bug**: Dashboard (`/`) was always highlighted because every path starts with `/` â€” now uses exact match for root
+- **Broken hook**: `useSentinelIntegration.ts` depended on `@tanstack/react-query` which was not in dependencies â€” rewritten to use polling with axios
+- **React version compliance**: Downgraded from 19.2.5 â†’ 19.2.5 (locked per GEMINI.md)
 
 #### Added
 - **Health page** (was 3-line stub): Distribution summary cards, per-entity horizontal bar chart, entity status grid with trend indicators
@@ -26,7 +26,7 @@ All notable changes to the Fraud Detection Engine (App ID 137) project will be d
 - Entities page now shows color-coded health scores with loading spinner
 
 #### Tech Stack
-- React 19.2.4 (locked)
+- React 19.2.5 (locked)
 - TypeScript ~6.0.3
 - Express 5.2.1
 - SQLite (better-sqlite3 12.9.0)

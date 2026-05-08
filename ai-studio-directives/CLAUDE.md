@@ -1,14 +1,14 @@
-# CLAUDE.md
+﻿# CLAUDE.md
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
 ## Project Overview
 
-**AI Studio Directive Workflow** is a React-based workflow management application designed to guide developers through standardized project phases for AI Studio projects. It provides a structured approach to implementing React 19.2.4 applications with built-in compliance checks, gap analysis requirements, and phase-based directives.
+**AI Studio Directive Workflow** is a React-based workflow management application designed to guide developers through standardized project phases for AI Studio projects. It provides a structured approach to implementing React 19.2.5 applications with built-in compliance checks, gap analysis requirements, and phase-based directives.
 
 ## Technology Stack
 
-- **Framework**: React 19.2.4 (strict version requirement)
+- **Framework**: React 19.2.5 (strict version requirement)
 - **Build Tool**: Vite 7.3.1
 - **Package Manager**: pnpm (required for all operations)
 - **Styling**: Inline styles with gradient-based color system
@@ -18,30 +18,30 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ```
 ai-studio-directives/
-├── src/
-│   ├── components/         # UI components
-│   │   ├── Badge.jsx       # Status badges
-│   │   ├── CopyButton.jsx  # Copy-to-clipboard functionality
-│   │   ├── DirectiveCode.jsx  # Code block display
-│   │   ├── DoneButton.jsx  # Completion toggle
-│   │   ├── NavButton.jsx   # Navigation controls
-│   │   ├── PhaseCard.jsx   # Main phase display
-│   │   ├── PhaseDots.jsx   # Progress indicator
-│   │   ├── ProgressBar.jsx # Progress visualization
-│   │   ├── Sidebar.jsx     # Phase navigation sidebar
-│   │   ├── SidebarItem.jsx # Individual sidebar items
-│   │   └── TopBar.jsx      # Header with progress
-│   ├── data/
-│   │   └── phases.js       # Phase definitions and content
-│   ├── App.jsx             # Main application component
-│   ├── main.jsx            # Entry point
-│   └── index.css           # Global styles
-├── dist/                   # Build output (generated)
-├── index.html              # HTML entry point
-├── vite.config.js          # Vite configuration
-├── package.json
-├── pnpm-lock.yaml
-└── pnpm-workspace.yaml
+â”œâ”€â”€ src/
+â”‚   â”œâ”€â”€ components/         # UI components
+â”‚   â”‚   â”œâ”€â”€ Badge.jsx       # Status badges
+â”‚   â”‚   â”œâ”€â”€ CopyButton.jsx  # Copy-to-clipboard functionality
+â”‚   â”‚   â”œâ”€â”€ DirectiveCode.jsx  # Code block display
+â”‚   â”‚   â”œâ”€â”€ DoneButton.jsx  # Completion toggle
+â”‚   â”‚   â”œâ”€â”€ NavButton.jsx   # Navigation controls
+â”‚   â”‚   â”œâ”€â”€ PhaseCard.jsx   # Main phase display
+â”‚   â”‚   â”œâ”€â”€ PhaseDots.jsx   # Progress indicator
+â”‚   â”‚   â”œâ”€â”€ ProgressBar.jsx # Progress visualization
+â”‚   â”‚   â”œâ”€â”€ Sidebar.jsx     # Phase navigation sidebar
+â”‚   â”‚   â”œâ”€â”€ SidebarItem.jsx # Individual sidebar items
+â”‚   â”‚   â””â”€â”€ TopBar.jsx      # Header with progress
+â”‚   â”œâ”€â”€ data/
+â”‚   â”‚   â””â”€â”€ phases.js       # Phase definitions and content
+â”‚   â”œâ”€â”€ App.jsx             # Main application component
+â”‚   â”œâ”€â”€ main.jsx            # Entry point
+â”‚   â””â”€â”€ index.css           # Global styles
+â”œâ”€â”€ dist/                   # Build output (generated)
+â”œâ”€â”€ index.html              # HTML entry point
+â”œâ”€â”€ vite.config.js          # Vite configuration
+â”œâ”€â”€ package.json
+â”œâ”€â”€ pnpm-lock.yaml
+â””â”€â”€ pnpm-workspace.yaml
 ```
 
 ## Development Commands
@@ -109,7 +109,7 @@ Each phase object contains:
 {
   id: 'unique-id',              // Phase identifier
   label: 'DISPLAY NAME',        // Short label for UI
-  icon: '🚀',                   // Emoji icon
+  icon: 'ðŸš€',                   // Emoji icon
   color: '#a78bfa',             // Primary color
   gradient: 'linear-gradient()', // Visual gradient
   title: 'Full Title',          // Display title
@@ -155,7 +155,7 @@ The application uses a consistent dark color scheme:
 
 ### React Version Requirement
 
-This project **strictly requires React 19.2.4**. This is enforced in:
+This project **strictly requires React 19.2.5**. This is enforced in:
 - Session start requirements
 - Phase 1 pre-flight checks
 - All subsequent phase verifications
@@ -168,7 +168,7 @@ This project **strictly requires React 19.2.4**. This is enforced in:
 
 The application enforces these permanent requirements across all phases:
 
-1. React 19.2.4 ONLY
+1. React 19.2.5 ONLY
 2. ZERO broken links (implement fully or exclude)
 3. Gap analysis mandatory after implementation
 4. ALL diagnostics in /admin section only
@@ -181,8 +181,8 @@ When modifying phase content (`src/data/phases.js`):
 - Maintain the sequential phase structure
 - Keep pre-flight checks in each phase
 - Ensure gap analysis requirements are present
-- Preserve the two-way sync concept (SRS ↔ Implementation)
-- Never remove the React 19.2.4 requirement
+- Preserve the two-way sync concept (SRS â†” Implementation)
+- Never remove the React 19.2.5 requirement
 
 ## Deployment Configuration
 
@@ -209,11 +209,11 @@ import Component from '@/components/Component'
 Build generates a static site in `dist/`:
 ```
 dist/
-├── index.html
-├── assets/
-│   ├── index-[hash].js
-│   └── index-[hash].css
-└── vite.svg
+â”œâ”€â”€ index.html
+â”œâ”€â”€ assets/
+â”‚   â”œâ”€â”€ index-[hash].js
+â”‚   â””â”€â”€ index-[hash].css
+â””â”€â”€ vite.svg
 ```
 
 ## Testing Configuration
@@ -283,7 +283,7 @@ navigator.clipboard.writeText(content).then(() => {
 
 1. Edit the `content` field in `src/data/phases.js`
 2. Use template literals for multi-line content
-3. Include checkbox items (☐/✅) for tracking
+3. Include checkbox items (â˜/âœ…) for tracking
 4. Maintain consistent formatting with existing phases
 
 ### Changing Color Scheme
@@ -391,5 +391,5 @@ This project is part of the aucdt-utilities monorepo:
 
 For issues or questions:
 - Check parent repository CLAUDE.md
-- Review React 19.2.4 documentation
+- Review React 19.2.5 documentation
 - Consult Vite documentation for build issues

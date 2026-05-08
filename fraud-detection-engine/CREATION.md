@@ -1,4 +1,4 @@
-# fraud-detection-engine — Creation Document
+﻿# fraud-detection-engine â€” Creation Document
 
 ## Purpose
 
@@ -15,7 +15,7 @@
 
 | Layer | Technology | Version |
 |-------|-----------|---------|
-| **Frontend** | React | 19.2.4 (locked) |
+| **Frontend** | React | 19.2.5 (locked) |
 | **Language** | TypeScript | ~6.0.3 |
 | **Build Tool** | Vite | 8.0.10 (dev) / 6.2.0 (dependencies) |
 | **Styling** | Tailwind CSS | 4.2.4 |
@@ -30,8 +30,8 @@
 
 ## Key Decisions
 
-### 1. **React 19.2.4 (Locked)**
-- Version is intentionally locked to 19.2.4 to avoid breaking changes
+### 1. **React 19.2.5 (Locked)**
+- Version is intentionally locked to 19.2.5 to avoid breaking changes
 - No minor/patch upgrades without full regression testing
 - Rationale: Stability and reproducibility across deployments
 
@@ -121,44 +121,44 @@ The SQLite database (`fde.db`) is created automatically on first server start vi
 
 ```
 fraud-detection-engine/
-├── src/
-│   ├── components/         # Reusable UI components (sidebar, cards, charts)
-│   ├── pages/              # Route-level pages (Dashboard, Entities, Health, Alerts, Admin)
-│   ├── pages/admin/        # Protected admin pages (6 sub-routes)
-│   ├── a11y/               # Accessibility helpers (ARIA tooltips)
-│   ├── hooks/              # React hooks (polling, data fetching)
-│   ├── stores/             # Zustand stores (auth, theme, app state)
-│   ├── services/           # API client services
-│   ├── types/              # TypeScript type definitions
-│   ├── utils/              # Utility functions
-│   ├── App.tsx             # Router configuration
-│   ├── Layout.tsx          # Main layout (sidebar + main content)
-│   ├── main.tsx            # Entry point
-│   └── index.css           # Global styles + Tailwind imports
-├── server.ts               # Express server (dev + prod)
-├── vite.config.ts          # Vite build configuration
-├── vitest.config.ts        # Vitest configuration
-├── vitest.e2e.config.ts    # Playwright E2E configuration
-├── tailwind.config.ts      # Tailwind CSS configuration
-├── tsconfig.json           # TypeScript configuration
-├── package.json            # Dependencies and scripts
-├── Dockerfile              # Docker image definition
-├── docs/
-│   ├── SRS.md              # Software Requirements Specification (IEEE 29148)
-│   ├── ARCHITECTURE.md     # System architecture and design
-│   ├── DEPLOYMENT_GUIDE.md # Deployment instructions
-│   ├── TESTING_GUIDE.md    # Testing procedures
-│   └── ADMIN_GUIDE.md      # Administrator guide
-├── CHANGELOG.md            # Version history
-├── GAP_ANALYSIS.md         # SRS vs. Implementation alignment
-└── CREATION.md             # This file
+â”œâ”€â”€ src/
+â”‚   â”œâ”€â”€ components/         # Reusable UI components (sidebar, cards, charts)
+â”‚   â”œâ”€â”€ pages/              # Route-level pages (Dashboard, Entities, Health, Alerts, Admin)
+â”‚   â”œâ”€â”€ pages/admin/        # Protected admin pages (6 sub-routes)
+â”‚   â”œâ”€â”€ a11y/               # Accessibility helpers (ARIA tooltips)
+â”‚   â”œâ”€â”€ hooks/              # React hooks (polling, data fetching)
+â”‚   â”œâ”€â”€ stores/             # Zustand stores (auth, theme, app state)
+â”‚   â”œâ”€â”€ services/           # API client services
+â”‚   â”œâ”€â”€ types/              # TypeScript type definitions
+â”‚   â”œâ”€â”€ utils/              # Utility functions
+â”‚   â”œâ”€â”€ App.tsx             # Router configuration
+â”‚   â”œâ”€â”€ Layout.tsx          # Main layout (sidebar + main content)
+â”‚   â”œâ”€â”€ main.tsx            # Entry point
+â”‚   â””â”€â”€ index.css           # Global styles + Tailwind imports
+â”œâ”€â”€ server.ts               # Express server (dev + prod)
+â”œâ”€â”€ vite.config.ts          # Vite build configuration
+â”œâ”€â”€ vitest.config.ts        # Vitest configuration
+â”œâ”€â”€ vitest.e2e.config.ts    # Playwright E2E configuration
+â”œâ”€â”€ tailwind.config.ts      # Tailwind CSS configuration
+â”œâ”€â”€ tsconfig.json           # TypeScript configuration
+â”œâ”€â”€ package.json            # Dependencies and scripts
+â”œâ”€â”€ Dockerfile              # Docker image definition
+â”œâ”€â”€ docs/
+â”‚   â”œâ”€â”€ SRS.md              # Software Requirements Specification (IEEE 29148)
+â”‚   â”œâ”€â”€ ARCHITECTURE.md     # System architecture and design
+â”‚   â”œâ”€â”€ DEPLOYMENT_GUIDE.md # Deployment instructions
+â”‚   â”œâ”€â”€ TESTING_GUIDE.md    # Testing procedures
+â”‚   â””â”€â”€ ADMIN_GUIDE.md      # Administrator guide
+â”œâ”€â”€ CHANGELOG.md            # Version history
+â”œâ”€â”€ GAP_ANALYSIS.md         # SRS vs. Implementation alignment
+â””â”€â”€ CREATION.md             # This file
 
 ```
 
 ## Open Questions & Resolutions
 
 ### Q1: How are health scores computed?
-**A:** Health scores are derived from a simulated metric stream (0–100 range). Every 5 seconds, metrics are regenerated per entity with slight variance (±10 points). In production, these would be computed from actual transaction/fraud signals.
+**A:** Health scores are derived from a simulated metric stream (0â€“100 range). Every 5 seconds, metrics are regenerated per entity with slight variance (Â±10 points). In production, these would be computed from actual transaction/fraud signals.
 
 ### Q2: Can I integrate real fraud detection models?
 **A:** Yes. The `/api/v1/predict` endpoint is a placeholder. Replace it with calls to your ML inference service (e.g., Gemini AI, custom PyTorch model, or third-party API).
@@ -206,4 +206,4 @@ fraud-detection-engine/
 ---
 
 *Last Updated: 2026-04-27*  
-*Status: Phase 4 Complete — Ready for Phase 5 (Final Alignment & Packaging)*
+*Status: Phase 4 Complete â€” Ready for Phase 5 (Final Alignment & Packaging)*

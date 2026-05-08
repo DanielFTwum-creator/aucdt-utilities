@@ -1,4 +1,4 @@
-
+﻿
 # Software Requirements Specification (SRS)
 ## Project: TVET Assessment Progress Dashboard
 **Version**: 5.2.0-Tooltips
@@ -60,7 +60,7 @@ The following documents constitute the complete documentation package:
 - **Notifications**: Queue of active system messages `{ id, type, message }`.
 
 ### 4. Technical Constraints
-- **Stack**: React 19.2.4 (Strict Requirement), Tailwind CSS, Recharts, Lucide React.
+- **Stack**: React 19.2.5 (Strict Requirement), Tailwind CSS, Recharts, Lucide React.
 - **Execution**: Purely client-side browser environment (No-Build).
 - **Storage**: Stateless; reliant on URL fragments and local memory.
 
@@ -77,7 +77,7 @@ The following architecture diagrams describe the high-level design:
 
 #### 5.3 Technology Stack
 ![Tech Stack](docs/TechStack.svg)
-*Board-level overview of the Zero-Build React 19.2.4 stack.*
+*Board-level overview of the Zero-Build React 19.2.5 stack.*
 
 #### 5.4 Data Flow
 ![Data Flow](docs/DataFlow.svg)

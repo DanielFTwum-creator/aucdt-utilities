@@ -1,11 +1,11 @@
-# Deployment Guide: Brainiac Challenge
+﻿# Deployment Guide: Brainiac Challenge
 **Project:** Brainiac Challenge AI Quiz (v3.0.0)
-**Core Requirement:** MUST compile with React 19.2.4
+**Core Requirement:** MUST compile with React 19.2.5
 
 ## 1. Prerequisites
 - **Node.js**: v18+ required.
 - **Package Manager**: `pnpm` (recommended) or `npm`.
-- **Constraint**: Ensure `package.json` pins `react` and `react-dom` to **19.2.4**.
+- **Constraint**: Ensure `package.json` pins `react` and `react-dom` to **19.2.5**.
 
 ## 2. Environment Variables
 Create a `.env` file in the root directory:
@@ -19,7 +19,7 @@ FIREBASE_PROJECT_ID=your_project_id
 ## 3. Institutional Build
 1. **Sync Dependencies**: `pnpm install`
 2. **Build**: `pnpm run build`
-3. **Verify**: Ensure all chunks are React 19.2.4 compatible.
+3. **Verify**: Ensure all chunks are React 19.2.5 compatible.
 
 ## 4. Hosting (Static + Firebase)
 Deploy the `dist/` folder to your institutional static hosting provider.

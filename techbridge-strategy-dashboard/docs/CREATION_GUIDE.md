@@ -1,4 +1,4 @@
-# Sentinel Agent - Model Creation Guide
+﻿# Sentinel Agent - Model Creation Guide
 
 ## OBJECTIVE
 Recreate the Sentinel Agent application from scratch following these exact steps. This is a full-stack React + Node.js application with PWA support.
@@ -31,8 +31,8 @@ Create file `package.json` with this exact content:
     "cors": "^2.8.6",
     "dotenv": "^17.2.4",
     "express": "^5.2.1",
-    "react": "^19.2.4",
-    "react-dom": "^19.2.4",
+    "react": "^19.2.5",
+    "react-dom": "^19.2.5",
     "typescript": "^4.9.5",
     "web-vitals": "^2.1.4"
   },
@@ -447,7 +447,7 @@ pnpm run preview
 ## ARCHITECTURE NOTES
 
 ### Frontend
-- React 19.2.4 with TypeScript
+- React 19.2.5 with TypeScript
 - Vite 7.3.1 for build and dev server
 - PWA support via vite-plugin-pwa
 - Component-based architecture

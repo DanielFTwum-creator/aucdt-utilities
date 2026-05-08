@@ -1,4 +1,4 @@
-# Administrator Guide
+﻿# Administrator Guide
 **Techbridge Media Club Platform**
 
 ## 1. Introduction
@@ -28,7 +28,7 @@ Once authenticated, the Overview tab provides a high-level snapshot of the syste
 
 ### 3.2 Diagnostics
 The Diagnostics tab displays technical details about the running environment:
-*   **Frontend Stack:** Verifies React version (19.2.4) and Tailwind CSS status.
+*   **Frontend Stack:** Verifies React version (19.2.5) and Tailwind CSS status.
 *   **Service Status:** Shows the status of internal singleton services (Auth, Audit, WebSocket).
 
 ### 3.3 Testing Suite

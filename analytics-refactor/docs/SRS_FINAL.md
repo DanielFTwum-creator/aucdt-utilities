@@ -1,9 +1,9 @@
-# Software Requirements Specification (SRS)
-## Advanced Analytics Dashboard — TECHBRIDGE University College
+﻿# Software Requirements Specification (SRS)
+## Advanced Analytics Dashboard â€” TECHBRIDGE University College
 ## Version 4.1 (Post-Session Corrections)
 
 **Date:** February 4, 2026
-**Organisation:** TECHBRIDGE University College — ICT Department
+**Organisation:** TECHBRIDGE University College â€” ICT Department
 **Document Standard:** IEEE Std 830-1998
 **Status:** Production Ready
 
@@ -13,8 +13,8 @@
 
 | Version | Date | Notes |
 |---------|------|-------|
-| 1.0–2.0 | Jan 26–28, 2026 | Initial release through authentication |
-| 2.1–2.6 | Jan 28–29, 2026 | Accessibility, export, admin, security enhancements |
+| 1.0â€“2.0 | Jan 26â€“28, 2026 | Initial release through authentication |
+| 2.1â€“2.6 | Jan 28â€“29, 2026 | Accessibility, export, admin, security enhancements |
 | 3.0 | Feb 1, 2026 | Major documentation revision |
 | 4.0 | Feb 3, 2026 | Single consolidated SRS. All claims verified against source. 18 discrepancies from v3.0 corrected. |
 | **4.1** | **Feb 4, 2026** | **This document.** Tailwind v3 noted. Efficiency formula corrected. Registered validation relaxed. Post-import logout fixed. TestPanel, filter wiring, LoginScreen audit, admin password all confirmed wired. Appendix C pruned. |
@@ -33,7 +33,7 @@
 6. Testing & Quality
 7. Data & Persistence
 8. File & Route Reference
-9. Corrections Log (v3.0 → v4.0)
+9. Corrections Log (v3.0 â†’ v4.0)
 10. Appendices
 
 ---
@@ -78,47 +78,47 @@ This is the single authoritative requirements specification for the **Advanced A
 ## 2.1 Architecture
 
 ```
-┌──────────────────────────────────────────────────────────┐
-│                      Browser (Client)                     │
-│                                                           │
-│  ┌─────────────────────────────────────────────────┐    │
-│  │  AdvancedAnalytics (root)                        │    │
-│  │  ├── LoginScreen          (auth gate)            │    │
-│  │  └── AuthenticatedDashboard                      │    │
-│  │        ├── DashboardHeader   (nav / controls)    │    │
-│  │        ├── AllTimeStatsBanner                    │    │
-│  │        ├── 5 × Chart components (Recharts)       │    │
-│  │        ├── ExportModal       (PDF / CSV / Excel) │    │
-│  │        ├── FilterPanel       (date / metrics)    │    │
-│  │        ├── AdminPanel        (5-tab modal)       │    │
-│  │        └── Footer                                │    │
-│  │                                                  │    │
-│  │  Shared Layer                                    │    │
-│  │  ├── AccessibilityToolbar + AccessibilityContext  │    │
-│  │  ├── SkipLinks                                   │    │
-│  │  ├── KeyboardShortcutsAnnouncer                  │    │
-│  │  ├── ErrorBoundary                               │    │
-│  │  └── FilterContext / ExportContext / ThemeContext  │    │
-│  │                                                  │    │
-│  │  Services                                        │    │
-│  │  ├── AuditLogger   (singleton, localStorage)     │    │
-│  │  ├── ExportService (jsPDF, XLSX)                 │    │
-│  │  ├── DataImportService (JSON parsing)            │    │
-│  │  └── logger.js     (general-purpose logger)      │    │
-│  │                                                  │    │
-│  │  Utilities                                       │    │
-│  │  ├── analyticsCalculations.js                    │    │
-│  │  ├── dataValidation.js                           │    │
-│  │  ├── formatters.js                               │    │
-│  │  └── inputValidation.js                          │    │
-│  └─────────────────────────────────────────────────┘    │
-│                                                           │
-│  Persistence                                              │
-│  ├── localStorage: audit_logs, imported_analytics_data,  │
-│  │                 login_attempts, login_lockout_until,   │
-│  │                 theme, fontSize, reduceMotion          │
-│  └── sessionStorage: session_id                          │
-└──────────────────────────────────────────────────────────┘
+â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
+â”‚                      Browser (Client)                     â”‚
+â”‚                                                           â”‚
+â”‚  â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”    â”‚
+â”‚  â”‚  AdvancedAnalytics (root)                        â”‚    â”‚
+â”‚  â”‚  â”œâ”€â”€ LoginScreen          (auth gate)            â”‚    â”‚
+â”‚  â”‚  â””â”€â”€ AuthenticatedDashboard                      â”‚    â”‚
+â”‚  â”‚        â”œâ”€â”€ DashboardHeader   (nav / controls)    â”‚    â”‚
+â”‚  â”‚        â”œâ”€â”€ AllTimeStatsBanner                    â”‚    â”‚
+â”‚  â”‚        â”œâ”€â”€ 5 Ã— Chart components (Recharts)       â”‚    â”‚
+â”‚  â”‚        â”œâ”€â”€ ExportModal       (PDF / CSV / Excel) â”‚    â”‚
+â”‚  â”‚        â”œâ”€â”€ FilterPanel       (date / metrics)    â”‚    â”‚
+â”‚  â”‚        â”œâ”€â”€ AdminPanel        (5-tab modal)       â”‚    â”‚
+â”‚  â”‚        â””â”€â”€ Footer                                â”‚    â”‚
+â”‚  â”‚                                                  â”‚    â”‚
+â”‚  â”‚  Shared Layer                                    â”‚    â”‚
+â”‚  â”‚  â”œâ”€â”€ AccessibilityToolbar + AccessibilityContext  â”‚    â”‚
+â”‚  â”‚  â”œâ”€â”€ SkipLinks                                   â”‚    â”‚
+â”‚  â”‚  â”œâ”€â”€ KeyboardShortcutsAnnouncer                  â”‚    â”‚
+â”‚  â”‚  â”œâ”€â”€ ErrorBoundary                               â”‚    â”‚
+â”‚  â”‚  â””â”€â”€ FilterContext / ExportContext / ThemeContext  â”‚    â”‚
+â”‚  â”‚                                                  â”‚    â”‚
+â”‚  â”‚  Services                                        â”‚    â”‚
+â”‚  â”‚  â”œâ”€â”€ AuditLogger   (singleton, localStorage)     â”‚    â”‚
+â”‚  â”‚  â”œâ”€â”€ ExportService (jsPDF, XLSX)                 â”‚    â”‚
+â”‚  â”‚  â”œâ”€â”€ DataImportService (JSON parsing)            â”‚    â”‚
+â”‚  â”‚  â””â”€â”€ logger.js     (general-purpose logger)      â”‚    â”‚
+â”‚  â”‚                                                  â”‚    â”‚
+â”‚  â”‚  Utilities                                       â”‚    â”‚
+â”‚  â”‚  â”œâ”€â”€ analyticsCalculations.js                    â”‚    â”‚
+â”‚  â”‚  â”œâ”€â”€ dataValidation.js                           â”‚    â”‚
+â”‚  â”‚  â”œâ”€â”€ formatters.js                               â”‚    â”‚
+â”‚  â”‚  â””â”€â”€ inputValidation.js                          â”‚    â”‚
+â”‚  â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜    â”‚
+â”‚                                                           â”‚
+â”‚  Persistence                                              â”‚
+â”‚  â”œâ”€â”€ localStorage: audit_logs, imported_analytics_data,  â”‚
+â”‚  â”‚                 login_attempts, login_lockout_until,   â”‚
+â”‚  â”‚                 theme, fontSize, reduceMotion          â”‚
+â”‚  â””â”€â”€ sessionStorage: session_id                          â”‚
+â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
 ```
 
 ## 2.2 User Classes
@@ -142,7 +142,7 @@ This is the single authoritative requirements specification for the **Advanced A
 
 ## 2.4 Constraints
 
-- **No backend (Phase 1–3).** All data in localStorage or embedded fallback.
+- **No backend (Phase 1â€“3).** All data in localStorage or embedded fallback.
 - **Single-user sessions.** No concurrent access model.
 - **Ghana Data Protection Act.** Aggregated data only; no PII displayed.
 - **WCAG 2.1 AA.** Mandatory across all themes.
@@ -154,7 +154,7 @@ This is the single authoritative requirements specification for the **Advanced A
 ## 3.1 User Interfaces
 
 ### UI-001 Login Screen
-**File:** `AdvancedAnalytics.jsx` — `LoginScreen` component (lines 33–228)
+**File:** `AdvancedAnalytics.jsx` â€” `LoginScreen` component (lines 33â€“228)
 
 - TECHBRIDGE logo (loaded from `https://techbridge.edu.gh/static/TUC_LOGO_1.png`)
 - Username + password fields with `autoComplete` attributes
@@ -188,12 +188,12 @@ This is the single authoritative requirements specification for the **Advanced A
 - Closes on X button or Escape
 
 ### UI-005 Filter Panel
-**File:** `FilterPanel.js` (692 lines — fully rendered)
+**File:** `FilterPanel.js` (692 lines â€” fully rendered)
 
 - Slides in from the right as a modal drawer
 - **Date Range:** 8 presets (All Time, Last 30 Days, Last 3/6/12 Months, This Year, Last Year, Custom). Custom range uses native `<input type="month">`.
 - **Metric Selector:** 6 checkboxes (Signups, Applicants, Accepted, Rejected, Waitlisted, Registered) with colour-coded borders. "Select All" / "Reset to Default" links.
-- **Year Comparison:** Toggle buttons for each year 2017–current. Selected years listed in a summary note.
+- **Year Comparison:** Toggle buttons for each year 2017â€“current. Selected years listed in a summary note.
 - **Active Filters summary** shown when any filter is non-default.
 - Apply / Cancel / Reset footer buttons.
 - Filter state flows to parent via `onApplyFilters`; parent passes `dateRange` and `selectedMetrics` to `useAnalyticsData`. The hook applies both filters: date range in Step 2, metric zeroing in Step 3 (lines 131-145).
@@ -210,7 +210,7 @@ This is the single authoritative requirements specification for the **Advanced A
   | Statistics | Total / by-severity / recent-activity cards; action-breakdown list |
   | Data Import | JSON file selector button, import instructions, strategy selector, recent-imports history |
   | Settings | Clear old logs (keep last 500), placeholder buttons for future features, Danger Zone |
-  | System Test | `TestPanel.jsx` — data integrity, calculation accuracy, performance benchmarks, accessibility checks |
+  | System Test | `TestPanel.jsx` â€” data integrity, calculation accuracy, performance benchmarks, accessibility checks |
 
 - **Data Import flow:** file selector opens `DataImportModal`, which parses JSON, previews, and calls back with data + strategy. Merge logic lives in `AdvancedAnalytics.jsx:handleDataImport`.
 
@@ -220,10 +220,10 @@ This is the single authoritative requirements specification for the **Advanced A
 Rendered as the "System Test" tab inside `AdminPanel.js`.
 
 Tests it runs when invoked:
-1. Data Integrity — calls `validateDataIntegrity()`, reports record count and errors
-2. Calculation Accuracy — spot-checks acceptance rate, yearly aggregation, all-time totals, summary stats
-3. Performance Benchmarks — measures `processRawData` and `calculateYearlyData` times; optionally reports `performance.memory`
-4. Accessibility Checks — DOM-level checks (main landmark, alt text, single H1); placeholder for axe-core
+1. Data Integrity â€” calls `validateDataIntegrity()`, reports record count and errors
+2. Calculation Accuracy â€” spot-checks acceptance rate, yearly aggregation, all-time totals, summary stats
+3. Performance Benchmarks â€” measures `processRawData` and `calculateYearlyData` times; optionally reports `performance.memory`
+4. Accessibility Checks â€” DOM-level checks (main landmark, alt text, single H1); placeholder for axe-core
 
 Exports results as JSON.
 
@@ -231,18 +231,18 @@ Exports results as JSON.
 
 # 4. System Features (Functional Requirements)
 
-## 4.1 Authentication (F-AUTH) — COMPLETE
+## 4.1 Authentication (F-AUTH) â€” COMPLETE
 
 | ID | Requirement | Verified |
 |----|-------------|----------|
-| FR-AUTH-001 | Login screen displayed before dashboard; includes logo, username, password | `LoginScreen` lines 156–227 |
-| FR-AUTH-002 | Credentials from env vars `REACT_APP_ADMIN_USERNAME` / `REACT_APP_ADMIN_PASSWORD`; defaults `admin` / `analytics2024`; exact-match validation | Line 44–45, 93 |
-| FR-AUTH-003 | Failed attempts tracked in localStorage (`login_attempts`); limited to configurable max (default 5) | Lines 112–114, 46 |
-| FR-AUTH-004 | Account locked after max attempts; lockout duration configurable (default 15 min); countdown shown; auto-unlock on expiry | Lines 129–134, 50–79 |
+| FR-AUTH-001 | Login screen displayed before dashboard; includes logo, username, password | `LoginScreen` lines 156â€“227 |
+| FR-AUTH-002 | Credentials from env vars `REACT_APP_ADMIN_USERNAME` / `REACT_APP_ADMIN_PASSWORD`; defaults `admin` / `analytics2024`; exact-match validation | Line 44â€“45, 93 |
+| FR-AUTH-003 | Failed attempts tracked in localStorage (`login_attempts`); limited to configurable max (default 5) | Lines 112â€“114, 46 |
+| FR-AUTH-004 | Account locked after max attempts; lockout duration configurable (default 15 min); countdown shown; auto-unlock on expiry | Lines 129â€“134, 50â€“79 |
 | FR-AUTH-005 | Login / lockout / logout events logged via `auditLogger` singleton (imported at module level) | Lines 103, 119, 139 |
-| FR-AUTH-006 | Session in React state; logout clears state and returns to login | Lines 255–259, 330–333 |
+| FR-AUTH-006 | Session in React state; logout clears state and returns to login | Lines 255â€“259, 330â€“333 |
 
-## 4.2 Data Visualisation (F-VIZ) — COMPLETE
+## 4.2 Data Visualisation (F-VIZ) â€” COMPLETE
 
 Five charts, all Recharts-based, rendered inside `AuthenticatedDashboard`.
 
@@ -251,20 +251,20 @@ Five charts, all Recharts-based, rendered inside `AuthenticatedDashboard`.
 | Year-over-Year Growth | ComposedChart | Bars: Signups, Applicants, Accepted, Registered. Line: Acceptance Rate (right Y-axis). Grouped by year. |
 | Conversion Funnel | AreaChart | Stacked areas, last 12 months. Stage-summary cards below. Compares recent vs all-time registration rate. |
 | Quality vs Quantity | ScatterChart | X = Applicants, Y = Acceptance Rate, bubble size = Accepted. Filters out zero-applicant months. |
-| Seasonal Patterns | BarChart | Monthly averages across all years. 4 grouped bars (Signups, Applicants, Accepted, Rejected). Sorted Jan–Dec. |
-| Performance Scorecard | RadarChart | Last 6 months. 4 metrics scaled 0–100: Conversion, Acceptance, Success, Efficiency. Definition cards below. |
+| Seasonal Patterns | BarChart | Monthly averages across all years. 4 grouped bars (Signups, Applicants, Accepted, Rejected). Sorted Janâ€“Dec. |
+| Performance Scorecard | RadarChart | Last 6 months. 4 metrics scaled 0â€“100: Conversion, Acceptance, Success, Efficiency. Definition cards below. |
 
 **Metric formulas** (source: `analyticsCalculations.js`):
 
 | Metric | Formula |
 |--------|---------|
-| Conversion | (Applicants / Signups) × 100 |
-| Acceptance | (Accepted / Applicants) × 100 |
-| Success | ((Accepted + Waitlisted) / Applicants) × 100 |
-| Efficiency | (Accepted / (Accepted + Rejected + Waitlisted)) × 100 |
-| Dropoff Rate | ((Signups − Applicants) / Signups) × 100 |
+| Conversion | (Applicants / Signups) Ã— 100 |
+| Acceptance | (Accepted / Applicants) Ã— 100 |
+| Success | ((Accepted + Waitlisted) / Applicants) Ã— 100 |
+| Efficiency | (Accepted / (Accepted + Rejected + Waitlisted)) Ã— 100 |
+| Dropoff Rate | ((Signups âˆ’ Applicants) / Signups) Ã— 100 |
 
-## 4.3 Accessibility (F-A11Y) — COMPLETE
+## 4.3 Accessibility (F-A11Y) â€” COMPLETE
 
 | ID | Requirement | Implementation |
 |----|-------------|----------------|
@@ -285,7 +285,7 @@ Five charts, all Recharts-based, rendered inside `AuthenticatedDashboard`.
 | `Enter` | Activate button |
 | `Escape` | Close modal / panel |
 
-## 4.4 Export System (F-EXPORT) — COMPLETE
+## 4.4 Export System (F-EXPORT) â€” COMPLETE
 
 | ID | Requirement | Details |
 |----|-------------|---------|
@@ -296,20 +296,20 @@ Five charts, all Recharts-based, rendered inside `AuthenticatedDashboard`.
 
 > **Note on PDF:** The SRS v3.0 stated "A4 landscape with TECHBRIDGE branding". The actual PDF is portrait (jsPDF default) with a text-based logo placeholder. The external logo URL is commented out in `ExportService.js:182`.
 
-## 4.5 Admin Panel (F-ADMIN) — COMPLETE
+## 4.5 Admin Panel (F-ADMIN) â€” COMPLETE
 
 | ID | Requirement | Status |
 |----|-------------|--------|
 | FR-ADMIN-001 | Data import from file | **JSON only** (phpMyAdmin export or custom array). File-selector button, no drag-and-drop. |
 | FR-ADMIN-002 | Import validation | Required fields checked; YYYY-MM date format enforced; numeric values validated; duplicates flagged. |
-| FR-ADMIN-003 | Import strategies | Replace / Merge / Append — all implemented in both `DataImportService.mergeData` and `AdvancedAnalytics.handleDataImport`. |
+| FR-ADMIN-003 | Import strategies | Replace / Merge / Append â€” all implemented in both `DataImportService.mergeData` and `AdvancedAnalytics.handleDataImport`. |
 | FR-ADMIN-004 | Audit log viewer | Filterable by severity / action / user; Export CSV; Clear (with confirmation). |
 | FR-ADMIN-005 | Statistics tab | Total logs, by-severity counts, recent-activity (24 h / 7 d / 30 d), action breakdown. |
 | FR-ADMIN-006 | Settings tab | Clear old logs (keep last N); placeholder stubs for future features. |
 
-## 4.6 Filter System (F-FILTER) — COMPLETE
+## 4.6 Filter System (F-FILTER) â€” COMPLETE
 
-The filter panel UI is fully built and functional (§3.1 UI-005). Filters flow through to `useAnalyticsData`: date range is applied in Step 2 (date filter), selected metrics are zeroed out in Step 3 (metric filter, lines 131-145). All six calculated views (raw, yearly, funnel, correlation, seasonal, radar) receive the filtered dataset.
+The filter panel UI is fully built and functional (Â§3.1 UI-005). Filters flow through to `useAnalyticsData`: date range is applied in Step 2 (date filter), selected metrics are zeroed out in Step 3 (metric filter, lines 131-145). All six calculated views (raw, yearly, funnel, correlation, seasonal, radar) receive the filtered dataset.
 
 | ID | Requirement | Status |
 |----|-------------|--------|
@@ -317,11 +317,11 @@ The filter panel UI is fully built and functional (§3.1 UI-005). Filters flow t
 | FR-FILTER-002 | Metric checkboxes + Select All / Reset | Complete |
 | FR-FILTER-003 | Year comparison toggles | Complete |
 | FR-FILTER-004 | Active-filter badge on header button | Complete (`getActiveFilterCount` in both `FilterPanel` and `FilterContext`) |
-| FR-FILTER-005 | Charts update on filter apply | Complete — `useAnalyticsData` applies both date and metric filters |
+| FR-FILTER-005 | Charts update on filter apply | Complete â€” `useAnalyticsData` applies both date and metric filters |
 
-## 4.7 Audit Logging (F-AUDIT) — COMPLETE
+## 4.7 Audit Logging (F-AUDIT) â€” COMPLETE
 
-**File:** `AuditLogger.js` — singleton class, exported as `auditLogger`.
+**File:** `AuditLogger.js` â€” singleton class, exported as `auditLogger`.
 
 | Capability | Detail |
 |------------|--------|
@@ -329,8 +329,8 @@ The filter panel UI is fully built and functional (§3.1 UI-005). Filters flow t
 | Log entry fields | `id`, `timestamp`, `action`, `details`, `severity`, `user`, `sessionId`, `userAgent` |
 | Severity levels | `info`, `warning`, `error`, `critical` |
 | Typed log methods | `logAuth`, `logExport`, `logFilterChange`, `logDataAccess`, `logAdminAction`, `logError`, `logSecurity` |
-| Query | `getLogs(filters)` — supports severity, action, user, date-range; sorted newest-first |
-| Statistics | `getStatistics()` — totals by severity, by action, recent-activity windows |
+| Query | `getLogs(filters)` â€” supports severity, action, user, date-range; sorted newest-first |
+| Statistics | `getStatistics()` â€” totals by severity, by action, recent-activity windows |
 | Export | CSV download via `exportLogs()` |
 | Retention | `clearOldLogs(keepCount)` and `clearLogs()` |
 
@@ -359,11 +359,11 @@ The filter panel UI is fully built and functional (§3.1 UI-005). Filters flow t
 
 | ID | Target | Maximum |
 |----|--------|---------|
-| NFR-PERF-001 Initial load | < 3 s on university LAN | — |
+| NFR-PERF-001 Initial load | < 3 s on university LAN | â€” |
 | NFR-PERF-002 Data processing (60 records) | < 500 ms | 2 s (1 000 records) |
 | NFR-PERF-003 Chart rendering (all 5) | < 1 s total | 200 ms per chart |
-| NFR-PERF-004 Export generation | PDF < 5 s; CSV < 1 s; Excel < 3 s | — |
-| NFR-PERF-005 Browser memory | < 150 MB | — |
+| NFR-PERF-004 Export generation | PDF < 5 s; CSV < 1 s; Excel < 3 s | â€” |
+| NFR-PERF-005 Browser memory | < 150 MB | â€” |
 | NFR-PERF-006 Bundle size | < 500 KB gzipped JS | Total assets < 2 MB |
 
 ## 5.2 Security
@@ -371,14 +371,14 @@ The filter panel UI is fully built and functional (§3.1 UI-005). Filters flow t
 | ID | Requirement | Notes |
 |----|-------------|-------|
 | NFR-SEC-001 | Auth enforced before dashboard | `LoginScreen` gate |
-| NFR-SEC-002 | Credentials NOT stored in localStorage | Correct — only `login_attempts` / lockout timestamp stored. **However:** both the main password (`analytics2024`) and the admin-panel password (`admin2024`) are hardcoded in client-side source and visible in the built bundle. These MUST be changed before production deployment. |
-| NFR-SEC-003 | Audit trail for all security events | See §4.7 |
+| NFR-SEC-002 | Credentials NOT stored in localStorage | Correct â€” only `login_attempts` / lockout timestamp stored. **However:** both the main password (`analytics2024`) and the admin-panel password (`admin2024`) are hardcoded in client-side source and visible in the built bundle. These MUST be changed before production deployment. |
+| NFR-SEC-003 | Audit trail for all security events | See Â§4.7 |
 | NFR-SEC-004 | Session in memory only; cleared on logout | React state; no localStorage session token |
 | NFR-SEC-005 | HTTPS mandatory | Deployment constraint |
 
 ## 5.3 Accessibility
 
-WCAG 2.1 AA target across all three themes. Specific requirements in §4.3.
+WCAG 2.1 AA target across all three themes. Specific requirements in Â§4.3.
 
 ## 5.4 Reliability
 
@@ -386,7 +386,7 @@ WCAG 2.1 AA target across all three themes. Specific requirements in §4.3.
 |----|-------------|
 | NFR-REL-001 | `ErrorBoundary` component (`ErrorBoundary.jsx`, 243 lines) catches unhandled React errors and renders a fallback UI with retry capability. |
 | NFR-REL-002 | All calculations accurate to 1 decimal place (rates) or integer (counts). |
-| NFR-REL-003 | `dataValidation.js` enforces business rules (e.g. warns if Registered > 1.5× Accepted, indicating cross-month lag; flags high dropout rate > 60%). |
+| NFR-REL-003 | `dataValidation.js` enforces business rules (e.g. warns if Registered > 1.5Ã— Accepted, indicating cross-month lag; flags high dropout rate > 60%). |
 
 ## 5.5 Maintainability
 
@@ -408,27 +408,27 @@ WCAG 2.1 AA target across all three themes. Specific requirements in §4.3.
 
 # 6. Testing & Quality
 
-## 6.1 Unit Tests — Written
+## 6.1 Unit Tests â€” Written
 
 **File:** `src/components/analytics/__tests__/analyticsCalculations.test.js`
 
 Covers `processRawData`, `calculateYearlyData`, `calculateFunnelData`, `calculateCorrelationData`, `calculateSeasonalData`, `calculateRadarData`, `calculateTrends`, `calculateAllTimeStats`, `calculateSummaryStats`. Tests include empty arrays, missing fields, zero-division edge cases.
 
-## 6.2 E2E Tests — Written
+## 6.2 E2E Tests â€” Written
 
-**File:** `e2e/dashboard.test.js` — Playwright suite.
+**File:** `e2e/dashboard.test.js` â€” Playwright suite.
 
 | Flow | Steps |
 |------|-------|
-| Login → Dashboard | Navigate, enter creds, verify 5 charts visible, no console errors |
+| Login â†’ Dashboard | Navigate, enter creds, verify 5 charts visible, no console errors |
 | Failed Login + Lockout | 5 bad attempts, verify lockout message, wait, verify re-enabled |
 | Export to PDF | Login, open modal, select PDF, verify download |
 | Data Import | Login, open admin, upload test CSV, merge, verify success |
 | Keyboard Navigation | Tab through elements, `Ctrl+Shift+A`, Escape |
 
-## 6.3 Self-Testing Module — Complete
+## 6.3 Self-Testing Module â€” Complete
 
-`TestPanel.jsx` (§3.1 UI-007). Runs data-integrity, calculation-accuracy, performance-benchmark, and accessibility checks. Exports JSON report. Accessible as the "System Test" tab in `AdminPanel.js`.
+`TestPanel.jsx` (Â§3.1 UI-007). Runs data-integrity, calculation-accuracy, performance-benchmark, and accessibility checks. Exports JSON report. Accessible as the "System Test" tab in `AdminPanel.js`.
 
 ## 6.4 Coverage Targets
 
@@ -436,7 +436,7 @@ Covers `processRawData`, `calculateYearlyData`, `calculateFunnelData`, `calculat
 |-------|--------|
 | Utility functions | 90% |
 | Data validation | 85% |
-| Export/Import services | 70–75% |
+| Export/Import services | 70â€“75% |
 | Chart components | 60% |
 | Accessibility components | 65% |
 
@@ -465,9 +465,9 @@ Covers `processRawData`, `calculateYearlyData`, `calculateFunnelData`, `calculat
 
 ## 7.3 Fallback Data
 
-61 months of embedded historical data (Sep 2017 – Feb 2026) lives in `useAnalyticsData.js`. This is the default dataset when nothing has been imported. 7 raw metrics per month; rates are calculated at read time.
+61 months of embedded historical data (Sep 2017 â€“ Feb 2026) lives in `useAnalyticsData.js`. This is the default dataset when nothing has been imported. 7 raw metrics per month; rates are calculated at read time.
 
-## 7.4 Data Model — Monthly Record
+## 7.4 Data Model â€” Monthly Record
 
 | Field | Type | Source |
 |-------|------|--------|
@@ -489,55 +489,55 @@ Covers `processRawData`, `calculateYearlyData`, `calculateFunnelData`, `calculat
 
 ```
 src/
-├── components/
-│   ├── accessibility/
-│   │   ├── AccessibilityToolbar.js    Theme / font / motion controls
-│   │   └── SkipLinks.js               Screen-reader skip links
-│   ├── admin/
-│   │   ├── AdminPanel.js              5-tab admin modal
-│   │   ├── DataImportModal.js         JSON import wizard
-│   │   └── TestPanel.jsx              Self-test suite (System Test tab)
-│   ├── analytics/
-│   │   ├── AdvancedAnalytics.jsx      Root: LoginScreen + AuthenticatedDashboard
-│   │   ├── charts/                    5 chart components
-│   │   ├── components/                DashboardHeader, AllTimeStatsBanner, states
-│   │   ├── context/
-│   │   │   └── AccessibilityContext.jsx
-│   │   ├── hooks/
-│   │   │   └── useAnalyticsData.js    Data fetch + memoised calculations
-│   │   └── utils/
-│   │       ├── analyticsCalculations.js   All rate / aggregation logic
-│   │       └── dataValidation.js          Business-rule validation
-│   ├── export/
-│   │   └── ExportModal.js             Format selector + download trigger
-│   ├── filters/
-│   │   └── FilterPanel.js             Date / metric / year filter drawer
-│   └── ErrorBoundary.jsx              Top-level error recovery
-├── contexts/
-│   ├── FilterContext.js               Global filter state
-│   ├── ExportContext.js               Export state + helpers
-│   └── ThemeContext.js                Theme state
-├── hooks/
-│   └── useKeyboardShortcuts.js        Global keyboard bindings + announcer
-├── services/
-│   ├── AuditLogger.js                 Audit trail singleton
-│   ├── ExportService.js               PDF / CSV / Excel generation
-│   ├── DataImportService.js           JSON parse / validate / merge
-│   └── logger.js                      General-purpose logger
-├── styles/
-│   └── premiumTheme.js                Glassmorphism theme tokens + z-index map
-├── utils/
-│   ├── formatters.js                  Date / number formatting
-│   └── inputValidation.js             Input sanitisation
-└── config/
-    └── auth.config.js                 Auth constants / env-var defaults
+â”œâ”€â”€ components/
+â”‚   â”œâ”€â”€ accessibility/
+â”‚   â”‚   â”œâ”€â”€ AccessibilityToolbar.js    Theme / font / motion controls
+â”‚   â”‚   â””â”€â”€ SkipLinks.js               Screen-reader skip links
+â”‚   â”œâ”€â”€ admin/
+â”‚   â”‚   â”œâ”€â”€ AdminPanel.js              5-tab admin modal
+â”‚   â”‚   â”œâ”€â”€ DataImportModal.js         JSON import wizard
+â”‚   â”‚   â””â”€â”€ TestPanel.jsx              Self-test suite (System Test tab)
+â”‚   â”œâ”€â”€ analytics/
+â”‚   â”‚   â”œâ”€â”€ AdvancedAnalytics.jsx      Root: LoginScreen + AuthenticatedDashboard
+â”‚   â”‚   â”œâ”€â”€ charts/                    5 chart components
+â”‚   â”‚   â”œâ”€â”€ components/                DashboardHeader, AllTimeStatsBanner, states
+â”‚   â”‚   â”œâ”€â”€ context/
+â”‚   â”‚   â”‚   â””â”€â”€ AccessibilityContext.jsx
+â”‚   â”‚   â”œâ”€â”€ hooks/
+â”‚   â”‚   â”‚   â””â”€â”€ useAnalyticsData.js    Data fetch + memoised calculations
+â”‚   â”‚   â””â”€â”€ utils/
+â”‚   â”‚       â”œâ”€â”€ analyticsCalculations.js   All rate / aggregation logic
+â”‚   â”‚       â””â”€â”€ dataValidation.js          Business-rule validation
+â”‚   â”œâ”€â”€ export/
+â”‚   â”‚   â””â”€â”€ ExportModal.js             Format selector + download trigger
+â”‚   â”œâ”€â”€ filters/
+â”‚   â”‚   â””â”€â”€ FilterPanel.js             Date / metric / year filter drawer
+â”‚   â””â”€â”€ ErrorBoundary.jsx              Top-level error recovery
+â”œâ”€â”€ contexts/
+â”‚   â”œâ”€â”€ FilterContext.js               Global filter state
+â”‚   â”œâ”€â”€ ExportContext.js               Export state + helpers
+â”‚   â””â”€â”€ ThemeContext.js                Theme state
+â”œâ”€â”€ hooks/
+â”‚   â””â”€â”€ useKeyboardShortcuts.js        Global keyboard bindings + announcer
+â”œâ”€â”€ services/
+â”‚   â”œâ”€â”€ AuditLogger.js                 Audit trail singleton
+â”‚   â”œâ”€â”€ ExportService.js               PDF / CSV / Excel generation
+â”‚   â”œâ”€â”€ DataImportService.js           JSON parse / validate / merge
+â”‚   â””â”€â”€ logger.js                      General-purpose logger
+â”œâ”€â”€ styles/
+â”‚   â””â”€â”€ premiumTheme.js                Glassmorphism theme tokens + z-index map
+â”œâ”€â”€ utils/
+â”‚   â”œâ”€â”€ formatters.js                  Date / number formatting
+â”‚   â””â”€â”€ inputValidation.js             Input sanitisation
+â””â”€â”€ config/
+    â””â”€â”€ auth.config.js                 Auth constants / env-var defaults
 ```
 
 **Single entry point:** `src/index.js` renders `<AdvancedAnalytics />` into `#root`.
 
 ---
 
-# 9. Corrections Log (v3.0 → v4.0)
+# 9. Corrections Log (v3.0 â†’ v4.0)
 
 Every item below was a discrepancy between the v3.0 SRS and the actual source code. All have been corrected in this document.
 
@@ -545,53 +545,53 @@ Every item below was a discrepancy between the v3.0 SRS and the actual source co
 
 | ID | What v3.0 said | Reality | Corrected in |
 |----|----------------|---------|--------------|
-| G1 | TestPanel "not created" / "in progress" | `TestPanel.jsx` is 504 lines, fully implemented and wired as the "System Test" tab in `AdminPanel`. | §3.1 UI-007 |
-| G2 | Admin data import supports "drag-drop or file selector" | Zero drag-and-drop handlers exist. File selector (`<input type="file">`) only. | §4.5 FR-ADMIN-001; §1.2 Out of Scope |
-| G3 | Import accepts "CSV and Excel" | `DataImportService` only parses JSON. The admin UI labels and instructions all say JSON / phpMyAdmin export. CSV/Excel parsing code in `ExportService` is for **export**, not import. | §4.5 FR-ADMIN-001 |
-| G6 | "System SHALL NOT store credentials in localStorage" | Technically true (password strings not in localStorage). But both passwords are hardcoded in client-side source (`analytics2024` in `LoginScreen`; `admin2024` in `AdminPanel`), making them trivially extractable from the bundle. | §5.2 NFR-SEC-002 |
+| G1 | TestPanel "not created" / "in progress" | `TestPanel.jsx` is 504 lines, fully implemented and wired as the "System Test" tab in `AdminPanel`. | Â§3.1 UI-007 |
+| G2 | Admin data import supports "drag-drop or file selector" | Zero drag-and-drop handlers exist. File selector (`<input type="file">`) only. | Â§4.5 FR-ADMIN-001; Â§1.2 Out of Scope |
+| G3 | Import accepts "CSV and Excel" | `DataImportService` only parses JSON. The admin UI labels and instructions all say JSON / phpMyAdmin export. CSV/Excel parsing code in `ExportService` is for **export**, not import. | Â§4.5 FR-ADMIN-001 |
+| G6 | "System SHALL NOT store credentials in localStorage" | Technically true (password strings not in localStorage). But both passwords are hardcoded in client-side source (`analytics2024` in `LoginScreen`; `admin2024` in `AdminPanel`), making them trivially extractable from the bundle. | Â§5.2 NFR-SEC-002 |
 
 ## 9.2 SRS understated a feature
 
 | ID | What v3.0 said | Reality | Corrected in |
 |----|----------------|---------|--------------|
-| G4 | Filter panel "70% complete"; "react-datepicker not fully wired" | `FilterPanel.js` is 692 lines, fully rendered and interactive (presets, custom month inputs, metric toggles, year comparison, Apply/Reset). The only real gap is that `useAnalyticsData` does not slice on the filter props. | §4.6 |
-| G5 | Testing "30% complete" | Unit tests and full E2E Playwright suite are written. | §6.1, §6.2 |
+| G4 | Filter panel "70% complete"; "react-datepicker not fully wired" | `FilterPanel.js` is 692 lines, fully rendered and interactive (presets, custom month inputs, metric toggles, year comparison, Apply/Reset). The only real gap is that `useAnalyticsData` does not slice on the filter props. | Â§4.6 |
+| G5 | Testing "30% complete" | Unit tests and full E2E Playwright suite are written. | Â§6.1, Â§6.2 |
 
 ## 9.3 SRS was silent on features that exist in code
 
 | ID | What exists | Documented in |
 |----|-------------|---------------|
-| C1 | `ErrorBoundary.jsx` — React error boundary (243 lines) | §5.4 NFR-REL-001 |
-| C2 | `ExportContext.js` — export state provider (377 lines) | §2.1 architecture diagram |
-| C3 | `logger.js` — general-purpose logger (387 lines), separate from AuditLogger | §2.1; §8 |
-| C4 | `inputValidation.js` — input sanitisation (411 lines) | §5.5 NFR-MAINT-004; §8 |
-| C5 | `formatters.js` — date/number formatting (294 lines) | §5.5; §8 |
-| C6 | `premiumTheme.js` — glassmorphism tokens, z-index map | §8 |
-| C7 | `AccessibilityContext.jsx` — second accessibility context alongside ThemeContext | §2.1; §4.3 |
-| C8 | Admin panel has **4 tabs** (Audit Logs, Statistics, Data Import, Settings), not the 3 stated in v3.0 | §3.1 UI-006 |
-| C9 | Admin panel has its **own password prompt** (separate from main login) | §3.1 UI-006 |
+| C1 | `ErrorBoundary.jsx` â€” React error boundary (243 lines) | Â§5.4 NFR-REL-001 |
+| C2 | `ExportContext.js` â€” export state provider (377 lines) | Â§2.1 architecture diagram |
+| C3 | `logger.js` â€” general-purpose logger (387 lines), separate from AuditLogger | Â§2.1; Â§8 |
+| C4 | `inputValidation.js` â€” input sanitisation (411 lines) | Â§5.5 NFR-MAINT-004; Â§8 |
+| C5 | `formatters.js` â€” date/number formatting (294 lines) | Â§5.5; Â§8 |
+| C6 | `premiumTheme.js` â€” glassmorphism tokens, z-index map | Â§8 |
+| C7 | `AccessibilityContext.jsx` â€” second accessibility context alongside ThemeContext | Â§2.1; Â§4.3 |
+| C8 | Admin panel has **4 tabs** (Audit Logs, Statistics, Data Import, Settings), not the 3 stated in v3.0 | Â§3.1 UI-006 |
+| C9 | Admin panel has its **own password prompt** (separate from main login) | Â§3.1 UI-006 |
 
 ## 9.4 Additional notes
 
-- **PDF orientation:** v3.0 stated "A4 landscape". `ExportService.exportToPDF` uses `new jsPDF()` with no options — default is A4 portrait. The external logo URL is commented out; a coloured rectangle placeholder is used instead.
-- **LoginScreen audit logging** — previously gated on `window.auditLogger`. Fixed: all calls now use the module-level imported `auditLogger` singleton.
-- **Admin panel password** — previously hardcoded as `'admin2024'`. Now reads `process.env.REACT_APP_ADMIN_PANEL_PASSWORD` with the same default as fallback.
-- **Tailwind CSS** — downgraded from v4 to v3.4.19. Tailwind v4's `@tailwindcss/postcss` plugin is incompatible with `react-scripts 5.0.1`; CRA's PostCSS pipeline does not invoke v4 content scanning, so utility classes were never generated.
-- **Efficiency formula** — corrected: `registered` removed from denominator. `registered` is a downstream outcome of `accepted`, not a parallel disposition alongside `rejected`/`waitlisted`.
-- **Registered > Accepted validation** — relaxed from hard error to soft warning at 1.5× threshold. Students can register in a later month than they were accepted, so the strict rule produced false positives on valid data.
-- **Post-import logout** — `window.location.reload()` after data import destroyed in-memory auth state. Replaced with `refetch()` call; no page reload needed.
+- **PDF orientation:** v3.0 stated "A4 landscape". `ExportService.exportToPDF` uses `new jsPDF()` with no options â€” default is A4 portrait. The external logo URL is commented out; a coloured rectangle placeholder is used instead.
+- **LoginScreen audit logging** â€” previously gated on `window.auditLogger`. Fixed: all calls now use the module-level imported `auditLogger` singleton.
+- **Admin panel password** â€” previously hardcoded as `'admin2024'`. Now reads `process.env.REACT_APP_ADMIN_PANEL_PASSWORD` with the same default as fallback.
+- **Tailwind CSS** â€” downgraded from v4 to v3.4.19. Tailwind v4's `@tailwindcss/postcss` plugin is incompatible with `react-scripts 5.0.1`; CRA's PostCSS pipeline does not invoke v4 content scanning, so utility classes were never generated.
+- **Efficiency formula** â€” corrected: `registered` removed from denominator. `registered` is a downstream outcome of `accepted`, not a parallel disposition alongside `rejected`/`waitlisted`.
+- **Registered > Accepted validation** â€” relaxed from hard error to soft warning at 1.5Ã— threshold. Students can register in a later month than they were accepted, so the strict rule produced false positives on valid data.
+- **Post-import logout** â€” `window.location.reload()` after data import destroyed in-memory auth state. Replaced with `refetch()` call; no page reload needed.
 
 ---
 
 # 10. Appendices
 
-## Appendix A — Technology Stack
+## Appendix A â€” Technology Stack
 
 ### Core
 | Package | Version | Purpose |
 |---------|---------|---------|
-| react | 19.2.4 | UI framework |
-| react-dom | 19.2.4 | DOM renderer |
+| react | 19.2.5 | UI framework |
+| react-dom | 19.2.5 | DOM renderer |
 | recharts | 3.7.0 | Chart library |
 | @heroicons/react | 2.2.0 | Icons |
 
@@ -605,7 +605,7 @@ Every item below was a discrepancy between the v3.0 SRS and the actual source co
 ### Styling & Build
 | Package | Version | Purpose |
 |---------|---------|---------|
-| tailwindcss | 3.4.19 | Utility CSS (downgraded from v4 — v4 incompatible with react-scripts PostCSS pipeline) |
+| tailwindcss | 3.4.19 | Utility CSS (downgraded from v4 â€” v4 incompatible with react-scripts PostCSS pipeline) |
 | postcss | 8.5.6 | CSS processor |
 | autoprefixer | 10.4.24 | Vendor prefixes |
 | react-scripts | 5.0.1 | Build toolchain |
@@ -625,7 +625,7 @@ Every item below was a discrepancy between the v3.0 SRS and the actual source co
 | react-datepicker | 9.1.0 | FilterPanel uses native `<input type="month">` instead |
 | date-fns | 4.1.0 | Installed; usage unconfirmed |
 
-## Appendix B — Feature Matrix (Implementation-Verified)
+## Appendix B â€” Feature Matrix (Implementation-Verified)
 
 | Feature | Phase | Status | Key File(s) |
 |---------|-------|--------|-------------|
@@ -637,13 +637,13 @@ Every item below was a discrepancy between the v3.0 SRS and the actual source co
 | Admin panel (5 tabs) | 3 | COMPLETE | `AdminPanel.js`, `DataImportModal.js`, `TestPanel.jsx` |
 | Audit logging | 3 | COMPLETE | `AuditLogger.js` |
 | Filter panel UI | 3 | COMPLETE | `FilterPanel.js` |
-| Filter → data wiring | 3 | COMPLETE | `useAnalyticsData.js` — date filter Step 2, metric filter Step 3 |
-| Self-test module | 3 | COMPLETE | `TestPanel.jsx` — "System Test" tab in `AdminPanel` |
+| Filter â†’ data wiring | 3 | COMPLETE | `useAnalyticsData.js` â€” date filter Step 2, metric filter Step 3 |
+| Self-test module | 3 | COMPLETE | `TestPanel.jsx` â€” "System Test" tab in `AdminPanel` |
 | Unit tests | 4 | WRITTEN | `__tests__/analyticsCalculations.test.js` |
 | E2E tests | 4 | WRITTEN | `e2e/dashboard.test.js` |
-| Error boundary | — | COMPLETE | `ErrorBoundary.jsx` |
+| Error boundary | â€” | COMPLETE | `ErrorBoundary.jsx` |
 
-## Appendix C — Known Gaps (prioritised)
+## Appendix C â€” Known Gaps (prioritised)
 
 These are the items that remain between "what exists" and "fully production-ready". Listed in effort order.
 
@@ -660,4 +660,4 @@ These are the items that remain between "what exists" and "fully production-read
 **End of SRS v4.0**
 
 *Next review: upon completion of Appendix C priority items.*
-*Classification: Internal Use — TECHBRIDGE University College*
+*Classification: Internal Use â€” TECHBRIDGE University College*

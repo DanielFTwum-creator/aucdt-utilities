@@ -1,10 +1,10 @@
-# carbon-credit-tracker
+﻿# carbon-credit-tracker
 
 ## Purpose
 Environmental sustainability and carbon offset tracking system for Techbridge University College. Monitors institutional carbon footprint, manages carbon credit portfolios, and tracks progress toward net-zero operations targets through integrated analytics and environmental impact reporting.
 
 ## Stack
-- React 19.2.4
+- React 19.2.5
 - TypeScript 5.8
 - Vite 6.2.0
 - Tailwind CSS 4.1.14

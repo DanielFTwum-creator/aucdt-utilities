@@ -1,4 +1,4 @@
-# Software Requirements Specification (SRS)
+﻿# Software Requirements Specification (SRS)
 ## Project: AI Agent Masterclass Registration Portal
 **Version:** 2.0 (Master Project Refresh)
 **Date:** February 24, 2025
@@ -17,7 +17,7 @@ The application is a robust Single Page Application (SPA) that includes:
 - **Infrastructure**: Client-side execution with external API integrations for email delivery.
 
 #### 1.3 Technology Stack (Strict Compliance)
-- **Framework**: React 19.2.4 (Mandatory)
+- **Framework**: React 19.2.5 (Mandatory)
 - **Styling**: Tailwind CSS via CDN
 - **Animation**: Framer Motion
 - **Icons**: Lucide React
@@ -74,7 +74,7 @@ The system operates autonomously in the browser, leveraging `localStorage` for p
 #### 3.3 Non-Functional Requirements
 
 **NFR-001: Compliance**
-- **React Version**: Must be strictly 19.2.4.
+- **React Version**: Must be strictly 19.2.5.
 - **Zero Broken Links**: All internal and external links must be functional.
 
 **NFR-002: Documentation**

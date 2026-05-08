@@ -1,4 +1,4 @@
-{
+﻿{
   "name": "asanska-university-college---fashion-design-brochure",
   "private": true,
   "version": "0.0.0",
@@ -13,8 +13,8 @@
     "test:e2e": "vitest run --config vitest.e2e.config.ts"
   },
   "dependencies": {
-    "react-dom": "19.2.4",
-    "react": "19.2.4"
+    "react-dom": "19.2.5",
+    "react": "19.2.5"
   },
   "devDependencies": {
     "@types/node": "^22.14.0",

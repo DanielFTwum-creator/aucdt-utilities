@@ -1,4 +1,4 @@
-# System Architecture - Medical Claims Validator (App ID 132)
+﻿# System Architecture - Medical Claims Validator (App ID 132)
 
 ## High-Level Architecture
 
@@ -19,7 +19,7 @@ graph TD
 ## Technology Stack
 
 **Frontend:**
-- React 19.2.4
+- React 19.2.5
 - TypeScript 5.8.2
 - Tailwind CSS 4.1.14
 - Zustand 5.0.11
@@ -40,15 +40,15 @@ graph TD
 
 ```
 src/
-├── components/       # Reusable UI components
-├── pages/           # Route-level page components
-│   └── admin/       # Protected admin pages
-├── authStore.ts     # Authentication state
-├── themeStore.ts    # Theme management
-├── store.ts         # Main app state
-├── App.tsx          # Router configuration
-├── Layout.tsx       # Main layout with sidebar
-└── main.tsx         # Application entry point
+â”œâ”€â”€ components/       # Reusable UI components
+â”œâ”€â”€ pages/           # Route-level page components
+â”‚   â””â”€â”€ admin/       # Protected admin pages
+â”œâ”€â”€ authStore.ts     # Authentication state
+â”œâ”€â”€ themeStore.ts    # Theme management
+â”œâ”€â”€ store.ts         # Main app state
+â”œâ”€â”€ App.tsx          # Router configuration
+â”œâ”€â”€ Layout.tsx       # Main layout with sidebar
+â””â”€â”€ main.tsx         # Application entry point
 ```
 
 ## Sentinel Integration

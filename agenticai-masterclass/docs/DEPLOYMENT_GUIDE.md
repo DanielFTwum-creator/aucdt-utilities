@@ -1,11 +1,11 @@
-# Deployment Guide
+﻿# Deployment Guide
 ## AI Agent Masterclass Portal
 
 ### Architecture Overview
 This application is a **Full-Stack Single Page Application (SPA)**. It relies on a Node.js/Express backend server for routing and proxying API requests.
 1.  **Node.js**: For running the Express server.
 2.  **Vite**: For bundling the frontend.
-3.  **CDN**: `aistudiocdn.com` for React 19.2.4 and libraries.
+3.  **CDN**: `aistudiocdn.com` for React 19.2.5 and libraries.
 4.  **External APIs**: `aucdt.edu.gh` for email services.
 
 ### Prerequisites
@@ -34,5 +34,5 @@ This application is a **Full-Stack Single Page Application (SPA)**. It relies on
 4.  Run the "Connectivity Test" in the Test Suite.
 
 ### Requirements Checklist
-- [x] **React Version**: 19.2.4 (Verified via ImportMap)
+- [x] **React Version**: 19.2.5 (Verified via ImportMap)
 - [x] **Browser Support**: Chrome 90+, Firefox 90+, Safari 14+, Edge 90+

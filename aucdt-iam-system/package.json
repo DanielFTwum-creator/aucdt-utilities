@@ -1,4 +1,4 @@
-{
+﻿{
   "name": "aucdt-iam-system",
   "private": true,
   "version": "0.0.0",
@@ -14,8 +14,8 @@
   },
   "dependencies": {
     "@google/genai": "^1.30.0",
-    "react": "19.2.4",
-    "react-dom": "19.2.4",
+    "react": "19.2.5",
+    "react-dom": "19.2.5",
     "react-router-dom": "^7.9.6",
     "recharts": "^3.4.1"
   },

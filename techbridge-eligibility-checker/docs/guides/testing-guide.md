@@ -1,6 +1,6 @@
-# Testing Guide: Eligibility Checker
+﻿# Testing Guide: Eligibility Checker
 **Project:** TUC Eligibility Checker (v3.0.0)
-**Core Requirement:** Logic validation against React 19.2.4
+**Core Requirement:** Logic validation against React 19.2.5
 
 ## 1. Testing Strategy
 The checker employs a three-tier testing approach:

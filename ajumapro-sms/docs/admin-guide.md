@@ -1,4 +1,4 @@
-# Ajumapro SMS — Admin Guide
+﻿# Ajumapro SMS â€” Admin Guide
 
 ## Overview
 
@@ -21,7 +21,7 @@ degrades gracefully to localStorage caching if the backend is temporarily unreac
 
 Authentication is handled by the backend (`POST /api/auth/login`). On success, a signed JWT is
 returned and attached as a `Bearer` token to all subsequent API requests. The token is stored in
-`localStorage` as `auth_token`. All login attempts — successful or failed — are persisted to the
+`localStorage` as `auth_token`. All login attempts â€” successful or failed â€” are persisted to the
 audit log in the SQLite database.
 
 ---
@@ -32,7 +32,7 @@ audit log in the SQLite database.
 
 High-level system status overview.
 
-- Displays the current React version (strictly **19.2.4**).
+- Displays the current React version (strictly **19.2.5**).
 - Shows overall system health status.
 - Renders the 10 most recent audit log entries fetched from `/api/audit`.
 

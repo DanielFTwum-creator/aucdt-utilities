@@ -1,4 +1,4 @@
-# Fraud Detection Engine
+﻿# Fraud Detection Engine
 
 **App ID:** 137  
 **Domain:** FinTech  
@@ -28,18 +28,18 @@ pnpm test
 
 ## Features
 
-- ✅ React 19.2.4 + TypeScript (locked)
-- ✅ Express backend with SQLite persistence
-- ✅ Real-time dashboard with stat cards and health charts
-- ✅ Entity management with color-coded health scores
-- ✅ System health monitoring with distribution analysis
-- ✅ Alert system with severity classification and acknowledgement
-- ✅ Sentinel AI Orchestrator integration (health reports + remediation)
-- ✅ Admin panel with authentication (6 admin routes)
-- ✅ Dark/Light theme toggle
-- ✅ Responsive design
-- ✅ TUC institutional branding
-- ✅ Production-ready Docker deployment
+- âœ… React 19.2.5 + TypeScript (locked)
+- âœ… Express backend with SQLite persistence
+- âœ… Real-time dashboard with stat cards and health charts
+- âœ… Entity management with color-coded health scores
+- âœ… System health monitoring with distribution analysis
+- âœ… Alert system with severity classification and acknowledgement
+- âœ… Sentinel AI Orchestrator integration (health reports + remediation)
+- âœ… Admin panel with authentication (6 admin routes)
+- âœ… Dark/Light theme toggle
+- âœ… Responsive design
+- âœ… TUC institutional branding
+- âœ… Production-ready Docker deployment
 
 ## Pages
 
@@ -75,7 +75,7 @@ pnpm test
 
 ## Tech Stack
 
-- React 19.2.4 (locked)
+- React 19.2.5 (locked)
 - TypeScript ~6.0.3
 - Vite 8.x
 - Express 5.x
@@ -89,5 +89,5 @@ pnpm test
 ---
 
 Techbridge University College  
-THE AGENT Project — 256-Application Ecosystem  
+THE AGENT Project â€” 256-Application Ecosystem  
 Managed by The Sentinel AI Orchestrator

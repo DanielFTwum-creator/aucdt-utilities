@@ -1,6 +1,6 @@
-# Administrator Guide: Brainiac Challenge
+﻿# Administrator Guide: Brainiac Challenge
 **Project:** Brainiac Challenge AI Quiz (v3.0.0)
-**Core Requirement:** Strict React 19.2.4 Execution
+**Core Requirement:** Strict React 19.2.5 Execution
 
 ## 1. Overview
 The Brainiac Challenge is an AI-powered learning platform that generates dynamic quizzes using Gemini 3.0. Administrators can monitor usage trends, review generated prompts, and track project refresh progress.
@@ -16,7 +16,7 @@ The Brainiac Challenge is an AI-powered learning platform that generates dynamic
 - **Persistence**: If Firebase is enabled, logs are securely synced to the institutional Firestore instance.
 
 ## 4. Refresh Status
-Monitor the 5-phase sequential refinement of the platform core. Ensure that every update maintains the React 19.2.4 mandate and zero-broken-link policy.
+Monitor the 5-phase sequential refinement of the platform core. Ensure that every update maintains the React 19.2.5 mandate and zero-broken-link policy.
 
 ## 5. System Troubleshooting
 If quiz generation fails:

@@ -1,4 +1,4 @@
-{
+﻿{
   "name": "react-example",
   "private": true,
   "version": "0.0.0",
@@ -23,8 +23,8 @@
     "idb": "^8.0.3",
     "lucide-react": "^0.546.0",
     "motion": "^12.38.0",
-    "react": "19.2.4",
-    "react-dom": "19.2.4",
+    "react": "19.2.5",
+    "react-dom": "19.2.5",
     "react-router-dom": "^7.13.2",
     "vite": "^6.2.0"
   },

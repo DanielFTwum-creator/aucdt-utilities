@@ -1,4 +1,4 @@
-{
+﻿{
   "name": "stockpulse",
   "private": true,
   "version": "0.0.0",
@@ -20,14 +20,14 @@
     "@google/genai": "^1.29.0",
     "framer-motion": "^12.38.0",
     "lucide-react": "^1.8.0",
-    "react": "19.2.4",
-    "react-dom": "19.2.4",
+    "react": "19.2.5",
+    "react-dom": "19.2.5",
     "recharts": "^3.8.1"
   },
   "pnpm": {
     "overrides": {
-      "react": "19.2.4",
-      "react-dom": "19.2.4"
+      "react": "19.2.5",
+      "react-dom": "19.2.5"
     }
   },
   "devDependencies": {

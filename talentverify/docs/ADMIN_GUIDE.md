@@ -1,10 +1,10 @@
-# Administrator Guide - TalentVerify
+﻿# Administrator Guide - TalentVerify
 
 **Version:** 1.0
 **Date:** 2026-03-01
 
 ## 1. Introduction
-This guide provides instructions for System Administrators to manage the TalentVerify platform. The system is built on **React 19.2.4** and utilizes a secure, role-based architecture.
+This guide provides instructions for System Administrators to manage the TalentVerify platform. The system is built on **React 19.2.5** and utilizes a secure, role-based architecture.
 
 ## 2. Accessing the Admin Console
 

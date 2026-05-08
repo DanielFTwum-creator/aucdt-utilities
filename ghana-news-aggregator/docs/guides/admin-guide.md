@@ -1,6 +1,6 @@
-# Administrator Guide: Ghana News Aggregator
+﻿# Administrator Guide: Ghana News Aggregator
 **Project:** Ghana News Aggregator (v3.0.0)
-**Core Requirement:** Strict React 19.2.4 Production Build
+**Core Requirement:** Strict React 19.2.5 Production Build
 
 ## 1. Overview
 The Ghana News Aggregator is an institutional editorial platform designed for automated news ingestion, AI synthesis, and strategic archiving. It features a persistent sidebar navigation and real-time refresh monitoring.
@@ -8,7 +8,7 @@ The Ghana News Aggregator is an institutional editorial platform designed for au
 ## 2. Refresh Protocol Monitoring
 - **Access**: Click the "Refresh Protocol" tab in the primary sidebar.
 - **Tracking**: Monitor the 5-phase sequential refinement of the application core.
-- **Compliance**: Every update must strictly adhere to the React 19.2.4 mandate and 100% gap analysis sync.
+- **Compliance**: Every update must strictly adhere to the React 19.2.5 mandate and 100% gap analysis sync.
 
 ## 3. Editorial Cockpit Management
 - **News Feed**: Review pending articles, modify headlines/summaries, and approve for institutional archiving.

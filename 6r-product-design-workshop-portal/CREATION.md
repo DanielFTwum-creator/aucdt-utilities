@@ -1,10 +1,10 @@
-# 6r-product-design-workshop-portal
+﻿# 6r-product-design-workshop-portal
 
 ## Purpose
 A dedicated learning portal for the 6R Product Design Workshop, providing students and staff with instructional modules, design quests, and a portfolio showcase. It facilitates the mastery of the 6R methodology through structured lessons and interactive design audits.
 
 ## Stack
-- React 19.2.4
+- React 19.2.5
 - TypeScript
 - Vite 7.3.1
 - Tailwind CSS 4.2+

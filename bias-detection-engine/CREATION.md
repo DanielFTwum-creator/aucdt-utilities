@@ -1,10 +1,10 @@
-# bias-detection-engine
+﻿# bias-detection-engine
 
 ## Purpose
 AI-powered fairness and bias detection system for Techbridge University College. Analyzes institutional decision-making processes and algorithmic systems to identify and remediate discriminatory patterns in admissions, assessment, and resource allocation.
 
 ## Stack
-- React 19.2.4
+- React 19.2.5
 - TypeScript 5.8
 - Vite 6.2.0
 - Tailwind CSS 4.1.14

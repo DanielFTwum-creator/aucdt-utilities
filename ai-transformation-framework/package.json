@@ -1,4 +1,4 @@
-{
+﻿{
   "name": "react-example",
   "private": true,
   "version": "0.0.0",
@@ -26,8 +26,8 @@
     "jspdf": "^4.2.0",
     "lucide-react": "^0.575.0",
     "motion": "^12.34.3",
-    "react": "19.2.4",
-    "react-dom": "19.2.4",
+    "react": "19.2.5",
+    "react-dom": "19.2.5",
     "react-router-dom": "^7.13.1",
     "sonner": "^2.0.7",
     "vite": "^7.3.1"

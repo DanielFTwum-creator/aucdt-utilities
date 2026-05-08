@@ -1,4 +1,4 @@
-# Administrator Guide
+﻿# Administrator Guide
 
 ## 1. Introduction
 This guide provides instructions for managing the Countdown Timer application via the Admin Dashboard.
@@ -19,7 +19,7 @@ Administrators can change the application's visual theme.
 
 ### 3.2 System Diagnostics
 The dashboard displays real-time system information:
-- **React Version:** Confirms the application is running React 19.2.4.
+- **React Version:** Confirms the application is running React 19.2.5.
 - **User Agent:** Displays browser and operating system details.
 - **Screen Resolution:** Shows the current viewport dimensions.
 - **Current Theme:** Indicates the active visual theme.

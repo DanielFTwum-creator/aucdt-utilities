@@ -1,8 +1,8 @@
-# SashMade Deployment Guide
+﻿# SashMade Deployment Guide
 
 **Version:** 2.0
 **Date:** 2026-04-14
-**Required React Version:** 19.2.4
+**Required React Version:** 19.2.5
 
 ## 1. Prerequisites
 - **Node.js:** v22.x LTS (minimum v22.0.0)
@@ -20,7 +20,7 @@
 ```bash
 pnpm install
 ```
-> **Critical:** Ensure `react` and `react-dom` are pinned to `19.2.4` in `package.json`. Never upgrade without approval.
+> **Critical:** Ensure `react` and `react-dom` are pinned to `19.2.5` in `package.json`. Never upgrade without approval.
 
 ## 4. Development Server
 ```bash
@@ -33,7 +33,7 @@ pnpm run build      # outputs to dist/
 pnpm run preview    # preview the production build locally
 ```
 
-Chunk splitting is configured in `vite.config.ts` — expect 7–9 `.js` files in `dist/assets/`, none exceeding 1 MB.
+Chunk splitting is configured in `vite.config.ts` â€” expect 7â€“9 `.js` files in `dist/assets/`, none exceeding 1 MB.
 
 ## 6. Deployment Targets
 
@@ -56,9 +56,9 @@ docker run -p 3000:80 -e GEMINI_API_KEY="your_key" sashmade
 
 ## 7. Post-Deployment Verification
 After deployment, verify:
-1. `/` — Homepage loads with hero, moodboard, How to Order section.
-2. `/shop` — All 5 products display with prices in ₵.
-3. `/about` — Founder message, team, contact info visible.
-4. `/admin/login` — Login form present; credentials `admin / sashmade2026` work.
-5. `/admin/testing` — Run E2E suite to confirm all 5 specs pass.
-6. SPA routing: navigate to `/shop`, refresh — page must not 404.
+1. `/` â€” Homepage loads with hero, moodboard, How to Order section.
+2. `/shop` â€” All 5 products display with prices in â‚µ.
+3. `/about` â€” Founder message, team, contact info visible.
+4. `/admin/login` â€” Login form present; credentials `admin / sashmade2026` work.
+5. `/admin/testing` â€” Run E2E suite to confirm all 5 specs pass.
+6. SPA routing: navigate to `/shop`, refresh â€” page must not 404.

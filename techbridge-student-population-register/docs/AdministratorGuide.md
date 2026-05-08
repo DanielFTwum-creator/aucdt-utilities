@@ -1,6 +1,6 @@
-# Administrator Guide: Student Population Register
+﻿# Administrator Guide: Student Population Register
 **Project:** TUC Population Register (v3.0.0)
-**Core Requirement:** Strict React 19.2.4 Execution
+**Core Requirement:** Strict React 19.2.5 Execution
 
 ## 1. Overview
 The Student Population Register is the authoritative dashboard for monitoring institutional growth and departmental distribution. It features high-fidelity metrics and a secure staff portal.

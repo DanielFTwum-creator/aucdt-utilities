@@ -1,4 +1,4 @@
-{
+﻿{
   "name": "techbridge-ai-application-portal",
   "private": true,
   "version": "0.0.0",
@@ -14,8 +14,8 @@
     "autoprefixer": "^10.4.27",
     "lucide-react": "^0.577.0",
     "postcss": "^8.5.8",
-    "react": "19.2.4",
-    "react-dom": "19.2.4",
+    "react": "19.2.5",
+    "react-dom": "19.2.5",
     "tailwindcss": "^4.2.1"
   },
   "devDependencies": {

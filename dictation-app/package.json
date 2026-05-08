@@ -1,4 +1,4 @@
-{
+﻿{
   "packageManager": "pnpm@10.30.1",
   "name": "dictation-app",
   "private": true,
@@ -18,8 +18,8 @@
     "@vitejs/plugin-react": "^4.7.0",
     "lucide-react": "^0.400.0",
     "marked": "^4.0.0",
-    "react": "19.2.4",
-    "react-dom": "19.2.4",
+    "react": "19.2.5",
+    "react-dom": "19.2.5",
     "react-router-dom": "^7.1.0"
   },
   "devDependencies": {

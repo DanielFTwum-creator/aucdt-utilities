@@ -1,10 +1,10 @@
-# Analytics Hub
+﻿# Analytics Hub
 
 ## Purpose
 Centralized analytics and business intelligence dashboard aggregating institutional data. Provides cross-functional visibility into operations, enrollment trends, financial metrics, and key performance indicators (KPIs) for executive decision-making.
 
 ## Stack
-- React 19.2.4
+- React 19.2.5
 - TypeScript 5.7.2
 - Vite 7.3.1
 - Recharts 3.7.0

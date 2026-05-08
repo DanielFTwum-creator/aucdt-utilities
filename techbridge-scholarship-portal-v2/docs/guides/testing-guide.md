@@ -1,6 +1,6 @@
-# Testing Framework Guide
+﻿# Testing Framework Guide
 **Project:** Techbridge Scholarship Portal (v2.0)
-**Core Requirement:** Validation against React 19.2.4
+**Core Requirement:** Validation against React 19.2.5
 
 ## 1. Overview
 The Techbridge Scholarship Portal utilizes a robust, dual-layered testing architecture to ensure 100% reliability of the legal bond execution process. This guide provides technical specifications for both internal state simulations and external end-to-end (E2E) automation.

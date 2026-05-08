@@ -1,4 +1,4 @@
-# Deployment Guide
+﻿# Deployment Guide
 **Techbridge Media Club Platform**
 
 ## 1. Overview
@@ -11,8 +11,8 @@ The Techbridge Media Club Platform is designed as a lightweight, client-side Sin
 ## 3. Dependency Requirements
 The application strictly enforces the following versions via the Import Map in `index.html`:
 
-*   **React:** `19.2.4`
-*   **React DOM:** `19.2.4`
+*   **React:** `19.2.5`
+*   **React DOM:** `19.2.5`
 *   **Lucide React:** `0.574.0`
 *   **Recharts:** `3.7.0`
 *   **Tailwind CSS:** `3.4` (via CDN)

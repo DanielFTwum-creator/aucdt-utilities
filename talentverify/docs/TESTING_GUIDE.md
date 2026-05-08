@@ -1,4 +1,4 @@
-# Testing Guide - TalentVerify
+﻿# Testing Guide - TalentVerify
 
 **Version:** 1.0
 **Date:** 2026-03-01
@@ -10,7 +10,7 @@ TalentVerify includes a comprehensive automated testing suite designed to ensure
 - **Tool**: Playwright (Headless Chrome Node.js API).
 - **Integration**: Server-side execution via Express API.
 - **Frontend**: Interactive runner at `/admin/testing`.
-- **React Version**: Validates compatibility with **React 19.2.4**.
+- **React Version**: Validates compatibility with **React 19.2.5**.
 
 ## 3. Test Coverage
 The current test suite covers the following scenarios:

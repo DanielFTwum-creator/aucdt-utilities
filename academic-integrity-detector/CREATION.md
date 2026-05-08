@@ -1,10 +1,10 @@
-# academic-integrity-detector
+﻿# academic-integrity-detector
 
 ## Purpose
 Detects and analyzes academic integrity violations in educational materials for faculty and administrators at Techbridge University College. It provides a dashboard for monitoring alerts and integrating with the Sentinel AI Orchestrator for automated remediation.
 
 ## Stack
-- React 19.2.4
+- React 19.2.5
 - TypeScript 5.8.2
 - Vite 6.2.0
 - Express 4.21.2
