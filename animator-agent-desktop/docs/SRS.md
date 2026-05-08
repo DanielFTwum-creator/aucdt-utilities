@@ -74,10 +74,10 @@ Animator Agent Desktop is a standalone web-based desktop application built with 
 
 ## 6. Architecture & Data Flow
 ### 6.1 System Architecture
-![System Architecture](file:///c:/Development/github/aucdt-utilities/animator-agent-desktop/docs/Architecture.svg)
+![System Architecture](c:\Development\github\aucdt-utilities\animator-agent-desktop\docs\Architecture.svg)
 
 ### 6.2 Data Flow
-![Data Flow](file:///c:/Development/github/aucdt-utilities/animator-agent-desktop/docs/DataFlow.svg)
+![Data Flow](c:\Development\github\aucdt-utilities\animator-agent-desktop\docs\DataFlow.svg)
 
 ### 6.3 State Flow
 `AnimatorContext` -> `HistoryState` -> `LocalStorage`.
