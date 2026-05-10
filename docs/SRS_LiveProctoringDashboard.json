@@ -1,0 +1,807 @@
+{
+  "ieee_srs": {
+    "metadata": {
+      "document_title": "Software Requirements Specification — Live Proctoring Dashboard",
+      "document_id": "AUCDT-SRS-LPD-001",
+      "version": "1.0.0",
+      "date": "2026-05-10",
+      "organization": "African University College of Digital Technologies (AUCDT)",
+      "authors": ["AUCDT Engineering Team"],
+      "status": "Draft",
+      "ieee_standard": "IEEE Std 830-1998 / ISO/IEC/IEEE 29148:2018"
+    },
+
+    "section_1_introduction": {
+      "1_1_purpose": {
+        "description": "This SRS defines the functional and non-functional requirements for the Live Proctoring Dashboard — a real-time web-based application that enables human proctors and AI systems to monitor, flag, and manage online examinees simultaneously. The document serves as the authoritative contract between stakeholders, designers, and developers."
+      },
+      "1_2_scope": {
+        "product_name": "Live Proctoring Dashboard (LPD)",
+        "summary": "LPD is a browser-based dashboard that streams live video feeds from remote examinees, applies AI-driven anomaly detection (multi-face, tab-switch, audio, identity), surfaces real-time alerts, and provides proctor controls — all within a single, responsive interface.",
+        "in_scope": [
+          "Real-time multi-student video feed grid",
+          "AI-generated behavioral alert classification and surfacing",
+          "Session and exam management (start, pause, terminate)",
+          "Proctor intervention controls (warn, flag, eject)",
+          "System health and capacity monitoring",
+          "Audit log generation per exam session"
+        ],
+        "out_of_scope": [
+          "Exam content authoring",
+          "Student identity enrollment (handled by upstream IDV service)",
+          "Payment or billing subsystems",
+          "Mobile native applications (web-responsive only)"
+        ]
+      },
+      "1_3_definitions_acronyms_abbreviations": [
+        { "term": "LPD", "definition": "Live Proctoring Dashboard" },
+        { "term": "SRS", "definition": "Software Requirements Specification" },
+        { "term": "AI", "definition": "Artificial Intelligence" },
+        { "term": "WebRTC", "definition": "Web Real-Time Communication protocol for browser-based video streaming" },
+        { "term": "MFA", "definition": "Multi-Face Alert — triggered when >1 face is detected in an examinee's video frame" },
+        { "term": "TSA", "definition": "Tab Switch Alert — triggered when an examinee navigates away from the exam tab" },
+        { "term": "IDV", "definition": "Identity Verification service" },
+        { "term": "ROI", "definition": "Region of Interest within a video frame" },
+        { "term": "SLA", "definition": "Service Level Agreement" },
+        { "term": "CDN", "definition": "Content Delivery Network" },
+        { "term": "WCAG", "definition": "Web Content Accessibility Guidelines" },
+        { "term": "JWT", "definition": "JSON Web Token for authentication" },
+        { "term": "RBAC", "definition": "Role-Based Access Control" },
+        { "term": "E2EE", "definition": "End-to-End Encryption" }
+      ],
+      "1_4_references": [
+        "IEEE Std 830-1998, IEEE Recommended Practice for Software Requirements Specifications",
+        "ISO/IEC/IEEE 29148:2018, Systems and software engineering — Requirements engineering",
+        "WebRTC W3C Specification (https://www.w3.org/TR/webrtc/)",
+        "WCAG 2.1 Level AA (https://www.w3.org/TR/WCAG21/)",
+        "GDPR Regulation (EU) 2016/679",
+        "FERPA (20 U.S.C. § 1232g)"
+      ],
+      "1_5_overview": "Section 2 provides overall system description and constraints. Section 3 enumerates specific functional requirements organized by feature. Section 4 covers non-functional requirements. Section 5 describes external interface requirements."
+    },
+
+    "section_2_overall_description": {
+      "2_1_product_perspective": {
+        "context": "LPD is a subsystem of the AUCDT Utilities Platform. It consumes streams from an upstream Media Server, alert events from an AI Inference Engine, and session data from the Exam Management Service, then presents a unified proctor-facing UI.",
+        "system_interfaces": [
+          "Media Server — WebRTC/WHIP for inbound student video streams",
+          "AI Inference Engine — REST/WebSocket for real-time alert events",
+          "Exam Management Service — REST API for session CRUD",
+          "Identity Verification Service — REST for face-match scores",
+          "Audit Log Service — event-driven (Kafka/WebSocket) for immutable records",
+          "Notification Service — push alerts to proctor browser"
+        ],
+        "context_diagram": {
+          "note": "Logical data flow: Student Clients → Media Server → LPD (video tiles) | AI Engine → LPD (alert badges) | Proctor → LPD → Exam Mgmt Service (interventions)"
+        }
+      },
+      "2_2_product_functions": [
+        "F-01: Real-time multi-feed video grid display",
+        "F-02: AI alert ingestion and visual surfacing",
+        "F-03: Per-student proctor intervention controls",
+        "F-04: Session-level controls (start, pause, end exam)",
+        "F-05: System health and live-count status bar",
+        "F-06: Alert history and audit log viewer",
+        "F-07: Role-based access for Proctor, Senior Proctor, and Admin",
+        "F-08: Configurable alert threshold and notification preferences",
+        "F-09: Zoom-in / focus mode for individual examinee feed",
+        "F-10: Export session report (PDF / JSON)"
+      ],
+      "2_3_user_classes_and_characteristics": [
+        {
+          "role": "Proctor",
+          "description": "Monitors assigned examinees in real-time. Can warn, flag, or eject students. Primary day-to-day user.",
+          "technical_level": "Low to medium",
+          "frequency": "High — active during all exam sessions"
+        },
+        {
+          "role": "Senior Proctor",
+          "description": "Oversees multiple proctors, can override decisions, access all exam rooms.",
+          "technical_level": "Medium",
+          "frequency": "Medium"
+        },
+        {
+          "role": "System Administrator",
+          "description": "Configures thresholds, manages user accounts, reviews audit logs.",
+          "technical_level": "High",
+          "frequency": "Low"
+        },
+        {
+          "role": "Examinee (indirect)",
+          "description": "Not a direct LPD user but is the subject of observation. Their browser client streams video.",
+          "technical_level": "Low",
+          "frequency": "Exam duration only"
+        }
+      ],
+      "2_4_operating_environment": {
+        "client": {
+          "browsers": ["Chrome 120+", "Firefox 121+", "Edge 120+", "Safari 17+"],
+          "minimum_display": "1366x768 px",
+          "network": "Minimum 10 Mbps downstream per 10 concurrent feeds",
+          "os": ["Windows 10+", "macOS 13+", "Ubuntu 22.04+"]
+        },
+        "server": {
+          "deployment": "Docker containers on Kubernetes (cloud-agnostic)",
+          "media_server": "WebRTC-compatible (e.g., mediasoup, Janus)",
+          "database": "PostgreSQL 15+ for session data, Redis for ephemeral state",
+          "cdn": "For static asset delivery"
+        }
+      },
+      "2_5_design_and_implementation_constraints": [
+        "All video streams must use end-to-end encryption (DTLS-SRTP via WebRTC)",
+        "No video frame data may be persisted without explicit institutional consent",
+        "WCAG 2.1 Level AA accessibility compliance required for all UI components",
+        "Maximum dashboard JavaScript bundle size: 500 KB gzipped",
+        "System must operate within GDPR and FERPA data handling requirements",
+        "All proctor interventions must generate immutable audit log entries",
+        "Frontend must be built with React 19 / TypeScript / Tailwind CSS per platform standards"
+      ],
+      "2_6_assumptions_and_dependencies": [
+        "AI Inference Engine API is available and provides alert events via WebSocket",
+        "Media Server supports WebRTC WHIP/WHEP protocols",
+        "Institutions have obtained required consent from examinees for video monitoring",
+        "Proctor workstations have hardware-accelerated video decoding",
+        "Network infrastructure supports required bandwidth per concurrent session count"
+      ]
+    },
+
+    "section_3_specific_requirements": {
+
+      "3_1_functional_requirements": {
+
+        "FR-01_video_grid": {
+          "id": "FR-01",
+          "title": "Real-Time Multi-Feed Video Grid",
+          "priority": "MUST",
+          "description": "The system shall display a responsive grid of live video tiles, each representing one active examinee.",
+          "sub_requirements": [
+            {
+              "id": "FR-01.1",
+              "statement": "The grid SHALL support 1 to 64 simultaneous video tiles in a single viewport.",
+              "rationale": "Supports small to large exam cohorts without requiring separate views."
+            },
+            {
+              "id": "FR-01.2",
+              "statement": "Each tile SHALL display: live video feed, examinee name, student ID, exam ID, and an active/inactive status indicator.",
+              "rationale": "Proctor needs identity context at a glance (as shown in dashboard screenshot)."
+            },
+            {
+              "id": "FR-01.3",
+              "statement": "Each tile SHALL display a colored status badge (green = normal, amber = warning, red = flagged) derived from the latest AI alert severity.",
+              "rationale": "Enables rapid triage across many simultaneous feeds."
+            },
+            {
+              "id": "FR-01.4",
+              "statement": "The grid layout SHALL automatically reflow when tiles are added or removed without page reload.",
+              "rationale": "Examinees join/leave sessions dynamically."
+            },
+            {
+              "id": "FR-01.5",
+              "statement": "A proctor SHALL be able to click any tile to enter Focus Mode (FR-09), enlarging that feed to 75% of viewport.",
+              "rationale": "Enables close inspection of a suspicious examinee."
+            },
+            {
+              "id": "FR-01.6",
+              "statement": "Video tiles SHALL render at a minimum of 15 fps under normal network conditions.",
+              "rationale": "Below 15 fps proctors miss rapid behavioral events."
+            }
+          ]
+        },
+
+        "FR-02_alert_system": {
+          "id": "FR-02",
+          "title": "AI Alert Ingestion and Display",
+          "priority": "MUST",
+          "description": "The system shall receive, classify, and visually surface behavioral anomaly alerts generated by the AI Inference Engine.",
+          "alert_types": [
+            {
+              "code": "ALERT_MFA",
+              "label": "Multi-Face Alert",
+              "trigger": "AI detects more than one face in the examinee's video frame",
+              "severity": "HIGH",
+              "color": "#f59e0b",
+              "icon": "user-multiple",
+              "display_example": "Multi-Face Alert — S2 • Exam 1247"
+            },
+            {
+              "code": "ALERT_TSA",
+              "label": "Tab Switch Alert",
+              "trigger": "Browser focus/visibility events indicate examinee navigated away from exam tab",
+              "severity": "HIGH",
+              "color": "#ef4444",
+              "icon": "shield-alert",
+              "display_example": "Tab Switch Alert — S3 • Exam 1248"
+            },
+            {
+              "code": "ALERT_NO_FACE",
+              "label": "No Face Detected",
+              "trigger": "AI detects no face present for > 5 consecutive seconds",
+              "severity": "HIGH",
+              "color": "#ef4444",
+              "icon": "eye-off"
+            },
+            {
+              "code": "ALERT_AUDIO",
+              "label": "Suspicious Audio",
+              "trigger": "Audio analysis detects secondary voice or disallowed communication",
+              "severity": "MEDIUM",
+              "color": "#f97316",
+              "icon": "mic-alert"
+            },
+            {
+              "code": "ALERT_PHONE",
+              "label": "Phone/Device Detected",
+              "trigger": "Object detection identifies unauthorized device in frame",
+              "severity": "MEDIUM",
+              "color": "#f97316",
+              "icon": "smartphone"
+            },
+            {
+              "code": "ALERT_ID_MISMATCH",
+              "label": "Identity Mismatch",
+              "trigger": "Face match score against enrolled ID drops below threshold",
+              "severity": "CRITICAL",
+              "color": "#dc2626",
+              "icon": "shield-x"
+            }
+          ],
+          "sub_requirements": [
+            {
+              "id": "FR-02.1",
+              "statement": "The dashboard SHALL subscribe to the AI Inference Engine via WebSocket and process alert events within 500 ms of generation."
+            },
+            {
+              "id": "FR-02.2",
+              "statement": "Active alerts SHALL be surfaced as notification cards in a persistent alert tray at the bottom of the dashboard viewport, as shown in the reference design."
+            },
+            {
+              "id": "FR-02.3",
+              "statement": "Alert cards SHALL include: alert type label, severity badge, student segment ID, exam ID, and timestamp."
+            },
+            {
+              "id": "FR-02.4",
+              "statement": "Unacknowledged CRITICAL or HIGH alerts SHALL trigger a browser notification and an audible chime (dismissible in settings)."
+            },
+            {
+              "id": "FR-02.5",
+              "statement": "A proctor SHALL be able to acknowledge or dismiss an alert; dismissed alerts SHALL be retained in the session audit log."
+            },
+            {
+              "id": "FR-02.6",
+              "statement": "Alert card for Tab Switch SHALL use red color (#ef4444) and shield icon to visually distinguish from Multi-Face amber (#f59e0b)."
+            }
+          ]
+        },
+
+        "FR-03_proctor_interventions": {
+          "id": "FR-03",
+          "title": "Proctor Intervention Controls",
+          "priority": "MUST",
+          "description": "The system shall provide per-examinee action controls accessible from the video tile context menu or Focus Mode panel.",
+          "actions": [
+            {
+              "action": "WARN",
+              "description": "Send an on-screen text warning to the examinee",
+              "reversible": true,
+              "audit_required": true
+            },
+            {
+              "action": "CHAT",
+              "description": "Open a private text chat channel with the examinee",
+              "reversible": true,
+              "audit_required": true
+            },
+            {
+              "action": "FLAG",
+              "description": "Mark submission for post-exam review; does not interrupt exam",
+              "reversible": true,
+              "audit_required": true
+            },
+            {
+              "action": "EJECT",
+              "description": "Terminate examinee session and lock their exam submission",
+              "reversible": false,
+              "audit_required": true,
+              "confirmation_required": true
+            },
+            {
+              "action": "REQUEST_ID",
+              "description": "Prompt examinee to hold ID document up to camera for re-verification",
+              "reversible": true,
+              "audit_required": true
+            }
+          ],
+          "sub_requirements": [
+            {
+              "id": "FR-03.1",
+              "statement": "EJECT action SHALL require a two-step confirmation dialog before execution."
+            },
+            {
+              "id": "FR-03.2",
+              "statement": "All intervention actions SHALL be logged to the Audit Log Service with proctor ID, timestamp, examinee ID, action type, and optional notes."
+            },
+            {
+              "id": "FR-03.3",
+              "statement": "Proctor role SHALL NOT be able to perform EJECT without Senior Proctor approval if institution policy flag `require_senior_approval_for_eject` is enabled."
+            }
+          ]
+        },
+
+        "FR-04_session_management": {
+          "id": "FR-04",
+          "title": "Exam Session Management",
+          "priority": "MUST",
+          "description": "The system shall allow authorized users to manage the lifecycle of proctored exam sessions.",
+          "sub_requirements": [
+            {
+              "id": "FR-04.1",
+              "statement": "The dashboard header SHALL display: session name, exam ID, scheduled duration, elapsed time, and live examinee count."
+            },
+            {
+              "id": "FR-04.2",
+              "statement": "Authorized users SHALL be able to: start a scheduled session, extend session duration, pause all feeds, and end the session."
+            },
+            {
+              "id": "FR-04.3",
+              "statement": "Session state transitions SHALL be: SCHEDULED → ACTIVE → PAUSED → ENDED. No backward transitions except PAUSED → ACTIVE."
+            },
+            {
+              "id": "FR-04.4",
+              "statement": "When a session ends, the dashboard SHALL display a summary modal: total examinees, total alerts by type, flagged count, ejected count."
+            }
+          ]
+        },
+
+        "FR-05_system_health": {
+          "id": "FR-05",
+          "title": "System Operational Status Indicator",
+          "priority": "MUST",
+          "description": "The dashboard shall display a real-time system health indicator reflecting infrastructure status and live examinee count.",
+          "sub_requirements": [
+            {
+              "id": "FR-05.1",
+              "statement": "A status chip SHALL appear in the top-right of the dashboard showing one of: 'Active' (green), 'Degraded' (amber), or 'Offline' (red)."
+            },
+            {
+              "id": "FR-05.2",
+              "statement": "The status bar SHALL display total live examinee count (e.g., '1,247 Live') updated every 5 seconds."
+            },
+            {
+              "id": "FR-05.3",
+              "statement": "On 'Degraded' or 'Offline' status, the system SHALL display a banner explaining the issue and estimated resolution time if available."
+            }
+          ]
+        },
+
+        "FR-06_audit_log": {
+          "id": "FR-06",
+          "title": "Audit Log and Session Report",
+          "priority": "MUST",
+          "description": "The system shall generate tamper-evident, timestamped logs of all alerts and proctor actions for compliance and dispute resolution.",
+          "sub_requirements": [
+            {
+              "id": "FR-06.1",
+              "statement": "Every AI alert, proctor action, and session state change SHALL produce an immutable log entry."
+            },
+            {
+              "id": "FR-06.2",
+              "statement": "Proctors SHALL be able to view the alert history for any examinee within the current session via a side panel."
+            },
+            {
+              "id": "FR-06.3",
+              "statement": "Admins SHALL be able to export a full session report as PDF or JSON, containing: session metadata, per-examinee alert timeline, and all interventions."
+            },
+            {
+              "id": "FR-06.4",
+              "statement": "Audit logs SHALL be retained for a minimum of 7 years per institutional compliance requirements."
+            }
+          ]
+        },
+
+        "FR-07_rbac": {
+          "id": "FR-07",
+          "title": "Role-Based Access Control",
+          "priority": "MUST",
+          "description": "The system shall enforce RBAC with three roles: Proctor, Senior Proctor, and Admin.",
+          "permission_matrix": {
+            "Proctor":         { "view_assigned_feeds": true,  "view_all_feeds": false, "warn": true,  "flag": true,  "eject": false, "configure_thresholds": false, "export_logs": false, "manage_users": false },
+            "Senior Proctor":  { "view_assigned_feeds": true,  "view_all_feeds": true,  "warn": true,  "flag": true,  "eject": true,  "configure_thresholds": false, "export_logs": true,  "manage_users": false },
+            "Admin":           { "view_assigned_feeds": true,  "view_all_feeds": true,  "warn": true,  "flag": true,  "eject": true,  "configure_thresholds": true,  "export_logs": true,  "manage_users": true  }
+          },
+          "sub_requirements": [
+            {
+              "id": "FR-07.1",
+              "statement": "Authentication SHALL use JWT tokens with a maximum lifetime of 8 hours."
+            },
+            {
+              "id": "FR-07.2",
+              "statement": "Unauthorized access attempts SHALL be logged and trigger a security alert to the Admin."
+            }
+          ]
+        },
+
+        "FR-08_alert_configuration": {
+          "id": "FR-08",
+          "title": "Alert Threshold Configuration",
+          "priority": "SHOULD",
+          "description": "Admin users shall be able to configure per-institution alert sensitivity thresholds.",
+          "configurable_parameters": [
+            { "param": "mfa_confidence_threshold", "type": "float", "range": "0.50–0.99", "default": 0.75, "description": "Minimum AI confidence to raise a Multi-Face Alert" },
+            { "param": "no_face_timeout_seconds", "type": "integer", "range": "3–30", "default": 5, "description": "Seconds with no face detected before alert fires" },
+            { "param": "tab_switch_grace_seconds", "type": "integer", "range": "0–10", "default": 2, "description": "Grace period before Tab Switch Alert triggers" },
+            { "param": "audio_decibel_threshold", "type": "integer", "range": "30–80", "default": 55, "description": "dB level triggering suspicious audio alert" },
+            { "param": "require_senior_approval_for_eject", "type": "boolean", "default": false }
+          ]
+        },
+
+        "FR-09_focus_mode": {
+          "id": "FR-09",
+          "title": "Focus Mode — Single Examinee View",
+          "priority": "SHOULD",
+          "description": "The system shall provide an expanded single-examinee view for detailed inspection.",
+          "sub_requirements": [
+            {
+              "id": "FR-09.1",
+              "statement": "Focus Mode SHALL display: enlarged video feed, full alert history timeline for the session, AI confidence scores for active detections, and all intervention controls."
+            },
+            {
+              "id": "FR-09.2",
+              "statement": "Entering Focus Mode SHALL NOT interrupt monitoring of other tiles in the background grid."
+            },
+            {
+              "id": "FR-09.3",
+              "statement": "Focus Mode SHALL be dismissible via Escape key or a close button, returning to the full grid."
+            }
+          ]
+        },
+
+        "FR-10_export": {
+          "id": "FR-10",
+          "title": "Session Report Export",
+          "priority": "SHOULD",
+          "description": "Senior Proctors and Admins shall be able to export session reports.",
+          "formats": ["PDF", "JSON"],
+          "report_contents": [
+            "Session metadata (exam name, date, duration, institution)",
+            "Per-examinee table: student ID, name, alert count by type, flags, final disposition",
+            "Chronological alert timeline",
+            "All proctor interventions with actor and timestamp",
+            "System health events during session"
+          ]
+        }
+      },
+
+      "3_2_use_cases": [
+        {
+          "uc_id": "UC-01",
+          "name": "Proctor Responds to Multi-Face Alert",
+          "actors": ["Proctor", "AI Inference Engine"],
+          "preconditions": "Exam session is ACTIVE; proctor is authenticated with Proctor role",
+          "main_flow": [
+            "1. AI Engine detects two faces in Examinee S2's video frame with 87% confidence",
+            "2. System receives WebSocket event ALERT_MFA for S2/Exam 1247",
+            "3. System displays amber alert card 'Multi-Face Alert — S2 • Exam 1247' in alert tray",
+            "4. Examinee S2's tile border turns amber",
+            "5. Browser emits audible chime and browser notification",
+            "6. Proctor clicks alert card → opens Focus Mode for S2",
+            "7. Proctor reviews enlarged feed; confirms secondary face is present",
+            "8. Proctor clicks 'Warn' → types warning message → confirms",
+            "9. System sends on-screen warning to S2 and logs the intervention",
+            "10. Proctor clicks 'Flag' to mark for post-exam review",
+            "11. Proctor dismisses Focus Mode; alert card remains until acknowledged"
+          ],
+          "alternate_flows": [
+            "6a. Proctor determines it was a false positive → dismisses alert → logs false_positive reason"
+          ],
+          "postconditions": "Intervention logged; alert marked as reviewed; S2 continues exam"
+        },
+        {
+          "uc_id": "UC-02",
+          "name": "Proctor Responds to Tab Switch Alert",
+          "actors": ["Proctor", "Browser Visibility API (examinee client)"],
+          "preconditions": "Exam session is ACTIVE",
+          "main_flow": [
+            "1. Examinee S3 switches browser tabs during Exam 1248",
+            "2. Examinee client fires visibilitychange event; backend records TSA",
+            "3. System displays red alert card 'Tab Switch Alert — S3 • Exam 1248'",
+            "4. S3's tile border turns red",
+            "5. Proctor reviews; this is S3's second tab switch event this session",
+            "6. Proctor clicks 'Warn' with message 'Stay on exam tab or session will be terminated'",
+            "7. Proctor flags S3 for review"
+          ],
+          "postconditions": "Warning delivered; flag set; audit log updated"
+        },
+        {
+          "uc_id": "UC-03",
+          "name": "Admin Views System Operational Status",
+          "actors": ["Admin"],
+          "preconditions": "Admin is authenticated",
+          "main_flow": [
+            "1. Admin opens dashboard",
+            "2. System displays 'Active' status chip and '1,247 Live' counter",
+            "3. Admin verifies all subsystems healthy via health panel",
+            "4. Counter auto-refreshes every 5 seconds"
+          ],
+          "postconditions": "Admin has verified system operational status"
+        }
+      ]
+    },
+
+    "section_4_non_functional_requirements": {
+
+      "4_1_performance": [
+        {
+          "id": "NFR-PERF-01",
+          "attribute": "Video Latency",
+          "requirement": "Glass-to-glass video latency SHALL be ≤ 500 ms under normal network conditions (≥ 10 Mbps)."
+        },
+        {
+          "id": "NFR-PERF-02",
+          "attribute": "Alert Propagation",
+          "requirement": "AI alert events SHALL appear on the proctor dashboard within 500 ms of AI engine generation."
+        },
+        {
+          "id": "NFR-PERF-03",
+          "attribute": "Grid Render",
+          "requirement": "Initial dashboard load with 16 tiles SHALL complete within 3 seconds on a 10 Mbps connection."
+        },
+        {
+          "id": "NFR-PERF-04",
+          "attribute": "Scalability",
+          "requirement": "The system SHALL support 1,500 concurrent live examinee sessions per deployment instance."
+        },
+        {
+          "id": "NFR-PERF-05",
+          "attribute": "Proctor Capacity",
+          "requirement": "A single proctor SHALL be able to monitor up to 32 examinees per session without performance degradation."
+        }
+      ],
+
+      "4_2_reliability": [
+        {
+          "id": "NFR-REL-01",
+          "attribute": "Availability",
+          "requirement": "LPD SHALL achieve 99.9% uptime during scheduled exam windows (SLA)."
+        },
+        {
+          "id": "NFR-REL-02",
+          "attribute": "Fault Tolerance",
+          "requirement": "Loss of a single AI alert event SHALL NOT crash the dashboard; the system SHALL queue and retry missed events."
+        },
+        {
+          "id": "NFR-REL-03",
+          "attribute": "Reconnection",
+          "requirement": "On WebSocket disconnection, the client SHALL automatically reconnect with exponential backoff (max 30 s) and display a degraded-state banner."
+        },
+        {
+          "id": "NFR-REL-04",
+          "attribute": "Data Integrity",
+          "requirement": "Audit log entries SHALL be written atomically; partial writes SHALL be rolled back."
+        }
+      ],
+
+      "4_3_security": [
+        {
+          "id": "NFR-SEC-01",
+          "attribute": "Transport Encryption",
+          "requirement": "All video streams SHALL use DTLS-SRTP. All API and WebSocket traffic SHALL use TLS 1.3."
+        },
+        {
+          "id": "NFR-SEC-02",
+          "attribute": "Authentication",
+          "requirement": "All dashboard access SHALL require JWT authentication with RS256 signing."
+        },
+        {
+          "id": "NFR-SEC-03",
+          "attribute": "Authorization",
+          "requirement": "All API endpoints SHALL enforce RBAC. Attempting a forbidden action SHALL return HTTP 403 and be logged."
+        },
+        {
+          "id": "NFR-SEC-04",
+          "attribute": "Data Privacy",
+          "requirement": "No raw video frames SHALL be stored server-side without explicit examinee consent and institutional data processing agreement."
+        },
+        {
+          "id": "NFR-SEC-05",
+          "attribute": "Session Hijacking",
+          "requirement": "Dashboard sessions SHALL invalidate on browser close or 30-minute inactivity."
+        },
+        {
+          "id": "NFR-SEC-06",
+          "attribute": "Penetration Testing",
+          "requirement": "The system SHALL undergo annual third-party penetration testing; critical findings SHALL be remediated within 30 days."
+        }
+      ],
+
+      "4_4_usability": [
+        {
+          "id": "NFR-USE-01",
+          "attribute": "Accessibility",
+          "requirement": "UI SHALL comply with WCAG 2.1 Level AA. All alert cards SHALL be screen-reader accessible with ARIA labels."
+        },
+        {
+          "id": "NFR-USE-02",
+          "attribute": "Learnability",
+          "requirement": "A new proctor with basic computer literacy SHALL be able to perform core monitoring tasks after a 30-minute onboarding session."
+        },
+        {
+          "id": "NFR-USE-03",
+          "attribute": "Error Feedback",
+          "requirement": "All user action failures SHALL display a human-readable error message within 1 second."
+        },
+        {
+          "id": "NFR-USE-04",
+          "attribute": "Responsiveness",
+          "requirement": "Dashboard SHALL be fully functional on screens from 1366×768 to 4K resolution."
+        }
+      ],
+
+      "4_5_maintainability": [
+        {
+          "id": "NFR-MAIN-01",
+          "attribute": "Modularity",
+          "requirement": "UI components SHALL be independently testable React components with unit test coverage ≥ 80%."
+        },
+        {
+          "id": "NFR-MAIN-02",
+          "attribute": "Logging",
+          "requirement": "All client-side errors SHALL be forwarded to a centralized logging service with structured JSON logs."
+        },
+        {
+          "id": "NFR-MAIN-03",
+          "attribute": "Deployment",
+          "requirement": "The frontend SHALL be deployable via Docker image with zero manual configuration steps."
+        }
+      ],
+
+      "4_6_compliance": [
+        {
+          "id": "NFR-COMP-01",
+          "regulation": "GDPR",
+          "requirement": "Processing of biometric video data SHALL comply with GDPR Article 9; lawful basis and DPA required per institution."
+        },
+        {
+          "id": "NFR-COMP-02",
+          "regulation": "FERPA",
+          "requirement": "Student examination records surfaced in LPD SHALL be treated as education records under FERPA."
+        },
+        {
+          "id": "NFR-COMP-03",
+          "regulation": "Data Retention",
+          "requirement": "Audit logs SHALL be retained for a minimum of 7 years; video data (if stored) per institutional policy, max 2 years."
+        }
+      ]
+    },
+
+    "section_5_external_interface_requirements": {
+
+      "5_1_user_interfaces": {
+        "UI-01_dashboard_header": {
+          "elements": ["Institution logo", "Dashboard title", "Session name & ID", "Elapsed timer", "System status chip", "User role badge", "Settings gear icon", "Logout button"]
+        },
+        "UI-02_video_grid": {
+          "elements": ["N×M tile grid (auto-reflow)", "Per-tile: video feed, name overlay, student ID, exam ID, status badge (green/amber/red)", "Tile context menu (right-click or kebab icon)"]
+        },
+        "UI-03_alert_tray": {
+          "position": "Fixed bottom bar",
+          "elements": ["Alert cards (icon + label + student segment + exam ID)", "Card color coding per alert type", "Acknowledge / Dismiss buttons", "Alert count badge"],
+          "reference": "Matches bottom section of provided screenshot"
+        },
+        "UI-04_focus_mode_panel": {
+          "trigger": "Click on tile or alert card",
+          "elements": ["Large video feed (75% viewport)", "AI confidence score overlay", "Alert timeline for this examinee", "Intervention action buttons (Warn, Chat, Flag, Eject, Request ID)", "Close (Esc)"]
+        },
+        "UI-05_session_controls_bar": {
+          "elements": ["Start/Pause/End Session buttons", "Live examinee counter", "Grid layout selector (2×2, 4×4, 8×8)"]
+        }
+      },
+
+      "5_2_software_interfaces": [
+        {
+          "interface": "AI Inference Engine",
+          "protocol": "WebSocket (WSS)",
+          "data_format": "JSON",
+          "sample_event": {
+            "event": "ALERT",
+            "alert_type": "ALERT_MFA",
+            "severity": "HIGH",
+            "student_segment_id": "S2",
+            "exam_id": "Exam 1247",
+            "confidence": 0.87,
+            "timestamp": "2026-05-10T09:14:33.412Z",
+            "frame_url": null
+          }
+        },
+        {
+          "interface": "Media Server (WebRTC)",
+          "protocol": "WebRTC WHEP (HTTP Egress Protocol)",
+          "description": "Dashboard subscribes to named video streams identified by student_segment_id"
+        },
+        {
+          "interface": "Exam Management API",
+          "protocol": "REST over HTTPS",
+          "base_path": "/api/v1/sessions",
+          "key_endpoints": [
+            "GET /sessions/{id} — fetch session details",
+            "POST /sessions/{id}/start — transition to ACTIVE",
+            "POST /sessions/{id}/end — transition to ENDED",
+            "GET /sessions/{id}/examinees — list enrolled examinees"
+          ]
+        },
+        {
+          "interface": "Audit Log Service",
+          "protocol": "REST POST (fire-and-forget) or Kafka topic",
+          "description": "Dashboard emits structured log events for every proctor action"
+        }
+      ],
+
+      "5_3_communication_interfaces": {
+        "transport": "TLS 1.3 for all HTTP/WebSocket traffic",
+        "video": "DTLS-SRTP via WebRTC",
+        "real_time_events": "WebSocket persistent connection with heartbeat ping every 30 s",
+        "fallback": "Long-poll SSE if WebSocket unavailable"
+      }
+    },
+
+    "section_6_appendices": {
+      "appendix_a_alert_state_machine": {
+        "states": ["PENDING", "ACTIVE", "ACKNOWLEDGED", "DISMISSED", "ESCALATED"],
+        "transitions": [
+          "PENDING → ACTIVE (on WebSocket receipt)",
+          "ACTIVE → ACKNOWLEDGED (proctor clicks Acknowledge)",
+          "ACTIVE → DISMISSED (proctor clicks Dismiss + reason)",
+          "ACTIVE → ESCALATED (proctor clicks Escalate to Senior)",
+          "ACKNOWLEDGED → DISMISSED",
+          "ESCALATED → ACKNOWLEDGED (Senior Proctor acts)"
+        ]
+      },
+      "appendix_b_ui_color_conventions": {
+        "normal": { "hex": "#22c55e", "tailwind": "green-500", "meaning": "No active alerts" },
+        "warning": { "hex": "#f59e0b", "tailwind": "amber-500", "meaning": "MEDIUM alert or MFA" },
+        "critical": { "hex": "#ef4444", "tailwind": "red-500", "meaning": "HIGH/CRITICAL alert" },
+        "system_operational": { "hex": "#22c55e", "tailwind": "green-500", "meaning": "All systems healthy" },
+        "system_degraded": { "hex": "#f59e0b", "tailwind": "amber-500", "meaning": "Partial degradation" },
+        "system_offline": { "hex": "#ef4444", "tailwind": "red-500", "meaning": "Service unavailable" }
+      },
+      "appendix_c_technology_recommendations": {
+        "frontend": {
+          "framework": "React 19 + TypeScript",
+          "build_tool": "Vite 7",
+          "styling": "Tailwind CSS 4",
+          "animations": "Framer Motion",
+          "icons": "Lucide React",
+          "charts": "Recharts (for alert frequency charts)",
+          "state_management": "React Context + useReducer (or Zustand for alert queue)",
+          "webrtc_client": "Native WebRTC API + WHEP client library"
+        },
+        "rationale": "Aligns with existing AUCDT platform stack defined in CLAUDE.md"
+      },
+      "appendix_d_open_questions": [
+        {
+          "id": "OQ-01",
+          "question": "Should the dashboard support simultaneous multi-session monitoring (proctor oversees two exam rooms at once)?",
+          "owner": "Product",
+          "status": "Open"
+        },
+        {
+          "id": "OQ-02",
+          "question": "What is the maximum acceptable false-positive rate for MFA alerts before institutions consider the system unreliable?",
+          "owner": "AI Team",
+          "status": "Open"
+        },
+        {
+          "id": "OQ-03",
+          "question": "Is clip recording (short video snippet on alert trigger) required, and if so, what are the consent and retention policies?",
+          "owner": "Legal / Product",
+          "status": "Open"
+        },
+        {
+          "id": "OQ-04",
+          "question": "Should the examinee client expose a network quality indicator to the proctor tile?",
+          "owner": "Engineering",
+          "status": "Open"
+        }
+      ]
+    }
+  }
+}
