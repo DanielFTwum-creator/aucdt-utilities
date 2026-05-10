@@ -168,7 +168,23 @@ Work through items in order. Confirm each with ✅ before proceeding.
    - Embed diagrams in SRS                              [Sonnet]
    - Organise all files in /docs directory              [Haiku]
    - SRS ↔ Implemented Features Gap Analysis            [Sonnet]
+
+☐ 6. APP STORE DEPLOYMENT (For Web Apps Targeting iOS/Android)
+   - Install Capacitor 8.3.3                            [Haiku]
+   - Add iOS and Android platforms                       [Haiku]
+   - Create capacitor.config.ts with app ID & name      [Haiku]
+   - Update package.json version to 1.0.0               [Haiku]
+   - Write APP_STORE_GUIDE.md (complete submission SOP) [Sonnet]
+   - Write MOBILE_BUILD_GUIDE.md (build/test workflow)  [Sonnet]
+   - Write APP_ICONS_GUIDE.md (icon generation process) [Haiku]
+   - Create privacy.html (GDPR/CCPA/GDPA compliant)    [Sonnet]
+   - Create APPSTORE_READY.md (pre-submission checklist)[Haiku]
+   - Add npm scripts for mobile builds & device testing [Haiku]
+   - Test on iOS simulator and Android emulator         [Haiku]
+   - Verify exports, theming, admin panel on devices    [Haiku]
 ```
+
+**Duration:** 1 session (design choice) → 1 session (builds + docs) → ready for submission
 
 ---
 
@@ -329,5 +345,82 @@ Say it:
 
 ---
 
+## 12. CAPACITOR MOBILE APP DEPLOYMENT (Reusable Process)
+
+For any React web app that needs iOS and Android app store deployment:
+
+### Option A: Quick Setup (30 min, after web build is complete)
+
+```bash
+# From project root (where package.json is)
+pnpm install @capacitor/core @capacitor/cli @capacitor/ios @capacitor/android
+npx capacitor init --appName "App Name" --appId com.company.appname --webDir dist
+npx capacitor add ios
+npx capacitor add android
+
+# Update version in package.json, then:
+npm run build
+npx capacitor sync
+```
+
+### Option B: Full Documentation (when submitting to app stores)
+
+Create in `/docs/`:
+1. **APP_STORE_GUIDE.md** — Complete iOS App Store + Google Play submission steps
+2. **MOBILE_BUILD_GUIDE.md** — Build workflow, debugging, CI/CD examples
+3. **APP_ICONS_GUIDE.md** — Icon generation (1024→all sizes), placement for both platforms
+4. **privacy.html** in `/public/` — GDPR/CCPA/GDPA compliant privacy policy
+
+### Option C: Pre-Submission Checklist
+
+Create **APPSTORE_READY.md** with:
+- ✅/❌ checklist of all completed setup items
+- Timeline estimate (1–2 weeks before submission)
+- Next steps (icons, screenshots, accounts, testing)
+- Common issues and fixes
+- Build size estimates
+
+### Key Commands (Add to package.json scripts)
+
+```json
+{
+  "scripts": {
+    "build": "vite build",
+    "build:web": "vite build && capacitor copy ios && capacitor copy android",
+    "build:ios": "npm run build:web && npx capacitor build ios",
+    "build:android": "npm run build:web && npx capacitor build android",
+    "ios:open": "open ios/App/App.xcworkspace",
+    "android:open": "open android",
+    "mobile:sync": "capacitor sync"
+  }
+}
+```
+
+### Critical Paths
+
+- **iOS:** `ios/App/App.xcodeproj/` + `.plist` configuration
+- **Android:** `android/app/build.gradle` + `AndroidManifest.xml`
+- **Config:** `capacitor.config.ts` (app ID, version, web directory)
+- **Privacy:** Must be public URL (e.g., `https://domain.com/privacy.html`)
+
+### Timeline for Any Project
+
+| Phase | Duration | Owner |
+|-------|----------|-------|
+| Setup Capacitor + platforms | 30 min | Haiku |
+| Create documentation (3 guides) | 2 hours | Sonnet |
+| Create icons (design required externally) | 1–2 hours | — |
+| Test on devices | 1 hour | Haiku |
+| Submit to App Store | 1 hour | Manual |
+| Approval (iOS: 3–5 days, Android: 1–2 hours) | 3–5 days | App Stores |
+
+### Don't Repeat
+
+This process is identical across all TUC web app projects (LearnAI, BioChemAI, ThesisAI, etc.).
+Once the docs are written for one project, copy `docs/APP_STORE_GUIDE.md` and adapt app ID + name.
+
+---
+
 *Last updated: May 2026 — Daniel Frempong Twum / TUC ICT*
 *College Landing Page Generator: Dynamic positioning, TUC branding, Gemini AI integration, dmcdai HTML patterns*
+*LuxThumb Designer: First TUC project on Capacitor — iOS/Android ready (v1.0.0)*
