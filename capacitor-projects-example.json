@@ -1,0 +1,50 @@
+[
+  {
+    "projectPath": "./luxthumb-agent",
+    "appName": "LuxThumb Designer",
+    "appId": "com.techbridge.luxthumb",
+    "version": "1.0.0"
+  },
+  {
+    "projectPath": "./biochemai-v151120252049",
+    "appName": "BioChemAI",
+    "appId": "com.techbridge.biochemai",
+    "version": "1.0.0"
+  },
+  {
+    "projectPath": "./smartghana",
+    "appName": "SmartGhana",
+    "appId": "com.techbridge.smartghana",
+    "version": "1.0.0"
+  },
+  {
+    "projectPath": "./verb-explorer-toolkit",
+    "appName": "Verb Explorer",
+    "appId": "com.techbridge.verbexplorer",
+    "version": "1.0.0"
+  },
+  {
+    "projectPath": "./animator-agent-desktop",
+    "appName": "Animator Agent",
+    "appId": "com.techbridge.animator",
+    "version": "1.0.0"
+  },
+  {
+    "projectPath": "./college-landing-page-generator",
+    "appName": "College Generator",
+    "appId": "com.techbridge.clpg",
+    "version": "1.0.0"
+  },
+  {
+    "projectPath": "./lyriastream",
+    "appName": "LyriaStream",
+    "appId": "com.techbridge.lyriastream",
+    "version": "1.0.0"
+  },
+  {
+    "projectPath": "./venture-matrix-alpha",
+    "appName": "Venture Matrix",
+    "appId": "com.techbridge.venturematrix",
+    "version": "1.0.0"
+  }
+]
