@@ -1,0 +1,265 @@
+/* TUC Theme System - LuxThumb Designer */
+
+:root {
+  --color-background-main: #050505;
+  --color-background-secondary: #0A0A0A;
+  --color-background-tertiary: #0F0F0F;
+  --color-background-quaternary: #111111;
+  --color-foreground: #F5F5F5;
+  --color-foreground-secondary: #C9C9C9;
+  --color-foreground-muted: #999999;
+  --color-primary: #C9A84C;
+  --color-primary-hover: #D4B96A;
+  --color-primary-active: #B89836;
+  --color-accent: #1A1A1A;
+  --color-accent-subtle: #2A2A2A;
+  --color-border: #2A2A2A;
+  --color-border-subtle: #1A1A1A;
+  --color-success: #22C55E;
+  --color-error: #EF4444;
+  --color-warning: #F59E0B;
+  --color-info: #3B82F6;
+  --transition-fast: 0.15s ease;
+  --transition-normal: 0.3s ease;
+  --transition-slow: 0.5s ease;
+  --font-scale-xs: 0.75rem;
+  --font-scale-sm: 0.875rem;
+  --font-scale-base: 1rem;
+  --font-scale-lg: 1.125rem;
+  --font-scale-xl: 1.25rem;
+  --font-scale-2xl: 1.5rem;
+  --spacing-xs: 0.25rem;
+  --spacing-sm: 0.5rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 1.5rem;
+  --spacing-xl: 2rem;
+  --spacing-2xl: 3rem;
+}
+
+/* Dark Theme (Default) */
+[data-theme='dark'] {
+  --color-background-main: #050505;
+  --color-background-secondary: #0A0A0A;
+  --color-background-tertiary: #0F0F0F;
+  --color-background-quaternary: #111111;
+  --color-foreground: #F5F5F5;
+  --color-foreground-secondary: #C9C9C9;
+  --color-foreground-muted: #999999;
+  --color-primary: #C9A84C;
+  --color-primary-hover: #D4B96A;
+  --color-primary-active: #B89836;
+  --color-accent: #1A1A1A;
+  --color-accent-subtle: #2A2A2A;
+  --color-border: #2A2A2A;
+  --color-border-subtle: #1A1A1A;
+}
+
+/* Light Theme */
+[data-theme='light'] {
+  --color-background-main: #FFFFFF;
+  --color-background-secondary: #F5F5F5;
+  --color-background-tertiary: #EEEEEE;
+  --color-background-quaternary: #E5E5E5;
+  --color-foreground: #050505;
+  --color-foreground-secondary: #333333;
+  --color-foreground-muted: #666666;
+  --color-primary: #C9A84C;
+  --color-primary-hover: #D4B96A;
+  --color-primary-active: #B89836;
+  --color-accent: #E5E5E5;
+  --color-accent-subtle: #CCCCCC;
+  --color-border: #CCCCCC;
+  --color-border-subtle: #E5E5E5;
+}
+
+/* High Contrast Theme */
+[data-theme='high-contrast'] {
+  --color-background-main: #000000;
+  --color-background-secondary: #1A1A1A;
+  --color-background-tertiary: #333333;
+  --color-background-quaternary: #4D4D4D;
+  --color-foreground: #FFFFFF;
+  --color-foreground-secondary: #E5E5E5;
+  --color-foreground-muted: #CCCCCC;
+  --color-primary: #FFFF00;
+  --color-primary-hover: #FFFFCC;
+  --color-primary-active: #CCCC00;
+  --color-accent: #FFFFFF;
+  --color-accent-subtle: #E5E5E5;
+  --color-border: #FFFFFF;
+  --color-border-subtle: #CCCCCC;
+}
+
+/* Base Styles */
+* {
+  transition: background-color var(--transition-normal), color var(--transition-normal);
+}
+
+body {
+  background-color: var(--color-background-main);
+  color: var(--color-foreground);
+}
+
+/* Typography Utilities */
+.font-playfair {
+  font-family: 'Playfair Display', ui-serif, Georgia, serif;
+  letter-spacing: -0.02em;
+}
+
+.font-outfit {
+  font-family: 'Outfit', sans-serif;
+}
+
+.font-space-grotesk {
+  font-family: 'Space Grotesk', monospace;
+}
+
+/* Animation Keyframes */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    transform: translateX(-20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    transform: scale(0.95);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* Animation Utilities */
+.animate-fade-in {
+  animation: fadeIn var(--transition-normal) ease;
+}
+
+.animate-slide-in {
+  animation: slideIn var(--transition-normal) ease;
+}
+
+.animate-slide-in-left {
+  animation: slideInLeft var(--transition-normal) ease;
+}
+
+.animate-slide-in-right {
+  animation: slideInRight var(--transition-normal) ease;
+}
+
+.animate-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.animate-scale-in {
+  animation: scaleIn var(--transition-normal) ease;
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-background-secondary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-accent-subtle);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-foreground-muted);
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Focus Styles for Accessibility */
+a:focus,
+button:focus,
+input:focus,
+select:focus,
+textarea:focus {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* High Contrast Mode Adjustments */
+@media (prefers-contrast: more) {
+  [data-theme='dark'] {
+    --color-foreground-muted: #CCCCCC;
+    --color-accent-subtle: #444444;
+  }
+
+  [data-theme='light'] {
+    --color-foreground-muted: #333333;
+    --color-accent-subtle: #999999;
+  }
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
