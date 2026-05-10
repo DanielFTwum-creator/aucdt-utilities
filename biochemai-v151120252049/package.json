@@ -1,7 +1,7 @@
-﻿{
+{
   "name": "biochemai-v151120252049",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -10,7 +10,12 @@
     "test": "vitest",
     "test:ui": "vitest --ui",
     "test:coverage": "vitest run --coverage",
-    "test:e2e": "vitest run --config vitest.e2e.config.ts"
+    "test:e2e": "vitest run --config vitest.e2e.config.ts",
+    "build:ios": "pnpm build && npx capacitor sync ios",
+    "build:android": "pnpm build && npx capacitor sync android",
+    "mobile:sync": "npx capacitor sync",
+    "mobile:open:ios": "npx capacitor open ios",
+    "mobile:open:android": "npx capacitor open android"
   },
   "dependencies": {
     "@google/genai": "^1.29.1",
@@ -19,6 +24,10 @@
     "react-dom": "19.2.5"
   },
   "devDependencies": {
+    "@capacitor/core": "^8.3.3",
+    "@capacitor/cli": "^8.3.3",
+    "@capacitor/ios": "^8.3.3",
+    "@capacitor/android": "^8.3.3",
     "@types/node": "^24.10.1",
     "@vitejs/plugin-react": "^5.1.1",
     "typescript": "~5.9.3",
@@ -30,7 +39,7 @@
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/user-event": "^14.6.1",
     "jsdom": "^26.1.0",
-    "tailwindcss": "^4.2.2",
-    "@tailwindcss/vite": "^4.2.2"
+    "tailwindcss": "^4.3.0",
+    "@tailwindcss/vite": "^4.3.0"
   }
 }
