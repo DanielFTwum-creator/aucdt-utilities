@@ -20,7 +20,21 @@
       "Bash(pnpm add *)",
       "Bash(pnpm exec *)",
       "Bash(npx *)",
-      "Bash(pnpm install *)"
+      "Bash(pnpm install *)",
+      "Bash(Select-Object Name)",
+      "Bash(awk '{print $NF}')",
+      "PowerShell(ls -Path \"C:\\\\Development\\\\github\\\\aucdt-utilities\\\\\" -Directory | Where-Object { $_.Name -notmatch '^\\\\.' } | Select-Object -ExpandProperty Name | Sort-Object)",
+      "PowerShell(cd \"C:\\\\Development\\\\github\\\\aucdt-utilities\"; Get-ChildItem | Where-Object { $_.PSIsContainer } | ForEach-Object { Write-Host $_.Name })",
+      "Bash(xargs grep -l '\"name\".*learnai')",
+      "PowerShell(cd \"C:\\\\Development\\\\github\\\\aucdt-utilities\"; Get-ChildItem | Where-Object { $_.Name -match \"thesis|luxthumb\" })",
+      "PowerShell(cd \"C:\\\\Development\\\\github\\\\aucdt-utilities\"; Get-ChildItem | Where-Object { $_.Name -match \"biochemai|thesis\" })",
+      "Bash(bash /tmp/audit_react.sh)",
+      "Bash(pnpm list *)",
+      "Bash(bash /tmp/fast_audit.sh)",
+      "PowerShell(Get-ChildItem \"C:\\\\Development\\\\github\\\\aucdt-utilities\" | Where-Object { $_.Name -eq \"ThesisAI\" })",
+      "Bash(bash /tmp/final_audit.sh)",
+      "Bash(grep -E \"^\\(ios|android\\)$\")",
+      "Bash(git add *)"
     ]
   }
 }
