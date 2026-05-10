@@ -1,0 +1,18 @@
+@import './styles/theme.css';
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Playfair Display", ui-serif, Georgia, serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+}
+
+@layer utilities {
+  .bg-radial-vignette {
+    background: radial-gradient(circle at center, transparent 0%, rgba(0,0,0,0.8) 100%);
+  }
+  
+  .editorial-shadow {
+    box-shadow: 0 50px 100px rgba(0,0,0,0.8);
+  }
+}

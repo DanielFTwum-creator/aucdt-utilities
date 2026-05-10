@@ -1,0 +1,26 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(Set-Location .. *)",
+      "Bash(Get-ChildItem *)",
+      "Bash(pnpm approve-builds *)",
+      "Bash(ssh *)",
+      "Bash(scp -r dist/* root@66.226.72.199:/var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/luxthumb/)",
+      "Bash(cat)",
+      "Bash(scp .htaccess root@66.226.72.199:/var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/luxthumb/)",
+      "Bash(curl -I https://ai-tools.techbridge.edu.gh/luxthumb)",
+      "Bash(curl -s https://ai-tools.techbridge.edu.gh/luxthumb/admin)",
+      "Bash(curl -s https://ai-tools.techbridge.edu.gh/luxthumb/)",
+      "Bash(curl -s -I https://ai-tools.techbridge.edu.gh/luxthumb/)",
+      "Bash(npx tsc *)",
+      "Bash(curl -s -I https://ai-tools.techbridge.edu.gh/luxthumb)",
+      "Bash(pkill -f \"vite --port\")",
+      "Bash(pwsh *)",
+      "Bash(npm install *)",
+      "Bash(pnpm add *)",
+      "Bash(pnpm exec *)",
+      "Bash(npx *)",
+      "Bash(pnpm install *)"
+    ]
+  }
+}
