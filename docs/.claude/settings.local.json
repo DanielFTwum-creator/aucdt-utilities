@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(Get-ChildItem \"C:\\\\Users\\\\DELL\\\\Downloads\" -ErrorAction SilentlyContinue | Measure-Object -Property Length -Sum | Select-Object @{Name=\"TotalGB\";Expression={[math]::Round\\($_.Sum/1GB,2\\)}})",
+      "Bash(bash docker/standardise.sh --dry-run --all)",
+      "Bash(bash docker/standardise.sh --all)",
+      "Bash(tee /tmp/phase1_output.log)"
+    ]
+  }
+}
