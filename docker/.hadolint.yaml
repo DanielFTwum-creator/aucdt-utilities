@@ -1,0 +1,35 @@
+# Hadolint Configuration — Docker Linting Rules
+# See: https://github.com/hadolint/hadolint
+
+rules:
+  # Errors (must fix)
+  DL3008: error   # pin package versions in apt-get
+  DL3009: off     # skip apt-get update warnings (handled by Alpine)
+  DL3045: error   # do not use multiple chmod instructions
+  DL3006: error   # use specific version tags, not latest
+  DL3009: off     # apt-get update warnings
+  DL4000: error   # FROM image must have tag
+
+  # Warnings (should fix)
+  DL3007: warn    # use WORKDIR instead of cd
+  DL3010: warn    # use COPY instead of ADD
+  DL3018: warn    # pin Alpine package versions
+  DL3019: warn    # use --no-cache with apk
+  DL3020: warn    # use COPY with multi-source instead of multiple COPY
+  DL3022: warn    # COPY should use relative path instead of /
+  DL3025: warn    # use lowercase commands
+  DL3033: warn    # specify version for base image
+  DL3040: warn    # dnf install should use -y
+  DL3042: warn    # avoid cache busting with --no-cache
+  DL3059: warn    # multiple adjacent RUN instructions can be combined
+
+# Ignore specific lines (if necessary)
+ignored:
+  # Example: ignore DL3003 for specific Dockerfile patterns
+  # - DL3003
+
+# Trustedregistries (for corporate registries)
+trustedRegistries:
+  - docker.io
+  - ghcr.io
+  - gcr.io

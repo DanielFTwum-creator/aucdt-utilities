@@ -21,5 +21,8 @@
     "monorepo"
   ],
   "author": "Daniel Frempong Twum <daniel.twum@techbridge.edu.gh>",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "docx": "^9.6.1"
+  }
 }
