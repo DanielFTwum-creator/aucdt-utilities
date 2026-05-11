@@ -19,7 +19,8 @@
       "Bash(npx tsc *)",
       "Bash(npx vite *)",
       "Bash(powershell -NoProfile -Command '.\\\\deploy.ps1 -Build:$false')",
-      "Bash(git add *)"
+      "Bash(git add *)",
+      "Bash(gh pr create --title 'feat: dictation app enhancements + patois deployment + cleanup' --body ' *)"
     ]
   }
 }

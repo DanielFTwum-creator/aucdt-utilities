@@ -1,5 +1,5 @@
 # ── Stage 1: Build React frontend ────────────────────────────────────────────
-FROM node:24-alpine AS frontend-build
+FROM node:24-alpine AS builder
 WORKDIR /app
 
 COPY package*.json ./
@@ -10,7 +10,7 @@ ARG VITE_API_URL=""
 RUN npm run build
 
 # ── Stage 2: Build backend ────────────────────────────────────────────────────
-FROM node:24-alpine AS backend-build
+FROM node:24-alpine AS builder
 WORKDIR /app/backend
 
 COPY backend/package*.json ./
