@@ -1,0 +1,5 @@
+{
+  "name": "AUCDT MSEE Aptitude Test",
+  "description": "An interactive web application for the AUCDT Mature Students Entrance Examination (MSEE) Mathematics Aptitude Test. This app provides a timed exam environment, automatic progress saving, and an admin panel for generating new exams using AI.",
+  "requestFramePermissions": []
+}

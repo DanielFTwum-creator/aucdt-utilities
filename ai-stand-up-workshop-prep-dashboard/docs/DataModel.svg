@@ -1,0 +1,75 @@
+<svg width="800" height="600" viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg" font-family="Poppins, sans-serif" font-size="14">
+    <style>
+        .title { font-size: 24px; font-weight: bold; fill: #2C1810; }
+        .entity { stroke: #6B1028; stroke-width: 2; fill: #FFFFFF; }
+        .header { fill: #8B1538; }
+        .header-text { fill: #FFFFFF; font-weight: bold; }
+        .row { fill: #2C1810; }
+        .row-type { fill: #2C1810; font-style: italic; opacity: 0.7; }
+    </style>
+
+    <text x="400" y="40" text-anchor="middle" class="title">Application Data Model Diagram</text>
+    <text x="400" y="65" text-anchor="middle" class="text">(Based on TypeScript Types)</text>
+
+    <!-- TeamMember Entity -->
+    <g transform="translate(20, 100)">
+        <rect class="entity" x="0" y="0" width="220" height="190" rx="5"/>
+        <rect class="header" x="0" y="0" width="220" height="30" rx="5" ry="5"/>
+        <text class="header-text" x="110" y="20" text-anchor="middle">TeamMember</text>
+        <line x1="5" y1="30" x2="215" y2="30" stroke="#6B1028"/>
+        <text class="row" x="10" y="50">id: <tspan class="row-type">TeamMemberId</tspan></text>
+        <text class="row" x="10" y="70">name: <tspan class="row-type">string</tspan></text>
+        <text class="row" x="10" y="90">update: <tspan class="row-type">string</tspan></text>
+        <text class="row" x="10" y="110">blocker: <tspan class="row-type">object</tspan></text>
+        <text class="row" x="20" y="130">- text: <tspan class="row-type">string</tspan></text>
+        <text class="row" x="20" y="150">- isCritical: <tspan class="row-type">boolean</tspan></text>
+        <text class="row" x="10" y="170">quote?: <tspan class="row-type">string</tspan></text>
+    </g>
+
+    <!-- TechConcept Entity -->
+    <g transform="translate(260, 100)">
+        <rect class="entity" x="0" y="0" width="220" height="90" rx="5"/>
+        <rect class="header" x="0" y="0" width="220" height="30" rx="5" ry="5"/>
+        <text class="header-text" x="110" y="20" text-anchor="middle">TechConcept</text>
+        <line x1="5" y1="30" x2="215" y2="30" stroke="#6B1028"/>
+        <text class="row" x="10" y="50">title: <tspan class="row-type">string</tspan></text>
+        <text class="row" x="10" y="70">description: <tspan class="row-type">string</tspan></text>
+    </g>
+
+    <!-- AuditLog Entity -->
+    <g transform="translate(500, 100)">
+        <rect class="entity" x="0" y="0" width="220" height="90" rx="5"/>
+        <rect class="header" x="0" y="0" width="220" height="30" rx="5" ry="5"/>
+        <text class="header-text" x="110" y="20" text-anchor="middle">AuditLog</text>
+        <line x1="5" y1="30" x2="215" y2="30" stroke="#6B1028"/>
+        <text class="row" x="10" y="50">timestamp: <tspan class="row-type">string</tspan></text>
+        <text class="row" x="10" y="70">action: <tspan class="row-type">string</tspan></text>
+    </g>
+
+    <!-- TestResult Entity -->
+    <g transform="translate(20, 320)">
+        <rect class="entity" x="0" y="0" width="360" height="170" rx="5"/>
+        <rect class="header" x="0" y="0" width="360" height="30" rx="5" ry="5"/>
+        <text class="header-text" x="180" y="20" text-anchor="middle">TestResult</text>
+        <line x1="5" y1="30" x2="355" y2="30" stroke="#6B1028"/>
+        <text class="row" x="10" y="50">suiteId: <tspan class="row-type">string</tspan></text>
+        <text class="row" x="10" y="70">title: <tspan class="row-type">string</tspan></text>
+        <text class="row" x="10" y="90">status: <tspan class="row-type">TestStatus</tspan></text>
+        <text class="row" x="10" y="110">stepResults: <tspan class="row-type">object[]</tspan></text>
+        <text class="row" x="20" y="130">- description: <tspan class="row-type">string</tspan></text>
+        <text class="row" x="20" y="150">- status: <tspan class="row-type">TestStatus</tspan></text>
+    </g>
+
+    <!-- TestSuite Entity -->
+    <g transform="translate(400, 320)">
+        <rect class="entity" x="0" y="0" width="360" height="150" rx="5"/>
+        <rect class="header" x="0" y="0" width="360" height="30" rx="5" ry="5"/>
+        <text class="header-text" x="180" y="20" text-anchor="middle">TestSuite</text>
+        <line x1="5" y1="30" x2="355" y2="30" stroke="#6B1028"/>
+        <text class="row" x="10" y="50">id: <tspan class="row-type">string</tspan></text>
+        <text class="row" x="10" y="70">title: <tspan class="row-type">string</tspan></text>
+        <text class="row" x="10" y="90">steps: <tspan class="row-type">object[]</tspan></text>
+        <text class="row" x="20" y="110">- description: <tspan class="row-type">string</tspan></text>
+        <text class="row" x="20" y="130">- action: <tspan class="row-type">() => Promise&lt;boolean&gt;</tspan></text>
+    </g>
+</svg>

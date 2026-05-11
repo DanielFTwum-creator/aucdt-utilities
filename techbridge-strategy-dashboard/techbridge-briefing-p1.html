@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1240">
+    <title>TechBridge Executive Briefing - Page 1</title>
+    <style>
+        /* RESET & BASE */
+        * {
+            box-sizing: border-box;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+        }
+        
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #555; /* Dark background for browser view to pop the page */
+            font-family: Georgia, serif;
+            color: #1A1A1A;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* PAGE CONTAINER (A4 @ 150dpi approx) */
+        .page {
+            width: 1240px;
+            height: 1754px;
+            background-color: #FFFFFF;
+            margin: 40px auto;
+            padding: 60px;
+            position: relative;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+            display: flex;
+            flex-direction: column;
+        }
+
+        @media print {
+            body {
+                background-color: #FFFFFF;
+                margin: 0;
+            }
+            .page {
+                margin: 0;
+                box-shadow: none;
+                page-break-after: always;
+                width: 100%;
+                height: 100%;
+            }
+            @page {
+                size: A4;
+                margin: 0;
+            }
+        }
+
+        /* TYPOGRAPHY UTILITIES */
+        .font-serif { font-family: Georgia, serif; }
+        .font-sans { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; }
+        
+        .text-charcoal { color: #2C3E50; }
+        .text-red { color: #C0392B; }
+        .text-grey { color: #555555; }
+        .text-black { color: #1A1A1A; }
+
+        .tracking-wide { letter-spacing: 0.05em; }
+        .tracking-tight { letter-spacing: -0.02em; }
+        
+        .uppercase { text-transform: uppercase; }
+        .italic { font-style: italic; }
+        .bold { font-weight: bold; }
+
+        /* RULES */
+        .rule-red { border-bottom: 2px solid #C0392B; }
+        .rule-charcoal { border-bottom: 1px solid #2C3E50; }
+        .rule-top-charcoal { border-top: 1px solid #2C3E50; }
+        .border-charcoal { border: 1px solid #2C3E50; }
+
+        /* MASTHEAD */
+        .masthead {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            padding-bottom: 12px;
+            margin-bottom: 32px;
+        }
+        .masthead-left {
+            font-size: 9pt;
+            font-weight: bold;
+        }
+        .masthead-right {
+            font-size: 9pt;
+            font-weight: normal;
+        }
+
+        /* HEADLINE SECTION */
+        .headline-section {
+            margin-bottom: 32px;
+            padding-bottom: 24px;
+        }
+        h1 {
+            font-size: 48pt;
+            line-height: 1.1;
+            margin: 0 0 16px 0;
+        }
+        .subheading {
+            font-size: 13pt;
+            line-height: 1.4;
+            max-width: 85%;
+        }
+
+        /* 3-COLUMN GRID */
+        .grid-container {
+            display: grid;
+            grid-template-columns: 40fr 35fr 25fr; /* 40% 35% 25% */
+            gap: 24px;
+            margin-bottom: 40px;
+            flex-grow: 1;
+        }
+
+        .col-label {
+            font-size: 8pt;
+            font-weight: bold;
+            margin-bottom: 12px;
+            display: block;
+        }
+
+        /* LEFT COLUMN */
+        .narrative-p {
+            font-size: 10pt;
+            line-height: 1.5;
+            margin-bottom: 16px;
+            text-align: justify;
+        }
+        
+        .burn-rate-box {
+            margin-top: 32px;
+            padding: 16px;
+        }
+        .burn-label {
+            font-size: 9pt;
+            font-weight: bold;
+            color: #2C3E50;
+            margin-bottom: 8px;
+            display: block;
+        }
+        .burn-value {
+            font-size: 28pt;
+            line-height: 1;
+            margin-bottom: 4px;
+            display: block;
+        }
+        .burn-sub {
+            font-size: 9pt;
+            font-style: italic;
+        }
+
+        /* CENTER COLUMN - CHART */
+        .chart-container {
+            padding: 20px;
+            height: 400px; /* Fixed height for chart area */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .chart-caption {
+            font-size: 9pt;
+            margin-top: 16px;
+            text-align: center;
+        }
+
+        /* RIGHT COLUMN - METRICS */
+        .metric-block {
+            margin-bottom: 32px;
+            padding-bottom: 24px;
+        }
+        .metric-huge {
+            font-size: 96pt;
+            line-height: 0.9;
+            text-align: center;
+            display: block;
+            margin-bottom: 8px;
+        }
+        .metric-large {
+            font-size: 48pt;
+            line-height: 1;
+            display: block;
+            margin-bottom: 8px;
+        }
+        .metric-label {
+            font-size: 11pt;
+            font-weight: bold;
+            text-align: center;
+            display: block;
+        }
+        .metric-sub {
+            font-size: 9pt;
+        }
+        
+        .cta-box {
+            padding: 12px;
+            text-align: center;
+            margin-top: auto; /* Push to bottom if flex */
+            cursor: pointer;
+            display: block;
+            text-decoration: none;
+        }
+
+        /* PULL QUOTE */
+        .pull-quote-section {
+            padding: 32px 0;
+            margin-bottom: auto; /* Push footer down */
+        }
+        .pull-quote-text {
+            font-size: 18pt;
+            line-height: 1.4;
+            text-align: center;
+            max-width: 80%;
+            margin: 0 auto 16px auto;
+        }
+        .pull-quote-attr {
+            font-size: 9pt;
+            font-weight: bold;
+            text-align: center;
+            display: block;
+        }
+
+        /* FOOTER */
+        .footer {
+            padding-top: 12px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 9pt;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="page">
+        
+        <!-- MASTHEAD -->
+        <div class="masthead rule-red">
+            <div class="masthead-left font-sans text-charcoal tracking-wide uppercase">
+                TechBridge University College
+            </div>
+            <div class="masthead-right font-sans text-grey tracking-wide uppercase">
+                Confidential Executive Briefing — February 2026
+            </div>
+        </div>
+
+        <!-- HEADLINE -->
+        <div class="headline-section rule-charcoal">
+            <h1 class="font-serif text-black tracking-tight">125 Students. 250 Needed.<br>The Window Is Now.</h1>
+            <div class="subheading font-serif italic text-grey">
+                A conversion crisis is eroding TechBridge's financial foundation — 
+                and a high-ROI intervention path has been identified.
+            </div>
+        </div>
+
+        <!-- 3-COLUMN BODY -->
+        <div class="grid-container">
+            
+            <!-- LEFT COLUMN (40%) -->
+            <div class="col-left">
+                <span class="col-label font-sans text-red tracking-wide uppercase">The Crisis</span>
+                
+                <p class="narrative-p text-black">
+                    TechBridge University College currently enrolls 125 students against 
+                    a break-even capacity of 250. A 52% dropout rate at the final 
+                    conversion stage — qualified, accepted students who do not register — 
+                    represents the core structural threat to institutional sustainability.
+                </p>
+                
+                <p class="narrative-p text-black">
+                    Root cause analysis identifies brand perception tied to the former 
+                    institutional name as the primary conversion barrier. The GTEC-approved 
+                    rebranding to TechBridge creates an immediate and time-sensitive 
+                    intervention window.
+                </p>
+
+                <div class="burn-rate-box border-charcoal">
+                    <span class="burn-label font-sans uppercase tracking-wide">Annual Burn Without Intervention</span>
+                    <span class="burn-value font-serif bold text-red">GHS 16.2M</span>
+                    <span class="burn-sub font-serif italic text-grey">Current trajectory — loss position</span>
+                </div>
+            </div>
+
+            <!-- CENTER COLUMN (35%) -->
+            <div class="col-center">
+                <span class="col-label font-sans text-charcoal tracking-wide uppercase">Conversion Funnel</span>
+                
+                <div class="chart-container border-charcoal">
+                    <!-- SVG CHART -->
+                    <svg width="100%" height="250" viewBox="0 0 350 250" preserveAspectRatio="xMidYMid meet">
+                        <!-- Stage 1: Signed Up -->
+                        <text x="0" y="20" font-family="Helvetica Neue, sans-serif" font-size="10" fill="#2C3E50" font-weight="bold">SIGNED UP</text>
+                        <rect x="0" y="28" width="350" height="24" fill="#2C3E50" />
+                        <text x="350" y="20" font-family="Helvetica Neue, sans-serif" font-size="10" fill="#2C3E50" text-anchor="end">100%</text>
+
+                        <!-- Stage 2: Applied -->
+                        <text x="0" y="80" font-family="Helvetica Neue, sans-serif" font-size="10" fill="#2C3E50" font-weight="bold">APPLIED</text>
+                        <rect x="0" y="88" width="252" height="24" fill="#2C3E50" /> <!-- 72% of 350 = 252 -->
+                        <text x="252" y="80" font-family="Helvetica Neue, sans-serif" font-size="10" fill="#2C3E50" text-anchor="end">72%</text>
+
+                        <!-- Stage 3: Accepted -->
+                        <text x="0" y="140" font-family="Helvetica Neue, sans-serif" font-size="10" fill="#2C3E50" font-weight="bold">ACCEPTED</text>
+                        <rect x="0" y="148" width="133" height="24" fill="#2C3E50" /> <!-- 38% of 350 = 133 -->
+                        <text x="133" y="140" font-family="Helvetica Neue, sans-serif" font-size="10" fill="#2C3E50" text-anchor="end">38%</text>
+
+                        <!-- Stage 4: Registered (Crisis) -->
+                        <text x="0" y="200" font-family="Helvetica Neue, sans-serif" font-size="10" fill="#C0392B" font-weight="bold">REGISTERED</text>
+                        <rect x="0" y="208" width="63" height="24" fill="#C0392B" /> <!-- 18% of 350 = 63 -->
+                        <text x="63" y="200" font-family="Helvetica Neue, sans-serif" font-size="10" fill="#C0392B" text-anchor="end">18%</text>
+                    </svg>
+                    
+                    <div class="chart-caption font-serif italic text-grey">
+                        52% of accepted, qualified students do not complete registration.
+                    </div>
+                </div>
+            </div>
+
+            <!-- RIGHT COLUMN (25%) -->
+            <div class="col-right" style="display: flex; flex-direction: column;">
+                <span class="col-label font-sans text-red tracking-wide uppercase">Key Metric</span>
+                
+                <div class="metric-block rule-red">
+                    <span class="metric-huge font-serif bold text-red">52%</span>
+                    <span class="metric-label font-sans text-charcoal uppercase">Conversion Dropout Rate</span>
+                </div>
+
+                <div class="metric-block">
+                    <span class="metric-large font-serif bold text-charcoal">125</span>
+                    <span class="metric-sub font-sans text-grey uppercase">Current Enrollment / 250 Capacity</span>
+                </div>
+
+                <div style="margin-top: auto;">
+                    <a href="#" class="cta-box border-charcoal font-sans text-charcoal uppercase tracking-wide" style="display: block;">
+                        View Intervention Roadmap &rarr;
+                    </a>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- PULL QUOTE -->
+        <div class="pull-quote-section rule-top-charcoal rule-charcoal">
+            <div class="pull-quote-text font-serif italic text-black">
+                "GHS 1.56M invested today returns GHS 48.6M over five years — a 
+                projected ROI of 1,735%. The intervention window is open now."
+            </div>
+            <span class="pull-quote-attr font-sans text-grey uppercase tracking-wide">
+                — TechBridge Strategic Financial Model, 2026
+            </span>
+        </div>
+
+        <!-- FOOTER -->
+        <div class="footer font-sans text-charcoal">
+            <div class="footer-left bold">TECHBRIDGE UNIVERSITY COLLEGE</div>
+            <div class="footer-center">Page 1 of 3</div>
+            <div class="footer-right text-grey">Generated: February 20, 2026</div>
+        </div>
+
+    </div>
+
+</body>
+</html>

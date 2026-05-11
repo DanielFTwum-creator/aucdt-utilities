@@ -1,44 +1,28 @@
 {
-  "name": "thesisai-frontend",
+  "name": "aucdt-utilities",
   "version": "1.0.0",
+  "description": "Techbridge University College - AI & Digital Transformation Utilities Monorepo",
   "private": true,
-  "type": "module",
-  "packageManager": "pnpm@8.15.0",
   "scripts": {
-    "dev": "vite",
-    "start": "vite",
-    "build": "tsc && vite build",
-    "preview": "vite preview",
-    "lint": "tsc --noEmit",
-    "install-clean": "pnpm install && pnpm start",
-    "test": "vitest",
-    "test:watch": "vitest --watch",
-    "test:ui": "vitest --ui",
-    "test:coverage": "vitest --coverage"
+    "build": "pnpm recursive run build",
+    "build:all": "powershell -NoProfile -ExecutionPolicy Bypass -File build-all.ps1 || bash build-all.sh",
+    "build:filter": "powershell -NoProfile -ExecutionPolicy Bypass -File build-all.ps1 -filter",
+    "build:parallel": "powershell -NoProfile -ExecutionPolicy Bypass -File build-all.ps1 -parallel || bash build-all.sh --parallel",
+    "dev": "pnpm recursive run dev --parallel",
+    "lint": "pnpm recursive run lint",
+    "test": "pnpm recursive run test",
+    "clean": "pnpm recursive run clean && pnpm recursive exec rm -rf dist node_modules"
   },
+  "keywords": [
+    "tuc",
+    "techbridge",
+    "ai",
+    "digital-transformation",
+    "monorepo"
+  ],
+  "author": "Daniel Frempong Twum <daniel.twum@techbridge.edu.gh>",
+  "license": "MIT",
   "dependencies": {
-    "axios": "^1.13.2",
-    "framer-motion": "^12.23.24",
-    "lucide-react": "^0.554.0",
-    "react": "^19.2.0",
-    "react-dom": "^19.2.0",
-    "react-router-dom": "^7.9.6",
-    "recharts": "^3.5.0"
-  },
-  "devDependencies": {
-    "@testing-library/jest-dom": "^6.9.1",
-    "@testing-library/react": "^16.3.0",
-    "@testing-library/user-event": "^14.6.1",
-    "@types/react": "^19.2.6",
-    "@types/react-dom": "^19.2.3",
-    "@vitejs/plugin-react": "^5.1.1",
-    "@vitest/coverage-v8": "^4.0.13",
-    "autoprefixer": "^10.4.22",
-    "jsdom": "^27.2.0",
-    "postcss": "^8.5.6",
-    "tailwindcss": "^4.1.17",
-    "typescript": "^5.9.3",
-    "vite": "^7.2.4",
-    "vitest": "^4.0.13"
+    "docx": "^9.6.1"
   }
 }

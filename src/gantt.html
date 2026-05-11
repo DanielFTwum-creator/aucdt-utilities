@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weekly Targets Gantt Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+    <!-- Chosen Palette: Calm Focus Palette -->
+    <!-- Application Structure Plan: The application is now structured as a visual project tracking dashboard centered around a Gantt-like timeline visualization. This design prioritizes immediate visual understanding of task durations and deadlines over a simple list. Key components include: a contextual header, an overall progress summary (progress bar and text), filter buttons for dynamic view adjustments, and a prominent Chart.js-powered Gantt chart. This structure was chosen to provide a more holistic and interactive overview of the weekly targets, transforming a static list into a dynamic project management tool that fosters better understanding of timelines and task statuses at a glance. -->
+    <!-- Visualization & Content Choices: 1. Weekly Tasks -> Goal: Visualize Duration & Track Progress -> Presentation: Chart.js Horizontal Bar Chart acting as a Gantt Chart -> Interaction: Clicking a bar on the chart cycles its associated task's status (To Do, In Progress, Completed), which updates the bar's color and the overall progress bar. -> Justification: This provides a clear, visual representation of each task's timeline relative to its due date, allowing for intuitive tracking. Filters allow focusing on specific task statuses within the timeline. Library/Method: Chart.js with 'time' scale, HTML/CSS/JS for interactions. 2. Overall Progress -> Goal: Inform -> Presentation: Dynamic progress bar and text counter -> Interaction: Automatically updates when a task's status changes to 'Completed' via chart interaction. -> Justification: Offers an at-a-glance summary of achievements. Library/Method: HTML/CSS/JS. 3. Task Filtering -> Goal: Organize/Focus -> Presentation: A row of filter buttons -> Interaction: Clicking a button dynamically updates the Chart.js dataset to show only tasks with the corresponding status. -> Justification: Allows the user to easily focus on remaining work or review completed tasks on the timeline. Library/Method: JS. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            background-color: #FDFBF7;
+            font-family: 'Inter', sans-serif;
+        }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        .filter-btn-active {
+            background-color: #A67B5B !important;
+            color: #ffffff !important;
+            font-weight: 600;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 400px; /* Base height, adjust for more tasks or smaller screens */
+            max-height: 600px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 500px;
+            }
+        }
+        @media (min-width: 1024px) {
+            .chart-container {
+                height: 550px;
+            }
+        }
+    </style>
+</head>
+<body class="text-gray-800">
+
+    <div class="container mx-auto max-w-6xl px-4 py-8 sm:py-12">
+
+        <header class="text-center mb-8">
+            <h1 class="text-3xl sm:text-4xl font-bold text-gray-900 tracking-tight">Weekly Targets Gantt Dashboard</h1>
+            <p class="text-md text-gray-500 mt-2">Submitted to Mr. Twum by Bright Senanu Agbosu</p>
+        </header>
+
+        <section id="overview" class="mb-10 bg-white p-6 rounded-2xl shadow-sm border border-gray-200">
+             <h2 class="text-lg font-semibold text-gray-700 mb-3">Week's Progress</h2>
+            <div class="flex justify-between items-center mb-2">
+                <span id="progress-text" class="text-sm font-medium text-gray-600">0/5 Completed</span>
+                 <span id="progress-percent" class="text-sm font-bold text-[#A67B5B]">0%</span>
+            </div>
+            <div class="w-full bg-gray-200 rounded-full h-3">
+                <div id="progress-bar" class="bg-[#A67B5B] h-3 rounded-full transition-all duration-500 ease-out" style="width: 0%"></div>
+            </div>
+            <p class="text-sm text-gray-500 mt-4">This dashboard visualizes your weekly targets as a Gantt-like chart, showing each task's duration leading to its deadline. Click on a task bar to cycle its status (To Do ⚪, In Progress 🔵, Completed ⚫). Use the filters below to focus on specific task categories.</p>
+        </section>
+
+        <nav id="filters" class="mb-8 flex flex-wrap justify-center gap-2 sm:gap-4">
+            <button data-filter="all" class="filter-btn filter-btn-active px-4 py-2 text-sm font-medium text-gray-700 bg-white rounded-full shadow-sm border border-gray-200 hover:bg-gray-100 transition-colors">All Tasks</button>
+            <button data-filter="todo" class="filter-btn px-4 py-2 text-sm font-medium text-gray-700 bg-white rounded-full shadow-sm border border-gray-200 hover:bg-gray-100 transition-colors">To Do</button>
+            <button data-filter="inprogress" class="filter-btn px-4 py-2 text-sm font-medium text-gray-700 bg-white rounded-full shadow-sm border border-gray-200 hover:bg-gray-100 transition-colors">In Progress</button>
+            <button data-filter="completed" class="filter-btn px-4 py-2 text-sm font-medium text-gray-700 bg-white rounded-full shadow-sm border border-gray-200 hover:bg-gray-100 transition-colors">Completed</button>
+        </nav>
+
+        <main class="bg-white p-6 rounded-2xl shadow-sm border border-gray-200">
+            <h2 class="text-lg font-semibold text-gray-700 mb-4">Task Timeline</h2>
+            <div class="chart-container">
+                <canvas id="ganttChart"></canvas>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const initialTasks = [
+                { id: 1, title: 'Complete Moodle Training Report', description: 'Finalize and submit the report on the recently conducted Moodle training sessions.', status: 'todo', dueDate: 'July 5, 2025', durationDays: 3 },
+                { id: 2, title: 'Update Team on TUC LMS Manual', description: 'Provide a progress update to the team regarding the ongoing development of the TUC LMS user manual.', status: 'todo', dueDate: 'July 7, 2025', durationDays: 4 },
+                { id: 3, title: 'Record LMS Setup Tutorials', description: 'Create and record step-by-step tutorial videos to guide lecturers on how to set up and use the TUC LMS effectively.', status: 'todo', dueDate: 'July 9, 2025', durationDays: 5 },
+                { id: 4, title: 'Edit and Post TUC SRC Updates', description: 'Curate, edit, and publish relevant updates and announcements concerning the TUC SRC on official platforms.', status: 'todo', dueDate: 'July 11, 2025', durationDays: 2 },
+                { id: 5, title: 'Design Flyers for TUC Social Media', description: 'Develop engaging flyer designs for AUCDT\'s social media campaigns to enhance online visibility and engagement.', status: 'todo', dueDate: 'July 12, 2025', durationDays: 3 }
+            ];
+
+            const tasks = initialTasks.map(task => {
+                const endDate = new Date(task.dueDate);
+                const startDate = new Date(endDate);
+                startDate.setDate(endDate.getDate() - task.durationDays);
+                return { ...task, startDate, endDate };
+            });
+
+            const progressBar = document.getElementById('progress-bar');
+            const progressText = document.getElementById('progress-text');
+            const progressPercent = document.getElementById('progress-percent');
+            const filterButtons = document.querySelectorAll('.filter-btn');
+            const ganttChartCanvas = document.getElementById('ganttChart');
+            let ganttChart;
+
+            const statusConfig = {
+                todo: {
+                    label: 'To Do',
+                    color: '#CBD5E0', /* Gray for To Do */
+                    next: 'inprogress'
+                },
+                inprogress: {
+                    label: 'In Progress',
+                    color: '#60A5FA', /* Blue for In Progress */
+                    next: 'completed'
+                },
+                completed: {
+                    label: 'Completed',
+                    color: '#34D399', /* Green for Completed */
+                    next: 'todo'
+                }
+            };
+            
+            function wrapLabel(label, maxLength = 16) {
+                if (label.length <= maxLength) return label;
+                const words = label.split(' ');
+                let currentLine = '';
+                let lines = [];
+                words.forEach(word => {
+                    if ((currentLine + word).length > maxLength && currentLine.length > 0) {
+                        lines.push(currentLine.trim());
+                        currentLine = word + ' ';
+                    } else {
+                        currentLine += word + ' ';
+                    }
+                });
+                lines.push(currentLine.trim());
+                return lines;
+            }
+
+            function initializeChart(filteredTasks) {
+                if (ganttChart) {
+                    ganttChart.destroy();
+                }
+
+                const chartLabels = filteredTasks.map(task => wrapLabel(task.title));
+                const chartData = filteredTasks.map(task => ({
+                    x: [task.startDate, task.endDate],
+                    y: task.title,
+                    taskId: task.id
+                }));
+                const backgroundColors = filteredTasks.map(task => statusConfig[task.status].color);
+
+                ganttChart = new Chart(ganttChartCanvas, {
+                    type: 'bar',
+                    data: {
+                        labels: chartLabels,
+                        datasets: [{
+                            data: chartData,
+                            backgroundColor: backgroundColors,
+                            borderColor: backgroundColors.map(color => color),
+                            borderWidth: 1,
+                            borderRadius: 6,
+                        }]
+                    },
+                    options: {
+                        indexAxis: 'y',
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        layout: {
+                            padding: {
+                                left: 10,
+                                right: 10,
+                                top: 10,
+                                bottom: 10
+                            }
+                        },
+                        scales: {
+                            x: {
+                                type: 'time',
+                                time: {
+                                    unit: 'day',
+                                    tooltipFormat: 'MMM d, yyyy',
+                                    displayFormats: {
+                                        day: 'MMM d'
+                                    }
+                                },
+                                min: new Date('July 1, 2025'),
+                                max: new Date('July 15, 2025'),
+                                title: {
+                                    display: true,
+                                    text: 'Date',
+                                    color: '#4B5563',
+                                    font: {
+                                        size: 14,
+                                        weight: '600'
+                                    }
+                                },
+                                ticks: {
+                                    color: '#6B7280'
+                                },
+                                grid: {
+                                    borderColor: '#E5E7EB',
+                                    color: '#F3F4F6'
+                                }
+                            },
+                            y: {
+                                ticks: {
+                                    autoSkip: false,
+                                    maxRotation: 0,
+                                    minRotation: 0,
+                                    color: '#4B5563',
+                                    font: {
+                                        size: 12
+                                    }
+                                },
+                                grid: {
+                                    display: false
+                                }
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                display: false
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    title: function(context) {
+                                        const taskTitle = filteredTasks[context[0].dataIndex].title;
+                                        return taskTitle;
+                                    },
+                                    label: function(context) {
+                                        const task = filteredTasks[context.dataIndex];
+                                        const startDate = task.startDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+                                        const endDate = task.endDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+                                        const status = statusConfig[task.status].label;
+                                        return [
+                                            `Status: ${status}`,
+                                            `Starts: ${startDate}`,
+                                            `Due: ${endDate}`,
+                                            `Description: ${task.description}`
+                                        ];
+                                    }
+                                },
+                                backgroundColor: 'rgba(0,0,0,0.7)',
+                                titleFont: { size: 14, weight: 'bold' },
+                                bodyFont: { size: 12 },
+                                padding: 10,
+                                borderRadius: 8,
+                                displayColors: false
+                            }
+                        },
+                        onClick: (event, elements) => {
+                            if (elements.length > 0) {
+                                const index = elements[0].index;
+                                const clickedTask = filteredTasks[index];
+                                const taskInOriginalArray = tasks.find(t => t.id === clickedTask.id);
+                                
+                                taskInOriginalArray.status = statusConfig[taskInOriginalArray.status].next;
+                                filterTasks(document.querySelector('.filter-btn-active').dataset.filter);
+                                updateProgress();
+                            }
+                        }
+                    }
+                });
+            }
+
+            function updateProgress() {
+                const completedTasks = tasks.filter(t => t.status === 'completed').length;
+                const totalTasks = tasks.length;
+                const percentage = totalTasks > 0 ? (completedTasks / totalTasks) * 100 : 0;
+
+                progressBar.style.width = `${percentage}%`;
+                progressText.textContent = `${completedTasks}/${totalTasks} Completed`;
+                progressPercent.textContent = `${Math.round(percentage)}%`;
+            }
+            
+            function filterTasks(filter) {
+                let filtered = tasks;
+                if (filter !== 'all') {
+                    filtered = tasks.filter(task => task.status === filter);
+                }
+                initializeChart(filtered);
+
+                filterButtons.forEach(button => {
+                    if (button.dataset.filter === filter) {
+                        button.classList.add('filter-btn-active');
+                    } else {
+                        button.classList.remove('filter-btn-active');
+                    }
+                });
+            }
+
+            filterButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const filter = button.dataset.filter;
+                    filterTasks(filter);
+                });
+            });
+
+            filterTasks('all'); // Initialize with all tasks
+            updateProgress();
+        });
+    </script>
+</body>
+</html>

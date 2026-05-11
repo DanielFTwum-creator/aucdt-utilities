@@ -1,0 +1,58 @@
+@import "tailwindcss";
+
+@theme {
+  --color-ink: #0F0C07;
+  --color-gold: #C8A84B;
+  --color-gold-light: #E8C96A;
+  --color-gold-pale: #F5E6B8;
+  --color-cream: #F2EBD9;
+  --color-rule: rgba(200, 168, 75, 0.27);
+
+  --color-theme-bg: var(--bg-primary);
+  --color-theme-text: var(--text-primary);
+  --color-theme-border: var(--border-primary);
+
+  --font-playfair: "Playfair Display", serif;
+  --font-bebas: "Bebas Neue", sans-serif;
+  --font-cormorant: "Cormorant Garamond", serif;
+  --font-dmsans: "DM Sans", sans-serif;
+}
+
+:root {
+  --bg-primary: #0F0C07;
+  --text-primary: #F2EBD9;
+  --border-primary: rgba(200, 168, 75, 0.27);
+}
+
+.theme-light {
+  --bg-primary: #F2EBD9;
+  --text-primary: #0F0C07;
+  --border-primary: rgba(15, 12, 7, 0.27);
+}
+
+.theme-hc {
+  --bg-primary: #050402;
+  --text-primary: #E8C96A;
+  --border-primary: #C8A84B;
+}
+
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: var(--font-cormorant);
+  margin: 0;
+  padding: 0;
+  position: relative;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+/* Noise overlay */
+body::before {
+  content: "";
+  position: fixed;
+  top: 0; left: 0; width: 100vw; height: 100vh;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  opacity: 0.04;
+  pointer-events: none;
+  z-index: 9999;
+}

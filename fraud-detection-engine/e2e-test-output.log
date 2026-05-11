@@ -1,0 +1,13 @@
+
+> fraud-detection-engine@3.0.0 test:e2e
+> vitest run --config vitest.e2e.config.ts
+
+
+ RUN  v4.1.5 C:/Development/aucdt-utilities/fraud-detection-engine
+
+
+ Test Files  1 passed (1)
+      Tests  1 passed (1)
+   Start at  20:58:47
+   Duration  6.04s (transform 442ms, setup 0ms, import 821ms, tests 56ms, environment 1ms)
+

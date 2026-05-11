@@ -1,0 +1,8 @@
+{
+  "name": "TECHBRIDGE Product Design 6R Design Portal",
+  "description": "A best-in-class PWA for mastering the 6R Product Design Methodology at TECHBRIDGE University College.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ]
+}

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="480" height="460" viewBox="0 0 480 460">
+  <defs>
+    <marker id="arr2" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto">
+      <path d="M0,0 L6,3 L0,6 Z" fill="#94a3b8"/>
+    </marker>
+  </defs>
+  <rect width="480" height="460" fill="#ffffff"/>
+  <text x="240" y="18" text-anchor="middle"
+        font-family="'Playfair Display',serif" font-size="15" font-weight="700"
+        fill="#0F0C07">Civic services and smart city solutions - App ID 191 — Data Flow</text>
+  
+    <line x1="280" y1="60" x2="280" y2="140"
+          stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="4,3"
+          marker-end="url(#arr2)"/>
+    <text x="280" y="96" text-anchor="middle"
+          font-family="Inter,sans-serif" font-size="10" fill="#64748b">requests</text>
+    <line x1="280" y1="170" x2="140" y2="250"
+          stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="4,3"
+          marker-end="url(#arr2)"/>
+    <text x="210" y="206" text-anchor="middle"
+          font-family="Inter,sans-serif" font-size="10" fill="#64748b">routes</text>
+    <line x1="280" y1="170" x2="420" y2="250"
+          stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="4,3"
+          marker-end="url(#arr2)"/>
+    <text x="350" y="206" text-anchor="middle"
+          font-family="Inter,sans-serif" font-size="10" fill="#64748b">state</text>
+    <line x1="420" y1="280" x2="420" y2="360"
+          stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="4,3"
+          marker-end="url(#arr2)"/>
+    <text x="420" y="316" text-anchor="middle"
+          font-family="Inter,sans-serif" font-size="10" fill="#64748b">data</text>
+    <line x1="280" y1="170" x2="280" y2="360"
+          stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="4,3"
+          marker-end="url(#arr2)"/>
+    <text x="280" y="261" text-anchor="middle"
+          font-family="Inter,sans-serif" font-size="10" fill="#64748b">persist</text>
+  
+    <rect x="220" y="30" width="120" height="50" rx="8"
+          fill="#dbeafe" stroke="#3b82f6" stroke-width="2"/>
+    <text x="280" y="52" text-anchor="middle"
+          font-family="Inter,sans-serif" font-size="12" fill="#1e293b"><tspan x="280" dy="0">User</tspan><tspan x="280" dy="16">Browser</tspan></text>
+    <rect x="220" y="140" width="120" height="50" rx="8"
+          fill="#f0fdf4" stroke="#22c55e" stroke-width="2"/>
+    <text x="280" y="162" text-anchor="middle"
+          font-family="Inter,sans-serif" font-size="12" fill="#1e293b"><tspan x="280" dy="0">React App</tspan><tspan x="280" dy="16">(SPA)</tspan></text>
+    <rect x="80" y="250" width="120" height="50" rx="8"
+          fill="#fef3c7" stroke="#f59e0b" stroke-width="2"/>
+    <text x="140" y="280" text-anchor="middle"
+          font-family="Inter,sans-serif" font-size="12" fill="#1e293b"><tspan x="140" dy="0">React Router</tspan></text>
+    <rect x="360" y="250" width="120" height="50" rx="8"
+          fill="#fdf4ff" stroke="#a855f7" stroke-width="2"/>
+    <text x="420" y="272" text-anchor="middle"
+          font-family="Inter,sans-serif" font-size="12" fill="#1e293b"><tspan x="420" dy="0">React State</tspan><tspan x="420" dy="16">/ Context</tspan></text>
+    <rect x="360" y="360" width="120" height="50" rx="8"
+          fill="#e0f2fe" stroke="#0284c7" stroke-width="2"/>
+    <text x="420" y="382" text-anchor="middle"
+          font-family="Inter,sans-serif" font-size="12" fill="#1e293b"><tspan x="420" dy="0">Recharts</tspan><tspan x="420" dy="16">Components</tspan></text>
+    <rect x="220" y="360" width="120" height="50" rx="8"
+          fill="#f1f5f9" stroke="#64748b" stroke-width="2"/>
+    <text x="280" y="382" text-anchor="middle"
+          font-family="Inter,sans-serif" font-size="12" fill="#1e293b"><tspan x="280" dy="0">localStorage</tspan><tspan x="280" dy="16">/ sessionStorage</tspan></text>
+</svg>

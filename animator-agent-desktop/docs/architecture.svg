@@ -1,0 +1,39 @@
+<svg width="800" height="600" viewBox="0 0 800 600" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="800" height="600" fill="#0F0C07" />
+  <rect width="790" height="590" x="5" y="5" stroke="#C8A84B" stroke-width="2" rx="10" />
+  
+  <!-- Providers -->
+  <rect x="50" y="50" width="700" height="100" rx="8" fill="#141210" stroke="#3b6bff" stroke-dasharray="5 5" />
+  <text x="400" y="80" fill="#3b6bff" font-family="Playfair Display, serif" font-size="20" text-anchor="middle">Context Providers (State Layer)</text>
+  <text x="400" y="110" fill="#e2e8f0" font-family="Inter, sans-serif" font-size="14" text-anchor="middle">ThemeProvider | AuditProvider | AnimatorProvider</text>
+  
+  <!-- App Core -->
+  <rect x="300" y="180" width="200" height="60" rx="8" fill="#C8A84B" />
+  <text x="400" y="215" fill="#0F0C07" font-family="Bebas Neue, sans-serif" font-size="24" text-anchor="middle">App.tsx (Router)</text>
+  
+  <!-- Main Layout -->
+  <path d="M400 240 V280" stroke="#C8A84B" stroke-width="2" />
+  <rect x="250" y="280" width="300" height="60" rx="8" fill="#161b27" stroke="#1e2433" />
+  <text x="400" y="315" fill="#e2e8f0" font-family="Inter, sans-serif" font-size="18" text-anchor="middle">Animator.tsx (Composition)</text>
+  
+  <!-- Sub Components -->
+  <path d="M400 340 V380" stroke="#C8A84B" stroke-width="2" />
+  <path d="M250 380 H550" stroke="#C8A84B" stroke-width="2" />
+  <path d="M250 380 V420" stroke="#C8A84B" stroke-width="2" />
+  <path d="M400 380 V420" stroke="#C8A84B" stroke-width="2" />
+  <path d="M550 380 V420" stroke="#C8A84B" stroke-width="2" />
+  
+  <rect x="180" y="420" width="140" height="80" rx="6" fill="#0f1117" stroke="#1e2433" />
+  <text x="250" y="465" fill="#8b9ab7" font-family="Inter, sans-serif" font-size="12" text-anchor="middle">TimelinePanel</text>
+  
+  <rect x="330" y="420" width="140" height="80" rx="6" fill="#0f1117" stroke="#1e2433" />
+  <text x="400" y="465" fill="#8b9ab7" font-family="Inter, sans-serif" font-size="12" text-anchor="middle">PreviewPanel</text>
+  
+  <rect x="480" y="420" width="140" height="80" rx="6" fill="#0f1117" stroke="#1e2433" />
+  <text x="550" y="465" fill="#8b9ab7" font-family="Inter, sans-serif" font-size="12" text-anchor="middle">AgentPanel</text>
+  
+  <!-- Footer -->
+  <rect x="50" y="530" width="700" height="40" rx="4" fill="#141210" stroke="#34d399" />
+  <text x="400" y="555" fill="#34d399" font-family="Inter, sans-serif" font-size="14" text-anchor="middle">StatusBar (System Persistence &amp; Auto-Save)</text>
+</svg>

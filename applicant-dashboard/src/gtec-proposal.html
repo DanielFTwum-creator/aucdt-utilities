@@ -1,0 +1,328 @@
+&lt;!DOCTYPE html>
+
+&lt;html lang="en-GB">
+&lt;head>
+&lt;meta charset="UTF-8">
+&lt;meta name="viewport" content="width=device-width, initial-scale=1.0">
+&lt;title>Infographic: The Case for Investing in TUC&lt;/title>
+&lt;script src="https://cdn.tailwindcss.com">&lt;/script>
+&lt;script src="https://cdn.jsdelivr.net/npm/chart.js">&lt;/script>
+&lt;1><link rel="preconnect" href="https://fonts.googleapis.com">
+&lt;link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+&lt;link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&amp;display=swap" rel="stylesheet">
+&lt;style>
+body {
+font-family: 'Inter', sans-serif;
+background-color: #F0F4F8;
+}
+.chart-container {
+position: relative;
+width: 100%;
+max-width: 600px;
+margin-left: auto;
+margin-right: auto;
+height: 320px;
+max-height: 400px;
+}
+@media (min-width: 768px) {
+.chart-container {
+height: 350px;
+}
+}
+.flowchart-node {
+border: 2px solid #006494;
+background-color: #ffffff;
+color: #003554;
+padding: 1rem 1.5rem;
+border-radius: 0.5rem;
+text-align: center;
+font-weight: 600;
+box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+}
+.flowchart-arrow {
+color: #006494;
+font-size: 2.5rem;
+line-height: 1;
+font-weight: 900;
+}
+.pyramid-level {
+clip-path: polygon(10% 0, 90% 0, 100% 100%, 0% 100%);
+padding: 1.5rem 2rem;
+text-align: center;
+font-weight: 600;
+color: white;
+margin: -1px 0;
+}
+&lt;/style>
+&lt;/head>
+&lt;body class="text-[#003554]">
+
+<header class="bg-[#003554] text-white text-center py-12 px-4">
+    <h1 class="text-4xl md:text-5xl font-black uppercase tracking-wide">Investing in Ghana's Creative Future</h1>
+    <p class="text-xl mt-4 max-w-3xl mx-auto text-[#E0F7FA]">A strategic proposal for supporting Techbridge University College (TUC) to foster national innovation and entrepreneurship.</p>
+</header>
+
+<main class="container mx-auto p-4 md:p-8">
+
+    <section id="introduction" class="mb-16 text-center">
+        <h2 class="text-3xl font-bold mb-4 text-[#006494]">Who is TUC?</h2>
+        <p class="max-w-4xl mx-auto text-lg mb-8">Techbridge University College is a unique, GTEC-accredited institution at the forefront of creative and practical education in Ghana. Our mission is to cultivate the next generation of innovators, designers, and entrepreneurs who will drive the nation's economic development.</p>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <p class="text-5xl mb-3">🎓</p>
+                <h3 class="text-xl font-bold text-[#0582CA]">Specialised & Accredited</h3>
+                <p class="mt-2">Offering targeted, industry-relevant programmes in design and technology, fully accredited by the Ghana Tertiary Education Commission.</p>
+            </div>
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <p class="text-5xl mb-3">💡</p>
+                <h3 class="text-xl font-bold text-[#0582CA]">Practice-Based Learning</h3>
+                <p class="mt-2">Our curriculum emphasises hands-on skills and real-world application, ensuring graduates are not just knowledgeable, but also job-ready.</p>
+            </div>
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <p class="text-5xl mb-3">🚀</p>
+                <h3 class="text-xl font-bold text-[#0582CA]">Fostering Entrepreneurs</h3>
+                <p class="mt-2">We empower students to become job creators, embedding business and entrepreneurship skills across all disciplines.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="programmes" class="mb-16">
+        <h2 class="text-3xl font-bold mb-8 text-center text-[#006494]">Our Programmes: Forging Ghana's Innovators</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div class="bg-white p-6 rounded-lg shadow-lg text-center transform hover:scale-105 transition-transform duration-300">
+                <p class="text-6xl mb-4">💎</p>
+                <h3 class="text-xl font-bold text-[#0A2463]">Jewellery Design Technology</h3>
+                <p class="mt-2">Transforming precious minerals into high-value finished products, championing local craftsmanship and value addition.</p>
+            </div>
+            <div class="bg-white p-6 rounded-lg shadow-lg text-center transform hover:scale-105 transition-transform duration-300">
+                <p class="text-6xl mb-4">💻</p>
+                <h3 class="text-xl font-bold text-[#0A2463]">Digital Media & Communication Design</h3>
+                <p class="mt-2">Equipping students with skills for the digital age, from graphic design and web development to digital marketing.</p>
+            </div>
+            <div class="bg-white p-6 rounded-lg shadow-lg text-center transform hover:scale-105 transition-transform duration-300">
+                <p class="text-6xl mb-4">👗</p>
+                <h3 class="text-xl font-bold text-[#0A2463]">Fashion Design Technology</h3>
+                <p class="mt-2">Cultivating designers who can lead the "Made in Ghana" brand with innovative and culturally rich apparel.</p>
+            </div>
+            <div class="bg-white p-6 rounded-lg shadow-lg text-center transform hover:scale-105 transition-transform duration-300">
+                <p class="text-6xl mb-4">📦</p>
+                <h3 class="text-xl font-bold text-[#0A2463]">Product Design & Entrepreneurship</h3>
+                <p class="mt-2">Developing innovators who can conceptualise, design, and market new products for local and global markets.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="alignment" class="mb-16">
+        <h2 class="text-3xl font-bold mb-2 text-center text-[#006494]">Aligning with Ghana's National Vision</h2>
+        <p class="max-w-4xl mx-auto text-lg mb-10 text-center">TUC's core activities directly support key pillars of Ghana's national development strategy. Our focus on practical skills, value addition, and entrepreneurship creates a tangible impact on the economy and society.</p>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+
+            <div class="bg-white p-6 rounded-lg shadow-md flex flex-col">
+                <h3 class="text-xl font-bold text-[#0582CA] mb-4">Boosting the "Made in Ghana" Brand</h3>
+                <p class="mb-4">Our design programmes are essential for improving the quality and innovation of local manufacturing. This chart illustrates the projected growth in brand value for Ghanaian products, driven by a new generation of skilled designers from institutions like TUC.</p>
+                <div class="chart-container mt-auto">
+                    <canvas id="brandGrowthChart"></canvas>
+                </div>
+            </div>
+
+            <div class="bg-white p-6 rounded-lg shadow-md flex flex-col">
+                <h3 class="text-xl font-bold text-[#0582CA] mb-4">Driving the Digital Economy</h3>
+                 <p class="mb-4">We are creating a pipeline of talent for the digital sector. This chart shows the anticipated rise in digital media and tech jobs in Ghana, a demand that our graduates are uniquely qualified to meet.</p>
+                <div class="chart-container mt-auto">
+                    <canvas id="digitalJobsChart"></canvas>
+                </div>
+            </div>
+
+            <div class="bg-white p-6 rounded-lg shadow-md flex flex-col">
+                <h3 class="text-xl font-bold text-[#0582CA] mb-4">Fostering a Culture of Entrepreneurship</h3>
+                <p class="mb-4">Our goal is to create job creators, not just job seekers. This chart represents the intended outcome for our graduates, with a significant portion empowered to start their own businesses, thereby reducing unemployment.</p>
+                <div class="chart-container mt-auto">
+                    <canvas id="entrepreneurshipChart"></canvas>
+                </div>
+            </div>
+
+            <div class="bg-white p-6 rounded-lg shadow-md flex flex-col">
+                <h3 class="text-xl font-bold text-[#0582CA] mb-4">Emphasising Practical, Hands-On Skills</h3>
+                 <p class="mb-4">Theory is important, but practical application is critical. Our curriculum is heavily weighted towards hands-on, studio-based learning to ensure our students graduate with demonstrable, real-world skills.</p>
+                <div class="chart-container mt-auto">
+                    <canvas id="educationFocusChart"></canvas>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <section id="challenge" class="mb-16">
+        <h2 class="text-3xl font-bold mb-2 text-center text-[#006494]">The Challenge: Unlocking Our Full Potential</h2>
+        <p class="max-w-4xl mx-auto text-lg mb-10 text-center">While our vision is clear, specialised design education requires significant investment. To elevate our contribution to Ghana's development, we must overcome key challenges that strategic funding can resolve. These needs are foundational, building upon each other to create a world-class institution.</p>
+        <div class="max-w-lg mx-auto">
+            <div class="pyramid-level" style="background-color: #0A2463;">Expanding Programme Offerings</div>
+            <div class="pyramid-level" style="background-color: #003554;">Strengthening Research & Innovation</div>
+            <div class="pyramid-level" style="background-color: #006494;">Increasing Student Access & Scholarships</div>
+            <div class="pyramid-level" style="background-color: #0582CA;">Attracting & Retaining Expert Academic Staff</div>
+            <div class="pyramid-level" style="background-color: #00A6FB;">Enhancing Infrastructure & Resources</div>
+            <div class="bg-[#003554] text-white p-4 text-center font-bold rounded-b-lg">Foundational Need: Ensuring Institutional Sustainability</div>
+        </div>
+    </section>
+    
+    <section id="solution" class="mb-16">
+        <h2 class="text-3xl font-bold mb-2 text-center text-[#006494]">The Solution: A Strategic Partnership for Growth</h2>
+        <p class="max-w-4xl mx-auto text-lg mb-10 text-center">Government funding is not just a lifeline; it is a strategic investment that creates a powerful cycle of growth. This partnership directly translates into enhanced institutional capacity, which in turn delivers tangible, positive outcomes for the entire nation.</p>
+        <div class="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-8">
+            <div class="flowchart-node">Strategic Government Funding</div>
+            <div class="flowchart-arrow transform rotate-90 md:rotate-0">➔</div>
+            <div class="flowchart-node">Enhanced TUC Capacity & Resources</div>
+            <div class="flowchart-arrow transform rotate-90 md:rotate-0">➔</div>
+            <div class="flowchart-node">Positive National Outcomes:<br><span class="font-normal text-sm">(Skilled Workforce, Job Creation, Innovation, Economic Growth)</span></div>
+        </div>
+    </section>
+
+</main>
+
+<footer class="bg-[#003554] text-white text-center py-8 px-4 mt-16">
+    <p class="text-xl font-bold">Let's build Ghana's creative future, together.</p>
+    <p class="mt-2">A partnership with TUC is an investment in innovation, entrepreneurship, and national pride.</p>
+    <div class="mt-4">
+        <p>Techbridge University College (TUC)</p>
+        <p>Website: aucdt.edu.gh</p>
+    </div>
+</footer>
+
+<script>
+    
+    function processLabels(labels, maxLength = 16) {
+        return labels.map(label => {
+            if (typeof label === 'string' && label.length > maxLength) {
+                const words = label.split(' ');
+                const newLabels = [];
+                let currentLine = '';
+                words.forEach(word => {
+                    if ((currentLine + word).length > maxLength) {
+                        newLabels.push(currentLine.trim());
+                        currentLine = '';
+                    }
+                    currentLine += word + ' ';
+                });
+                newLabels.push(currentLine.trim());
+                return newLabels;
+            }
+            return label;
+        });
+    }
+    
+    const tooltipTitleCallback = {
+        plugins: {
+            tooltip: {
+                callbacks: {
+                    title: function(tooltipItems) {
+                        const item = tooltipItems[0];
+                        let label = item.chart.data.labels[item.dataIndex];
+                        if (Array.isArray(label)) {
+                          return label.join(' ');
+                        }
+                        return label;
+                    }
+                }
+            }
+        }
+    };
+
+    const chartColors = ['#00A6FB', '#0582CA', '#006494', '#003554', '#0A2463'];
+
+    const brandGrowthData = {
+        labels: ['2023', '2024', '2025 (Projected)', '2026 (Projected)', '2027 (Projected)'],
+        datasets: [{
+            label: 'Made in Ghana Brand Value (in millions GHS)',
+            data: [120, 150, 210, 280, 370],
+            borderColor: chartColors[0],
+            backgroundColor: 'rgba(0, 166, 251, 0.1)',
+            fill: true,
+            tension: 0.4
+        }]
+    };
+
+    new Chart(document.getElementById('brandGrowthChart'), {
+        type: 'line',
+        data: brandGrowthData,
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            ...tooltipTitleCallback
+        }
+    });
+
+    const digitalJobsData = {
+        labels: processLabels(['Digital Marketing Specialists', 'UI/UX Designers', 'Motion Graphics Artists', 'Full-Stack Web Developers', 'Content Creators']),
+        datasets: [{
+            label: 'Projected New Jobs by 2027',
+            data: [8000, 5500, 4000, 6500, 9000],
+            backgroundColor: chartColors,
+            borderColor: '#ffffff',
+            borderWidth: 2
+        }]
+    };
+    
+    new Chart(document.getElementById('digitalJobsChart'), {
+        type: 'bar',
+        data: digitalJobsData,
+        options: {
+            indexAxis: 'y',
+            responsive: true,
+            maintainAspectRatio: false,
+            ...tooltipTitleCallback
+        }
+    });
+
+    const entrepreneurshipData = {
+        labels: ['Start Own Business', 'Join Creative Industry', 'Further Education'],
+        datasets: [{
+            label: 'Graduate Outcomes',
+            data: [40, 55, 5],
+            backgroundColor: [chartColors[1], chartColors[3], chartColors[0]],
+            hoverOffset: 4
+        }]
+    };
+
+    new Chart(document.getElementById('entrepreneurshipChart'), {
+        type: 'doughnut',
+        data: entrepreneurshipData,
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            ...tooltipTitleCallback,
+            plugins: {
+                legend: {
+                    position: 'top',
+                }
+            }
+        }
+    });
+
+    const educationFocusData = {
+        labels: ['Practical & Studio Work', 'Theoretical Learning'],
+        datasets: [{
+            label: 'Curriculum Focus',
+            data: [75, 25],
+            backgroundColor: [chartColors[2], chartColors[4]],
+            hoverOffset: 4
+        }]
+    };
+
+    new Chart(document.getElementById('educationFocusChart'), {
+        type: 'pie',
+        data: educationFocusData,
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            ...tooltipTitleCallback,
+            plugins: {
+                legend: {
+                    position: 'top',
+                }
+            }
+        }
+    });
+
+</script>
+&lt;/body>
+&lt;/html>

@@ -1,0 +1,44 @@
+<svg width="600" height="450" viewBox="0 0 600 450" xmlns="http://www.w3.org/2000/svg" style="--bg-primary:#0D1117;--bg-secondary:#161B22;--border-primary:#30363D;--text-primary:#E6EDF3;--text-secondary:#8B949E;--accent-primary:#58A6FF;--feedback-success:#56D364; font-family: 'Poppins', sans-serif; color: var(--text-primary);">
+    <defs>
+        <style>
+            .box { fill: var(--bg-secondary); stroke: var(--border-primary); stroke-width: 2; }
+            .txt { fill: var(--text-primary); font-size: 14px; }
+            .line { stroke: var(--feedback-success); stroke-width: 1.5; marker-end: url(#arrow); }
+            .title { fill: var(--text-primary); font-size: 18px; font-weight: bold; text-anchor: middle; }
+            .field-name { font-weight: bold; fill: var(--text-secondary); }
+            .field-type { fill: var(--accent-primary); }
+        </style>
+        <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--feedback-success)" />
+        </marker>
+    </defs>
+    
+    <rect x="0" y="0" width="600" height="450" fill="var(--bg-primary)" />
+    <text x="300" y="30" class="title">Data Architecture</text>
+
+    <!-- Data Source -->
+    <g>
+        <rect x="50" y="60" width="200" height="60" rx="5" class="box"/>
+        <text x="150" y="85" text-anchor="middle" class="txt">Data Source</text>
+        <text x="150" y="105" text-anchor="middle" class="txt" style="font-size: 12px;">(constants.ts)</text>
+    </g>
+
+    <!-- Data Structure -->
+    <g>
+        <rect x="350" y="60" width="220" height="300" rx="5" class="box"/>
+        <text x="460" y="85" text-anchor="middle" class="txt">Question Schema</text>
+        <text x="460" y="105" text-anchor="middle" class="txt" style="font-size: 12px;">(types.ts)</text>
+        <line x1="360" y1="120" x2="560" y2="120" stroke="var(--border-primary)" />
+        
+        <text x="365" y="145" class="txt"><tspan class="field-name">id:</tspan> <tspan class="field-type">number</tspan></text>
+        <text x="365" y="170" class="txt"><tspan class="field-name">question:</tspan> <tspan class="field-type">string</tspan></text>
+        <text x="365" y="195" class="txt"><tspan class="field-name">options:</tspan> <tspan class="field-type">string[]</tspan></text>
+        <text x="365" y="220" class="txt"><tspan class="field-name">correct:</tspan> <tspan class="field-type">number</tspan></text>
+        <text x="365" y="245" class="txt"><tspan class="field-name">topic:</tspan> <tspan class="field-type">string</tspan></text>
+        <text x="365" y="270" class="txt"><tspan class="field-name">cognitive_level:</tspan> <tspan class="field-type">string</tspan></text>
+        <text x="365" y="295" class="txt"><tspan class="field-name">svgContent:</tspan> <tspan class="field-type">string | null</tspan></text>
+        <text x="365" y="320" class="txt"><tspan class="field-name">chartJsConfig:</tspan> <tspan class="field-type">any | null</tspan></text>
+    </g>
+    
+    <path d="M 250 90 H 350" class="line" fill="none"/>
+</svg>

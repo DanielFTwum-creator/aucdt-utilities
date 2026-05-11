@@ -1,0 +1,59 @@
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600">
+  <defs>
+    <style>
+      .box { fill: #f8fafc; stroke: #334155; stroke-width: 2; rx: 8; }
+      .box-admin { fill: #f0fdf4; stroke: #15803d; stroke-width: 2; rx: 8; }
+      .box-core { fill: #eff6ff; stroke: #1d4ed8; stroke-width: 2; rx: 8; }
+      .text-title { font-family: sans-serif; font-size: 14px; font-weight: bold; fill: #0f172a; text-anchor: middle; }
+      .text-desc { font-family: sans-serif; font-size: 10px; fill: #64748b; text-anchor: middle; }
+      .line { stroke: #94a3b8; stroke-width: 2; marker-end: url(#arrow); }
+      .dashed { stroke: #94a3b8; stroke-width: 2; stroke-dasharray: 4; }
+    </style>
+    <marker id="arrow" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#94a3b8" />
+    </marker>
+  </defs>
+
+  <!-- Title -->
+  <text x="400" y="30" class="text-title" style="font-size: 18px;">TVET Assessment Dashboard - System Architecture</text>
+
+  <!-- App Container -->
+  <rect x="50" y="60" width="700" height="500" fill="none" stroke="#cbd5e1" stroke-width="2" stroke-dasharray="5,5" rx="16" />
+  <text x="70" y="85" class="text-title" style="text-anchor: start; fill: #64748b;">App Container (React 19.2.4)</text>
+
+  <!-- State Manager -->
+  <rect x="250" y="100" width="300" height="80" class="box-core" />
+  <text x="400" y="130" class="text-title">State Manager (App.tsx)</text>
+  <text x="400" y="150" class="text-desc">URL Hash Sync | Auth State | Computed Stats</text>
+
+  <!-- Routing Logic -->
+  <path d="M 400 180 L 200 240" class="line" />
+  <path d="M 400 180 L 400 240" class="line" />
+  <path d="M 400 180 L 600 240" class="line" />
+
+  <!-- Views -->
+  <rect x="100" y="240" width="200" height="100" class="box" />
+  <text x="200" y="270" class="text-title">Dashboard View</text>
+  <text x="200" y="290" class="text-desc">Visualizations (Charts/Stats)</text>
+  <text x="200" y="310" class="text-desc">Control Panel (Config)</text>
+
+  <rect x="300" y="240" width="200" height="100" class="box-admin" />
+  <text x="400" y="270" class="text-title">Admin Panel</text>
+  <text x="400" y="290" class="text-desc">Audit Logs | Diagnostics</text>
+  <text x="400" y="310" class="text-desc">Theme Control</text>
+
+  <rect x="500" y="240" width="200" height="100" class="box" />
+  <text x="600" y="270" class="text-title">Login View</text>
+  <text x="600" y="290" class="text-desc">Authentication Gate</text>
+
+  <!-- Test Runner Overlay -->
+  <rect x="250" y="400" width="300" height="60" fill="#fef2f2" stroke="#ef4444" stroke-width="2" rx="8" />
+  <text x="400" y="425" class="text-title" fill="#ef4444">Test Runner (Overlay)</text>
+  <text x="400" y="445" class="text-desc">Puppeteer Simulator (DOM Access)</text>
+
+  <!-- Connections -->
+  <path d="M 400 340 L 400 400" class="line" style="stroke: #ef4444;" />
+  <text x="410" y="370" style="font-size: 10px; fill: #ef4444;">Invokes</text>
+
+</svg>

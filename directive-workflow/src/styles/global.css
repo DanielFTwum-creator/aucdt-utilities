@@ -1,0 +1,117 @@
+@import url('https://fonts.googleapis.com/css2?family=Cascadia+Code&family=Fira+Code:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500;600;700&display=swap');
+
+:root {
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-mono: 'Fira Code', 'JetBrains Mono', 'Cascadia Code', monospace;
+
+  /* Theme Transitions */
+  --transition-fast: 0.1s ease;
+  --transition-base: 0.2s ease;
+  --transition-slow: 0.4s ease;
+}
+
+[data-theme="dark"] {
+  --bg: #0b0b1a;
+  --surface: #0e0e24;
+  --surface-alt: #16162a;
+  --border: #1e1e3a;
+  --text: #e2e8f0;
+  --text-muted: #94a3b8;
+  --text-dim: #475569;
+  --primary: #6c63ff;
+  --secondary: #00b894;
+  --accent: #a78bfa;
+  --success: #34d399;
+  --warning: #fb923c;
+  --error: #f87171;
+}
+
+[data-theme="light"] {
+  --bg: #f8fafc;
+  --surface: #ffffff;
+  --surface-alt: #f1f5f9;
+  --border: #e2e8f0;
+  --text: #0f172a;
+  --text-muted: #475569;
+  --text-dim: #94a3b8;
+  --primary: #4f46e5;
+  --secondary: #059669;
+  --accent: #7c3aed;
+  --success: #10b981;
+  --warning: #f59e0b;
+  --error: #ef4444;
+}
+
+[data-theme="highContrast"] {
+  --bg: #000000;
+  --surface: #000000;
+  --surface-alt: #111111;
+  --border: #ffffff;
+  --text: #ffffff;
+  --text-muted: #cccccc;
+  --text-dim: #888888;
+  --primary: #ffff00;
+  --secondary: #00ff00;
+  --accent: #ff00ff;
+  --success: #00ff00;
+  --warning: #ffff00;
+  --error: #ff0000;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-sans);
+  background: var(--bg);
+  color: var(--text);
+  overflow: hidden;
+  transition: background var(--transition-base), color var(--transition-base);
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-dim);
+}
+
+.mono {
+  font-family: var(--font-mono);
+}
+
+.glass {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.shimmer {
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.05),
+    transparent
+  );
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}

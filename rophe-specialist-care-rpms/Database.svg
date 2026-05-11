@@ -1,0 +1,63 @@
+<svg viewBox="0 0 1000 650" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1000" height="650" fill="#f1f5f9" rx="20"/>
+  <text x="500" y="40" font-family="Inter, sans-serif" font-size="26" font-weight="900" text-anchor="middle" fill="#0f172a">ROPHE LOGICAL DATA SCHEMA</text>
+
+  <!-- Patients Table -->
+  <g transform="translate(50, 80)">
+    <rect width="220" height="260" rx="12" fill="#ffffff" stroke="#10b981" stroke-width="2"/>
+    <path d="M0 12 Q0 0 12 0 L208 0 Q220 0 220 12 L220 45 L0 45 Z" fill="#10b981"/>
+    <text x="110" y="28" font-family="Inter, sans-serif" font-size="14" font-weight="800" text-anchor="middle" fill="#ffffff">PATIENTS</text>
+    <text x="20" y="70" font-family="Inter, sans-serif" font-size="12" font-weight="700" fill="#065f46">ID [PK]</text>
+    <text x="20" y="95" font-family="Inter, sans-serif" font-size="11" fill="#334155">firstName (string)</text>
+    <text x="20" y="115" font-family="Inter, sans-serif" font-size="11" fill="#334155">lastName (string)</text>
+    <text x="20" y="135" font-family="Inter, sans-serif" font-size="11" fill="#334155">dob (ISO8601)</text>
+    <text x="20" y="155" font-family="Inter, sans-serif" font-size="11" fill="#334155">gender (enum)</text>
+    <text x="20" y="175" font-family="Inter, sans-serif" font-size="11" fill="#334155">medicalHistory (array)</text>
+    <text x="20" y="195" font-family="Inter, sans-serif" font-size="11" fill="#334155">allergies (array)</text>
+    <text x="20" y="215" font-family="Inter, sans-serif" font-size="11" fill="#334155">insuranceId (string)</text>
+  </g>
+
+  <!-- Appointments Table -->
+  <g transform="translate(390, 80)">
+    <rect width="220" height="200" rx="12" fill="#ffffff" stroke="#3b82f6" stroke-width="2"/>
+    <path d="M0 12 Q0 0 12 0 L208 0 Q220 0 220 12 L220 45 L0 45 Z" fill="#3b82f6"/>
+    <text x="110" y="28" font-family="Inter, sans-serif" font-size="14" font-weight="800" text-anchor="middle" fill="#ffffff">APPOINTMENTS</text>
+    <text x="20" y="70" font-family="Inter, sans-serif" font-size="12" font-weight="700" fill="#1e40af">ID [PK]</text>
+    <text x="20" y="95" font-family="Inter, sans-serif" font-size="11" fill="#1e40af">patientId [FK]</text>
+    <text x="20" y="115" font-family="Inter, sans-serif" font-size="11" fill="#334155">date (string)</text>
+    <text x="20" y="135" font-family="Inter, sans-serif" font-size="11" fill="#334155">status (enum)</text>
+    <text x="20" y="155" font-family="Inter, sans-serif" font-size="11" fill="#334155">type (enum)</text>
+    <text x="20" y="175" font-family="Inter, sans-serif" font-size="11" fill="#334155">notes (text)</text>
+  </g>
+
+  <!-- Alerts Table -->
+  <g transform="translate(730, 80)">
+    <rect width="220" height="160" rx="12" fill="#ffffff" stroke="#f43f5e" stroke-width="2"/>
+    <path d="M0 12 Q0 0 12 0 L208 0 Q220 0 220 12 L220 45 L0 45 Z" fill="#f43f5e"/>
+    <text x="110" y="28" font-family="Inter, sans-serif" font-size="14" font-weight="800" text-anchor="middle" fill="#ffffff">ALERTS</text>
+    <text x="20" y="70" font-family="Inter, sans-serif" font-size="12" font-weight="700" fill="#9f1239">ID [PK]</text>
+    <text x="20" y="95" font-family="Inter, sans-serif" font-size="11" fill="#9f1239">patientId [FK]</text>
+    <text x="20" y="115" font-family="Inter, sans-serif" font-size="11" fill="#334155">message (text)</text>
+    <text x="20" y="135" font-family="Inter, sans-serif" font-size="11" fill="#334155">resolved (bool)</text>
+  </g>
+
+  <!-- Recordings Table -->
+  <g transform="translate(390, 400)">
+    <rect width="220" height="180" rx="12" fill="#ffffff" stroke="#8b5cf6" stroke-width="2"/>
+    <path d="M0 12 Q0 0 12 0 L208 0 Q220 0 220 12 L220 45 L0 45 Z" fill="#8b5cf6"/>
+    <text x="110" y="28" font-family="Inter, sans-serif" font-size="14" font-weight="800" text-anchor="middle" fill="#ffffff">RECORDINGS</text>
+    <text x="20" y="70" font-family="Inter, sans-serif" font-size="12" font-weight="700" fill="#5b21b6">ID [PK]</text>
+    <text x="20" y="95" font-family="Inter, sans-serif" font-size="11" fill="#5b21b6">patientId [FK]</text>
+    <text x="20" y="115" font-family="Inter, sans-serif" font-size="11" fill="#5b21b6">appointmentId [FK]</text>
+    <text x="20" y="135" font-family="Inter, sans-serif" font-size="11" fill="#334155">videoUrl (blob/url)</text>
+    <text x="20" y="155" font-family="Inter, sans-serif" font-size="11" fill="#334155">duration (int)</text>
+  </g>
+
+  <!-- Relationships Lines -->
+  <line x1="270" y1="150" x2="390" y2="150" stroke="#94a3b8" stroke-width="2" stroke-dasharray="4"/>
+  <circle cx="270" cy="150" r="3" fill="#94a3b8"/>
+  <line x1="610" y1="150" x2="730" y2="150" stroke="#94a3b8" stroke-width="2" stroke-dasharray="4"/>
+  <circle cx="610" cy="150" r="3" fill="#94a3b8"/>
+  <line x1="500" y1="280" x2="500" y2="400" stroke="#94a3b8" stroke-width="2" stroke-dasharray="4"/>
+  <circle cx="500" cy="280" r="3" fill="#94a3b8"/>
+</svg>

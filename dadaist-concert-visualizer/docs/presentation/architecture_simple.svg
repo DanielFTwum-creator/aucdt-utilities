@@ -1,0 +1,14 @@
+<svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
+  <rect width="400" height="300" fill="#111" rx="20"/>
+  <circle cx="80" cy="150" r="40" fill="#E8BC50"/>
+  <text x="80" y="155" font-family="sans-serif" font-weight="bold" font-size="14" fill="#000" text-anchor="middle">AUDIO</text>
+  
+  <rect x="160" y="110" width="80" height="80" rx="10" fill="#eee"/>
+  <text x="200" y="155" font-family="sans-serif" font-weight="bold" font-size="14" fill="#000" text-anchor="middle">REACT</text>
+  
+  <polygon points="300,110 380,150 300,190" fill="#E8BC50"/>
+  <text x="315" y="155" font-family="sans-serif" font-weight="bold" font-size="14" fill="#000" text-anchor="middle">CANVAS</text>
+  
+  <path d="M 120 150 L 155 150" stroke="#eee" stroke-width="4"/>
+  <path d="M 245 150 L 295 150" stroke="#eee" stroke-width="4"/>
+</svg>

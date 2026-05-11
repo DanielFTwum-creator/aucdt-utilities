@@ -1,0 +1,35 @@
+{
+  "packageManager": "pnpm@10.30.1",
+  "name": "techbridge-assessment-platform",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "pnpm install && vite",
+    "build": "vite build",
+    "lint": "pnpm install && eslint .",
+    "preview": "pnpm install && vite preview",
+    "test:e2e": "playwright test"
+  },
+  "dependencies": {
+    "@google/genai": "^1.15.0",
+    "@vitejs/plugin-react": "^4.7.0",
+    "lucide-react": "^0.542.0",
+    "react": "19.2.5",
+    "react-dom": "19.2.5",
+    "react-router-dom": "^7.1.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19.1.8",
+    "@types/react-dom": "^19.1.5",
+    "autoprefixer": "^10.4.19",
+    "postcss": "^8.4.38",
+    "serve": "14.2.5",
+    "tailwindcss": "^3.4.4",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.5.3",
+    "vite": "7.3.1",
+    "@playwright/test": "^1.49.0",
+    "@tailwindcss/vite": "^4.2.2"
+  }
+}

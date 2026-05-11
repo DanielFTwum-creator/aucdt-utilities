@@ -1,0 +1,6 @@
+{
+  "name": "Impact Ventures Dashboard",
+  "description": "A strategic ranking dashboard for AI applications, balancing Monetisation potential with AI-for-Good impact.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["Data Visualization", "Strategic Insights"]
+}

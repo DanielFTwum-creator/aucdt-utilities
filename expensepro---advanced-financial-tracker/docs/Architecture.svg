@@ -1,0 +1,39 @@
+
+<svg viewBox="0 0 800 400" xmlns="http://www.w3.org/2000/svg">
+  <rect width="800" height="400" fill="#f8fafc" rx="20"/>
+  <text x="400" y="40" text-anchor="middle" font-family="Inter, sans-serif" font-weight="bold" font-size="24" fill="#1e293b">SYSTEM ARCHITECTURE</text>
+  
+  <!-- Presentation Layer -->
+  <rect x="50" y="100" width="200" height="250" fill="#6366f1" rx="15" fill-opacity="0.1" stroke="#6366f1" stroke-width="2"/>
+  <text x="150" y="130" text-anchor="middle" font-weight="bold" fill="#4338ca">UI LAYER (React)</text>
+  <rect x="70" y="150" width="160" height="40" fill="#fff" rx="5" stroke="#e2e8f0"/>
+  <text x="150" y="175" text-anchor="middle" font-size="12">Dashboards</text>
+  <rect x="70" y="200" width="160" height="40" fill="#fff" rx="5" stroke="#e2e8f0"/>
+  <text x="150" y="225" text-anchor="middle" font-size="12">Expense Tables</text>
+  
+  <!-- Business Logic -->
+  <rect x="300" y="100" width="200" height="250" fill="#10b981" rx="15" fill-opacity="0.1" stroke="#10b981" stroke-width="2"/>
+  <text x="400" y="130" text-anchor="middle" font-weight="bold" fill="#047857">CORE LOGIC</text>
+  <rect x="320" y="150" width="160" height="40" fill="#fff" rx="5" stroke="#e2e8f0"/>
+  <text x="400" y="175" text-anchor="middle" font-size="12">State Contexts</text>
+  <rect x="320" y="200" width="160" height="40" fill="#fff" rx="5" stroke="#e2e8f0"/>
+  <text x="400" y="225" text-anchor="middle" font-size="12">Budget Engine</text>
+
+  <!-- External & Storage -->
+  <rect x="550" y="100" width="200" height="250" fill="#f59e0b" rx="15" fill-opacity="0.1" stroke="#f59e0b" stroke-width="2"/>
+  <text x="650" y="130" text-anchor="middle" font-weight="bold" fill="#b45309">DATA & EXTERNAL</text>
+  <rect x="570" y="150" width="160" height="40" fill="#fff" rx="5" stroke="#e2e8f0"/>
+  <text x="650" y="175" text-anchor="middle" font-size="12">Gemini AI API</text>
+  <rect x="570" y="200" width="160" height="40" fill="#fff" rx="5" stroke="#e2e8f0"/>
+  <text x="650" y="225" text-anchor="middle" font-size="12">Local Storage</text>
+
+  <!-- Flow Arrows -->
+  <path d="M250 225 L300 225" stroke="#94a3b8" stroke-width="2" marker-end="url(#arrow)"/>
+  <path d="M500 225 L550 225" stroke="#94a3b8" stroke-width="2" marker-end="url(#arrow)"/>
+  
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto">
+      <path d="M0,0 L0,10 L10,5 Z" fill="#94a3b8" />
+    </marker>
+  </defs>
+</svg>

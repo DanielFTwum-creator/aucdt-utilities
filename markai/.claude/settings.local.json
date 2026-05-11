@@ -1,0 +1,28 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(docker-compose *)",
+      "Bash(grep -v \"//\")",
+      "Bash(xargs -I{} basename {})",
+      "Bash(xargs grep *)",
+      "Bash(sort wc *)",
+      "Bash(grep -v \"react:$\")",
+      "Bash(grep -v 'react:$')",
+      "Bash(sed -n '130,142p' /c/Development/aucdt-utilities/omniextract/App.tsx)",
+      "Bash(sed -n '55,65p' /c/Development/aucdt-utilities/send-platform-dashboard/pages/Executions.tsx)",
+      "Bash(sed -n '334,343p' /c/Development/aucdt-utilities/techbridge-website-react/components/Admin.tsx)",
+      "Bash(pnpm run *)",
+      "Bash(pnpm install *)",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(tar -tzf plcrp-e2e-scaffolding.tar.gz)",
+      "Bash(tar -xOz harness.ts)",
+      "Bash(git -C C:/Development/aucdt-utilities log --oneline -1 -- plcrp/)",
+      "Bash(git -C C:/Development/aucdt-utilities show --stat 3089a139)",
+      "Bash(git mv *)",
+      "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\(d.get\\('name',''\\),'|',d.get\\('description',''\\)\\)\")",
+      "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\('deps:', list\\(d.get\\('dependencies',{}\\).keys\\(\\)\\)\\)\")",
+      "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\(list\\(d.keys\\(\\)\\)\\)\")"
+    ]
+  }
+}

@@ -1,0 +1,457 @@
+%! TeX program = lualatex
+\documentclass[11pt, a4paper]{article}
+
+%======= PACKAGE SETUP =======%
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{geometry}
+\usepackage{fontspec}           % For using system fonts (Poppins)
+\usepackage[svgnames]{xcolor}   % For advanced colour definitions
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{titlesec}           % For customising section titles
+\usepackage{setspace}           % For line spacing control
+\usepackage{fancyhdr}           % For custom headers and footers
+\usepackage[many]{tcolorbox}    % For creating coloured boxes
+\usepackage{fontawesome5}       % For icons
+\usepackage{booktabs}           % For professional tables
+\usepackage{array}              % Enhanced table formatting
+
+%======= PAGE GEOMETRY =======%
+\geometry{a4paper, left=2.5cm, right=2.5cm, top=2.5cm, bottom=2.5cm}
+\onehalfspacing % Set line spacing to 1.5 for better readability
+
+%======= BRAND COLOUR DEFINITIONS =======%
+\definecolor{AUCDTBurgundy}{RGB}{139, 21, 56}
+\definecolor{AUCDTBurgundyDark}{RGB}{107, 16, 40}
+\definecolor{AUCDTGold}{RGB}{212, 175, 55}
+\definecolor{AUCDTGoldLight}{RGB}{244, 228, 188}
+\definecolor{AUCDTCream}{RGB}{248, 246, 240}
+\definecolor{AUCDTWarmBeige}{RGB}{230, 213, 199}
+\definecolor{AUCDTCampusGreen}{RGB}{46, 64, 52}
+\definecolor{AUCDTPrimaryText}{RGB}{44, 24, 16}
+\definecolor{AUCDTWhite}{RGB}{255, 255, 255}
+
+% Set page background colour
+\pagecolor{AUCDTCream}
+
+%======= FONT SETUP (POPPINS) =======%
+\setmainfont{Poppins}
+\newfontfamily\poppinslight{Poppins Light}
+\newfontfamily\poppinsmedium{Poppins Medium}
+\newfontfamily\poppinssemibold{Poppins SemiBold}
+\newfontfamily\poppinsbold{Poppins Bold}
+
+%======= FOOTER SETUP =======%
+\pagestyle{fancy}
+\fancyhf{} % Clear all header and footer fields
+\renewcommand{\headrulewidth}{0pt} % No line under the header
+\fancyfoot[C]{\poppinslight Page \thepage} % Centred page number in footer
+
+%======= CUSTOM TCOLORBOX STYLES =======%
+\tcbuselibrary{skins}
+
+% Requirements box
+\newtcolorbox{requirementbox}[1][]{
+    enhanced,
+    colback=AUCDTWhite,
+    colframe=AUCDTBurgundy,
+    borderline west={3mm}{0mm}{AUCDTGold},
+    arc=4pt,
+    fonttitle=\poppinssemibold,
+    coltitle=AUCDTPrimaryText,
+    attach boxed title to top left={yshift=-2mm, xshift=4mm},
+    boxed title style={colback=AUCDTGoldLight, arc=2pt, boxrule=0.5pt, colframe=AUCDTGold},
+    #1
+}
+
+% Critical requirement box
+\newtcolorbox{criticalbox}[1][]{
+    enhanced,
+    colback=AUCDTGoldLight,
+    colframe=AUCDTBurgundy,
+    borderline west={4mm}{0mm}{AUCDTBurgundy},
+    arc=4pt,
+    fonttitle=\poppinsbold,
+    coltitle=AUCDTBurgundy,
+    attach boxed title to top left={yshift=-2mm, xshift=4mm},
+    boxed title style={colback=AUCDTWhite, arc=2pt, boxrule=1pt, colframe=AUCDTBurgundy},
+    title={\faExclamationTriangle\space Critical Requirement},
+    #1
+}
+
+% Brand compliance box
+\newtcolorbox{brandbox}[1][]{
+    enhanced,
+    colback=AUCDTCream,
+    colframe=AUCDTGold,
+    borderline west={3mm}{0mm}{AUCDTCampusGreen},
+    arc=4pt,
+    fonttitle=\poppinssemibold,
+    coltitle=AUCDTCampusGreen,
+    attach boxed title to top left={yshift=-2mm, xshift=4mm},
+    boxed title style={colback=AUCDTWhite, arc=2pt, boxrule=0.5pt, colframe=AUCDTGold},
+    title={\faPalette\space Brand Compliance},
+    #1
+}
+
+%======= HYPERLINK & DOCUMENT SETUP =======%
+\hypersetup{
+    colorlinks=true,
+    linkcolor=AUCDTBurgundy,
+    urlcolor=AUCDTBurgundy,
+    pdftitle={Enhanced SRS for Timetable Management System},
+    pdfauthor={Asanska University College of Design and Technology},
+    pdfsubject={Software Requirements Specification - Enhanced Version},
+    pdfkeywords={SRS, Timetable, Management, System, Accessibility, IEEE},
+    bookmarks=true,
+    bookmarksopen=true
+}
+
+%======= TITLE FORMATTING =======%
+\titleformat{\section}{\Large\poppinsbold\color{AUCDTBurgundy}}{\thesection.}{1em}{}[\titlerule]
+\titleformat{\subsection}{\large\poppinssemibold\color{AUCDTPrimaryText}}{\thesubsection}{1em}{}
+\titleformat{\subsubsection}{\normalsize\poppinsmedium\color{AUCDTPrimaryText}}{\thesubsubsection}{1em}{}
+\titlespacing*{\section}{0pt}{3.5ex plus 1ex minus .2ex}{2.3ex plus .2ex}
+
+%======= TITLE PAGE SETUP =======%
+\title{
+    \vspace{2cm}
+    {\poppinsbold\Huge\color{AUCDTBurgundy} Enhanced Software Requirements \\ Specification \\ for \\ Timetable Management System}
+    \vspace{1cm}
+}
+\author{
+    {\poppinssemibold\large Version 2.0} \\
+    \vspace{0.5cm}
+    {\poppinslight\large 22 August 2025} \\
+    \vspace{2cm}
+    {\poppinsmedium Prepared for:} \\
+    \textbf{\poppinssemibold\large Asanska University College of Design and Technology}
+    \vspace{1cm} \\
+    {\poppinslight Enhanced with IEEE Standards Compliance} \\
+    {\poppinslight Accessibility Excellence \& Brand Integration}
+}
+\date{}
+
+\begin{document}
+
+\maketitle
+\thispagestyle{empty}
+\newpage
+
+\tableofcontents
+\thispagestyle{empty}
+\newpage
+
+\setcounter{page}{1}
+
+%----------------------------------------------------------------------------------------
+%	EXECUTIVE SUMMARY
+%----------------------------------------------------------------------------------------
+\section{Executive Summary}
+\label{sec:executive_summary}
+
+This enhanced Software Requirements Specification (SRS) document incorporates IEEE standards compliance, comprehensive accessibility requirements, and full integration with AUCDT brand identity guidelines. This revision addresses critical gaps in the original specification while maintaining the core functional objectives.
+
+\begin{criticalbox}
+This document supersedes version 1.3 and includes mandatory accessibility compliance requirements, enhanced security specifications, and detailed brand implementation guidelines that are legally required for institutional software systems.
+\end{criticalbox}
+
+%----------------------------------------------------------------------------------------
+%	1. INTRODUCTION (ENHANCED)
+%----------------------------------------------------------------------------------------
+\section{Introduction}
+\label{sec:introduction}
+
+\subsection{Purpose}
+\label{sec:purpose}
+This Software Requirements Specification (SRS) document defines the comprehensive functional and non-functional requirements for the Timetable Management System (TMS) for the Asanska University College of Design and Technology. This enhanced specification ensures IEEE 830-1998 compliance, Web Content Accessibility Guidelines (WCAG) 2.1 Level AA conformance, and full integration with AUCDT brand identity standards.
+
+\subsection{Document Conventions}
+\label{sec:conventions}
+This document adheres to:
+\begin{itemize}
+    \item IEEE Std 830-1998 recommended practices for Software Requirements Specifications
+    \item Section 508 accessibility compliance standards
+    \item AUCDT Brand Identity Guide v2.0 specifications
+    \item ISO/IEC 25010:2011 software quality model
+\end{itemize}
+
+All requirements include unique identifiers, priority classifications, and measurable acceptance criteria.
+
+\subsection{Intended Audience and Reading Suggestions}
+\label{sec:audience}
+\textbf{Primary Audience:}
+\begin{itemize}
+    \item Project managers and technical architects
+    \item Software developers and QA engineers
+    \item Accessibility compliance officers
+    \item University administrators and end users
+    \item Legal and compliance teams
+\end{itemize}
+
+\textbf{Reading Sequence:} Review Executive Summary → Overall Description → Accessibility Requirements → System Features → Implementation Constraints.
+
+\subsection{Enhanced Product Scope}
+\label{sec:scope}
+The TMS encompasses a comprehensive, accessible, brand-compliant web-based ecosystem including:
+
+\begin{itemize}
+    \item Multi-modal user interfaces (visual, auditory, tactile)
+    \item Real-time collaboration and synchronization
+    \item Advanced analytics and predictive scheduling
+    \item Comprehensive API ecosystem for integrations
+    \item Mobile-first responsive design with offline capabilities
+    \item Multi-language support architecture
+\end{itemize}
+
+%----------------------------------------------------------------------------------------
+%	2. ENHANCED SYSTEM FEATURES
+%----------------------------------------------------------------------------------------
+\section{Enhanced System Features}
+\label{sec:enhanced_features}
+
+\subsection{Universal Access Authentication}
+\label{sec:universal_auth}
+
+\begin{requirementbox}[title=Authentication \& Authorization]
+\textbf{Priority:} Critical \\
+\textbf{Compliance:} Section 508, OAuth 2.0, SAML 2.0
+
+\textbf{Functional Requirements:}
+\begin{description}
+    \item[REQ-001] Multi-factor authentication supporting hardware tokens, biometric authentication, and assistive technology compatibility
+    \item[REQ-002] Single Sign-On (SSO) integration with university identity providers
+    \item[REQ-003] Role-based access control with granular permissions and audit trails
+    \item[REQ-004] Session management with configurable timeout and concurrent session limits
+    \item[REQ-005] Password-less authentication options for users with cognitive disabilities
+\end{description}
+\end{requirementbox}
+
+\subsection{Intelligent Timetable Engine}
+\label{sec:intelligent_timetable}
+
+\begin{requirementbox}[title=Advanced Scheduling System]
+\textbf{Priority:} Critical \\
+\textbf{Performance Target:} <30 seconds for complex schedules
+
+\textbf{Functional Requirements:}
+\begin{description}
+    \item[REQ-006] AI-powered conflict resolution using constraint satisfaction algorithms
+    \item[REQ-007] Real-time collaborative editing with operational transformation
+    \item[REQ-008] Template-based scheduling with version control and rollback capabilities
+    \item[REQ-009] Multi-criteria optimization considering accessibility requirements, travel distances, and resource utilization
+    \item[REQ-010] Scenario modeling and "what-if" analysis tools
+\end{description}
+\end{requirementbox}
+
+\subsection{Comprehensive Accessibility Features}
+\label{sec:accessibility_features}
+
+\begin{criticalbox}
+\textbf{Legal Requirement:} Full WCAG 2.1 Level AA compliance is mandatory for educational institutions.
+
+\textbf{Accessibility Requirements:}
+\begin{description}
+    \item[REQ-011] \textbf{Visual Accessibility:} High contrast modes, customizable font sizes (up to 200\% zoom), alternative color schemes for color-blind users
+    \item[REQ-012] \textbf{Motor Accessibility:} Full keyboard navigation, customizable keyboard shortcuts, voice control integration, switch control support
+    \item[REQ-013] \textbf{Cognitive Accessibility:} Simplified interface modes, consistent navigation patterns, clear error messages, extended session timeouts
+    \item[REQ-014] \textbf{Auditory Accessibility:} Visual indicators for all audio cues, captions for video content, text-to-speech compatibility
+    \item[REQ-015] \textbf{Assistive Technology:} Screen reader optimization (NVDA, JAWS, VoiceOver), voice recognition software compatibility
+\end{description}
+\end{criticalbox}
+
+\subsection{Brand-Compliant User Interface}
+\label{sec:brand_ui}
+
+\begin{brandbox}
+\textbf{AUCDT Brand Integration Requirements:}
+\begin{description}
+    \item[REQ-016] \textbf{Color Palette:} Mandatory use of AUCDT brand colors - Burgundy Primary (\#8B1538), Gold Accent (\#D4AF37), Cream Background (\#F8F6F0)
+    \item[REQ-017] \textbf{Typography:} Poppins font family implementation with proper hierarchy (Bold for H1, SemiBold for H2, Medium for H3, Regular for body)
+    \item[REQ-018] \textbf{UI Components:} Brand-compliant buttons, cards, and containers matching AUCDT Brand Identity Guide v2.0
+    \item[REQ-019] \textbf{Logo Usage:} Proper logo implementation following brand protection guidelines with minimum clear space requirements
+    \item[REQ-020] \textbf{Accessibility Compliance:} Ensure all brand colors meet WCAG contrast ratios (4.5:1 for normal text, 3:1 for large text)
+\end{description}
+\end{brandbox}
+
+%----------------------------------------------------------------------------------------
+%	3. ENHANCED NON-FUNCTIONAL REQUIREMENTS
+%----------------------------------------------------------------------------------------
+\section{Enhanced Non-Functional Requirements}
+\label{sec:enhanced_nonfunctional}
+
+\subsection{Performance Requirements}
+\label{sec:enhanced_performance}
+
+\begin{table}[h]
+\centering
+\caption{Performance Benchmarks}
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{Operation} & \textbf{Target Time} & \textbf{Maximum Time} \\
+\midrule
+Page Load (Initial) & <2 seconds & 3 seconds \\
+Page Load (Subsequent) & <1 second & 2 seconds \\
+Search Results & <500ms & 1 second \\
+Timetable Generation & <30 seconds & 45 seconds \\
+Real-time Updates & <2 seconds & 3 seconds \\
+Mobile Response & <3 seconds & 4 seconds \\
+Offline Sync & <10 seconds & 15 seconds \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Enhanced Security Requirements}
+\label{sec:enhanced_security}
+
+\begin{requirementbox}[title=Comprehensive Security Framework]
+\begin{description}
+    \item[REQ-021] \textbf{Data Protection:} AES-256 encryption for data at rest, TLS 1.3 for data in transit
+    \item[REQ-022] \textbf{API Security:} OAuth 2.0 with PKCE, rate limiting (100 req/min/user), API key management
+    \item[REQ-023] \textbf{Audit Logging:} Immutable, cryptographically signed audit trails with blockchain verification
+    \item[REQ-024] \textbf{Privacy Compliance:} GDPR, FERPA compliance with data retention policies and user consent management
+    \item[REQ-025] \textbf{Vulnerability Management:} Regular security scans, penetration testing, dependency vulnerability monitoring
+\end{description}
+\end{requirementbox}
+
+\subsection{Internationalization Requirements}
+\label{sec:i18n_enhanced}
+
+\begin{requirementbox}[title=Multi-Language Support]
+\begin{description}
+    \item[REQ-026] \textbf{Language Support:} English (primary), French, Arabic with RTL support
+    \item[REQ-027] \textbf{Localization:} Currency, date/time formats, number formats, cultural preferences
+    \item[REQ-028] \textbf{Content Management:} Translation management system with version control
+    \item[REQ-029] \textbf{Accessibility:} Screen reader support in all supported languages
+\end{description}
+\end{requirementbox}
+
+%----------------------------------------------------------------------------------------
+%	4. INTEGRATION REQUIREMENTS
+%----------------------------------------------------------------------------------------
+\section{Integration Requirements}
+\label{sec:integration}
+
+\subsection{Educational Technology Standards}
+\label{sec:edtech_standards}
+
+\begin{requirementbox}[title=Standards Compliance]
+\begin{description}
+    \item[REQ-030] \textbf{LTI Compliance:} Learning Tools Interoperability (LTI) 1.3 implementation
+    \item[REQ-031] \textbf{QTI Support:} Question and Test Interoperability for assessment integration
+    \item[REQ-032] \textbf{xAPI Integration:} Experience API for learning analytics
+    \item[REQ-033] \textbf{OneRoster:} Student information system data exchange
+\end{description}
+\end{requirementbox}
+
+\subsection{Third-Party Integrations}
+\label{sec:third_party}
+
+\begin{table}[h]
+\centering
+\caption{Required Integrations}
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{Service} & \textbf{Purpose} & \textbf{Priority} \\
+\midrule
+Microsoft 365 & Calendar, Email & High \\
+Google Workspace & Calendar, Drive & High \\
+Moodle LMS & Course Integration & Critical \\
+Campus Card System & Access Control & Medium \\
+Library System & Resource Booking & Low \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+%----------------------------------------------------------------------------------------
+%	5. QUALITY ASSURANCE
+%----------------------------------------------------------------------------------------
+\section{Quality Assurance Requirements}
+\label{sec:quality_assurance}
+
+\subsection{Testing Requirements}
+\label{sec:testing_requirements}
+
+\begin{criticalbox}
+\textbf{Mandatory Testing Procedures:}
+\begin{itemize}
+    \item Automated accessibility testing using axe-core and Pa11y
+    \item Manual accessibility testing with disabled users
+    \item Cross-browser testing including assistive technologies
+    \item Performance testing under realistic load conditions
+    \item Security penetration testing by certified ethical hackers
+    \item Usability testing with representative user groups
+\end{itemize}
+\end{criticalbox}
+
+\subsection{Acceptance Criteria}
+\label{sec:acceptance_criteria}
+
+\textbf{System Acceptance Requirements:}
+\begin{itemize}
+    \item 100\% WCAG 2.1 Level AA compliance verification
+    \item 99.5\% uptime during 30-day evaluation period
+    \item User satisfaction score >85\% across all user groups
+    \item Brand compliance audit by AUCDT Marketing Department
+    \item Security audit clearance by institutional IT security team
+\end{itemize}
+
+%----------------------------------------------------------------------------------------
+%	6. IMPLEMENTATION ROADMAP
+%----------------------------------------------------------------------------------------
+\section{Implementation Roadmap}
+\label{sec:implementation}
+
+\subsection{Phased Delivery Approach}
+\label{sec:phased_delivery}
+
+\textbf{Phase 1 (Months 1-3):} Core authentication, basic timetable viewing, accessibility framework
+
+\textbf{Phase 2 (Months 4-6):} Advanced scheduling, notification system, mobile optimization
+
+\textbf{Phase 3 (Months 7-9):} Analytics, reporting, third-party integrations
+
+\textbf{Phase 4 (Months 10-12):} Multi-language support, advanced accessibility features, AI optimization
+
+\subsection{Risk Mitigation}
+\label{sec:risk_mitigation}
+
+\begin{requirementbox}[title=Risk Management Strategy]
+\begin{description}
+    \item[RISK-001] \textbf{Accessibility Compliance:} Regular audits, disabled user testing, legal consultation
+    \item[RISK-002] \textbf{Performance:} Load testing, CDN implementation, caching strategies
+    \item[RISK-003] \textbf{Data Migration:} Comprehensive backup, rollback procedures, parallel systems
+    \item[RISK-004] \textbf{User Adoption:} Training programs, change management, user support
+\end{description}
+\end{requirementbox}
+
+%----------------------------------------------------------------------------------------
+%	7. CONCLUSION
+%----------------------------------------------------------------------------------------
+\section{Conclusion}
+\label{sec:conclusion}
+
+This enhanced SRS establishes a comprehensive framework for developing a world-class, accessible, and brand-compliant Timetable Management System. The requirements ensure legal compliance, technical excellence, and exceptional user experience for all members of the AUCDT community.
+
+\textbf{Next Steps:}
+\begin{enumerate}
+    \item Stakeholder review and approval
+    \item Technical architecture design
+    \item Accessibility consultant engagement
+    \item Development team onboarding
+    \item Pilot user group establishment
+\end{enumerate}
+
+\vfill
+\hrule
+\vspace{2mm}
+\begin{center}
+    \poppinslight
+    \textbf{Document Approval Required:} IT Director, Accessibility Officer, Legal Counsel, Academic Registrar \\
+    \textbf{Next Review Date:} January 2026 \\
+    \textbf{Contact:} project-tms@aucdt.edu.gh
+\end{center}
+
+\end{document}

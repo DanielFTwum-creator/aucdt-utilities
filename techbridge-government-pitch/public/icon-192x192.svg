@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192">
+  <!-- Background -->
+  <rect width="192" height="192" fill="#0f2545" rx="45"/>
+
+  <!-- Accent stripe -->
+  <rect x="0" y="0" width="192" height="12" fill="#FCD116"/>
+
+  <!-- "T" monogram -->
+  <text x="96" y="140" font-size="100" font-weight="bold" fill="#FCD116" text-anchor="middle" font-family="Inter, sans-serif">T</text>
+
+  <!-- Subtitle -->
+  <text x="96" y="165" font-size="12" fill="#FCD116" text-anchor="middle" opacity="0.8" font-family="Inter, sans-serif">TECHBRIDGE</text>
+</svg>

@@ -1,0 +1,325 @@
+%! TeX program = lualatex
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Software Requirements Specification for CounselorPro
+% Themed with AUCDT Brand Identity Guide v2.0
+%
+% Version 1.1 (Revised after expert review)
+% Author: Gemini
+% Date: 23 August 2025
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\documentclass[a4paper, 11pt]{article}
+
+%======= PACKAGE SETUP (from AUCDT Brand Guide) =======%
+\usepackage{geometry}           % For setting page margins
+\usepackage{fontspec}           % For using system fonts (Poppins)
+\usepackage[svgnames]{xcolor}   % For advanced colour definitions
+\usepackage{graphicx}           % For including images (the logo)
+\usepackage{hyperref}           % For clickable links and document metadata
+\usepackage[many]{tcolorbox}    % For creating coloured boxes and UI elements
+\usetikzlibrary{shadows.blur}   % Manually load TikZ library for shadows
+\usepackage{titlesec}           % For customising section titles
+\usepackage{enumitem}           % For customising lists
+\usepackage{fontawesome5}       % For icons (e.g., checklist)
+\usepackage{setspace}           % For line spacing control
+\usepackage{fancyhdr}           % For custom headers and footers
+\usepackage{longtable}          % For tables that can span multiple pages
+
+%======= PAGE GEOMETRY =======%
+\geometry{a4paper, left=2.5cm, right=2.5cm, top=2.5cm, bottom=2.5cm}
+\onehalfspacing % Set line spacing to 1.5 for better readability
+
+%======= FONT SETUP (for System-Installed Fonts) =======%
+% This version is more reliable if you have installed the fonts to Windows.
+\setmainfont{Poppins}
+\newfontfamily\poppinslight{Poppins-Light}
+\newfontfamily\poppinssemibold{Poppins-SemiBold}
+\newfontfamily\poppinsbold{Poppins-Bold}
+\newfontfamily\poppinsmedium{Poppins-Medium.ttf}[Path=./fonts/]
+
+%======= FOOTER SETUP =======%
+\pagestyle{fancy}
+\fancyhf{} % Clear all header and footer fields
+\renewcommand{\headrulewidth}{0pt} % No line under the header
+\fancyfoot[C]{\poppinslight Page \thepage} % Centred page number in footer
+
+%======= BRAND COLOUR DEFINITIONS (from AUCDT Brand Guide) =======%
+\definecolor{AUCDTBurgundy}{RGB}{139, 21, 56}
+\definecolor{AUCDTBurgundyDark}{RGB}{107, 16, 40}
+\definecolor{AUCDTGold}{RGB}{212, 175, 55}
+\definecolor{AUCDTGoldLight}{RGB}{244, 228, 188}
+\definecolor{AUCDTCream}{RGB}{248, 246, 240}
+\definecolor{AUCDTWarmBeige}{RGB}{230, 213, 199}
+\definecolor{AUCDTCampusGreen}{RGB}{46, 64, 52}
+\definecolor{AUCDTPrimaryText}{RGB}{44, 24, 16}
+\definecolor{AUCDTWhite}{RGB}{255, 255, 255}
+
+% Set page background colour
+\pagecolor{AUCDTCream}
+
+%======= FONT SETUP (POPPINS - from AUCDT Brand Guide) =======%
+% Assumes a './fonts/' folder exists with the Poppins .ttf files
+\setmainfont{Poppins}[
+    Path = ./fonts/,
+    Extension = .ttf,
+    UprightFont = *-Regular,
+    BoldFont = *-Bold,
+    ItalicFont = *-Italic,
+    BoldItalicFont = *-BoldItalic
+]
+\newfontfamily\poppinslight{Poppins-Light.ttf}[Path=./fonts/]
+\newfontfamily\poppinsmedium{Poppins-Medium.ttf}[Path=./fonts/]
+\newfontfamily\poppinssemibold{Poppins-SemiBold.ttf}[Path=./fonts/]
+\newfontfamily\poppinsbold{Poppins-Bold.ttf}[Path=./fonts/]
+
+%======= HYPERLINK & DOCUMENT SETUP =======%
+\hypersetup{
+    colorlinks=true,
+    linkcolor=AUCDTBurgundy,
+    urlcolor=AUCDTBurgundy,
+    pdftitle={Software Requirements Specification for CounselorPro},
+    pdfauthor={Gemini},
+    pdfsubject={System Requirements}
+}
+
+%======= TITLE FORMATTING (from AUCDT Brand Guide) =======%
+\titleformat{\section}{\Large\poppinsbold\color{AUCDTBurgundy}}{\thesection.}{1em}{}[\titlerule]
+\titleformat{\subsection}{\large\poppinssemibold\color{AUCDTPrimaryText}}{\thesubsection}{1em}{}
+\titleformat{\subsubsection}{\normalsize\poppinsmedium\color{AUCDTPrimaryText}}{\thesubsubsection}{1em}{}
+\titlespacing*{\section}{0pt}{3.5ex plus 1ex minus .2ex}{2.3ex plus .2ex}
+
+%======= CUSTOM TCOLORBOX STYLES (from AUCDT Brand Guide) =======%
+\tcbuselibrary{skins}
+
+% Card Container
+\newtcolorbox{cardcontainer}[1][]{
+    enhanced,
+    colback=AUCDTWhite,
+    colframe=AUCDTWarmBeige,
+    borderline west={2mm}{0mm}{AUCDTGold},
+    arc=8pt,
+    drop fuzzy shadow,
+    shadow yshift=-1mm,
+    shadow color=AUCDTBurgundy!20,
+    pad at break=2mm,
+    toptitle=5pt,
+    bottomtitle=5pt,
+    title={{\poppinsmedium Card Title}},
+    coltitle=AUCDTPrimaryText,
+    #1
+}
+
+% Note Box
+\newtcolorbox{notebox}[1][]{
+    enhanced,
+    colback=AUCDTGoldLight,
+    colframe=AUCDTGold,
+    coltitle=AUCDTPrimaryText,
+    fonttitle=\poppinssemibold,
+    attach boxed title to top left={yshift=-2mm, xshift=4mm},
+    boxed title style={ colback=AUCDTWhite, arc=4pt, boxrule=0.5pt, colframe=AUCDTGold, },
+    title={\faInfoCircle\space Important Note},
+    arc=4pt,
+    #1
+}
+
+% Primary Button
+\newtcolorbox{primarybutton}{ enhanced, bicolor, boxrule=0pt, arc=12pt, colback=AUCDTBurgundy, colbacklower=AUCDTBurgundyDark, coltext=AUCDTWhite, fontupper=\poppinssemibold, halign=center, valign=center, width=6cm, boxsep=10pt }
+
+% Secondary Button
+\newtcolorbox{secondarybutton}{ enhanced, boxrule=0pt, arc=12pt, colback=AUCDTGold, coltext=AUCDTBurgundy, fontupper=\poppinssemibold, halign=center, valign=center, width=6cm, boxsep=10pt }
+
+%======= DOCUMENT START =======%
+\begin{document}
+
+%======= TITLE PAGE =======%
+\begin{titlepage}
+    \thispagestyle{empty}
+    \centering
+    \vspace*{2cm}
+    
+    \includegraphics[width=6cm]{aucdt-logo.png}
+    
+    \vspace{2.5cm}
+    
+    {\poppinsbold\Huge\color{AUCDTBurgundy} Software Requirements Specification}
+    
+    \vspace{1cm}
+    
+    {\poppinssemibold\Large\color{AUCDTPrimaryText} For}
+    
+    \vspace{0.5cm}
+    
+    {\poppinsmedium\Huge\color{AUCDTPrimaryText} CounselorPro}
+    
+    \vfill 
+    
+    % REVIEW: Updated version number after review.
+    {\large\poppinsmedium Version 1.1 (Revised)}
+    
+    \vspace{0.5cm}
+    
+    {\large\poppinslight 23 August 2025}
+    
+    \vspace{2cm}
+\end{titlepage}
+
+%======= TABLE OF CONTENTS =======%
+\tableofcontents
+\newpage
+
+%======= SECTIONS OF THE SRS =======%
+
+\section{Introduction}
+
+\subsection{Purpose}
+This document defines the functional and non-functional requirements for the CounselorPro application. It serves as a foundational agreement between the development team, stakeholders, and users.
+
+\subsection{Document Conventions}
+This document follows the IEEE 830-1998 standard. All requirements are uniquely identified for traceability. British International English spelling and grammar are used throughout.
+
+\subsection{Intended Audience and Reading Suggestions}
+This document is intended for project managers, software developers, the quality assurance team, and project stakeholders. 
+
+\subsection{Product Scope}
+\begin{cardcontainer}[title={Product Scope}]
+    \textbf{CounselorPro} is an intelligent, web-based application designed to provide automated, personalised academic and extracurricular guidance by analysing scanned school term reports. The primary goal is to make high-quality, data-driven academic counselling accessible.
+
+    % REVIEW: Added MVP scope definition based on review feedback.
+    \vspace{1em}
+    \poppinssemibold\color{AUCDTPrimaryText}Version 1.0 (MVP) Scope:\normalfont The initial release will focus on perfecting the core data pipeline. The scope includes: the user account system, the file upload mechanism, the OCR-based data extraction and user-verification workflow, and a \textbf{rules-based recommendation engine}. The rules-based engine will provide foundational, template-driven advice based on the verified data. More advanced, generative AI features are planned for future versions.
+\end{cardcontainer}
+
+\subsection{References}
+\begin{itemize}[label={\color{AUCDTBurgundy}\faBook}]
+    \item IEEE Std 830-1998, \textit{Recommended Practice for Software Requirements Specifications}.
+    \item AUCDT Brand Identity Guide v2.0, August 2025.
+\end{itemize}
+
+\section{Overall Description}
+
+\subsection{Product Perspective}
+CounselorPro is a new, self-contained, standalone web application. Future versions may include APIs for integration with School Information Systems (SIS).
+
+\subsection{Product Functions}
+The major functions are: User Account Management, Report Upload, Data Extraction \& Verification, Performance Analysis, Recommendation Generation, and Report Generation.
+
+\subsection{User Classes and Characteristics}
+\begin{cardcontainer}[title={User Classes}]
+\begin{description}[\font=\normalfont\poppinsmedium, style=unboxed]
+    \item[\poppinssemibold Students:] Aged 10-22. Need a simple, intuitive, and engaging interface.
+    \item[\poppinssemibold Parents/Guardians:] Technologically varied. Require a clear overview and value data privacy.
+    \item[\poppinssemibold School Counsellors:] Professional users. May use the tool to augment their sessions.
+\end{description}
+\end{cardcontainer}
+
+\subsection{Operating Environment}
+The application will be a web-based platform accessible through modern web browsers on desktop and mobile devices, hosted on a secure cloud infrastructure.
+
+\subsection{Design and Implementation Constraints}
+\begin{notebox}
+    The system must comply with data protection regulations such as GDPR and FERPA. This is a critical, non-negotiable constraint requiring dedicated resources for security architecture, data handling protocols, and consent management.
+\end{notebox}
+\begin{itemize}[label={\color{AUCDTBurgundy}\faExclamationTriangle}]
+    \item \textbf{C-1 (Data Privacy):} Must comply with GDPR/FERPA.
+    \item \textbf{C-2 (OCR):} Must support multiple languages, starting with English.
+    \item \textbf{C-3 (AI Ethics):} The recommendation engine must avoid generating biased or deterministic advice. For V1.0, this will be managed via a curated, rules-based system.
+    \item \textbf{C-4 (Branding):} The UI must strictly adhere to the AUCDT Brand Identity Guide v2.0.
+\end{itemize}
+
+\subsection{Assumptions and Dependencies}
+\begin{description}[\font=\normalfont, style=unboxed]
+    \item[\poppinssemibold Assumption:] Users have a stable internet connection.
+    \item[\poppinssemibold Assumption:] The quality of the uploaded scanned report is sufficient for OCR (e.g. >= 300 DPI). A PoC will be conducted to validate performance on diverse report formats.
+    \item[\poppinssemibold Dependency:] The system depends on third-party cloud hosting and AI/OCR APIs. Costs and reliability must be monitored.
+\end{description}
+
+\section{Specific Requirements}
+
+\subsection{External Interface Requirements}
+\subsubsection{User Interfaces (Revised per Brand Guide)}
+The UI will be clean, modern, and strictly conform to the AUCDT brand identity.
+\begin{cardcontainer}[title={UI Component Specifications}]
+    \begin{itemize}[label={\color{AUCDTGold}\faPalette}]
+        \item \textbf{Colour Palette \& Typography:} The application will be built from the official brand colours and the Poppins font family as specified in the brand guide.
+        \item \textbf{Containers \& Buttons:} Distinct information will be presented in styled card containers. Actions will be presented using styled primary and secondary buttons.
+    \end{itemize}
+\end{cardcontainer}
+
+\subsection{Functional Requirements}
+\begin{longtable}{p{0.15\textwidth} p{0.8\textwidth}}
+    \hline
+    \rowcolor{AUCDTBurgundy!80}
+    \poppinssemibold\color{AUCDTWhite} ID & \poppinssemibold\color{AUCDTWhite} Requirement Description \\
+    \hline
+    \endhead
+    
+    \multicolumn{2}{l}{\poppinssemibold\color{AUCDTPrimaryText} FR-1: User Account Management} \\
+    \textbf{FR-1.1} & The system shall allow users to register, log in, and reset their password securely. \\
+    
+    \multicolumn{2}{l}{\poppinssemibold\color{AUCDTPrimaryText} FR-2: Report Upload} \\
+    \textbf{FR-2.1} & Authenticated users shall be able to upload files in PDF, JPEG, and PNG formats (max 10 MB). \\
+
+    \multicolumn{2}{l}{\poppinssemibold\color{AUCDTPrimaryText} FR-3: Data Extraction} \\
+    \textbf{FR-3.1} & The system shall use an OCR engine to extract textual and tabular data from the report. \\
+    % REVIEW: Expanded on the complexity of the data verification UI.
+    \textbf{FR-3.2} & The system shall present the extracted data to the user for verification via an intuitive interface that allows for easy correction of text, numbers, and table structures. \\
+
+    \multicolumn{2}{l}{\poppinssemibold\color{AUCDTPrimaryText} FR-4: Performance Analysis} \\
+    \textbf{FR-4.1} & The system shall parse verified data to categorise subjects and calculate key metrics. \\
+    % REVIEW: Made sentiment analysis requirement specific and testable.
+    \textbf{FR-4.2} & The system shall analyse teacher's comments, classifying them into 'Positive', 'Negative', or 'Neutral for Improvement' categories with at least 85\% accuracy against a pre-defined test set. \\
+
+    \multicolumn{2}{l}{\poppinssemibold\color{AUCDTPrimaryText} FR-5: Recommendation Generation} \\
+    % REVIEW: Rewrote recommendation requirement for MVP and added testable acceptance criteria.
+    \textbf{FR-5.1} & For V1.0, the system shall generate a personalised report using a \textbf{rules-based engine} that maps specific data points (e.g., low grades, positive comments in a subject) to pre-defined, template-based recommendations. \\
+    \textbf{FR-5.2} & The tone of the recommendations must be encouraging and empathetic. \textbf{Acceptance Criterion:} A focus group of 10 representative users must rate 90\% of sample reports as 'Helpful' and 'Encouraging'. \\
+
+    \multicolumn{2}{l}{\poppinssemibold\color{AUCDTPrimaryText} FR-6: Report Generation \& Display} \\
+    \textbf{FR-6.1} & The final report shall be presented in a clean web format and be downloadable as a PDF. \\
+    \hline
+\end{longtable}
+
+\subsection{Non-Functional Requirements}
+\subsubsection{Performance}
+\begin{itemize}[label={\color{AUCDTCampusGreen}\faTachometerAlt}]
+    \item \textbf{NFR-1.1:} Web pages shall load in under 3 seconds.
+    \item \textbf{NFR-1.2:} The end-to-end analysis process shall be completed within 90 seconds.
+\end{itemize}
+
+\subsubsection{Security}
+\begin{itemize}[label={\color{AUCDTCampusGreen}\faShieldAlt}]
+    \item \textbf{NFR-2.1:} All user passwords must be hashed using a strong, modern algorithm (e.g., Argon2).
+    \item \textbf{NFR-2.2:} All sensitive student data must be encrypted at rest and in transit.
+\end{itemize}
+
+\subsubsection{Software Quality Attributes}
+\begin{itemize}[label={\color{AUCDTCampusGreen}\faStar}]
+    \item \textbf{NFR-3.1 (Reliability):} The system shall have an uptime of 99.5\% or greater.
+    \item \textbf{NFR-3.2 (Usability):} The system must comply with WCAG 2.1 Level AA.
+\end{itemize}
+
+% REVIEW: Added new NFR category and specific OCR accuracy requirement.
+\subsubsection{Data Quality}
+\begin{itemize}[label={\color{AUCDTCampusGreen}\faCheckDouble}]
+    \item \textbf{NFR-4.1 (OCR Accuracy):} The system shall achieve a Character Error Rate (CER) of less than 5\% on machine-printed text from uploaded reports of at least 300 DPI resolution.
+\end{itemize}
+
+% REVIEW: Added new section for Error Handling as recommended.
+\subsection{Error Handling and Recovery}
+\begin{itemize}[label={\color{AUCDTBurgundy}\faExclamationCircle}]
+    \item \textbf{EH-1:} If a user uploads a corrupted or unreadable file, the system shall reject it and display a user-friendly error message explaining the likely problem (e.g., "This file appears to be corrupted. Please try uploading it again.").
+    \item \textbf{EH-2:} If the OCR process fails to extract any meaningful data from a file, the system shall notify the user with a message like, "We could not find any readable text in this document. Please ensure it is a school report and try again."
+    \item \textbf{EH-3:} The system shall handle API connection failures gracefully, informing the user that the service is temporarily unavailable and suggesting they try again later, without losing their uploaded data if possible.
+\end{itemize}
+
+
+\vfill
+\hrule
+\vspace{2mm}
+\begin{center}
+    \poppinslight
+    This document was generated based on requirements provided on 23 August 2025.
+\end{center}
+
+\end{document}

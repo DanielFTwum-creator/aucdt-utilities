@@ -1,0 +1,106 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - link "Skip to main content" [ref=e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - main "Fees Comparison Dashboard" [ref=e3]:
+    - generic [ref=e4]:
+      - generic [ref=e6]:
+        - generic [ref=e7] [cursor=pointer]:
+          - img [ref=e9]
+          - heading "EduData Ghana" [level=1] [ref=e11]
+        - generic [ref=e12]:
+          - generic [ref=e13]:
+            - button "Switch to light theme" [ref=e14] [cursor=pointer]: Light
+            - button "Switch to dark theme" [ref=e15] [cursor=pointer]: Dark
+            - button "Switch to high-contrast theme" [ref=e16] [cursor=pointer]: HC
+          - button "Admin Access" [ref=e17] [cursor=pointer]
+      - main [ref=e18]:
+        - generic [ref=e20]:
+          - generic [ref=e21]:
+            - generic [ref=e23]:
+              - generic [ref=e24]:
+                - heading "Tuition Analysis" [level=1] [ref=e27]
+                - generic [ref=e28]:
+                  - generic [ref=e29]: 2024-2025
+                  - generic [ref=e30]: Comparative Fee Structures
+              - generic [ref=e31]:
+                - button "🎓 Undergraduate" [ref=e32] [cursor=pointer]:
+                  - generic [ref=e33]: 🎓
+                  - generic [ref=e34]: Undergraduate
+                - button "🌍 International" [ref=e35] [cursor=pointer]:
+                  - generic [ref=e36]: 🌍
+                  - generic [ref=e37]: International
+                - button "📚 Postgraduate" [ref=e38] [cursor=pointer]:
+                  - generic [ref=e39]: 📚
+                  - generic [ref=e40]: Postgraduate
+            - generic [ref=e42]:
+              - generic [ref=e43]:
+                - generic [ref=e44]:
+                  - heading "Fee Distribution" [level=2] [ref=e45]
+                  - paragraph [ref=e46]: Annual tuition cost per institution
+                - generic [ref=e47]: 💰 GH₵
+              - generic [ref=e50]:
+                - list [ref=e52]:
+                  - listitem [ref=e53]:
+                    - img "Continuing legend icon" [ref=e54]
+                    - text: Continuing
+                  - listitem [ref=e56]:
+                    - img "Freshman/Annual legend icon" [ref=e57]
+                    - text: Freshman/Annual
+                - application [ref=e59]:
+                  - generic [ref=e184]:
+                    - generic [ref=e185]:
+                      - generic [ref=e187]: UG (Humanities)
+                      - generic [ref=e189]: UG (Admin/Law)
+                      - generic [ref=e191]: KNUST (Humanities)
+                      - generic [ref=e193]: KNUST (Business)
+                      - generic [ref=e195]: KNUST (Engineering)
+                      - generic [ref=e197]: KNUST (Medicine)
+                      - generic [ref=e199]: UEW (Humanities)
+                      - generic [ref=e201]: UEW (Business)
+                      - generic [ref=e203]: UEW (Science)
+                      - generic [ref=e205]: TUC
+                      - generic [ref=e207]: Academic City (CS)
+                      - generic [ref=e209]: Academic City (Journalism)
+                      - generic [ref=e211]: Academic City (Biomed)
+                      - generic [ref=e213]: Ashesi (Business)
+                      - generic [ref=e215]: Ashesi (Engineering)
+                      - generic [ref=e217]: Valley View (Business)
+                      - generic [ref=e219]: Valley View (Science)
+                      - generic [ref=e221]: Wisconsin (General)
+                      - generic [ref=e223]: Wisconsin (Law)
+                    - generic [ref=e224]:
+                      - generic [ref=e226]: GH₵0
+                      - generic [ref=e228]: GH₵15k
+                      - generic [ref=e230]: GH₵30k
+                      - generic [ref=e232]: GH₵45k
+                      - generic [ref=e234]: GH₵60k
+          - generic [ref=e235]:
+            - generic [ref=e236]:
+              - img [ref=e238]
+              - heading "Sector Disparity" [level=3] [ref=e240]
+              - paragraph [ref=e241]: Private institutions like Academic City and Ashesi exhibit 5x-10x higher tuition fees compared to public counterparts due to funding models.
+              - generic [ref=e242]: Key Insight
+            - generic [ref=e243]:
+              - img [ref=e245]
+              - heading "Program Premiums" [level=3] [ref=e247]
+              - paragraph [ref=e248]: Specialized STEM programmes (Medicine, Engineering) and Law degrees consistently command the highest fees across both public and private sectors.
+              - generic [ref=e249]: Key Insight
+            - generic [ref=e250]:
+              - img [ref=e252]
+              - heading "Intl. Variance" [level=3] [ref=e254]
+              - paragraph [ref=e255]: International student fees are pegged to USD, creating significant cost divergence based on exchange rates, with medical programmes reaching premium tiers.
+              - generic [ref=e256]: Key Insight
+          - generic [ref=e257]:
+            - paragraph [ref=e258]: 📊 Data sourced from official 2024-2025 University Fee Schedules
+            - paragraph [ref=e259]: Last verified October 2023
+      - generic [ref=e261]:
+        - paragraph [ref=e262]: © 2026 EduData Ghana.
+        - generic [ref=e263]:
+          - generic [ref=e264] [cursor=pointer]: Privacy Policy
+          - generic [ref=e265] [cursor=pointer]: Terms of Service
+          - generic [ref=e266] [cursor=pointer]: Contact
+  - generic [ref=e267]: GH₵0
+```

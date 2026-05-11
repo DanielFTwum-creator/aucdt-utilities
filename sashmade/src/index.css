@@ -1,0 +1,170 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "DM Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Playfair Display", Georgia, serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+
+  /* Brand tokens */
+  --clr-olive: #3d4a35;
+  --clr-ember: #E87722;
+  --clr-onyx: #1a1a1a;
+  --clr-cream: #F5F0E8;
+  --clr-pan-r: #C0392B;
+  --clr-pan-g: #2E7D32;
+  --clr-pan-y: #C9941A;
+}
+
+/* Kente strip utility */
+.kente-strip {
+  height: 6px;
+  background: repeating-linear-gradient(
+    90deg,
+    var(--clr-pan-r) 0px,
+    var(--clr-pan-r) 18px,
+    var(--clr-pan-y) 18px,
+    var(--clr-pan-y) 36px,
+    var(--clr-pan-g) 36px,
+    var(--clr-pan-g) 54px
+  );
+}
+
+/* Hero grain overlay */
+.hero-grain::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  opacity: 0.04;
+  mix-blend-mode: overlay;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Nav ember underline */
+.nav-link {
+  position: relative;
+}
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: #E87722;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 200ms ease;
+}
+.nav-link:hover::after,
+.nav-link.active::after {
+  transform: scaleX(1);
+}
+
+/* Scroll cue chevron */
+@keyframes scroll-bounce {
+  0%, 100% { transform: translateY(0); opacity: 0.6; }
+  50% { transform: translateY(6px); opacity: 1; }
+}
+.scroll-cue {
+  animation: scroll-bounce 1.8s ease-in-out infinite;
+}
+
+/* Marquee scroll */
+@keyframes marqueeScroll {
+  to { transform: translateX(-50%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [style*="marqueeScroll"] {
+    animation: none !important;
+  }
+}
+
+/* Card fade-up animation */
+@keyframes card-fade-up {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.card-animate {
+  opacity: 0;
+  animation: card-fade-up 0.5s ease forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scroll-cue,
+  .card-animate,
+  .hero-grain::after {
+    animation: none !important;
+    opacity: 1;
+  }
+}
+
+/* Responsive single-col grids on mobile */
+@media (max-width: 768px) {
+  .hero-main-grid,
+  .how-to-order-grid,
+  .about-hero-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .founder-note-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* Shop layout — sidebar stacks below on mobile */
+@media (max-width: 900px) {
+  .shop-layout {
+    flex-direction: column !important;
+  }
+  .shop-sidebar {
+    width: 100% !important;
+  }
+}
+
+/* Footer grid — 2-col on tablet, 1-col on mobile */
+@media (max-width: 1024px) {
+  .footer-grid {
+    grid-template-columns: 1fr 1fr !important;
+  }
+}
+@media (max-width: 600px) {
+  .footer-grid {
+    grid-template-columns: 1fr !important;
+  }
+  .footer-bottom {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+  }
+}
+
+/* High Contrast Theme Overrides */
+.high-contrast {
+  --color-stone-50: #ffffff;
+  --color-stone-100: #f0f0f0;
+  --color-stone-200: #e0e0e0;
+  --color-stone-800: #000000;
+  --color-stone-900: #000000;
+  --color-stone-950: #000000;
+}
+
+.high-contrast * {
+  border-color: #000 !important;
+}
+
+.high-contrast .bg-stone-50 {
+  background-color: #ffffff;
+  color: #000000;
+}
+
+.high-contrast .text-stone-500,
+.high-contrast .text-stone-600 {
+  color: #000000 !important;
+}
+
+.high-contrast button {
+  border: 2px solid #000 !important;
+  font-weight: bold;
+}

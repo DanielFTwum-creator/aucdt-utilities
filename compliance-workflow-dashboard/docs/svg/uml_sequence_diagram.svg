@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="550" viewBox="0 0 800 550" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="14">
+  <defs>
+    <marker id="seq-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#1d4ed8"/>
+    </marker>
+    <style>
+      .lifeline { stroke: #9ca3af; stroke-width: 2; }
+      .lifeline-box { fill: #e0f2fe; stroke: #7dd3fc; stroke-width: 1.5; rx: 5; }
+      .lifeline-text { fill: #0c4a6e; font-weight: 600; text-anchor: middle; }
+      .message { stroke: #1d4ed8; stroke-width: 2; marker-end: url(#seq-arrow); }
+      .message-text { fill: #1e3a8a; font-size: 13px; }
+      .reply-message { stroke: #6b7280; stroke-width: 2; stroke-dasharray: 5 3; marker-end: url(#seq-arrow); }
+      .activation-box { fill: #bfdbfe; stroke: #93c5fd; stroke-width: 1; }
+    </style>
+  </defs>
+
+  <!-- Lifelines -->
+  <g id="user-lifeline">
+    <rect x="50" y="40" width="100" height="40" class="lifeline-box"/>
+    <text x="100" y="65" class="lifeline-text">:User</text>
+    <line x1="100" y1="80" x2="100" y2="500" class="lifeline"/>
+  </g>
+  <g id="panel-lifeline">
+    <rect x="250" y="40" width="140" height="40" class="lifeline-box"/>
+    <text x="320" y="65" class="lifeline-text">:AdminPanel</text>
+    <line x1="320" y1="80" x2="320" y2="500" class="lifeline"/>
+  </g>
+  <g id="hash-lifeline">
+    <rect x="470" y="40" width="120" height="40" class="lifeline-box"/>
+    <text x="530" y="65" class="lifeline-text">:useSimpleHash</text>
+    <line x1="530" y1="80" x2="530" y2="500" class="lifeline"/>
+  </g>
+  <g id="storage-lifeline">
+    <rect x="630" y="40" width="140" height="40" class="lifeline-box"/>
+    <text x="700" y="65" class="lifeline-text">:LocalStorage</text>
+    <line x1="700" y1="80" x2="700" y2="500" class="lifeline"/>
+  </g>
+
+  <!-- Activation Boxes -->
+  <rect x="95" y="120" width="10" height="340" class="activation-box"/>
+  <rect x="315" y="140" width="10" height="300" class="activation-box"/>
+  <rect x="695" y="160" width="10" height="50" class="activation-box"/>
+  <rect x="525" y="240" width="10" height="50" class="activation-box"/>
+  <rect x="695" y="320" width="10" height="50" class="activation-box"/>
+
+  <!-- Messages -->
+  <text x="105" y="135" class="message-text">1. Enters password &amp; clicks Login</text>
+  <line x1="105" y1="145" x2="315" y2="145" class="message"/>
+
+  <text x="325" y="155" class="message-text">2. handleLogin(event)</text>
+  <line x1="325" y1="165" x2="695" y2="165" class="message"/>
+  <text x="450" y="180" class="message-text">3. getItem('admin-password-hash')</text>
+
+  <line x1="695" y1="200" x2="325" y2="200" class="reply-message"/>
+  <text x="480" y="215" class="message-text">4. returns storedHash</text>
+  
+  <text x="325" y="235" class="message-text">5. hash(passwordInput)</text>
+  <line x1="325" y1="245" x2="525" y2="245" class="message"/>
+  
+  <line x1="525" y1="280" x2="325" y2="280" class="reply-message"/>
+  <text x="400" y="295" class="message-text">6. returns inputHash</text>
+
+  <text x="325" y="315" class="message-text">7. if (inputHash === storedHash)</text>
+  
+  <line x1="325" y1="325" x2="695" y2="325" class="message"/>
+  <text x="480" y="340" class="message-text">8. setItem('admin-audit-log', ...)</text>
+
+  <text x="325" y="375" class="message-text">9. setIsAuthenticated(true)</text>
+  
+  <line x1="315" y1="430" x2="105" y2="430" class="reply-message"/>
+  <text x="160" y="425" class="message-text">10. Displays authenticated view</text>
+</svg>

@@ -1,0 +1,88 @@
+
+<svg width="600" height="450" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif" font-size="12">
+    <title>UML Sequence Diagram - User Login</title>
+    <defs>
+        <marker id="arrow-seq" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#334155" />
+        </marker>
+        <style>
+            .title { font-size: 16px; font-weight: bold; text-anchor: middle; }
+            .lifeline { stroke: #64748b; stroke-width: 1.5; }
+            .activation { fill: #e0f2fe; stroke: #7dd3fc; }
+            .message { stroke: #334155; stroke-width: 1.5; marker-end: url(#arrow-seq); }
+            .reply { stroke: #334155; stroke-width: 1.5; stroke-dasharray: 5 3; marker-end: url(#arrow-seq); }
+            .label { font-size: 11px; }
+        </style>
+    </defs>
+
+    <text x="300" y="30" class="title">Sequence Diagram: Administrator Login</text>
+
+    <!-- Lifelines -->
+    <g>
+        <rect x="40" y="60" width="100" height="30" fill="#f1f5f9" stroke="#94a3b8" />
+        <text x="90" y="80" text-anchor="middle">:Administrator</text>
+        <line x1="90" y1="90" x2="90" y2="400" class="lifeline" />
+    </g>
+    <g>
+        <rect x="180" y="60" width="100" height="30" fill="#f1f5f9" stroke="#94a3b8" />
+        <text x="230" y="80" text-anchor="middle">:LoginPage</text>
+        <line x1="230" y1="90" x2="230" y2="400" class="lifeline" />
+    </g>
+    <g>
+        <rect x="320" y="60" width="100" height="30" fill="#f1f5f9" stroke="#94a3b8" />
+        <text x="370" y="80" text-anchor="middle">:AuthContext</text>
+        <line x1="370" y1="90" x2="370" y2="400" class="lifeline" />
+    </g>
+    <g>
+        <rect x="460" y="60" width="100" height="30" fill="#f1f5f9" stroke="#94a3b8" />
+        <text x="510" y="80" text-anchor="middle">:localStorage</text>
+        <line x1="510" y1="90" x2="510" y2="400" class="lifeline" />
+    </g>
+    
+    <!-- Messages -->
+    <g>
+        <!-- 1. Enter Password -->
+        <path d="M 90 120 L 230 120" class="message" />
+        <text x="125" y="115" class="label">1. enterPassword(pass)</text>
+        <rect x="225" y="120" width="10" height="220" class="activation" />
+    </g>
+    <g>
+        <!-- 2. Call Login -->
+        <path d="M 230 150 L 370 150" class="message" />
+        <text x="270" y="145" class="label">2. login(pass)</text>
+        <rect x="365" y="150" width="10" height="150" class="activation" />
+    </g>
+    <g>
+        <!-- 3. Get Stored Password -->
+        <path d="M 370 180 L 510 180" class="message" />
+        <text x="390" y="175" class="label">3. getItem('...password')</text>
+        <rect x="505" y="180" width="10" height="30" class="activation" />
+    </g>
+    <g>
+        <!-- 4. Return Stored Password -->
+        <path d="M 510 200 L 370 200" class="reply" />
+        <text x="390" y="195" class="label">4. storedPassword</text>
+    </g>
+    <g>
+        <!-- 5. Compare -->
+        <path d="M 375 220 L 395 220 L 395 240 L 375 240 Z" fill="#e0f2fe" stroke="#7dd3fc" />
+        <text x="400" y="235" class="label">Compare Passwords</text>
+    </g>
+    <g>
+        <!-- 6. Log Event -->
+        <path d="M 370 260 L 510 260" class="message" />
+        <text x="410" y="255" class="label">6. addLog(LOGIN_SUCCESS)</text>
+         <rect x="505" y="260" width="10" height="20" class="activation" />
+    </g>
+    <g>
+        <!-- 7. Return Success -->
+        <path d="M 370 290 L 230 290" class="reply" />
+        <text x="280" y="285" class="label">7. true</text>
+    </g>
+    <g>
+        <!-- 8. Navigate -->
+        <path d="M 230 310 L 230 330" class="message" />
+        <path d="M 230 310 L 220 320 L 230 330" fill="none" />
+        <text x="235" y="325" class="label">8. navigate('/')</text>
+    </g>
+</svg>

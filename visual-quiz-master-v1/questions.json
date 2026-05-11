@@ -1,0 +1,107 @@
+[
+  {
+    "id": 1,
+    "question": "Based on the diagram, what is the area of the circle with radius 5?",
+    "options": ["25π cm²", "10π cm²", "15π cm²", "5π cm²"],
+    "correct": 0,
+    "topic": "Geometry",
+    "cognitive_level": "Application",
+    "svgContent": "<svg width=\"200\" height=\"200\" viewBox=\"0 0 200 200\" xmlns=\"http://www.w3.org/2000/svg\" role=\"img\" aria-label=\"Diagram of a circle with its radius labeled as 5.\"><title>Circle Diagram</title><desc>A circle with its center marked. A horizontal line extends from the center to the edge, representing the radius, which is labeled 'r = 5'.</desc><circle cx=\"100\" cy=\"100\" r=\"60\" stroke=\"var(--text-primary)\" stroke-width=\"2\" fill=\"none\"/><line x1=\"100\" y1=\"100\" x2=\"160\" y2=\"100\" stroke=\"var(--text-primary)\" stroke-width=\"1\"/><text x=\"125\" y=\"95\" fill=\"var(--text-primary)\" font-size=\"12\">r = 5</text><circle cx=\"100\" cy=\"100\" r=\"2\" fill=\"var(--text-primary)\"/></svg>",
+    "chartJsConfig": null
+  },
+  {
+    "id": 2,
+    "question": "According to the chart, which student scored the highest on the test?",
+    "options": ["Alice", "Bob", "Charlie", "Diana"],
+    "correct": 3,
+    "topic": "Statistics",
+    "cognitive_level": "Analysis",
+    "svgContent": null,
+    "chartJsConfig": {
+      "type": "bar",
+      "data": {
+        "labels": ["Alice", "Bob", "Charlie", "Diana"],
+        "datasets": [{
+          "data": [78, 85, 72, 92],
+          "backgroundColor": ["#3B82F6", "#10B981", "#F59E0B", "#EF4444"],
+          "borderColor": "#FFFFFF",
+          "borderWidth": 1
+        }]
+      },
+      "options": {
+        "responsive": true,
+        "maintainAspectRatio": false,
+        "plugins": {
+          "legend": { "display": false },
+          "title": {
+            "display": true,
+            "text": "Test Scores",
+            "color": "#FFFFFF",
+            "font": { "size": 16 }
+          }
+        },
+        "scales": {
+          "y": {
+            "beginAtZero": true,
+            "ticks": { "color": "#FFFFFF" },
+            "grid": { "color": "#374151" },
+            "title": {
+              "display": true,
+              "text": "Score",
+              "color": "#FFFFFF"
+            }
+          },
+          "x": {
+            "ticks": { "color": "#FFFFFF" },
+            "grid": { "color": "#374151" },
+            "title": {
+              "display": true,
+              "text": "Students",
+              "color": "#FFFFFF"
+            }
+          }
+        }
+      }
+    }
+  },
+  {
+    "id": 3,
+    "question": "Based on the coordinate plane, what are the coordinates of point P?",
+    "options": ["(3, 2)", "(2, 3)", "(4, 1)", "(1, 4)"],
+    "correct": 0,
+    "topic": "Coordinate Geometry",
+    "cognitive_level": "Knowledge",
+    "svgContent": "<svg width=\"300\" height=\"300\" viewBox=\"0 0 300 300\" xmlns=\"http://www.w3.org/2000/svg\" role=\"img\" aria-label=\"A coordinate plane showing point P located at coordinates (3, 2).\"><title>Coordinate Plane</title><desc>A grid with x and y axes. The origin (0,0) is at the center. Point P is marked in the top-right quadrant, 3 units to the right on the x-axis and 2 units up on the y-axis.</desc><defs><pattern id=\"grid\" width=\"20\" height=\"20\" patternUnits=\"userSpaceOnUse\"><path d=\"M 20 0 L 0 0 0 20\" fill=\"none\" stroke=\"var(--border-primary)\" stroke-width=\"0.5\"/></pattern></defs><rect width=\"300\" height=\"300\" fill=\"url(#grid)\"/><line x1=\"0\" y1=\"150\" x2=\"300\" y2=\"150\" stroke=\"var(--text-primary)\" stroke-width=\"2\"/><line x1=\"150\" y1=\"0\" x2=\"150\" y2=\"300\" stroke=\"var(--text-primary)\" stroke-width=\"2\"/><circle cx=\"210\" cy=\"110\" r=\"4\" fill=\"var(--feedback-error)\"/><text x=\"220\" y=\"105\" fill=\"var(--text-primary)\" font-size=\"14\" font-weight=\"bold\">P</text><text x=\"290\" y=\"145\" fill=\"var(--text-primary)\" font-size=\"12\">x</text><text x=\"155\" y=\"15\" fill=\"var(--text-primary)\" font-size=\"12\">y</text><text x=\"145\" y=\"165\" fill=\"var(--text-primary)\" font-size=\"10\">0</text></svg>",
+    "chartJsConfig": null
+  },
+  {
+    "id": 4,
+    "question": "Solve for x: $3x + 7 = 16$",
+    "options": ["x = 3", "x = 4", "x = 5", "x = 2"],
+    "correct": 0,
+    "topic": "Algebra",
+    "cognitive_level": "Application",
+    "svgContent": null,
+    "chartJsConfig": null
+  },
+  {
+    "id": 5,
+    "question": "What is the area of the rectangle shown below?",
+    "options": ["24 cm²", "28 cm²", "48 cm²", "12 cm²"],
+    "correct": 0,
+    "topic": "Geometry",
+    "cognitive_level": "Knowledge",
+    "svgContent": "<svg width=\"200\" height=\"150\" viewBox=\"0 0 200 150\" xmlns=\"http://www.w3.org/2000/svg\" role=\"img\" aria-label=\"A rectangle with its length labeled as 8 cm and its width as 3 cm.\"><title>Rectangle Diagram</title><desc>A horizontal rectangle. The bottom side is labeled 'Length = 8 cm' and the left side is labeled 'Width = 3 cm'.</desc><rect x=\"50\" y=\"25\" width=\"100\" height=\"75\" stroke=\"var(--text-primary)\" stroke-width=\"2\" fill=\"none\"/><text x=\"95\" y=\"110\" fill=\"var(--text-primary)\" font-size=\"12\">Length = 8 cm</text><text x=\"30\" y=\"60\" fill=\"var(--text-primary)\" font-size=\"12\" transform=\"rotate(-90 30 60)\">Width = 3 cm</text></svg>",
+    "chartJsConfig": null
+  },
+  {
+    "id": 30,
+    "question": "What is the Greatest Common Divisor (GCD) of 18 and 24?",
+    "options": ["4", "6", "8", "12"],
+    "correct": 1,
+    "topic": "Number Theory",
+    "cognitive_level": "Knowledge",
+    "svgContent": null,
+    "chartJsConfig": null
+  }
+]

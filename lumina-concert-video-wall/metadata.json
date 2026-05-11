@@ -1,0 +1,5 @@
+{
+  "name": "Lumina - Concert Video Wall",
+  "description": "Interactive concert video wall generator with mouse-reactive visuals and customizable LED patterns.",
+  "requestFramePermissions": []
+}

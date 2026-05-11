@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="400" viewBox="0 0 800 400" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="14">
+  <defs>
+    <style>
+      .bg { fill: #f9fafb; }
+      .title { font-size: 20px; font-weight: 600; fill: #111827; text-anchor: middle; }
+      .category-title { font-size: 16px; font-weight: 600; fill: #1f2937; text-anchor: middle; }
+      .card { fill: #ffffff; stroke: #e5e7eb; rx: 8; }
+      .item-text { font-weight: 500; fill: #1e40af; }
+      .item-desc { fill: #6b7280; }
+    </style>
+  </defs>
+
+  <rect width="100%" height="100%" class="bg"/>
+  <text x="400" y="50" class="title">Technology Stack</text>
+
+  <!-- Frontend Category -->
+  <g transform="translate(50, 90)">
+    <text x="125" y="20" class="category-title">Frontend</text>
+    <rect x="0" y="30" width="250" height="250" fill="#f0f9ff" stroke="#e0f2fe" rx="10"/>
+    <g class="card" transform="translate(20, 50)">
+      <rect width="210" height="60"/>
+      <text x="20" y="30" class="item-text">React & TypeScript</text>
+      <text x="20" y="50" class="item-desc">Core UI library and language</text>
+    </g>
+    <g class="card" transform="translate(20, 130)">
+      <rect width="210" height="60"/>
+      <text x="20" y="30" class="item-text">Tailwind CSS</text>
+      <text x="20" y="50" class="item-desc">Utility-first styling framework</text>
+    </g>
+  </g>
+
+  <!-- Data & AI Category -->
+  <g transform="translate(325, 90)">
+    <text x="175" y="20" class="category-title">Data Persistence & AI</text>
+    <rect x="0" y="30" width="350" height="250" fill="#fefce8" stroke="#fef9c3" rx="10"/>
+    <g class="card" transform="translate(20, 50)">
+      <rect width="310" height="60"/>
+      <text x="20" y="30" class="item-text">Browser Local Storage</text>
+      <text x="20" y="50" class="item-desc">Client-side storage for progress and settings</text>
+    </g>
+    <g class="card" transform="translate(20, 130)">
+      <rect width="310" height="60"/>
+      <text x="20" y="30" class="item-text">Google Gemini API</text>
+      <text x="20" y="50" class="item-desc">Engine for AI-driven test generation</text>
+    </g>
+     <g class="card" transform="translate(20, 210)">
+       <rect width="310" height="0"/>
+    </g>
+  </g>
+</svg>

@@ -1,0 +1,49 @@
+<svg width="600" height="400" viewBox="0 0 600 400" xmlns="http://www.w3.org/2000/svg" style="font-family: 'Poppins', sans-serif; background-color: #0D1117; color: #E6EDF3;">
+    <defs>
+        <style>
+            .box { fill: #161B22; stroke: #30363D; stroke-width: 2; }
+            .txt { fill: #E6EDF3; font-size: 16px; text-anchor: middle; font-weight: bold; }
+            .line { stroke: #30363D; stroke-width: 1.5; }
+            .title { fill: #E6EDF3; font-size: 20px; font-weight: bold; text-anchor: middle; }
+        </style>
+    </defs>
+    
+    <text x="300" y="40" class="title">Technology Stack</text>
+
+    <!-- Core App -->
+    <g>
+        <rect x="225" y="150" width="150" height="80" rx="10" class="box" style="stroke: #58A6FF; stroke-width: 3;"/>
+        <text x="300" y="185" class="txt">Visual Quiz</text>
+        <text x="300" y="205" class="txt">Master</text>
+    </g>
+    
+    <!-- Tech Items -->
+    <g>
+        <rect x="50" y="75" width="120" height="50" rx="8" class="box"/>
+        <text x="110" y="105" class="txt">React</text>
+    </g>
+    <g>
+        <rect x="240" y="75" width="120" height="50" rx="8" class="box"/>
+        <text x="300" y="105" class="txt">TypeScript</text>
+    </g>
+    <g>
+        <rect x="430" y="75" width="120" height="50" rx="8" class="box"/>
+        <text x="490" y="105" class="txt">MathJax</text>
+    </g>
+    <g>
+        <rect x="125" y="265" width="120" height="50" rx="8" class="box"/>
+        <text x="185" y="295" class="txt">Chart.js</text>
+    </g>
+    <g>
+        <rect x="355" y="265" width="120" height="50" rx="8" class="box"/>
+        <text x="415" y="295" class="txt">TailwindCSS</text>
+    </g>
+    
+    <!-- Lines -->
+    <path d="M 170 125 L 245 160" class="line" fill="none"/>
+    <path d="M 300 125 V 150" class="line" fill="none"/>
+    <path d="M 430 125 L 355 160" class="line" fill="none"/>
+    <path d="M 245 265 L 280 220" class="line" fill="none"/>
+    <path d="M 355 265 L 320 220" class="line" fill="none"/>
+    
+</svg>

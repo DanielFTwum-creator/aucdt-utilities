@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+  <head>
+    <meta charset="UTF-8" />
+    <!-- ── TUC Standard Meta ─────────────────────────────────────── -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <!-- SEO -->
+    <meta name="keywords" content="Techbridge University College, TUC, design education, technology education, Accra university, Ghana university, product design, entrepreneurship, private university Ghana, design school" />
+    <meta name="author" content="Techbridge University College" />
+    <meta name="publisher" content="Techbridge University College" />
+    <link rel="canonical" href="https://www.techbridge.edu.gh/" />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    <!-- Geographic -->
+    <meta name="language" content="English" />
+    <meta name="geo.region" content="GH-AA" />
+    <meta name="geo.placename" content="Accra" />
+    <meta name="geo.position" content="5.6037;-0.1870" />
+    <meta name="ICBM" content="5.6037, -0.1870" />
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://www.techbridge.edu.gh/" />
+    <meta property="og:site_name" content="Techbridge University College" />
+    <meta property="og:title" content="Compliance Workflow Dashboard" />
+    <meta property="og:description" content="AI Studio Project Refresh &amp; Compliance Implementation Tracker — Techbridge University College" />
+    <meta property="og:image" content="https://techbridge.edu.gh/static/TUC_LOGO.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Techbridge University College Logo" />
+    <meta property="og:locale" content="en_GB" />
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@TUCGhana" />
+    <meta name="twitter:creator" content="@TUCGhana" />
+    <meta name="twitter:title" content="Compliance Workflow Dashboard" />
+    <meta name="twitter:description" content="AI Studio Project Refresh &amp; Compliance Implementation Tracker — Techbridge University College" />
+    <meta name="twitter:image" content="https://techbridge.edu.gh/static/TUC_LOGO.png" />
+    <meta name="twitter:image:alt" content="Techbridge University College Logo" />
+    <!-- Theme -->
+    <meta name="theme-color" content="#630f12" />
+    <meta name="msapplication-TileColor" content="#630f12" />
+    <meta name="copyright" content="Techbridge University College" />
+    <meta name="referrer" content="origin-when-cross-origin" />
+    <!-- ────────────────────────────────────────────────────────────── -->
+    <link rel="icon" type="image/png" href="https://techbridge.edu.gh/static/TUC_LOGO.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="AI Studio Project Refresh &amp; Compliance Implementation Tracker — Techbridge University College" />
+    <title>Compliance Workflow Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+    <style>
+      /* ── Typography ── */
+      body {
+        font-family: 'Inter', system-ui, Helvetica, Arial, sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+      pre, code {
+        font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+      }
+
+      /* ── Design Tokens ── */
+      :root {
+        --tuc-brown:      #2D241E;
+        --tuc-gold:       #C5A059;
+        --tuc-gold-light: #D4B070;
+        --tuc-gold-dim:   #8B6914;
+        --tuc-cream:      #EAE0D5;
+        --tuc-bg-light:   #FDFBF7;
+        --tuc-bg-dark:    #120E0B;   /* Obsidian */
+        --tuc-card-dark:  #1E1812;
+        --tuc-ink:        #0F0C07;
+      }
+
+      /* ── Smooth scroll ── */
+      html { scroll-behavior: smooth; }
+
+      /* ── Transition defaults ── */
+      *, *::before, *::after {
+        transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      /* High Contrast Theme Styles */
+      [data-theme="high-contrast"] body {
+        background-color: #000;
+      }
+      [data-theme="high-contrast"] .hc-bg { background-color: #000 !important; }
+      [data-theme="high-contrast"] .hc-text { color: #fff !important; }
+      [data-theme="high-contrast"] .hc-text-yellow { color: #ff0 !important; }
+      [data-theme="high-contrast"] .hc-border { border-color: #ff0 !important; }
+      [data-theme="high-contrast"] .hc-shadow { box-shadow: 0 0 0 2px #ff0 !important; }
+      [data-theme="high-contrast"] .hc-bg-code { background-color: #111 !important; }
+      [data-theme="high-contrast"] .hc-text-code { color: #eee !important; }
+      [data-theme="high-contrast"] .hc-bg-info { background-color: #000 !important; border-color: #ff0 !important; }
+      [data-theme="high-contrast"] .hc-text-info { color: #ff0 !important; }
+      [data-theme="high-contrast"] .hc-btn:not(.text-white) { background-color: #000 !important; color: #fff !important; border: 1px solid #ff0; }
+      [data-theme="high-contrast"] .hc-btn.text-white { border: 1px solid #fff; }
+      [data-theme="high-contrast"] .hc-hover-bg-gray:hover { background-color: #222 !important; }
+    </style>
+  <script>
+    // Prevents Flash of Unstyled Content (FOUC) for themes
+    (function() {
+      try {
+        const theme = localStorage.getItem('compliance-theme') || 'light';
+        if (theme === 'dark') {
+          document.documentElement.classList.add('dark');
+        } else {
+          document.documentElement.classList.remove('dark');
+        }
+        document.documentElement.setAttribute('data-theme', theme);
+      } catch (e) {
+        console.warn('Could not set theme from localStorage', e);
+      }
+    })();
+  </script>
+  <script type="importmap">
+{
+  "imports": {
+    "react/": "https://aistudiocdn.com/react@^19.2.0/",
+    "react": "https://aistudiocdn.com/react@^19.2.0",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
+    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.29.0"
+  }
+}
+</script>
+<link rel="stylesheet" href="/index.css">
+</head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/index.tsx"></script>
+  </body>
+</html>

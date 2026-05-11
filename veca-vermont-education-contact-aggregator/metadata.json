@@ -1,0 +1,5 @@
+{
+  "name": "VECA - Vermont Education Contact Aggregator",
+  "description": "A centralized database and search engine designed to identify, verify, and present contact information for Professional Development leads in Vermont elementary schools.",
+  "requestFramePermissions": []
+}

@@ -1,0 +1,6 @@
+onlyBuiltDependencies:
+  - '@firebase/util'
+  - esbuild
+  - protobufjs
+  - puppeteer
+  - test-server-sdk

@@ -1,0 +1,44 @@
+<svg width="800" height="450" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif">
+    <style>
+        .bg { fill: #ffffff; }
+        .box { fill: #f0f4f8; stroke: #4a5568; stroke-width: 2.5; rx: 10; }
+        .box-user { fill: #c6f6d5; stroke: #2f855a; }
+        .box-api { fill: #fed7d7; stroke: #c53030; }
+        .box-storage { fill: #bee3f8; stroke: #2b6cb0; }
+        .txt { fill: #1a202c; text-anchor: middle; dominant-baseline: middle; font-size: 18px; font-weight: bold; }
+        .arrow { stroke: #4a5568; stroke-width: 2.5; marker-end: url(#pres-arrowhead); fill: none; }
+        .arrow-label { fill: #2d3748; text-anchor: middle; font-size: 14px; font-weight: 600; }
+    </style>
+    <defs>
+        <marker id="pres-arrowhead" markerWidth="10" markerHeight="7" refX="0" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" fill="#4a5568" />
+        </marker>
+    </defs>
+    <title>Presentation - System Architecture</title>
+    <rect width="100%" height="100%" class="bg" />
+
+    <!-- User -->
+    <rect x="340" y="20" width="120" height="60" class="box box-user" />
+    <text x="400" y="50" class="txt">👤 User</text>
+
+    <!-- Frontend -->
+    <rect x="250" y="150" width="300" height="80" class="box" />
+    <text x="400" y="190" class="txt">React Web App</text>
+
+    <!-- Local Storage -->
+    <rect x="50" y="320" width="300" height="80" class="box box-storage" />
+    <text x="200" y="350" class="txt">💾 Browser Storage</text>
+    <text x="200" y="375" class="txt" font-size="12" font-weight="normal">(Accounts & History)</text>
+    
+    <!-- Gemini API -->
+    <rect x="450" y="320" width="300" height="80" class="box box-api" />
+    <text x="600" y="360" class="txt">✨ Google Gemini API</text>
+
+    <!-- Arrows -->
+    <path class="arrow" d="M400,80 v65" />
+    <path class="arrow" d="M350,230 L250,315" />
+    <text x="280" y="260" class="arrow-label">Data Persistence</text>
+    
+    <path class="arrow" d="M450,230 L550,315" />
+    <text x="520" y="260" class="arrow-label">AI Generation</text>
+</svg>

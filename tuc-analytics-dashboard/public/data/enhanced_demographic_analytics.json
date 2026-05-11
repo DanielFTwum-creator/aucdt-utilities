@@ -1,0 +1,506 @@
+{
+  "metadata": {
+    "processing_date": "2025-06-08T17:19:05.141363",
+    "total_records_processed": 523,
+    "privacy_protection_applied": true,
+    "k_anonymity_level": 5,
+    "data_sources": {
+      "applicant_records": 523,
+      "address_records": 1913,
+      "contact_records": 1677
+    }
+  },
+  "demographic_insights": {
+    "total_applicants_analyzed": 523,
+    "regional_representation": {
+      "GENERALIZED_REGION": {
+        "count": 54,
+        "percentage": 10.325047801147228,
+        "status_distribution": {
+          "ACCEPTED": 21,
+          "REJECTED": 15,
+          "REGISTERED": 10,
+          "WAITLISTED": 7,
+          "": 1
+        },
+        "year_distribution": {
+          "2020s": 53,
+          "2010s": 1
+        }
+      },
+      "ACCRA_REGION": {
+        "count": 58,
+        "percentage": 11.089866156787762,
+        "status_distribution": {
+          "ACCEPTED": 26,
+          "REJECTED": 21,
+          "REGISTERED": 11
+        },
+        "year_distribution": {
+          "2025": 33,
+          "2024": 20,
+          "2023": 5
+        }
+      },
+      "OTHER_REGION": {
+        "count": 28,
+        "percentage": 5.353728489483748,
+        "status_distribution": {
+          "ACCEPTED": 8,
+          "REJECTED": 8,
+          "REGISTERED": 7,
+          "WAITLISTED": 5
+        },
+        "year_distribution": {
+          "2024": 21,
+          "2025": 7
+        }
+      },
+      "UNKNOWN": {
+        "count": 383,
+        "percentage": 73.23135755258127,
+        "status_distribution": {
+          "REJECTED": 154,
+          "ACCEPTED": 148,
+          "WAITLISTED": 62,
+          "REGISTERED": 19
+        },
+        "year_distribution": {
+          "2023": 130,
+          "2024": 123,
+          "2025": 68,
+          "2022": 54,
+          "2020": 8
+        }
+      }
+    },
+    "international_metrics": {
+      "total_international": 267,
+      "percentage_international": 51.05162523900574,
+      "countries_represented": 3,
+      "international_acceptance_rate": 35.580524344569284
+    },
+    "diversity_metrics": {
+      "regions_represented": 4,
+      "countries_represented": 4,
+      "geographic_concentration": 73.23135755258127,
+      "international_diversity_index": 0.011235955056179775
+    },
+    "access_patterns": {
+      "GENERALIZED_REGION": {
+        "mobile_access_rate": 96.29629629629629,
+        "landline_access_rate": 96.29629629629629,
+        "communication_completeness": 96.29629629629629
+      },
+      "ACCRA_REGION": {
+        "mobile_access_rate": 100.0,
+        "landline_access_rate": 100.0,
+        "communication_completeness": 100.0
+      },
+      "OTHER_REGION": {
+        "mobile_access_rate": 100.0,
+        "landline_access_rate": 100.0,
+        "communication_completeness": 100.0
+      },
+      "UNKNOWN": {
+        "mobile_access_rate": 36.55352480417754,
+        "landline_access_rate": 35.24804177545692,
+        "communication_completeness": 36.55352480417754
+      }
+    },
+    "processing_summary": {
+      "applicant_records": 523,
+      "address_records": 1913,
+      "contact_records": 1677,
+      "merged_records": 523,
+      "privacy_protected": true,
+      "k_anonymity_applied": true
+    }
+  },
+  "geographic_analytics": {
+    "state_distribution": {
+      "UNKNOWN": 383,
+      "ACCRA_REGION": 58,
+      "GENERALIZED_REGION": 54,
+      "OTHER_REGION": 28
+    },
+    "city_cluster_distribution": {
+      "CITY_CLUSTER_OTHER": 27,
+      "CITY_CLUSTER_120K": 34,
+      "CITY_CLUSTER_117K": 42,
+      "CITY_CLUSTER_118K": 22
+    },
+    "international_vs_domestic": {
+      "Domestic": 507,
+      "International": 16
+    },
+    "conversion_by_region": {
+      "": {
+        "ACCRA_REGION": 0,
+        "GENERALIZED_REGION": 1,
+        "OTHER_REGION": 0,
+        "UNKNOWN": 0
+      },
+      "ACCEPTED": {
+        "ACCRA_REGION": 26,
+        "GENERALIZED_REGION": 21,
+        "OTHER_REGION": 8,
+        "UNKNOWN": 148
+      },
+      "REGISTERED": {
+        "ACCRA_REGION": 11,
+        "GENERALIZED_REGION": 10,
+        "OTHER_REGION": 7,
+        "UNKNOWN": 19
+      },
+      "REJECTED": {
+        "ACCRA_REGION": 21,
+        "GENERALIZED_REGION": 15,
+        "OTHER_REGION": 8,
+        "UNKNOWN": 154
+      },
+      "WAITLISTED": {
+        "ACCRA_REGION": 0,
+        "GENERALIZED_REGION": 7,
+        "OTHER_REGION": 5,
+        "UNKNOWN": 62
+      }
+    },
+    "conversion_rates_by_region": {
+      "ACCRA_REGION": 63.793103448275865,
+      "GENERALIZED_REGION": 57.407407407407405,
+      "OTHER_REGION": 53.57142857142857,
+      "UNKNOWN": 43.60313315926893
+    },
+    "total_regions": 4,
+    "most_represented_region": "UNKNOWN"
+  },
+  "communication_patterns": {
+    "country_code_distribution": {
+      "+233": 256,
+      "UNKNOWN": 251,
+      "+234": 15,
+      "+1": 1
+    },
+    "country_names_distribution": {
+      "Ghana": 256,
+      "Unknown (UNKNOWN)": 251,
+      "Nigeria": 15,
+      "USA/Canada": 1
+    },
+    "mobile_usage": {
+      "true": 278,
+      "false": 245
+    },
+    "landline_usage": {
+      "true": 273,
+      "false": 250
+    },
+    "communication_by_status": {
+      "has_mobile": {
+        "": 0,
+        "ACCEPTED": 133,
+        "REGISTERED": 28,
+        "REJECTED": 100,
+        "WAITLISTED": 17
+      },
+      "has_landline": {
+        "": 0,
+        "ACCEPTED": 131,
+        "REGISTERED": 28,
+        "REJECTED": 98,
+        "WAITLISTED": 16
+      },
+      "country_code": {
+        "": {
+          "UNKNOWN": 1
+        },
+        "ACCEPTED": {
+          "+233": 127,
+          "UNKNOWN": 72,
+          "+234": 4
+        },
+        "REGISTERED": {
+          "+233": 28,
+          "UNKNOWN": 19
+        },
+        "REJECTED": {
+          "UNKNOWN": 102,
+          "+233": 86,
+          "+234": 10
+        },
+        "WAITLISTED": {
+          "UNKNOWN": 57,
+          "+233": 15,
+          "+1": 1,
+          "+234": 1
+        }
+      }
+    },
+    "international_patterns": {
+      "application_status": {
+        "+1": {
+          "WAITLISTED": 1
+        },
+        "+234": {
+          "REJECTED": 10,
+          "ACCEPTED": 4,
+          "WAITLISTED": 1
+        },
+        "UNKNOWN": {
+          "REJECTED": 102,
+          "ACCEPTED": 72,
+          "WAITLISTED": 57,
+          "REGISTERED": 19,
+          "": 1
+        }
+      },
+      "academic_year": {
+        "+1": {
+          "2020s": 1
+        },
+        "+234": {
+          "2020s": 9,
+          "2022": 6
+        },
+        "UNKNOWN": {
+          "2024": 123,
+          "2025": 68,
+          "2023": 55,
+          "2020s": 5
+        }
+      }
+    },
+    "total_countries": 4,
+    "primary_country_code": "+233"
+  },
+  "privacy_audit_trail": {
+    "anonymization_operations": [
+      {
+        "operation": "PII_ANONYMIZATION",
+        "fields_anonymized": [
+          "person_id",
+          "addresses",
+          "phone_numbers",
+          "postal_codes"
+        ],
+        "method": "SHA256_HASH_WITH_SALT",
+        "records_processed": 523,
+        "timestamp": "2025-06-08T17:19:03.674341"
+      }
+    ],
+    "k_anonymity_checks": [
+      {
+        "k_value": 5,
+        "groups_checked": 57,
+        "violations_found": 30,
+        "violations_resolved": 30,
+        "timestamp": "2025-06-08T17:19:03.722474"
+      }
+    ],
+    "privacy_violations": [],
+    "processing_timestamp": "2025-06-08T17:19:03.662207"
+  },
+  "anonymized_sample_data": [
+    {
+      "person_id_hash": "HASH_20e0715a26",
+      "application_status": "ACCEPTED",
+      "academic_year": "2020s",
+      "application_received_date": "2023-03-14",
+      "programme_id": "0",
+      "programme_type_id": "04",
+      "applicant_type": "REGULAR",
+      "state_anonymized": [
+        "ACCRA_REGION"
+      ],
+      "city_id_pattern": [
+        "CITY_CLUSTER_OTHER"
+      ],
+      "geographic_cluster": "GENERALIZED_REGION",
+      "country_code": "+233",
+      "has_mobile": true,
+      "has_landline": true,
+      "phone_pattern": "+233_MOBILE"
+    },
+    {
+      "person_id_hash": "HASH_9614309abc",
+      "application_status": "ACCEPTED",
+      "academic_year": "2020s",
+      "application_received_date": "2023-06-25",
+      "programme_id": "0",
+      "programme_type_id": "07",
+      "applicant_type": "REGULAR",
+      "state_anonymized": [
+        "ACCRA_REGION"
+      ],
+      "city_id_pattern": [
+        "CITY_CLUSTER_120K"
+      ],
+      "geographic_cluster": "GENERALIZED_REGION",
+      "country_code": "+233",
+      "has_mobile": true,
+      "has_landline": true,
+      "phone_pattern": "+233_MOBILE"
+    },
+    {
+      "person_id_hash": "HASH_e8039e71e3",
+      "application_status": "ACCEPTED",
+      "academic_year": "2020s",
+      "application_received_date": "2023-07-06",
+      "programme_id": "0",
+      "programme_type_id": "10",
+      "applicant_type": "REGULAR",
+      "state_anonymized": [
+        "ACCRA_REGION"
+      ],
+      "city_id_pattern": [
+        "CITY_CLUSTER_OTHER"
+      ],
+      "geographic_cluster": "GENERALIZED_REGION",
+      "country_code": "+233",
+      "has_mobile": true,
+      "has_landline": true,
+      "phone_pattern": "+233_MOBILE"
+    },
+    {
+      "person_id_hash": "HASH_9334a456aa",
+      "application_status": "ACCEPTED",
+      "academic_year": "2020s",
+      "application_received_date": "2023-09-06",
+      "programme_id": "0",
+      "programme_type_id": "32",
+      "applicant_type": "REGULAR",
+      "state_anonymized": [
+        "ACCRA_REGION"
+      ],
+      "city_id_pattern": [
+        "CITY_CLUSTER_OTHER"
+      ],
+      "geographic_cluster": "GENERALIZED_REGION",
+      "country_code": "+233",
+      "has_mobile": true,
+      "has_landline": true,
+      "phone_pattern": "+233_MOBILE"
+    },
+    {
+      "person_id_hash": "HASH_7a64d4efce",
+      "application_status": "REJECTED",
+      "academic_year": "2023",
+      "application_received_date": "2023-08-05",
+      "programme_id": "0",
+      "programme_type_id": "10",
+      "applicant_type": "REGULAR",
+      "state_anonymized": [
+        "ACCRA_REGION"
+      ],
+      "city_id_pattern": [
+        "CITY_CLUSTER_117K"
+      ],
+      "geographic_cluster": "ACCRA_REGION",
+      "country_code": "+233",
+      "has_mobile": true,
+      "has_landline": true,
+      "phone_pattern": "+233_MOBILE"
+    },
+    {
+      "person_id_hash": "HASH_3c3cfbdf15",
+      "application_status": "REJECTED",
+      "academic_year": "2023",
+      "application_received_date": "2023-09-10",
+      "programme_id": "0",
+      "programme_type_id": "10",
+      "applicant_type": "REGULAR",
+      "state_anonymized": [
+        "ACCRA_REGION"
+      ],
+      "city_id_pattern": [
+        "CITY_CLUSTER_117K"
+      ],
+      "geographic_cluster": "ACCRA_REGION",
+      "country_code": "+233",
+      "has_mobile": true,
+      "has_landline": true,
+      "phone_pattern": "+233_MOBILE"
+    },
+    {
+      "person_id_hash": "HASH_190fd0cf0a",
+      "application_status": "REJECTED",
+      "academic_year": "2023",
+      "application_received_date": "2023-10-15",
+      "programme_id": "0",
+      "programme_type_id": "10",
+      "applicant_type": "REGULAR",
+      "state_anonymized": [
+        "ACCRA_REGION"
+      ],
+      "city_id_pattern": [
+        "CITY_CLUSTER_117K"
+      ],
+      "geographic_cluster": "ACCRA_REGION",
+      "country_code": "+233",
+      "has_mobile": true,
+      "has_landline": true,
+      "phone_pattern": "+233_MOBILE"
+    },
+    {
+      "person_id_hash": "HASH_947544c80a",
+      "application_status": "REJECTED",
+      "academic_year": "2023",
+      "application_received_date": "2023-10-16",
+      "programme_id": "0",
+      "programme_type_id": "10",
+      "applicant_type": "REGULAR",
+      "state_anonymized": [
+        "ACCRA_REGION"
+      ],
+      "city_id_pattern": [
+        "CITY_CLUSTER_117K"
+      ],
+      "geographic_cluster": "ACCRA_REGION",
+      "country_code": "+233",
+      "has_mobile": true,
+      "has_landline": true,
+      "phone_pattern": "+233_MOBILE"
+    },
+    {
+      "person_id_hash": "HASH_53a12ca107",
+      "application_status": "REJECTED",
+      "academic_year": "2023",
+      "application_received_date": "2023-10-23",
+      "programme_id": "0",
+      "programme_type_id": "10",
+      "applicant_type": "REGULAR",
+      "state_anonymized": [
+        "ACCRA_REGION"
+      ],
+      "city_id_pattern": [
+        "CITY_CLUSTER_117K"
+      ],
+      "geographic_cluster": "ACCRA_REGION",
+      "country_code": "+233",
+      "has_mobile": true,
+      "has_landline": true,
+      "phone_pattern": "+233_MOBILE"
+    },
+    {
+      "person_id_hash": "HASH_d93a7b149c",
+      "application_status": "ACCEPTED",
+      "academic_year": "2024",
+      "application_received_date": "2023-09-26",
+      "programme_id": "0",
+      "programme_type_id": "10",
+      "applicant_type": "REGULAR",
+      "state_anonymized": [
+        "ACCRA_REGION"
+      ],
+      "city_id_pattern": [
+        "CITY_CLUSTER_117K"
+      ],
+      "geographic_cluster": "ACCRA_REGION",
+      "country_code": "+233",
+      "has_mobile": true,
+      "has_landline": true,
+      "phone_pattern": "+233_MOBILE"
+    }
+  ]
+}

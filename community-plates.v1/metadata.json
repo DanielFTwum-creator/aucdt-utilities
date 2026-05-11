@@ -1,0 +1,5 @@
+{
+  "name": "s",
+  "description": "A web application designed to connect restaurants with local food pantries to facilitate food donations, featuring location-based search, connection mapping, and automated donation requests.",
+  "requestFramePermissions": []
+}

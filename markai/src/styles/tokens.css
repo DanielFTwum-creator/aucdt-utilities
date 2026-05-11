@@ -1,0 +1,169 @@
+/* MarkAI Design Tokens — Single Source of Truth */
+
+:root {
+  /* Brand — Electric Violet */
+  --brand-300: 267 90% 75%;
+  --brand-500: 265 85% 60%;
+  --brand-600: 263 80% 52%;
+  --brand-700: 261 75% 44%;
+
+  /* Accent — Ghana Gold */
+  --accent-500: 42 95% 55%;
+  --accent-600: 38 90% 48%;
+
+  /* Signal — Kente Red */
+  --signal-500: 358 78% 58%;
+
+  /* Neutrals */
+  --ink-950: 240 10% 4%;
+  --ink-900: 240 8%  7%;
+  --ink-800: 240 6%  12%;
+  --ink-700: 240 5%  18%;
+  --ink-300: 240 4%  65%;
+  --ink-100: 240 5%  92%;
+  --ink-50:  240 10% 98%;
+
+  /* Typography */
+  --font-display: 'Clash Display', 'Cabinet Grotesk', ui-sans-serif, system-ui;
+  --font-body:    'Inter Variable', ui-sans-serif, system-ui;
+  --font-mono:    'JetBrains Mono', ui-monospace, monospace;
+
+  /* Fluid type scale */
+  --step--1: clamp(0.833rem, 0.8rem + 0.17vw, 0.938rem);
+  --step-0:  clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
+  --step-1:  clamp(1.2rem, 1.12rem + 0.4vw, 1.4rem);
+  --step-2:  clamp(1.44rem, 1.31rem + 0.65vw, 1.75rem);
+  --step-3:  clamp(1.73rem, 1.54rem + 0.95vw, 2.19rem);
+  --step-4:  clamp(2.07rem, 1.8rem + 1.38vw, 2.74rem);
+  --step-5:  clamp(2.49rem, 2.09rem + 2vw, 3.42rem);
+  --step-6:  clamp(2.99rem, 2.42rem + 2.85vw, 4.28rem);
+
+  /* Radii */
+  --radius-sm:   0.5rem;
+  --radius-md:   0.875rem;
+  --radius-lg:   1.25rem;
+  --radius-pill: 999px;
+
+  /* Shadows */
+  --shadow-sm:   0 1px 2px hsl(var(--ink-950) / 0.08);
+  --shadow-md:   0 8px 24px -8px hsl(var(--ink-950) / 0.35);
+  --shadow-glow: 0 0 48px hsl(var(--brand-500) / 0.35);
+
+  /* Motion */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --dur-fast: 180ms;
+  --dur-base: 320ms;
+  --dur-slow: 560ms;
+}
+
+/* ── Theme: Dark (default) ── */
+html.dark {
+  --bg-page:       hsl(var(--ink-950));
+  --bg-surface:    hsl(var(--ink-900) / 0.72);
+  --bg-elevated:   hsl(var(--ink-800) / 0.85);
+  --border-subtle: hsl(var(--ink-700) / 0.6);
+  --text-primary:  hsl(var(--ink-50));
+  --text-secondary:hsl(var(--ink-100) / 0.82);
+  --text-muted:    hsl(var(--ink-300));
+}
+
+/* ── Theme: Light ── */
+html.light {
+  --bg-page:       hsl(var(--ink-50));
+  --bg-surface:    hsl(0 0% 100% / 0.82);
+  --bg-elevated:   hsl(0 0% 100%);
+  --border-subtle: hsl(240 6% 88%);
+  --text-primary:  hsl(var(--ink-950));
+  --text-secondary:hsl(240 8% 25%);
+  --text-muted:    hsl(240 5% 45%);
+}
+
+/* ── Theme: High Contrast (WCAG AAA) ── */
+html.high-contrast {
+  --bg-page:       #000;
+  --bg-surface:    #000;
+  --bg-elevated:   #0a0a0a;
+  --border-subtle: #fff;
+  --text-primary:  #fff;
+  --text-secondary:#ffef00;
+  --text-muted:    #fff;
+}
+
+/* ── Reduced motion ── */
+@media (prefers-reduced-motion: reduce) {
+  .aurora, .constellation-particle, .animate-drift,
+  .animate-float, .animate-subtle-glow, .animate-pulse {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* ── Global base ── */
+body {
+  background-color: var(--bg-page, #fff);
+  color: var(--text-primary, #0f0c07);
+  font-family: var(--font-body);
+}
+
+/* ── Gradient text HC fallback ── */
+html.high-contrast .gradient-text {
+  background: none !important;
+  -webkit-background-clip: unset !important;
+  background-clip: unset !important;
+  -webkit-text-fill-color: #ffef00 !important;
+  color: #ffef00 !important;
+}
+
+/* ── Focus visible ring ── */
+:focus-visible {
+  outline: 2px solid hsl(var(--brand-500));
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+/* ── Skip link ── */
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: auto;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+.skip-link:focus {
+  position: fixed;
+  top: 1rem;
+  left: 1rem;
+  width: auto;
+  height: auto;
+  padding: 0.75rem 1.5rem;
+  background: hsl(var(--brand-500));
+  color: #fff;
+  font-weight: 600;
+  border-radius: var(--radius-md);
+  z-index: 9999;
+}
+
+/* ── Constellation / hero animations ── */
+@keyframes constellation-pulse {
+  0%, 100% { opacity: 0.6; transform: scale(1); }
+  50%       { opacity: 1;   transform: scale(1.08); }
+}
+@keyframes orbit-rotate {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+@keyframes particle-drift {
+  0%   { transform: translateY(0px)   translateX(0px);   opacity: 0; }
+  20%  { opacity: 0.7; }
+  80%  { opacity: 0.4; }
+  100% { transform: translateY(-120px) translateX(30px);  opacity: 0; }
+}
+@keyframes dash-draw {
+  from { stroke-dashoffset: 300; }
+  to   { stroke-dashoffset: 0; }
+}
+@keyframes aurora-shift {
+  0%, 100% { opacity: 0.28; transform: scale(1); }
+  50%       { opacity: 0.38; transform: scale(1.04); }
+}

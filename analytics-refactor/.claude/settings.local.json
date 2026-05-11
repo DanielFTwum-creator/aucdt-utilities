@@ -1,0 +1,23 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm start)",
+      "Bash(npm install:*)",
+      "Bash(npm uninstall:*)",
+      "Bash(pnpm remove:*)",
+      "Bash(pnpm add:*)",
+      "Bash(pnpm start)",
+      "Bash(pnpm run build:*)",
+      "Bash(netstat:*)",
+      "Bash(findstr:*)",
+      "Bash(taskkill:*)",
+      "Bash(pnpm list:*)",
+      "Bash(timeout 15 cmd:*)",
+      "Bash(nul)",
+      "Bash(cat:*)",
+      "Bash(pnpm build:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

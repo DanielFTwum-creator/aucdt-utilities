@@ -1,0 +1,54 @@
+<svg width="850" height="550" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="3" />
+      <feOffset dx="2" dy="2" result="offsetblur" />
+      <feComponentTransfer>
+        <feFuncA type="linear" slope="0.2"/>
+      </feComponentTransfer>
+      <feMerge>
+        <feMergeNode />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+  </defs>
+  <rect width="100%" height="100%" fill="#fcfcfc"/>
+  <text x="425" y="40" font-family="sans-serif" font-size="28" font-weight="bold" text-anchor="middle" fill="#1e293b">SmartScale v3.2 Architecture</text>
+
+  <!-- Presentation Engine -->
+  <rect x="50" y="80" width="350" height="420" rx="20" fill="#fff" stroke="#C97064" stroke-width="3" filter="url(#shadow)"/>
+  <text x="225" y="115" font-family="sans-serif" font-size="18" font-weight="bold" text-anchor="middle" fill="#C97064">REACT APPLICATION</text>
+  
+  <rect x="75" y="140" width="300" height="90" rx="10" fill="#f8fafc" stroke="#e2e8f0"/>
+  <text x="100" y="165" font-family="sans-serif" font-size="15" font-weight="bold" fill="#334155">Presentation Logic</text>
+  <text x="100" y="185" font-family="sans-serif" font-size="12" fill="#64748b">• Layout Dispatcher</text>
+  <text x="100" y="205" font-family="sans-serif" font-size="12" fill="#64748b">• Slide State Manager</text>
+
+  <rect x="75" y="245" width="300" height="110" rx="10" fill="#fff5f5" stroke="#feb2b2"/>
+  <text x="100" y="270" font-family="sans-serif" font-size="15" font-weight="bold" fill="#c53030">AI Workshop Tool</text>
+  <text x="100" y="290" font-family="sans-serif" font-size="12" fill="#9b2c2c">• Tokenization: [STYLE], [ASPECT]</text>
+  <text x="100" y="310" font-family="sans-serif" font-size="12" fill="#9b2c2c">• Gemini 3.0/2.5 API Bridge</text>
+  <text x="100" y="330" font-family="sans-serif" font-size="12" fill="#9b2c2c">• Real-time Renderer</text>
+
+  <rect x="75" y="370" width="300" height="100" rx="10" fill="#f0fdf4" stroke="#86efac"/>
+  <text x="100" y="395" font-family="sans-serif" font-size="15" font-weight="bold" fill="#166534">Security & Admin</text>
+  <text x="100" y="415" font-family="sans-serif" font-size="12" fill="#15803d">• Audit Log Store (JSON)</text>
+  <text x="100" y="435" font-family="sans-serif" font-size="12" fill="#15803d">• Layout Diagnostic Capture</text>
+  <text x="100" y="455" font-family="sans-serif" font-size="12" fill="#15803d">• Multi-Theme Controller</text>
+
+  <!-- External Nodes -->
+  <rect x="480" y="120" width="320" height="150" rx="20" fill="#eff6ff" stroke="#3b82f6" stroke-width="2"/>
+  <text x="640" y="150" font-family="sans-serif" font-size="18" font-weight="bold" text-anchor="middle" fill="#1d4ed8">GOOGLE GENAI SERVICE</text>
+  <text x="500" y="180" font-family="sans-serif" font-size="13" fill="#3b82f6">Model: Gemini 3.0 Flash (Text)</text>
+  <text x="500" y="205" font-family="sans-serif" font-size="13" fill="#3b82f6">Model: Gemini 2.5 Image (Image)</text>
+  <text x="500" y="230" font-family="sans-serif" font-size="12" fill="#60a5fa">Protocol: WSS/REST Secure API</text>
+
+  <rect x="480" y="300" width="320" height="100" rx="20" fill="#faf5ff" stroke="#a855f7" stroke-width="2"/>
+  <text x="640" y="330" font-family="sans-serif" font-size="18" font-weight="bold" text-anchor="middle" fill="#7e22ce">CDN & ASSETS</text>
+  <text x="500" y="360" font-family="sans-serif" font-size="13" fill="#9333ea">• Unsplash / DT Cloud Storage</text>
+  <text x="500" y="380" font-family="sans-serif" font-size="13" fill="#9333ea">• Lucide Vector Icon Library</text>
+
+  <!-- Flow Lines -->
+  <path d="M 400 300 L 480 200" stroke="#94a3b8" stroke-width="2" stroke-dasharray="5,5" fill="none" marker-end="url(#arrow)"/>
+  <path d="M 400 170 L 480 350" stroke="#94a3b8" stroke-width="2" stroke-dasharray="5,5" fill="none"/>
+</svg>

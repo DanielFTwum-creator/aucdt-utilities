@@ -1,0 +1,80 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800">
+  <!-- Background -->
+  <rect width="1200" height="800" fill="#f8fafc" />
+  
+  <!-- Title -->
+  <text x="600" y="50" font-family="sans-serif" font-size="32" text-anchor="middle" font-weight="bold" fill="#0f172a">SEND Platform - Executive Overview</text>
+  <text x="600" y="80" font-family="sans-serif" font-size="18" text-anchor="middle" fill="#64748b">Strategic Architecture & Value Delivery</text>
+
+  <!-- User Layer -->
+  <g transform="translate(100, 150)">
+    <rect width="1000" height="120" rx="10" fill="#eff6ff" stroke="#3b82f6" stroke-width="2" />
+    <text x="500" y="30" font-family="sans-serif" font-size="18" font-weight="bold" text-anchor="middle" fill="#1e40af">User Interface Layer (React 19.2.4)</text>
+    
+    <!-- Personas -->
+    <circle cx="200" cy="75" r="30" fill="#ffffff" stroke="#60a5fa" stroke-width="2" />
+    <text x="200" y="80" font-family="sans-serif" font-size="24" text-anchor="middle" fill="#1e40af">👤</text>
+    <text x="200" y="135" font-family="sans-serif" font-size="14" text-anchor="middle" fill="#1e40af">Admin</text>
+
+    <circle cx="500" cy="75" r="30" fill="#ffffff" stroke="#60a5fa" stroke-width="2" />
+    <text x="500" y="80" font-family="sans-serif" font-size="24" text-anchor="middle" fill="#1e40af">📊</text>
+    <text x="500" y="135" font-family="sans-serif" font-size="14" text-anchor="middle" fill="#1e40af">Analyst</text>
+
+    <circle cx="800" cy="75" r="30" fill="#ffffff" stroke="#60a5fa" stroke-width="2" />
+    <text x="800" y="80" font-family="sans-serif" font-size="24" text-anchor="middle" fill="#1e40af">🧪</text>
+    <text x="800" y="135" font-family="sans-serif" font-size="14" text-anchor="middle" fill="#1e40af">QA Engineer</text>
+  </g>
+
+  <!-- Core Functions -->
+  <g transform="translate(100, 320)">
+    <rect width="1000" height="200" rx="10" fill="#f0fdf4" stroke="#22c55e" stroke-width="2" />
+    <text x="500" y="30" font-family="sans-serif" font-size="18" font-weight="bold" text-anchor="middle" fill="#15803d">Core Business Logic</text>
+
+    <!-- Modules -->
+    <rect x="50" y="60" width="200" height="100" rx="5" fill="#ffffff" stroke="#86efac" />
+    <text x="150" y="90" font-family="sans-serif" font-size="16" font-weight="bold" text-anchor="middle" fill="#15803d">Job Management</text>
+    <text x="150" y="115" font-family="sans-serif" font-size="12" text-anchor="middle" fill="#334155">Create, Edit, Delete</text>
+    <text x="150" y="135" font-family="sans-serif" font-size="12" text-anchor="middle" fill="#334155">JSON Definitions</text>
+
+    <rect x="280" y="60" width="200" height="100" rx="5" fill="#ffffff" stroke="#86efac" />
+    <text x="380" y="90" font-family="sans-serif" font-size="16" font-weight="bold" text-anchor="middle" fill="#15803d">Scheduling</text>
+    <text x="380" y="115" font-family="sans-serif" font-size="12" text-anchor="middle" fill="#334155">Cron Expressions</text>
+    <text x="380" y="135" font-family="sans-serif" font-size="12" text-anchor="middle" fill="#334155">Timezone Handling</text>
+
+    <rect x="510" y="60" width="200" height="100" rx="5" fill="#ffffff" stroke="#86efac" />
+    <text x="610" y="90" font-family="sans-serif" font-size="16" font-weight="bold" text-anchor="middle" fill="#15803d">Execution Engine</text>
+    <text x="610" y="115" font-family="sans-serif" font-size="12" text-anchor="middle" fill="#334155">Report Generation</text>
+    <text x="610" y="135" font-family="sans-serif" font-size="12" text-anchor="middle" fill="#334155">Delivery (Email/SP)</text>
+
+    <rect x="740" y="60" width="200" height="100" rx="5" fill="#ffffff" stroke="#86efac" />
+    <text x="840" y="90" font-family="sans-serif" font-size="16" font-weight="bold" text-anchor="middle" fill="#15803d">Admin Console</text>
+    <text x="840" y="115" font-family="sans-serif" font-size="12" text-anchor="middle" fill="#334155">Security & Audit</text>
+    <text x="840" y="135" font-family="sans-serif" font-size="12" text-anchor="middle" fill="#334155">Diagnostics & Testing</text>
+  </g>
+
+  <!-- Infrastructure Layer -->
+  <g transform="translate(100, 570)">
+    <rect width="1000" height="120" rx="10" fill="#fef2f2" stroke="#ef4444" stroke-width="2" />
+    <text x="500" y="30" font-family="sans-serif" font-size="18" font-weight="bold" text-anchor="middle" fill="#b91c1c">Infrastructure & Security Layer</text>
+
+    <rect x="100" y="50" width="250" height="50" rx="5" fill="#ffffff" stroke="#fca5a5" />
+    <text x="225" y="80" font-family="sans-serif" font-size="14" text-anchor="middle" fill="#b91c1c">API Gateway (Rate Limiting)</text>
+
+    <rect x="375" y="50" width="250" height="50" rx="5" fill="#ffffff" stroke="#fca5a5" />
+    <text x="500" y="80" font-family="sans-serif" font-size="14" text-anchor="middle" fill="#b91c1c">Audit Logging Service</text>
+
+    <rect x="650" y="50" width="250" height="50" rx="5" fill="#ffffff" stroke="#fca5a5" />
+    <text x="775" y="80" font-family="sans-serif" font-size="14" text-anchor="middle" fill="#b91c1c">Automated Testing Suite</text>
+  </g>
+
+  <!-- Arrows -->
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#94a3b8" />
+    </marker>
+  </defs>
+
+  <line x1="600" y1="270" x2="600" y2="320" stroke="#94a3b8" stroke-width="4" marker-end="url(#arrow)" />
+  <line x1="600" y1="520" x2="600" y2="570" stroke="#94a3b8" stroke-width="4" marker-end="url(#arrow)" />
+
+</svg>

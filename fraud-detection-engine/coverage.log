@@ -1,0 +1,165 @@
+
+> fraud-detection-engine@3.0.0 test:coverage C:\Development\aucdt-utilities\fraud-detection-engine
+> vitest run --coverage
+
+
+ RUN  v4.1.5 C:/Development/aucdt-utilities/fraud-detection-engine
+      Coverage enabled with v8
+
+Not implemented: Window's alert() method
+Not implemented: Window's alert() method
+Not implemented: Window's alert() method
+Not implemented: Window's alert() method
+Not implemented: Window's alert() method
+⎯⎯⎯⎯⎯⎯ Unhandled Errors ⎯⎯⎯⎯⎯⎯
+
+Vitest caught 7 unhandled errors during the test run.
+This might cause false positive tests. Resolve unhandled errors to make sure your tests are not affected.
+
+⎯⎯⎯⎯⎯⎯ Unhandled Error ⎯⎯⎯⎯⎯⎯⎯
+Error: [vitest-pool]: Failed to start forks worker for test files C:/Development/aucdt-utilities/fraud-detection-engine/src/pages/admin/Testing.test.tsx.
+ ❯ node_modules/.pnpm/vitest@4.1.5_@types+node@25_5ada7e87c925c0a6e9e231f40b345bf2/node_modules/vitest/dist/chunks/cli-api.Cjt90eJu.js:3448:94
+ ❯ runNextTicks node:internal/process/task_queues:65:5
+ ❯ listOnTimeout node:internal/timers:567:9
+ ❯ processTimers node:internal/timers:541:7
+ ❯ Pool.schedule node_modules/.pnpm/vitest@4.1.5_@types+node@25_5ada7e87c925c0a6e9e231f40b345bf2/node_modules/vitest/dist/chunks/cli-api.Cjt90eJu.js:3448:5
+
+Caused by: Error: [vitest-pool-runner]: Timeout waiting for worker to respond
+ ❯ Timeout.<anonymous> node_modules/.pnpm/vitest@4.1.5_@types+node@25_5ada7e87c925c0a6e9e231f40b345bf2/node_modules/vitest/dist/chunks/cli-api.Cjt90eJu.js:3028:58
+ ❯ listOnTimeout node:internal/timers:605:17
+ ❯ processTimers node:internal/timers:541:7
+
+
+⎯⎯⎯⎯⎯⎯ Unhandled Error ⎯⎯⎯⎯⎯⎯⎯
+Error: [vitest-pool]: Failed to start forks worker for test files C:/Development/aucdt-utilities/fraud-detection-engine/src/pages/admin/Diagnostics.test.tsx.
+ ❯ node_modules/.pnpm/vitest@4.1.5_@types+node@25_5ada7e87c925c0a6e9e231f40b345bf2/node_modules/vitest/dist/chunks/cli-api.Cjt90eJu.js:3448:94
+ ❯ runNextTicks node:internal/process/task_queues:65:5
+ ❯ listOnTimeout node:internal/timers:567:9
+ ❯ processTimers node:internal/timers:541:7
+ ❯ Pool.schedule node_modules/.pnpm/vitest@4.1.5_@types+node@25_5ada7e87c925c0a6e9e231f40b345bf2/node_modules/vitest/dist/chunks/cli-api.Cjt90eJu.js:3448:5
+
+Caused by: Error: [vitest-pool-runner]: Timeout waiting for worker to respond
+ ❯ Timeout.<anonymous> node_modules/.pnpm/vitest@4.1.5_@types+node@25_5ada7e87c925c0a6e9e231f40b345bf2/node_modules/vitest/dist/chunks/cli-api.Cjt90eJu.js:3028:58
+ ❯ listOnTimeout node:internal/timers:605:17
+ ❯ processTimers node:internal/timers:541:7
+
+
+⎯⎯⎯⎯⎯⎯ Unhandled Error ⎯⎯⎯⎯⎯⎯⎯
+Error: [vitest-pool]: Failed to start forks worker for test files C:/Development/aucdt-utilities/fraud-detection-engine/src/pages/admin/Performance.test.tsx.
+ ❯ node_modules/.pnpm/vitest@4.1.5_@types+node@25_5ada7e87c925c0a6e9e231f40b345bf2/node_modules/vitest/dist/chunks/cli-api.Cjt90eJu.js:3448:94
+ ❯ runNextTicks node:internal/process/task_queues:65:5
+ ❯ listOnTimeout node:internal/timers:567:9
+ ❯ processTimers node:internal/timers:541:7
+ ❯ Pool.schedule node_modules/.pnpm/vitest@4.1.5_@types+node@25_5ada7e87c925c0a6e9e231f40b345bf2/node_modules/vitest/dist/chunks/cli-api.Cjt90eJu.js:3448:5
+
+Caused by: Error: [vitest-pool-runner]: Timeout waiting for worker to respond
+ ❯ Timeout.<anonymous> node_modules/.pnpm/vitest@4.1.5_@types+node@25_5ada7e87c925c0a6e9e231f40b345bf2/node_modules/vitest/dist/chunks/cli-api.Cjt90eJu.js:3028:58
+ ❯ listOnTimeout node:internal/timers:605:17
+ ❯ processTimers node:internal/timers:541:7
+
+
+⎯⎯⎯⎯⎯⎯ Unhandled Error ⎯⎯⎯⎯⎯⎯⎯
+Error: [vitest-pool]: Failed to start forks worker for test files C:/Development/aucdt-utilities/fraud-detection-engine/src/pages/admin/DbMonitor.test.tsx.
+ ❯ node_modules/.pnpm/vitest@4.1.5_@types+node@25_5ada7e87c925c0a6e9e231f40b345bf2/node_modules/vitest/dist/chunks/cli-api.Cjt90eJu.js:3448:94
+ ❯ runNextTicks node:internal/process/task_queues:65:5
+ ❯ listOnTimeout node:internal/timers:567:9
+ ❯ processTimers node:internal/timers:541:7
+ ❯ Pool.schedule node_modules/.pnpm/vitest@4.1.5_@types+node@25_5ada7e87c925c0a6e9e231f40b345bf2/node_modules/vitest/dist/chunks/cli-api.Cjt90eJu.js:3448:5
+
+Caused by: Error: [vitest-pool-runner]: Timeout waiting for worker to respond
+ ❯ Timeout.<anonymous> node_modules/.pnpm/vitest@4.1.5_@types+node@25_5ada7e87c925c0a6e9e231f40b345bf2/node_modules/vitest/dist/chunks/cli-api.Cjt90eJu.js:3028:58
+ ❯ listOnTimeout node:internal/timers:605:17
+ ❯ processTimers node:internal/timers:541:7
+
+
+⎯⎯⎯⎯⎯⎯ Unhandled Error ⎯⎯⎯⎯⎯⎯⎯
+Error: [vitest-pool]: Failed to start forks worker for test files C:/Development/aucdt-utilities/fraud-detection-engine/src/pages/Health.test.tsx.
+ ❯ node_modules/.pnpm/vitest@4.1.5_@types+node@25_5ada7e87c925c0a6e9e231f40b345bf2/node_modules/vitest/dist/chunks/cli-api.Cjt90eJu.js:3448:94
+ ❯ runNextTicks node:internal/process/task_queues:65:5
+ ❯ listOnTimeout node:internal/timers:567:9
+ ❯ processTimers node:internal/timers:541:7
+ ❯ Pool.schedule node_modules/.pnpm/vitest@4.1.5_@types+node@25_5ada7e87c925c0a6e9e231f40b345bf2/node_modules/vitest/dist/chunks/cli-api.Cjt90eJu.js:3448:5
+
+Caused by: Error: [vitest-pool-runner]: Timeout waiting for worker to respond
+ ❯ Timeout.<anonymous> node_modules/.pnpm/vitest@4.1.5_@types+node@25_5ada7e87c925c0a6e9e231f40b345bf2/node_modules/vitest/dist/chunks/cli-api.Cjt90eJu.js:3028:58
+ ❯ listOnTimeout node:internal/timers:605:17
+ ❯ processTimers node:internal/timers:541:7
+
+
+⎯⎯⎯⎯⎯⎯ Unhandled Error ⎯⎯⎯⎯⎯⎯⎯
+Error: [vitest-pool]: Failed to start forks worker for test files C:/Development/aucdt-utilities/fraud-detection-engine/src/pages/Entities.test.tsx.
+ ❯ node_modules/.pnpm/vitest@4.1.5_@types+node@25_5ada7e87c925c0a6e9e231f40b345bf2/node_modules/vitest/dist/chunks/cli-api.Cjt90eJu.js:3448:94
+ ❯ runNextTicks node:internal/process/task_queues:65:5
+ ❯ listOnTimeout node:internal/timers:567:9
+ ❯ processTimers node:internal/timers:541:7
+
+  Snapshots  1 obsolete
+             ↳ src/__tests__/App.test.tsx
+               · App > matches snapshot 1
+
+ Test Files  9 passed (9)
+      Tests  152 passed (152)
+     Errors  7 errors
+   Start at  22:28:22
+   Duration  139.80s (transform 4.30s, setup 65.58s, import 136.64s, tests 8.92s, environment 132.65s)
+
+ % Coverage report from v8
+ ❯ Pool.schedule node_modules/.pnpm/vitest@4.1.5_@types+node@25_5ada7e87c925c0a6e9e231f40b345bf2/node_modules/vitest/dist/chunks/cli-api.Cjt90eJu.js:3448:5
+
+Caused by: Error: [vitest-pool-runner]: Timeout waiting for worker to respond
+ ❯ Timeout.<anonymous> node_modules/.pnpm/vitest@4.1.5_@types+node@25_5ada7e87c925c0a6e9e231f40b345bf2/node_modules/vitest/dist/chunks/cli-api.Cjt90eJu.js:3028:58
+ ❯ listOnTimeout node:internal/timers:605:17
+ ❯ processTimers node:internal/timers:541:7
+
+
+⎯⎯⎯⎯⎯⎯ Unhandled Error ⎯⎯⎯⎯⎯⎯⎯
+Error: [vitest-pool]: Failed to start forks worker for test files C:/Development/aucdt-utilities/fraud-detection-engine/src/pages/Alerts.test.tsx.
+ ❯ node_modules/.pnpm/vitest@4.1.5_@types+node@25_5ada7e87c925c0a6e9e231f40b345bf2/node_modules/vitest/dist/chunks/cli-api.Cjt90eJu.js:3448:94
+ ❯ Pool.schedule node_modules/.pnpm/vitest@4.1.5_@types+node@25_5ada7e87c925c0a6e9e231f40b345bf2/node_modules/vitest/dist/chunks/cli-api.Cjt90eJu.js:3448:5
+
+Caused by: Error: [vitest-pool-runner]: Timeout waiting for worker to respond
+ ❯ Timeout.<anonymous> node_modules/.pnpm/vitest@4.1.5_@types+node@25_5ada7e87c925c0a6e9e231f40b345bf2/node_modules/vitest/dist/chunks/cli-api.Cjt90eJu.js:3028:58
+ ❯ listOnTimeout node:internal/timers:605:17
+ ❯ processTimers node:internal/timers:541:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+
+-------------------|---------|----------|---------|---------|-------------------
+File               | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
+-------------------|---------|----------|---------|---------|-------------------
+All files          |   34.64 |    15.19 |   30.76 |   36.04 |                   
+ src               |   94.82 |    63.63 |     100 |   96.15 |                   
+  Layout.tsx       |     100 |       50 |     100 |     100 | 23-58             
+  main.tsx         |       0 |      100 |     100 |       0 | 6-12              
+  themeStore.ts    |   96.15 |    88.88 |     100 |     100 | 18                
+ src/components    |    65.9 |    71.42 |   64.28 |   71.79 |                   
+  ...bleLayout.tsx |       0 |        0 |       0 |       0 | 15                
+  Dashboard.tsx    |       0 |      100 |       0 |       0 | 9                 
+  SkipLink.tsx     |       0 |        0 |       0 |       0 | 8                 
+  StatusBar.tsx    |       0 |        0 |       0 |       0 | 9-19              
+ src/pages         |   26.85 |    17.36 |   19.51 |   30.76 |                   
+  Alerts.tsx       |    3.03 |        0 |       0 |    3.44 | 26-162            
+  Dashboard.tsx    |   73.68 |    49.09 |   44.44 |   86.66 | 22,107            
+  Entities.tsx     |       0 |        0 |       0 |       0 | 8-34              
+  Health.tsx       |       0 |        0 |       0 |       0 | 9-95              
+  Login.tsx        |     100 |      100 |      80 |     100 |                   
+ src/pages/admin   |    1.29 |        0 |       0 |    1.36 |                   
+  DbMonitor.tsx    |       0 |        0 |       0 |       0 | 16-128            
+  Diagnostics.tsx  |       0 |        0 |       0 |       0 | 21-131            
+  Logs.tsx         |   10.52 |        0 |       0 |   11.11 | 25-86             
+  Performance.tsx  |       0 |        0 |       0 |       0 | 16-134            
+  ...elConsole.tsx |       0 |        0 |       0 |       0 | 8-99              
+  Testing.tsx      |       0 |        0 |       0 |       0 | 15-118            
+-------------------|---------|----------|---------|---------|-------------------
+
+=============================== Coverage summary ===============================
+Statements   : 34.64% ( 132/381 )
+Branches     : 15.19% ( 134/882 )
+Functions    : 30.76% ( 36/117 )
+Lines        : 36.04% ( 124/344 )
+================================================================================
+ERROR: Coverage for lines (36.04%) does not meet global threshold (70%)
+ERROR: Coverage for functions (30.76%) does not meet global threshold (70%)
+ERROR: Coverage for statements (34.64%) does not meet global threshold (70%)
+ERROR: Coverage for branches (15.19%) does not meet global threshold (70%)
+ ELIFECYCLE  Command failed with exit code 1.

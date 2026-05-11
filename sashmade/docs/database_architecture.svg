@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600">
+  <!-- Background -->
+  <rect width="800" height="600" fill="#f8f9fa" />
+  
+  <!-- Title -->
+  <text x="400" y="40" font-family="Arial" font-size="24" text-anchor="middle" font-weight="bold">SashMade Database Schema (Conceptual)</text>
+  
+  <!-- Users Table -->
+  <rect x="50" y="80" width="200" height="180" fill="#fff" stroke="#333" stroke-width="2" />
+  <rect x="50" y="80" width="200" height="30" fill="#e0e0e0" stroke="#333" stroke-width="1" />
+  <text x="150" y="100" font-family="Arial" font-size="14" text-anchor="middle" font-weight="bold">Users</text>
+  <text x="60" y="130" font-family="Monospace" font-size="12">PK id: UUID</text>
+  <text x="60" y="150" font-family="Monospace" font-size="12">   username: String</text>
+  <text x="60" y="170" font-family="Monospace" font-size="12">   email: String</text>
+  <text x="60" y="190" font-family="Monospace" font-size="12">   password_hash: String</text>
+  <text x="60" y="210" font-family="Monospace" font-size="12">   role: Enum(admin, user)</text>
+  <text x="60" y="230" font-family="Monospace" font-size="12">   created_at: Timestamp</text>
+
+  <!-- Products Table -->
+  <rect x="300" y="80" width="200" height="200" fill="#fff" stroke="#333" stroke-width="2" />
+  <rect x="300" y="80" width="200" height="30" fill="#e0e0e0" stroke="#333" stroke-width="1" />
+  <text x="400" y="100" font-family="Arial" font-size="14" text-anchor="middle" font-weight="bold">Products</text>
+  <text x="310" y="130" font-family="Monospace" font-size="12">PK id: UUID</text>
+  <text x="310" y="150" font-family="Monospace" font-size="12">   name: String</text>
+  <text x="310" y="170" font-family="Monospace" font-size="12">   price: Decimal</text>
+  <text x="310" y="190" font-family="Monospace" font-size="12">   category: Enum</text>
+  <text x="310" y="210" font-family="Monospace" font-size="12">   origin: String</text>
+  <text x="310" y="230" font-family="Monospace" font-size="12">   pattern_type: String</text>
+  <text x="310" y="250" font-family="Monospace" font-size="12">   stock_level: Integer</text>
+
+  <!-- Audit Logs Table -->
+  <rect x="550" y="80" width="200" height="160" fill="#fff" stroke="#333" stroke-width="2" />
+  <rect x="550" y="80" width="200" height="30" fill="#e0e0e0" stroke="#333" stroke-width="1" />
+  <text x="650" y="100" font-family="Arial" font-size="14" text-anchor="middle" font-weight="bold">AuditLogs</text>
+  <text x="560" y="130" font-family="Monospace" font-size="12">PK id: UUID</text>
+  <text x="560" y="150" font-family="Monospace" font-size="12">FK user_id: UUID</text>
+  <text x="560" y="170" font-family="Monospace" font-size="12">   action: String</text>
+  <text x="560" y="190" font-family="Monospace" font-size="12">   details: JSON</text>
+  <text x="560" y="210" font-family="Monospace" font-size="12">   timestamp: Timestamp</text>
+
+  <!-- Relationships -->
+  <line x1="250" y1="130" x2="550" y2="150" stroke="#666" stroke-width="2" stroke-dasharray="5,5" />
+  <text x="380" y="140" font-family="Arial" font-size="10" fill="#666">1:N</text>
+
+</svg>

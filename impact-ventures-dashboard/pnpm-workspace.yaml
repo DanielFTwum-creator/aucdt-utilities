@@ -1,0 +1,7 @@
+packages:
+  - '.'
+allowBuilds:
+  '@playwright/browser-chromium': true
+  '@playwright/browser-firefox': true
+  '@playwright/browser-webkit': true
+  protobufjs: true
