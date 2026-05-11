@@ -17,6 +17,95 @@ interface Note {
   timestamp: number;
 }
 
+class RecordingStore {
+  private db: IDBDatabase | null = null;
+  private readonly DB_NAME = 'tuc-dictation-db';
+  private readonly STORE_NAME = 'recordings';
+  private readonly HISTORY_STORE = 'history';
+  private readonly MAX_AGE_MS = 24 * 60 * 60 * 1000;
+
+  async open(): Promise<void> {
+    return new Promise((resolve, reject) => {
+      const req = indexedDB.open(this.DB_NAME, 2);
+      req.onupgradeneeded = (event) => {
+        const db = (event.target as IDBOpenDBRequest).result;
+        if (!db.objectStoreNames.contains(this.STORE_NAME)) {
+          db.createObjectStore(this.STORE_NAME, { keyPath: 'id' });
+        }
+        if (!db.objectStoreNames.contains(this.HISTORY_STORE)) {
+          db.createObjectStore(this.HISTORY_STORE, { keyPath: 'id', autoIncrement: true });
+        }
+      };
+      req.onsuccess = () => { this.db = req.result; resolve(); };
+      req.onerror = () => reject(req.error);
+    });
+  }
+
+  async save(chunks: Blob[], mimeType: string, startedAt: number): Promise<void> {
+    if (!this.db) return;
+    return new Promise((resolve, reject) => {
+      const tx = this.db!.transaction(this.STORE_NAME, 'readwrite');
+      tx.objectStore(this.STORE_NAME).put({
+        id: 'current', chunks, mimeType, startedAt, chunkCount: chunks.length
+      });
+      tx.oncomplete = () => resolve();
+      tx.onerror = () => reject(tx.error);
+    });
+  }
+
+  async load(): Promise<{ chunks: Blob[]; mimeType: string; startedAt: number } | null> {
+    if (!this.db) return null;
+    return new Promise((resolve, reject) => {
+      const tx = this.db!.transaction(this.STORE_NAME, 'readonly');
+      const req = tx.objectStore(this.STORE_NAME).get('current');
+      req.onsuccess = () => {
+        const rec = req.result;
+        if (!rec) return resolve(null);
+        if (Date.now() - rec.startedAt > this.MAX_AGE_MS) {
+          this.clear();
+          return resolve(null);
+        }
+        resolve(rec);
+      };
+      req.onerror = () => reject(req.error);
+    });
+  }
+
+  async clear(): Promise<void> {
+    if (!this.db) return;
+    return new Promise((resolve) => {
+      const tx = this.db!.transaction(this.STORE_NAME, 'readwrite');
+      tx.objectStore(this.STORE_NAME).delete('current');
+      tx.oncomplete = () => resolve();
+      tx.onerror = () => resolve();
+    });
+  }
+
+  async saveNote(note: Note): Promise<void> {
+    if (!this.db) return;
+    return new Promise((resolve, reject) => {
+      const tx = this.db!.transaction(this.HISTORY_STORE, 'readwrite');
+      tx.objectStore(this.HISTORY_STORE).add(note);
+      tx.oncomplete = () => resolve();
+      tx.onerror = () => reject(tx.error);
+    });
+  }
+
+  async loadHistory(): Promise<Note[]> {
+    if (!this.db) return [];
+    return new Promise((resolve) => {
+      const tx = this.db!.transaction(this.HISTORY_STORE, 'readonly');
+      const req = tx.objectStore(this.HISTORY_STORE).getAll();
+      req.onsuccess = () => {
+        const notes = req.result as Note[];
+        notes.sort((a, b) => b.timestamp - a.timestamp);
+        resolve(notes);
+      };
+      req.onerror = () => resolve([]);
+    });
+  }
+}
+
 class VoiceNotesApp {
   private genAI: any;
   private mediaRecorder: MediaRecorder | null = null;
@@ -47,6 +136,11 @@ class VoiceNotesApp {
   private waveformDrawingId: number | null = null;
   private timerIntervalId: number | null = null;
   private recordingStartTime: number = 0;
+
+  private store: RecordingStore = new RecordingStore();
+  private persistIntervalId: number | null = null;
+  private notes: Note[] = [];
+  private readonly STORAGE_KEY = 'tuc-dictation-notes';
 
   constructor() {
     this.genAI = new GoogleGenAI({
@@ -110,13 +204,62 @@ class VoiceNotesApp {
     this.createNewNote();
 
     this.recordingStatus.textContent = 'Ready to record';
+
+    this.store.open().then(() => this.checkForRecovery()).catch(e => console.warn('Failed to open IndexedDB:', e));
   }
 
   private bindEventListeners(): void {
     this.recordButton.addEventListener('click', () => this.toggleRecording());
     this.newButton.addEventListener('click', () => this.createNewNote());
     this.themeToggleButton.addEventListener('click', () => this.toggleTheme());
+
+    const exportTxtBtn = document.getElementById('exportTxtButton');
+    const exportPdfBtn = document.getElementById('exportPdfButton');
+
+    exportTxtBtn?.addEventListener('click', () => this.exportToTxt());
+    exportPdfBtn?.addEventListener('click', () => this.exportToPdf());
+
     window.addEventListener('resize', this.handleResize.bind(this));
+  }
+
+  private async checkForRecovery(): Promise<void> {
+    try {
+      this.notes = await this.store.loadHistory();
+
+      const saved = await this.store.load();
+      if (!saved || saved.chunks.length === 0) return;
+
+      const minutes = Math.round((Date.now() - saved.startedAt) / 60000);
+      const banner = document.getElementById('recoveryBanner');
+      const msg = document.getElementById('recoveryMessage');
+      if (!banner || !msg) return;
+
+      msg.textContent = `A recording from ${minutes} minute${minutes !== 1 ? 's' : ''} ago was not processed.`;
+      banner.style.display = 'flex';
+
+      const recoverBtn = document.getElementById('recoverBtn');
+      const discardBtn = document.getElementById('discardBtn');
+
+      if (recoverBtn) {
+        recoverBtn.addEventListener('click', async () => {
+          banner.style.display = 'none';
+          const audioBlob = new Blob(saved.chunks, { type: saved.mimeType });
+          this.recordingStatus.textContent = 'Recovering previous recording...';
+          this.noteContentWrapper.classList.remove('state-empty');
+          await this.processAudio(audioBlob);
+          await this.store.clear();
+        });
+      }
+
+      if (discardBtn) {
+        discardBtn.addEventListener('click', async () => {
+          banner.style.display = 'none';
+          await this.store.clear();
+        });
+      }
+    } catch (err) {
+      console.warn('Recovery check failed:', err);
+    }
   }
 
   private handleResize(): void {
@@ -445,6 +588,14 @@ class VoiceNotesApp {
       this.recordButton.classList.add('recording');
       this.recordButton.setAttribute('title', 'Stop Recording');
 
+      this.recordingStartTime = Date.now();
+      await this.store.save([], this.mediaRecorder.mimeType, this.recordingStartTime);
+      this.persistIntervalId = window.setInterval(async () => {
+        if (this.isRecording && this.audioChunks.length > 0) {
+          await this.store.save([...this.audioChunks], this.mediaRecorder?.mimeType ?? 'audio/webm', this.recordingStartTime);
+        }
+      }, 30_000);
+
       this.startLiveDisplay();
     } catch (error) {
       console.error('Error starting recording:', error);
@@ -489,6 +640,11 @@ class VoiceNotesApp {
   }
 
   private async stopRecording(): Promise<void> {
+    if (this.persistIntervalId) {
+      clearInterval(this.persistIntervalId);
+      this.persistIntervalId = null;
+    }
+
     if (this.mediaRecorder && this.isRecording) {
       try {
         this.mediaRecorder.stop();
@@ -556,7 +712,7 @@ class VoiceNotesApp {
       this.recordingStatus.textContent = 'Getting transcription...';
 
       const contents = [
-        {text: 'Generate a complete, detailed transcript of this audio.'},
+        {text: 'Transcribe this audio file. Provide only the transcription text, nothing else.'},
         {inlineData: {mimeType: mimeType, data: base64Audio}},
       ];
 
@@ -708,6 +864,8 @@ class VoiceNotesApp {
         if (this.currentNote) this.currentNote.polishedNote = polishedText;
         this.recordingStatus.textContent =
           'Note polished. Ready for next recording.';
+        await this.saveNote();
+        await this.store.clear();
       } else {
         this.recordingStatus.textContent =
           'Polishing failed or returned empty.';
@@ -740,6 +898,8 @@ class VoiceNotesApp {
   }
 
   private createNewNote(): void {
+    this.store.clear().catch(e => console.warn('Failed to clear recording store:', e));
+
     this.currentNote = {
       id: `note_${Date.now()}`,
       rawTranscription: '',
@@ -775,10 +935,79 @@ class VoiceNotesApp {
       this.stopLiveDisplay();
     }
   }
+
+  private async saveNote(): Promise<void> {
+    if (!this.currentNote) return;
+
+    this.currentNote.rawTranscription = this.rawTranscription.textContent || '';
+    this.currentNote.polishedNote = this.polishedNote.innerHTML || '';
+    this.currentNote.timestamp = Date.now();
+
+    try {
+      await this.store.saveNote(this.currentNote);
+      this.notes.unshift(this.currentNote);
+    } catch (err) {
+      console.warn('Failed to save note to IndexedDB:', err);
+    }
+  }
+
+  private exportToTxt(): void {
+    if (!this.currentNote) return;
+
+    const content = `${this.editorTitle?.textContent || 'Untitled Note'}
+Created: ${new Date(this.currentNote.timestamp).toLocaleString()}
+
+POLISHED NOTE:
+${this.polishedNote.textContent || '(empty)'}
+
+RAW TRANSCRIPT:
+${this.rawTranscription.textContent || '(empty)'}`;
+
+    const blob = new Blob([content], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `note-${this.currentNote.id}.txt`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  private exportToPdf(): void {
+    if (!this.currentNote) return;
+
+    const content = `
+      <div style="font-family: Arial, sans-serif; padding: 20px;">
+        <h1>${(this.editorTitle?.textContent || 'Untitled Note').replace(/</g, '&lt;').replace(/>/g, '&gt;')}</h1>
+        <p style="color: #666;">Created: ${new Date(this.currentNote.timestamp).toLocaleString()}</p>
+        <hr style="margin: 20px 0;" />
+        <h2>Polished Note</h2>
+        <div>${this.polishedNote.innerHTML || '<em>(empty)</em>'}</div>
+        <hr style="margin: 20px 0;" />
+        <h2>Raw Transcript</h2>
+        <div style="white-space: pre-wrap; background: #f5f5f5; padding: 10px; border-radius: 4px;">
+          ${(this.rawTranscription.textContent || '(empty)').replace(/</g, '&lt;').replace(/>/g, '&gt;')}
+        </div>
+      </div>
+    `;
+
+    const element = document.createElement('div');
+    element.innerHTML = content;
+
+    const opt = {
+      margin: 10,
+      filename: `note-${this.currentNote.id}.pdf`,
+      image: { type: 'jpeg', quality: 0.98 },
+      html2canvas: { scale: 2 },
+      jsPDF: { orientation: 'portrait', unit: 'mm', format: 'a4' }
+    };
+
+    (window as any).html2pdf().set(opt).from(element).save();
+  }
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  new VoiceNotesApp();
+  const app = new VoiceNotesApp();
+  (window as any).__voiceNotesApp = app;
 
   document
     .querySelectorAll<HTMLElement>('[contenteditable][placeholder]')
@@ -820,5 +1049,48 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     });
 });
+
+// History and export functionality
+const app = (window as any).__voiceNotesApp;
+if (app) {
+  (window as any).__exportToTxt = (noteId: string) => {
+    const note = app.notes?.find((n: Note) => n.id === noteId);
+    if (!note) return;
+
+    const content = `${note.id}\n${new Date(note.timestamp).toLocaleString()}\n\n${note.polishedNote || note.rawTranscription}`;
+    const blob = new Blob([content], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `note-${noteId}.txt`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  (window as any).__exportToPdf = (noteId: string) => {
+    const note = app.notes?.find((n: Note) => n.id === noteId);
+    if (!note) return;
+
+    const html = `
+      <h1>${note.id}</h1>
+      <p>${new Date(note.timestamp).toLocaleString()}</p>
+      <div>${note.polishedNote || note.rawTranscription}</div>
+    `;
+    const element = document.createElement('div');
+    element.innerHTML = html;
+    const opt = {
+      margin: 10,
+      filename: `note-${noteId}.pdf`,
+      image: { type: 'jpeg', quality: 0.98 },
+      html2canvas: { scale: 2 },
+      jsPDF: { orientation: 'portrait', unit: 'mm', format: 'a4' }
+    };
+    (window as any).html2pdf().set(opt).from(element).save();
+  };
+
+  (window as any).__loadHistory = () => {
+    return app.notes || [];
+  };
+}
 
 export {};
