@@ -45,14 +45,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Dictation App | Techbridge University College</title>
 
-    <!-- TailwindCSS -->
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+      integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+      crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <!-- html2pdf for PDF export -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="https://techbridge.edu.gh/static/TUC_LOGO.png" />
+
+    <!-- App styles (imported via css-entry.ts) -->
+    <script type="module" src="./css-entry.ts"></script>
 
     <style>
       body {
@@ -66,29 +77,267 @@
       }
     </style>
 
-    <script type="module" src="./index.tsx"></script>
-  
     <style id="tuc-splash-styles">
-      body { background-color: #0F0C07 !important; margin: 0; padding: 0; display: flex; align-items: center; justify-content: center; min-height: 100vh; font-family: serif; overflow: hidden; }
-      .tuc-splash { text-align: center; border: 1px solid rgba(200,168,75,0.2); padding: 60px; background: #141210; position: relative; }
+      body { background-color: #0F0C07; margin: 0; padding: 0; }
+      .tuc-splash {
+        position: fixed;
+        inset: 0;
+        z-index: 9999;
+        background: #0F0C07;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        border: 1px solid rgba(200,168,75,0.2);
+        font-family: serif;
+        overflow: hidden;
+        animation: tuc-splash-fade 0.4s ease 1.2s forwards;
+      }
       .tuc-splash::before { content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 4px; background: #C8A84B; }
       .tuc-logo { color: #C8A84B; font-size: 3rem; font-weight: 900; letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 10px; display: block; }
       .tuc-status { color: #D4C4A0; font-family: sans-serif; text-transform: uppercase; letter-spacing: 0.4em; font-size: 0.7rem; opacity: 0.6; }
       .tuc-loading { margin-top: 30px; height: 1px; width: 100px; background: rgba(200,168,75,0.2); margin-left: auto; margin-right: auto; position: relative; overflow: hidden; }
       .tuc-loading::after { content: ""; position: absolute; left: -100%; width: 50%; height: 100%; background: #C8A84B; animation: tuc-load 2s infinite; }
       @keyframes tuc-load { to { left: 150%; } }
+      @keyframes tuc-splash-fade { to { opacity: 0; visibility: hidden; pointer-events: none; } }
+
+      /* Recovery banner */
+      #recoveryBanner {
+        position: fixed;
+        top: var(--header-height, 90px);
+        left: 0; right: 0;
+        z-index: 200;
+        background: #8B1538;
+        color: #fff;
+        padding: 0.75rem 1.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 1rem;
+        font-family: sans-serif;
+        font-size: 0.9rem;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+      }
+      #recoveryContent {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        max-width: 700px;
+        width: 100%;
+      }
+      #recoveryActions {
+        display: flex;
+        gap: 0.5rem;
+        margin-left: auto;
+        flex-shrink: 0;
+      }
+      #recoverBtn, #discardBtn {
+        padding: 0.35rem 0.9rem;
+        border: 1px solid rgba(255,255,255,0.5);
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 0.85rem;
+        background: transparent;
+        color: #fff;
+        transition: background 0.2s;
+        font-weight: 500;
+      }
+      #recoverBtn { background: rgba(255,255,255,0.15); }
+      #recoverBtn:hover { background: rgba(255,255,255,0.3); }
+      #discardBtn:hover { background: rgba(255,255,255,0.1); }
     </style>
 </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
-    
-    <div id="root">
-      <div class="tuc-splash">
-        <span class="tuc-logo">TECHBRIDGE</span>
-        <div class="tuc-status">dictation app</div>
-        <div class="tuc-loading"></div>
-      </div>
+
+    <!-- Splash screen: fades out after 1.2s via CSS animation -->
+    <div class="tuc-splash" aria-hidden="true">
+      <span class="tuc-logo">TECHBRIDGE</span>
+      <div class="tuc-status">dictation app</div>
+      <div class="tuc-loading"></div>
     </div>
+
+    <div id="root">
+      <div class="app-container">
+
+        <!-- Recovery banner (hidden by default) -->
+        <div id="recoveryBanner" style="display:none;" role="alert" aria-live="assertive">
+          <div id="recoveryContent">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+            <span id="recoveryMessage"></span>
+            <div id="recoveryActions">
+              <button id="recoverBtn">Recover &amp; Process</button>
+              <button id="discardBtn">Discard</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ═══ FIXED APP HEADER ═══ -->
+        <header class="app-header" role="banner">
+
+          <!-- Live recording overlay (hidden until recording starts) -->
+          <div id="liveRecordingTitle" class="live-recording-title" style="display:none;"></div>
+          <canvas id="liveWaveformCanvas" style="display:none;" aria-hidden="true"></canvas>
+          <div id="liveRecordingTimerDisplay" class="live-recording-timer" style="display:none;"></div>
+
+          <!-- Static status indicator (visible when not recording) -->
+          <div class="status-indicator">
+            <span id="recordingStatus" class="status-text">Ready to record</span>
+          </div>
+
+          <!-- Primary control bar (recording) -->
+          <div class="recording-controls">
+            <button id="themeToggleButton" class="action-button" title="Toggle theme" aria-label="Toggle light/dark theme">
+              <i class="fa-solid fa-sun"></i>
+            </button>
+
+            <button id="recordButton" class="record-button" title="Start Recording" aria-label="Start recording">
+              <span class="record-button-inner">
+                <i class="fa-solid fa-microphone"></i>
+              </span>
+              <!-- Animated wave rings (shown during recording) -->
+              <svg class="record-waves" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <circle class="wave wave1" cx="50" cy="50" r="40"/>
+                <circle class="wave wave2" cx="50" cy="50" r="40"/>
+                <circle class="wave wave3" cx="50" cy="50" r="40"/>
+              </svg>
+            </button>
+
+            <button id="newButton" class="action-button" title="New note" aria-label="Create new note">
+              <i class="fa-solid fa-plus"></i>
+            </button>
+          </div>
+
+          <!-- Secondary control bar (export) -->
+          <div class="export-controls">
+            <button id="exportTxtButton" class="action-button secondary" title="Export as TXT" aria-label="Export note as text file">
+              <i class="fa-solid fa-file-lines"></i>
+              <span>TXT</span>
+            </button>
+
+            <button id="exportPdfButton" class="action-button secondary" title="Export as PDF" aria-label="Export note as PDF">
+              <i class="fa-solid fa-file-pdf"></i>
+              <span>PDF</span>
+            </button>
+          </div>
+        </header>
+
+        <!-- ═══ MAIN SCROLLABLE CONTENT ═══ -->
+        <main class="main-content" role="main">
+          <div class="note-area">
+
+            <!-- Note title (contenteditable) -->
+            <div class="note-header">
+              <div
+                class="editor-title placeholder-active"
+                contenteditable="true"
+                placeholder="Untitled Note"
+                role="heading"
+                aria-level="1"
+                aria-label="Note title"
+              >Untitled Note</div>
+            </div>
+
+            <!-- Tab navigation -->
+            <div class="tab-navigation-container" role="tablist" aria-label="Note views">
+              <nav class="tab-navigation">
+                <button class="tab-button active" role="tab" aria-selected="true" data-tab="polished">Polished Note</button>
+                <button class="tab-button" role="tab" aria-selected="false" data-tab="raw">Raw Transcript</button>
+                <div class="active-tab-indicator" aria-hidden="true"></div>
+              </nav>
+            </div>
+
+            <!-- Note content area -->
+            <div class="note-content-wrapper state-empty">
+
+              <!-- Empty state hero (visible via state-empty class) -->
+              <div class="hero-instructions" aria-live="polite">
+                <h2>Start Your Recording</h2>
+                <p>Press the microphone button to dictate. Your note will appear here.</p>
+                <ul class="steps">
+                  <li><i class="fa-solid fa-microphone" aria-hidden="true"></i> Press the mic button to record</li>
+                  <li><i class="fa-solid fa-wand-magic-sparkles" aria-hidden="true"></i> Gemini transcribes and polishes it</li>
+                  <li><i class="fa-solid fa-file-lines" aria-hidden="true"></i> Edit your note directly</li>
+                </ul>
+              </div>
+
+              <!-- Polished note (active by default) -->
+              <div
+                id="polishedNote"
+                class="note-content active placeholder-active"
+                contenteditable="true"
+                placeholder="Your polished note will appear here after recording..."
+                role="tabpanel"
+                aria-label="Polished note"
+                spellcheck="true"
+              >Your polished note will appear here after recording...</div>
+
+              <!-- Raw transcription (hidden by default) -->
+              <div
+                id="rawTranscription"
+                class="note-content placeholder-active"
+                contenteditable="true"
+                placeholder="Raw transcription will appear here after recording..."
+                role="tabpanel"
+                aria-label="Raw transcription"
+                aria-hidden="true"
+                spellcheck="true"
+              >Raw transcription will appear here after recording...</div>
+
+            </div><!-- /.note-content-wrapper -->
+          </div><!-- /.note-area -->
+        </main>
+
+      </div><!-- /.app-container -->
+    </div><!-- /#root -->
+
+    <script type="module" src="./index.tsx"></script>
+
+    <!-- Tab switching logic -->
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        const tabs = document.querySelectorAll('.tab-button');
+        const indicator = document.querySelector('.active-tab-indicator');
+
+        tabs.forEach(tab => {
+          tab.addEventListener('click', () => {
+            tabs.forEach(t => {
+              t.classList.remove('active');
+              t.setAttribute('aria-selected', 'false');
+            });
+            tab.classList.add('active');
+            tab.setAttribute('aria-selected', 'true');
+
+            const target = tab.dataset.tab;
+            document.querySelectorAll('.note-content').forEach(c => c.classList.remove('active'));
+
+            const active = document.getElementById(target === 'polished' ? 'polishedNote' : 'rawTranscription');
+            if (active) {
+              active.classList.add('active');
+              active.setAttribute('aria-hidden', 'false');
+            }
+
+            const inactive = document.getElementById(target === 'polished' ? 'rawTranscription' : 'polishedNote');
+            if (inactive) {
+              inactive.setAttribute('aria-hidden', 'true');
+            }
+
+            if (indicator) {
+              indicator.style.left = tab.offsetLeft + 'px';
+              indicator.style.width = tab.offsetWidth + 'px';
+            }
+          });
+        });
+
+        // Set initial indicator position
+        const activeTab = document.querySelector('.tab-button.active');
+        if (activeTab && indicator) {
+          indicator.style.left = activeTab.offsetLeft + 'px';
+          indicator.style.width = activeTab.offsetWidth + 'px';
+        }
+      });
+    </script>
 
   </body>
 </html>
