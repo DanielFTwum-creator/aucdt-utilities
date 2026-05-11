@@ -1,0 +1,58 @@
+# Standardised Multi-Stage Dockerfile for TUC Applications
+# Usage: docker build --build-arg ENV=dev|prod -t app:latest .
+# Supports: React/Vite, Node.js backends, Express servers
+
+ARG NODE_VERSION=24
+ARG NODE_VARIANT=alpine
+ARG ENV=dev
+
+# Stage 1: Builder
+FROM node:${NODE_VERSION}-${NODE_VARIANT} AS builder
+WORKDIR /build
+
+# Install dependencies
+RUN npm install -g pnpm
+
+# Copy dependency files
+COPY pnpm-lock.yaml package.json ./
+RUN pnpm install --frozen-lockfile
+
+# Copy source
+COPY . .
+
+# Build (for React/Vite/NextJS, this generates /dist)
+RUN pnpm run build
+
+# Stage 2: Runtime (DEV)
+FROM node:${NODE_VERSION}-${NODE_VARIANT} AS runtime-dev
+WORKDIR /app
+
+# Install runtime dependencies only
+RUN npm install -g pnpm
+COPY --from=builder /build/node_modules ./node_modules
+COPY --from=builder /build/package.json ./package.json
+COPY --from=builder /build/dist ./dist
+
+# Development settings
+ENV NODE_ENV=development
+EXPOSE 3000
+CMD ["pnpm", "dev"]
+
+# Stage 3: Runtime (PROD) — Nginx reverse proxy
+FROM nginx:1.27-alpine AS runtime-prod
+WORKDIR /usr/share/nginx/html
+
+# Copy built assets from builder
+COPY --from=builder /build/dist .
+
+# Copy nginx config
+COPY docker/nginx/nginx.conf /etc/nginx/conf.d/default.conf
+
+# Production settings
+EXPOSE 80
+HEALTHCHECK --interval=30s --timeout=10s --retries=3 \
+  CMD wget --quiet --tries=1 --spider http://localhost/health || exit 1
+CMD ["nginx", "-g", "daemon off;"]
+
+# Stage 4: Final stage (select based on ENV)
+FROM runtime-${ENV}

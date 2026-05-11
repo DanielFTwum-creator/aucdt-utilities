@@ -1,5 +1,5 @@
 # ── Stage 1: Build frontend ───────────────────────────────────────────────────
-FROM node:24-alpine AS frontend
+FROM node:24-alpine AS builder
 WORKDIR /app
 COPY package*.json pnpm-lock.yaml* ./
 RUN npm install -g pnpm && CI=true pnpm install --no-frozen-lockfile
@@ -7,7 +7,7 @@ COPY . .
 RUN pnpm run build
 
 # ── Stage 2: Build backend ────────────────────────────────────────────────────
-FROM node:24-alpine AS backend-build
+FROM node:24-alpine AS builder
 WORKDIR /backend
 COPY backend/package*.json ./
 RUN npm install
