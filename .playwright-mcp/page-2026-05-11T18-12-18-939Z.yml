@@ -1,0 +1,34 @@
+- generic [ref=e7]:
+  - text: 
+  - banner [ref=e15]:
+    - generic [ref=e16]: Ready to record
+    - generic [ref=e17]:
+      - button "Toggle light/dark theme" [ref=e18] [cursor=pointer]:
+        - generic [ref=e19]: 
+      - button "Start recording" [ref=e20] [cursor=pointer]:
+        - generic [ref=e22]: 
+        - img
+      - button "Create new note" [ref=e23] [cursor=pointer]:
+        - generic [ref=e24]: +
+  - main [ref=e25]:
+    - generic [ref=e26]:
+      - heading "Note title" [level=1] [ref=e28]: Untitled Note
+      - tablist "Note views" [ref=e29]:
+        - navigation [ref=e30]:
+          - tab "Polished Note" [selected] [ref=e31] [cursor=pointer]
+          - tab "Raw Transcript" [ref=e32] [cursor=pointer]
+      - generic [ref=e34]:
+        - generic:
+          - heading "Start Your Recording" [level=2]
+          - paragraph: Press the microphone button to dictate. Your note will appear here.
+          - list:
+            - listitem:
+              - generic: 
+              - text: Press the mic button to record
+            - listitem:
+              - generic: 
+              - text: Gemini transcribes and polishes it
+            - listitem:
+              - generic: 
+              - text: Edit your note directly
+        - tabpanel "Polished note" [ref=e35]: Your polished note will appear here after recording...
