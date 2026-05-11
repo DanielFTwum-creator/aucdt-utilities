@@ -1,0 +1,69 @@
+# Shared Docker Ignore Template — Copy to project root as .dockerignore
+# This template eliminates the need to maintain 315 separate .dockerignore files
+
+# === Node/npm ===
+node_modules
+npm-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+package-lock.json  # we use pnpm exclusively
+
+# === Build outputs ===
+dist
+build
+.next
+.nuxt
+coverage
+out
+
+# === Environment files ===
+.env
+.env.local
+.env.*.local
+.env.production.local
+.env.development.local
+.env.test.local
+
+# === IDE / Editor ===
+.vscode
+.idea
+.DS_Store
+*.swp
+*.swo
+*.swn
+.sublime-project
+.sublime-workspace
+*.iml
+
+# === Testing ===
+.mocha
+test-results
+cypress/screenshots
+cypress/videos
+playwright-report
+
+# === Git & CI/CD ===
+.git
+.gitignore
+.gitlab-ci.yml
+.github
+.gitattributes
+.pre-commit-config.yaml
+
+# === Source Control & Docs ===
+README.md
+LICENSE
+CHANGELOG.md
+docs
+.CHANGELOG.md
+
+# === Misc ===
+.cache
+temp
+tmp
+*.log
+*.tmp
+.DS_Store
+Thumbs.db
+.turbo
+.cache

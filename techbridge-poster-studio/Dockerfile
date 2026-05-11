@@ -1,6 +1,6 @@
 # Multi-stage Docker build for TechBridge Poster Studio
 # Stage 1: Build React app
-FROM node:20-alpine AS builder
+FROM node:24-alpine AS builder
 
 WORKDIR /app
 
@@ -13,7 +13,7 @@ COPY . .
 RUN npm run build
 
 # Stage 2: Runtime
-FROM node:20-slim
+FROM node:24-alpine
 
 WORKDIR /app
 
