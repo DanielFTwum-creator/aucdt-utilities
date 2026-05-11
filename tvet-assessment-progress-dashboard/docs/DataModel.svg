@@ -1,0 +1,70 @@
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600">
+  <defs>
+    <style>
+      .table { fill: #ffffff; stroke: #0f172a; stroke-width: 2; }
+      .header { fill: #e2e8f0; stroke: #0f172a; stroke-width: 1; }
+      .text-head { font-family: monospace; font-weight: bold; font-size: 14px; text-anchor: middle; }
+      .text-row { font-family: monospace; font-size: 12px; }
+      .line { stroke: #0f172a; stroke-width: 1; }
+      .rel { stroke: #64748b; stroke-width: 2; stroke-dasharray: 4; }
+    </style>
+  </defs>
+
+  <text x="400" y="30" font-family="sans-serif" font-size="20" font-weight="bold" text-anchor="middle">Client-Side Data Architecture</text>
+
+  <!-- DashboardData -->
+  <g transform="translate(50, 80)">
+    <rect width="220" height="180" class="table" />
+    <rect width="220" height="30" class="header" />
+    <text x="110" y="20" class="text-head">DashboardData</text>
+    <text x="10" y="50" class="text-row">+ totalAssessments: number</text>
+    <text x="10" y="70" class="text-row">+ completed: number</text>
+    <text x="10" y="90" class="text-row">+ startDate: string (ISO)</text>
+    <text x="10" y="110" class="text-row">+ targetRate: number</text>
+    <text x="10" y="130" class="text-row">+ logoUrl: string</text>
+    <text x="10" y="150" class="text-row">+ title: string</text>
+    <text x="10" y="170" class="text-row">+ itemLabel: string</text>
+  </g>
+
+  <!-- CalculatedStats -->
+  <g transform="translate(350, 80)">
+    <rect width="250" height="220" class="table" />
+    <rect width="250" height="30" class="header" />
+    <text x="125" y="20" class="text-head">CalculatedStats (Derived)</text>
+    <text x="10" y="50" class="text-row">+ daysElapsed: number</text>
+    <text x="10" y="70" class="text-row">+ progressPercent: number</text>
+    <text x="10" y="90" class="text-row">+ actualRate: number</text>
+    <text x="10" y="110" class="text-row">+ projectedFinishDay: number</text>
+    <text x="10" y="130" class="text-row">+ shortfall: number</text>
+    <text x="10" y="150" class="text-row">+ burnupTrend: TrendPoint[]</text>
+    <text x="10" y="170" class="text-row">+ gapTrend: GapPoint[]</text>
+  </g>
+
+  <!-- AuditLog -->
+  <g transform="translate(50, 320)">
+    <rect width="220" height="120" class="table" />
+    <rect width="220" height="30" class="header" />
+    <text x="110" y="20" class="text-head">AuditLogEntry</text>
+    <text x="10" y="50" class="text-row">+ id: string (UUID)</text>
+    <text x="10" y="70" class="text-row">+ timestamp: string</text>
+    <text x="10" y="90" class="text-row">+ action: string</text>
+    <text x="10" y="110" class="text-row">+ details: string</text>
+  </g>
+
+  <!-- TestResult -->
+  <g transform="translate(350, 320)">
+    <rect width="250" height="120" class="table" />
+    <rect width="250" height="30" class="header" />
+    <text x="125" y="20" class="text-head">TestResult</text>
+    <text x="10" y="50" class="text-row">+ id: string (UUID)</text>
+    <text x="10" y="70" class="text-row">+ name: string</text>
+    <text x="10" y="90" class="text-row">+ status: 'pass' | 'fail'</text>
+    <text x="10" y="110" class="text-row">+ duration: number (ms)</text>
+  </g>
+
+  <!-- Relationships -->
+  <line x1="270" y1="170" x2="350" y2="170" class="rel" />
+  <text x="310" y="160" font-family="sans-serif" font-size="10" text-anchor="middle">Derives</text>
+
+</svg>

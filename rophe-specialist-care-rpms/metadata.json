@@ -1,0 +1,8 @@
+{
+  "name": "Rophe Specialist Care RPMS",
+  "description": "A comprehensive patient management system for Rophe Specialist Care, featuring electronic health records, appointment scheduling, and AI-assisted clinical documentation.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ]
+}

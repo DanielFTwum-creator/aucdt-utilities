@@ -1,0 +1,45 @@
+<svg viewBox="0 0 800 500" xmlns="http://www.w3.org/2000/svg">
+  <rect width="800" height="500" fill="#111" rx="10"/>
+  <text x="400" y="40" font-family="monospace" font-size="20" fill="#E8BC50" text-anchor="middle" font-weight="bold">USE CASE DIAGRAM</text>
+  
+  <!-- Actor -->
+  <g transform="translate(100, 200)">
+    <circle cx="0" cy="0" r="20" stroke="#eee" fill="none" stroke-width="2"/>
+    <line x1="0" y1="20" x2="0" y2="60" stroke="#eee" stroke-width="2"/>
+    <line x1="-20" y1="35" x2="20" y2="35" stroke="#eee" stroke-width="2"/>
+    <line x1="0" y1="60" x2="-15" y2="90" stroke="#eee" stroke-width="2"/>
+    <line x1="0" y1="60" x2="15" y2="90" stroke="#eee" stroke-width="2"/>
+    <text x="0" y="115" font-family="monospace" font-size="14" fill="#eee" text-anchor="middle">User / VJ</text>
+  </g>
+  
+  <!-- System Boundary -->
+  <rect x="250" y="80" width="450" height="380" fill="#1a1a1a" stroke="#E8BC50" stroke-width="2" rx="10"/>
+  <text x="475" y="105" font-family="monospace" font-size="14" fill="#E8BC50" text-anchor="middle">DADA VISUALS SYSTEM</text>
+  
+  <!-- Use Cases -->
+  <g transform="translate(350, 150)">
+    <ellipse cx="120" cy="0" rx="100" ry="30" fill="#222" stroke="#888" stroke-width="2"/>
+    <text x="120" y="5" font-family="monospace" font-size="12" fill="#eee" text-anchor="middle">Start Visualizer</text>
+  </g>
+  
+  <g transform="translate(350, 220)">
+    <ellipse cx="120" cy="0" rx="100" ry="30" fill="#222" stroke="#888" stroke-width="2"/>
+    <text x="120" y="5" font-family="monospace" font-size="12" fill="#eee" text-anchor="middle">Configure Settings</text>
+  </g>
+  
+  <g transform="translate(350, 290)">
+    <ellipse cx="120" cy="0" rx="100" ry="30" fill="#222" stroke="#888" stroke-width="2"/>
+    <text x="120" y="5" font-family="monospace" font-size="12" fill="#eee" text-anchor="middle">Toggle Audio Input</text>
+  </g>
+  
+  <g transform="translate(350, 360)">
+    <ellipse cx="120" cy="0" rx="100" ry="30" fill="#222" stroke="#888" stroke-width="2"/>
+    <text x="120" y="5" font-family="monospace" font-size="12" fill="#eee" text-anchor="middle">Select Geometry</text>
+  </g>
+  
+  <!-- Connectors -->
+  <line x1="130" y1="230" x2="350" y2="150" stroke="#555" stroke-width="1"/>
+  <line x1="130" y1="230" x2="350" y2="220" stroke="#555" stroke-width="1"/>
+  <line x1="130" y1="230" x2="350" y2="290" stroke="#555" stroke-width="1"/>
+  <line x1="130" y1="230" x2="350" y2="360" stroke="#555" stroke-width="1"/>
+</svg>

@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600">
+  <!-- Background -->
+  <rect width="800" height="600" fill="#1a1a1a" />
+  
+  <!-- Title -->
+  <text x="400" y="40" fill="#D4AF37" font-family="Arial, sans-serif" font-size="24" font-weight="bold" text-anchor="middle">Patois Lyricist - System Architecture</text>
+  
+  <!-- Client Layer -->
+  <rect x="50" y="80" width="700" height="150" fill="#2d2d2d" stroke="#D4AF37" stroke-width="2" rx="10" />
+  <text x="400" y="110" fill="#ffffff" font-family="Arial, sans-serif" font-size="18" font-weight="bold" text-anchor="middle">Client Layer (Browser)</text>
+  
+  <!-- React App -->
+  <rect x="100" y="130" width="180" height="80" fill="#61dafb" stroke="#ffffff" stroke-width="1" rx="5" />
+  <text x="190" y="160" fill="#000000" font-family="Arial, sans-serif" font-size="14" font-weight="bold" text-anchor="middle">React 19.2.4 SPA</text>
+  <text x="190" y="180" fill="#000000" font-family="Arial, sans-serif" font-size="12" text-anchor="middle">Vite + TypeScript</text>
+  
+  <!-- Components -->
+  <rect x="310" y="130" width="180" height="80" fill="#4ade80" stroke="#ffffff" stroke-width="1" rx="5" />
+  <text x="400" y="160" fill="#000000" font-family="Arial, sans-serif" font-size="14" font-weight="bold" text-anchor="middle">Core Components</text>
+  <text x="400" y="180" fill="#000000" font-family="Arial, sans-serif" font-size="10" text-anchor="middle">LyricsOutput, History,</text>
+  <text x="400" y="195" fill="#000000" font-family="Arial, sans-serif" font-size="10" text-anchor="middle">AdminPanel, Dictionary</text>
+  
+  <!-- Local Storage -->
+  <rect x="520" y="130" width="180" height="80" fill="#f59e0b" stroke="#ffffff" stroke-width="1" rx="5" />
+  <text x="610" y="160" fill="#000000" font-family="Arial, sans-serif" font-size="14" font-weight="bold" text-anchor="middle">Secure Storage</text>
+  <text x="610" y="180" fill="#000000" font-family="Arial, sans-serif" font-size="12" text-anchor="middle">Base64 Obfuscation</text>
+  
+  <!-- Service Layer -->
+  <rect x="50" y="260" width="700" height="120" fill="#2d2d2d" stroke="#4ade80" stroke-width="2" rx="10" />
+  <text x="400" y="290" fill="#ffffff" font-family="Arial, sans-serif" font-size="18" font-weight="bold" text-anchor="middle">Service Layer</text>
+  
+  <!-- Services -->
+  <rect x="100" y="310" width="140" height="50" fill="#3b82f6" stroke="#ffffff" stroke-width="1" rx="5" />
+  <text x="170" y="340" fill="#ffffff" font-family="Arial, sans-serif" font-size="12" font-weight="bold" text-anchor="middle">Gemini Service</text>
+  
+  <rect x="260" y="310" width="140" height="50" fill="#3b82f6" stroke="#ffffff" stroke-width="1" rx="5" />
+  <text x="330" y="340" fill="#ffffff" font-family="Arial, sans-serif" font-size="12" font-weight="bold" text-anchor="middle">Audit Log Service</text>
+  
+  <rect x="420" y="310" width="140" height="50" fill="#3b82f6" stroke="#ffffff" stroke-width="1" rx="5" />
+  <text x="490" y="340" fill="#ffffff" font-family="Arial, sans-serif" font-size="12" font-weight="bold" text-anchor="middle">Dictionary Service</text>
+  
+  <rect x="580" y="310" width="140" height="50" fill="#3b82f6" stroke="#ffffff" stroke-width="1" rx="5" />
+  <text x="650" y="340" fill="#ffffff" font-family="Arial, sans-serif" font-size="12" font-weight="bold" text-anchor="middle">Storage Service</text>
+  
+  <!-- External API -->
+  <rect x="50" y="410" width="700" height="100" fill="#2d2d2d" stroke="#ef4444" stroke-width="2" rx="10" />
+  <text x="400" y="440" fill="#ffffff" font-family="Arial, sans-serif" font-size="18" font-weight="bold" text-anchor="middle">External Integration</text>
+  
+  <rect x="300" y="460" width="200" height="40" fill="#ffffff" stroke="#000000" stroke-width="1" rx="5" />
+  <text x="400" y="485" fill="#000000" font-family="Arial, sans-serif" font-size="14" font-weight="bold" text-anchor="middle">Google Gemini API</text>
+  
+  <!-- Arrows -->
+  <line x1="400" y1="230" x2="400" y2="260" stroke="#ffffff" stroke-width="2" marker-end="url(#arrow)" />
+  <line x1="400" y1="380" x2="400" y2="410" stroke="#ffffff" stroke-width="2" marker-end="url(#arrow)" />
+  
+  <!-- Definitions -->
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="0" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#ffffff" />
+    </marker>
+  </defs>
+</svg>

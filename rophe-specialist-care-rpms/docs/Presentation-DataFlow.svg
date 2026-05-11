@@ -1,0 +1,61 @@
+<svg viewBox="0 0 800 500" xmlns="http://www.w3.org/2000/svg">
+  <rect width="800" height="500" fill="#f8fafc" rx="20"/>
+  <text x="400" y="40" font-family="Inter, sans-serif" font-size="24" font-weight="900" text-anchor="middle" fill="#0f172a">CLINICAL DATA FLOW & STATE ORCHESTRATION</text>
+  
+  <!-- Entities -->
+  <g transform="translate(50, 100)">
+    <rect width="140" height="80" rx="12" fill="#10b981" />
+    <text x="70" y="45" font-family="Inter, sans-serif" font-size="14" font-weight="700" text-anchor="middle" fill="#fff">PHYSICIAN</text>
+    <text x="70" y="65" font-family="Inter, sans-serif" font-size="10" text-anchor="middle" fill="#ecfdf5">Input: Vitals / Notes</text>
+  </g>
+
+  <g transform="translate(50, 300)">
+    <rect width="140" height="80" rx="12" fill="#3b82f6" />
+    <text x="70" y="45" font-family="Inter, sans-serif" font-size="14" font-weight="700" text-anchor="middle" fill="#fff">PATIENT</text>
+    <text x="70" y="65" font-family="Inter, sans-serif" font-size="10" text-anchor="middle" fill="#eff6ff">Input: Video / Audio</text>
+  </g>
+
+  <!-- Central Processing -->
+  <g transform="translate(280, 150)">
+    <rect width="240" height="180" rx="20" fill="#fff" stroke="#e2e8f0" stroke-width="2" />
+    <text x="120" y="35" font-family="Inter, sans-serif" font-size="16" font-weight="800" text-anchor="middle" fill="#0f172a">ROPHE CORE HUB</text>
+    
+    <rect x="20" y="60" width="200" height="40" rx="8" fill="#f1f5f9" />
+    <text x="120" y="85" font-family="Inter, sans-serif" font-size="12" font-weight="700" text-anchor="middle" fill="#475569">Safety Threshold Engine</text>
+    
+    <rect x="20" y="110" width="200" height="40" rx="8" fill="#f1f5f9" />
+    <text x="120" y="135" font-family="Inter, sans-serif" font-size="12" font-weight="700" text-anchor="middle" fill="#475569">Audit Trail Serialization</text>
+  </g>
+
+  <!-- External Nodes -->
+  <g transform="translate(600, 80)">
+    <rect width="150" height="70" rx="12" fill="#0f172a" />
+    <text x="75" y="35" font-family="Inter, sans-serif" font-size="14" font-weight="700" text-anchor="middle" fill="#fff">GEMINI 3 API</text>
+    <text x="75" y="55" font-family="Inter, sans-serif" font-size="10" text-anchor="middle" fill="#94a3b8">Diagnostic Intelligence</text>
+  </g>
+
+  <g transform="translate(600, 210)">
+    <rect width="150" height="70" rx="12" fill="#8b5cf6" />
+    <text x="75" y="35" font-family="Inter, sans-serif" font-size="14" font-weight="700" text-anchor="middle" fill="#fff">WebRTC P2P</text>
+    <text x="75" y="55" font-family="Inter, sans-serif" font-size="10" text-anchor="middle" fill="#ddd6fe">Encrypted Media</text>
+  </g>
+
+  <g transform="translate(600, 340)">
+    <rect width="150" height="70" rx="12" fill="#64748b" />
+    <text x="75" y="35" font-family="Inter, sans-serif" font-size="14" font-weight="700" text-anchor="middle" fill="#fff">EHR STATE</text>
+    <text x="75" y="55" font-family="Inter, sans-serif" font-size="10" text-anchor="middle" fill="#e2e8f0">Mock Persistence</text>
+  </g>
+
+  <!-- Connectors -->
+  <path d="M190 140 L280 180" stroke="#cbd5e1" stroke-width="2" fill="none" marker-end="url(#arrow)"/>
+  <path d="M190 340 L280 300" stroke="#cbd5e1" stroke-width="2" fill="none" marker-end="url(#arrow)"/>
+  <path d="M520 200 L600 120" stroke="#cbd5e1" stroke-width="2" fill="none" marker-end="url(#arrow)"/>
+  <path d="M520 240 L600 245" stroke="#cbd5e1" stroke-width="2" fill="none" marker-end="url(#arrow)"/>
+  <path d="M520 280 L600 370" stroke="#cbd5e1" stroke-width="2" fill="none" marker-end="url(#arrow)"/>
+
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#cbd5e1" />
+    </marker>
+  </defs>
+</svg>

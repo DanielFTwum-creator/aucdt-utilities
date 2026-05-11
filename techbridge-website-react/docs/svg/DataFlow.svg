@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#333" />
+    </marker>
+  </defs>
+  <rect width="800" height="400" fill="#ffffff" />
+  <text x="400" y="40" font-family="sans-serif" font-size="22" text-anchor="middle" font-weight="bold" fill="#333">DFD: Admin Authentication & Audit</text>
+
+  <!-- External Entity: Admin -->
+  <rect x="50" y="150" width="100" height="100" fill="#ffe0b2" stroke="#f57c00" stroke-width="2" />
+  <text x="100" y="205" text-anchor="middle" font-family="sans-serif" font-size="14" font-weight="bold">Admin</text>
+
+  <!-- Process: Login -->
+  <circle cx="300" cy="200" r="60" fill="#e1f5fe" stroke="#0277bd" stroke-width="2" />
+  <text x="300" y="195" text-anchor="middle" font-family="sans-serif" font-size="12" font-weight="bold">Authenticate</text>
+  <text x="300" y="215" text-anchor="middle" font-family="sans-serif" font-size="12">Credentials</text>
+
+  <!-- Process: Log Action -->
+  <circle cx="550" cy="200" r="60" fill="#e1f5fe" stroke="#0277bd" stroke-width="2" />
+  <text x="550" y="195" text-anchor="middle" font-family="sans-serif" font-size="12" font-weight="bold">Record</text>
+  <text x="550" y="215" text-anchor="middle" font-family="sans-serif" font-size="12">Audit Log</text>
+
+  <!-- Data Store: LocalStorage -->
+  <rect x="400" y="320" width="300" height="50" fill="#fff" stroke="#333" stroke-width="2" />
+  <line x1="430" y1="320" x2="430" y2="370" stroke="#333" stroke-width="2" />
+  <text x="565" y="350" text-anchor="middle" font-family="sans-serif" font-size="14">D1: LocalStorage (Browser)</text>
+
+  <!-- Flows -->
+  <line x1="150" y1="200" x2="240" y2="200" stroke="#333" stroke-width="2" marker-end="url(#arrow)" />
+  <text x="195" y="190" text-anchor="middle" font-family="sans-serif" font-size="10">Password</text>
+
+  <line x1="360" y1="200" x2="490" y2="200" stroke="#333" stroke-width="2" marker-end="url(#arrow)" />
+  <text x="425" y="190" text-anchor="middle" font-family="sans-serif" font-size="10">Success Event</text>
+
+  <path d="M550 260 L550 320" stroke="#333" stroke-width="2" marker-end="url(#arrow)" />
+  <text x="560" y="295" text-anchor="start" font-family="sans-serif" font-size="10">Write Log</text>
+
+  <path d="M300 260 L300 320" stroke="#333" stroke-width="2" marker-end="url(#arrow)" />
+  <text x="310" y="295" text-anchor="start" font-family="sans-serif" font-size="10">Read/Verify Pass</text>
+
+</svg>

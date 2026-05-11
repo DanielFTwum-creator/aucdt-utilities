@@ -1,0 +1,8 @@
+{
+  "name": "AI @ TechBridge",
+  "description": "An interactive landing page showcasing current AI research and initiatives at TechBridge University, where the field of Artificial Intelligence was born in 1956.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ]
+}

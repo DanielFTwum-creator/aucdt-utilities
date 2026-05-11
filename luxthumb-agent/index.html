@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <!-- TUC Standard Meta Tags -->
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- SEO Meta Tags -->
+    <title>LuxThumb Designer | AI-Powered Thumbnail Generation</title>
+    <meta name="description" content="LuxThumb Designer: Generate premium AI-powered thumbnail designs with Gemini AI integration. Create cinematic, luxury editorial visuals for social media and marketing." />
+    <meta name="keywords" content="thumbnail generator, AI design, Gemini API, luxury branding, editorial design, social media graphics, advertising" />
+    <meta name="author" content="Daniel Frempong Twum, Techbridge University College (TUC)" />
+    <meta name="publisher" content="Techbridge University College" />
+    <meta name="canonical" href="https://luxthumb.techbridge.edu.gh/" />
+    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
+
+    <!-- Geographic Meta Tags -->
+    <meta name="geo.region" content="GH-GA" />
+    <meta name="geo.placename" content="Oyibi, Greater Accra" />
+    <meta name="geo.position" content="5.6529;-0.0756" />
+
+    <!-- Open Graph Tags -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://luxthumb.techbridge.edu.gh/" />
+    <meta property="og:title" content="LuxThumb Designer | AI-Powered Thumbnail Generation" />
+    <meta property="og:description" content="Generate premium AI-powered thumbnail designs with Gemini AI integration. Create cinematic, luxury editorial visuals." />
+    <meta property="og:image" content="https://luxthumb.techbridge.edu.gh/og-image.png" />
+    <meta property="og:locale" content="en_GB" />
+    <meta property="og:site_name" content="LuxThumb Designer" />
+
+    <!-- Twitter Card Tags -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@TecBridgeUni" />
+    <meta name="twitter:creator" content="@KudjoTwum" />
+    <meta name="twitter:title" content="LuxThumb Designer | AI-Powered Thumbnail Generation" />
+    <meta name="twitter:description" content="Generate premium AI-powered thumbnail designs with Gemini AI integration." />
+    <meta name="twitter:image" content="https://luxthumb.techbridge.edu.gh/og-image.png" />
+
+    <!-- Theme & Branding -->
+    <meta name="theme-color" content="#C9A84C" />
+    <meta name="msapplication-TileColor" content="#050505" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <meta name="copyright" content="Copyright 2026 Techbridge University College" />
+
+    <!-- Font Preconnection -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700;1,900&family=Outfit:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet" />
+
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-FKXTELQ71R"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-FKXTELQ71R');
+    </script>
+
+    <!-- Theme Persistence & Auto-Apply -->
+    <script>
+      (function() {
+        const theme = localStorage.getItem('luxthumb-theme');
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const effectiveTheme = theme || (prefersDark ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', effectiveTheme);
+      })();
+    </script>
+
+    <!-- Main Styles -->
+    <style>
+      :root {
+        --color-background-main: #050505;
+        --color-background-secondary: #0A0A0A;
+        --color-background-tertiary: #0F0F0F;
+        --color-background-quaternary: #111111;
+        --color-foreground: #F5F5F5;
+        --color-foreground-secondary: #C9C9C9;
+        --color-foreground-muted: #999999;
+        --color-primary: #C9A84C;
+        --color-primary-hover: #D4B96A;
+        --color-primary-active: #B89836;
+        --color-accent: #1A1A1A;
+        --color-accent-subtle: #2A2A2A;
+        --color-border: #2A2A2A;
+        --color-border-subtle: #1A1A1A;
+        --color-success: #22C55E;
+        --color-error: #EF4444;
+        --color-warning: #F59E0B;
+        --color-info: #3B82F6;
+        --transition-fast: 0.15s ease;
+        --transition-normal: 0.3s ease;
+        --transition-slow: 0.5s ease;
+      }
+
+      [data-theme='dark'] {
+        --color-background-main: #050505;
+        --color-background-secondary: #0A0A0A;
+        --color-background-tertiary: #0F0F0F;
+        --color-background-quaternary: #111111;
+        --color-foreground: #F5F5F5;
+        --color-foreground-secondary: #C9C9C9;
+        --color-foreground-muted: #999999;
+        --color-primary: #C9A84C;
+        --color-primary-hover: #D4B96A;
+        --color-primary-active: #B89836;
+        --color-accent: #1A1A1A;
+        --color-accent-subtle: #2A2A2A;
+        --color-border: #2A2A2A;
+        --color-border-subtle: #1A1A1A;
+      }
+
+      [data-theme='light'] {
+        --color-background-main: #FFFFFF;
+        --color-background-secondary: #F5F5F5;
+        --color-background-tertiary: #EEEEEE;
+        --color-background-quaternary: #E5E5E5;
+        --color-foreground: #050505;
+        --color-foreground-secondary: #333333;
+        --color-foreground-muted: #666666;
+        --color-primary: #C9A84C;
+        --color-primary-hover: #D4B96A;
+        --color-primary-active: #B89836;
+        --color-accent: #E5E5E5;
+        --color-accent-subtle: #CCCCCC;
+        --color-border: #CCCCCC;
+        --color-border-subtle: #E5E5E5;
+      }
+
+      [data-theme='high-contrast'] {
+        --color-background-main: #000000;
+        --color-background-secondary: #1A1A1A;
+        --color-background-tertiary: #333333;
+        --color-background-quaternary: #4D4D4D;
+        --color-foreground: #FFFFFF;
+        --color-foreground-secondary: #E5E5E5;
+        --color-foreground-muted: #CCCCCC;
+        --color-primary: #FFFF00;
+        --color-primary-hover: #FFFFCC;
+        --color-primary-active: #CCCC00;
+        --color-accent: #FFFFFF;
+        --color-accent-subtle: #E5E5E5;
+        --color-border: #FFFFFF;
+        --color-border-subtle: #CCCCCC;
+      }
+
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        background-color: var(--color-background-main);
+        color: var(--color-foreground);
+        transition: background-color var(--transition-normal), color var(--transition-normal);
+        overflow: hidden;
+      }
+
+      #root {
+        width: 100%;
+        height: 100vh;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+
+      @keyframes slideIn {
+        from {
+          transform: translateY(20px);
+          opacity: 0;
+        }
+        to {
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
+
+      .animate-fade-in {
+        animation: fadeIn var(--transition-normal) ease;
+      }
+
+      .animate-slide-in {
+        animation: slideIn var(--transition-normal) ease;
+      }
+
+      .font-playfair {
+        font-family: 'Playfair Display', ui-serif, Georgia, serif;
+      }
+
+      .font-outfit {
+        font-family: 'Outfit', sans-serif;
+      }
+
+      .font-space-grotesk {
+        font-family: 'Space Grotesk', monospace;
+      }
+
+      /* Scrollbar Styling */
+      ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+      }
+
+      ::-webkit-scrollbar-track {
+        background: var(--color-background-secondary);
+      }
+
+      ::-webkit-scrollbar-thumb {
+        background: var(--color-accent-subtle);
+        border-radius: 4px;
+      }
+
+      ::-webkit-scrollbar-thumb:hover {
+        background: var(--color-foreground-muted);
+      }
+
+      .scrollbar-hide::-webkit-scrollbar {
+        display: none;
+      }
+
+      .scrollbar-hide {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

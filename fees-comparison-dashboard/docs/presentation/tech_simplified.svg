@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600">
+  <defs>
+    <style>
+      .icon-bg { fill: #ffffff; rx: 20; }
+      .label { fill: #1e293b; font-family: sans-serif; font-size: 24px; font-weight: bold; text-anchor: middle; }
+    </style>
+  </defs>
+  <rect width="800" height="600" fill="#f1f5f9" />
+  
+  <text x="400" y="80" fill="#0f172a" font-family="sans-serif" font-size="36px" font-weight="bold" text-anchor="middle">Core Technology</text>
+
+  <!-- Grid Layout -->
+  
+  <!-- React -->
+  <rect x="150" y="150" width="200" height="150" class="icon-bg" stroke="#61dafb" stroke-width="4" />
+  <text x="250" y="235" class="label" fill="#61dafb">React 19</text>
+
+  <!-- TypeScript -->
+  <rect x="450" y="150" width="200" height="150" class="icon-bg" stroke="#3178c6" stroke-width="4" />
+  <text x="550" y="235" class="label" fill="#3178c6">TypeScript</text>
+
+  <!-- Tailwind -->
+  <rect x="150" y="350" width="200" height="150" class="icon-bg" stroke="#38bdf8" stroke-width="4" />
+  <text x="250" y="435" class="label" fill="#38bdf8">Tailwind CSS</text>
+
+  <!-- Recharts -->
+  <rect x="450" y="350" width="200" height="150" class="icon-bg" stroke="#f472b6" stroke-width="4" />
+  <text x="550" y="435" class="label" fill="#f472b6">Recharts</text>
+
+</svg>

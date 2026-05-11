@@ -1,0 +1,97 @@
+package com.example.techbridge_ict.security;
+
+import com.example.techbridge_ict.constant.PrivilegeConstant;
+import com.example.techbridge_ict.constant.SecurityConstants;
+import com.example.techbridge_ict.security.jwt.JwtAuthenticationEntryPoint;
+import com.example.techbridge_ict.security.jwt.JwtAuthorizationFilter;
+import com.example.techbridge_ict.security.jwt.TokenProvider;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.ProviderManager;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import static org.springframework.security.config.Customizer.withDefaults;
+import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
+
+
+@Configuration
+@EnableWebSecurity
+@EnableMethodSecurity
+@RequiredArgsConstructor
+public class SecurityConfiguration {
+
+
+    @Autowired
+    private JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+
+    @Autowired
+    private AuthenticationConfiguration configuration;
+
+    @Autowired
+    private TokenProvider tokenProvider;
+
+
+
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
+
+        http.cors(withDefaults()).csrf(csrf->csrf.disable());
+
+        http .authorizeHttpRequests(
+                        auth->{
+                         auth.requestMatchers("/api/auth/login","/api/auth/register","/api/public/**").permitAll();
+                         auth.requestMatchers("/api/admin/**").hasAuthority(PrivilegeConstant.ADMIN);
+                         auth.requestMatchers("/api/staff/**").hasAuthority(PrivilegeConstant.STAFF);
+                         auth.requestMatchers("/api/manager/**").hasAuthority(PrivilegeConstant.MANAGER);
+
+
+                            auth.anyRequest().authenticated();
+                        })
+                .exceptionHandling(exception->exception.authenticationEntryPoint(jwtAuthenticationEntryPoint))
+                .addFilterBefore(new JwtAuthorizationFilter(configuration.getAuthenticationManager(),tokenProvider), UsernamePasswordAuthenticationFilter.class)
+                .sessionManagement(session ->session.sessionCreationPolicy(STATELESS));
+
+        return  http.build();
+    }
+
+
+
+
+    @Bean
+    public WebSecurityCustomizer webSecurityCustomizer() {
+        return (web -> {
+            web.ignoring().requestMatchers(HttpMethod.OPTIONS, "/**");
+            web.ignoring().requestMatchers(SecurityConstants.IGNORE_SWAGGER);
+            web.ignoring().requestMatchers( SecurityConstants.IGNORE_OTHERS);
+        });
+    }
+
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+
+    @Bean
+    public AuthenticationManager authenticationManagerProvider(UserDetailsService detailsService) {
+        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider(detailsService);
+        authProvider.setPasswordEncoder(passwordEncoder());
+        return new ProviderManager(authProvider);
+    }
+
+}

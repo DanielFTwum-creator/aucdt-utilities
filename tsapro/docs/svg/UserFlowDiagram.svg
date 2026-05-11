@@ -1,0 +1,86 @@
+<svg width="800" height="600" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif" font-size="12">
+    <title>User Flow Diagram - Salary Calculation & Audit</title>
+    <defs>
+        <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569" />
+        </marker>
+        <style>
+            .start-end { fill: #dcfce7; stroke: #4ade80; }
+            .process { fill: #e0f2fe; stroke: #7dd3fc; }
+            .decision { fill: #fef9c3; stroke: #facc15; }
+            .data { fill: #f3e8ff; stroke: #c084fc; }
+            .title { font-size: 16px; font-weight: bold; text-anchor: middle; }
+            .connector { stroke: #64748b; stroke-width: 1.5; marker-end: url(#arrow); fill: none; }
+            .label { fill: #334155; }
+        </style>
+    </defs>
+
+    <text x="400" y="30" class="title">User Flow: Salary Calculation & Audit</text>
+
+    <!-- Start -->
+    <ellipse cx="400" cy="80" rx="100" ry="25" class="start-end" />
+    <text x="400" y="84" text-anchor="middle">HR User Opens Portal</text>
+
+    <!-- Path to Login -->
+    <path class="connector" d="M 400 105 V 135" />
+
+    <!-- Process: Login -->
+    <rect x="300" y="135" width="200" height="50" rx="5" class="process" />
+    <text x="400" y="163" text-anchor="middle">Enters Password &amp; Clicks Login</text>
+
+    <!-- Path to Decision -->
+    <path class="connector" d="M 400 185 V 215" />
+
+    <!-- Decision: Password Correct? -->
+    <path class="decision" d="M 400 215 L 475 250 L 400 285 L 325 250 Z" />
+    <text x="400" y="254" text-anchor="middle">Password Correct?</text>
+
+    <!-- Path: No -->
+    <path class="connector" d="M 325 250 H 150 V 160 H 300" />
+    <text x="225" y="245" class="label">No</text>
+    <text x="200" y="190" class="label">Shows Error Message</text>
+    
+    <!-- Path: Yes -->
+    <path class="connector" d="M 400 285 V 315" />
+    <text x="410" y="305" class="label">Yes</text>
+
+    <!-- Data: Log Login Event -->
+    <rect x="500" y="315" width="200" height="50" rx="5" class="data" />
+    <text x="600" y="343" text-anchor="middle">Logs "Successful Login" Event</text>
+    <path class="connector" d="M 400 340 H 500" style="marker-end: none; stroke-dasharray: 4 2;" />
+    
+    <!-- Process: Redirect to Dashboard -->
+    <rect x="300" y="315" width="200" height="50" rx="5" class="process" />
+    <text x="400" y="343" text-anchor="middle">Redirects to Calculator Dashboard</text>
+
+    <!-- Path to Calculation -->
+    <path class="connector" d="M 400 365 V 395" />
+
+    <!-- Process: Fills Form -->
+    <rect x="300" y="395" width="200" height="50" rx="5" class="process" />
+    <text x="400" y="423" text-anchor="middle">Fills Salary Form &amp; Clicks Calculate</text>
+
+    <!-- Path to Display & Log -->
+    <path class="connector" d="M 400 445 V 475" />
+
+    <!-- Process: Display Results -->
+    <rect x="150" y="475" width="200" height="50" rx="5" class="process" />
+    <text x="250" y="503" text-anchor="middle">Displays Salary Breakdown</text>
+
+    <!-- Data: Log Calculation -->
+    <rect x="450" y="475" width="200" height="50" rx="5" class="data" />
+    <text x="550" y="503" text-anchor="middle">Logs Calculation Details</text>
+    
+    <!-- Fork -->
+    <path class="connector" d="M 400 475 H 250" />
+    <path class="connector" d="M 400 475 H 550" />
+
+    <!-- Path to End -->
+    <path class="connector" d="M 250 525 V 545 H 400" />
+    <path class="connector" d="M 550 525 V 545 H 400" />
+
+    <!-- End -->
+    <ellipse cx="400" cy="545" rx="100" ry="25" class="start-end" />
+    <text x="400" y="549" text-anchor="middle">User Reviews Results</text>
+
+</svg>

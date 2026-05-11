@@ -1,0 +1,70 @@
+{
+  "analysis_metadata": {
+    "timestamp": "2024-12-30T20:01:48Z",
+    "script_version": "enhanced-v2.0",
+    "max_depth": 4,
+    "target_directories": ["/workspace/test_directory"]
+  },
+  "directory_analysis": [
+    {
+      "name": "test_directory",
+      "path": "/workspace/test_directory",
+      "size_kb": 28,
+      "size_formatted": "28.0KB",
+      "file_count": 3,
+      "modification_timestamp": 1748607213,
+      "modification_date": "30/05/2025",
+      "depth": 2,
+      "parent_path": "/workspace",
+      "percentage": 100.0
+    },
+    {
+      "name": "subdir1",
+      "path": "/workspace/test_directory/subdir1",
+      "size_kb": 12,
+      "size_formatted": "12.0KB",
+      "file_count": 1,
+      "modification_timestamp": 1748607213,
+      "modification_date": "30/05/2025",
+      "depth": 3,
+      "parent_path": "/workspace/test_directory",
+      "percentage": 42.9
+    },
+    {
+      "name": "subdir2",
+      "path": "/workspace/test_directory/subdir2",
+      "size_kb": 12,
+      "size_formatted": "12.0KB",
+      "file_count": 0,
+      "modification_timestamp": 1748607213,
+      "modification_date": "30/05/2025",
+      "depth": 3,
+      "parent_path": "/workspace/test_directory",
+      "percentage": 42.9
+    },
+    {
+      "name": "deep1",
+      "path": "/workspace/test_directory/subdir1/deep1",
+      "size_kb": 4,
+      "size_formatted": "4.0KB",
+      "file_count": 1,
+      "modification_timestamp": 1748607213,
+      "modification_date": "30/05/2025",
+      "depth": 4,
+      "parent_path": "/workspace/test_directory/subdir1",
+      "percentage": 14.3
+    },
+    {
+      "name": "deep2",
+      "path": "/workspace/test_directory/subdir1/deep2",
+      "size_kb": 4,
+      "size_formatted": "4.0KB",
+      "file_count": 0,
+      "modification_timestamp": 1748607213,
+      "modification_date": "30/05/2025",
+      "depth": 4,
+      "parent_path": "/workspace/test_directory/subdir1",
+      "percentage": 14.3
+    }
+  ]
+}

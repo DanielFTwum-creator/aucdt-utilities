@@ -1,0 +1,6 @@
+{
+  "name": "Mature Students Exam App",
+  "description": "An advanced web application for taking and creating mathematics aptitude tests, featuring LaTeX rendering, dynamic diagrams, and AI-powered question generation. Designed for the Techbridge University College (TUC) Mature Students Entrance Examination.",
+  "requestFramePermissions": [],
+  "prompt": ""
+}

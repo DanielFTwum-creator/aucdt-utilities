@@ -1,0 +1,35 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(pnpm run:*)",
+      "Bash(wc -l C:/Development/aucdt-utilities/flydee/src/components/admin/*.tsx)",
+      "Bash(ls -lh C:/Development/aucdt-utilities/flydee/dist/*.js)",
+      "Bash(grep -E \"\\\\.js$\")",
+      "Bash(ls C:/Development/aucdt-utilities/flydee/.env*)",
+      "Bash(pnpm list:*)",
+      "Bash(cp /c/Development/aucdt-utilities/sashmade/public/images/sashmade_logo.png /c/Development/aucdt-utilities/sashmade/public/images/p0_20.png)",
+      "Bash(cp /c/Development/aucdt-utilities/sashmade/public/images/sashmade_logo.png /c/Development/aucdt-utilities/sashmade/public/images/p9_66.png)",
+      "Bash(bash add-spa-routing-fix.sh)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(grep -E \"^\\\\s+[a-z0-9_-]+:\\\\s*$\" \"C:\\\\Development\\\\aucdt-utilities\\\\docker-compose-all-apps.yml\")",
+      "Bash(grep -v -E \"^\\(build|config|depends_on|environment|healthcheck|ipam|networks|ports|volumes\\)$\")",
+      "Bash(grep -v -E \"^\\(build|config|depends_on|environment|healthcheck|ipam|networks|ports|url_monitoring|volumes|nginx-gateway|notification-service-hub|tuc-network\\)$\")",
+      "Bash(grep -oE \":[0-9]{4,5}:\" /c/Development/aucdt-utilities/docker-compose-all-apps.yml)",
+      "Bash(sort -t: -k2 -n)",
+      "Bash(grep -oE \"[0-9]{4,5}:[0-9]+\" /c/Development/aucdt-utilities/docker-compose-all-apps.yml)",
+      "Bash(grep -rl \"puppeteer\" /c/Development/aucdt-utilities/*/package.json)",
+      "Bash(xargs grep:*)",
+      "Bash(sort grep:*)",
+      "Bash(xargs -I{} basename {})",
+      "Bash(node:*)",
+      "Bash(echo \"exit: $?\")",
+      "Bash(grep -v \"\\\\.json$\")",
+      "Bash(echo \"EXIT: $?\")",
+      "Bash(ls /c/Development/aucdt-utilities/*.bat)",
+      "Bash(grep -r \"BASE_URL\\\\|images/\" /c/Development/aucdt-utilities/flydee/dist/assets/Collection*.js)",
+      "Bash(grep -o 'BASE\\\\|images/aircraft' /c/Development/aucdt-utilities/flydee/dist/assets/Collection*.js)",
+      "Bash(grep -o 'flydee-e4046\\\\|commandert\\\\|\\(default\\)' /c/Development/aucdt-utilities/flydee/dist/assets/firebase*.js)"
+    ]
+  }
+}

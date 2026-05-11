@@ -1,0 +1,64 @@
+<svg viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="800" height="600" fill="#0b0b0d" rx="16"/>
+  
+  <!-- Title -->
+  <text x="400" y="40" font-family="Arial, sans-serif" font-size="24" fill="#4285f4" text-anchor="middle" font-weight="bold">GEMINI SLINGSHOT: SYSTEM ARCHITECTURE</text>
+  
+  <!-- Client Container -->
+  <rect x="40" y="80" width="500" height="480" rx="12" fill="#161618" stroke="#333" stroke-width="2"/>
+  <text x="290" y="105" font-family="Arial, sans-serif" font-size="16" fill="#888" text-anchor="middle" font-weight="bold">CLIENT-SIDE BROWSER RUNTIME (REACT)</text>
+
+  <!-- MediaPipe Layer -->
+  <rect x="70" y="130" width="200" height="80" rx="8" fill="#1a1a1c" stroke="#66bb6a" stroke-width="2"/>
+  <text x="170" y="165" font-family="Arial, sans-serif" font-size="14" fill="#66bb6a" text-anchor="middle" font-weight="bold">MEDIAPIPE VISION</text>
+  <text x="170" y="185" font-family="Arial, sans-serif" font-size="10" fill="#66bb6a" text-anchor="middle">Hand Landmarks / Gestures</text>
+
+  <!-- Physics Layer -->
+  <rect x="310" y="130" width="200" height="80" rx="8" fill="#1a1a1c" stroke="#ef5350" stroke-width="2"/>
+  <text x="410" y="165" font-family="Arial, sans-serif" font-size="14" fill="#ef5350" text-anchor="middle" font-weight="bold">PHYSICS ENGINE</text>
+  <text x="410" y="185" font-family="Arial, sans-serif" font-size="10" fill="#ef5350" text-anchor="middle">Collision / Slingshot Trajectory</text>
+
+  <!-- React State / Core -->
+  <rect x="70" y="250" width="440" height="100" rx="8" fill="#1a1a1c" stroke="#4285f4" stroke-width="2"/>
+  <text x="290" y="295" font-family="Arial, sans-serif" font-size="18" fill="#4285f4" text-anchor="middle" font-weight="bold">REACT STATE & HUD</text>
+  <text x="290" y="320" font-family="Arial, sans-serif" font-size="12" fill="#4285f4" text-anchor="middle">Hooks / Game Loop / Theme Engine</text>
+
+  <!-- Test Lab / QA -->
+  <rect x="70" y="390" width="440" height="140" rx="8" fill="#1a1a1c" stroke="#fdd835" stroke-width="2"/>
+  <text x="290" y="420" font-family="Arial, sans-serif" font-size="16" fill="#fdd835" text-anchor="middle" font-weight="bold">TEST LAB & QUALITY SUITE</text>
+  <text x="290" y="445" font-family="Arial, sans-serif" font-size="12" fill="#fdd835" text-anchor="middle">E2E Self-Diagnostics / Visual Validation</text>
+  <rect x="100" y="465" width="160" height="40" rx="4" fill="#222" stroke="#fdd835" stroke-dasharray="4"/>
+  <text x="180" y="490" font-family="Arial, sans-serif" font-size="11" fill="#fdd835" text-anchor="middle">Audit Logging</text>
+  <rect x="320" y="465" width="160" height="40" rx="4" fill="#222" stroke="#fdd835" stroke-dasharray="4"/>
+  <text x="400" y="490" font-family="Arial, sans-serif" font-size="11" fill="#fdd835" text-anchor="middle">Screenshot Capture</text>
+
+  <!-- Server/Cloud Container -->
+  <rect x="580" y="80" width="180" height="480" rx="12" fill="#161618" stroke="#4285f4" stroke-width="2"/>
+  <text x="670" y="110" font-family="Arial, sans-serif" font-size="16" fill="#4285f4" text-anchor="middle" font-weight="bold">EXTERNAL (AI)</text>
+
+  <!-- Gemini Box -->
+  <rect x="600" y="250" width="140" height="100" rx="8" fill="#1a1a1c" stroke="#4285f4" stroke-width="2"/>
+  <text x="670" y="290" font-family="Arial, sans-serif" font-size="16" fill="#4285f4" text-anchor="middle" font-weight="bold">GEMINI 3</text>
+  <text x="670" y="315" font-family="Arial, sans-serif" font-size="12" fill="#4285f4" text-anchor="middle">FLASH PREVIEW</text>
+
+  <!-- Flows -->
+  <path d="M 510 300 L 580 300" stroke="#4285f4" stroke-width="3" fill="none" marker-end="url(#arrow-blue)"/>
+  <text x="545" y="290" font-family="Arial, sans-serif" font-size="10" fill="#4285f4" text-anchor="middle">Vision Data</text>
+
+  <path d="M 170 210 L 170 250" stroke="#66bb6a" stroke-width="2" fill="none" marker-end="url(#arrow-green)"/>
+  <path d="M 410 210 L 410 250" stroke="#ef5350" stroke-width="2" fill="none" marker-end="url(#arrow-red)"/>
+
+  <!-- Markers -->
+  <defs>
+    <marker id="arrow-blue" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L9,3 z" fill="#4285f4" />
+    </marker>
+    <marker id="arrow-green" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L9,3 z" fill="#66bb6a" />
+    </marker>
+    <marker id="arrow-red" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L9,3 z" fill="#ef5350" />
+    </marker>
+  </defs>
+</svg>

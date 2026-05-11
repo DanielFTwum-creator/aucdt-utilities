@@ -1,0 +1,5 @@
+{
+  "name": "Brainiac Challenge",
+  "description": "An advanced, AI-powered quiz application that leverages the Google Gemini API for real-time, customizable question generation across numerous subjects and difficulty levels. It features a sophisticated dark-themed UI, rich content rendering, and a detailed audit log system.",
+  "requestFramePermissions": []
+}

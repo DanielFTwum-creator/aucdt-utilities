@@ -1,0 +1,39 @@
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400">
+  <rect width="600" height="400" fill="#f8fafc"/>
+  <text x="300" y="40" font-family="sans-serif" font-size="20" font-weight="bold" text-anchor="middle" fill="#1e293b">Client Persistence Schema</text>
+
+  <!-- Audit Log Key -->
+  <g transform="translate(50, 80)">
+    <rect width="240" height="30" fill="#630f12" stroke="#630f12" rx="4"/>
+    <text x="120" y="20" font-family="sans-serif" font-size="12" font-weight="bold" text-anchor="middle" fill="white">KEY: tuc_audit_logs</text>
+    <rect y="35" width="240" height="200" fill="white" stroke="#630f12" rx="4"/>
+    
+    <text x="15" y="60" font-family="monospace" font-size="11" fill="#334155">[ Array of JSON Objects ]</text>
+    <line x1="10" y1="75" x2="230" y2="75" stroke="#e2e8f0"/>
+    
+    <text x="15" y="95" font-family="sans-serif" font-size="11" font-weight="bold">id:</text>
+    <text x="80" y="95" font-family="sans-serif" font-size="11" fill="#64748b">String (UUID)</text>
+    
+    <text x="15" y="120" font-family="sans-serif" font-size="11" font-weight="bold">timestamp:</text>
+    <text x="85" y="120" font-family="sans-serif" font-size="11" fill="#64748b">ISO-8601 String</text>
+    
+    <text x="15" y="145" font-family="sans-serif" font-size="11" font-weight="bold">action:</text>
+    <text x="80" y="145" font-family="sans-serif" font-size="11" fill="#64748b">Enum (LOGIN|AUTH|LOG)</text>
+    
+    <text x="15" y="170" font-family="sans-serif" font-size="11" font-weight="bold">details:</text>
+    <text x="80" y="170" font-family="sans-serif" font-size="11" fill="#64748b">String Description</text>
+  </g>
+
+  <!-- Theme Key -->
+  <g transform="translate(320, 80)">
+    <rect width="240" height="30" fill="#ffcb05" stroke="#eab308" rx="4"/>
+    <text x="120" y="20" font-family="sans-serif" font-size="12" font-weight="bold" text-anchor="middle" fill="#630f12">KEY: tuc-theme</text>
+    <rect y="35" width="240" height="80" fill="white" stroke="#eab308" rx="4"/>
+    <text x="15" y="65" font-family="sans-serif" font-size="12" fill="#334155">"light" | "dark" | "high-contrast"</text>
+  </g>
+
+  <text x="300" y="360" font-family="sans-serif" font-size="12" text-anchor="middle" fill="#64748b" font-style="italic">
+    Note: Data persists in browser memory across sessions until cleared by Admin.
+  </text>
+</svg>

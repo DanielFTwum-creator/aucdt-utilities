@@ -1,0 +1,76 @@
+<svg width="700" height="500" viewBox="0 0 700 500" xmlns="http://www.w3.org/2000/svg" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif">
+  <defs>
+    <linearGradient id="bg-grad-data" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#f8fafc;" />
+      <stop offset="100%" style="stop-color:#e2e8f0;" />
+    </linearGradient>
+    <linearGradient id="node-grad-data" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" />
+      <stop offset="100%" stop-color="#f1f5f9" />
+    </linearGradient>
+    <linearGradient id="arrow-grad-data" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#3b82f6" />
+      <stop offset="100%" stop-color="#10b981" />
+    </linearGradient>
+    <marker id="arrowhead-data" markerWidth="10" markerHeight="7" refX="0" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="url(#arrow-grad-data)" />
+    </marker>
+    <filter id="node-shadow-data" x="-50%" y="-50%" width="200%" height="200%">
+      <feDropShadow dx="2" dy="4" stdDeviation="4" flood-color="#000" flood-opacity="0.1" />
+    </filter>
+  </defs>
+
+  <rect width="700" height="500" fill="url(#bg-grad-data)" />
+
+  <text x="350" y="50" font-size="28" font-weight="bold" text-anchor="middle" fill="#1e293b">MarkAI System Architecture</text>
+  <line x1="200" y1="65" x2="500" y2="65" stroke="#cbd5e1" stroke-width="1" />
+
+  <!-- Nodes -->
+  <g id="node-user-data" transform="translate(20, 210)" filter="url(#node-shadow-data)">
+    <rect width="120" height="80" rx="10" fill="url(#node-grad-data)" stroke="#cbd5e1" stroke-width="1"/>
+    <text x="60" y="35" font-size="32" text-anchor="middle">👤</text>
+    <text x="60" y="65" font-size="14" fill="#1e293b" text-anchor="middle" font-weight="bold">User</text>
+  </g>
+  
+  <g id="node-react-data" transform="translate(180, 210)" filter="url(#node-shadow-data)">
+    <rect width="160" height="80" rx="10" fill="url(#node-grad-data)" stroke="#cbd5e1" stroke-width="1"/>
+    <text x="80" y="35" font-size="18" font-weight="bold" fill="#0369a1" text-anchor="middle">⚛️ React SPA</text>
+    <text x="80" y="60" font-size="12" fill="#475569" text-anchor="middle">Client-Side Application</text>
+  </g>
+  
+  <g id="node-backend-data" transform="translate(380, 210)" filter="url(#node-shadow-data)">
+    <rect width="160" height="80" rx="10" fill="url(#node-grad-data)" stroke="#cbd5e1" stroke-width="1"/>
+    <text x="80" y="35" font-size="18" font-weight="bold" fill="#4ade80" text-anchor="middle">🟢 Backend Server</text>
+    <text x="80" y="60" font-size="12" fill="#475569" text-anchor="middle">Node.js Proxy</text>
+  </g>
+
+  <g id="node-gemini-data" transform="translate(580, 210)" filter="url(#node-shadow-data)">
+    <rect width="100" height="80" rx="10" fill="url(#node-grad-data)" stroke="#cbd5e1" stroke-width="1"/>
+    <text x="50" y="35" font-size="18" font-weight="bold" fill="#059669" text-anchor="middle">🤖 Gemini</text>
+    <text x="50" y="60" font-size="12" fill="#475569" text-anchor="middle">API</text>
+  </g>
+  
+  <g id="node-storage-data" transform="translate(180, 350)" filter="url(#node-shadow-data)">
+    <rect width="160" height="80" rx="10" fill="url(#node-grad-data)" stroke="#cbd5e1" stroke-width="1"/>
+    <text x="80" y="35" font-size="18" font-weight="bold" fill="#94a3b8" text-anchor="middle">💾 Local Storage</text>
+    <text x="80" y="60" font-size="12" fill="#475569" text-anchor="middle">In-Browser Data</text>
+  </g>
+
+  <!-- Arrows -->
+  <path d="M 145 250 H 175" stroke="url(#arrow-grad-data)" stroke-width="2.5" marker-end="url(#arrowhead-data)"/>
+  <text x="160" y="240" fill="#475569" font-size="11" text-anchor="middle">Input</text>
+
+  <path d="M 345 250 H 375" stroke="url(#arrow-grad-data)" stroke-width="2.5" marker-end="url(#arrowhead-data)"/>
+  <text x="360" y="240" fill="#475569" font-size="11" text-anchor="middle">HTTP</text>
+  
+  <path d="M 545 250 H 575" stroke="url(#arrow-grad-data)" stroke-width="2.5" marker-end="url(#arrowhead-data)"/>
+  <text x="560" y="240" fill="#475569" font-size="11" text-anchor="middle">Secure API Call</text>
+  
+  <path d="M 260 295 V 345" stroke="url(#arrow-grad-data)" stroke-width="2.5" marker-end="url(#arrowhead-data)"/>
+  <text x="280" y="325" fill="#475569" font-size="11">Save/Load Data</text>
+
+
+  <text x="350" y="470" font-size="14" fill="#64748b" text-anchor="middle" font-style="italic">
+    A client-centric architecture with a secure backend proxy.
+  </text>
+</svg>

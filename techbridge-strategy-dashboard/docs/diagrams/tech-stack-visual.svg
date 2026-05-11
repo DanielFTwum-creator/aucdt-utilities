@@ -1,0 +1,38 @@
+<svg viewBox="0 0 800 400" xmlns="http://www.w3.org/2000/svg">
+  <rect width="100%" height="100%" fill="#0a0a0a"/>
+  
+  <text x="400" y="50" fill="white" font-family="Arial" font-size="24" font-weight="bold" text-anchor="middle">TECH STACK VISUALIZATION</text>
+
+  <!-- Level 1: Core -->
+  <g transform="translate(100, 100)">
+    <rect width="180" height="80" rx="10" fill="#61dafb33" stroke="#61dafb" stroke-width="2"/>
+    <text x="90" y="45" fill="#61dafb" font-family="Arial" font-size="20" font-weight="bold" text-anchor="middle">React 18/19</text>
+  </g>
+  <g transform="translate(310, 100)">
+    <rect width="180" height="80" rx="10" fill="#3178c633" stroke="#3178c6" stroke-width="2"/>
+    <text x="90" y="45" fill="#3178c6" font-family="Arial" font-size="20" font-weight="bold" text-anchor="middle">TypeScript</text>
+  </g>
+  <g transform="translate(520, 100)">
+    <rect width="180" height="80" rx="10" fill="#646cff33" stroke="#646cff" stroke-width="2"/>
+    <text x="90" y="45" fill="#646cff" font-family="Arial" font-size="20" font-weight="bold" text-anchor="middle">Vite</text>
+  </g>
+
+  <!-- Level 2: Styling & UI -->
+  <g transform="translate(100, 220)">
+    <rect width="180" height="80" rx="10" fill="#38bdf833" stroke="#38bdf8" stroke-width="2"/>
+    <text x="90" y="45" fill="#38bdf8" font-family="Arial" font-size="20" font-weight="bold" text-anchor="middle">Tailwind CSS</text>
+  </g>
+  <g transform="translate(310, 220)">
+    <rect width="180" height="80" rx="10" fill="#f43f5e33" stroke="#f43f5e" stroke-width="2"/>
+    <text x="90" y="45" fill="#f43f5e" font-family="Arial" font-size="20" font-weight="bold" text-anchor="middle">Lucide Icons</text>
+  </g>
+  <g transform="translate(520, 220)">
+    <rect width="180" height="80" rx="10" fill="#00d8ff33" stroke="#00d8ff" stroke-width="2"/>
+    <text x="90" y="45" fill="#00d8ff" font-family="Arial" font-size="20" font-weight="bold" text-anchor="middle">Puppeteer</text>
+  </g>
+
+  <!-- Connectors -->
+  <line x1="190" y1="180" x2="190" y2="220" stroke="#333" stroke-width="2"/>
+  <line x1="400" y1="180" x2="400" y2="220" stroke="#333" stroke-width="2"/>
+  <line x1="610" y1="180" x2="610" y2="220" stroke="#333" stroke-width="2"/>
+</svg>

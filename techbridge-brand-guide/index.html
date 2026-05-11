@@ -1,0 +1,998 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <!-- ========== BASIC SEO META TAGS ========== -->
+    <title>Techbridge University College | Pioneering Design & Technology</title>
+    <meta name="description" content="Techbridge University College (TUC) is a premier private institution in Accra pioneering innovative and progressive higher education in design and entrepreneurship." />
+    
+    <!-- 🆕 SEO ADDITION: Keywords -->
+    <meta name="keywords" content="Techbridge University College, TUC, design education, technology education, Accra university, Ghana university, product design, entrepreneurship, private university Ghana, design school" />
+    
+    <!-- 🆕 SEO ADDITION: Author and Publisher -->
+    <meta name="author" content="Techbridge University College" />
+    <meta name="publisher" content="Techbridge University College" />
+    
+    <!-- 🆕 SEO ADDITION: Canonical URL -->
+    <link rel="canonical" href="https://www.techbridge.edu.gh/" />
+    
+    <!-- 🆕 SEO ADDITION: Robots Meta Tag -->
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    
+    <!-- 🆕 SEO ADDITION: Language and Geographic Targeting -->
+    <meta name="language" content="English" />
+    <meta name="geo.region" content="GH-AA" />
+    <meta name="geo.placename" content="Accra" />
+    <meta name="geo.position" content="5.6037;-0.1870" />
+    <meta name="ICBM" content="5.6037, -0.1870" />
+    
+    <!-- ========== OPEN GRAPH META TAGS (Facebook, LinkedIn, etc.) ========== -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://www.techbridge.edu.gh/" />
+    <meta property="og:site_name" content="Techbridge University College" />
+    <meta property="og:title" content="Techbridge University College | Pioneering Design & Technology" />
+    <meta property="og:description" content="Techbridge University College (TUC) is a premier private institution in Accra pioneering innovative and progressive higher education in design and entrepreneurship." />
+    <meta property="og:image" content="https://techbridge.edu.gh/static/TUC_LOGO.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Techbridge University College Logo" />
+    <meta property="og:locale" content="en_GB" />
+    
+    <!-- ========== TWITTER CARD META TAGS ========== -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@TUCGhana" />
+    <meta name="twitter:creator" content="@TUCGhana" />
+    <meta name="twitter:title" content="Techbridge University College | Pioneering Design & Technology" />
+    <meta name="twitter:description" content="Techbridge University College (TUC) is a premier private institution in Accra pioneering innovative and progressive higher education in design and entrepreneurship." />
+    <meta name="twitter:image" content="https://techbridge.edu.gh/static/TUC_LOGO.png" />
+    <meta name="twitter:image:alt" content="Techbridge University College Logo" />
+    
+    <!-- ========== ADDITIONAL SEO META TAGS ========== -->
+    <meta name="theme-color" content="#630f12" />
+    <meta name="msapplication-TileColor" content="#630f12" />
+    <meta name="copyright" content="Techbridge University College" />
+    <meta name="rating" content="general" />
+    <meta name="referrer" content="origin-when-cross-origin" />
+    
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-FKXTELQ71R"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-FKXTELQ71R');
+    </script>
+        
+    <!-- Favicon / Tab Logo -->
+    <link rel="icon" type="image/png" href="https://techbridge.edu.gh/tuc/TUC_LOGO.png" />
+    <link rel="apple-touch-icon" href="https://techbridge.edu.gh/tuc/TUC_LOGO.png" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #F8F6F0;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .nav-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 30px;
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(139, 21, 56, 0.1);
+        }
+
+        .nav-tab {
+            background: #F4E4BC;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 500;
+            color: #8B1538;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .nav-tab:hover {
+            background: #D4AF37;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .nav-tab.active {
+            background: #8B1538;
+            color: white;
+            box-shadow: 0 4px 15px rgba(139, 21, 56, 0.3);
+        }
+
+        .section {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #8B1538;
+            margin-bottom: 30px;
+            letter-spacing: 2px;
+            text-align: center;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 20px rgba(139, 21, 56, 0.08);
+            border: 1px solid #F4E4BC;
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #8B1538;
+            margin-bottom: 15px;
+            letter-spacing: 0.5px;
+        }
+
+        .color-palette {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .color-card {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            background: #F8F6F0;
+            border-radius: 10px;
+            border: 2px solid #E6D5C7;
+        }
+
+        .color-swatch {
+            width: 80px;
+            height: 80px;
+            border-radius: 10px;
+            position: relative;
+            cursor: pointer;
+            border: 3px solid white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .copy-btn {
+            background: rgba(255,255,255,0.9);
+            border: none;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            color: #8B1538;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .color-swatch:hover .copy-btn {
+            opacity: 1;
+        }
+
+        .color-info {
+            flex: 1;
+        }
+
+        .color-name {
+            font-weight: 600;
+            font-size: 16px;
+            color: #8B1538;
+            margin-bottom: 5px;
+        }
+
+        .color-values {
+            font-size: 12px;
+            color: #666;
+            line-height: 1.4;
+        }
+
+        .specs-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        .specs-table th,
+        .specs-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #E6D5C7;
+        }
+
+        .specs-table th {
+            background: #F4E4BC;
+            color: #8B1538;
+            font-weight: 600;
+        }
+
+        .typography-demo {
+            margin-top: 20px;
+        }
+
+        .font-example {
+            margin-bottom: 25px;
+            padding: 20px;
+            background: #F8F6F0;
+            border-radius: 8px;
+            border-left: 4px solid #D4AF37;
+        }
+
+        .font-specs {
+            font-size: 12px;
+            color: #666;
+            margin-top: 8px;
+            font-weight: 400;
+        }
+
+        .tips-list {
+            list-style: none;
+            margin-top: 15px;
+        }
+
+        .tips-list li {
+            padding: 10px 0;
+            border-bottom: 1px solid #F4E4BC;
+            position: relative;
+            padding-left: 20px;
+        }
+
+        .tips-list li:before {
+            content: "•";
+            color: #D4AF37;
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+        }
+
+        .logo-container {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            max-width: 300px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 0 auto;
+        }
+
+        .usage-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .component-demo {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .demo-button {
+            background: #8B1538;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .demo-button:hover {
+            background: #6B1028;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(139, 21, 56, 0.3);
+        }
+
+        .demo-button.secondary {
+            background: #D4AF37;
+            color: #8B1538;
+        }
+
+        .demo-button.secondary:hover {
+            background: #B8941F;
+        }
+
+        .demo-input {
+            border: 2px solid #E6D5C7;
+            border-radius: 8px;
+            padding: 12px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+        }
+
+        .demo-input:focus {
+            outline: none;
+            border-color: #8B1538;
+            box-shadow: 0 0 0 3px rgba(139, 21, 56, 0.1);
+        }
+
+        .project-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .project-card {
+            background: linear-gradient(135deg, #8B1538 0%, #6B1028 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(139, 21, 56, 0.2);
+            transition: transform 0.3s ease;
+        }
+
+        .project-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .project-icon {
+            font-size: 2rem;
+            margin-bottom: 15px;
+        }
+
+        .project-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .resource-link {
+            display: inline-block;
+            background: #8B1538;
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 500;
+            margin: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .resource-link:hover {
+            background: #6B1028;
+            transform: translateY(-2px);
+        }
+
+        .accessibility-note {
+            background: #F4E4BC;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #D4AF37;
+        }
+
+        @media (max-width: 768px) {
+            .nav-tabs {
+                flex-direction: column;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+            }
+            
+            .color-palette {
+                grid-template-columns: 1fr;
+            }
+            
+            .project-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #8B1538;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+            z-index: 1000;
+        }
+
+        .toast.show {
+            transform: translateX(0);
+        }
+    </style>
+
+    <style id="tuc-splash-styles">
+      body { background-color: #0F0C07 !important; margin: 0; padding: 0; display: flex; align-items: center; justify-content: center; min-height: 100vh; font-family: serif; overflow: hidden; }
+      .tuc-splash { text-align: center; border: 1px solid rgba(200,168,75,0.2); padding: 60px; background: #141210; position: relative; }
+      .tuc-splash::before { content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 4px; background: #C8A84B; }
+      .tuc-logo { color: #C8A84B; font-size: 3rem; font-weight: 900; letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 10px; display: block; }
+      .tuc-status { color: #D4C4A0; font-family: sans-serif; text-transform: uppercase; letter-spacing: 0.4em; font-size: 0.7rem; opacity: 0.6; }
+      .tuc-loading { margin-top: 30px; height: 1px; width: 100px; background: rgba(200,168,75,0.2); margin-left: auto; margin-right: auto; position: relative; overflow: hidden; }
+      .tuc-loading::after { content: ""; position: absolute; left: -100%; width: 50%; height: 100%; background: #C8A84B; animation: tuc-load 2s infinite; }
+      @keyframes tuc-load { to { left: 150%; } }
+    </style>
+</head>
+<body>
+    <div class="toast" id="toast"></div>
+    
+    <div class="container">
+        <nav class="nav-tabs" role="navigation" aria-label="Brand guide sections">
+            <button class="nav-tab active" onclick="showSection('colors')" aria-controls="colors">🎨 Colors</button>
+            <button class="nav-tab" onclick="showSection('typography')" aria-controls="typography">📝 Typography</button>
+            <button class="nav-tab" onclick="showSection('logo')" aria-controls="logo">🏛️ Logo Usage</button>
+            <button class="nav-tab" onclick="showSection('elements')" aria-controls="elements">🔧 UI Elements</button>
+            <button class="nav-tab" onclick="showSection('projects')" aria-controls="projects">💡 Project Ideas</button>
+            <button class="nav-tab" onclick="showSection('resources')" aria-controls="resources">📁 Resources</button>
+        </nav>
+
+        <main>
+            <section id="colors" class="section active" aria-labelledby="colors-title">
+                <h2 id="colors-title" class="section-title">Brand Colors</h2>
+                
+                <div class="card">
+                    <h3 class="card-title">🎯 Primary Palette</h3>
+                    <p>These are your go-to colors for all TUC branded materials. Use them boldly and confidently!</p>
+                    <div class="color-palette">
+                        <div class="color-card">
+                            <div class="color-swatch" style="background: #8B1538;" aria-label="Burgundy primary color">
+                                <button class="copy-btn" onclick="copyColor('#8B1538')" aria-label="Copy burgundy primary hex code">Copy</button>
+                            </div>
+                            <div class="color-info">
+                                <div class="color-name">Burgundy Primary</div>
+                                <div class="color-values">
+                                    HEX: #8B1538<br>
+                                    RGB: 139, 21, 56<br>
+                                    Use: Headers, main text, branding
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="color-card">
+                            <div class="color-swatch" style="background: #6B1028;" aria-label="Burgundy dark color">
+                                <button class="copy-btn" onclick="copyColor('#6B1028')" aria-label="Copy burgundy dark hex code">Copy</button>
+                            </div>
+                            <div class="color-info">
+                                <div class="color-name">Burgundy Dark</div>
+                                <div class="color-values">
+                                    HEX: #6B1028<br>
+                                    RGB: 107, 16, 40<br>
+                                    Use: Shadows, gradients, depth
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="color-card">
+                            <div class="color-swatch" style="background: #D4AF37; color: #8B1538;" aria-label="Gold accent color">
+                                <button class="copy-btn" onclick="copyColor('#D4AF37')" aria-label="Copy gold accent hex code">Copy</button>
+                            </div>
+                            <div class="color-info">
+                                <div class="color-name">Gold Accent</div>
+                                <div class="color-values">
+                                    HEX: #D4AF37<br>
+                                    RGB: 212, 175, 55<br>
+                                    Use: Highlights, CTAs, emphasis
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h3 class="card-title">🌟 Supporting Colors</h3>
+                    <p>These softer tones provide balance and breathing room in your designs.</p>
+                    <div class="color-palette">
+                        <div class="color-card">
+                            <div class="color-swatch" style="background: #F4E4BC; color: #8B1538;" aria-label="Gold light color">
+                                <button class="copy-btn" onclick="copyColor('#F4E4BC')" aria-label="Copy gold light hex code">Copy</button>
+                            </div>
+                            <div class="color-info">
+                                <div class="color-name">Gold Light</div>
+                                <div class="color-values">HEX: #F4E4BC<br>Perfect for subtle backgrounds</div>
+                            </div>
+                        </div>
+                        
+                        <div class="color-card">
+                            <div class="color-swatch" style="background: #F8F6F0; color: #8B1538;" aria-label="Cream background color">
+                                <button class="copy-btn" onclick="copyColor('#F8F6F0')" aria-label="Copy cream background hex code">Copy</button>
+                            </div>
+                            <div class="color-info">
+                                <div class="color-name">Cream Background</div>
+                                <div class="color-values">HEX: #F8F6F0<br>Your go-to clean background</div>
+                            </div>
+                        </div>
+                        
+                        <div class="color-card">
+                            <div class="color-swatch" style="background: #E6D5C7; color: #8B1538;" aria-label="Warm beige color">
+                                <button class="copy-btn" onclick="copyColor('#E6D5C7')" aria-label="Copy warm beige hex code">Copy</button>
+                            </div>
+                            <div class="color-info">
+                                <div class="color-name">Warm Beige</div>
+                                <div class="color-values">HEX: #E6D5C7<br>Great for secondary sections</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3 class="card-title">♿ Accessibility Guidelines</h3>
+                    <div class="accessibility-note">
+                        <p><strong>Important:</strong> Always ensure proper contrast ratios for accessibility:</p>
+                        <table class="specs-table">
+                            <thead>
+                                <tr>
+                                    <th>Color Combination</th>
+                                    <th>Contrast Ratio</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Burgundy on White</td>
+                                    <td>8.5:1</td>
+                                    <td>✅ AAA Compliant</td>
+                                </tr>
+                                <tr>
+                                    <td>Gold on White</td>
+                                    <td>4.8:1</td>
+                                    <td>✅ AA Compliant</td>
+                                </tr>
+                                <tr>
+                                    <td>White on Burgundy</td>
+                                    <td>8.5:1</td>
+                                    <td>✅ AAA Compliant</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <section id="typography" class="section" aria-labelledby="typography-title">
+                <h2 id="typography-title" class="section-title">Typography</h2>
+                
+                <div class="card">
+                    <h3 class="card-title">📚 Font Family: Poppins</h3>
+                    <p>Poppins is our primary font - modern, clean, and perfect for both digital and print applications.</p>
+                    
+                    <div class="typography-demo">
+                        <div class="font-example">
+                            <h1 style="font-size: 2.5rem; font-weight: 700; letter-spacing: 2px; color: #8B1538;">Main Headlines</h1>
+                            <div class="font-specs">Poppins Bold 700 • 40px • 2px letter-spacing</div>
+                        </div>
+                        
+                        <div class="font-example">
+                            <h2 style="font-size: 1.8rem; font-weight: 600; letter-spacing: 0.5px; color: #8B1538;">Section Headers</h2>
+                            <div class="font-specs">Poppins Semi-Bold 600 • 29px • 0.5px letter-spacing</div>
+                        </div>
+                        
+                        <div class="font-example">
+                            <h3 style="font-size: 1.5rem; font-weight: 500; letter-spacing: 0.5px; color: #8B1538;">Subsection Headers</h3>
+                            <div class="font-specs">Poppins Medium 500 • 24px • 0.5px letter-spacing</div>
+                        </div>
+                        
+                        <div class="font-example">
+                            <p style="font-size: 1rem; font-weight: 400; line-height: 1.6;">This is body text - perfect for paragraphs and general content. Notice the excellent readability and modern feel that Poppins provides.</p>
+                            <div class="font-specs">Poppins Regular 400 • 16px • 1.6 line-height</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h3 class="card-title">💡 Typography Best Practices</h3>
+                    <ul class="tips-list">
+                        <li><strong>Hierarchy is Key:</strong> Use different font weights to create clear information hierarchy</li>
+                        <li><strong>Spacing Matters:</strong> Don't forget about letter-spacing for headlines - it adds elegance</li>
+                        <li><strong>Line Height:</strong> 1.6 line-height ensures comfortable reading for body text</li>
+                        <li><strong>Consistency:</strong> Stick to the defined sizes and weights across your entire project</li>
+                        <li><strong>Responsive Design:</strong> Use relative units (rem, em) for better scalability</li>
+                    </ul>
+                </div>
+            </section>
+
+            <section id="logo" class="section" aria-labelledby="logo-title">
+                <h2 id="logo-title" class="section-title">Logo Guidelines</h2>
+                
+                <div class="card">
+                    <h3 class="card-title">🏛️ Official TUC Logo</h3>
+                    <div style="text-align: center; margin: 2rem 0;">
+                        <div class="logo-container" style="margin: 0 auto;">
+                            <img src="https://techbridge.edu.gh/wp-content/uploads/2022/04/aucdt-logo-for-web.png" alt="TUC Logo" class="logo" onerror="this.style.display='none'">
+                        </div>
+                    </div>
+                    <p><strong>Download the official logo:</strong> Always use the official PNG file from the TUC website for consistency and quality.</p>
+                </div>
+                
+                <div class="usage-grid">
+                    <div class="card">
+                        <h3 class="card-title">✅ Logo Do's</h3>
+                        <ul class="tips-list">
+                            <li>Use minimum 60px width for digital applications</li>
+                            <li>Maintain 20px clear space around logo on all sides</li>
+                            <li>Place on white or cream backgrounds for optimal visibility</li>
+                            <li>Use circular white container when placing on dark backgrounds</li>
+                            <li>Maintain original proportions at all times</li>
+                            <li>Use PNG format for web applications</li>
+                            <li>Ensure logo is readable at all sizes</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="card">
+                        <h3 class="card-title">❌ Logo Don'ts</h3>
+                        <ul class="tips-list">
+                            <li>Don't stretch, distort, or skew the logo</li>
+                            <li>Don't change the colors or add effects</li>
+                            <li>Don't place on busy or low-contrast backgrounds</li>
+                            <li>Don't rotate or flip the logo</li>
+                            <li>Don't use low-resolution versions</li>
+                            <li>Don't add drop shadows or outlines</li>
+                            <li>Don't place other elements too close to the logo</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3 class="card-title">📏 Logo Specifications</h3>
+                    <table class="specs-table">
+                        <thead>
+                            <tr>
+                                <th>Usage</th>
+                                <th>Minimum Size</th>
+                                <th>Clear Space</th>
+                                <th>Format</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Digital/Web</td>
+                                <td>60px width</td>
+                                <td>20px all sides</td>
+                                <td>PNG, SVG</td>
+                            </tr>
+                            <tr>
+                                <td>Print</td>
+                                <td>1 inch width</td>
+                                <td>0.25 inch all sides</td>
+                                <td>Vector (AI, EPS)</td>
+                            </tr>
+                            <tr>
+                                <td>Business Cards</td>
+                                <td>0.5 inch width</td>
+                                <td>0.125 inch all sides</td>
+                                <td>Vector</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="elements" class="section" aria-labelledby="elements-title">
+                <h2 id="elements-title" class="section-title">UI Elements</h2>
+                
+                <div class="card">
+                    <h3 class="card-title">🔘 Buttons</h3>
+                    <p>Consistent button styles that reflect the TUC brand identity.</p>
+                    <div class="component-demo">
+                        <div>
+                            <button class="demo-button">Primary Button</button>
+                            <div class="font-specs" style="margin-top: 10px;">
+                                Background: #8B1538<br>
+                                Color: White<br>
+                                Padding: 12px 24px<br>
+                                Border-radius: 8px
+                            </div>
+                        </div>
+                        <div>
+                            <button class="demo-button secondary">Secondary Button</button>
+                            <div class="font-specs" style="margin-top: 10px;">
+                                Background: #D4AF37<br>
+                                Color: #8B1538<br>
+                                Padding: 12px 24px<br>
+                                Border-radius: 8px
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3 class="card-title">📝 Form Elements</h3>
+                    <p>Clean, accessible form elements that maintain brand consistency.</p>
+                    <div class="component-demo">
+                        <div>
+                            <input type="text" class="demo-input" placeholder="Text Input" style="width: 100%;">
+                            <div class="font-specs" style="margin-top: 10px;">
+                                Border: 2px solid #E6D5C7<br>
+                                Focus: #8B1538 border<br>
+                                Padding: 12px<br>
+                                Border-radius: 8px
+                            </div>
+                        </div>
+                        <div>
+                            <textarea class="demo-input" placeholder="Textarea" rows="3" style="width: 100%; resize: vertical;"></textarea>
+                            <div class="font-specs" style="margin-top: 10px;">
+                                Same styling as text input<br>
+                                Vertical resize only<br>
+                                Min-height: 80px
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3 class="card-title">🎨 Card Styles</h3>
+                    <p>Elegant card components for content organization.</p>
+                    <div class="component-demo">
+                        <div class="card" style="margin: 0;">
+                            <h4 style="color: #8B1538; margin-bottom: 10px;">Standard Card</h4>
+                            <p style="margin: 0; font-size: 14px;">Clean white background with subtle shadow and rounded corners.</p>
+                        </div>
+                        <div style="background: linear-gradient(135deg, #8B1538 0%, #6B1028 100%); color: white; padding: 20px; border-radius: 12px;">
+                            <h4 style="margin-bottom: 10px;">Gradient Card</h4>
+                            <p style="margin: 0; font-size: 14px;">Eye-catching gradient for featured content and CTAs.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3 class="card-title">📊 Data Visualization</h3>
+                    <p>Guidelines for charts, graphs, and data representation.</p>
+                    <ul class="tips-list">
+                        <li><strong>Primary Data:</strong> Use Burgundy (#8B1538) for main data series</li>
+                        <li><strong>Secondary Data:</strong> Use Gold (#D4AF37) for comparison or accent data</li>
+                        <li><strong>Neutral Data:</strong> Use Warm Beige (#E6D5C7) for background or inactive states</li>
+                        <li><strong>Grid Lines:</strong> Use light gray (#F4E4BC) for subtle grid lines</li>
+                        <li><strong>Text:</strong> Maintain high contrast with Burgundy text on light backgrounds</li>
+                    </ul>
+                </div>
+            </section>
+
+            <section id="projects" class="section" aria-labelledby="projects-title">
+                <h2 id="projects-title" class="section-title">Project Ideas</h2>
+                
+                <div class="card">
+                    <h3 class="card-title">🚀 Ready-to-Use Project Templates</h3>
+                    <p>Get started quickly with these brand-compliant project ideas and templates.</p>
+                </div>
+
+                <div class="project-grid">
+                    <div class="project-card">
+                        <div class="project-icon">🌐</div>
+                        <div class="project-title">University Website</div>
+                        <p>Modern, responsive website template with navigation, hero sections, and course listings. Perfect for departmental or program websites.</p>
+                    </div>
+                    
+                    <div class="project-card">
+                        <div class="project-icon">📱</div>
+                        <div class="project-title">Mobile App UI</div>
+                        <p>Student-focused mobile app interface with login, dashboard, and course management features using TUC brand colors.</p>
+                    </div>
+                    
+                    <div class="project-card">
+                        <div class="project-icon">📧</div>
+                        <div class="project-title">Email Templates</div>
+                        <p>Professional email templates for admissions, announcements, newsletters, and official communications.</p>
+                    </div>
+                    
+                    <div class="project-card">
+                        <div class="project-icon">📊</div>
+                        <div class="project-title">Dashboard Design</div>
+                        <p>Student and faculty dashboard templates with data visualization, charts, and interactive elements following brand guidelines.</p>
+                    </div>
+                    
+                    <div class="project-card">
+                        <div class="project-icon">🎓</div>
+                        <div class="project-title">Academic Portfolio</div>
+                        <p>Showcase templates for student projects, research, and academic achievements with professional TUC styling.</p>
+                    </div>
+                    
+                    <div class="project-card">
+                        <div class="project-icon">📋</div>
+                        <div class="project-title">Form Templates</div>
+                        <p>Application forms, surveys, and registration forms designed with accessibility and brand consistency in mind.</p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3 class="card-title">🎯 Implementation Tips</h3>
+                    <ul class="tips-list">
+                        <li><strong>Start with Colors:</strong> Begin every project by implementing the core color palette</li>
+                        <li><strong>Typography First:</strong> Establish font hierarchy before adding visual elements</li>
+                        <li><strong>Mobile Responsive:</strong> Always design mobile-first with TUC brand elements</li>
+                        <li><strong>Accessibility:</strong> Test color contrast and keyboard navigation in all projects</li>
+                        <li><strong>Consistency:</strong> Use the same spacing, shadows, and border-radius across components</li>
+                    </ul>
+                </div>
+            </section>
+
+            <section id="resources" class="section" aria-labelledby="resources-title">
+                <h2 id="resources-title" class="section-title">Resources</h2>
+                
+                <div class="card">
+                    <h3 class="card-title">🎨 Design Assets</h3>
+                    <p>Download official TUC brand assets and resources for your projects.</p>
+                    <div style="margin-top: 20px;">
+                        <a href="https://techbridge.edu.gh/wp-content/uploads/2022/04/aucdt-logo-for-web.png" class="resource-link" target="_blank" rel="noopener noreferrer">Official Logo (PNG)</a>
+                        <a href="#" class="resource-link">Color Palette (Adobe Swatch)</a>
+                        <a href="#" class="resource-link">Poppins Font Files</a>
+                        <a href="#" class="resource-link">Brand Icons Pack</a>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3 class="card-title">📚 Documentation</h3>
+                    <p>Comprehensive guides and documentation for implementing TUC branding.</p>
+                    <div style="margin-top: 20px;">
+                        <a href="#" class="resource-link">Brand Guidelines PDF</a>
+                        <a href="#" class="resource-link">Logo Usage Manual</a>
+                        <a href="#" class="resource-link">Typography Specification</a>
+                        <a href="#" class="resource-link">Web Development Guide</a>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3 class="card-title">🛠️ Development Tools</h3>
+                    <p>Code snippets, CSS variables, and development resources.</p>
+                    <div style="margin-top: 20px;">
+                        <a href="#" class="resource-link">CSS Variables File</a>
+                        <a href="#" class="resource-link">React Components</a>
+                        <a href="#" class="resource-link">Figma UI Kit</a>
+                        <a href="#" class="resource-link">HTML Templates</a>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3 class="card-title">📞 Support & Contact</h3>
+                    <p>Need help with brand implementation? Contact the TUC communications team.</p>
+                    <ul class="tips-list">
+                        <li><strong>Email:</strong> communications@techbridge.edu.gh</li>
+                        <li><strong>Phone:</strong> +233 (0) 302 123 456</li>
+                        <li><strong>Office:</strong> Administration Building, Room 201</li>
+                        <li><strong>Hours:</strong> Monday - Friday, 8:00 AM - 5:00 PM</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <h3 class="card-title">🌐 Online Resources</h3>
+                    <p>Additional resources and inspiration for your TUC projects.</p>
+                    <div style="margin-top: 20px;">
+                        <a href="https://techbridge.edu.gh" class="resource-link" target="_blank" rel="noopener noreferrer">Techbridge University College Website</a>
+                        <a href="#" class="resource-link">Brand Asset Library</a>
+                        <a href="#" class="resource-link">Style Guide Templates</a>
+                        <a href="#" class="resource-link">Accessibility Guidelines</a>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3 class="card-title">⚡ Quick Reference</h3>
+                    <div class="component-demo">
+                        <div>
+                            <h4 style="color: #8B1538; margin-bottom: 10px;">Primary Colors</h4>
+                            <p style="font-size: 12px; margin: 0;">Burgundy: #8B1538<br>Gold: #D4AF37<br>Cream: #F8F6F0</p>
+                        </div>
+                        <div>
+                            <h4 style="color: #8B1538; margin-bottom: 10px;">Typography</h4>
+                            <p style="font-size: 12px; margin: 0;">Font: Poppins<br>Weights: 400, 500, 600, 700<br>Line Height: 1.6</p>
+                        </div>
+                        <div>
+                            <h4 style="color: #8B1538; margin-bottom: 10px;">Spacing</h4>
+                            <p style="font-size: 12px; margin: 0;">Border Radius: 8-12px<br>Padding: 12-30px<br>Margin: 15-30px</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        // Section navigation
+        function showSection(sectionId) {
+            // Hide all sections
+            const sections = document.querySelectorAll('.section');
+            sections.forEach(section => section.classList.remove('active'));
+            
+            // Remove active class from all tabs
+            const tabs = document.querySelectorAll('.nav-tab');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            
+            // Show target section
+            const targetSection = document.getElementById(sectionId);
+            if (targetSection) {
+                targetSection.classList.add('active');
+            }
+            
+            // Add active class to clicked tab
+            const clickedTab = event.target;
+            clickedTab.classList.add('active');
+        }
+
+        // Color copying functionality
+        function copyColor(color) {
+            navigator.clipboard.writeText(color).then(function() {
+                showToast(`Copied ${color} to clipboard!`);
+            }).catch(function(err) {
+                // Fallback for older browsers
+                const textArea = document.createElement('textarea');
+                textArea.value = color;
+                document.body.appendChild(textArea);
+                textArea.focus();
+                textArea.select();
+                try {
+                    document.execCommand('copy');
+                    showToast(`Copied ${color} to clipboard!`);
+                } catch (err) {
+                    showToast('Unable to copy to clipboard');
+                }
+                document.body.removeChild(textArea);
+            });
+        }
+
+        // Toast notification
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set initial active section
+            const firstTab = document.querySelector('.nav-tab');
+            if (firstTab) {
+                firstTab.classList.add('active');
+            }
+        });
+    </script>
+</body>
+</html>

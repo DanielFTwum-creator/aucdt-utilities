@@ -1,0 +1,394 @@
+[
+  {
+    "id": 1,
+    "url": "https://aucdt.edu.gh/",
+    "status": "Up",
+    "lastChecked": "7/20/2025, 3:05:04 PM",
+    "responseTime": "1071ms"
+  },
+  {
+    "id": 2,
+    "url": "https://aucdt.edu.gh/about/",
+    "status": "Up",
+    "lastChecked": "7/20/2025, 3:05:04 PM",
+    "responseTime": "1048ms"
+  },
+  {
+    "id": 3,
+    "url": "https://aucdt.edu.gh/about/our-history/",
+    "status": "Up",
+    "lastChecked": "7/20/2025, 3:05:04 PM",
+    "responseTime": "1051ms"
+  },
+  {
+    "id": 4,
+    "url": "https://aucdt.edu.gh/about/vision-mission/",
+    "status": "Up",
+    "lastChecked": "7/20/2025, 3:05:04 PM",
+    "responseTime": "1091ms"
+  },
+  {
+    "id": 5,
+    "url": "https://aucdt.edu.gh/about/governing-council/",
+    "status": "Up",
+    "lastChecked": "7/20/2025, 3:05:04 PM",
+    "responseTime": "1776ms"
+  },
+  {
+    "id": 6,
+    "url": "https://aucdt.edu.gh/about/administrative-staff/",
+    "status": "Up",
+    "lastChecked": "7/20/2025, 3:05:04 PM",
+    "responseTime": "1089ms"
+  },
+  {
+    "id": 7,
+    "url": "https://aucdt.edu.gh/about/welcome-message-from-our-president/",
+    "status": "Up",
+    "lastChecked": "7/20/2025, 3:05:04 PM",
+    "responseTime": "1048ms"
+  },
+  {
+    "id": 8,
+    "url": "https://aucdt.edu.gh/academics/faculty/",
+    "status": "Up",
+    "lastChecked": "7/20/2025, 3:05:04 PM",
+    "responseTime": "1041ms"
+  },
+  {
+    "id": 9,
+    "url": "https://aucdt.edu.gh/academics/students/",
+    "status": "Up",
+    "lastChecked": "7/20/2025, 3:05:04 PM",
+    "responseTime": "1083ms"
+  },
+  {
+    "id": 10,
+    "url": "https://aucdt.edu.gh/admissions/asanska-hostel/hostel-online-application/",
+    "status": "Up",
+    "lastChecked": "7/20/2025, 3:05:04 PM",
+    "responseTime": "1101ms"
+  },
+  {
+    "id": 11,
+    "url": "https://aucdt.edu.gh/academics/students/orientation/",
+    "status": "Up",
+    "lastChecked": "7/20/2025, 3:05:04 PM",
+    "responseTime": "1081ms"
+  },
+  {
+    "id": 12,
+    "url": "https://aucdt.edu.gh/academics/students/careers/",
+    "status": "Up",
+    "lastChecked": "7/20/2025, 3:05:04 PM",
+    "responseTime": "1124ms"
+  },
+  {
+    "id": 13,
+    "url": "https://aucdt.edu.gh/academics/students/activities/",
+    "status": "Up",
+    "lastChecked": "7/20/2025, 3:05:04 PM",
+    "responseTime": "1081ms"
+  },
+  {
+    "id": 14,
+    "url": "https://aucdt.edu.gh/academics/students/counseling/",
+    "status": "Up",
+    "lastChecked": "7/20/2025, 3:05:04 PM",
+    "responseTime": "1114ms"
+  },
+  {
+    "id": 15,
+    "url": "https://aucdt.edu.gh/academics/academic-calendar/",
+    "status": "Up",
+    "lastChecked": "7/20/2025, 3:05:04 PM",
+    "responseTime": "1113ms"
+  },
+  {
+    "id": 16,
+    "url": "https://aucdt.edu.gh/academics/timetable/",
+    "status": "Up",
+    "lastChecked": "7/20/2025, 3:05:04 PM",
+    "responseTime": "1109ms"
+  },
+  {
+    "id": 17,
+    "url": "https://aucdt.edu.gh/academics/library/",
+    "status": "Up",
+    "lastChecked": "7/20/2025, 3:05:16 PM",
+    "responseTime": "12761ms"
+  },
+  {
+    "id": 18,
+    "url": "https://aucdt.edu.gh/departments/fashion-design-department/",
+    "status": "Up",
+    "lastChecked": "7/20/2025, 3:05:04 PM",
+    "responseTime": "1116ms"
+  },
+  {
+    "id": 19,
+    "url": "https://aucdt.edu.gh/departments/digital-media-and-communication-design-department/digital-media-and-communication-design/",
+    "status": "Up",
+    "lastChecked": "7/20/2025, 3:05:04 PM",
+    "responseTime": "1117ms"
+  },
+  {
+    "id": 20,
+    "url": "https://aucdt.edu.gh/departments/interior-design-department/",
+    "status": "Down",
+    "lastChecked": "7/20/2025, 3:05:12 PM",
+    "responseTime": "9897ms"
+  },
+  {
+    "id": 21,
+    "url": "https://aucdt.edu.gh/departments/jewellery-design-technology-department/",
+    "status": "Down",
+    "lastChecked": "7/20/2025, 3:05:12 PM",
+    "responseTime": "9676ms"
+  },
+  {
+    "id": 22,
+    "url": "https://aucdt.edu.gh/departments/textile-design-department/",
+    "status": "Down",
+    "lastChecked": "7/20/2025, 3:05:14 PM",
+    "responseTime": "10944ms"
+  },
+  {
+    "id": 23,
+    "url": "https://aucdt.edu.gh/departments/animation-vfx-department/",
+    "status": "Down",
+    "lastChecked": "7/20/2025, 3:05:14 PM",
+    "responseTime": "11855ms"
+  },
+  {
+    "id": 24,
+    "url": "https://aucdt.edu.gh/departments/film-tv-production-department/",
+    "status": "Down",
+    "lastChecked": "7/20/2025, 3:05:14 PM",
+    "responseTime": "11681ms"
+  },
+  {
+    "id": 25,
+    "url": "https://aucdt.edu.gh/admissions/",
+    "status": "Up",
+    "lastChecked": "7/20/2025, 3:05:04 PM",
+    "responseTime": "1097ms"
+  },
+  {
+    "id": 26,
+    "url": "https://aucdt.edu.gh/admissions/entry-requirements/",
+    "status": "Up",
+    "lastChecked": "7/20/2025, 3:05:04 PM",
+    "responseTime": "1142ms"
+  },
+  {
+    "id": 27,
+    "url": "https://aucdt.edu.gh/admissions/how-to-apply/",
+    "status": "Up",
+    "lastChecked": "7/20/2025, 3:05:04 PM",
+    "responseTime": "1103ms"
+  },
+  {
+    "id": 28,
+    "url": "https://aucdt.edu.gh/admissions/fees-scholarships/",
+    "status": "Down",
+    "lastChecked": "7/20/2025, 3:05:15 PM",
+    "responseTime": "12296ms"
+  },
+  {
+    "id": 29,
+    "url": "https://aucdt.edu.gh/programmes/",
+    "status": "Down",
+    "lastChecked": "7/20/2025, 3:05:16 PM",
+    "responseTime": "12502ms"
+  },
+  {
+    "id": 30,
+    "url": "https://aucdt.edu.gh/gallery/",
+    "status": "Down",
+    "lastChecked": "7/20/2025, 3:05:15 PM",
+    "responseTime": "12471ms"
+  },
+  {
+    "id": 31,
+    "url": "https://aucdt.edu.gh/news-events/",
+    "status": "Down",
+    "lastChecked": "7/20/2025, 3:05:16 PM",
+    "responseTime": "12559ms"
+  },
+  {
+    "id": 32,
+    "url": "https://aucdt.edu.gh/contact-us/",
+    "status": "Down",
+    "lastChecked": "7/20/2025, 3:05:15 PM",
+    "responseTime": "12274ms"
+  },
+  {
+    "id": 33,
+    "url": "https://portal.aucdt.edu.gh/",
+    "status": "Up",
+    "lastChecked": "7/20/2025, 3:05:04 PM",
+    "responseTime": "1115ms"
+  },
+  {
+    "id": 34,
+    "url": "https://portal.aucdt.edu.gh/admissions/#/home",
+    "status": "Up",
+    "lastChecked": "7/20/2025, 3:05:03 PM",
+    "responseTime": "857ms"
+  },
+  {
+    "id": 35,
+    "url": "https://portal.aucdt.edu.gh/start-new-application.php",
+    "status": "Down",
+    "lastChecked": "7/20/2025, 3:05:08 PM",
+    "responseTime": "5330ms"
+  },
+  {
+    "id": 36,
+    "url": "https://portal.aucdt.edu.gh/continue-application.php",
+    "status": "Down",
+    "lastChecked": "7/20/2025, 3:05:08 PM",
+    "responseTime": "5048ms"
+  },
+  {
+    "id": 37,
+    "url": "https://portal.aucdt.edu.gh/admission-status.php",
+    "status": "Down",
+    "lastChecked": "7/20/2025, 3:05:08 PM",
+    "responseTime": "5225ms"
+  },
+  {
+    "id": 38,
+    "url": "https://portal.aucdt.edu.gh/registration",
+    "status": "Up",
+    "lastChecked": "7/20/2025, 3:05:10 PM",
+    "responseTime": "7033ms"
+  },
+  {
+    "id": 39,
+    "url": "https://portal.aucdt.edu.gh/index.php/student-portal/",
+    "status": "Up",
+    "lastChecked": "7/20/2025, 3:05:04 PM",
+    "responseTime": "1103ms"
+  },
+  {
+    "id": 40,
+    "url": "https://portal.aucdt.edu.gh/staff-portal.php",
+    "status": "Down",
+    "lastChecked": "7/20/2025, 3:05:09 PM",
+    "responseTime": "6769ms"
+  },
+  {
+    "id": 41,
+    "url": "https://lms.aucdt.edu.gh",
+    "status": "Up",
+    "lastChecked": "7/20/2025, 3:05:08 PM",
+    "responseTime": "5936ms"
+  },
+  {
+    "id": 42,
+    "url": "https://ilearn.aucdt.edu.gh",
+    "status": "Down",
+    "lastChecked": "7/20/2025, 3:05:03 PM",
+    "responseTime": "550ms"
+  },
+  {
+    "id": 43,
+    "url": "https://dmcd.aucdt.edu.gh",
+    "status": "Up",
+    "lastChecked": "7/20/2025, 3:05:09 PM",
+    "responseTime": "6866ms"
+  },
+  {
+    "id": 44,
+    "url": "https://jdt.aucdt.edu.gh",
+    "status": "Up",
+    "lastChecked": "7/20/2025, 3:05:13 PM",
+    "responseTime": "10068ms"
+  },
+  {
+    "id": 45,
+    "url": "https://pde.aucdt.edu.gh",
+    "status": "Up",
+    "lastChecked": "7/20/2025, 3:05:15 PM",
+    "responseTime": "11997ms"
+  },
+  {
+    "id": 46,
+    "url": "https://fdt.aucdt.edu.gh",
+    "status": "Up",
+    "lastChecked": "7/20/2025, 3:05:14 PM",
+    "responseTime": "11513ms"
+  },
+  {
+    "id": 47,
+    "url": "https://src.aucdt.edu.gh",
+    "status": "Up",
+    "lastChecked": "7/20/2025, 3:05:14 PM",
+    "responseTime": "11612ms"
+  },
+  {
+    "id": 48,
+    "url": "https://tvet.aucdt.edu.gh",
+    "status": "Up",
+    "lastChecked": "7/20/2025, 3:05:10 PM",
+    "responseTime": "7872ms"
+  },
+  {
+    "id": 49,
+    "url": "https://exhibition.aucdt.edu.gh",
+    "status": "Down",
+    "lastChecked": "7/20/2025, 3:05:03 PM",
+    "responseTime": "536ms"
+  },
+  {
+    "id": 50,
+    "url": "https://ol.aucdt.edu.gh",
+    "status": "Up",
+    "lastChecked": "7/20/2025, 3:05:09 PM",
+    "responseTime": "6258ms"
+  },
+  {
+    "id": 51,
+    "url": "https://intranet.aucdt.edu.gh",
+    "status": "Up",
+    "lastChecked": "7/20/2025, 3:05:13 PM",
+    "responseTime": "10854ms"
+  },
+  {
+    "id": 52,
+    "url": "https://students.aucdt.edu.gh",
+    "status": "Down",
+    "lastChecked": "7/20/2025, 3:05:03 PM",
+    "responseTime": "25ms"
+  },
+  {
+    "id": 53,
+    "url": "https://daaandsonsltd.com",
+    "status": "Up",
+    "lastChecked": "7/20/2025, 3:05:10 PM",
+    "responseTime": "7136ms"
+  },
+  {
+    "id": 54,
+    "url": "https://daarowater.com",
+    "status": "Up",
+    "lastChecked": "7/20/2025, 3:05:10 PM",
+    "responseTime": "7660ms"
+  },
+  {
+    "id": 55,
+    "url": "https://asanskamineralsltd.com",
+    "status": "Up",
+    "lastChecked": "7/20/2025, 3:05:04 PM",
+    "responseTime": "1085ms"
+  },
+  {
+    "id": 56,
+    "url": "https://asanskafc.com",
+    "status": "Up",
+    "lastChecked": "7/20/2025, 3:05:13 PM",
+    "responseTime": "10532ms"
+  }
+]

@@ -1,0 +1,118 @@
+[76] Installing: countdown-timer
+Lockfile is up to date, resolution step is skipped
+Progress: resolved 1, reused 0, downloaded 0, added 0
+Packages: +468
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Progress: resolved 468, reused 0, downloaded 0, added 0
+Progress: resolved 468, reused 71, downloaded 0, added 0
+Progress: resolved 468, reused 109, downloaded 0, added 0
+Progress: resolved 468, reused 179, downloaded 0, added 0
+Progress: resolved 468, reused 239, downloaded 0, added 0
+Progress: resolved 468, reused 277, downloaded 0, added 0
+Progress: resolved 468, reused 300, downloaded 0, added 0
+Progress: resolved 468, reused 319, downloaded 0, added 0
+Progress: resolved 468, reused 332, downloaded 0, added 0
+Progress: resolved 468, reused 353, downloaded 0, added 0
+Progress: resolved 468, reused 397, downloaded 0, added 0
+Progress: resolved 468, reused 466, downloaded 0, added 0
+Progress: resolved 468, reused 466, downloaded 0, added 7
+Progress: resolved 468, reused 466, downloaded 0, added 13
+Progress: resolved 468, reused 467, downloaded 0, added 14
+Progress: resolved 468, reused 467, downloaded 0, added 15
+Progress: resolved 468, reused 467, downloaded 0, added 17
+Progress: resolved 468, reused 467, downloaded 0, added 18
+Progress: resolved 468, reused 467, downloaded 0, added 24
+Progress: resolved 468, reused 467, downloaded 0, added 25
+Progress: resolved 468, reused 467, downloaded 0, added 30
+Progress: resolved 468, reused 467, downloaded 0, added 31
+Progress: resolved 468, reused 467, downloaded 0, added 32
+Progress: resolved 468, reused 467, downloaded 0, added 33
+Progress: resolved 468, reused 468, downloaded 0, added 43
+Progress: resolved 468, reused 468, downloaded 0, added 44
+Progress: resolved 468, reused 468, downloaded 0, added 51
+Progress: resolved 468, reused 468, downloaded 0, added 64
+Progress: resolved 468, reused 468, downloaded 0, added 73
+Progress: resolved 468, reused 468, downloaded 0, added 84
+Progress: resolved 468, reused 468, downloaded 0, added 88
+Progress: resolved 468, reused 468, downloaded 0, added 103
+Progress: resolved 468, reused 468, downloaded 0, added 119
+Progress: resolved 468, reused 468, downloaded 0, added 135
+Progress: resolved 468, reused 468, downloaded 0, added 137
+Progress: resolved 468, reused 468, downloaded 0, added 141
+Progress: resolved 468, reused 468, downloaded 0, added 147
+Progress: resolved 468, reused 468, downloaded 0, added 161
+Progress: resolved 468, reused 468, downloaded 0, added 185
+Progress: resolved 468, reused 468, downloaded 0, added 200
+Progress: resolved 468, reused 468, downloaded 0, added 205
+Progress: resolved 468, reused 468, downloaded 0, added 206
+Progress: resolved 468, reused 468, downloaded 0, added 213
+Progress: resolved 468, reused 468, downloaded 0, added 220
+Progress: resolved 468, reused 468, downloaded 0, added 256
+Progress: resolved 468, reused 468, downloaded 0, added 257
+Progress: resolved 468, reused 468, downloaded 0, added 264
+Progress: resolved 468, reused 468, downloaded 0, added 265
+Progress: resolved 468, reused 468, downloaded 0, added 266
+Progress: resolved 468, reused 468, downloaded 0, added 267
+Progress: resolved 468, reused 468, downloaded 0, added 270
+Progress: resolved 468, reused 468, downloaded 0, added 271
+Progress: resolved 468, reused 468, downloaded 0, added 279
+Progress: resolved 468, reused 468, downloaded 0, added 280
+Progress: resolved 468, reused 468, downloaded 0, added 301
+Progress: resolved 468, reused 468, downloaded 0, added 322
+Progress: resolved 468, reused 468, downloaded 0, added 334
+Progress: resolved 468, reused 468, downloaded 0, added 340
+Progress: resolved 468, reused 468, downloaded 0, added 344
+Progress: resolved 468, reused 468, downloaded 0, added 353
+Progress: resolved 468, reused 468, downloaded 0, added 357
+Progress: resolved 468, reused 468, downloaded 0, added 373
+Progress: resolved 468, reused 468, downloaded 0, added 386
+Progress: resolved 468, reused 468, downloaded 0, added 400
+Progress: resolved 468, reused 468, downloaded 0, added 418
+Progress: resolved 468, reused 468, downloaded 0, added 429
+Progress: resolved 468, reused 468, downloaded 0, added 447
+Progress: resolved 468, reused 468, downloaded 0, added 456
+Progress: resolved 468, reused 468, downloaded 0, added 460
+Progress: resolved 468, reused 468, downloaded 0, added 462
+Progress: resolved 468, reused 468, downloaded 0, added 467
+Progress: resolved 468, reused 468, downloaded 0, added 468
+Progress: resolved 468, reused 468, downloaded 0, added 468, done
+
+dependencies:
++ @google/genai 1.43.0
++ @tailwindcss/vite 4.2.1
++ @vitejs/plugin-react 5.1.4
++ better-sqlite3 12.6.2
++ dotenv 17.3.1
++ express 4.22.1
++ lucide-react 0.546.0
++ motion 12.34.3
++ puppeteer 24.37.5
++ react 19.2.4
++ react-dom 19.2.4
++ react-router-dom 7.13.1
++ vite 6.4.1
+
+devDependencies:
++ @testing-library/jest-dom 6.9.1
++ @testing-library/react 16.3.2
++ @testing-library/user-event 14.6.1
++ @types/express 4.17.25
++ @types/node 22.19.13
++ @vitest/coverage-v8 3.2.4
++ @vitest/ui 3.2.4
++ autoprefixer 10.4.27
++ jsdom 26.1.0
++ tailwindcss 4.2.1
++ tsx 4.21.0
++ typescript 5.8.3
++ vitest 3.2.4
+
+╭ Warning ─────────────────────────────────────────────────────────────────────╮
+│                                                                              │
+│   Ignored build scripts: better-sqlite3@12.6.2, esbuild@0.25.12,             │
+│   esbuild@0.27.3, protobufjs@7.5.4, puppeteer@24.37.5.                       │
+│   Run "pnpm approve-builds" to pick which dependencies should be allowed     │
+│   to run scripts.                                                            │
+│                                                                              │
+╰──────────────────────────────────────────────────────────────────────────────╯
+Done in 3m 15.5s using pnpm v10.32.1

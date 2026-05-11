@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="description" content="PLCRP — Production-Level Content Rights Platform. Techbridge University College institutional sandbox for music and media rights management." />
+    <meta name="keywords" content="Techbridge University College, TUC, PLCRP, content rights, music production, rights management, Ghana university" />
+    <meta name="author" content="Techbridge University College" />
+    <meta name="publisher" content="Techbridge University College" />
+    <meta name="theme-color" content="#C8A84B" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Inter:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
+    <title>PLCRP | Techbridge University College</title>
+    <style>
+      :root, [data-theme='dark'] {
+        --color-background-main: #0F0C07;
+        --color-background-card: #141210;
+        --color-background-card-hover: #1c1a17;
+        --color-background-input: #0F0C07;
+        --color-border-card: #1c1a17;
+        --color-border-input: #2a2825;
+        --color-foreground: #F2EBD9;
+        --color-foreground-muted: #9ca3af;
+        --color-foreground-on-primary: #0F0C07;
+        --color-primary: #C8A84B;
+        --color-primary-hover: #b6963a;
+      }
+      [data-theme='light'] {
+        --color-background-main: #fcfaf2;
+        --color-background-card: #ffffff;
+        --color-background-card-hover: #f3f4f6;
+        --color-background-input: #ffffff;
+        --color-border-card: #e5e7eb;
+        --color-border-input: #d1d5db;
+        --color-foreground: #0F0C07;
+        --color-foreground-muted: #4b5563;
+        --color-foreground-on-primary: #ffffff;
+        --color-primary: #C8A84B;
+        --color-primary-hover: #b6963a;
+      }
+      [data-theme='high-contrast'] {
+        --color-background-main: #000000;
+        --color-background-card: #000000;
+        --color-background-card-hover: #1a1a1a;
+        --color-background-input: #000000;
+        --color-border-card: #ffffff;
+        --color-border-input: #ffffff;
+        --color-foreground: #ffffff;
+        --color-foreground-muted: #e0e0e0;
+        --color-foreground-on-primary: #000000;
+        --color-primary: #ffff00;
+        --color-primary-hover: #e6e600;
+      }
+      body {
+        background-color: var(--color-background-main);
+        color: var(--color-foreground);
+        font-family: 'Inter', sans-serif;
+        margin: 0;
+      }
+      h1, h2, h3, .font-playfair { font-family: 'Playfair Display', serif; }
+      .font-bebas { font-family: 'Bebas Neue', sans-serif; }
+      .font-cormorant { font-family: 'Cormorant Garamond', serif; }
+      @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      .animate-fade-in { animation: fadeIn 0.5s ease-out forwards; }
+    </style>
+    <link rel="stylesheet" href="/index.css">
+  </head>
+  <body class="antialiased">
+    <script>
+      (function() {
+        const theme = localStorage.getItem('plcrp-theme') || 'dark';
+        document.documentElement.setAttribute('data-theme', theme);
+      })();
+    </script>
+    <div id="root"></div>
+    <script type="module" src="/index.tsx"></script>
+  </body>
+</html>

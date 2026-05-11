@@ -1,0 +1,50 @@
+<svg width="800" height="500" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif">
+    <style>
+        .entity { fill: #2d3748; stroke: #a0aec0; stroke-width: 2; }
+        .process { fill: #2d3748; stroke: #a0aec0; stroke-width: 2; rx: 20; }
+        .datastore { fill: #2d3748; stroke: #a0aec0; stroke-width: 2; }
+        .text { fill: #ffffff; text-anchor: middle; dominant-baseline: middle; font-size: 14px; font-weight: bold; }
+        .arrow { stroke: #a0aec0; stroke-width: 2; marker-end: url(#dfd-arrowhead); fill: none; }
+        .arrow-label { fill: #cbd5e0; text-anchor: middle; font-size: 12px; }
+    </style>
+    <defs>
+        <marker id="dfd-arrowhead" markerWidth="10" markerHeight="7" refX="0" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" fill="#a0aec0" />
+        </marker>
+    </defs>
+    <title>Data Flow Diagram - User Registration</title>
+
+    <!-- Entities -->
+    <rect x="50" y="215" width="150" height="70" class="entity" />
+    <text x="125" y="250" class="text">User</text>
+
+    <!-- Processes -->
+    <rect x="300" y="80" width="200" height="80" class="process" />
+    <text x="400" y="120" class="text">1.0 Collect Details</text>
+    <rect x="300" y="210" width="200" height="80" class="process" />
+    <text x="400" y="250" class="text">2.0 Validate & Store</text>
+    <rect x="300" y="340" width="200" height="80" class="process" />
+    <text x="400" y="380" class="text">3.0 Update Session</text>
+
+    <!-- Data Store -->
+    <path d="M 600 150 H 750 V 350 H 600" class="datastore" />
+    <line x1="600" y1="150" x2="600" y2="350" stroke="#a0aec0" stroke-width="2" />
+    <text x="675" y="250" class="text">Users Data Store</text>
+    <text x="675" y="270" class="text" font-size="10">(Local Storage)</text>
+
+    <!-- Flows -->
+    <path class="arrow" d="M 125,215 V 120 H 295" />
+    <text x="210" y="150" class="arrow-label">Username & Password</text>
+    
+    <path class="arrow" d="M 400,160 V 210" />
+    <text x="450" y="185" class="arrow-label">User Details</text>
+
+    <path class="arrow" d="M 500,250 H 595" />
+    <text x="550" y="240" class="arrow-label">New User Record</text>
+
+    <path class="arrow" d="M 400,290 V 340" />
+    <text x="460" y="315" class="arrow-label">Registration Success</text>
+
+    <path class="arrow" d="M 295,380 H 125 V 285" />
+    <text x="210" y="350" class="arrow-label">Login Confirmation</text>
+</svg>

@@ -1,0 +1,146 @@
+/* Global Styles */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+h1 {
+  text-align: center;
+  margin-top: 2rem;
+}
+
+form {
+  max-width: 70%;
+  margin: auto;
+  padding: 1rem;
+}
+
+.styled-table {
+  border-collapse: collapse;
+  margin: 25px 0;
+  font-size: 0.9em;
+  font-family: sans-serif;
+  min-width: 400px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+}
+
+.styled-table thead tr {
+  background-color: #009879;
+  color: #ffffff;
+  text-align: left;
+  border-bottom: 1px solid #dddddd;
+}
+
+.styled-table .table-row:nth-of-type(even) {
+  background-color: #f3f3f3;
+}
+
+.styled-table .table-row.table-header {
+  background-color: #4caf50;
+  color: #fff;
+}
+
+.styled-table .table-row {
+  display: table-row;
+}
+
+.styled-table .table-row .table-cell {
+  display: table-cell;
+  padding: 0.5rem;
+  border: none;
+  text-align: left;
+  border-radius: 5px;
+  padding: 12px 15px;
+}
+
+.styled-table .table-row .table-cell:first-child {
+  text-align: left;
+  width: 20%;
+}
+
+.styled-table .table-row .table-cell:nth-child(2),
+.styled-table .table-row .table-cell:nth-child(5) {
+  width: 5%;
+  text-align: center;
+}
+
+.styled-table .table-row .table-cell:nth-child(3) {
+  width: 15%;
+}
+
+.styled-table .table-row .table-cell:nth-child(4) {
+  text-align: left;
+  width: 20%;
+}
+
+.styled-table .table-row .table-cell:nth-child(6) {
+  width: 15%;
+}
+
+.styled-table .table-header .table-row:last-of-type {
+  border-bottom: 2px solid #009879;
+}
+
+.centered-input {
+  text-align: center;
+}
+
+@media screen and (max-width: 768px) {
+  .styled-table .table-row {
+    display: block;
+    margin-bottom: 0.5rem;
+    border: none;
+  }
+
+  .styled-table .table-row .table-cell {
+    display: block;
+    width: 100%;
+    border: none;
+    text-align: left;
+    padding: 0.5rem;
+    border-radius: 5px;
+  }
+
+  .styled-table .table-row.table-header {
+    display: none;
+  }
+
+  .styled-table .table-row:nth-of-type(even) {
+    background-color: transparent;
+  }
+}
+
+#exams {
+  width: 200px; /* change this value to adjust the width */
+  height: 40px; /* change this value to adjust the height */
+}
+
+.select-box {
+  appearance: none;
+  border: none;
+  border-radius: 5px;
+  background-color: #b3f1d0;
+  padding: 10px 20px;
+  font-size: 16px;
+  color: #141601;
+  font-weight: bold;
+  width: 100%;
+  max-width: 400px;
+  cursor: pointer;
+  outline: none;
+  transition: all 0.3s ease-in-out;
+}
+
+.select-box:hover,
+.select-box:focus {
+  background-color: #ddd;
+}
+
+.select-box option {
+  font-weight: normal;
+}

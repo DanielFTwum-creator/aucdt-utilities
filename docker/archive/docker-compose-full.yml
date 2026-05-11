@@ -1,0 +1,901 @@
+version: '3.8'
+
+# Docker Compose for TUC Utilities - Full Profile Deployment
+# Total Projects in Monorepo: 109
+# Services in this file: 69 (63.3% coverage)
+# NOTE: For complete coverage (101 services), use docker-compose-all-apps.yml instead
+#
+# Usage:
+#   Default (High Priority): docker-compose up
+#   All Projects: docker-compose --profile full up
+#   Development: docker-compose --profile dev up <service>-dev
+#
+# Access: http://localhost:8080
+
+services:
+  # ====================
+  # Reverse Proxy (Gateway)
+  # ====================
+  nginx-gateway:
+    image: nginx:alpine
+    container_name: tuc-gateway
+    ports:
+      - "8080:80"
+    volumes:
+      - ./docker/nginx/nginx-full.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./docker/nginx/html:/usr/share/nginx/html:ro
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # ====================
+  # High Priority Apps
+  # ====================
+
+  analytics-refactor:
+    build:
+      context: ./analytics-refactor
+      dockerfile: ../Dockerfile.vite
+    container_name: analytics-refactor
+    environment:
+      - NODE_ENV=production
+    networks:
+      - tuc-network
+    restart: unless-stopped
+
+  fees-comparison-dashboard:
+    build:
+      context: ./fees-comparison-dashboard
+      dockerfile: ../Dockerfile.vite
+    container_name: fees-comparison
+    environment:
+      - NODE_ENV=production
+    networks:
+      - tuc-network
+    restart: unless-stopped
+
+  tuc-analytics-dashboard:
+    build:
+      context: ./tuc-analytics-dashboard
+      dockerfile: ../Dockerfile.vite
+    container_name: tuc-analytics
+    environment:
+      - NODE_ENV=production
+    networks:
+      - tuc-network
+    restart: unless-stopped
+
+  kanban-app:
+    build:
+      context: ./kanban-app
+      dockerfile: ../Dockerfile.vite
+    container_name: kanban
+    environment:
+      - NODE_ENV=production
+    networks:
+      - tuc-network
+    restart: unless-stopped
+
+  tuc-website-react:
+    build:
+      context: ./tuc-website-react
+      dockerfile: ../Dockerfile.vite
+    container_name: tuc-website-react
+    environment:
+      - NODE_ENV=production
+    networks:
+      - tuc-network
+    restart: unless-stopped
+
+  techbridge-product-design-6r-design-portal:
+    build:
+      context: ./techbridge-product-design-6r-design-portal
+      dockerfile: ../Dockerfile.vite
+    container_name: techbridge-product-design-6r-design-portal
+    environment:
+      - NODE_ENV=production
+    networks:
+      - tuc-network
+    restart: unless-stopped
+
+  # ====================
+  # All Other Projects (On-Demand with --profile full)
+  # ====================
+
+  6r-product-design-workshop-portal:
+    build:
+      context: ./6r-product-design-workshop-portal
+      dockerfile: ../Dockerfile.vite
+    container_name: 6r-product-design-workshop-portal
+    environment:
+      - NODE_ENV=production
+    networks:
+      - tuc-network
+    profiles:
+      - full
+
+  academic-performance-app:
+    build:
+      context: ./academic-performance-app
+      dockerfile: ../Dockerfile.vite
+    container_name: academic-performance
+    environment:
+      - NODE_ENV=production
+    networks:
+      - tuc-network
+    profiles:
+      - full
+
+  agenticai-masterclass:
+    build:
+      context: ./agenticai-masterclass
+      dockerfile: ../Dockerfile.vite
+    container_name: agenticai-masterclass
+    environment:
+      - NODE_ENV=production
+    networks:
+      - tuc-network
+    profiles:
+      - full
+
+  ai-techbridge:
+    build:
+      context: ./ai-@-techbridge
+      dockerfile: ../Dockerfile.vite
+    container_name: ai-techbridge
+    environment:
+      - NODE_ENV=production
+    networks:
+      - tuc-network
+    profiles:
+      - full
+
+  ai-code-reviewer:
+    build:
+      context: ./ai-code-reviewer
+      dockerfile: ../Dockerfile.vite
+    container_name: ai-code-reviewer
+    environment:
+      - NODE_ENV=production
+    networks:
+      - tuc-network
+    profiles:
+      - full
+
+  ai-studio-directives:
+    build:
+      context: ./ai-studio-directives
+      dockerfile: ../Dockerfile.vite
+    container_name: ai-studio-directives
+    environment:
+      - NODE_ENV=production
+    networks:
+      - tuc-network
+    profiles:
+      - full
+
+  ananse-cartoon-generator:
+    build:
+      context: ./ananse-cartoon-generator
+      dockerfile: ../Dockerfile.vite
+    container_name: ananse-cartoon-generator
+    environment:
+      - NODE_ENV=production
+    networks:
+      - tuc-network
+    profiles:
+      - full
+
+  tuc-assessment-platform:
+    build:
+      context: ./tuc-assessment-platform
+      dockerfile: ../Dockerfile.vite
+    container_name: tuc-assessment-platform
+    environment:
+      - NODE_ENV=production
+    networks:
+      - tuc-network
+    profiles:
+      - full
+
+  tuc-dashboard:
+    build:
+      context: ./tuc-dashboard
+      dockerfile: ../Dockerfile.vite
+    container_name: tuc
+    environment:
+      - NODE_ENV=production
+    networks:
+      - tuc-network
+    profiles:
+      - full
+
+  tuc-eligibility-checker:
+    build:
+      context: ./tuc-eligibility-checker
+      dockerfile: ../Dockerfile.vite
+    container_name: tuc-eligibility-checker
+    environment:
+      - NODE_ENV=production
+    networks:
+      - tuc-network
+    profiles:
+      - full
+
+  tuc-lead-generation-infographic:
+    build:
+      context: ./tuc-lead-generation-infographic
+      dockerfile: ../Dockerfile.vite
+    container_name: tuc-lead-generation-infographic
+    environment:
+      - NODE_ENV=production
+    networks:
+      - tuc-network
+    profiles:
+      - full
+
+  tuc-lead-generator:
+    build:
+      context: ./tuc-lead-generator
+      dockerfile: ../Dockerfile.vite
+    container_name: tuc-lead-generator
+    environment:
+      - NODE_ENV=production
+    networks:
+      - tuc-network
+    profiles:
+      - full
+
+  tuc-skills-evaluation:
+    build:
+      context: ./tuc-skills-evaluation
+      dockerfile: ../Dockerfile.vite
+    container_name: tuc-skills-evaluation
+    environment:
+      - NODE_ENV=production
+    networks:
+      - tuc-network
+    profiles:
+      - full
+
+  aurelia-v4-working-with-aurelia:
+    build:
+      context: ./aurelia-v4---working-with-aurelia
+      dockerfile: ../Dockerfile.vite
+    container_name: aurelia-v4-working-with-aurelia
+    environment:
+      - NODE_ENV=production
+    networks:
+      - tuc-network
+    profiles:
+      - full
+
+  bp-bulletproof-directive-v22012026-1326:
+    build:
+      context: ./bp-bulletproof-directive-v22012026-1326
+      dockerfile: ../Dockerfile.vite
+    container_name: bp-bulletproof-directive-v22012026-1326
+    environment:
+      - NODE_ENV=production
+    networks:
+      - tuc-network
+    profiles:
+      - full
+
+  brainiac-challenge:
+    build:
+      context: ./brainiac-challenge
+      dockerfile: ../Dockerfile.vite
+    container_name: brainiac-challenge
+    environment:
+      - NODE_ENV=production
+    networks:
+      - tuc-network
+    profiles:
+      - full
+
+  brand-guideline-checker:
+    build:
+      context: ./brand-guideline-checker
+      dockerfile: ../Dockerfile.vite
+    container_name: brand-guideline-checker
+    environment:
+      - NODE_ENV=production
+    networks:
+      - tuc-network
+    profiles:
+      - full
+
+  cinematic-triptych-generator:
+    build:
+      context: ./cinematic-triptych-generator
+      dockerfile: ../Dockerfile.vite
+    container_name: cinematic-triptych-generator
+    environment:
+      - NODE_ENV=production
+    networks:
+      - tuc-network
+    profiles:
+      - full
+
+  ckt-utas-modern-website:
+    build:
+      context: ./ckt-utas-modern-website
+      dockerfile: ../Dockerfile.vite
+    container_name: ckt-utas-modern-website
+    environment:
+      - NODE_ENV=production
+    networks:
+      - tuc-network
+    profiles:
+      - full
+
+  Class4_Digital_Learning_System:
+    build:
+      context: ./Class4_Digital_Learning_System
+      dockerfile: ../Dockerfile.vite
+    container_name: Class4_Digital_Learning_System
+    environment:
+      - NODE_ENV=production
+    networks:
+      - tuc-network
+    profiles:
+      - full
+
+  community-plates-v1:
+    build:
+      context: ./community-plates.v1
+      dockerfile: ../Dockerfile.vite
+    container_name: community-plates-v1
+    environment:
+      - NODE_ENV=production
+    networks:
+      - tuc-network
+    profiles:
+      - full
+
+  dadaist-concert-visualizer:
+    build:
+      context: ./dadaist-concert-visualizer
+      dockerfile: ../Dockerfile.vite
+    container_name: dadaist-concert-visualizer
+    environment:
+      - NODE_ENV=production
+    networks:
+      - tuc-network
+    profiles:
+      - full
+
+  dictation-app:
+    build:
+      context: ./dictation-app
+      dockerfile: ../Dockerfile.vite
+    container_name: dictation
+    environment:
+      - NODE_ENV=production
+    networks:
+      - tuc-network
+    profiles:
+      - full
+
+  drone-light-show-simulator:
+    build:
+      context: ./drone-light-show-simulator
+      dockerfile: ../Dockerfile.vite
+    container_name: drone-light-show-simulator
+    environment:
+      - NODE_ENV=production
+    networks:
+      - tuc-network
+    profiles:
+      - full
+
+  drone-showcase:
+    build:
+      context: ./drone-showcase
+      dockerfile: ../Dockerfile.vite
+    container_name: drone-showcase
+    environment:
+      - NODE_ENV=production
+    networks:
+      - tuc-network
+    profiles:
+      - full
+
+  enactus-ckt-frontend-app-main:
+    build:
+      context: ./enactus-ckt-frontend-app-main
+      dockerfile: ../Dockerfile.vite
+    container_name: enactus-ckt-frontend-main
+    environment:
+      - NODE_ENV=production
+    networks:
+      - tuc-network
+    profiles:
+      - full
+
+  english-safari:
+    build:
+      context: ./english-safari
+      dockerfile: ../Dockerfile.vite
+    container_name: english-safari
+    environment:
+      - NODE_ENV=production
+    networks:
+      - tuc-network
+    profiles:
+      - full
+
+  enhanced-youtube-genie:
+    build:
+      context: ./enhanced-youtube-genie
+      dockerfile: ../Dockerfile.vite
+    container_name: enhanced-youtube-genie
+    environment:
+      - NODE_ENV=production
+    networks:
+      - tuc-network
+    profiles:
+      - full
+
+  expensepro-advanced-financial-tracker:
+    build:
+      context: ./expensepro---advanced-financial-tracker
+      dockerfile: ../Dockerfile.vite
+    container_name: expensepro-advanced-financial-tracker
+    environment:
+      - NODE_ENV=production
+    networks:
+      - tuc-network
+    profiles:
+      - full
+
+  ghana-news-aggregator:
+    build:
+      context: ./ghana-news-aggregator
+      dockerfile: ../Dockerfile.vite
+    container_name: ghana-news-aggregator
+    environment:
+      - NODE_ENV=production
+    networks:
+      - tuc-network
+    profiles:
+      - full
+
+  ghana-university-fees-dashboard:
+    build:
+      context: ./ghana-university-fees-dashboard
+      dockerfile: ../Dockerfile.vite
+    container_name: ghana-university-fees
+    environment:
+      - NODE_ENV=production
+    networks:
+      - tuc-network
+    profiles:
+      - full
+
+  gif-animator-ai-refactored:
+    build:
+      context: ./gif-animator-ai-refactored
+      dockerfile: ../Dockerfile.vite
+    container_name: gif-animator-ai-refactored
+    environment:
+      - NODE_ENV=production
+    networks:
+      - tuc-network
+    profiles:
+      - full
+
+  kente-fusion-fashion-workshop:
+    build:
+      context: ./kente-fusion-fashion-workshop
+      dockerfile: ../Dockerfile.vite
+    container_name: kente-fusion-fashion-workshop
+    environment:
+      - NODE_ENV=production
+    networks:
+      - tuc-network
+    profiles:
+      - full
+
+  lecturer-assessment-system:
+    build:
+      context: ./lecturer-assessment-system
+      dockerfile: ../Dockerfile.vite
+    container_name: lecturer-assessment-system
+    environment:
+      - NODE_ENV=production
+    networks:
+      - tuc-network
+    profiles:
+      - full
+
+  lumina-triptych-studio:
+    build:
+      context: ./lumina-triptych-studio
+      dockerfile: ../Dockerfile.vite
+    container_name: lumina-triptych-studio
+    environment:
+      - NODE_ENV=production
+    networks:
+      - tuc-network
+    profiles:
+      - full
+
+  mature-students-exam-app:
+    build:
+      context: ./mature-students-exam-app
+      dockerfile: ../Dockerfile.vite
+    container_name: mature-students-exam
+    environment:
+      - NODE_ENV=production
+    networks:
+      - tuc-network
+    profiles:
+      - full
+
+  mature-students-exam-app-waec-integrated:
+    build:
+      context: ./mature-students-exam-app-waec-integrated
+      dockerfile: ../Dockerfile.vite
+    container_name: mature-students-exam-waec-integrated
+    environment:
+      - NODE_ENV=production
+    networks:
+      - tuc-network
+    profiles:
+      - full
+
+  mirror-truth-thumbnail-designer:
+    build:
+      context: ./mirror-truth---thumbnail-designer
+      dockerfile: ../Dockerfile.vite
+    container_name: mirror-truth-thumbnail-designer
+    environment:
+      - NODE_ENV=production
+    networks:
+      - tuc-network
+    profiles:
+      - full
+
+  omniextract:
+    build:
+      context: ./omniextract
+      dockerfile: ../Dockerfile.vite
+    container_name: omniextract
+    environment:
+      - NODE_ENV=production
+    networks:
+      - tuc-network
+    profiles:
+      - full
+
+  pama-realtor:
+    build:
+      context: ./pama-realtor
+      dockerfile: ../Dockerfile.vite
+    container_name: pama-realtor
+    environment:
+      - NODE_ENV=production
+    networks:
+      - tuc-network
+    profiles:
+      - full
+
+  pdf-extractor-app:
+    build:
+      context: ./pdf-extractor-app
+      dockerfile: ../Dockerfile.vite
+    container_name: pdf-extractor
+    environment:
+      - NODE_ENV=production
+    networks:
+      - tuc-network
+    profiles:
+      - full
+
+  pdf-to-assessment-json-converter:
+    build:
+      context: ./pdf-to-assessment-json-converter
+      dockerfile: ../Dockerfile.vite
+    container_name: pdf-to-assessment-json-converter
+    environment:
+      - NODE_ENV=production
+    networks:
+      - tuc-network
+    profiles:
+      - full
+
+  presentation-app:
+    build:
+      context: ./presentation-app
+      dockerfile: ../Dockerfile.vite
+    container_name: presentation
+    environment:
+      - NODE_ENV=production
+    networks:
+      - tuc-network
+    profiles:
+      - full
+
+  primevaluer-pro:
+    build:
+      context: ./primevaluer-pro
+      dockerfile: ../Dockerfile.vite
+    container_name: primevaluer-pro
+    environment:
+      - NODE_ENV=production
+    networks:
+      - tuc-network
+    profiles:
+      - full
+
+  rophe-specialist-care-rpms:
+    build:
+      context: ./rophe-specialist-care-rpms
+      dockerfile: ../Dockerfile.vite
+    container_name: rophe-specialist-care-rpms
+    environment:
+      - NODE_ENV=production
+    networks:
+      - tuc-network
+    profiles:
+      - full
+
+  rophe-specialist-care-rpms-final:
+    build:
+      context: ./rophe-specialist-care-rpms-final
+      dockerfile: ../Dockerfile.vite
+    container_name: rophe-specialist-care-rpms-final
+    environment:
+      - NODE_ENV=production
+    networks:
+      - tuc-network
+    profiles:
+      - full
+
+  scholarship-bond-portal-v3:
+    build:
+      context: ./scholarship-bond-portal-v3
+      dockerfile: ../Dockerfile.vite
+    container_name: scholarship-bond-portal-v3
+    environment:
+      - NODE_ENV=production
+    networks:
+      - tuc-network
+    profiles:
+      - full
+
+  sentinel-agent:
+    build:
+      context: ./sentinel-agent
+      dockerfile: ../Dockerfile.vite
+    container_name: sentinel-agent
+    environment:
+      - NODE_ENV=production
+    networks:
+      - tuc-network
+    profiles:
+      - full
+
+  smartscale-ai-presentation-platform:
+    build:
+      context: ./smartscale-ai-presentation-platform
+      dockerfile: ../Dockerfile.vite
+    container_name: smartscale-ai-presentation-platform
+    environment:
+      - NODE_ENV=production
+    networks:
+      - tuc-network
+    profiles:
+      - full
+
+  smartscale-ai-presentation-v1-06-12-2025-0020:
+    build:
+      context: ./smartscale-ai-presentation-v1.06.12.2025.0020
+      dockerfile: ../Dockerfile.vite
+    container_name: smartscale-ai-presentation-v1-06-12-2025-0020
+    environment:
+      - NODE_ENV=production
+    networks:
+      - tuc-network
+    profiles:
+      - full
+
+  smartscale-presenter:
+    build:
+      context: ./smartscale-presenter
+      dockerfile: ../Dockerfile.vite
+    container_name: smartscale-presenter
+    environment:
+      - NODE_ENV=production
+    networks:
+      - tuc-network
+    profiles:
+      - full
+
+  still_her_baby:
+    build:
+      context: ./still_her_baby
+      dockerfile: ../Dockerfile.vite
+    container_name: still_her_baby
+    environment:
+      - NODE_ENV=production
+    networks:
+      - tuc-network
+    profiles:
+      - full
+
+  techbridge-ai-workshop-flyer:
+    build:
+      context: ./techbridge-ai-workshop-flyer
+      dockerfile: ../Dockerfile.vite
+    container_name: techbridge-ai-workshop-flyer
+    environment:
+      - NODE_ENV=production
+    networks:
+      - tuc-network
+    profiles:
+      - full
+
+  techbridge-media-club-platform:
+    build:
+      context: ./techbridge-media-club-platform
+      dockerfile: ../Dockerfile.vite
+    container_name: techbridge-media-club-platform
+    environment:
+      - NODE_ENV=production
+    networks:
+      - tuc-network
+    profiles:
+      - full
+
+  techbridge-scholarship-portal:
+    build:
+      context: ./techbridge-scholarship-portal
+      dockerfile: ../Dockerfile.vite
+    container_name: techbridge-scholarship-portal
+    environment:
+      - NODE_ENV=production
+    networks:
+      - tuc-network
+    profiles:
+      - full
+
+  techbridge-strategy-dashboard:
+    build:
+      context: ./techbridge-strategy-dashboard
+      dockerfile: ../Dockerfile.vite
+    container_name: techbridge-strategy
+    environment:
+      - NODE_ENV=production
+    networks:
+      - tuc-network
+    profiles:
+      - full
+
+  techbridge-technical-quiz-platform:
+    build:
+      context: ./techbridge-technical-quiz-platform
+      dockerfile: ../Dockerfile.vite
+    container_name: techbridge-technical-quiz-platform
+    environment:
+      - NODE_ENV=production
+    networks:
+      - tuc-network
+    profiles:
+      - full
+
+  timetable-management-system:
+    build:
+      context: ./timetable-management-system
+      dockerfile: ../Dockerfile.vite
+    container_name: timetable-management-system
+    environment:
+      - NODE_ENV=production
+    networks:
+      - tuc-network
+    profiles:
+      - full
+
+  tsapro:
+    build:
+      context: ./tsapro
+      dockerfile: ../Dockerfile.vite
+    container_name: tsapro
+    environment:
+      - NODE_ENV=production
+    networks:
+      - tuc-network
+    profiles:
+      - full
+
+  tvet-assessment-progress-dashboard:
+    build:
+      context: ./tvet-assessment-progress-dashboard
+      dockerfile: ../Dockerfile.vite
+    container_name: tvet-assessment-progress
+    environment:
+      - NODE_ENV=production
+    networks:
+      - tuc-network
+    profiles:
+      - full
+
+  umoja-react-app:
+    build:
+      context: ./umoja-react-app
+      dockerfile: ../Dockerfile.vite
+    container_name: umoja-react
+    environment:
+      - NODE_ENV=production
+    networks:
+      - tuc-network
+    profiles:
+      - full
+
+  university-timetable-insights:
+    build:
+      context: ./university-timetable-insights
+      dockerfile: ../Dockerfile.vite
+    container_name: university-timetable-insights
+    environment:
+      - NODE_ENV=production
+    networks:
+      - tuc-network
+    profiles:
+      - full
+
+  veca-vermont-education-contact-aggregator:
+    build:
+      context: ./veca---vermont-education-contact-aggregator
+      dockerfile: ../Dockerfile.vite
+    container_name: veca-vermont-education-contact-aggregator
+    environment:
+      - NODE_ENV=production
+    networks:
+      - tuc-network
+    profiles:
+      - full
+
+  willpro:
+    build:
+      context: ./willpro
+      dockerfile: ../Dockerfile.vite
+    container_name: willpro
+    environment:
+      - NODE_ENV=production
+    networks:
+      - tuc-network
+    profiles:
+      - full
+
+  youtube-description-genie:
+    build:
+      context: ./youtube-description-genie
+      dockerfile: ../Dockerfile.vite
+    container_name: youtube-description-genie
+    environment:
+      - NODE_ENV=production
+    networks:
+      - tuc-network
+    profiles:
+      - full
+
+# ====================
+# Networks
+# ====================
+networks:
+  tuc-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
+
+volumes:
+  node_modules:

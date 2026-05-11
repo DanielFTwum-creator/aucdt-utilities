@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500">
+  <defs>
+    <style>
+      .bg { fill: #ffffff; }
+      .db { fill: #FBF8F1; stroke: #C8A84B; stroke-width: 2; rx: 8; }
+      .text-title { fill: #0F0C07; font-family: serif; font-size: 20px; font-weight: bold; text-anchor: middle; }
+      .text-field { fill: #333333; font-family: monospace; font-size: 11px; }
+      .line { stroke: #C8A84B; stroke-width: 2; fill: none; }
+    </style>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#C8A84B" />
+    </marker>
+  </defs>
+
+  <rect width="1000" height="600" class="bg" />
+
+  <text x="400" y="40" fill="#0F0C07" font-family="serif" font-size="24" font-weight="bold" text-anchor="middle" letter-spacing="2">DATA ARCHITECTURE &amp; PAYLOAD SCHEMA</text>
+  <text x="400" y="60" fill="#666" font-family="sans-serif" font-size="10" text-anchor="middle" letter-spacing="2">TECHBRIDGE SCHOLARSHIP PORTAL v2.0</text>
+
+  <!-- FormData Object -->
+  <rect x="50" y="100" width="220" height="350" class="db" />
+  <rect x="50" y="100" width="220" height="40" fill="#C8A84B" rx="8" />
+  <rect x="50" y="120" width="220" height="20" fill="#C8A84B" />
+  <text x="160" y="125" fill="#fff" font-family="sans-serif" font-size="14" font-weight="bold" text-anchor="middle">FormData (JSON)</text>
+  
+  <text x="70" y="170" class="text-field" font-weight="bold">meta:</text>
+  <text x="90" y="190" class="text-field">madeAt: string</text>
+  <text x="90" y="210" class="text-field">date: ISO8601</text>
+  
+  <text x="70" y="240" class="text-field" font-weight="bold">scholar:</text>
+  <text x="90" y="260" class="text-field">idNumber: masked</text>
+  <text x="90" y="280" class="text-field">email: regex_validated</text>
+
+  <text x="70" y="310" class="text-field" font-weight="bold">program:</text>
+  <text x="90" y="330" class="text-field">serviceYears: number</text>
+
+  <text x="70" y="360" class="text-field" font-weight="bold">signatures:</text>
+  <text x="90" y="380" class="text-field">signatureImage: base64</text>
+  <text x="90" y="400" class="text-field">agreedToTerms: boolean</text>
+
+  <!-- Transformation -->
+  <rect x="350" y="220" width="100" height="40" fill="#0F0C07" rx="20" />
+  <text x="400" y="245" fill="#fff" font-family="sans-serif" font-size="10" text-anchor="middle" letter-spacing="1">TRANSFORM</text>
+
+  <!-- API Payload -->
+  <rect x="530" y="150" width="220" height="250" class="db" />
+  <rect x="530" y="150" width="220" height="40" fill="#0F0C07" rx="8" />
+  <rect x="530" y="170" width="220" height="20" fill="#0F0C07" />
+  <text x="640" y="175" fill="#C8A84B" font-family="sans-serif" font-size="14" font-weight="bold" text-anchor="middle">SMTP Relay Payload</text>
+
+  <text x="550" y="220" class="text-field">receiverEmailId: [...]</text>
+  <text x="550" y="240" class="text-field">senderEmailId: string</text>
+  <text x="550" y="260" class="text-field">subject: string</text>
+  <text x="550" y="280" class="text-field">message: HTML</text>
+  <text x="550" y="310" class="text-field" font-weight="bold">attachments: Array</text>
+  <text x="570" y="330" class="text-field">- Bond_Record.png</text>
+  <text x="570" y="350" class="text-field">- Signature_Auth.png</text>
+
+  <!-- Connectors -->
+  <path d="M 270 240 L 340 240" class="line" marker-end="url(#arrowhead)" />
+  <path d="M 450 240 L 520 240" class="line" marker-end="url(#arrowhead)" />
+
+</svg>

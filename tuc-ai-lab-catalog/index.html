@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- TUC Standard Meta Tags -->
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- SEO & Descriptive -->
+    <meta name="description" content="TUC AI Lab Catalog - Explore artificial intelligence research, tools, and educational resources at Techbridge University College" />
+    <meta name="keywords" content="AI, machine learning, TUC, Techbridge, research, education" />
+    <meta name="author" content="Techbridge University College" />
+    <meta name="publisher" content="Techbridge University College" />
+    <meta name="copyright" content="© 2026 Techbridge University College. All rights reserved." />
+
+    <!-- Geographic -->
+    <meta name="geo.region" content="GH-GA" />
+    <meta name="geo.placename" content="Accra, Ghana" />
+    <meta name="geo.position" content="5.6037;-0.1870" />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://ai-lab.techbridge.edu.gh" />
+    <meta property="og:title" content="TUC AI Lab Catalog" />
+    <meta property="og:description" content="Explore artificial intelligence research and tools at Techbridge University College" />
+    <meta property="og:locale" content="en_US" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="TUC AI Lab Catalog" />
+    <meta name="twitter:description" content="Explore artificial intelligence research and tools at Techbridge University College" />
+
+    <!-- Theme & Branding -->
+    <meta name="theme-color" content="#C9A84C" />
+    <meta name="msapplication-TileColor" content="#C9A84C" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <meta name="robots" content="index, follow" />
+    <meta name="canonical" content="https://ai-lab.techbridge.edu.gh" />
+
+    <!-- Google Fonts Preconnect -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-FKXTELQ71R"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-FKXTELQ71R');
+    </script>
+
+    <!-- Font Loading -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@700&family=Space+Grotesk:wght@400;600&display=swap" rel="stylesheet" />
+
+    <!-- CSS Variables & Theme -->
+    <style>
+      :root {
+        --color-background-main: #ffffff;
+        --color-foreground: #000000;
+        --color-primary: #C9A84C;
+        --color-secondary: #64748b;
+        --color-accent: #0ea5e9;
+        --color-border: #e2e8f0;
+        --color-text-muted: #64748b;
+        --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+        --font-serif: "Playfair Display", ui-serif, Georgia, serif;
+        --font-mono: "Space Grotesk", ui-monospace, monospace;
+      }
+
+      [data-theme='dark'] {
+        --color-background-main: #0f172a;
+        --color-foreground: #f1f5f9;
+        --color-primary: #d4af37;
+        --color-secondary: #cbd5e1;
+        --color-border: #334155;
+        --color-text-muted: #94a3b8;
+      }
+
+      [data-theme='high-contrast'] {
+        --color-background-main: #000000;
+        --color-foreground: #ffff00;
+        --color-primary: #ffff00;
+        --color-secondary: #ffffff;
+        --color-border: #ffff00;
+        --color-text-muted: #ffffff;
+      }
+
+      * {
+        transition: background-color 0.3s ease, color 0.3s ease;
+      }
+
+      html {
+        font-family: var(--font-sans);
+        color: var(--color-foreground);
+        background-color: var(--color-background-main);
+      }
+
+      @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+      }
+
+      @keyframes slideIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .animate-fade-in {
+        animation: fadeIn 0.3s ease;
+      }
+
+      .animate-slide-in {
+        animation: slideIn 0.3s ease;
+      }
+    </style>
+
+    <title>TUC AI Lab Catalog</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+
+    <!-- Theme Persistence -->
+    <script>
+      const savedTheme = localStorage.getItem('tuc-ai-lab-catalog-theme') || 'light';
+      document.documentElement.setAttribute('data-theme', savedTheme);
+    </script>
+  </body>
+</html>

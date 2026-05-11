@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="500" viewBox="0 0 800 500">
+    <defs>
+        <style>
+            .title { font: bold 28px sans-serif; fill: #111827; text-anchor: middle; }
+            .category { font: bold 20px sans-serif; fill: #1e3a8a; text-anchor: middle; }
+            .item-box { fill: #ffffff; stroke: #d1d5db; stroke-width: 2; rx: 10; }
+            .item-title { font: bold 16px sans-serif; fill: #1f2937; text-anchor: middle; }
+            .item-desc { font: 12px sans-serif; fill: #4b5563; text-anchor: middle; }
+        </style>
+    </defs>
+    <rect width="100%" height="100%" fill="#f9fafb"/>
+    <text x="400" y="50" class="title">PlayGrow Technology Stack</text>
+
+    <!-- Frontend -->
+    <g transform="translate(0, 100)">
+        <text x="400" y="0" class="category">Frontend Framework & Language</text>
+        <g transform="translate(150, 30)">
+            <rect width="200" height="100" class="item-box" fill="#e0f2fe"/>
+            <text x="100" y="40" class="item-title">React</text>
+            <text x="100" y="60" class="item-desc">Core UI library for building</text>
+            <text x="100" y="75" class="item-desc">the component-based interface.</text>
+        </g>
+        <g transform="translate(450, 30)">
+            <rect width="200" height="100" class="item-box" fill="#e0f2fe"/>
+            <text x="100" y="40" class="item-title">TypeScript</text>
+            <text x="100" y="60" class="item-desc">Adds static typing to JavaScript</text>
+            <text x="100" y="75" class="item-desc">for enhanced code quality.</text>
+        </g>
+    </g>
+
+    <!-- Styling -->
+    <g transform="translate(0, 260)">
+        <text x="400" y="0" class="category">Styling & Design</text>
+        <g transform="translate(290, 30)">
+             <rect width="220" height="100" class="item-box" fill="#dcfce7"/>
+            <text x="110" y="40" class="item-title">Tailwind CSS</text>
+            <text x="110" y="60" class="item-desc">A utility-first CSS framework for</text>
+            <text x="110" y="75" class="item-desc">rapid and responsive UI development.</text>
+        </g>
+    </g>
+
+    <!-- Environment -->
+     <g transform="translate(0, 410)">
+        <text x="400" y="0" class="category">Development Environment</text>
+        <text x="400" y="30" class="item-desc">(As provided)</text>
+        <text x="400" y="50" class="item-desc">Web-based IDE with integrated build process and deployment.</text>
+     </g>
+</svg>

@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600">
+  <defs>
+    <style>
+      .bg { fill: #0F0C07; }
+      .text-title { font-family: 'Playfair Display', serif; font-size: 24px; fill: #C8A84B; font-weight: bold; }
+      .text-body { font-family: 'Inter', sans-serif; font-size: 14px; fill: #F2EBD9; }
+      .box { fill: #141210; stroke: #C8A84B; stroke-width: 2; rx: 8; ry: 8; }
+      .box-alt { fill: #141210; stroke: #4B5563; stroke-width: 2; rx: 8; ry: 8; }
+      .line { stroke: #C8A84B; stroke-width: 2; marker-end: url(#arrow); stroke-dasharray: 4; }
+      .line-solid { stroke: #C8A84B; stroke-width: 2; marker-end: url(#arrow); }
+    </style>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#C8A84B" />
+    </marker>
+  </defs>
+
+  <!-- Background -->
+  <rect width="100%" height="100%" class="bg" />
+
+  <!-- Title -->
+  <text x="400" y="50" class="text-title" text-anchor="middle">System Architecture: Fraud Detection Engine</text>
+
+  <!-- Frontend Layer -->
+  <rect x="50" y="100" width="700" height="150" class="box-alt" fill-opacity="0.5" stroke-dasharray="8" />
+  <text x="65" y="130" class="text-title" style="font-size: 18px; fill: #9CA3AF;">Presentation Layer (Frontend)</text>
+  
+  <rect x="100" y="150" width="180" height="70" class="box" />
+  <text x="190" y="185" class="text-body" text-anchor="middle" font-weight="bold">React SPA</text>
+  <text x="190" y="205" class="text-body" text-anchor="middle" style="font-size: 12px; fill: #9CA3AF;">Vite, Zustand, Tailwind</text>
+
+  <rect x="310" y="150" width="180" height="70" class="box" />
+  <text x="400" y="185" class="text-body" text-anchor="middle" font-weight="bold">Admin Diagnostics</text>
+  <text x="400" y="205" class="text-body" text-anchor="middle" style="font-size: 12px; fill: #9CA3AF;">Playwright E2E UI</text>
+
+  <!-- Application Layer -->
+  <rect x="50" y="300" width="700" height="150" class="box-alt" fill-opacity="0.5" stroke-dasharray="8" />
+  <text x="65" y="330" class="text-title" style="font-size: 18px; fill: #9CA3AF;">Application Layer (Backend)</text>
+
+  <rect x="100" y="350" width="180" height="70" class="box" />
+  <text x="190" y="385" class="text-body" text-anchor="middle" font-weight="bold">Express API</text>
+  <text x="190" y="405" class="text-body" text-anchor="middle" style="font-size: 12px; fill: #9CA3AF;">Node.js / tsx</text>
+
+  <rect x="310" y="350" width="180" height="70" class="box" />
+  <text x="400" y="385" class="text-body" text-anchor="middle" font-weight="bold">Data Polling Engine</text>
+  <text x="400" y="405" class="text-body" text-anchor="middle" style="font-size: 12px; fill: #9CA3AF;">Background Timers</text>
+
+  <rect x="520" y="350" width="180" height="70" class="box" />
+  <text x="610" y="385" class="text-body" text-anchor="middle" font-weight="bold">Sentinel Gateway</text>
+  <text x="610" y="405" class="text-body" text-anchor="middle" style="font-size: 12px; fill: #9CA3AF;">Mock AI Inference</text>
+
+  <!-- Database Layer -->
+  <rect x="250" y="500" width="300" height="70" class="box" />
+  <text x="400" y="535" class="text-body" text-anchor="middle" font-weight="bold">SQLite Persistence</text>
+  <text x="400" y="555" class="text-body" text-anchor="middle" style="font-size: 12px; fill: #9CA3AF;">better-sqlite3</text>
+
+  <!-- Connections -->
+  <path d="M 190 220 L 190 350" class="line-solid" />
+  <path d="M 400 220 L 400 350" class="line-solid" />
+  
+  <path d="M 190 420 L 300 500" class="line-solid" />
+  <path d="M 400 420 L 400 500" class="line-solid" />
+  
+  <!-- Network Labels -->
+  <text x="210" y="280" class="text-body" style="font-size: 12px; fill: #C8A84B;">REST API (JSON)</text>
+
+</svg>

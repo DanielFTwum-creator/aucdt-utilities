@@ -1,0 +1,7 @@
+{
+  "name": "Dadaist Concert Visualizer",
+  "description": "A sound-reactive concert video wall animation inspired by Dadaist collage art. Features a dynamic central eye and exploding geometric shards that react to microphone input.",
+  "requestFramePermissions": [
+    "microphone"
+  ]
+}

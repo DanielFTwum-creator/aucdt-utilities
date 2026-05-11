@@ -1,0 +1,275 @@
+---
+title: "Beyond the Baseline"
+subtitle: "How AI Will Reshape Typography by 2025"
+author: "AsanSka University College of Design and Technology"
+date: "November 2025"
+format:
+  revealjs:
+    theme: serif
+    transition: slide
+    background-transition: fade
+    slide-number: true
+    chalkboard: true
+    logo: "https://aucdt.edu.gh/wp-content/uploads/2022/04/aucdt-logo-for-web.png"
+    footer: "AUCDT - Digital Media and Communication Design"
+    
+---
+
+## The Typography Earthquake
+
+As AUCDT design students, you're entering a world where **the only constant is change**.
+
+::: {.fragment}
+The most significant shift? **Artificial Intelligence**
+:::
+
+::: {.fragment}
+AI's impact on typography: moving from **novelty to necessity** by 2025
+:::
+
+::: {.notes}
+Aligns with AUCDT's mission: fostering creativity, innovation, and use of technology
+:::
+
+---
+
+## Not Science Fiction
+
+::: {.incremental}
+- AI in typography is already here
+- Evolving at lightning speed
+- By 2025: integral to workflows
+- Not about replacement—about **transformation**
+:::
+
+---
+
+# AI as Your Typographic Assistant
+
+## The Efficiency Revolution
+
+---
+
+## Automated Intelligence
+
+**Font Pairing & Selection**
+
+- AI analyzes: content, audience, brand, mood
+- Generates optimal pairings instantly
+- Explains choices: legibility, mood, hierarchy
+- Context-aware, not just suggestions
+
+---
+
+## Responsive & Adaptive Type
+
+**Dynamic Typography**
+
+::: {.incremental}
+- Adjusts to diverse screens automatically
+- Variable fonts, kerning, leading in real-time
+- Optimal readability across all viewports
+- No manual intervention needed
+:::
+
+---
+
+## Layout Generation
+
+**AI-Powered Design**
+
+- Trained on millions of successful designs
+- Proposes initial typographic layouts
+- Suggests text blocks, headings, spacing
+- Frees designers for refinement & concept
+
+---
+
+## Accessibility First
+
+**Proactive Enhancement**
+
+- Analyzes readability and contrast
+- Ensures accessibility standards
+- Flags issues automatically
+- Serves diverse user needs
+
+---
+
+# Expanding Creative Horizons
+
+## New Frontiers in Type Design
+
+---
+
+## Generative Typefaces
+
+**AI-Powered Creation**
+
+::: {.incremental}
+- Input: mood, style, historical references
+- Output: hundreds of unique glyph variations
+- Experimental typefaces ready to refine
+- Democratizes custom font design
+:::
+
+---
+
+## Hyper-Personalized Typography
+
+**Bespoke Reading Experiences**
+
+- Adapts to user preferences
+- Responds to reading speed & vision
+- Adjusts to ambient light
+- Changes with user fatigue
+- Truly individualized interfaces
+
+---
+
+## Algorithmic Lettering
+
+**Digital Craftsmanship**
+
+- Learns human handwriting nuances
+- Generates custom lettering styles
+- Simulates brushstrokes authentically
+- Animates with organic fluidity
+- Saves time on manual work
+
+---
+
+# The Evolving Typographer
+
+## From Artisan to Conductor
+
+---
+
+## New Essential Skills
+
+::: {.columns}
+::: {.column width="50%"}
+**Master Prompt Engineering**
+
+- Articulate precise instructions
+- Define desired outcomes
+- Direct AI effectively
+- Quality through guidance
+:::
+
+::: {.column width="50%"}
+**Become Expert Curators**
+
+- Discerning eye more valuable
+- Critical judgment essential
+- Deep typographic principles
+- Give human soul to AI output
+:::
+:::
+
+---
+
+## Strategic Focus
+
+**Higher-Level Thinking**
+
+::: {.incremental}
+- Less time on minutiae
+- More conceptual development
+- Strategic typographic choices
+- Emotional impact emphasis
+:::
+
+---
+
+## Ethical Design
+
+**Non-Negotiable Skills for AUCDT Graduates**
+
+- Understand AI biases
+- Advocate for ethical use
+- Ensure inclusivity
+- Avoid stereotypes
+- Respect intellectual property
+- Commit to sustainability in digital design
+
+---
+
+# Challenges Ahead
+
+## A Word of Caution
+
+---
+
+## Potential Pitfalls
+
+::: {.incremental}
+1. **Risk of Homogenization**
+   - Over-reliance creates sameness
+   - Loss of unique visual identities
+
+2. **Loss of Intuition**
+   - Will designers lose their 'feel' for type?
+   - Must continue honing fundamentals
+
+3. **Ethical Quandaries**
+   - Ownership of AI-generated type
+   - Deepfakes in textual content
+   - Algorithmic biases
+:::
+
+---
+
+## Embrace the Future
+
+::: {.r-fit-text}
+By 2025, AI will be **integral**, not optional
+:::
+
+::: {.fragment}
+### For AUCDT Students
+
+This is an **opportunity**, not a threat
+
+Preparing you for **professional excellence in design and entrepreneurship**
+:::
+
+---
+
+## The New Typographer
+
+::: {.incremental}
+- Expert in typefaces
+- Visionary collaborator with machines
+- Blends human creativity + algorithmic power
+- Pushes boundaries of possibility
+- Creates accessible, innovative experiences
+:::
+
+---
+
+## Your Challenge
+
+::: {.r-fit-text}
+**The baseline is shifting**
+:::
+
+::: {.fragment}
+### Are you ready to define the new top line?
+:::
+
+::: {.fragment}
+- Start experimenting now
+- Ask questions
+- Lead this exciting chapter
+:::
+
+---
+
+## Questions?
+
+**Let's discuss the future of typography**
+
+::: {.notes}
+Open floor for discussion about AI tools, ethical considerations, and practical applications in student work.
+:::

@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600">
+  <!-- Background -->
+  <rect width="800" height="600" fill="#f8f9fa" />
+  
+  <!-- Title -->
+  <text x="400" y="40" font-family="Arial" font-size="24" text-anchor="middle" font-weight="bold">TechBridge Clinical Platform Architecture</text>
+  
+  <!-- Client Layer -->
+  <rect x="50" y="80" width="700" height="150" fill="#e3f2fd" stroke="#2196f3" stroke-width="2" rx="10" />
+  <text x="400" y="110" font-family="Arial" font-size="18" text-anchor="middle" fill="#1565c0" font-weight="bold">Client Layer (Browser)</text>
+  
+  <rect x="100" y="130" width="180" height="80" fill="#ffffff" stroke="#2196f3" rx="5" />
+  <text x="190" y="160" font-family="Arial" font-size="14" text-anchor="middle" font-weight="bold">React 19.2.4 SPA</text>
+  <text x="190" y="180" font-family="Arial" font-size="12" text-anchor="middle">Tailwind CSS v4</text>
+  <text x="190" y="195" font-family="Arial" font-size="12" text-anchor="middle">Recharts / Framer Motion</text>
+  
+  <rect x="310" y="130" width="180" height="80" fill="#ffffff" stroke="#2196f3" rx="5" />
+  <text x="400" y="160" font-family="Arial" font-size="14" text-anchor="middle" font-weight="bold">Admin Module</text>
+  <text x="400" y="180" font-family="Arial" font-size="12" text-anchor="middle">Auth / Diagnostics</text>
+  <text x="400" y="195" font-family="Arial" font-size="12" text-anchor="middle">Testing Suite</text>
+
+  <rect x="520" y="130" width="180" height="80" fill="#ffffff" stroke="#2196f3" rx="5" />
+  <text x="610" y="160" font-family="Arial" font-size="14" text-anchor="middle" font-weight="bold">Theme Context</text>
+  <text x="610" y="180" font-family="Arial" font-size="12" text-anchor="middle">Light / Dark</text>
+  <text x="610" y="195" font-family="Arial" font-size="12" text-anchor="middle">High Contrast</text>
+
+  <!-- API Layer -->
+  <rect x="50" y="260" width="700" height="120" fill="#fff3e0" stroke="#ff9800" stroke-width="2" rx="10" />
+  <text x="400" y="290" font-family="Arial" font-size="18" text-anchor="middle" fill="#e65100" font-weight="bold">Server Layer (Node.js)</text>
+  
+  <rect x="150" y="310" width="500" height="50" fill="#ffffff" stroke="#ff9800" rx="5" />
+  <text x="400" y="340" font-family="Arial" font-size="14" text-anchor="middle" font-weight="bold">Express API & Vite Middleware</text>
+
+  <!-- Data Layer -->
+  <rect x="50" y="410" width="340" height="150" fill="#e8f5e9" stroke="#4caf50" stroke-width="2" rx="10" />
+  <text x="220" y="440" font-family="Arial" font-size="18" text-anchor="middle" fill="#2e7d32" font-weight="bold">Data Layer</text>
+  
+  <rect x="100" y="460" width="240" height="80" fill="#ffffff" stroke="#4caf50" rx="5" />
+  <text x="220" y="490" font-family="Arial" font-size="14" text-anchor="middle" font-weight="bold">SQLite Database</text>
+  <text x="220" y="510" font-family="Arial" font-size="12" text-anchor="middle">better-sqlite3</text>
+
+  <!-- External Services -->
+  <rect x="410" y="410" width="340" height="150" fill="#f3e5f5" stroke="#9c27b0" stroke-width="2" rx="10" />
+  <text x="580" y="440" font-family="Arial" font-size="18" text-anchor="middle" fill="#6a1b9a" font-weight="bold">External Services</text>
+  
+  <rect x="460" y="460" width="240" height="80" fill="#ffffff" stroke="#9c27b0" rx="5" />
+  <text x="580" y="490" font-family="Arial" font-size="14" text-anchor="middle" font-weight="bold">Google Gemini API</text>
+  <text x="580" y="510" font-family="Arial" font-size="12" text-anchor="middle">Image Analysis (Vision)</text>
+
+  <!-- Arrows -->
+  <line x1="400" y1="230" x2="400" y2="260" stroke="#333" stroke-width="2" marker-end="url(#arrow)" />
+  <line x1="220" y1="380" x2="220" y2="410" stroke="#333" stroke-width="2" marker-end="url(#arrow)" />
+  <line x1="580" y1="380" x2="580" y2="410" stroke="#333" stroke-width="2" marker-end="url(#arrow)" />
+
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#333" />
+    </marker>
+  </defs>
+</svg>

@@ -1,0 +1,44 @@
+<svg width="800" height="600" xmlns="http://www.w3.org/2000/svg">
+  <rect width="100%" height="100%" fill="#f8fafc"/>
+  
+  <!-- Client Side -->
+  <rect x="50" y="100" width="250" height="400" rx="20" fill="#ffffff" stroke="#4f46e5" stroke-width="2"/>
+  <text x="175" y="130" font-family="sans-serif" font-size="18" font-weight="bold" text-anchor="middle" fill="#1e293b">Client (React 19.2.4)</text>
+  
+  <rect x="70" y="160" width="210" height="60" rx="10" fill="#f1f5f9" stroke="#cbd5e1"/>
+  <text x="175" y="195" font-family="sans-serif" font-size="14" text-anchor="middle" fill="#475569">Dashboard & Categories</text>
+  
+  <rect x="70" y="240" width="210" height="60" rx="10" fill="#f1f5f9" stroke="#cbd5e1"/>
+  <text x="175" y="275" font-family="sans-serif" font-size="14" text-anchor="middle" fill="#475569">AI Assistant UI</text>
+  
+  <rect x="70" y="320" width="210" height="60" rx="10" fill="#f1f5f9" stroke="#cbd5e1"/>
+  <text x="175" y="355" font-family="sans-serif" font-size="14" text-anchor="middle" fill="#475569">Admin Portal (Auth)</text>
+  
+  <rect x="70" y="400" width="210" height="60" rx="10" fill="#f1f5f9" stroke="#cbd5e1"/>
+  <text x="175" y="435" font-family="sans-serif" font-size="14" text-anchor="middle" fill="#475569">Theme Engine</text>
+
+  <!-- Server Side -->
+  <rect x="500" y="100" width="250" height="400" rx="20" fill="#ffffff" stroke="#10b981" stroke-width="2"/>
+  <text x="625" y="130" font-family="sans-serif" font-size="18" font-weight="bold" text-anchor="middle" fill="#1e293b">Server (Express/Node)</text>
+  
+  <rect x="520" y="160" width="210" height="60" rx="10" fill="#ecfdf5" stroke="#a7f3d0"/>
+  <text x="625" y="195" font-family="sans-serif" font-size="14" text-anchor="middle" fill="#065f46">Vite Middleware</text>
+  
+  <rect x="520" y="240" width="210" height="60" rx="10" fill="#ecfdf5" stroke="#a7f3d0"/>
+  <text x="625" y="275" font-family="sans-serif" font-size="14" text-anchor="middle" fill="#065f46">Puppeteer Test Runner</text>
+  
+  <rect x="520" y="320" width="210" height="60" rx="10" fill="#ecfdf5" stroke="#a7f3d0"/>
+  <text x="625" y="355" font-family="sans-serif" font-size="14" text-anchor="middle" fill="#065f46">API Endpoints</text>
+
+  <!-- External -->
+  <rect x="300" y="20" width="200" height="50" rx="10" fill="#e0e7ff" stroke="#4f46e5"/>
+  <text x="400" y="50" font-family="sans-serif" font-size="14" font-weight="bold" text-anchor="middle" fill="#4338ca">Gemini AI API</text>
+
+  <!-- Connections -->
+  <line x1="300" y1="270" x2="500" y2="270" stroke="#94a3b8" stroke-width="2" stroke-dasharray="5,5"/>
+  <line x1="300" y1="350" x2="500" y2="350" stroke="#94a3b8" stroke-width="2"/>
+  <path d="M 175 100 Q 175 45 300 45" fill="none" stroke="#4f46e5" stroke-width="2"/>
+  
+  <text x="400" y="260" font-family="sans-serif" font-size="12" text-anchor="middle" fill="#64748b">Test Requests</text>
+  <text x="400" y="340" font-family="sans-serif" font-size="12" text-anchor="middle" fill="#64748b">JSON API</text>
+</svg>

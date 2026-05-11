@@ -1,0 +1,65 @@
+[196] Installing: remix-muniratu-portfolio
+Lockfile is up to date, resolution step is skipped
+Progress: resolved 1, reused 0, downloaded 0, added 0
+Packages: +397
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Progress: resolved 397, reused 125, downloaded 0, added 0
+Progress: resolved 397, reused 396, downloaded 0, added 18
+Progress: resolved 397, reused 397, downloaded 0, added 76
+Progress: resolved 397, reused 397, downloaded 0, added 77
+Progress: resolved 397, reused 397, downloaded 0, added 113
+Progress: resolved 397, reused 397, downloaded 0, added 149
+Progress: resolved 397, reused 397, downloaded 0, added 173
+Progress: resolved 397, reused 397, downloaded 0, added 227
+Progress: resolved 397, reused 397, downloaded 0, added 257
+Progress: resolved 397, reused 397, downloaded 0, added 272
+Progress: resolved 397, reused 397, downloaded 0, added 295
+Progress: resolved 397, reused 397, downloaded 0, added 302
+Progress: resolved 397, reused 397, downloaded 0, added 315
+Progress: resolved 397, reused 397, downloaded 0, added 338
+Progress: resolved 397, reused 397, downloaded 0, added 346
+Progress: resolved 397, reused 397, downloaded 0, added 382
+Progress: resolved 397, reused 397, downloaded 0, added 394
+Progress: resolved 397, reused 397, downloaded 0, added 395
+Progress: resolved 397, reused 397, downloaded 0, added 396
+Progress: resolved 397, reused 397, downloaded 0, added 397
+Progress: resolved 397, reused 397, downloaded 0, added 397, done
+
+dependencies:
++ @google/genai 1.44.0
++ @tailwindcss/vite 4.2.1
++ @vitejs/plugin-react 5.1.4
++ better-sqlite3 12.6.2
++ dotenv 17.3.1
++ express 4.22.1
++ lucide-react 0.546.0
++ motion 12.35.2
++ react 19.2.4
++ react-dom 19.2.4
++ react-router-dom 7.13.1
++ vite 6.4.1
+
+devDependencies:
++ @testing-library/jest-dom 6.9.1
++ @testing-library/react 16.3.2
++ @testing-library/user-event 14.6.1
++ @types/express 4.17.25
++ @types/node 22.19.15
++ @vitest/coverage-v8 3.2.4
++ @vitest/ui 3.2.4
++ autoprefixer 10.4.27
++ jsdom 26.1.0
++ tailwindcss 4.2.1
++ tsx 4.21.0
++ typescript 5.8.3
++ vitest 3.2.4
+
+╭ Warning ─────────────────────────────────────────────────────────────────────╮
+│                                                                              │
+│   Ignored build scripts: better-sqlite3@12.6.2, esbuild@0.25.12,             │
+│   esbuild@0.27.3, protobufjs@7.5.4.                                          │
+│   Run "pnpm approve-builds" to pick which dependencies should be allowed     │
+│   to run scripts.                                                            │
+│                                                                              │
+╰──────────────────────────────────────────────────────────────────────────────╯
+Done in 1m 22.3s using pnpm v10.30.1

@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="500" viewBox="0 0 800 500" style="background-color: #0f172a; font-family: sans-serif; color: #cbd5e1;">
+
+    <defs>
+        <marker id="arrow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#60a5fa" />
+        </marker>
+        <style>
+            .title { font-size: 24px; font-weight: bold; fill: #e2e8f0; }
+            .subtitle { font-size: 14px; fill: #94a3b8; }
+            .box-title { font-size: 16px; font-weight: bold; fill: #e2e8f0; }
+            .box-text { font-size: 12px; fill: #cbd5e1; }
+            .label { font-size: 12px; font-style: italic; fill: #94a3b8; }
+        </style>
+    </defs>
+
+    <text x="400" y="40" text-anchor="middle" class="title">System Architecture Diagram</text>
+    <text x="400" y="65" text-anchor="middle" class="subtitle">Interactive Product Development Workbook</text>
+
+    <!-- Main Container: Web Browser -->
+    <rect x="50" y="100" width="700" height="350" rx="15" fill="none" stroke="#334155" stroke-width="2" />
+    <text x="65" y="125" class="box-title" fill="#60a5fa">Web Browser (Client-Side)</text>
+
+    <!-- User -->
+    <g transform="translate(100, 250)">
+        <circle cx="25" cy="25" r="25" fill="#1e293b"/>
+        <path d="M 25 50 C 10 50, 10 30, 25 30 C 40 30, 40 50, 25 50 Z" fill="#334155"/>
+        <circle cx="25" cy="20" r="10" fill="#334155"/>
+        <text x="25" y="85" text-anchor="middle" class="box-title">User</text>
+    </g>
+
+    <!-- React UI Components -->
+    <rect x="200" y="150" width="220" height="250" rx="10" fill="#1e293b" stroke="#475569" />
+    <text x="215" y="175" class="box-title">React UI Components</text>
+    <text x="215" y="200" class="box-text">- App.tsx (Main)</text>
+    <text x="215" y="220" class="box-text">- Sidebar</text>
+    <text x="215" y="240" class="box-text">- StageContent</text>
+    <text x="215" y="260" class="box-text">- AdminPanel</text>
+    <text x="215" y="280" class="box-text">- AI Generators</text>
+
+    <!-- State Management -->
+    <rect x="200" y="310" width="220" height="90" rx="10" fill="#1e293b" stroke="#475569" style="visibility: hidden;"/>
+     <text x="310" y="325" text-anchor="middle" class="box-text" style="font-style: italic;">(State managed within components)</text>
+
+
+    <!-- LocalStorage -->
+    <rect x="470" y="150" width="220" height="150" rx="10" fill="#1e293b" stroke="#475569" />
+    <text x="485" y="175" class="box-title">Browser `localStorage`</text>
+    <text x="485" y="200" class="box-text">- Project Data (Notes, Progress)</text>
+    <text x="485" y="220" class="box-text">- User Theme</text>
+    <text x="485" y="240" class="box-text">- Admin Audit Log</text>
+    <text x="485" y="265" class="label">Data Persistence</text>
+    
+    <!-- External API -->
+    <rect x="470" y="330" width="220" height="70" rx="10" fill="#1e293b" stroke="#475569" />
+    <text x="485" y="355" class="box-title">Google Gemini API</text>
+    <text x="485" y="375" class="label">External Service</text>
+
+    <!-- Arrows -->
+    <line x1="155" y1="275" x2="195" y2="275" stroke="#60a5fa" stroke-width="2" marker-end="url(#arrow)" />
+    <path d="M 425 275 Q 445 275 445 255 L 445 225 Q 445 205 465 205 L 465 205" stroke="#60a5fa" stroke-width="2" fill="none" marker-end="url(#arrow)" />
+    <path d="M 465 225 Q 445 225 445 245 L 445 275 Q 445 295 425 295 L 425 295" stroke="#60a5fa" stroke-width="2" fill="none" marker-start="url(#arrow)" />
+    <text x="450" y="255" class="label" fill="#60a5fa">read/write</text>
+
+    <line x1="425" y1="365" x2="465" y2="365" stroke="#60a5fa" stroke-width="2" marker-end="url(#arrow)" />
+    <text x="430" y="350" class="label" fill="#60a5fa">API Call</text>
+
+</svg>

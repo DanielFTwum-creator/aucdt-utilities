@@ -1,0 +1,104 @@
+[29] Installing: ai-transformation-framework
+Lockfile is up to date, resolution step is skipped
+Progress: resolved 1, reused 0, downloaded 0, added 0
+Packages: +482
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Progress: resolved 482, reused 97, downloaded 0, added 0
+Progress: resolved 482, reused 141, downloaded 0, added 0
+Progress: resolved 482, reused 172, downloaded 0, added 0
+Progress: resolved 482, reused 246, downloaded 0, added 0
+Progress: resolved 482, reused 254, downloaded 0, added 0
+Progress: resolved 482, reused 275, downloaded 0, added 0
+Progress: resolved 482, reused 278, downloaded 0, added 0
+Progress: resolved 482, reused 289, downloaded 0, added 0
+Progress: resolved 482, reused 293, downloaded 0, added 0
+Progress: resolved 482, reused 325, downloaded 0, added 0
+Progress: resolved 482, reused 408, downloaded 0, added 0
+Progress: resolved 482, reused 439, downloaded 0, added 0
+Progress: resolved 482, reused 466, downloaded 0, added 0
+Progress: resolved 482, reused 476, downloaded 0, added 0
+Progress: resolved 482, reused 477, downloaded 0, added 0
+Progress: resolved 482, reused 479, downloaded 0, added 8
+Progress: resolved 482, reused 479, downloaded 0, added 11
+Progress: resolved 482, reused 479, downloaded 0, added 17
+Progress: resolved 482, reused 480, downloaded 0, added 17
+Progress: resolved 482, reused 480, downloaded 0, added 25
+Progress: resolved 482, reused 481, downloaded 0, added 35
+Progress: resolved 482, reused 482, downloaded 0, added 48
+Progress: resolved 482, reused 482, downloaded 0, added 68
+Progress: resolved 482, reused 482, downloaded 0, added 78
+Progress: resolved 482, reused 482, downloaded 0, added 80
+Progress: resolved 482, reused 482, downloaded 0, added 91
+Progress: resolved 482, reused 482, downloaded 0, added 92
+Progress: resolved 482, reused 482, downloaded 0, added 101
+Progress: resolved 482, reused 482, downloaded 0, added 102
+Progress: resolved 482, reused 482, downloaded 0, added 114
+Progress: resolved 482, reused 482, downloaded 0, added 123
+Progress: resolved 482, reused 482, downloaded 0, added 126
+Progress: resolved 482, reused 482, downloaded 0, added 135
+Progress: resolved 482, reused 482, downloaded 0, added 142
+Progress: resolved 482, reused 482, downloaded 0, added 183
+Progress: resolved 482, reused 482, downloaded 0, added 188
+Progress: resolved 482, reused 482, downloaded 0, added 190
+Progress: resolved 482, reused 482, downloaded 0, added 225
+Progress: resolved 482, reused 482, downloaded 0, added 263
+Progress: resolved 482, reused 482, downloaded 0, added 269
+Progress: resolved 482, reused 482, downloaded 0, added 270
+Progress: resolved 482, reused 482, downloaded 0, added 284
+Progress: resolved 482, reused 482, downloaded 0, added 292
+Progress: resolved 482, reused 482, downloaded 0, added 293
+Progress: resolved 482, reused 482, downloaded 0, added 318
+Progress: resolved 482, reused 482, downloaded 0, added 333
+Progress: resolved 482, reused 482, downloaded 0, added 334
+Progress: resolved 482, reused 482, downloaded 0, added 378
+Progress: resolved 482, reused 482, downloaded 0, added 379
+Progress: resolved 482, reused 482, downloaded 0, added 380
+Progress: resolved 482, reused 482, downloaded 0, added 423
+Progress: resolved 482, reused 482, downloaded 0, added 430
+Progress: resolved 482, reused 482, downloaded 0, added 463
+Progress: resolved 482, reused 482, downloaded 0, added 471
+Progress: resolved 482, reused 482, downloaded 0, added 475
+Progress: resolved 482, reused 482, downloaded 0, added 476
+Progress: resolved 482, reused 482, downloaded 0, added 477
+Progress: resolved 482, reused 482, downloaded 0, added 478
+Progress: resolved 482, reused 482, downloaded 0, added 479
+Progress: resolved 482, reused 482, downloaded 0, added 480
+Progress: resolved 482, reused 482, downloaded 0, added 481
+Progress: resolved 482, reused 482, downloaded 0, added 482
+Progress: resolved 482, reused 482, downloaded 0, added 482, done
+
+dependencies:
++ @google/genai 1.43.0
++ @tailwindcss/vite 4.2.1
++ @vitejs/plugin-react 5.1.4
++ better-sqlite3 12.6.2
++ dotenv 17.3.1
++ express 5.2.1
++ html-to-image 1.11.13
++ html2canvas 1.4.1
++ jspdf 4.2.0
++ lucide-react 0.575.0
++ motion 12.34.3
++ react 19.2.4
++ react-dom 19.2.4
++ react-router-dom 7.13.1
++ sonner 2.0.7
++ vite 7.3.1
+
+devDependencies:
++ @testing-library/jest-dom 6.9.1
++ @testing-library/react 16.3.2
++ @testing-library/user-event 14.6.1
++ @types/express 5.0.6
++ @types/node 25.3.2
++ @vitest/coverage-v8 3.2.4
++ @vitest/ui 3.2.4
++ autoprefixer 10.4.27
++ jsdom 26.1.0
++ puppeteer 24.37.5
++ tailwindcss 4.2.1
++ tsx 4.21.0
++ typescript 5.9.3
++ vitest 3.2.4
+
+Done in 1m 31.6s using pnpm v10.30.3

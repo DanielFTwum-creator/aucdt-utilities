@@ -1,0 +1,942 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GTEC Recommendations Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            background-color: #FDFBF7;
+            font-family: 'Inter', sans-serif;
+        }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        .filter-btn-active {
+            background-color: #A67B5B !important;
+            color: #ffffff !important;
+            font-weight: 600;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 800px;
+            max-height: 1000px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 900px;
+            }
+        }
+        @media (min-width: 1024px) {
+            .chart-container {
+                height: 1000px;
+            }
+        }
+        .category-badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: 600;
+            margin-left: 8px;
+        }
+        .facilities { background-color: #FEE2E2; color: #DC2626; }
+        .library { background-color: #DBEAFE; color: #2563EB; }
+        .governance { background-color: #D1FAE5; color: #059669; }
+        .staffing { background-color: #FEF3C7; color: #D97706; }
+        .finance { background-color: #E0E7FF; color: #7C3AED; }
+        .notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 12px 20px;
+            background-color: #10B981;
+            color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+        .notification.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        .btn {
+            background-color: #A67B5B;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 9999px;
+            font-weight: 600;
+            transition: background-color 0.2s;
+            border: none;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .btn:hover {
+            background-color: #8B5A2B;
+        }
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid #A67B5B;
+            color: #A67B5B;
+        }
+        .btn-outline:hover {
+            background-color: #F9F5F0;
+        }
+        .btn-danger {
+            background-color: #EF4444;
+        }
+        .btn-danger:hover {
+            background-color: #DC2626;
+        }
+        .storage-info {
+            background-color: #E0F2FE;
+            border: 1px solid #BAE6FD;
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 15px;
+            font-size: 0.85rem;
+            color: #0C4A6E;
+        }
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        .modal.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+        .modal-content {
+            background-color: white;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow: hidden;
+            transform: translateY(20px);
+            transition: transform 0.3s ease;
+        }
+        .modal.active .modal-content {
+            transform: translateY(0);
+        }
+        .modal-header {
+            background-color: #A67B5B;
+            color: white;
+            padding: 16px 24px;
+            font-size: 1.25rem;
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .modal-body {
+            padding: 24px;
+            overflow-y: auto;
+            max-height: 60vh;
+        }
+        .modal-footer {
+            padding: 16px 24px;
+            background-color: #F9FAFB;
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+        }
+        .audit-log {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .audit-item {
+            padding: 12px;
+            border-radius: 8px;
+            background-color: #F9FAFB;
+            border-left: 3px solid #A67B5B;
+        }
+        .audit-item-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 0.85rem;
+        }
+        .audit-item-content {
+            font-size: 0.9rem;
+        }
+        .status-change {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        .status-todo { background-color: #CBD5E0; }
+        .status-inprogress { background-color: #60A5FA; color: white; }
+        .status-completed { background-color: #34D399; color: white; }
+        .tab-container {
+            display: flex;
+            border-bottom: 1px solid #E5E7EB;
+            margin-bottom: 16px;
+        }
+        .tab {
+            padding: 8px 16px;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+        }
+        .tab.active {
+            border-bottom: 2px solid #A67B5B;
+            color: #A67B5B;
+            font-weight: 600;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+    </style>
+</head>
+<body class="text-gray-800">
+
+    <div class="container mx-auto max-w-7xl px-4 py-8 sm:py-12">
+
+        <header class="text-center mb-8">
+            <h1 class="text-3xl sm:text-4xl font-bold text-gray-900 tracking-tight">GTEC Recommendations Dashboard</h1>
+            <p class="text-md text-gray-500 mt-2">Asanska University College of Design and Technology, Oyibi</p>
+            <p class="text-sm text-red-600 font-semibold mt-1">⏰ Deadline: August 31, 2025</p>
+        </header>
+
+        <section id="overview" class="mb-10 bg-white p-6 rounded-2xl shadow-sm border border-gray-200">
+             <h2 class="text-lg font-semibold text-gray-700 mb-3 flex justify-between items-center">
+                <span>Overall Progress</span>
+                <div class="flex gap-2">
+                    <button id="export-btn" class="btn btn-outline">
+                        <i class="fas fa-file-export"></i>
+                        Export
+                    </button>
+                    <button id="import-btn" class="btn btn-outline">
+                        <i class="fas fa-file-import"></i>
+                        Import
+                    </button>
+                    <button id="reset-btn" class="btn btn-danger">
+                        <i class="fas fa-undo"></i>
+                        Reset
+                    </button>
+                </div>
+            </h2>
+            <div class="flex justify-between items-center mb-2">
+                <span id="progress-text" class="text-sm font-medium text-gray-600">0/19 Completed</span>
+                 <span id="progress-percent" class="text-sm font-bold text-[#A67B5B]">0%</span>
+            </div>
+            <div class="w-full bg-gray-200 rounded-full h-3">
+                <div id="progress-bar" class="bg-[#A67B5B] h-3 rounded-full transition-all duration-500 ease-out" style="width: 0%"></div>
+            </div>
+            <div class="grid grid-cols-2 md:grid-cols-5 gap-4 mt-6 text-center">
+                <div class="bg-red-50 p-3 rounded-lg">
+                    <div class="text-xs text-red-600 font-semibold">Physical Facilities</div>
+                    <div id="facilities-count" class="text-lg font-bold text-red-700">0/5</div>
+                </div>
+                <div class="bg-blue-50 p-3 rounded-lg">
+                    <div class="text-xs text-blue-600 font-semibold">Library Services</div>
+                    <div id="library-count" class="text-lg font-bold text-blue-700">0/6</div>
+                </div>
+                <div class="bg-green-50 p-3 rounded-lg">
+                    <div class="text-xs text-green-600 font-semibold">Governance</div>
+                    <div id="governance-count" class="text-lg font-bold text-green-700">0/5</div>
+                </div>
+                <div class="bg-yellow-50 p-3 rounded-lg">
+                    <div class="text-xs text-yellow-600 font-semibold">Staffing</div>
+                    <div id="staffing-count" class="text-lg font-bold text-yellow-700">0/2</div>
+                </div>
+                <div class="bg-purple-50 p-3 rounded-lg">
+                    <div class="text-xs text-purple-600 font-semibold">Finance</div>
+                    <div id="finance-count" class="text-lg font-bold text-purple-700">0/1</div>
+                </div>
+            </div>
+            <p class="text-sm text-gray-500 mt-4">Click on any task bar to cycle its status (To Do ⚪, In Progress 🔵, Completed ✅). Use the filters below to focus on specific categories or statuses.</p>
+            
+            <div class="storage-info mt-4">
+                <div class="flex items-center gap-2">
+                    <i class="fas fa-info-circle"></i>
+                    <strong>Data Management & Sharing</strong>
+                </div>
+                <p class="mt-2">Your progress is saved automatically. You can:</p>
+                <ul class="list-disc pl-5 mt-1">
+                    <li>Export your data to share with others</li>
+                    <li>Import data from others to view their progress</li>
+                    <li>Review an audit log of all changes made</li>
+                    <li>Reset to the initial state at any time</li>
+                </ul>
+            </div>
+        </section>
+
+        <nav id="filters" class="mb-8 flex flex-wrap justify-center gap-2 sm:gap-4">
+            <button data-filter="all" class="filter-btn filter-btn-active px-4 py-2 text-sm font-medium text-gray-700 bg-white rounded-full shadow-sm border border-gray-200 hover:bg-gray-100 transition-colors">All Tasks</button>
+            <button data-filter="todo" class="filter-btn px-4 py-2 text-sm font-medium text-gray-700 bg-white rounded-full shadow-sm border border-gray-200 hover:bg-gray-100 transition-colors">To Do</button>
+            <button data-filter="inprogress" class="filter-btn px-4 py-2 text-sm font-medium text-gray-700 bg-white rounded-full shadow-sm border border-gray-200 hover:bg-gray-100 transition-colors">In Progress</button>
+            <button data-filter="completed" class="filter-btn px-4 py-2 text-sm font-medium text-gray-700 bg-white rounded-full shadow-sm border border-gray-200 hover:bg-gray-100 transition-colors">Completed</button>
+            <button data-filter="facilities" class="filter-btn px-4 py-2 text-sm font-medium text-gray-700 bg-white rounded-full shadow-sm border border-gray-200 hover:bg-gray-100 transition-colors">Facilities</button>
+            <button data-filter="library" class="filter-btn px-4 py-2 text-sm font-medium text-gray-700 bg-white rounded-full shadow-sm border border-gray-200 hover:bg-gray-100 transition-colors">Library</button>
+            <button data-filter="governance" class="filter-btn px-4 py-2 text-sm font-medium text-gray-700 bg-white rounded-full shadow-sm border border-gray-200 hover:bg-gray-100 transition-colors">Governance</button>
+            <button data-filter="staffing" class="filter-btn px-4 py-2 text-sm font-medium text-gray-700 bg-white rounded-full shadow-sm border border-gray-200 hover:bg-gray-100 transition-colors">Staffing</button>
+            <button data-filter="finance" class="filter-btn px-4 py-2 text-sm font-medium text-gray-700 bg-white rounded-full shadow-sm border border-gray-200 hover:bg-gray-100 transition-colors">Finance</button>
+            <button id="audit-log-btn" class="px-4 py-2 text-sm font-medium text-gray-700 bg-white rounded-full shadow-sm border border-gray-200 hover:bg-gray-100 transition-colors">
+                <i class="fas fa-history mr-1"></i> Audit Log
+            </button>
+        </nav>
+
+        <main class="bg-white p-6 rounded-2xl shadow-sm border border-gray-200">
+            <h2 class="text-lg font-semibold text-gray-700 mb-4">GTEC Recommendations Timeline</h2>
+            <div class="chart-container">
+                <canvas id="ganttChart"></canvas>
+            </div>
+        </main>
+
+        <div class="mt-8 bg-amber-50 border border-amber-200 rounded-2xl p-6">
+            <h3 class="text-lg font-semibold text-amber-800 mb-3">⚠️ Important Notes</h3>
+            <ul class="text-sm text-amber-700 space-y-2">
+                <li>• All submissions must be complete and properly documented</li>
+                <li>• Use attached templates where specified in the original letter</li>
+                <li>• Ensure all appointment letters include highest academic qualifications</li>
+                <li>• The deadline is firm: <strong>August 31, 2025</strong></li>
+                <li>• This submission is required to facilitate further application processing</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Notification -->
+    <div id="notification" class="notification">Data saved to local storage!</div>
+
+    <!-- Export/Import Modal -->
+    <div id="export-import-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span id="modal-title">Export Data</span>
+                <button id="close-modal" class="text-white"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="tab-container">
+                <div class="tab active" data-tab="export">Export Data</div>
+                <div class="tab" data-tab="import">Import Data</div>
+                <div class="tab" data-tab="audit">Audit Log</div>
+            </div>
+            <div class="modal-body">
+                <div id="export-tab" class="tab-content active">
+                    <p class="mb-4">Export your current progress to share with others:</p>
+                    <div class="bg-gray-50 p-4 rounded-lg mb-4">
+                        <pre id="export-data" class="text-xs overflow-auto max-h-40"></pre>
+                    </div>
+                    <button id="download-json" class="btn">
+                        <i class="fas fa-download"></i> Download JSON File
+                    </button>
+                </div>
+                
+                <div id="import-tab" class="tab-content">
+                    <p class="mb-4">Import a previously exported JSON file:</p>
+                    <div class="mb-4">
+                        <input type="file" id="import-file" accept=".json" class="w-full text-sm text-gray-500
+                            file:mr-4 file:py-2 file:px-4
+                            file:rounded-full file:border-0
+                            file:text-sm file:font-semibold
+                            file:bg-[#A67B5B] file:text-white
+                            hover:file:bg-[#8B5A2B]
+                        ">
+                    </div>
+                    <div class="bg-gray-50 p-4 rounded-lg mb-4 hidden" id="import-preview">
+                        <pre class="text-xs overflow-auto max-h-40" id="import-preview-data"></pre>
+                    </div>
+                    <button id="confirm-import" class="btn" disabled>
+                        <i class="fas fa-file-import"></i> Confirm Import
+                    </button>
+                </div>
+                
+                <div id="audit-tab" class="tab-content">
+                    <p class="mb-4">Audit log of all changes:</p>
+                    <div class="audit-log" id="audit-log-container">
+                        <!-- Audit items will be inserted here -->
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="close-modal-btn" class="btn btn-outline">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const initialTasks = [
+                // Physical Facilities (5 tasks)
+                { id: 1, title: 'Recruit Dedicated Facilities Officer', description: 'Hire either part-time or full-time officer with expertise in physical facilities management to oversee maintenance of institution buildings.', status: 'todo', dueDate: 'July 15, 2025', durationDays: 14, category: 'facilities' },
+                { id: 2, title: 'Address Rising Damp Issues', description: 'Identify and assess all walls with damp problems, undertake remedial work, and submit evidence of completed work to GTEC.', status: 'todo', dueDate: 'July 25, 2025', durationDays: 21, category: 'facilities' },
+                { id: 3, title: 'Submit Water Quality Test Report', description: 'Conduct recent water quality test for campus borehole supply and submit report to Commission for review and compliance.', status: 'todo', dueDate: 'July 10, 2025', durationDays: 7, category: 'facilities' },
+                { id: 4, title: 'Develop Preventive Maintenance Schedule', description: 'Create comprehensive maintenance schedule for all buildings using attached template as guide to ensure buildings are always in good repair.', status: 'todo', dueDate: 'July 20, 2025', durationDays: 10, category: 'facilities' },
+                { id: 5, title: 'Fire Safety Training & Equipment Setup', description: 'Arrange Ghana National Fire Service to train at least 2 fire marshals and organize fire drills for students and staff.', status: 'todo', dueDate: 'August 5, 2025', durationDays: 14, category: 'facilities' },
+                
+                // Library Services (6 tasks)
+                { id: 6, title: 'Subscribe to Electronic Library Service', description: 'Choose reputable electronic library service provider to enhance academic resources and provide documentary evidence of subscription.', status: 'todo', dueDate: 'July 12, 2025', durationDays: 10, category: 'library' },
+                { id: 7, title: 'Submit Librarian Appointment Documentation', description: 'Provide appointment letter, acceptance letter, and curriculum vitae (CV) of appointed Librarian to the Commission.', status: 'todo', dueDate: 'July 8, 2025', durationDays: 5, category: 'library' },
+                { id: 8, title: 'Appoint Para-professional Library Assistant', description: 'Hire para-professional with at least Diploma in Library Studies to support Librarian, submit appointment letter, acceptance letter, and CV.', status: 'todo', dueDate: 'July 18, 2025', durationDays: 14, category: 'library' },
+                { id: 9, title: 'Provide Essential Library Amenities', description: 'Install permanent seating arrangements in library and submit evidence confirming provision of amenities.', status: 'todo', dueDate: 'August 1, 2025', durationDays: 10, category: 'library' },
+                { id: 10, title: 'Constitute Library Committee', description: 'Establish committee with President, Registrar, Librarian, faculty representative, student representative, and Finance representative.', status: 'todo', dueDate: 'July 22, 2025', durationDays: 7, category: 'library' },
+                { id: 11, title: 'Allocate Library Budget (5%)', description: 'Allocate at least 5% of institutional annual budget for library operations in compliance with GTEC norm and provide evidence.', status: 'todo', dueDate: 'August 10, 2025', durationDays: 14, category: 'library' },
+                
+                // Governance (5 tasks)
+                { id: 12, title: 'Ensure Full-time Key Management Positions', description: 'Confirm President, Finance Officer, Librarian, Registrar, and Programme Heads are full-time, submit appointment letters with qualifications.', status: 'todo', dueDate: 'July 25, 2025', durationDays: 21, category: 'governance' },
+                { id: 13, title: 'Provide Comprehensive Student Data', description: 'Submit data on all enrolled students by programme including entrance details, certificates, and results verification for compliance.', status: 'todo', dueDate: 'August 5, 2025', durationDays: 10, category: 'governance' },
+                { id: 14, title: 'Submit Signed MOU with Mentor Institution', description: 'Execute valid legally binding Affiliation Agreement with mentor institution including obligations and regulatory conditions.', status: 'todo', dueDate: 'August 15, 2025', durationDays: 21, category: 'governance' },
+                { id: 15, title: 'Submit Comprehensive Strategic Plan', description: 'Develop plan outlining measures and initiatives for sustainable growth focused on student enrollment strategies.', status: 'todo', dueDate: 'August 12, 2025', durationDays: 14, category: 'governance' },
+                { id: 16, title: 'Provide Governing Council Information', description: 'Submit Council membership details, constituencies, secretary info, student representation, and establish regular meeting schedule.', status: 'todo', dueDate: 'July 30, 2025', durationDays: 10, category: 'governance' },
+                
+                // Staffing (2 tasks)
+                { id: 17, title: 'Submit Revised Teaching Staff List', description: 'Organize by department with gender, qualifications, specialization, rank, employment status using attached template.', status: 'todo', dueDate: 'August 8, 2025', durationDays: 14, category: 'staffing' },
+                { id: 18, title: 'Submit Staff Employment Documentation', description: 'Provide appointment letters, acceptance letters, CVs for full-time staff, and 6 months salary payment evidence.', status: 'todo', dueDate: 'August 20, 2025', durationDays: 14, category: 'staffing' },
+                
+                // Finance (1 task)
+                { id: 19, title: 'Post Financial Bond (GH¢300,000)', description: 'Post bond from Bank/Insurance Company or shareholders commitment with financial details and submit resolution minutes to GTEC.', status: 'todo', dueDate: 'August 25, 2025', durationDays: 28, category: 'finance' }
+            ];
+
+            // Load tasks from localStorage or initialize with default tasks
+            let tasks = loadTasksFromLocalStorage() || initialTasks.map(task => {
+                const endDate = new Date(task.dueDate);
+                const startDate = new Date(endDate);
+                startDate.setDate(endDate.getDate() - task.durationDays);
+                return { ...task, startDate, endDate };
+            });
+            
+            // Initialize audit log
+            let auditLog = loadAuditLogFromLocalStorage() || [];
+
+            const progressBar = document.getElementById('progress-bar');
+            const progressText = document.getElementById('progress-text');
+            const progressPercent = document.getElementById('progress-percent');
+            const filterButtons = document.querySelectorAll('.filter-btn');
+            const ganttChartCanvas = document.getElementById('ganttChart');
+            const notification = document.getElementById('notification');
+            const resetBtn = document.getElementById('reset-btn');
+            const exportBtn = document.getElementById('export-btn');
+            const importBtn = document.getElementById('import-btn');
+            const auditLogBtn = document.getElementById('audit-log-btn');
+            const modal = document.getElementById('export-import-modal');
+            const closeModal = document.getElementById('close-modal');
+            const closeModalBtn = document.getElementById('close-modal-btn');
+            const modalTitle = document.getElementById('modal-title');
+            const exportDataElement = document.getElementById('export-data');
+            const downloadJsonBtn = document.getElementById('download-json');
+            const importFileInput = document.getElementById('import-file');
+            const importPreview = document.getElementById('import-preview');
+            const importPreviewData = document.getElementById('import-preview-data');
+            const confirmImportBtn = document.getElementById('confirm-import');
+            const auditLogContainer = document.getElementById('audit-log-container');
+            const tabs = document.querySelectorAll('.tab');
+            const tabContents = document.querySelectorAll('.tab-content');
+            let ganttChart;
+
+            const statusConfig = {
+                todo: {
+                    label: 'To Do',
+                    color: '#CBD5E0',
+                    next: 'inprogress'
+                },
+                inprogress: {
+                    label: 'In Progress',
+                    color: '#60A5FA',
+                    next: 'completed'
+                },
+                completed: {
+                    label: 'Completed',
+                    color: '#34D399',
+                    next: 'todo'
+                }
+            };
+
+            const categoryColors = {
+                facilities: '#EF4444',
+                library: '#3B82F6',
+                governance: '#10B981',
+                staffing: '#F59E0B',
+                finance: '#8B5CF6'
+            };
+            
+            function wrapLabel(label, maxLength = 20) {
+                if (label.length <= maxLength) return label;
+                const words = label.split(' ');
+                let currentLine = '';
+                let lines = [];
+                words.forEach(word => {
+                    if ((currentLine + word).length > maxLength && currentLine.length > 0) {
+                        lines.push(currentLine.trim());
+                        currentLine = word + ' ';
+                    } else {
+                        currentLine += word + ' ';
+                    }
+                });
+                lines.push(currentLine.trim());
+                return lines;
+            }
+            
+            function showNotification(message) {
+                notification.textContent = message;
+                notification.classList.add('show');
+                setTimeout(() => {
+                    notification.classList.remove('show');
+                }, 3000);
+            }
+            
+            function saveTasksToLocalStorage() {
+                // Convert Date objects to ISO strings for storage
+                const tasksForStorage = tasks.map(task => ({
+                    ...task,
+                    startDate: task.startDate.toISOString(),
+                    endDate: task.endDate.toISOString()
+                }));
+                localStorage.setItem('gtec_tasks', JSON.stringify(tasksForStorage));
+                showNotification('Data saved to local storage!');
+            }
+            
+            function saveAuditLogToLocalStorage() {
+                localStorage.setItem('gtec_audit_log', JSON.stringify(auditLog));
+            }
+            
+            function loadTasksFromLocalStorage() {
+                const storedTasks = localStorage.getItem('gtec_tasks');
+                if (!storedTasks) return null;
+                
+                try {
+                    const parsedTasks = JSON.parse(storedTasks);
+                    return parsedTasks.map(task => ({
+                        ...task,
+                        startDate: new Date(task.startDate),
+                        endDate: new Date(task.endDate)
+                    }));
+                } catch (e) {
+                    console.error('Error loading tasks from localStorage:', e);
+                    return null;
+                }
+            }
+            
+            function loadAuditLogFromLocalStorage() {
+                const storedLog = localStorage.getItem('gtec_audit_log');
+                if (!storedLog) return null;
+                
+                try {
+                    return JSON.parse(storedLog);
+                } catch (e) {
+                    console.error('Error loading audit log from localStorage:', e);
+                    return null;
+                }
+            }
+            
+            function resetToInitialTasks() {
+                if (confirm('Are you sure you want to reset all data? This action cannot be undone.')) {
+                    tasks = initialTasks.map(task => {
+                        const endDate = new Date(task.dueDate);
+                        const startDate = new Date(endDate);
+                        startDate.setDate(endDate.getDate() - task.durationDays);
+                        return { ...task, startDate, endDate };
+                    });
+                    auditLog = [];
+                    saveTasksToLocalStorage();
+                    saveAuditLogToLocalStorage();
+                    filterTasks(document.querySelector('.filter-btn-active').dataset.filter);
+                    updateProgress();
+                    showNotification('All data has been reset to initial state');
+                }
+            }
+            
+            function logAuditEvent(taskId, previousStatus, newStatus) {
+                const event = {
+                    timestamp: new Date().toISOString(),
+                    taskId,
+                    previousStatus,
+                    newStatus,
+                    description: `Task ${taskId} changed from ${previousStatus} to ${newStatus}`
+                };
+                auditLog.unshift(event);
+                saveAuditLogToLocalStorage();
+            }
+            
+            function renderAuditLog() {
+                auditLogContainer.innerHTML = '';
+                
+                if (auditLog.length === 0) {
+                    auditLogContainer.innerHTML = '<div class="text-center py-4 text-gray-500">No audit events recorded yet</div>';
+                    return;
+                }
+                
+                auditLog.forEach(event => {
+                    const item = document.createElement('div');
+                    item.className = 'audit-item';
+                    
+                    const header = document.createElement('div');
+                    header.className = 'audit-item-header';
+                    header.innerHTML = `
+                        <span>${new Date(event.timestamp).toLocaleString()}</span>
+                        <span>Task #${event.taskId}</span>
+                    `;
+                    
+                    const content = document.createElement('div');
+                    content.className = 'audit-item-content';
+                    content.innerHTML = `
+                        <span>Status changed: </span>
+                        <span class="status-change status-${event.previousStatus}">${statusConfig[event.previousStatus].label}</span>
+                        <i class="fas fa-arrow-right mx-2 text-gray-400"></i>
+                        <span class="status-change status-${event.newStatus}">${statusConfig[event.newStatus].label}</span>
+                    `;
+                    
+                    item.appendChild(header);
+                    item.appendChild(content);
+                    auditLogContainer.appendChild(item);
+                });
+            }
+            
+            function openModal(title, tab) {
+                modalTitle.textContent = title;
+                modal.classList.add('active');
+                
+                // Set active tab
+                tabs.forEach(t => t.classList.remove('active'));
+                tabContents.forEach(t => t.classList.remove('active'));
+                
+                document.querySelector(`.tab[data-tab="${tab}"]`).classList.add('active');
+                document.getElementById(`${tab}-tab`).classList.add('active');
+                
+                if (tab === 'export') {
+                    const exportData = {
+                        tasks: tasks.map(task => ({
+                            ...task,
+                            startDate: task.startDate.toISOString(),
+                            endDate: task.endDate.toISOString()
+                        })),
+                        auditLog,
+                        exportedAt: new Date().toISOString()
+                    };
+                    exportDataElement.textContent = JSON.stringify(exportData, null, 2);
+                }
+                else if (tab === 'audit') {
+                    renderAuditLog();
+                }
+            }
+            
+            function downloadJSON(data, filename) {
+                const blob = new Blob([data], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = filename;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            }
+
+            function initializeChart(filteredTasks) {
+                if (ganttChart) {
+                    ganttChart.destroy();
+                }
+
+                const chartLabels = filteredTasks.map(task => `${task.id}. ${wrapLabel(task.title)}`);
+                const chartData = filteredTasks.map(task => ({
+                    x: [task.startDate, task.endDate],
+                    y: `${task.id}. ${task.title}`,
+                    taskId: task.id
+                }));
+                const backgroundColors = filteredTasks.map(task => statusConfig[task.status].color);
+
+                ganttChart = new Chart(ganttChartCanvas, {
+                    type: 'bar',
+                    data: {
+                        labels: chartLabels,
+                        datasets: [{
+                            data: chartData,
+                            backgroundColor: backgroundColors,
+                            borderColor: filteredTasks.map(task => categoryColors[task.category]),
+                            borderWidth: 2,
+                            borderRadius: 6,
+                        }]
+                    },
+                    options: {
+                        indexAxis: 'y',
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        layout: {
+                            padding: {
+                                left: 10,
+                                right: 10,
+                                top: 10,
+                                bottom: 10
+                            }
+                        },
+                        scales: {
+                            x: {
+                                type: 'time',
+                                time: {
+                                    unit: 'day',
+                                    tooltipFormat: 'MMM d, yyyy',
+                                    displayFormats: {
+                                        day: 'MMM d'
+                                    }
+                                },
+                                min: new Date('July 1, 2025'),
+                                max: new Date('September 1, 2025'),
+                                title: {
+                                    display: true,
+                                    text: 'Timeline (Deadline: August 31, 2025)',
+                                    color: '#4B5563',
+                                    font: {
+                                        size: 14,
+                                        weight: '600'
+                                    }
+                                },
+                                ticks: {
+                                    color: '#6B7280'
+                                },
+                                grid: {
+                                    borderColor: '#E5E7EB',
+                                    color: '#F3F4F6'
+                                }
+                            },
+                            y: {
+                                ticks: {
+                                    autoSkip: false,
+                                    maxRotation: 0,
+                                    minRotation: 0,
+                                    color: '#4B5563',
+                                    font: {
+                                        size: 10
+                                    }
+                                },
+                                grid: {
+                                    display: false
+                                }
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                display: false
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    title: function(context) {
+                                        const task = filteredTasks[context[0].dataIndex];
+                                        return `${task.id}. ${task.title}`;
+                                    },
+                                    label: function(context) {
+                                        const task = filteredTasks[context.dataIndex];
+                                        const startDate = task.startDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+                                        const endDate = task.endDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+                                        const status = statusConfig[task.status].label;
+                                        return [
+                                            `Category: ${task.category.charAt(0).toUpperCase() + task.category.slice(1)}`,
+                                            `Status: ${status}`,
+                                            `Start: ${startDate}`,
+                                            `Due: ${endDate}`,
+                                            `Duration: ${task.durationDays} days`,
+                                            '',
+                                            `Description: ${task.description}`
+                                        ];
+                                    }
+                                },
+                                backgroundColor: 'rgba(0,0,0,0.8)',
+                                titleFont: { size: 14, weight: 'bold' },
+                                bodyFont: { size: 11 },
+                                padding: 12,
+                                borderRadius: 8,
+                                displayColors: false,
+                                maxWidth: 350
+                            }
+                        },
+                        onClick: (event, elements) => {
+                            if (elements.length > 0) {
+                                const index = elements[0].index;
+                                const clickedTask = filteredTasks[index];
+                                const taskInOriginalArray = tasks.find(t => t.id === clickedTask.id);
+                                
+                                const previousStatus = taskInOriginalArray.status;
+                                taskInOriginalArray.status = statusConfig[taskInOriginalArray.status].next;
+                                
+                                // Log the status change
+                                logAuditEvent(taskInOriginalArray.id, previousStatus, taskInOriginalArray.status);
+                                
+                                saveTasksToLocalStorage();
+                                filterTasks(document.querySelector('.filter-btn-active').dataset.filter);
+                                updateProgress();
+                            }
+                        }
+                    }
+                });
+            }
+
+            function updateProgress() {
+                const completedTasks = tasks.filter(t => t.status === 'completed').length;
+                const totalTasks = tasks.length;
+                const percentage = totalTasks > 0 ? (completedTasks / totalTasks) * 100 : 0;
+
+                progressBar.style.width = `${percentage}%`;
+                progressText.textContent = `${completedTasks}/${totalTasks} Completed`;
+                progressPercent.textContent = `${Math.round(percentage)}%`;
+
+                // Update category counts
+                const categories = ['facilities', 'library', 'governance', 'staffing', 'finance'];
+                categories.forEach(category => {
+                    const categoryTasks = tasks.filter(t => t.category === category);
+                    const completedCategoryTasks = categoryTasks.filter(t => t.status === 'completed').length;
+                    document.getElementById(`${category}-count`).textContent = `${completedCategoryTasks}/${categoryTasks.length}`;
+                });
+            }
+            
+            function filterTasks(filter) {
+                let filtered = tasks;
+                if (filter === 'todo' || filter === 'inprogress' || filter === 'completed') {
+                    filtered = tasks.filter(task => task.status === filter);
+                } else if (filter !== 'all') {
+                    filtered = tasks.filter(task => task.category === filter);
+                }
+                initializeChart(filtered);
+
+                filterButtons.forEach(button => {
+                    if (button.dataset.filter === filter) {
+                        button.classList.add('filter-btn-active');
+                    } else {
+                        button.classList.remove('filter-btn-active');
+                    }
+                });
+            }
+
+            // Event listeners
+            filterButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const filter = button.dataset.filter;
+                    filterTasks(filter);
+                });
+            });
+            
+            resetBtn.addEventListener('click', resetToInitialTasks);
+            
+            exportBtn.addEventListener('click', () => {
+                openModal('Export Data', 'export');
+            });
+            
+            importBtn.addEventListener('click', () => {
+                openModal('Import Data', 'import');
+            });
+            
+            auditLogBtn.addEventListener('click', () => {
+                openModal('Audit Log', 'audit');
+            });
+            
+            closeModal.addEventListener('click', () => {
+                modal.classList.remove('active');
+            });
+            
+            closeModalBtn.addEventListener('click', () => {
+                modal.classList.remove('active');
+            });
+            
+            downloadJsonBtn.addEventListener('click', () => {
+                const exportData = {
+                    tasks: tasks.map(task => ({
+                        ...task,
+                        startDate: task.startDate.toISOString(),
+                        endDate: task.endDate.toISOString()
+                    })),
+                    auditLog,
+                    exportedAt: new Date().toISOString()
+                };
+                downloadJSON(JSON.stringify(exportData, null, 2), `gtec-dashboard-${new Date().toISOString().slice(0, 10)}.json`);
+                showNotification('Export downloaded successfully!');
+            });
+            
+            importFileInput.addEventListener('change', (event) => {
+                const file = event.target.files[0];
+                if (!file) return;
+                
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    try {
+                        const importedData = JSON.parse(e.target.result);
+                        importPreviewData.textContent = JSON.stringify(importedData, null, 2);
+                        importPreview.classList.remove('hidden');
+                        confirmImportBtn.disabled = false;
+                    } catch (error) {
+                        alert('Invalid file format. Please select a valid JSON file.');
+                        console.error('Error parsing JSON:', error);
+                    }
+                };
+                reader.readAsText(file);
+            });
+            
+            confirmImportBtn.addEventListener('click', () => {
+                try {
+                    const importedData = JSON.parse(importPreviewData.textContent);
+                    
+                    if (!importedData.tasks || !Array.isArray(importedData.tasks)) {
+                        throw new Error('Invalid data format: tasks array missing');
+                    }
+                    
+                    // Convert date strings to Date objects
+                    importedData.tasks = importedData.tasks.map(task => ({
+                        ...task,
+                        startDate: new Date(task.startDate),
+                        endDate: new Date(task.endDate)
+                    }));
+                    
+                    tasks = importedData.tasks;
+                    auditLog = importedData.auditLog || [];
+                    
+                    saveTasksToLocalStorage();
+                    saveAuditLogToLocalStorage();
+                    
+                    filterTasks(document.querySelector('.filter-btn-active').dataset.filter);
+                    updateProgress();
+                    
+                    modal.classList.remove('active');
+                    showNotification('Data imported successfully!');
+                } catch (error) {
+                    alert('Error importing data: ' + error.message);
+                    console.error('Import error:', error);
+                }
+            });
+            
+            // Tab switching
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const tabName = tab.dataset.tab;
+                    
+                    tabs.forEach(t => t.classList.remove('active'));
+                    tabContents.forEach(t => t.classList.remove('active'));
+                    
+                    tab.classList.add('active');
+                    document.getElementById(`${tabName}-tab`).classList.add('active');
+                    
+                    if (tabName === 'audit') {
+                        renderAuditLog();
+                    }
+                });
+            });
+
+            // Initialize
+            filterTasks('all');
+            updateProgress();
+        });
+    </script>
+</body>
+</html>

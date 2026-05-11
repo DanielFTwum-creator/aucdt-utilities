@@ -1,0 +1,302 @@
+\documentclass[11pt, a4paper]{article}
+
+% PACKAGES
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{geometry}
+\usepackage{hyperref}
+\usepackage{enumitem}
+
+% DOCUMENT GEOMETRY
+\geometry{
+    a4paper,
+    left=2.5cm,
+    right=2.5cm,
+    top=2.5cm,
+    bottom=2.5cm
+}
+
+% HYPERREF SETUP for clickable links and metadata
+\hypersetup{
+    colorlinks=true,
+    linkcolor=black,
+    urlcolor=blue,
+    pdftitle={Software Requirements Specification for Timetable Management System},
+    pdfauthor={Asanska University College of Design and Technology},
+    pdfsubject={SRS},
+    pdfkeywords={SRS, Timetable, Management, System},
+    bookmarks=true,
+    bookmarksopen=true
+}
+
+% TITLE PAGE
+\title{
+    \vspace{2cm}
+    \textbf{Software Requirements Specification \\ for \\ Timetable Management System}
+    \vspace{1cm}
+}
+\author{
+    \textbf{Version 1.3} \\
+    \vspace{0.5cm}
+    \textbf{20 August 2025} \\
+    \vspace{2cm}
+    Prepared for: \\
+    \textbf{Asanska University College of Design and Technology}
+}
+\date{} % No date here, as it's included in the author block
+
+\begin{document}
+
+\maketitle
+\thispagestyle{empty} % No page number on the title page
+\newpage
+
+\tableofcontents
+\thispagestyle{empty} % No page number on the ToC page
+\newpage
+
+\setcounter{page}{1} % Start page numbering from 1
+
+%----------------------------------------------------------------------------------------
+%	1. INTRODUCTION
+%----------------------------------------------------------------------------------------
+\section{Introduction}
+\label{sec:introduction}
+
+\subsection{Purpose}
+\label{sec:purpose}
+This Software Requirements Specification (SRS) document outlines the functional and non-functional requirements for the Timetable Management System (TMS) for the Asanska University College of Design and Technology. The purpose of this document is to provide a detailed description of the system's features, capabilities, and constraints, serving as a foundational agreement between the development team and the university stakeholders.
+
+\subsection{Document Conventions}
+\label{sec:conventions}
+This document follows the IEEE Std 830-1998 recommended practices for Software Requirements Specifications. All requirements are uniquely identifiable for traceability.
+
+\subsection{Intended Audience and Reading Suggestions}
+\label{sec:audience}
+This document is intended for project managers, developers, quality assurance teams, and university administrators. It is recommended that readers familiarise themselves with the overall description before delving into the specific requirements.
+
+\subsection{Product Scope}
+\label{sec:scope}
+The Timetable Management System will be a comprehensive web-based application designed to automate the creation, management, and viewing of academic timetables. The system will cater to the needs of students, lecturers, and administrators, providing a centralised platform for all timetable-related activities.
+
+\subsection{References}
+\label{sec:references}
+\begin{itemize}
+    \item IEEE Std 830-1998, \textit{IEEE Recommended Practice for Software Requirements Specifications}.
+    \item Asanska University College of Design and Technology Academic Timetable 2025.
+\end{itemize}
+
+%----------------------------------------------------------------------------------------
+%	2. OVERALL DESCRIPTION
+%----------------------------------------------------------------------------------------
+\section{Overall Description}
+\label{sec:overall_description}
+
+\subsection{Product Perspective}
+\label{sec:perspective}
+The TMS is a new, self-contained system that will replace the current manual process of timetable creation and distribution. It will be a web-based application accessible through standard web browsers on desktops and mobile devices.
+
+\subsection{Product Functions}
+\label{sec:functions}
+The primary functions of the TMS will include:
+\begin{itemize}
+    \item \textbf{User Authentication}: Secure login for administrators, lecturers, and students.
+    \item \textbf{Timetable Creation}: Automated generation of timetables based on predefined constraints.
+    \item \textbf{Timetable Viewing}: Easy access to timetables for all users, with filtering and search capabilities.
+    \item \textbf{Notifications}: Automated alerts for timetable changes, clashes, and upcoming classes.
+    \item \textbf{Reporting}: Generation of reports on resource utilisation and scheduling efficiency.
+    \item \textbf{Data Import/Export}: Functionality to import and export timetable data.
+    \item \textbf{Audit Logging}: Tracking and recording of key user actions within the system.
+\end{itemize}
+
+\subsection{User Classes and Characteristics}
+\label{sec:user_classes}
+\begin{itemize}
+    \item \textbf{Administrator}: Responsible for managing user accounts, defining constraints, overseeing the timetable generation process, managing data import/export, and reviewing audit logs.
+    \item \textbf{Lecturer}: Can view their assigned courses and schedules, and receive notifications about their classes.
+    \item \textbf{Student}: Can view their course timetables, and receive notifications about classes and any changes.
+\end{itemize}
+
+\subsection{Operating Environment}
+\label{sec:environment}
+The system will operate on a standard web server and be accessible through modern web browsers such as Google Chrome, Mozilla Firefox, and Safari. It will be designed to be responsive and accessible on a variety of devices, including desktops, tablets, and smartphones.
+
+\subsection{Design and Implementation Constraints}
+\label{sec:constraints}
+\begin{itemize}
+    \item The system must be developed using a modern web technology stack.
+    \item The database must be a relational database management system (RDBMS).
+    \item The user interface should adhere to the AUCDT branding guidelines, incorporating gold, deep brown, white, and green.
+\end{itemize}
+
+\subsection{Assumptions and Dependencies}
+\label{sec:assumptions}
+\begin{itemize}
+    \item It is assumed that the university will provide the necessary data for courses, lecturers, students, and available venues.
+    \item The system's performance is dependent on the reliability of the university's network infrastructure.
+\end{itemize}
+
+%----------------------------------------------------------------------------------------
+%	3. SYSTEM FEATURES
+%----------------------------------------------------------------------------------------
+\section{System Features}
+\label{sec:system_features}
+
+\subsection{User Authentication}
+\label{sec:auth}
+\subsubsection{Description and Priority}
+The system shall provide a secure login mechanism for all users. This is a \textbf{high-priority} requirement.
+
+\subsubsection{Functional Requirements}
+\begin{description}
+    \item[REQ-001] The system shall allow users to log in with a unique username and password.
+    \item[REQ-002] The system shall enforce password complexity rules.
+    \item[REQ-003] The system shall provide a password recovery mechanism.
+\end{description}
+
+\subsection{Timetable Management}
+\label{sec:timetable_management}
+\subsubsection{Description and Priority}
+The core functionality of the system is to create, manage, and display timetables. This is a \textbf{high-priority} requirement.
+
+\subsubsection{Functional Requirements}
+\begin{description}
+    \item[REQ-004] The system shall allow administrators to input and manage course details, lecturer availability, and venue information.
+    \item[REQ-005] The system shall automatically generate a master timetable based on the predefined constraints, avoiding clashes.
+    \item[REQ-006] The system shall allow administrators to manually adjust the generated timetable.
+    \item[REQ-007] The system shall provide a user-friendly interface for students and lecturers to view their personalised timetables.
+\end{description}
+
+\subsection{Notification System}
+\label{sec:notifications}
+\subsubsection{Description and Priority}
+The system shall notify users of any changes or updates to the timetable. This is a \textbf{medium-priority} requirement.
+
+\subsubsection{Functional Requirements}
+\begin{description}
+    \item[REQ-008] The system shall send email notifications to affected users when a class is rescheduled or cancelled. Notifications will include the course name, original date/time, new date/time (if applicable), and venue.
+    \item[REQ-009] The system shall provide in-app notifications for upcoming classes. These alerts shall be sent 24 hours and 1 hour prior to the class start time.
+    \item[REQ-019] The system shall allow users to customize their notification preferences, enabling them to choose between email and in-app alerts and to opt-out of non-critical notifications.
+\end{description}
+
+\subsection{Reporting and Analytics}
+\label{sec:reporting}
+\subsubsection{Description and Priority}
+The system shall generate reports to help administrators analyse resource utilisation. This is a \textbf{medium-priority} requirement.
+
+\subsubsection{Functional Requirements}
+\begin{description}
+    \item[REQ-010] The system shall generate reports on lecturer workload and classroom utilisation.
+    \item[REQ-011] The system shall provide visualisations, such as charts and graphs, to represent the data.
+\end{description}
+
+\subsection{Data Import/Export}
+\label{sec:import_export}
+\subsubsection{Description and Priority}
+The system shall allow administrators to import and export timetable data in JSON format for backup and interoperability purposes. This is a \textbf{high-priority} requirement.
+
+\subsubsection{Functional Requirements}
+\begin{description}
+    \item[REQ-012] The system shall provide a feature for administrators to export the entire timetable dataset into a JSON file.
+    \item[REQ-013] The system shall provide a feature for administrators to import a timetable dataset from a JSON file.
+    \item[REQ-014] The system shall validate the structure and data types of the imported JSON file to ensure data integrity. This validation shall include:
+    \begin{itemize}
+        \item Confirming all mandatory fields (e.g., course ID, lecturer ID, venue, start time, end time) are present.
+        \item Verifying logical consistency (e.g., ensuring a class end time is not before its start time).
+        \item Ensuring all referenced entities (e.g., lecturers, students, venues) exist within the system's database.
+    \end{itemize}
+\end{description}
+
+\subsection{Audit Logs}
+\label{sec:audit_logs}
+\subsubsection{Description and Priority}
+The system shall maintain a log of all significant actions performed by users, particularly administrators, to ensure accountability and traceability. This is a \textbf{medium-priority} requirement.
+
+\subsubsection{Functional Requirements}
+\begin{description}
+    \item[REQ-015] The system shall log all timetable creation, modification, and deletion events.
+    \item[REQ-016] The system shall record the user, timestamp, and a description of the action for each log entry.
+    \item[REQ-017] The system shall provide a secure, read-only interface for administrators to view the audit logs.
+    \item[REQ-018] The audit logs shall be searchable and filterable by user and date range.
+\end{description}
+
+%----------------------------------------------------------------------------------------
+%	4. EXTERNAL INTERFACE REQUIREMENTS
+%----------------------------------------------------------------------------------------
+\section{External Interface Requirements}
+\label{sec:external_interfaces}
+
+\subsection{User Interfaces}
+\label{sec:ui}
+The user interface shall be intuitive and easy to navigate. It will feature a dashboard for each user type, providing quick access to relevant information and functions. The UI must be fully responsive and provide an optimal viewing experience on desktops, tablets, and smartphones.
+
+\subsection{Hardware Interfaces}
+\label{sec:hardware_interfaces}
+No specific hardware interfaces are required beyond standard web browsing devices.
+
+\subsection{Software Interfaces}
+\label{sec:software_interfaces}
+The system may need to integrate with the university's existing Student Information System (SIS) to fetch student and course data.
+
+\subsection{Communications Interfaces}
+\label{sec:comm_interfaces}
+The system will use standard HTTP/HTTPS protocols for communication between the client and server. Email notifications will be sent via SMTP.
+
+%----------------------------------------------------------------------------------------
+%	5. NON-FUNCTIONAL REQUIREMENTS
+%----------------------------------------------------------------------------------------
+\section{Non-Functional Requirements}
+\label{sec:non_functional}
+
+\subsection{Performance Requirements}
+\label{sec:performance}
+\begin{itemize}
+    \item The system shall be able to support up to 500 concurrent users without significant degradation in performance.
+    \item Page load times shall not exceed 3 seconds under normal network conditions.
+\end{itemize}
+
+\subsection{Safety Requirements}
+\label{sec:safety}
+There are no specific safety requirements for this system.
+
+\subsection{Security Requirements}
+\label{sec:security}
+\begin{itemize}
+    \item All user data shall be encrypted both in transit and at rest.
+    \item The system shall be protected against common web vulnerabilities, such as SQL injection and cross-site scripting (XSS).
+\end{itemize}
+
+\subsection{Software Quality Attributes}
+\label{sec:quality}
+\begin{itemize}
+    \item \textbf{Reliability}: The system shall have an uptime of 99.5\%.
+    \item \textbf{Usability}: The system shall be easy to learn and use. Usability will be validated through user acceptance testing with representatives from all user classes (administrators, lecturers, students), aiming for a user satisfaction rate of at least 80\%.
+    \item \textbf{Maintainability}: The code shall be well-documented and modular to facilitate future updates and maintenance.
+\end{itemize}
+
+\subsection{Accessibility Requirements}
+\label{sec:accessibility}
+The system shall be developed to be accessible to users with disabilities, including those with visual, motor, and cognitive impairments. The web interface shall conform to the Web Content Accessibility Guidelines (WCAG) 2.1 at a Level AA compliance. This includes:
+\begin{itemize}
+    \item Providing text alternatives (alt-text) for all images and non-text content.
+    \item Ensuring all functionality is operable through a keyboard interface without requiring a mouse.
+    \item Maintaining a color contrast ratio that meets WCAG standards to ensure readability for users with low vision.
+    \item Ensuring compatibility with modern screen readers.
+\end{itemize}
+
+\subsection{Internationalization and Localization}
+\label{sec:i18n}
+The system shall be designed to support multiple languages and regional formats (e.g., date, time). The initial version will be released in English, but the underlying architecture must allow for the easy addition of new languages in future releases.
+
+%----------------------------------------------------------------------------------------
+%	6. OTHER REQUIREMENTS
+%----------------------------------------------------------------------------------------
+\section{Other Requirements}
+\label{sec:other}
+\begin{itemize}
+    \item The system shall be scalable to accommodate future growth in the number of students and courses.
+    \item A comprehensive user manual and training materials shall be provided to all user groups.
+\end{itemize}
+
+\end{document}

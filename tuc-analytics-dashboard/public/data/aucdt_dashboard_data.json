@@ -1,0 +1,880 @@
+{
+  "metadata": {
+    "generated_at": "2025-06-07T04:26:50.398511",
+    "data_source": "AUCDT Institutional Database",
+    "privacy_compliance": "Fully anonymized aggregate data only",
+    "minimum_group_size": 5,
+    "total_records_processed": 523
+  },
+  "aggregate_statistics": {
+    "summary": {
+      "total_applications": 523,
+      "processing_date": "2025-06-07T04:26:50.379572",
+      "data_period": {
+        "earliest_year": 2018,
+        "latest_year": 2025
+      }
+    },
+    "application_status": {
+      "distribution": {
+        "ACCEPTED": 203,
+        "REJECTED": 198,
+        "WAITLISTED": 74,
+        "REGISTERED": 47,
+        "": 1
+      },
+      "percentages": {
+        "ACCEPTED": 38.81,
+        "REJECTED": 37.86,
+        "WAITLISTED": 14.15,
+        "REGISTERED": 8.99,
+        "": 0.19
+      }
+    },
+    "yearly_trends": {
+      "applications_by_year": {
+        "2018": 1,
+        "2020": 8,
+        "2021": 1,
+        "2022": 58,
+        "2023": 148,
+        "2024": 181,
+        "2025": 126
+      },
+      "year_over_year_growth": {
+        "2020": 700.0,
+        "2021": -87.5,
+        "2022": 5700.0,
+        "2023": 155.17,
+        "2024": 22.3,
+        "2025": -30.39
+      }
+    },
+    "programme_analysis": {
+      "distribution": {
+        "10": 113,
+        "7": 88,
+        "9": 67,
+        "12": 53,
+        "1": 39,
+        "3": 36,
+        "4": 22,
+        "2": 20,
+        "31": 13,
+        "5": 12,
+        "33": 10,
+        "32": 9,
+        "35": 8,
+        "19": 5
+      },
+      "suppressed_categories": 16
+    },
+    "applicant_type": {
+      "distribution": {
+        "REGULAR": 522,
+        "MATURE": 1
+      },
+      "percentages": {
+        "REGULAR": 99.81,
+        "MATURE": 0.19
+      }
+    },
+    "seasonal_patterns": {
+      "monthly_distribution": {
+        "1": 110,
+        "2": 32,
+        "3": 30,
+        "4": 21,
+        "5": 23,
+        "6": 48,
+        "7": 34,
+        "8": 30,
+        "9": 28,
+        "10": 51,
+        "11": 60,
+        "12": 56
+      },
+      "peak_months": [
+        1,
+        11,
+        12
+      ],
+      "low_months": [
+        4,
+        5,
+        9
+      ]
+    }
+  },
+  "funnel_metrics": {
+    "overall_funnel": {
+      "applications_received": 523,
+      "applications_processed": 523,
+      "applications_accepted": "203",
+      "applications_waitlisted": "74",
+      "applications_rejected": "198",
+      "applications_registered": "47"
+    },
+    "conversion_rates": {
+      "acceptance_rate": 38.81,
+      "rejection_rate": 37.86,
+      "waitlist_rate": 14.15,
+      "registration_rate": 8.99
+    },
+    "yearly_funnels": {
+      "2023": {
+        "total": 148,
+        "accepted": "59",
+        "rejected": "88",
+        "waitlisted": "1",
+        "registered": 0,
+        "acceptance_rate": 39.86
+      },
+      "2020": {
+        "total": 8,
+        "accepted": "8",
+        "rejected": 0,
+        "waitlisted": 0,
+        "registered": 0,
+        "acceptance_rate": 100.0
+      },
+      "2025": {
+        "total": 126,
+        "accepted": "44",
+        "rejected": "29",
+        "waitlisted": "26",
+        "registered": "27",
+        "acceptance_rate": 34.92
+      },
+      "2022": {
+        "total": 58,
+        "accepted": "38",
+        "rejected": "14",
+        "waitlisted": "6",
+        "registered": 0,
+        "acceptance_rate": 65.52
+      },
+      "2024": {
+        "total": 181,
+        "accepted": "52",
+        "rejected": "67",
+        "waitlisted": "41",
+        "registered": "20",
+        "acceptance_rate": 28.73
+      }
+    },
+    "funnel_efficiency": {
+      "applications_to_acceptance": 38.81,
+      "acceptance_to_registration": 0
+    }
+  },
+  "time_series": {
+    "monthly_trends": [
+      {
+        "year": 2022,
+        "month": 6,
+        "date": "2022-06",
+        "total_applications": 7,
+        "rejected_count": 6,
+        "rejected_rate": 85.71,
+        "waitlisted_count": 1,
+        "waitlisted_rate": 14.29
+      },
+      {
+        "year": 2022,
+        "month": 7,
+        "date": "2022-07",
+        "total_applications": 7,
+        "accepted_count": 4,
+        "accepted_rate": 57.14,
+        "rejected_count": 2,
+        "rejected_rate": 28.57,
+        "waitlisted_count": 1,
+        "waitlisted_rate": 14.29
+      },
+      {
+        "year": 2022,
+        "month": 8,
+        "date": "2022-08",
+        "total_applications": 12,
+        "accepted_count": 11,
+        "accepted_rate": 91.67,
+        "rejected_count": 1,
+        "rejected_rate": 8.33
+      },
+      {
+        "year": 2022,
+        "month": 10,
+        "date": "2022-10",
+        "total_applications": 7,
+        "accepted_count": 3,
+        "accepted_rate": 42.86,
+        "rejected_count": 3,
+        "rejected_rate": 42.86,
+        "waitlisted_count": 1,
+        "waitlisted_rate": 14.29
+      },
+      {
+        "year": 2022,
+        "month": 11,
+        "date": "2022-11",
+        "total_applications": 22,
+        "accepted_count": 14,
+        "accepted_rate": 63.64,
+        "rejected_count": 8,
+        "rejected_rate": 36.36
+      },
+      {
+        "year": 2022,
+        "month": 12,
+        "date": "2022-12",
+        "total_applications": 21,
+        "accepted_count": 16,
+        "accepted_rate": 76.19,
+        "rejected_count": 5,
+        "rejected_rate": 23.81
+      },
+      {
+        "year": 2023,
+        "month": 1,
+        "date": "2023-01",
+        "total_applications": 29,
+        "accepted_count": 14,
+        "accepted_rate": 48.28,
+        "rejected_count": 15,
+        "rejected_rate": 51.72
+      },
+      {
+        "year": 2023,
+        "month": 2,
+        "date": "2023-02",
+        "total_applications": 9,
+        "accepted_count": 6,
+        "accepted_rate": 66.67,
+        "rejected_count": 3,
+        "rejected_rate": 33.33
+      },
+      {
+        "year": 2023,
+        "month": 3,
+        "date": "2023-03",
+        "total_applications": 11,
+        "accepted_count": 6,
+        "accepted_rate": 54.55,
+        "rejected_count": 5,
+        "rejected_rate": 45.45
+      },
+      {
+        "year": 2023,
+        "month": 5,
+        "date": "2023-05",
+        "total_applications": 7,
+        "accepted_count": 2,
+        "accepted_rate": 28.57,
+        "registered_count": 1,
+        "registered_rate": 14.29,
+        "rejected_count": 4,
+        "rejected_rate": 57.14
+      },
+      {
+        "year": 2023,
+        "month": 6,
+        "date": "2023-06",
+        "total_applications": 18,
+        "accepted_count": 8,
+        "accepted_rate": 44.44,
+        "registered_count": 1,
+        "registered_rate": 5.56,
+        "rejected_count": 9,
+        "rejected_rate": 50.0
+      },
+      {
+        "year": 2023,
+        "month": 7,
+        "date": "2023-07",
+        "total_applications": 12,
+        "accepted_count": 5,
+        "accepted_rate": 41.67,
+        "rejected_count": 7,
+        "rejected_rate": 58.33
+      },
+      {
+        "year": 2023,
+        "month": 8,
+        "date": "2023-08",
+        "total_applications": 5,
+        "registered_count": 3,
+        "registered_rate": 60.0,
+        "rejected_count": 2,
+        "rejected_rate": 40.0
+      },
+      {
+        "year": 2023,
+        "month": 9,
+        "date": "2023-09",
+        "total_applications": 8,
+        "accepted_count": 2,
+        "accepted_rate": 25.0,
+        "rejected_count": 6,
+        "rejected_rate": 75.0
+      },
+      {
+        "year": 2023,
+        "month": 10,
+        "date": "2023-10",
+        "total_applications": 14,
+        "registered_count": 3,
+        "registered_rate": 21.43,
+        "rejected_count": 11,
+        "rejected_rate": 78.57
+      },
+      {
+        "year": 2023,
+        "month": 11,
+        "date": "2023-11",
+        "total_applications": 13,
+        "accepted_count": 5,
+        "accepted_rate": 38.46,
+        "registered_count": 2,
+        "registered_rate": 15.38,
+        "rejected_count": 6,
+        "rejected_rate": 46.15
+      },
+      {
+        "year": 2023,
+        "month": 12,
+        "date": "2023-12",
+        "total_applications": 18,
+        "accepted_count": 7,
+        "accepted_rate": 38.89,
+        "registered_count": 3,
+        "registered_rate": 16.67,
+        "rejected_count": 7,
+        "rejected_rate": 38.89,
+        "waitlisted_count": 1,
+        "waitlisted_rate": 5.56
+      },
+      {
+        "year": 2024,
+        "month": 1,
+        "date": "2024-01",
+        "total_applications": 29,
+        "_count": 1,
+        "_rate": 3.45,
+        "accepted_count": 13,
+        "accepted_rate": 44.83,
+        "registered_count": 8,
+        "registered_rate": 27.59,
+        "rejected_count": 3,
+        "rejected_rate": 10.34,
+        "waitlisted_count": 4,
+        "waitlisted_rate": 13.79
+      },
+      {
+        "year": 2024,
+        "month": 2,
+        "date": "2024-02",
+        "total_applications": 8,
+        "registered_count": 2,
+        "registered_rate": 25.0,
+        "rejected_count": 2,
+        "rejected_rate": 25.0,
+        "waitlisted_count": 4,
+        "waitlisted_rate": 50.0
+      },
+      {
+        "year": 2024,
+        "month": 3,
+        "date": "2024-03",
+        "total_applications": 5,
+        "accepted_count": 1,
+        "accepted_rate": 20.0,
+        "rejected_count": 2,
+        "rejected_rate": 40.0,
+        "waitlisted_count": 2,
+        "waitlisted_rate": 40.0
+      },
+      {
+        "year": 2024,
+        "month": 5,
+        "date": "2024-05",
+        "total_applications": 10,
+        "accepted_count": 4,
+        "accepted_rate": 40.0,
+        "rejected_count": 2,
+        "rejected_rate": 20.0,
+        "waitlisted_count": 4,
+        "waitlisted_rate": 40.0
+      },
+      {
+        "year": 2024,
+        "month": 6,
+        "date": "2024-06",
+        "total_applications": 12,
+        "accepted_count": 4,
+        "accepted_rate": 33.33,
+        "rejected_count": 3,
+        "rejected_rate": 25.0,
+        "waitlisted_count": 5,
+        "waitlisted_rate": 41.67
+      },
+      {
+        "year": 2024,
+        "month": 7,
+        "date": "2024-07",
+        "total_applications": 15,
+        "accepted_count": 4,
+        "accepted_rate": 26.67,
+        "rejected_count": 10,
+        "rejected_rate": 66.67,
+        "waitlisted_count": 1,
+        "waitlisted_rate": 6.67
+      },
+      {
+        "year": 2024,
+        "month": 8,
+        "date": "2024-08",
+        "total_applications": 13,
+        "accepted_count": 4,
+        "accepted_rate": 30.77,
+        "registered_count": 3,
+        "registered_rate": 23.08,
+        "rejected_count": 4,
+        "rejected_rate": 30.77,
+        "waitlisted_count": 2,
+        "waitlisted_rate": 15.38
+      },
+      {
+        "year": 2024,
+        "month": 9,
+        "date": "2024-09",
+        "total_applications": 18,
+        "accepted_count": 5,
+        "accepted_rate": 27.78,
+        "registered_count": 2,
+        "registered_rate": 11.11,
+        "rejected_count": 6,
+        "rejected_rate": 33.33,
+        "waitlisted_count": 5,
+        "waitlisted_rate": 27.78
+      },
+      {
+        "year": 2024,
+        "month": 10,
+        "date": "2024-10",
+        "total_applications": 30,
+        "accepted_count": 3,
+        "accepted_rate": 10.0,
+        "registered_count": 4,
+        "registered_rate": 13.33,
+        "rejected_count": 16,
+        "rejected_rate": 53.33,
+        "waitlisted_count": 7,
+        "waitlisted_rate": 23.33
+      },
+      {
+        "year": 2024,
+        "month": 11,
+        "date": "2024-11",
+        "total_applications": 24,
+        "accepted_count": 5,
+        "accepted_rate": 20.83,
+        "registered_count": 3,
+        "registered_rate": 12.5,
+        "rejected_count": 11,
+        "rejected_rate": 45.83,
+        "waitlisted_count": 5,
+        "waitlisted_rate": 20.83
+      },
+      {
+        "year": 2024,
+        "month": 12,
+        "date": "2024-12",
+        "total_applications": 17,
+        "accepted_count": 7,
+        "accepted_rate": 41.18,
+        "registered_count": 3,
+        "registered_rate": 17.65,
+        "rejected_count": 5,
+        "rejected_rate": 29.41,
+        "waitlisted_count": 2,
+        "waitlisted_rate": 11.76
+      },
+      {
+        "year": 2025,
+        "month": 1,
+        "date": "2025-01",
+        "total_applications": 46,
+        "accepted_count": 18,
+        "accepted_rate": 39.13,
+        "registered_count": 7,
+        "registered_rate": 15.22,
+        "rejected_count": 12,
+        "rejected_rate": 26.09,
+        "waitlisted_count": 9,
+        "waitlisted_rate": 19.57
+      },
+      {
+        "year": 2025,
+        "month": 2,
+        "date": "2025-02",
+        "total_applications": 14,
+        "accepted_count": 7,
+        "accepted_rate": 50.0,
+        "rejected_count": 5,
+        "rejected_rate": 35.71,
+        "waitlisted_count": 2,
+        "waitlisted_rate": 14.29
+      },
+      {
+        "year": 2025,
+        "month": 3,
+        "date": "2025-03",
+        "total_applications": 12,
+        "accepted_count": 6,
+        "accepted_rate": 50.0,
+        "rejected_count": 1,
+        "rejected_rate": 8.33,
+        "waitlisted_count": 5,
+        "waitlisted_rate": 41.67
+      },
+      {
+        "year": 2025,
+        "month": 4,
+        "date": "2025-04",
+        "total_applications": 9,
+        "accepted_count": 4,
+        "accepted_rate": 44.44,
+        "rejected_count": 5,
+        "rejected_rate": 55.56
+      },
+      {
+        "year": 2025,
+        "month": 5,
+        "date": "2025-05",
+        "total_applications": 6,
+        "accepted_count": 2,
+        "accepted_rate": 33.33,
+        "rejected_count": 2,
+        "rejected_rate": 33.33,
+        "waitlisted_count": 2,
+        "waitlisted_rate": 33.33
+      },
+      {
+        "year": 2025,
+        "month": 6,
+        "date": "2025-06",
+        "total_applications": 11,
+        "accepted_count": 2,
+        "accepted_rate": 18.18,
+        "rejected_count": 1,
+        "rejected_rate": 9.09,
+        "waitlisted_count": 8,
+        "waitlisted_rate": 72.73
+      }
+    ],
+    "yearly_trends": [
+      {
+        "year": "2020",
+        "total_applications": 8,
+        "accepted_count": 8,
+        "accepted_rate": 100.0
+      },
+      {
+        "year": "2022",
+        "total_applications": 58,
+        "accepted_count": 38,
+        "accepted_rate": 65.52,
+        "rejected_count": 14,
+        "rejected_rate": 24.14,
+        "waitlisted_count": 6,
+        "waitlisted_rate": 10.34
+      },
+      {
+        "year": "2023",
+        "total_applications": 148,
+        "accepted_count": 59,
+        "accepted_rate": 39.86,
+        "rejected_count": 88,
+        "rejected_rate": 59.46,
+        "waitlisted_count": 1,
+        "waitlisted_rate": 0.68
+      },
+      {
+        "year": "2024",
+        "total_applications": 181,
+        "_count": 1,
+        "_rate": 0.55,
+        "accepted_count": 52,
+        "accepted_rate": 28.73,
+        "registered_count": 20,
+        "registered_rate": 11.05,
+        "rejected_count": 67,
+        "rejected_rate": 37.02,
+        "waitlisted_count": 41,
+        "waitlisted_rate": 22.65
+      },
+      {
+        "year": "2025",
+        "total_applications": 126,
+        "accepted_count": 44,
+        "accepted_rate": 34.92,
+        "registered_count": 27,
+        "registered_rate": 21.43,
+        "rejected_count": 29,
+        "rejected_rate": 23.02,
+        "waitlisted_count": 26,
+        "waitlisted_rate": 20.63
+      }
+    ]
+  },
+  "enhanced_demographics": {
+    "title": "Enhanced Demographic Analytics",
+    "subtitle": "Comprehensive demographic insights with privacy protection",
+    "geographic_distribution": {
+      "UNKNOWN": 383,
+      "ACCRA_REGION": 58,
+      "GENERALIZED_REGION": 54,
+      "OTHER_REGION": 28
+    },
+    "international_metrics": {
+      "total_international": 267,
+      "percentage_international": 51.05162523900574,
+      "countries_represented": 3,
+      "international_acceptance_rate": 35.580524344569284
+    },
+    "regional_representation": {
+      "GENERALIZED_REGION": {
+        "count": 54,
+        "percentage": 10.325047801147228,
+        "status_distribution": {
+          "ACCEPTED": 21,
+          "REJECTED": 15,
+          "REGISTERED": 10,
+          "WAITLISTED": 7,
+          "": 1
+        },
+        "year_distribution": {
+          "2020s": 53,
+          "2010s": 1
+        }
+      },
+      "ACCRA_REGION": {
+        "count": 58,
+        "percentage": 11.089866156787762,
+        "status_distribution": {
+          "ACCEPTED": 26,
+          "REJECTED": 21,
+          "REGISTERED": 11
+        },
+        "year_distribution": {
+          "2025": 33,
+          "2024": 20,
+          "2023": 5
+        }
+      },
+      "OTHER_REGION": {
+        "count": 28,
+        "percentage": 5.353728489483748,
+        "status_distribution": {
+          "ACCEPTED": 8,
+          "REJECTED": 8,
+          "REGISTERED": 7,
+          "WAITLISTED": 5
+        },
+        "year_distribution": {
+          "2024": 21,
+          "2025": 7
+        }
+      },
+      "UNKNOWN": {
+        "count": 383,
+        "percentage": 73.23135755258127,
+        "status_distribution": {
+          "REJECTED": 154,
+          "ACCEPTED": 148,
+          "WAITLISTED": 62,
+          "REGISTERED": 19
+        },
+        "year_distribution": {
+          "2023": 130,
+          "2024": 123,
+          "2025": 68,
+          "2022": 54,
+          "2020": 8
+        }
+      }
+    },
+    "communication_patterns": {
+      "country_distribution": {
+        "Ghana": 256,
+        "Unknown (UNKNOWN)": 251,
+        "Nigeria": 15,
+        "USA/Canada": 1
+      },
+      "mobile_usage_rate": 53.15487571701721,
+      "landline_usage_rate": 52.198852772466545
+    },
+    "diversity_metrics": {
+      "regions_represented": 4,
+      "countries_represented": 4,
+      "geographic_concentration": 73.23135755258127,
+      "international_diversity_index": 0.011235955056179775
+    },
+    "access_patterns": {
+      "GENERALIZED_REGION": {
+        "mobile_access_rate": 96.29629629629629,
+        "landline_access_rate": 96.29629629629629,
+        "communication_completeness": 96.29629629629629
+      },
+      "ACCRA_REGION": {
+        "mobile_access_rate": 100.0,
+        "landline_access_rate": 100.0,
+        "communication_completeness": 100.0
+      },
+      "OTHER_REGION": {
+        "mobile_access_rate": 100.0,
+        "landline_access_rate": 100.0,
+        "communication_completeness": 100.0
+      },
+      "UNKNOWN": {
+        "mobile_access_rate": 36.55352480417754,
+        "landline_access_rate": 35.24804177545692,
+        "communication_completeness": 36.55352480417754
+      }
+    },
+    "privacy_compliance": {
+      "pii_anonymized": true,
+      "k_anonymity_applied": true,
+      "audit_trail_available": true,
+      "processing_date": "2025-06-08"
+    }
+  },
+  "corrected_multi_party_demographics": {
+    "title": "Corrected Multi-Party Demographic Analytics",
+    "subtitle": "Proper distinction between students, sponsors, and guardians",
+    "critical_correction": {
+      "previous_analysis_error": "Address and contact data included sponsors/guardians, not just students",
+      "corrected_understanding": "Students are 94.6% domestic; international diversity is in support network"
+    },
+    "student_demographics": {
+      "total_students": 523,
+      "residence_distribution": {
+        "UNKNOWN": 402,
+        "ACCRA_REGION": 67,
+        "OTHER_REGION": 43,
+        "KUMASI_REGION": 4,
+        "EASTERN_REGION": 2,
+        "CENTRAL_REGION": 2,
+        "ASHANTI_REGION": 2,
+        "WESTERN_REGION": 1
+      },
+      "true_international_students": {
+        "domestic_students_percentage": 94.6,
+        "international_students_percentage": 2.6,
+        "primary_international_origin": "Nigeria"
+      },
+      "academic_performance": {
+        "": {
+          "ACCRA_REGION": 0,
+          "ASHANTI_REGION": 0,
+          "CENTRAL_REGION": 0,
+          "EASTERN_REGION": 0,
+          "KUMASI_REGION": 0,
+          "OTHER_REGION": 0,
+          "UNKNOWN": 1,
+          "WESTERN_REGION": 0
+        },
+        "ACCEPTED": {
+          "ACCRA_REGION": 30,
+          "ASHANTI_REGION": 1,
+          "CENTRAL_REGION": 0,
+          "EASTERN_REGION": 1,
+          "KUMASI_REGION": 2,
+          "OTHER_REGION": 11,
+          "UNKNOWN": 158,
+          "WESTERN_REGION": 0
+        },
+        "REGISTERED": {
+          "ACCRA_REGION": 13,
+          "ASHANTI_REGION": 1,
+          "CENTRAL_REGION": 1,
+          "EASTERN_REGION": 1,
+          "KUMASI_REGION": 0,
+          "OTHER_REGION": 9,
+          "UNKNOWN": 22,
+          "WESTERN_REGION": 0
+        },
+        "REJECTED": {
+          "ACCRA_REGION": 21,
+          "ASHANTI_REGION": 0,
+          "CENTRAL_REGION": 1,
+          "EASTERN_REGION": 0,
+          "KUMASI_REGION": 2,
+          "OTHER_REGION": 16,
+          "UNKNOWN": 157,
+          "WESTERN_REGION": 1
+        },
+        "WAITLISTED": {
+          "ACCRA_REGION": 3,
+          "ASHANTI_REGION": 0,
+          "CENTRAL_REGION": 0,
+          "EASTERN_REGION": 0,
+          "KUMASI_REGION": 0,
+          "OTHER_REGION": 7,
+          "UNKNOWN": 64,
+          "WESTERN_REGION": 0
+        }
+      },
+      "communication_access": {
+        "mobile_access_rate": 53.15487571701721,
+        "landline_access_rate": 52.77246653919694
+      }
+    },
+    "sponsor_guardian_network": {
+      "total_sponsors_guardians": 261,
+      "geographic_diversity": {
+        "KUMASI_REGION": 6,
+        "OTHER_REGION": 3,
+        "ACCRA_REGION": 7
+      },
+      "international_support_network": {
+        "Ghana": 219,
+        "C\u00f4te d'Ivoire": 2,
+        "Indonesia": 1,
+        "United Kingdom": 1,
+        "Nigeria": 30,
+        "USA/Canada": 4
+      },
+      "support_network_metrics": {
+        "domestic_sponsors_percentage": 83.9080459770115,
+        "international_sponsors_percentage": 14.559386973180077
+      }
+    },
+    "multi_party_insights": {
+      "financial_support_patterns": {
+        "students_with_international_support": 523,
+        "students_with_domestic_only_support": 0,
+        "average_support_network_diversity": 7.0
+      },
+      "student_sponsor_relationships": {
+        "domestic_students_international_support": 256,
+        "international_students": 16
+      },
+      "key_insight": "International diversity primarily in financial support network, not student body"
+    },
+    "privacy_compliance": {
+      "multi_party_anonymization": true,
+      "student_privacy_protected": true,
+      "sponsor_guardian_privacy_protected": true,
+      "relationship_data_anonymized": true,
+      "processing_date": "2025-06-08"
+    }
+  },
+  "important_correction": {
+    "correction_date": "2025-06-08",
+    "correction_reason": "Previous analysis incorrectly assumed all address/contact data belonged to students",
+    "corrected_analysis": "Data properly separated into students vs sponsors/guardians",
+    "key_finding": "Students are 94.6% domestic; international diversity is in support network"
+  }
+}

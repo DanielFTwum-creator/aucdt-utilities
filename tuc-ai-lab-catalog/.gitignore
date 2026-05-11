@@ -1,0 +1,18 @@
+node_modules/
+build/
+dist/
+coverage/
+.DS_Store
+*.log
+.env*
+!.env.example
+
+# Playwright browser binaries (firefox, webkit, winldd — chromium is intentionally kept)
+playwright-browsers/firefox-*/
+playwright-browsers/webkit-*/
+playwright-browsers/winldd-*/
+playwright-browsers/ffmpeg-*/
+
+# Playwright test output artifacts
+playwright-report/
+test-results/

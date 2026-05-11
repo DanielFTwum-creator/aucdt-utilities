@@ -1,0 +1,1 @@
+const logger = { info: (m) => console.log('[INFO] ' + m), error: (m) => console.error('[ERROR] ' + m), warn: (m) => console.warn('[WARN] ' + m) }; module.exports = { logger };

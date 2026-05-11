@@ -1,0 +1,68 @@
+[160] Installing: mentorship-program
+Lockfile is up to date, resolution step is skipped
+Progress: resolved 1, reused 0, downloaded 0, added 0
+Packages: +155
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Progress: resolved 155, reused 0, downloaded 0, added 0
+Progress: resolved 155, reused 1, downloaded 0, added 0
+Progress: resolved 155, reused 11, downloaded 0, added 0
+Progress: resolved 155, reused 12, downloaded 0, added 0
+Progress: resolved 155, reused 25, downloaded 0, added 0
+Progress: resolved 155, reused 28, downloaded 0, added 0
+Progress: resolved 155, reused 30, downloaded 0, added 0
+Progress: resolved 155, reused 34, downloaded 0, added 0
+Progress: resolved 155, reused 46, downloaded 0, added 0
+Progress: resolved 155, reused 66, downloaded 0, added 0
+Progress: resolved 155, reused 72, downloaded 0, added 0
+Progress: resolved 155, reused 95, downloaded 0, added 0
+Progress: resolved 155, reused 111, downloaded 0, added 0
+Progress: resolved 155, reused 123, downloaded 0, added 0
+Progress: resolved 155, reused 139, downloaded 0, added 0
+Progress: resolved 155, reused 152, downloaded 0, added 2
+Progress: resolved 155, reused 154, downloaded 0, added 10
+Progress: resolved 155, reused 155, downloaded 0, added 13
+Progress: resolved 155, reused 155, downloaded 0, added 26
+Progress: resolved 155, reused 155, downloaded 0, added 30
+Progress: resolved 155, reused 155, downloaded 0, added 34
+Progress: resolved 155, reused 155, downloaded 0, added 44
+Progress: resolved 155, reused 155, downloaded 0, added 48
+Progress: resolved 155, reused 155, downloaded 0, added 55
+Progress: resolved 155, reused 155, downloaded 0, added 67
+Progress: resolved 155, reused 155, downloaded 0, added 74
+Progress: resolved 155, reused 155, downloaded 0, added 79
+Progress: resolved 155, reused 155, downloaded 0, added 80
+Progress: resolved 155, reused 155, downloaded 0, added 84
+Progress: resolved 155, reused 155, downloaded 0, added 93
+Progress: resolved 155, reused 155, downloaded 0, added 102
+Progress: resolved 155, reused 155, downloaded 0, added 108
+Progress: resolved 155, reused 155, downloaded 0, added 110
+Progress: resolved 155, reused 155, downloaded 0, added 112
+Progress: resolved 155, reused 155, downloaded 0, added 119
+Progress: resolved 155, reused 155, downloaded 0, added 122
+Progress: resolved 155, reused 155, downloaded 0, added 127
+Progress: resolved 155, reused 155, downloaded 0, added 131
+Progress: resolved 155, reused 155, downloaded 0, added 133
+Progress: resolved 155, reused 155, downloaded 0, added 140
+Progress: resolved 155, reused 155, downloaded 0, added 146
+Progress: resolved 155, reused 155, downloaded 0, added 152
+Progress: resolved 155, reused 155, downloaded 0, added 155, done
+
+dependencies:
++ cors 2.8.6
++ dotenv 16.6.1
++ express 5.2.1
++ mysql2 3.19.1
++ uuid 11.1.0
+
+devDependencies:
++ nodemon 3.1.14
++ vitest 3.2.4
+
+╭ Warning ─────────────────────────────────────────────────────────────────────╮
+│                                                                              │
+│   Ignored build scripts: esbuild@0.27.3.                                     │
+│   Run "pnpm approve-builds" to pick which dependencies should be allowed     │
+│   to run scripts.                                                            │
+│                                                                              │
+╰──────────────────────────────────────────────────────────────────────────────╯
+Done in 55.5s using pnpm v10.32.1

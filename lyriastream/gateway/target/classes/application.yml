@@ -1,0 +1,95 @@
+spring:
+  application:
+    name: lyriastream-gateway
+
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:mariadb://localhost:3307/lyriastream_db}
+    username: ${SPRING_DATASOURCE_USERNAME:lyriastream}
+    password: ${SPRING_DATASOURCE_PASSWORD:lyriastream_dev_pwd}
+    driver-class-name: org.mariadb.jdbc.Driver
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 2
+      connection-timeout: 20000
+
+  jpa:
+    hibernate:
+      ddl-auto: validate        # schema managed by init.sql / Flyway
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MariaDBDialect
+        format_sql: true
+
+  data:
+    redis:
+      host: ${SPRING_REDIS_HOST:localhost}
+      port: ${SPRING_REDIS_PORT:6379}
+      database: ${SPRING_REDIS_DATABASE:2}
+      timeout: 2000ms
+
+  security:
+    # Handled by custom JWT filter — disable form login
+    user:
+      password: disabled
+
+# ── App config ──────────────────────────────────────────────────────────────
+app:
+  aim:
+    base-url: ${AIM_BASE_URL:http://localhost:8090}
+    api-key: ${AIM_API_KEY:dev-aim-key-change-in-prod}
+    connect-timeout-ms: 5000
+    read-timeout-ms: 300000     # 5 min for long GPU generations
+
+  jwt:
+    secret: ${JWT_SECRET:dev-jwt-secret-min-512-bits-change-in-prod-xxxxxxxxxxxxxxxxxxxx}
+    access-expiry-ms: ${JWT_ACCESS_EXPIRY_MS:900000}       # 15 min
+    refresh-expiry-ms: ${JWT_REFRESH_EXPIRY_MS:604800000}  # 7 days
+
+  totp:
+    encryption-key: ${TOTP_ENCRYPTION_KEY:dev-totp-key-32-chars-change-prod}
+
+  cors:
+    allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:3000}
+
+  audio:
+    storage-path: ${APP_AUDIO_STORAGE_PATH:/var/lyriastream/audio}
+
+  rate-limit:
+    authenticated-rpm: 60
+    anonymous-rpm: 10
+
+  quotas:
+    guest: 3
+    free: 20
+    pro: 100
+
+# ── Actuator ─────────────────────────────────────────────────────────────────
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus,metrics
+  endpoint:
+    health:
+      show-details: when-authorized
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+
+# ── Logging ───────────────────────────────────────────────────────────────────
+logging:
+  level:
+    root: INFO
+    gh.edu.tuc.lyriastream: DEBUG
+    org.springframework.security: WARN
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+
+server:
+  port: 8080
+  compression:
+    enabled: true
+  http2:
+    enabled: true

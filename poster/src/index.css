@@ -1,0 +1,5 @@
+@import "tailwindcss";
+
+@utility font-heavy {
+  font-family: "Arial Black", Arial, Helvetica, sans-serif;
+}

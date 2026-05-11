@@ -1,0 +1,183 @@
+import { AuthGate } from './AuthGate';
+require('dotenv').config();
+const express = require('express');
+const cors = require('cors');
+const mysql = require('mysql2/promise');
+const { v4: uuidv4 } = require('uuid');
+
+const PORT = process.env.PORT || 4055;
+const app = express();
+app.use(cors());
+app.use(express.json());
+
+
+// Serve admin UI from public directory
+app.use(express.static(path.join(__dirname, '../public')));
+let pool;
+
+async function initDB() {
+  pool = mysql.createPool({
+    host: process.env.DB_HOST || 'localhost',
+    user: process.env.DB_USER || 'appuser',
+    password: process.env.DB_PASSWORD || 'apppass',
+    database: process.env.DB_NAME || 'complaint_resolution',
+    waitForConnections: true,
+    connectionLimit: 10,
+    queueLimit: 0,
+  });
+
+  const conn = await pool.getConnection();
+
+  await conn.query(`
+    CREATE TABLE IF NOT EXISTS complaints (
+      id VARCHAR(255) PRIMARY KEY,
+      complainant_name VARCHAR(255),
+      contact_email VARCHAR(255),
+      complaint_category VARCHAR(100),
+      complaint_description TEXT,
+      severity_level VARCHAR(50),
+      complaint_date DATE,
+      status VARCHAR(50),
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
+
+  await conn.query(`
+    CREATE TABLE IF NOT EXISTS resolutions (
+      id VARCHAR(255) PRIMARY KEY,
+      complaint_id VARCHAR(255),
+      assigned_officer VARCHAR(255),
+      resolution_plan TEXT,
+      resolution_date DATE,
+      outcome VARCHAR(100),
+      satisfaction_rating INT,
+      resolution_notes TEXT,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (complaint_id) REFERENCES complaints(id)
+    )
+  `);
+
+  conn.release();
+  console.log('Complaint Resolution DB initialized');
+}
+
+
+// Serve admin UI at root
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, '../public', 'index.html'));
+});
+app.get('/health', (_req, res) => res.json({ status: 'ok', service: 'complaint-resolution-system' }));
+
+// --- complaints CRUD ---
+
+app.get('/api/complaints', async (_req, res) => {
+  try {
+    const [rows] = await pool.query('SELECT * FROM complaints ORDER BY created_at DESC');
+    res.json(rows);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.post('/api/complaints', async (req, res) => {
+  try {
+    const id = `comp_${uuidv4()}`;
+    const { complainant_name, contact_email, complaint_category, complaint_description, severity_level, complaint_date, status } = req.body;
+    await pool.query(
+      'INSERT INTO complaints (id, complainant_name, contact_email, complaint_category, complaint_description, severity_level, complaint_date, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+      [id, complainant_name, contact_email, complaint_category, complaint_description, severity_level, complaint_date, status || 'open']
+    );
+    const [[row]] = await pool.query('SELECT * FROM complaints WHERE id = ?', [id]);
+    res.status(201).json(row);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.put('/api/complaints/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { complainant_name, contact_email, complaint_category, complaint_description, severity_level, complaint_date, status } = req.body;
+    await pool.query(
+      'UPDATE complaints SET complainant_name=?, contact_email=?, complaint_category=?, complaint_description=?, severity_level=?, complaint_date=?, status=? WHERE id=?',
+      [complainant_name, contact_email, complaint_category, complaint_description, severity_level, complaint_date, status, id]
+    );
+    const [[row]] = await pool.query('SELECT * FROM complaints WHERE id = ?', [id]);
+    if (!row) return res.status(404).json({ error: 'Not found' });
+    res.json(row);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.delete('/api/complaints/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    await pool.query('DELETE FROM resolutions WHERE complaint_id = ?', [id]);
+    const [result] = await pool.query('DELETE FROM complaints WHERE id = ?', [id]);
+    if (result.affectedRows === 0) return res.status(404).json({ error: 'Not found' });
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// --- resolutions CRUD ---
+
+app.get('/api/resolutions', async (_req, res) => {
+  try {
+    const [rows] = await pool.query('SELECT * FROM resolutions ORDER BY created_at DESC');
+    res.json(rows);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.post('/api/resolutions', async (req, res) => {
+  try {
+    const id = `res_${uuidv4()}`;
+    const { complaint_id, assigned_officer, resolution_plan, resolution_date, outcome, satisfaction_rating, resolution_notes } = req.body;
+    await pool.query(
+      'INSERT INTO resolutions (id, complaint_id, assigned_officer, resolution_plan, resolution_date, outcome, satisfaction_rating, resolution_notes) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+      [id, complaint_id, assigned_officer, resolution_plan, resolution_date, outcome, satisfaction_rating, resolution_notes]
+    );
+    const [[row]] = await pool.query('SELECT * FROM resolutions WHERE id = ?', [id]);
+    res.status(201).json(row);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.put('/api/resolutions/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { complaint_id, assigned_officer, resolution_plan, resolution_date, outcome, satisfaction_rating, resolution_notes } = req.body;
+    await pool.query(
+      'UPDATE resolutions SET complaint_id=?, assigned_officer=?, resolution_plan=?, resolution_date=?, outcome=?, satisfaction_rating=?, resolution_notes=? WHERE id=?',
+      [complaint_id, assigned_officer, resolution_plan, resolution_date, outcome, satisfaction_rating, resolution_notes, id]
+    );
+    const [[row]] = await pool.query('SELECT * FROM resolutions WHERE id = ?', [id]);
+    if (!row) return res.status(404).json({ error: 'Not found' });
+    res.json(row);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.delete('/api/resolutions/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const [result] = await pool.query('DELETE FROM resolutions WHERE id = ?', [id]);
+    if (result.affectedRows === 0) return res.status(404).json({ error: 'Not found' });
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+async function start() {
+  await initDB();
+  app.listen(PORT, () => console.log(`Complaint Resolution System API running on port ${PORT}`));
+}
+
+start().catch(console.error);

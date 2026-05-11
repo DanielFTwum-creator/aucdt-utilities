@@ -1,0 +1,34 @@
+spring:
+  application:
+    name: techbridge-ict
+
+  datasource:
+    url: jdbc:mariadb://127.0.0.1:3307/techbridge
+    username: admin
+    password: "AdminPass#123!"
+    driver-class-name: org.mariadb.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      org:
+        hibernate:
+          format_sql: false
+          envers:
+            default_schema: audit
+            store_data_at_delete: true
+
+  cache:
+    type: redis
+
+  data:
+    redis:
+      host: 127.0.0.1
+      port: 6379
+
+jwt:
+  secret: 2948404D635166546A576E5A7234753778217A25432A462D4A614E645267556B
+
+server:
+  port: ${PORT:8080}

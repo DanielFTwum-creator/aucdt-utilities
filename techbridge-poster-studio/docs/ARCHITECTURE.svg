@@ -1,0 +1,49 @@
+<svg width="800" height="600" viewBox="0 0 800 600" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="800" height="600" fill="#FAF7F0"/>
+  
+  <!-- Client Side -->
+  <rect x="50" y="50" width="300" height="500" rx="20" fill="white" stroke="#2A1A1A" stroke-width="2"/>
+  <text x="200" y="85" text-anchor="middle" font-family="Inter, sans-serif" font-weight="900" font-size="18" fill="#2A1A1A">CLIENT (React 19.2.5)</text>
+  
+  <!-- App Components -->
+  <rect x="75" y="110" width="250" height="60" rx="10" fill="#F8FAFC" stroke="#8C1A2E" stroke-width="1"/>
+  <text x="200" y="145" text-anchor="middle" font-family="Inter, sans-serif" font-weight="700" font-size="14" fill="#8C1A2E">AppContent (Main Interface)</text>
+  
+  <rect x="75" y="180" width="250" height="60" rx="10" fill="#F8FAFC" stroke="#8C1A2E" stroke-width="1"/>
+  <text x="200" y="215" text-anchor="middle" font-family="Inter, sans-serif" font-weight="700" font-size="14" fill="#8C1A2E">Aesthetic Engine (6R Logic)</text>
+  
+  <rect x="75" y="250" width="250" height="60" rx="10" fill="#F8FAFC" stroke="#8C1A2E" stroke-width="1"/>
+  <text x="200" y="285" text-anchor="middle" font-family="Inter, sans-serif" font-weight="700" font-size="14" fill="#8C1A2E">Posters (SVG/Canvas Render)</text>
+  
+  <rect x="75" y="350" width="250" height="180" rx="15" fill="#1A0A06" stroke="#C49A22" stroke-width="1"/>
+  <text x="200" y="380" text-anchor="middle" font-family="Inter, sans-serif" font-weight="800" font-size="16" fill="#C49A22">ADMIN SUITE</text>
+  <text x="200" y="415" text-anchor="middle" font-family="Inter, sans-serif" font-size="12" fill="white">Diagnostics | Testing | Logs</text>
+  
+  <!-- Server Side -->
+  <rect x="450" y="50" width="300" height="300" rx="20" fill="#2A1A1A" stroke="#C49A22" stroke-width="2"/>
+  <text x="600" y="85" text-anchor="middle" font-family="Inter, sans-serif" font-weight="900" font-size="18" fill="#FAF7F0">SERVER (Express + Tsx)</text>
+  
+  <rect x="475" y="110" width="250" height="60" rx="10" fill="#3D2B2B" stroke="#C49A22" stroke-width="1"/>
+  <text x="600" y="145" text-anchor="middle" font-family="Inter, sans-serif" font-weight="700" font-size="14" fill="white">Static Assets / SPA SPA Routing</text>
+  
+  <rect x="475" y="190" width="250" height="60" rx="10" fill="#3D2B2B" stroke="#C49A22" stroke-width="1"/>
+  <text x="600" y="225" text-anchor="middle" font-family="Inter, sans-serif" font-weight="700" font-size="14" fill="white">Generation API (PNG/PDF)</text>
+
+  <!-- External Infrastructure -->
+  <rect x="450" y="400" width="300" height="150" rx="20" fill="#FAF7F0" stroke="#555555" stroke-dasharray="8 4" stroke-width="1"/>
+  <text x="600" y="435" text-anchor="middle" font-family="Inter, sans-serif" font-weight="900" font-size="16" fill="#555555">INFRASTRUCTURE</text>
+  <text x="600" y="470" text-anchor="middle" font-family="Inter, sans-serif" font-size="12" fill="#555555">Docker Engine / Cloud Run</text>
+  <text x="600" y="495" text-anchor="middle" font-family="Inter, sans-serif" font-size="12" fill="#555555">Playwright Headless Chrome</text>
+
+  <!-- Relationship Arrows -->
+  <path d="M350 150 L450 150" stroke="#8C1A2E" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <path d="M350 220 L450 220" stroke="#8C1A2E" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <path d="M600 350 L600 400" stroke="#555555" stroke-width="2" stroke-dasharray="4 4"/>
+  
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="0" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#8C1A2E" />
+    </marker>
+  </defs>
+</svg>

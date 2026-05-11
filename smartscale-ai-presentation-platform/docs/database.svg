@@ -1,0 +1,38 @@
+<svg width="650" height="450" xmlns="http://www.w3.org/2000/svg">
+  <rect width="100%" height="100%" fill="#f8fafc"/>
+  <text x="325" y="45" font-family="sans-serif" font-size="24" font-weight="bold" text-anchor="middle" fill="#1e293b">System Schema v3.1</text>
+
+  <!-- Slide Schema -->
+  <rect x="40" y="80" width="260" height="320" rx="15" fill="#fff" stroke="#C97064" stroke-width="3"/>
+  <rect x="40" y="80" width="260" height="40" rx="15" fill="#C97064"/>
+  <text x="170" y="105" font-family="sans-serif" font-size="14" font-weight="bold" text-anchor="middle" fill="#fff">SlideContent (Static Schema)</text>
+  
+  <text x="55" y="145" font-family="monospace" font-size="12" fill="#475569">id: number (PK)</text>
+  <text x="55" y="165" font-family="monospace" font-size="12" fill="#475569">type: SlideType (ENUM)</text>
+  <text x="55" y="185" font-family="monospace" font-size="12" fill="#475569">title: string</text>
+  <text x="55" y="205" font-family="monospace" font-size="12" fill="#475569">body: string[]</text>
+  <text x="55" y="225" font-family="monospace" font-size="12" fill="#475569">images: Image[]</text>
+  <text x="55" y="245" font-family="monospace" font-size="12" fill="#475569">interactions: Interaction[]</text>
+  <text x="55" y="265" font-family="monospace" font-size="12" fill="#475569">useCases: UseCase[]</text>
+  <text x="55" y="285" font-family="monospace" font-size="12" fill="#475569">notes: text</text>
+
+  <!-- Interaction Attributes -->
+  <rect x="350" y="80" width="260" height="150" rx="15" fill="#fff" stroke="#94a3b8" stroke-width="2"/>
+  <rect x="350" y="80" width="260" height="40" rx="15" fill="#94a3b8"/>
+  <text x="480" y="105" font-family="sans-serif" font-size="14" font-weight="bold" text-anchor="middle" fill="#fff">Interaction (Workshop)</text>
+  <text x="365" y="145" font-family="monospace" font-size="12" fill="#475569">id: string</text>
+  <text x="365" y="165" font-family="monospace" font-size="12" fill="#475569">type: "text" | "image"</text>
+  <text x="365" y="185" font-family="monospace" font-size="12" fill="#475569">selectedStyle: Style_ID</text>
+  <text x="365" y="205" font-family="monospace" font-size="12" fill="#475569">aspectRatio: "1:1" | "16:9"</text>
+
+  <!-- Audit Store -->
+  <rect x="350" y="250" width="260" height="150" rx="15" fill="#fff" stroke="#ef4444" stroke-width="2"/>
+  <rect x="350" y="250" width="260" height="40" rx="15" fill="#ef4444"/>
+  <text x="480" y="275" font-family="sans-serif" font-size="14" font-weight="bold" text-anchor="middle" fill="#fff">AuditLog (Volatile)</text>
+  <text x="365" y="315" font-family="monospace" font-size="12" fill="#475569">timestamp: UNIX_MS</text>
+  <text x="365" y="335" font-family="monospace" font-size="12" fill="#475569">action: Action_ENUM</text>
+  <text x="365" y="355" font-family="monospace" font-size="12" fill="#475569">details: JSON_BLOB</text>
+
+  <path d="M 300 200 L 350 150" stroke="#cbd5e1" stroke-width="2" stroke-dasharray="4"/>
+  <path d="M 300 300 L 350 320" stroke="#cbd5e1" stroke-width="2" stroke-dasharray="4"/>
+</svg>
