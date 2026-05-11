@@ -10,7 +10,7 @@
 This document defines the baseline system requirements for **backend**, ensuring alignment with the overarching Techbridge University College ecosystem standards.
 
 ### 1.2 Scope
-This application provides utility functionality within the AUCDT ecosystem.
+This application provides utility functionality within the TUC ecosystem.
 
 ## 2. Institutional Compliance Mandates (Permanent)
 To maintain alignment with the **Techbridge Scholarship Portal v2.0 Blueprint**, this project strictly adheres to the following constraints:

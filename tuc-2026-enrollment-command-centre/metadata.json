@@ -1,0 +1,11 @@
+{
+  "name": "TUC 2026 Enrollment Command Centre",
+  "description": "An interactive enrollment and marketing strategy dashboard for Techbridge University College.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "Interactive strategic marketing timeline",
+    "Demographic segmentation strategies",
+    "Visual funnel conversion analytics",
+    "Operational activation checklist"
+  ]
+}

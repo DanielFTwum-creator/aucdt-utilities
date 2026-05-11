@@ -1,0 +1,25 @@
+{
+  "name": "aucdt-utilities",
+  "version": "1.0.0",
+  "description": "Techbridge University College - AI & Digital Transformation Utilities Monorepo",
+  "private": true,
+  "scripts": {
+    "build": "pnpm recursive run build",
+    "build:all": "powershell -NoProfile -ExecutionPolicy Bypass -File build-all.ps1 || bash build-all.sh",
+    "build:filter": "powershell -NoProfile -ExecutionPolicy Bypass -File build-all.ps1 -filter",
+    "build:parallel": "powershell -NoProfile -ExecutionPolicy Bypass -File build-all.ps1 -parallel || bash build-all.sh --parallel",
+    "dev": "pnpm recursive run dev --parallel",
+    "lint": "pnpm recursive run lint",
+    "test": "pnpm recursive run test",
+    "clean": "pnpm recursive run clean && pnpm recursive exec rm -rf dist node_modules"
+  },
+  "keywords": [
+    "tuc",
+    "techbridge",
+    "ai",
+    "digital-transformation",
+    "monorepo"
+  ],
+  "author": "Daniel Frempong Twum <daniel.twum@techbridge.edu.gh>",
+  "license": "MIT"
+}

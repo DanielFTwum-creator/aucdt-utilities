@@ -6,9 +6,14 @@ set -e
 
 ENVIRONMENT="${1:-production}"
 REMOTE_HOST="${2:-root@66.226.72.199}"
-REMOTE_PATH="/var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/ai-lab"
+REMOTE_PATH="${3:-}"
 BUILD=false
 TEST=false
+
+# Set default REMOTE_PATH if not provided
+if [ -z "$REMOTE_PATH" ]; then
+    REMOTE_PATH="/var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/ai-lab/"
+fi
 
 # Parse arguments
 for arg in "$@"; do
@@ -129,8 +134,8 @@ ssh -o StrictHostKeyChecking=no "$REMOTE_HOST" "rm -rf $REMOTE_PATH/* $REMOTE_PA
 echo "Deploying files via SCP..."
 scp -r -o StrictHostKeyChecking=no "$STAGING"/* "$REMOTE_HOST:$REMOTE_PATH/"
 
-echo "Setting permissions..."
-ssh -o StrictHostKeyChecking=no "$REMOTE_HOST" "chmod -R 755 $REMOTE_PATH && chmod 644 $REMOTE_PATH/.htaccess"
+echo "Setting permissions and ownership..."
+ssh -o StrictHostKeyChecking=no "$REMOTE_HOST" "chown -R techbridge.edu.gh_md:techbridge.edu.gh_md $REMOTE_PATH && chmod -R 755 $REMOTE_PATH && chmod 644 $REMOTE_PATH/.htaccess"
 
 echo -e "${GREEN}✓ Deployment complete${NC}"
 

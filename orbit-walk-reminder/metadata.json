@@ -1,0 +1,6 @@
+{
+  "name": "Orbit Walk Reminder",
+  "description": "A rhythmic countdown that dings every 15 minutes to encourage healthy movement breaks.",
+  "requestFramePermissions": [],
+  "majorCapabilities": []
+}
