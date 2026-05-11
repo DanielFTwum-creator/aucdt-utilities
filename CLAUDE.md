@@ -197,6 +197,13 @@ Work through items in order. Confirm each with ✅ before proceeding.
 - **Infrastructure:** Ubuntu · Docker · Plesk · Nginx · Apache
 - **AI Tools:** Claude (Sonnet + Haiku) · Gemini CLI · Suno.ai
 
+### Package Manager
+- **All projects use pnpm** (not npm or yarn)
+- Run `pnpm install` to install dependencies
+- Run `pnpm build` to build projects
+- Commit `pnpm-lock.yaml` to version control (not package-lock.json)
+- Delete `package-lock.json` if migrating from npm projects
+
 ### Code Standards
 - UK British English in all documentation and comments
 - IEEE SRS format for all project specifications

@@ -1,49 +1,42 @@
 #!/bin/bash
-
 # UMaT Tracker Deployment Script
-# Usage: ./deploy.sh [user@host] [remote-path]
-# Example: ./deploy.sh root@66.226.72.199 /var/www/vhosts/ai-tools.techbridge.edu.gh/umat
+# Simple SCP-based deployment
 
-set -e
+REMOTE_HOST="${1:-root@66.226.72.199}"
+REMOTE_PATH="${2:-/var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/umat/}"
 
-# Configuration
-SERVER_HOST="${1:-root@66.226.72.199}"
-REMOTE_PATH="${2:-/var/www/vhosts/ai-tools.techbridge.edu.gh/umat}"
-LOCAL_BUILD_DIR="./dist"
-
-echo "======================================"
-echo "UMaT Tracker Deployment"
-echo "======================================"
-echo "Server: $SERVER_HOST"
-echo "Remote path: $REMOTE_PATH"
+echo "=== UMAT TRACKER DEPLOYMENT ==="
+echo "Remote: $REMOTE_HOST"
+echo "Path: $REMOTE_PATH"
 echo ""
 
-# Check if dist directory exists
-if [ ! -d "$LOCAL_BUILD_DIR" ]; then
-    echo "❌ Build directory not found: $LOCAL_BUILD_DIR"
-    echo "Building the application..."
-    pnpm build
+# Check dist exists
+if [ ! -d "dist" ]; then
+    echo "Building..."
+    pnpm build || { echo "Build failed!"; exit 1; }
 fi
 
-echo ""
-echo "📦 Uploading to server..."
-echo ""
+echo "Creating directory..."
+ssh -o StrictHostKeyChecking=no "$REMOTE_HOST" "mkdir -p $REMOTE_PATH && rm -rf $REMOTE_PATH/*" 2>/dev/null
 
-# Use rsync for better performance and resume capability
-rsync -avz --delete "$LOCAL_BUILD_DIR/" "$SERVER_HOST:$REMOTE_PATH/" || {
-    echo ""
-    echo "⚠️  rsync failed. Trying with scp as fallback..."
-    scp -r "$LOCAL_BUILD_DIR"/* "$SERVER_HOST:$REMOTE_PATH/"
-}
+echo "Copying files..."
+scp -r -o StrictHostKeyChecking=no "dist/"* "$REMOTE_HOST:$REMOTE_PATH" 2>/dev/null
 
-echo ""
-echo "======================================"
-echo "✅ Deployment Complete!"
-echo "======================================"
-echo ""
-echo "Access the app at:"
-echo "  https://ai-tools.techbridge.edu.gh/umat/"
-echo ""
-echo "To verify deployment, run:"
-echo "  ssh $SERVER_HOST 'ls -lh $REMOTE_PATH/'"
+echo "Creating .htaccess..."
+ssh -o StrictHostKeyChecking=no "$REMOTE_HOST" "cat > $REMOTE_PATH/.htaccess" << 'EOF' 2>/dev/null
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /umat/
+  RewriteCond %{REQUEST_FILENAME} -f [OR]
+  RewriteCond %{REQUEST_FILENAME} -d
+  RewriteRule ^ - [L]
+  RewriteRule ^ /umat/index.html [QSA,L]
+</IfModule>
+EOF
+
+echo "Setting permissions..."
+ssh -o StrictHostKeyChecking=no "$REMOTE_HOST" "chown -R techbridge.edu.gh_md:psacln $REMOTE_PATH && chmod -R 755 $REMOTE_PATH && chmod 644 $REMOTE_PATH/.htaccess 2>/dev/null; true" 2>/dev/null
+
+echo "✅ Deployment complete!"
+echo "URL: https://ai-tools.techbridge.edu.gh/umat"
 echo ""
