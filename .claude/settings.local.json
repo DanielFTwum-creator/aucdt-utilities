@@ -243,7 +243,10 @@
       "Bash(scp -r -o StrictHostKeyChecking=no dist/* root@66.226.72.199:/var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/agenticai-masterclass/)",
       "Bash(scp -r -o StrictHostKeyChecking=no dist/* root@66.226.72.199:/var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/orbit-walk-reminder/)",
       "Bash(scp -r -o StrictHostKeyChecking=no dist/* root@66.226.72.199:/var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/enrollment-2026/)",
-      "Bash(npx --yes vite build)"
+      "Bash(npx --yes vite build)",
+      "Bash(scp -r -o StrictHostKeyChecking=no dist/* root@66.226.72.199:/var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/dictation/)",
+      "Bash(scp -r -o StrictHostKeyChecking=no dist/* root@66.226.72.199:/var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/dmcdai/)",
+      "Bash(scp -r -o StrictHostKeyChecking=no dist/* root@66.226.72.199:/var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/markai/)"
     ],
     "deny": [],
     "ask": []
