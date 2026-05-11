@@ -92,7 +92,9 @@
   --font-mono: 'SF Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
 
   --header-height: 90px;
-  --live-header-height: 300px;
+  --export-bar-height: 50px;
+  --total-header-height: 140px;
+  --live-header-height: 350px;
 }
 
 body.light-mode {
@@ -155,7 +157,7 @@ body {
   max-width: 900px;
   width: 100%;
   margin: 0 auto;
-  padding-top: calc(var(--header-height) + 1.5rem);
+  padding-top: calc(var(--total-header-height) + 1.5rem);
   position: relative;
 }
 
@@ -380,7 +382,7 @@ body {
   justify-content: center;
   gap: 1rem;
   transition: all var(--transition-slow);
-  height: var(--header-height);
+  height: var(--total-header-height);
 }
 
 .app-header.is-live {
@@ -455,6 +457,21 @@ body {
   height: var(--header-height);
 }
 
+.export-controls {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  position: absolute;
+  bottom: -50px;
+  left: 0;
+  height: 50px;
+  padding: 0.5rem 0;
+  background: var(--color-surface-alt);
+  border-top: 1px solid var(--color-border);
+}
+
 .action-button {
   background-color: var(--color-surface);
   border: 1px solid var(--color-border);
@@ -477,6 +494,22 @@ body {
   color: var(--color-text);
   transform: translateY(-2px);
   box-shadow: var(--shadow-md);
+}
+
+.action-button.secondary {
+  width: auto;
+  height: 40px;
+  border-radius: 6px;
+  padding: 0 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.action-button.secondary:hover {
+  transform: none;
 }
 
 #themeToggleButton {
