@@ -1,0 +1,21 @@
+[248] Installing: techbridge-msee-aptitude-test
+Lockfile is up to date, resolution step is skipped
+Progress: resolved 1, reused 0, downloaded 0, added 0
+Packages: +106
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Progress: resolved 106, reused 75, downloaded 0, added 0
+Progress: resolved 106, reused 106, downloaded 0, added 37
+Progress: resolved 106, reused 106, downloaded 0, added 101
+Progress: resolved 106, reused 106, downloaded 0, added 106, done
+
+dependencies:
++ cors 2.8.6
++ dotenv 16.6.1
++ express 5.2.1
++ mysql2 3.19.1
++ uuid 11.1.0
+
+devDependencies:
++ nodemon 3.1.14
+
+Done in 5.1s using pnpm v10.32.1

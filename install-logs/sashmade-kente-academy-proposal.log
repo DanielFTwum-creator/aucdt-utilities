@@ -1,0 +1,44 @@
+[204] Installing: sashmade-kente-academy-proposal
+Lockfile is up to date, resolution step is skipped
+Progress: resolved 1, reused 0, downloaded 0, added 0
+Packages: +221
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Progress: resolved 221, reused 28, downloaded 0, added 0
+Progress: resolved 221, reused 108, downloaded 0, added 0
+Progress: resolved 221, reused 202, downloaded 0, added 0
+Progress: resolved 221, reused 221, downloaded 0, added 4
+Progress: resolved 221, reused 221, downloaded 0, added 16
+Progress: resolved 221, reused 221, downloaded 0, added 28
+Progress: resolved 221, reused 221, downloaded 0, added 35
+Progress: resolved 221, reused 221, downloaded 0, added 40
+Progress: resolved 221, reused 221, downloaded 0, added 60
+Progress: resolved 221, reused 221, downloaded 0, added 80
+Progress: resolved 221, reused 221, downloaded 0, added 90
+Progress: resolved 221, reused 221, downloaded 0, added 110
+Progress: resolved 221, reused 221, downloaded 0, added 136
+Progress: resolved 221, reused 221, downloaded 0, added 149
+Progress: resolved 221, reused 221, downloaded 0, added 168
+Progress: resolved 221, reused 221, downloaded 0, added 193
+Progress: resolved 221, reused 221, downloaded 0, added 208
+Progress: resolved 221, reused 221, downloaded 0, added 218
+Progress: resolved 221, reused 221, downloaded 0, added 219
+Progress: resolved 221, reused 221, downloaded 0, added 221, done
+
+dependencies:
++ react 19.2.4
++ react-dom 19.2.4
+
+devDependencies:
++ @testing-library/jest-dom 6.9.1
++ @testing-library/react 16.3.2
++ @testing-library/user-event 14.6.1
++ @types/node 24.10.1
++ @vitejs/plugin-react 5.1.1
++ @vitest/coverage-v8 3.2.4
++ @vitest/ui 3.2.4
++ jsdom 26.1.0
++ typescript 5.9.3
++ vite 7.2.2
++ vitest 3.2.4
+
+Done in 28.2s using pnpm v10.32.1

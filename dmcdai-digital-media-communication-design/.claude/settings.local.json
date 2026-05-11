@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(xargs grep *)",
+      "Bash(xargs ls *)",
+      "Bash(grep -E \"\\\\.tsx?$\")",
+      "Bash(grep -v \"className\\\\|//\\\\|import \\\\|export \\\\|const [a-z]\\\\|function \\\\|=> \\\\b\\\\|\\\\\\\\.tsx:\\\\|\\\\.ts:\")",
+      "Bash(grep -v \"^#\\\\|comment\\\\|//\")",
+      "Bash(grep -v \"^--$\")",
+      "Bash(ls \"/c/Development/aucdt-utilities/dmcdai-digital-media-communication-design/\"*.env*)",
+      "Bash(ls \"/c/Development/aucdt-utilities/dmcdai-digital-media-communication-design/\".env*)",
+      "Bash(python3 -c \"import sys,json; models=json.load\\(sys.stdin\\).get\\('models',[]\\); [print\\(m['name'], m.get\\('supportedGenerationMethods',''\\)\\) for m in models if 'image' in str\\(m\\).lower\\(\\) or 'imagen' in str\\(m\\).lower\\(\\) or 'flash' in m.get\\('name',''\\).lower\\(\\)]\")"
+    ]
+  }
+}

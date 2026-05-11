@@ -1,0 +1,32 @@
+<svg width="600" height="300" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif" font-size="14">
+  <style>
+    .title { font-size: 20px; font-weight: bold; text-anchor: middle; }
+    .subtitle { font-size: 16px; font-weight: bold; fill: #333; }
+    .text { fill: #555; }
+    .box { fill: #f9f9f9; stroke: #ccc; stroke-width: 1; }
+    .icon { font-size: 50px; text-anchor: middle; }
+  </style>
+
+  <rect x="1" y="1" width="598" height="298" fill="#fff" stroke="#ccc" />
+
+  <text x="300" y="40" class="title">Database Architecture</text>
+
+  <g transform="translate(50, 80)">
+    <rect x="0" y="0" width="500" height="180" rx="10" class="box" />
+
+    <text x="70" y="75" class="icon">🚫</text>
+    
+    <text x="140" y="40" class="subtitle">No Database Required</text>
+
+    <text x="140" y="70" class="text" dy="0">This application is a fully client-side solution and does not</text>
+    <text x="140" y="70" class="text" dy="1.2em">require a traditional backend database.</text>
+
+    <text x="140" y="120" class="subtitle">State Management</text>
+    <text x="140" y="145" class="text" dy="0">• Application state (e.g., loading status, image URL) is managed</text>
+    <text x="140" y="145" class="text" dy="1.2em">  in-memory using React hooks (`useState`).</text>
+    <text x="140" y="145" class="text" dy="2.4em">• Session state (e.g., authentication, audit log) is ephemeral and</text>
+    <text x="140" y="145" class="text" dy="3.6em">  resets on page reload.</text>
+    <text x="140" y="145" class="text" dy="4.8em">• User preferences (e.g., theme) are persisted in the browser's</text>
+    <text x="140" y="145" class="text" dy="6em">  `localStorage`.</text>
+  </g>
+</svg>

@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Project Timeline</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Calm Harmony -->
+    <!-- Application Structure Plan: The application uses a horizontal, multi-column timeline structure (one column per day) inspired by Kanban boards. This provides an intuitive, chronological overview of the week. Key tasks are represented as individual 'cards' within each day for clarity and modularity. An overarching progress bar gives an immediate sense of project progression. Ongoing, week-long tasks are separated into their own section to avoid cluttering the daily view. This structure was chosen because it directly translates the time-based nature of the report into a highly scannable and interactive visual format, making it easier to grasp the workload and sequence of tasks than a simple text list. User interaction is centered on clicking a day to 'focus,' which dims other days, guiding attention and simplifying the view for the user. -->
+    <!-- Visualization & Content Choices: 
+        - Report Info: Entire weekly timeline breakdown. -> Goal: Organize & Change. -> Viz/Presentation: Interactive Timeline Grid (HTML/Tailwind Grid). -> Interaction: Click on a day column to highlight it and fade others. -> Justification: Transforms a static list into a dynamic dashboard, showing task flow and allowing user-driven focus. -> Library/Method: Vanilla JS & Tailwind CSS.
+        - Report Info: Daily tasks (AM/PM). -> Goal: Inform. -> Viz/Presentation: Task Cards (Styled HTML/Tailwind). -> Interaction: Hover effects for visual feedback. -> Justification: Breaks down complex days into digestible chunks. Unicode icons provide quick visual context for task types. -> Library/Method: HTML & Tailwind CSS.
+        - Report Info: Progress through the week. -> Goal: Change. -> Viz/Presentation: Dynamic Progress Bar (HTML/Tailwind). -> Interaction: Automatically reflects the current day on load. -> Justification: Provides an at-a-glance status of the project's position in the timeline. -> Library/Method: Vanilla JS.
+        - Report Info: Ongoing 'Staff Support' task. -> Goal: Inform. -> Viz/Presentation: Separate summary card below the main timeline. -> Interaction: None. -> Justification: Isolates recurring tasks from the main project workflow for better clarity. -> Library/Method: HTML & Tailwind CSS.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #FDFBF7;
+            color: #374151;
+        }
+        .day-column {
+            transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+        }
+        .day-column.is-focused {
+            opacity: 1 !important;
+            transform: translateY(-4px);
+        }
+        .task-card {
+            transition: all 0.2s ease-in-out;
+        }
+        .task-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+    </style>
+</head>
+<body class="antialiased">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <header class="text-center mb-10">
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-800 tracking-tight">Weekly Development Plan</h1>
+            <p class="mt-2 text-lg text-gray-500">An interactive overview of the tasks for the week. Click on a day to focus.</p>
+        </header>
+
+        <main>
+            <div id="timeline-container">
+                <div class="mb-8 px-1">
+                    <div class="bg-gray-200 rounded-full h-2.5 w-full">
+                        <div id="progress-bar" class="bg-blue-600 h-2.5 rounded-full" style="width: 0%; transition: width 1s ease-in-out;"></div>
+                    </div>
+                </div>
+
+                <div id="days-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 cursor-pointer">
+                </div>
+            </div>
+
+            <div id="ongoing-tasks-section" class="mt-12">
+                 <h2 class="text-2xl font-bold text-gray-700 text-center mb-6">Ongoing Responsibilities</h2>
+                 <div class="max-w-2xl mx-auto bg-white p-6 rounded-xl shadow-md border border-gray-200">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0">
+                            <span class="text-2xl">🤝</span>
+                        </div>
+                        <div class="ml-4">
+                            <h3 class="text-lg font-semibold text-gray-800">Staff Support</h3>
+                            <p class="text-gray-600">Allocate 30-45 minutes daily for any urgent staff support needs. This is a continuous task throughout the week.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer class="text-center mt-16 text-gray-400 text-sm">
+            <p>Project Timeline Application</p>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const timelineData = {
+                days: [
+                    {
+                        name: "Monday",
+                        dayIndex: 1,
+                        tasks: [
+                            { time: "Morning", description: "Complete documentation updates", icon: "✅" },
+                            { time: "Afternoon", description: "Update person and applicant tables (application_date, last_update fields)", icon: "💾" }
+                        ]
+                    },
+                    {
+                        name: "Tuesday",
+                        dayIndex: 2,
+                        tasks: [
+                            { time: "Morning", description: "Test database changes and verify data integrity", icon: "🧪" },
+                            { time: "Afternoon", description: "Update any related database queries/migrations", icon: "🔄" }
+                        ]
+                    },
+                    {
+                        name: "Wednesday",
+                        dayIndex: 3,
+                        title: "Backend Focus",
+                        tasks: [
+                            { time: "All Day", description: "Update data models and service layer", icon: "⚙️" },
+                            { time: "All Day", description: "Update filtering logic in business classes", icon: "⚙️" }
+                        ]
+                    },
+                    {
+                        name: "Thursday",
+                        dayIndex: 4,
+                        title: "API & Frontend",
+                        tasks: [
+                            { time: "Morning", description: "Modify API controllers and endpoint responses", icon: "🔌" },
+                            { time: "Afternoon", description: "Update filtering components and year selection UI", icon: "🖥️" }
+                        ]
+                    },
+                    {
+                        name: "Friday",
+                        dayIndex: 5,
+                        title: "API Integration",
+                        tasks: [
+                            { time: "Morning", description: "Re-engage with Hubtel, review previous work", icon: "🤝" },
+                            { time: "Afternoon", description: "Test their API endpoints and continue integration", icon: "🔗" }
+                        ]
+                    }
+                ]
+            };
+
+            const grid = document.getElementById('days-grid');
+            const progressBar = document.getElementById('progress-bar');
+            const todayIndex = 2;
+
+            function renderTimeline() {
+                grid.innerHTML = '';
+                timelineData.days.forEach(day => {
+                    const dayColumn = document.createElement('div');
+                    dayColumn.className = 'day-column bg-white p-5 rounded-xl shadow-sm border border-gray-200/80';
+                    dayColumn.dataset.dayIndex = day.dayIndex;
+
+                    let tasksHtml = day.tasks.map(task => `
+                        <div class="task-card flex items-start space-x-4 p-4 mb-3 bg-gray-50/70 rounded-lg border border-gray-200/60">
+                            <span class="text-xl mt-1">${task.icon}</span>
+                            <div>
+                                <h4 class="font-semibold text-gray-700">${task.time}</h4>
+                                <p class="text-sm text-gray-600">${task.description}</p>
+                            </div>
+                        </div>
+                    `).join('');
+
+                    dayColumn.innerHTML = `
+                        <div class="flex justify-between items-baseline mb-4">
+                            <h3 class="font-bold text-xl text-gray-800">${day.name}</h3>
+                            ${day.dayIndex === todayIndex ? '<span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded-full">Today</span>' : ''}
+                        </div>
+                        <div>${tasksHtml}</div>
+                    `;
+                    grid.appendChild(dayColumn);
+                });
+            }
+
+            function setInitialState() {
+                const progressPercentage = ((todayIndex - 0.5) / timelineData.days.length) * 100;
+                setTimeout(() => {
+                  progressBar.style.width = `${progressPercentage}%`;
+                }, 100);
+                
+                focusOnDay(todayIndex);
+            }
+            
+            function focusOnDay(dayIndex) {
+                 const allDays = document.querySelectorAll('.day-column');
+                 allDays.forEach(col => {
+                    if (parseInt(col.dataset.dayIndex) === dayIndex) {
+                        col.classList.add('is-focused');
+                        col.style.opacity = '1';
+                    } else {
+                        col.classList.remove('is-focused');
+                        col.style.opacity = '0.5';
+                    }
+                 });
+            }
+
+            grid.addEventListener('click', (e) => {
+                const dayColumn = e.target.closest('.day-column');
+                if (dayColumn) {
+                    const selectedIndex = parseInt(dayColumn.dataset.dayIndex);
+                    focusOnDay(selectedIndex);
+                }
+            });
+
+            renderTimeline();
+            setInitialState();
+        });
+    </script>
+</body>
+</html>

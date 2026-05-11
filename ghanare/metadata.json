@@ -1,0 +1,7 @@
+{
+  "name": "GhanaRide",
+  "description": "A trusted, accessible, and efficient marketplace connecting vehicle owners with individuals seeking affordable transportation in Ghana.",
+  "requestFramePermissions": [
+    "geolocation"
+  ]
+}

@@ -1,0 +1,5 @@
+{
+  "name": "Visual Quiz Master v1",
+  "description": "An interactive quiz application that presents questions with dynamic visuals, including SVG diagrams and Chart.js charts, to test knowledge across various topics like geometry, algebra, and statistics.",
+  "requestFramePermissions": []
+}

@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500">
+  <defs>
+    <style>
+      .bg { fill: #ffffff; }
+      .box { fill: rgba(122,27,30,0.05); stroke: #7A1B1E; stroke-width: 2; rx: 8; }
+      .text-title { fill: #0F172A; font-family: sans-serif; font-size: 20px; font-weight: bold; text-anchor: middle; }
+      .text-sub { fill: #7A1B1E; font-family: sans-serif; font-size: 12px; letter-spacing: 2px; text-anchor: middle; }
+      .line { stroke: #7A1B1E; stroke-width: 2; stroke-dasharray: 4; fill: none; }
+      .arrow { fill: #7A1B1E; }
+    </style>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" class="arrow" />
+    </marker>
+  </defs>
+  
+  <rect width="1000" height="600" class="bg" />
+  
+  <!-- Presentation Title -->
+  <text x="400" y="40" fill="#7A1B1E" font-family="serif" font-size="24" font-weight="bold" text-anchor="middle" letter-spacing="4">REGISTRY SYSTEM ARCHITECTURE</text>
+  <text x="400" y="60" fill="#0F172A" opacity="0.6" font-family="sans-serif" font-size="10" text-anchor="middle" letter-spacing="2">PRECISION RECORDING • REACT 19.2.4</text>
+
+  <!-- Client Layer -->
+  <rect x="50" y="100" width="200" height="300" class="box" />
+  <text x="150" y="130" class="text-title">Registry UI</text>
+  <text x="150" y="150" class="text-sub">REACT 19.2.4 SPA</text>
+  
+  <rect x="70" y="180" width="160" height="40" fill="rgba(122,27,30,0.1)" rx="4" />
+  <text x="150" y="205" fill="#7A1B1E" font-family="sans-serif" font-size="12" text-anchor="middle" font-weight="bold">Editorial Dashboard</text>
+
+  <rect x="70" y="240" width="160" height="40" fill="rgba(122,27,30,0.1)" rx="4" />
+  <text x="150" y="265" fill="#7A1B1E" font-family="sans-serif" font-size="12" text-anchor="middle" font-weight="bold">Registration Modal</text>
+
+  <rect x="70" y="300" width="160" height="40" fill="rgba(122,27,30,0.1)" rx="4" />
+  <text x="150" y="325" fill="#7A1B1E" font-family="sans-serif" font-size="12" text-anchor="middle" font-weight="bold">Admin Diagnostics</text>
+
+  <!-- Logic Layer -->
+  <rect x="300" y="100" width="200" height="300" class="box" />
+  <text x="400" y="130" class="text-title">Logic Tier</text>
+  <text x="400" y="150" class="text-sub">CORE PROVIDERS</text>
+
+  <rect x="320" y="180" width="160" height="40" fill="rgba(180,134,0,0.1)" rx="4" />
+  <text x="400" y="205" fill="#B48600" font-family="sans-serif" font-size="12" text-anchor="middle" font-weight="bold">AuditContext</text>
+
+  <rect x="320" y="240" width="160" height="40" fill="rgba(180,134,0,0.1)" rx="4" />
+  <text x="400" y="265" fill="#B48600" font-family="sans-serif" font-size="12" text-anchor="middle" font-weight="bold">ThemeContext</text>
+
+  <rect x="320" y="300" width="160" height="40" fill="rgba(180,134,0,0.1)" rx="4" />
+  <text x="400" y="325" fill="#B48600" font-family="sans-serif" font-size="12" text-anchor="middle" font-weight="bold">LocalStorage Sync</text>
+
+  <!-- Automation Layer -->
+  <rect x="550" y="100" width="200" height="300" class="box" />
+  <text x="650" y="130" class="text-title">Validation</text>
+  <text x="650" y="150" class="text-sub">AUTOMATION</text>
+
+  <rect x="570" y="180" width="160" height="40" fill="#0F172A" rx="4" />
+  <text x="650" y="205" fill="#ffffff" font-family="sans-serif" font-size="12" text-anchor="middle" font-weight="bold">Puppeteer Engine</text>
+
+  <rect x="570" y="240" width="160" height="40" fill="#0F172A" rx="4" />
+  <text x="650" y="265" fill="#ffffff" font-family="sans-serif" font-size="12" text-anchor="middle" font-weight="bold">Test Results API</text>
+
+  <!-- Connections -->
+  <path d="M 250 200 L 310 200" class="line" marker-end="url(#arrowhead)" />
+  <path d="M 500 200 L 560 200" class="line" marker-end="url(#arrowhead)" />
+  
+  <path d="M 250 260 L 310 260" class="line" marker-end="url(#arrowhead)" />
+  <path d="M 500 260 L 560 260" class="line" marker-end="url(#arrowhead)" />
+
+  <path d="M 250 320 L 310 320" class="line" marker-end="url(#arrowhead)" />
+  <path d="M 310 320 L 250 320" class="line" marker-end="url(#arrowhead)" />
+</svg>

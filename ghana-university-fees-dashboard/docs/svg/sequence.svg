@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500">
+  <defs>
+    <style>
+      .lifeline { stroke: #6b7280; stroke-width: 2; stroke-dasharray: 5,5; }
+      .box { fill: #f3f4f6; stroke: #1f2937; stroke-width: 2; }
+      .activation { fill: #dbeafe; stroke: #2563eb; stroke-width: 1; }
+      .label { font-family: 'Courier New', monospace; font-size: 14px; text-anchor: middle; }
+      .message { stroke: #1f2937; stroke-width: 1.5; marker-end: url(#arrowhead); }
+      .return { stroke: #1f2937; stroke-width: 1.5; stroke-dasharray: 4,4; marker-end: url(#arrowhead); }
+    </style>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#1f2937" />
+    </marker>
+  </defs>
+
+  <rect width="800" height="500" fill="#ffffff" />
+  <text x="400" y="30" class="label" font-size="18px" font-weight="bold">Sequence: Admin Data Update</text>
+
+  <!-- Lifelines -->
+  <rect x="50" y="60" width="100" height="40" class="box" />
+  <text x="100" y="85" class="label">Admin</text>
+  <line x1="100" y1="100" x2="100" y2="450" class="lifeline" />
+
+  <rect x="250" y="60" width="100" height="40" class="box" />
+  <text x="300" y="85" class="label">UI (View)</text>
+  <line x1="300" y1="100" x2="300" y2="450" class="lifeline" />
+
+  <rect x="450" y="60" width="100" height="40" class="box" />
+  <text x="500" y="85" class="label">DataContext</text>
+  <line x1="500" y1="100" x2="500" y2="450" class="lifeline" />
+
+  <rect x="650" y="60" width="100" height="40" class="box" />
+  <text x="700" y="85" class="label">AuthContext</text>
+  <line x1="700" y1="100" x2="700" y2="450" class="lifeline" />
+
+  <!-- Interactions -->
+  
+  <!-- 1. Edit Value -->
+  <line x1="100" y1="130" x2="300" y2="130" class="message" />
+  <text x="200" y="125" class="label">1. Enter New Fee</text>
+  <rect x="295" y="130" width="10" height="280" class="activation" />
+
+  <!-- 2. Call Update -->
+  <line x1="300" y1="160" x2="500" y2="160" class="message" />
+  <text x="400" y="155" class="label">2. updateFee()</text>
+  <rect x="495" y="160" width="10" height="200" class="activation" />
+
+  <!-- 3. Update State -->
+  <line x1="500" y1="190" x2="510" y2="190" class="message" />
+  <path d="M510,190 L520,190 L520,210 L500,210" fill="none" stroke="#000" />
+  <text x="550" y="205" class="label">3. setState</text>
+
+  <!-- 4. Log Action -->
+  <line x1="500" y1="240" x2="700" y2="240" class="message" />
+  <text x="600" y="235" class="label">4. logAction()</text>
+  <rect x="695" y="240" width="10" height="50" class="activation" />
+
+  <!-- 5. Return Log Confirm -->
+  <line x1="700" y1="280" x2="500" y2="280" class="return" />
+  <text x="600" y="275" class="label">5. Ack</text>
+
+  <!-- 6. Refresh UI -->
+  <line x1="500" y1="320" x2="300" y2="320" class="return" />
+  <text x="400" y="315" class="label">6. Data Updated</text>
+
+  <!-- 7. Show Success -->
+  <line x1="300" y1="360" x2="100" y2="360" class="return" />
+  <text x="200" y="355" class="label">7. Display Toast</text>
+
+</svg>

@@ -1,0 +1,78 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600">
+  <defs>
+    <style>
+      .entity { fill: #fff; stroke: #0f172a; stroke-width: 2; }
+      .header { fill: #0f172a; }
+      .header-text { fill: #fff; font-family: monospace; font-weight: bold; font-size: 14px; }
+      .field { font-family: monospace; font-size: 12px; fill: #334155; }
+      .relation { stroke: #64748b; stroke-width: 2; marker-end: url(#crowfoot); }
+      .title { font-family: 'Segoe UI', sans-serif; font-size: 20px; font-weight: bold; fill: #1e293b; text-anchor: middle; }
+    </style>
+     <marker id="crowfoot" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+        <path d="M0,6 L10,6 M10,0 L0,6 L10,12" fill="none" stroke="#64748b" stroke-width="1.5"/>
+    </marker>
+  </defs>
+
+  <rect width="800" height="600" fill="#f8fafc" />
+  <text x="400" y="40" class="title">Data Structure Schema (InMemory)</text>
+
+  <!-- DataContext Store Entity -->
+  <g transform="translate(300, 80)">
+    <rect width="200" height="120" class="entity" />
+    <rect width="200" height="30" class="header" />
+    <text x="10" y="20" class="header-text">DataContext</text>
+    
+    <text x="10" y="50" class="field">+ undergraduateData: []</text>
+    <text x="10" y="70" class="field">+ internationalData: []</text>
+    <text x="10" y="90" class="field">+ postgraduateData: []</text>
+    <text x="10" y="110" class="field">+ auditLogs: []</text>
+  </g>
+
+  <!-- Fee Data Entity -->
+  <g transform="translate(50, 250)">
+    <rect width="220" height="130" class="entity" />
+    <rect width="220" height="30" class="header" />
+    <text x="10" y="20" class="header-text">FeeDataItem</text>
+    
+    <text x="10" y="50" class="field">name: string (PK)</text>
+    <text x="10" y="70" class="field">fees: number</text>
+    <text x="10" y="90" class="field">type: 'public' | 'private'</text>
+    <text x="10" y="110" class="field">continuing?: number</text>
+    <text x="10" y="130" class="field">programType: string</text>
+  </g>
+
+  <!-- Audit Log Entity -->
+  <g transform="translate(530, 250)">
+    <rect width="220" height="130" class="entity" />
+    <rect width="220" height="30" class="header" />
+    <text x="10" y="20" class="header-text">AuditLog</text>
+    
+    <text x="10" y="50" class="field">id: string (PK)</text>
+    <text x="10" y="70" class="field">timestamp: number</text>
+    <text x="10" y="90" class="field">action: string</text>
+    <text x="10" y="110" class="field">details: string</text>
+    <text x="10" y="130" class="field">actor: string</text>
+  </g>
+
+  <!-- Auth State Entity -->
+  <g transform="translate(300, 450)">
+    <rect width="200" height="100" class="entity" />
+    <rect width="200" height="30" class="header" />
+    <text x="10" y="20" class="header-text">AuthState</text>
+    
+    <text x="10" y="50" class="field">isAuthenticated: bool</text>
+    <text x="10" y="70" class="field">passwordHash: string</text>
+    <text x="10" y="90" class="field">sessionExpiry: number</text>
+  </g>
+
+  <!-- Relationships -->
+  <!-- DataContext contains FeeDataItems -->
+  <path d="M300,140 L160,140 L160,250" fill="none" class="relation" />
+  
+  <!-- DataContext contains AuditLogs -->
+  <path d="M500,140 L640,140 L640,250" fill="none" class="relation" />
+
+  <!-- AuthState generates AuditLogs -->
+  <path d="M400,450 L400,410 L640,410 L640,380" fill="none" class="relation" stroke-dasharray="4" />
+
+</svg>

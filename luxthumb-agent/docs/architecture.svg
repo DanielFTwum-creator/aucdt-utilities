@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1200" height="800" viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="1200" height="800" fill="#050505"/>
+
+  <!-- Title -->
+  <text x="600" y="40" font-size="28" font-weight="bold" fill="#C9A84C" text-anchor="middle">LuxThumb Designer — System Architecture</text>
+  <text x="600" y="65" font-size="14" fill="#999999" text-anchor="middle">AI-Powered Thumbnail Generation System</text>
+
+  <!-- Grid -->
+  <defs>
+    <style>
+      .box { fill: #111111; stroke: #C9A84C; stroke-width: 2; }
+      .box-label { fill: #F5F5F5; font-size: 12px; font-weight: bold; }
+      .box-desc { fill: #999999; font-size: 11px; }
+      .arrow { stroke: #C9A84C; stroke-width: 2; fill: none; marker-end: url(#arrowhead); }
+      .line-label { fill: #C9A84C; font-size: 10px; }
+    </style>
+    <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <polygon points="0 0, 10 3, 0 6" fill="#C9A84C" />
+    </marker>
+  </defs>
+
+  <!-- Layer 1: User Interface -->
+  <text x="50" y="110" font-size="12" fill="#C9A84C" font-weight="bold">CLIENT LAYER</text>
+
+  <!-- React App Container -->
+  <rect class="box" x="50" y="130" width="280" height="120"/>
+  <text class="box-label" x="190" y="155" text-anchor="middle">React SPA (App.tsx)</text>
+  <text class="box-desc" x="190" y="175" text-anchor="middle">• Configuration UI</text>
+  <text class="box-desc" x="190" y="190" text-anchor="middle">• Thumbnail Canvas Preview</text>
+  <text class="box-desc" x="190" y="205" text-anchor="middle">• Admin Panel</text>
+  <text class="box-desc" x="190" y="220" text-anchor="middle">• Accessibility Settings</text>
+  <text class="box-desc" x="190" y="235" text-anchor="middle">• Export Module</text>
+  <text class="box-desc" x="190" y="250" text-anchor="middle">v19.0.1 + Vite 6 + TypeScript</text>
+
+  <!-- Theme & Accessibility -->
+  <rect class="box" x="350" y="130" width="260" height="120"/>
+  <text class="box-label" x="480" y="155" text-anchor="middle">Theme & Accessibility</text>
+  <text class="box-desc" x="480" y="175" text-anchor="middle">• Dark / Light / High-Contrast</text>
+  <text class="box-desc" x="480" y="190" text-anchor="middle">• Font Size Adjuster</text>
+  <text class="box-desc" x="480" y="205" text-anchor="middle">• Reduced Motion Toggle</text>
+  <text class="box-desc" x="480" y="220" text-anchor="middle">• CSS Variables System</text>
+  <text class="box-desc" x="480" y="235" text-anchor="middle">• WCAG AA Compliance</text>
+  <text class="box-desc" x="480" y="250" text-anchor="middle">theme.css + index.html</text>
+
+  <!-- Admin & Audit -->
+  <rect class="box" x="630" y="130" width="260" height="120"/>
+  <text class="box-label" x="760" y="155" text-anchor="middle">Admin & Audit</text>
+  <text class="box-desc" x="760" y="175" text-anchor="middle">• AdminPanel (pwd: admin123)</text>
+  <text class="box-desc" x="760" y="190" text-anchor="middle">• Audit Dashboard</text>
+  <text class="box-desc" x="760" y="205" text-anchor="middle">• JSON/CSV Export</text>
+  <text class="box-desc" x="760" y="220" text-anchor="middle">• Action Logging</text>
+  <text class="box-desc" x="760" y="235" text-anchor="middle">• Log Retention (1000 max)</text>
+  <text class="box-desc" x="760" y="250" text-anchor="middle">recordAuditLog()</text>
+
+  <!-- Export Module -->
+  <rect class="box" x="910" y="130" width="240" height="120"/>
+  <text class="box-label" x="1030" y="155" text-anchor="middle">Export Module</text>
+  <text class="box-desc" x="1030" y="175" text-anchor="middle">• PNG (html2canvas-pro)</text>
+  <text class="box-desc" x="1030" y="190" text-anchor="middle">• PDF (jsPDF)</text>
+  <text class="box-desc" x="1030" y="205" text-anchor="middle">• JPG (canvas API)</text>
+  <text class="box-desc" x="1030" y="220" text-anchor="middle">• JSON Config</text>
+  <text class="box-desc" x="1030" y="235" text-anchor="middle">• 2x Scale Rendering</text>
+  <text class="box-desc" x="1030" y="250" text-anchor="middle">exportTo*()</text>
+
+  <!-- Arrows from UI to Services -->
+  <path class="arrow" d="M 190 250 L 190 290"/>
+  <path class="arrow" d="M 480 250 L 480 290"/>
+  <path class="arrow" d="M 760 250 L 760 290"/>
+  <path class="arrow" d="M 1030 250 L 1030 290"/>
+
+  <!-- Layer 2: Data & State Management -->
+  <text x="50" y="310" font-size="12" fill="#C9A84C" font-weight="bold">BROWSER STORAGE LAYER</text>
+
+  <!-- IndexedDB -->
+  <rect class="box" x="50" y="330" width="500" height="110"/>
+  <text class="box-label" x="300" y="355" text-anchor="middle">IndexedDB (idb-keyval)</text>
+  <text class="box-desc" x="300" y="375" text-anchor="middle">• luxthumb_design_data (current design state)</text>
+  <text class="box-desc" x="300" y="390" text-anchor="middle">• luxthumb_saved_designs (history snapshots)</text>
+  <text class="box-desc" x="300" y="405" text-anchor="middle">• luxthumb_audit_logs (action audit trail)</text>
+  <text class="box-desc" x="300" y="420" text-anchor="middle">• ThumbnailData | SavedDesign | AuditLog interfaces</text>
+  <text class="box-desc" x="300" y="435" text-anchor="middle">• Auto-sync on state change, restored on page load</text>
+
+  <!-- LocalStorage -->
+  <rect class="box" x="580" y="330" width="470" height="110"/>
+  <text class="box-label" x="815" y="355" text-anchor="middle">LocalStorage</text>
+  <text class="box-desc" x="815" y="375" text-anchor="middle">• luxthumb-theme (dark|light|high-contrast)</text>
+  <text class="box-desc" x="815" y="390" text-anchor="middle">• luxthumb-font-size (small|normal|large|extra-large)</text>
+  <text class="box-desc" x="815" y="405" text-anchor="middle">• luxthumb-reduced-motion (true|false)</text>
+  <text class="box-desc" x="815" y="420" text-anchor="middle">• Checked on init, applied to DOM</text>
+  <text class="box-desc" x="815" y="435" text-anchor="middle">• Persists across browser sessions</text>
+
+  <!-- Arrows to API -->
+  <path class="arrow" d="M 300 440 L 300 490"/>
+  <path class="arrow" d="M 815 440 L 450 490"/>
+
+  <!-- Layer 3: External APIs -->
+  <text x="50" y="510" font-size="12" fill="#C9A84C" font-weight="bold">API LAYER</text>
+
+  <!-- Google Gemini API -->
+  <rect class="box" x="50" y="530" width="800" height="140"/>
+  <text class="box-label" x="450" y="560" text-anchor="middle">Google Gemini AI API</text>
+  <text class="box-desc" x="450" y="580" text-anchor="middle">• Model: gemini-3-flash-preview</text>
+  <text class="box-desc" x="450" y="595" text-anchor="middle">• SDK: @google/genai</text>
+  <text class="box-desc" x="450" y="610" text-anchor="middle">• Endpoint: generateContent({model, contents, config})</text>
+  <text class="box-desc" x="450" y="625" text-anchor="middle">• Response: JSON {midjourney, imagen3, canvaBrief, typographySpec, colorPalette, animatedExtension}</text>
+  <text class="box-desc" x="450" y="640" text-anchor="middle">• Input: ThumbnailData → AI System Instruction (design philosophy, lighting, composition)</text>
+  <text class="box-desc" x="450" y="655" text-anchor="middle">• Error Handling: try-catch, user-friendly alert, log to console</text>
+
+  <!-- Browser APIs -->
+  <rect class="box" x="880" y="530" width="270" height="140"/>
+  <text class="box-label" x="1015" y="560" text-anchor="middle">Browser APIs</text>
+  <text class="box-desc" x="1015" y="580" text-anchor="middle">• Canvas API (export)</text>
+  <text class="box-desc" x="1015" y="595" text-anchor="middle">• File API (upload/download)</text>
+  <text class="box-desc" x="1015" y="610" text-anchor="middle">• Navigator (user agent)</text>
+  <text class="box-desc" x="1015" y="625" text-anchor="middle">• LocalStorage API</text>
+  <text class="box-desc" x="1015" y="640" text-anchor="middle">• prefers-color-scheme</text>
+  <text class="box-desc" x="1015" y="655" text-anchor="middle">• prefers-reduced-motion</text>
+
+  <!-- Data Flow Diagram -->
+  <text x="50" y="710" font-size="12" fill="#C9A84C" font-weight="bold">DATA FLOW</text>
+
+  <text x="50" y="735" font-size="11" fill="#F5F5F5">1. User fills form (ThumbnailData) → auto-saved to IndexedDB</text>
+  <text x="50" y="755" font-size="11" fill="#F5F5F5">2. User clicks "Engage Engine" → ThumbnailData sent to Gemini API → GeneratedPrompts returned</text>
+  <text x="50" y="775" font-size="11" fill="#F5F5F5">3. User exports (PNG/PDF/JPG/JSON) → file downloaded, action logged to IndexedDB, audit log updated</text>
+</svg>

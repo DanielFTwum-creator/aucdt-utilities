@@ -1,0 +1,5 @@
+{
+  "name": "CreoAI",
+  "description": "CreoAI is an AI-powered flyer generator that uses Gemini to create professional business flyers from detailed design briefs, including generating custom images and video-based backgrounds.",
+  "requestFramePermissions": []
+}

@@ -1,0 +1,5 @@
+{
+  "name": "BionicSkins™",
+  "description": "Advanced prosthetics provider grounded in MIT research, combining state-of-the-art technology with compassionate patient care.",
+  "requestFramePermissions": ["camera", "microphone", "geolocation"]
+}

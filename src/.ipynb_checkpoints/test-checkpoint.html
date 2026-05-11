@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Student Information Form</title>
+    <style>
+        /* Center the form */
+        form {
+            margin: 0 auto;
+            max-width: 800px;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-gap: 20px;
+        }
+
+        /* Style the labels */
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            grid-column: 1;
+        }
+
+        /* Style the input fields */
+        input[type="text"] {
+            padding: 10px;
+            border: 2px solid #ccc;
+            border-radius: 4px;
+            width: 100%;
+            box-sizing: border-box;
+            margin-bottom: 20px;
+            font-size: 16px;
+            grid-column: 2 / span 3;
+        }
+
+        /* Style the submit button */
+        input[type="submit"] {
+            background-color: #4caf50;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            grid-column: 2 / span 3;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Registrar Admission Form</h1>
+    <form>
+        <label for="firstname">First Name:</label>
+        <input type="text" id="firstname" name="firstname" value="JEMIMA" />
+
+        <label for="middlename">Middle Name:</label>
+        <input type="text" id="middlename" name="middlename" value="AFUA" />
+
+        <label for="lastname">Last Name:</label>
+        <input type="text" id="lastname" name="lastname" value="KUMAH" />
+
+        <label for="hometown">Hometown:</label>
+        <input type="text" id="hometown" name="hometown" value="DAMBAI" />
+
+        <label for="region">Region:</label>
+        <input type="text" id="region" name="region" value="OTI" />
+
+        <label for="datetoday">Date Today:</label>
+        <input type="text" id="datetoday" name="datetoday" value="{{datetoday}}" />
+
+        <label for="programme">Programme:</label>
+        <input type="text" id="programme" name="programme" value="Diploma in Jewellery Design Technology" />
+
+        <label for="semesterstartmonth">Semester Start Month:</label>
+        <input type="text" id="semesterstartmonth" name="semesterstartmonth" value="September" />
+
+        <label for="semesterstartyear">Semester Start Year:</label>
+        <input type="text" id="semesterstartyear" name="semesterstartyear" value="2023" />
+
+        <label for="provisionalstudentnumber">Provisioan Student Number Year:</label>
+        <input type="text" id="provisionalstudentnumber" name="provisionalstudentnumber" value="670" />
+
+        <label for="firstpaymentdeadline">First Payment Deadline:</label>
+        <input type="text" id="firstpaymentdeadline" name="firstpaymentdeadline" value="17th July, 2023">
+
+        <label for="registrationperiod">First Payment Deadline:</label>
+        <input type="text" id="registrationperiod" name="registrationperiod" value="17th - 28th July, 2023">
+
+        <label for="orientationdate">Orientation Date:</label>
+        <input type="text" id="orientationdate" name="orientationdate" value="17th - 28th July, 2023">
+
+        <label for="lecturesbegin">Lectures Begin:</label>
+        <input type="text" id="lecturesbegin" name="lecturesbegin" value="17th - 28th July, 2023">
+
+        <label for="registrationstartdate">Lectures Begin:</label>
+        <input type="text" id="registrationstartdate" name="registrationstartdate" value="31st July, 2023">
+
+
+        <label for="registrationenddate">Lectures Begin:</label>
+        <input type="text" id="registrationenddate" name="registrationenddate" value="17th August, 2023">
+
+        <input type="submit" />
+    </form>
+</body>
+
+</html>

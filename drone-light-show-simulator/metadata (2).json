@@ -1,0 +1,5 @@
+{
+  "name": "Drone Light Show Simulator",
+  "description": "A dynamic React application that simulates a drone light show on an HTML5 canvas. Drones visually form various shapes and text, transitioning through choreographed sequences.",
+  "requestFramePermissions": []
+}

@@ -1,0 +1,48 @@
+spring:
+  application:
+    name: lems-backend
+  datasource:
+    url: jdbc:mysql://localhost:3306/lems
+    username: root
+    password: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+        format_sql: true
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${MAIL_USERNAME:your-email@gmail.com}
+    password: ${MAIL_PASSWORD:your-app-password}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+
+server:
+  port: 8080
+  servlet:
+    context-path: /api
+
+# Google Gemini API Configuration
+gemini:
+  api-key: ${GEMINI_API_KEY:}
+  model: gemini-1.5-flash
+
+# Admin Configuration
+admin:
+  password: admin123
+
+logging:
+  level:
+    root: INFO
+    com.lems: DEBUG
+

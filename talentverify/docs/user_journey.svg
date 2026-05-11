@@ -1,0 +1,73 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400">
+  <rect width="800" height="400" fill="#ffffff" />
+  <text x="400" y="40" font-family="Arial" font-size="24" text-anchor="middle" font-weight="bold">TalentVerify User Journeys</text>
+
+  <!-- Recruiter Journey -->
+  <g transform="translate(50, 80)">
+    <rect width="700" height="120" rx="10" fill="#e3f2fd" stroke="#1565c0" stroke-width="2" />
+    <text x="20" y="30" font-family="Arial" font-size="16" fill="#1565c0" font-weight="bold">Recruiter Journey</text>
+    
+    <!-- Steps -->
+    <g transform="translate(50, 50)">
+      <rect width="120" height="50" rx="5" fill="white" stroke="#1565c0" />
+      <text x="60" y="30" font-family="Arial" font-size="12" text-anchor="middle">Login</text>
+    </g>
+    <path d="M 170 75 L 220 75" stroke="#1565c0" stroke-width="2" marker-end="url(#arrow-blue)" />
+    
+    <g transform="translate(220, 50)">
+      <rect width="120" height="50" rx="5" fill="white" stroke="#1565c0" />
+      <text x="60" y="30" font-family="Arial" font-size="12" text-anchor="middle">Create Job</text>
+    </g>
+    <path d="M 340 75 L 390 75" stroke="#1565c0" stroke-width="2" marker-end="url(#arrow-blue)" />
+    
+    <g transform="translate(390, 50)">
+      <rect width="120" height="50" rx="5" fill="white" stroke="#1565c0" />
+      <text x="60" y="30" font-family="Arial" font-size="12" text-anchor="middle">Review Apps</text>
+    </g>
+    <path d="M 510 75 L 560 75" stroke="#1565c0" stroke-width="2" marker-end="url(#arrow-blue)" />
+    
+    <g transform="translate(560, 50)">
+      <rect width="120" height="50" rx="5" fill="white" stroke="#1565c0" />
+      <text x="60" y="30" font-family="Arial" font-size="12" text-anchor="middle">Analyze AI Score</text>
+    </g>
+  </g>
+
+  <!-- Candidate Journey -->
+  <g transform="translate(50, 230)">
+    <rect width="700" height="120" rx="10" fill="#e8f5e9" stroke="#2e7d32" stroke-width="2" />
+    <text x="20" y="30" font-family="Arial" font-size="16" fill="#2e7d32" font-weight="bold">Candidate Journey</text>
+    
+    <!-- Steps -->
+    <g transform="translate(50, 50)">
+      <rect width="120" height="50" rx="5" fill="white" stroke="#2e7d32" />
+      <text x="60" y="30" font-family="Arial" font-size="12" text-anchor="middle">Select Role</text>
+    </g>
+    <path d="M 170 75 L 220 75" stroke="#2e7d32" stroke-width="2" marker-end="url(#arrow-green)" />
+    
+    <g transform="translate(220, 50)">
+      <rect width="120" height="50" rx="5" fill="white" stroke="#2e7d32" />
+      <text x="60" y="30" font-family="Arial" font-size="12" text-anchor="middle">Fill Profile</text>
+    </g>
+    <path d="M 340 75 L 390 75" stroke="#2e7d32" stroke-width="2" marker-end="url(#arrow-green)" />
+    
+    <g transform="translate(390, 50)">
+      <rect width="120" height="50" rx="5" fill="white" stroke="#2e7d32" />
+      <text x="60" y="30" font-family="Arial" font-size="12" text-anchor="middle">Record Video</text>
+    </g>
+    <path d="M 510 75 L 560 75" stroke="#2e7d32" stroke-width="2" marker-end="url(#arrow-green)" />
+    
+    <g transform="translate(560, 50)">
+      <rect width="120" height="50" rx="5" fill="white" stroke="#2e7d32" />
+      <text x="60" y="30" font-family="Arial" font-size="12" text-anchor="middle">Submit</text>
+    </g>
+  </g>
+
+  <defs>
+    <marker id="arrow-blue" markerWidth="10" markerHeight="7" refX="0" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#1565c0" />
+    </marker>
+    <marker id="arrow-green" markerWidth="10" markerHeight="7" refX="0" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#2e7d32" />
+    </marker>
+  </defs>
+</svg>

@@ -1,0 +1,5 @@
+{
+  "name": "AI Email Drafter",
+  "description": "An AI-powered application to help you draft professional emails. Compose your message, add attachments, and let Gemini refine it for you.",
+  "requestFramePermissions": []
+}

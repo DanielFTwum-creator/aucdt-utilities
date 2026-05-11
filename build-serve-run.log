@@ -1,0 +1,2257 @@
+[36m
+================================================================================[0m
+[1mBuild, Serve, and Capture - CORRECTED VERSION[0m
+[36m================================================================================[0m
+[33mMode: Serve via HTTP (not file://)[0m
+[2mStarted: 3/17/2026, 4:11:23 AM
+[0m
+[32mFound 240 projects to process
+[0m
+[36m
+================================================================================[0m
+[1m[1] 6r-product-design-workshop-portal[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+(node:20908) [DEP0190] DeprecationWarning: Passing args to a child process with shell option true can lead to security vulnerabilities, as the arguments are not escaped, only concatenated.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[2] academic-integrity-detector[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[3] academic-performance-app[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[4] adaptive-curriculum-engine[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[5] agent-collaboration-framework[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[6] agenticai-masterclass[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[7] ai-code-reviewer[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[8] ai-exam-generator[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[9] ai-explainability-console[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[10] ai-governance-analytics-hub[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[11] ai-knowledge-compression-lab[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[12] ai-legal-clause-analyzer[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[13] ai-log-pattern-analyzer[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[14] ai-marketplace-engine[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[15] ai-music-arrangement-assistant[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[16] ai-portfolio-demonstrator[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[17] ai-resource-arbitrage-engine[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[18] ai-risk-rebalancing-engine[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[19] ai-skill-transfer-engine[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[20] ai-strategy-recommender[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[21] ai-studio-directives[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[22] ai-techbridge[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[23] ai-transformation-framework[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[24] analytics-refactor[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found build/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[25] ananse-cartoon-generator[0m
+[36m================================================================================[0m
+[36m  Building...[0m
+[31m  ✗ Build failed: Command failed: pnpm run build
+[0m
+[36m
+================================================================================[0m
+[1m[26] api-monetization-portal[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[27] aurelia-v4---working-with-aurelia[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[28] auto-scaling-policy-engine[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[29] automated-compliance-monitor[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[30] automated-rollback-ai[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[31] autonomous-audit-engine[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[32] autonomous-budget-allocator[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[33] autonomous-compliance-enforcer[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[34] autonomous-decision-optimizer[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[35] autonomous-incident-resolver[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[36] autonomous-refactoring-ai[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[37] autonomous-robotics-coordination-engine[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[38] autonomous-system-governance-core[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[39] bias-detection-engine[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[40] bp-bulletproof-directive-v22012026-1326[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[41] brainiac-challenge[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[42] brand-guideline-checker[0m
+[36m================================================================================[0m
+[36m  Building...[0m
+[31m  ✗ Build failed: Command failed: pnpm run build
+[31m✗[39m Build failed in 324ms
+[31merror during build:
+[31mCould not resolve "./services/AuditService" from "App.tsx"[31m
+file: [36mC:/Development/aucdt-utilities/brand-guideline-checker/App.tsx[31m
+    at getRollupError (file:///C:/Development/aucdt-utilities/brand-guideline-checker/node_modules/.pnpm/rollup@4.59.0/node_modules/rollup/dist/es/shared/parseAst.js:402:41)
+    at error (file:///C:/Development/aucdt-utilities/brand-guideline-checker/node_modules/.pnpm/rollup@4.59.0/node_modules/rollup/dist/es/shared/parseAst.js:398:42)
+    at ModuleLoader.handleInvalidResolvedId (file:///C:/Development/aucdt-utilities/brand-guideline-checker/node_modules/.pnpm/rollup@4.59.0/node_modules/rollup/dist/es/shared/node-entry.js:21710:24)
+    at file:///C:/Development/aucdt-utilities/brand-guideline-checker/node_modules/.pnpm/rollup@4.59.0/node_modules/rollup/dist/es/shared/node-entry.js:21670:26[39m
+[0m
+[36m
+================================================================================[0m
+[1m[43] brand-narrative-synthesizer[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[44] canary-release-manager[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[45] carbon-credit-tracker[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[46] cinematic-triptych-generator[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[47] city-digital-twin[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[48] ckt-utas-modern-website[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[49] class4-digital-learning[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[50] climate-impact-modeler[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[51] climate-impact-twin[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[52] cognitive-load-monitor[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[53] commodity-price-forecast-engine[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[54] community-plates.v1[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[55] container-health-auditor-2[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[56] countdown-timer[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[57] creativity-amplifier[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[58] crisis-simulation-ai[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[59] crop-yield-predictor[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[60] cross-app-api-gateway[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[61] cross-app-data-fabric[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[62] cross-app-performance-synthesizer[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[63] cross-app-search[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[64] cross-border-trade-optimizer[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[65] cross-industry-pattern-miner[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[66] cross-system-stability-controller[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[67] cyber-threat-landscape-analyzer[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[68] dadaist-concert-visualizer[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[69] data-anonymization-engine[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[70] data-lineage-tracker[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[71] decision-confidence-estimator[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[72] dependency-graph-visualizer[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[73] deployment-drift-detector[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[74] dictation-app[0m
+[36m================================================================================[0m
+[36m  Building...[0m
+[31m  ✗ Build failed: Command failed: pnpm run build
+[31m✗[39m Build failed in 872ms
+[31merror during build:
+[31mCould not resolve entry module "react".[31m
+    at getRollupError (file:///C:/Development/aucdt-utilities/dictation-app/node_modules/.pnpm/rollup@4.49.0/node_modules/rollup/dist/es/shared/parseAst.js:401:41)
+    at error (file:///C:/Development/aucdt-utilities/dictation-app/node_modules/.pnpm/rollup@4.49.0/node_modules/rollup/dist/es/shared/parseAst.js:397:42)
+    at ModuleLoader.loadEntryModule (file:///C:/Development/aucdt-utilities/dictation-app/node_modules/.pnpm/rollup@4.49.0/node_modules/rollup/dist/es/shared/node-entry.js:21555:20)
+    at async Promise.all (index 0)
+    at async Promise.all (index 0)[39m
+[0m
+[36m
+================================================================================[0m
+[1m[75] digital-identity-verifier[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[76] digital-twin-builder[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[77] directive-workflow[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[78] disaster-preparedness-simulator[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[79] disaster-response-allocator[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[80] dns-copy-utility[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[81] docujudge_202624502_1111[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[82] drone-fleet-intelligence-manager[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[83] drone-light-show-simulator[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[84] drone-showcase[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[85] dynamic-policy-adjustment-engine[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[86] edge-deployment-manager[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[87] election-sentiment-analyzer[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[88] emergent-behavior-monitor[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[89] enactus-ckt-frontend-app-main[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[90] energy-grid-digital-twin[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[91] english-safari[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[92] enhanced-youtube-genie[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[93] ethical-governance-ai[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[94] executive-brief-generator[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[95] expensepro---advanced-financial-tracker[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[96] factory-energy-optimizer[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[97] farm-digital-twin[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[98] fashionprompt-ai[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[99] federated-learning-coordinator[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[100] fees-comparison-dashboard[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[101] fraud-detection-engine[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[102] gemini-slingshot-3[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[103] geopolitical-risk-monitor[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[104] ghana-news-aggregator[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[105] ghana-university-fees-dashboard[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[106] gif-animator-ai-refactored[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[107] global-trade-simulation-engine[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[108] glucosentinel[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[109] hospital-digital-twin[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[110] hospital-resource-allocator[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[111] human-ai-collaboration-optimizer[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[112] incident-response-copilot[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[113] infrastructure-cost-optimizer[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[114] innovation-opportunity-detector[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[115] insurance-risk-intelligence-engine[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[116] internal-knowledge-embedding-engine[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[117] inventory-demand-forecaster[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[118] kanban-app[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[119] kente-fusion-fashion-workshop[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[120] knowledge-compression-engine[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[121] knowledge-graph-builder[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[122] lecturer-assessment-system[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[123] logistics-fleet-autopilot[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[124] lumina-concert-video-wall[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[125] lumina-triptych-studio[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[126] mannequin-ai[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[127] manufacturing-ecosystem-twin[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[128] master-thumbnail-catalog[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[129] mature-students-exam-app[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[31m  ✗ Capture failed: Server start timeout[0m
+[36m
+================================================================================[0m
+[1m[130] mature-students-exam-app-waec-integrated[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[131] medical-claims-validator[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[132] microcredit-risk-scorer[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[31m  ✗ Capture failed: Server start timeout[0m
+[36m
+================================================================================[0m
+[1m[133] midjourney-prompt-helper[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[31m  ✗ Capture failed: Server start timeout[0m
+[36m
+================================================================================[0m
+[1m[134] mirror-truth---thumbnail-designer[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[135] misinformation-detector[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[136] model-performance-drift-ai[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[137] model-version-registry[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[138] multi-agent-negotiation-engine[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[139] multi-tenant-role-engine[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[140] narrative-intelligence-engine[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[141] omniextract[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[142] organizational-design-recommender[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[143] pama-realtor[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[144] patois-app[0m
+[36m================================================================================[0m
+[36m  Building...[0m
+[31m  ✗ Build failed: Command failed: pnpm run build
+file:///C:/Development/aucdt-utilities/patois-app/node_modules/.pnpm/vite@6.4.1_@types+node@22.19.15/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:36314
+                            new Error(`Failed to resolve ${url} from ${id}`)
+                            ^
+
+Error: Failed to resolve ./src/index.tsx from C:/Development/aucdt-utilities/patois-app/index.html
+    at file:///C:/Development/aucdt-utilities/patois-app/node_modules/.pnpm/vite@6.4.1_@types+node@22.19.15/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:36314:29
+
+Node.js v24.11.1
+[0m
+[36m
+================================================================================[0m
+[1m[145] pdf-extractor-app[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[146] pdf-to-assessment-json-converter[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[147] predictive-disease-risk-model[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[148] predictive-maintenance-ai[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[149] predictive-policy-engine[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[150] presentation-app[0m
+[36m================================================================================[0m
+[36m  Building...[0m
+[31m  ✗ Build failed: Command failed: pnpm run build
+[31m✗[39m Build failed in 8.95s
+[31merror during build:
+[31m[vite:css] [postcss] postcss-import: C:\Development\aucdt-utilities\presentation-app\node_modules\.pnpm\tailwindcss@3.4.19\node_modules\tailwindcss\lib\index.js:1:1: Unknown word "use strict"[31m
+file: [36mC:\Development\aucdt-utilities\presentation-app\node_modules\.pnpm\tailwindcss@3.4.19\node_modules\tailwindcss\lib\index.js:1:0 (C:/Development/aucdt-utilities/presentation-app/src/index.css)[31m
+    at Input.error (C:\Development\aucdt-utilities\presentation-app\node_modules\.pnpm\postcss@8.5.8\node_modules\postcss\lib\input.js:135:16)
+    at Parser.unknownWord (C:\Development\aucdt-utilities\presentation-app\node_modules\.pnpm\postcss@8.5.8\node_modules\postcss\lib\parser.js:595:22)
+    at Parser.other (C:\Development\aucdt-utilities\presentation-app\node_modules\.pnpm\postcss@8.5.8\node_modules\postcss\lib\parser.js:437:12)
+    at Parser.parse (C:\Development\aucdt-utilities\presentation-app\node_modules\.pnpm\postcss@8.5.8\node_modules\postcss\lib\parser.js:472:16)
+    at parse (C:\Development\aucdt-utilities\presentation-app\node_modules\.pnpm\postcss@8.5.8\node_modules\postcss\lib\parse.js:11:12)
+    at get root (C:\Development\aucdt-utilities\presentation-app\node_modules\.pnpm\postcss@8.5.8\node_modules\postcss\lib\no-work-result.js:43:14)
+    at Result.get [as root] (C:\Development\aucdt-utilities\presentation-app\node_modules\.pnpm\postcss@8.5.8\node_modules\postcss\lib\no-work-result.js:76:21)
+    at loadImportContent (file:///C:/Development/aucdt-utilities/presentation-app/node_modules/.pnpm/vite@7.3.1_jiti@1.21.7_lightningcss@1.31.1/node_modules/vite/dist/node/chunks/postcss-import.js:408:33)
+    at async Promise.all (index 0)
+    at async resolveImportId (file:///C:/Development/aucdt-utilities/presentation-app/node_modules/.pnpm/vite@7.3.1_jiti@1.21.7_lightningcss@1.31.1/node_modules/vite/dist/node/chunks/postcss-import.js:387:20)[39m
+[0m
+[36m
+================================================================================[0m
+[1m[151] primevaluer-pro[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[152] privacy-risk-assessor[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[153] prompt-optimization-engine[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[154] public-health-surveillance-ai[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[155] quality-defect-vision-system[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[156] quantum-risk-modeling-engine[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[157] real-time-economic-signal-analyzer[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[158] real-time-error-classifier[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[159] real-time-persona-engine[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[160] regulatory-update-scanner[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[161] remix-muniratu-portfolio[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[162] remote-patient-monitoring-ai[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[163] renewable-grid-balancer[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[164] retail-demand-intelligence[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[165] retail-ecosystem-twin[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[166] risk-exposure-forecaster[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[167] rophe-specialist-care-rpms[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[168] scenario-simulation-engine[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[169] scholarship-bond-portal-v3[0m
+[36m================================================================================[0m
+[36m  Building...[0m
+[31m  ✗ Build failed: Command failed: npm run build
+npm warn Unknown project config "package-manager". This will stop working in the next major version of npm.
+'vite' is not recognized as an internal or external command,
+operable program or batch file.
+[0m
+[36m
+================================================================================[0m
+[1m[170] script-co-writer[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[171] secret-vault-manager[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[172] self-healing-infrastructure-engine[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[173] self-improving-model-trainer[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[174] semantic-workflow-engine[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[175] send-platform-dashboard[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[176] sentiment-aware-ux-adapter[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[177] sentinel-agent[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[178] sentinel-command-deck[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[179] sentinel-conscious-state-dashboard[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[180] sentinel-self-diagnostics-console[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[181] shortcut-master[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[182] sla-compliance-monitor[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[183] smart-campus-operations-engine[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[184] smart-contract-executor[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[185] smart-contract-risk-scanner[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[186] smart-energy-consumption-monitor[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[187] smart-logistics-optimizer[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[188] smartscale-ai-presentation-platform[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[189] smartscale-ai-presentation-v1.06.12.2025.0020[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[190] smartscale-presenter[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[191] societal-impact-simulator[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[192] soil-health-analyzer[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[193] still_her_baby[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[194] strategic-resource-redistributor[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[195] strategic-risk-balancer[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[196] strategic-scenario-forecast-engine[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[197] student-performance-predictor[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[198] supply-chain-digital-twin[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[199] supply-chain-route-optimizer[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[200] synthetic-data-generator[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[201] synthetic-user-simulator[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[202] talentverify[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[203] techbridge-ai-application-portal[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[204] techbridge-ai-workshop-flyer[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[205] techbridge-assessment-platform[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[206] techbridge-eligibility-checker[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[207] techbridge-lead-generation-infographic[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[208] techbridge-lead-generator[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[209] techbridge-media-club-platform[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[210] techbridge-product-design-6r-design-portal[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[211] techbridge-promo[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[212] techbridge-scholarship-portal-v2[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[213] techbridge-skills-evaluation[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[214] techbridge-strategy-dashboard[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[215] techbridge-student-population-register[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[216] techbridge-student-population-register-1[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[217] techbridge-technical-quiz-platform[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[218] techbridge-tuc-dashboard[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[219] techbridge-website-react[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[220] telemedicine-session-optimizer[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[221] thumbnail-generator[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[222] timetable-management-system[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[223] transportation-network-twin[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[224] treasury-forecasting-ai[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[225] trust-and-governance-layer[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[226] tsapro[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[227] tuc-analytics-dashboard[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[228] tuc-portal-tests[0m
+[36m================================================================================[0m
+[36m  Building...[0m
+[31m  ✗ Build failed: Command failed: pnpm run build
+[0m
+[36m
+================================================================================[0m
+[1m[229] tvet-assessment-progress-dashboard[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[230] umoja-react-app[0m
+[36m================================================================================[0m
+[36m  Building...[0m
+[31m  ✗ Build failed: Command failed: pnpm run build
+node:internal/modules/cjs/loader:1424
+  throw err;
+  ^
+
+Error: Cannot find module 'C:\Development\aucdt-utilities\umoja-react-app\node_modules\vite\bin\vite.js'
+    at Module._resolveFilename (node:internal/modules/cjs/loader:1421:15)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1059:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1064:22)
+    at Module._load (node:internal/modules/cjs/loader:1227:37)
+    at TracingChannel.traceSync (node:diagnostics_channel:328:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:245:24)
+    at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)
+    at node:internal/main/run_main_module:33:47 {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: []
+}
+
+Node.js v24.11.1
+[0m
+[36m
+================================================================================[0m
+[1m[231] university-digital-twin[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[232] university-timetable-insights[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[233] urban-traffic-optimizer[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[234] urban-waste-optimization-engine[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[235] usage-billing-engine[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[236] veca-vermont-education-contact-aggregator[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[237] video-scene-generator[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[238] whatsapp-parody[0m
+[36m================================================================================[0m
+[36m  Building...[0m
+[31m  ✗ Build failed: Command failed: pnpm run build
+node:internal/modules/cjs/loader:1424
+  throw err;
+  ^
+
+Error: Cannot find module 'C:\Development\aucdt-utilities\whatsapp-parody\node_modules\vite\bin\vite.js'
+    at Module._resolveFilename (node:internal/modules/cjs/loader:1421:15)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1059:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1064:22)
+    at Module._load (node:internal/modules/cjs/loader:1227:37)
+    at TracingChannel.traceSync (node:diagnostics_channel:328:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:245:24)
+    at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)
+    at node:internal/main/run_main_module:33:47 {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: []
+}
+
+Node.js v24.11.1
+[0m
+[36m
+================================================================================[0m
+[1m[239] willpro[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+================================================================================[0m
+[1m[240] youtube-description-genie[0m
+[36m================================================================================[0m
+[2m  ✓ Already built (found dist/index.html)[0m
+[36m  Serving app on http://localhost:3456...[0m
+[2m  Loading http://localhost:3456...[0m
+[2m  Waiting 10s for app to fully load...[0m
+[32m  ✓ Screenshot captured (110KB)[0m
+[36m
+
+================================================================================[0m
+[1mFINAL REPORT[0m
+[36m================================================================================[0m
+[33m
+Statistics:[0m
+[0m  Total projects:               240[0m
+[32m  Build successful:             0[0m
+[31m  Build failed:                 9[0m
+[32m  Screenshots captured:         228[0m
+[31m  Screenshot failures:          3[0m
+[32m  Actual content captured:      228[0m
+[32m  Splash screens detected:      0[0m
+[2m
+Duration: 56m 53s[0m
+[31m
+
+Issues (12):[0m
+[31m  1. ananse-cartoon-generator - build_failed[0m
+[31m  2. brand-guideline-checker - build_failed[0m
+[31m  3. dictation-app - build_failed[0m
+[31m  4. mature-students-exam-app - Server start timeout[0m
+[31m  5. microcredit-risk-scorer - Server start timeout[0m
+[31m  6. midjourney-prompt-helper - Server start timeout[0m
+[31m  7. patois-app - build_failed[0m
+[31m  8. presentation-app - build_failed[0m
+[31m  9. scholarship-bond-portal-v3 - build_failed[0m
+[31m  10. tuc-portal-tests - build_failed[0m
+[31m  11. umoja-react-app - build_failed[0m
+[31m  12. whatsapp-parody - build_failed[0m
+[32m
+✓ Detailed report saved to BUILD-SERVE-CAPTURE-REPORT.md[0m

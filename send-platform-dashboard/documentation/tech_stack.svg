@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400">
+  <rect width="600" height="400" fill="#1e293b" />
+  <text x="300" y="50" font-family="sans-serif" font-size="28" text-anchor="middle" font-weight="bold" fill="#f8fafc">Technology Stack</text>
+
+  <!-- Core -->
+  <g transform="translate(50, 100)">
+    <rect width="150" height="100" rx="8" fill="#0ea5e9" />
+    <text x="75" y="55" font-family="sans-serif" font-size="18" font-weight="bold" text-anchor="middle" fill="white">React</text>
+    <text x="75" y="75" font-family="sans-serif" font-size="14" text-anchor="middle" fill="#e0f2fe">v19.2.4</text>
+  </g>
+
+  <!-- Styling -->
+  <g transform="translate(225, 100)">
+    <rect width="150" height="100" rx="8" fill="#38bdf8" />
+    <text x="75" y="55" font-family="sans-serif" font-size="18" font-weight="bold" text-anchor="middle" fill="white">Tailwind CSS</text>
+    <text x="75" y="75" font-family="sans-serif" font-size="14" text-anchor="middle" fill="#e0f2fe">Utility-First</text>
+  </g>
+
+  <!-- Routing -->
+  <g transform="translate(400, 100)">
+    <rect width="150" height="100" rx="8" fill="#ef4444" />
+    <text x="75" y="55" font-family="sans-serif" font-size="18" font-weight="bold" text-anchor="middle" fill="white">React Router</text>
+    <text x="75" y="75" font-family="sans-serif" font-size="14" text-anchor="middle" fill="#fee2e2">v7.13.0</text>
+  </g>
+
+  <!-- Icons -->
+  <g transform="translate(50, 225)">
+    <rect width="150" height="100" rx="8" fill="#f59e0b" />
+    <text x="75" y="60" font-family="sans-serif" font-size="18" font-weight="bold" text-anchor="middle" fill="white">Lucide</text>
+  </g>
+
+  <!-- Charts -->
+  <g transform="translate(225, 225)">
+    <rect width="150" height="100" rx="8" fill="#10b981" />
+    <text x="75" y="60" font-family="sans-serif" font-size="18" font-weight="bold" text-anchor="middle" fill="white">Recharts</text>
+  </g>
+
+  <!-- Testing -->
+  <g transform="translate(400, 225)">
+    <rect width="150" height="100" rx="8" fill="#8b5cf6" />
+    <text x="75" y="55" font-family="sans-serif" font-size="18" font-weight="bold" text-anchor="middle" fill="white">Puppeteer</text>
+    <text x="75" y="75" font-family="sans-serif" font-size="14" text-anchor="middle" fill="#ede9fe">(Simulated)</text>
+  </g>
+
+</svg>

@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <!-- ========== BASIC SEO META TAGS ========== -->
+    <title>Techbridge University College | Pioneering Design & Technology</title>
+    <meta name="description" content="Techbridge University College (TUC) is a premier private institution in Accra pioneering innovative and progressive higher education in design and entrepreneurship." />
+    
+    <!-- 🆕 SEO ADDITION: Keywords -->
+    <meta name="keywords" content="Techbridge University College, TUC, design education, technology education, Accra university, Ghana university, product design, entrepreneurship, private university Ghana, design school" />
+    
+    <!-- 🆕 SEO ADDITION: Author and Publisher -->
+    <meta name="author" content="Techbridge University College" />
+    <meta name="publisher" content="Techbridge University College" />
+    
+    <!-- 🆕 SEO ADDITION: Canonical URL -->
+    <link rel="canonical" href="https://www.techbridge.edu.gh/" />
+    
+    <!-- 🆕 SEO ADDITION: Robots Meta Tag -->
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    
+    <!-- 🆕 SEO ADDITION: Language and Geographic Targeting -->
+    <meta name="language" content="English" />
+    <meta name="geo.region" content="GH-AA" />
+    <meta name="geo.placename" content="Accra" />
+    <meta name="geo.position" content="5.6037;-0.1870" />
+    <meta name="ICBM" content="5.6037, -0.1870" />
+    
+    <!-- ========== OPEN GRAPH META TAGS (Facebook, LinkedIn, etc.) ========== -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://www.techbridge.edu.gh/" />
+    <meta property="og:site_name" content="Techbridge University College" />
+    <meta property="og:title" content="Techbridge University College | Pioneering Design & Technology" />
+    <meta property="og:description" content="Techbridge University College (TUC) is a premier private institution in Accra pioneering innovative and progressive higher education in design and entrepreneurship." />
+    <meta property="og:image" content="https://techbridge.edu.gh/static/TUC_LOGO.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Techbridge University College Logo" />
+    <meta property="og:locale" content="en_GB" />
+    
+    <!-- ========== TWITTER CARD META TAGS ========== -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@TUCGhana" />
+    <meta name="twitter:creator" content="@TUCGhana" />
+    <meta name="twitter:title" content="Techbridge University College | Pioneering Design & Technology" />
+    <meta name="twitter:description" content="Techbridge University College (TUC) is a premier private institution in Accra pioneering innovative and progressive higher education in design and entrepreneurship." />
+    <meta name="twitter:image" content="https://techbridge.edu.gh/static/TUC_LOGO.png" />
+    <meta name="twitter:image:alt" content="Techbridge University College Logo" />
+    
+    <!-- ========== ADDITIONAL SEO META TAGS ========== -->
+    <meta name="theme-color" content="#630f12" />
+    <meta name="msapplication-TileColor" content="#630f12" />
+    <meta name="copyright" content="Techbridge University College" />
+    <meta name="rating" content="general" />
+    <meta name="referrer" content="origin-when-cross-origin" />
+    
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-FKXTELQ71R"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-FKXTELQ71R');
+    </script>
+        
+    <!-- Favicon / Tab Logo -->
+    <link rel="icon" type="image/png" href="https://aucdt.edu.gh/tuc/TUC_LOGO.png" />
+    <link rel="apple-touch-icon" href="https://aucdt.edu.gh/tuc/TUC_LOGO.png" />
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script type="importmap">
+    {
+      "imports": {
+        "react/": "https://aistudiocdn.com/react@^19.2.0/",
+        "react": "https://aistudiocdn.com/react@^19.2.0",
+        "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/"
+      }
+    }
+    </script>
+    <link rel="stylesheet" href="/index.css">
+    <style>
+      body {
+        font-family: 'Poppins', sans-serif;
+      }
+
+      /* QA Preference Styles -- Scoped to .qa-preview-wrapper */
+      .qa-preview-wrapper {
+        --burgundy-primary: #8B1538;
+        --burgundy-dark: #6B1028;
+        --gold-accent: #D4AF37;
+        --gold-light: #F4E4BC;
+        --cream-bg: #F8F6F0;
+        --warm-beige: #E6D5C7;
+        --campus-green: #2E4034;
+        --primary-text: #2C1810;
+        --light-text: #FFFFFF;
+        font-family: 'Poppins', sans-serif;
+        color: var(--primary-text);
+        line-height: 1.6;
+      }
+
+      .qa-preview-wrapper .app-wrapper {
+          display: flex;
+          flex-direction: column;
+          height: 100%;
+          width: 100%;
+          background: var(--cream-bg);
+          border-radius: 0.5rem;
+          overflow: hidden;
+      }
+
+      .qa-preview-wrapper .header {
+          background: linear-gradient(135deg, var(--burgundy-dark) 0%, var(--burgundy-primary) 100%);
+          color: var(--light-text);
+          padding: 0.75rem 1.5rem;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          border-bottom: 3px solid var(--gold-accent);
+          flex-shrink: 0;
+          box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+          z-index: 10;
+      }
+
+      .qa-preview-wrapper .header-title {
+          font-size: 1rem;
+          font-weight: 600;
+          letter-spacing: 0.5px;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+      }
+
+      .qa-preview-wrapper .header-info {
+          display: flex;
+          gap: 1.5rem;
+          align-items: center;
+      }
+
+      .qa-preview-wrapper .header-counter {
+          font-size: 0.9rem;
+          font-weight: 600;
+          background: var(--gold-accent);
+          color: var(--burgundy-primary);
+          padding: 0.3rem 0.8rem;
+          border-radius: 20px;
+          min-width: 70px;
+          text-align: center;
+      }
+
+      .qa-preview-wrapper .header-nav {
+          font-size: 0.8rem;
+          opacity: 0.85;
+      }
+
+      .qa-preview-wrapper .slides-container {
+          flex: 1;
+          position: relative;
+          overflow: hidden;
+      }
+
+      .qa-preview-wrapper .slide {
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          padding: 1.5rem 2.5rem 2.5rem 2.5rem;
+          display: flex;
+          flex-direction: column;
+          justify-content: flex-start;
+          opacity: 0;
+          pointer-events: none;
+          transition: opacity 0.5s ease-in-out;
+          background: var(--cream-bg);
+          overflow-y: auto;
+      }
+
+      .qa-preview-wrapper .slide.active {
+          opacity: 1;
+          pointer-events: auto;
+      }
+
+      .qa-preview-wrapper .footer {
+          background: var(--burgundy-dark);
+          color: var(--light-text);
+          padding: 0.75rem 1.5rem;
+          font-weight: 500;
+          border-top: 3px solid var(--gold-accent);
+          flex-shrink: 0;
+          text-align: center;
+          font-size: 0.8rem;
+          z-index: 10;
+      }
+      
+      .qa-preview-wrapper .slide-content {
+          max-width: 900px;
+          margin: 0 auto;
+          width: 100%;
+      }
+
+      .qa-preview-wrapper h1, .qa-preview-wrapper h2, .qa-preview-wrapper h3, .qa-preview-wrapper h4 {
+        margin: 1.5rem 0 1rem 0;
+      }
+
+      .qa-preview-wrapper .slide-content > h2:first-child,
+      .qa-preview-wrapper .slide-content > h3:first-child,
+      .qa-preview-wrapper .slide-content > h4:first-child {
+        margin-top: 0;
+      }
+
+      .qa-preview-wrapper h2 {
+          font-size: 1.8rem;
+          font-weight: 700;
+          color: var(--light-text);
+          background: linear-gradient(135deg, var(--burgundy-dark) 0%, var(--burgundy-primary) 100%);
+          padding: 1rem 1.5rem;
+          margin: -1.5rem -2.5rem 1.5rem -2.5rem;
+          border-bottom: 4px solid var(--gold-accent);
+          box-shadow: 0 4px 12px rgba(139, 21, 56, 0.3);
+      }
+
+      .qa-preview-wrapper h3 {
+          font-size: 1.4rem;
+          font-weight: 600;
+          color: var(--burgundy-dark);
+          border-left: 5px solid var(--gold-accent);
+          padding-left: 1rem;
+      }
+
+      .qa-preview-wrapper h4 {
+          font-size: 1.2rem;
+          font-weight: 600;
+          color: var(--burgundy-primary);
+          border-bottom: 3px solid var(--gold-accent);
+          padding-bottom: 0.5rem;
+          display: inline-block;
+      }
+
+      .qa-preview-wrapper .title-slide {
+          text-align: center;
+          background: linear-gradient(135deg, var(--burgundy-dark) 0%, var(--burgundy-primary) 100%);
+          color: var(--light-text);
+          justify-content: center;
+          align-items: center;
+      }
+
+      .qa-preview-wrapper .title-slide h1 {
+          font-size: 3rem;
+          font-weight: 700;
+          margin: 0;
+          padding: 0;
+          background: none;
+          border: none;
+          text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+          letter-spacing: -1px;
+      }
+
+      .qa-preview-wrapper .title-slide .subtitle {
+          font-size: 1.5rem;
+          font-weight: 600;
+          background: var(--gold-light);
+          color: var(--burgundy-primary);
+          padding: 1rem 2rem;
+          display: inline-block;
+          border-left: 6px solid var(--gold-accent);
+          margin: 2rem 0;
+          border-radius: 4px;
+          box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      }
+
+      .qa-preview-wrapper .title-slide .author {
+          font-size: 1.1rem;
+          font-weight: 500;
+          color: var(--gold-light);
+          margin-top: 2rem;
+          letter-spacing: 0.5px;
+      }
+
+      .qa-preview-wrapper .highlight-box {
+          background: var(--light-text);
+          border-left: 6px solid var(--gold-accent);
+          border-top: 2px solid var(--gold-light);
+          padding: 1.5rem;
+          margin: 1.5rem 0;
+          box-shadow: 0 4px 12px rgba(139, 21, 56, 0.15);
+          border-radius: 4px;
+      }
+
+      .qa-preview-wrapper .burgundy-box {
+          background: var(--burgundy-primary);
+          color: var(--light-text);
+          padding: 1.5rem;
+          border-radius: 4px;
+          border-top: 6px solid var(--gold-accent);
+          margin: 1.5rem 0;
+          box-shadow: 0 4px 12px rgba(139, 21, 56, 0.4);
+      }
+      .qa-preview-wrapper .burgundy-box strong {
+          color: var(--gold-accent);
+      }
+
+      .qa-preview-wrapper .key-point {
+          background: linear-gradient(135deg, var(--gold-light) 0%, var(--warm-beige) 100%);
+          padding: 1.5rem;
+          border-radius: 4px;
+          border: 3px solid var(--gold-accent);
+          margin: 1.5rem 0;
+          font-weight: 500;
+          box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
+      }
+
+      .qa-preview-wrapper .columns {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+          gap: 1.5rem;
+          margin: 1.5rem 0;
+      }
+
+      .qa-preview-wrapper .column {
+          background: var(--light-text);
+          padding: 1.5rem;
+          border-radius: 4px;
+          border-left: 4px solid var(--gold-accent);
+          box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      }
+
+      .qa-preview-wrapper ul {
+          list-style: none;
+          padding-left: 0;
+          margin: 1rem 0;
+      }
+
+      .qa-preview-wrapper ul li {
+          padding: 0.6rem 0;
+          padding-left: 2rem;
+          position: relative;
+          line-height: 1.5;
+      }
+
+      .qa-preview-wrapper ul li::before {
+          content: "▸";
+          color: var(--gold-accent);
+          font-weight: bold;
+          position: absolute;
+          left: 0;
+          font-size: 1.2em;
+      }
+
+      .qa-preview-wrapper strong {
+          color: var(--burgundy-primary);
+          font-weight: 600;
+      }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "react/": "https://aistudiocdn.com/react@^19.2.0/",
+    "react": "https://aistudiocdn.com/react@^19.2.0",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/"
+  }
+}
+</script>
+<link rel="stylesheet" href="/index.css">
+</head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/index.tsx"></script>
+  </body>
+</html>

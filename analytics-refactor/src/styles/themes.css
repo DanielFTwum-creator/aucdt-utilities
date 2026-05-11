@@ -1,0 +1,463 @@
+/**
+ * Global Theme Styles
+ * 
+ * Implements three themes:
+ * 1. Light Theme (default)
+ * 2. Dark Theme
+ * 3. High-Contrast Theme (WCAG AAA compliant)
+ * 
+ * Also includes:
+ * - Font size scaling
+ * - Reduced motion support
+ * - Colorblind-friendly alternatives
+ */
+
+/* ============================================
+   ROOT VARIABLES - LIGHT THEME (Default)
+   ============================================ */
+:root {
+  /* Primary Colors */
+  --color-primary: #6366f1; /* Indigo */
+  --color-primary-dark: #4f46e5;
+  --color-primary-light: #818cf8;
+  
+  /* Secondary Colors */
+  --color-secondary: #8b5cf6; /* Purple */
+  --color-secondary-dark: #7c3aed;
+  --color-secondary-light: #a78bfa;
+  
+  /* Accent Colors */
+  --color-accent: #f59e0b; /* Amber */
+  --color-accent-dark: #d97706;
+  --color-accent-light: #fbbf24;
+  
+  /* Status Colors */
+  --color-success: #10b981; /* Green */
+  --color-warning: #f59e0b; /* Amber */
+  --color-error: #ef4444; /* Red */
+  --color-info: #3b82f6; /* Blue */
+  
+  /* Neutral Colors */
+  --color-background: #f9fafb; /* Very light gray */
+  --color-surface: #ffffff; /* White */
+  --color-surface-elevated: #ffffff;
+  
+  /* Text Colors */
+  --color-text-primary: #111827; /* Very dark gray */
+  --color-text-secondary: #6b7280; /* Medium gray */
+  --color-text-disabled: #9ca3af; /* Light gray */
+  --color-text-inverse: #ffffff; /* White */
+  
+  /* Border Colors */
+  --color-border: #e5e7eb; /* Light gray */
+  --color-border-focus: #6366f1; /* Indigo */
+  
+  /* Chart Colors */
+  --chart-color-1: #3b82f6; /* Blue */
+  --chart-color-2: #8b5cf6; /* Purple */
+  --chart-color-3: #10b981; /* Green */
+  --chart-color-4: #f59e0b; /* Amber */
+  --chart-color-5: #ef4444; /* Red */
+  --chart-color-6: #06b6d4; /* Cyan */
+  
+  /* Shadows */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+  
+  /* Transitions */
+  --transition-fast: 150ms ease;
+  --transition-normal: 300ms ease;
+  --transition-slow: 500ms ease;
+  
+  /* Focus Ring */
+  --focus-ring: 0 0 0 3px rgba(99, 102, 241, 0.5);
+  
+  /* Spacing (base 4px) */
+  --spacing-xs: 0.25rem; /* 4px */
+  --spacing-sm: 0.5rem; /* 8px */
+  --spacing-md: 1rem; /* 16px */
+  --spacing-lg: 1.5rem; /* 24px */
+  --spacing-xl: 2rem; /* 32px */
+  --spacing-2xl: 3rem; /* 48px */
+  
+  /* Border Radius */
+  --radius-sm: 0.25rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+  --radius-2xl: 1.5rem;
+  
+  /* Font Families */
+  --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  --font-mono: 'Courier New', Courier, monospace;
+}
+
+/* ============================================
+   DARK THEME
+   ============================================ */
+[data-theme="dark"] {
+  /* Primary Colors */
+  --color-primary: #818cf8; /* Lighter indigo */
+  --color-primary-dark: #6366f1;
+  --color-primary-light: #a5b4fc;
+  
+  /* Secondary Colors */
+  --color-secondary: #a78bfa; /* Lighter purple */
+  --color-secondary-dark: #8b5cf6;
+  --color-secondary-light: #c4b5fd;
+  
+  /* Accent Colors */
+  --color-accent: #fbbf24; /* Lighter amber */
+  --color-accent-dark: #f59e0b;
+  --color-accent-light: #fcd34d;
+  
+  /* Status Colors */
+  --color-success: #34d399; /* Lighter green */
+  --color-warning: #fbbf24; /* Lighter amber */
+  --color-error: #f87171; /* Lighter red */
+  --color-info: #60a5fa; /* Lighter blue */
+  
+  /* Neutral Colors */
+  --color-background: #0f172a; /* Very dark blue-gray */
+  --color-surface: #1e293b; /* Dark blue-gray */
+  --color-surface-elevated: #334155; /* Medium dark blue-gray */
+  
+  /* Text Colors */
+  --color-text-primary: #f1f5f9; /* Very light gray */
+  --color-text-secondary: #cbd5e1; /* Light gray */
+  --color-text-disabled: #64748b; /* Medium gray */
+  --color-text-inverse: #0f172a; /* Very dark */
+  
+  /* Border Colors */
+  --color-border: #334155; /* Medium dark */
+  --color-border-focus: #818cf8; /* Lighter indigo */
+  
+  /* Chart Colors (adjusted for dark background) */
+  --chart-color-1: #60a5fa; /* Lighter blue */
+  --chart-color-2: #a78bfa; /* Lighter purple */
+  --chart-color-3: #34d399; /* Lighter green */
+  --chart-color-4: #fbbf24; /* Lighter amber */
+  --chart-color-5: #f87171; /* Lighter red */
+  --chart-color-6: #22d3ee; /* Lighter cyan */
+  
+  /* Shadows (more pronounced in dark mode) */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.6);
+  
+  /* Focus Ring (lighter for dark mode) */
+  --focus-ring: 0 0 0 3px rgba(129, 140, 248, 0.5);
+}
+
+/* ============================================
+   HIGH-CONTRAST THEME (WCAG AAA)
+   ============================================ */
+[data-theme="high-contrast"] {
+  /* Primary Colors (maximum contrast) */
+  --color-primary: #0000ff; /* Pure blue */
+  --color-primary-dark: #0000cc;
+  --color-primary-light: #3333ff;
+  
+  /* Secondary Colors */
+  --color-secondary: #6600cc; /* Dark purple */
+  --color-secondary-dark: #5500aa;
+  --color-secondary-light: #7700dd;
+  
+  /* Accent Colors */
+  --color-accent: #ff8800; /* Orange */
+  --color-accent-dark: #cc6600;
+  --color-accent-light: #ffaa00;
+  
+  /* Status Colors */
+  --color-success: #008000; /* Pure green */
+  --color-warning: #ff8800; /* Orange */
+  --color-error: #cc0000; /* Pure red */
+  --color-info: #0000ff; /* Pure blue */
+  
+  /* Neutral Colors */
+  --color-background: #000000; /* Pure black */
+  --color-surface: #1a1a1a; /* Very dark gray */
+  --color-surface-elevated: #333333; /* Dark gray */
+  
+  /* Text Colors */
+  --color-text-primary: #ffffff; /* Pure white */
+  --color-text-secondary: #ffff00; /* Yellow for contrast */
+  --color-text-disabled: #808080; /* Medium gray */
+  --color-text-inverse: #000000; /* Pure black */
+  
+  /* Border Colors */
+  --color-border: #ffffff; /* White borders */
+  --color-border-focus: #ffff00; /* Yellow focus */
+  
+  /* Chart Colors (high contrast) */
+  --chart-color-1: #00ffff; /* Cyan */
+  --chart-color-2: #ff00ff; /* Magenta */
+  --chart-color-3: #00ff00; /* Lime */
+  --chart-color-4: #ffff00; /* Yellow */
+  --chart-color-5: #ff0000; /* Red */
+  --chart-color-6: #0080ff; /* Blue */
+  
+  /* Shadows (more visible in high contrast) */
+  --shadow-sm: 0 1px 2px 0 rgba(255, 255, 255, 0.3);
+  --shadow-md: 0 4px 6px -1px rgba(255, 255, 255, 0.4);
+  --shadow-lg: 0 10px 15px -3px rgba(255, 255, 255, 0.5);
+  --shadow-xl: 0 20px 25px -5px rgba(255, 255, 255, 0.6);
+  
+  /* Focus Ring (yellow for high visibility) */
+  --focus-ring: 0 0 0 4px rgba(255, 255, 0, 0.8);
+}
+
+/* ============================================
+   FONT SIZE SCALING
+   ============================================ */
+[data-font-size="small"] {
+  font-size: 14px; /* 87.5% of default 16px */
+}
+
+[data-font-size="medium"] {
+  font-size: 16px; /* Default */
+}
+
+[data-font-size="large"] {
+  font-size: 18px; /* 112.5% of default */
+}
+
+[data-font-size="extra-large"] {
+  font-size: 20px; /* 125% of default */
+}
+
+/* ============================================
+   REDUCED MOTION
+   ============================================ */
+.reduce-motion *,
+.reduce-motion *::before,
+.reduce-motion *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+  scroll-behavior: auto !important;
+}
+
+/* Respect system preference */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ============================================
+   COLORBLIND MODE (Deuteranopia-friendly)
+   ============================================ */
+.colorblind-mode {
+  /* Replace red-green combinations with blue-yellow */
+  --chart-color-1: #0066cc; /* Blue */
+  --chart-color-2: #ff9900; /* Orange */
+  --chart-color-3: #0099cc; /* Cyan */
+  --chart-color-4: #ffcc00; /* Yellow */
+  --chart-color-5: #6633cc; /* Purple */
+  --chart-color-6: #009999; /* Teal */
+  
+  --color-success: #0066cc; /* Blue instead of green */
+  --color-error: #ff6600; /* Orange instead of red */
+}
+
+/* ============================================
+   BASE STYLES
+   ============================================ */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--color-background);
+  color: var(--color-text-primary);
+  line-height: 1.6;
+  transition: background-color var(--transition-normal), 
+              color var(--transition-normal);
+}
+
+/* ============================================
+   FOCUS STYLES (WCAG 2.1 Compliance)
+   ============================================ */
+*:focus {
+  outline: none;
+}
+
+*:focus-visible {
+  outline: 2px solid var(--color-border-focus);
+  outline-offset: 2px;
+  box-shadow: var(--focus-ring);
+}
+
+/* High contrast focus */
+[data-theme="high-contrast"] *:focus-visible {
+  outline: 3px solid var(--color-border-focus);
+  outline-offset: 3px;
+}
+
+/* ============================================
+   BUTTON FOCUS STYLES
+   ============================================ */
+button:focus-visible,
+a:focus-visible {
+  outline: 2px solid var(--color-border-focus);
+  outline-offset: 2px;
+  box-shadow: var(--focus-ring);
+}
+
+/* ============================================
+   SKIP LINKS (Accessibility)
+   ============================================ */
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: var(--color-primary);
+  color: var(--color-text-inverse);
+  padding: var(--spacing-md) var(--spacing-lg);
+  text-decoration: none;
+  border-radius: 0 0 var(--radius-md) 0;
+  z-index: 9999;
+  font-weight: 600;
+  transition: top var(--transition-fast);
+}
+
+.skip-link:focus {
+  top: 0;
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+/* ============================================
+   SCREEN READER ONLY
+   ============================================ */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+.sr-only-focusable:focus,
+.sr-only-focusable:active {
+  position: static;
+  width: auto;
+  height: auto;
+  overflow: visible;
+  clip: auto;
+  white-space: normal;
+}
+
+/* ============================================
+   CUSTOM SCROLLBAR
+   ============================================ */
+::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-background);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: var(--radius-lg);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-text-secondary);
+}
+
+/* ============================================
+   PRINT STYLES
+   ============================================ */
+@media print {
+  body {
+    background: white;
+    color: black;
+  }
+  
+  /* Hide non-essential elements when printing */
+  .no-print,
+  .accessibility-toolbar,
+  .skip-link,
+  button:not(.print-button) {
+    display: none !important;
+  }
+  
+  /* Ensure charts are visible */
+  .recharts-wrapper {
+    page-break-inside: avoid;
+  }
+}
+
+/* ============================================
+   UTILITY CLASSES
+   ============================================ */
+.visually-hidden {
+  position: absolute !important;
+  clip: rect(1px, 1px, 1px, 1px);
+  padding: 0 !important;
+  border: 0 !important;
+  height: 1px !important;
+  width: 1px !important;
+  overflow: hidden;
+}
+
+.no-animation {
+  animation: none !important;
+  transition: none !important;
+}
+
+/* ============================================
+   RESPONSIVE FONT SIZES
+   ============================================ */
+@media (max-width: 768px) {
+  [data-font-size="small"] {
+    font-size: 13px;
+  }
+  
+  [data-font-size="medium"] {
+    font-size: 15px;
+  }
+  
+  [data-font-size="large"] {
+    font-size: 17px;
+  }
+  
+  [data-font-size="extra-large"] {
+    font-size: 19px;
+  }
+}
+
+/* ============================================
+   HIGH CONTRAST BORDERS
+   ============================================ */
+[data-theme="high-contrast"] button,
+[data-theme="high-contrast"] input,
+[data-theme="high-contrast"] select,
+[data-theme="high-contrast"] textarea {
+  border: 2px solid var(--color-border);
+}
+
+[data-theme="high-contrast"] .card,
+[data-theme="high-contrast"] .chart-container {
+  border: 2px solid var(--color-border);
+}

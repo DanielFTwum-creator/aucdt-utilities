@@ -1,0 +1,26 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(ssh -o StrictHostKeyChecking=no root@66.226.72.199 \"rm -rf /var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/dictation/*\")",
+      "Bash(scp -r -o StrictHostKeyChecking=no dist/* root@66.226.72.199:/var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/dictation/)",
+      "Bash(ssh -o StrictHostKeyChecking=no root@66.226.72.199 \"chown -R techbridge.edu.gh_md:psacln /var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/dictation && chmod -R 755 /var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/dictation && ls -la /var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/dictation/\")",
+      "Bash(grep -oE 'API_KEY.{0,200}' \"C:/Development/github/aucdt-utilities/dictation-app/dist/assets/index-BU6_Z7Fx.js\")",
+      "Bash(grep -oE 'process\\\\.env.{0,100}' \"C:/Development/github/aucdt-utilities/dictation-app/dist/assets/index-BU6_Z7Fx.js\")",
+      "mcp__plugin_playwright_playwright__browser_navigate",
+      "mcp__plugin_playwright_playwright__browser_wait_for",
+      "mcp__plugin_playwright_playwright__browser_take_screenshot",
+      "mcp__plugin_playwright_playwright__browser_click",
+      "mcp__plugin_playwright_playwright__browser_snapshot",
+      "mcp__plugin_playwright_playwright__browser_close",
+      "mcp__plugin_playwright_playwright__browser_evaluate",
+      "Bash(Get-ChildItem -Path \"C:\\\\Development\\\\github\\\\aucdt-utilities\\\\dictation-app\" -Recurse -File)",
+      "Bash(Select-Object FullName)",
+      "mcp__plugin_playwright_playwright__browser_run_code_unsafe",
+      "Bash(npx tsc *)",
+      "Bash(npx vite *)",
+      "Bash(powershell -NoProfile -Command '.\\\\deploy.ps1 -Build:$false')",
+      "Bash(git add *)",
+      "Bash(gh pr create --title 'feat: dictation app enhancements + patois deployment + cleanup' --body ' *)"
+    ]
+  }
+}

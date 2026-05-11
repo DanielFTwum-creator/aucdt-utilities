@@ -1,0 +1,28 @@
+services:
+  patois-lyricist:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        GEMINI_API_KEY: ${GEMINI_API_KEY:-}
+    container_name: patois-lyricist-v2
+    ports:
+      - "3000:80"
+    environment:
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:80/"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
+    networks:
+      - patois-network
+    labels:
+      - "com.techbridge.project=patois-lyricist"
+      - "com.techbridge.version=2.0.0"
+
+networks:
+  patois-network:
+    driver: bridge

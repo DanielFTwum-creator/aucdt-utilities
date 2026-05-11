@@ -1,0 +1,51 @@
+
+{
+  "questions": [
+    {
+      "id": 1,
+      "question": "According to the chart, which fruit is the most popular?",
+      "options": ["Apples", "Oranges", "Bananas", "Grapes", "None of these"],
+      "correct": 2,
+      "chartJsConfig": {
+        "type": "bar",
+        "data": {
+          "labels": ["Apples", "Oranges", "Bananas", "Grapes"],
+          "datasets": [{
+            "label": "Votes",
+            "data": [65, 59, 80, 71],
+            "backgroundColor": [
+              "rgba(255, 99, 132, 0.5)",
+              "rgba(255, 159, 64, 0.5)",
+              "rgba(255, 205, 86, 0.5)",
+              "rgba(75, 192, 192, 0.5)"
+            ],
+            "borderColor": [
+              "rgb(255, 99, 132)",
+              "rgb(255, 159, 64)",
+              "rgb(255, 205, 86)",
+              "rgb(75, 192, 192)"
+            ],
+            "borderWidth": 1
+          }]
+        },
+        "options": {
+           "scales": { 
+             "y": { "beginAtZero": true, "ticks": { "color": "#eaf0ed" }, "grid": { "color": "rgba(234, 240, 237, 0.1)" } }, 
+             "x": { "ticks": { "color": "#eaf0ed" }, "grid": { "color": "rgba(234, 240, 237, 0.1)" } } 
+           },
+           "plugins": { "legend": { "display": false } }
+        }
+      },
+      "cognitive_level": "analysis",
+      "topic": "Data Interpretation"
+    },
+    {
+      "id": 2,
+      "question": "What is the result of $2 + 2 \\times 2$?",
+      "options": ["8", "6", "4", "10", "None of these"],
+      "correct": 1,
+      "cognitive_level": "application",
+      "topic": "Mathematics"
+    }
+  ]
+}

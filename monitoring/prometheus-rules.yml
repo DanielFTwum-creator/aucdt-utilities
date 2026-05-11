@@ -1,0 +1,156 @@
+# Prometheus Alert Rules for AUCDT Services
+
+groups:
+  - name: aucdt_services
+    interval: 30s
+    rules:
+
+      # ────────────────────────────────────────────────────────────────────
+      # SERVICE AVAILABILITY ALERTS
+      # ────────────────────────────────────────────────────────────────────
+
+      - alert: ServiceDown
+        expr: up{job=~".*-api"} == 0
+        for: 2m
+        labels:
+          severity: critical
+          service: "{{ $labels.job }}"
+        annotations:
+          summary: "{{ $labels.job }} is down"
+          description: "{{ $labels.job }} has been unreachable for more than 2 minutes."
+
+      - alert: HighErrorRate
+        expr: rate(http_requests_total{status=~"5.."}[5m]) > 0.05
+        for: 5m
+        labels:
+          severity: warning
+          service: "{{ $labels.job }}"
+        annotations:
+          summary: "High error rate on {{ $labels.job }}"
+          description: "Error rate is {{ $value | humanizePercentage }} for the last 5 minutes."
+
+      # ────────────────────────────────────────────────────────────────────
+      # PERFORMANCE ALERTS
+      # ────────────────────────────────────────────────────────────────────
+
+      - alert: SlowResponse
+        expr: histogram_quantile(0.95, http_request_duration_seconds_bucket) > 5
+        for: 10m
+        labels:
+          severity: warning
+          service: "{{ $labels.job }}"
+        annotations:
+          summary: "Slow response time on {{ $labels.job }}"
+          description: "95th percentile response time is {{ $value }}s"
+
+      - alert: HighMemoryUsage
+        expr: container_memory_usage_bytes{name=~".*-api"} / 1024 / 1024 / 1024 > 2
+        for: 5m
+        labels:
+          severity: warning
+          container: "{{ $labels.name }}"
+        annotations:
+          summary: "High memory usage in {{ $labels.name }}"
+          description: "{{ $labels.name }} is using {{ $value | humanize }}GB of memory"
+
+      - alert: HighCPUUsage
+        expr: rate(container_cpu_usage_seconds_total{name=~".*-api"}[5m]) > 0.8
+        for: 5m
+        labels:
+          severity: warning
+          container: "{{ $labels.name }}"
+        annotations:
+          summary: "High CPU usage in {{ $labels.name }}"
+          description: "{{ $labels.name }} CPU usage is {{ $value | humanizePercentage }}"
+
+      # ────────────────────────────────────────────────────────────────────
+      # DATABASE ALERTS
+      # ────────────────────────────────────────────────────────────────────
+
+      - alert: DatabaseDown
+        expr: up{job="mariadb"} == 0
+        for: 1m
+        labels:
+          severity: critical
+          component: "database"
+        annotations:
+          summary: "MariaDB is down"
+          description: "MariaDB database is unavailable."
+
+      - alert: DatabaseConnectionPoolExhausted
+        expr: mysql_global_status_threads_connected / mysql_global_variables_max_connections > 0.8
+        for: 5m
+        labels:
+          severity: warning
+          component: "database"
+        annotations:
+          summary: "Database connection pool nearing limit"
+          description: "{{ $value | humanizePercentage }} of max connections are in use"
+
+      - alert: DatabaseSlowQueries
+        expr: rate(mysql_global_status_slow_queries[5m]) > 1
+        for: 5m
+        labels:
+          severity: warning
+          component: "database"
+        annotations:
+          summary: "High rate of slow queries"
+          description: "{{ $value }} slow queries detected in the last 5 minutes"
+
+      # ────────────────────────────────────────────────────────────────────
+      # INFRASTRUCTURE ALERTS
+      # ────────────────────────────────────────────────────────────────────
+
+      - alert: DiskSpaceRunningOut
+        expr: node_filesystem_avail_bytes{fstype!~"tmpfs"} / node_filesystem_size_bytes < 0.1
+        for: 5m
+        labels:
+          severity: warning
+          component: "disk"
+        annotations:
+          summary: "Low disk space"
+          description: "Only {{ $value | humanizePercentage }} free space remaining on {{ $labels.device }}"
+
+      - alert: ElasticsearchDown
+        expr: up{job="elasticsearch"} == 0
+        for: 2m
+        labels:
+          severity: critical
+          component: "logging"
+        annotations:
+          summary: "Elasticsearch is down"
+          description: "Elasticsearch service is unavailable"
+
+      - alert: LogIndexingBehind
+        expr: elasticsearch_indices_docs_size_in_bytes{index=~".*"} > 100000000
+        for: 10m
+        labels:
+          severity: warning
+          component: "logging"
+        annotations:
+          summary: "Large index size detected"
+          description: "Index {{ $labels.index }} is {{ $value | humanize }} bytes"
+
+      # ────────────────────────────────────────────────────────────────────
+      # PROMETHEUS ALERTS
+      # ────────────────────────────────────────────────────────────────────
+
+      - alert: PrometheusDown
+        expr: up{job="prometheus"} == 0
+        for: 2m
+        labels:
+          severity: critical
+          component: "monitoring"
+        annotations:
+          summary: "Prometheus is down"
+          description: "Prometheus monitoring service is unavailable"
+
+      - alert: PrometheusHighMemory
+        expr: process_resident_memory_bytes{job="prometheus"} / 1024 / 1024 / 1024 > 4
+        for: 10m
+        labels:
+          severity: warning
+          component: "monitoring"
+        annotations:
+          summary: "Prometheus using high memory"
+          description: "Prometheus is using {{ $value }}GB of memory"

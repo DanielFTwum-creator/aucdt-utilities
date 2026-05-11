@@ -1,0 +1,20 @@
+@import "tailwindcss";
+
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  #valuation-report, #valuation-report * {
+    visibility: visible;
+  }
+  #valuation-report {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    background: white;
+    padding: 0;
+    margin: 0;
+    box-shadow: none;
+  }
+}

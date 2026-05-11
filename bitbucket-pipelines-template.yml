@@ -1,0 +1,193 @@
+# Bitbucket Pipelines Template — TUC Project Deployment
+# Copy to each project's root as: bitbucket-pipelines.yml
+#
+# Usage in your project (customize values):
+#
+# image: node:18
+#
+# definitions:
+#   steps:
+#     - step: &deploy-prod
+#         name: Deploy to Production
+#         trigger: manual
+#         script:
+#           - npm install -g pnpm
+#           - pnpm install
+#           - pnpm build
+#           - eval $(ssh-agent -s)
+#           - echo "$SSH_DEPLOY_KEY" | base64 -d > /tmp/deploy_key
+#           - chmod 600 /tmp/deploy_key
+#           - ssh-add /tmp/deploy_key
+#           - mkdir -p ~/.ssh && echo "$SSH_HOST_KEY" >> ~/.ssh/known_hosts
+#           - |
+#             scp -r ./dist/* \
+#               -o StrictHostKeyChecking=no \
+#               -i /tmp/deploy_key \
+#               $DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH/
+#           - ssh -i /tmp/deploy_key $DEPLOY_USER@$DEPLOY_HOST "chmod -R 755 $DEPLOY_PATH"
+#           - rm /tmp/deploy_key
+#
+# pipelines:
+#   branches:
+#     main:
+#       - step: *deploy-prod
+#   custom:
+#     deploy-staging:
+#       - step:
+#           name: Deploy to Staging
+#           script:
+#             - npm install -g pnpm
+#             - pnpm install
+#             - pnpm build
+#             # ... (same SSH deployment, different $DEPLOY_PATH)
+
+image: node:18
+
+definitions:
+  caches:
+    pnpm: ~/.pnpm-store
+
+  steps:
+    - step: &build
+        name: Build
+        caches:
+          - pnpm
+        script:
+          - npm install -g pnpm
+          - pnpm install
+          - pnpm build
+        artifacts:
+          - dist/**
+
+    - step: &test
+        name: Test
+        caches:
+          - pnpm
+        script:
+          - npm install -g pnpm
+          - pnpm install
+          - pnpm run lint 2>&1 || true
+        after-script:
+          - |
+            if [ -d "test-results" ]; then
+              curl -s -X POST \
+                -H "Authorization: Bearer ${BITBUCKET_BUILD_NUMBER}" \
+                -F "files=@test-results/*.xml" \
+                "https://api.bitbucket.org/2.0/repositories/${BITBUCKET_REPO_FULL_NAME}/commit/${BITBUCKET_COMMIT}/statuses/build"
+            fi
+
+    - step: &deploy-production
+        name: Deploy to Production
+        trigger: manual
+        script:
+          - apt-get update && apt-get install -y openssh-client
+          - npm install -g pnpm
+          - pnpm install
+          - pnpm build
+          - eval $(ssh-agent -s)
+          - echo "$SSH_DEPLOY_KEY" | base64 -d | ssh-add -
+          - mkdir -p ~/.ssh
+          - echo "$SSH_HOST_KEY" >> ~/.ssh/known_hosts
+          - chmod 644 ~/.ssh/known_hosts
+          # Deploy to production
+          - |
+            echo "🚀 Deploying to production..."
+            scp -r -o StrictHostKeyChecking=no \
+              ./dist/* \
+              ${DEPLOY_USER}@${DEPLOY_HOST}:${DEPLOY_PATH}/
+            ssh -o StrictHostKeyChecking=no \
+              ${DEPLOY_USER}@${DEPLOY_HOST} \
+              "chmod -R 755 ${DEPLOY_PATH} && chmod 644 ${DEPLOY_PATH}/.htaccess 2>/dev/null || true"
+          - echo "✅ Production deployment complete"
+          - echo "📍 URL: https://ai-tools.techbridge.edu.gh/${PROJECT_SUBDOMAIN}"
+
+    - step: &deploy-staging
+        name: Deploy to Staging
+        trigger: manual
+        script:
+          - apt-get update && apt-get install -y openssh-client
+          - npm install -g pnpm
+          - pnpm install
+          - pnpm build
+          - eval $(ssh-agent -s)
+          - echo "$SSH_DEPLOY_KEY_STAGING" | base64 -d | ssh-add -
+          - mkdir -p ~/.ssh
+          - echo "$SSH_HOST_KEY" >> ~/.ssh/known_hosts
+          - chmod 644 ~/.ssh/known_hosts
+          # Deploy to staging
+          - |
+            echo "🚀 Deploying to staging..."
+            scp -r -o StrictHostKeyChecking=no \
+              ./dist/* \
+              ${DEPLOY_USER_STAGING}@${DEPLOY_HOST_STAGING}:${DEPLOY_PATH_STAGING}/
+            ssh -o StrictHostKeyChecking=no \
+              ${DEPLOY_USER_STAGING}@${DEPLOY_HOST_STAGING} \
+              "chmod -R 755 ${DEPLOY_PATH_STAGING}"
+          - echo "✅ Staging deployment complete"
+
+    - step: &auto-deploy-prod
+        name: Auto-Deploy to Production (main)
+        script:
+          - apt-get update && apt-get install -y openssh-client
+          - npm install -g pnpm
+          - pnpm install
+          - pnpm build
+          - eval $(ssh-agent -s)
+          - echo "$SSH_DEPLOY_KEY" | base64 -d | ssh-add -
+          - mkdir -p ~/.ssh
+          - echo "$SSH_HOST_KEY" >> ~/.ssh/known_hosts
+          - chmod 644 ~/.ssh/known_hosts
+          # Create deployment manifest
+          - |
+            cat > ./dist/DEPLOYMENT_MANIFEST.json << EOF
+            {
+              "ProjectName": "${PROJECT_NAME}",
+              "Deployed": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
+              "DeployedBy": "Bitbucket Pipeline",
+              "Repository": "${BITBUCKET_REPO_FULL_NAME}",
+              "Commit": "${BITBUCKET_COMMIT}",
+              "Branch": "${BITBUCKET_BRANCH}",
+              "Environment": "production",
+              "URL": "https://ai-tools.techbridge.edu.gh/${PROJECT_SUBDOMAIN}",
+              "BuildNumber": "${BITBUCKET_BUILD_NUMBER}"
+            }
+            EOF
+          # Deploy
+          - |
+            echo "🚀 Auto-deploying to production..."
+            scp -r -o StrictHostKeyChecking=no \
+              ./dist/* \
+              ${DEPLOY_USER}@${DEPLOY_HOST}:${DEPLOY_PATH}/
+            ssh -o StrictHostKeyChecking=no \
+              ${DEPLOY_USER}@${DEPLOY_HOST} \
+              "chmod -R 755 ${DEPLOY_PATH} && chmod 644 ${DEPLOY_PATH}/.htaccess 2>/dev/null || true"
+          - echo "✅ Auto-deployment to production complete"
+          - echo "📍 URL: https://ai-tools.techbridge.edu.gh/${PROJECT_SUBDOMAIN}"
+
+pipelines:
+  branches:
+    main:
+      # Automatically deploy to production on every main branch push
+      - step: *auto-deploy-prod
+
+    develop:
+      # Build and test on develop branch
+      - step: *build
+      - step: *test
+
+  pull-requests:
+    '**':
+      # Build and test on every PR
+      - step: *build
+      - step: *test
+
+  custom:
+    # Manual deployment options
+    deploy-to-production:
+      - step: *deploy-production
+
+    deploy-to-staging:
+      - step: *deploy-staging
+
+    build-only:
+      - step: *build

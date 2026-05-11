@@ -1,0 +1,5 @@
+{
+  "name": "Salary Calculator Automation System",
+  "description": "An automated system for calculating new recruit salaries based on standardized steps, allowances, and deductions, ensuring consistency and transparency in salary administration.",
+  "requestFramePermissions": []
+}

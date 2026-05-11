@@ -1,0 +1,69 @@
+<svg width="800" height="450" xmlns="http://www.w3.org/2000/svg" font-family="Arial, sans-serif">
+    <style>
+        .bg { fill: #f8f9fa; }
+        .title { font-size: 24px; font-weight: bold; text-anchor: middle; fill: #212529; }
+        .category { font-size: 18px; font-weight: bold; fill: #007bff; }
+        .tech-box { fill: #ffffff; stroke: #dee2e6; stroke-width: 1.5; rx: 8; ry: 8; transition: all 0.2s ease-in-out; }
+        .tech-box:hover { transform: translateY(-3px); box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+        .tech-logo { object-fit: contain; }
+        .tech-label { font-size: 14px; text-anchor: middle; fill: #495057; }
+        .line { stroke: #adb5bd; stroke-width: 2; }
+    </style>
+    <title>Technology Stack Diagram</title>
+
+    <rect width="100%" height="100%" class="bg" />
+    <text x="400" y="50" class="title">AI Email Drafter - Technology Stack</text>
+
+    <!-- Categories -->
+    <text x="150" y="100" class="category">Frontend</text>
+    <line x1="50" y1="110" x2="250" y2="110" />
+
+    <text x="400" y="100" class="category">Core Logic</text>
+    <line x1="320" y1="110" x2="480" y2="110" />
+    
+    <text x="650" y="100" class="category">External Services</text>
+    <line x1="550" y1="110" x2="750" y2="110" />
+    
+    <text x="400" y="280" class="category">Testing & Tooling</text>
+    <line x1="300" y1="290" x2="500" y2="290" />
+
+    <!-- Frontend Techs -->
+    <g transform="translate(50, 140)">
+        <rect class="tech-box" width="100" height="100" />
+        <image href="https://upload.wikimedia.org/wikipedia/commons/a/a7/React-icon.svg" x="25" y="10" width="50" height="50" class="tech-logo"/>
+        <text class="tech-label" x="50" y="85">React</text>
+    </g>
+    <g transform="translate(170, 140)">
+        <rect class="tech-box" width="100" height="100" />
+        <image href="https://upload.wikimedia.org/wikipedia/commons/d/d5/Tailwind_CSS_Logo.svg" x="25" y="15" width="50" height="40" class="tech-logo"/>
+        <text class="tech-label" x="50" y="85">Tailwind CSS</text>
+    </g>
+
+    <!-- Core Logic Techs -->
+    <g transform="translate(350, 140)">
+        <rect class="tech-box" width="100" height="100" />
+        <image href="https://upload.wikimedia.org/wikipedia/commons/4/4c/Typescript_logo_2020.svg" x="25" y="15" width="50" height="50" class="tech-logo"/>
+        <text class="tech-label" x="50" y="85">TypeScript</text>
+    </g>
+
+    <!-- External Services -->
+    <g transform="translate(600, 140)">
+        <rect class="tech-box" width="100" height="100" />
+        <image href="https://www.gstatic.com/devrel-devsite/prod/vbd47b029ba26a978749386d626a118c21f045a20b7074c8ca126fb5b06d15b3c/developers/images/lockup.svg" x="15" y="25" width="70" height="30" class="tech-logo"/>
+        <text class="tech-label" x="50" y="85">Gemini API</text>
+    </g>
+    
+    <!-- Testing & Tooling -->
+    <g transform="translate(290, 320)">
+        <rect class="tech-box" width="100" height="100" />
+        <image href="https://upload.wikimedia.org/wikipedia/commons/e/e3/Puppeteer_logo.png" x="25" y="10" width="50" height="55" class="tech-logo"/>
+        <text class="tech-label" x="50" y="85">Puppeteer</text>
+        <text class="tech-label" x="50" y="98" font-size="10">(Simulated)</text>
+    </g>
+     <g transform="translate(410, 320)">
+        <rect class="tech-box" width="100" height="100" />
+        <image href="https://upload.wikimedia.org/wikipedia/commons/d/d9/Node.js_logo.svg" x="25" y="15" width="50" height="50" class="tech-logo"/>
+        <text class="tech-label" x="50" y="85">Node.js/npm</text>
+    </g>
+
+</svg>

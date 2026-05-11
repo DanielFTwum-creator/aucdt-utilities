@@ -1,0 +1,42 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Comic+Neue:wght@700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --color-manila: #FDE68A;
+  --color-primary: #4F46E5;
+  --color-secondary: #EC4899;
+}
+
+body {
+  font-family: 'Nunito', sans-serif;
+  background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+  color: #334155;
+}
+
+.comic-font {
+  font-family: 'Comic Neue', cursive;
+}
+
+.card-shadow {
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+}
+
+.bouncy {
+  transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.bouncy:hover {
+  transform: translateY(-5px);
+}
+
+@media print {
+  body { background: white !important; }
+  .manila-card {
+      border: 2px solid #000 !important;
+      box-shadow: none !important;
+      break-inside: avoid;
+  }
+}

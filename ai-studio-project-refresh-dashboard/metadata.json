@@ -1,0 +1,5 @@
+{
+  "name": "AI Studio Project Refresh Dashboard",
+  "description": "A dashboard to manage and execute phased project refresh directives for AI Studio, ensuring reliable, sequential execution to prevent context truncation. Includes standard, HIPAA-compliant, and quick refresh options.",
+  "requestFramePermissions": []
+}

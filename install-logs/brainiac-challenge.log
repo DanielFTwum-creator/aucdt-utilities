@@ -1,0 +1,67 @@
+[57] Installing: brainiac-challenge
+Progress: resolved 0, reused 1, downloaded 0, added 0
+Progress: resolved 16, reused 16, downloaded 0, added 0
+Progress: resolved 17, reused 17, downloaded 0, added 0
+Progress: resolved 105, reused 81, downloaded 0, added 0
+Progress: resolved 150, reused 102, downloaded 0, added 0
+Progress: resolved 202, reused 132, downloaded 0, added 0
+Progress: resolved 256, reused 182, downloaded 0, added 0
+Progress: resolved 283, reused 230, downloaded 0, added 0
+Progress: resolved 352, reused 304, downloaded 0, added 0
+Progress: resolved 382, reused 336, downloaded 0, added 0
+Progress: resolved 391, reused 346, downloaded 0, added 0
+Progress: resolved 392, reused 347, downloaded 0, added 0
+ WARN  3 deprecated subdependencies found: glob@10.5.0, node-domexception@1.0.0, whatwg-encoding@3.1.1
+Packages: +348
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Progress: resolved 393, reused 348, downloaded 0, added 0
+Progress: resolved 393, reused 348, downloaded 0, added 1
+Progress: resolved 393, reused 348, downloaded 0, added 29
+Progress: resolved 393, reused 348, downloaded 0, added 59
+Progress: resolved 393, reused 348, downloaded 0, added 89
+Progress: resolved 393, reused 348, downloaded 0, added 102
+Progress: resolved 393, reused 348, downloaded 0, added 113
+Progress: resolved 393, reused 348, downloaded 0, added 126
+Progress: resolved 393, reused 348, downloaded 0, added 149
+Progress: resolved 393, reused 348, downloaded 0, added 171
+Progress: resolved 393, reused 348, downloaded 0, added 180
+Progress: resolved 393, reused 348, downloaded 0, added 190
+Progress: resolved 393, reused 348, downloaded 0, added 205
+Progress: resolved 393, reused 348, downloaded 0, added 224
+Progress: resolved 393, reused 348, downloaded 0, added 245
+Progress: resolved 393, reused 348, downloaded 0, added 285
+Progress: resolved 393, reused 348, downloaded 0, added 305
+Progress: resolved 393, reused 348, downloaded 0, added 319
+Progress: resolved 393, reused 348, downloaded 0, added 320
+Progress: resolved 393, reused 348, downloaded 0, added 324
+Progress: resolved 393, reused 348, downloaded 0, added 341
+Progress: resolved 393, reused 348, downloaded 0, added 344
+Progress: resolved 393, reused 348, downloaded 0, added 346
+Progress: resolved 393, reused 348, downloaded 0, added 347
+Progress: resolved 393, reused 348, downloaded 0, added 348
+Progress: resolved 393, reused 348, downloaded 0, added 348, done
+.../node_modules/protobufjs postinstall$ node scripts/postinstall
+.../node_modules/protobufjs postinstall: Done
+
+dependencies:
++ @google/genai 1.46.0
++ firebase 12.1.0
++ lucide-react 0.400.0
++ react 19.2.4
++ react-dom 19.2.4
++ react-router-dom 7.13.1
+
+devDependencies:
++ @testing-library/jest-dom 6.9.1
++ @testing-library/react 16.3.2
++ @testing-library/user-event 14.6.1
++ @types/node 22.17.1
++ @vitest/coverage-v8 3.2.4
++ @vitest/ui 3.2.4
++ jsdom 26.1.0
++ serve 14.2.5
++ typescript 5.8.3
++ vite 7.3.1
++ vitest 3.2.4
+
+Done in 59.8s using pnpm v10.30.1

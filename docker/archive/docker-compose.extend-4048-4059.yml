@@ -1,0 +1,158 @@
+version: '3.9'
+
+services:
+  student-success-coach:
+    build:
+      context: ./student-success-coach
+      dockerfile: Dockerfile.prod
+    ports:
+      - "4048:4048"
+    environment:
+      - DB_HOST=${DB_HOST:-mariadb}
+      - DB_USER=${DB_USER:-appuser}
+      - DB_PASSWORD=${DB_PASSWORD:-apppass}
+      - DB_NAME=student_success_coach
+    restart: unless-stopped
+
+  scholarship-tracker:
+    build:
+      context: ./scholarship-tracker
+      dockerfile: Dockerfile.prod
+    ports:
+      - "4049:4049"
+    environment:
+      - DB_HOST=${DB_HOST:-mariadb}
+      - DB_USER=${DB_USER:-appuser}
+      - DB_PASSWORD=${DB_PASSWORD:-apppass}
+      - DB_NAME=scholarship_tracker
+    restart: unless-stopped
+
+  alumni-network:
+    build:
+      context: ./alumni-network
+      dockerfile: Dockerfile.prod
+    ports:
+      - "4050:4050"
+    environment:
+      - DB_HOST=${DB_HOST:-mariadb}
+      - DB_USER=${DB_USER:-appuser}
+      - DB_PASSWORD=${DB_PASSWORD:-apppass}
+      - DB_NAME=alumni_network
+    restart: unless-stopped
+
+  career-services:
+    build:
+      context: ./career-services
+      dockerfile: Dockerfile.prod
+    ports:
+      - "4051:4051"
+    environment:
+      - DB_HOST=${DB_HOST:-mariadb}
+      - DB_USER=${DB_USER:-appuser}
+      - DB_PASSWORD=${DB_PASSWORD:-apppass}
+      - DB_NAME=career_services
+    restart: unless-stopped
+
+  library-management:
+    build:
+      context: ./library-management
+      dockerfile: Dockerfile.prod
+    ports:
+      - "4052:4052"
+    environment:
+      - DB_HOST=${DB_HOST:-mariadb}
+      - DB_USER=${DB_USER:-appuser}
+      - DB_PASSWORD=${DB_PASSWORD:-apppass}
+      - DB_NAME=library_management
+    restart: unless-stopped
+
+  accommodation-management:
+    build:
+      context: ./accommodation-management
+      dockerfile: Dockerfile.prod
+    ports:
+      - "4053:4053"
+    environment:
+      - DB_HOST=${DB_HOST:-mariadb}
+      - DB_USER=${DB_USER:-appuser}
+      - DB_PASSWORD=${DB_PASSWORD:-apppass}
+      - DB_NAME=accommodation_management
+    restart: unless-stopped
+
+  health-wellness-portal:
+    build:
+      context: ./health-wellness-portal
+      dockerfile: Dockerfile.prod
+    ports:
+      - "4054:4054"
+    environment:
+      - DB_HOST=${DB_HOST:-mariadb}
+      - DB_USER=${DB_USER:-appuser}
+      - DB_PASSWORD=${DB_PASSWORD:-apppass}
+      - DB_NAME=health_wellness
+    restart: unless-stopped
+
+  complaint-resolution:
+    build:
+      context: ./complaint-resolution-system
+      dockerfile: Dockerfile.prod
+    ports:
+      - "4055:4055"
+    environment:
+      - DB_HOST=${DB_HOST:-mariadb}
+      - DB_USER=${DB_USER:-appuser}
+      - DB_PASSWORD=${DB_PASSWORD:-apppass}
+      - DB_NAME=complaint_resolution
+    restart: unless-stopped
+
+  mentorship-program:
+    build:
+      context: ./mentorship-program
+      dockerfile: Dockerfile.prod
+    ports:
+      - "4056:4056"
+    environment:
+      - DB_HOST=${DB_HOST:-mariadb}
+      - DB_USER=${DB_USER:-appuser}
+      - DB_PASSWORD=${DB_PASSWORD:-apppass}
+      - DB_NAME=mentorship_program
+    restart: unless-stopped
+
+  research-portal:
+    build:
+      context: ./research-portal
+      dockerfile: Dockerfile.prod
+    ports:
+      - "4057:4057"
+    environment:
+      - DB_HOST=${DB_HOST:-mariadb}
+      - DB_USER=${DB_USER:-appuser}
+      - DB_PASSWORD=${DB_PASSWORD:-apppass}
+      - DB_NAME=research_portal
+    restart: unless-stopped
+
+  internship-program:
+    build:
+      context: ./internship-program
+      dockerfile: Dockerfile.prod
+    ports:
+      - "4058:4058"
+    environment:
+      - DB_HOST=${DB_HOST:-mariadb}
+      - DB_USER=${DB_USER:-appuser}
+      - DB_PASSWORD=${DB_PASSWORD:-apppass}
+      - DB_NAME=internship_program
+    restart: unless-stopped
+
+  student-payment:
+    build:
+      context: ./student-payment-system
+      dockerfile: Dockerfile.prod
+    ports:
+      - "4059:4059"
+    environment:
+      - DB_HOST=${DB_HOST:-mariadb}
+      - DB_USER=${DB_USER:-appuser}
+      - DB_PASSWORD=${DB_PASSWORD:-apppass}
+      - DB_NAME=student_payment
+    restart: unless-stopped

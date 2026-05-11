@@ -1,0 +1,17 @@
+[42] Building: brand-guideline-checker
+
+> brand-guideline-checker@0.0.0 build C:\Development\aucdt-utilities\brand-guideline-checker
+> vite build
+
+[36mvite v7.3.1 [32mbuilding client environment for production...[36m[39m
+transforming...
+[32m✓[39m 6 modules transformed.
+[31m✗[39m Build failed in 2.25s
+[31merror during build:
+[31mCould not resolve "./services/AuditService" from "App.tsx"[31m
+file: [36mC:/Development/aucdt-utilities/brand-guideline-checker/App.tsx[31m
+    at getRollupError (file:///C:/Development/aucdt-utilities/brand-guideline-checker/node_modules/.pnpm/rollup@4.59.0/node_modules/rollup/dist/es/shared/parseAst.js:402:41)
+    at error (file:///C:/Development/aucdt-utilities/brand-guideline-checker/node_modules/.pnpm/rollup@4.59.0/node_modules/rollup/dist/es/shared/parseAst.js:398:42)
+    at ModuleLoader.handleInvalidResolvedId (file:///C:/Development/aucdt-utilities/brand-guideline-checker/node_modules/.pnpm/rollup@4.59.0/node_modules/rollup/dist/es/shared/node-entry.js:21710:24)
+    at file:///C:/Development/aucdt-utilities/brand-guideline-checker/node_modules/.pnpm/rollup@4.59.0/node_modules/rollup/dist/es/shared/node-entry.js:21670:26[39m
+ ELIFECYCLE  Command failed with exit code 1.

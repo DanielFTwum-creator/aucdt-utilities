@@ -1,0 +1,5 @@
+{
+  "name": "myVBCI Camper App",
+  "description": "A church camp management system enabling registration, room allocation, and payments for VBCI campers.",
+  "requestFramePermissions": []
+}

@@ -1,0 +1,326 @@
+# Docker Compose for TECHBRIDGE Utilities - High-Priority Applications
+# Total Projects in Monorepo: 109
+# Services in this file: 19 (core + standard profile)
+# For all 101 services, use: docker-compose -f docker-compose-all-apps.yml up
+# Access all apps at http://localhost:8080
+
+services:
+  # ====================
+  # Reverse Proxy (Gateway)
+  # ====================
+  nginx-gateway:
+    image: nginx:1.27-alpine
+    container_name: tuc-gateway
+    ports:
+      - "8080:80"
+    volumes:
+      - ./docker/nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./docker/nginx/html:/usr/share/nginx/html:ro
+    depends_on:
+      - analytics-refactor
+      - fees-comparison-dashboard
+      - tuc-analytics-dashboard
+      - kanban-app
+      - tuc-website-react
+      - techbridge-product-design-6r-design-portal
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # ====================
+  # High Priority Apps (Always Running)
+  # ====================
+
+  analytics-refactor:
+    build:
+      context: ./analytics-refactor
+      dockerfile: ../Dockerfile.vite
+    container_name: analytics-refactor
+    environment:
+      - NODE_ENV=production
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  fees-comparison-dashboard:
+    build:
+      context: ./fees-comparison-dashboard
+      dockerfile: ../Dockerfile.vite
+    container_name: fees-comparison-dashboard
+    environment:
+      - NODE_ENV=production
+    networks:
+      - tuc-network
+    restart: unless-stopped
+
+  tuc-analytics-dashboard:
+    build:
+      context: ./tuc-analytics-dashboard
+      dockerfile: ../Dockerfile.vite
+    container_name: tuc-analytics-dashboard
+    environment:
+      - NODE_ENV=production
+    networks:
+      - tuc-network
+    restart: unless-stopped
+
+  kanban-app:
+    build:
+      context: ./kanban-app
+      dockerfile: ../Dockerfile.vite
+    container_name: kanban-app
+    environment:
+      - NODE_ENV=production
+    env_file:
+      - ./kanban-app/.env
+    networks:
+      - tuc-network
+    restart: unless-stopped
+
+  tuc-website-react:
+    build:
+      context: ./tuc-website-react
+      dockerfile: ../Dockerfile.vite
+    container_name: tuc-website-react
+    environment:
+      - NODE_ENV=production
+    networks:
+      - tuc-network
+    restart: unless-stopped
+
+  techbridge-product-design-6r-design-portal:
+    build:
+      context: ./techbridge-product-design-6r-design-portal
+      dockerfile: ../Dockerfile.vite
+    container_name: techbridge-portal
+    environment:
+      - NODE_ENV=production
+    networks:
+      - tuc-network
+    restart: unless-stopped
+
+  techbridge-scholarship-portal:
+    build:
+      context: ./techbridge-scholarship-portal
+      dockerfile: ../Dockerfile.vite
+    container_name: techbridge-scholarship
+    environment:
+      - NODE_ENV=production
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    profiles:
+      - full
+
+  # ====================
+  # Standard Apps (On-Demand)
+  # Use: docker-compose --profile standard up
+  # ====================
+
+  academic-performance-app:
+    build:
+      context: ./academic-performance-app
+      dockerfile: ../Dockerfile.vite
+    container_name: academic-performance
+    networks:
+      - tuc-network
+    profiles:
+      - standard
+      - full
+
+  tuc-skills-evaluation:
+    build:
+      context: ./tuc-skills-evaluation
+      dockerfile: ../Dockerfile.vite
+    container_name: tuc-skills-evaluation
+    networks:
+      - tuc-network
+    profiles:
+      - standard
+      - full
+
+  drone-showcase:
+    build:
+      context: ./drone-showcase
+      dockerfile: ../Dockerfile.vite
+    container_name: drone-showcase
+    networks:
+      - tuc-network
+    profiles:
+      - standard
+      - full
+
+  english-safari:
+    build:
+      context: ./english-safari
+      dockerfile: ../Dockerfile.vite
+    container_name: english-safari
+    networks:
+      - tuc-network
+    profiles:
+      - standard
+      - full
+
+  pdf-extractor-app:
+    build:
+      context: ./pdf-extractor-app
+      dockerfile: ../Dockerfile.vite
+    container_name: pdf-extractor
+    networks:
+      - tuc-network
+    profiles:
+      - standard
+      - full
+
+  presentation-app:
+    build:
+      context: ./presentation-app
+      dockerfile: ../Dockerfile.vite
+    container_name: presentation-app
+    networks:
+      - tuc-network
+    profiles:
+      - standard
+      - full
+
+  umoja-react-app:
+    build:
+      context: ./umoja-react-app
+      dockerfile: ../Dockerfile.vite
+    container_name: umoja-app
+    networks:
+      - tuc-network
+    profiles:
+      - standard
+      - full
+
+  # ====================
+  # Development Mode Services
+  # Use: docker-compose --profile dev up
+  # ====================
+  
+  mannequin-ai:
+    build:
+      context: ./mannequin-ai
+      dockerfile: ../Dockerfile.vite
+    container_name: mannequin-ai
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    profiles:
+      - standard
+      - full
+
+  directive-workflow:
+    build:
+      context: ./directive-workflow
+      dockerfile: ../Dockerfile.vite
+    container_name: directive-workflow
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    profiles:
+      - standard
+      - full
+
+  dns-copy-utility:
+    build:
+      context: ./dns-copy-utility
+      dockerfile: ../Dockerfile.vite
+    container_name: dns-copy-utility
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    profiles:
+      - standard
+      - full
+
+  college-landing-page-generator:
+    build:
+      context: ./college-landing-page-generator
+      dockerfile: ../Dockerfile.vite
+    container_name: college-landing-page
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    profiles:
+      - standard
+      - full
+
+  techbridge-promo:
+    build:
+      context: ./techbridge-promo
+      dockerfile: ../Dockerfile.vite
+    container_name: techbridge-promo
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    profiles:
+      - standard
+      - full
+
+  whatsapp-parody:
+    build:
+      context: ./whatsapp-parody
+      dockerfile: ../Dockerfile.vite
+    container_name: whatsapp-parody
+    networks:
+      - tuc-network
+    restart: unless-stopped
+    profiles:
+      - standard
+      - full
+
+  analytics-refactor-dev:
+    build:
+      context: ./analytics-refactor
+      dockerfile: ../Dockerfile.dev
+    container_name: analytics-refactor-dev
+    volumes:
+      - ./analytics-refactor:/app:cached
+      - /app/node_modules
+    ports:
+      - "3001:5173"
+    environment:
+      - NODE_ENV=development
+    networks:
+      - tuc-network
+    profiles:
+      - dev
+
+  fees-comparison-dev:
+    build:
+      context: ./fees-comparison-dashboard
+      dockerfile: ../Dockerfile.dev
+    container_name: fees-comparison-dev
+    volumes:
+      - ./fees-comparison-dashboard:/app:cached
+      - /app/node_modules
+    ports:
+      - "3002:5173"
+    environment:
+      - NODE_ENV=development
+    networks:
+      - tuc-network
+    profiles:
+      - dev
+
+networks:
+  tuc-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
+
+volumes:
+  node_modules:

@@ -1,0 +1,63 @@
+spring:
+  application:
+    name: send-platform-api
+
+  datasource:
+    url: ${DB_URL:jdbc:mysql://localhost:3306/send_platform?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC}
+    username: ${DB_USER:root}
+    password: ${DB_PASS:password}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+        "[format_sql]": true
+
+  quartz:
+    job-store-type: memory
+    properties:
+      org:
+        quartz:
+          threadPool:
+            threadCount: 5
+
+server:
+  port: ${PORT:8090}
+  servlet:
+    context-path: /api
+
+tuc:
+  jwt:
+    secret: ${JWT_SECRET:TUC-Send-Platform-JWT-Secret-Key-2026-Change-In-Production}
+    expiration-ms: 86400000  # 24 hours
+  cors:
+    allowed-origins: ${CORS_ORIGINS:http://localhost:5173,http://localhost:8080}
+
+---
+# Dev profile — use H2 in-memory for local dev without MySQL
+spring:
+  config:
+    activate:
+      on-profile: dev
+
+  datasource:
+    url: jdbc:h2:mem:send_platform;DB_CLOSE_DELAY=-1;MODE=MySQL
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
+
+  h2:
+    console:
+      enabled: true
+      path: /h2-console

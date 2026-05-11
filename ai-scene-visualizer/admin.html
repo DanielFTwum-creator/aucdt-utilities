@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            background: linear-gradient(135deg, #1a1f3a 0%, #0f1419 100%);
+            color: #e2e8f0;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Login Section -->
+    <div id="login-section" class="min-h-screen flex items-center justify-center font-sans p-4">
+        <div class="w-full max-w-sm p-8 space-y-6 bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl">
+            <div class="text-center">
+                <h1 class="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-amber-500">
+                    Admin Access
+                </h1>
+                <p class="mt-2 text-slate-400">
+                    Please enter the password to continue.
+                </p>
+            </div>
+            <form id="login-form" class="mt-8 space-y-6">
+                <input
+                    id="password"
+                    type="password"
+                    required
+                    class="w-full px-4 py-3 bg-black/30 border-2 border-white/10 rounded-lg text-slate-200 focus:outline-none focus:border-amber-400"
+                    placeholder="Password"
+                />
+                <p id="error-message" class="text-sm text-red-400 text-center h-5"></p>
+                <div>
+                    <button
+                        type="submit"
+                        class="w-full flex justify-center py-3 px-4 text-base font-bold rounded-lg text-slate-900 bg-gradient-to-r from-amber-400 to-amber-500 hover:opacity-90 transition-opacity"
+                    >
+                        Sign In
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Dashboard Content (Initially Hidden) -->
+    <div id="dashboard-content" class="hidden container max-w-4xl mx-auto p-4 sm:p-6 md:p-8">
+         <header class="flex flex-col sm:flex-row justify-between items-center mb-10 sm:mb-16 py-4">
+            <div class="text-center sm:text-left mb-4 sm:mb-0">
+                <h1 class="text-4xl sm:text-5xl font-extrabold bg-gradient-to-r from-amber-400 to-amber-500 bg-clip-text text-transparent mb-1">
+                Admin Dashboard
+                </h1>
+                <p class="text-slate-400 text-base sm:text-lg">
+                System management and testing tools.
+                </p>
+            </div>
+            <div class="flex items-center gap-3 sm:gap-4">
+                 <button 
+                    id="logout-button"
+                    class="px-4 py-2 bg-red-500/20 border border-red-500/50 rounded-lg text-red-300 text-sm transition-colors hover:bg-red-500/40"
+                >
+                    Logout
+                </button>
+            </div>
+        </header>
+
+        <main class="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-6 sm:p-10 md:p-12 shadow-2xl">
+            <h2 class="text-2xl font-bold text-slate-100 mb-6">Testing Tools</h2>
+             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-white/5 p-6 rounded-lg border border-white/10">
+                    <h3 class="font-bold text-lg text-amber-400 mb-2">System Self-Test</h3>
+                    <p class="text-slate-400 text-sm mb-4">Run diagnostics to check for common configuration issues.</p>
+                    <button id="run-test-button" class="px-4 py-2 bg-blue-500/20 text-blue-300 rounded-md text-sm hover:bg-blue-500/30">Run Test</button>
+                    <div id="test-results" class="mt-4 text-xs space-y-1"></div>
+                </div>
+                <div class="bg-white/5 p-6 rounded-lg border border-white/10">
+                    <h3 class="font-bold text-lg text-amber-400 mb-2">Clear User Cache</h3>
+                    <p class="text-slate-400 text-sm mb-4">Remove all user and creation data from localStorage.</p>
+                    <button id="clear-cache-button" class="px-4 py-2 bg-red-500/20 text-red-300 rounded-md text-sm hover:bg-red-500/30">Clear Cache</button>
+                </div>
+             </div>
+        </main>
+        
+        <section class="mt-8 bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-6 sm:p-10 md:p-12 shadow-2xl">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold text-slate-100">Audit Log</h2>
+                <button id="refresh-logs-button" class="px-4 py-2 bg-white/10 text-slate-300 rounded-md text-sm hover:bg-white/20">Refresh Logs</button>
+            </div>
+            <div id="audit-log-content" class="h-64 overflow-y-auto bg-black/20 p-4 rounded-lg font-mono text-xs space-y-2">
+                <!-- Logs will be injected here by JS -->
+            </div>
+        </section>
+
+    </div>
+
+    <script>
+        const loginSection = document.getElementById('login-section');
+        const dashboardContent = document.getElementById('dashboard-content');
+        const loginForm = document.getElementById('login-form');
+        const passwordInput = document.getElementById('password');
+        const errorMessage = document.getElementById('error-message');
+        const logoutButton = document.getElementById('logout-button');
+
+        const ADMIN_PASSWORD = 'gemini-admin-2024';
+        const AUTH_KEY = 'ai-scene-visualizer-admin-auth';
+        const AUDIT_LOG_KEY = 'ai-scene-visualizer-audit-log';
+
+        // --- Audit Logging ---
+        function getLogs() {
+            try {
+                const logs = localStorage.getItem(AUDIT_LOG_KEY);
+                return logs ? JSON.parse(logs) : [];
+            } catch (e) {
+                console.error("Failed to parse audit logs", e);
+                return [];
+            }
+        }
+
+        function addLog(message) {
+            const logs = getLogs();
+            const timestamp = new Date().toISOString();
+            logs.unshift({ timestamp, message }); // Add new logs to the top
+            if (logs.length > 100) logs.pop(); // Keep last 100 logs
+            localStorage.setItem(AUDIT_LOG_KEY, JSON.stringify(logs));
+        }
+
+        function displayLogs() {
+            const logContainer = document.getElementById('audit-log-content');
+            const logs = getLogs();
+            if (logs.length === 0) {
+                logContainer.innerHTML = '<p class="text-slate-500">No audit logs found.</p>';
+                return;
+            }
+            logContainer.innerHTML = logs.map(log => 
+                `<div><span class="text-slate-500">${log.timestamp}:</span> <span class="text-slate-300">${log.message}</span></div>`
+            ).join('');
+        }
+
+        // --- Auth ---
+        function showDashboard() {
+            loginSection.classList.add('hidden');
+            dashboardContent.classList.remove('hidden');
+            displayLogs();
+        }
+
+        function showLogin() {
+            loginSection.classList.remove('hidden');
+            dashboardContent.classList.add('hidden');
+        }
+
+        // Check auth status on page load
+        if (localStorage.getItem(AUTH_KEY) === 'true') {
+            showDashboard();
+        } else {
+            showLogin();
+        }
+
+        // Handle login form submission
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const enteredPassword = passwordInput.value;
+            if (enteredPassword === ADMIN_PASSWORD) {
+                addLog('Successful admin login');
+                localStorage.setItem(AUTH_KEY, 'true');
+                showDashboard();
+            } else {
+                addLog('Failed admin login attempt');
+                errorMessage.textContent = 'Incorrect password. Please try again.';
+                passwordInput.value = '';
+                setTimeout(() => { errorMessage.textContent = ''; }, 3000);
+            }
+        });
+        
+        // Handle logout
+        logoutButton.addEventListener('click', () => {
+            addLog('Admin logged out');
+            localStorage.removeItem(AUTH_KEY);
+            showLogin();
+        });
+
+        // --- Dashboard Actions ---
+        document.getElementById('refresh-logs-button').addEventListener('click', displayLogs);
+
+        document.getElementById('run-test-button').addEventListener('click', () => {
+            const resultsContainer = document.getElementById('test-results');
+            let results = '';
+            try {
+                localStorage.setItem('__test__', 'ok');
+                localStorage.removeItem('__test__');
+                results += '<p class="text-green-400">✅ localStorage is working correctly.</p>';
+            } catch (e) {
+                results += '<p class="text-red-400">❌ localStorage is not available or disabled.</p>';
+            }
+            const users = localStorage.getItem('ai-scene-visualizer-users');
+            if(users) {
+                results += `<p class="text-green-400">✅ Found user data in localStorage.</p>`;
+            } else {
+                results += `<p class="text-yellow-400">⚠️ No user data found (normal if no users have registered).</p>`;
+            }
+            results += `<p class="text-yellow-400">⚠️ API Key status must be checked in the main application.</p>`;
+            resultsContainer.innerHTML = results;
+        });
+
+        document.getElementById('clear-cache-button').addEventListener('click', () => {
+            if (confirm('Are you sure you want to delete ALL user and creation data? This cannot be undone.')) {
+                Object.keys(localStorage).forEach(key => {
+                    if (key.startsWith('ai-scene-visualizer-') || key.startsWith('creations_')) {
+                        if (key !== AUTH_KEY && key !== AUDIT_LOG_KEY) { // Don't log out the admin or clear logs
+                            localStorage.removeItem(key);
+                        }
+                    }
+                });
+                addLog('Admin cleared all user cache.');
+                displayLogs();
+                alert('All user and creation data has been cleared.');
+            }
+        });
+    </script>
+
+</body>
+</html>

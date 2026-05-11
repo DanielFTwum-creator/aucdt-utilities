@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="450" viewBox="0 0 800 450" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif">
+  <defs>
+    <marker id="pres-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#1d4ed8"/>
+    </marker>
+    <style>
+      .bg { fill: #f9fafb; }
+      .title { font-size: 24px; font-weight: 700; fill: #111827; text-anchor: middle; }
+      .card { fill: #ffffff; stroke: #d1d5db; stroke-width: 2; rx: 16; ry: 16; }
+      .card-title { font-size: 18px; font-weight: 600; fill: #1f2937; text-anchor: middle; }
+      .card-desc { font-size: 14px; fill: #6b7280; text-anchor: middle; }
+      .arrow { stroke: #3b82f6; stroke-width: 3; fill: none; marker-end: url(#pres-arrow); }
+      .arrow-label { font-size: 14px; font-weight: 500; fill: #1e40a; text-anchor: middle; }
+    </style>
+  </defs>
+
+  <rect width="100%" height="100%" class="bg" />
+  <text x="400" y="60" class="title">System Architecture Overview</text>
+
+  <!-- Cards -->
+  <g id="user-card" transform="translate(50, 150)">
+    <rect width="200" height="120" class="card" style="fill:#eff6ff; stroke:#93c5fd;"/>
+    <text x="100" y="55" class="card-title">User</text>
+    <text x="100" y="80" class="card-desc">Developer / PM</text>
+  </g>
+  <g id="app-card" transform="translate(300, 150)">
+    <rect width="200" height="120" class="card" style="fill:#f0fdf4; stroke:#86efac;"/>
+    <text x="100" y="55" class="card-title">Browser</text>
+    <text x="100" y="80" class="card-desc">React App + Local Storage</text>
+  </g>
+  <g id="api-card" transform="translate(550, 150)">
+    <rect width="200" height="120" class="card" style="fill:#fef2f2; stroke:#fca5a5;"/>
+    <text x="100" y="55" class="card-title">Google Gemini API</text>
+    <text x="100" y="80" class="card-desc">AI Self-Testing</text>
+  </g>
+  
+  <!-- Arrows -->
+  <path d="M 255 210 H 295" class="arrow"/>
+  <path d="M 505 210 H 545" class="arrow"/>
+  <path d="M 545 240 H 505" class="arrow"/>
+</svg>

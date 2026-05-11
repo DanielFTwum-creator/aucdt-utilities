@@ -1,0 +1,33 @@
+<svg viewBox="0 0 800 450" xmlns="http://www.w3.org/2000/svg">
+  <rect width="800" height="450" fill="#111" rx="10"/>
+  <text x="400" y="50" font-family="monospace" font-size="22" fill="#E8BC50" text-anchor="middle" font-weight="bold">TECHNOLOGY STACK</text>
+  
+  <!-- Categories -->
+  <g transform="translate(50, 100)">
+    <text x="0" y="0" font-family="monospace" font-size="16" fill="#E8BC50" font-weight="bold">FRONTEND</text>
+    <rect x="0" y="10" width="200" height="120" fill="#1a1a1a" stroke="#444" rx="5"/>
+    <text x="20" y="45" font-family="monospace" font-size="14" fill="#eee">• React 19</text>
+    <text x="20" y="75" font-family="monospace" font-size="14" fill="#eee">• TypeScript</text>
+    <text x="20" y="105" font-family="monospace" font-size="14" fill="#eee">• Tailwind CSS</text>
+  </g>
+  
+  <g transform="translate(300, 100)">
+    <text x="0" y="0" font-family="monospace" font-size="16" fill="#E8BC50" font-weight="bold">LOGIC &amp; APIs</text>
+    <rect x="0" y="10" width="200" height="120" fill="#1a1a1a" stroke="#444" rx="5"/>
+    <text x="20" y="45" font-family="monospace" font-size="14" fill="#eee">• Web Audio API</text>
+    <text x="20" y="75" font-family="monospace" font-size="14" fill="#eee">• Canvas 2D API</text>
+    <text x="20" y="105" font-family="monospace" font-size="14" fill="#eee">• requestAnimationFrame</text>
+  </g>
+  
+  <g transform="translate(550, 100)">
+    <text x="0" y="0" font-family="monospace" font-size="16" fill="#E8BC50" font-weight="bold">EXTERNAL</text>
+    <rect x="0" y="10" width="200" height="120" fill="#1a1a1a" stroke="#444" rx="5"/>
+    <text x="20" y="45" font-family="monospace" font-size="14" fill="#eee">• ESM.sh (CDN)</text>
+    <text x="20" y="75" font-family="monospace" font-size="14" fill="#eee">• Lucide Icons</text>
+    <text x="20" y="105" font-family="monospace" font-size="14" fill="#eee">• Google Fonts</text>
+  </g>
+  
+  <rect x="50" y="280" width="700" height="120" fill="#222" stroke="#E8BC50" stroke-width="1" rx="5" stroke-dasharray="5,5"/>
+  <text x="400" y="320" font-family="monospace" font-size="16" fill="#aaa" text-anchor="middle">DEVELOPMENT WORKFLOW</text>
+  <text x="400" y="350" font-family="monospace" font-size="14" fill="#eee" text-anchor="middle">ES6 Modules | Browser Native APIs | No-Build React Runtime</text>
+</svg>

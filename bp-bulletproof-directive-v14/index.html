@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+    <meta charset="UTF-8">
+    <!-- ── TUC Standard Meta ─────────────────────────────────────── -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <!-- SEO -->
+    <meta name="description" content="Techbridge University College (TUC) is a premier private institution in Accra pioneering innovative and progressive higher education in design and entrepreneurship." />
+    <meta name="keywords" content="Techbridge University College, TUC, design education, technology education, Accra university, Ghana university, product design, entrepreneurship, private university Ghana, design school" />
+    <meta name="author" content="Techbridge University College" />
+    <meta name="publisher" content="Techbridge University College" />
+    <link rel="canonical" href="https://www.techbridge.edu.gh/" />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    <!-- Geographic -->
+    <meta name="language" content="English" />
+    <meta name="geo.region" content="GH-AA" />
+    <meta name="geo.placename" content="Accra" />
+    <meta name="geo.position" content="5.6037;-0.1870" />
+    <meta name="ICBM" content="5.6037, -0.1870" />
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://www.techbridge.edu.gh/" />
+    <meta property="og:site_name" content="Techbridge University College" />
+    <meta property="og:title" content="Bulletproof Directive | QA Framework" />
+    <meta property="og:description" content="Techbridge University College (TUC) is a premier private institution in Accra pioneering innovative and progressive higher education in design and entrepreneurship." />
+    <meta property="og:image" content="https://techbridge.edu.gh/static/TUC_LOGO.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Techbridge University College Logo" />
+    <meta property="og:locale" content="en_GB" />
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@TUCGhana" />
+    <meta name="twitter:creator" content="@TUCGhana" />
+    <meta name="twitter:title" content="Bulletproof Directive | QA Framework" />
+    <meta name="twitter:description" content="Techbridge University College (TUC) is a premier private institution in Accra pioneering innovative and progressive higher education in design and entrepreneurship." />
+    <meta name="twitter:image" content="https://techbridge.edu.gh/static/TUC_LOGO.png" />
+    <meta name="twitter:image:alt" content="Techbridge University College Logo" />
+    <!-- Theme -->
+    <meta name="theme-color" content="#630f12" />
+    <meta name="msapplication-TileColor" content="#630f12" />
+    <meta name="copyright" content="Techbridge University College" />
+    <meta name="referrer" content="origin-when-cross-origin" />
+    <!-- ────────────────────────────────────────────────────────────── -->
+    <link rel="icon" type="image/png" href="https://techbridge.edu.gh/static/TUC_LOGO.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bulletproof Directive | QA Framework</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Crimson+Pro:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        // Safer Polyfill for process.env
+        window.process = window.process || {};
+        window.process.env = window.process.env || {};
+        if (!window.process.env.NODE_ENV) window.process.env.NODE_ENV = 'development';
+        if (!window.process.env.API_KEY) window.process.env.API_KEY = ''; 
+
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Crimson Pro', 'serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                        display: ['Bebas Neue', 'sans-serif'],
+                    },
+                    colors: {
+                        bg: {
+                            primary: 'rgb(var(--bg-primary) / <alpha-value>)',
+                            secondary: 'rgb(var(--bg-secondary) / <alpha-value>)',
+                            tertiary: 'rgb(var(--bg-tertiary) / <alpha-value>)',
+                        },
+                        accent: {
+                            primary: 'rgb(var(--accent-primary) / <alpha-value>)',
+                            secondary: 'rgb(var(--accent-secondary) / <alpha-value>)',
+                            tertiary: 'rgb(var(--accent-tertiary) / <alpha-value>)',
+                        },
+                        text: {
+                            primary: 'rgb(var(--text-primary) / <alpha-value>)',
+                            secondary: 'rgb(var(--text-secondary) / <alpha-value>)',
+                            muted: 'rgb(var(--text-muted) / <alpha-value>)',
+                        },
+                        border: 'rgb(var(--border-color) / <alpha-value>)',
+                        phase: {
+                            1: 'rgb(var(--phase-1) / <alpha-value>)',
+                            2: 'rgb(var(--phase-2) / <alpha-value>)',
+                            3: 'rgb(var(--phase-3) / <alpha-value>)',
+                            4: 'rgb(var(--phase-4) / <alpha-value>)',
+                            5: 'rgb(var(--phase-5) / <alpha-value>)',
+                        }
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.5s ease-out forwards',
+                        'slide-up': 'slideUp 0.5s ease-out forwards',
+                        'slide-in-right': 'slideInRight 0.3s ease-out forwards',
+                        'gold-pulse': 'goldPulse 3s ease-in-out infinite',
+                        'shimmer': 'shimmer 2s linear infinite',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' },
+                        },
+                        slideUp: {
+                            '0%': { opacity: '0', transform: 'translateY(20px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        },
+                        slideInRight: {
+                            '0%': { opacity: '0', transform: 'translateX(100%)' },
+                            '100%': { opacity: '1', transform: 'translateX(0)' },
+                        },
+                        goldPulse: {
+                            '0%, 100%': { boxShadow: '0 0 0 0 rgba(200,168,75,0)' },
+                            '50%': { boxShadow: '0 0 24px 4px rgba(200,168,75,0.18)' },
+                        },
+                        shimmer: {
+                            '0%': { backgroundPosition: '-200% center' },
+                            '100%': { backgroundPosition: '200% center' },
+                        },
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        :root {
+            /* Dark Theme — Deep Navy + TUC Gold */
+            --bg-primary:    6 9 18;         /* #060912 */
+            --bg-secondary:  11 15 28;        /* #0b0f1c */
+            --bg-tertiary:   18 24 44;        /* #12182c */
+            --accent-primary:  200 168 75;    /* #c8a84b TUC Gold */
+            --accent-secondary: 124 58 237;   /* #7c3aed violet */
+            --accent-tertiary:  245 158 11;   /* #f59e0b amber */
+            --text-primary:  240 236 224;     /* #f0ece0 warm cream */
+            --text-secondary: 160 150 128;    /* #a09680 warm gray */
+            --text-muted:    88 80 62;        /* #58503e */
+            --border-color:  26 32 56;        /* #1a2038 */
+
+            /* Phase Colors */
+            --phase-1: 99 102 241;   /* #6366f1 indigo */
+            --phase-2: 139 92 246;   /* #8b5cf6 violet */
+            --phase-3: 236 72 153;   /* #ec4899 pink */
+            --phase-4: 245 158 11;   /* #f59e0b amber */
+            --phase-5: 16 185 129;   /* #10b981 emerald */
+        }
+
+        .dark { /* Inherits :root */ }
+
+        .light {
+            --bg-primary:    252 250 245;     /* #fcfaf5 warm white */
+            --bg-secondary:  246 242 232;     /* #f6f2e8 cream */
+            --bg-tertiary:   236 230 214;     /* #ece6d6 deeper cream */
+            --accent-primary:  160 128 35;    /* #a08023 darker gold for contrast */
+            --accent-secondary: 109 40 217;   /* #6d28d9 */
+            --accent-tertiary:  180 100 0;    /* warm amber */
+            --text-primary:  12 8 2;          /* #0c0802 near-black warm */
+            --text-secondary: 64 56 38;       /* #403826 */
+            --text-muted:    128 116 88;      /* #807458 */
+            --border-color:  216 206 184;     /* #d8ceb8 */
+            --phase-1: 79 70 229;
+            --phase-2: 109 40 217;
+            --phase-3: 219 39 119;
+            --phase-4: 180 100 0;
+            --phase-5: 5 150 105;
+        }
+
+        .high-contrast {
+            --bg-primary:    0 0 0;
+            --bg-secondary:  0 0 0;
+            --bg-tertiary:   10 10 10;
+            --accent-primary:  255 215 0;     /* gold */
+            --accent-secondary: 255 215 0;
+            --accent-tertiary:  255 215 0;
+            --text-primary:  255 255 255;
+            --text-secondary: 255 255 255;
+            --text-muted:    0 255 0;
+            --border-color:  255 255 255;
+            --phase-1: 0 255 255;
+            --phase-2: 255 255 0;
+            --phase-3: 255 0 255;
+            --phase-4: 255 165 0;
+            --phase-5: 0 255 0;
+        }
+
+        body {
+            background-color: rgb(var(--bg-primary));
+            color: rgb(var(--text-primary));
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        /* Mesh gradient background */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+            background:
+                radial-gradient(ellipse 80% 50% at 10% 10%, rgba(200,168,75,0.04) 0%, transparent 60%),
+                radial-gradient(ellipse 60% 40% at 90% 80%, rgba(124,58,237,0.05) 0%, transparent 60%);
+        }
+
+        /* Noise texture overlay */
+        body::after {
+            content: '';
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.025;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+        }
+
+        /* Gold shimmer text utility */
+        .text-gold-shimmer {
+            background: linear-gradient(90deg, #c8a84b 0%, #f0d080 45%, #c8a84b 55%, #a07830 100%);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: shimmer 4s linear infinite;
+        }
+
+        /* Animation delay utility classes (replaces inline style animationDelay) */
+        .anim-delay-1  { animation-delay: 80ms;  }
+        .anim-delay-2  { animation-delay: 100ms; }
+        .anim-delay-3  { animation-delay: 160ms; }
+        .phase-delay-0 { animation-delay: 0ms;   }
+        .phase-delay-1 { animation-delay: 100ms; }
+        .phase-delay-2 { animation-delay: 200ms; }
+        .phase-delay-3 { animation-delay: 300ms; }
+        .phase-delay-4 { animation-delay: 400ms; }
+        .phase-delay-5 { animation-delay: 500ms; }
+        .phase-delay-6 { animation-delay: 600ms; }
+        .phase-delay-7 { animation-delay: 700ms; }
+        .phase-delay-8 { animation-delay: 800ms; }
+        .phase-delay-9 { animation-delay: 900ms; }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: rgb(var(--bg-primary)); }
+        ::-webkit-scrollbar-thumb { background: rgb(var(--border-color)); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgb(var(--text-muted)); }
+    </style>
+<script type="importmap">
+{
+  "imports": {
+    "react": "https://esm.sh/react@19.2.4?dev",
+    "react-dom/client": "https://esm.sh/react-dom@19.2.4/client?dev",
+    "react-dom": "https://esm.sh/react-dom@19.2.4?dev",
+    "@google/genai": "https://esm.sh/@google/genai@latest"
+  }
+}
+</script>
+<link rel="stylesheet" href="/index.css">
+</head>
+<body>
+    <div id="root"></div>
+    <script type="module" src="/index.tsx"></script>
+</body>
+</html>

@@ -1,0 +1,5 @@
+{
+  "name": "TUC Assessment Platform",
+  "description": "An interactive academic assessment platform for Techbridge University College (TUC). It allows students to take tests, receive AI-powered feedback, and provides an administrative panel for data management.",
+  "requestFramePermissions": []
+}

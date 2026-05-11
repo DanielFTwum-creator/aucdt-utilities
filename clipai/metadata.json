@@ -1,0 +1,5 @@
+{
+  "name": "ClipAI",
+  "description": "An application to upload an image and clip it into various custom shapes like circles, hearts, stars, and more. Users can download the final clipped image.",
+  "requestFramePermissions": []
+}

@@ -1,0 +1,802 @@
+{
+  "data" : [ {
+    "gid" : "1207136843126713",
+    "actual_time_minutes" : null,
+    "assignee" : {
+      "gid" : "434273397793530",
+      "name" : "Bright Senanu Agbosu",
+      "resource_type" : "user"
+    },
+    "assignee_status" : "inbox",
+    "completed" : false,
+    "completed_at" : null,
+    "created_at" : "2024-04-22T17:57:48.176Z",
+    "due_at" : null,
+    "due_on" : "2024-04-24",
+    "followers" : [ {
+      "gid" : "1205939110703922",
+      "name" : "Mandela vudugah",
+      "resource_type" : "user"
+    }, {
+      "gid" : "434273397793530",
+      "name" : "Bright Senanu Agbosu",
+      "resource_type" : "user"
+    } ],
+    "hearted" : false,
+    "hearts" : [ ],
+    "liked" : false,
+    "likes" : [ ],
+    "memberships" : [ {
+      "project" : {
+        "gid" : "1207136843126701",
+        "name" : "Student Portal Project",
+        "resource_type" : "project"
+      },
+      "section" : {
+        "gid" : "1207136843126702",
+        "name" : "Untitled section",
+        "resource_type" : "section"
+      }
+    } ],
+    "modified_at" : "2024-04-23T13:00:43.615Z",
+    "name" : "Task 1: Design Login Screen UI/UX\n",
+    "notes" : "- Description: Create a visually appealing and user-friendly design for the login screen\n    Research and Define Requirements:\n        Understand the audience and features needed.\n        Identify branding guidelines.\n    Sketching and Wireframing:\n        Sketch layout ideas.\n        Create wireframes for structure.\n    Choose Color Scheme and Typography:\n        Select colors and fonts aligned with branding.\n    Design UI Elements:\n        Create intuitive input fields, buttons, logos.\n    Create Visual Mockups:\n        Use design tools for high-fidelity mockups.\n        Incorporate stakeholder feedback.\n    Add Interaction and Animation:\n        Enhance with interactive elements and smooth transitions.\n    Test and Iterate:\n        Conduct usability testing.\n        Gather feedback and iterate design.\n    Finalize Design and Handoff:\n        Make adjustments based on feedback.\n        Prepare assets for developers.\n    Implementation and Development:\n        Collaborate with developers for accurate implementation.\n    Review and Refinement:\n        Analyze post-launch for improvements.\n        Refine design based on feedback.\n- Tags: design, ui/ux, login screen\n- Assignee: @designer\n- Due Date: 1 day",
+    "num_hearts" : 0,
+    "num_likes" : 0,
+    "parent" : null,
+    "permalink_url" : "https://app.asana.com/1/236599948336393/project/1207136843126701/task/1207136843126713",
+    "projects" : [ {
+      "gid" : "1207136843126701",
+      "name" : "Student Portal Project",
+      "resource_type" : "project"
+    } ],
+    "resource_type" : "task",
+    "start_at" : null,
+    "start_on" : null,
+    "subtasks" : [ ],
+    "tags" : [ ],
+    "resource_subtype" : "default_task",
+    "workspace" : {
+      "gid" : "236599948336393",
+      "name" : "aucdt.edu.gh",
+      "resource_type" : "workspace"
+    }
+  }, {
+    "gid" : "1207136843126721",
+    "actual_time_minutes" : null,
+    "assignee" : {
+      "gid" : "434273397793530",
+      "name" : "Bright Senanu Agbosu",
+      "resource_type" : "user"
+    },
+    "assignee_status" : "inbox",
+    "completed" : false,
+    "completed_at" : null,
+    "created_at" : "2024-04-22T18:12:15.302Z",
+    "due_at" : null,
+    "due_on" : null,
+    "followers" : [ {
+      "gid" : "1205939110703922",
+      "name" : "Mandela vudugah",
+      "resource_type" : "user"
+    }, {
+      "gid" : "434273397793530",
+      "name" : "Bright Senanu Agbosu",
+      "resource_type" : "user"
+    } ],
+    "hearted" : false,
+    "hearts" : [ ],
+    "liked" : false,
+    "likes" : [ ],
+    "memberships" : [ {
+      "project" : {
+        "gid" : "1207136843126701",
+        "name" : "Student Portal Project",
+        "resource_type" : "project"
+      },
+      "section" : {
+        "gid" : "1207136843126702",
+        "name" : "Untitled section",
+        "resource_type" : "section"
+      }
+    } ],
+    "modified_at" : "2024-04-23T13:04:20.004Z",
+    "name" : "Task 2: Develop login Screen HTML/CSS",
+    "notes" : "- Description: Write HTML and CSS code to implement the designed login screen\n    Create HTML Structure:\n        Code the basic HTML structure for the login screen, including input fields, labels, buttons, and any other necessary elements.\n    Style with CSS:\n        Write CSS code to style the HTML elements according to the design requirements, including layout, colors, typography, and any additional styling.\n    Link CSS File:\n        Save the CSS code and link it to the HTML file.\n    Test and Refine:\n        Test the login screen in different browsers and devices to ensure it displays correctly and functions as expected.\n        Make any necessary adjustments to the HTML and CSS code to improve the appearance and usability of the login screen.\n- Tags: development, html, css, login screen\n- Assignee: @frontend_dev\n- Due Date: 2 days",
+    "num_hearts" : 0,
+    "num_likes" : 0,
+    "parent" : null,
+    "permalink_url" : "https://app.asana.com/1/236599948336393/project/1207136843126701/task/1207136843126721",
+    "projects" : [ {
+      "gid" : "1207136843126701",
+      "name" : "Student Portal Project",
+      "resource_type" : "project"
+    } ],
+    "resource_type" : "task",
+    "start_at" : null,
+    "start_on" : null,
+    "subtasks" : [ ],
+    "tags" : [ ],
+    "resource_subtype" : "default_task",
+    "workspace" : {
+      "gid" : "236599948336393",
+      "name" : "aucdt.edu.gh",
+      "resource_type" : "workspace"
+    }
+  }, {
+    "gid" : "1207136843126723",
+    "actual_time_minutes" : null,
+    "assignee" : {
+      "gid" : "1205939110703922",
+      "name" : "Mandela vudugah",
+      "resource_type" : "user"
+    },
+    "assignee_status" : "inbox",
+    "assignee_section" : {
+      "gid" : "1205939110703945",
+      "name" : "Recently assigned",
+      "resource_type" : "section"
+    },
+    "completed" : false,
+    "completed_at" : null,
+    "created_at" : "2024-04-22T18:13:25.880Z",
+    "due_at" : null,
+    "due_on" : "2024-04-25",
+    "followers" : [ {
+      "gid" : "1205939110703922",
+      "name" : "Mandela vudugah",
+      "resource_type" : "user"
+    } ],
+    "hearted" : false,
+    "hearts" : [ ],
+    "liked" : false,
+    "likes" : [ ],
+    "memberships" : [ {
+      "project" : {
+        "gid" : "1207136843126701",
+        "name" : "Student Portal Project",
+        "resource_type" : "project"
+      },
+      "section" : {
+        "gid" : "1207136843126702",
+        "name" : "Untitled section",
+        "resource_type" : "section"
+      }
+    } ],
+    "modified_at" : "2024-04-25T00:00:47.552Z",
+    "name" : "Task 3: Implement Authentication Logic",
+    "notes" : "- Description: Write backend code to handle user authentication (e.g. verify username/password, generate session token)\n    User Registration:\n        Create registration form/interface.\n        Handle registration requests.\n        Store user credentials securely.\n    User Login:\n        Develop login form/interface.\n        Manage login requests.\n        Validate and authenticate user credentials.\n        Issue authentication tokens upon successful login.\n    Authentication Token Management:\n        Choose token type (e.g., JWT, session cookies).\n        Implement token generation and verification processes.\nServer-side Login Request Handling:\n    Define Login Endpoint:\n        Set HTTP method and URL path.\n        Configure routes/controllers.\n    Input Validation:\n        Validate user input.\n        Prevent security vulnerabilities.\n    User Authentication:\n        Retrieve and compare credentials.\n        Implement password hashing.\n    Authentication Success:\n        Generate and store authentication tokens.\n        Return tokens to clients.\n    Authentication Failure:\n        Manage failed login attempts.\n        Implement security measures.\n        Return appropriate error messages.\n    Error Handling:\n        Implement error handling and logging.\n    Documentation:\n        Document endpoint details.\n        Provide examples/test cases.\n    Unit Testing:\n        Write unit tests.\n        Test various scenarios.\n    Integration Testing:\n        Test endpoint integration.\n        Conduct end-to-end testing.\n    Code Review:\n        Conduct thorough code reviews.\n        Ensure adherence to standards and security guidelines.\n    Deployment:\n        Deploy updated logic.\n        Ensure smooth integration.\n- Tags: development, backend, authentication\n- Assignee: @backend_dev\n- Due Date: 3 days",
+    "num_hearts" : 0,
+    "num_likes" : 0,
+    "parent" : null,
+    "permalink_url" : "https://app.asana.com/1/236599948336393/project/1207136843126701/task/1207136843126723",
+    "projects" : [ {
+      "gid" : "1207136843126701",
+      "name" : "Student Portal Project",
+      "resource_type" : "project"
+    } ],
+    "resource_type" : "task",
+    "start_at" : null,
+    "start_on" : null,
+    "subtasks" : [ ],
+    "tags" : [ ],
+    "resource_subtype" : "default_task",
+    "workspace" : {
+      "gid" : "236599948336393",
+      "name" : "aucdt.edu.gh",
+      "resource_type" : "workspace"
+    }
+  }, {
+    "gid" : "1207136843126725",
+    "actual_time_minutes" : null,
+    "assignee" : {
+      "gid" : "1205939110703922",
+      "name" : "Mandela vudugah",
+      "resource_type" : "user"
+    },
+    "assignee_status" : "inbox",
+    "assignee_section" : {
+      "gid" : "1205939110703945",
+      "name" : "Recently assigned",
+      "resource_type" : "section"
+    },
+    "completed" : false,
+    "completed_at" : null,
+    "created_at" : "2024-04-22T18:17:06.462Z",
+    "due_at" : null,
+    "due_on" : "2024-04-25",
+    "followers" : [ {
+      "gid" : "1205939110703922",
+      "name" : "Mandela vudugah",
+      "resource_type" : "user"
+    } ],
+    "hearted" : false,
+    "hearts" : [ ],
+    "liked" : false,
+    "likes" : [ ],
+    "memberships" : [ {
+      "project" : {
+        "gid" : "1207136843126701",
+        "name" : "Student Portal Project",
+        "resource_type" : "project"
+      },
+      "section" : {
+        "gid" : "1207136843126702",
+        "name" : "Untitled section",
+        "resource_type" : "section"
+      }
+    } ],
+    "modified_at" : "2024-04-25T00:00:47.728Z",
+    "name" : "Task 4: Integrate with Database",
+    "notes" : "- Description: Connect the login screen to the student database to verify credentials\n    Conceptual and Physical modeling:\n    Modeling the database to handle the logical process ot the authorization and authentication.\n    Create the MySql database in phpmyadmin.\n    Backend Setup:\n        Create a Spring Boot application with Spring Data JPA to interact with the MySQL database.\n    Authentication Endpoint:\n        Implement a REST controller with an endpoint to handle login requests\n    Verify Credentials:\n        In the backend, use Spring Data JPA to query the student database for the provided username.\n        Verify the provided password matches the stored password hash.\n    Return Authentication Result:\n        If credentials are valid, generate a JWT token using Spring Security and return it in the response.\n        Handle invalid credentials by returning an appropriate error response.\n    Frontend Integration:\n        Update the frontend login form to send POST requests to the endpoint of the backend to test the db request..\n        Handle the response from the backend, storing the token locally for authenticated requests.\n    Testing and Debugging:\n        Test the login functionality using tools like Postman.\n        Debug any issues that arise during testing, ensuring the login process functions correctly.\n    Security Considerations:\n        Use Spring Security to handle authentication and authorization, implementing password hashing and encryption for security.\n        Ensure sensitive information is not transmitted in plain text over the network.\n    Error Handling and Logging:\n        Implement error handling and logging in both frontend and backend to capture and handle exceptions gracefully.\n    Integration Testing:\n        Perform integration testing to ensure frontend and backend components interact correctly.\n        Test various scenarios, including successful logins, invalid credentials, and edge cases.\n    Deployment:\n        Deploy the the MySQL database to live database.\n        Configure the frontend to interact with the deployed backend.\n- Tags: development, database, integration\n- Assignee: @backend_dev\n- Due Date: 2 days",
+    "num_hearts" : 0,
+    "num_likes" : 0,
+    "parent" : null,
+    "permalink_url" : "https://app.asana.com/1/236599948336393/project/1207136843126701/task/1207136843126725",
+    "projects" : [ {
+      "gid" : "1207136843126701",
+      "name" : "Student Portal Project",
+      "resource_type" : "project"
+    } ],
+    "resource_type" : "task",
+    "start_at" : null,
+    "start_on" : null,
+    "subtasks" : [ ],
+    "tags" : [ ],
+    "resource_subtype" : "default_task",
+    "workspace" : {
+      "gid" : "236599948336393",
+      "name" : "aucdt.edu.gh",
+      "resource_type" : "workspace"
+    }
+  }, {
+    "gid" : "1207148339092265",
+    "actual_time_minutes" : null,
+    "assignee" : {
+      "gid" : "1205939110703922",
+      "name" : "Mandela vudugah",
+      "resource_type" : "user"
+    },
+    "assignee_status" : "inbox",
+    "assignee_section" : {
+      "gid" : "1205939110703945",
+      "name" : "Recently assigned",
+      "resource_type" : "section"
+    },
+    "completed" : true,
+    "completed_at" : "2024-05-16T10:46:17.180Z",
+    "created_at" : "2024-04-23T15:52:58.296Z",
+    "due_at" : null,
+    "due_on" : "2024-04-24",
+    "followers" : [ {
+      "gid" : "1205939110703922",
+      "name" : "Mandela vudugah",
+      "resource_type" : "user"
+    } ],
+    "hearted" : false,
+    "hearts" : [ ],
+    "liked" : false,
+    "likes" : [ ],
+    "memberships" : [ {
+      "project" : {
+        "gid" : "1207136843126701",
+        "name" : "Student Portal Project",
+        "resource_type" : "project"
+      },
+      "section" : {
+        "gid" : "1207136843126702",
+        "name" : "Untitled section",
+        "resource_type" : "section"
+      }
+    } ],
+    "modified_at" : "2024-05-16T10:46:17.353Z",
+    "name" : "Task4 #00001:Mysql Database table physical modeling ",
+    "notes" : "    Conceptual and Physical modeling:\n    Modeling the database to handle the logical process of the authorization and authentication.\n    Create MySQL database using phpMyadmin on our cloud codero test server.\n\nhttps://app.asana.com/app/asana/-/get_asset?asset_id=1207148339092268\n\nhttps://drive.google.com/file/d/1agl93Vz31LdVeVi2r06DqQJKTQZvjkJK/view?usp=sharing",
+    "num_hearts" : 0,
+    "num_likes" : 0,
+    "parent" : null,
+    "permalink_url" : "https://app.asana.com/1/236599948336393/project/1207136843126701/task/1207148339092265",
+    "projects" : [ {
+      "gid" : "1207136843126701",
+      "name" : "Student Portal Project",
+      "resource_type" : "project"
+    } ],
+    "resource_type" : "task",
+    "start_at" : null,
+    "start_on" : null,
+    "subtasks" : [ ],
+    "tags" : [ ],
+    "resource_subtype" : "default_task",
+    "workspace" : {
+      "gid" : "236599948336393",
+      "name" : "aucdt.edu.gh",
+      "resource_type" : "workspace"
+    }
+  }, {
+    "gid" : "1207136843126797",
+    "actual_time_minutes" : null,
+    "assignee" : {
+      "gid" : "1205939110703922",
+      "name" : "Mandela vudugah",
+      "resource_type" : "user"
+    },
+    "assignee_status" : "inbox",
+    "assignee_section" : {
+      "gid" : "1205939110703945",
+      "name" : "Recently assigned",
+      "resource_type" : "section"
+    },
+    "completed" : false,
+    "completed_at" : null,
+    "created_at" : "2024-04-22T18:20:12.370Z",
+    "due_at" : null,
+    "due_on" : null,
+    "followers" : [ {
+      "gid" : "1205939110703922",
+      "name" : "Mandela vudugah",
+      "resource_type" : "user"
+    } ],
+    "hearted" : false,
+    "hearts" : [ ],
+    "liked" : false,
+    "likes" : [ ],
+    "memberships" : [ {
+      "project" : {
+        "gid" : "1207136843126701",
+        "name" : "Student Portal Project",
+        "resource_type" : "project"
+      },
+      "section" : {
+        "gid" : "1207136843126702",
+        "name" : "Untitled section",
+        "resource_type" : "section"
+      }
+    } ],
+    "modified_at" : "2024-04-22T18:20:50.529Z",
+    "name" : "Task 5: Test and Debug",
+    "notes" : "",
+    "num_hearts" : 0,
+    "num_likes" : 0,
+    "parent" : null,
+    "permalink_url" : "https://app.asana.com/1/236599948336393/project/1207136843126701/task/1207136843126797",
+    "projects" : [ {
+      "gid" : "1207136843126701",
+      "name" : "Student Portal Project",
+      "resource_type" : "project"
+    } ],
+    "resource_type" : "task",
+    "start_at" : null,
+    "start_on" : null,
+    "subtasks" : [ ],
+    "tags" : [ ],
+    "resource_subtype" : "default_task",
+    "workspace" : {
+      "gid" : "236599948336393",
+      "name" : "aucdt.edu.gh",
+      "resource_type" : "workspace"
+    }
+  }, {
+    "gid" : "1207136843126800",
+    "actual_time_minutes" : null,
+    "assignee" : null,
+    "assignee_status" : "upcoming",
+    "completed" : false,
+    "completed_at" : null,
+    "created_at" : "2024-04-22T18:21:08.635Z",
+    "due_at" : null,
+    "due_on" : null,
+    "followers" : [ {
+      "gid" : "1205939110703922",
+      "name" : "Mandela vudugah",
+      "resource_type" : "user"
+    } ],
+    "hearted" : false,
+    "hearts" : [ ],
+    "liked" : false,
+    "likes" : [ ],
+    "memberships" : [ {
+      "project" : {
+        "gid" : "1207136843126701",
+        "name" : "Student Portal Project",
+        "resource_type" : "project"
+      },
+      "section" : {
+        "gid" : "1207136843126702",
+        "name" : "Untitled section",
+        "resource_type" : "section"
+      }
+    } ],
+    "modified_at" : "2024-04-22T18:21:32.878Z",
+    "name" : "Task 6: Deployment to Production",
+    "notes" : "- Description: Deploy the implemented login screen to the production environment\n- Tags: deployment, production, login screen\n- Assignee: @devops\n- Due Date: 1 day",
+    "num_hearts" : 0,
+    "num_likes" : 0,
+    "parent" : null,
+    "permalink_url" : "https://app.asana.com/1/236599948336393/project/1207136843126701/task/1207136843126800",
+    "projects" : [ {
+      "gid" : "1207136843126701",
+      "name" : "Student Portal Project",
+      "resource_type" : "project"
+    } ],
+    "resource_type" : "task",
+    "start_at" : null,
+    "start_on" : null,
+    "subtasks" : [ ],
+    "tags" : [ ],
+    "resource_subtype" : "default_task",
+    "workspace" : {
+      "gid" : "236599948336393",
+      "name" : "aucdt.edu.gh",
+      "resource_type" : "workspace"
+    }
+  }, {
+    "gid" : "1207331785251215",
+    "actual_time_minutes" : null,
+    "assignee" : null,
+    "assignee_status" : "upcoming",
+    "completed" : true,
+    "completed_at" : "2024-05-16T06:41:20.650Z",
+    "created_at" : "2024-05-16T06:26:16.682Z",
+    "due_at" : null,
+    "due_on" : null,
+    "followers" : [ {
+      "gid" : "1205939110703922",
+      "name" : "Mandela vudugah",
+      "resource_type" : "user"
+    } ],
+    "hearted" : false,
+    "hearts" : [ ],
+    "liked" : false,
+    "likes" : [ ],
+    "memberships" : [ {
+      "project" : {
+        "gid" : "1207136843126701",
+        "name" : "Student Portal Project",
+        "resource_type" : "project"
+      },
+      "section" : {
+        "gid" : "1207136843126702",
+        "name" : "Untitled section",
+        "resource_type" : "section"
+      }
+    } ],
+    "modified_at" : "2024-05-16T06:41:20.761Z",
+    "name" : "Task 4 #00002: Create package structure for student portal",
+    "notes" : "- Description: Write backend code to handle user authentication (e.g. verify email/password, generate session token)\n    User Registration:\n        Create registration Packages/form/interface/Classes.\n\nhttps://app.asana.com/app/asana/-/get_asset?asset_id=1207331785251218\n\n\n",
+    "num_hearts" : 0,
+    "num_likes" : 0,
+    "parent" : null,
+    "permalink_url" : "https://app.asana.com/1/236599948336393/project/1207136843126701/task/1207331785251215",
+    "projects" : [ {
+      "gid" : "1207136843126701",
+      "name" : "Student Portal Project",
+      "resource_type" : "project"
+    } ],
+    "resource_type" : "task",
+    "start_at" : null,
+    "start_on" : null,
+    "subtasks" : [ ],
+    "tags" : [ ],
+    "resource_subtype" : "default_task",
+    "workspace" : {
+      "gid" : "236599948336393",
+      "name" : "aucdt.edu.gh",
+      "resource_type" : "workspace"
+    }
+  }, {
+    "gid" : "1209760882552161",
+    "actual_time_minutes" : null,
+    "assignee" : {
+      "gid" : "1205939110703922",
+      "name" : "Mandela vudugah",
+      "resource_type" : "user"
+    },
+    "assignee_status" : "inbox",
+    "assignee_section" : {
+      "gid" : "1205939110703945",
+      "name" : "Recently assigned",
+      "resource_type" : "section"
+    },
+    "completed" : false,
+    "completed_at" : null,
+    "created_at" : "2025-03-22T14:10:53.645Z",
+    "due_at" : null,
+    "due_on" : "2025-03-23",
+    "followers" : [ {
+      "gid" : "1205939110703922",
+      "name" : "Mandela vudugah",
+      "resource_type" : "user"
+    } ],
+    "hearted" : false,
+    "hearts" : [ ],
+    "liked" : false,
+    "likes" : [ ],
+    "memberships" : [ {
+      "project" : {
+        "gid" : "1207136843126701",
+        "name" : "Student Portal Project",
+        "resource_type" : "project"
+      },
+      "section" : {
+        "gid" : "1207136843126715",
+        "name" : "Login Feature for Student",
+        "resource_type" : "section"
+      }
+    } ],
+    "modified_at" : "2025-03-23T16:19:47.813Z",
+    "name" : "Created 2FA login within the student portal API development- thus login, email verification based on application_status being REGISTERED ",
+    "notes" : "created 2FA login within the student portal API development- thus login, email verification based on REGISTERED\n\nhttps://bitbucket.org/securedataghana/aucdtsb-dev/pull-requests/46\n\n1.http://localhost:8181/student/auth/login\nPAYLOAD SAMPLE:\n{\n \"registrationNumber\": \"202401\",\n\"aucdtEmail\": \"helpdesk@aucdt.edu.gh\"\n}\n\nRESPONSE SAMPLE;\n{\n    \"tempToken\": \"eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJoZWxwZGVza0BhdWNkdC5lZHUuZ2giLCJ0b2tlblR5cGUiOiJWRVJJRklDQVRJT04iLCJleHAiOjE3NDI2NTE5MTksImlhdCI6MTc0MjY1MTMxOX0.Ujqh1vC0vXUdSnKyE_kuz5mO6SBI2Wx0oYQlG9ePT0w\",\n    \"message\": \"Verification code sent to your email\"\n}\n2. http://localhost:8181/student/auth/verify\nPAYLOAD SAMPLE\n{\n    \"verificationCode\":\"373060\"\n}\n+ Authorization token;\neyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJoZWxwZGVza0BhdWNkdC5lZHUuZ2giLCJ0b2tlblR5cGUiOiJWRVJJRklDQVRJT04iLCJleHAiOjE3NDI2NTE5MTksImlhdCI6MTc0MjY1MTMxOX0.Ujqh1vC0vXUdSnKyE_kuz5mO6SBI2Wx0oYQlG9ePT0w\n\nRESPONSE SAMPLE;\n{\n    \"accessToken\": \"eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJoZWxwZGVza0BhdWNkdC5lZHUuZ2giLCJ0b2tlblR5cGUiOiJBQ0NFU1MiLCJleHAiOjE3NDI2NTUwMzAsImlhdCI6MTc0MjY1MTQzMH0.4zyK139WOYoljFKQwsLXpof34KXtVYd3kuYhyNivDFk\",\n    \"message\": \"Email verified successfully. You can now access the main application.\"\n}\n\n3. http://localhost:8181/app/protected\nNO PAYLOAD - all you need is the authorization token.\nInclude Authourization token\n\nRESPONSE;\n{\n    \"message\": \"Welcome to the main application!\",\n    \"status\": \"200\"\n}",
+    "num_hearts" : 0,
+    "num_likes" : 0,
+    "parent" : null,
+    "permalink_url" : "https://app.asana.com/1/236599948336393/project/1207136843126701/task/1209760882552161",
+    "projects" : [ {
+      "gid" : "1207136843126701",
+      "name" : "Student Portal Project",
+      "resource_type" : "project"
+    } ],
+    "resource_type" : "task",
+    "start_at" : null,
+    "start_on" : null,
+    "subtasks" : [ ],
+    "tags" : [ ],
+    "resource_subtype" : "default_task",
+    "workspace" : {
+      "gid" : "236599948336393",
+      "name" : "aucdt.edu.gh",
+      "resource_type" : "workspace"
+    }
+  }, {
+    "gid" : "1209764741777730",
+    "actual_time_minutes" : null,
+    "assignee" : {
+      "gid" : "1205939110703922",
+      "name" : "Mandela vudugah",
+      "resource_type" : "user"
+    },
+    "assignee_status" : "inbox",
+    "assignee_section" : {
+      "gid" : "1205939110703945",
+      "name" : "Recently assigned",
+      "resource_type" : "section"
+    },
+    "completed" : false,
+    "completed_at" : null,
+    "created_at" : "2025-03-23T16:14:05.098Z",
+    "due_at" : null,
+    "due_on" : "2025-03-25",
+    "followers" : [ {
+      "gid" : "1205939110703922",
+      "name" : "Mandela vudugah",
+      "resource_type" : "user"
+    } ],
+    "hearted" : false,
+    "hearts" : [ ],
+    "liked" : false,
+    "likes" : [ ],
+    "memberships" : [ {
+      "project" : {
+        "gid" : "1207136843126701",
+        "name" : "Student Portal Project",
+        "resource_type" : "project"
+      },
+      "section" : {
+        "gid" : "1207136843126715",
+        "name" : "Login Feature for Student",
+        "resource_type" : "section"
+      }
+    } ],
+    "modified_at" : "2025-03-25T00:01:08.520Z",
+    "name" : "Integrated the login, token verification, dashboard navigation endpoint and add popup plus loader to the student login process",
+    "notes" : "Integrated the login, token verification, dashboard navigation endpoint and add popup plus loader to the student login process.\n    Integrated the UI with the API and included popup alerts\n    Created UI for verification token page and integrated the API with it\n    Implemented a loader and popup alerts across the three components login, verification and dashboard access alerts.\n\nhttps://bitbucket.org/securedataghana/aucdt-students-dev/pull-requests/19\n\n",
+    "num_hearts" : 0,
+    "num_likes" : 0,
+    "parent" : null,
+    "permalink_url" : "https://app.asana.com/1/236599948336393/project/1207136843126701/task/1209764741777730",
+    "projects" : [ {
+      "gid" : "1207136843126701",
+      "name" : "Student Portal Project",
+      "resource_type" : "project"
+    } ],
+    "resource_type" : "task",
+    "start_at" : null,
+    "start_on" : null,
+    "subtasks" : [ ],
+    "tags" : [ ],
+    "resource_subtype" : "default_task",
+    "workspace" : {
+      "gid" : "236599948336393",
+      "name" : "aucdt.edu.gh",
+      "resource_type" : "workspace"
+    }
+  }, {
+    "gid" : "1209764741777733",
+    "actual_time_minutes" : null,
+    "assignee" : {
+      "gid" : "1205939110703922",
+      "name" : "Mandela vudugah",
+      "resource_type" : "user"
+    },
+    "assignee_status" : "inbox",
+    "assignee_section" : {
+      "gid" : "1205939110703945",
+      "name" : "Recently assigned",
+      "resource_type" : "section"
+    },
+    "completed" : false,
+    "completed_at" : null,
+    "created_at" : "2025-03-23T16:24:36.494Z",
+    "due_at" : null,
+    "due_on" : "2025-03-26",
+    "followers" : [ {
+      "gid" : "1205939110703922",
+      "name" : "Mandela vudugah",
+      "resource_type" : "user"
+    } ],
+    "hearted" : false,
+    "hearts" : [ ],
+    "liked" : false,
+    "likes" : [ ],
+    "memberships" : [ {
+      "project" : {
+        "gid" : "1207136843126701",
+        "name" : "Student Portal Project",
+        "resource_type" : "project"
+      },
+      "section" : {
+        "gid" : "1207136843126715",
+        "name" : "Login Feature for Student",
+        "resource_type" : "section"
+      }
+    } ],
+    "modified_at" : "2025-03-26T00:00:49.573Z",
+    "name" : "Implement retrieval of Student profile using API endpoint and a verified token in the Spring booten",
+    "notes" : "",
+    "num_hearts" : 0,
+    "num_likes" : 0,
+    "parent" : null,
+    "permalink_url" : "https://app.asana.com/1/236599948336393/project/1207136843126701/task/1209764741777733",
+    "projects" : [ {
+      "gid" : "1207136843126701",
+      "name" : "Student Portal Project",
+      "resource_type" : "project"
+    } ],
+    "resource_type" : "task",
+    "start_at" : null,
+    "start_on" : null,
+    "subtasks" : [ ],
+    "tags" : [ ],
+    "resource_subtype" : "default_task",
+    "workspace" : {
+      "gid" : "236599948336393",
+      "name" : "aucdt.edu.gh",
+      "resource_type" : "workspace"
+    }
+  }, {
+    "gid" : "1209764741777738",
+    "actual_time_minutes" : null,
+    "assignee" : {
+      "gid" : "1205939110703922",
+      "name" : "Mandela vudugah",
+      "resource_type" : "user"
+    },
+    "assignee_status" : "inbox",
+    "assignee_section" : {
+      "gid" : "1205939110703945",
+      "name" : "Recently assigned",
+      "resource_type" : "section"
+    },
+    "completed" : false,
+    "completed_at" : null,
+    "created_at" : "2025-03-23T16:26:53.603Z",
+    "due_at" : null,
+    "due_on" : "2025-03-28",
+    "followers" : [ {
+      "gid" : "1205939110703922",
+      "name" : "Mandela vudugah",
+      "resource_type" : "user"
+    } ],
+    "hearted" : false,
+    "hearts" : [ ],
+    "liked" : false,
+    "likes" : [ ],
+    "memberships" : [ {
+      "project" : {
+        "gid" : "1207136843126701",
+        "name" : "Student Portal Project",
+        "resource_type" : "project"
+      },
+      "section" : {
+        "gid" : "1207136843126715",
+        "name" : "Login Feature for Student",
+        "resource_type" : "section"
+      }
+    } ],
+    "modified_at" : "2025-03-28T00:01:43.381Z",
+    "name" : "Inculcate the profile endpoint with the UI page and also include update of certain profile inputs",
+    "notes" : "",
+    "num_hearts" : 0,
+    "num_likes" : 0,
+    "parent" : null,
+    "permalink_url" : "https://app.asana.com/1/236599948336393/project/1207136843126701/task/1209764741777738",
+    "projects" : [ {
+      "gid" : "1207136843126701",
+      "name" : "Student Portal Project",
+      "resource_type" : "project"
+    } ],
+    "resource_type" : "task",
+    "start_at" : null,
+    "start_on" : null,
+    "subtasks" : [ ],
+    "tags" : [ ],
+    "resource_subtype" : "default_task",
+    "workspace" : {
+      "gid" : "236599948336393",
+      "name" : "aucdt.edu.gh",
+      "resource_type" : "workspace"
+    }
+  }, {
+    "gid" : "1209849066612898",
+    "actual_time_minutes" : null,
+    "assignee" : {
+      "gid" : "1205939110703922",
+      "name" : "Mandela vudugah",
+      "resource_type" : "user"
+    },
+    "assignee_status" : "inbox",
+    "assignee_section" : {
+      "gid" : "1205939110703945",
+      "name" : "Recently assigned",
+      "resource_type" : "section"
+    },
+    "completed" : false,
+    "completed_at" : null,
+    "created_at" : "2025-03-31T18:41:38.842Z",
+    "due_at" : null,
+    "due_on" : "2025-03-31",
+    "followers" : [ {
+      "gid" : "1205939110703922",
+      "name" : "Mandela vudugah",
+      "resource_type" : "user"
+    } ],
+    "hearted" : false,
+    "hearts" : [ ],
+    "liked" : false,
+    "likes" : [ ],
+    "memberships" : [ {
+      "project" : {
+        "gid" : "1207136843126701",
+        "name" : "Student Portal Project",
+        "resource_type" : "project"
+      },
+      "section" : {
+        "gid" : "1207136843126715",
+        "name" : "Login Feature for Student",
+        "resource_type" : "section"
+      }
+    } ],
+    "modified_at" : "2025-03-31T18:44:26.439Z",
+    "name" : "Developed test for student repository, student email service impl and studentservice classes",
+    "notes" : "Developed test for student repository, student email service impl and studentservice classes\nhttps://bitbucket.org/securedataghana/aucdtsb-dev/pull-requests/48",
+    "num_hearts" : 0,
+    "num_likes" : 0,
+    "parent" : null,
+    "permalink_url" : "https://app.asana.com/1/236599948336393/project/1207136843126701/task/1209849066612898",
+    "projects" : [ {
+      "gid" : "1207136843126701",
+      "name" : "Student Portal Project",
+      "resource_type" : "project"
+    } ],
+    "resource_type" : "task",
+    "start_at" : null,
+    "start_on" : null,
+    "subtasks" : [ ],
+    "tags" : [ ],
+    "resource_subtype" : "default_task",
+    "workspace" : {
+      "gid" : "236599948336393",
+      "name" : "aucdt.edu.gh",
+      "resource_type" : "workspace"
+    }
+  } ]
+}

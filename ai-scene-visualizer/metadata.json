@@ -1,0 +1,5 @@
+{
+  "name": "AI Scene Visualizer",
+  "description": "An application that uses generative AI to create stunning visual scenes based on detailed textual descriptions of an art installation.",
+  "requestFramePermissions": []
+}

@@ -1,0 +1,73 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600">
+    <defs>
+        <style>
+            .title { font: bold 24px sans-serif; fill: #111827; text-anchor: middle; }
+            .box { fill: #ffffff; stroke: #9ca3af; stroke-width: 2; rx: 8; }
+            .state-box { fill: #fefce8; stroke: #facc15; }
+            .component-box { fill: #e0f2fe; stroke: #3b82f6; }
+            .action-box { fill: #dcfce7; stroke: #22c55e; }
+            .box-title { font: bold 16px sans-serif; fill: #1f2937; text-anchor: middle; }
+            .arrow { stroke: #4b5563; stroke-width: 2; marker-end: url(#arrowhead); fill: none; }
+            .label { font: 12px sans-serif; fill: #374151; text-anchor: middle; }
+        </style>
+        <marker id="arrowhead" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#4b5563"/>
+        </marker>
+    </defs>
+    <rect width="100%" height="100%" fill="#f9fafb"/>
+    <text x="400" y="40" class="title">PlayGrow Application Data Flow</text>
+
+    <!-- App State -->
+    <g id="AppState">
+        <rect x="275" y="80" width="250" height="80" class="box state-box"/>
+        <text x="400" y="110" class="box-title">App.tsx State</text>
+        <text x="400" y="135" class="label">(currentView, currentZone, theme)</text>
+    </g>
+
+    <!-- Components -->
+    <g id="WorldMap">
+        <rect x="50" y="250" width="200" height="80" class="box component-box"/>
+        <text x="150" y="280" class="box-title">WorldMap.tsx</text>
+        <text x="150" y="305" class="label">(Renders Zones)</text>
+    </g>
+    <g id="ZoneDetail">
+        <rect x="300" y="450" width="200" height="80" class="box component-box"/>
+        <text x="400" y="480" class="box-title">ZoneDetail.tsx</text>
+        <text x="400" y="505" class="label">(Renders Mini-Games)</text>
+    </g>
+     <g id="Admin">
+        <rect x="550" y="250" width="200" height="80" class="box component-box"/>
+        <text x="650" y="280" class="box-title">Admin Components</text>
+        <text x="650" y="305" class="label">(Login, Dashboard, etc.)</text>
+    </g>
+
+    <!-- Arrows from State to Components -->
+    <path class="arrow" d="M 400 160 C 400 210, 200 200, 150 250"/>
+    <text x="270" y="200" class="label">Props</text>
+    <path class="arrow" d="M 400 160 C 400 210, 600 200, 650 250"/>
+    <text x="530" y="200" class="label">Props</text>
+    <path class="arrow" d="M 400 160 V 450"/>
+    <text x="420" y="300" class="label">Props</text>
+
+    <!-- User Actions -->
+    <g id="SelectZone">
+        <rect x="50" y="380" width="200" height="50" class="box action-box"/>
+        <text x="150" y="410" class="box-title">User selects a Zone</text>
+    </g>
+     <g id="GoBack">
+        <rect x="300" y="380" width="200" height="50" class="box action-box"/>
+        <text x="400" y="410" class="box-title">User clicks 'Back'</text>
+    </g>
+    <g id="SelectAdmin">
+        <rect x="550" y="380" width="200" height="50" class="box action-box"/>
+        <text x="650" y="410" class="box-title">User selects Admin</text>
+    </g>
+
+    <!-- Arrows from Actions to State -->
+    <path class="arrow" d="M 150 380 C 100 300, 200 180, 275 140"/>
+    <text x="180" y="250" class="label">handleSelectZone()</text>
+    <path class="arrow" d="M 400 380 V 160"/>
+    <text x="450" y="270" class="label">handleBackToMap()</text>
+    <path class="arrow" d="M 650 380 C 700 300, 600 180, 525 140"/>
+    <text x="600" y="250" class="label">handleNavigateToAdmin()</text>
+</svg>

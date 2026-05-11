@@ -1,0 +1,49 @@
+{
+  "name": "luxthumb-agent",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --port=3000 --host=0.0.0.0",
+    "build": "vite build",
+    "build:web": "vite build && npm run sync:mobile",
+    "preview": "vite preview",
+    "clean": "rm -rf dist",
+    "test": "playwright test",
+    "test:ui": "playwright test --ui",
+    "lint": "tsc --noEmit",
+    "sync:mobile": "capacitor copy ios && capacitor copy android",
+    "build:ios": "npm run build:web && npx capacitor build ios",
+    "build:android": "npm run build:web && npx capacitor build android",
+    "ios:open": "open ios/App/App.xcworkspace",
+    "android:open": "open android",
+    "mobile:sync": "capacitor sync"
+  },
+  "dependencies": {
+    "@capacitor/android": "^8.3.3",
+    "@capacitor/ios": "^8.3.3",
+    "@google/genai": "^1.29.0",
+    "@tailwindcss/vite": "^4.1.14",
+    "@vitejs/plugin-react": "^5.0.4",
+    "html2canvas-pro": "^2.0.2",
+    "idb-keyval": "^6.2.2",
+    "jspdf": "^4.2.1",
+    "lucide-react": "^0.546.0",
+    "motion": "^12.23.24",
+    "react": "^19.0.1",
+    "react-dom": "^19.0.1",
+    "vite": "^6.2.3"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^8.3.3",
+    "@capacitor/core": "^8.3.3",
+    "@playwright/test": "^1.59.1",
+    "@types/express": "^4.17.21",
+    "@types/node": "^22.19.18",
+    "autoprefixer": "^10.4.21",
+    "tailwindcss": "^4.1.14",
+    "tsx": "^4.21.0",
+    "typescript": "~5.8.2",
+    "vite": "^6.2.3"
+  }
+}

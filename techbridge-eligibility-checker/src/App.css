@@ -1,0 +1,67 @@
+/* Custom styles for the AUCDT Eligibility Checker */
+
+.eligibility-checker {
+  font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Form animations */
+.form-section {
+  transition: all 0.3s ease-in-out;
+}
+
+.form-section.entering {
+  opacity: 0;
+  transform: translateY(10px);
+}
+
+.form-section.entered {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Custom radio button styles */
+.custom-radio {
+  transition: all 0.2s ease;
+}
+
+.custom-radio:checked {
+  transform: scale(1.1);
+}
+
+/* Button hover effects */
+.btn-primary {
+  transition: all 0.2s ease;
+}
+
+.btn-primary:hover {
+  transform: translateY(-1px);
+}
+
+/* Responsive design improvements */
+@media (max-width: 768px) {
+  .eligibility-checker {
+    padding: 1rem;
+  }
+  
+  .form-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+}
+
+/* Print styles */
+@media print {
+  .no-print {
+    display: none;
+  }
+  
+  .eligibility-checker {
+    max-width: 100%;
+    margin: 0;
+    padding: 0;
+  }
+}
+
+#root {
+  margin: 0 auto;
+}

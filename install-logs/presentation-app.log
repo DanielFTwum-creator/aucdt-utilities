@@ -1,0 +1,80 @@
+[183] Installing: presentation-app
+Lockfile is up to date, resolution step is skipped
+Progress: resolved 1, reused 0, downloaded 0, added 0
+Packages: +301
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Progress: resolved 301, reused 4, downloaded 0, added 0
+Progress: resolved 301, reused 161, downloaded 0, added 0
+Progress: resolved 301, reused 299, downloaded 0, added 2
+Progress: resolved 301, reused 300, downloaded 0, added 12
+Progress: resolved 301, reused 300, downloaded 0, added 18
+Progress: resolved 301, reused 300, downloaded 0, added 30
+Progress: resolved 301, reused 300, downloaded 0, added 32
+Progress: resolved 301, reused 300, downloaded 0, added 39
+Progress: resolved 301, reused 300, downloaded 0, added 44
+Progress: resolved 301, reused 301, downloaded 0, added 54
+Progress: resolved 301, reused 301, downloaded 0, added 55
+Progress: resolved 301, reused 301, downloaded 0, added 68
+Progress: resolved 301, reused 301, downloaded 0, added 69
+Progress: resolved 301, reused 301, downloaded 0, added 81
+Progress: resolved 301, reused 301, downloaded 0, added 88
+Progress: resolved 301, reused 301, downloaded 0, added 89
+Progress: resolved 301, reused 301, downloaded 0, added 107
+Progress: resolved 301, reused 301, downloaded 0, added 123
+Progress: resolved 301, reused 301, downloaded 0, added 126
+Progress: resolved 301, reused 301, downloaded 0, added 151
+Progress: resolved 301, reused 301, downloaded 0, added 166
+Progress: resolved 301, reused 301, downloaded 0, added 168
+Progress: resolved 301, reused 301, downloaded 0, added 184
+Progress: resolved 301, reused 301, downloaded 0, added 200
+Progress: resolved 301, reused 301, downloaded 0, added 204
+Progress: resolved 301, reused 301, downloaded 0, added 219
+Progress: resolved 301, reused 301, downloaded 0, added 225
+Progress: resolved 301, reused 301, downloaded 0, added 228
+Progress: resolved 301, reused 301, downloaded 0, added 239
+Progress: resolved 301, reused 301, downloaded 0, added 242
+Progress: resolved 301, reused 301, downloaded 0, added 259
+Progress: resolved 301, reused 301, downloaded 0, added 269
+Progress: resolved 301, reused 301, downloaded 0, added 285
+Progress: resolved 301, reused 301, downloaded 0, added 295
+Progress: resolved 301, reused 301, downloaded 0, added 297
+Progress: resolved 301, reused 301, downloaded 0, added 298
+Progress: resolved 301, reused 301, downloaded 0, added 299
+Progress: resolved 301, reused 301, downloaded 0, added 300
+Progress: resolved 301, reused 301, downloaded 0, added 301
+Progress: resolved 301, reused 301, downloaded 0, added 301, done
+
+dependencies:
++ @tailwindcss/vite 4.2.1
++ @testing-library/dom 10.4.1
++ @testing-library/jest-dom 6.9.1
++ @testing-library/react 16.3.2
++ @testing-library/user-event 13.5.0
++ lucide-react 0.525.0
++ react 19.2.4
++ react-dom 19.2.4
++ react-router-dom 7.13.1
++ web-vitals 2.1.4
+
+devDependencies:
++ @types/react 19.2.14
++ @types/react-dom 19.2.3
++ @vitejs/plugin-react 5.1.4
++ @vitest/coverage-v8 3.2.4
++ @vitest/ui 3.2.4
++ jsdom 26.1.0
++ postcss 8.5.8
++ serve 14.2.5
++ tailwindcss 4.2.1
++ typescript 5.9.3
++ vite 7.3.1
++ vitest 3.2.4
+
+╭ Warning ─────────────────────────────────────────────────────────────────────╮
+│                                                                              │
+│   Ignored build scripts: esbuild@0.27.3.                                     │
+│   Run "pnpm approve-builds" to pick which dependencies should be allowed     │
+│   to run scripts.                                                            │
+│                                                                              │
+╰──────────────────────────────────────────────────────────────────────────────╯
+Done in 1m 27.6s using pnpm v10.30.1

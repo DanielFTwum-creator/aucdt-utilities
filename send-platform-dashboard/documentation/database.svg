@@ -1,0 +1,80 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600">
+  <!-- Background -->
+  <rect width="800" height="600" fill="#f8fafc" />
+  
+  <!-- Title -->
+  <text x="400" y="40" font-family="sans-serif" font-size="24" text-anchor="middle" font-weight="bold" fill="#0f172a">SEND Platform - Data Schema</text>
+
+  <!-- Entities -->
+  
+  <!-- User -->
+  <g transform="translate(50, 100)">
+    <rect width="180" height="120" rx="5" fill="#ffffff" stroke="#3b82f6" stroke-width="2" />
+    <path d="M0,30 L180,30" stroke="#3b82f6" stroke-width="1" />
+    <text x="90" y="20" font-family="sans-serif" font-size="14" font-weight="bold" text-anchor="middle" fill="#1e40af">User</text>
+    <text x="10" y="50" font-family="monospace" font-size="11" fill="#334155">PK id: number</text>
+    <text x="10" y="70" font-family="monospace" font-size="11" fill="#334155">username: string</text>
+    <text x="10" y="90" font-family="monospace" font-size="11" fill="#334155">role: 'ADMIN'|'USER'</text>
+  </g>
+
+  <!-- ReportJob -->
+  <g transform="translate(300, 100)">
+    <rect width="200" height="220" rx="5" fill="#ffffff" stroke="#22c55e" stroke-width="2" />
+    <path d="M0,30 L200,30" stroke="#22c55e" stroke-width="1" />
+    <text x="100" y="20" font-family="sans-serif" font-size="14" font-weight="bold" text-anchor="middle" fill="#15803d">ReportJob</text>
+    <text x="10" y="50" font-family="monospace" font-size="11" fill="#334155">PK id: number</text>
+    <text x="10" y="70" font-family="monospace" font-size="11" fill="#334155">uuid: string</text>
+    <text x="10" y="90" font-family="monospace" font-size="11" fill="#334155">FK owner_id: number</text>
+    <text x="10" y="110" font-family="monospace" font-size="11" fill="#334155">name: string</text>
+    <text x="10" y="130" font-family="monospace" font-size="11" fill="#334155">definition: json</text>
+    <text x="10" y="150" font-family="monospace" font-size="11" fill="#334155">status: JobStatus</text>
+    <text x="10" y="170" font-family="monospace" font-size="11" fill="#334155">format: OutputFormat</text>
+  </g>
+
+  <!-- Schedule -->
+  <g transform="translate(600, 100)">
+    <rect width="180" height="120" rx="5" fill="#ffffff" stroke="#eab308" stroke-width="2" />
+    <path d="M0,30 L180,30" stroke="#eab308" stroke-width="1" />
+    <text x="90" y="20" font-family="sans-serif" font-size="14" font-weight="bold" text-anchor="middle" fill="#a16207">Schedule</text>
+    <text x="10" y="50" font-family="monospace" font-size="11" fill="#334155">PK id: number</text>
+    <text x="10" y="70" font-family="monospace" font-size="11" fill="#334155">FK job_id: number</text>
+    <text x="10" y="90" font-family="monospace" font-size="11" fill="#334155">cron_expr: string</text>
+    <text x="10" y="110" font-family="monospace" font-size="11" fill="#334155">timezone: string</text>
+  </g>
+
+  <!-- ExecutionInstance -->
+  <g transform="translate(300, 400)">
+    <rect width="200" height="140" rx="5" fill="#ffffff" stroke="#64748b" stroke-width="2" />
+    <path d="M0,30 L200,30" stroke="#64748b" stroke-width="1" />
+    <text x="100" y="20" font-family="sans-serif" font-size="14" font-weight="bold" text-anchor="middle" fill="#334155">ExecutionInstance</text>
+    <text x="10" y="50" font-family="monospace" font-size="11" fill="#334155">PK id: number</text>
+    <text x="10" y="70" font-family="monospace" font-size="11" fill="#334155">FK job_id: number</text>
+    <text x="10" y="90" font-family="monospace" font-size="11" fill="#334155">status: ExecutionStatus</text>
+    <text x="10" y="110" font-family="monospace" font-size="11" fill="#334155">started_at: datetime</text>
+    <text x="10" y="130" font-family="monospace" font-size="11" fill="#334155">output_path: string</text>
+  </g>
+
+  <!-- DeliveryTarget -->
+  <g transform="translate(50, 400)">
+    <rect width="180" height="120" rx="5" fill="#ffffff" stroke="#a855f7" stroke-width="2" />
+    <path d="M0,30 L180,30" stroke="#a855f7" stroke-width="1" />
+    <text x="90" y="20" font-family="sans-serif" font-size="14" font-weight="bold" text-anchor="middle" fill="#7e22ce">DeliveryTarget</text>
+    <text x="10" y="50" font-family="monospace" font-size="11" fill="#334155">PK id: number</text>
+    <text x="10" y="70" font-family="monospace" font-size="11" fill="#334155">FK job_id: number</text>
+    <text x="10" y="90" font-family="monospace" font-size="11" fill="#334155">channel: DeliveryChannel</text>
+    <text x="10" y="110" font-family="monospace" font-size="11" fill="#334155">config: json</text>
+  </g>
+
+  <!-- Relationships Lines -->
+  <path d="M230,160 L300,160" stroke="#94a3b8" stroke-width="2" marker-end="url(#arrow)" /> <!-- User -> Job -->
+  <path d="M500,160 L600,160" stroke="#94a3b8" stroke-width="2" marker-end="url(#arrow)" /> <!-- Job -> Schedule -->
+  <path d="M400,320 L400,400" stroke="#94a3b8" stroke-width="2" marker-end="url(#arrow)" /> <!-- Job -> Execution -->
+  <path d="M300,210 L265,210 L265,460 L230,460" stroke="#94a3b8" stroke-width="2" marker-end="url(#arrow)" /> <!-- Job -> Delivery -->
+
+  <!-- Markers -->
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#94a3b8" />
+    </marker>
+  </defs>
+</svg>

@@ -1,0 +1,6 @@
+{
+  "name": "Flydee",
+  "description": "A plane-spotting gamified experience. Identify aircraft in the sky using your camera and sensors, and collect digital cards.",
+  "requestFramePermissions": ["camera", "geolocation"],
+  "majorCapabilities": ["AR Viewfinder", "Flight Tracking", "Digital Collection"]
+}

@@ -1,0 +1,1465 @@
+{
+  "data" : [ {
+    "gid" : "1199515680419840",
+    "actual_time_minutes" : null,
+    "assignee" : null,
+    "assignee_status" : "upcoming",
+    "completed" : false,
+    "completed_at" : null,
+    "created_at" : "2020-12-03T14:47:06.427Z",
+    "due_at" : null,
+    "due_on" : null,
+    "followers" : [ {
+      "gid" : "434273397793530",
+      "name" : "Bright Senanu Agbosu",
+      "resource_type" : "user"
+    } ],
+    "hearted" : false,
+    "hearts" : [ ],
+    "liked" : false,
+    "likes" : [ ],
+    "memberships" : [ {
+      "project" : {
+        "gid" : "1199515680419837",
+        "name" : "Computer Science Curriculum",
+        "resource_type" : "project"
+      },
+      "section" : {
+        "gid" : "1199515680419838",
+        "name" : "Untitled section",
+        "resource_type" : "section"
+      }
+    } ],
+    "modified_at" : "2020-12-14T13:23:45.364Z",
+    "name" : "CS-0001 Seek Affiliation with Ashesi University",
+    "notes" : "",
+    "num_hearts" : 0,
+    "num_likes" : 0,
+    "parent" : null,
+    "permalink_url" : "https://app.asana.com/1/236599948336393/project/1199515680419837/task/1199515680419840",
+    "projects" : [ {
+      "gid" : "1199515680419837",
+      "name" : "Computer Science Curriculum",
+      "resource_type" : "project"
+    } ],
+    "resource_type" : "task",
+    "start_at" : null,
+    "start_on" : null,
+    "subtasks" : [ ],
+    "tags" : [ ],
+    "resource_subtype" : "default_task",
+    "workspace" : {
+      "gid" : "236599948336393",
+      "name" : "aucdt.edu.gh",
+      "resource_type" : "workspace"
+    }
+  }, {
+    "gid" : "1199515680419842",
+    "actual_time_minutes" : null,
+    "assignee" : null,
+    "assignee_status" : "upcoming",
+    "completed" : false,
+    "completed_at" : null,
+    "created_at" : "2020-12-03T14:47:31.373Z",
+    "due_at" : null,
+    "due_on" : null,
+    "followers" : [ {
+      "gid" : "434273397793530",
+      "name" : "Bright Senanu Agbosu",
+      "resource_type" : "user"
+    } ],
+    "hearted" : false,
+    "hearts" : [ ],
+    "liked" : false,
+    "likes" : [ ],
+    "memberships" : [ {
+      "project" : {
+        "gid" : "1199515680419837",
+        "name" : "Computer Science Curriculum",
+        "resource_type" : "project"
+      },
+      "section" : {
+        "gid" : "1199515680419838",
+        "name" : "Untitled section",
+        "resource_type" : "section"
+      }
+    } ],
+    "modified_at" : "2020-12-03T14:48:16.594Z",
+    "name" : "CS-0002 A statement indicating that the proposed programme has the support of ACDT",
+    "notes" : "",
+    "num_hearts" : 0,
+    "num_likes" : 0,
+    "parent" : null,
+    "permalink_url" : "https://app.asana.com/1/236599948336393/project/1199515680419837/task/1199515680419842",
+    "projects" : [ {
+      "gid" : "1199515680419837",
+      "name" : "Computer Science Curriculum",
+      "resource_type" : "project"
+    } ],
+    "resource_type" : "task",
+    "start_at" : null,
+    "start_on" : null,
+    "subtasks" : [ ],
+    "tags" : [ ],
+    "resource_subtype" : "default_task",
+    "workspace" : {
+      "gid" : "236599948336393",
+      "name" : "aucdt.edu.gh",
+      "resource_type" : "workspace"
+    }
+  }, {
+    "gid" : "1199515680419844",
+    "actual_time_minutes" : null,
+    "assignee" : null,
+    "assignee_status" : "upcoming",
+    "completed" : false,
+    "completed_at" : null,
+    "created_at" : "2020-12-03T14:48:19.167Z",
+    "due_at" : null,
+    "due_on" : null,
+    "followers" : [ {
+      "gid" : "434273397793530",
+      "name" : "Bright Senanu Agbosu",
+      "resource_type" : "user"
+    } ],
+    "hearted" : false,
+    "hearts" : [ ],
+    "liked" : false,
+    "likes" : [ ],
+    "memberships" : [ {
+      "project" : {
+        "gid" : "1199515680419837",
+        "name" : "Computer Science Curriculum",
+        "resource_type" : "project"
+      },
+      "section" : {
+        "gid" : "1199515680419838",
+        "name" : "Untitled section",
+        "resource_type" : "section"
+      }
+    } ],
+    "modified_at" : "2020-12-03T14:48:32.961Z",
+    "name" : "CS-0003 A statement indicating that the proposed programme has the support of Ashesi University",
+    "notes" : "",
+    "num_hearts" : 0,
+    "num_likes" : 0,
+    "parent" : null,
+    "permalink_url" : "https://app.asana.com/1/236599948336393/project/1199515680419837/task/1199515680419844",
+    "projects" : [ {
+      "gid" : "1199515680419837",
+      "name" : "Computer Science Curriculum",
+      "resource_type" : "project"
+    } ],
+    "resource_type" : "task",
+    "start_at" : null,
+    "start_on" : null,
+    "subtasks" : [ ],
+    "tags" : [ ],
+    "resource_subtype" : "default_task",
+    "workspace" : {
+      "gid" : "236599948336393",
+      "name" : "aucdt.edu.gh",
+      "resource_type" : "workspace"
+    }
+  }, {
+    "gid" : "1199515680419846",
+    "actual_time_minutes" : null,
+    "assignee" : null,
+    "assignee_status" : "upcoming",
+    "completed" : false,
+    "completed_at" : null,
+    "created_at" : "2020-12-03T14:48:36.305Z",
+    "due_at" : null,
+    "due_on" : null,
+    "followers" : [ {
+      "gid" : "434273397793530",
+      "name" : "Bright Senanu Agbosu",
+      "resource_type" : "user"
+    } ],
+    "hearted" : false,
+    "hearts" : [ ],
+    "liked" : false,
+    "likes" : [ ],
+    "memberships" : [ {
+      "project" : {
+        "gid" : "1199515680419837",
+        "name" : "Computer Science Curriculum",
+        "resource_type" : "project"
+      },
+      "section" : {
+        "gid" : "1199515680419838",
+        "name" : "Untitled section",
+        "resource_type" : "section"
+      }
+    } ],
+    "modified_at" : "2020-12-16T10:22:39.091Z",
+    "name" : "CS-0004 Background Information ",
+    "notes" : "State the Aims and Objectives of the programme as fit into the mission and plans of the institution and national demand for the programme.",
+    "num_hearts" : 0,
+    "num_likes" : 0,
+    "parent" : null,
+    "permalink_url" : "https://app.asana.com/1/236599948336393/project/1199515680419837/task/1199515680419846",
+    "projects" : [ {
+      "gid" : "1199515680419837",
+      "name" : "Computer Science Curriculum",
+      "resource_type" : "project"
+    } ],
+    "resource_type" : "task",
+    "start_at" : null,
+    "start_on" : null,
+    "subtasks" : [ ],
+    "tags" : [ ],
+    "resource_subtype" : "default_task",
+    "workspace" : {
+      "gid" : "236599948336393",
+      "name" : "aucdt.edu.gh",
+      "resource_type" : "workspace"
+    }
+  }, {
+    "gid" : "1199515680419850",
+    "actual_time_minutes" : null,
+    "assignee" : null,
+    "assignee_status" : "upcoming",
+    "completed" : false,
+    "completed_at" : null,
+    "created_at" : "2020-12-03T14:49:11.363Z",
+    "due_at" : null,
+    "due_on" : null,
+    "followers" : [ {
+      "gid" : "434273397793530",
+      "name" : "Bright Senanu Agbosu",
+      "resource_type" : "user"
+    } ],
+    "hearted" : false,
+    "hearts" : [ ],
+    "liked" : false,
+    "likes" : [ ],
+    "memberships" : [ {
+      "project" : {
+        "gid" : "1199515680419837",
+        "name" : "Computer Science Curriculum",
+        "resource_type" : "project"
+      },
+      "section" : {
+        "gid" : "1199515680419838",
+        "name" : "Untitled section",
+        "resource_type" : "section"
+      }
+    } ],
+    "modified_at" : "2020-12-14T13:38:49.414Z",
+    "name" : "CS-0005 Clearly state the policies on minimum qualifications for admission into the programme",
+    "notes" : "This documentation can be generated from the NAB website.",
+    "num_hearts" : 0,
+    "num_likes" : 0,
+    "parent" : null,
+    "permalink_url" : "https://app.asana.com/1/236599948336393/project/1199515680419837/task/1199515680419850",
+    "projects" : [ {
+      "gid" : "1199515680419837",
+      "name" : "Computer Science Curriculum",
+      "resource_type" : "project"
+    } ],
+    "resource_type" : "task",
+    "start_at" : null,
+    "start_on" : null,
+    "subtasks" : [ ],
+    "tags" : [ ],
+    "resource_subtype" : "default_task",
+    "workspace" : {
+      "gid" : "236599948336393",
+      "name" : "aucdt.edu.gh",
+      "resource_type" : "workspace"
+    }
+  }, {
+    "gid" : "1199515680419852",
+    "actual_time_minutes" : null,
+    "assignee" : null,
+    "assignee_status" : "upcoming",
+    "completed" : false,
+    "completed_at" : null,
+    "created_at" : "2020-12-03T14:49:52.689Z",
+    "due_at" : null,
+    "due_on" : null,
+    "followers" : [ {
+      "gid" : "434273397793530",
+      "name" : "Bright Senanu Agbosu",
+      "resource_type" : "user"
+    } ],
+    "hearted" : false,
+    "hearts" : [ ],
+    "liked" : false,
+    "likes" : [ ],
+    "memberships" : [ {
+      "project" : {
+        "gid" : "1199515680419837",
+        "name" : "Computer Science Curriculum",
+        "resource_type" : "project"
+      },
+      "section" : {
+        "gid" : "1199515680419838",
+        "name" : "Untitled section",
+        "resource_type" : "section"
+      }
+    } ],
+    "modified_at" : "2020-12-03T14:50:25.171Z",
+    "name" : "CS-0006 Clearly state the policies on minimum qualifications for retention",
+    "notes" : "",
+    "num_hearts" : 0,
+    "num_likes" : 0,
+    "parent" : null,
+    "permalink_url" : "https://app.asana.com/1/236599948336393/project/1199515680419837/task/1199515680419852",
+    "projects" : [ {
+      "gid" : "1199515680419837",
+      "name" : "Computer Science Curriculum",
+      "resource_type" : "project"
+    } ],
+    "resource_type" : "task",
+    "start_at" : null,
+    "start_on" : null,
+    "subtasks" : [ ],
+    "tags" : [ ],
+    "resource_subtype" : "default_task",
+    "workspace" : {
+      "gid" : "236599948336393",
+      "name" : "aucdt.edu.gh",
+      "resource_type" : "workspace"
+    }
+  }, {
+    "gid" : "1199515680419854",
+    "actual_time_minutes" : null,
+    "assignee" : null,
+    "assignee_status" : "upcoming",
+    "completed" : false,
+    "completed_at" : null,
+    "created_at" : "2020-12-03T14:50:25.642Z",
+    "due_at" : null,
+    "due_on" : null,
+    "followers" : [ {
+      "gid" : "434273397793530",
+      "name" : "Bright Senanu Agbosu",
+      "resource_type" : "user"
+    } ],
+    "hearted" : false,
+    "hearts" : [ ],
+    "liked" : false,
+    "likes" : [ ],
+    "memberships" : [ {
+      "project" : {
+        "gid" : "1199515680419837",
+        "name" : "Computer Science Curriculum",
+        "resource_type" : "project"
+      },
+      "section" : {
+        "gid" : "1199515680419838",
+        "name" : "Untitled section",
+        "resource_type" : "section"
+      }
+    } ],
+    "modified_at" : "2020-12-03T14:50:53.793Z",
+    "name" : "CS-0007 Clearly state the policies on minimum qualifications for graduation",
+    "notes" : "",
+    "num_hearts" : 0,
+    "num_likes" : 0,
+    "parent" : null,
+    "permalink_url" : "https://app.asana.com/1/236599948336393/project/1199515680419837/task/1199515680419854",
+    "projects" : [ {
+      "gid" : "1199515680419837",
+      "name" : "Computer Science Curriculum",
+      "resource_type" : "project"
+    } ],
+    "resource_type" : "task",
+    "start_at" : null,
+    "start_on" : null,
+    "subtasks" : [ ],
+    "tags" : [ ],
+    "resource_subtype" : "default_task",
+    "workspace" : {
+      "gid" : "236599948336393",
+      "name" : "aucdt.edu.gh",
+      "resource_type" : "workspace"
+    }
+  }, {
+    "gid" : "1199515680419858",
+    "actual_time_minutes" : null,
+    "assignee" : null,
+    "assignee_status" : "upcoming",
+    "completed" : false,
+    "completed_at" : null,
+    "created_at" : "2020-12-03T14:51:12.578Z",
+    "due_at" : null,
+    "due_on" : null,
+    "followers" : [ {
+      "gid" : "434273397793530",
+      "name" : "Bright Senanu Agbosu",
+      "resource_type" : "user"
+    } ],
+    "hearted" : false,
+    "hearts" : [ ],
+    "liked" : false,
+    "likes" : [ ],
+    "memberships" : [ {
+      "project" : {
+        "gid" : "1199515680419837",
+        "name" : "Computer Science Curriculum",
+        "resource_type" : "project"
+      },
+      "section" : {
+        "gid" : "1199515680419838",
+        "name" : "Untitled section",
+        "resource_type" : "section"
+      }
+    } ],
+    "modified_at" : "2020-12-14T13:50:31.263Z",
+    "name" : "CS-0008 Employment",
+    "notes" : "List the areas in which the students are likely to be employed\n\n",
+    "num_hearts" : 0,
+    "num_likes" : 0,
+    "parent" : null,
+    "permalink_url" : "https://app.asana.com/1/236599948336393/project/1199515680419837/task/1199515680419858",
+    "projects" : [ {
+      "gid" : "1199515680419837",
+      "name" : "Computer Science Curriculum",
+      "resource_type" : "project"
+    } ],
+    "resource_type" : "task",
+    "start_at" : null,
+    "start_on" : null,
+    "subtasks" : [ ],
+    "tags" : [ ],
+    "resource_subtype" : "default_task",
+    "workspace" : {
+      "gid" : "236599948336393",
+      "name" : "aucdt.edu.gh",
+      "resource_type" : "workspace"
+    }
+  }, {
+    "gid" : "1199515680419860",
+    "actual_time_minutes" : null,
+    "assignee" : null,
+    "assignee_status" : "upcoming",
+    "completed" : false,
+    "completed_at" : null,
+    "created_at" : "2020-12-03T14:51:33.755Z",
+    "due_at" : null,
+    "due_on" : null,
+    "followers" : [ {
+      "gid" : "434273397793530",
+      "name" : "Bright Senanu Agbosu",
+      "resource_type" : "user"
+    }, {
+      "gid" : "236599939894511",
+      "name" : "Daniel Twum",
+      "resource_type" : "user"
+    } ],
+    "hearted" : false,
+    "hearts" : [ ],
+    "liked" : false,
+    "likes" : [ ],
+    "memberships" : [ {
+      "project" : {
+        "gid" : "1199515680419837",
+        "name" : "Computer Science Curriculum",
+        "resource_type" : "project"
+      },
+      "section" : {
+        "gid" : "1199515680419838",
+        "name" : "Untitled section",
+        "resource_type" : "section"
+      }
+    } ],
+    "modified_at" : "2020-12-04T12:04:35.144Z",
+    "name" : "CS-0009 Consultations",
+    "notes" : "State the levels of consultations for the design of the programme including consultations with the appropriate professional and/or relevant supervisory body where applicable.\n\ncan we outline names of possible institutions and individuals we can contact for this curriculums development? https://app.asana.com/0/236599948336398/\n\n\n",
+    "num_hearts" : 0,
+    "num_likes" : 0,
+    "parent" : null,
+    "permalink_url" : "https://app.asana.com/1/236599948336393/project/1199515680419837/task/1199515680419860",
+    "projects" : [ {
+      "gid" : "1199515680419837",
+      "name" : "Computer Science Curriculum",
+      "resource_type" : "project"
+    } ],
+    "resource_type" : "task",
+    "start_at" : null,
+    "start_on" : null,
+    "subtasks" : [ ],
+    "tags" : [ ],
+    "resource_subtype" : "default_task",
+    "workspace" : {
+      "gid" : "236599948336393",
+      "name" : "aucdt.edu.gh",
+      "resource_type" : "workspace"
+    }
+  }, {
+    "gid" : "1199515680419862",
+    "actual_time_minutes" : null,
+    "assignee" : null,
+    "assignee_status" : "upcoming",
+    "completed" : false,
+    "completed_at" : null,
+    "created_at" : "2020-12-03T14:52:14.588Z",
+    "due_at" : null,
+    "due_on" : null,
+    "followers" : [ {
+      "gid" : "434273397793530",
+      "name" : "Bright Senanu Agbosu",
+      "resource_type" : "user"
+    } ],
+    "hearted" : false,
+    "hearts" : [ ],
+    "liked" : false,
+    "likes" : [ ],
+    "memberships" : [ {
+      "project" : {
+        "gid" : "1199515680419837",
+        "name" : "Computer Science Curriculum",
+        "resource_type" : "project"
+      },
+      "section" : {
+        "gid" : "1199515680419838",
+        "name" : "Untitled section",
+        "resource_type" : "section"
+      }
+    } ],
+    "modified_at" : "2020-12-03T14:52:51.255Z",
+    "name" : "CS-0010 Components of the Programme",
+    "notes" : "Provide details of the curriculum and mode of delivery to include the following:",
+    "num_hearts" : 0,
+    "num_likes" : 0,
+    "parent" : null,
+    "permalink_url" : "https://app.asana.com/1/236599948336393/project/1199515680419837/task/1199515680419862",
+    "projects" : [ {
+      "gid" : "1199515680419837",
+      "name" : "Computer Science Curriculum",
+      "resource_type" : "project"
+    } ],
+    "resource_type" : "task",
+    "start_at" : null,
+    "start_on" : null,
+    "subtasks" : [ ],
+    "tags" : [ ],
+    "resource_subtype" : "default_task",
+    "workspace" : {
+      "gid" : "236599948336393",
+      "name" : "aucdt.edu.gh",
+      "resource_type" : "workspace"
+    }
+  }, {
+    "gid" : "1199515680419864",
+    "actual_time_minutes" : null,
+    "assignee" : null,
+    "assignee_status" : "upcoming",
+    "completed" : false,
+    "completed_at" : null,
+    "created_at" : "2020-12-03T14:53:36.953Z",
+    "due_at" : null,
+    "due_on" : null,
+    "followers" : [ {
+      "gid" : "434273397793530",
+      "name" : "Bright Senanu Agbosu",
+      "resource_type" : "user"
+    } ],
+    "hearted" : false,
+    "hearts" : [ ],
+    "liked" : false,
+    "likes" : [ ],
+    "memberships" : [ {
+      "project" : {
+        "gid" : "1199515680419837",
+        "name" : "Computer Science Curriculum",
+        "resource_type" : "project"
+      },
+      "section" : {
+        "gid" : "1199515680419838",
+        "name" : "Untitled section",
+        "resource_type" : "section"
+      }
+    } ],
+    "modified_at" : "2020-12-03T14:54:24.212Z",
+    "name" : "CS-0011 Provide list of required courses",
+    "notes" : "",
+    "num_hearts" : 0,
+    "num_likes" : 0,
+    "parent" : null,
+    "permalink_url" : "https://app.asana.com/1/236599948336393/project/1199515680419837/task/1199515680419864",
+    "projects" : [ {
+      "gid" : "1199515680419837",
+      "name" : "Computer Science Curriculum",
+      "resource_type" : "project"
+    } ],
+    "resource_type" : "task",
+    "start_at" : null,
+    "start_on" : null,
+    "subtasks" : [ ],
+    "tags" : [ ],
+    "resource_subtype" : "default_task",
+    "workspace" : {
+      "gid" : "236599948336393",
+      "name" : "aucdt.edu.gh",
+      "resource_type" : "workspace"
+    }
+  }, {
+    "gid" : "1199515680419867",
+    "actual_time_minutes" : null,
+    "assignee" : null,
+    "assignee_status" : "upcoming",
+    "completed" : false,
+    "completed_at" : null,
+    "created_at" : "2020-12-03T14:54:06.123Z",
+    "due_at" : null,
+    "due_on" : null,
+    "followers" : [ {
+      "gid" : "434273397793530",
+      "name" : "Bright Senanu Agbosu",
+      "resource_type" : "user"
+    } ],
+    "hearted" : false,
+    "hearts" : [ ],
+    "liked" : false,
+    "likes" : [ ],
+    "memberships" : [ {
+      "project" : {
+        "gid" : "1199515680419837",
+        "name" : "Computer Science Curriculum",
+        "resource_type" : "project"
+      },
+      "section" : {
+        "gid" : "1199515680419838",
+        "name" : "Untitled section",
+        "resource_type" : "section"
+      }
+    } ],
+    "modified_at" : "2020-12-03T14:54:41.043Z",
+    "name" : "CS-0012 Provide list of elective courses",
+    "notes" : "",
+    "num_hearts" : 0,
+    "num_likes" : 0,
+    "parent" : null,
+    "permalink_url" : "https://app.asana.com/1/236599948336393/project/1199515680419837/task/1199515680419867",
+    "projects" : [ {
+      "gid" : "1199515680419837",
+      "name" : "Computer Science Curriculum",
+      "resource_type" : "project"
+    } ],
+    "resource_type" : "task",
+    "start_at" : null,
+    "start_on" : null,
+    "subtasks" : [ ],
+    "tags" : [ ],
+    "resource_subtype" : "default_task",
+    "workspace" : {
+      "gid" : "236599948336393",
+      "name" : "aucdt.edu.gh",
+      "resource_type" : "workspace"
+    }
+  }, {
+    "gid" : "1199515680419868",
+    "actual_time_minutes" : null,
+    "assignee" : null,
+    "assignee_status" : "upcoming",
+    "completed" : false,
+    "completed_at" : null,
+    "created_at" : "2020-12-03T14:54:36.399Z",
+    "due_at" : null,
+    "due_on" : null,
+    "followers" : [ {
+      "gid" : "434273397793530",
+      "name" : "Bright Senanu Agbosu",
+      "resource_type" : "user"
+    } ],
+    "hearted" : false,
+    "hearts" : [ ],
+    "liked" : false,
+    "likes" : [ ],
+    "memberships" : [ {
+      "project" : {
+        "gid" : "1199515680419837",
+        "name" : "Computer Science Curriculum",
+        "resource_type" : "project"
+      },
+      "section" : {
+        "gid" : "1199515680419838",
+        "name" : "Untitled section",
+        "resource_type" : "section"
+      }
+    } ],
+    "modified_at" : "2020-12-03T14:54:54.644Z",
+    "name" : "CS-0013 Provide list of research component ",
+    "notes" : "",
+    "num_hearts" : 0,
+    "num_likes" : 0,
+    "parent" : null,
+    "permalink_url" : "https://app.asana.com/1/236599948336393/project/1199515680419837/task/1199515680419868",
+    "projects" : [ {
+      "gid" : "1199515680419837",
+      "name" : "Computer Science Curriculum",
+      "resource_type" : "project"
+    } ],
+    "resource_type" : "task",
+    "start_at" : null,
+    "start_on" : null,
+    "subtasks" : [ ],
+    "tags" : [ ],
+    "resource_subtype" : "default_task",
+    "workspace" : {
+      "gid" : "236599948336393",
+      "name" : "aucdt.edu.gh",
+      "resource_type" : "workspace"
+    }
+  }, {
+    "gid" : "1199515680419870",
+    "actual_time_minutes" : null,
+    "assignee" : null,
+    "assignee_status" : "upcoming",
+    "completed" : false,
+    "completed_at" : null,
+    "created_at" : "2020-12-03T14:54:55.964Z",
+    "due_at" : null,
+    "due_on" : null,
+    "followers" : [ {
+      "gid" : "434273397793530",
+      "name" : "Bright Senanu Agbosu",
+      "resource_type" : "user"
+    } ],
+    "hearted" : false,
+    "hearts" : [ ],
+    "liked" : false,
+    "likes" : [ ],
+    "memberships" : [ {
+      "project" : {
+        "gid" : "1199515680419837",
+        "name" : "Computer Science Curriculum",
+        "resource_type" : "project"
+      },
+      "section" : {
+        "gid" : "1199515680419838",
+        "name" : "Untitled section",
+        "resource_type" : "section"
+      }
+    } ],
+    "modified_at" : "2020-12-03T14:55:52.644Z",
+    "name" : "CS-0014 Provide list of practical training, industrial attachment, internship",
+    "notes" : "",
+    "num_hearts" : 0,
+    "num_likes" : 0,
+    "parent" : null,
+    "permalink_url" : "https://app.asana.com/1/236599948336393/project/1199515680419837/task/1199515680419870",
+    "projects" : [ {
+      "gid" : "1199515680419837",
+      "name" : "Computer Science Curriculum",
+      "resource_type" : "project"
+    } ],
+    "resource_type" : "task",
+    "start_at" : null,
+    "start_on" : null,
+    "subtasks" : [ ],
+    "tags" : [ ],
+    "resource_subtype" : "default_task",
+    "workspace" : {
+      "gid" : "236599948336393",
+      "name" : "aucdt.edu.gh",
+      "resource_type" : "workspace"
+    }
+  }, {
+    "gid" : "1199515680419874",
+    "actual_time_minutes" : null,
+    "assignee" : null,
+    "assignee_status" : "upcoming",
+    "completed" : false,
+    "completed_at" : null,
+    "created_at" : "2020-12-03T14:55:53.240Z",
+    "due_at" : null,
+    "due_on" : null,
+    "followers" : [ {
+      "gid" : "434273397793530",
+      "name" : "Bright Senanu Agbosu",
+      "resource_type" : "user"
+    } ],
+    "hearted" : false,
+    "hearts" : [ ],
+    "liked" : false,
+    "likes" : [ ],
+    "memberships" : [ {
+      "project" : {
+        "gid" : "1199515680419837",
+        "name" : "Computer Science Curriculum",
+        "resource_type" : "project"
+      },
+      "section" : {
+        "gid" : "1199515680419838",
+        "name" : "Untitled section",
+        "resource_type" : "section"
+      }
+    } ],
+    "modified_at" : "2025-04-23T23:31:02.631Z",
+    "name" : "CS-0015 Semester-by-semester structure/schedule of course, showing the credit value of each course",
+    "notes" : "",
+    "num_hearts" : 0,
+    "num_likes" : 0,
+    "parent" : null,
+    "permalink_url" : "https://app.asana.com/1/236599948336393/project/1199515680419837/task/1199515680419874",
+    "projects" : [ {
+      "gid" : "1199515680419837",
+      "name" : "Computer Science Curriculum",
+      "resource_type" : "project"
+    } ],
+    "resource_type" : "task",
+    "start_at" : null,
+    "start_on" : null,
+    "subtasks" : [ ],
+    "tags" : [ ],
+    "resource_subtype" : "default_task",
+    "workspace" : {
+      "gid" : "236599948336393",
+      "name" : "aucdt.edu.gh",
+      "resource_type" : "workspace"
+    }
+  }, {
+    "gid" : "1199515680419876",
+    "actual_time_minutes" : null,
+    "assignee" : null,
+    "assignee_status" : "upcoming",
+    "completed" : false,
+    "completed_at" : null,
+    "created_at" : "2020-12-03T14:56:07.223Z",
+    "due_at" : null,
+    "due_on" : null,
+    "followers" : [ {
+      "gid" : "434273397793530",
+      "name" : "Bright Senanu Agbosu",
+      "resource_type" : "user"
+    } ],
+    "hearted" : false,
+    "hearts" : [ ],
+    "liked" : false,
+    "likes" : [ ],
+    "memberships" : [ {
+      "project" : {
+        "gid" : "1199515680419837",
+        "name" : "Computer Science Curriculum",
+        "resource_type" : "project"
+      },
+      "section" : {
+        "gid" : "1199515680419838",
+        "name" : "Untitled section",
+        "resource_type" : "section"
+      }
+    } ],
+    "modified_at" : "2020-12-03T14:57:23.934Z",
+    "name" : "CS-0016 Course Descriptions",
+    "notes" : "Provide short description of the content of the courses in the programme to include:\n    Objective\n    Content\n    Mode of delivery\n    Reading material  \n",
+    "num_hearts" : 0,
+    "num_likes" : 0,
+    "parent" : null,
+    "permalink_url" : "https://app.asana.com/1/236599948336393/project/1199515680419837/task/1199515680419876",
+    "projects" : [ {
+      "gid" : "1199515680419837",
+      "name" : "Computer Science Curriculum",
+      "resource_type" : "project"
+    } ],
+    "resource_type" : "task",
+    "start_at" : null,
+    "start_on" : null,
+    "subtasks" : [ ],
+    "tags" : [ ],
+    "resource_subtype" : "default_task",
+    "workspace" : {
+      "gid" : "236599948336393",
+      "name" : "aucdt.edu.gh",
+      "resource_type" : "workspace"
+    }
+  }, {
+    "gid" : "1199515680419878",
+    "actual_time_minutes" : null,
+    "assignee" : null,
+    "assignee_status" : "upcoming",
+    "completed" : false,
+    "completed_at" : null,
+    "created_at" : "2020-12-03T14:57:25.970Z",
+    "due_at" : null,
+    "due_on" : null,
+    "followers" : [ {
+      "gid" : "434273397793530",
+      "name" : "Bright Senanu Agbosu",
+      "resource_type" : "user"
+    } ],
+    "hearted" : false,
+    "hearts" : [ ],
+    "liked" : false,
+    "likes" : [ ],
+    "memberships" : [ {
+      "project" : {
+        "gid" : "1199515680419837",
+        "name" : "Computer Science Curriculum",
+        "resource_type" : "project"
+      },
+      "section" : {
+        "gid" : "1199515680419838",
+        "name" : "Untitled section",
+        "resource_type" : "section"
+      }
+    } ],
+    "modified_at" : "2020-12-03T14:58:10.978Z",
+    "name" : "CS-0017 Assessment of students’ performance and achievements:    ",
+    "notes" : "Regulations on students’ assessment, performance and achievements should be clearly defined and there should be evidence of students’ awareness of the regulations.",
+    "num_hearts" : 0,
+    "num_likes" : 0,
+    "parent" : null,
+    "permalink_url" : "https://app.asana.com/1/236599948336393/project/1199515680419837/task/1199515680419878",
+    "projects" : [ {
+      "gid" : "1199515680419837",
+      "name" : "Computer Science Curriculum",
+      "resource_type" : "project"
+    } ],
+    "resource_type" : "task",
+    "start_at" : null,
+    "start_on" : null,
+    "subtasks" : [ ],
+    "tags" : [ ],
+    "resource_subtype" : "default_task",
+    "workspace" : {
+      "gid" : "236599948336393",
+      "name" : "aucdt.edu.gh",
+      "resource_type" : "workspace"
+    }
+  }, {
+    "gid" : "1199515680419880",
+    "actual_time_minutes" : null,
+    "assignee" : null,
+    "assignee_status" : "upcoming",
+    "completed" : false,
+    "completed_at" : null,
+    "created_at" : "2020-12-03T14:58:13.874Z",
+    "due_at" : null,
+    "due_on" : null,
+    "followers" : [ {
+      "gid" : "434273397793530",
+      "name" : "Bright Senanu Agbosu",
+      "resource_type" : "user"
+    } ],
+    "hearted" : false,
+    "hearts" : [ ],
+    "liked" : false,
+    "likes" : [ ],
+    "memberships" : [ {
+      "project" : {
+        "gid" : "1199515680419837",
+        "name" : "Computer Science Curriculum",
+        "resource_type" : "project"
+      },
+      "section" : {
+        "gid" : "1199515680419838",
+        "name" : "Untitled section",
+        "resource_type" : "section"
+      }
+    } ],
+    "modified_at" : "2020-12-03T14:58:44.640Z",
+    "name" : "CS-0018 Mode of certification ",
+    "notes" : "Please, state name of awarding institution.",
+    "num_hearts" : 0,
+    "num_likes" : 0,
+    "parent" : null,
+    "permalink_url" : "https://app.asana.com/1/236599948336393/project/1199515680419837/task/1199515680419880",
+    "projects" : [ {
+      "gid" : "1199515680419837",
+      "name" : "Computer Science Curriculum",
+      "resource_type" : "project"
+    } ],
+    "resource_type" : "task",
+    "start_at" : null,
+    "start_on" : null,
+    "subtasks" : [ ],
+    "tags" : [ ],
+    "resource_subtype" : "default_task",
+    "workspace" : {
+      "gid" : "236599948336393",
+      "name" : "aucdt.edu.gh",
+      "resource_type" : "workspace"
+    }
+  }, {
+    "gid" : "1199515680419882",
+    "actual_time_minutes" : null,
+    "assignee" : null,
+    "assignee_status" : "upcoming",
+    "completed" : false,
+    "completed_at" : null,
+    "created_at" : "2020-12-03T14:58:45.163Z",
+    "due_at" : null,
+    "due_on" : null,
+    "followers" : [ {
+      "gid" : "434273397793530",
+      "name" : "Bright Senanu Agbosu",
+      "resource_type" : "user"
+    } ],
+    "hearted" : false,
+    "hearts" : [ ],
+    "liked" : false,
+    "likes" : [ ],
+    "memberships" : [ {
+      "project" : {
+        "gid" : "1199515680419837",
+        "name" : "Computer Science Curriculum",
+        "resource_type" : "project"
+      },
+      "section" : {
+        "gid" : "1199515680419838",
+        "name" : "Untitled section",
+        "resource_type" : "section"
+      }
+    } ],
+    "modified_at" : "2020-12-14T14:03:01.343Z",
+    "name" : "CS-0019 Staffing (Teaching Staff)",
+    "notes" : "Provide information on staffing for the programme\n    Name of staff\n    Sex\n    Status (Full Time or Part-Time)\n    Rank\n    Qualification (starting from highest indicating title of programme. Institution of award, year of award and place)\n    Area of Specialization\n    Courses Taught\n    Credit Hours\n    Teaching Experience\nNB: Attach list of publications and technical reports of staff",
+    "num_hearts" : 0,
+    "num_likes" : 0,
+    "parent" : null,
+    "permalink_url" : "https://app.asana.com/1/236599948336393/project/1199515680419837/task/1199515680419882",
+    "projects" : [ {
+      "gid" : "1199515680419837",
+      "name" : "Computer Science Curriculum",
+      "resource_type" : "project"
+    } ],
+    "resource_type" : "task",
+    "start_at" : null,
+    "start_on" : null,
+    "subtasks" : [ ],
+    "tags" : [ ],
+    "resource_subtype" : "default_task",
+    "workspace" : {
+      "gid" : "236599948336393",
+      "name" : "aucdt.edu.gh",
+      "resource_type" : "workspace"
+    }
+  }, {
+    "gid" : "1199515680419885",
+    "actual_time_minutes" : null,
+    "assignee" : null,
+    "assignee_status" : "upcoming",
+    "completed" : false,
+    "completed_at" : null,
+    "created_at" : "2020-12-03T15:02:55.434Z",
+    "due_at" : null,
+    "due_on" : null,
+    "followers" : [ {
+      "gid" : "434273397793530",
+      "name" : "Bright Senanu Agbosu",
+      "resource_type" : "user"
+    } ],
+    "hearted" : false,
+    "hearts" : [ ],
+    "liked" : false,
+    "likes" : [ ],
+    "memberships" : [ {
+      "project" : {
+        "gid" : "1199515680419837",
+        "name" : "Computer Science Curriculum",
+        "resource_type" : "project"
+      },
+      "section" : {
+        "gid" : "1199515680419838",
+        "name" : "Untitled section",
+        "resource_type" : "section"
+      }
+    } ],
+    "modified_at" : "2020-12-14T14:03:08.532Z",
+    "name" : "CS-0020 Staffing (Technical Staff)",
+    "notes" : "Provide information on staffing for the programme\n    Name of staff\n    Sex\n    Status (Full Time or Part-Time)\n    Rank\n    Qualification (starting from highest indicating title of programme. Institution of award, year of award and place)\n    Area of Specialization\n    Courses Taught\n    Credit Hours\n    Teaching Experience\n\nNB: Attach list of publications and technical reports of staff\n\n",
+    "num_hearts" : 0,
+    "num_likes" : 0,
+    "parent" : null,
+    "permalink_url" : "https://app.asana.com/1/236599948336393/project/1199515680419837/task/1199515680419885",
+    "projects" : [ {
+      "gid" : "1199515680419837",
+      "name" : "Computer Science Curriculum",
+      "resource_type" : "project"
+    } ],
+    "resource_type" : "task",
+    "start_at" : null,
+    "start_on" : null,
+    "subtasks" : [ ],
+    "tags" : [ ],
+    "resource_subtype" : "default_task",
+    "workspace" : {
+      "gid" : "236599948336393",
+      "name" : "aucdt.edu.gh",
+      "resource_type" : "workspace"
+    }
+  }, {
+    "gid" : "1199515680419886",
+    "actual_time_minutes" : null,
+    "assignee" : null,
+    "assignee_status" : "upcoming",
+    "completed" : false,
+    "completed_at" : null,
+    "created_at" : "2020-12-03T15:04:09.093Z",
+    "due_at" : null,
+    "due_on" : null,
+    "followers" : [ {
+      "gid" : "434273397793530",
+      "name" : "Bright Senanu Agbosu",
+      "resource_type" : "user"
+    } ],
+    "hearted" : false,
+    "hearts" : [ ],
+    "liked" : false,
+    "likes" : [ ],
+    "memberships" : [ {
+      "project" : {
+        "gid" : "1199515680419837",
+        "name" : "Computer Science Curriculum",
+        "resource_type" : "project"
+      },
+      "section" : {
+        "gid" : "1199515680419838",
+        "name" : "Untitled section",
+        "resource_type" : "section"
+      }
+    } ],
+    "modified_at" : "2020-12-15T13:10:34.825Z",
+    "name" : "CS-0021 Student Enrolment",
+    "notes" : "",
+    "num_hearts" : 0,
+    "num_likes" : 0,
+    "parent" : null,
+    "permalink_url" : "https://app.asana.com/1/236599948336393/project/1199515680419837/task/1199515680419886",
+    "projects" : [ {
+      "gid" : "1199515680419837",
+      "name" : "Computer Science Curriculum",
+      "resource_type" : "project"
+    } ],
+    "resource_type" : "task",
+    "start_at" : null,
+    "start_on" : null,
+    "subtasks" : [ ],
+    "tags" : [ ],
+    "resource_subtype" : "default_task",
+    "workspace" : {
+      "gid" : "236599948336393",
+      "name" : "aucdt.edu.gh",
+      "resource_type" : "workspace"
+    }
+  }, {
+    "gid" : "1199515680419888",
+    "actual_time_minutes" : null,
+    "assignee" : null,
+    "assignee_status" : "upcoming",
+    "completed" : false,
+    "completed_at" : null,
+    "created_at" : "2020-12-03T15:05:03.490Z",
+    "due_at" : null,
+    "due_on" : null,
+    "followers" : [ {
+      "gid" : "434273397793530",
+      "name" : "Bright Senanu Agbosu",
+      "resource_type" : "user"
+    } ],
+    "hearted" : false,
+    "hearts" : [ ],
+    "liked" : false,
+    "likes" : [ ],
+    "memberships" : [ {
+      "project" : {
+        "gid" : "1199515680419837",
+        "name" : "Computer Science Curriculum",
+        "resource_type" : "project"
+      },
+      "section" : {
+        "gid" : "1199515680419838",
+        "name" : "Untitled section",
+        "resource_type" : "section"
+      }
+    } ],
+    "modified_at" : "2020-12-07T17:53:27.119Z",
+    "name" : "CS-0022 Resources (Physical Resources)",
+    "notes" : "Provide details of the available physical facilities including the following:\n    classrooms, laboratories/demonstration rooms, studios and farms workshops and their respective capacities (as applicable);\n    Pieces of equipment, instruments and tools;\n    Provisions made for the physically challenged;\n    Safety facilities provided.\n",
+    "num_hearts" : 0,
+    "num_likes" : 0,
+    "parent" : null,
+    "permalink_url" : "https://app.asana.com/1/236599948336393/project/1199515680419837/task/1199515680419888",
+    "projects" : [ {
+      "gid" : "1199515680419837",
+      "name" : "Computer Science Curriculum",
+      "resource_type" : "project"
+    } ],
+    "resource_type" : "task",
+    "start_at" : null,
+    "start_on" : null,
+    "subtasks" : [ ],
+    "tags" : [ ],
+    "resource_subtype" : "default_task",
+    "workspace" : {
+      "gid" : "236599948336393",
+      "name" : "aucdt.edu.gh",
+      "resource_type" : "workspace"
+    }
+  }, {
+    "gid" : "1199609770140487",
+    "actual_time_minutes" : null,
+    "assignee" : null,
+    "assignee_status" : "upcoming",
+    "completed" : false,
+    "completed_at" : null,
+    "created_at" : "2020-12-15T13:43:22.906Z",
+    "due_at" : null,
+    "due_on" : null,
+    "followers" : [ {
+      "gid" : "434273397793530",
+      "name" : "Bright Senanu Agbosu",
+      "resource_type" : "user"
+    } ],
+    "hearted" : false,
+    "hearts" : [ ],
+    "liked" : false,
+    "likes" : [ ],
+    "memberships" : [ {
+      "project" : {
+        "gid" : "1199515680419837",
+        "name" : "Computer Science Curriculum",
+        "resource_type" : "project"
+      },
+      "section" : {
+        "gid" : "1199515680419838",
+        "name" : "Untitled section",
+        "resource_type" : "section"
+      }
+    } ],
+    "modified_at" : "2020-12-15T13:44:57.068Z",
+    "name" : "CS-0027 Machines, Tools and Equipment",
+    "notes" : "Review all courses and generate a list of machines, tools, equipment's needed to undertake them.",
+    "num_hearts" : 0,
+    "num_likes" : 0,
+    "parent" : null,
+    "permalink_url" : "https://app.asana.com/1/236599948336393/project/1199515680419837/task/1199609770140487",
+    "projects" : [ {
+      "gid" : "1199515680419837",
+      "name" : "Computer Science Curriculum",
+      "resource_type" : "project"
+    } ],
+    "resource_type" : "task",
+    "start_at" : null,
+    "start_on" : null,
+    "subtasks" : [ ],
+    "tags" : [ ],
+    "resource_subtype" : "default_task",
+    "workspace" : {
+      "gid" : "236599948336393",
+      "name" : "aucdt.edu.gh",
+      "resource_type" : "workspace"
+    }
+  }, {
+    "gid" : "1199515680419890",
+    "actual_time_minutes" : null,
+    "assignee" : null,
+    "assignee_status" : "upcoming",
+    "completed" : false,
+    "completed_at" : null,
+    "created_at" : "2020-12-03T15:06:46.288Z",
+    "due_at" : null,
+    "due_on" : null,
+    "followers" : [ {
+      "gid" : "434273397793530",
+      "name" : "Bright Senanu Agbosu",
+      "resource_type" : "user"
+    } ],
+    "hearted" : false,
+    "hearts" : [ ],
+    "liked" : false,
+    "likes" : [ ],
+    "memberships" : [ {
+      "project" : {
+        "gid" : "1199515680419837",
+        "name" : "Computer Science Curriculum",
+        "resource_type" : "project"
+      },
+      "section" : {
+        "gid" : "1199515680419838",
+        "name" : "Untitled section",
+        "resource_type" : "section"
+      }
+    } ],
+    "modified_at" : "2020-12-03T15:07:07.201Z",
+    "name" : "CS-0023 Resources (Physical Resources)",
+    "notes" : "Sources of information (e.g Library) and other relevant resources.",
+    "num_hearts" : 0,
+    "num_likes" : 0,
+    "parent" : null,
+    "permalink_url" : "https://app.asana.com/1/236599948336393/project/1199515680419837/task/1199515680419890",
+    "projects" : [ {
+      "gid" : "1199515680419837",
+      "name" : "Computer Science Curriculum",
+      "resource_type" : "project"
+    } ],
+    "resource_type" : "task",
+    "start_at" : null,
+    "start_on" : null,
+    "subtasks" : [ ],
+    "tags" : [ ],
+    "resource_subtype" : "default_task",
+    "workspace" : {
+      "gid" : "236599948336393",
+      "name" : "aucdt.edu.gh",
+      "resource_type" : "workspace"
+    }
+  }, {
+    "gid" : "1199515680419892",
+    "actual_time_minutes" : null,
+    "assignee" : null,
+    "assignee_status" : "upcoming",
+    "completed" : false,
+    "completed_at" : null,
+    "created_at" : "2020-12-03T15:07:08.609Z",
+    "due_at" : null,
+    "due_on" : null,
+    "followers" : [ {
+      "gid" : "434273397793530",
+      "name" : "Bright Senanu Agbosu",
+      "resource_type" : "user"
+    } ],
+    "hearted" : false,
+    "hearts" : [ ],
+    "liked" : false,
+    "likes" : [ ],
+    "memberships" : [ {
+      "project" : {
+        "gid" : "1199515680419837",
+        "name" : "Computer Science Curriculum",
+        "resource_type" : "project"
+      },
+      "section" : {
+        "gid" : "1199515680419838",
+        "name" : "Untitled section",
+        "resource_type" : "section"
+      }
+    } ],
+    "modified_at" : "2020-12-03T15:07:37.426Z",
+    "name" : "CS-0024 Student Learning Outcomes",
+    "notes" : "Please state/list the student learning outcomes for the programme (i.e. the set of knowledge and skills a graduate of the programme should have)",
+    "num_hearts" : 0,
+    "num_likes" : 0,
+    "parent" : null,
+    "permalink_url" : "https://app.asana.com/1/236599948336393/project/1199515680419837/task/1199515680419892",
+    "projects" : [ {
+      "gid" : "1199515680419837",
+      "name" : "Computer Science Curriculum",
+      "resource_type" : "project"
+    } ],
+    "resource_type" : "task",
+    "start_at" : null,
+    "start_on" : null,
+    "subtasks" : [ ],
+    "tags" : [ ],
+    "resource_subtype" : "default_task",
+    "workspace" : {
+      "gid" : "236599948336393",
+      "name" : "aucdt.edu.gh",
+      "resource_type" : "workspace"
+    }
+  }, {
+    "gid" : "1199515680419894",
+    "actual_time_minutes" : null,
+    "assignee" : null,
+    "assignee_status" : "upcoming",
+    "completed" : false,
+    "completed_at" : null,
+    "created_at" : "2020-12-03T15:07:38.868Z",
+    "due_at" : null,
+    "due_on" : null,
+    "followers" : [ {
+      "gid" : "434273397793530",
+      "name" : "Bright Senanu Agbosu",
+      "resource_type" : "user"
+    } ],
+    "hearted" : false,
+    "hearts" : [ ],
+    "liked" : false,
+    "likes" : [ ],
+    "memberships" : [ {
+      "project" : {
+        "gid" : "1199515680419837",
+        "name" : "Computer Science Curriculum",
+        "resource_type" : "project"
+      },
+      "section" : {
+        "gid" : "1199515680419838",
+        "name" : "Untitled section",
+        "resource_type" : "section"
+      }
+    } ],
+    "modified_at" : "2020-12-03T15:08:02.905Z",
+    "name" : "CS-0025 Sources of Funding for the Programme:",
+    "notes" : "",
+    "num_hearts" : 0,
+    "num_likes" : 0,
+    "parent" : null,
+    "permalink_url" : "https://app.asana.com/1/236599948336393/project/1199515680419837/task/1199515680419894",
+    "projects" : [ {
+      "gid" : "1199515680419837",
+      "name" : "Computer Science Curriculum",
+      "resource_type" : "project"
+    } ],
+    "resource_type" : "task",
+    "start_at" : null,
+    "start_on" : null,
+    "subtasks" : [ ],
+    "tags" : [ ],
+    "resource_subtype" : "default_task",
+    "workspace" : {
+      "gid" : "236599948336393",
+      "name" : "aucdt.edu.gh",
+      "resource_type" : "workspace"
+    }
+  }, {
+    "gid" : "1199515680419896",
+    "actual_time_minutes" : null,
+    "assignee" : null,
+    "assignee_status" : "upcoming",
+    "completed" : false,
+    "completed_at" : null,
+    "created_at" : "2020-12-03T15:08:04.889Z",
+    "due_at" : null,
+    "due_on" : null,
+    "followers" : [ {
+      "gid" : "434273397793530",
+      "name" : "Bright Senanu Agbosu",
+      "resource_type" : "user"
+    } ],
+    "hearted" : false,
+    "hearts" : [ ],
+    "liked" : false,
+    "likes" : [ ],
+    "memberships" : [ {
+      "project" : {
+        "gid" : "1199515680419837",
+        "name" : "Computer Science Curriculum",
+        "resource_type" : "project"
+      },
+      "section" : {
+        "gid" : "1199515680419838",
+        "name" : "Untitled section",
+        "resource_type" : "section"
+      }
+    } ],
+    "modified_at" : "2020-12-03T15:08:33.417Z",
+    "name" : "CS-0026 Linkages",
+    "notes" : "Linkages with other organisations/institutions (national/international) for academic or other forms of support",
+    "num_hearts" : 0,
+    "num_likes" : 0,
+    "parent" : null,
+    "permalink_url" : "https://app.asana.com/1/236599948336393/project/1199515680419837/task/1199515680419896",
+    "projects" : [ {
+      "gid" : "1199515680419837",
+      "name" : "Computer Science Curriculum",
+      "resource_type" : "project"
+    } ],
+    "resource_type" : "task",
+    "start_at" : null,
+    "start_on" : null,
+    "subtasks" : [ ],
+    "tags" : [ ],
+    "resource_subtype" : "default_task",
+    "workspace" : {
+      "gid" : "236599948336393",
+      "name" : "aucdt.edu.gh",
+      "resource_type" : "workspace"
+    }
+  } ]
+}

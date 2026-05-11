@@ -1,0 +1,46 @@
+<svg width="800" height="450" viewBox="0 0 800 450" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif" font-size="14">
+    <style>
+        .bg { fill: #111827; }
+        .box { fill: #1f2937; stroke: #4b5563; stroke-width: 2; rx: 8; }
+        .center-box { fill: #1f2937; stroke: #22d3ee; stroke-width: 3; rx: 8; }
+        .text-title { fill: #f9fafb; text-anchor: middle; font-size: 24px; font-weight: bold; }
+        .text-cat { fill: #9ca3af; text-anchor: middle; font-size: 12px; font-weight: bold; text-transform: uppercase; }
+        .text-tech { fill: #e5e7eb; text-anchor: middle; font-size: 16px; }
+        .line { stroke: #374151; stroke-width: 2; }
+    </style>
+    <rect width="100%" height="100%" class="bg" />
+
+    <!-- Center Box -->
+    <rect x="300" y="175" width="200" height="100" class="center-box" />
+    <text x="400" y="220" class="text-title">dmcd<tspan fill="#22d3ee">AI</tspan></text>
+    <text x="400" y="245" class="text-cat">Tech Stack</text>
+
+    <!-- Top Row -->
+    <rect x="150" y="50" width="180" height="80" class="box" />
+    <text x="240" y="80" class="text-cat">Language</text>
+    <text x="240" y="105" class="text-tech">TypeScript</text>
+
+    <rect x="470" y="50" width="180" height="80" class="box" />
+    <text x="560" y="80" class="text-cat">Frontend Framework</text>
+    <text x="560" y="105" class="text-tech">React 19</text>
+
+    <!-- Bottom Row -->
+    <rect x="50" y="320" width="180" height="80" class="box" />
+    <text x="140" y="350" class="text-cat">Styling</text>
+    <text x="140" y="375" class="text-tech">Tailwind CSS</text>
+
+    <rect x="310" y="320" width="180" height="80" class="box" />
+    <text x="400" y="350" class="text-cat">Environment</text>
+    <text x="400" y="375" class="text-tech">ES Modules / Import Maps</text>
+
+    <rect x="570" y="320" width="180" height="80" class="box" />
+    <text x="660" y="350" class="text-cat">AI Services</text>
+    <text x="660" y="375" class="text-tech">Google Gemini API</text>
+
+    <!-- Lines -->
+    <line x1="400" y1="175" x2="240" y2="130" class="line" />
+    <line x1="400" y1="175" x2="560" y2="130" class="line" />
+    <line x1="400" y1="275" x2="140" y2="320" class="line" />
+    <line x1="400" y1="275" x2="400" y2="320" class="line" />
+    <line x1="400" y1="275" x2="660" y2="320" class="line" />
+</svg>

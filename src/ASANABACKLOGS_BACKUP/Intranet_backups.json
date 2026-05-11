@@ -1,0 +1,1306 @@
+{
+  "data" : [ {
+    "gid" : "1207601770405917",
+    "actual_time_minutes" : null,
+    "assignee" : {
+      "gid" : "1205939110703922",
+      "name" : "Mandela vudugah",
+      "resource_type" : "user"
+    },
+    "assignee_status" : "inbox",
+    "assignee_section" : {
+      "gid" : "1205939110703945",
+      "name" : "Recently assigned",
+      "resource_type" : "section"
+    },
+    "completed" : true,
+    "completed_at" : "2024-08-30T09:36:25.865Z",
+    "created_at" : "2024-06-18T13:45:47.653Z",
+    "due_at" : null,
+    "due_on" : "2024-06-18",
+    "followers" : [ {
+      "gid" : "1205939110703922",
+      "name" : "Mandela vudugah",
+      "resource_type" : "user"
+    }, {
+      "gid" : "1200587641048692",
+      "name" : "Daniel F. Twum",
+      "resource_type" : "user"
+    } ],
+    "hearted" : false,
+    "hearts" : [ ],
+    "liked" : false,
+    "likes" : [ ],
+    "memberships" : [ {
+      "project" : {
+        "gid" : "1201408154433321",
+        "name" : "Intranet",
+        "resource_type" : "project"
+      },
+      "section" : {
+        "gid" : "1201408066615085",
+        "name" : "Untitled section",
+        "resource_type" : "section"
+      }
+    } ],
+    "modified_at" : "2024-08-30T09:36:26.444Z",
+    "name" : "Create ICT weeklies in AUCDT intranet ",
+    "notes" : "Create A folder for Status Reports. Where President can easily view IT Unit status reports.",
+    "num_hearts" : 0,
+    "num_likes" : 0,
+    "parent" : null,
+    "permalink_url" : "https://app.asana.com/1/236599948336393/project/1201408154433321/task/1207601770405917",
+    "projects" : [ {
+      "gid" : "1201408154433321",
+      "name" : "Intranet",
+      "resource_type" : "project"
+    } ],
+    "resource_type" : "task",
+    "start_at" : null,
+    "start_on" : null,
+    "subtasks" : [ ],
+    "tags" : [ ],
+    "resource_subtype" : "default_task",
+    "workspace" : {
+      "gid" : "236599948336393",
+      "name" : "aucdt.edu.gh",
+      "resource_type" : "workspace"
+    }
+  }, {
+    "gid" : "1201893488009914",
+    "actual_time_minutes" : null,
+    "assignee" : null,
+    "assignee_status" : "upcoming",
+    "completed" : true,
+    "completed_at" : "2025-03-19T09:17:56.131Z",
+    "created_at" : "2022-04-06T13:55:22.134Z",
+    "due_at" : null,
+    "due_on" : null,
+    "followers" : [ {
+      "gid" : "434273397793530",
+      "name" : "Bright Senanu Agbosu",
+      "resource_type" : "user"
+    } ],
+    "hearted" : false,
+    "hearts" : [ ],
+    "liked" : false,
+    "likes" : [ ],
+    "memberships" : [ {
+      "project" : {
+        "gid" : "1201408154433321",
+        "name" : "Intranet",
+        "resource_type" : "project"
+      },
+      "section" : {
+        "gid" : "1201408066615085",
+        "name" : "Untitled section",
+        "resource_type" : "section"
+      }
+    } ],
+    "modified_at" : "2025-03-19T09:17:56.390Z",
+    "name" : "Create an email intranet@aucdt.edu.gh",
+    "notes" : "Create an email for AUCDT Intranet and it should be intranet@aucdt.edu.gh.\nThis email should forward to:\n1. Beatrice\n2. Bright\n3. Mr. Twum\n",
+    "num_hearts" : 0,
+    "num_likes" : 0,
+    "parent" : null,
+    "permalink_url" : "https://app.asana.com/1/236599948336393/project/1201408154433321/task/1201893488009914",
+    "projects" : [ {
+      "gid" : "1201408154433321",
+      "name" : "Intranet",
+      "resource_type" : "project"
+    } ],
+    "resource_type" : "task",
+    "start_at" : null,
+    "start_on" : null,
+    "subtasks" : [ ],
+    "tags" : [ ],
+    "resource_subtype" : "default_task",
+    "workspace" : {
+      "gid" : "236599948336393",
+      "name" : "aucdt.edu.gh",
+      "resource_type" : "workspace"
+    }
+  }, {
+    "gid" : "1201408154433330",
+    "actual_time_minutes" : null,
+    "assignee" : {
+      "gid" : "1200587641048692",
+      "name" : "Daniel F. Twum",
+      "resource_type" : "user"
+    },
+    "assignee_status" : "inbox",
+    "completed" : false,
+    "completed_at" : null,
+    "created_at" : "2021-11-22T10:01:45.332Z",
+    "due_at" : null,
+    "due_on" : null,
+    "followers" : [ {
+      "gid" : "1200587641048692",
+      "name" : "Daniel F. Twum",
+      "resource_type" : "user"
+    } ],
+    "hearted" : false,
+    "hearts" : [ ],
+    "liked" : false,
+    "likes" : [ ],
+    "memberships" : [ {
+      "project" : {
+        "gid" : "1201408154433321",
+        "name" : "Intranet",
+        "resource_type" : "project"
+      },
+      "section" : {
+        "gid" : "1201408154433323",
+        "name" : "Intranet evaluation",
+        "resource_type" : "section"
+      }
+    } ],
+    "modified_at" : "2021-11-22T10:09:02.024Z",
+    "name" : "Executive summary",
+    "notes" : "",
+    "num_hearts" : 0,
+    "num_likes" : 0,
+    "parent" : null,
+    "permalink_url" : "https://app.asana.com/1/236599948336393/project/1201408154433321/task/1201408154433330",
+    "projects" : [ {
+      "gid" : "1201408154433321",
+      "name" : "Intranet",
+      "resource_type" : "project"
+    } ],
+    "resource_type" : "task",
+    "start_at" : null,
+    "start_on" : null,
+    "subtasks" : [ {
+      "gid" : "1201408154433331",
+      "actual_time_minutes" : null,
+      "assignee" : null,
+      "assignee_status" : "upcoming",
+      "completed" : false,
+      "completed_at" : null,
+      "created_at" : "2021-11-22T10:01:45.528Z",
+      "due_at" : null,
+      "due_on" : null,
+      "followers" : [ {
+        "gid" : "1200587641048692",
+        "name" : "Daniel F. Twum",
+        "resource_type" : "user"
+      } ],
+      "hearted" : false,
+      "hearts" : [ ],
+      "liked" : false,
+      "likes" : [ ],
+      "memberships" : [ ],
+      "modified_at" : "2021-11-22T10:01:45.783Z",
+      "name" : "Details to include",
+      "notes" : "",
+      "num_hearts" : 0,
+      "num_likes" : 0,
+      "parent" : {
+        "gid" : "1201408154433330",
+        "name" : "Executive summary",
+        "resource_type" : "task",
+        "resource_subtype" : "default_task"
+      },
+      "permalink_url" : "https://app.asana.com/1/236599948336393/task/1201408154433331",
+      "projects" : [ ],
+      "resource_type" : "task",
+      "start_at" : null,
+      "start_on" : null,
+      "subtasks" : [ ],
+      "tags" : [ ],
+      "resource_subtype" : "default_task",
+      "workspace" : {
+        "gid" : "236599948336393",
+        "name" : "aucdt.edu.gh",
+        "resource_type" : "workspace"
+      }
+    }, {
+      "gid" : "1201408154433332",
+      "actual_time_minutes" : null,
+      "assignee" : null,
+      "assignee_status" : "upcoming",
+      "completed" : false,
+      "completed_at" : null,
+      "created_at" : "2021-11-22T10:01:45.825Z",
+      "due_at" : null,
+      "due_on" : null,
+      "followers" : [ {
+        "gid" : "1200587641048692",
+        "name" : "Daniel F. Twum",
+        "resource_type" : "user"
+      } ],
+      "hearted" : false,
+      "hearts" : [ ],
+      "liked" : false,
+      "likes" : [ ],
+      "memberships" : [ ],
+      "modified_at" : "2021-11-22T10:01:46.119Z",
+      "name" : "Create a brief or deck that will structure the rest of your business plan by summing up the opportunity in one document.",
+      "notes" : "",
+      "num_hearts" : 0,
+      "num_likes" : 0,
+      "parent" : {
+        "gid" : "1201408154433330",
+        "name" : "Executive summary",
+        "resource_type" : "task",
+        "resource_subtype" : "default_task"
+      },
+      "permalink_url" : "https://app.asana.com/1/236599948336393/task/1201408154433332",
+      "projects" : [ ],
+      "resource_type" : "task",
+      "start_at" : null,
+      "start_on" : null,
+      "subtasks" : [ ],
+      "tags" : [ ],
+      "resource_subtype" : "default_task",
+      "workspace" : {
+        "gid" : "236599948336393",
+        "name" : "aucdt.edu.gh",
+        "resource_type" : "workspace"
+      }
+    }, {
+      "gid" : "1201408154433333",
+      "actual_time_minutes" : null,
+      "assignee" : null,
+      "assignee_status" : "upcoming",
+      "completed" : false,
+      "completed_at" : null,
+      "created_at" : "2021-11-22T10:01:46.165Z",
+      "due_at" : null,
+      "due_on" : null,
+      "followers" : [ {
+        "gid" : "1200587641048692",
+        "name" : "Daniel F. Twum",
+        "resource_type" : "user"
+      } ],
+      "hearted" : false,
+      "hearts" : [ ],
+      "liked" : false,
+      "likes" : [ ],
+      "memberships" : [ ],
+      "modified_at" : "2021-11-22T10:01:46.431Z",
+      "name" : "Make sure to clearly state the problem you're solving for, so potential investors understand the context of your solution early on.",
+      "notes" : "",
+      "num_hearts" : 0,
+      "num_likes" : 0,
+      "parent" : {
+        "gid" : "1201408154433330",
+        "name" : "Executive summary",
+        "resource_type" : "task",
+        "resource_subtype" : "default_task"
+      },
+      "permalink_url" : "https://app.asana.com/1/236599948336393/task/1201408154433333",
+      "projects" : [ ],
+      "resource_type" : "task",
+      "start_at" : null,
+      "start_on" : null,
+      "subtasks" : [ ],
+      "tags" : [ ],
+      "resource_subtype" : "default_task",
+      "workspace" : {
+        "gid" : "236599948336393",
+        "name" : "aucdt.edu.gh",
+        "resource_type" : "workspace"
+      }
+    }, {
+      "gid" : "1201408154433334",
+      "actual_time_minutes" : null,
+      "assignee" : null,
+      "assignee_status" : "upcoming",
+      "completed" : false,
+      "completed_at" : null,
+      "created_at" : "2021-11-22T10:01:46.470Z",
+      "due_at" : null,
+      "due_on" : null,
+      "followers" : [ {
+        "gid" : "1200587641048692",
+        "name" : "Daniel F. Twum",
+        "resource_type" : "user"
+      } ],
+      "hearted" : false,
+      "hearts" : [ ],
+      "liked" : false,
+      "likes" : [ ],
+      "memberships" : [ ],
+      "modified_at" : "2021-11-22T10:01:46.755Z",
+      "name" : "Incorporate your unique selling proposition so you can show what gives your product an advantage over the competition.",
+      "notes" : "",
+      "num_hearts" : 0,
+      "num_likes" : 0,
+      "parent" : {
+        "gid" : "1201408154433330",
+        "name" : "Executive summary",
+        "resource_type" : "task",
+        "resource_subtype" : "default_task"
+      },
+      "permalink_url" : "https://app.asana.com/1/236599948336393/task/1201408154433334",
+      "projects" : [ ],
+      "resource_type" : "task",
+      "start_at" : null,
+      "start_on" : null,
+      "subtasks" : [ ],
+      "tags" : [ ],
+      "resource_subtype" : "default_task",
+      "workspace" : {
+        "gid" : "236599948336393",
+        "name" : "aucdt.edu.gh",
+        "resource_type" : "workspace"
+      }
+    }, {
+      "gid" : "1201408154433335",
+      "actual_time_minutes" : null,
+      "assignee" : null,
+      "assignee_status" : "upcoming",
+      "completed" : false,
+      "completed_at" : null,
+      "created_at" : "2021-11-22T10:01:46.799Z",
+      "due_at" : null,
+      "due_on" : null,
+      "followers" : [ {
+        "gid" : "1200587641048692",
+        "name" : "Daniel F. Twum",
+        "resource_type" : "user"
+      } ],
+      "hearted" : false,
+      "hearts" : [ ],
+      "liked" : false,
+      "likes" : [ ],
+      "memberships" : [ ],
+      "modified_at" : "2021-11-22T10:01:47.083Z",
+      "name" : "Keep your business model clear and easy to follow.",
+      "notes" : "",
+      "num_hearts" : 0,
+      "num_likes" : 0,
+      "parent" : {
+        "gid" : "1201408154433330",
+        "name" : "Executive summary",
+        "resource_type" : "task",
+        "resource_subtype" : "default_task"
+      },
+      "permalink_url" : "https://app.asana.com/1/236599948336393/task/1201408154433335",
+      "projects" : [ ],
+      "resource_type" : "task",
+      "start_at" : null,
+      "start_on" : null,
+      "subtasks" : [ ],
+      "tags" : [ ],
+      "resource_subtype" : "default_task",
+      "workspace" : {
+        "gid" : "236599948336393",
+        "name" : "aucdt.edu.gh",
+        "resource_type" : "workspace"
+      }
+    } ],
+    "tags" : [ ],
+    "resource_subtype" : "default_task",
+    "workspace" : {
+      "gid" : "236599948336393",
+      "name" : "aucdt.edu.gh",
+      "resource_type" : "workspace"
+    }
+  }, {
+    "gid" : "1201408154433324",
+    "actual_time_minutes" : null,
+    "assignee" : null,
+    "assignee_status" : "upcoming",
+    "completed" : false,
+    "completed_at" : null,
+    "created_at" : "2021-11-22T10:01:43.806Z",
+    "due_at" : null,
+    "due_on" : null,
+    "followers" : [ {
+      "gid" : "1200587641048692",
+      "name" : "Daniel F. Twum",
+      "resource_type" : "user"
+    } ],
+    "hearted" : false,
+    "hearts" : [ ],
+    "liked" : false,
+    "likes" : [ ],
+    "memberships" : [ {
+      "project" : {
+        "gid" : "1201408154433321",
+        "name" : "Intranet",
+        "resource_type" : "project"
+      },
+      "section" : {
+        "gid" : "1201408154433323",
+        "name" : "Intranet evaluation",
+        "resource_type" : "section"
+      }
+    } ],
+    "modified_at" : "2023-10-20T09:14:05.654Z",
+    "name" : "[READ ME] - Instructions for using this template",
+    "notes" : "This project template is set up in List View with sections and Asana-created Custom Fields to help you track your team's work. We've provided some example content in this template to get you started, but you should add tasks, change task names, add more Custom Fields, and change any other info to make this project your own.\n\nSend feedback about this template: https://asa.na/templatesfeedback",
+    "num_hearts" : 0,
+    "num_likes" : 0,
+    "parent" : null,
+    "permalink_url" : "https://app.asana.com/1/236599948336393/project/1201408154433321/task/1201408154433324",
+    "projects" : [ {
+      "gid" : "1201408154433321",
+      "name" : "Intranet",
+      "resource_type" : "project"
+    } ],
+    "resource_type" : "task",
+    "start_at" : null,
+    "start_on" : null,
+    "subtasks" : [ {
+      "gid" : "1201408154433325",
+      "actual_time_minutes" : null,
+      "assignee" : null,
+      "assignee_status" : "upcoming",
+      "completed" : false,
+      "completed_at" : null,
+      "created_at" : "2021-11-22T10:01:43.935Z",
+      "due_at" : null,
+      "due_on" : null,
+      "followers" : [ {
+        "gid" : "1200587641048692",
+        "name" : "Daniel F. Twum",
+        "resource_type" : "user"
+      } ],
+      "hearted" : false,
+      "hearts" : [ ],
+      "liked" : false,
+      "likes" : [ ],
+      "memberships" : [ ],
+      "modified_at" : "2021-11-22T10:01:44.166Z",
+      "name" : "Asana tips for this template",
+      "notes" : "",
+      "num_hearts" : 0,
+      "num_likes" : 0,
+      "parent" : {
+        "gid" : "1201408154433324",
+        "name" : "[READ ME] - Instructions for using this template",
+        "resource_type" : "task",
+        "resource_subtype" : "default_task"
+      },
+      "permalink_url" : "https://app.asana.com/1/236599948336393/task/1201408154433325",
+      "projects" : [ ],
+      "resource_type" : "task",
+      "start_at" : null,
+      "start_on" : null,
+      "subtasks" : [ ],
+      "tags" : [ ],
+      "resource_subtype" : "default_task",
+      "workspace" : {
+        "gid" : "236599948336393",
+        "name" : "aucdt.edu.gh",
+        "resource_type" : "workspace"
+      }
+    }, {
+      "gid" : "1201408154433327",
+      "actual_time_minutes" : null,
+      "assignee" : null,
+      "assignee_status" : "upcoming",
+      "completed" : false,
+      "completed_at" : null,
+      "created_at" : "2021-11-22T10:01:44.458Z",
+      "due_at" : null,
+      "due_on" : null,
+      "followers" : [ {
+        "gid" : "1200587641048692",
+        "name" : "Daniel F. Twum",
+        "resource_type" : "user"
+      } ],
+      "hearted" : false,
+      "hearts" : [ ],
+      "liked" : false,
+      "likes" : [ ],
+      "memberships" : [ ],
+      "modified_at" : "2021-11-22T10:01:44.706Z",
+      "name" : "Attach patent registrations, trademarks, and contracts to this project, so you can easily access any required documentation here.",
+      "notes" : "",
+      "num_hearts" : 0,
+      "num_likes" : 0,
+      "parent" : {
+        "gid" : "1201408154433324",
+        "name" : "[READ ME] - Instructions for using this template",
+        "resource_type" : "task",
+        "resource_subtype" : "default_task"
+      },
+      "permalink_url" : "https://app.asana.com/1/236599948336393/task/1201408154433327",
+      "projects" : [ ],
+      "resource_type" : "task",
+      "start_at" : null,
+      "start_on" : null,
+      "subtasks" : [ ],
+      "tags" : [ ],
+      "resource_subtype" : "default_task",
+      "workspace" : {
+        "gid" : "236599948336393",
+        "name" : "aucdt.edu.gh",
+        "resource_type" : "workspace"
+      }
+    }, {
+      "gid" : "1201408154433328",
+      "actual_time_minutes" : null,
+      "assignee" : null,
+      "assignee_status" : "upcoming",
+      "completed" : false,
+      "completed_at" : null,
+      "created_at" : "2021-11-22T10:01:44.749Z",
+      "due_at" : null,
+      "due_on" : null,
+      "followers" : [ {
+        "gid" : "1200587641048692",
+        "name" : "Daniel F. Twum",
+        "resource_type" : "user"
+      } ],
+      "hearted" : false,
+      "hearts" : [ ],
+      "liked" : false,
+      "likes" : [ ],
+      "memberships" : [ ],
+      "modified_at" : "2021-11-22T10:01:44.979Z",
+      "name" : "Add relevant stakeholders as task collaborators so they can see progress, chime in with updates and ideas, and follow along as work moves forward.",
+      "notes" : "",
+      "num_hearts" : 0,
+      "num_likes" : 0,
+      "parent" : {
+        "gid" : "1201408154433324",
+        "name" : "[READ ME] - Instructions for using this template",
+        "resource_type" : "task",
+        "resource_subtype" : "default_task"
+      },
+      "permalink_url" : "https://app.asana.com/1/236599948336393/task/1201408154433328",
+      "projects" : [ ],
+      "resource_type" : "task",
+      "start_at" : null,
+      "start_on" : null,
+      "subtasks" : [ ],
+      "tags" : [ ],
+      "resource_subtype" : "default_task",
+      "workspace" : {
+        "gid" : "236599948336393",
+        "name" : "aucdt.edu.gh",
+        "resource_type" : "workspace"
+      }
+    }, {
+      "gid" : "1201408154433329",
+      "actual_time_minutes" : null,
+      "assignee" : null,
+      "assignee_status" : "upcoming",
+      "completed" : false,
+      "completed_at" : null,
+      "created_at" : "2021-11-22T10:01:45.026Z",
+      "due_at" : null,
+      "due_on" : null,
+      "followers" : [ {
+        "gid" : "1200587641048692",
+        "name" : "Daniel F. Twum",
+        "resource_type" : "user"
+      } ],
+      "hearted" : false,
+      "hearts" : [ ],
+      "liked" : false,
+      "likes" : [ ],
+      "memberships" : [ ],
+      "modified_at" : "2021-11-22T10:01:45.278Z",
+      "name" : "Need to see project information differently? Filter and sort your project to see tasks by assignee, task progress, and more. You can also browse the free project view tabs just beneath the project title.",
+      "notes" : "",
+      "num_hearts" : 0,
+      "num_likes" : 0,
+      "parent" : {
+        "gid" : "1201408154433324",
+        "name" : "[READ ME] - Instructions for using this template",
+        "resource_type" : "task",
+        "resource_subtype" : "default_task"
+      },
+      "permalink_url" : "https://app.asana.com/1/236599948336393/task/1201408154433329",
+      "projects" : [ ],
+      "resource_type" : "task",
+      "start_at" : null,
+      "start_on" : null,
+      "subtasks" : [ ],
+      "tags" : [ ],
+      "resource_subtype" : "default_task",
+      "workspace" : {
+        "gid" : "236599948336393",
+        "name" : "aucdt.edu.gh",
+        "resource_type" : "workspace"
+      }
+    } ],
+    "tags" : [ ],
+    "resource_subtype" : "default_task",
+    "workspace" : {
+      "gid" : "236599948336393",
+      "name" : "aucdt.edu.gh",
+      "resource_type" : "workspace"
+    }
+  }, {
+    "gid" : "1201408154433338",
+    "actual_time_minutes" : null,
+    "assignee" : {
+      "gid" : "1200587641048692",
+      "name" : "Daniel F. Twum",
+      "resource_type" : "user"
+    },
+    "assignee_status" : "inbox",
+    "completed" : false,
+    "completed_at" : null,
+    "created_at" : "2021-11-22T10:01:47.598Z",
+    "due_at" : null,
+    "due_on" : null,
+    "followers" : [ {
+      "gid" : "1200587641048692",
+      "name" : "Daniel F. Twum",
+      "resource_type" : "user"
+    } ],
+    "hearted" : false,
+    "hearts" : [ ],
+    "liked" : false,
+    "likes" : [ ],
+    "memberships" : [ {
+      "project" : {
+        "gid" : "1201408154433321",
+        "name" : "Intranet",
+        "resource_type" : "project"
+      },
+      "section" : {
+        "gid" : "1201408154433363",
+        "name" : "Product & Services",
+        "resource_type" : "section"
+      }
+    } ],
+    "modified_at" : "2021-11-22T10:05:27.167Z",
+    "name" : "Confluence Core product/service overview",
+    "notes" : "",
+    "num_hearts" : 0,
+    "num_likes" : 0,
+    "parent" : null,
+    "permalink_url" : "https://app.asana.com/1/236599948336393/project/1201408154433321/task/1201408154433338",
+    "projects" : [ {
+      "gid" : "1201408154433321",
+      "name" : "Intranet",
+      "resource_type" : "project"
+    } ],
+    "resource_type" : "task",
+    "start_at" : null,
+    "start_on" : null,
+    "subtasks" : [ {
+      "gid" : "1201408154433339",
+      "actual_time_minutes" : null,
+      "assignee" : null,
+      "assignee_status" : "upcoming",
+      "completed" : false,
+      "completed_at" : null,
+      "created_at" : "2021-11-22T10:01:47.821Z",
+      "due_at" : null,
+      "due_on" : null,
+      "followers" : [ {
+        "gid" : "1200587641048692",
+        "name" : "Daniel F. Twum",
+        "resource_type" : "user"
+      } ],
+      "hearted" : false,
+      "hearts" : [ ],
+      "liked" : false,
+      "likes" : [ ],
+      "memberships" : [ ],
+      "modified_at" : "2021-11-22T10:01:48.111Z",
+      "name" : "Details to include",
+      "notes" : "",
+      "num_hearts" : 0,
+      "num_likes" : 0,
+      "parent" : {
+        "gid" : "1201408154433338",
+        "name" : "Confluence Core product/service overview",
+        "resource_type" : "task",
+        "resource_subtype" : "default_task"
+      },
+      "permalink_url" : "https://app.asana.com/1/236599948336393/task/1201408154433339",
+      "projects" : [ ],
+      "resource_type" : "task",
+      "start_at" : null,
+      "start_on" : null,
+      "subtasks" : [ ],
+      "tags" : [ ],
+      "resource_subtype" : "default_task",
+      "workspace" : {
+        "gid" : "236599948336393",
+        "name" : "aucdt.edu.gh",
+        "resource_type" : "workspace"
+      }
+    }, {
+      "gid" : "1201408154433340",
+      "actual_time_minutes" : null,
+      "assignee" : null,
+      "assignee_status" : "upcoming",
+      "completed" : false,
+      "completed_at" : null,
+      "created_at" : "2021-11-22T10:01:48.163Z",
+      "due_at" : null,
+      "due_on" : null,
+      "followers" : [ {
+        "gid" : "1200587641048692",
+        "name" : "Daniel F. Twum",
+        "resource_type" : "user"
+      } ],
+      "hearted" : false,
+      "hearts" : [ ],
+      "liked" : false,
+      "likes" : [ ],
+      "memberships" : [ ],
+      "modified_at" : "2021-11-22T10:01:48.439Z",
+      "name" : "Definition of the core product or service",
+      "notes" : "",
+      "num_hearts" : 0,
+      "num_likes" : 0,
+      "parent" : {
+        "gid" : "1201408154433338",
+        "name" : "Confluence Core product/service overview",
+        "resource_type" : "task",
+        "resource_subtype" : "default_task"
+      },
+      "permalink_url" : "https://app.asana.com/1/236599948336393/task/1201408154433340",
+      "projects" : [ ],
+      "resource_type" : "task",
+      "start_at" : null,
+      "start_on" : null,
+      "subtasks" : [ ],
+      "tags" : [ ],
+      "resource_subtype" : "default_task",
+      "workspace" : {
+        "gid" : "236599948336393",
+        "name" : "aucdt.edu.gh",
+        "resource_type" : "workspace"
+      }
+    }, {
+      "gid" : "1201408154433341",
+      "actual_time_minutes" : null,
+      "assignee" : null,
+      "assignee_status" : "upcoming",
+      "completed" : false,
+      "completed_at" : null,
+      "created_at" : "2021-11-22T10:01:48.486Z",
+      "due_at" : null,
+      "due_on" : null,
+      "followers" : [ {
+        "gid" : "1200587641048692",
+        "name" : "Daniel F. Twum",
+        "resource_type" : "user"
+      } ],
+      "hearted" : false,
+      "hearts" : [ ],
+      "liked" : false,
+      "likes" : [ ],
+      "memberships" : [ ],
+      "modified_at" : "2021-11-22T10:01:49.235Z",
+      "name" : "Development stage",
+      "notes" : "",
+      "num_hearts" : 0,
+      "num_likes" : 0,
+      "parent" : {
+        "gid" : "1201408154433338",
+        "name" : "Confluence Core product/service overview",
+        "resource_type" : "task",
+        "resource_subtype" : "default_task"
+      },
+      "permalink_url" : "https://app.asana.com/1/236599948336393/task/1201408154433341",
+      "projects" : [ ],
+      "resource_type" : "task",
+      "start_at" : null,
+      "start_on" : null,
+      "subtasks" : [ ],
+      "tags" : [ ],
+      "resource_subtype" : "default_task",
+      "workspace" : {
+        "gid" : "236599948336393",
+        "name" : "aucdt.edu.gh",
+        "resource_type" : "workspace"
+      }
+    }, {
+      "gid" : "1201408154433342",
+      "actual_time_minutes" : null,
+      "assignee" : null,
+      "assignee_status" : "upcoming",
+      "completed" : false,
+      "completed_at" : null,
+      "created_at" : "2021-11-22T10:01:49.305Z",
+      "due_at" : null,
+      "due_on" : null,
+      "followers" : [ {
+        "gid" : "1200587641048692",
+        "name" : "Daniel F. Twum",
+        "resource_type" : "user"
+      } ],
+      "hearted" : false,
+      "hearts" : [ ],
+      "liked" : false,
+      "likes" : [ ],
+      "memberships" : [ ],
+      "modified_at" : "2021-11-22T10:01:49.578Z",
+      "name" : "Screenshots or diagrams",
+      "notes" : "",
+      "num_hearts" : 0,
+      "num_likes" : 0,
+      "parent" : {
+        "gid" : "1201408154433338",
+        "name" : "Confluence Core product/service overview",
+        "resource_type" : "task",
+        "resource_subtype" : "default_task"
+      },
+      "permalink_url" : "https://app.asana.com/1/236599948336393/task/1201408154433342",
+      "projects" : [ ],
+      "resource_type" : "task",
+      "start_at" : null,
+      "start_on" : null,
+      "subtasks" : [ ],
+      "tags" : [ ],
+      "resource_subtype" : "default_task",
+      "workspace" : {
+        "gid" : "236599948336393",
+        "name" : "aucdt.edu.gh",
+        "resource_type" : "workspace"
+      }
+    }, {
+      "gid" : "1201408154433343",
+      "actual_time_minutes" : null,
+      "assignee" : null,
+      "assignee_status" : "upcoming",
+      "completed" : false,
+      "completed_at" : null,
+      "created_at" : "2021-11-22T10:01:49.619Z",
+      "due_at" : null,
+      "due_on" : null,
+      "followers" : [ {
+        "gid" : "1200587641048692",
+        "name" : "Daniel F. Twum",
+        "resource_type" : "user"
+      } ],
+      "hearted" : false,
+      "hearts" : [ ],
+      "liked" : false,
+      "likes" : [ ],
+      "memberships" : [ ],
+      "modified_at" : "2021-11-22T10:01:49.938Z",
+      "name" : "Current pricing",
+      "notes" : "",
+      "num_hearts" : 0,
+      "num_likes" : 0,
+      "parent" : {
+        "gid" : "1201408154433338",
+        "name" : "Confluence Core product/service overview",
+        "resource_type" : "task",
+        "resource_subtype" : "default_task"
+      },
+      "permalink_url" : "https://app.asana.com/1/236599948336393/task/1201408154433343",
+      "projects" : [ ],
+      "resource_type" : "task",
+      "start_at" : null,
+      "start_on" : null,
+      "subtasks" : [ ],
+      "tags" : [ ],
+      "resource_subtype" : "default_task",
+      "workspace" : {
+        "gid" : "236599948336393",
+        "name" : "aucdt.edu.gh",
+        "resource_type" : "workspace"
+      }
+    }, {
+      "gid" : "1201408154433344",
+      "actual_time_minutes" : null,
+      "assignee" : null,
+      "assignee_status" : "upcoming",
+      "completed" : false,
+      "completed_at" : null,
+      "created_at" : "2021-11-22T10:01:49.996Z",
+      "due_at" : null,
+      "due_on" : null,
+      "followers" : [ {
+        "gid" : "1200587641048692",
+        "name" : "Daniel F. Twum",
+        "resource_type" : "user"
+      } ],
+      "hearted" : false,
+      "hearts" : [ ],
+      "liked" : false,
+      "likes" : [ ],
+      "memberships" : [ ],
+      "modified_at" : "2021-11-22T10:01:50.320Z",
+      "name" : "Anticipated future products and services",
+      "notes" : "",
+      "num_hearts" : 0,
+      "num_likes" : 0,
+      "parent" : {
+        "gid" : "1201408154433338",
+        "name" : "Confluence Core product/service overview",
+        "resource_type" : "task",
+        "resource_subtype" : "default_task"
+      },
+      "permalink_url" : "https://app.asana.com/1/236599948336393/task/1201408154433344",
+      "projects" : [ ],
+      "resource_type" : "task",
+      "start_at" : null,
+      "start_on" : null,
+      "subtasks" : [ ],
+      "tags" : [ ],
+      "resource_subtype" : "default_task",
+      "workspace" : {
+        "gid" : "236599948336393",
+        "name" : "aucdt.edu.gh",
+        "resource_type" : "workspace"
+      }
+    } ],
+    "tags" : [ ],
+    "resource_subtype" : "default_task",
+    "workspace" : {
+      "gid" : "236599948336393",
+      "name" : "aucdt.edu.gh",
+      "resource_type" : "workspace"
+    }
+  }, {
+    "gid" : "1201408154433389",
+    "actual_time_minutes" : null,
+    "assignee" : {
+      "gid" : "1200587641048692",
+      "name" : "Daniel F. Twum",
+      "resource_type" : "user"
+    },
+    "assignee_status" : "inbox",
+    "completed" : false,
+    "completed_at" : null,
+    "created_at" : "2021-11-22T10:05:50.635Z",
+    "due_at" : null,
+    "due_on" : null,
+    "followers" : [ {
+      "gid" : "1200587641048692",
+      "name" : "Daniel F. Twum",
+      "resource_type" : "user"
+    } ],
+    "hearted" : false,
+    "hearts" : [ ],
+    "liked" : false,
+    "likes" : [ ],
+    "memberships" : [ {
+      "project" : {
+        "gid" : "1201408154433321",
+        "name" : "Intranet",
+        "resource_type" : "project"
+      },
+      "section" : {
+        "gid" : "1201408154433363",
+        "name" : "Product & Services",
+        "resource_type" : "section"
+      }
+    } ],
+    "modified_at" : "2021-11-22T10:06:01.281Z",
+    "name" : "Google Workspace Core product/service overview",
+    "notes" : "",
+    "num_hearts" : 0,
+    "num_likes" : 0,
+    "parent" : null,
+    "permalink_url" : "https://app.asana.com/1/236599948336393/project/1201408154433321/task/1201408154433389",
+    "projects" : [ {
+      "gid" : "1201408154433321",
+      "name" : "Intranet",
+      "resource_type" : "project"
+    } ],
+    "resource_type" : "task",
+    "start_at" : null,
+    "start_on" : null,
+    "subtasks" : [ {
+      "gid" : "1201408126249318",
+      "actual_time_minutes" : null,
+      "assignee" : null,
+      "assignee_status" : "upcoming",
+      "completed" : false,
+      "completed_at" : null,
+      "created_at" : "2021-11-22T10:05:52.505Z",
+      "due_at" : null,
+      "due_on" : null,
+      "followers" : [ ],
+      "hearted" : false,
+      "hearts" : [ ],
+      "liked" : false,
+      "likes" : [ ],
+      "memberships" : [ ],
+      "modified_at" : "2021-11-22T10:05:52.916Z",
+      "name" : "Details to include",
+      "notes" : "",
+      "num_hearts" : 0,
+      "num_likes" : 0,
+      "parent" : {
+        "gid" : "1201408154433389",
+        "name" : "Google Workspace Core product/service overview",
+        "resource_type" : "task",
+        "resource_subtype" : "default_task"
+      },
+      "permalink_url" : "https://app.asana.com/1/236599948336393/task/1201408126249318",
+      "projects" : [ ],
+      "resource_type" : "task",
+      "start_at" : null,
+      "start_on" : null,
+      "subtasks" : [ ],
+      "tags" : [ ],
+      "resource_subtype" : "default_task",
+      "workspace" : {
+        "gid" : "236599948336393",
+        "name" : "aucdt.edu.gh",
+        "resource_type" : "workspace"
+      }
+    }, {
+      "gid" : "1201408126268145",
+      "actual_time_minutes" : null,
+      "assignee" : null,
+      "assignee_status" : "upcoming",
+      "completed" : false,
+      "completed_at" : null,
+      "created_at" : "2021-11-22T10:05:53.034Z",
+      "due_at" : null,
+      "due_on" : null,
+      "followers" : [ ],
+      "hearted" : false,
+      "hearts" : [ ],
+      "liked" : false,
+      "likes" : [ ],
+      "memberships" : [ ],
+      "modified_at" : "2021-11-22T10:05:53.344Z",
+      "name" : "Definition of the core product or service",
+      "notes" : "",
+      "num_hearts" : 0,
+      "num_likes" : 0,
+      "parent" : {
+        "gid" : "1201408154433389",
+        "name" : "Google Workspace Core product/service overview",
+        "resource_type" : "task",
+        "resource_subtype" : "default_task"
+      },
+      "permalink_url" : "https://app.asana.com/1/236599948336393/task/1201408126268145",
+      "projects" : [ ],
+      "resource_type" : "task",
+      "start_at" : null,
+      "start_on" : null,
+      "subtasks" : [ ],
+      "tags" : [ ],
+      "resource_subtype" : "default_task",
+      "workspace" : {
+        "gid" : "236599948336393",
+        "name" : "aucdt.edu.gh",
+        "resource_type" : "workspace"
+      }
+    }, {
+      "gid" : "1201408126310045",
+      "actual_time_minutes" : null,
+      "assignee" : null,
+      "assignee_status" : "upcoming",
+      "completed" : false,
+      "completed_at" : null,
+      "created_at" : "2021-11-22T10:05:54.226Z",
+      "due_at" : null,
+      "due_on" : null,
+      "followers" : [ ],
+      "hearted" : false,
+      "hearts" : [ ],
+      "liked" : false,
+      "likes" : [ ],
+      "memberships" : [ ],
+      "modified_at" : "2021-11-22T10:05:54.672Z",
+      "name" : "Development stage",
+      "notes" : "",
+      "num_hearts" : 0,
+      "num_likes" : 0,
+      "parent" : {
+        "gid" : "1201408154433389",
+        "name" : "Google Workspace Core product/service overview",
+        "resource_type" : "task",
+        "resource_subtype" : "default_task"
+      },
+      "permalink_url" : "https://app.asana.com/1/236599948336393/task/1201408126310045",
+      "projects" : [ ],
+      "resource_type" : "task",
+      "start_at" : null,
+      "start_on" : null,
+      "subtasks" : [ ],
+      "tags" : [ ],
+      "resource_subtype" : "default_task",
+      "workspace" : {
+        "gid" : "236599948336393",
+        "name" : "aucdt.edu.gh",
+        "resource_type" : "workspace"
+      }
+    }, {
+      "gid" : "1201408126340570",
+      "actual_time_minutes" : null,
+      "assignee" : null,
+      "assignee_status" : "upcoming",
+      "completed" : false,
+      "completed_at" : null,
+      "created_at" : "2021-11-22T10:05:54.957Z",
+      "due_at" : null,
+      "due_on" : null,
+      "followers" : [ ],
+      "hearted" : false,
+      "hearts" : [ ],
+      "liked" : false,
+      "likes" : [ ],
+      "memberships" : [ ],
+      "modified_at" : "2021-11-22T10:05:55.429Z",
+      "name" : "Screenshots or diagrams",
+      "notes" : "",
+      "num_hearts" : 0,
+      "num_likes" : 0,
+      "parent" : {
+        "gid" : "1201408154433389",
+        "name" : "Google Workspace Core product/service overview",
+        "resource_type" : "task",
+        "resource_subtype" : "default_task"
+      },
+      "permalink_url" : "https://app.asana.com/1/236599948336393/task/1201408126340570",
+      "projects" : [ ],
+      "resource_type" : "task",
+      "start_at" : null,
+      "start_on" : null,
+      "subtasks" : [ ],
+      "tags" : [ ],
+      "resource_subtype" : "default_task",
+      "workspace" : {
+        "gid" : "236599948336393",
+        "name" : "aucdt.edu.gh",
+        "resource_type" : "workspace"
+      }
+    }, {
+      "gid" : "1201408126363679",
+      "actual_time_minutes" : null,
+      "assignee" : null,
+      "assignee_status" : "upcoming",
+      "completed" : false,
+      "completed_at" : null,
+      "created_at" : "2021-11-22T10:05:55.544Z",
+      "due_at" : null,
+      "due_on" : null,
+      "followers" : [ ],
+      "hearted" : false,
+      "hearts" : [ ],
+      "liked" : false,
+      "likes" : [ ],
+      "memberships" : [ ],
+      "modified_at" : "2021-11-22T10:05:55.858Z",
+      "name" : "Current pricing",
+      "notes" : "",
+      "num_hearts" : 0,
+      "num_likes" : 0,
+      "parent" : {
+        "gid" : "1201408154433389",
+        "name" : "Google Workspace Core product/service overview",
+        "resource_type" : "task",
+        "resource_subtype" : "default_task"
+      },
+      "permalink_url" : "https://app.asana.com/1/236599948336393/task/1201408126363679",
+      "projects" : [ ],
+      "resource_type" : "task",
+      "start_at" : null,
+      "start_on" : null,
+      "subtasks" : [ ],
+      "tags" : [ ],
+      "resource_subtype" : "default_task",
+      "workspace" : {
+        "gid" : "236599948336393",
+        "name" : "aucdt.edu.gh",
+        "resource_type" : "workspace"
+      }
+    }, {
+      "gid" : "1201408126376195",
+      "actual_time_minutes" : null,
+      "assignee" : null,
+      "assignee_status" : "upcoming",
+      "completed" : false,
+      "completed_at" : null,
+      "created_at" : "2021-11-22T10:05:55.968Z",
+      "due_at" : null,
+      "due_on" : null,
+      "followers" : [ ],
+      "hearted" : false,
+      "hearts" : [ ],
+      "liked" : false,
+      "likes" : [ ],
+      "memberships" : [ ],
+      "modified_at" : "2021-11-22T10:05:56.454Z",
+      "name" : "Anticipated future products and services",
+      "notes" : "",
+      "num_hearts" : 0,
+      "num_likes" : 0,
+      "parent" : {
+        "gid" : "1201408154433389",
+        "name" : "Google Workspace Core product/service overview",
+        "resource_type" : "task",
+        "resource_subtype" : "default_task"
+      },
+      "permalink_url" : "https://app.asana.com/1/236599948336393/task/1201408126376195",
+      "projects" : [ ],
+      "resource_type" : "task",
+      "start_at" : null,
+      "start_on" : null,
+      "subtasks" : [ ],
+      "tags" : [ ],
+      "resource_subtype" : "default_task",
+      "workspace" : {
+        "gid" : "236599948336393",
+        "name" : "aucdt.edu.gh",
+        "resource_type" : "workspace"
+      }
+    } ],
+    "tags" : [ ],
+    "resource_subtype" : "default_task",
+    "workspace" : {
+      "gid" : "236599948336393",
+      "name" : "aucdt.edu.gh",
+      "resource_type" : "workspace"
+    }
+  }, {
+    "gid" : "1201408154433345",
+    "actual_time_minutes" : null,
+    "assignee" : null,
+    "assignee_status" : "upcoming",
+    "completed" : false,
+    "completed_at" : null,
+    "created_at" : "2021-11-22T10:01:50.377Z",
+    "due_at" : null,
+    "due_on" : null,
+    "followers" : [ {
+      "gid" : "1200587641048692",
+      "name" : "Daniel F. Twum",
+      "resource_type" : "user"
+    } ],
+    "hearted" : false,
+    "hearts" : [ ],
+    "liked" : false,
+    "likes" : [ ],
+    "memberships" : [ {
+      "project" : {
+        "gid" : "1201408154433321",
+        "name" : "Intranet",
+        "resource_type" : "project"
+      },
+      "section" : {
+        "gid" : "1201408154433363",
+        "name" : "Product & Services",
+        "resource_type" : "section"
+      }
+    } ],
+    "modified_at" : "2021-11-22T10:02:02.162Z",
+    "name" : "Past test results",
+    "notes" : "",
+    "num_hearts" : 0,
+    "num_likes" : 0,
+    "parent" : null,
+    "permalink_url" : "https://app.asana.com/1/236599948336393/project/1201408154433321/task/1201408154433345",
+    "projects" : [ {
+      "gid" : "1201408154433321",
+      "name" : "Intranet",
+      "resource_type" : "project"
+    } ],
+    "resource_type" : "task",
+    "start_at" : null,
+    "start_on" : null,
+    "subtasks" : [ ],
+    "tags" : [ ],
+    "resource_subtype" : "default_task",
+    "workspace" : {
+      "gid" : "236599948336393",
+      "name" : "aucdt.edu.gh",
+      "resource_type" : "workspace"
+    }
+  } ]
+}

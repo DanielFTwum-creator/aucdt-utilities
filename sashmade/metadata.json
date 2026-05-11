@@ -1,0 +1,7 @@
+{
+  "name": "SashMade: Afro-Chic Studio",
+  "description": "AI-enhanced e-commerce platform for African textile patterns and fashion.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}

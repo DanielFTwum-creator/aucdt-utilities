@@ -1,0 +1,104 @@
+<svg width="800" height="600" viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      .bg { fill: #0f172a; }
+      .entity { fill: #1e293b; stroke: #475569; stroke-width: 2; rx: 12; ry: 12; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3)); }
+      .entity-user { fill: #5b21b6; stroke: #a78bfa; }
+      .entity-camp { fill: #065f46; stroke: #34d399; }
+      .entity-booking { fill: #1e40af; stroke: #60a5fa; }
+      .entity-notification { fill: #92400e; stroke: #fbbf24; }
+      .entity-title { font-family: 'Inter', sans-serif; font-size: 18px; font-weight: bold; fill: #f1f5f9; text-anchor: middle; }
+      .entity-attr { font-family: 'Fira Code', 'Courier New', monospace; font-size: 13px; fill: #cbd5e1; }
+      .pk { font-weight: bold; fill: #FFD700; } /* VBCI Gold */
+      .fk { font-style: italic; fill: #93c5fd; } /* light blue */
+      .rel-line { stroke: #64748b; stroke-width: 2; fill: none; }
+      .text-title { font-family: 'Inter', sans-serif; font-size: 28px; font-weight: 700; fill: #ffffff; letter-spacing: -0.5px; text-anchor: middle; }
+    </style>
+    <marker id="crow-one" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="10" markerHeight="10" orient="auto-start-reverse">
+      <path d="M 0 3 L 8 3 M 0 7 L 8 7" stroke="#64748b" stroke-width="2" />
+    </marker>
+    <marker id="crow-many" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="10" markerHeight="10" orient="auto-start-reverse">
+      <path d="M 0 0 L 8 5 L 0 10" stroke="#64748b" stroke-width="2" fill="none" />
+    </marker>
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#0f172a;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1e293b;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+
+  <rect width="100%" height="100%" fill="url(#bgGradient)" />
+  <text x="400" y="45" class="text-title">myVBCI App - Database Schema (ERD)</text>
+  
+  <!-- Entities -->
+  <g id="user-entity" transform="translate(40, 70)">
+    <rect class="entity entity-user" width="200" height="220" />
+    <text class="entity-title" x="100" y="30">User</text>
+    <line x1="15" y1="45" x2="185" y2="45" stroke="#a78bfa" stroke-opacity="0.3" />
+    <text class="entity-attr" x="20" y="65"><tspan class="pk">user_id (PK)</tspan></text>
+    <text class="entity-attr" x="20" y="82">full_name</text>
+    <text class="entity-attr" x="20" y="99">title</text>
+    <text class="entity-attr" x="20" y="116">email</text>
+    <text class="entity-attr" x="20" y="133">phone</text>
+    <text class="entity-attr" x="20" y="150">gender</text>
+    <text class="entity-attr" x="20" y="167">role</text>
+    <text class="entity-attr" x="20" y="184">province</text>
+    <text class="entity-attr" x="20" y="201">sanctuary</text>
+  </g>
+
+  <g id="camp-entity" transform="translate(560, 70)">
+    <rect class="entity entity-camp" width="200" height="200" />
+    <text class="entity-title" x="100" y="30">Camp</text>
+    <line x1="15" y1="45" x2="185" y2="45" stroke="#34d399" stroke-opacity="0.3" />
+    <text class="entity-attr" x="20" y="65"><tspan class="pk">camp_id (PK)</tspan></text>
+    <text class="entity-attr" x="20" y="82">name</text>
+    <text class="entity-attr" x="20" y="99">description</text>
+    <text class="entity-attr" x="20" y="116">start_date</text>
+    <text class="entity-attr" x="20" y="133">end_date</text>
+    <text class="entity-attr" x="20" y="150">price</text>
+    <text class="entity-attr" x="20" y="167">capacity</text>
+    <text class="entity-attr" x="20" y="184">available_slots</text>
+  </g>
+
+  <g id="room-entity" transform="translate(560, 310)">
+    <rect class="entity entity-camp" width="200" height="200" />
+    <text class="entity-title" x="100" y="30">Room</text>
+    <line x1="15" y1="45" x2="185" y2="45" stroke="#34d399" stroke-opacity="0.3" />
+    <text class="entity-attr" x="20" y="65"><tspan class="pk">room_id (PK)</tspan></text>
+    <text class="entity-attr" x="20" y="82"><tspan class="fk">camp_id (FK)</tspan></text>
+    <text class="entity-attr" x="20" y="99">room_name</text>
+    <text class="entity-attr" x="20" y="116">type</text>
+    <text class="entity-attr" x="20" y="133">capacity</text>
+    <text class="entity-attr" x="20" y="150">current_occupancy</text>
+    <text class="entity-attr" x="20" y="167">gender_restriction</text>
+    <text class="entity-attr" x="20" y="184">amenities</text>
+  </g>
+
+  <g id="booking-entity" transform="translate(300, 220)">
+    <rect class="entity entity-booking" width="200" height="170" />
+    <text class="entity-title" x="100" y="30">Booking</text>
+    <line x1="15" y1="45" x2="185" y2="45" stroke="#60a5fa" stroke-opacity="0.3" />
+    <text class="entity-attr" x="20" y="65"><tspan class="pk">booking_id (PK)</tspan></text>
+    <text class="entity-attr" x="20" y="82"><tspan class="fk">user_id (FK)</tspan></text>
+    <text class="entity-attr" x="20" y="99"><tspan class="fk">camp_id (FK)</tspan></text>
+    <text class="entity-attr" x="20" y="116"><tspan class="fk">room_id (FK)</tspan></text>
+    <text class="entity-attr" x="20" y="133">status</text>
+    <text class="entity-attr" x="20" y="150">payment_status</text>
+  </g>
+  
+  <g id="notification-entity" transform="translate(40, 330)">
+    <rect class="entity entity-notification" width="200" height="155" />
+    <text class="entity-title" x="100" y="30">Notification</text>
+    <line x1="15" y1="45" x2="185" y2="45" stroke="#fbbf24" stroke-opacity="0.3" />
+    <text class="entity-attr" x="20" y="65"><tspan class="pk">id (PK)</tspan></text>
+    <text class="entity-attr" x="20" y="82">title</text>
+    <text class="entity-attr" x="20" y="99">message</text>
+    <text class="entity-attr" x="20" y="116">type</text>
+    <text class="entity-attr" x="20" y="133">audience</text>
+  </g>
+
+  <!-- Relationships -->
+  <path class="rel-line" d="M 240 180 H 300" marker-start="url(#crow-one)" marker-end="url(#crow-many)" />
+  <path class="rel-line" d="M 500 305 H 560" marker-start="url(#crow-many)" marker-end="url(#crow-one)" />
+  <path class="rel-line" d="M 500 320 H 560" marker-start="url(#crow-many)" marker-end="url(#crow-one)" />
+  <path class="rel-line" d="M 660 270 V 310" marker-start="url(#crow-one)" marker-end="url(#crow-many)" />
+</svg>

@@ -1,0 +1,102 @@
+{
+  "metadata": {
+    "data_source": "AUCDT Institutional Database",
+    "privacy_compliance": "Fully anonymized aggregate data only",
+    "last_updated": "2025-06-07",
+    "total_records_processed": 523,
+    "data_period": "2018-2025",
+    "real_data": true
+  },
+  "timeSeriesData": [
+    { "month": "2020-01", "signups": 3, "applicants": 2, "accepted": 2, "registered": 0 },
+    { "month": "2020-02", "signups": 3, "applicants": 2, "accepted": 2, "registered": 0 },
+    { "month": "2020-03", "signups": 3, "applicants": 2, "accepted": 2, "registered": 0 },
+    { "month": "2020-04", "signups": 2, "applicants": 2, "accepted": 2, "registered": 0 },
+    { "month": "2022-06", "signups": 10, "applicants": 7, "accepted": 0, "registered": 0 },
+    { "month": "2022-07", "signups": 10, "applicants": 7, "accepted": 4, "registered": 0 },
+    { "month": "2022-08", "signups": 17, "applicants": 12, "accepted": 11, "registered": 0 },
+    { "month": "2022-09", "signups": 16, "applicants": 11, "accepted": 10, "registered": 0 },
+    { "month": "2022-10", "signups": 14, "applicants": 10, "accepted": 6, "registered": 0 },
+    { "month": "2022-11", "signups": 17, "applicants": 12, "accepted": 4, "registered": 0 },
+    { "month": "2022-12", "signups": 4, "applicants": 3, "accepted": 1, "registered": 0 },
+    { "month": "2023-01", "signups": 33, "applicants": 23, "accepted": 5, "registered": 0 },
+    { "month": "2023-02", "signups": 9, "applicants": 6, "accepted": 2, "registered": 0 },
+    { "month": "2023-03", "signups": 8, "applicants": 6, "accepted": 1, "registered": 0 },
+    { "month": "2023-04", "signups": 5, "applicants": 4, "accepted": 1, "registered": 0 },
+    { "month": "2023-05", "signups": 6, "applicants": 4, "accepted": 1, "registered": 0 },
+    { "month": "2023-06", "signups": 13, "applicants": 9, "accepted": 6, "registered": 0 },
+    { "month": "2023-07", "signups": 9, "applicants": 6, "accepted": 4, "registered": 0 },
+    { "month": "2023-08", "signups": 8, "applicants": 6, "accepted": 5, "registered": 0 },
+    { "month": "2023-09", "signups": 7, "applicants": 5, "accepted": 4, "registered": 0 },
+    { "month": "2023-10", "signups": 13, "applicants": 9, "accepted": 6, "registered": 0 },
+    { "month": "2023-11", "signups": 20, "applicants": 14, "accepted": 12, "registered": 0 },
+    { "month": "2023-12", "signups": 17, "applicants": 12, "accepted": 12, "registered": 0 },
+    { "month": "2024-01", "signups": 65, "applicants": 46, "accepted": 8, "registered": 4 },
+    { "month": "2024-02", "signups": 22, "applicants": 15, "accepted": 2, "registered": 1 },
+    { "month": "2024-03", "signups": 20, "applicants": 14, "accepted": 5, "registered": 2 },
+    { "month": "2024-04", "signups": 12, "applicants": 8, "accepted": 2, "registered": 1 },
+    { "month": "2024-05", "signups": 16, "applicants": 11, "accepted": 3, "registered": 1 },
+    { "month": "2024-06", "signups": 21, "applicants": 15, "accepted": 6, "registered": 3 },
+    { "month": "2024-07", "signups": 17, "applicants": 12, "accepted": 4, "registered": 2 },
+    { "month": "2024-08", "signups": 13, "applicants": 9, "accepted": 1, "registered": 1 },
+    { "month": "2024-09", "signups": 10, "applicants": 7, "accepted": 2, "registered": 1 },
+    { "month": "2024-10", "signups": 22, "applicants": 15, "accepted": 7, "registered": 3 },
+    { "month": "2024-11", "signups": 24, "applicants": 17, "accepted": 10, "registered": 1 },
+    { "month": "2024-12", "signups": 17, "applicants": 12, "accepted": 2, "registered": 0 },
+    { "month": "2025-01", "signups": 65, "applicants": 46, "accepted": 18, "registered": 7 },
+    { "month": "2025-02", "signups": 20, "applicants": 14, "accepted": 7, "registered": 0 },
+    { "month": "2025-03", "signups": 17, "applicants": 12, "accepted": 6, "registered": 0 },
+    { "month": "2025-04", "signups": 13, "applicants": 9, "accepted": 4, "registered": 0 },
+    { "month": "2025-05", "signups": 9, "applicants": 6, "accepted": 2, "registered": 0 },
+    { "month": "2025-06", "signups": 16, "applicants": 11, "accepted": 2, "registered": 0 }
+  ],
+  "totalMetrics": {
+    "totalSignups": 794,
+    "totalApplicants": 523,
+    "totalAccepted": 203,
+    "totalRegistered": 47,
+    "acceptedNotRegistered": 156,
+    "signupsNeverApplied": 271,
+    "overallConversionRate": 8.99
+  },
+  "conversionRates": {
+    "signupToApplication": 65.9,
+    "applicationToAcceptance": 38.81,
+    "acceptanceToRegistration": 23.15
+  },
+  "funnelBreakdown": {
+    "registered": 47,
+    "acceptedNotRegistered": 156,
+    "rejected": 198,
+    "waitlisted": 74,
+    "never_applied": 271
+  },
+  "realDataMetrics": {
+    "totalApplications": 523,
+    "acceptanceRate": 38.81,
+    "rejectionRate": 37.86,
+    "waitlistRate": 14.15,
+    "registrationRate": 8.99,
+    "yearlyGrowth": {
+      "2018": 1,
+      "2020": 8,
+      "2021": 1,
+      "2022": 58,
+      "2023": 148,
+      "2024": 181,
+      "2025": 126
+    },
+    "peakMonths": [1, 11, 12],
+    "lowMonths": [4, 5, 9],
+    "programmeDistribution": {
+      "top_programmes": {
+        "10": 113,
+        "7": 88,
+        "9": 67,
+        "12": 53,
+        "1": 39
+      },
+      "suppressed_categories": 16
+    }
+  }
+}

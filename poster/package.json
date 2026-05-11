@@ -1,0 +1,20 @@
+{
+  "name": "poster",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "react": "19.2.5",
+    "react-dom": "19.2.5"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.2.2",
+    "@vitejs/plugin-react": "^4.3.4",
+    "tailwindcss": "^4.2.2",
+    "vite": "^7.3.1"
+  }
+}

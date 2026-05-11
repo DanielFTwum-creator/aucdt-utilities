@@ -1,0 +1,149 @@
+# LyriaStream — Full Local Dev Stack (CPU mode)
+# Run: docker compose up --build
+# AIM:      http://localhost:8090  (internal only in prod)
+# Gateway:  http://localhost:8080
+# Frontend: http://localhost:3000
+
+services:
+
+  # ── AI Inference Microservice (Python / FastAPI) ──────────────────────────
+  aim:
+    build:
+      context: ./aim
+      dockerfile: Dockerfile
+    container_name: lyriastream-aim
+    environment:
+      COMPUTE_MODE: cpu_draft
+      AIM_API_KEY: ${AIM_API_KEY:-dev-aim-key-change-in-prod}
+      HF_HOME: /var/lyriastream/models
+      AUDIO_OUTPUT_PATH: /var/lyriastream/audio
+      REDIS_URL: redis://redis:6379/2
+      LOG_LEVEL: INFO
+    init: true               # tini init — reaps zombie processes from WatchFiles/uvicorn
+    volumes:
+      - lyriastream-models:/var/lyriastream/models
+      - lyriastream-audio:/var/lyriastream/audio
+    ports:
+      - "8090:8090"           # ⚠ expose only in dev; remove in prod
+    networks:
+      - lyriastream-internal
+    depends_on:
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8090/aim/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 3600s      # first-run model download from HuggingFace can take 30-60 min
+    restart: unless-stopped
+
+  # ── Spring Boot API Gateway ───────────────────────────────────────────────
+  gateway:
+    build:
+      context: ./gateway
+      dockerfile: Dockerfile
+    container_name: lyriastream-gateway
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mariadb://db:3306/lyriastream_db?useUnicode=true&characterEncoding=UTF-8
+      SPRING_DATASOURCE_USERNAME: ${DB_USER:-lyriastream}
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD:-lyriastream_dev_pwd}
+      SPRING_REDIS_HOST: redis
+      SPRING_REDIS_PORT: 6379
+      SPRING_REDIS_DATABASE: 2
+      AIM_BASE_URL: http://aim:8090
+      AIM_API_KEY: ${AIM_API_KEY:-dev-aim-key-change-in-prod}
+      SPRING_JPA_HIBERNATE_DDL_AUTO: none   # schema managed by init.sql; skip Hibernate validation
+      JWT_SECRET: ${JWT_SECRET:-dev-jwt-secret-min-512-bits-change-in-prod-xxxxxxxxxxxxxxxxxxxx}
+      JWT_ACCESS_EXPIRY_MS: 900000
+      JWT_REFRESH_EXPIRY_MS: 604800000
+      TOTP_ENCRYPTION_KEY: ${TOTP_ENCRYPTION_KEY:-dev-totp-key-32-chars-change-prod}
+      CORS_ALLOWED_ORIGINS: http://localhost:3000,http://localhost:3002
+      APP_AUDIO_STORAGE_PATH: /var/lyriastream/audio
+    volumes:
+      - lyriastream-audio:/var/lyriastream/audio
+    ports:
+      - "8080:8080"
+    networks:
+      - lyriastream-internal
+      - lyriastream-external
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      aim:
+        condition: service_started  # AIM may still be loading models; gateway handles AIM-unavailable gracefully
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
+      interval: 20s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  # ── React Frontend (Nginx) ────────────────────────────────────────────────
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        VITE_API_BASE_URL: http://localhost:8080
+    container_name: lyriastream-frontend
+    ports:
+      - "3000:80"
+    networks:
+      - lyriastream-external
+    depends_on:
+      - gateway
+    restart: unless-stopped
+
+  # ── MariaDB ───────────────────────────────────────────────────────────────
+  db:
+    image: mariadb:11.4-alpine
+    container_name: lyriastream-db
+    environment:
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-root_dev_pwd}
+      MARIADB_DATABASE: lyriastream_db
+      MARIADB_USER: ${DB_USER:-lyriastream}
+      MARIADB_PASSWORD: ${DB_PASSWORD:-lyriastream_dev_pwd}
+    volumes:
+      - lyriastream-db:/var/lib/mysql
+      - ./gateway/src/main/resources/db/init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "3307:3306"            # mapped to 3307 on host (TUC standard)
+    networks:
+      - lyriastream-internal
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+
+  # ── Redis ─────────────────────────────────────────────────────────────────
+  redis:
+    image: redis:7.2-alpine
+    container_name: lyriastream-redis
+    command: redis-server --save 60 1 --loglevel warning
+    volumes:
+      - lyriastream-redis:/data
+    networks:
+      - lyriastream-internal
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    restart: unless-stopped
+
+volumes:
+  lyriastream-db:
+  lyriastream-redis:
+  lyriastream-models:     # HuggingFace model cache (large — ~10 GB)
+  lyriastream-audio:      # Generated audio files
+
+networks:
+  lyriastream-internal:   # AIM + Gateway + DB + Redis (not internet-facing)
+    driver: bridge
+  lyriastream-external:   # Gateway + Frontend (internet-facing)
+    driver: bridge

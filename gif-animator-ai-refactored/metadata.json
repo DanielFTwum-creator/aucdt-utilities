@@ -1,0 +1,5 @@
+{
+  "name": "GIF Animator AI",
+  "description": "An application that generates animated cartoon GIFs from text prompts using the Gemini API. Describe a scene, and watch it come to life as a short animation.",
+  "requestFramePermissions": []
+}

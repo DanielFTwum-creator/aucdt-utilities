@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450">
+  <defs>
+    <style>
+      .cat-box { fill: #f3f4f6; stroke: #4b5563; stroke-width: 1; rx: 4; }
+      .tech-box { fill: #ffffff; stroke: #3b82f6; stroke-width: 2; rx: 6; }
+      .label { font-family: 'Segoe UI', sans-serif; text-anchor: middle; fill: #1f2937; }
+      .cat-title { font-size: 14px; font-weight: bold; fill: #6b7280; text-anchor: start; }
+      .tech-text { font-size: 14px; font-weight: bold; }
+    </style>
+  </defs>
+
+  <rect width="800" height="450" fill="#ffffff" />
+  <text x="400" y="35" class="label" font-size="20px" font-weight="bold">Technology Stack</text>
+
+  <!-- Frontend Core -->
+  <rect x="50" y="80" width="220" height="300" class="cat-box" />
+  <text x="60" y="105" class="cat-title">FRONTEND CORE</text>
+  
+  <rect x="70" y="120" width="180" height="50" class="tech-box" />
+  <text x="160" y="150" class="label tech-text">React 19</text>
+
+  <rect x="70" y="190" width="180" height="50" class="tech-box" />
+  <text x="160" y="220" class="label tech-text">TypeScript</text>
+
+  <rect x="70" y="260" width="180" height="50" class="tech-box" />
+  <text x="160" y="290" class="label tech-text">Vite / Create React App</text>
+
+
+  <!-- Visualization & Styling -->
+  <rect x="290" y="80" width="220" height="300" class="cat-box" />
+  <text x="300" y="105" class="cat-title">UI &amp; VISUALIZATION</text>
+
+  <rect x="310" y="120" width="180" height="50" class="tech-box" />
+  <text x="400" y="150" class="label tech-text">Tailwind CSS</text>
+
+  <rect x="310" y="190" width="180" height="50" class="tech-box" />
+  <text x="400" y="220" class="label tech-text">Recharts</text>
+
+
+  <!-- Testing & Quality -->
+  <rect x="530" y="80" width="220" height="300" class="cat-box" />
+  <text x="540" y="105" class="cat-title">TESTING &amp; QA</text>
+
+  <rect x="550" y="120" width="180" height="50" class="tech-box" />
+  <text x="640" y="150" class="label tech-text">Puppeteer (E2E)</text>
+
+  <rect x="550" y="190" width="180" height="50" class="tech-box" />
+  <text x="640" y="220" class="label tech-text">ESLint / Prettier</text>
+  
+  <rect x="550" y="260" width="180" height="50" class="tech-box" />
+  <text x="640" y="290" class="label tech-text">Internal Self-Diagnostics</text>
+
+</svg>

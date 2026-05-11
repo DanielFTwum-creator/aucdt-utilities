@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500">
+  <defs>
+    <style>
+      .bg { fill: #ffffff; }
+      .db { fill: #FBF8F1; stroke: #C8A84B; stroke-width: 2; rx: 8; }
+      .text-title { fill: #2C1810; font-family: serif; font-size: 20px; font-weight: bold; text-anchor: middle; }
+      .text-field { fill: #333333; font-family: monospace; font-size: 11px; }
+      .line { stroke: #C8A84B; stroke-width: 2; fill: none; }
+    </style>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#C8A84B" />
+    </marker>
+  </defs>
+
+  <rect width="1000" height="600" class="bg" />
+
+  <text x="400" y="40" fill="#2C1810" font-family="serif" font-size="24" font-weight="bold" text-anchor="middle" letter-spacing="2">FINANCIAL DATA ARCHITECTURE</text>
+  <text x="400" y="60" fill="#666" font-family="sans-serif" font-size="10" text-anchor="middle" letter-spacing="2">GHANA UNIVERSITY FEES v3.0.0</text>
+
+  <!-- Fee Ingestion -->
+  <rect x="50" y="100" width="220" height="350" class="db" />
+  <rect x="50" y="100" width="220" height="40" fill="#C8A84B" rx="8" />
+  <rect x="50" y="120" width="220" height="20" fill="#C8A84B" />
+  <text x="160" y="125" fill="#2C1810" font-family="sans-serif" font-size="14" font-weight="bold" text-anchor="middle">FeeData (JSON)</text>
+  
+  <text x="70" y="170" class="text-field" font-weight="bold">structure:</text>
+  <text x="90" y="190" class="text-field">institution: string</text>
+  <text x="90" y="210" class="text-field">category: UG|INTL|PG</text>
+  
+  <text x="70" y="240" class="text-field" font-weight="bold">metrics:</text>
+  <text x="90" y="260" class="text-field">freshman_fee: number</text>
+  <text x="90" y="280" class="text-field">continuing_fee: number</text>
+  <text x="90" y="300" class="text-field">currency: GHS (fixed)</text>
+
+  <text x="70" y="330" class="text-field" font-weight="bold">metadata:</text>
+  <text x="90" y="350" class="text-field">academic_year: 2024-25</text>
+  <text x="90" y="370" class="text-field">last_verified: date</text>
+
+  <!-- Transformation -->
+  <rect x="350" y="220" width="100" height="40" fill="#2C1810" rx="20" />
+  <text x="400" y="245" fill="#fff" font-family="sans-serif" font-size="10" text-anchor="middle" letter-spacing="1">ANALYZE</text>
+
+  <!-- Visual State -->
+  <rect x="530" y="150" width="240" height="250" class="db" />
+  <rect x="530" y="150" width="240" height="40" fill="#2C1810" rx="8" />
+  <rect x="530" y="170" width="240" height="20" fill="#2C1810" />
+  <text x="650" y="175" fill="#C8A84B" font-family="sans-serif" font-size="14" font-weight="bold" text-anchor="middle">DashboardState</text>
+
+  <text x="550" y="220" class="text-field" font-weight="bold">filtered_view:</text>
+  <text x="570" y="240" class="text-field">- Recharts_Buffer</text>
+  <text x="570" y="260" class="text-field">- Comparative_Avg</text>
+  
+  <text x="550" y="300" class="text-field" font-weight="bold">audit:</text>
+  <text x="570" y="320" class="text-field">- NavigationLogs</text>
+  <text x="570" y="340" class="text-field">- FilterHistory</text>
+
+  <!-- Connectors -->
+  <path d="M 270 240 L 340 240" class="line" marker-end="url(#arrowhead)" />
+  <path d="M 450 240 L 520 240" class="line" marker-end="url(#arrowhead)" />
+
+</svg>

@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 500">
+  <defs>
+    <style>
+      .actor-head { fill: #ffffff; stroke: #0f172a; stroke-width: 2; }
+      .actor-body { stroke: #0f172a; stroke-width: 2; fill: none; }
+      .usecase { fill: #ffffff; stroke: #3b82f6; stroke-width: 2; rx: 20; ry: 20; }
+      .system { fill: #f8fafc; stroke: #64748b; stroke-width: 2; }
+      .text { font-family: sans-serif; font-size: 12px; text-anchor: middle; }
+      .line { stroke: #64748b; stroke-width: 1; }
+    </style>
+  </defs>
+
+  <!-- System Boundary -->
+  <rect x="150" y="50" width="300" height="400" class="system"/>
+  <text x="300" y="70" font-weight="bold" text-anchor="middle" font-family="sans-serif">Ghana News Aggregator</text>
+
+  <!-- Actor: Admin -->
+  <circle cx="80" cy="150" r="15" class="actor-head"/>
+  <line x1="80" y1="165" x2="80" y2="200" class="actor-body"/>
+  <line x1="60" y1="175" x2="100" y2="175" class="actor-body"/>
+  <line x1="80" y1="200" x2="60" y2="230" class="actor-body"/>
+  <line x1="80" y1="200" x2="100" y2="230" class="actor-body"/>
+  <text x="80" y="250" class="text" font-weight="bold">Admin</text>
+
+  <!-- Actor: System Agent -->
+  <circle cx="80" cy="350" r="15" class="actor-head"/>
+  <line x1="80" y1="365" x2="80" y2="400" class="actor-body"/>
+  <line x1="60" y1="375" x2="100" y2="375" class="actor-body"/>
+  <line x1="80" y1="400" x2="60" y2="430" class="actor-body"/>
+  <line x1="80" y1="400" x2="100" y2="430" class="actor-body"/>
+  <text x="80" y="450" class="text" font-weight="bold">System Agent</text>
+
+  <!-- Actor: Facebook (External) -->
+  <circle cx="520" cy="250" r="15" class="actor-head"/>
+  <line x1="520" y1="265" x2="520" y2="300" class="actor-body"/>
+  <line x1="500" y1="275" x2="540" y2="275" class="actor-body"/>
+  <line x1="520" y1="300" x2="500" y2="330" class="actor-body"/>
+  <line x1="520" y1="300" x2="540" y2="330" class="actor-body"/>
+  <text x="520" y="350" class="text" font-weight="bold">Facebook API</text>
+
+  <!-- Use Cases -->
+  <ellipse cx="300" cy="120" rx="60" ry="20" class="usecase"/>
+  <text x="300" y="125" class="text">Login / Auth</text>
+
+  <ellipse cx="300" cy="180" rx="60" ry="20" class="usecase"/>
+  <text x="300" y="185" class="text">Manage Config</text>
+
+  <ellipse cx="300" cy="240" rx="60" ry="20" class="usecase"/>
+  <text x="300" y="245" class="text">Moderate Content</text>
+
+  <ellipse cx="300" cy="300" rx="60" ry="20" class="usecase"/>
+  <text x="300" y="305" class="text">Fetch News</text>
+
+  <ellipse cx="300" cy="360" rx="60" ry="20" class="usecase"/>
+  <text x="300" y="365" class="text">Publish Post</text>
+
+  <!-- Connections -->
+  <line x1="100" y1="150" x2="240" y2="120" class="line"/> <!-- Admin -> Login -->
+  <line x1="100" y1="150" x2="240" y2="180" class="line"/> <!-- Admin -> Config -->
+  <line x1="100" y1="150" x2="240" y2="240" class="line"/> <!-- Admin -> Moderate -->
+
+  <line x1="100" y1="350" x2="240" y2="300" class="line"/> <!-- Agent -> Fetch -->
+  <line x1="100" y1="350" x2="240" y2="360" class="line"/> <!-- Agent -> Publish -->
+
+  <line x1="360" y1="360" x2="500" y2="250" class="line"/> <!-- Publish -> FB -->
+
+</svg>

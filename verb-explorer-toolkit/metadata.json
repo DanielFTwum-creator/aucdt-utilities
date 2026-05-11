@@ -1,0 +1,29 @@
+{
+  "name": "Verb Explorer Toolkit",
+  "description": "Interactive toolkit for Class 4 verb discovery project",
+  "version": "1.0.0",
+  "appId": "com.techbridge.verbexplorer",
+  "publisher": "Techbridge Education Services Ghana",
+  "contact": {
+    "email": "daniel.twum@techbridge.edu.gh",
+    "website": "https://www.techbridge.edu.gh"
+  },
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "User input (text research)",
+    "Local storage (student progress)",
+    "Print functionality"
+  ],
+  "permissions": {
+    "ios": [],
+    "android": []
+  },
+  "minimumOSVersions": {
+    "ios": "13.0",
+    "android": "8.0"
+  },
+  "screenshots": {
+    "ios": "Screenshots for iPhone 6.7-inch (Pro Max) minimum",
+    "android": "Screenshots for 6.7-inch minimum"
+  }
+}
