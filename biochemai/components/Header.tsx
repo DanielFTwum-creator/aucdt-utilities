@@ -1,11 +1,12 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { AppMode, Theme } from '../types';
+import { AppMode, Theme, ResponseTemplate } from '../types';
 import { THEMES } from '../constants';
-import { 
-    FlaskConicalIcon, BrainIcon, TrophyIcon, BookIcon, TestIcon, AdminIcon, 
+import {
+    FlaskConicalIcon, BrainIcon, TrophyIcon, BookIcon, TestIcon, AdminIcon,
     DownloadIcon, CrownIcon, SparklesIcon, SquareIcon, FilmIcon, CopyIcon, CheckIcon, InfoIcon,
     MicrophoneIcon
 } from './Icons';
+import { TemplateSelector } from './TemplateSelector';
 
 interface HeaderProps {
     mode: AppMode;
@@ -16,6 +17,8 @@ interface HeaderProps {
     onOpenAbout: () => void;
     theme: Theme;
     setTheme: (theme: Theme) => void;
+    responseTemplate: ResponseTemplate;
+    setResponseTemplate: (template: ResponseTemplate) => void;
 }
 
 const NavButton: React.FC<{
@@ -99,7 +102,7 @@ const ExportDropdown: React.FC<{onExportChat: () => void, onExportMarkdown: () =
     );
 };
 
-export const Header: React.FC<HeaderProps> = ({ mode, setMode, onExportChat, onExportMarkdown, onCopyChat, onOpenAbout, theme, setTheme }) => {
+export const Header: React.FC<HeaderProps> = ({ mode, setMode, onExportChat, onExportMarkdown, onCopyChat, onOpenAbout, theme, setTheme, responseTemplate, setResponseTemplate }) => {
     const themeColors: Record<Theme, string> = {
         [Theme.Ocean]: '#64FFDA',
         [Theme.Golden]: '#FFB300',
@@ -151,6 +154,8 @@ export const Header: React.FC<HeaderProps> = ({ mode, setMode, onExportChat, onE
             >
                 <InfoIcon className="w-5 h-5" />
             </button>
+
+            <TemplateSelector currentTemplate={responseTemplate} onSelectTemplate={setResponseTemplate} />
 
             <div className="flex items-center bg-[var(--color-bg-tertiary)] rounded-full p-1 space-x-1" role="radiogroup" aria-label="Select color theme">
               {THEMES.map((t) => (

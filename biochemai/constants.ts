@@ -1,4 +1,4 @@
-import { LearningLevel, Theme } from './types';
+import { LearningLevel, Theme, ResponseTemplate } from './types';
 
 export const LEARNING_LEVELS: LearningLevel[] = [
   LearningLevel.Primary,
@@ -16,10 +16,18 @@ export const THEMES: Theme[] = [
   Theme.Cinema,
 ];
 
+export const RESPONSE_TEMPLATES: ResponseTemplate[] = [
+  ResponseTemplate.Markdown,
+  ResponseTemplate.HTMLDocumentation,
+  ResponseTemplate.LaTeX,
+  ResponseTemplate.Interactive,
+];
+
 export const LOCAL_STORAGE_KEYS = {
   messages: 'bioChemAiMessages',
   learningLevel: 'bioChemAiLearningLevel',
   theme: 'bioChemAiTheme',
+  responseTemplate: 'bioChemAiResponseTemplate',
   adminPassword: 'bioChemAiAdminPassword',
   auditLog: 'bioChemAiAuditLog',
   quizQuestionCount: 'bioChemAiQuizQuestionCount',
