@@ -65,7 +65,7 @@ import { HeroStats } from './components/HeroStats';
 import { QuickTopics } from './components/QuickTopics';
 import { VoiceContainer } from './components/voice/VoiceContainer';
 import { generateBioChemResponse } from './services/geminiService';
-import { LearningLevel, Message, AppMode, Theme } from './types';
+import { LearningLevel, Message, AppMode, Theme, ResponseTemplate } from './types';
 import { LOCAL_STORAGE_KEYS } from './constants';
 
 const initialMessage: Message = {
@@ -100,7 +100,12 @@ function App() {
 
   const [theme, setTheme] = useState<Theme>(() => {
     const savedTheme = localStorage.getItem(LOCAL_STORAGE_KEYS.theme);
-    return (savedTheme as Theme) || Theme.Ocean; // Default to Ocean theme
+    return (savedTheme as Theme) || Theme.Ocean;
+  });
+
+  const [responseTemplate, setResponseTemplate] = useState<ResponseTemplate>(() => {
+    const savedTemplate = localStorage.getItem(LOCAL_STORAGE_KEYS.responseTemplate);
+    return (savedTemplate as ResponseTemplate) || ResponseTemplate.Markdown;
   });
 
   const [currentQuestion, setCurrentQuestion] = useState('');
@@ -126,6 +131,10 @@ function App() {
     html.setAttribute('data-theme', themeSlug);
     document.body.style.fontFamily = `var(--font-sans)`;
   }, [theme]);
+
+  useEffect(() => {
+    localStorage.setItem(LOCAL_STORAGE_KEYS.responseTemplate, responseTemplate);
+  }, [responseTemplate]);
   
   const handleSetMode = (newMode: AppMode) => {
     if (newMode === AppMode.Admin) {
@@ -160,7 +169,7 @@ function App() {
 
     try {
       const { text, sources } = await generateBioChemResponse(currentQuestion.trim(), learningLevel);
-      const aiMessage: Message = { id: `ai-${Date.now()}`, role: 'ai', content: text, sources: sources };
+      const aiMessage: Message = { id: `ai-${Date.now()}`, role: 'ai', content: text, sources: sources, template: responseTemplate };
       setMessages(prev => [...prev, aiMessage]);
     } catch (error) {
       console.error("Error generating response:", error);
@@ -169,6 +178,7 @@ function App() {
         role: 'ai',
         content: "I'm sorry, but I encountered an error while trying to generate a response. Please check your connection and try again. If the problem persists, the service might be temporarily unavailable.",
         isError: true,
+        template: responseTemplate,
       };
       setMessages(prev => [...prev, errorMessage]);
     } finally {
@@ -343,15 +353,17 @@ function App() {
 
   return (
     <div className={`text-[var(--color-text-primary)] ${mode === AppMode.Chat || mode === AppMode.Voice ? 'h-screen flex flex-col' : 'min-h-screen'}`}>
-      <Header 
-        mode={mode} 
-        setMode={handleSetMode} 
-        onExportChat={handleExportChat} 
+      <Header
+        mode={mode}
+        setMode={handleSetMode}
+        onExportChat={handleExportChat}
         onExportMarkdown={handleExportMarkdown}
         onCopyChat={handleCopyChat}
         onOpenAbout={() => setIsAboutModalOpen(true)}
         theme={theme}
         setTheme={setTheme}
+        responseTemplate={responseTemplate}
+        setResponseTemplate={setResponseTemplate}
       />
       {mode === AppMode.Chat && <HeroStats />}
 
