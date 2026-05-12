@@ -1,214 +1,209 @@
-#!/usr/bin/env pwsh
-<#
-.SYNOPSIS
-Deployment script for Rophe Sugar Logger
-
-.DESCRIPTION
-Builds and deploys rophe-sugar-logger to various platforms.
-
-.PARAMETER Action
-Build, Docker, or Help
-
-.EXAMPLE
-.\deploy.ps1 -Action Build
-.\deploy.ps1 -Action Docker
-#>
+# TUC Project Deployment Script - Rophe Sugar Logger
+# Deploys built artifacts to techbridge.edu.gh via Plesk/Ubuntu
 
 param(
-    [ValidateSet('Build', 'Docker', 'Serve', 'Help')]
-    [string]$Action = 'Help'
+    [string]$ProjectName = "rophe-sugar-logger",
+    [string]$SubdomainPath = "rophe",
+    [string]$Environment = "production",
+    [string]$RemoteHost = "root@66.226.72.199",
+    [string]$RemotePath = "/var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/rophe",
+    [switch]$Build = $false,
+    [switch]$Test = $false,
+    [switch]$DryRun = $false
 )
 
-function Write-Step {
-    param([string]$Message)
-    Write-Host "📌 $Message" -ForegroundColor Cyan
+$ErrorActionPreference = "Stop"
+
+# Normalize project name for display
+$displayName = "Rophe Sugar Logger"
+
+Write-Host "╔════════════════════════════════════════════════════════════╗" -ForegroundColor Cyan
+Write-Host "║  TUC PROJECT DEPLOYMENT                                    ║" -ForegroundColor Cyan
+Write-Host "╚════════════════════════════════════════════════════════════╝" -ForegroundColor Cyan
+Write-Host ""
+Write-Host "Project:      $displayName ($ProjectName)"
+Write-Host "Subdomain:    $SubdomainPath"
+Write-Host "Remote Host:  $RemoteHost"
+Write-Host "Remote Path:  $RemotePath"
+Write-Host "Environment:  $Environment"
+Write-Host "URL:          https://ai-tools.techbridge.edu.gh/$SubdomainPath"
+Write-Host ""
+
+if ($DryRun) {
+    Write-Host "⚠️  DRY RUN MODE - No changes will be made" -ForegroundColor Yellow
+    Write-Host ""
 }
 
-function Write-Success {
-    param([string]$Message)
-    Write-Host "✅ $Message" -ForegroundColor Green
+# Build if requested
+if ($Build) {
+    Write-Host "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" -ForegroundColor Yellow
+    Write-Host "Building production bundle..." -ForegroundColor Yellow
+    Write-Host "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" -ForegroundColor Yellow
+
+    pnpm build
+    if ($LASTEXITCODE -ne 0) {
+        Write-Host "❌ Build failed!" -ForegroundColor Red
+        exit 1
+    }
+    Write-Host "✅ Build complete" -ForegroundColor Green
+    Write-Host ""
 }
 
-function Write-Error-Custom {
-    param([string]$Message)
-    Write-Host "❌ $Message" -ForegroundColor Red
+# Test build locally if requested
+if ($Test) {
+    Write-Host "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" -ForegroundColor Yellow
+    Write-Host "Testing build locally..." -ForegroundColor Yellow
+    Write-Host "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" -ForegroundColor Yellow
+    Write-Host "Starting preview server at http://localhost:4173" -ForegroundColor Cyan
+    Write-Host "Press Ctrl+C to stop" -ForegroundColor Cyan
+    Write-Host ""
+    pnpm preview
+    exit 0
 }
 
-function Write-Info {
-    param([string]$Message)
-    Write-Host "ℹ️  $Message" -ForegroundColor Blue
+# Check dist exists
+if (-not (Test-Path "dist")) {
+    Write-Host "❌ Error: dist/ not found. Run with -Build flag first." -ForegroundColor Red
+    exit 1
 }
 
-function Show-Help {
-    Write-Host @"
-╔════════════════════════════════════════════════════════════════╗
-║     Rophe Sugar Logger Deployment Script                       ║
-╚════════════════════════════════════════════════════════════════╝
+# Check SSH key
+$sshKey = "$env:USERPROFILE\.ssh\id_rsa"
+if (-not (Test-Path $sshKey)) {
+    Write-Host "⚠️  Warning: SSH key not found at $sshKey" -ForegroundColor Yellow
+    Write-Host "Ensure you have SSH access configured for: $RemoteHost" -ForegroundColor Yellow
+    Write-Host ""
+}
 
-USAGE:
-  .\deploy.ps1 -Action <Build|Docker|Serve|Help>
+# Prepare deployment package
+Write-Host "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" -ForegroundColor Yellow
+Write-Host "Preparing deployment package..." -ForegroundColor Yellow
+Write-Host "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" -ForegroundColor Yellow
 
-ACTIONS:
-  Build     Build the production bundle (generates ./dist/)
-  Docker    Build and run Docker container locally
-  Serve     Start local development server
-  Help      Show this help message
+$timestamp = Get-Date -Format "yyyyMMdd_HHmmss"
+$staging = ".\dist-deploy"
 
-EXAMPLES:
-  # Build for production
-  .\deploy.ps1 -Action Build
+# Create temporary staging directory
+if (Test-Path $staging) {
+    Remove-Item $staging -Recurse -Force
+}
+New-Item -ItemType Directory -Path $staging -Force | Out-Null
+Write-Host "Created staging directory: $staging"
 
-  # Build Docker image and run
-  .\deploy.ps1 -Action Docker
+# Copy dist files
+Copy-Item -Path "dist\*" -Destination $staging -Recurse -Force
+Write-Host "Copied dist files"
 
-  # Start dev server
-  .\deploy.ps1 -Action Serve
+# Copy .env.example if it exists
+if (Test-Path ".env.example") {
+    Copy-Item -Path ".env.example" -Destination "$staging\.env.example" -Force
+    Write-Host "Copied .env.example"
+}
 
-PREREQUISITES:
-  • Node.js 24+ (for Docker: Docker must be installed)
-  • pnpm (install: npm install -g pnpm)
-  • GEMINI_API_KEY environment variable set
-
-DEPLOYMENT GUIDES:
-  See DEPLOY.md for detailed deployment options for:
-    • Static hosting (Vercel, Netlify, GitHub Pages)
-    • Docker/Docker Compose
-    • Traditional servers (Nginx, Apache, Node.js)
-
+# Create .htaccess for SPA routing
+$htaccess = @"
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /$SubdomainPath/
+  RewriteCond %{REQUEST_FILENAME} -f [OR]
+  RewriteCond %{REQUEST_FILENAME} -d
+  RewriteRule ^ - [L]
+  RewriteRule ^ /$SubdomainPath/index.html [QSA,L]
+</IfModule>
 "@
+$htaccess | Set-Content "$staging\.htaccess"
+Write-Host "Created .htaccess for SPA routing"
+
+# Create deployment manifest
+$packageJson = Get-Content "package.json" | ConvertFrom-Json
+$gitBranch = & git branch --show-current 2>$null
+if ($LASTEXITCODE -ne 0) { $gitBranch = "unknown" }
+$gitCommit = & git rev-parse --short HEAD 2>$null
+if ($LASTEXITCODE -ne 0) { $gitCommit = "unknown" }
+
+$manifest = @{
+  "ProjectName" = $ProjectName
+  "Deployed" = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
+  "DeployedBy" = $env:USERNAME
+  "Version" = $packageJson.version
+  "Branch" = $gitBranch
+  "Commit" = $gitCommit
+  "Environment" = $Environment
+  "URL" = "https://ai-tools.techbridge.edu.gh/$SubdomainPath"
+} | ConvertTo-Json
+
+$manifest | Set-Content "$staging\DEPLOYMENT_MANIFEST.json"
+Write-Host "Created deployment manifest"
+
+Write-Host "✅ Package ready" -ForegroundColor Green
+Write-Host ""
+
+# Deploy via SSH
+if (-not $DryRun) {
+    Write-Host "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" -ForegroundColor Yellow
+    Write-Host "Deploying to remote server..." -ForegroundColor Yellow
+    Write-Host "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" -ForegroundColor Yellow
+
+    # Create remote directory
+    Write-Host "Creating directory structure..."
+    & ssh -o StrictHostKeyChecking=no $RemoteHost "mkdir -p $RemotePath" 2>&1 | Where-Object { $_ -notmatch "already exists" }
+
+    # Clear old deployment
+    Write-Host "Clearing old deployment..."
+    & ssh -o StrictHostKeyChecking=no $RemoteHost "rm -rf $RemotePath/* $RemotePath/.htaccess 2>/dev/null || true"
+
+    # Deploy files via SCP
+    Write-Host "Deploying files via SCP..."
+    & scp -r -o StrictHostKeyChecking=no "$staging\*" "$RemoteHost`:$RemotePath/" 2>&1 | Select-Object -First 20
+
+    # Set permissions
+    Write-Host "Setting permissions..."
+    & ssh -o StrictHostKeyChecking=no $RemoteHost "chmod -R 755 $RemotePath && chmod 644 $RemotePath/.htaccess"
+
+    Write-Host "✅ Deployment complete" -ForegroundColor Green
+} else {
+    Write-Host "🔍 DRY RUN: Would deploy to:" -ForegroundColor Cyan
+    Write-Host "  Host: $RemoteHost"
+    Write-Host "  Path: $RemotePath"
+    Write-Host "  Files: $(Get-ChildItem -Path $staging -File -Recurse | Measure-Object).Count files"
+    Write-Host ""
 }
 
-function Build-App {
-    Write-Step "Building rophe-sugar-logger production bundle..."
+# Cleanup
+Write-Host "Cleaning up..." -ForegroundColor Yellow
+Remove-Item $staging -Recurse -Force
+Write-Host "✅ Cleanup complete" -ForegroundColor Green
+Write-Host ""
 
-    if (-not (Test-Path "package.json")) {
-        Write-Error-Custom "package.json not found. Run from rophe-sugar-logger directory."
-        exit 1
-    }
+# Summary
+$fileCount = (Get-ChildItem -Path "dist" -File -Recurse | Measure-Object).Count
+$sizeBytes = (Get-ChildItem -Path "dist" -File -Recurse | Measure-Object -Property Length -Sum).Sum
+$sizeMB = [math]::Round($sizeBytes / 1MB, 2)
 
-    # Check for GEMINI_API_KEY
-    if (-not $env:GEMINI_API_KEY) {
-        Write-Info "GEMINI_API_KEY not set. Build will use build-time default."
-        Write-Info "Set it before deployment: `$env:GEMINI_API_KEY='your_key'"
-    }
+Write-Host "╔════════════════════════════════════════════════════════════╗" -ForegroundColor Green
+Write-Host "║  ✅ DEPLOYMENT COMPLETE                                    ║" -ForegroundColor Green
+Write-Host "╚════════════════════════════════════════════════════════════╝" -ForegroundColor Green
+Write-Host ""
+Write-Host "Project:        $displayName"
+Write-Host "URL:            https://ai-tools.techbridge.edu.gh/$SubdomainPath"
+Write-Host "Files deployed: $fileCount"
+Write-Host "Size:           $sizeMB MB"
+Write-Host "Deployed at:    $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')"
+Write-Host ""
 
-    # Install dependencies if needed
-    if (-not (Test-Path "node_modules")) {
-        Write-Step "Installing dependencies..."
-        & pnpm install
-        if ($LASTEXITCODE -ne 0) {
-            Write-Error-Custom "Dependency installation failed"
-            exit 1
-        }
-    }
-
-    # Build
-    Write-Step "Running production build..."
-    & pnpm build
-    if ($LASTEXITCODE -ne 0) {
-        Write-Error-Custom "Build failed"
-        exit 1
-    }
-
-    Write-Success "Build complete!"
-    Write-Host ""
-    Write-Host "Distribution files are ready in ./dist/" -ForegroundColor Yellow
-    Write-Host ""
-    Write-Host "📊 Build artifacts:" -ForegroundColor Cyan
-    if (Test-Path "dist") {
-        Get-ChildItem -Path "dist/assets" | Select-Object Name, @{
-            Name = 'Size'
-            Expression = { '{0:N0} KB' -f ($_.Length / 1024) }
-        } | Format-Table -AutoSize
-    }
-
-    Write-Host ""
-    Write-Host "🚀 Next steps:" -ForegroundColor Cyan
-    Write-Host "  1. Deploy ./dist/ to your hosting platform"
-    Write-Host "  2. Set GEMINI_API_KEY environment variable at runtime"
-    Write-Host "  3. Access app at your deployment URL"
-    Write-Host ""
-    Write-Host "📖 For detailed deployment instructions, see DEPLOY.md" -ForegroundColor Cyan
-}
-
-function Deploy-Docker {
-    Write-Step "Building Docker image for rophe-sugar-logger..."
-
-    if (-not (Test-Path "Dockerfile")) {
-        Write-Error-Custom "Dockerfile not found. Run from rophe-sugar-logger directory."
-        exit 1
-    }
-
-    # Check Docker
-    try {
-        $null = docker --version
-    }
-    catch {
-        Write-Error-Custom "Docker is not installed or not in PATH"
-        exit 1
-    }
-
-    $imageName = "rophe-sugar-logger:latest"
-
-    if (-not $env:GEMINI_API_KEY) {
-        Write-Error-Custom "GEMINI_API_KEY environment variable not set"
-        Write-Info "Set it with: `$env:GEMINI_API_KEY='your_key'"
-        exit 1
-    }
-
-    Write-Step "Building image: $imageName"
-    & docker build -t $imageName `
-        --build-arg GEMINI_API_KEY=$env:GEMINI_API_KEY `
-        .
-
-    if ($LASTEXITCODE -ne 0) {
-        Write-Error-Custom "Docker build failed"
-        exit 1
-    }
-
-    Write-Success "Docker image built!"
-    Write-Host ""
-    Write-Host "🚀 To run the container:" -ForegroundColor Cyan
-    Write-Host "  docker run -p 3000:80 $imageName" -ForegroundColor Yellow
-    Write-Host ""
-    Write-Host "🌐 Then access at: http://localhost:3000" -ForegroundColor Yellow
-    Write-Host ""
-    Write-Info "On first visit, set your admin password to unlock the app"
-}
-
-function Start-DevServer {
-    Write-Step "Starting development server..."
-
-    if (-not (Test-Path "package.json")) {
-        Write-Error-Custom "package.json not found. Run from rophe-sugar-logger directory."
-        exit 1
-    }
-
-    # Install dependencies if needed
-    if (-not (Test-Path "node_modules")) {
-        Write-Step "Installing dependencies..."
-        & pnpm install
-        if ($LASTEXITCODE -ne 0) {
-            Write-Error-Custom "Dependency installation failed"
-            exit 1
-        }
-    }
-
-    if (-not $env:GEMINI_API_KEY) {
-        Write-Info "Warning: GEMINI_API_KEY not set. Image upload will not work."
-        Write-Info "Set it with: `$env:GEMINI_API_KEY='your_key'"
-    }
-
-    Write-Success "Starting dev server (port 3000)..."
-    Write-Host ""
-    & pnpm dev
-}
-
-# Main execution
-switch ($Action) {
-    'Build' { Build-App }
-    'Docker' { Deploy-Docker }
-    'Serve' { Start-DevServer }
-    'Help' { Show-Help }
-    default { Show-Help }
-}
+Write-Host "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" -ForegroundColor Cyan
+Write-Host "Verification:" -ForegroundColor Cyan
+Write-Host "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" -ForegroundColor Cyan
+Write-Host ""
+Write-Host "  1. Browser:"
+Write-Host "     https://ai-tools.techbridge.edu.gh/$SubdomainPath"
+Write-Host ""
+Write-Host "  2. Curl:"
+Write-Host "     curl -I https://ai-tools.techbridge.edu.gh/$SubdomainPath"
+Write-Host ""
+Write-Host "  3. Server logs:"
+Write-Host "     ssh $RemoteHost 'tail -f /var/log/apache2/ai-tools.techbridge.edu.gh-access.log'"
+Write-Host ""
+Write-Host "  4. Clear cache (if needed):"
+Write-Host "     Ctrl+Shift+Delete in browser → Clear cached images and files"
+Write-Host ""
