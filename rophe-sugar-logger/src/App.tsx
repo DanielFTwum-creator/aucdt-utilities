@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { Printer, Plus, X, Trash2, LogOut, LogIn, ShieldCheck, Activity, Eye, FileText, Settings, Building2, Camera, Loader2 } from 'lucide-react';
+import { Printer, Plus, X, Trash2, LogOut, ShieldCheck, Activity, Eye, FileText, Settings, Camera, Loader2 } from 'lucide-react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, ReferenceArea } from 'recharts';
-import { auth, loginWithGoogle, logout, db } from './lib/firebase';
-import { handleFirestoreError, OperationType } from './lib/firebaseErrors';
-import { onAuthStateChanged, User } from 'firebase/auth';
-import { collection, query, onSnapshot, setDoc, doc, deleteDoc, getDoc, serverTimestamp, where, writeBatch } from 'firebase/firestore';
+import { useAdminAuth } from './hooks/useAdminAuth';
+import {
+  getAllReadings, upsertReading, deleteReading, batchUpsertReadings,
+  getProfile, saveProfile, ReadingRow, getAdminConfig
+} from './lib/db';
 import { GoogleGenAI, Type } from "@google/genai";
 
 const COLS = [
@@ -28,9 +29,8 @@ interface Row {
   pre_dinner: string;
   post_dinner: string;
   createdAt?: number;
+  updatedAt?: number;
 }
-
-const DEFAULT_ROWS: Row[] = [];
 
 const MONTH_NAMES = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 
@@ -71,13 +71,16 @@ function convertTarget(limit: number, unit: 'mmol/L' | 'mg/dL') {
 }
 
 export default function App() {
+  const { isAuthenticated, login, logout } = useAdminAuth();
+  const [passwordInput, setPasswordInput] = useState('');
+  const [loginError, setLoginError] = useState('');
+  const [isFirstTime, setIsFirstTime] = useState<boolean | null>(null);
+
   const [rows, setRows] = useState<Row[]>([]);
   const [patientName, setPatientName] = useState('');
   const [doctorName, setDoctorName] = useState('');
   const [selectedMonth, setSelectedMonth] = useState<string>('');
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [user, setUser] = useState<User | null>(null);
-  const [authLoading, setAuthLoading] = useState(true);
 
   // UI preferences
   const [unit, setUnit] = useState<'mmol/L' | 'mg/dL'>('mmol/L');
@@ -93,9 +96,14 @@ export default function App() {
   const [uploadProgress, setUploadProgress] = useState(0);
   const [uploadError, setUploadError] = useState('');
 
+  // Initialize first-time flag
+  useEffect(() => {
+    getAdminConfig('adminPassword').then(pw => setIsFirstTime(!pw));
+  }, []);
+
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (!file || !user) return;
+    if (!file || !isAuthenticated) return;
 
     try {
       setIsUploading(true);
@@ -183,56 +191,44 @@ Restrictions:
         if (rowsToAdd && rowsToAdd.length > 0) {
           setUploadProgress(90);
           setUploadStatus(`Saving ${rowsToAdd.length} readings...`);
-          const batch = writeBatch(db);
+          const rowsToSave: ReadingRow[] = [];
+          const now = Date.now();
           let successCount = 0;
-          
+
           for (const row of rowsToAdd) {
-             let formattedDate = row.date;
-             try {
-               const d = new Date(row.date);
-               if (!isNaN(d.getTime())) {
-                 formattedDate = d.toISOString().split('T')[0];
-               }
-             } catch (err) {}
-             
-             // Check if dates are somewhat valid
-             if (formattedDate.includes('NaN')) continue;
-             
-             const existingIdx = rows.findIndex(r => r.date === formattedDate);
-             const existingRow = existingIdx >= 0 ? rows[existingIdx] : null;
-             const newRowId = existingRow ? existingRow.id : `row_${Date.now()}_${Math.random().toString(36).substring(2,9)}`;
-             const docRef = doc(db, `users/${user.uid}/readings`, newRowId);
-             
-             if (existingRow) {
-                const updatePayload: any = {
-                  updatedAt: serverTimestamp()
-                };
-                if (row.fasting && row.fasting !== '') updatePayload.fasting = toBaseUnit(row.fasting, unit);
-                if (row.post_breakfast && row.post_breakfast !== '') updatePayload.post_breakfast = toBaseUnit(row.post_breakfast, unit);
-                if (row.pre_lunch && row.pre_lunch !== '') updatePayload.pre_lunch = toBaseUnit(row.pre_lunch, unit);
-                if (row.post_lunch && row.post_lunch !== '') updatePayload.post_lunch = toBaseUnit(row.post_lunch, unit);
-                if (row.pre_dinner && row.pre_dinner !== '') updatePayload.pre_dinner = toBaseUnit(row.pre_dinner, unit);
-                if (row.post_dinner && row.post_dinner !== '') updatePayload.post_dinner = toBaseUnit(row.post_dinner, unit);
-                
-                batch.set(docRef, updatePayload, { merge: true });
-             } else {
-                batch.set(docRef, {
-                  id: newRowId,
-                  date: formattedDate,
-                  fasting: row.fasting ? toBaseUnit(row.fasting, unit) : '',
-                  post_breakfast: row.post_breakfast ? toBaseUnit(row.post_breakfast, unit) : '',
-                  pre_lunch: row.pre_lunch ? toBaseUnit(row.pre_lunch, unit) : '',
-                  post_lunch: row.post_lunch ? toBaseUnit(row.post_lunch, unit) : '',
-                  pre_dinner: row.pre_dinner ? toBaseUnit(row.pre_dinner, unit) : '',
-                  post_dinner: row.post_dinner ? toBaseUnit(row.post_dinner, unit) : '',
-                  userId: user.uid,
-                  createdAt: serverTimestamp(),
-                  updatedAt: serverTimestamp()
-                });
-             }
-             successCount++;
+            let formattedDate = row.date;
+            try {
+              const d = new Date(row.date);
+              if (!isNaN(d.getTime())) {
+                formattedDate = d.toISOString().split('T')[0];
+              }
+            } catch (err) {}
+
+            if (formattedDate.includes('NaN')) continue;
+
+            const existingRow = rows.find(r => r.date === formattedDate);
+            const newRowId = existingRow
+              ? existingRow.id
+              : `row_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
+
+            rowsToSave.push({
+              id: newRowId,
+              date: formattedDate,
+              fasting:        row.fasting        ? toBaseUnit(row.fasting, unit)        : (existingRow?.fasting || ''),
+              post_breakfast: row.post_breakfast ? toBaseUnit(row.post_breakfast, unit) : (existingRow?.post_breakfast || ''),
+              pre_lunch:      row.pre_lunch      ? toBaseUnit(row.pre_lunch, unit)      : (existingRow?.pre_lunch || ''),
+              post_lunch:     row.post_lunch     ? toBaseUnit(row.post_lunch, unit)     : (existingRow?.post_lunch || ''),
+              pre_dinner:     row.pre_dinner     ? toBaseUnit(row.pre_dinner, unit)     : (existingRow?.pre_dinner || ''),
+              post_dinner:    row.post_dinner    ? toBaseUnit(row.post_dinner, unit)    : (existingRow?.post_dinner || ''),
+              createdAt: (existingRow as any)?.createdAt ?? now,
+              updatedAt: now,
+            });
+            successCount++;
           }
-          await batch.commit();
+
+          await batchUpsertReadings(rowsToSave);
+          const refreshed = await getAllReadings();
+          setRows(refreshed as Row[]);
           setUploadProgress(100);
           setUploadStatus(`Successfully extracted and saved ${successCount} readings!`);
           setTimeout(() => setIsUploading(false), 2000);
@@ -251,80 +247,29 @@ Restrictions:
   };
 
   useEffect(() => {
-    const unsub = onAuthStateChanged(auth, (u) => {
-      setUser(u);
-      setAuthLoading(false);
-    });
-    return unsub;
-  }, []);
-
-  useEffect(() => {
-    if (!user) {
+    if (!isAuthenticated) {
       setRows([]);
       setPatientName('');
       setDoctorName('');
       return;
     }
-
-    const loadProfile = async () => {
-      try {
-        const docRef = doc(db, 'users', user.uid);
-        const docSnap = await getDoc(docRef);
-        if (docSnap.exists()) {
-          setPatientName(docSnap.data().patientName || '');
-          setDoctorName(docSnap.data().doctorName || '');
-        } else {
-          const newProfile = {
-            userId: user.uid,
-            patientName: user.displayName || '',
-            doctorName: '',
-            createdAt: serverTimestamp(),
-            updatedAt: serverTimestamp()
-          };
-          await setDoc(docRef, newProfile);
-          setPatientName(newProfile.patientName);
-        }
-      } catch (err) {
-        handleFirestoreError(err, OperationType.GET, `users/${user.uid}`);
+    getProfile().then(profile => {
+      if (profile) {
+        setPatientName(profile.patientName || '');
+        setDoctorName(profile.doctorName || '');
       }
-    };
-    
-    loadProfile();
-
-    const q = query(
-      collection(db, `users/${user.uid}/readings`),
-      where("userId", "==", user.uid)
-    );
-    const unsub = onSnapshot(q, (snapshot) => {
-      const fetchedRows: Row[] = [];
-      snapshot.forEach(d => {
-        fetchedRows.push({ ...d.data(), id: d.id } as Row);
-      });
-      setRows(fetchedRows);
-    }, (error) => handleFirestoreError(error, OperationType.LIST, `users/${user.uid}/readings`));
-
-    return () => unsub();
-  }, [user]);
+    });
+    getAllReadings().then(fetched => setRows(fetched as Row[]));
+  }, [isAuthenticated]);
 
   // Save profile changes
   useEffect(() => {
-    if (!user || authLoading || (!patientName && !doctorName)) return;
-    
-    const saveProfile = async () => {
-      try {
-        await setDoc(doc(db, 'users', user.uid), {
-          patientName,
-          doctorName,
-          updatedAt: serverTimestamp()
-        }, { merge: true });
-      } catch (err) {
-        handleFirestoreError(err, OperationType.UPDATE, `users/${user.uid}`);
-      }
-    };
-    
-    const timeout = setTimeout(saveProfile, 1000);
+    if (!isAuthenticated || (!patientName && !doctorName)) return;
+    const timeout = setTimeout(() => {
+      saveProfile({ patientName, doctorName });
+    }, 1000);
     return () => clearTimeout(timeout);
-  }, [patientName, doctorName, user, authLoading]);
+  }, [patientName, doctorName, isAuthenticated]);
 
   const monthOptions = useMemo(() => {
     const keys = new Set<string>();
@@ -350,7 +295,7 @@ Restrictions:
 
   const handleAddReading = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!newRow.date || !user) return;
+    if (!newRow.date) return;
     
     const existingIdx = rows.findIndex(r => r.date === newRow.date);
     const existingRow = existingIdx >= 0 ? rows[existingIdx] : null;
@@ -367,47 +312,26 @@ Restrictions:
       post_dinner: newRow.post_dinner !== undefined ? toBaseUnit(newRow.post_dinner, unit) : (existingRow?.post_dinner || ''),
     };
 
-    try {
-      const docRef = doc(db, `users/${user.uid}/readings`, rowId);
-      if (existingRow) {
-        // Omitting id so it doesn't trigger affectedKeys() mismatch
-        const updatePayload = {
-          date: rowToAdd.date,
-          fasting: rowToAdd.fasting,
-          post_breakfast: rowToAdd.post_breakfast,
-          pre_lunch: rowToAdd.pre_lunch,
-          post_lunch: rowToAdd.post_lunch,
-          pre_dinner: rowToAdd.pre_dinner,
-          post_dinner: rowToAdd.post_dinner,
-          updatedAt: serverTimestamp()
-        };
-        await setDoc(docRef, updatePayload, { merge: true });
-      } else {
-        await setDoc(docRef, {
-          ...rowToAdd,
-          userId: user.uid,
-          createdAt: serverTimestamp(),
-          updatedAt: serverTimestamp()
-        });
-      }
-      
-      setIsModalOpen(false);
-      setNewRow({ date: new Date().toISOString().split('T')[0] });
-      
-      const addedMonth = getMonthKey(rowToAdd.date);
-      if (addedMonth) setSelectedMonth(addedMonth);
-    } catch (err) {
-      handleFirestoreError(err, OperationType.WRITE, `users/${user.uid}/readings/${rowId}`);
-    }
+    const now = Date.now();
+    const rowToSave: ReadingRow = {
+      ...rowToAdd,
+      createdAt: (existingRow as any)?.createdAt ?? now,
+      updatedAt: now,
+    };
+    await upsertReading(rowToSave);
+    const updatedRows = await getAllReadings();
+    setRows(updatedRows as Row[]);
+
+    setIsModalOpen(false);
+    setNewRow({ date: new Date().toISOString().split('T')[0] });
+
+    const addedMonth = getMonthKey(rowToAdd.date);
+    if (addedMonth) setSelectedMonth(addedMonth);
   };
 
   const deleteRow = async (id: string) => {
-    if (!user) return;
-    try {
-      await deleteDoc(doc(db, `users/${user.uid}/readings`, id));
-    } catch (err) {
-      handleFirestoreError(err, OperationType.DELETE, `users/${user.uid}/readings/${id}`);
-    }
+    await deleteReading(id);
+    setRows(prev => prev.filter(r => r.id !== id));
   };
 
   const currentMonthLabel = useMemo(() => {
@@ -444,54 +368,49 @@ Restrictions:
     });
   }, [filteredRows, unit]);
 
-  if (authLoading) {
-    return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
-        <div className="animate-spin w-10 h-10 border-4 border-[#D6E4F0] border-t-[#2E75B6] rounded-full"></div>
-      </div>
-    );
-  }
-
-  if (!user) {
+  if (!isAuthenticated) {
     return (
       <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center p-6 text-center">
-        <div className="border-2 border-[#1F3864] text-[#1F3864] px-6 py-2 text-3xl font-bold tracking-tighter rounded-lg mb-6 shadow-sm">ROPHE</div>
-        <h1 className="text-2xl font-semibold mb-2 text-slate-900">Blood Glucose Monitoring</h1>
-        <p className="text-slate-500 mb-8 max-w-md">Sign in to sync your readings securely across devices. Your clinical data stays with you.</p>
-        
-        <div className="flex flex-col gap-4 w-full max-w-sm mb-12">
-          <button 
-            onClick={loginWithGoogle}
+        <div className="border-2 border-[#1F3864] text-[#1F3864] px-6 py-2 text-3xl font-bold tracking-tighter rounded-lg mb-6 shadow-sm">
+          ROPHE
+        </div>
+        <h1 className="text-2xl font-semibold mb-1 text-slate-900">Blood Glucose Monitoring</h1>
+        <p className="text-slate-500 mb-8 max-w-sm text-sm">
+          {isFirstTime === null
+            ? 'Loading...'
+            : isFirstTime
+            ? 'Create a password to secure your records.'
+            : 'Enter your password to access your records.'}
+        </p>
+        <form
+          className="flex flex-col gap-4 w-full max-w-sm"
+          onSubmit={async (e) => {
+            e.preventDefault();
+            setLoginError('');
+            const ok = await login(passwordInput);
+            if (!ok) setLoginError('Incorrect password. Please try again.');
+          }}
+        >
+          <input
+            type="password"
+            value={passwordInput}
+            onChange={e => setPasswordInput(e.target.value)}
+            placeholder={isFirstTime ? 'Set a new password' : 'Enter password'}
+            className="w-full border border-slate-300 rounded-xl px-4 py-3.5 text-sm font-medium outline-none focus:ring-4 focus:ring-blue-100 focus:border-[#2E75B6] shadow-sm"
+            autoFocus
+            required
+          />
+          {loginError && (
+            <p className="text-red-500 text-sm font-medium">{loginError}</p>
+          )}
+          <button
+            type="submit"
             className="w-full bg-[#2E75B6] text-white px-8 py-3.5 rounded-xl font-medium hover:bg-[#1F3864] transition-colors flex items-center justify-center gap-3 shadow-md focus:ring-4 focus:ring-blue-100 outline-none"
           >
-            <LogIn className="w-5 h-5" />
-            Sign in with Google
+            <ShieldCheck className="w-5 h-5" />
+            {isFirstTime ? 'Set Password & Enter' : 'Unlock'}
           </button>
-          
-          <button 
-            onClick={() => alert('Enterprise SSO integration pending setup.')}
-            className="w-full bg-white text-slate-700 border border-slate-300 px-8 py-3.5 rounded-xl font-medium hover:bg-slate-50 transition-colors flex items-center justify-center gap-3 shadow-sm focus:ring-4 focus:ring-slate-100 outline-none"
-          >
-            <Building2 className="w-5 h-5 text-slate-500" />
-            Enterprise SSO Login
-          </button>
-        </div>
-
-        {/* Security Signifiers */}
-        <div className="flex flex-wrap justify-center items-center gap-6 text-slate-400">
-          <div className="flex items-center gap-2">
-            <ShieldCheck className="w-5 h-5" />
-            <span className="text-xs font-semibold uppercase tracking-wider">HIPAA Compliant</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <ShieldCheck className="w-5 h-5" />
-            <span className="text-xs font-semibold uppercase tracking-wider">GDPR Ready</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <ShieldCheck className="w-5 h-5" />
-            <span className="text-xs font-semibold uppercase tracking-wider">ISO 27001 standard</span>
-          </div>
-        </div>
+        </form>
       </div>
     );
   }

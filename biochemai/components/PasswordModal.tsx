@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { verifyPassword } from '../services/adminService';
+import { useAdminAuth } from '../hooks/useAdminAuth';
 
 interface PasswordModalProps {
   isOpen: boolean;
@@ -8,6 +8,7 @@ interface PasswordModalProps {
 }
 
 export const PasswordModal: React.FC<PasswordModalProps> = ({ isOpen, onClose, onSuccess }) => {
+  const { login } = useAdminAuth();
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -37,7 +38,7 @@ export const PasswordModal: React.FC<PasswordModalProps> = ({ isOpen, onClose, o
         const firstElement = focusableElements[0];
         const lastElement = focusableElements[focusableElements.length - 1];
 
-        if (event.shiftKey) { 
+        if (event.shiftKey) {
           if (document.activeElement === firstElement) {
             lastElement.focus();
             event.preventDefault();
@@ -57,20 +58,24 @@ export const PasswordModal: React.FC<PasswordModalProps> = ({ isOpen, onClose, o
     };
   }, [isOpen, onClose]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
     setIsSubmitting(true);
-    
-    setTimeout(() => {
-      if (verifyPassword(password)) {
+
+    try {
+      const success = await login(password);
+      if (success) {
         onSuccess();
       } else {
         setError('Incorrect password. Please try again.');
         inputRef.current?.select();
       }
+    } catch (err) {
+      setError('An error occurred. Please try again.');
+    } finally {
       setIsSubmitting(false);
-    }, 500);
+    }
   };
   
   if (!isOpen) return null;

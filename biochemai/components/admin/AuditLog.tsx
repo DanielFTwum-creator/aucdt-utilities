@@ -1,12 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import { getAuditLog } from '../../services/adminService';
+import { getAuditLog as getLogsFromDB } from '../../lib/db';
 import { AuditLogEntry } from '../../types';
 
 export const AuditLog: React.FC = () => {
     const [logs, setLogs] = useState<AuditLogEntry[]>([]);
 
     useEffect(() => {
-        setLogs(getAuditLog());
+        const loadLogs = async () => {
+            try {
+                const loadedLogs = await getLogsFromDB();
+                setLogs(loadedLogs);
+            } catch (error) {
+                console.error('Failed to load audit logs:', error);
+            }
+        };
+        loadLogs();
     }, []);
 
     const formatTimestamp = (isoString: string) => {

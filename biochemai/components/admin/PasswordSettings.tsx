@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { changePassword } from '../../services/adminService';
+import { getAdminConfig, setAdminConfig, addAuditLog } from '../../lib/db';
 
 export const PasswordSettings: React.FC = () => {
     const [oldPassword, setOldPassword] = useState('');
@@ -9,29 +9,45 @@ export const PasswordSettings: React.FC = () => {
     const [isError, setIsError] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setMessage('');
         setIsError(false);
-        
+
         if (newPassword !== confirmPassword) {
             setMessage("New passwords do not match.");
             setIsError(true);
             return;
         }
 
+        if (newPassword.length < 8) {
+            setMessage("New password must be at least 8 characters long.");
+            setIsError(true);
+            return;
+        }
+
         setIsSubmitting(true);
-        const result = changePassword(oldPassword, newPassword);
-        setTimeout(() => { // Simulate delay
-            setMessage(result.message);
-            setIsError(!result.success);
-            setIsSubmitting(false);
-            if(result.success) {
+        try {
+            const storedPassword = await getAdminConfig('adminPassword');
+            if (oldPassword !== storedPassword) {
+                setMessage("Incorrect old password.");
+                setIsError(true);
+                await addAuditLog('Password Change Attempt', 'Failed: Incorrect old password.');
+            } else {
+                await setAdminConfig('adminPassword', newPassword);
+                await addAuditLog('Password Changed', 'Administrator password was successfully changed.');
+                setMessage("Password changed successfully.");
+                setIsError(false);
                 setOldPassword('');
                 setNewPassword('');
                 setConfirmPassword('');
             }
-        }, 500);
+        } catch (error) {
+            setMessage("An error occurred. Please try again.");
+            setIsError(true);
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     return (
