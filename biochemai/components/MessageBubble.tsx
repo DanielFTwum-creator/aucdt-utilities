@@ -1,6 +1,6 @@
 import React from 'react';
 import { Message } from '../types';
-import { MarkdownRenderer } from './MarkdownRenderer';
+import { ResponseRenderer } from './ResponseRenderer';
 import { SourceIcon, FlaskConicalIcon } from './Icons';
 
 interface MessageBubbleProps {
@@ -58,9 +58,7 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({ message }) => {
             </span>
         </div>
 
-        <div className="prose prose-sm max-w-none prose-p:text-[var(--color-text-primary)] prose-li:text-[var(--color-text-primary)] prose-strong:text-[var(--color-text-primary)] prose-headings:text-[var(--color-text-primary)]">
-            <MarkdownRenderer content={content} />
-        </div>
+        <ResponseRenderer content={content} template={message.template} />
 
         {sources && sources.length > 0 && !isError && (
           <div className="mt-4 pt-3 border-t border-[var(--color-border-primary)]">

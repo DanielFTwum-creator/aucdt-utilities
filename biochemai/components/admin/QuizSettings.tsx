@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getQuizQuestionCount, setQuizQuestionCount } from '../../services/adminService';
+import { getQuizQuestionCount as getQuizCountFromDB, setQuizQuestionCount as setQuizCountToDB } from '../../lib/db';
 
 export const QuizSettings: React.FC = () => {
     const [questionCount, setQuestionCount] = useState<number>(5);
@@ -7,18 +7,29 @@ export const QuizSettings: React.FC = () => {
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     useEffect(() => {
-        setQuestionCount(getQuizQuestionCount());
+        const loadQuizCount = async () => {
+            try {
+                const count = await getQuizCountFromDB();
+                setQuestionCount(count);
+            } catch (error) {
+                console.error('Failed to load quiz question count:', error);
+            }
+        };
+        loadQuizCount();
     }, []);
 
-    const handleSave = (e: React.FormEvent) => {
+    const handleSave = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsSubmitting(true);
-        setTimeout(() => { // Simulate delay
-            setQuizQuestionCount(questionCount);
+        try {
+            await setQuizCountToDB(questionCount);
             setMessage(`Default quiz question count saved as ${questionCount}.`);
+            setTimeout(() => setMessage(''), 3000);
+        } catch (error) {
+            setMessage("Failed to save quiz settings.");
+        } finally {
             setIsSubmitting(false);
-            setTimeout(() => setMessage(''), 3000); // Clear message after 3 seconds
-        }, 500);
+        }
     };
 
     return (
