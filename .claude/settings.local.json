@@ -45,7 +45,12 @@
       "PowerShell(Start-Sleep -Seconds 8; $attempt = 0; while\\($attempt -lt 5\\) { try { $r = Invoke-WebRequest -Uri \"http://localhost:3000\" -UseBasicParsing -TimeoutSec 2; if\\($r.StatusCode -eq 200\\) { Write-Host \"✓ Server ready\"; break } } catch { } $attempt++; Start-Sleep -Seconds 2 }; if\\($attempt -eq 5\\) { Write-Host \"⚠ Server startup timeout\" })",
       "PowerShell(grep *)",
       "PowerShell(cd C:\\\\Development\\\\github\\\\aucdt-utilities\\\\biochemai && \\(Get-Content App.tsx | Select-String \"<Header\" -Context 0,2\\))",
-      "PowerShell(cd C:\\\\Development\\\\github\\\\aucdt-utilities\\\\biochemai && \\(Get-Content App.tsx -ReadCount 0 | Select-String -Pattern \"<Header\" | ForEach-Object { $_.LineNumber }\\))"
+      "PowerShell(cd C:\\\\Development\\\\github\\\\aucdt-utilities\\\\biochemai && \\(Get-Content App.tsx -ReadCount 0 | Select-String -Pattern \"<Header\" | ForEach-Object { $_.LineNumber }\\))",
+      "PowerShell(rsync *)",
+      "PowerShell(ssh -o StrictHostKeyChecking=no root@66.226.72.199 \"ls -lh /var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/rophe/ | head -20\" 2>&1)",
+      "PowerShell(bash -c \"cd 'C:\\\\Development\\\\github\\\\aucdt-utilities\\\\rophe-sugar-logger' && ls -la dist/\" 2>&1)",
+      "PowerShell(ssh -o StrictHostKeyChecking=no root@66.226.72.199 \"find /var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/rophe/ -type f | sort\" 2>&1)",
+      "PowerShell(curl *)"
     ]
   }
 }
