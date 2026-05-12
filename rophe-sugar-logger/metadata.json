@@ -1,0 +1,6 @@
+{
+  "name": "Rophe Sugar Logger",
+  "description": "A self-monitoring blood glucose logger tailored for Rophe Specialist Care. Allows logging, calculating averages, identifying highs, and generating printable reports.",
+  "requestFramePermissions": [],
+  "majorCapabilities": []
+}
