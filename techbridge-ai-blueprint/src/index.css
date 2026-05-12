@@ -1,0 +1,127 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+
+  /* 6R Protocol Spacing (Rhythm) */
+  --space-xs: 0.25rem;
+  --space-sm: 0.5rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2rem;
+  --space-2xl: 3rem;
+
+  /* 6R Protocol Typography (Ratio) */
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+
+  /* Theme Transitions */
+  --transition-all: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+  --transition-transform: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+
+  /* Light Theme (Radiance: Foundation) */
+  --color-brand: #2563eb;
+  --color-brand-light: #eff6ff;
+  --color-brand-dark: #1d4ed8;
+  --color-brand-glow: rgba(37, 99, 235, 0.15);
+  
+  --color-success: #059669;
+  --color-success-bg: #f0fdf4;
+  
+  --color-warning: #d97706;
+  --color-warning-bg: #fffbeb;
+  
+  --color-danger: #dc2626;
+  --color-danger-bg: #fef2f2;
+  
+  --color-bg-main: #f8fafc;
+  --color-bg-card: #ffffff;
+  --color-bg-panel: #ffffff;
+  --color-bg-sidebar: #f1f5f9;
+  
+  --color-border-subtle: #f1f5f9;
+  --color-border-standard: #e2e8f0;
+  --color-border-strong: #cbd5e1;
+  
+  --color-text-primary: #0f172a;
+  --color-text-secondary: #475569;
+  --color-text-tertiary: #94a3b8;
+
+  /* 6R Protocol Rigor: Shadows */
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+}
+
+[data-theme='dark'] {
+  /* Radiance: Deep Slate for Dark Theme Resonance */
+  --color-brand: #60a5fa;
+  --color-brand-light: rgba(96, 165, 250, 0.1);
+  --color-brand-dark: #3b82f6;
+  --color-brand-glow: rgba(96, 165, 250, 0.25);
+
+  --color-success: #34d399;
+  --color-success-bg: rgba(52, 211, 153, 0.1);
+
+  --color-bg-main: #0f172a;
+  --color-bg-card: #1e293b;
+  --color-bg-panel: #1e293b;
+  --color-bg-sidebar: #020617;
+
+  --color-border-subtle: #1e293b;
+  --color-border-standard: #334155;
+  --color-border-strong: #475569;
+
+  --color-text-primary: #f8fafc;
+  --color-text-secondary: #cbd5e1;
+  --color-text-tertiary: #64748b;
+
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.3), 0 2px 4px -2px rgb(0 0 0 / 0.3);
+}
+
+[data-theme='contrast'] {
+  --color-brand: #ffff00;
+  --color-brand-light: #000000;
+  --color-brand-dark: #ffff00;
+
+  --color-bg-main: #000000;
+  --color-bg-card: #000000;
+  --color-bg-panel: #000000;
+
+  --color-border-subtle: #ffffff;
+  --color-border-standard: #ffffff;
+  --color-border-strong: #ffffff;
+
+  --color-text-primary: #ffffff;
+  --color-text-secondary: #ffffff;
+  --color-text-tertiary: #ffffff;
+}
+
+@layer base {
+  body {
+    @apply bg-bg-main text-text-primary font-sans antialiased selection:bg-brand/20 transition-colors duration-300;
+  }
+}
+
+/* Blueprint dot pattern */
+.dot-pattern {
+  background-image: radial-gradient(var(--color-border-standard) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+/* Custom scrollbar - professional look */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  @apply bg-border-strong/50 rounded-full;
+}
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-text-tertiary;
+}

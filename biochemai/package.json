@@ -10,7 +10,7 @@
     "test": "vitest",
     "test:ui": "vitest --ui",
     "test:coverage": "vitest run --coverage",
-    "test:e2e": "vitest run --config vitest.e2e.config.ts",
+    "test:e2e": "playwright test",
     "build:ios": "pnpm build && npx capacitor sync ios",
     "build:android": "pnpm build && npx capacitor sync android",
     "mobile:sync": "npx capacitor sync",

@@ -20,7 +20,17 @@
       "Bash(npx vite *)",
       "Bash(powershell -NoProfile -Command '.\\\\deploy.ps1 -Build:$false')",
       "Bash(git add *)",
-      "Bash(gh pr create --title 'feat: dictation app enhancements + patois deployment + cleanup' --body ' *)"
+      "Bash(gh pr create --title 'feat: dictation app enhancements + patois deployment + cleanup' --body ' *)",
+      "Bash(gh pr *)",
+      "Bash(dir C:\\\\Development\\\\github\\\\aucdt-utilities *)",
+      "Bash(dir C:\\\\Development\\\\github\\\\aucdt-utilities\\\\bridge-radio *)",
+      "Bash(dir *)",
+      "PowerShell(pnpm install *)",
+      "PowerShell(pnpm *)",
+      "Bash(xargs grep -l \"fetch\\\\|mail\\\\|otp\\\\|send\" -i)",
+      "Bash(python3 -c \"import json,sys; d=json.load\\(sys.stdin\\); print\\(json.dumps\\({**d.get\\('dependencies',{}\\), **d.get\\('devDependencies',{}\\)}, indent=2\\)\\)\")",
+      "PowerShell(head *)",
+      "PowerShell(Get-ChildItem -Path \"C:\\\\Development\\\\github\\\\aucdt-utilities\" -Directory | ForEach-Object { $_.Name } | Sort-Object)"
     ]
   }
 }

@@ -1,0 +1,10 @@
+{
+  "projectId": "gen-lang-client-0402452400",
+  "appId": "1:381783929321:web:adada2cb75c8fe90425b78",
+  "apiKey": "<REDACTED_GEMINI_KEY>",
+  "authDomain": "gen-lang-client-0402452400.firebaseapp.com",
+  "firestoreDatabaseId": "ai-studio-d4fc6b13-cc94-4582-aaab-f1e07bb8f71f",
+  "storageBucket": "gen-lang-client-0402452400.firebasestorage.app",
+  "messagingSenderId": "381783929321",
+  "measurementId": ""
+}

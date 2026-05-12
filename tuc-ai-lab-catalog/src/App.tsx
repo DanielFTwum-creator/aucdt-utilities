@@ -35,16 +35,16 @@ const TOOLS: Tool[] = [
     features: ["Real-time Radiograph Analysis", "Automated Clinical Documentation", "Historical Progression Tracking", "HIPAA-Compliant Processing"],
     tags: ["Healthcare", "Computer Vision", "Diagnostics"]
   },
-  { 
-    slug: "biochem", 
-    title: "BioChemAI Teaching Aid", 
+  {
+    slug: "biochemai",
+    title: "BioChemAI Teaching Aid",
     desc: "Domain-specific research support for biochemistry students", 
     cat: "AI & ML",
     extendedDesc: "A specialized LLM agent trained on biochemical journals and textbook data. It assists students in molecular structure visualization, metabolic pathway analysis, and predictive reaction modeling.",
     features: ["Metabolic Pathway Mapping", "Molecular Docking Simulations", "Automated Literature Summarization", "Interactive Reaction Prediction"],
     tags: ["Education", "Research", "Chemistry"]
   },
-  { slug: "lyrics", title: "Patois Lyricist", desc: "Reggae & dancehall lyric generator in Jamaican Patois", cat: "AI & ML", features: ["Phonetic Rhyme Matching", "Rhythm-Based Phrasing", "Thematic Genre Presets"], extendedDesc: "An innovative NLP model specifically tuned for the nuances of Jamaican Patois, providing industry-standard lyrics for Reggae and Dancehall producers." },
+  { slug: "patois", title: "Patois Lyricist", desc: "Reggae & dancehall lyric generator in Jamaican Patois", cat: "AI & ML", features: ["Phonetic Rhyme Matching", "Rhythm-Based Phrasing", "Thematic Genre Presets"], extendedDesc: "An innovative NLP model specifically tuned for the nuances of Jamaican Patois, providing industry-standard lyrics for Reggae and Dancehall producers." },
   { slug: "nobleai", title: "Ghana Home Design AI", desc: "AI assistant for home design and interior concepts", cat: "AI & ML" },
   { slug: "markai", title: "MarkAI", desc: "Marketing strategy and content for non-marketers", cat: "AI & ML" },
   { slug: "lifeplan", title: "Life Planner AI", desc: "Intelligent AI-powered life and goal planning", cat: "AI & ML" },
@@ -63,6 +63,7 @@ const TOOLS: Tool[] = [
   { slug: "code-reviewer", title: "AI Code Reviewer", desc: "Automated code review, analysis and feedback", cat: "AI & ML" },
   { slug: "standup", title: "AI Stand-up Prep", desc: "Workshop and stand-up meeting preparation tool", cat: "AI & ML" },
   { slug: "dictation", title: "Dictation App", desc: "AI-powered dictation and transcription", cat: "AI & ML" },
+  { slug: "blueprint", title: "Techbridge AI Blueprint", desc: "TUC ICT platform for AI project planning, mission tracking and deployment workflows", cat: "Dev Tools", features: ["Mission Phase Tracking", "Cloud Snapshot Sync", "Audit Logging", "Admin Console"], extendedDesc: "The official TUC ICT platform for planning and tracking AI project deployments using a structured multi-phase workflow." },
   { slug: "script-generator", title: "Dialogue Generator", desc: "Script and natural dialogue generation", cat: "AI & ML" },
   // Academic
   { slug: "vet", title: "Verb Explorer Toolkit", desc: "Class 4 digital verb discovery — Choose, Research, Present", cat: "Academic" },
@@ -80,7 +81,7 @@ const TOOLS: Tool[] = [
   { slug: "playgrow", title: "PlayGrow", desc: "Smart learning fun for bright young minds", cat: "Academic" },
   { slug: "present", title: "14-Day Sprint Standup", desc: "Daily standup tracker for AUCDT agile sprints", cat: "Academic" },
   // Creative
-  { slug: "groove-stream", title: "Groove Streamer", desc: "HLS radio streamer — genre selectors, EQ, BPM tagging", cat: "Creative" },
+  { slug: "bridge-radio", title: "Bridge Radio", desc: "AI music generation streamer — Afrobeats, Neo Soul and more", cat: "Creative", features: ["Gemini AI Music Generation", "Genre Selectors", "IndexedDB Track Library", "Admin Panel"], extendedDesc: "An AI-powered music streaming platform that generates original tracks across genres using Google Gemini, with an admin panel and persistent track library." },
   { slug: "warrior", title: "DJ CyStorm: Electric Storm", desc: "Reggae/dancehall artist showcase and release hub", cat: "Creative" },
   { slug: "triptych", title: "Cinematic Triptych Generator", desc: "AI-powered cinematic triptych image creation", cat: "Creative" },
   { slug: "reaper", title: "AI Audio in REAPER", desc: "Mastering AI audio production in REAPER DAW", cat: "Creative" },
@@ -118,7 +119,7 @@ const TOOLS: Tool[] = [
   { slug: "sdf", title: "Strategic Dev Framework", desc: "Business strategic development and planning tool", cat: "Business" },
   { slug: "volt", title: "Volt Virtual Card", desc: "Digital virtual card creation and management", cat: "Business" },
   { slug: "thrive", title: "Interactive Marketing Strategy", desc: "AUCDT interactive marketing strategy platform", cat: "Business" },
-  { slug: "impact", title: "Impact Ventures Dashboard", desc: "Venture impact tracking and investor reporting", cat: "Business" },
+  { slug: "impact-ventures", title: "Impact Ventures Dashboard", desc: "Venture impact tracking and investor reporting", cat: "Business" },
   { slug: "myvbci", title: "myVBCI Camper App", desc: "VBCI camper program management application", cat: "Business" },
   { slug: "willpro", title: "Will Drafting Utility", desc: "AI-powered will and estate document drafting", cat: "Business" },
   { slug: "willgenius", title: "WillGenius", desc: "Smart will creation and legal document assistant", cat: "Business" },
