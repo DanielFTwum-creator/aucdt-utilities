@@ -42,7 +42,10 @@
       "PowerShell(Receive-Job *)",
       "PowerShell(Get-Process *)",
       "PowerShell(rm *)",
-      "PowerShell(Start-Sleep -Seconds 8; $attempt = 0; while\\($attempt -lt 5\\) { try { $r = Invoke-WebRequest -Uri \"http://localhost:3000\" -UseBasicParsing -TimeoutSec 2; if\\($r.StatusCode -eq 200\\) { Write-Host \"✓ Server ready\"; break } } catch { } $attempt++; Start-Sleep -Seconds 2 }; if\\($attempt -eq 5\\) { Write-Host \"⚠ Server startup timeout\" })"
+      "PowerShell(Start-Sleep -Seconds 8; $attempt = 0; while\\($attempt -lt 5\\) { try { $r = Invoke-WebRequest -Uri \"http://localhost:3000\" -UseBasicParsing -TimeoutSec 2; if\\($r.StatusCode -eq 200\\) { Write-Host \"✓ Server ready\"; break } } catch { } $attempt++; Start-Sleep -Seconds 2 }; if\\($attempt -eq 5\\) { Write-Host \"⚠ Server startup timeout\" })",
+      "PowerShell(grep *)",
+      "PowerShell(cd C:\\\\Development\\\\github\\\\aucdt-utilities\\\\biochemai && \\(Get-Content App.tsx | Select-String \"<Header\" -Context 0,2\\))",
+      "PowerShell(cd C:\\\\Development\\\\github\\\\aucdt-utilities\\\\biochemai && \\(Get-Content App.tsx -ReadCount 0 | Select-String -Pattern \"<Header\" | ForEach-Object { $_.LineNumber }\\))"
     ]
   }
 }
