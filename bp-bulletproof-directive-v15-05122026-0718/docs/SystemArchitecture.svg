@@ -1,0 +1,95 @@
+<svg viewBox="0 0 1000 650" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#3b82f6" />
+    </marker>
+  </defs>
+
+  <rect width="1000" height="650" fill="#f8fafc" />
+  
+  <text x="500" y="40" textAnchor="middle" fontFamily="sans-serif" fontSize="24" fontWeight="bold" fill="#1e293b">TUC Project Refresh - System Architecture</text>
+
+  <!-- Client Layer -->
+  <g transform="translate(50, 100)">
+    <rect width="250" height="480" rx="10" fill="#e2e8f0" stroke="#94a3b8" strokeWidth="2" />
+    <text x="125" y="30" textAnchor="middle" fontFamily="sans-serif" fontSize="16" fontWeight="bold" fill="#334155">Client Layer</text>
+    
+    <rect x="25" y="60" width="200" height="100" rx="8" fill="#ffffff" stroke="#64748b" strokeWidth="2" />
+    <text x="125" y="90" textAnchor="middle" fontFamily="sans-serif" fontSize="14" fontWeight="bold" fill="#0f172a">React Application</text>
+    <text x="125" y="110" textAnchor="middle" fontFamily="sans-serif" fontSize="12" fill="#475569">(v19.2.5 + Vite + Tailwind)</text>
+    <text x="125" y="130" textAnchor="middle" fontFamily="sans-serif" fontSize="12" fill="#475569">Single Shot Prompts &amp; Dashboard</text>
+    
+    <rect x="25" y="180" width="200" height="100" rx="8" fill="#fef9c3" stroke="#eab308" strokeWidth="2" />
+    <text x="125" y="210" textAnchor="middle" fontFamily="sans-serif" fontSize="14" fontWeight="bold" fill="#854d0e">Admin Panel (/admin)</text>
+    <text x="125" y="230" textAnchor="middle" fontFamily="sans-serif" fontSize="12" fill="#713f12">Password Protected</text>
+    <text x="125" y="250" textAnchor="middle" fontFamily="sans-serif" fontSize="12" fill="#713f12">Audit Logs &amp; Diagnostics</text>
+    <text x="125" y="270" textAnchor="middle" fontFamily="sans-serif" fontSize="12" fill="#713f12">Doc Viewer &amp; Playwright Runner</text>
+    
+    <rect x="25" y="300" width="200" height="70" rx="8" fill="#ffffff" stroke="#64748b" strokeWidth="2" />
+    <text x="125" y="330" textAnchor="middle" fontFamily="sans-serif" fontSize="14" fill="#0f172a">Mobile View</text>
+    <text x="125" y="350" textAnchor="middle" fontFamily="sans-serif" fontSize="12" fill="#475569">(Responsive Design)</text>
+
+    <rect x="25" y="390" width="200" height="70" rx="8" fill="#ffffff" stroke="#64748b" strokeWidth="2" />
+    <text x="125" y="420" textAnchor="middle" fontFamily="sans-serif" fontSize="14" fill="#0f172a">Testing Applet</text>
+    <text x="125" y="440" textAnchor="middle" fontFamily="sans-serif" fontSize="12" fill="#475569">(Playwright Integration)</text>
+  </g>
+
+  <!-- Gateway Layer -->
+  <g transform="translate(400, 150)">
+    <rect width="200" height="120" rx="10" fill="#bfdbfe" stroke="#60a5fa" strokeWidth="2" />
+    <text x="100" y="30" textAnchor="middle" fontFamily="sans-serif" fontSize="16" fontWeight="bold" fill="#1e3a8a">Gateway Layer</text>
+    
+    <rect x="25" y="50" width="150" height="50" rx="8" fill="#ffffff" stroke="#3b82f6" strokeWidth="2" />
+    <text x="100" y="72" textAnchor="middle" fontFamily="sans-serif" fontSize="14" fill="#1e40af">Nginx/Proxy</text>
+    <text x="100" y="90" textAnchor="middle" fontFamily="sans-serif" fontSize="12" fill="#2563eb">Cloud Run Platform</text>
+  </g>
+
+  <!-- Services / Processing Layer -->
+  <g transform="translate(700, 100)">
+    <rect width="250" height="280" rx="10" fill="#fed7aa" stroke="#fb923c" strokeWidth="2" />
+    <text x="125" y="30" textAnchor="middle" fontFamily="sans-serif" fontSize="16" fontWeight="bold" fill="#7c2d12">Logic / Backend</text>
+    
+    <rect x="25" y="60" width="200" height="80" rx="8" fill="#ffffff" stroke="#f97316" strokeWidth="2" />
+    <text x="125" y="95" textAnchor="middle" fontFamily="sans-serif" fontSize="14" fill="#9a3412">Application Logic</text>
+    <text x="125" y="115" textAnchor="middle" fontFamily="sans-serif" fontSize="12" fill="#c2410c">(React Components / State)</text>
+
+    <rect x="25" y="160" width="200" height="80" rx="8" fill="#ffffff" stroke="#f97316" strokeWidth="2" />
+    <text x="125" y="195" textAnchor="middle" fontFamily="sans-serif" fontSize="14" fill="#9a3412">LLM Services</text>
+    <text x="125" y="215" textAnchor="middle" fontFamily="sans-serif" fontSize="12" fill="#c2410c">(Claude / AI Studio Agents)</text>
+  </g>
+
+  <!-- Database / Storage Layer -->
+  <g transform="translate(400, 360)">
+    <rect width="200" height="150" rx="10" fill="#bbf7d0" stroke="#4ade80" strokeWidth="2" />
+    <text x="100" y="30" textAnchor="middle" fontFamily="sans-serif" fontSize="16" fontWeight="bold" fill="#14532d">Data Layer</text>
+    
+    <rect x="25" y="50" width="150" height="80" rx="8" fill="#ffffff" stroke="#22c55e" strokeWidth="2" />
+    <text x="100" y="85" textAnchor="middle" fontFamily="sans-serif" fontSize="14" fill="#064e3b">Local Storage</text>
+    <text x="100" y="105" textAnchor="middle" fontFamily="sans-serif" fontSize="12" fill="#166534">(Client-Side State,</text>
+    <text x="100" y="120" textAnchor="middle" fontFamily="sans-serif" fontSize="12" fill="#166534">Auth &amp; Audit Logs)</text>
+  </g>
+
+  <!-- Static Files Layer -->
+  <g transform="translate(700, 420)">
+    <rect width="250" height="150" rx="10" fill="#fbcfe8" stroke="#f472b6" strokeWidth="2" />
+    <text x="125" y="30" textAnchor="middle" fontFamily="sans-serif" fontSize="16" fontWeight="bold" fill="#831843">Static Resources</text>
+    
+    <rect x="25" y="50" width="200" height="80" rx="8" fill="#ffffff" stroke="#db2777" strokeWidth="2" />
+    <text x="125" y="85" textAnchor="middle" fontFamily="sans-serif" fontSize="14" fill="#be185d">/docs Directory</text>
+    <text x="125" y="105" textAnchor="middle" fontFamily="sans-serif" fontSize="12" fill="#9d174d">(IEEE SRS, Architecture SVGs,</text>
+    <text x="125" y="120" textAnchor="middle" fontFamily="sans-serif" fontSize="12" fill="#9d174d">Deployment &amp; Admin Guides)</text>
+  </g>
+
+  <!-- Arrows -->
+  <path d="M 300 180 L 400 180" fill="none" stroke="#3b82f6" strokeWidth="3" marker-end="url(#arrow)" />
+  <text x="350" y="170" textAnchor="middle" fontFamily="sans-serif" fontSize="12" fill="#475569">HTTP/HTTPS</text>
+  
+  <path d="M 600 180 L 700 180" fill="none" stroke="#f97316" strokeWidth="3" marker-end="url(#arrow)" />
+  <text x="650" y="170" textAnchor="middle" fontFamily="sans-serif" fontSize="12" fill="#475569">Data Routing</text>
+  
+  <path d="M 175 580 L 175 620 L 500 620 L 500 510" fill="none" stroke="#22c55e" strokeWidth="3" marker-end="url(#arrow)" />
+  <text x="337" y="615" textAnchor="middle" fontFamily="sans-serif" fontSize="12" fill="#475569">Session &amp; Log Persistance</text>
+  
+  <path d="M 825 380 L 825 420" fill="none" stroke="#db2777" strokeWidth="3" marker-end="url(#arrow)" />
+  <text x="880" y="405" textAnchor="middle" fontFamily="sans-serif" fontSize="12" fill="#475569">Static Exports</text>
+</svg>
