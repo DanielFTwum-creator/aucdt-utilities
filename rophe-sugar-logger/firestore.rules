@@ -1,0 +1,104 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Global Safety Net
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Primitive Helpers
+    function isValidId(id) { 
+      return id is string && id.size() > 0 && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$'); 
+    }
+    function incoming() { return request.resource.data; }
+    function existing() { return resource.data; }
+    function isSignedIn() { return request.auth != null; }
+    function isVerified() { return request.auth.token.email_verified == true; }
+    
+    function isOwner(userId) { 
+      return isSignedIn() && request.auth.uid == userId; 
+    }
+
+    // Role-based helper (if there is an admin, typically user's own checking is enough here)
+
+    // Entity Validations
+    function isValidUserProfile(data, userId) {
+      return data.keys().hasAll(['userId', 'patientName', 'doctorName', 'createdAt', 'updatedAt']) 
+             && data.keys().size() == 5
+             && data.userId == userId
+             && data.patientName is string && data.patientName.size() <= 100
+             && data.doctorName is string && data.doctorName.size() <= 100
+             && data.createdAt is timestamp
+             && data.updatedAt is timestamp;
+    }
+
+    function isValidReading(data, userId) {
+      return data.keys().hasAll(['id', 'date', 'fasting', 'post_breakfast', 'pre_lunch', 'post_lunch', 'pre_dinner', 'post_dinner', 'userId', 'createdAt', 'updatedAt']) 
+             && data.keys().size() == 11
+             && data.id is string && data.id.size() <= 128
+             && data.date is string && data.date.size() <= 20
+             && data.fasting is string && data.fasting.size() <= 10
+             && data.post_breakfast is string && data.post_breakfast.size() <= 10
+             && data.pre_lunch is string && data.pre_lunch.size() <= 10
+             && data.post_lunch is string && data.post_lunch.size() <= 10
+             && data.pre_dinner is string && data.pre_dinner.size() <= 10
+             && data.post_dinner is string && data.post_dinner.size() <= 10
+             && data.userId == userId
+             && data.createdAt is timestamp
+             && data.updatedAt is timestamp;
+    }
+
+    // User Profile
+    match /users/{userId} {
+      allow get: if isValidId(userId) && isOwner(userId);
+      // No allow list for root users collection to prevent scraping
+      
+      allow create: if isValidId(userId) 
+                    && isOwner(userId) 
+                    && isVerified()
+                    && incoming().createdAt == request.time
+                    && incoming().updatedAt == request.time
+                    && isValidUserProfile(incoming(), userId);
+                    
+      allow update: if isValidId(userId) 
+                    && isOwner(userId) 
+                    && isVerified()
+                    && isValidUserProfile(incoming(), userId)
+                    && incoming().createdAt == existing().createdAt
+                    && incoming().userId == existing().userId
+                    && incoming().diff(existing()).affectedKeys().hasOnly(['patientName', 'doctorName', 'updatedAt'])
+                    && incoming().updatedAt == request.time;
+                    
+      // No delete allowed for users
+      
+      // Readings subcollection
+      match /readings/{readingId} {
+        allow get: if isValidId(userId) && isValidId(readingId) && isOwner(userId);
+        allow list: if isValidId(userId) && isOwner(userId) && resource.data.userId == request.auth.uid;
+        
+        allow create: if isValidId(userId) && isValidId(readingId)
+                      && isOwner(userId)
+                      && isVerified()
+                      && incoming().createdAt == request.time
+                      && incoming().updatedAt == request.time
+                      && isValidReading(incoming(), userId);
+                      
+        allow update: if isValidId(userId) && isValidId(readingId)
+                      && isOwner(userId)
+                      && isVerified()
+                      && isValidReading(incoming(), userId)
+                      && incoming().createdAt == existing().createdAt
+                      && incoming().userId == existing().userId
+                      && incoming().id == existing().id
+                      && incoming().diff(existing()).affectedKeys().hasOnly([
+                          'date', 'fasting', 'post_breakfast', 'pre_lunch', 'post_lunch', 'pre_dinner', 'post_dinner', 'updatedAt'
+                      ])
+                      && incoming().updatedAt == request.time;
+                      
+        allow delete: if isValidId(userId) && isValidId(readingId) && isOwner(userId) && isVerified();
+      }
+    }
+  }
+}
