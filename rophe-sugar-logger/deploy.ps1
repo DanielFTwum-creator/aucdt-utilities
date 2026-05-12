@@ -152,9 +152,16 @@ if (-not $DryRun) {
     Write-Host "Clearing old deployment..."
     & ssh -o StrictHostKeyChecking=no $RemoteHost "rm -rf $RemotePath/* $RemotePath/.htaccess 2>/dev/null || true"
 
-    # Deploy files via SCP
-    Write-Host "Deploying files via SCP..."
-    & scp -r -o StrictHostKeyChecking=no "$staging\*" "$RemoteHost`:$RemotePath/" 2>&1 | Select-Object -First 20
+    # Deploy files via rsync or scp
+    Write-Host "Deploying files..."
+    $rsynAvailable = (Get-Command rsync -ErrorAction SilentlyContinue) -ne $null
+    if ($rsynAvailable) {
+        # Use rsync if available (faster, preserves permissions)
+        & rsync -avz -e "ssh -o StrictHostKeyChecking=no" --delete "$staging/" "$RemoteHost`:$RemotePath/" 2>&1 | Select-Object -First 20
+    } else {
+        # Fallback to scp
+        & scp -r -o StrictHostKeyChecking=no "$staging\*" "$RemoteHost`:$RemotePath/" 2>&1 | Select-Object -First 20
+    }
 
     # Set permissions
     Write-Host "Setting permissions..."
