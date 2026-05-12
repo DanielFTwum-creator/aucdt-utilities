@@ -23,6 +23,13 @@ export enum Theme {
   Cinema = 'Cinema',
 }
 
+export enum ResponseTemplate {
+  Markdown = 'Markdown',
+  HTMLDocumentation = 'HTML Documentation',
+  LaTeX = 'LaTeX',
+  Interactive = 'Interactive',
+}
+
 export interface Source {
   uri: string;
   title: string;
@@ -34,6 +41,7 @@ export interface Message {
   content: string;
   sources?: Source[];
   isError?: boolean;
+  template?: ResponseTemplate;
 }
 
 export interface QuizQuestion {

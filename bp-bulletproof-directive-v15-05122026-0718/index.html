@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bulletproof Directive | QA Framework</title>
+    <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        // Safer Polyfill for process.env
+        window.process = window.process || {};
+        window.process.env = window.process.env || {};
+        if (typeof window.process.env.NODE_ENV === 'undefined') window.process.env.NODE_ENV = 'development';
+        if (typeof window.process.env.API_KEY === 'undefined') window.process.env.API_KEY = ''; 
+
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Crimson Pro', 'serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        bg: {
+                            primary: 'rgb(var(--bg-primary) / <alpha-value>)',
+                            secondary: 'rgb(var(--bg-secondary) / <alpha-value>)',
+                            tertiary: 'rgb(var(--bg-tertiary) / <alpha-value>)',
+                        },
+                        accent: {
+                            primary: 'rgb(var(--accent-primary) / <alpha-value>)',
+                            secondary: 'rgb(var(--accent-secondary) / <alpha-value>)',
+                            tertiary: 'rgb(var(--accent-tertiary) / <alpha-value>)',
+                        },
+                        text: {
+                            primary: 'rgb(var(--text-primary) / <alpha-value>)',
+                            secondary: 'rgb(var(--text-secondary) / <alpha-value>)',
+                            muted: 'rgb(var(--text-muted) / <alpha-value>)',
+                        },
+                        border: 'rgb(var(--border-color) / <alpha-value>)',
+                        phase: {
+                            1: 'rgb(var(--phase-1) / <alpha-value>)',
+                            2: 'rgb(var(--phase-2) / <alpha-value>)',
+                            3: 'rgb(var(--phase-3) / <alpha-value>)',
+                            4: 'rgb(var(--phase-4) / <alpha-value>)',
+                            5: 'rgb(var(--phase-5) / <alpha-value>)',
+                        }
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.5s ease-out forwards',
+                        'slide-up': 'slideUp 0.5s ease-out forwards',
+                        'slide-in-right': 'slideInRight 0.3s ease-out forwards',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' },
+                        },
+                        slideUp: {
+                            '0%': { opacity: '0', transform: 'translateY(20px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        },
+                        slideInRight: {
+                            '0%': { opacity: '0', transform: 'translateX(100%)' },
+                            '100%': { opacity: '1', transform: 'translateX(0)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        :root {
+            /* Default Dark Theme (RGB Values) */
+            --bg-primary: 10 10 15;        /* #0a0a0f */
+            --bg-secondary: 18 18 26;      /* #12121a */
+            --bg-tertiary: 26 26 40;       /* #1a1a28 */
+            --accent-primary: 0 229 255;   /* #00e5ff */
+            --accent-secondary: 124 58 237;/* #7c3aed */
+            --accent-tertiary: 245 158 11; /* #f59e0b */
+            --text-primary: 226 232 240;   /* #e2e8f0 */
+            --text-secondary: 148 163 184; /* #94a3b8 */
+            --text-muted: 100 116 139;     /* #64748b */
+            --border-color: 42 42 58;      /* #2a2a3a */
+
+            /* Phase Colors */
+            --phase-1: 59 130 246;  /* #3b82f6 */
+            --phase-2: 139 92 246;  /* #8b5cf6 */
+            --phase-3: 236 72 153;  /* #ec4899 */
+            --phase-4: 245 158 11;  /* #f59e0b */
+            --phase-5: 16 185 129;  /* #10b981 */
+        }
+
+        .dark {
+            /* Inherits :root */
+        }
+
+        .light {
+            --bg-primary: 255 255 255;     /* #ffffff */
+            --bg-secondary: 248 250 252;   /* #f8fafc */
+            --bg-tertiary: 241 245 249;    /* #f1f5f9 */
+            --accent-primary: 8 145 178;   /* #0891b2 */
+            --accent-secondary: 124 58 237;/* #7c3aed */
+            --text-primary: 15 23 42;      /* #0f172a */
+            --text-secondary: 71 85 105;   /* #475569 */
+            --text-muted: 100 116 139;     /* #64748b */
+            --border-color: 226 232 240;   /* #e2e8f0 */
+            /* Phase colors remain standard for light mode */
+        }
+
+        .high-contrast {
+            --bg-primary: 0 0 0;           /* #000000 */
+            --bg-secondary: 0 0 0;         /* #000000 */
+            --bg-tertiary: 0 0 0;          /* #000000 */
+            --accent-primary: 255 255 0;   /* #ffff00 */
+            --accent-secondary: 255 255 0; /* #ffff00 */
+            --accent-tertiary: 255 255 0;  /* #ffff00 */
+            --text-primary: 255 255 255;   /* #ffffff */
+            --text-secondary: 255 255 255; /* #ffffff */
+            --text-muted: 0 255 0;         /* #00ff00 - Bright green for info */
+            --border-color: 255 255 255;   /* #ffffff */
+
+            /* High Contrast Phase Colors - Maximum visibility */
+            --phase-1: 0 255 255;    /* Cyan */
+            --phase-2: 255 255 0;    /* Yellow */
+            --phase-3: 255 0 255;    /* Magenta */
+            --phase-4: 255 165 0;    /* Orange */
+            --phase-5: 0 255 0;      /* Lime */
+        }
+
+        body {
+            background-color: rgb(var(--bg-primary));
+            color: rgb(var(--text-primary));
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgb(var(--bg-primary));
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgb(var(--border-color));
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgb(var(--text-muted));
+        }
+    </style>
+<script type="importmap">
+{
+  "imports": {
+    "react": "https://esm.sh/react@19.2.5?dev",
+    "react-dom/client": "https://esm.sh/react-dom@19.2.5/client?dev",
+    "react-dom": "https://esm.sh/react-dom@19.2.5?dev",
+    "@google/genai": "https://esm.sh/@google/genai@latest"
+  }
+}
+</script>
+</head>
+<body>
+    <div id="root"></div>
+    <script type="module" src="./index.tsx"></script>
+</body>
+</html>

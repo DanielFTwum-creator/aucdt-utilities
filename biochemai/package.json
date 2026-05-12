@@ -10,7 +10,7 @@
     "test": "vitest",
     "test:ui": "vitest --ui",
     "test:coverage": "vitest run --coverage",
-    "test:e2e": "vitest run --config vitest.e2e.config.ts",
+    "test:e2e": "playwright test",
     "build:ios": "pnpm build && npx capacitor sync ios",
     "build:android": "pnpm build && npx capacitor sync android",
     "mobile:sync": "npx capacitor sync",
@@ -18,28 +18,30 @@
     "mobile:open:android": "npx capacitor open android"
   },
   "dependencies": {
-    "@google/genai": "^1.29.1",
-    "jspdf": "^3.0.3",
-    "react": "19.2.5",
-    "react-dom": "19.2.5"
+    "@google/genai": "^2.0.1",
+    "@google/generative-ai": "^0.24.1",
+    "jspdf": "^4.2.1",
+    "react": "19.2.6",
+    "react-dom": "19.2.6"
   },
   "devDependencies": {
-    "@capacitor/core": "^8.3.3",
-    "@capacitor/cli": "^8.3.3",
-    "@capacitor/ios": "^8.3.3",
     "@capacitor/android": "^8.3.3",
-    "@types/node": "^24.10.1",
-    "@vitejs/plugin-react": "^5.1.1",
-    "typescript": "~5.9.3",
-    "vite": "^7.2.2",
-    "vitest": "^3.0.0",
-    "@vitest/ui": "^3.0.0",
-    "@vitest/coverage-v8": "^3.0.0",
+    "@capacitor/cli": "^8.3.3",
+    "@capacitor/core": "^8.3.3",
+    "@capacitor/ios": "^8.3.3",
+    "@tailwindcss/vite": "^4.3.0",
+    "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",
-    "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/user-event": "^14.6.1",
-    "jsdom": "^26.1.0",
+    "@types/node": "^25.6.2",
+    "@vitejs/plugin-react": "^6.0.1",
+    "@vitest/coverage-v8": "^4.1.6",
+    "@vitest/ui": "^4.1.6",
+    "baseline-browser-mapping": "^2.10.29",
+    "jsdom": "^29.1.1",
     "tailwindcss": "^4.3.0",
-    "@tailwindcss/vite": "^4.3.0"
+    "typescript": "~6.0.3",
+    "vite": "^8.0.12",
+    "vitest": "^4.1.6"
   }
 }

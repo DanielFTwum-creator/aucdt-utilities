@@ -20,7 +20,32 @@
       "Bash(npx vite *)",
       "Bash(powershell -NoProfile -Command '.\\\\deploy.ps1 -Build:$false')",
       "Bash(git add *)",
-      "Bash(gh pr create --title 'feat: dictation app enhancements + patois deployment + cleanup' --body ' *)"
+      "Bash(gh pr create --title 'feat: dictation app enhancements + patois deployment + cleanup' --body ' *)",
+      "Bash(gh pr *)",
+      "Bash(dir C:\\\\Development\\\\github\\\\aucdt-utilities *)",
+      "Bash(dir C:\\\\Development\\\\github\\\\aucdt-utilities\\\\bridge-radio *)",
+      "Bash(dir *)",
+      "PowerShell(pnpm install *)",
+      "PowerShell(pnpm *)",
+      "Bash(xargs grep -l \"fetch\\\\|mail\\\\|otp\\\\|send\" -i)",
+      "Bash(python3 -c \"import json,sys; d=json.load\\(sys.stdin\\); print\\(json.dumps\\({**d.get\\('dependencies',{}\\), **d.get\\('devDependencies',{}\\)}, indent=2\\)\\)\")",
+      "PowerShell(head *)",
+      "PowerShell(Get-ChildItem -Path \"C:\\\\Development\\\\github\\\\aucdt-utilities\" -Directory | ForEach-Object { $_.Name } | Sort-Object)",
+      "PowerShell(Get-ChildItem -Recurse -Filter \"ai-lab-catalog\" -Directory 2>$null | Select-Object -First 1 | % FullName)",
+      "Bash(findstr /i ai-lab)",
+      "PowerShell(Get-ChildItem \"C:/Development/github/aucdt-utilities/rophe-sugar-logger/\" | Where-Object { $_.Name -ne 'node_modules' } | Select-Object Name, PSIsContainer | Format-Table -AutoSize)",
+      "PowerShell($content = Get-Content C:\\\\Development\\\\github\\\\aucdt-utilities\\\\rophe-sugar-logger\\\\pnpm-lock.yaml -Raw; $idx = $content.IndexOf\\(\"importers:\"\\); $section = $content.Substring\\($idx, [Math]::Min\\(3000, $content.Length - $idx\\)\\); Write-Output $section)",
+      "PowerShell(Split-Path *)",
+      "PowerShell(cd C:\\\\Development\\\\github\\\\aucdt-utilities\\\\rophe-sugar-logger && \\(Get-Content src/App.tsx | Select-String -Pattern \"if \\\\\\(!isAuthenticated\\\\\\)\" -Context 0,50 | Select-Object -First 100\\))",
+      "PowerShell(pnpm dev *)",
+      "PowerShell(Get-Job *)",
+      "PowerShell(Receive-Job *)",
+      "PowerShell(Get-Process *)",
+      "PowerShell(rm *)",
+      "PowerShell(Start-Sleep -Seconds 8; $attempt = 0; while\\($attempt -lt 5\\) { try { $r = Invoke-WebRequest -Uri \"http://localhost:3000\" -UseBasicParsing -TimeoutSec 2; if\\($r.StatusCode -eq 200\\) { Write-Host \"✓ Server ready\"; break } } catch { } $attempt++; Start-Sleep -Seconds 2 }; if\\($attempt -eq 5\\) { Write-Host \"⚠ Server startup timeout\" })",
+      "PowerShell(grep *)",
+      "PowerShell(cd C:\\\\Development\\\\github\\\\aucdt-utilities\\\\biochemai && \\(Get-Content App.tsx | Select-String \"<Header\" -Context 0,2\\))",
+      "PowerShell(cd C:\\\\Development\\\\github\\\\aucdt-utilities\\\\biochemai && \\(Get-Content App.tsx -ReadCount 0 | Select-String -Pattern \"<Header\" | ForEach-Object { $_.LineNumber }\\))"
     ]
   }
 }

@@ -1,0 +1,79 @@
+{
+  "entities": {
+    "User": {
+      "title": "User Profile",
+      "description": "User profile information",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "email": { "type": "string", "format": "email" },
+        "displayName": { "type": "string" },
+        "photoURL": { "type": "string" },
+        "lastActive": { "type": "number" },
+        "isAdmin": { "type": "boolean" }
+      },
+      "required": ["uid", "email"]
+    },
+    "Project": {
+      "title": "Project Blueprint",
+      "description": "Saved project state containing phases and progress",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "ownerId": { "type": "string" },
+        "name": { "type": "string" },
+        "checkedItems": { "type": "object" },
+        "openPhase": { "type": "integer" },
+        "activeTab": { "type": "string" },
+        "updatedAt": { "type": "number" },
+        "createdAt": { "type": "number" }
+      },
+      "required": ["id", "ownerId", "name"]
+    },
+    "AuditLog": {
+      "title": "Audit Log",
+      "description": "Activity log for administrative and system actions",
+      "type": "object",
+      "properties": {
+        "timestamp": { "type": "number" },
+        "userId": { "type": "string" },
+        "userEmail": { "type": "string" },
+        "action": { "type": "string" },
+        "resource": { "type": "string" },
+        "details": { "type": "string" }
+      },
+      "required": ["timestamp", "userId", "action"]
+    },
+    "Share": {
+      "title": "Shared Blueprint",
+      "description": "Publicly shared project snapshot for diagram viewing",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "projectName": { "type": "string" },
+        "checkedItems": { "type": "object" },
+        "sharedBy": { "type": "string" },
+        "createdAt": { "type": "number" }
+      },
+      "required": ["id", "projectName", "sharedBy", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "Store for user profile data"
+    },
+    "/projects/{projectId}": {
+      "schema": "Project",
+      "description": "Store for blueprint project states"
+    },
+    "/audit_logs/{logId}": {
+      "schema": "AuditLog",
+      "description": "Global audit trail"
+    },
+    "/shares/{shareId}": {
+      "schema": "Share",
+      "description": "Publicly accessible shared snapshots"
+    }
+  }
+}
