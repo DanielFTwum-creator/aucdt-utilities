@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { Printer, Plus, X, Trash2, LogOut, ShieldCheck, Activity, Eye, FileText, Settings, Camera, Loader2 } from 'lucide-react';
-import { APIKeyModal } from './components/APIKeyModal';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, ReferenceArea } from 'recharts';
 import { useAdminAuth } from './hooks/useAdminAuth';
 import {
@@ -80,8 +79,6 @@ export default function App() {
   const [rows, setRows] = useState<Row[]>([]);
   const [patientName, setPatientName] = useState('');
   const [doctorName, setDoctorName] = useState('');
-  const [geminiApiKey, setGeminiApiKey] = useState('');
-  const [isAPIKeyModalOpen, setIsAPIKeyModalOpen] = useState(false);
   const [selectedMonth, setSelectedMonth] = useState<string>('');
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -102,21 +99,15 @@ export default function App() {
   // Initialize first-time flag
   useEffect(() => {
     getAdminConfig('adminPassword').then(pw => setIsFirstTime(!pw));
-    const saved = localStorage.getItem('rophe-gemini-api-key');
-    if (saved) {
-      setGeminiApiKey(saved);
-    } else {
-      setIsAPIKeyModalOpen(true);
-    }
   }, []);
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file || !isAuthenticated) return;
 
-    if (!geminiApiKey) {
-      setUploadError('API key not configured. Please set your Gemini API key in settings.');
-      setIsAPIKeyModalOpen(true);
+    const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
+    if (!apiKey) {
+      setUploadError('Gemini API key is not configured. Please contact the administrator.');
       return;
     }
 
@@ -125,7 +116,7 @@ export default function App() {
       setUploadProgress(10);
       setUploadStatus('Processing image...');
       setUploadError('');
-      const ai = new GoogleGenAI({ apiKey: geminiApiKey });
+      const ai = new GoogleGenAI({ apiKey });
       
       const fileToGenerativePart = async (f: File) => {
         return new Promise<{inlineData: {data: string, mimeType: string}}>((resolve) => {
@@ -860,11 +851,6 @@ Restrictions:
           </div>
         </div>
       )}
-      <APIKeyModal
-        isOpen={isAPIKeyModalOpen}
-        onClose={() => setIsAPIKeyModalOpen(false)}
-        onSave={(key) => setGeminiApiKey(key)}
-      />
       </div>
     </div>
   );
