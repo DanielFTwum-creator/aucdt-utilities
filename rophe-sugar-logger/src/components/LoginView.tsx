@@ -3,7 +3,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { Eye, EyeOff, User as UserIcon, Lock, Phone } from 'lucide-react';
 
 export const LoginView: React.FC = () => {
-  const { login, register, googleLogin } = useAuth();
+  const { login, register } = useAuth();
   const [mode, setMode] = useState<'login' | 'register'>('login');
   const [identifier, setIdentifier] = useState('');
   const [username, setUsername] = useState('');
@@ -27,7 +27,7 @@ export const LoginView: React.FC = () => {
         });
         if (!res.ok) throw new Error('Failed to fetch user info');
         const userInfo = await res.json();
-        googleLogin({
+        await login({
           id: userInfo.id,
           username: userInfo.name,
           email: userInfo.email,
@@ -39,7 +39,7 @@ export const LoginView: React.FC = () => {
     };
     window.addEventListener('message', handleMessage);
     return () => window.removeEventListener('message', handleMessage);
-  }, [googleLogin]);
+  }, [login]);
 
   const handleGoogleLogin = () => {
     const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
