@@ -5,56 +5,39 @@ import { AlertThresholds, AuditLogEntry, Patient, Appointment, AppointmentStatus
 
 interface AdminPanelProps {
   isAuthenticated: boolean;
-  onLogin: (password: string) => void;
+  onLogin: (password: string) => Promise<boolean>;
   thresholds: AlertThresholds;
   onUpdateThresholds: (newThresholds: AlertThresholds) => void;
   auditLogs: AuditLogEntry[];
-  adminPasswordConfig: string;
-  onUpdatePassword: (newPass: string) => void;
   patients: Patient[];
   appointments: Appointment[];
 }
 
-const AdminPanel: React.FC<AdminPanelProps> = ({ 
-  isAuthenticated, 
-  onLogin, 
-  thresholds, 
-  onUpdateThresholds, 
+const AdminPanel: React.FC<AdminPanelProps> = ({
+  isAuthenticated,
+  onLogin,
+  thresholds,
+  onUpdateThresholds,
   auditLogs,
-  adminPasswordConfig,
-  onUpdatePassword,
   patients,
   appointments
 }) => {
   const [passwordInput, setPasswordInput] = useState('');
   const [loginError, setLoginError] = useState(false);
-  const [activeSubTab, setActiveSubTab] = useState<'thresholds' | 'logs' | 'security' | 'tests' | 'comms'>('thresholds');
-  
-  // New Password State
-  const [newPass, setNewPass] = useState('');
-  const [passUpdateSuccess, setPassUpdateSuccess] = useState(false);
+  const [activeSubTab, setActiveSubTab] = useState<'thresholds' | 'logs' | 'tests' | 'comms'>('thresholds');
 
   // Reminder State
   const [processingReminders, setProcessingReminders] = useState(false);
   const [lastBatchCount, setLastBatchCount] = useState<number | null>(null);
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (passwordInput === adminPasswordConfig) {
-      onLogin(passwordInput);
+    const success = await onLogin(passwordInput);
+    if (success) {
       setLoginError(false);
+      setPasswordInput('');
     } else {
       setLoginError(true);
-    }
-  };
-
-  const handlePassUpdate = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (newPass.length >= 6) {
-      onUpdatePassword(newPass);
-      setPassUpdateSuccess(true);
-      setNewPass('');
-      setTimeout(() => setPassUpdateSuccess(false), 3000);
     }
   };
 
@@ -133,7 +116,7 @@ const AdminPanel: React.FC<AdminPanelProps> = ({
         </div>
         
         <nav className="flex p-1 bg-gray-100 dark:bg-slate-800 rounded-2xl w-fit overflow-x-auto" aria-label="Admin sub-navigation">
-          {(['thresholds', 'comms', 'logs', 'security', 'tests'] as const).map((tab) => (
+          {(['thresholds', 'comms', 'logs', 'tests'] as const).map((tab) => (
             <button
               key={tab}
               onClick={() => setActiveSubTab(tab)}
@@ -275,39 +258,6 @@ const AdminPanel: React.FC<AdminPanelProps> = ({
                   <p className="text-gray-400 font-medium">Zero system events recorded in current session.</p>
                 </div>
               )}
-            </div>
-          </div>
-        )}
-
-        {activeSubTab === 'security' && (
-          <div className="max-w-xl mx-auto w-full bg-white dark:bg-slate-900 p-10 rounded-3xl border border-gray-100 dark:border-slate-800 shadow-sm animate-in zoom-in duration-300">
-            <h3 className="text-xl font-black text-gray-900 dark:text-white mb-6">Security Configuration</h3>
-            <form onSubmit={handlePassUpdate} className="space-y-6">
-              <div>
-                <label className="block text-xs font-black text-gray-400 uppercase tracking-widest mb-3">Update Admin Passphrase</label>
-                <input 
-                  type="password"
-                  className="w-full px-5 py-3 rounded-2xl border border-gray-200 dark:border-slate-800 focus:ring-2 focus:ring-emerald-500 outline-none font-bold bg-white dark:bg-slate-950 text-gray-900 dark:text-white"
-                  placeholder="Minimum 6 characters"
-                  value={newPass}
-                  onChange={(e) => setNewPass(e.target.value)}
-                />
-              </div>
-              <button 
-                type="submit" 
-                disabled={newPass.length < 6}
-                className="w-full py-4 bg-gray-900 text-white rounded-2xl font-bold hover:bg-black transition-all disabled:opacity-50"
-              >
-                Apply New Key
-              </button>
-              {passUpdateSuccess && (
-                <p className="text-center text-emerald-600 font-bold text-xs uppercase tracking-widest animate-bounce">Passphrase updated successfully</p>
-              )}
-            </form>
-            <div className="mt-10 pt-8 border-t border-gray-50 dark:border-slate-800">
-              <p className="text-xs text-gray-400 leading-relaxed">
-                <strong className="text-gray-600 dark:text-gray-300">Note:</strong> Changing the passphrase will only apply to the current session. Persistent storage of credentials is not enabled for Phase 2.
-              </p>
             </div>
           </div>
         )}

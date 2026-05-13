@@ -6,10 +6,12 @@ import ClinicalAssistance from './components/ClinicalAssistance';
 import VideoCall from './components/VideoCall';
 import AdminPanel from './components/AdminPanel';
 import Login from './components/Login';
+import { AdminProvider, useAdmin } from './src/contexts/AdminContext';
 import { mockPatients, mockAppointments, mockAlerts } from './services/mockData';
 import { Patient, Appointment, AppointmentStatus, Alert, AlertSeverity, AlertType, PatientRecording, AlertThresholds, ThemeType, AuditLogEntry, User, AuthState } from './types';
 
-const App: React.FC = () => {
+const AppContent: React.FC = () => {
+  const { isAdmin, adminLogin, adminLogout } = useAdmin();
   const [activeTab, setActiveTab] = useState('dashboard');
   const [patients, setPatients] = useState<Patient[]>(mockPatients);
   const [appointments, setAppointments] = useState<Appointment[]>(mockAppointments);
@@ -19,8 +21,6 @@ const App: React.FC = () => {
   const [clinicalComplaint, setClinicalComplaint] = useState('');
 
   const [theme, setTheme] = useState<ThemeType>(() => (localStorage.getItem('rophe_theme') as ThemeType) || 'light');
-  const [isAdminAuth, setIsAdminAuth] = useState(false);
-  const [adminPasswordConfig, setAdminPasswordConfig] = useState('rophe2024');
   const [auditLogs, setAuditLogs] = useState<AuditLogEntry[]>([]);
   
   // Authentication State
@@ -69,7 +69,7 @@ const App: React.FC = () => {
     addAuditLog('USER_LOGOUT', `Session terminated for ${auth.user?.username}`);
     setAuth({ user: null, isAuthenticated: false });
     localStorage.removeItem('rophe_user');
-    setIsAdminAuth(false);
+    adminLogout();
   };
 
   const handleUpdateThresholds = (newThresholds: AlertThresholds) => {
@@ -77,14 +77,12 @@ const App: React.FC = () => {
     setAlertThresholds(newThresholds);
   };
 
-  const handleAdminLogin = (password: string) => {
-    setIsAdminAuth(true);
-    addAuditLog('ADMIN_AUTH_SUCCESS', 'Administrator successfully entered secure command zone.');
-  };
-
-  const handleUpdatePassword = (newPass: string) => {
-    setAdminPasswordConfig(newPass);
-    addAuditLog('SECURITY_CREDENTIAL_CHANGE', 'Administrator updated the session access passphrase.');
+  const handleAdminLogin = async (password: string) => {
+    const success = await adminLogin(password);
+    if (success) {
+      addAuditLog('ADMIN_AUTH_SUCCESS', 'Administrator successfully entered secure command zone.');
+    }
+    return success;
   };
 
   const [vitals, setVitals] = useState({
@@ -261,14 +259,12 @@ const App: React.FC = () => {
         );
       case 'admin':
         return (
-          <AdminPanel 
-            isAuthenticated={isAdminAuth} 
+          <AdminPanel
+            isAuthenticated={isAdmin}
             onLogin={handleAdminLogin}
             thresholds={alertThresholds}
             onUpdateThresholds={handleUpdateThresholds}
             auditLogs={auditLogs}
-            adminPasswordConfig={adminPasswordConfig}
-            onUpdatePassword={handleUpdatePassword}
             patients={patients}
             appointments={appointments}
           />
@@ -420,4 +416,10 @@ const App: React.FC = () => {
   );
 };
 
-export default App;
+export default function App() {
+  return (
+    <AdminProvider>
+      <AppContent />
+    </AdminProvider>
+  );
+}
