@@ -1,25 +1,30 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Google OAuth Callback</title>
     <script>
         const hash = window.location.hash.substring(1);
         const params = new URLSearchParams(hash);
         const accessToken = params.get('access_token');
 
-        if (accessToken) {
+        if (accessToken && window.opener) {
             window.opener.postMessage(
                 { type: 'OAUTH_TOKEN_SUCCESS', access_token: accessToken },
-                window.location.origin
+                '*'
             );
-            window.close();
+            setTimeout(() => window.close(), 100);
         } else {
-            window.opener.postMessage(
-                { type: 'OAUTH_ERROR', error: 'No access token received' },
-                window.location.origin
-            );
-            window.close();
+            if (window.opener) {
+                window.opener.postMessage(
+                    { type: 'OAUTH_ERROR', error: 'No access token received' },
+                    '*'
+                );
+                setTimeout(() => window.close(), 100);
+            } else {
+                console.error('No parent window found');
+            }
         }
     </script>
 </head>
