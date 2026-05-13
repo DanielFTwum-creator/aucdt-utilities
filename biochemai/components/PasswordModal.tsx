@@ -1,14 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useAdminAuth } from '../hooks/useAdminAuth';
 
 interface PasswordModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSuccess: () => void;
+  onLogin: (password: string) => Promise<boolean>;
 }
 
-export const PasswordModal: React.FC<PasswordModalProps> = ({ isOpen, onClose, onSuccess }) => {
-  const { login } = useAdminAuth();
+export const PasswordModal: React.FC<PasswordModalProps> = ({ isOpen, onClose, onSuccess, onLogin }) => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -64,7 +63,7 @@ export const PasswordModal: React.FC<PasswordModalProps> = ({ isOpen, onClose, o
     setIsSubmitting(true);
 
     try {
-      const success = await login(password);
+      const success = await onLogin(password);
       if (success) {
         onSuccess();
       } else {
