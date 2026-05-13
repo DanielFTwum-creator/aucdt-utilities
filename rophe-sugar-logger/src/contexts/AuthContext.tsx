@@ -6,6 +6,7 @@ interface AuthContextValue {
   user: User | null;
   login: (u: string, p: string) => Promise<{ success: boolean; message?: string }>;
   register: (u: string, e: string, p: string) => Promise<{ success: boolean; message?: string }>;
+  googleLogin: (user: User) => void;
   logout: () => void;
   isLoading: boolean;
 }
@@ -41,10 +42,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return { success: res.success, message: res.message };
   };
 
+  const googleLogin = (googleUser: User) => {
+    const user: User = { id: googleUser.id, username: googleUser.username, email: googleUser.email };
+    setIsAuthenticated(true);
+    setUser(user);
+    const token = `google-${googleUser.id}-${Date.now()}`;
+    localStorage.setItem('biochemai_token', token);
+  };
+
   const logout = () => { AuthService.logout(); setIsAuthenticated(false); setUser(null); };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, user, login, register, logout, isLoading }}>
+    <AuthContext.Provider value={{ isAuthenticated, user, login, register, googleLogin, logout, isLoading }}>
       {children}
     </AuthContext.Provider>
   );
