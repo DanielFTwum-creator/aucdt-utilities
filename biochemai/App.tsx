@@ -52,6 +52,7 @@ declare global {
 }
 
 import React, { useState, useCallback, useEffect, useRef } from 'react';
+import { AdminProvider, useAdmin } from './contexts/AdminContext';
 import { Header } from './components/Header';
 import { ChatArea } from './components/ChatArea';
 import { InputFooter } from './components/InputFooter';
@@ -74,7 +75,8 @@ const initialMessage: Message = {
   content: "Welcome to BioChemAI—Your 24/7 Biochemistry Expert. Select your level below and ask your first question.",
 };
 
-function App() {
+function AppContent() {
+  const { isAdmin, adminLogin, adminLogout } = useAdmin();
   const [mode, setMode] = useState<AppMode>(AppMode.Chat);
 
   const [messages, setMessages] = useState<Message[]>(() => {
@@ -110,7 +112,6 @@ function App() {
 
   const [currentQuestion, setCurrentQuestion] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [isAdminAuthenticated, setIsAdminAuthenticated] = useState(false);
   const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
   const [isAboutModalOpen, setIsAboutModalOpen] = useState(false);
   const [isListening, setIsListening] = useState(false);
@@ -138,7 +139,7 @@ function App() {
   
   const handleSetMode = (newMode: AppMode) => {
     if (newMode === AppMode.Admin) {
-      if (isAdminAuthenticated) {
+      if (isAdmin) {
         setMode(AppMode.Admin);
       } else {
         setIsPasswordModalOpen(true);
@@ -149,7 +150,6 @@ function App() {
   };
 
   const handlePasswordSuccess = () => {
-    setIsAdminAuthenticated(true);
     setIsPasswordModalOpen(false);
     setMode(AppMode.Admin);
   };
@@ -384,10 +384,11 @@ function App() {
         />
       )}
 
-      <PasswordModal 
-        isOpen={isPasswordModalOpen} 
-        onClose={() => setIsPasswordModalOpen(false)} 
+      <PasswordModal
+        isOpen={isPasswordModalOpen}
+        onClose={() => setIsPasswordModalOpen(false)}
         onSuccess={handlePasswordSuccess}
+        onLogin={adminLogin}
       />
       <AboutModal 
         isOpen={isAboutModalOpen}
@@ -398,4 +399,10 @@ function App() {
   );
 }
 
-export default App;
+export default function App() {
+  return (
+    <AdminProvider>
+      <AppContent />
+    </AdminProvider>
+  );
+}
