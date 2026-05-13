@@ -1,9 +1,9 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { AuthService } from '../services/AuthService';
+import { AuthService, User } from '../services/authService';
 
 interface AuthContextValue {
   isAuthenticated: boolean;
-  user: any | null;
+  user: User | null;
   login: (u: string, p: string) => Promise<{ success: boolean; message?: string }>;
   register: (u: string, e: string, p: string) => Promise<{ success: boolean; message?: string }>;
   logout: () => void;
@@ -25,7 +25,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         if (res.valid && res.user) { setIsAuthenticated(true); setUser(res.user); }
         else { AuthService.logout(); setIsAuthenticated(false); }
       })
-      .catch(() => { /* backend unreachable — keep state */ })
+      .catch(() => { /* continue */ })
       .finally(() => setIsLoading(false));
   }, []);
 

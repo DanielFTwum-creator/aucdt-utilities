@@ -1,7 +1,7 @@
-const TOKEN_KEY = 'rophe_specialist_care_rpms_token';
-const USERS_KEY = 'rophe_specialist_care_rpms_users';
+const TOKEN_KEY = 'biochemai_token';
+const USERS_KEY = 'biochemai_users';
 
-export interface User {
+export interface AuthUser {
   id: string;
   username: string;
   email: string;
@@ -11,10 +11,10 @@ export interface AuthResponse {
   success: boolean;
   message: string;
   token?: string;
-  user?: User;
+  user?: AuthUser;
 }
 
-const getStoredUsers = (): Record<string, { password: string; user: User }> => {
+const getStoredUsers = (): Record<string, { password: string; user: AuthUser }> => {
   try {
     const users = localStorage.getItem(USERS_KEY);
     return users ? JSON.parse(users) : {};
@@ -23,7 +23,7 @@ const getStoredUsers = (): Record<string, { password: string; user: User }> => {
   }
 };
 
-const setStoredUsers = (users: Record<string, { password: string; user: User }>) => {
+const setStoredUsers = (users: Record<string, { password: string; user: AuthUser }>) => {
   localStorage.setItem(USERS_KEY, JSON.stringify(users));
 };
 
@@ -40,7 +40,7 @@ export const AuthService = {
     }
 
     const userId = `user-${Date.now()}`;
-    const user: User = { id: userId, username, email };
+    const user: AuthUser = { id: userId, username, email };
     users[username] = { password, user };
     setStoredUsers(users);
 
