@@ -89,10 +89,24 @@ async function startServer() {
       
       // Navigate and wait
       await page.goto(targetUrl, { waitUntil: "domcontentloaded", timeout: 45000 });
-      
-      // Wait for fonts and settle animations
-      await page.waitForTimeout(3000); 
-      
+      await page.waitForTimeout(1000);
+
+      // Inject auth so apps using markai pattern skip login and show main UI
+      const slugKey = slug.replace(/-/g, '_');
+      const previewUser = JSON.stringify({
+        id: "preview-001",
+        username: "TUC Preview",
+        email: "preview@techbridge.edu.gh"
+      });
+      await page.evaluate(({ keys, val }) => {
+        for (const key of keys) localStorage.setItem(key, val);
+      }, {
+        keys: [`${slugKey}_user`, 'tuc_ai_lab_user', 'markai_user', 'user'],
+        val: previewUser
+      });
+      await page.reload({ waitUntil: "domcontentloaded" });
+      await page.waitForTimeout(3000);
+
       // Attempt to wait for any visible content if it's dynamic
       try {
         await page.waitForSelector('body', { timeout: 5000 });
