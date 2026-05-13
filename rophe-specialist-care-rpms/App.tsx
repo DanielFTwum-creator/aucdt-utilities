@@ -5,12 +5,14 @@ import PatientRegistry from './components/PatientRegistry';
 import ClinicalAssistance from './components/ClinicalAssistance';
 import VideoCall from './components/VideoCall';
 import AdminPanel from './components/AdminPanel';
-import Login from './components/Login';
+import { LoginView } from './src/components/LoginView';
 import { AdminProvider, useAdmin } from './src/contexts/AdminContext';
+import { AuthProvider, useAuth } from './src/contexts/AuthContext';
 import { mockPatients, mockAppointments, mockAlerts } from './services/mockData';
-import { Patient, Appointment, AppointmentStatus, Alert, AlertSeverity, AlertType, PatientRecording, AlertThresholds, ThemeType, AuditLogEntry, User, AuthState } from './types';
+import { Patient, Appointment, AppointmentStatus, Alert, AlertSeverity, AlertType, PatientRecording, AlertThresholds, ThemeType, AuditLogEntry, User } from './types';
 
 const AppContent: React.FC = () => {
+  const { isAuthenticated, user, logout } = useAuth();
   const { isAdmin, adminLogin, adminLogout } = useAdmin();
   const [activeTab, setActiveTab] = useState('dashboard');
   const [patients, setPatients] = useState<Patient[]>(mockPatients);
@@ -22,15 +24,6 @@ const AppContent: React.FC = () => {
 
   const [theme, setTheme] = useState<ThemeType>(() => (localStorage.getItem('rophe_theme') as ThemeType) || 'light');
   const [auditLogs, setAuditLogs] = useState<AuditLogEntry[]>([]);
-  
-  // Authentication State
-  const [auth, setAuth] = useState<AuthState>(() => {
-    const savedUser = localStorage.getItem('rophe_user');
-    return {
-      user: savedUser ? JSON.parse(savedUser) : null,
-      isAuthenticated: !!savedUser
-    };
-  });
 
   const [alertThresholds, setAlertThresholds] = useState<AlertThresholds>({
     bpSystolicMax: 140,
@@ -52,23 +45,16 @@ const AppContent: React.FC = () => {
     const newLog: AuditLogEntry = {
       id: `LOG-${Math.random().toString(36).substr(2, 5).toUpperCase()}`,
       timestamp: new Date().toISOString(),
-      user: auth.user?.name || 'System', 
+      user: user?.username || 'System',
       action,
       details
     };
     setAuditLogs(prev => [newLog, ...prev]);
   };
 
-  const handleLoginSuccess = (user: User) => {
-    setAuth({ user, isAuthenticated: true });
-    localStorage.setItem('rophe_user', JSON.stringify(user));
-    addAuditLog('USER_LOGIN', `Authentication successful for ${user.username} (${user.role})`);
-  };
-
   const handleLogout = () => {
-    addAuditLog('USER_LOGOUT', `Session terminated for ${auth.user?.username}`);
-    setAuth({ user: null, isAuthenticated: false });
-    localStorage.removeItem('rophe_user');
+    addAuditLog('USER_LOGOUT', `Session terminated for ${user?.username}`);
+    logout();
     adminLogout();
   };
 
@@ -228,8 +214,8 @@ const AppContent: React.FC = () => {
     addAuditLog('TELEHEALTH_ENGAGEMENT', `P2P Encrypted consultation established for Appointment REF: ${appointmentId}`); 
   };
 
-  if (!auth.isAuthenticated) {
-    return <Login onLoginSuccess={handleLoginSuccess} />;
+  if (!isAuthenticated) {
+    return <LoginView />;
   }
 
   const renderContent = () => {
@@ -393,10 +379,10 @@ const AppContent: React.FC = () => {
   };
 
   return (
-    <Layout 
-      activeTab={activeTab} 
-      onTabChange={handleTabChange} 
-      user={auth.user!}
+    <Layout
+      activeTab={activeTab}
+      onTabChange={handleTabChange}
+      user={user!}
       theme={theme}
       onThemeChange={(t) => { setTheme(t); addAuditLog('ACCESSIBILITY_THEME_CHANGE', `User toggled display mode to: ${t.toUpperCase()}`); }}
       onLogout={handleLogout}
@@ -418,8 +404,10 @@ const AppContent: React.FC = () => {
 
 export default function App() {
   return (
-    <AdminProvider>
-      <AppContent />
-    </AdminProvider>
+    <AuthProvider>
+      <AdminProvider>
+        <AppContent />
+      </AdminProvider>
+    </AuthProvider>
   );
 }

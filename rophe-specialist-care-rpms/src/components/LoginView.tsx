@@ -101,7 +101,7 @@ export const LoginView: React.FC = () => {
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center p-6">
       <div className="w-full max-w-sm">
-        <div className="border-2 border-[#1F3864] text-[#1F3864] px-6 py-2 text-3xl font-bold tracking-tighter rounded-lg mb-8 shadow-sm text-center">
+        <div className="border-2 border-[#2E75B6] text-[#2E75B6] px-6 py-2 text-3xl font-bold tracking-tighter rounded-lg mb-8 shadow-sm text-center">
           ROPHE
         </div>
 
@@ -110,7 +110,7 @@ export const LoginView: React.FC = () => {
             {mode === 'login' ? 'Welcome Back' : 'Create Account'}
           </h1>
           <p className="text-center text-slate-500 mb-6 text-sm">
-            {mode === 'login' ? 'Sign in to access your blood glucose records' : 'Create an account to get started'}
+            {mode === 'login' ? 'Sign in to specialist care management' : 'Create an account to get started'}
           </p>
 
           <form onSubmit={handleSubmit} className="space-y-4">
