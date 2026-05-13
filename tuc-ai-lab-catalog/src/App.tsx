@@ -1,6 +1,8 @@
 import { useState, useMemo, useEffect } from "react";
-import { Search, LayoutGrid, List as ListIcon, ExternalLink, Cpu, Sparkles, Code, Briefcase, Settings, Gamepad2, ChevronRight, Check, X, Shield, Zap, Globe } from "lucide-react";
+import { Search, LayoutGrid, List as ListIcon, ExternalLink, Cpu, Sparkles, Code, Briefcase, Settings, Gamepad2, ChevronRight, Check, X, Shield, Zap, Globe, LogOut } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
+import { useAuth } from "./contexts/AuthContext";
+import { LoginView } from "./components/LoginView";
 
 const BASE_URL = "https://ai-tools.techbridge.edu.gh";
 
@@ -22,6 +24,7 @@ interface Tool {
   tags?: string[];
   features?: string[];
   extendedDesc?: string;
+  status?: "live" | "in-lab" | "coming-soon" | "soon-installed";
 }
 
 const TOOLS: Tool[] = [
@@ -138,10 +141,15 @@ const TOOLS: Tool[] = [
 const CAT_LIST = ["All", ...Object.keys(CATEGORIES)];
 
 export default function App() {
+  const { isAuthenticated, logout } = useAuth();
   const [search, setSearch] = useState("");
   const [activeCategory, setActiveCategory] = useState("All");
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [selectedTool, setSelectedTool] = useState<Tool | null>(null);
+
+  if (!isAuthenticated) {
+    return <LoginView />;
+  }
 
   // Body scroll lock
   useEffect(() => {
@@ -188,6 +196,10 @@ export default function App() {
             <a href="#" className="text-blue-600 border-b-2 border-blue-600 pb-5 translate-y-2.5">Product Catalog</a>
           </div>
           <div className="h-8 w-px bg-slate-200"></div>
+          <button onClick={logout} className="flex items-center gap-2 px-4 py-1.5 text-slate-600 text-sm font-semibold hover:text-slate-900 transition-colors">
+            <LogOut className="w-4 h-4" />
+            Sign Out
+          </button>
           <button className="px-4 py-1.5 bg-slate-900 text-white text-sm font-semibold rounded-md hover:bg-slate-800 transition-colors">Contact Lab</button>
         </div>
       </nav>
@@ -268,8 +280,8 @@ export default function App() {
 
           <div className="grow overflow-y-auto px-8 pb-12 custom-scrollbar">
             {filteredTools.length > 0 ? (
-              <div className={viewMode === "grid" 
-                ? "grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6" 
+              <div className={viewMode === "grid"
+                ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
                 : "flex flex-col gap-3"
               }>
                 <AnimatePresence mode="popLayout">
@@ -334,10 +346,15 @@ export default function App() {
 }
 
 function ToolCard({ tool, index, viewMode, onOpen }: { tool: Tool, index: number, viewMode: "grid" | "list", onOpen: () => void }) {
+  const [screenshotFailed, setScreenshotFailed] = useState(false);
   const CatIcon = CATEGORIES[tool.cat as keyof typeof CATEGORIES]?.icon || Cpu;
   const badgeClass = CATEGORIES[tool.cat as keyof typeof CATEGORIES]?.badge || "badge-slate";
 
   const cardNumber = String(index + 1).padStart(3, '0');
+
+  // Status messages for placeholder
+  const statusMessages = ["In the lab", "Soon to be installed", "Coming soon"];
+  const statusMessage = statusMessages[index % statusMessages.length];
 
   if (viewMode === "list") {
     return (
@@ -377,20 +394,24 @@ function ToolCard({ tool, index, viewMode, onOpen }: { tool: Tool, index: number
     >
       {/* Full Bleed Background Screenshot via Local Playwright API */}
       <div className="absolute inset-0 z-0 bg-slate-900 overflow-hidden">
-        <img 
-          src={`/api/screenshot?url=${encodeURIComponent(BASE_URL + "/" + tool.slug)}&slug=${tool.slug}`}
-          alt={`${tool.title} background`}
-          className="w-full h-full object-cover object-top filter contrast-[1.05] brightness-[0.6] saturate-[0.9] transition-all duration-[1500ms] ease-out group-hover:scale-105 group-hover:brightness-[0.8] group-hover:contrast-[1.1]"
-          loading="lazy"
-          referrerPolicy="no-referrer"
-          onError={(e) => {
-            // Fallback to a cleaner thum.io without extra parameters if local fails
-            const target = e.target as HTMLImageElement;
-            if (!target.src.includes('thum.io')) {
-               target.src = `https://image.thum.io/get/width/800/crop/800/noanimate/${BASE_URL}/${tool.slug}`;
-            }
-          }}
-        />
+        {!screenshotFailed && (
+          <img
+            src={`/api/screenshot?url=${encodeURIComponent(BASE_URL + "/" + tool.slug)}&slug=${tool.slug}`}
+            alt={`${tool.title} background`}
+            className="w-full h-full object-cover object-top filter contrast-[1.05] brightness-[0.6] saturate-[0.9] transition-all duration-[1500ms] ease-out group-hover:scale-105 group-hover:brightness-[0.8] group-hover:contrast-[1.1]"
+            loading="lazy"
+            referrerPolicy="no-referrer"
+            onError={() => setScreenshotFailed(true)}
+          />
+        )}
+        {screenshotFailed && (
+          <div className="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-slate-800 to-slate-900">
+            <div className="text-center">
+              <Sparkles className="w-12 h-12 text-blue-400/60 mx-auto mb-3" />
+              <p className="text-blue-300/80 text-sm font-medium">{statusMessage}</p>
+            </div>
+          </div>
+        )}
         {/* Scanline Effect (Recipe 3) */}
         <div className="absolute inset-0 bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06))] bg-[length:100%_2px,3px_100%] pointer-events-none opacity-20" />
         <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/60 to-transparent transition-opacity duration-700 group-hover:opacity-40" />
