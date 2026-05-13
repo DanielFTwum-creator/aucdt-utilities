@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head><title>Authenticating...</title></head>
+<body>
+<script>
+  const hash = window.location.hash.substring(1);
+  const params = new URLSearchParams(hash);
+  const access_token = params.get('access_token');
+  const error = params.get('error');
+  if (access_token && window.opener) {
+    window.opener.postMessage({ type: 'OAUTH_TOKEN_SUCCESS', access_token }, window.location.origin);
+    window.close();
+  } else if (error && window.opener) {
+    window.opener.postMessage({ type: 'OAUTH_TOKEN_ERROR', error }, window.location.origin);
+    window.close();
+  }
+</script>
+</body>
+</html>

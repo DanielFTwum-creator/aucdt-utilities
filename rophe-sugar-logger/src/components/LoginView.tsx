@@ -27,11 +27,7 @@ export const LoginView: React.FC = () => {
         });
         if (!res.ok) throw new Error('Failed to fetch user info');
         const userInfo = await res.json();
-        await login({
-          id: userInfo.id,
-          username: userInfo.name,
-          email: userInfo.email,
-        });
+        await login({ id: userInfo.id, username: userInfo.name, email: userInfo.email });
       } catch (err) {
         setError('Google login failed. Please try again.');
         setIsSubmitting(false);
@@ -47,14 +43,19 @@ export const LoginView: React.FC = () => {
       setError('Google login is not configured. Use username/password instead.');
       return;
     }
-    const redirectUri = import.meta.env.VITE_GOOGLE_REDIRECT_URI || `${window.location.origin}/auth/google/callback`;
+    const redirectUri = import.meta.env.VITE_GOOGLE_REDIRECT_URI
+      || `${window.location.origin}/auth/google/callback`;
     const params = new URLSearchParams({
       client_id: clientId,
       redirect_uri: redirectUri,
       response_type: 'token',
       scope: 'openid email profile',
     });
-    const authWindow = window.open(`https://accounts.google.com/o/oauth2/v2/auth?${params}`, 'oauth_popup', 'width=600,height=700');
+    const authWindow = window.open(
+      `https://accounts.google.com/o/oauth2/v2/auth?${params}`,
+      'oauth_popup',
+      'width=600,height=700'
+    );
     if (!authWindow) setError('Popup blocked. Please allow popups for this site.');
   };
 
