@@ -211,3 +211,10 @@ export const MarkdownIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => 
         <path d="M2.25 4.5A2.25 2.25 0 014.5 2.25h15A2.25 2.25 0 0121.75 4.5v15a2.25 2.25 0 01-2.25 2.25h-15A2.25 2.25 0 012.25 19.5v-15zM15 10.5h1.5a.75.75 0 000-1.5H15v1.5zm-3 0h1.5a.75.75 0 000-1.5H12v1.5zM9 10.5h1.5a.75.75 0 000-1.5H9v1.5zM6 10.5h1.5a.75.75 0 000-1.5H6v1.5zM6 15h1.5a.75.75 0 000-1.5H6v1.5zm3 0h1.5a.75.75 0 000-1.5H9v1.5zm3 0h1.5a.75.75 0 000-1.5H12v1.5zm3-3.375a.75.75 0 00-1.5 0V15a.75.75 0 001.5 0v-3.375zM16.5 6.75a.75.75 0 00-1.5 0V15a.75.75 0 001.5 0V6.75z" />
     </svg>
 );
+
+export const FileIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+        <polyline points="14 2 14 8 20 8"></polyline>
+    </svg>
+);
