@@ -53,6 +53,7 @@ declare global {
 
 import React, { useState, useCallback, useEffect, useRef } from 'react';
 import { AdminProvider, useAdmin } from './contexts/AdminContext';
+import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { Header } from './components/Header';
 import { ChatArea } from './components/ChatArea';
 import { InputFooter } from './components/InputFooter';
@@ -60,6 +61,7 @@ import { QuizContainer } from './components/quiz/QuizContainer';
 import { DocsContainer } from './components/docs/DocsContainer';
 import { TestContainer } from './components/test/TestContainer';
 import { AdminContainer } from './components/admin/AdminContainer';
+import { LoginView } from './components/LoginView';
 import { PasswordModal } from './components/PasswordModal';
 import { AboutModal } from './components/AboutModal';
 import { HeroStats } from './components/HeroStats';
@@ -76,6 +78,7 @@ const initialMessage: Message = {
 };
 
 function AppContent() {
+  const { isAuthenticated } = useAuth();
   const { isAdmin, adminLogin, adminLogout } = useAdmin();
   const [mode, setMode] = useState<AppMode>(AppMode.Chat);
 
@@ -351,6 +354,10 @@ function AppContent() {
     }
   };
 
+  if (!isAuthenticated) {
+    return <LoginView />;
+  }
+
   return (
     <div className={`text-[var(--color-text-primary)] ${mode === AppMode.Chat || mode === AppMode.Voice ? 'h-screen flex flex-col' : 'min-h-screen'}`}>
       <Header
@@ -401,8 +408,10 @@ function AppContent() {
 
 export default function App() {
   return (
-    <AdminProvider>
-      <AppContent />
-    </AdminProvider>
+    <AuthProvider>
+      <AdminProvider>
+        <AppContent />
+      </AdminProvider>
+    </AuthProvider>
   );
 }

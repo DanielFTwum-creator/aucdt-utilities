@@ -99,18 +99,21 @@ export const LoginView: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center p-6">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 flex flex-col items-center justify-center p-6">
       <div className="w-full max-w-sm">
-        <div className="border-2 border-[#1F3864] text-[#1F3864] px-6 py-2 text-3xl font-bold tracking-tighter rounded-lg mb-8 shadow-sm text-center">
-          ROPHE
+        <div className="text-center mb-8">
+          <h1 className="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-violet-600 to-indigo-600 mb-2">
+            BioChemAI
+          </h1>
+          <p className="text-slate-500 text-sm">Your 24/7 Biochemistry Expert</p>
         </div>
 
         <div className="bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden p-8">
-          <h1 className="text-2xl font-bold text-center text-slate-900 mb-2">
+          <h2 className="text-2xl font-bold text-center text-slate-900 mb-2">
             {mode === 'login' ? 'Welcome Back' : 'Create Account'}
-          </h1>
+          </h2>
           <p className="text-center text-slate-500 mb-6 text-sm">
-            {mode === 'login' ? 'Sign in to access your blood glucose records' : 'Create an account to get started'}
+            {mode === 'login' ? 'Sign in to access biochemistry learning' : 'Create an account to get started'}
           </p>
 
           <form onSubmit={handleSubmit} className="space-y-4">
@@ -129,7 +132,7 @@ export const LoginView: React.FC = () => {
                       onChange={e => setIdentifier(e.target.value)}
                       placeholder="Enter username or email"
                       disabled={isSubmitting}
-                      className="w-full border border-slate-300 rounded-xl px-4 py-3.5 pl-12 text-sm font-medium outline-none focus:ring-4 focus:ring-blue-100 focus:border-[#2E75B6] shadow-sm disabled:opacity-50"
+                      className="w-full border border-slate-300 rounded-xl px-4 py-3.5 pl-12 text-sm font-medium outline-none focus:ring-4 focus:ring-violet-100 focus:border-violet-600 shadow-sm disabled:opacity-50"
                       required
                     />
                   </div>
@@ -150,7 +153,7 @@ export const LoginView: React.FC = () => {
                       onChange={e => setUsername(e.target.value)}
                       placeholder="Choose a username"
                       disabled={isSubmitting}
-                      className="w-full border border-slate-300 rounded-xl px-4 py-3.5 pl-12 text-sm font-medium outline-none focus:ring-4 focus:ring-blue-100 focus:border-[#2E75B6] shadow-sm disabled:opacity-50"
+                      className="w-full border border-slate-300 rounded-xl px-4 py-3.5 pl-12 text-sm font-medium outline-none focus:ring-4 focus:ring-violet-100 focus:border-violet-600 shadow-sm disabled:opacity-50"
                       required
                     />
                   </div>
@@ -168,7 +171,7 @@ export const LoginView: React.FC = () => {
                       onChange={e => setEmail(e.target.value)}
                       placeholder="Enter your email"
                       disabled={isSubmitting}
-                      className="w-full border border-slate-300 rounded-xl px-4 py-3.5 pl-12 text-sm font-medium outline-none focus:ring-4 focus:ring-blue-100 focus:border-[#2E75B6] shadow-sm disabled:opacity-50"
+                      className="w-full border border-slate-300 rounded-xl px-4 py-3.5 pl-12 text-sm font-medium outline-none focus:ring-4 focus:ring-violet-100 focus:border-violet-600 shadow-sm disabled:opacity-50"
                       required
                     />
                   </div>
@@ -186,7 +189,7 @@ export const LoginView: React.FC = () => {
                       onChange={e => setPhone(e.target.value)}
                       placeholder="Enter phone number"
                       disabled={isSubmitting}
-                      className="w-full border border-slate-300 rounded-xl px-4 py-3.5 pl-12 text-sm font-medium outline-none focus:ring-4 focus:ring-blue-100 focus:border-[#2E75B6] shadow-sm disabled:opacity-50"
+                      className="w-full border border-slate-300 rounded-xl px-4 py-3.5 pl-12 text-sm font-medium outline-none focus:ring-4 focus:ring-violet-100 focus:border-violet-600 shadow-sm disabled:opacity-50"
                     />
                   </div>
                 </div>
@@ -206,7 +209,7 @@ export const LoginView: React.FC = () => {
                   onChange={e => setPassword(e.target.value)}
                   placeholder="Enter password"
                   disabled={isSubmitting}
-                  className="w-full border border-slate-300 rounded-xl px-4 py-3.5 pl-12 pr-12 text-sm font-medium outline-none focus:ring-4 focus:ring-blue-100 focus:border-[#2E75B6] shadow-sm disabled:opacity-50"
+                  className="w-full border border-slate-300 rounded-xl px-4 py-3.5 pl-12 pr-12 text-sm font-medium outline-none focus:ring-4 focus:ring-violet-100 focus:border-violet-600 shadow-sm disabled:opacity-50"
                   required
                 />
                 <button
@@ -234,7 +237,7 @@ export const LoginView: React.FC = () => {
                     onChange={e => setConfirmPassword(e.target.value)}
                     placeholder="Confirm password"
                     disabled={isSubmitting}
-                    className="w-full border border-slate-300 rounded-xl px-4 py-3.5 pl-12 pr-12 text-sm font-medium outline-none focus:ring-4 focus:ring-blue-100 focus:border-[#2E75B6] shadow-sm disabled:opacity-50"
+                    className="w-full border border-slate-300 rounded-xl px-4 py-3.5 pl-12 pr-12 text-sm font-medium outline-none focus:ring-4 focus:ring-violet-100 focus:border-violet-600 shadow-sm disabled:opacity-50"
                     required
                   />
                   <button
@@ -254,7 +257,7 @@ export const LoginView: React.FC = () => {
             <button
               type="submit"
               disabled={isSubmitting}
-              className="w-full bg-[#2E75B6] text-white px-8 py-3.5 rounded-xl font-medium hover:bg-[#1F3864] transition-colors shadow-md focus:ring-4 focus:ring-blue-100 outline-none disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full bg-gradient-to-r from-violet-600 to-indigo-600 text-white px-8 py-3.5 rounded-xl font-medium hover:shadow-lg transition-all shadow-md focus:ring-4 focus:ring-violet-100 outline-none disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isSubmitting ? 'Please wait...' : (mode === 'login' ? 'Sign In' : 'Create Account')}
             </button>
@@ -285,7 +288,7 @@ export const LoginView: React.FC = () => {
             {mode === 'login' ? "Don't have an account? " : 'Already have an account? '}
             <button
               onClick={() => handleModeChange(mode === 'login' ? 'register' : 'login')}
-              className="text-[#2E75B6] font-medium hover:text-[#1F3864] transition-colors"
+              className="text-violet-600 font-medium hover:text-indigo-600 transition-colors"
             >
               {mode === 'login' ? 'Sign up' : 'Sign in'}
             </button>
