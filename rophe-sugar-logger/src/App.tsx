@@ -1,7 +1,9 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { Printer, Plus, X, Trash2, LogOut, ShieldCheck, Activity, Eye, FileText, Settings, Camera, Loader2, Download, Upload } from 'lucide-react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, ReferenceArea } from 'recharts';
+import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { AdminProvider, useAdmin } from './contexts/AdminContext';
+import { LoginView } from './components/LoginView';
 import {
   getAllReadings, upsertReading, deleteReading, batchUpsertReadings,
   getProfile, saveProfile, ReadingRow, getAdminConfig
@@ -927,10 +929,30 @@ Restrictions:
   );
 }
 
+function AppWrapper() {
+  const { isAuthenticated, isLoading } = useAuth();
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+        <div className="text-slate-500">Loading...</div>
+      </div>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return <LoginView />;
+  }
+
+  return <AppContent />;
+}
+
 export default function App() {
   return (
-    <AdminProvider>
-      <AppContent />
-    </AdminProvider>
+    <AuthProvider>
+      <AdminProvider>
+        <AppWrapper />
+      </AdminProvider>
+    </AuthProvider>
   );
 }

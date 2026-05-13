@@ -1,5 +1,5 @@
-const TOKEN_KEY = 'rophe_specialist_care_rpms_token';
-const USERS_KEY = 'rophe_specialist_care_rpms_users';
+const TOKEN_KEY = 'rophe_sugar_logger_token';
+const USERS_KEY = 'rophe_sugar_logger_users';
 
 export interface User {
   id: string;
