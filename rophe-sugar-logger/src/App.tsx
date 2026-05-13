@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useMemo } from 'react';
-import { Printer, Plus, X, Trash2, LogOut, ShieldCheck, Activity, Eye, FileText, Settings, Camera, Loader2 } from 'lucide-react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
+import { Printer, Plus, X, Trash2, LogOut, ShieldCheck, Activity, Eye, FileText, Settings, Camera, Loader2, Download, Upload } from 'lucide-react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, ReferenceArea } from 'recharts';
-import { useAdminAuth } from './hooks/useAdminAuth';
+import { AdminProvider, useAdmin } from './contexts/AdminContext';
 import {
   getAllReadings, upsertReading, deleteReading, batchUpsertReadings,
   getProfile, saveProfile, ReadingRow, getAdminConfig
@@ -70,8 +70,8 @@ function convertTarget(limit: number, unit: 'mmol/L' | 'mg/dL') {
   return (limit * 18.0182).toFixed(0);
 }
 
-export default function App() {
-  const { isAuthenticated, login, logout } = useAdminAuth();
+function AppContent() {
+  const { isAdmin, adminLogin, adminLogout } = useAdmin();
   const [passwordInput, setPasswordInput] = useState('');
   const [loginError, setLoginError] = useState('');
   const [isFirstTime, setIsFirstTime] = useState<boolean | null>(null);
@@ -95,6 +95,7 @@ export default function App() {
   const [uploadStatus, setUploadStatus] = useState('');
   const [uploadProgress, setUploadProgress] = useState(0);
   const [uploadError, setUploadError] = useState('');
+  const importInputRef = useRef<HTMLInputElement>(null);
 
   // Initialize first-time flag
   useEffect(() => {
@@ -103,7 +104,7 @@ export default function App() {
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (!file || !isAuthenticated) return;
+    if (!file || !isAdmin) return;
 
     const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
     if (!apiKey) {
@@ -253,7 +254,7 @@ Restrictions:
   };
 
   useEffect(() => {
-    if (!isAuthenticated) {
+    if (!isAdmin) {
       setRows([]);
       setPatientName('');
       setDoctorName('');
@@ -266,16 +267,16 @@ Restrictions:
       }
     });
     getAllReadings().then(fetched => setRows(fetched as Row[]));
-  }, [isAuthenticated]);
+  }, [isAdmin]);
 
   // Save profile changes
   useEffect(() => {
-    if (!isAuthenticated || (!patientName && !doctorName)) return;
+    if (!isAdmin || (!patientName && !doctorName)) return;
     const timeout = setTimeout(() => {
       saveProfile({ patientName, doctorName });
     }, 1000);
     return () => clearTimeout(timeout);
-  }, [patientName, doctorName, isAuthenticated]);
+  }, [patientName, doctorName, isAdmin]);
 
   const monthOptions = useMemo(() => {
     const keys = new Set<string>();
@@ -340,6 +341,54 @@ Restrictions:
     setRows(prev => prev.filter(r => r.id !== id));
   };
 
+  const handleExportData = async () => {
+    const exportData = {
+      version: 1,
+      exportedAt: new Date().toISOString(),
+      readings: rows,
+      profile: { patientName, doctorName },
+    };
+    const json = JSON.stringify(exportData, null, 2);
+    const blob = new Blob([json], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `rophe-backup-${new Date().toISOString().split('T')[0]}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const handleImportData = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    try {
+      const text = await file.text();
+      const data = JSON.parse(text);
+
+      if (!data.readings || !Array.isArray(data.readings)) {
+        setUploadError('Invalid backup file format.');
+        return;
+      }
+
+      await batchUpsertReadings(data.readings);
+      if (data.profile) {
+        setPatientName(data.profile.patientName || '');
+        setDoctorName(data.profile.doctorName || '');
+      }
+
+      const refreshed = await getAllReadings();
+      setRows(refreshed as Row[]);
+      setUploadStatus(`Restored ${data.readings.length} readings successfully!`);
+      setIsUploading(true);
+      setUploadProgress(100);
+      setTimeout(() => setIsUploading(false), 2000);
+    } catch (err) {
+      setUploadError('Failed to import backup: ' + String(err));
+    }
+    if (importInputRef.current) importInputRef.current.value = '';
+  };
+
   const currentMonthLabel = useMemo(() => {
     if (!selectedMonth) return '—';
     const [yr, mo] = selectedMonth.split('-');
@@ -374,7 +423,7 @@ Restrictions:
     });
   }, [filteredRows, unit]);
 
-  if (!isAuthenticated) {
+  if (!isAdmin) {
     return (
       <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center p-6 text-center">
         <div className="border-2 border-[#1F3864] text-[#1F3864] px-6 py-2 text-3xl font-bold tracking-tighter rounded-lg mb-6 shadow-sm">
@@ -393,7 +442,7 @@ Restrictions:
           onSubmit={async (e) => {
             e.preventDefault();
             setLoginError('');
-            const ok = await login(passwordInput);
+            const ok = await adminLogin(passwordInput);
             if (!ok) setLoginError('Incorrect password. Please try again.');
           }}
         >
@@ -503,7 +552,29 @@ Restrictions:
             <Eye className="w-5 h-5" />
           </button>
 
-          <button onClick={logout} className={`p-2.5 rounded-lg transition-colors focus:ring-2 focus:ring-blue-300 h-10 ${isHighContrast ? 'text-gray-400 hover:text-white hover:bg-gray-800' : 'text-slate-400 hover:text-[#1F3864] hover:bg-slate-200'}`} title="Sign out border-none">
+          <button
+            onClick={handleExportData}
+            className={`p-2.5 rounded-lg transition-colors focus:ring-2 focus:ring-blue-300 h-10 ${isHighContrast ? 'text-gray-400 hover:text-white hover:bg-gray-800' : 'text-slate-400 hover:text-[#1F3864] hover:bg-slate-200'}`}
+            title="Export data to JSON"
+          >
+            <Download className="w-5 h-5" />
+          </button>
+
+          <label
+            className={`p-2.5 rounded-lg transition-colors focus:ring-2 focus:ring-blue-300 h-10 flex items-center cursor-pointer ${isHighContrast ? 'text-gray-400 hover:text-white hover:bg-gray-800' : 'text-slate-400 hover:text-[#1F3864] hover:bg-slate-200'}`}
+            title="Import backup"
+          >
+            <input
+              type="file"
+              accept=".json"
+              className="sr-only"
+              ref={importInputRef}
+              onChange={handleImportData}
+            />
+            <Upload className="w-5 h-5" />
+          </label>
+
+          <button onClick={adminLogout} className={`p-2.5 rounded-lg transition-colors focus:ring-2 focus:ring-blue-300 h-10 ${isHighContrast ? 'text-gray-400 hover:text-white hover:bg-gray-800' : 'text-slate-400 hover:text-[#1F3864] hover:bg-slate-200'}`} title="Sign out">
             <LogOut className="w-5 h-5" />
           </button>
 
@@ -853,5 +924,13 @@ Restrictions:
       )}
       </div>
     </div>
+  );
+}
+
+export default function App() {
+  return (
+    <AdminProvider>
+      <AppContent />
+    </AdminProvider>
   );
 }
