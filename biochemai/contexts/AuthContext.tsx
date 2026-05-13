@@ -4,9 +4,8 @@ import { AuthService, AuthUser } from '../services/authService';
 interface AuthContextValue {
   isAuthenticated: boolean;
   user: AuthUser | null;
-  login: (u: string, p: string) => Promise<{ success: boolean; message?: string }>;
+  login: (userOrUsername: AuthUser | string, password?: string) => Promise<{ success: boolean; message?: string }>;
   register: (u: string, e: string, p: string) => Promise<{ success: boolean; message?: string }>;
-  googleLogin: (user: AuthUser) => void;
   logout: () => void;
   isLoading: boolean;
 }
@@ -20,7 +19,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     const token = AuthService.getToken();
-    if (!token) { setIsLoading(false); return; }
+    if (!token) {
+      const savedUser = localStorage.getItem('biochemai_user');
+      if (savedUser) {
+        try {
+          const parsed = JSON.parse(savedUser);
+          setIsAuthenticated(true);
+          setUser(parsed);
+        } catch { /* continue */ }
+      }
+      setIsLoading(false);
+      return;
+    }
     AuthService.validateToken(token)
       .then((res: any) => {
         if (res.valid && res.user) { setIsAuthenticated(true); setUser(res.user); }
@@ -30,8 +40,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       .finally(() => setIsLoading(false));
   }, []);
 
-  const login = async (username: string, password: string) => {
-    const res = await AuthService.login(username, password);
+  const login = async (userOrUsername: AuthUser | string, password?: string) => {
+    if (typeof userOrUsername === 'object') {
+      setIsAuthenticated(true);
+      setUser(userOrUsername);
+      localStorage.setItem('biochemai_user', JSON.stringify(userOrUsername));
+      return { success: true };
+    }
+    const res = await AuthService.login(userOrUsername, password!);
     if (res.success && res.user) { setIsAuthenticated(true); setUser(res.user); }
     return { success: res.success, message: res.message };
   };
@@ -42,18 +58,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return { success: res.success, message: res.message };
   };
 
-  const googleLogin = (googleUser: AuthUser) => {
-    const user: AuthUser = { id: googleUser.id, username: googleUser.username, email: googleUser.email };
-    setIsAuthenticated(true);
-    setUser(user);
-    const token = `google-${googleUser.id}-${Date.now()}`;
-    localStorage.setItem('biochemai_token', token);
-  };
-
-  const logout = () => { AuthService.logout(); setIsAuthenticated(false); setUser(null); };
+  const logout = () => { AuthService.logout(); localStorage.removeItem('biochemai_user'); setIsAuthenticated(false); setUser(null); };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, user, login, register, googleLogin, logout, isLoading }}>
+    <AuthContext.Provider value={{ isAuthenticated, user, login, register, logout, isLoading }}>
       {children}
     </AuthContext.Provider>
   );
