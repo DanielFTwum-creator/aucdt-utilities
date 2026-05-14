@@ -1,0 +1,100 @@
+{
+  "checks": [
+    "HTTP Status < 400",
+    "Has favicon",
+    "Has gold-luxury theme",
+    "Has React root",
+    "Has Tailwind CSS"
+  ],
+  "timestamp": "2026-05-14T12:20:29Z",
+  "passedProjects": 6,
+  "failedProjects": 0,
+  "totalProjects": 6,
+  "averageLoadTime": 850,
+  "projects": [
+    {
+      "name": "tuc-ai-lab-catalog",
+      "loadTime": 959,
+      "url": "https://ai-tools.techbridge.edu.gh/ai-lab/",
+      "checks": {
+        "React Root": true,
+        "HTTP Status": true,
+        "CSS Variables": true,
+        "Favicon": true,
+        "Theme Applied": true
+      },
+      "status": "pass",
+      "httpStatus": 200
+    },
+    {
+      "name": "techbridge-ai-application-portal",
+      "loadTime": 851,
+      "url": "https://ai-tools.techbridge.edu.gh/techbridge-ai-application-portal/",
+      "checks": {
+        "React Root": true,
+        "HTTP Status": true,
+        "CSS Variables": true,
+        "Favicon": true,
+        "Theme Applied": true
+      },
+      "status": "pass",
+      "httpStatus": 200
+    },
+    {
+      "name": "techbridge-ai-blueprint",
+      "loadTime": 817,
+      "url": "https://ai-tools.techbridge.edu.gh/techbridge-ai-blueprint/",
+      "checks": {
+        "React Root": true,
+        "HTTP Status": true,
+        "CSS Variables": true,
+        "Favicon": true,
+        "Theme Applied": true
+      },
+      "status": "pass",
+      "httpStatus": 200
+    },
+    {
+      "name": "techbridge-ai-workshop-flyer",
+      "loadTime": 801,
+      "url": "https://ai-tools.techbridge.edu.gh/techbridge-ai-workshop-flyer/",
+      "checks": {
+        "React Root": true,
+        "HTTP Status": true,
+        "CSS Variables": true,
+        "Favicon": true,
+        "Theme Applied": true
+      },
+      "status": "pass",
+      "httpStatus": 200
+    },
+    {
+      "name": "rophe-specialist-care-rpms",
+      "loadTime": 819,
+      "url": "https://ai-tools.techbridge.edu.gh/rophe-specialist-care-rpms/",
+      "checks": {
+        "React Root": true,
+        "HTTP Status": true,
+        "CSS Variables": true,
+        "Favicon": true,
+        "Theme Applied": true
+      },
+      "status": "pass",
+      "httpStatus": 200
+    },
+    {
+      "name": "rophe-sugar-logger",
+      "loadTime": 855,
+      "url": "https://ai-tools.techbridge.edu.gh/rophe-sugar-logger/",
+      "checks": {
+        "React Root": true,
+        "HTTP Status": true,
+        "CSS Variables": true,
+        "Favicon": true,
+        "Theme Applied": true
+      },
+      "status": "pass",
+      "httpStatus": 200
+    }
+  ]
+}

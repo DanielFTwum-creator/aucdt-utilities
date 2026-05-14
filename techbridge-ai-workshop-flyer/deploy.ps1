@@ -1,7 +1,7 @@
 # TechBridge AI Workshop Flyer Deployment Script
 param(
     [string]$RemoteHost = "root@66.226.72.199",
-    [string]$RemotePath = "/var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/techbridge-ai-workshop-flyer/",
+    [string]$RemotePath = "/var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/workshop/",
     [switch]$Build = $false
 )
 
@@ -29,11 +29,11 @@ Write-Host "Creating .htaccess..." -ForegroundColor Yellow
 @"
 <IfModule mod_rewrite.c>
   RewriteEngine On
-  RewriteBase /techbridge-ai-workshop-flyer/
+  RewriteBase /workshop/
   RewriteCond %{REQUEST_FILENAME} -f [OR]
   RewriteCond %{REQUEST_FILENAME} -d
   RewriteRule ^ - [L]
-  RewriteRule ^ /techbridge-ai-workshop-flyer/index.html [QSA,L]
+  RewriteRule ^ /workshop/index.html [QSA,L]
 </IfModule>
 "@ | ssh -o StrictHostKeyChecking=no $RemoteHost "cat > $RemotePath/.htaccess" 2>$null
 
@@ -41,4 +41,4 @@ Write-Host "Setting permissions..." -ForegroundColor Yellow
 ssh -o StrictHostKeyChecking=no $RemoteHost "chown -R techbridge.edu.gh_md:psacln $RemotePath && chmod -R 755 $RemotePath && chmod 644 $RemotePath/.htaccess 2>/dev/null; true" | Out-Null
 
 Write-Host "✅ Deployment complete!" -ForegroundColor Green
-Write-Host "URL: https://ai-tools.techbridge.edu.gh/techbridge-ai-workshop-flyer`n"
+Write-Host "URL: https://ai-tools.techbridge.edu.gh/workshop`n"

@@ -54,19 +54,19 @@
     <link rel="icon" type="image/x-icon" href="https://techbridge.edu.gh/favicon.ico" />
 
     <!-- Font Loading -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@700&family=Space+Grotesk:wght@400;600&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Lora:wght@400;700&family=Playfair+Display:wght@700&family=Space+Grotesk:wght@400;600&display=swap" rel="stylesheet" />
 
     <!-- CSS Variables & Theme -->
     <style>
-      :root {
-        --color-background-main: #ffffff;
-        --color-foreground: #000000;
-        --color-primary: #C9A84C;
-        --color-secondary: #64748b;
-        --color-accent: #0ea5e9;
-        --color-border: #e2e8f0;
-        --color-text-muted: #64748b;
-        --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+      :root, [data-theme='gold-luxury'] {
+        --color-background-main: #F5F0E8;
+        --color-foreground: #3D2817;
+        --color-primary: #D4AF37;
+        --color-secondary: #5C4033;
+        --color-accent: #D4AF37;
+        --color-border: #D4AF37;
+        --color-text-muted: #5C4033;
+        --font-sans: "Lora", ui-serif, Georgia, serif;
         --font-serif: "Playfair Display", ui-serif, Georgia, serif;
         --font-mono: "Space Grotesk", ui-monospace, monospace;
       }
@@ -132,7 +132,7 @@
 
     <!-- Theme Persistence -->
     <script>
-      const savedTheme = localStorage.getItem('tuc-ai-lab-catalog-theme') || 'light';
+      const savedTheme = localStorage.getItem('tuc-ai-lab-catalog-theme') || 'gold-luxury';
       document.documentElement.setAttribute('data-theme', savedTheme);
     </script>
   </body>

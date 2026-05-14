@@ -47,7 +47,7 @@
     <link rel="icon" type="image/png" href="https://techbridge.edu.gh/static/TUC_LOGO.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Lora:wght@400;700&display=swap" rel="stylesheet">
     <style>
       :root {
         --color-background: #FDFBF6;
@@ -128,14 +128,46 @@
         --color-badge-education-bg: #000000;
         --color-badge-education-text: #FFFF00;
       }
+      [data-theme="gold-luxury"] {
+        --color-background: #F5F0E8;
+        --color-text: #3D2817;
+        --color-text-muted: #5C4033;
+        --color-accent: #D4AF37;
+        --color-primary: #D4AF37;
+        --color-primary-hover: #C9A84B;
+        --color-card-bg: #FFFBF5;
+        --color-card-footer-bg: #F0E8DC;
+        --color-card-border: #D4AF37;
+        --color-header-bg-from: #3D2817;
+        --color-header-bg-to: #5C4033;
+        --color-header-text: #FFFBF5;
+        --color-header-text-muted: #D4AF37;
+        --color-tooltip-bg: #3D2817;
+        --color-tooltip-text: #FFFBF5;
+        --color-input-bg: #FFFBF5;
+        --color-input-border: #D4AF37;
+        --color-input-text: #3D2817;
+        --color-input-placeholder: #5C4033;
+        --color-badge-research-bg: #F0E8DC;
+        --color-badge-research-text: #3D2817;
+        --color-badge-development-bg: #F0E8DC;
+        --color-badge-development-text: #3D2817;
+        --color-badge-analysis-bg: #F0E8DC;
+        --color-badge-analysis-text: #3D2817;
+        --color-badge-education-bg: #F0E8DC;
+        --color-badge-education-text: #3D2817;
+      }
       html {
         scroll-behavior: smooth;
       }
       body {
-        font-family: 'Inter', sans-serif;
+        font-family: var(--font-family, 'Inter'), sans-serif;
         background-color: var(--color-background);
         color: var(--color-text);
         transition: background-color 0.3s, color 0.3s;
+      }
+      [data-theme="gold-luxury"] body {
+        font-family: 'Lora', serif;
       }
       .shimmer::after {
         content: '';
