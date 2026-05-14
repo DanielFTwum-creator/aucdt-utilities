@@ -49,22 +49,50 @@
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&family=Lora:wght@400;700&display=swap" rel="stylesheet">
 
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="https://techbridge.edu.gh/static/TUC_LOGO.png" />
 
     <style>
+      :root, [data-theme='gold-luxury'] {
+        --font-sans: 'Lora', serif;
+        --color-bg-primary: #F5F0E8;
+        --color-bg-secondary: #FFFBF5;
+        --color-text-primary: #3D2817;
+        --color-accent-primary: #D4AF37;
+      }
+      [data-theme='dark'] {
+        --font-sans: 'Inter', sans-serif;
+        --color-bg-primary: #1A1A1A;
+        --color-bg-secondary: #2D2D2D;
+        --color-text-primary: #FFFFFF;
+        --color-accent-primary: #64FFDA;
+      }
       body {
-        font-family: 'Inter', sans-serif;
+        font-family: var(--font-sans, 'Inter'), sans-serif;
         margin: 0;
         padding: 0;
+        background-color: var(--color-bg-primary);
+        color: var(--color-text-primary);
+        transition: background-color 0.3s ease, color 0.3s ease;
       }
 
       #root {
         min-height: 100vh;
       }
     </style>
+    <script>
+      (function() {
+        try {
+          const theme = localStorage.getItem('techbridge-ai-workshop-flyer-theme') || 'gold-luxury';
+          const themeSlug = theme.toLowerCase().replace(/\s+/g, '-');
+          document.documentElement.setAttribute('data-theme', themeSlug);
+        } catch (e) {
+          document.documentElement.setAttribute('data-theme', 'gold-luxury');
+        }
+      })();
+    </script>
 
     <script type="module" src="./index.tsx"></script>
   

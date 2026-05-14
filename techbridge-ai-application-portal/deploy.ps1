@@ -1,7 +1,7 @@
 # TechBridge AI Application Portal Deployment Script
 param(
     [string]$RemoteHost = "root@66.226.72.199",
-    [string]$RemotePath = "/var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/techbridge-ai-application-portal/",
+    [string]$RemotePath = "/var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/portal/",
     [switch]$Build = $false
 )
 
@@ -29,11 +29,11 @@ Write-Host "Creating .htaccess..." -ForegroundColor Yellow
 @"
 <IfModule mod_rewrite.c>
   RewriteEngine On
-  RewriteBase /techbridge-ai-application-portal/
+  RewriteBase /portal/
   RewriteCond %{REQUEST_FILENAME} -f [OR]
   RewriteCond %{REQUEST_FILENAME} -d
   RewriteRule ^ - [L]
-  RewriteRule ^ /techbridge-ai-application-portal/index.html [QSA,L]
+  RewriteRule ^ /portal/index.html [QSA,L]
 </IfModule>
 "@ | ssh -o StrictHostKeyChecking=no $RemoteHost "cat > $RemotePath/.htaccess" 2>$null
 
@@ -41,4 +41,4 @@ Write-Host "Setting permissions..." -ForegroundColor Yellow
 ssh -o StrictHostKeyChecking=no $RemoteHost "chown -R techbridge.edu.gh_md:psacln $RemotePath && chmod -R 755 $RemotePath && chmod 644 $RemotePath/.htaccess 2>/dev/null; true" | Out-Null
 
 Write-Host "✅ Deployment complete!" -ForegroundColor Green
-Write-Host "URL: https://ai-tools.techbridge.edu.gh/techbridge-ai-application-portal`n"
+Write-Host "URL: https://ai-tools.techbridge.edu.gh/portal`n"
