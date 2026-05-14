@@ -1,8 +1,8 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import App from './App';
-import { AuthGate } from './AuthGate';
+import { AuthProvider } from './src/contexts/AuthContext';
+import { AppWithAuth } from './src/components/AppWithAuth';
 
 const rootElement = document.getElementById('root');
 if (!rootElement) {
@@ -12,6 +12,6 @@ if (!rootElement) {
 const root = ReactDOM.createRoot(rootElement);
 root.render(
   <React.StrictMode>
-    <AuthGate><App /></AuthGate>
+    <AuthProvider><AppWithAuth /></AuthProvider>
   </React.StrictMode>
 );

@@ -1,74 +1,98 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
-import { AuthService } from '../services/AuthService';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 
-interface AuthContextValue {
-  isAuthenticated: boolean;
-  user: any | null;
-  login: (userOrUsername: any | string, password?: string) => Promise<{ success: boolean; message?: string }>;
-  register: (u: string, e: string, p: string) => Promise<{ success: boolean; message?: string }>;
-  logout: () => void;
-  isLoading: boolean;
+export interface User {
+  id: string;
+  username: string;
+  email: string;
 }
 
-const AuthContext = createContext<AuthContextValue | null>(null);
+interface AuthContextType {
+  isAuthenticated: boolean;
+  user: User | null;
+  login: (userOrUsername: User | string, password?: string) => Promise<{ success: boolean; message?: string }>;
+  register: (username: string, email: string, password: string) => Promise<{ success: boolean; message?: string }>;
+  logout: () => void;
+}
 
-export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [isAuthenticated, setIsAuthenticated] = useState(AuthService.isAuthenticated());
-  const [user, setUser] = useState<any | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
+
+export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
-    const token = AuthService.getToken();
-    if (!token) {
-      const savedUser = localStorage.getItem('rophe_specialist_care_rpms_user');
-      if (savedUser) {
-        try {
-          const parsed = JSON.parse(savedUser);
-          setIsAuthenticated(true);
-          setUser(parsed);
-        } catch { /* continue */ }
+    const stored = localStorage.getItem('rophe_specialist_care_rpms_user');
+    if (stored) {
+      try {
+        const parsed = JSON.parse(stored);
+        setUser(parsed);
+        setIsAuthenticated(true);
+      } catch {
+        localStorage.removeItem('rophe_specialist_care_rpms_user');
       }
-      setIsLoading(false);
-      return;
     }
-    AuthService.validateToken(token)
-      .then((res: any) => {
-        if (res.valid && res.user) { setIsAuthenticated(true); setUser(res.user); }
-        else { AuthService.logout(); setIsAuthenticated(false); }
-      })
-      .catch(() => { /* backend unreachable — keep state */ })
-      .finally(() => setIsLoading(false));
   }, []);
 
-  const login = async (userOrUsername: any | string, password?: string) => {
+  const login = async (userOrUsername: User | string, password?: string) => {
     if (typeof userOrUsername === 'object') {
       setIsAuthenticated(true);
       setUser(userOrUsername);
       localStorage.setItem('rophe_specialist_care_rpms_user', JSON.stringify(userOrUsername));
       return { success: true };
     }
-    const res = await AuthService.login(userOrUsername, password!);
-    if (res.success && res.user) { setIsAuthenticated(true); setUser(res.user); }
-    return { success: res.success, message: res.message };
+
+    try {
+      const res = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username: userOrUsername, password }),
+      });
+      const data = await res.json();
+      if (data.success && data.user) {
+        setIsAuthenticated(true);
+        setUser(data.user);
+        localStorage.setItem('rophe_specialist_care_rpms_user', JSON.stringify(data.user));
+      }
+      return { success: data.success, message: data.message };
+    } catch (err) {
+      return { success: false, message: 'Login failed' };
+    }
   };
 
   const register = async (username: string, email: string, password: string) => {
-    const res = await AuthService.register(username, email, password);
-    if (res.success && res.user) { setIsAuthenticated(true); setUser(res.user); }
-    return { success: res.success, message: res.message };
+    try {
+      const res = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, email, password }),
+      });
+      const data = await res.json();
+      if (data.success && data.user) {
+        setIsAuthenticated(true);
+        setUser(data.user);
+        localStorage.setItem('rophe_specialist_care_rpms_user', JSON.stringify(data.user));
+      }
+      return { success: data.success, message: data.message };
+    } catch (err) {
+      return { success: false, message: 'Registration failed' };
+    }
   };
 
-  const logout = () => { AuthService.logout(); localStorage.removeItem('rophe_specialist_care_rpms_user'); setIsAuthenticated(false); setUser(null); };
+  const logout = () => {
+    setIsAuthenticated(false);
+    setUser(null);
+    localStorage.removeItem('rophe_specialist_care_rpms_user');
+  };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, user, login, register, logout, isLoading }}>
+    <AuthContext.Provider value={{ isAuthenticated, user, login, register, logout }}>
       {children}
     </AuthContext.Provider>
   );
-}
+};
 
-export function useAuth(): AuthContextValue {
-  const ctx = useContext(AuthContext);
-  if (!ctx) throw new Error('useAuth must be used inside AuthProvider');
-  return ctx;
-}
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (!context) throw new Error('useAuth must be used within AuthProvider');
+  return context;
+};

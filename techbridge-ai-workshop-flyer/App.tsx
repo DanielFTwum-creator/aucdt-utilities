@@ -2,18 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { Flyer } from './components/Flyer';
 import { ThemeSwitcher } from './components/ThemeSwitcher';
 import { AdminPanel } from './components/AdminPanel';
-import { LoginView } from './components/LoginView';
 import { useAuth } from './contexts/AuthContext';
 import { ThemeMode } from './types';
 import { auditLogger } from './utils/audit';
 
 const App: React.FC = () => {
-  const { isAuthenticated } = useAuth();
-
-  if (!isAuthenticated) {
-    return <LoginView />;
-  }
-
   const [theme, setTheme] = useState<ThemeMode>('dark');
   const [showAdmin, setShowAdmin] = useState(false);
 

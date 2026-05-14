@@ -9,7 +9,8 @@ export interface User {
 interface AuthContextType {
   isAuthenticated: boolean;
   user: User | null;
-  login: (userOrUsername: User | string, password?: string) => Promise<void>;
+  login: (userOrUsername: User | string, password?: string) => Promise<{ success: boolean; message?: string }>;
+  register: (username: string, email: string, password: string) => Promise<{ success: boolean; message?: string }>;
   logout: () => void;
 }
 
@@ -34,30 +35,46 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const login = async (userOrUsername: User | string, password?: string) => {
     if (typeof userOrUsername === 'object') {
-      setUser(userOrUsername);
       setIsAuthenticated(true);
+      setUser(userOrUsername);
       localStorage.setItem('techbridge_ai_application_portal_user', JSON.stringify(userOrUsername));
-    } else {
-      const hashPassword = async (pwd: string): Promise<string> => {
-        const encoder = new TextEncoder();
-        const data = encoder.encode(pwd);
-        const hashBuffer = await crypto.subtle.digest('SHA-256', data);
-        const hashArray = Array.from(new Uint8Array(hashBuffer));
-        return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-      };
+      return { success: true };
+    }
 
-      if (password) {
-        const envHash = import.meta.env.VITE_ADMIN_PASSWORD_HASH;
-        const inputHash = await hashPassword(password);
-        if (inputHash === envHash) {
-          const userData: User = { id: 'admin-001', username: userOrUsername, email: 'admin@techbridge.edu.gh' };
-          setUser(userData);
-          setIsAuthenticated(true);
-          localStorage.setItem('techbridge_ai_application_portal_user', JSON.stringify(userData));
-        } else {
-          throw new Error('Invalid credentials');
-        }
+    try {
+      const res = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username: userOrUsername, password }),
+      });
+      const data = await res.json();
+      if (data.success && data.user) {
+        setIsAuthenticated(true);
+        setUser(data.user);
+        localStorage.setItem('techbridge_ai_application_portal_user', JSON.stringify(data.user));
       }
+      return { success: data.success, message: data.message };
+    } catch (err) {
+      return { success: false, message: 'Login failed' };
+    }
+  };
+
+  const register = async (username: string, email: string, password: string) => {
+    try {
+      const res = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, email, password }),
+      });
+      const data = await res.json();
+      if (data.success && data.user) {
+        setIsAuthenticated(true);
+        setUser(data.user);
+        localStorage.setItem('techbridge_ai_application_portal_user', JSON.stringify(data.user));
+      }
+      return { success: data.success, message: data.message };
+    } catch (err) {
+      return { success: false, message: 'Registration failed' };
     }
   };
 
@@ -68,7 +85,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, user, login, logout }}>
+    <AuthContext.Provider value={{ isAuthenticated, user, login, register, logout }}>
       {children}
     </AuthContext.Provider>
   );

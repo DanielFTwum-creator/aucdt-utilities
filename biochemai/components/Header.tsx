@@ -105,7 +105,7 @@ const ExportDropdown: React.FC<{onExportChat: () => void, onExportMarkdown: () =
 export const Header: React.FC<HeaderProps> = ({ mode, setMode, onExportChat, onExportMarkdown, onCopyChat, onOpenAbout, theme, setTheme, responseTemplate, setResponseTemplate }) => {
     const themeColors: Record<Theme, string> = {
         [Theme.Ocean]: '#64FFDA',
-        [Theme.Golden]: '#FFB300',
+        [Theme.Golden]: '#D4AF37',
         [Theme.Cyberpunk]: '#FF00FF',
         [Theme.Minimal]: '#27272A',
         [Theme.Cinema]: '#E50914',
@@ -141,6 +141,13 @@ export const Header: React.FC<HeaderProps> = ({ mode, setMode, onExportChat, onE
             <NavButton label="Docs" icon={<BookIcon className="w-5 h-5" />} isActive={mode === AppMode.Docs} onClick={() => setMode(AppMode.Docs)} />
             <NavButton label="Test" icon={<TestIcon className="w-5 h-5" />} isActive={mode === AppMode.Test} onClick={() => setMode(AppMode.Test)} />
             <NavButton label="Admin" icon={<AdminIcon className="w-5 h-5" />} isActive={mode === AppMode.Admin} onClick={() => setMode(AppMode.Admin)} />
+
+            {mode === AppMode.Chat && (
+              <div className="px-2 py-1 rounded-lg bg-[var(--color-bg-tertiary)] border border-[var(--color-border-secondary)] hidden md:flex items-center space-x-2">
+                <span className="text-xs font-medium text-[var(--color-text-secondary)]">Level:</span>
+                <span className="text-xs font-semibold text-[var(--color-text-accent)]">{typeof window !== 'undefined' ? localStorage.getItem('bioChemAiLearningLevel') || 'Undergraduate' : 'Loading...'}</span>
+              </div>
+            )}
             
             <div className="w-px h-6 bg-[var(--color-border-primary)] mx-2"></div>
             

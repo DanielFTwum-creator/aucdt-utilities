@@ -2,7 +2,6 @@ import { useState, useMemo, useEffect } from "react";
 import { Search, LayoutGrid, List as ListIcon, ExternalLink, Cpu, Sparkles, Code, Briefcase, Settings, Gamepad2, ChevronRight, Check, X, Shield, Zap, Globe, LogOut } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { useAuth } from "./contexts/AuthContext";
-import { LoginView } from "./components/LoginView";
 
 const BASE_URL = "https://ai-tools.techbridge.edu.gh";
 
@@ -147,10 +146,6 @@ export default function App() {
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [selectedTool, setSelectedTool] = useState<Tool | null>(null);
 
-  if (!isAuthenticated) {
-    return <LoginView />;
-  }
-
   // Body scroll lock
   useEffect(() => {
     if (selectedTool) {
@@ -162,7 +157,7 @@ export default function App() {
 
   const filteredTools = useMemo(() => {
     return TOOLS.filter((tool) => {
-      const matchesSearch = tool.title.toLowerCase().includes(search.toLowerCase()) || 
+      const matchesSearch = tool.title.toLowerCase().includes(search.toLowerCase()) ||
                             tool.desc.toLowerCase().includes(search.toLowerCase()) ||
                             tool.slug.toLowerCase().includes(search.toLowerCase());
       const matchesCategory = activeCategory === "All" || tool.cat === activeCategory;

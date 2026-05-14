@@ -42,18 +42,54 @@
     <meta name="copyright" content="Techbridge University College" />
     <meta name="referrer" content="origin-when-cross-origin" />
     <!-- ────────────────────────────────────────────────────────────── -->
-    <link rel="icon" type="image/png" href="https://techbridge.edu.gh/static/TUC_LOGO.png" />
+    <link rel="icon" type="image/x-icon" href="https://techbridge.edu.gh/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>BioChemAI Teaching Aid</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Lora:ital,wght@0,400;0,700;1,400&family=Fira+Code:wght@400;700&display=swap" rel="stylesheet">
     <style>
-      :root, html[data-theme='ocean'] {
+      :root, html[data-theme='gold-luxury'] {
+        --font-sans: 'Lora', serif;
+        --font-serif: 'Lora', serif;
+        --font-mono: 'Fira Code', monospace;
+
+        --color-bg-primary: #F5F0E8;
+        --color-bg-secondary: #FFFBF5;
+        --color-bg-tertiary: #F0E8DC;
+        --color-bg-contrast: #F5F0E8;
+        --color-bg-modal-overlay: rgba(61, 40, 23, 0.8);
+
+        --color-border-primary: #D4AF37;
+        --color-border-secondary: #C9A84B;
+        --color-border-focus: #D4AF37;
+
+        --color-text-primary: #3D2817;
+        --color-text-secondary: #5C4033;
+        --color-text-tertiary: #6D4C41;
+        --color-text-inverted: #F5F0E8;
+        --color-text-accent: #D4AF37;
+        --color-text-on-accent: #3D2817;
+
+        --color-accent-primary: #D4AF37;
+        --color-accent-primary-hover: #C9A84B;
+        --color-accent-secondary: #B8860B;
+
+        --color-success: #27AE60;
+        --color-error: #E74C3C;
+        --color-warning: #F39C12;
+
+        --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.1);
+        --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.12), 0 2px 4px -2px rgb(0 0 0 / 0.08);
+        --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.15), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.2), 0 8px 10px -6px rgb(0 0 0 / 0.12);
+      }
+
+      html[data-theme='ocean'] {
         --font-sans: 'Inter', sans-serif;
         --font-serif: 'Lora', serif;
         --font-mono: 'Fira Code', monospace;
-        
+
         --color-bg-primary: #0A192F;
         --color-bg-secondary: #172A45;
         --color-bg-tertiary: #0E203A;
@@ -70,7 +106,7 @@
         --color-text-inverted: #0A192F;
         --color-text-accent: var(--color-accent-primary);
         --color-text-on-accent: #0A192F;
-        
+
         --color-accent-primary: #64FFDA;
         --color-accent-primary-hover: #52D8BC;
         --color-accent-secondary: #13B4B3;
@@ -87,25 +123,38 @@
       
       html[data-theme='golden'] {
         --font-sans: 'Lora', serif;
-        
-        --color-bg-primary: #FFF8E1;
-        --color-bg-secondary: #FFECB3;
-        --color-bg-tertiary: #FFE082;
-        --color-bg-contrast: #FFF8E1;
-        --color-bg-modal-overlay: rgba(78, 52, 46, 0.5);
+        --font-serif: 'Lora', serif;
+        --font-mono: 'Fira Code', monospace;
 
-        --color-border-primary: #FFD54F;
-        --color-border-secondary: #FFCA28;
-        
-        --color-text-primary: #4E342E;
-        --color-text-secondary: #6D4C41;
-        --color-text-tertiary: #795548;
-        --color-text-inverted: #FFF8E1;
-        --color-text-on-accent: #4E342E;
-        
-        --color-accent-primary: #FFB300;
-        --color-accent-primary-hover: #FFA000;
-        --color-accent-secondary: #FF8F00;
+        --color-bg-primary: #F5F0E8;
+        --color-bg-secondary: #FFFBF5;
+        --color-bg-tertiary: #F0E8DC;
+        --color-bg-contrast: #F5F0E8;
+        --color-bg-modal-overlay: rgba(61, 40, 23, 0.8);
+
+        --color-border-primary: #D4AF37;
+        --color-border-secondary: #C9A84B;
+        --color-border-focus: #D4AF37;
+
+        --color-text-primary: #3D2817;
+        --color-text-secondary: #5C4033;
+        --color-text-tertiary: #6D4C41;
+        --color-text-inverted: #F5F0E8;
+        --color-text-accent: #D4AF37;
+        --color-text-on-accent: #3D2817;
+
+        --color-accent-primary: #D4AF37;
+        --color-accent-primary-hover: #C9A84B;
+        --color-accent-secondary: #B8860B;
+
+        --color-success: #27AE60;
+        --color-error: #E74C3C;
+        --color-warning: #F39C12;
+
+        --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.1);
+        --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.12), 0 2px 4px -2px rgb(0 0 0 / 0.08);
+        --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.15), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.2), 0 8px 10px -6px rgb(0 0 0 / 0.12);
       }
 
       html[data-theme='cyberpunk'] {
