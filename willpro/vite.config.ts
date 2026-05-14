@@ -5,12 +5,13 @@ import { defineConfig, loadEnv } from 'vite';
 export default defineConfig(({ mode }) => {
     const env = loadEnv(mode, '.', '');
     return {
+      base: './',
   build: {
     chunkSizeWarningLimit: 1000,
     rollupOptions: {
       output: {
-        manualChunks: {
-          'react-vendor': ['react', 'react-dom'],
+        manualChunks(id) {
+          if (id.includes('node_modules/react')) return 'react-vendor';
         }
       }
     }
