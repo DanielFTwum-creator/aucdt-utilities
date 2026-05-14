@@ -41,14 +41,14 @@ export const QuizResults: React.FC<QuizResultsProps> = ({ questions, userAnswers
                         const userAnswer = userAnswers[index];
                         const isCorrect = userAnswer === q.correctAnswerIndex;
                         return (
-                            <div key={index} className="p-4 bg-[var(--color-bg-tertiary)] rounded-lg border border-[var(--color-border-primary)]">
+                            <div key={index} className="p-4 bg-[var(--color-bg-tertiary)] rounded-lg border border-[var(--color-border-primary)] space-y-3">
                                 <p className="font-semibold text-[var(--color-text-secondary)] flex items-start">
                                     <span className="mr-2">{index + 1}.</span>
                                     <span>{q.questionText}</span>
                                 </p>
-                                <div className={`mt-3 pl-6 border-l-2 ml-2 ${isCorrect ? 'border-[var(--color-success)]' : 'border-[var(--color-error)]'}`}>
+                                <div className={`pl-6 border-l-2 ml-2 ${isCorrect ? 'border-[var(--color-success)]' : 'border-[var(--color-error)]'}`}>
                                     <p className="text-sm text-[var(--color-text-secondary)]">
-                                        Your answer: 
+                                        Your answer:
                                         <span className={`font-semibold ${isCorrect ? 'text-[var(--color-success)]' : 'text-[var(--color-error)]'}`}>
                                             {userAnswer !== null ? q.options[userAnswer] : 'Not Answered'}
                                         </span>
@@ -59,6 +59,12 @@ export const QuizResults: React.FC<QuizResultsProps> = ({ questions, userAnswers
                                         </p>
                                     )}
                                 </div>
+                                {q.imageSuggestion && (
+                                    <div className="mt-3 p-3 bg-[var(--color-bg-info)]/30 rounded border border-[var(--color-accent-primary)]/30">
+                                        <p className="text-xs font-semibold text-[var(--color-text-primary)] mb-1">💡 Visual Aid:</p>
+                                        <p className="text-sm text-[var(--color-text-secondary)] italic">{q.imageSuggestion}</p>
+                                    </div>
+                                )}
                             </div>
                         );
                     })}

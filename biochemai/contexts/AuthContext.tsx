@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { AuthService, AuthUser } from '../services/authService';
+import { initSessionService, createSession, restoreSession, destroySession } from '../services/sessionService';
 
 interface AuthContextValue {
   isAuthenticated: boolean;
@@ -18,26 +19,51 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const token = AuthService.getToken();
-    if (!token) {
-      const savedUser = localStorage.getItem('biochemai_user');
-      if (savedUser) {
-        try {
-          const parsed = JSON.parse(savedUser);
-          setIsAuthenticated(true);
-          setUser(parsed);
-        } catch { /* continue */ }
+    const initAuth = async () => {
+      try {
+        // Initialize IndexedDB session service
+        await initSessionService();
+
+        const token = AuthService.getToken();
+        if (!token) {
+          // Try to restore from IndexedDB
+          const savedUser = localStorage.getItem('biochemai_user');
+          if (savedUser) {
+            try {
+              const parsed = JSON.parse(savedUser);
+              const session = await restoreSession(parsed.email);
+              if (session) {
+                setIsAuthenticated(true);
+                setUser(parsed);
+              } else {
+                localStorage.removeItem('biochemai_user');
+              }
+            } catch { /* continue */ }
+          }
+          setIsLoading(false);
+          return;
+        }
+
+        AuthService.validateToken(token)
+          .then((res: any) => {
+            if (res.valid && res.user) {
+              setIsAuthenticated(true);
+              setUser(res.user);
+            }
+            else {
+              AuthService.logout();
+              setIsAuthenticated(false);
+            }
+          })
+          .catch(() => { /* continue */ })
+          .finally(() => setIsLoading(false));
+      } catch (error) {
+        console.error('Auth initialization error:', error);
+        setIsLoading(false);
       }
-      setIsLoading(false);
-      return;
-    }
-    AuthService.validateToken(token)
-      .then((res: any) => {
-        if (res.valid && res.user) { setIsAuthenticated(true); setUser(res.user); }
-        else { AuthService.logout(); setIsAuthenticated(false); }
-      })
-      .catch(() => { /* continue */ })
-      .finally(() => setIsLoading(false));
+    };
+
+    initAuth();
   }, []);
 
   const login = async (userOrUsername: AuthUser | string, password?: string) => {
@@ -45,20 +71,42 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setIsAuthenticated(true);
       setUser(userOrUsername);
       localStorage.setItem('biochemai_user', JSON.stringify(userOrUsername));
+      // Persist session to IndexedDB
+      await createSession(userOrUsername.email, userOrUsername.name);
       return { success: true };
     }
     const res = await AuthService.login(userOrUsername, password!);
-    if (res.success && res.user) { setIsAuthenticated(true); setUser(res.user); }
+    if (res.success && res.user) {
+      setIsAuthenticated(true);
+      setUser(res.user);
+      localStorage.setItem('biochemai_user', JSON.stringify(res.user));
+      // Persist session to IndexedDB
+      await createSession(res.user.email, res.user.name);
+    }
     return { success: res.success, message: res.message };
   };
 
   const register = async (username: string, email: string, password: string) => {
     const res = await AuthService.register(username, email, password);
-    if (res.success && res.user) { setIsAuthenticated(true); setUser(res.user); }
+    if (res.success && res.user) {
+      setIsAuthenticated(true);
+      setUser(res.user);
+      localStorage.setItem('biochemai_user', JSON.stringify(res.user));
+      // Persist session to IndexedDB
+      await createSession(res.user.email, res.user.name);
+    }
     return { success: res.success, message: res.message };
   };
 
-  const logout = () => { AuthService.logout(); localStorage.removeItem('biochemai_user'); setIsAuthenticated(false); setUser(null); };
+  const logout = async () => {
+    AuthService.logout();
+    localStorage.removeItem('biochemai_user');
+    if (user?.email) {
+      await destroySession(user.email);
+    }
+    setIsAuthenticated(false);
+    setUser(null);
+  };
 
   return (
     <AuthContext.Provider value={{ isAuthenticated, user, login, register, logout, isLoading }}>
