@@ -7,11 +7,9 @@ coverage/
 .env*
 !.env.example
 
-# Playwright browser binaries (firefox, webkit, winldd — chromium is intentionally kept)
-playwright-browsers/firefox-*/
-playwright-browsers/webkit-*/
-playwright-browsers/winldd-*/
-playwright-browsers/ffmpeg-*/
+# Playwright browser binaries and cache
+playwright-browsers/
+.cache/
 
 # Playwright test output artifacts
 playwright-report/
