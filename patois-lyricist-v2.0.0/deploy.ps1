@@ -3,7 +3,7 @@
 
 param(
     [string]$RemoteHost = "root@66.226.72.199",
-    [string]$RemotePath = "/var/www/vhosts/aucdt.edu.gh/ai-tools.aucdt.edu.gh/lyricist/",
+    [string]$RemotePath = "/var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/lyricist/",
     [switch]$Build = $false
 )
 
@@ -50,3 +50,4 @@ ssh -o StrictHostKeyChecking=no $RemoteHost "chown -R aucdtadmin:psacln $RemoteP
 
 Write-Host "✅ Deployment complete!" -ForegroundColor Green
 Write-Host "URL: https://ai-tools.techbridge.edu.gh/lyricist`n"
+
