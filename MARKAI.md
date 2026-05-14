@@ -16,7 +16,7 @@ MARKAI is a battle-tested, zero-external-dependency Google OAuth2 authentication
 - ✅ **postMessage + polling dual-channel** (reliable token delivery)
 - ✅ **Overloaded login()** (OAuth AND form-based fallback)
 - ✅ **App-specific branding** (gold-luxury default)
-- ✅ **Production-ready** (deployed to 8 projects, zero critical bugs)
+- ✅ **Production-ready** (deployed to 9 projects, zero critical bugs)
 
 ---
 
@@ -350,10 +350,9 @@ Add `"vite/client"` to types array:
 | techbridge-ai-workshop-flyer | `techbridge_ai_workshop_flyer_user` | Rose (#db2777) | `/workshop/auth/google/callback` |
 | rophe-specialist-care-rpms | `rophe_specialist_care_rpms_user` | Teal | `/care/auth/google/callback` |
 | willpro | `willpro_user` | Gold (#C8A84B) | `/willpro/auth/google/callback` |
+| glucose | `glucose_user` | Amber | `/glucose/auth/google/callback` |
 | patois-lyricist-v2.0.0 | `patois_lyricist_user` | Amber (#C8A84B) | `/lyricist/auth/google/callback` |
 | tuc-ai-lab-catalog | `tuc_ai_lab_catalog_user` | Gold | `/ai-lab/auth/google/callback` |
-
-**⚠️ Deprecated:** `glucose` (formerly rophe-sugar-logger) — URI `/glucose/auth/google/callback` should be removed from Google Cloud Console as the project no longer exists.
 
 ---
 
@@ -410,16 +409,11 @@ https://ai-tools.techbridge.edu.gh/blueprint/auth/google/callback
 https://ai-tools.techbridge.edu.gh/workshop/auth/google/callback
 https://ai-tools.techbridge.edu.gh/care/auth/google/callback
 https://ai-tools.techbridge.edu.gh/willpro/auth/google/callback
+https://ai-tools.techbridge.edu.gh/glucose/auth/google/callback
 https://ai-tools.techbridge.edu.gh/lyricist/auth/google/callback
 https://ai-tools.techbridge.edu.gh/ai-lab/auth/google/callback
 http://localhost:3000/auth/google/callback
 ```
-
-**⚠️ Deprecated URIs (REMOVE from Google Cloud Console):**
-```
-https://ai-tools.techbridge.edu.gh/glucose/auth/google/callback
-```
-**Reason:** rophe-sugar-logger project deleted; `/glucose` directory removed from server. No longer active.
 
 ---
 
@@ -433,4 +427,4 @@ https://ai-tools.techbridge.edu.gh/glucose/auth/google/callback
 ---
 
 **Last Updated:** 2026-05-14  
-**Status:** Production (8/8 projects live, 1 deprecated)
+**Status:** Production (9/9 projects live)
