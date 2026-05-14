@@ -49,6 +49,7 @@ export interface QuizQuestion {
   options: string[];
   correctAnswerIndex: number;
   explanation: string;
+  imageSuggestion?: string;
 }
 
 export type ExportType = 'pdf' | 'instagram' | 'linkedin';

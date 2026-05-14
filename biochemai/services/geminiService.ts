@@ -170,15 +170,29 @@ export const generateBioChemResponse = async (
 };
 
 /**
- * Generates a structured MCQ quiz for the QuizContainer.
+ * Generates a structured MCQ quiz for the QuizContainer with visual support.
+ * Each question includes an optional imageSuggestion for pedagogical clarity.
  */
 export const generateQuiz = async (
   topic: string,
   level: LearningLevel,
   numQuestions: number = 5
 ): Promise<QuizQuestion[]> => {
+  const quizSystemInstruction = `
+    You are generating an educational multiple-choice quiz. Each question must include a helpful visual recommendation.
+
+    For each question, provide an imageSuggestion that describes what diagram, structure, or infographic would help students understand this concept visually.
+    Examples:
+    - "Molecular structure of glucose with carbon atoms numbered 1-6"
+    - "Enzyme active site diagram showing substrate binding"
+    - "Metabolic pathway flow chart with ATP production points highlighted"
+
+    Make suggestions specific and actionable for image generation or search.
+  `;
+
   const model = genAI.getGenerativeModel({
     model: TECHBRIGE_CONFIG.model,
+    systemInstruction: quizSystemInstruction,
     generationConfig: {
       responseMimeType: "application/json",
       responseSchema: {
@@ -193,8 +207,9 @@ export const generateQuiz = async (
                 options: { type: SchemaType.ARRAY, items: { type: SchemaType.STRING } },
                 correctAnswerIndex: { type: SchemaType.NUMBER },
                 explanation: { type: SchemaType.STRING },
+                imageSuggestion: { type: SchemaType.STRING },
               },
-              required: ["questionText", "options", "correctAnswerIndex", "explanation"],
+              required: ["questionText", "options", "correctAnswerIndex", "explanation", "imageSuggestion"],
             },
           },
         },
@@ -203,7 +218,7 @@ export const generateQuiz = async (
     },
   });
 
-  const result = await model.generateContent(`Generate a ${numQuestions}-question quiz on ${topic} for ${level}.`);
+  const result = await model.generateContent(`Generate a ${numQuestions}-question quiz on ${topic} for ${level}. Each question MUST include a helpful imageSuggestion.`);
   const response = await result.response;
   return JSON.parse(response.text()).questions;
 };
