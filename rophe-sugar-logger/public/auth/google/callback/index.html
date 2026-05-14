@@ -1,18 +1,50 @@
 <!DOCTYPE html>
 <html>
 <head><title>Authenticating...</title></head>
-<body>
+<body style="font-family: Arial; padding: 20px;">
+<p id="status">Processing authentication...</p>
 <script>
   const hash = window.location.hash.substring(1);
   const params = new URLSearchParams(hash);
   const access_token = params.get('access_token');
   const error = params.get('error');
-  if (access_token && window.opener) {
-    window.opener.postMessage({ type: 'OAUTH_TOKEN_SUCCESS', access_token }, window.location.origin);
-    window.close();
-  } else if (error && window.opener) {
-    window.opener.postMessage({ type: 'OAUTH_TOKEN_ERROR', error }, window.location.origin);
-    window.close();
+  const error_description = params.get('error_description');
+  const status = document.getElementById('status');
+
+  console.log('=== Callback Page ===');
+  console.log('Hash:', hash.substring(0, 50) + '...');
+  console.log('Access Token:', !!access_token);
+  console.log('Opener:', !!window.opener);
+
+  if (access_token) {
+    console.log('✓ Token found, storing in localStorage');
+    status.textContent = '✓ Authenticated! Closing in 2s...';
+    // Store in localStorage for main window to retrieve
+    localStorage.setItem('oauth_token_temp', access_token);
+    console.log('Stored token in localStorage:', access_token.substring(0, 20) + '...');
+    // Also try postMessage as backup
+    if (window.opener) {
+      console.log('Posting message to opener with origin:', window.location.origin);
+      window.opener.postMessage({ type: 'OAUTH_TOKEN_SUCCESS', access_token }, '*');
+      console.log('✓ Message posted');
+    } else {
+      console.log('No window.opener available');
+    }
+    setTimeout(() => {
+      console.log('Closing popup');
+      window.close();
+    }, 2000);
+  } else if (error) {
+    console.error('✗ Error:', error);
+    status.textContent = `✗ Error: ${error}`;
+    localStorage.setItem('oauth_error_temp', error);
+    if (window.opener) {
+      window.opener.postMessage({ type: 'OAUTH_TOKEN_ERROR', error, error_description }, window.location.origin);
+    }
+    setTimeout(() => window.close(), 1000);
+  } else {
+    console.error('✗ No token found in hash');
+    status.textContent = '✗ No token. Check browser console.';
   }
 </script>
 </body>

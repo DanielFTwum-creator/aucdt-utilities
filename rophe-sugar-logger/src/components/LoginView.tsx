@@ -17,9 +17,7 @@ export const LoginView: React.FC = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   useEffect(() => {
-    const handleMessage = async (event: MessageEvent) => {
-      if (event.data?.type !== 'OAUTH_TOKEN_SUCCESS') return;
-      const { access_token } = event.data;
+    const handleOAuthToken = async (access_token: string) => {
       try {
         setIsSubmitting(true);
         const res = await fetch('https://www.googleapis.com/oauth2/v2/userinfo', {
@@ -28,13 +26,39 @@ export const LoginView: React.FC = () => {
         if (!res.ok) throw new Error('Failed to fetch user info');
         const userInfo = await res.json();
         await login({ id: userInfo.id, username: userInfo.name, email: userInfo.email });
+        // Clear temp token
+        localStorage.removeItem('oauth_token_temp');
       } catch (err) {
         setError('Google login failed. Please try again.');
         setIsSubmitting(false);
       }
     };
+
+    // Listen for postMessage
+    const handleMessage = (event: MessageEvent) => {
+      console.log('Message event received:', event.data?.type);
+      if (event.data?.type === 'OAUTH_TOKEN_SUCCESS') {
+        console.log('✓ Got OAUTH_TOKEN_SUCCESS message');
+        handleOAuthToken(event.data.access_token);
+      }
+    };
+    console.log('Setting up message listener');
     window.addEventListener('message', handleMessage);
-    return () => window.removeEventListener('message', handleMessage);
+
+    // Also check localStorage (fallback if postMessage fails)
+    const checkLocalStorage = setInterval(() => {
+      const token = localStorage.getItem('oauth_token_temp');
+      if (token) {
+        console.log('✓ Found token in localStorage');
+        handleOAuthToken(token);
+        clearInterval(checkLocalStorage);
+      }
+    }, 100);
+
+    return () => {
+      window.removeEventListener('message', handleMessage);
+      clearInterval(checkLocalStorage);
+    };
   }, [login]);
 
   const handleGoogleLogin = () => {
@@ -49,7 +73,8 @@ export const LoginView: React.FC = () => {
       client_id: clientId,
       redirect_uri: redirectUri,
       response_type: 'token',
-      scope: 'openid email profile',
+      scope: 'email profile',
+      prompt: 'select_account'
     });
     const authWindow = window.open(
       `https://accounts.google.com/o/oauth2/v2/auth?${params}`,
@@ -100,18 +125,25 @@ export const LoginView: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center p-6">
+    <div className="min-h-screen bg-gradient-to-br from-orange-50 to-slate-100 flex flex-col items-center justify-center p-6">
       <div className="w-full max-w-sm">
-        <div className="border-2 border-[#1F3864] text-[#1F3864] px-6 py-2 text-3xl font-bold tracking-tighter rounded-lg mb-8 shadow-sm text-center">
-          ROPHE
+        <div className="text-center mb-8">
+          <img
+            src="https://techbridge.edu.gh/static/TUC_LOGO_1.png"
+            alt="TUC Logo"
+            className="h-12 w-auto object-contain mx-auto mb-4"
+            referrerPolicy="no-referrer"
+          />
+          <h1 className="text-3xl font-bold text-slate-900 mb-1">Rophe Sugar Logger</h1>
+          <p className="text-slate-600 text-sm">Blood Glucose Monitoring Made Simple</p>
         </div>
 
         <div className="bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden p-8">
-          <h1 className="text-2xl font-bold text-center text-slate-900 mb-2">
+          <h2 className="text-2xl font-bold text-center text-slate-900 mb-2">
             {mode === 'login' ? 'Welcome Back' : 'Create Account'}
-          </h1>
+          </h2>
           <p className="text-center text-slate-500 mb-6 text-sm">
-            {mode === 'login' ? 'Sign in to access your blood glucose records' : 'Create an account to get started'}
+            {mode === 'login' ? 'Sign in to track your glucose levels' : 'Create an account to get started'}
           </p>
 
           <form onSubmit={handleSubmit} className="space-y-4">
@@ -130,7 +162,7 @@ export const LoginView: React.FC = () => {
                       onChange={e => setIdentifier(e.target.value)}
                       placeholder="Enter username or email"
                       disabled={isSubmitting}
-                      className="w-full border border-slate-300 rounded-xl px-4 py-3.5 pl-12 text-sm font-medium outline-none focus:ring-4 focus:ring-blue-100 focus:border-[#2E75B6] shadow-sm disabled:opacity-50"
+                      className="w-full border border-slate-300 rounded-xl px-4 py-3.5 pl-12 text-sm font-medium outline-none focus:ring-4 focus:ring-orange-100 focus:border-orange-600 shadow-sm disabled:opacity-50"
                       required
                     />
                   </div>
@@ -151,7 +183,7 @@ export const LoginView: React.FC = () => {
                       onChange={e => setUsername(e.target.value)}
                       placeholder="Choose a username"
                       disabled={isSubmitting}
-                      className="w-full border border-slate-300 rounded-xl px-4 py-3.5 pl-12 text-sm font-medium outline-none focus:ring-4 focus:ring-blue-100 focus:border-[#2E75B6] shadow-sm disabled:opacity-50"
+                      className="w-full border border-slate-300 rounded-xl px-4 py-3.5 pl-12 text-sm font-medium outline-none focus:ring-4 focus:ring-orange-100 focus:border-orange-600 shadow-sm disabled:opacity-50"
                       required
                     />
                   </div>
@@ -169,7 +201,7 @@ export const LoginView: React.FC = () => {
                       onChange={e => setEmail(e.target.value)}
                       placeholder="Enter your email"
                       disabled={isSubmitting}
-                      className="w-full border border-slate-300 rounded-xl px-4 py-3.5 pl-12 text-sm font-medium outline-none focus:ring-4 focus:ring-blue-100 focus:border-[#2E75B6] shadow-sm disabled:opacity-50"
+                      className="w-full border border-slate-300 rounded-xl px-4 py-3.5 pl-12 text-sm font-medium outline-none focus:ring-4 focus:ring-orange-100 focus:border-orange-600 shadow-sm disabled:opacity-50"
                       required
                     />
                   </div>
@@ -187,7 +219,7 @@ export const LoginView: React.FC = () => {
                       onChange={e => setPhone(e.target.value)}
                       placeholder="Enter phone number"
                       disabled={isSubmitting}
-                      className="w-full border border-slate-300 rounded-xl px-4 py-3.5 pl-12 text-sm font-medium outline-none focus:ring-4 focus:ring-blue-100 focus:border-[#2E75B6] shadow-sm disabled:opacity-50"
+                      className="w-full border border-slate-300 rounded-xl px-4 py-3.5 pl-12 text-sm font-medium outline-none focus:ring-4 focus:ring-orange-100 focus:border-orange-600 shadow-sm disabled:opacity-50"
                     />
                   </div>
                 </div>
@@ -207,7 +239,7 @@ export const LoginView: React.FC = () => {
                   onChange={e => setPassword(e.target.value)}
                   placeholder="Enter password"
                   disabled={isSubmitting}
-                  className="w-full border border-slate-300 rounded-xl px-4 py-3.5 pl-12 pr-12 text-sm font-medium outline-none focus:ring-4 focus:ring-blue-100 focus:border-[#2E75B6] shadow-sm disabled:opacity-50"
+                  className="w-full border border-slate-300 rounded-xl px-4 py-3.5 pl-12 pr-12 text-sm font-medium outline-none focus:ring-4 focus:ring-orange-100 focus:border-orange-600 shadow-sm disabled:opacity-50"
                   required
                 />
                 <button
@@ -235,7 +267,7 @@ export const LoginView: React.FC = () => {
                     onChange={e => setConfirmPassword(e.target.value)}
                     placeholder="Confirm password"
                     disabled={isSubmitting}
-                    className="w-full border border-slate-300 rounded-xl px-4 py-3.5 pl-12 pr-12 text-sm font-medium outline-none focus:ring-4 focus:ring-blue-100 focus:border-[#2E75B6] shadow-sm disabled:opacity-50"
+                    className="w-full border border-slate-300 rounded-xl px-4 py-3.5 pl-12 pr-12 text-sm font-medium outline-none focus:ring-4 focus:ring-orange-100 focus:border-orange-600 shadow-sm disabled:opacity-50"
                     required
                   />
                   <button
@@ -255,7 +287,7 @@ export const LoginView: React.FC = () => {
             <button
               type="submit"
               disabled={isSubmitting}
-              className="w-full bg-[#2E75B6] text-white px-8 py-3.5 rounded-xl font-medium hover:bg-[#1F3864] transition-colors shadow-md focus:ring-4 focus:ring-blue-100 outline-none disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full bg-orange-600 text-white px-8 py-3.5 rounded-xl font-medium hover:bg-orange-700 transition-colors shadow-md focus:ring-4 focus:ring-orange-100 outline-none disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isSubmitting ? 'Please wait...' : (mode === 'login' ? 'Sign In' : 'Create Account')}
             </button>
@@ -286,7 +318,7 @@ export const LoginView: React.FC = () => {
             {mode === 'login' ? "Don't have an account? " : 'Already have an account? '}
             <button
               onClick={() => handleModeChange(mode === 'login' ? 'register' : 'login')}
-              className="text-[#2E75B6] font-medium hover:text-[#1F3864] transition-colors"
+              className="text-orange-600 font-medium hover:text-orange-700 transition-colors"
             >
               {mode === 'login' ? 'Sign up' : 'Sign in'}
             </button>
