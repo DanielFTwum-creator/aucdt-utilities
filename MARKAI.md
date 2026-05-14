@@ -16,7 +16,7 @@ MARKAI is a battle-tested, zero-external-dependency Google OAuth2 authentication
 - ✅ **postMessage + polling dual-channel** (reliable token delivery)
 - ✅ **Overloaded login()** (OAuth AND form-based fallback)
 - ✅ **App-specific branding** (gold-luxury default)
-- ✅ **Production-ready** (deployed to 6 projects, zero critical bugs)
+- ✅ **Production-ready** (deployed to 7 projects, zero critical bugs)
 
 ---
 
@@ -29,9 +29,11 @@ User logs in → LoginView (OAuth popup)
               ↓
               callback/index.html (hash parsing)
               ↓
-              postMessage to parent window
+              postMessage access token to parent window
               ↓
-              AuthContext stores token in localStorage
+              LoginView fetches Google userinfo
+              ↓
+              AuthContext stores user in localStorage
               ↓
               AppWithAuth wrapper renders App
 ```
@@ -69,25 +71,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   useEffect(() => {
     const stored = localStorage.getItem(STORAGE_KEY);
     if (stored) setUser(JSON.parse(stored));
-
-    const handleOAuthMessage = (event: MessageEvent) => {
-      if (event.origin !== window.location.origin) return;
-      
-      if (event.data.type === 'OAUTH_TOKEN_SUCCESS') {
-        const userData: User = {
-          email: event.data.email,
-          name: event.data.name,
-          id: event.data.id,
-        };
-        setUser(userData);
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(userData));
-      } else if (event.data.type === 'OAUTH_TOKEN_ERROR') {
-        console.error('OAuth error:', event.data.error);
-      }
-    };
-
-    window.addEventListener('message', handleOAuthMessage);
-    return () => window.removeEventListener('message', handleOAuthMessage);
   }, []);
 
   const login = (userOrEmail: User | string, password?: string) => {
@@ -127,25 +110,81 @@ export const useAuth = () => {
 **File:** `components/LoginView.tsx`
 
 ```typescript
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 
 export const LoginView: React.FC = () => {
   const { login } = useAuth();
   const [email, setEmail] = useState('');
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    let oauthHandled = false;
+
+    const handleOAuthToken = async (accessToken: string) => {
+      if (oauthHandled) return;
+      oauthHandled = true;
+
+      try {
+        const res = await fetch('https://www.googleapis.com/oauth2/v2/userinfo', {
+          headers: { Authorization: `Bearer ${accessToken}` },
+        });
+        if (!res.ok) throw new Error('Failed to fetch user info');
+        const userInfo = await res.json();
+        login({
+          id: userInfo.id,
+          name: userInfo.name,
+          email: userInfo.email,
+        });
+        localStorage.removeItem('oauth_token_temp');
+      } catch {
+        setError('Google login failed. Please try again.');
+      }
+    };
+
+    const handleOAuthMessage = (event: MessageEvent) => {
+      if (event.origin !== window.location.origin) return;
+      if (event.data?.type === 'OAUTH_TOKEN_SUCCESS') {
+        handleOAuthToken(event.data.access_token);
+      }
+      if (event.data?.type === 'OAUTH_TOKEN_ERROR') {
+        setError(event.data.error_description || event.data.error || 'Google login failed.');
+      }
+    };
+
+    window.addEventListener('message', handleOAuthMessage);
+
+    const fallback = window.setInterval(() => {
+      const token = localStorage.getItem('oauth_token_temp');
+      if (token) {
+        handleOAuthToken(token);
+        window.clearInterval(fallback);
+      }
+    }, 100);
+
+    return () => {
+      window.removeEventListener('message', handleOAuthMessage);
+      window.clearInterval(fallback);
+    };
+  }, [login]);
 
   const handleOAuthClick = () => {
     const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
-    const redirectUri = import.meta.env.VITE_GOOGLE_REDIRECT_URI;
-    const scope = 'email profile';
+    const redirectUri = import.meta.env.VITE_GOOGLE_REDIRECT_URI
+      || `${window.location.origin}/auth/google/callback`;
+    const params = new URLSearchParams({
+      client_id: clientId,
+      redirect_uri: redirectUri,
+      response_type: 'token',
+      scope: 'openid email profile',
+      prompt: 'select_account',
+    });
 
-    const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?` +
-      `client_id=${clientId}&` +
-      `redirect_uri=${redirectUri}&` +
-      `response_type=token&` +
-      `scope=${scope}`;
-
-    window.open(authUrl, 'oauth_popup', 'width=500,height=600');
+    window.open(
+      `https://accounts.google.com/o/oauth2/v2/auth?${params}`,
+      'oauth_popup',
+      'width=600,height=700'
+    );
   };
 
   const handleFormSubmit = (e: React.FormEvent) => {
@@ -159,6 +198,7 @@ export const LoginView: React.FC = () => {
         <h1 className="text-3xl font-bold mb-6 text-[var(--color-accent-primary)]">
           Welcome
         </h1>
+        {error && <p className="mb-4 text-sm text-red-600">{error}</p>}
 
         <button
           onClick={handleOAuthClick}
@@ -214,29 +254,16 @@ export const LoginView: React.FC = () => {
   const params = new URLSearchParams(hash);
   const access_token = params.get('access_token');
   const error = params.get('error');
+  const error_description = params.get('error_description');
 
   if (access_token && window.opener) {
-    fetch(`https://www.googleapis.com/oauth2/v2/userinfo?access_token=${access_token}`)
-      .then(r => r.json())
-      .then(data => {
-        window.opener.postMessage({
-          type: 'OAUTH_TOKEN_SUCCESS',
-          email: data.email,
-          name: data.name,
-          id: data.id,
-        }, window.location.origin);
-        setTimeout(() => window.close(), 2000);
-      })
-      .catch(() => {
-        window.opener.postMessage({
-          type: 'OAUTH_TOKEN_ERROR',
-          error: 'Failed to fetch user info'
-        }, window.location.origin);
-        setTimeout(() => window.close(), 2000);
-      });
+    localStorage.setItem('oauth_token_temp', access_token);
+    window.opener.postMessage({ type: 'OAUTH_TOKEN_SUCCESS', access_token }, window.location.origin);
+    setTimeout(() => window.close(), 500);
   } else if (error && window.opener) {
-    window.opener.postMessage({ type: 'OAUTH_TOKEN_ERROR', error }, window.location.origin);
-    setTimeout(() => window.close(), 2000);
+    localStorage.setItem('oauth_error_temp', error);
+    window.opener.postMessage({ type: 'OAUTH_TOKEN_ERROR', error, error_description }, window.location.origin);
+    setTimeout(() => window.close(), 1000);
   }
 </script>
 </body>
@@ -289,14 +316,14 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
 **File:** `.env.local` (production)
 
 ```env
-VITE_GOOGLE_CLIENT_ID=537671076222-q0ovngh3m2m560kdcrsn2hk0cae5rudg
+VITE_GOOGLE_CLIENT_ID=537671076222-q0ovngh3m2m560kdcrsn2hk0cae5rudg.apps.googleusercontent.com
 VITE_GOOGLE_REDIRECT_URI=https://ai-tools.techbridge.edu.gh/[project]/auth/google/callback
 ```
 
 **File:** `.env.development.local` (development)
 
 ```env
-VITE_GOOGLE_CLIENT_ID=537671076222-q0ovngh3m2m560kdcrsn2hk0cae5rudg
+VITE_GOOGLE_CLIENT_ID=537671076222-q0ovngh3m2m560kdcrsn2hk0cae5rudg.apps.googleusercontent.com
 VITE_GOOGLE_REDIRECT_URI=http://localhost:3000/auth/google/callback
 ```
 
@@ -322,8 +349,10 @@ Add `"vite/client"` to types array:
 | techbridge-ai-blueprint | `techbridge_ai_blueprint_user` | Blue (#2563eb) | `/blueprint/auth/google/callback` |
 | techbridge-ai-workshop-flyer | `techbridge_ai_workshop_flyer_user` | Rose (#db2777) | `/workshop/auth/google/callback` |
 | rophe-specialist-care-rpms | `rophe_specialist_care_rpms_user` | Teal | `/care/auth/google/callback` |
-| rophe-sugar-logger | `rophe_sugar_logger_user` | Amber | `/glucose/auth/google/callback` |
+| willpro | `willpro_user` | Gold (#C8A84B) | `/willpro/auth/google/callback` |
 | tuc-ai-lab-catalog | `tuc_ai_lab_catalog_user` | Gold | `/ai-lab/auth/google/callback` |
+
+**⚠️ Deprecated:** `glucose` (formerly rophe-sugar-logger) — URI `/glucose/auth/google/callback` should be removed from Google Cloud Console as the project no longer exists.
 
 ---
 
@@ -379,9 +408,14 @@ https://ai-tools.techbridge.edu.gh/techbridge-ai-application-portal/auth/google/
 https://ai-tools.techbridge.edu.gh/blueprint/auth/google/callback
 https://ai-tools.techbridge.edu.gh/workshop/auth/google/callback
 https://ai-tools.techbridge.edu.gh/care/auth/google/callback
-https://ai-tools.techbridge.edu.gh/glucose/auth/google/callback
+https://ai-tools.techbridge.edu.gh/willpro/auth/google/callback
 https://ai-tools.techbridge.edu.gh/ai-lab/auth/google/callback
 http://localhost:3000/auth/google/callback
+```
+
+**⚠️ Deprecated URIs (remove from Google Cloud Console):**
+```
+https://ai-tools.techbridge.edu.gh/glucose/auth/google/callback  [rophe-sugar-logger removed]
 ```
 
 ---
@@ -396,4 +430,4 @@ http://localhost:3000/auth/google/callback
 ---
 
 **Last Updated:** 2026-05-14  
-**Status:** Production (6/6 projects live)
+**Status:** Production (7/7 projects live, 1 deprecated)
