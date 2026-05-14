@@ -1,146 +1,39 @@
-// Set local browsers path to avoid /root permission issues
 import { fileURLToPath } from "url";
 import path from "path";
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-
-// Check if we are at the project root or inside the built 'dist' folder
-const isBuilt = __dirname.endsWith('dist') || !fs.existsSync(path.join(__dirname, 'server.ts'));
-const baseDir = __dirname;
-const browsersBase = path.join(baseDir, "playwright-browsers");
-
-// Always prefer local playwright browsers
-process.env.PLAYWRIGHT_BROWSERS_PATH = browsersBase;
-
 import express from "express";
 import { createServer as createViteServer } from "vite";
 import fs from "fs";
-import { chromium } from "playwright";
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const isBuilt = __dirname.endsWith('dist') || !fs.existsSync(path.join(__dirname, 'server.ts'));
+const baseDir = __dirname;
 
 async function startServer() {
   const app = express();
   const PORT = 3000;
 
-  // Ensure directories exist
-  const screenshotsDir = path.join(__dirname, "public", "screenshots");
-  const cacheDir = path.join(__dirname, ".cache");
-  [screenshotsDir, cacheDir].forEach(dir => {
-    if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
-  });
-
-  // API routes FIRST
+  // Public static files
   app.use("/public", express.static(path.join(__dirname, "public")));
 
-  app.get("/api/screenshot", async (req, res) => {
-    const targetUrl = req.query.url as string;
+  // Serve pre-generated screenshots
+  app.get("/api/screenshot", (req, res) => {
     const slug = req.query.slug as string;
 
-    if (!targetUrl || !slug) {
-      return res.status(400).send("Missing url or slug parameters");
+    if (!slug) {
+      return res.status(400).json({ error: "Missing slug parameter" });
     }
 
-    const filename = `${slug}.jpg`;
-    const filepath = path.join(screenshotsDir, filename);
+    const filepath = path.join(__dirname, "public", "screenshots", `${slug}.jpg`);
 
-    // Check if cached version exists (older than 24h?)
-    if (fs.existsSync(filepath)) {
-      const stats = fs.statSync(filepath);
-      const isOld = Date.now() - stats.mtimeMs > 24 * 60 * 60 * 1000;
-      if (!isOld) {
-        return res.sendFile(filepath);
-      }
+    // Check if screenshot exists
+    if (!fs.existsSync(filepath)) {
+      return res.status(404).json({
+        error: "Screenshot not found",
+        message: `No screenshot for slug: ${slug}. Run 'pnpm run generate-screenshots' to generate.`
+      });
     }
 
-    let browser;
-    try {
-      console.log(`[Playwright] Capturing screenshot for: ${targetUrl}`);
-      
-      // Dynamically find the chromium executable in the local folder
-      const browsersBase = path.join(__dirname, "playwright-browsers");
-      let executablePath: string | undefined = undefined;
-
-      if (fs.existsSync(browsersBase)) {
-        const dirs = fs.readdirSync(browsersBase);
-        // Look for chromium-headless-shell or chromium directories
-        const shellDir = dirs.find(d => d.startsWith('chromium_headless_shell-'));
-        const chromeDir = dirs.find(d => d.startsWith('chromium-'));
-        
-        if (shellDir) {
-           executablePath = path.join(browsersBase, shellDir, "chrome-headless-shell-linux64", "chrome-headless-shell");
-        } else if (chromeDir) {
-           executablePath = path.join(browsersBase, chromeDir, "chrome-linux64", "chrome");
-        }
-      }
-
-      if (executablePath && !fs.existsSync(executablePath)) {
-        console.warn(`[Playwright] Computed path ${executablePath} does not exist, falling back to system default.`);
-        executablePath = undefined;
-      }
-      
-      browser = await chromium.launch({ 
-        headless: true,
-        executablePath,
-        args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage']
-      });
-      const context = await browser.newContext({
-        viewport: { width: 1024, height: 768 },
-        userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36'
-      });
-      const page = await context.newPage();
-      
-      // Navigate and wait
-      await page.goto(targetUrl, { waitUntil: "domcontentloaded", timeout: 45000 });
-      await page.waitForTimeout(1000);
-
-      // Inject auth so apps using markai pattern skip login and show main UI
-      const slugKey = slug.replace(/-/g, '_');
-      const previewUser = JSON.stringify({
-        id: "preview-001",
-        username: "TUC Preview",
-        email: "preview@techbridge.edu.gh"
-      });
-      await page.evaluate(({ keys, val }) => {
-        for (const key of keys) localStorage.setItem(key, val);
-      }, {
-        keys: [`${slugKey}_user`, 'tuc_ai_lab_user', 'markai_user', 'user'],
-        val: previewUser
-      });
-      await page.reload({ waitUntil: "domcontentloaded" });
-      await page.waitForTimeout(3000);
-
-      // Attempt to wait for any visible content if it's dynamic
-      try {
-        await page.waitForSelector('body', { timeout: 5000 });
-      } catch (e) {
-        console.warn("[Playwright] Timeout waiting for body, taking screenshot anyway.");
-      }      
-      // Hide common popups
-      await page.evaluate(() => {
-        const style = document.createElement('style');
-        style.innerHTML = `
-          [id*="cookie"], [class*="cookie"], 
-          [id*="modal"], [class*="modal"],
-          [id*="banner"], [class*="banner"],
-          [id*="popup"], [class*="popup"] { display: none !important; }
-        `;
-        document.head.appendChild(style);
-      });
-      
-      await page.screenshot({ 
-        path: filepath, 
-        type: "jpeg", 
-        quality: 90,
-        fullPage: false
-      });
-
-      console.log(`[Playwright] Captured: ${filepath}`);
-      res.sendFile(filepath);
-    } catch (error: any) {
-      console.error("[Playwright Error]:", error?.message || error);
-      // Fallback: If local screenshot fails, redirect to thum.io
-      res.redirect(`https://image.thum.io/get/width/800/crop/800/noanimate/${targetUrl}`);
-    } finally {
-      if (browser) await browser.close();
-    }
+    res.sendFile(filepath);
   });
 
   // Vite middleware for development
