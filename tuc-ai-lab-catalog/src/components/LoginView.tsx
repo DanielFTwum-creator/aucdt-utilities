@@ -17,9 +17,7 @@ export const LoginView: React.FC = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   useEffect(() => {
-    const handleMessage = async (event: MessageEvent) => {
-      if (event.data?.type !== 'OAUTH_TOKEN_SUCCESS') return;
-      const { access_token } = event.data;
+    const handleOAuthToken = async (access_token: string) => {
       try {
         setIsSubmitting(true);
         const res = await fetch('https://www.googleapis.com/oauth2/v2/userinfo', {
@@ -28,13 +26,39 @@ export const LoginView: React.FC = () => {
         if (!res.ok) throw new Error('Failed to fetch user info');
         const userInfo = await res.json();
         await login({ id: userInfo.id, username: userInfo.name, email: userInfo.email });
+        // Clear temp token
+        localStorage.removeItem('oauth_token_temp');
       } catch (err) {
         setError('Google login failed. Please try again.');
         setIsSubmitting(false);
       }
     };
+
+    // Listen for postMessage
+    const handleMessage = (event: MessageEvent) => {
+      console.log('Message event received:', event.data?.type);
+      if (event.data?.type === 'OAUTH_TOKEN_SUCCESS') {
+        console.log('✓ Got OAUTH_TOKEN_SUCCESS message');
+        handleOAuthToken(event.data.access_token);
+      }
+    };
+    console.log('Setting up message listener');
     window.addEventListener('message', handleMessage);
-    return () => window.removeEventListener('message', handleMessage);
+
+    // Also check localStorage (fallback if postMessage fails)
+    const checkLocalStorage = setInterval(() => {
+      const token = localStorage.getItem('oauth_token_temp');
+      if (token) {
+        console.log('✓ Found token in localStorage');
+        handleOAuthToken(token);
+        clearInterval(checkLocalStorage);
+      }
+    }, 100);
+
+    return () => {
+      window.removeEventListener('message', handleMessage);
+      clearInterval(checkLocalStorage);
+    };
   }, [login]);
 
   const handleGoogleLogin = () => {
@@ -49,7 +73,8 @@ export const LoginView: React.FC = () => {
       client_id: clientId,
       redirect_uri: redirectUri,
       response_type: 'token',
-      scope: 'openid email profile',
+      scope: 'email profile',
+      prompt: 'select_account'
     });
     const authWindow = window.open(
       `https://accounts.google.com/o/oauth2/v2/auth?${params}`,

@@ -38,7 +38,6 @@ import { saveLastState, getLastState, saveProjectSnapshot, getProjectHistory, Pr
 import { db, handleFirestoreError, OperationType } from "./lib/firebase";
 import { registerUser, loginUser, clearSession, getSession, sendHelpdeskNotification, SessionUser } from "./lib/auth";
 import { useAuth } from "./contexts/AuthContext";
-import { LoginView } from "./components/LoginView";
 import { 
   doc, 
   setDoc, 
@@ -338,12 +337,6 @@ const CopyButton = ({ text }: { text: string }) => {
 // --- Main Application ---
 
 export default function App() {
-  const { isAuthenticated } = useAuth();
-
-  if (!isAuthenticated) {
-    return <LoginView />;
-  }
-
   const [activeTab, setActiveTab] = useState<"checklist" | "workflow" | "rules" | "admin" | "testing">("checklist");
   const [mode, setMode] = useState<PlatformMode>("claude");
   const [theme, setTheme] = useState<ThemeType>(() => {

@@ -5,9 +5,8 @@ import PatientRegistry from './components/PatientRegistry';
 import ClinicalAssistance from './components/ClinicalAssistance';
 import VideoCall from './components/VideoCall';
 import AdminPanel from './components/AdminPanel';
-import { LoginView } from './src/components/LoginView';
 import { AdminProvider, useAdmin } from './src/contexts/AdminContext';
-import { AuthProvider, useAuth } from './src/contexts/AuthContext';
+import { useAuth } from './src/contexts/AuthContext';
 import { mockPatients, mockAppointments, mockAlerts } from './services/mockData';
 import { Patient, Appointment, AppointmentStatus, Alert, AlertSeverity, AlertType, PatientRecording, AlertThresholds, ThemeType, AuditLogEntry, User } from './types';
 
@@ -214,9 +213,6 @@ const AppContent: React.FC = () => {
     addAuditLog('TELEHEALTH_ENGAGEMENT', `P2P Encrypted consultation established for Appointment REF: ${appointmentId}`); 
   };
 
-  if (!isAuthenticated) {
-    return <LoginView />;
-  }
 
   const renderContent = () => {
     switch (activeTab) {

@@ -9,7 +9,6 @@ import FeatureBand from './components/FeatureBand';
 import AdminLogin from './components/AdminLogin';
 import AdminDashboard from './components/AdminDashboard';
 import TableOfContents from './components/TableOfContents';
-import { LoginView } from './components/LoginView';
 import { useAuth } from './contexts/AuthContext';
 import { AI_APPLICATIONS, CATEGORIES } from './constants';
 import { Category, Theme } from './types';
@@ -20,11 +19,7 @@ const LOCKOUT_DURATION = 15 * 60 * 1000; // 15 minutes
 const SESSION_TIMEOUT = 30 * 60 * 1000; // 30 minutes
 
 function App() {
-  const { isAuthenticated, logout: authLogout } = useAuth();
-
-  if (!isAuthenticated) {
-    return <LoginView />;
-  }
+  const { logout: authLogout } = useAuth();
 
   const [searchTerm, setSearchTerm] = useState('');
   const [activeCategory, setActiveCategory] = useState<Category | 'All Apps'>('All Apps');

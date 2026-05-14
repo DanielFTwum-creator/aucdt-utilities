@@ -9,7 +9,8 @@ export interface User {
 interface AuthContextType {
   isAuthenticated: boolean;
   user: User | null;
-  login: (userOrUsername: User | string, password?: string) => Promise<void>;
+  login: (userOrUsername: User | string, password?: string) => Promise<{ success: boolean; message?: string }>;
+  register: (username: string, email: string, password: string) => Promise<{ success: boolean; message?: string }>;
   logout: () => void;
 }
 
@@ -34,16 +35,46 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const login = async (userOrUsername: User | string, password?: string) => {
     if (typeof userOrUsername === 'object') {
-      setUser(userOrUsername);
       setIsAuthenticated(true);
+      setUser(userOrUsername);
       localStorage.setItem('techbridge_ai_blueprint_user', JSON.stringify(userOrUsername));
-    } else {
-      if (password) {
-        const userData: User = { id: 'user-' + Date.now(), username: userOrUsername, email: 'user@techbridge.edu.gh' };
-        setUser(userData);
+      return { success: true };
+    }
+
+    try {
+      const res = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username: userOrUsername, password }),
+      });
+      const data = await res.json();
+      if (data.success && data.user) {
         setIsAuthenticated(true);
-        localStorage.setItem('techbridge_ai_blueprint_user', JSON.stringify(userData));
+        setUser(data.user);
+        localStorage.setItem('techbridge_ai_blueprint_user', JSON.stringify(data.user));
       }
+      return { success: data.success, message: data.message };
+    } catch (err) {
+      return { success: false, message: 'Login failed' };
+    }
+  };
+
+  const register = async (username: string, email: string, password: string) => {
+    try {
+      const res = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, email, password }),
+      });
+      const data = await res.json();
+      if (data.success && data.user) {
+        setIsAuthenticated(true);
+        setUser(data.user);
+        localStorage.setItem('techbridge_ai_blueprint_user', JSON.stringify(data.user));
+      }
+      return { success: data.success, message: data.message };
+    } catch (err) {
+      return { success: false, message: 'Registration failed' };
     }
   };
 
@@ -54,7 +85,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, user, login, logout }}>
+    <AuthContext.Provider value={{ isAuthenticated, user, login, register, logout }}>
       {children}
     </AuthContext.Provider>
   );
