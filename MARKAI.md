@@ -415,10 +415,11 @@ https://ai-tools.techbridge.edu.gh/ai-lab/auth/google/callback
 http://localhost:3000/auth/google/callback
 ```
 
-**⚠️ Deprecated URIs (remove from Google Cloud Console):**
+**⚠️ Deprecated URIs (REMOVE from Google Cloud Console):**
 ```
-https://ai-tools.techbridge.edu.gh/glucose/auth/google/callback  [rophe-sugar-logger removed]
+https://ai-tools.techbridge.edu.gh/glucose/auth/google/callback
 ```
+**Reason:** rophe-sugar-logger project deleted; `/glucose` directory removed from server. No longer active.
 
 ---
 
