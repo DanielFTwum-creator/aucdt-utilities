@@ -74,9 +74,19 @@ export const QuizActive: React.FC<QuizActiveProps> = ({ questions, userAnswers, 
             </div>
 
             {isAnswered && (
-                <div className="mt-6 p-4 bg-[var(--color-bg-tertiary)] rounded-lg border border-[var(--color-border-primary)] animate-fade-in">
-                    <h3 className="font-bold text-[var(--color-text-primary)] mb-1">Explanation</h3>
-                    <p className="text-[var(--color-text-secondary)]">{question.explanation}</p>
+                <div className="mt-6 space-y-4 animate-fade-in">
+                    <div className="p-4 bg-[var(--color-bg-tertiary)] rounded-lg border border-[var(--color-border-primary)]">
+                        <h3 className="font-bold text-[var(--color-text-primary)] mb-1">Explanation</h3>
+                        <p className="text-[var(--color-text-secondary)]">{question.explanation}</p>
+                    </div>
+                    {question.imageSuggestion && (
+                        <div className="p-4 bg-[var(--color-bg-info)]/40 rounded-lg border border-[var(--color-accent-primary)]/30">
+                            <h3 className="font-semibold text-[var(--color-text-primary)] mb-2 flex items-center gap-2">
+                                <span>🖼️</span> Visual Aid
+                            </h3>
+                            <p className="text-[var(--color-text-secondary)] italic">{question.imageSuggestion}</p>
+                        </div>
+                    )}
                 </div>
             )}
 
