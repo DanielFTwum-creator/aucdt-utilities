@@ -24,5 +24,8 @@
   "license": "MIT",
   "dependencies": {
     "docx": "^9.6.1"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.60.0"
   }
 }

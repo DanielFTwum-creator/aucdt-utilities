@@ -1,0 +1,29 @@
+=== DEPLOYMENT LOG ===
+Started: 2026-05-14 11:47:20
+
+Deploying: tuc-ai-lab-catalog
+Status: SUCCESS
+Output: Already up to date Done in 565ms using pnpm v11.0.9 $ vite build && node -e "require('fs').copyFileSync('server.ts', 'dist/server.ts')" && node -e "require('fs').copyFileSync('package.json', 'dist/package.json')" && node -e "try { require('fs').cpSync('public/screenshots', 'dist/public/screenshots', { recursive: true }); } catch(e) {}" [36mvite v8.0.12 [32mbuilding client environment for production...[36m[39m [2K transforming...✓ 2134 modules transformed. rendering chunks... computing gzip size... dist/index.html                   5.13 kB │ gzip:   1.73 kB dist/assets/index-BQossvLh.css   42.54 kB │ gzip:   7.94 kB dist/assets/index-Bvgl6-4L.js   364.16 kB │ gzip: 115.46 kB  [33m[33m[PLUGIN_TIMINGS] Warning:[0m Your build spent significant time in plugins. Here is a breakdown:   - rolldown:vite-resolve (41%)   - @tailwindcss/vite:generate:build (22%)   - vite:css (19%) See https://rolldown.rs/options/checks#plugintimings for more details. [39m [32m✓ built in 15.93s[39m
+
+Deploying: techbridge-ai-application-portal
+Status: SUCCESS
+Output: $ vite build [36mvite v6.4.2 [32mbuilding for production...[36m[39m transforming... Found 1 warning while optimizing generated CSS:  [2m│   }[22m [2m│ }[22m [2m│[22m @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400;1,500;1,700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600;1,700;1,800;1,900&display=swap'); [2m┆[22m        [33m[2m^--[22m @import rules must precede all rules aside from @charset and @layer statements[39m [2m┆[22m [2m│ :root {[22m [2m│   --color-brand-gold: #C8A84B;[22m  [32m✓[39m 1762 modules transformed. rendering chunks... computing gzip size... [2mdist/[22m[32mindex.html                       [39m[1m[2m 10.17 kB[22m[1m[22m[2m │ gzip:  2.55 kB[22m [2mdist/[22m[35massets/index-CH9ETQ9-.css        [39m[1m[2m 46.85 kB[22m[1m[22m[2m │ gzip:  8.64 kB[22m [2mdist/[22m[36massets/react-vendor-yfL0ty4i.js  [39m[1m[2m 11.79 kB[22m[1m[22m[2m │ gzip:  4.21 kB[22m [2mdist/[22m[36massets/index-B3a3YJQD.js         [39m[1m[2m255.56 kB[22m[1m[22m[2m │ gzip: 76.73 kB[22m [32m✓ built in 3.09s[39m
+
+Deploying: techbridge-ai-blueprint
+Status: SUCCESS
+Output: $ vite build [36mvite v6.4.2 [32mbuilding for production...[36m[39m transforming... [32m✓[39m 2097 modules transformed. rendering chunks... computing gzip size... [2mdist/[22m[32mindex.html                 [39m[1m[2m  6.09 kB[22m[1m[22m[2m │ gzip:   1.87 kB[22m [2mdist/[22m[35massets/index-Buz6efYD.css  [39m[1m[2m 55.74 kB[22m[1m[22m[2m │ gzip:   9.37 kB[22m [2mdist/[22m[36massets/index-CUpAuyY5.js   [39m[1m[33m876.05 kB[39m[22m[2m │ gzip: 235.14 kB[22m [33m (!) Some chunks are larger than 500 kB after minification. Consider: - Using dynamic import() to code-split the application - Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks - Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.[39m [32m✓ built in 7.98s[39m
+
+Deploying: techbridge-ai-workshop-flyer
+Status: SUCCESS
+Output:  > techbridge-ai-workshop-flyer@0.0.0 build C:\Development\github\aucdt-utilities\techbridge-ai-workshop-flyer > vite build  [36mvite v7.3.1 [32mbuilding client environment for production...[36m[39m transforming... [32m✓[39m 1522 modules transformed. rendering chunks... computing gzip size... [2mdist/[22m[32mindex.html                       [39m[1m[2m  7.01 kB[22m[1m[22m[2m │ gzip:  2.14 kB[22m [2mdist/[22m[36massets/react-vendor-DGg87m7X.js  [39m[1m[2m 11.32 kB[22m[1m[22m[2m │ gzip:  4.07 kB[22m [2mdist/[22m[36massets/index-DoVBnZP6.js         [39m[1m[2m222.11 kB[22m[1m[22m[2m │ gzip: 68.67 kB[22m [32m✓ built in 2.43s[39m
+
+Deploying: rophe-specialist-care-rpms
+Status: SUCCESS
+Output:  > rophe-specialist-care-rpms@0.0.0 build C:\Development\github\aucdt-utilities\rophe-specialist-care-rpms > vite build  [36mvite v7.3.1 [32mbuilding client environment for production...[36m[39m transforming... [32m✓[39m 2150 modules transformed. rendering chunks... computing gzip size... [2mdist/[22m[32mindex.html                       [39m[1m[2m  7.01 kB[22m[1m[22m[2m │ gzip:   2.16 kB[22m [2mdist/[22m[36massets/react-vendor-3vo9YLbA.js  [39m[1m[2m 11.44 kB[22m[1m[22m[2m │ gzip:   4.11 kB[22m [2mdist/[22m[36massets/index-B4aKuYZv.js         [39m[1m[2m977.74 kB[22m[1m[22m[2m │ gzip: 253.23 kB[22m [32m✓ built in 10.36s[39m
+
+Deploying: rophe-sugar-logger
+Status: SUCCESS
+Output: $ vite build [36mvite v6.4.2 [32mbuilding for production...[36m[39m transforming... [32m✓[39m 2339 modules transformed. rendering chunks... computing gzip size... [2mdist/[22m[32mindex.html                   [39m[1m[2m  2.25 kB[22m[1m[22m[2m │ gzip:   0.93 kB[22m [2mdist/[22m[35massets/index-DeTgezeU.css    [39m[1m[2m 37.10 kB[22m[1m[22m[2m │ gzip:   7.66 kB[22m [2mdist/[22m[36massets/idb-BXWtuYvb.js       [39m[1m[2m  3.05 kB[22m[1m[22m[2m │ gzip:   1.23 kB[22m [2mdist/[22m[36massets/genai-DgO2NZLZ.js     [39m[1m[2m 54.39 kB[22m[1m[22m[2m │ gzip:  16.52 kB[22m [2mdist/[22m[36massets/index-BcHkXQzo.js     [39m[1m[2m233.21 kB[22m[1m[22m[2m │ gzip:  70.68 kB[22m [2mdist/[22m[36massets/recharts-BmrJ8hsu.js  [39m[1m[2m379.08 kB[22m[1m[22m[2m │ gzip: 112.78 kB[22m [32m✓ built in 5.11s[39m
+
+Completed: 2026-05-14 11:51:11
+
