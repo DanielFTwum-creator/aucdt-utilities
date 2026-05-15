@@ -5,6 +5,7 @@ import { defineConfig, loadEnv } from 'vite';
 export default defineConfig(({ mode }) => {
     const env = loadEnv(mode, '.', '');
     return {
+  base: '/brainiac-challenge/',
   build: {
     chunkSizeWarningLimit: 1000,
     rollupOptions: {

@@ -2,6 +2,8 @@ import React, { useState, useCallback } from 'react';
 import { runTestSuite, TestSuiteResult } from './testRunner';
 import { MockScreenshot } from './MockScreenshot';
 import { TestIcon } from '../Icons';
+import { SVGNetworkBackground } from '../SVGNetworkBackground';
+import { GlassmorphismCard } from '../GlassmorphismCard';
 
 type TestStatus = 'idle' | 'running' | 'complete';
 
@@ -12,7 +14,7 @@ export const TestContainer: React.FC = () => {
     const handleRunTests = useCallback(() => {
         setStatus('running');
         setResults([]);
-        
+
         runTestSuite((progress) => {
             setResults(progress);
         }).then((finalResults) => {
@@ -20,7 +22,7 @@ export const TestContainer: React.FC = () => {
             setStatus('complete');
         });
     }, []);
-    
+
     const getStatusBadge = (status: 'running' | 'pass' | 'fail' | 'idle') => {
         switch (status) {
             case 'running': return <span className="text-xs font-bold text-[var(--color-warning)]">RUNNING...</span>;
@@ -31,8 +33,10 @@ export const TestContainer: React.FC = () => {
     };
 
     return (
-        <div className="w-full space-y-8">
-            <div className="bg-[var(--color-bg-secondary)] p-6 sm:p-8 rounded-2xl shadow-lg border border-[var(--color-border-primary)]">
+        <div className="relative w-full space-y-8">
+            <SVGNetworkBackground accentColor="--color-accent-primary" opacity={0.07} />
+
+            <GlassmorphismCard>
                 <div className="flex items-center mb-4">
                     <TestIcon className="w-8 h-8 text-[var(--color-accent-primary)] mr-3" />
                     <h1 className="text-3xl font-bold text-[var(--color-text-primary)]">E2E Self-Test</h1>
@@ -47,13 +51,13 @@ export const TestContainer: React.FC = () => {
                 >
                     {status === 'running' ? 'Tests in Progress...' : 'Run Full Test Suite'}
                 </button>
-            </div>
-            
+            </GlassmorphismCard>
+
             {results.length > 0 && (
                 <div className="space-y-6">
                     <h2 className="text-2xl font-bold text-[var(--color-text-primary)]">Test Results</h2>
                     {results.map((suite, suiteIndex) => (
-                        <div key={suiteIndex} className="bg-[var(--color-bg-secondary)] p-4 sm:p-6 rounded-2xl shadow-lg border border-[var(--color-border-primary)]">
+                        <GlassmorphismCard key={suiteIndex}>
                             <h3 className="text-lg font-semibold text-[var(--color-text-primary)] mb-4 flex justify-between items-center">
                                 <span>{suite.name}</span>
                                 {getStatusBadge(suite.status)}
@@ -74,7 +78,7 @@ export const TestContainer: React.FC = () => {
                                     </div>
                                 ))}
                             </div>
-                        </div>
+                        </GlassmorphismCard>
                     ))}
                 </div>
             )}

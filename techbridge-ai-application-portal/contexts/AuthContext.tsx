@@ -1,4 +1,5 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+/* eslint-disable react-refresh/only-export-components */
+import React, { createContext, useContext, useState } from 'react';
 
 export interface User {
   id: string;
@@ -15,29 +16,29 @@ interface AuthContextType {
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
+const STORAGE_KEY = 'techbridge_ai_application_portal_user';
+
+const getStoredUser = (): User | null => {
+  const stored = localStorage.getItem(STORAGE_KEY);
+  if (!stored) return null;
+
+  try {
+    return JSON.parse(stored) as User;
+  } catch {
+    localStorage.removeItem(STORAGE_KEY);
+    return null;
+  }
+};
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [user, setUser] = useState<User | null>(null);
-
-  useEffect(() => {
-    const stored = localStorage.getItem('techbridge_ai_application_portal_user');
-    if (stored) {
-      try {
-        const userData = JSON.parse(stored);
-        setUser(userData);
-        setIsAuthenticated(true);
-      } catch (err) {
-        localStorage.removeItem('techbridge_ai_application_portal_user');
-      }
-    }
-  }, []);
+  const [user, setUser] = useState<User | null>(() => getStoredUser());
+  const [isAuthenticated, setIsAuthenticated] = useState(() => !!getStoredUser());
 
   const login = async (userOrUsername: User | string, password?: string) => {
     if (typeof userOrUsername === 'object') {
       setIsAuthenticated(true);
       setUser(userOrUsername);
-      localStorage.setItem('techbridge_ai_application_portal_user', JSON.stringify(userOrUsername));
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(userOrUsername));
       return { success: true };
     }
 
@@ -51,10 +52,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (data.success && data.user) {
         setIsAuthenticated(true);
         setUser(data.user);
-        localStorage.setItem('techbridge_ai_application_portal_user', JSON.stringify(data.user));
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(data.user));
       }
       return { success: data.success, message: data.message };
-    } catch (err) {
+    } catch {
       return { success: false, message: 'Login failed' };
     }
   };
@@ -70,10 +71,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (data.success && data.user) {
         setIsAuthenticated(true);
         setUser(data.user);
-        localStorage.setItem('techbridge_ai_application_portal_user', JSON.stringify(data.user));
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(data.user));
       }
       return { success: data.success, message: data.message };
-    } catch (err) {
+    } catch {
       return { success: false, message: 'Registration failed' };
     }
   };
@@ -81,7 +82,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const logout = () => {
     setUser(null);
     setIsAuthenticated(false);
-    localStorage.removeItem('techbridge_ai_application_portal_user');
+    localStorage.removeItem(STORAGE_KEY);
   };
 
   return (

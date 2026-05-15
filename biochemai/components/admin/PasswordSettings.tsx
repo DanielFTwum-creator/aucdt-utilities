@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { getAdminConfig, setAdminConfig, addAuditLog } from '../../lib/db';
+import { GlassmorphismCard } from '../GlassmorphismCard';
 
 export const PasswordSettings: React.FC = () => {
     const [oldPassword, setOldPassword] = useState('');
@@ -51,7 +52,7 @@ export const PasswordSettings: React.FC = () => {
     };
 
     return (
-        <div className="bg-[var(--color-bg-secondary)] p-6 sm:p-8 rounded-2xl shadow-lg border border-[var(--color-border-primary)]">
+        <GlassmorphismCard>
             <h2 className="text-2xl font-bold text-[var(--color-text-primary)] mb-4">Change Admin Password</h2>
             <form onSubmit={handleSubmit} className="space-y-4 max-w-md">
                 <div>
@@ -84,6 +85,6 @@ export const PasswordSettings: React.FC = () => {
                     </button>
                 </div>
             </form>
-        </div>
+        </GlassmorphismCard>
     );
 };

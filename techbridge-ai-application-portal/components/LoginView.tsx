@@ -17,9 +17,15 @@ export const LoginView: React.FC = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   useEffect(() => {
+    let oauthHandled = false;
+
     const handleOAuthToken = async (access_token: string) => {
+      if (oauthHandled) return;
+      oauthHandled = true;
+
       try {
         setIsSubmitting(true);
+        setError('');
         const res = await fetch('https://www.googleapis.com/oauth2/v2/userinfo', {
           headers: { Authorization: `Bearer ${access_token}` }
         });
@@ -27,26 +33,28 @@ export const LoginView: React.FC = () => {
         const userInfo = await res.json();
         await login({ id: userInfo.id, username: userInfo.name, email: userInfo.email });
         localStorage.removeItem('oauth_token_temp');
-      } catch (err) {
+      } catch {
         setError('Google login failed. Please try again.');
         setIsSubmitting(false);
       }
     };
 
     const handleMessage = (event: MessageEvent) => {
-      console.log('Message event received:', event.data?.type);
+      if (event.origin !== window.location.origin) return;
       if (event.data?.type === 'OAUTH_TOKEN_SUCCESS') {
-        console.log('✓ Got OAUTH_TOKEN_SUCCESS message');
         handleOAuthToken(event.data.access_token);
       }
+      if (event.data?.type === 'OAUTH_TOKEN_ERROR') {
+        setError(event.data.error_description || event.data.error || 'Google login failed. Please try again.');
+        setIsSubmitting(false);
+      }
     };
-    console.log('Setting up message listener');
+
     window.addEventListener('message', handleMessage);
 
     const checkLocalStorage = setInterval(() => {
       const token = localStorage.getItem('oauth_token_temp');
       if (token) {
-        console.log('✓ Found token in localStorage');
         handleOAuthToken(token);
         clearInterval(checkLocalStorage);
       }
@@ -70,7 +78,7 @@ export const LoginView: React.FC = () => {
       client_id: clientId,
       redirect_uri: redirectUri,
       response_type: 'token',
-      scope: 'email profile',
+      scope: 'openid email profile',
       prompt: 'select_account'
     });
     const authWindow = window.open(

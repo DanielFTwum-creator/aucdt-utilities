@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { getAuditLog as getLogsFromDB } from '../../lib/db';
 import { AuditLogEntry } from '../../types';
+import { GlassmorphismCard } from '../GlassmorphismCard';
 
 export const AuditLog: React.FC = () => {
     const [logs, setLogs] = useState<AuditLogEntry[]>([]);
@@ -29,7 +30,7 @@ export const AuditLog: React.FC = () => {
     };
 
     return (
-        <div className="bg-[var(--color-bg-secondary)] p-6 sm:p-8 rounded-2xl shadow-lg border border-[var(--color-border-primary)]">
+        <GlassmorphismCard>
             <h2 className="text-2xl font-bold text-[var(--color-text-primary)] mb-4">Audit Log</h2>
             <p className="text-[var(--color-text-secondary)] mb-6">Displays the last 100 administrative actions.</p>
             
@@ -57,6 +58,6 @@ export const AuditLog: React.FC = () => {
                     <p className="p-6 text-center text-[var(--color-text-secondary)]">No log entries found.</p>
                 )}
             </div>
-        </div>
+        </GlassmorphismCard>
     );
 };

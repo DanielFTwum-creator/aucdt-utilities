@@ -5,6 +5,8 @@ import { getQuizQuestionCount } from '../../services/adminService';
 import { QuizSetup } from './QuizSetup';
 import { QuizActive } from './QuizActive';
 import { QuizResults } from './QuizResults';
+import { SVGNetworkBackground } from '../SVGNetworkBackground';
+import { GlassmorphismCard } from '../GlassmorphismCard';
 
 type QuizState = 'setup' | 'loading' | 'active' | 'results' | 'error';
 
@@ -61,7 +63,7 @@ export const QuizContainer: React.FC = () => {
         switch(quizState) {
             case 'loading':
                 return (
-                    <div className="text-center p-10 bg-[var(--color-bg-secondary)] rounded-2xl shadow-lg border border-[var(--color-border-primary)]">
+                    <GlassmorphismCard className="text-center p-10">
                         <h2 className="text-xl font-semibold text-[var(--color-text-primary)] mb-4">Generating Your Quiz...</h2>
                         <div className="flex justify-center items-center space-x-2">
                             <div className="w-3 h-3 bg-[var(--color-accent-primary)] rounded-full dot-1"></div>
@@ -69,15 +71,23 @@ export const QuizContainer: React.FC = () => {
                             <div className="w-3 h-3 bg-[var(--color-accent-primary)] rounded-full dot-3"></div>
                         </div>
                         <p className="text-[var(--color-text-secondary)] mt-4">BioChemAI is preparing {numQuestions} questions for you.</p>
-                    </div>
+                    </GlassmorphismCard>
                 );
             case 'active':
-                return <QuizActive questions={questions} userAnswers={userAnswers} onAnswer={handleAnswer} onFinish={handleFinish} />;
+                return (
+                    <GlassmorphismCard>
+                        <QuizActive questions={questions} userAnswers={userAnswers} onAnswer={handleAnswer} onFinish={handleFinish} />
+                    </GlassmorphismCard>
+                );
             case 'results':
-                return <QuizResults questions={questions} userAnswers={userAnswers} onRestart={handleRestart} />;
+                return (
+                    <GlassmorphismCard>
+                        <QuizResults questions={questions} userAnswers={userAnswers} onRestart={handleRestart} />
+                    </GlassmorphismCard>
+                );
             case 'error':
                  return (
-                    <div className="text-center p-10 bg-red-500/10 rounded-2xl max-w-2xl mx-auto border border-[var(--color-error)]">
+                    <GlassmorphismCard className="text-center p-10 max-w-2xl mx-auto">
                         <h2 className="text-xl font-semibold text-[var(--color-error)] mb-2">Oops! Something went wrong.</h2>
                         <p className="text-[var(--color-error)] mb-6">{error}</p>
                         <button
@@ -86,27 +96,32 @@ export const QuizContainer: React.FC = () => {
                         >
                             Try Again
                         </button>
-                    </div>
+                    </GlassmorphismCard>
                 );
             case 'setup':
             default:
                 return (
-                    <QuizSetup 
-                        topic={topic}
-                        setTopic={setTopic}
-                        learningLevel={learningLevel}
-                        setLearningLevel={setLearningLevel}
-                        numQuestions={numQuestions}
-                        setNumQuestions={setNumQuestions}
-                        onStart={handleStartQuiz}
-                    />
+                    <GlassmorphismCard>
+                        <QuizSetup
+                            topic={topic}
+                            setTopic={setTopic}
+                            learningLevel={learningLevel}
+                            setLearningLevel={setLearningLevel}
+                            numQuestions={numQuestions}
+                            setNumQuestions={setNumQuestions}
+                            onStart={handleStartQuiz}
+                        />
+                    </GlassmorphismCard>
                 );
         }
     };
 
     return (
-        <div className="w-full">
-            {renderContent()}
+        <div className="w-full relative">
+            <SVGNetworkBackground accentColor="--color-accent-primary" opacity={0.07} />
+            <div className="relative z-10">
+                {renderContent()}
+            </div>
         </div>
     );
 };
