@@ -17,16 +17,10 @@ export const LoginView: React.FC = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   useEffect(() => {
-    const handleOAuthToken = async (access_token: string) => {
+    const handleOAuthSuccess = async (userData: { id: string; email: string; name?: string }) => {
       try {
         setIsSubmitting(true);
-        const res = await fetch('https://www.googleapis.com/oauth2/v2/userinfo', {
-          headers: { Authorization: `Bearer ${access_token}` }
-        });
-        if (!res.ok) throw new Error('Failed to fetch user info');
-        const userInfo = await res.json();
-        await login({ id: userInfo.id, username: userInfo.name, email: userInfo.email });
-        localStorage.removeItem('oauth_token_temp');
+        await login({ id: userData.id, username: userData.name || userData.email, email: userData.email });
       } catch (err) {
         setError('Google login failed. Please try again.');
         setIsSubmitting(false);
@@ -34,28 +28,22 @@ export const LoginView: React.FC = () => {
     };
 
     const handleMessage = (event: MessageEvent) => {
-      console.log('Message event received:', event.data?.type);
+      if (event.origin !== window.location.origin) return;
+
       if (event.data?.type === 'OAUTH_TOKEN_SUCCESS') {
-        console.log('✓ Got OAUTH_TOKEN_SUCCESS message');
-        handleOAuthToken(event.data.access_token);
+        handleOAuthSuccess({
+          id: event.data.id,
+          email: event.data.email,
+          name: event.data.name
+        });
+      } else if (event.data?.type === 'OAUTH_TOKEN_ERROR') {
+        setError('Google authentication failed. Please try again.');
+        setIsSubmitting(false);
       }
     };
-    console.log('Setting up message listener');
+
     window.addEventListener('message', handleMessage);
-
-    const checkLocalStorage = setInterval(() => {
-      const token = localStorage.getItem('oauth_token_temp');
-      if (token) {
-        console.log('✓ Found token in localStorage');
-        handleOAuthToken(token);
-        clearInterval(checkLocalStorage);
-      }
-    }, 100);
-
-    return () => {
-      window.removeEventListener('message', handleMessage);
-      clearInterval(checkLocalStorage);
-    };
+    return () => window.removeEventListener('message', handleMessage);
   }, [login]);
 
   const handleGoogleLogin = () => {

@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { SrsContent } from './SrsContent';
 import { SystemDiagrams } from './SystemDiagrams';
 import { Guides } from './Guides';
+import { SVGNetworkBackground } from '../SVGNetworkBackground';
+import { GlassmorphismCard } from '../GlassmorphismCard';
 
 type DocTab = 'srs' | 'diagrams' | 'guides';
 
@@ -30,8 +32,10 @@ export const DocsContainer: React.FC = () => {
     };
 
     return (
-        <div className="w-full">
-            <div className="bg-[var(--color-bg-secondary)] p-6 sm:p-8 rounded-2xl shadow-lg border border-[var(--color-border-primary)]">
+        <div className="relative w-full">
+            <SVGNetworkBackground accentColor="--color-accent-primary" opacity={0.07} />
+
+            <GlassmorphismCard>
                 <div className="mb-6 sm:mb-8 border-b border-[var(--color-border-primary)] pb-4">
                     <h1 className="text-3xl sm:text-4xl font-bold text-[var(--color-text-primary)]">Application Documentation</h1>
                     <p className="text-[var(--color-text-secondary)] mt-1">Comprehensive guides, diagrams, and specifications for BioChemAI.</p>
@@ -42,11 +46,11 @@ export const DocsContainer: React.FC = () => {
                     <button onClick={() => setActiveTab('diagrams')} className={getTabClasses('diagrams')}>Diagrams</button>
                     <button onClick={() => setActiveTab('guides')} className={getTabClasses('guides')}>Guides</button>
                 </div>
-                
+
                 <div className="animate-fade-in">
                     {renderContent()}
                 </div>
-            </div>
+            </GlassmorphismCard>
         </div>
     );
 };

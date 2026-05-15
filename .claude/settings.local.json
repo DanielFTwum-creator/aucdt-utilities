@@ -50,7 +50,29 @@
       "PowerShell(ssh -o StrictHostKeyChecking=no root@66.226.72.199 \"ls -lh /var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/rophe/ | head -20\" 2>&1)",
       "PowerShell(bash -c \"cd 'C:\\\\Development\\\\github\\\\aucdt-utilities\\\\rophe-sugar-logger' && ls -la dist/\" 2>&1)",
       "PowerShell(ssh -o StrictHostKeyChecking=no root@66.226.72.199 \"find /var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/rophe/ -type f | sort\" 2>&1)",
-      "PowerShell(curl *)"
+      "PowerShell(curl *)",
+      "Bash(ssh root@ai-tools.techbridge.edu.gh \"tail -50 /var/log/nginx/error.log | grep -i willpro -A 5 -B 5\")",
+      "Bash(ssh *)",
+      "Bash(.\\\\deploy.ps1)",
+      "Bash(Get-Content \"C:\\\\Users\\\\DELL\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\C--Development-github-aucdt-utilities\\\\ca967b8b-a534-48c9-b5e2-3ea74a2525bd\\\\tasks\\\\bvyi0rj8b.output\" -Tail 50 -Wait)",
+      "Bash(curl *)",
+      "Bash(Get-ChildItem -Path \"C:\\\\Development\\\\github\\\\aucdt-utilities\" -Directory)",
+      "Bash(Select-Object -ExpandProperty Name)",
+      "Bash([ -f \"$dir/README.md\" ])",
+      "Bash([ -f \"$dir/CREATION.md\" ])",
+      "Bash([ -f \"$dir/metadata.json\" ])",
+      "Bash(pnpm approve-builds *)",
+      "Bash(rm -rf node_modules pnpm-lock.yaml)",
+      "Bash(pnpm install *)",
+      "Bash(Get-ChildItem *)",
+      "PowerShell(Get-ChildItem -Path \"C:\\\\Development\\\\github\\\\aucdt-utilities\\\\biochemai\\\\src\\\\components\" -Recurse -File | Where-Object {$_.Extension -eq \".tsx\" -or $_.Extension -eq \".ts\"} | Select-Object -ExpandProperty FullName)",
+      "PowerShell(Get-ChildItem -Path \"C:\\\\Development\\\\github\\\\aucdt-utilities\\\\biochemai\\\\components\\\\{LoginView.tsx,ChatArea.tsx,SVGNetworkBackground.tsx,GlassmorphismCard.tsx}\" -ErrorAction SilentlyContinue | Select-Object Name, LastWriteTime, @{N=\"Size\";E={$_.Length}})",
+      "PowerShell(Get-Item \"C:\\\\Development\\\\github\\\\aucdt-utilities\\\\biochemai\\\\dist\\\\index.html\" | Select-Object LastWriteTime, @{N=\"Size\\(KB\\)\";E={[math]::Round\\($_.Length/1KB,2\\)}})",
+      "PowerShell(ls \"C:\\\\Development\\\\github\\\\aucdt-utilities\\\\biochemai\\\\dist\\\\index.html\" -ErrorAction SilentlyContinue | ForEach-Object {Write-Output \"Last modified: $\\($_.LastWriteTime\\)\"; Write-Output \"Size: $\\($_.Length\\) bytes\"})",
+      "Bash(Select-Object -First 50 FullName)",
+      "Bash(pnpm test *)",
+      "Bash(Select-Object Name)",
+      "Bash(Select-Object -ExpandProperty FullName)"
     ]
   }
 }

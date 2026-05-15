@@ -2,6 +2,8 @@ import React, { useState, useRef, useEffect, useCallback } from 'react';
 // FIX: The LiveSession type is not exported from @google/genai. It has been removed.
 import { GoogleGenAI, LiveServerMessage, Modality, Blob } from '@google/genai';
 import { MicrophoneIcon, StopCircleIcon, FlaskConicalIcon } from '../Icons';
+import { SVGNetworkBackground } from '../SVGNetworkBackground';
+import { GlassmorphismCard } from '../GlassmorphismCard';
 
 // --- Helper functions for audio and base64 encoding/decoding ---
 
@@ -206,7 +208,9 @@ export const VoiceContainer: React.FC = () => {
     
     if (status === 'idle' || status === 'error') {
         return (
-            <div className="flex flex-col items-center justify-center h-full text-center">
+            <div className="relative flex flex-col items-center justify-center h-full text-center">
+                <SVGNetworkBackground accentColor="--color-accent-primary" opacity={0.07} />
+
                 <MicrophoneIcon className="w-24 h-24 text-[var(--color-text-tertiary)] mb-4" />
                 <h1 className="text-3xl font-bold text-[var(--color-text-primary)]">Conversational Voice Mode</h1>
                 <p className="text-[var(--color-text-secondary)] mt-2 max-w-md">
@@ -232,49 +236,53 @@ export const VoiceContainer: React.FC = () => {
     };
     
     return (
-        <div className="flex flex-col h-full">
-            <div className="p-4 bg-[var(--color-bg-secondary)] border-b border-[var(--color-border-primary)] rounded-t-lg">
-                <div className="flex items-center justify-center space-x-2">
-                    <div className={`w-3 h-3 rounded-full ${status === 'active' ? 'bg-[var(--color-success)] animate-pulse' : 'bg-[var(--color-warning)]'}`}></div>
-                    <span className="text-sm font-medium text-[var(--color-text-secondary)]">{getStatusText()}</span>
+        <div className="relative flex flex-col h-full">
+            <SVGNetworkBackground accentColor="--color-accent-primary" opacity={0.07} />
+
+            <GlassmorphismCard className="flex flex-col h-full m-0 rounded-none">
+                <div className="p-4 border-b border-[var(--color-border-primary)]">
+                    <div className="flex items-center justify-center space-x-2">
+                        <div className={`w-3 h-3 rounded-full ${status === 'active' ? 'bg-[var(--color-success)] animate-pulse' : 'bg-[var(--color-warning)]'}`}></div>
+                        <span className="text-sm font-medium text-[var(--color-text-secondary)]">{getStatusText()}</span>
+                    </div>
                 </div>
-            </div>
-            <div className="flex-1 p-4 space-y-4 overflow-y-auto">
-                {transcriptionHistory.map((turn, index) => (
-                    <div key={index} className={`flex ${turn.speaker === 'user' ? 'justify-end' : 'justify-start'}`}>
-                        <div className={`p-3 rounded-lg max-w-lg ${turn.speaker === 'user' ? 'bg-[var(--color-accent-primary)] text-[var(--color-text-on-accent)]' : 'bg-[var(--color-bg-secondary)] text-[var(--color-text-primary)]'}`}>
-                           <p className="font-medium">{turn.speaker === 'user' ? 'You' : 'BioChemAI'}</p>
-                           <p>{turn.text}</p>
+                <div className="flex-1 p-4 space-y-4 overflow-y-auto">
+                    {transcriptionHistory.map((turn, index) => (
+                        <div key={index} className={`flex ${turn.speaker === 'user' ? 'justify-end' : 'justify-start'}`}>
+                            <div className={`p-3 rounded-lg max-w-lg ${turn.speaker === 'user' ? 'bg-[var(--color-accent-primary)] text-[var(--color-text-on-accent)]' : 'bg-[var(--color-bg-secondary)] text-[var(--color-text-primary)]'}`}>
+                               <p className="font-medium">{turn.speaker === 'user' ? 'You' : 'BioChemAI'}</p>
+                               <p>{turn.text}</p>
+                            </div>
                         </div>
-                    </div>
-                ))}
-                 {currentInput && (
-                    <div className="flex justify-end">
-                        <div className="p-3 rounded-lg max-w-lg bg-[var(--color-accent-primary)] text-[var(--color-text-on-accent)] opacity-70">
-                            <p className="font-medium">You</p>
-                            <p>{currentInput}...</p>
+                    ))}
+                     {currentInput && (
+                        <div className="flex justify-end">
+                            <div className="p-3 rounded-lg max-w-lg bg-[var(--color-accent-primary)] text-[var(--color-text-on-accent)] opacity-70">
+                                <p className="font-medium">You</p>
+                                <p>{currentInput}...</p>
+                            </div>
                         </div>
-                    </div>
-                 )}
-                 {currentOutput && (
-                    <div className="flex justify-start">
-                        <div className="p-3 rounded-lg max-w-lg bg-[var(--color-bg-secondary)] text-[var(--color-text-primary)] opacity-70">
-                            <p className="font-medium">BioChemAI</p>
-                            <p>{currentOutput}...</p>
+                     )}
+                     {currentOutput && (
+                        <div className="flex justify-start">
+                            <div className="p-3 rounded-lg max-w-lg bg-[var(--color-bg-secondary)] text-[var(--color-text-primary)] opacity-70">
+                                <p className="font-medium">BioChemAI</p>
+                                <p>{currentOutput}...</p>
+                            </div>
                         </div>
-                    </div>
-                 )}
-                <div ref={scrollRef}></div>
-            </div>
-            <div className="p-4 border-t border-[var(--color-border-primary)]">
-                <button
-                    onClick={handleStop}
-                    className="w-full flex items-center justify-center gap-2 px-4 py-3 font-semibold text-[var(--color-text-primary)] bg-[var(--color-bg-tertiary)] rounded-lg hover:bg-[var(--color-border-primary)] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[var(--color-text-tertiary)] focus:ring-offset-[var(--color-bg-primary)] transition"
-                >
-                    <StopCircleIcon className="w-6 h-6" />
-                    End Conversation
-                </button>
-            </div>
+                     )}
+                    <div ref={scrollRef}></div>
+                </div>
+                <div className="p-4 border-t border-[var(--color-border-primary)]">
+                    <button
+                        onClick={handleStop}
+                        className="w-full flex items-center justify-center gap-2 px-4 py-3 font-semibold text-[var(--color-text-primary)] bg-[var(--color-bg-tertiary)] rounded-lg hover:bg-[var(--color-border-primary)] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[var(--color-text-tertiary)] focus:ring-offset-[var(--color-bg-primary)] transition"
+                    >
+                        <StopCircleIcon className="w-6 h-6" />
+                        End Conversation
+                    </button>
+                </div>
+            </GlassmorphismCard>
         </div>
     );
 };

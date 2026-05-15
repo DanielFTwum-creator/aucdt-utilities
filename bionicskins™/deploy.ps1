@@ -2,7 +2,7 @@
 
 param(
     [string]$RemoteHost = "root@66.226.72.199",
-    [string]$RemotePath = "/var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/skins/",
+    [string]$RemotePath = "/var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/bionicskins/",
     [switch]$Build = $false
 )
 
@@ -37,16 +37,16 @@ Write-Host "Creating .htaccess..." -ForegroundColor Yellow
 @"
 <IfModule mod_rewrite.c>
   RewriteEngine On
-  RewriteBase /skins/
+  RewriteBase /bionicskins/
   RewriteCond %{REQUEST_FILENAME} -f [OR]
   RewriteCond %{REQUEST_FILENAME} -d
   RewriteRule ^ - [L]
-  RewriteRule ^ /skins/index.html [QSA,L]
+  RewriteRule ^ /bionicskins/index.html [QSA,L]
 </IfModule>
 "@ | ssh -o StrictHostKeyChecking=no $RemoteHost "cat > $RemotePath/.htaccess" 2>$null
 
 Write-Host "Setting permissions..." -ForegroundColor Yellow
-ssh -o StrictHostKeyChecking=no $RemoteHost "chown -R techbridge.edu.gh_md:psacln $RemotePath && chmod -R 755 $RemotePath && chmod 644 $RemotePath/.htaccess 2>/dev/null; true" | Out-Null
+ssh -o StrictHostKeyChecking=no $RemoteHost "chown -R aucdtadmin:psacln $RemotePath && chmod -R 755 $RemotePath && chmod 644 $RemotePath/.htaccess 2>/dev/null; true" | Out-Null
 
 Write-Host "✅ Deployment complete!" -ForegroundColor Green
-Write-Host "URL: https://ai-tools.techbridge.edu.gh/skins`n"
+Write-Host "URL: https://ai-tools.techbridge.edu.gh/bionicskins`n"

@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { Eye, EyeOff, User as UserIcon, Lock, Phone } from 'lucide-react';
+import { SVGNetworkBackground } from './SVGNetworkBackground';
+import { GlassmorphismCard } from './GlassmorphismCard';
 
 export const LoginView: React.FC = () => {
   const { login, register } = useAuth();
@@ -100,8 +102,10 @@ export const LoginView: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 flex flex-col items-center justify-center p-6">
-      <div className="w-full max-w-sm">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 flex flex-col items-center justify-center p-6 relative overflow-hidden">
+      <SVGNetworkBackground accentColor="--color-accent-primary" opacity={0.07} />
+
+      <div className="w-full max-w-sm relative z-10">
         <div className="text-center mb-8">
           <h1 className="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-violet-600 to-indigo-600 mb-2">
             BioChemAI
@@ -109,7 +113,7 @@ export const LoginView: React.FC = () => {
           <p className="text-slate-500 text-sm">Your 24/7 Biochemistry Expert</p>
         </div>
 
-        <div className="bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden p-8">
+        <GlassmorphismCard className="overflow-hidden">
           <h2 className="text-2xl font-bold text-center text-slate-900 mb-2">
             {mode === 'login' ? 'Welcome Back' : 'Create Account'}
           </h2>
@@ -294,7 +298,7 @@ export const LoginView: React.FC = () => {
               {mode === 'login' ? 'Sign up' : 'Sign in'}
             </button>
           </p>
-        </div>
+        </GlassmorphismCard>
       </div>
     </div>
   );
