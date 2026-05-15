@@ -73,18 +73,18 @@ pm2 logs glucose-api
 
 Copy the provided nginx.conf to your Nginx sites-available:
 ```bash
-sudo cp nginx.conf /etc/nginx/sites-available/ai-tools.techbridge.edu.gh
-sudo ln -s /etc/nginx/sites-available/ai-tools.techbridge.edu.gh /etc/nginx/sites-enabled/
+cp nginx.conf /etc/nginx/sites-available/ai-tools.techbridge.edu.gh
+ln -s /etc/nginx/sites-available/ai-tools.techbridge.edu.gh /etc/nginx/sites-enabled/
 ```
 
 Test Nginx configuration:
 ```bash
-sudo nginx -t
+nginx -t
 ```
 
 Reload Nginx:
 ```bash
-sudo systemctl reload nginx
+systemctl reload nginx
 ```
 
 ## Architecture
@@ -126,6 +126,8 @@ pm2 logs glucose-api
 ```bash
 tail -f /var/log/nginx/error.log
 tail -f /var/log/nginx/access.log
+# Or check Plesk logs if using Plesk panel
+tail -f /var/log/plesk/nginx/error.log
 ```
 
 ### Health Check
@@ -139,8 +141,8 @@ curl https://ai-tools.techbridge.edu.gh/api/health
 ### 502 Bad Gateway
 - Check backend is running: `pm2 list`
 - Check backend logs: `pm2 logs glucose-api`
-- Verify Nginx proxy config: `sudo nginx -t`
-- Check firewall allows port 3001: `sudo ufw status`
+- Verify Nginx proxy config: `nginx -t`
+- Check if port 3001 is listening: `netstat -tuln | grep 3001`
 
 ### API Key Not Found
 - Verify `.env.local` exists: `cat .env.local`
