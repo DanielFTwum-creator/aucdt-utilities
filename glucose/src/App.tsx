@@ -7,7 +7,7 @@ import {
   getAllReadings, upsertReading, deleteReading, batchUpsertReadings,
   getProfile, saveProfile, ReadingRow, getAdminConfig
 } from './lib/db';
-import { GoogleGenAI, Type } from "@google/genai";
+import Anthropic from "@anthropic-ai/sdk";
 
 const COLS = [
   { id: 'fasting', label: 'Fasting', limit: 7.0, group: 'Morning' },
@@ -105,11 +105,13 @@ function AppContent() {
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
+    console.log('[SCAN] File selected:', file?.name, file?.size);
     if (!file || !isAdmin) return;
 
-    const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
+    const apiKey = import.meta.env.VITE_ANTHROPIC_API_KEY;
+    console.log('[SCAN] API Key present:', !!apiKey);
     if (!apiKey) {
-      setUploadError('Gemini API key is not configured. Please contact the administrator.');
+      setUploadError('Claude API key is not configured. Please contact the administrator.');
       return;
     }
 
@@ -118,137 +120,126 @@ function AppContent() {
       setUploadProgress(10);
       setUploadStatus('Processing image...');
       setUploadError('');
-      const ai = new GoogleGenAI({ apiKey });
-      
-      const fileToGenerativePart = async (f: File) => {
-        return new Promise<{inlineData: {data: string, mimeType: string}}>((resolve) => {
+
+      const fileToBase64 = (f: File): Promise<string> => {
+        return new Promise((resolve) => {
           const reader = new FileReader();
           reader.onloadend = () => {
-            const base64Data = (reader.result as string).split(',')[1];
-            resolve({
-              inlineData: { data: base64Data, mimeType: f.type },
-            });
+            const base64 = (reader.result as string).split(',')[1];
+            console.log('[SCAN] Image converted to base64:', base64.length, 'chars');
+            resolve(base64);
           };
           reader.readAsDataURL(f);
         });
       };
 
-      const filePart = await fileToGenerativePart(file);
+      const base64Image = await fileToBase64(file);
+      console.log('[SCAN] Calling Claude API...');
 
       setUploadProgress(40);
       setUploadStatus('Extracting data with AI...');
-      const responseStream = await ai.models.generateContentStream({
-        model: 'gemini-3.1-pro-preview',
-        contents: {
-          parts: [
-            { text: `Role: You are a highly accurate clinical data entry assistant.
-Request: Extract all handwritten blood glucose reading logs from the attached photo.
-Result: A valid JSON array of objects.
-Requirements:
-- Each object must map to a row containing these keys: date, fasting, post_breakfast, pre_lunch, post_lunch, pre_dinner, post_dinner.
-- Format the date appropriately to MM/DD/YYYY if possible.
-- The values are blood glucose measurements in mmol/L. Keep decimals exactly as written.
-Rules:
-- Leave fields empty (as an empty string "") if there is no reading recorded in that cell.
-- Ignore blank rows completely. Only return rows with at least one reading.
-Restrictions:
-- ONLY output the JSON array. Make sure the output precisely matches the JSON response schema.` },
-            filePart
-          ]
-        },
-        config: {
-          temperature: 0,
-          responseMimeType: "application/json",
-          responseSchema: {
-            type: Type.ARRAY,
-            items: {
-              type: Type.OBJECT,
-              properties: {
-                date: { type: Type.STRING },
-                fasting: { type: Type.STRING },
-                post_breakfast: { type: Type.STRING },
-                pre_lunch: { type: Type.STRING },
-                post_lunch: { type: Type.STRING },
-                pre_dinner: { type: Type.STRING },
-                post_dinner: { type: Type.STRING },
+
+      const client = new Anthropic({ apiKey, dangerouslyAllowBrowser: true });
+      const response = await client.messages.create({
+        model: 'claude-3-5-sonnet-20241022',
+        max_tokens: 1024,
+        messages: [
+          {
+            role: 'user',
+            content: [
+              {
+                type: 'image',
+                source: {
+                  type: 'base64',
+                  media_type: file.type as 'image/jpeg' | 'image/png' | 'image/gif' | 'image/webp',
+                  data: base64Image,
+                },
               },
-              required: ["date"],
-            }
-          }
-        }
+              {
+                type: 'text',
+                text: `Extract all handwritten blood glucose readings from this image.
+Return ONLY a JSON array with no markdown formatting.
+Each object: {date: "MM/DD/YYYY", fasting: "X.X", post_breakfast: "X.X", pre_lunch: "X.X", post_lunch: "X.X", pre_dinner: "X.X", post_dinner: "X.X"}
+Empty fields as "". Include only rows with at least one reading. Values in mmol/L.`,
+              },
+            ],
+          },
+        ],
       });
 
-      let text = '';
-      for await (const chunk of responseStream) {
-        if (chunk.text) {
-          text += chunk.text;
-          const matches = [...text.matchAll(/"date":\s*"([^"]+)"/g)];
-          if (matches && matches.length > 0) {
-            const lastDate = matches[matches.length - 1][1];
-            setUploadStatus(`Extracted reading for ${lastDate}...`);
-            setUploadProgress(Math.min(75, 40 + matches.length * 2));
-          }
-        }
-      }
+      const text = response.content[0].type === 'text' ? response.content[0].text : '';
+      console.log('[SCAN] Response received, length:', text.length);
+      console.log('[SCAN] Raw response:', text.substring(0, 300));
 
       setUploadProgress(80);
       setUploadStatus('Formatting data...');
-      if (text) {
-        text = text.replace(/```json\n/gi, '').replace(/```\n?/g, '').trim();
-        const rowsToAdd = JSON.parse(text);
-        if (rowsToAdd && rowsToAdd.length > 0) {
-          setUploadProgress(90);
-          setUploadStatus(`Saving ${rowsToAdd.length} readings...`);
-          const rowsToSave: ReadingRow[] = [];
-          const now = Date.now();
-          let successCount = 0;
 
-          for (const row of rowsToAdd) {
-            let formattedDate = row.date;
-            try {
-              const d = new Date(row.date);
-              if (!isNaN(d.getTime())) {
-                formattedDate = d.toISOString().split('T')[0];
-              }
-            } catch (err) {}
-
-            if (formattedDate.includes('NaN')) continue;
-
-            const existingRow = rows.find(r => r.date === formattedDate);
-            const newRowId = existingRow
-              ? existingRow.id
-              : `row_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
-
-            rowsToSave.push({
-              id: newRowId,
-              date: formattedDate,
-              fasting:        row.fasting        ? toBaseUnit(row.fasting, unit)        : (existingRow?.fasting || ''),
-              post_breakfast: row.post_breakfast ? toBaseUnit(row.post_breakfast, unit) : (existingRow?.post_breakfast || ''),
-              pre_lunch:      row.pre_lunch      ? toBaseUnit(row.pre_lunch, unit)      : (existingRow?.pre_lunch || ''),
-              post_lunch:     row.post_lunch     ? toBaseUnit(row.post_lunch, unit)     : (existingRow?.post_lunch || ''),
-              pre_dinner:     row.pre_dinner     ? toBaseUnit(row.pre_dinner, unit)     : (existingRow?.pre_dinner || ''),
-              post_dinner:    row.post_dinner    ? toBaseUnit(row.post_dinner, unit)    : (existingRow?.post_dinner || ''),
-              createdAt: (existingRow as any)?.createdAt ?? now,
-              updatedAt: now,
-            });
-            successCount++;
-          }
-
-          await batchUpsertReadings(rowsToSave);
-          const refreshed = await getAllReadings();
-          setRows(refreshed as Row[]);
-          setUploadProgress(100);
-          setUploadStatus(`Successfully extracted and saved ${successCount} readings!`);
-          setTimeout(() => setIsUploading(false), 2000);
-        } else {
-          setUploadError('No readings found in the image.');
-        }
-      } else {
+      if (!text.trim()) {
+        console.error('[SCAN] Empty response');
         setUploadError('No data extracted from the image.');
+        setIsUploading(false);
+        return;
       }
+
+      const cleanText = text.replace(/```json\n?/gi, '').replace(/```/g, '').trim();
+      console.log('[SCAN] Cleaned response:', cleanText.substring(0, 300));
+
+      const rowsToAdd = JSON.parse(cleanText);
+      console.log('[SCAN] Parsed JSON, count:', rowsToAdd?.length || 0);
+
+      if (!rowsToAdd || rowsToAdd.length === 0) {
+        console.error('[SCAN] No rows returned');
+        setUploadError('No readings found in the image.');
+        setIsUploading(false);
+        return;
+      }
+
+      const rowsToSave: ReadingRow[] = [];
+      const now = Date.now();
+      let successCount = 0;
+
+      for (const row of rowsToAdd) {
+        let formattedDate = row.date;
+        try {
+          const d = new Date(row.date);
+          if (!isNaN(d.getTime())) {
+            formattedDate = d.toISOString().split('T')[0];
+          }
+        } catch (err) {}
+
+        if (formattedDate.includes('NaN')) continue;
+
+        const existingRow = rows.find(r => r.date === formattedDate);
+        const newRowId = existingRow ? existingRow.id : `row_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
+
+        rowsToSave.push({
+          id: newRowId,
+          date: formattedDate,
+          fasting: row.fasting ? toBaseUnit(row.fasting, unit) : (existingRow?.fasting || ''),
+          post_breakfast: row.post_breakfast ? toBaseUnit(row.post_breakfast, unit) : (existingRow?.post_breakfast || ''),
+          pre_lunch: row.pre_lunch ? toBaseUnit(row.pre_lunch, unit) : (existingRow?.pre_lunch || ''),
+          post_lunch: row.post_lunch ? toBaseUnit(row.post_lunch, unit) : (existingRow?.post_lunch || ''),
+          pre_dinner: row.pre_dinner ? toBaseUnit(row.pre_dinner, unit) : (existingRow?.pre_dinner || ''),
+          post_dinner: row.post_dinner ? toBaseUnit(row.post_dinner, unit) : (existingRow?.post_dinner || ''),
+          createdAt: (existingRow as any)?.createdAt ?? now,
+          updatedAt: now,
+        });
+        successCount++;
+      }
+
+      console.log('[SCAN] Saving', rowsToSave.length, 'rows...');
+      await batchUpsertReadings(rowsToSave);
+      const refreshed = await getAllReadings();
+      console.log('[SCAN] DB now has', refreshed.length, 'readings');
+      setRows(refreshed as Row[]);
+
+      setUploadProgress(100);
+      setUploadStatus(`Successfully extracted and saved ${successCount} readings!`);
+      setTimeout(() => setIsUploading(false), 2000);
     } catch (err) {
-      console.error(err);
-      setUploadError('Failed to parse image: ' + String(err));
+      console.error('[SCAN] Error:', err);
+      setUploadError('Failed to process image: ' + String(err));
+      setIsUploading(false);
     } finally {
       if (e.target) e.target.value = '';
     }
