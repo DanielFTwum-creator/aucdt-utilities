@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en-GB" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <!-- ── TUC Standard Meta ─────────────────────────────────────── -->
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- SEO -->
+  <meta name="description" content="Afrofuturism Cartoon Directive Generator — AI-powered analysis and creative brief tool for Afrofuturism illustrations. Built by Techbridge University College." />
+  <meta name="keywords" content="Afrofuturism, cartoon analysis, AI art direction, African diaspora, creative brief, cultural analysis, TUC" />
+  <meta name="author" content="Daniel Frempong Twum — Techbridge University College" />
+  <meta name="publisher" content="Techbridge University College" />
+  <meta name="robots" content="noindex, nofollow" />
+  <!-- Geographic -->
+  <meta name="language" content="English" />
+  <meta name="geo.region" content="GH-AA" />
+  <meta name="geo.placename" content="Accra" />
+  <meta name="geo.position" content="5.6037;-0.1870" />
+  <meta name="ICBM" content="5.6037, -0.1870" />
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Afrofuturism Cartoon Directive Generator" />
+  <meta property="og:description" content="AI-powered analysis and creative brief tool for Afrofuturism cartoons." />
+  <meta property="og:locale" content="en_GB" />
+  <!-- Theme -->
+  <meta name="theme-color" content="#0a0020" />
+  <meta name="msapplication-TileColor" content="#0a0020" />
+  <meta name="copyright" content="Techbridge University College 2026" />
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet" />
+  <title>Afrofuturism Cartoon Generator</title>
+  <style>
+    /* ── CSS Variables — Afrofuturism Dark Theme ──────────────── */
+    :root {
+      --color-bg-main: #050010;
+      --color-bg-surface: #0a0020;
+      --color-bg-card: #0f0028;
+      --color-primary: #d97706;
+      --color-primary-hover: #f59e0b;
+      --color-accent-teal: #14b8a6;
+      --color-accent-purple: #9333ea;
+      --color-accent-terracotta: #c2410c;
+      --color-fg: #e8d5f5;
+      --color-fg-muted: #8b6ea8;
+      --color-border: rgba(147, 51, 234, 0.2);
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body { margin: 0; padding: 0; }
+
+    body {
+      background-color: var(--color-bg-main);
+      color: var(--color-fg);
+      font-family: 'Inter', sans-serif;
+      transition: background-color 0.3s ease, color 0.3s ease;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    h1, h2, h3 { font-family: 'Playfair Display', serif; }
+    .font-space-grotesk { font-family: 'Space Grotesk', sans-serif; }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #0a0020; }
+    ::-webkit-scrollbar-thumb { background: #4c1d95; border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: #6d28d9; }
+
+    /* Animations */
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes slideIn { from { opacity: 0; transform: translateX(-12px); } to { opacity: 1; transform: translateX(0); } }
+    @keyframes pulse-glow {
+      0%, 100% { box-shadow: 0 0 8px rgba(217, 119, 6, 0.3); }
+      50% { box-shadow: 0 0 20px rgba(217, 119, 6, 0.6); }
+    }
+
+    .animate-fade-in { animation: fadeIn 0.4s ease forwards; }
+    .animate-slide-in { animation: slideIn 0.3s ease forwards; }
+    .animate-pulse-glow { animation: pulse-glow 2s ease infinite; }
+
+    /* Afrofuturism decorative gradient */
+    .afro-gradient {
+      background: linear-gradient(135deg, #9333ea22 0%, #05001000 40%, #d9770622 100%);
+    }
+
+    /* Hide scrollbar for tab nav */
+    .scrollbar-none::-webkit-scrollbar { display: none; }
+    .scrollbar-none { -ms-overflow-style: none; scrollbar-width: none; }
+
+    /* Theme persistence */
+    .__theme-script__ {} /* placeholder */
+  </style>
+  <script>
+    // Apply saved theme on load (prevents flash)
+    try {
+      const t = localStorage.getItem('afrofuturism-cg-theme') || 'dark';
+      document.documentElement.setAttribute('data-theme', t);
+    } catch (_) {}
+  </script>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="module" src="/index.tsx"></script>
+</body>
+</html>
