@@ -131,6 +131,7 @@ function AppContent() {
       setUploadProgress(40);
       setUploadStatus('Extracting data with AI...');
 
+      console.log('[SCAN] Request URL:', '/glucose/api/scan-glucose');
       const response = await fetch('/glucose/api/scan-glucose', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -140,12 +141,22 @@ function AppContent() {
         }),
       });
 
+      console.log('[SCAN] Response status:', response.status);
+      console.log('[SCAN] Response headers:', response.headers.get('content-type'));
+
       if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error || `API error: ${response.status}`);
+        const text = await response.text();
+        console.log('[SCAN] Error response body:', text.substring(0, 500));
+        try {
+          const error = JSON.parse(text);
+          throw new Error(error.error || `API error: ${response.status}`);
+        } catch (e) {
+          throw new Error(`API error ${response.status}: ${text.substring(0, 200)}`);
+        }
       }
 
       const result = await response.json();
+      console.log('[SCAN] API response received:', result);
       const rowsToAdd = result.readings;
       console.log('[SCAN] API returned', rowsToAdd?.length || 0, 'readings');
 
