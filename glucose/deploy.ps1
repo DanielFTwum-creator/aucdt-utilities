@@ -2,7 +2,7 @@
 # SCP-based deployment using bash (follows TUC standard pattern)
 
 param(
-    [string]$RemoteHost = "root@66.226.72.199",
+    [string]$RemoteHost = "root@techbridge.edu.gh",
     [string]$RemotePath = "/var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/glucose/",
     [switch]$Build = $false
 )
