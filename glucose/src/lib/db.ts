@@ -93,7 +93,9 @@ export const deleteReading = async (id: string): Promise<void> => {
 export const batchUpsertReadings = async (rows: ReadingRow[]): Promise<void> => {
   const db = await initDB();
   const tx = db.transaction('readings', 'readwrite');
-  await Promise.all(rows.map(row => tx.store.put(row)));
+  for (const row of rows) {
+    tx.store.put(row);
+  }
   await tx.done;
 };
 
