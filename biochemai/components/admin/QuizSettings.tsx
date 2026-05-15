@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { getQuizQuestionCount as getQuizCountFromDB, setQuizQuestionCount as setQuizCountToDB } from '../../lib/db';
+import { GlassmorphismCard } from '../GlassmorphismCard';
 
 export const QuizSettings: React.FC = () => {
     const [questionCount, setQuestionCount] = useState<number>(5);
@@ -33,7 +34,7 @@ export const QuizSettings: React.FC = () => {
     };
 
     return (
-        <div className="bg-[var(--color-bg-secondary)] p-6 sm:p-8 rounded-2xl shadow-lg border border-[var(--color-border-primary)]">
+        <GlassmorphismCard>
             <h2 className="text-2xl font-bold text-[var(--color-text-primary)] mb-4">Quiz Settings</h2>
             <form onSubmit={handleSave} className="space-y-4 max-w-md">
                 <div>
@@ -67,6 +68,6 @@ export const QuizSettings: React.FC = () => {
                     </button>
                 </div>
             </form>
-        </div>
+        </GlassmorphismCard>
     );
 };

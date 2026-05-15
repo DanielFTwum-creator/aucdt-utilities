@@ -345,6 +345,8 @@ Add `"vite/client"` to types array:
 
 | Project | Storage Key | Theme | Redirect URI |
 |---------|-------------|-------|-----|
+| bionicskins™ | `bionicskins_user` | Gold (#C8A84B) | `/bionicskins/auth/google/callback` |
+| clipai | `clipai_user` | Gold (#C8A84B) | `/clipai/auth/google/callback` |
 | techbridge-ai-application-portal | `techbridge_ai_application_portal_user` | Gold (#C8A84B) | `/techbridge-ai-application-portal/auth/google/callback` |
 | techbridge-ai-blueprint | `techbridge_ai_blueprint_user` | Blue (#2563eb) | `/blueprint/auth/google/callback` |
 | techbridge-ai-workshop-flyer | `techbridge_ai_workshop_flyer_user` | Rose (#db2777) | `/workshop/auth/google/callback` |
@@ -353,6 +355,7 @@ Add `"vite/client"` to types array:
 | glucose | `glucose_user` | Amber | `/glucose/auth/google/callback` |
 | patois-lyricist-v2.0.0 | `patois_lyricist_user` | Amber (#C8A84B) | `/lyricist/auth/google/callback` |
 | tuc-ai-lab-catalog | `tuc_ai_lab_catalog_user` | Gold | `/ai-lab/auth/google/callback` |
+| brainiac-challenge | `brainiac_challenge_user` | Gold (#C8A84B) | `/brainiac-challenge/auth/google/callback` |
 
 ---
 
@@ -404,6 +407,7 @@ Supports both OAuth (User object) and form-based (email string) authentication. 
 
 **Redirect URIs registered:**
 ```
+https://ai-tools.techbridge.edu.gh/bionicskins/auth/google/callback
 https://ai-tools.techbridge.edu.gh/techbridge-ai-application-portal/auth/google/callback
 https://ai-tools.techbridge.edu.gh/blueprint/auth/google/callback
 https://ai-tools.techbridge.edu.gh/workshop/auth/google/callback

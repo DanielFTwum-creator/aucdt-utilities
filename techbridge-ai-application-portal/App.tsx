@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect, useCallback } from 'react';
 import Header from './components/Header';
 import SearchBar from './components/SearchBar';
 import CategoryFilters from './components/CategoryFilters';
@@ -43,11 +43,11 @@ function App() {
   const [currentPage, setCurrentPage] = useState(1);
   const [showIndex, setShowIndex] = useState(false);
 
-  const handleLogout = () => {
+  const handleLogout = useCallback(() => {
     authLogout();
     setShowAdmin(false);
     logAction('Admin logged out');
-  };
+  }, [authLogout]);
 
   // Session Timeout Logic
   useEffect(() => {
@@ -76,7 +76,7 @@ function App() {
           window.removeEventListener('keydown', resetTimer);
           window.removeEventListener('click', resetTimer);
       };
-  }, [isAuthenticated]);
+  }, [handleLogout, isAuthenticated]);
 
   // Lockout Timer Logic
   useEffect(() => {
@@ -126,7 +126,7 @@ function App() {
         setLoginAttempts(0);
     }
 
-    const envHash = (import.meta as any).env?.VITE_ADMIN_PASSWORD_HASH;
+    const envHash = import.meta.env.VITE_ADMIN_PASSWORD_HASH as string | undefined;
     const inputHash = await hashPassword(password);
 
     if (inputHash === envHash) {

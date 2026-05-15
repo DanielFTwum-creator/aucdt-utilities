@@ -1,51 +1,63 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
-import { AuthService } from '../services/AuthService';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 
-interface User { id: string; username: string; role: string }
-interface AuthContextValue {
-  isAuthenticated: boolean;
-  user: User | null;
-  login: (u: string, p: string) => Promise<{ success: boolean; message?: string }>;
-  logout: () => void;
-  isLoading: boolean;
+interface User {
+  email: string;
+  name?: string;
+  id?: string;
 }
 
-const AuthContext = createContext<AuthContextValue | null>(null);
+interface AuthContextType {
+  user: User | null;
+  isAuthenticated: boolean;
+  login: (userOrEmail: User | string, password?: string) => void;
+  logout: () => void;
+}
 
-export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [isAuthenticated, setIsAuthenticated] = useState(AuthService.isAuthenticated());
+const AuthContext = createContext<AuthContextType | null>(null);
+const STORAGE_KEY = 'brainiac_challenge_user';
+
+export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const token = AuthService.getToken();
-    if (!token) { setIsLoading(false); return; }
-    AuthService.validateToken(token)
-      .then((res: any) => {
-        if (res.valid && res.user) { setIsAuthenticated(true); setUser(res.user); }
-        else { AuthService.logout(); setIsAuthenticated(false); }
-      })
-      .catch(() => { /* backend unreachable — keep state */ })
-      .finally(() => setIsLoading(false));
+    const stored = localStorage.getItem(STORAGE_KEY);
+    if (stored) {
+      try {
+        setUser(JSON.parse(stored));
+      } catch {
+        // Invalid JSON, clear it
+        localStorage.removeItem(STORAGE_KEY);
+      }
+    }
   }, []);
 
-  const login = async (username: string, password: string) => {
-    const res = await AuthService.login(username, password);
-    if (res.success && res.user) { setIsAuthenticated(true); setUser(res.user); }
-    return { success: res.success, message: res.message };
+  const login = (userOrEmail: User | string, password?: string) => {
+    if (typeof userOrEmail === 'string') {
+      // Form-based login
+      const userData: User = { email: userOrEmail };
+      setUser(userData);
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(userData));
+    } else {
+      // OAuth login
+      setUser(userOrEmail);
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(userOrEmail));
+    }
   };
 
-  const logout = () => { AuthService.logout(); setIsAuthenticated(false); setUser(null); };
+  const logout = () => {
+    setUser(null);
+    localStorage.removeItem(STORAGE_KEY);
+  };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, user, login, logout, isLoading }}>
+    <AuthContext.Provider value={{ user, isAuthenticated: !!user, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
-}
+};
 
-export function useAuth(): AuthContextValue {
-  const ctx = useContext(AuthContext);
-  if (!ctx) throw new Error('useAuth must be used inside AuthProvider');
-  return ctx;
-}
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (!context) throw new Error('useAuth must be used within AuthProvider');
+  return context;
+};

@@ -55,6 +55,32 @@
     <link rel="icon" type="image/png" href="https://techbridge.edu.gh/static/TUC_LOGO.png" />
 
     <style>
+      :root {
+        --color-bg-primary: #ffffff;
+        --color-fg-primary: #000000;
+        --color-accent-primary: #C8A84B;
+        --color-accent-secondary: #142520;
+        transition: background-color 0.3s ease, color 0.3s ease;
+      }
+
+      [data-theme='dark'] {
+        --color-bg-primary: #142520;
+        --color-fg-primary: #e0e0e0;
+        --color-accent-primary: #C8A84B;
+      }
+
+      [data-theme='light'] {
+        --color-bg-primary: #ffffff;
+        --color-fg-primary: #000000;
+        --color-accent-primary: #C8A84B;
+      }
+
+      [data-theme='high-contrast'] {
+        --color-bg-primary: #ffffff;
+        --color-fg-primary: #000000;
+        --color-accent-primary: #000000;
+      }
+
       body {
         font-family: 'Inter', sans-serif;
         margin: 0;
@@ -65,6 +91,11 @@
         min-height: 100vh;
       }
     </style>
+
+    <script>
+      const savedTheme = localStorage.getItem('brainiac-challenge-theme') || 'light';
+      document.documentElement.setAttribute('data-theme', savedTheme);
+    </script>
 
     <script type="module" src="./index.tsx"></script>
   
