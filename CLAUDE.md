@@ -82,7 +82,7 @@ wrap it as a reusable tool instead of re-running it each time.
 | **Institution** | Techbridge University College (TUC), Oyibi, Greater Accra, Ghana |
 | **Contact** | daniel.twum@techbridge.edu.gh / daniel.twum@gmail.com |
 | **Music Aliases** | DJ KoFAi · DJ CyStorm · DJ Genie |
-| **Server IP** | 66.226.72.199 (shared Plesk/Ubuntu) |
+| **Server Domain** | techbridge.edu.gh (shared Plesk/Ubuntu) |
 
 ---
 

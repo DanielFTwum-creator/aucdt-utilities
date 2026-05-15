@@ -6,7 +6,7 @@ param(
 $ErrorActionPreference = "Stop"
 
 # Configuration
-$RemoteHost = "root@66.226.72.199"
+$RemoteHost = "root@techbridge.edu.gh"
 $RemotePath = "/var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/clipai/"
 $FileOwnership = "aucdtadmin:psacln"
 $HtaccessRewriteBase = "/clipai/"
