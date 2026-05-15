@@ -26,15 +26,19 @@ export const LoginView: React.FC = () => {
       try {
         setIsSubmitting(true);
         setError('');
+        console.log('[OAuth] Fetching user info with token...');
         const res = await fetch('https://www.googleapis.com/oauth2/v2/userinfo', {
           headers: { Authorization: `Bearer ${access_token}` }
         });
         if (!res.ok) throw new Error('Failed to fetch user info');
         const userInfo = await res.json();
-        await login({ id: userInfo.id, username: userInfo.name, email: userInfo.email });
+        console.log('[OAuth] User info received:', userInfo);
+        const loginResult = await login({ id: userInfo.id, username: userInfo.name, email: userInfo.email });
+        console.log('[OAuth] Login result:', loginResult);
         // Clear temp token
         localStorage.removeItem('oauth_token_temp');
       } catch (err) {
+        console.error('[OAuth] Error:', err);
         setError('Google login failed. Please try again.');
         setIsSubmitting(false);
       }
@@ -42,10 +46,13 @@ export const LoginView: React.FC = () => {
 
     const handleMessage = (event: MessageEvent) => {
       if (event.origin !== window.location.origin) return;
+      console.log('[OAuth] Message received:', event.data?.type, event.data);
       if (event.data?.type === 'OAUTH_TOKEN_SUCCESS') {
+        console.log('[OAuth] Token received, fetching user info...');
         handleOAuthToken(event.data.access_token);
       }
       if (event.data?.type === 'OAUTH_TOKEN_ERROR') {
+        console.error('[OAuth] Error:', event.data.error);
         setError(event.data.error_description || event.data.error || 'Google login failed. Please try again.');
         setIsSubmitting(false);
       }
@@ -140,7 +147,7 @@ export const LoginView: React.FC = () => {
             className="h-12 w-auto object-contain mx-auto mb-4"
             referrerPolicy="no-referrer"
           />
-          <h1 className="text-3xl font-bold text-slate-900 mb-1">Rophe Sugar Logger</h1>
+          <h1 className="text-3xl font-bold text-slate-900 mb-1">Glucose</h1>
           <p className="text-slate-600 text-sm">Blood Glucose Monitoring Made Simple</p>
         </div>
 
