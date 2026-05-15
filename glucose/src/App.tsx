@@ -7,7 +7,6 @@ import {
   getAllReadings, upsertReading, deleteReading, batchUpsertReadings,
   getProfile, saveProfile, ReadingRow, getAdminConfig
 } from './lib/db';
-import Anthropic from "@anthropic-ai/sdk";
 
 const COLS = [
   { id: 'fasting', label: 'Fasting', limit: 7.0, group: 'Morning' },
@@ -108,13 +107,6 @@ function AppContent() {
     console.log('[SCAN] File selected:', file?.name, file?.size);
     if (!file || !isAdmin) return;
 
-    const apiKey = import.meta.env.VITE_ANTHROPIC_API_KEY;
-    console.log('[SCAN] API Key present:', !!apiKey);
-    if (!apiKey) {
-      setUploadError('Claude API key is not configured. Please contact the administrator.');
-      return;
-    }
-
     try {
       setIsUploading(true);
       setUploadProgress(10);
@@ -134,58 +126,28 @@ function AppContent() {
       };
 
       const base64Image = await fileToBase64(file);
-      console.log('[SCAN] Calling Claude API...');
+      console.log('[SCAN] Calling backend API...');
 
       setUploadProgress(40);
       setUploadStatus('Extracting data with AI...');
 
-      const client = new Anthropic({ apiKey, dangerouslyAllowBrowser: true });
-      const response = await client.messages.create({
-        model: 'claude-3-5-sonnet-20241022',
-        max_tokens: 1024,
-        messages: [
-          {
-            role: 'user',
-            content: [
-              {
-                type: 'image',
-                source: {
-                  type: 'base64',
-                  media_type: file.type as 'image/jpeg' | 'image/png' | 'image/gif' | 'image/webp',
-                  data: base64Image,
-                },
-              },
-              {
-                type: 'text',
-                text: `Extract all handwritten blood glucose readings from this image.
-Return ONLY a JSON array with no markdown formatting.
-Each object: {date: "MM/DD/YYYY", fasting: "X.X", post_breakfast: "X.X", pre_lunch: "X.X", post_lunch: "X.X", pre_dinner: "X.X", post_dinner: "X.X"}
-Empty fields as "". Include only rows with at least one reading. Values in mmol/L.`,
-              },
-            ],
-          },
-        ],
+      const response = await fetch('/api/scan-glucose', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          imageData: base64Image,
+          mimeType: file.type,
+        }),
       });
 
-      const text = response.content[0].type === 'text' ? response.content[0].text : '';
-      console.log('[SCAN] Response received, length:', text.length);
-      console.log('[SCAN] Raw response:', text.substring(0, 300));
-
-      setUploadProgress(80);
-      setUploadStatus('Formatting data...');
-
-      if (!text.trim()) {
-        console.error('[SCAN] Empty response');
-        setUploadError('No data extracted from the image.');
-        setIsUploading(false);
-        return;
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || `API error: ${response.status}`);
       }
 
-      const cleanText = text.replace(/```json\n?/gi, '').replace(/```/g, '').trim();
-      console.log('[SCAN] Cleaned response:', cleanText.substring(0, 300));
-
-      const rowsToAdd = JSON.parse(cleanText);
-      console.log('[SCAN] Parsed JSON, count:', rowsToAdd?.length || 0);
+      const result = await response.json();
+      const rowsToAdd = result.readings;
+      console.log('[SCAN] API returned', rowsToAdd?.length || 0, 'readings');
 
       if (!rowsToAdd || rowsToAdd.length === 0) {
         console.error('[SCAN] No rows returned');
