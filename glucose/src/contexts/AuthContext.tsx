@@ -21,14 +21,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
-    const stored = localStorage.getItem('rophe_sugar_logger_user');
+    const stored = localStorage.getItem('glucose_user');
     if (stored) {
       try {
         const parsed = JSON.parse(stored);
         setUser(parsed);
         setIsAuthenticated(true);
       } catch {
-        localStorage.removeItem('rophe_sugar_logger_user');
+        localStorage.removeItem('glucose_user');
       }
     }
   }, []);
@@ -37,7 +37,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (typeof userOrUsername === 'object') {
       setIsAuthenticated(true);
       setUser(userOrUsername);
-      localStorage.setItem('rophe_sugar_logger_user', JSON.stringify(userOrUsername));
+      localStorage.setItem('glucose_user', JSON.stringify(userOrUsername));
       return { success: true };
     }
 
@@ -51,7 +51,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (data.success && data.user) {
         setIsAuthenticated(true);
         setUser(data.user);
-        localStorage.setItem('rophe_sugar_logger_user', JSON.stringify(data.user));
+        localStorage.setItem('glucose_user', JSON.stringify(data.user));
       }
       return { success: data.success, message: data.message };
     } catch (err) {
@@ -70,7 +70,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (data.success && data.user) {
         setIsAuthenticated(true);
         setUser(data.user);
-        localStorage.setItem('rophe_sugar_logger_user', JSON.stringify(data.user));
+        localStorage.setItem('glucose_user', JSON.stringify(data.user));
       }
       return { success: data.success, message: data.message };
     } catch (err) {
@@ -81,7 +81,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const logout = () => {
     setIsAuthenticated(false);
     setUser(null);
-    localStorage.removeItem('rophe_sugar_logger_user');
+    localStorage.removeItem('glucose_user');
   };
 
   return (
