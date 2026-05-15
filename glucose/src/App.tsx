@@ -131,7 +131,7 @@ function AppContent() {
       setUploadProgress(40);
       setUploadStatus('Extracting data with AI...');
 
-      const response = await fetch('/api/scan-glucose', {
+      const response = await fetch('/glucose/api/scan-glucose', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
