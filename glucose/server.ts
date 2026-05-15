@@ -27,10 +27,15 @@ interface ReadingData {
 }
 
 app.post('/api/scan-glucose', async (req, res) => {
+  console.log('[SCAN-API] Received POST request');
+  console.log('[SCAN-API] Content-Type:', req.get('content-type'));
+  console.log('[SCAN-API] Body size:', JSON.stringify(req.body).length, 'bytes');
+
   try {
     const { imageData, mimeType } = req.body as ScanRequest;
 
     if (!imageData || !mimeType) {
+      console.error('[SCAN-API] Missing required fields');
       return res.status(400).json({ error: 'Missing imageData or mimeType' });
     }
 
@@ -82,6 +87,8 @@ Empty fields as "". Include only rows with at least one reading. Values in mmol/
   } catch (error) {
     console.error('[SCAN-API] Error:', error);
     const errorMessage = error instanceof Error ? error.message : String(error);
+    const errorStack = error instanceof Error ? error.stack : '';
+    console.error('[SCAN-API] Stack:', errorStack);
     res.status(500).json({
       error: 'Failed to process image',
       details: errorMessage,
