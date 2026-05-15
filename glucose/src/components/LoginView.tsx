@@ -1,6 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { Eye, EyeOff, User as UserIcon, Lock, Phone } from 'lucide-react';
+
+const OAUTH_TIMEOUT_MS = 5000;
+const STORAGE_FALLBACK_POLL_MS = 100;
+const STORAGE_KEY_TEMP = 'oauth_token_temp';
+
+type OAuthState = 'idle' | 'pending' | 'complete';
 
 export const LoginView: React.FC = () => {
   const { login, register } = useAuth();
@@ -15,73 +21,85 @@ export const LoginView: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [oauthState, setOAuthState] = useState<OAuthState>('idle');
+  const oauthAbortRef = useRef<AbortController | null>(null);
 
   useEffect(() => {
-    let oauthHandled = false;
+    if (oauthState !== 'pending') return;
 
-    const handleOAuthToken = async (access_token: string) => {
-      if (oauthHandled) return;
-      oauthHandled = true;
-
+    const processOAuthToken = async (access_token: string): Promise<void> => {
       try {
-        setIsSubmitting(true);
         setError('');
-        console.log('[OAuth] Fetching user info with token...');
+        setIsSubmitting(true);
+
+        oauthAbortRef.current = new AbortController();
+        const timeoutId = setTimeout(() => oauthAbortRef.current?.abort(), OAUTH_TIMEOUT_MS);
+
         const res = await fetch('https://www.googleapis.com/oauth2/v2/userinfo', {
-          headers: { Authorization: `Bearer ${access_token}` }
+          headers: { Authorization: `Bearer ${access_token}` },
+          signal: oauthAbortRef.current.signal
         });
+
+        clearTimeout(timeoutId);
+
         if (!res.ok) throw new Error('Failed to fetch user info');
         const userInfo = await res.json();
-        console.log('[OAuth] User info received:', userInfo);
-        const loginResult = await login({ id: userInfo.id, username: userInfo.name, email: userInfo.email });
-        console.log('[OAuth] Login result:', loginResult);
-        // Clear temp token
-        localStorage.removeItem('oauth_token_temp');
+
+        await login({ id: userInfo.id, username: userInfo.name, email: userInfo.email });
+        setOAuthState('complete');
+        localStorage.removeItem(STORAGE_KEY_TEMP);
       } catch (err) {
-        console.error('[OAuth] Error:', err);
-        setError('Google login failed. Please try again.');
+        if (err instanceof Error && err.name === 'AbortError') {
+          setError('Google login took too long. Please try again.');
+        } else {
+          setError('Google login failed. Please try again.');
+        }
+        setOAuthState('idle');
         setIsSubmitting(false);
       }
     };
 
     const handleMessage = (event: MessageEvent) => {
       if (event.origin !== window.location.origin) return;
-      console.log('[OAuth] Message received:', event.data?.type, event.data);
+
       if (event.data?.type === 'OAUTH_TOKEN_SUCCESS') {
-        console.log('[OAuth] Token received, fetching user info...');
-        handleOAuthToken(event.data.access_token);
-      }
-      if (event.data?.type === 'OAUTH_TOKEN_ERROR') {
-        console.error('[OAuth] Error:', event.data.error);
+        processOAuthToken(event.data.access_token);
+      } else if (event.data?.type === 'OAUTH_TOKEN_ERROR') {
         setError(event.data.error_description || event.data.error || 'Google login failed. Please try again.');
+        setOAuthState('idle');
         setIsSubmitting(false);
       }
     };
 
-    window.addEventListener('message', handleMessage);
-
-    const checkLocalStorage = setInterval(() => {
-      const token = localStorage.getItem('oauth_token_temp');
+    const checkLocalStorageFallback = setInterval(() => {
+      const token = localStorage.getItem(STORAGE_KEY_TEMP);
       if (token) {
-        handleOAuthToken(token);
-        clearInterval(checkLocalStorage);
+        clearInterval(checkLocalStorageFallback);
+        processOAuthToken(token);
       }
-    }, 100);
+    }, STORAGE_FALLBACK_POLL_MS);
+
+    window.addEventListener('message', handleMessage);
 
     return () => {
       window.removeEventListener('message', handleMessage);
-      clearInterval(checkLocalStorage);
+      clearInterval(checkLocalStorageFallback);
+      oauthAbortRef.current?.abort();
     };
-  }, [login]);
+  }, [oauthState, login]);
 
-  const handleGoogleLogin = () => {
+  const handleGoogleLogin = (): void => {
+    if (oauthState !== 'idle') return;
+
     const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
     if (!clientId) {
-      setError('Google login is not configured. Use username/password instead.');
+      setError('Google login is not configured.');
       return;
     }
+
     const redirectUri = import.meta.env.VITE_GOOGLE_REDIRECT_URI
       || `${window.location.origin}/auth/google/callback`;
+
     const params = new URLSearchParams({
       client_id: clientId,
       redirect_uri: redirectUri,
@@ -89,12 +107,19 @@ export const LoginView: React.FC = () => {
       scope: 'openid email profile',
       prompt: 'select_account'
     });
+
     const authWindow = window.open(
       `https://accounts.google.com/o/oauth2/v2/auth?${params}`,
       'oauth_popup',
       'width=600,height=700'
     );
-    if (!authWindow) setError('Popup blocked. Please allow popups for this site.');
+
+    if (!authWindow) {
+      setError('Popup blocked. Please enable popups for this site.');
+      return;
+    }
+
+    setOAuthState('pending');
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -314,7 +339,7 @@ export const LoginView: React.FC = () => {
             <button
               type="button"
               onClick={handleGoogleLogin}
-              disabled={isSubmitting}
+              disabled={isSubmitting || oauthState !== 'idle'}
               className="w-full bg-white border-2 border-slate-300 text-slate-700 px-8 py-3.5 rounded-xl font-medium hover:bg-slate-50 transition-colors shadow-sm flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <svg className="w-5 h-5" viewBox="0 0 24 24">
@@ -323,7 +348,7 @@ export const LoginView: React.FC = () => {
                 <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" />
                 <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
               </svg>
-              Continue with Google
+              {oauthState === 'pending' ? 'Authenticating...' : 'Continue with Google'}
             </button>
           </form>
 
