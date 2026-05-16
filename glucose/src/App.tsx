@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
-import { Printer, Plus, X, Trash2, LogOut, ShieldCheck, Activity, Eye, FileText, Settings, Camera, Loader2, Download, Upload, HelpCircle } from 'lucide-react';
+import { Printer, Plus, X, Trash2, LogOut, ShieldCheck, Activity, Eye, FileText, Settings, Camera, Loader2, Download, Upload, HelpCircle, Edit2 } from 'lucide-react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, ReferenceArea } from 'recharts';
 import { useAuth } from './contexts/AuthContext';
 import { AdminProvider, useAdmin } from './contexts/AdminContext';
@@ -84,6 +84,7 @@ function AppContent() {
   const [doctorName, setDoctorName] = useState('Dr Yacoba Atiase');
   const [selectedMonth, setSelectedMonth] = useState<string>('');
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingId, setEditingId] = useState<string | null>(null);
 
   // UI preferences
   const [unit, setUnit] = useState<'mmol/L' | 'mg/dL'>('mmol/L');
@@ -351,6 +352,26 @@ function AppContent() {
     setNewRow({ date: new Date().toISOString().split('T')[0] });
 
     console.log('[MANUAL] Keeping current month view:', selectedMonth);
+  };
+
+  const openEditModal = (row: Row) => {
+    setEditingId(row.id);
+    setNewRow({
+      date: row.date,
+      fasting: toCurrentUnit(row.fasting, unit),
+      post_breakfast: toCurrentUnit(row.post_breakfast, unit),
+      pre_lunch: toCurrentUnit(row.pre_lunch, unit),
+      post_lunch: toCurrentUnit(row.post_lunch, unit),
+      pre_dinner: toCurrentUnit(row.pre_dinner, unit),
+      post_dinner: toCurrentUnit(row.post_dinner, unit),
+    });
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setEditingId(null);
+    setNewRow({ date: new Date().toISOString().split('T')[0] });
   };
 
   const deleteRow = async (id: string) => {
@@ -824,17 +845,30 @@ function AppContent() {
                           >
                             <td className="px-5 py-3 text-slate-400 relative font-mono text-[11px]">
                               {(i + 1).toString().padStart(2, '0')}
-                              <button 
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  deleteRow(r.id);
-                                }}
-                                className="absolute left-1 top-1/2 -translate-y-1/2 p-1 text-rose-500 opacity-0 group-hover:opacity-100 transition-opacity print:hidden hover:bg-rose-100 rounded focus:opacity-100 focus:outline-none focus:ring-2 focus:ring-rose-400"
-                                title="Delete reading"
-                                aria-label="Delete reading"
-                              >
-                                <Trash2 className="w-[14px] h-[14px]" />
-                              </button>
+                              <div className="absolute left-1 top-1/2 -translate-y-1/2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity print:hidden">
+                                <button
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    openEditModal(r);
+                                  }}
+                                  className="p-1 text-blue-500 hover:bg-blue-100 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+                                  title="Edit reading"
+                                  aria-label="Edit reading"
+                                >
+                                  <Edit2 className="w-[14px] h-[14px]" />
+                                </button>
+                                <button
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    deleteRow(r.id);
+                                  }}
+                                  className="p-1 text-rose-500 hover:bg-rose-100 rounded focus:outline-none focus:ring-2 focus:ring-rose-400"
+                                  title="Delete reading"
+                                  aria-label="Delete reading"
+                                >
+                                  <Trash2 className="w-[14px] h-[14px]" />
+                                </button>
+                              </div>
                             </td>
                             <td className={`px-4 py-3 font-semibold whitespace-nowrap ${isHighContrast ? (isSelected ? 'text-white' : 'text-gray-200') : (isSelected ? 'text-amber-900' : 'text-slate-700')}`}>
                               {formatDate(r.date)}
@@ -898,9 +932,9 @@ function AppContent() {
         <div className="fixed inset-0 bg-[#1F3864]/40 backdrop-blur-sm flex items-center justify-center p-4 z-50 print:hidden transition-opacity">
           <div className={`rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden flex flex-col transform transition-all ${isHighContrast ? 'bg-gray-900 border border-gray-700' : 'bg-white'}`}>
             <div className={`px-6 py-4 border-b flex items-center justify-between ${isHighContrast ? 'bg-black border-gray-800' : 'bg-slate-50 border-slate-100'}`}>
-              <h2 className={`font-bold text-lg ${isHighContrast ? 'text-white' : 'text-slate-800'}`}>Log Glucose Reading</h2>
-              <button 
-                onClick={() => setIsModalOpen(false)} 
+              <h2 className={`font-bold text-lg ${isHighContrast ? 'text-white' : 'text-slate-800'}`}>{editingId ? 'Edit Glucose Reading' : 'Log Glucose Reading'}</h2>
+              <button
+                onClick={closeModal} 
                 className={`rounded-full p-1.5 transition-colors focus:outline-none focus:ring-2 focus:ring-[#D6E4F0] ${isHighContrast ? 'text-gray-400 hover:text-white hover:bg-gray-800' : 'text-slate-400 hover:text-slate-600 hover:bg-slate-200'}`}
                 aria-label="Close dialog"
               >
@@ -949,11 +983,11 @@ function AppContent() {
               </div>
 
               <div className={`pt-4 mt-2 border-t flex justify-end gap-3 ${isHighContrast ? 'border-gray-800' : 'border-slate-100'}`}>
-                <button type="button" onClick={() => setIsModalOpen(false)} className={`px-5 py-2.5 text-sm font-bold tracking-wide rounded-lg transition-colors focus:ring-2 focus:ring-slate-200 ${isHighContrast ? 'text-gray-400 hover:text-white hover:bg-gray-800' : 'text-slate-600 hover:bg-slate-100'}`}>
+                <button type="button" onClick={closeModal} className={`px-5 py-2.5 text-sm font-bold tracking-wide rounded-lg transition-colors focus:ring-2 focus:ring-slate-200 ${isHighContrast ? 'text-gray-400 hover:text-white hover:bg-gray-800' : 'text-slate-600 hover:bg-slate-100'}`}>
                   Cancel
                 </button>
                 <button type="submit" className={`px-6 py-2.5 text-sm tracking-wide font-bold rounded-lg shadow-sm transition-all focus:ring-4 focus:ring-[#D6E4F0] active:scale-[0.98] ${isHighContrast ? 'bg-white text-black hover:bg-gray-200' : 'text-white bg-[#2E75B6] hover:bg-[#1F3864]'}`}>
-                  Save Record
+                  {editingId ? 'Update Record' : 'Save Record'}
                 </button>
               </div>
             </form>
