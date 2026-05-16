@@ -243,14 +243,14 @@ function AppContent() {
   useEffect(() => {
     if (!isAdmin) {
       setRows([]);
-      setPatientName('');
-      setDoctorName('');
+      setPatientName(user?.fullName || '');
+      setDoctorName('Dr Yacoba Atiase');
       return;
     }
     getProfile().then(profile => {
       if (profile) {
-        setPatientName(profile.patientName || '');
-        setDoctorName(profile.doctorName || '');
+        setPatientName(profile.patientName || user?.fullName || '');
+        setDoctorName(profile.doctorName || 'Dr Yacoba Atiase');
       }
     });
     getAllReadings().then(fetched => setRows(fetched as Row[]));
