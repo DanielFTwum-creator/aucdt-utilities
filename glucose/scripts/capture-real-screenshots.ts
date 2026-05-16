@@ -193,29 +193,9 @@ async function runCaptures() {
       console.log('⚠ AGP graph not available');
     }
 
-    // Help Guide
+    // Help Guide - Skip for now as it's blocked by other modals during auth
     console.log('\n📸 Help & Accessibility');
-    try {
-      const helpBtn = await page.$('button[title="View user guide"]');
-      if (helpBtn) {
-        await page.evaluate(() => window.scrollTo(0, 0));
-        await helpBtn.click();
-        await page.waitForSelector('text=ROPHE Guide', { timeout: 3000 });
-        await captureScreenshot(
-          page,
-          'dashboard-help-guide',
-          'Help modal with comprehensive user guide',
-          'Dashboard & Analytics Features'
-        );
-
-        // Close modal
-        const closeBtn = await page.$('button[aria-label="Close help"]');
-        if (closeBtn) await closeBtn.click();
-        await page.waitForTimeout(300);
-      }
-    } catch (e) {
-      console.log('⚠ Help guide not available');
-    }
+    console.log('⚠ Help guide capture skipped (blocked by auth flow modals)');
 
     // Export/Import
     try {
