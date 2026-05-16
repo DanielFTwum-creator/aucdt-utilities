@@ -3,42 +3,42 @@
     "name": "oauth-login-view",
     "description": "LoginView renders with Google sign-in button",
     "path": "/screenshots/e2e/oauth-login-view.png",
-    "timestamp": "2026-05-16T18:14:23.226Z",
+    "timestamp": "2026-05-16T19:01:58.893Z",
     "testSuite": "OAuth Login Journey"
   },
   {
     "name": "data-scan-interface",
     "description": "Scan photo button for AI extraction",
     "path": "/screenshots/e2e/data-scan-interface.png",
-    "timestamp": "2026-05-16T18:14:23.328Z",
+    "timestamp": "2026-05-16T19:01:58.992Z",
     "testSuite": "Image Scanning Journey"
   },
   {
     "name": "data-manual-entry-modal",
     "description": "Manual entry modal for adding readings",
     "path": "/screenshots/e2e/data-manual-entry-modal.png",
-    "timestamp": "2026-05-16T18:14:23.693Z",
+    "timestamp": "2026-05-16T19:01:59.385Z",
     "testSuite": "Data Management Journey"
   },
   {
     "name": "dashboard-stats-overview",
     "description": "Stats cards showing Average Fasting, Post-Meal, Total Readings",
     "path": "/screenshots/e2e/dashboard-stats-overview.png",
-    "timestamp": "2026-05-16T18:14:25.209Z",
+    "timestamp": "2026-05-16T19:02:00.870Z",
     "testSuite": "Dashboard & Analytics Features"
   },
   {
     "name": "dashboard-month-selector",
     "description": "Month selector dropdown (PERIOD)",
     "path": "/screenshots/e2e/dashboard-month-selector.png",
-    "timestamp": "2026-05-16T18:14:25.641Z",
+    "timestamp": "2026-05-16T19:02:01.298Z",
     "testSuite": "Dashboard & Analytics Features"
   },
   {
     "name": "dashboard-export-import",
     "description": "Export and Import buttons for data management",
     "path": "/screenshots/e2e/dashboard-export-import.png",
-    "timestamp": "2026-05-16T18:15:25.817Z",
+    "timestamp": "2026-05-16T19:03:01.444Z",
     "testSuite": "Dashboard & Analytics Features"
   }
 ]
