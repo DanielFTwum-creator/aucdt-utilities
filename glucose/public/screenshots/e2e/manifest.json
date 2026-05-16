@@ -1,13 +1,16 @@
 {
-  "generated": "2026-05-16T17:30:00Z",
-  "description": "E2E Test Screenshots - Real application UI captured with Puppeteer",
+  "generated": "2026-05-16T17:45:00Z",
+  "description": "E2E Test Screenshots - Real application UI captured with Playwright",
+  "captureStatus": "real-screenshots-standard",
+  "totalCaptured": 1,
+  "totalDefined": 14,
   "screenshots": [
     {
       "name": "oauth-login-view",
       "description": "LoginView renders with Google sign-in button",
       "path": "/screenshots/e2e/oauth-login-view.png",
       "testSuite": "OAuth Login Journey",
-      "status": "pending_capture"
+      "status": "captured"
     },
     {
       "name": "oauth-authenticated",
@@ -101,7 +104,8 @@
       "status": "pending_capture"
     }
   ],
-  "notes": "Screenshots can be captured by running: pnpm run test:e2e:screenshots (requires working dev server on port 3000)",
+  "notes": "Screenshots captured using Playwright. Run: pnpm run test:e2e:screenshots (requires working dev server on port 3000)",
   "totalTests": 26,
-  "testsReferencingScreenshots": 14
+  "testsReferencingScreenshots": 14,
+  "implementation": "Real screenshots are the standard. RealScreenshot.tsx loads actual PNG images from public/screenshots/e2e/ instead of drawing mockups."
 }

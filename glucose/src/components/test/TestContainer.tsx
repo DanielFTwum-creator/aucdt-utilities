@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from 'react';
 import { runTestSuite, TestSuiteResult } from './testRunner';
-import { MockScreenshot } from './MockScreenshot';
+import { RealScreenshot } from './RealScreenshot';
 import { Activity, AlertCircle, CheckCircle } from 'lucide-react';
 
 type TestStatus = 'idle' | 'running' | 'complete';
@@ -101,8 +101,8 @@ export const TestContainer: React.FC = () => {
                                         </div>
                                         {test.status !== 'idle' && test.status !== 'running' && (
                                             <div className="mt-3">
-                                                <p className="text-xs font-semibold text-slate-500 mb-3 uppercase tracking-wider">Visual Verification:</p>
-                                                <MockScreenshot state={test.screenshotState} />
+                                                <p className="text-xs font-semibold text-slate-500 mb-3 uppercase tracking-wider">🎬 Real Screenshot:</p>
+                                                <RealScreenshot state={test.screenshotState} />
                                             </div>
                                         )}
                                     </div>
