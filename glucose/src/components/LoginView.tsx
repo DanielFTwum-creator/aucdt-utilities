@@ -294,10 +294,10 @@ export const LoginView: React.FC = () => {
 
         {/* R2 + R3 + R5: Card with softened orange accent + natural stagger timing */}
         <div className="bg-white rounded-3xl shadow-2xl border border-slate-100 border-t-2 border-t-orange-400 overflow-hidden p-8 sm:p-10 space-y-6 animate-fadeUp-delay-150">
-          {/* R1 + R3 + R4 + R6: Fraunces heading with personalized greeting */}
+          {/* R1 + R3 + R4 + R6: Fraunces heading with generic greeting */}
           <div className="text-center space-y-2">
             <h2 className="text-2xl font-semibold tracking-tight" style={{ fontFamily: 'Fraunces, serif', color: '#1E1E1E', fontWeight: 600 }}>
-              {user ? `Good to see you, ${user.username}` : (mode === 'login' && identifier ? `Good to see you, ${identifier.split('@')[0]}` : mode === 'login' ? 'Welcome Back' : 'Create Account')}
+              {mode === 'login' ? 'Welcome Back' : 'Create Account'}
             </h2>
             <p className="text-slate-600 text-sm leading-relaxed">
               {mode === 'login' ? 'Sign in to track your levels' : 'Join the community'}

@@ -495,7 +495,7 @@ function AppContent() {
           <div className={`border-[2.5px] px-3.5 py-1 text-xl font-bold tracking-tighter rounded-md shadow-sm ${isHighContrast ? 'border-white text-white' : 'border-[#1F3864] text-[#1F3864]'}`}>ROPHE</div>
           <div>
             <h1 className={`text-lg font-bold leading-tight ${isHighContrast ? 'text-white' : 'text-slate-900'}`}>Blood Glucose Monitoring</h1>
-            <p className={`text-[11px] uppercase tracking-[0.15em] font-bold mt-0.5 ${isHighContrast ? 'text-blue-300' : 'text-[#2E75B6]'}`}>Specialist Care Portal</p>
+            <p className={`text-[11px] uppercase tracking-[0.15em] font-bold mt-0.5 ${isHighContrast ? 'text-blue-300' : 'text-[#2E75B6]'}`}>Specialist Care Portal{user && ` — Good to see you, ${user.username}`}</p>
           </div>
         </div>
         <div className="flex flex-wrap items-center gap-3">
