@@ -80,7 +80,7 @@ function AppContent() {
 
   const [rows, setRows] = useState<Row[]>([]);
   const [patientName, setPatientName] = useState('');
-  const [doctorName, setDoctorName] = useState('');
+  const [doctorName, setDoctorName] = useState('Dr Yacoba Atiase');
   const [selectedMonth, setSelectedMonth] = useState<string>('');
   const [isModalOpen, setIsModalOpen] = useState(false);
 
