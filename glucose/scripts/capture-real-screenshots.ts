@@ -126,95 +126,123 @@ async function runCaptures() {
     // ========== DASHBOARD FEATURES ==========
     console.log('\n📸 Dashboard Features');
 
-    // Stats overview
-    await page.evaluate(() => window.scrollTo(0, 0));
-    await page.waitForSelector('text=AVERAGE FASTING', { timeout: 5000 });
-    await captureScreenshot(
-      page,
-      'dashboard-stats-overview',
-      'Stats cards showing Average Fasting, Post-Meal, Total Readings',
-      'Dashboard & Analytics Features'
-    );
-
-    // Month selector
-    await captureScreenshot(
-      page,
-      'dashboard-month-selector',
-      'Month selector dropdown (PERIOD)',
-      'Dashboard & Analytics Features'
-    );
-
-    // AGP Graph
-    const agpTab = await page.$('text=AMBULATORY GLUCOSE PROFILE');
-    if (agpTab) {
-      await agpTab.click();
-      await page.waitForSelector('text=Daily Glucose Variation Trend', { timeout: 5000 });
-      await page.evaluate(() => window.scrollTo(0, 300));
+    // Stats overview - Try to find it, skip if not available (requires authentication)
+    try {
+      await page.evaluate(() => window.scrollTo(0, 0));
+      await page.waitForSelector('text=AVERAGE FASTING', { timeout: 3000 });
       await captureScreenshot(
         page,
-        'dashboard-agp-graph',
-        'Ambulatory Glucose Profile (AGP) with trend chart',
+        'dashboard-stats-overview',
+        'Stats cards showing Average Fasting, Post-Meal, Total Readings',
         'Dashboard & Analytics Features'
       );
+    } catch (e) {
+      console.log('⚠ Dashboard stats require authentication - skipping');
+    }
+
+    // Month selector
+    try {
+      await captureScreenshot(
+        page,
+        'dashboard-month-selector',
+        'Month selector dropdown (PERIOD)',
+        'Dashboard & Analytics Features'
+      );
+    } catch (e) {
+      console.log('⚠ Month selector not available');
+    }
+
+    // AGP Graph
+    try {
+      const agpTab = await page.$('text=AMBULATORY GLUCOSE PROFILE');
+      if (agpTab) {
+        await agpTab.click();
+        await page.waitForSelector('text=Daily Glucose Variation Trend', { timeout: 3000 });
+        await page.evaluate(() => window.scrollTo(0, 300));
+        await captureScreenshot(
+          page,
+          'dashboard-agp-graph',
+          'Ambulatory Glucose Profile (AGP) with trend chart',
+          'Dashboard & Analytics Features'
+        );
+      }
+    } catch (e) {
+      console.log('⚠ AGP graph not available');
     }
 
     // Help Guide
     console.log('\n📸 Help & Accessibility');
-    const helpBtn = await page.$('button[title="View user guide"]');
-    if (helpBtn) {
-      await page.evaluate(() => window.scrollTo(0, 0));
-      await helpBtn.click();
-      await page.waitForSelector('text=ROPHE Guide', { timeout: 5000 });
-      await captureScreenshot(
-        page,
-        'dashboard-help-guide',
-        'Help modal with comprehensive user guide',
-        'Dashboard & Analytics Features'
-      );
+    try {
+      const helpBtn = await page.$('button[title="View user guide"]');
+      if (helpBtn) {
+        await page.evaluate(() => window.scrollTo(0, 0));
+        await helpBtn.click();
+        await page.waitForSelector('text=ROPHE Guide', { timeout: 3000 });
+        await captureScreenshot(
+          page,
+          'dashboard-help-guide',
+          'Help modal with comprehensive user guide',
+          'Dashboard & Analytics Features'
+        );
 
-      // Close modal
-      const closeBtn = await page.$('button[aria-label="Close help"]');
-      if (closeBtn) await closeBtn.click();
-      await page.waitForTimeout(300);
+        // Close modal
+        const closeBtn = await page.$('button[aria-label="Close help"]');
+        if (closeBtn) await closeBtn.click();
+        await page.waitForTimeout(300);
+      }
+    } catch (e) {
+      console.log('⚠ Help guide not available');
     }
 
     // Export/Import
-    await page.evaluate(() => window.scrollTo(0, 0));
-    const exportBtn = await page.$('button[title="Export data to JSON"]');
-    if (exportBtn) {
-      await captureScreenshot(
-        page,
-        'dashboard-export-import',
-        'Export and Import buttons for data management',
-        'Dashboard & Analytics Features'
-      );
+    try {
+      await page.evaluate(() => window.scrollTo(0, 0));
+      const exportBtn = await page.$('button[title="Export data to JSON"]');
+      if (exportBtn) {
+        await captureScreenshot(
+          page,
+          'dashboard-export-import',
+          'Export and Import buttons for data management',
+          'Dashboard & Analytics Features'
+        );
+      }
+    } catch (e) {
+      console.log('⚠ Export/Import buttons not available');
     }
 
     // Theme toggle
-    const themeBtn = await page.$('button[title="Toggle High Contrast"]');
-    if (themeBtn) {
-      await themeBtn.click();
-      await page.waitForTimeout(500);
-      await captureScreenshot(
-        page,
-        'theme-high-contrast',
-        'High contrast theme enabled',
-        'Theme & Logout Journey'
-      );
-      await themeBtn.click(); // Toggle back
+    try {
+      const themeBtn = await page.$('button[title="Toggle High Contrast"]');
+      if (themeBtn) {
+        await themeBtn.click();
+        await page.waitForTimeout(500);
+        await captureScreenshot(
+          page,
+          'theme-high-contrast',
+          'High contrast theme enabled',
+          'Theme & Logout Journey'
+        );
+        await themeBtn.click(); // Toggle back
+      }
+    } catch (e) {
+      console.log('⚠ Theme toggle not available');
     }
 
     // Unit switch
-    const unitBtn = await page.$('button:has-text("mg/dL")');
-    if (unitBtn) {
-      await unitBtn.click();
-      await page.waitForTimeout(300);
-      await captureScreenshot(
-        page,
-        'theme-unit-switch',
-        'Unit selector showing mg/dL conversion',
-        'Theme & Logout Journey'
-      );
+    try {
+      const unitBtn = await page.$('button:has-text("mg/dL")');
+      if (unitBtn) {
+        await unitBtn.click();
+        await page.waitForTimeout(300);
+        await captureScreenshot(
+          page,
+          'theme-unit-switch',
+          'Unit selector showing mg/dL conversion',
+          'Theme & Logout Journey'
+        );
+      }
+    } catch (e) {
+      console.log('⚠ Unit switch not available');
     }
 
     // Write manifest file
