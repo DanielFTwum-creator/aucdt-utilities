@@ -331,9 +331,7 @@ function AppContent() {
     setIsModalOpen(false);
     setNewRow({ date: new Date().toISOString().split('T')[0] });
 
-    const addedMonth = getMonthKey(rowToAdd.date);
-    console.log('[MANUAL] Setting month to:', addedMonth);
-    if (addedMonth) setSelectedMonth(addedMonth);
+    console.log('[MANUAL] Keeping current month view:', selectedMonth);
   };
 
   const deleteRow = async (id: string) => {
