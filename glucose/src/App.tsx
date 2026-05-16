@@ -87,6 +87,7 @@ function AppContent() {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [viewMode, setViewMode] = useState<'month' | 'year'>('month');
   const [selectedYear, setSelectedYear] = useState<string>('');
+  const [showTrendlines, setShowTrendlines] = useState(true);
 
   // UI preferences
   const [unit, setUnit] = useState<'mmol/L' | 'mg/dL'>('mmol/L');
@@ -479,8 +480,28 @@ function AppContent() {
   const apCls = ap && parseFloat(ap) >= parseFloat(convertTarget(8.9, unit)) ? (isHighContrast ? 'text-[#D00000]' : 'text-red-600') : (isHighContrast ? 'text-[#006400]' : 'text-green-600');
 
   // AGP Chart Data
+  // Calculate linear regression trendline
+  const calculateTrendline = (values: (number | null)[]): (number | null)[] => {
+    const validValues = values
+      .map((v, i) => ({ v, i }))
+      .filter(({ v }) => v !== null && !isNaN(v));
+
+    if (validValues.length < 2) return Array(values.length).fill(null);
+
+    const n = validValues.length;
+    const sumX = validValues.reduce((sum, { i }) => sum + i, 0);
+    const sumY = validValues.reduce((sum, { v }) => sum + (v as number), 0);
+    const sumXY = validValues.reduce((sum, { v, i }) => sum + i * (v as number), 0);
+    const sumX2 = validValues.reduce((sum, { i }) => sum + i * i, 0);
+
+    const slope = (n * sumXY - sumX * sumY) / (n * sumX2 - sumX * sumX);
+    const intercept = (sumY - slope * sumX) / n;
+
+    return values.map((_, i) => slope * i + intercept);
+  };
+
   const chartData = useMemo(() => {
-    return filteredRows.map(r => {
+    const baseData = filteredRows.map(r => {
       return {
         date: formatDate(r.date).replace(/, \d{4}/, ''), // Shorten date
         fasting: r.fasting ? parseFloat(toCurrentUnit(r.fasting, unit)) : null,
@@ -491,7 +512,25 @@ function AppContent() {
         post_dinner: r.post_dinner ? parseFloat(toCurrentUnit(r.post_dinner, unit)) : null,
       };
     });
-  }, [filteredRows, unit]);
+
+    if (!showTrendlines) return baseData;
+
+    // Add trendline values for each metric
+    const fastingValues = baseData.map(d => d.fasting);
+    const preLunchValues = baseData.map(d => d.pre_lunch);
+    const preDinnerValues = baseData.map(d => d.pre_dinner);
+
+    const fastingTrend = calculateTrendline(fastingValues);
+    const preLunchTrend = calculateTrendline(preLunchValues);
+    const preDinnerTrend = calculateTrendline(preDinnerValues);
+
+    return baseData.map((d, i) => ({
+      ...d,
+      fasting_trend: fastingTrend[i],
+      pre_lunch_trend: preLunchTrend[i],
+      pre_dinner_trend: preDinnerTrend[i],
+    }));
+  }, [filteredRows, unit, showTrendlines]);
 
   if (!isAdmin) {
     return (
@@ -836,7 +875,20 @@ function AppContent() {
         <div className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden flex flex-col max-h-[70vh] min-h-[500px] print:max-h-none print:h-auto print:border-none print:shadow-none">
           {activeTab === 'agp' ? (
             <div className={`p-6 flex-grow flex flex-col ${isHighContrast ? 'bg-gray-900 text-white' : ''}`}>
-              <h3 className="text-sm font-bold text-slate-500 uppercase tracking-widest mb-6">Daily Glucose Variation Trend</h3>
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="text-sm font-bold text-slate-500 uppercase tracking-widest">Daily Glucose Variation Trend</h3>
+                <button
+                  onClick={() => setShowTrendlines(!showTrendlines)}
+                  className={`px-4 py-2 text-xs font-bold uppercase rounded-lg transition-colors ${
+                    showTrendlines
+                      ? isHighContrast ? 'bg-blue-900 text-white' : 'bg-blue-100 text-blue-700'
+                      : isHighContrast ? 'bg-gray-800 text-gray-400 hover:text-gray-200' : 'bg-slate-100 text-slate-600 hover:text-slate-900'
+                  }`}
+                  title={showTrendlines ? 'Hide trendlines' : 'Show trendlines'}
+                >
+                  {showTrendlines ? '✓ Trendlines' : 'Trendlines'}
+                </button>
+              </div>
               {chartData.length > 0 ? (
                 <div className="h-[400px] w-full">
                   <ResponsiveContainer width="100%" height="100%">
@@ -863,6 +915,14 @@ function AppContent() {
                       <Line type="monotone" name="Fasting" dataKey="fasting" stroke="#3b82f6" strokeWidth={3} dot={{r:4, strokeWidth:2}} connectNulls />
                       <Line type="monotone" name="Pre-Lunch" dataKey="pre_lunch" stroke="#10b981" strokeWidth={2} dot={{r:3}} connectNulls />
                       <Line type="monotone" name="Pre-Dinner" dataKey="pre_dinner" stroke="#8b5cf6" strokeWidth={2} dot={{r:3}} connectNulls />
+
+                      {showTrendlines && (
+                        <>
+                          <Line type="monotone" name="Fasting Trend" dataKey="fasting_trend" stroke="#3b82f6" strokeWidth={2} strokeDasharray="5 5" dot={false} connectNulls isAnimationActive={false} />
+                          <Line type="monotone" name="Pre-Lunch Trend" dataKey="pre_lunch_trend" stroke="#10b981" strokeWidth={2} strokeDasharray="5 5" dot={false} connectNulls isAnimationActive={false} />
+                          <Line type="monotone" name="Pre-Dinner Trend" dataKey="pre_dinner_trend" stroke="#8b5cf6" strokeWidth={2} strokeDasharray="5 5" dot={false} connectNulls isAnimationActive={false} />
+                        </>
+                      )}
                     </LineChart>
                   </ResponsiveContainer>
                 </div>
