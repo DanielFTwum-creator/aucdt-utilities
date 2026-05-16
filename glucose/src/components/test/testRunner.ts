@@ -26,8 +26,8 @@ const testSuite: TestSuiteResult[] = [
         tests: [
             { description: 'LoginView renders with Google sign-in button', status: 'idle', screenshotState: { type: 'oauth', step: 'login-view' } },
             { description: 'OAuth popup opens on sign-in click', status: 'idle', screenshotState: { type: 'oauth', step: 'oauth-popup' } },
-            { description: 'User authenticated via Google, App renders', status: 'idle', screenshotState: { type: 'oauth', step: 'authenticated' } },
-            { description: 'Patient and doctor profile fields appear', status: 'idle', screenshotState: { type: 'oauth', step: 'profile' } },
+            { description: 'User authenticated via Google, App renders with patient data', status: 'idle', screenshotState: { type: 'oauth', step: 'authenticated' } },
+            { description: 'Patient Name auto-populated from authenticated user fullName', status: 'idle', screenshotState: { type: 'oauth', step: 'profile' } },
         ],
     },
     {

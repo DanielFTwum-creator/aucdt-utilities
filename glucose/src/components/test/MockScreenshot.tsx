@@ -47,11 +47,12 @@ const OAuthScreen: React.FC<{ step: 'login-view' | 'oauth-popup' | 'authenticate
                         <div className="border-[2.5px] px-2 py-0.5 text-sm font-bold border-[#1F3864] text-[#1F3864] rounded w-fit">ROPHE</div>
                         <h1 className="text-sm font-bold text-slate-900">Blood Glucose Monitoring</h1>
                     </div>
-                    <div className="flex gap-2">
-                        <div className="w-8 h-8 rounded-full bg-[#D6E4F0] text-[#1F3864] font-bold flex items-center justify-center text-xs">PT</div>
+                    <div className="flex gap-2 p-2 border rounded-lg bg-blue-50">
+                        <div className="w-8 h-8 rounded-full bg-[#D6E4F0] text-[#1F3864] font-bold flex items-center justify-center text-xs shrink-0">PT</div>
                         <div className="flex-1">
                             <p className="text-xs text-slate-400 font-bold">Patient Name</p>
                             <p className="text-xs font-semibold text-slate-900">John Doe</p>
+                            <p className="text-xs text-green-600 mt-1">✓ Auto-populated from Google profile</p>
                         </div>
                     </div>
                 </div>
@@ -63,15 +64,17 @@ const OAuthScreen: React.FC<{ step: 'login-view' | 'oauth-popup' | 'authenticate
             <div className="p-3 space-y-3">
                 <div className="border-b pb-2">
                     <div className="border-[2.5px] px-2 py-0.5 text-sm font-bold border-[#1F3864] text-[#1F3864] rounded w-fit">ROPHE</div>
+                    <h1 className="text-sm font-bold text-slate-900">Blood Glucose Monitoring</h1>
                 </div>
                 <div className="grid grid-cols-2 gap-2">
-                    <div>
+                    <div className="border rounded-lg p-2 bg-slate-50">
                         <p className="text-xs text-slate-400 font-bold">Patient Name</p>
-                        <input type="text" placeholder="John Doe" className="w-full text-xs p-1 border rounded" />
+                        <p className="text-xs font-semibold text-slate-900">John Doe</p>
+                        <p className="text-xs text-green-600 mt-1">✓ Auto-filled</p>
                     </div>
-                    <div>
+                    <div className="border rounded-lg p-2 bg-white">
                         <p className="text-xs text-slate-400 font-bold">Attending Physician</p>
-                        <input type="text" placeholder="Dr. Smith" className="w-full text-xs p-1 border rounded" />
+                        <input type="text" placeholder="Dr. Smith" className="w-full text-xs p-1 border rounded bg-white" />
                     </div>
                 </div>
             </div>
