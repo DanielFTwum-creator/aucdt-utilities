@@ -73,7 +73,7 @@ function convertTarget(limit: number, unit: 'mmol/L' | 'mg/dL') {
 
 function AppContent() {
   const { isAdmin, adminLogin, adminLogout } = useAdmin();
-  const { logout } = useAuth();
+  const { logout, user } = useAuth();
   const [passwordInput, setPasswordInput] = useState('');
   const [loginError, setLoginError] = useState('');
   const [isFirstTime, setIsFirstTime] = useState<boolean | null>(null);
@@ -103,6 +103,13 @@ function AppContent() {
   useEffect(() => {
     getAdminConfig('adminPassword').then(pw => setIsFirstTime(!pw));
   }, []);
+
+  // Populate patient name from authenticated user's fullName
+  useEffect(() => {
+    if (user?.fullName && !patientName) {
+      setPatientName(user.fullName);
+    }
+  }, [user?.fullName, patientName]);
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
