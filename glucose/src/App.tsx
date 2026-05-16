@@ -581,11 +581,11 @@ function AppContent() {
           <div className="w-11 h-11 rounded-full bg-[#D6E4F0] flex items-center justify-center text-[#1F3864] font-bold text-lg uppercase shrink-0">PT</div>
           <div className="flex-1">
             <p className={`text-[10px] font-bold uppercase tracking-widest ${isHighContrast ? 'text-gray-400' : 'text-slate-400'}`}>Patient Name</p>
-            <input 
-              value={patientName} 
-              onChange={e => setPatientName(e.target.value)} 
-              className={`font-semibold text-[15px] outline-none w-full bg-transparent ${isHighContrast ? 'text-white placeholder-gray-600' : 'text-slate-900 placeholder-slate-300'}`} 
-              placeholder="Enter patient name..." 
+            <input
+              value={patientName}
+              readOnly
+              className={`font-semibold text-[15px] outline-none w-full bg-transparent cursor-default ${isHighContrast ? 'text-white placeholder-gray-600' : 'text-slate-900 placeholder-slate-300'}`}
+              placeholder="Enter patient name..."
             />
           </div>
         </div>
