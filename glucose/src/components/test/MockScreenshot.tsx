@@ -51,7 +51,7 @@ const OAuthScreen: React.FC<{ step: 'login-view' | 'oauth-popup' | 'authenticate
                         <div className="w-8 h-8 rounded-full bg-[#D6E4F0] text-[#1F3864] font-bold flex items-center justify-center text-xs shrink-0">PT</div>
                         <div className="flex-1">
                             <p className="text-xs text-slate-400 font-bold">Patient Name</p>
-                            <p className="text-xs font-semibold text-slate-900">John Doe</p>
+                            <p className="text-xs font-semibold text-slate-900">Kwadjo Frempong</p>
                             <p className="text-xs text-green-600 mt-1">✓ Auto-populated from Google profile</p>
                         </div>
                     </div>
@@ -69,7 +69,7 @@ const OAuthScreen: React.FC<{ step: 'login-view' | 'oauth-popup' | 'authenticate
                 <div className="grid grid-cols-2 gap-2">
                     <div className="border rounded-lg p-2 bg-slate-50">
                         <p className="text-xs text-slate-400 font-bold">Patient Name</p>
-                        <p className="text-xs font-semibold text-slate-900">John Doe</p>
+                        <p className="text-xs font-semibold text-slate-900">Kwadjo Frempong</p>
                         <p className="text-xs text-green-600 mt-1">✓ Auto-filled</p>
                     </div>
                     <div className="border rounded-lg p-2 bg-white">
