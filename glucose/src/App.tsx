@@ -399,11 +399,14 @@ function AppContent() {
     return `${MONTH_NAMES[parseInt(mo) - 1]} ${yr}`;
   }, [selectedMonth]);
 
-  // Calculations for summary
+  // Calculations for summary (filtered by current month)
   const fastVals = filteredRows.map(r => r.fasting);
   const postVals = filteredRows.flatMap(r => [r.post_breakfast, r.post_lunch, r.post_dinner]);
   const allVals = filteredRows.flatMap(r => COLS.map(c => r[c.id])).filter(v => v !== '' && v != null && !isNaN(parseFloat(v))).map(Number);
-  
+
+  // Total readings across all months
+  const allReadingsVals = rows.flatMap(r => COLS.map(c => r[c.id])).filter(v => v !== '' && v != null && !isNaN(parseFloat(v))).map(Number);
+
   const hi = allVals.length ? toCurrentUnit(Math.max(...allVals).toFixed(1), unit) : null;
   const af = toCurrentUnit(getAverage(fastVals), unit);
   const ap = toCurrentUnit(getAverage(postVals), unit);
@@ -666,7 +669,7 @@ function AppContent() {
           <div className={`${isHighContrast ? 'bg-black border-gray-600' : 'bg-white border-slate-200'} border rounded-2xl p-6 shadow-sm flex items-center print:flex-1`}>
             <div>
               <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest mb-2">Total Readings</p>
-              <div className={`text-3xl font-mono font-bold tracking-tight ${isHighContrast ? 'text-white' : 'text-slate-900'}`}>{allVals.length}</div>
+              <div className={`text-3xl font-mono font-bold tracking-tight ${isHighContrast ? 'text-white' : 'text-slate-900'}`}>{rows.length}</div>
             </div>
           </div>
           
