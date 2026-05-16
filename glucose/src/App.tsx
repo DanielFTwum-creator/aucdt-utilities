@@ -781,9 +781,9 @@ function AppContent() {
       {/* User Meta Strip */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6 print:mb-4">
         <div className={`border rounded-xl p-4 flex items-center gap-4 shadow-sm transition-shadow focus-within:ring-2 focus-within:ring-[#D6E4F0] ${isHighContrast ? 'bg-black border-gray-600' : 'bg-white border-slate-200'}`}>
-          <div className="w-11 h-11 rounded-full bg-[#D6E4F0] flex items-center justify-center text-[#1F3864] font-bold text-lg uppercase shrink-0">PT</div>
+          <div className="w-11 h-11 rounded-full bg-[#D6E4F0] flex items-center justify-center text-[#1F3864] font-bold text-lg uppercase shrink-0">{patientName.split(' ')[0]?.[0] || 'PT'}</div>
           <div className="flex-1">
-            <p className={`text-[10px] font-bold uppercase tracking-widest ${isHighContrast ? 'text-gray-400' : 'text-slate-400'}`}>Patient Name</p>
+            <p className={`text-[10px] font-bold uppercase tracking-widest ${isHighContrast ? 'text-gray-400' : 'text-slate-400'}`}>Patient</p>
             <input
               value={patientName}
               readOnly
@@ -793,14 +793,14 @@ function AppContent() {
           </div>
         </div>
         <div className={`border rounded-xl p-4 flex items-center gap-4 shadow-sm transition-shadow focus-within:ring-2 focus-within:ring-[#D6E4F0] ${isHighContrast ? 'bg-black border-gray-600' : 'bg-white border-slate-200'}`}>
-          <div className="w-11 h-11 rounded-full bg-indigo-50 flex items-center justify-center text-indigo-600 font-bold text-lg uppercase shrink-0">DR</div>
+          <div className="w-11 h-11 rounded-full bg-indigo-50 flex items-center justify-center text-indigo-600 font-bold text-lg uppercase shrink-0">{doctorName.split(' ')[0]?.[0] || 'DR'}</div>
           <div className="flex-1">
-            <p className={`text-[10px] font-bold uppercase tracking-widest ${isHighContrast ? 'text-gray-400' : 'text-slate-400'}`}>Attending Physician</p>
-            <input 
-              value={doctorName} 
-              onChange={e => setDoctorName(e.target.value)} 
-              className={`font-semibold text-[15px] outline-none w-full bg-transparent ${isHighContrast ? 'text-white placeholder-gray-600' : 'text-slate-900 placeholder-slate-300'}`} 
-              placeholder="Enter doctor's name..." 
+            <p className={`text-[10px] font-bold uppercase tracking-widest ${isHighContrast ? 'text-gray-400' : 'text-slate-400'}`}>Physician</p>
+            <input
+              value={doctorName}
+              onChange={e => setDoctorName(e.target.value)}
+              className={`font-semibold text-[15px] outline-none w-full bg-transparent ${isHighContrast ? 'text-white placeholder-gray-600' : 'text-slate-900 placeholder-slate-300'}`}
+              placeholder="Enter doctor's name..."
             />
           </div>
         </div>
