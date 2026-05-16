@@ -215,6 +215,11 @@ function AppContent() {
       console.log('[SCAN] DB now has', refreshed.length, 'readings');
       setRows(refreshed as Row[]);
 
+      const firstScannedMonth = rowsToSave.length > 0 ? getMonthKey(rowsToSave[0].date) : null;
+      if (firstScannedMonth) {
+        setSelectedMonth(firstScannedMonth);
+      }
+
       setUploadProgress(100);
       setUploadStatus(`Successfully extracted and saved ${successCount} readings!`);
       setTimeout(() => setIsUploading(false), 2000);
