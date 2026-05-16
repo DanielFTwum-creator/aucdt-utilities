@@ -548,6 +548,131 @@ Once the docs are written for one project, copy `docs/APP_STORE_GUIDE.md` and ad
 
 ---
 
+## 14. GOOGLE GEMINI API INTEGRATION PATTERNS
+
+For AI vision tasks (document scanning, OCR, handwriting extraction), use the proven Glucose project pattern.
+
+### Model Selection
+
+**Use `gemini-3.1-pro-preview` for vision tasks requiring structured output.**
+
+❌ **Avoid:**
+- `gemini-1.5-flash` — Not available on free tier, throws 404
+- `gemini-2.0-flash-exp` — Experimental, not available for structured responses
+
+✅ **Use:**
+- `gemini-3.1-pro-preview` — Stable, supports streaming + JSON schema validation
+
+### Implementation Pattern (Proven in Glucose Project)
+
+```typescript
+import { GoogleGenAI, Type } from '@google/genai';
+
+const client = new GoogleGenAI({ apiKey: process.env.VITE_GEMINI_API_KEY });
+
+const responseStream = await client.models.generateContentStream({
+  model: 'gemini-3.1-pro-preview',
+  contents: {
+    parts: [
+      { text: 'Your instruction prompt...' },
+      {
+        inlineData: {
+          data: base64ImageData,
+          mimeType: 'image/png',
+        },
+      },
+    ],
+  },
+  config: {
+    temperature: 0,  // Deterministic for data extraction
+    responseMimeType: 'application/json',
+    responseSchema: {
+      type: Type.ARRAY,
+      items: {
+        type: Type.OBJECT,
+        properties: {
+          field1: { type: Type.STRING },
+          field2: { type: Type.STRING },
+        },
+        required: ['field1'],
+      },
+    },
+  },
+});
+
+let text = '';
+for await (const chunk of responseStream) {
+  if (chunk.text) {
+    text += chunk.text;
+  }
+}
+const results = JSON.parse(text);
+```
+
+**Key Points:**
+- Must use `generateContentStream` (not `generateContent`) for structured responses
+- Schema defined via `Type` enum, not TypeScript interfaces
+- Response arrives as valid JSON (no markdown parsing needed)
+- `temperature: 0` ensures deterministic, reproducible extraction
+
+### Real-World Example: Glucose Project
+
+**Task:** Extract handwritten glucose readings from photo
+- Input: Base64 image + JSON schema describing expected output
+- Model: `gemini-3.1-pro-preview` with streaming
+- Output: Array of 20+ readings extracted from single handwritten page
+- Success: Deployed to production 2026-05-16, handles real patient data
+
+---
+
+## 15. DUAL-AUTH LOGOUT PATTERN (OAuth + Local Session)
+
+For apps with two-layer authentication (OAuth + local password/session), **call both logout functions** to avoid users remaining authenticated.
+
+### The Problem
+
+Apps like Glucose have:
+1. **OAuth Layer** — Google Sign-In, stored in `localStorage`
+2. **Admin Layer** — Local password, stored in `sessionStorage`
+
+If only the admin logout is called, OAuth session persists → user remains authenticated → admin auto-grants on next visit → user cycles back instead of exiting.
+
+### The Solution
+
+```typescript
+import { useAuth } from './contexts/AuthContext';       // OAuth logout
+import { useAdmin } from './contexts/AdminContext';     // Local admin logout
+
+function AppContent() {
+  const { logout } = useAuth();
+  const { adminLogout } = useAdmin();
+
+  const handleLogout = () => {
+    adminLogout();  // Clear local session + sessionStorage
+    logout();       // Clear OAuth + localStorage
+  };
+
+  return <button onClick={handleLogout}>Sign Out</button>;
+}
+```
+
+### State Transitions
+
+```
+[Authenticated + Admin]
+    ↓ logout clicked
+[adminLogout() removes sessionStorage]
+    ↓ MUST ALSO call
+[logout() removes localStorage]
+    ↓
+[LoginView with fresh OAuth flow required]
+```
+
+**Real-World Fix:** Glucose project, 2026-05-16 — logout was cycling users back to password screen instead of login because OAuth session persisted.
+
+---
+
 *Last updated: May 2026 — Daniel Frempong Twum / TUC ICT*
 *College Landing Page Generator: Dynamic positioning, TUC branding, Gemini AI integration, dmcdai HTML patterns*
 *LuxThumb Designer: First TUC project on Capacitor — iOS/Android ready (v1.0.0)*
+*Glucose: Blood glucose monitoring with Gemini vision OCR + dual-auth logout fixed (v1.0.0)*
