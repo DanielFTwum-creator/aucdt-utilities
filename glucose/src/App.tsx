@@ -11,15 +11,24 @@ import {
 } from './lib/db';
 
 const COLS = [
-  { id: 'fasting', label: 'Fasting', limit: 7.0, group: 'Morning' },
+  { id: 'fasting', label: 'Fasting', limit: 7.0, group: 'Morning', color: '#3b82f6', name: 'Fasting' },
   { id: 'post_breakfast', label: '2h Post-Breakfast', limit: 8.9, group: 'Morning' },
-  { id: 'pre_lunch', label: 'Pre-Lunch', limit: 7.0, group: 'Lunch' },
+  { id: 'pre_lunch', label: 'Pre-Lunch', limit: 7.0, group: 'Lunch', color: '#10b981', name: 'Pre-Lunch' },
   { id: 'post_lunch', label: '2h Post-Lunch', limit: 8.9, group: 'Lunch' },
-  { id: 'pre_dinner', label: 'Pre-Dinner', limit: 7.0, group: 'Dinner' },
+  { id: 'pre_dinner', label: 'Pre-Dinner', limit: 7.0, group: 'Dinner', color: '#8b5cf6', name: 'Pre-Dinner' },
   { id: 'post_dinner', label: '2h Post-Dinner', limit: 8.9, group: 'Dinner' },
 ] as const;
 
 type ColId = typeof COLS[number]['id'];
+
+// Chart line configuration (reduce repetition)
+const CHART_LINES = COLS.filter(c => 'color' in c).map(c => ({
+  id: c.id,
+  name: c.name,
+  color: c.color,
+  strokeWidth: c.id === 'fasting' ? 3 : 2,
+  dotSize: c.id === 'fasting' ? 4 : 3,
+}));
 
 interface Row {
   id: string;
@@ -71,6 +80,17 @@ function convertTarget(limit: number, unit: 'mmol/L' | 'mg/dL') {
   if (unit === 'mmol/L') return limit.toFixed(1);
   return (limit * 18.0182).toFixed(0);
 }
+
+// Theme utilities for DRY styling
+const themeClasses = {
+  bgCard: (isHighContrast: boolean) => isHighContrast ? 'bg-black border-gray-600' : 'bg-white border-slate-200',
+  bgBody: (isHighContrast: boolean) => isHighContrast ? 'bg-gray-900' : 'bg-white',
+  textPrimary: (isHighContrast: boolean) => isHighContrast ? 'text-white' : 'text-slate-900',
+  textSecondary: (isHighContrast: boolean) => isHighContrast ? 'text-gray-400' : 'text-slate-400',
+  borderLine: (isHighContrast: boolean) => isHighContrast ? 'border-gray-700' : 'border-slate-100',
+  hoverBg: (isHighContrast: boolean) => isHighContrast ? 'hover:bg-gray-800' : 'hover:bg-slate-100',
+  inputBg: (isHighContrast: boolean) => isHighContrast ? 'bg-gray-800 border-gray-700 text-white' : 'bg-white border-slate-200 text-slate-900',
+};
 
 function AppContent() {
   const { isAdmin, adminLogin, adminLogout } = useAdmin();
@@ -912,15 +932,35 @@ function AppContent() {
                         label={{ position: 'insideTopLeft', value: 'Pre-Meal Target Range', fill: isHighContrast ? '#34d399' : '#059669', fontSize: 12, fontWeight: 600, opacity: 0.8 } as any}
                       />
                       
-                      <Line type="monotone" name="Fasting" dataKey="fasting" stroke="#3b82f6" strokeWidth={3} dot={{r:4, strokeWidth:2}} connectNulls />
-                      <Line type="monotone" name="Pre-Lunch" dataKey="pre_lunch" stroke="#10b981" strokeWidth={2} dot={{r:3}} connectNulls />
-                      <Line type="monotone" name="Pre-Dinner" dataKey="pre_dinner" stroke="#8b5cf6" strokeWidth={2} dot={{r:3}} connectNulls />
+                      {CHART_LINES.map(line => (
+                        <Line
+                          key={line.id}
+                          type="monotone"
+                          name={line.name}
+                          dataKey={line.id}
+                          stroke={line.color}
+                          strokeWidth={line.strokeWidth}
+                          dot={{r: line.dotSize, strokeWidth: 2}}
+                          connectNulls
+                        />
+                      ))}
 
                       {showTrendlines && (
                         <>
-                          <Line type="monotone" name="Fasting Trend" dataKey="fasting_trend" stroke="#3b82f6" strokeWidth={2} strokeDasharray="5 5" dot={false} connectNulls isAnimationActive={false} />
-                          <Line type="monotone" name="Pre-Lunch Trend" dataKey="pre_lunch_trend" stroke="#10b981" strokeWidth={2} strokeDasharray="5 5" dot={false} connectNulls isAnimationActive={false} />
-                          <Line type="monotone" name="Pre-Dinner Trend" dataKey="pre_dinner_trend" stroke="#8b5cf6" strokeWidth={2} strokeDasharray="5 5" dot={false} connectNulls isAnimationActive={false} />
+                          {CHART_LINES.map(line => (
+                            <Line
+                              key={`${line.id}_trend`}
+                              type="monotone"
+                              name={`${line.name} Trend`}
+                              dataKey={`${line.id}_trend`}
+                              stroke={line.color}
+                              strokeWidth={2}
+                              strokeDasharray="5 5"
+                              dot={false}
+                              connectNulls
+                              isAnimationActive={false}
+                            />
+                          ))}
                         </>
                       )}
                     </LineChart>
@@ -1032,7 +1072,7 @@ function AppContent() {
                   </tbody>
                 </table>
               </div>
-              <div className={`p-4 border-t text-xs font-medium print:hidden flex justify-between items-center ${isHighContrast ? 'bg-gray-900 border-gray-700 text-gray-400' : 'bg-white border-slate-200 text-slate-500'}`}>
+              <div className={`p-4 border-t text-xs font-medium print:hidden flex justify-between items-center border-l border-r ${themeClasses.bgBody(isHighContrast)} ${themeClasses.borderLine(isHighContrast)} ${themeClasses.textSecondary(isHighContrast)}`}>
                 <span>Showing {filteredRows.length} records</span>
               </div>
             </>
@@ -1059,9 +1099,9 @@ function AppContent() {
       {/* Add Reading Modal */}
       {isModalOpen && (
         <div className="fixed inset-0 bg-[#1F3864]/40 backdrop-blur-sm flex items-center justify-center p-4 z-50 print:hidden transition-opacity">
-          <div className={`rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden flex flex-col transform transition-all ${isHighContrast ? 'bg-gray-900 border border-gray-700' : 'bg-white'}`}>
+          <div className={`rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden flex flex-col transform transition-all border ${themeClasses.bgBody(isHighContrast)}`}>
             <div className={`px-6 py-4 border-b flex items-center justify-between ${isHighContrast ? 'bg-black border-gray-800' : 'bg-slate-50 border-slate-100'}`}>
-              <h2 className={`font-bold text-lg ${isHighContrast ? 'text-white' : 'text-slate-800'}`}>{editingId ? 'Edit Glucose Reading' : 'Log Glucose Reading'}</h2>
+              <h2 className={`font-bold text-lg ${themeClasses.textPrimary(isHighContrast)}`}>{editingId ? 'Edit Glucose Reading' : 'Log Glucose Reading'}</h2>
               <button
                 onClick={closeModal} 
                 className={`rounded-full p-1.5 transition-colors focus:outline-none focus:ring-2 focus:ring-[#D6E4F0] ${isHighContrast ? 'text-gray-400 hover:text-white hover:bg-gray-800' : 'text-slate-400 hover:text-slate-600 hover:bg-slate-200'}`}
@@ -1071,7 +1111,7 @@ function AppContent() {
               </button>
             </div>
             
-            <form onSubmit={handleAddReading} className={`p-6 flex flex-col gap-6 ${isHighContrast ? 'bg-gray-900' : 'bg-white'}`}>
+            <form onSubmit={handleAddReading} className={`p-6 flex flex-col gap-6 ${themeClasses.bgBody(isHighContrast)}`}>
               <div className={`p-4 rounded-xl border ${isHighContrast ? 'bg-black border-gray-800' : 'bg-blue-50/50 border-blue-100/50'}`}>
                 <label className={`block text-xs font-bold uppercase tracking-widest mb-2 ${isHighContrast ? 'text-blue-400' : 'text-[#1F3864]'}`} htmlFor="reading-date">Date of Measurement</label>
                 <input 
@@ -1079,7 +1119,7 @@ function AppContent() {
                   type="date" required
                   value={newRow.date || ''}
                   onChange={e => setNewRow({...newRow, date: e.target.value})}
-                  className={`w-full text-[15px] font-medium px-4 py-3 border rounded-lg outline-none focus:ring-4 focus:ring-[#D6E4F0] transition-all shadow-sm ${isHighContrast ? 'bg-gray-800 border-gray-700 text-white focus:border-blue-500' : 'bg-white border-slate-200 text-slate-900 focus:border-[#2E75B6]'}`}
+                  className={`w-full text-[15px] font-medium px-4 py-3 border rounded-lg outline-none focus:ring-4 focus:ring-[#D6E4F0] transition-all shadow-sm ${themeClasses.inputBg(isHighContrast)} focus:border-[#2E75B6]`}
                 />
               </div>
 
@@ -1100,7 +1140,7 @@ function AppContent() {
                         placeholder="—"
                         value={newRow[col.id as ColId] || ''}
                         onChange={e => setNewRow({...newRow, [col.id as ColId]: e.target.value})}
-                        className={`w-full font-mono text-[16px] px-3.5 py-3 border rounded-lg outline-none focus:ring-4 focus:ring-[#D6E4F0] transition-all shadow-sm pr-16 placeholder:text-slate-300 ${isHighContrast ? 'bg-gray-800 border-gray-700 text-white focus:border-blue-500' : 'bg-white border-slate-200 text-slate-900 focus:border-[#2E75B6]'}`}
+                        className={`w-full font-mono text-[16px] px-3.5 py-3 border rounded-lg outline-none focus:ring-4 focus:ring-[#D6E4F0] transition-all shadow-sm pr-16 placeholder:text-slate-300 ${themeClasses.inputBg(isHighContrast)} focus:border-[#2E75B6]`}
                         aria-describedby={`unit-${col.id}`}
                       />
                       <span id={`unit-${col.id}`} className={`absolute right-3.5 text-[10px] font-bold select-none pointer-events-none ${isHighContrast ? 'text-gray-500' : 'text-slate-400'}`}>
