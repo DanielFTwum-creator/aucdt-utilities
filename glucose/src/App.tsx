@@ -290,11 +290,14 @@ function AppContent() {
   const handleAddReading = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newRow.date) return;
-    
+
+    console.log('[MANUAL] Starting manual entry for date:', newRow.date);
+    console.log('[MANUAL] Current rows before save:', rows.length);
+
     const existingIdx = rows.findIndex(r => r.date === newRow.date);
     const existingRow = existingIdx >= 0 ? rows[existingIdx] : null;
     const rowId = existingRow ? existingRow.id : Date.now().toString();
-    
+
     const rowToAdd: Row = {
       id: rowId,
       date: newRow.date,
@@ -306,20 +309,30 @@ function AppContent() {
       post_dinner: newRow.post_dinner !== undefined ? toBaseUnit(newRow.post_dinner, unit) : (existingRow?.post_dinner || ''),
     };
 
+    console.log('[MANUAL] Row to save:', rowToAdd);
+
     const now = Date.now();
     const rowToSave: ReadingRow = {
       ...rowToAdd,
       createdAt: (existingRow as any)?.createdAt ?? now,
       updatedAt: now,
     };
+
+    console.log('[MANUAL] Upserting reading...');
     await upsertReading(rowToSave);
+    console.log('[MANUAL] Upsert complete, fetching all readings...');
+
     const updatedRows = await getAllReadings();
+    console.log('[MANUAL] Fetched', updatedRows.length, 'readings from DB');
+    console.log('[MANUAL] Readings:', updatedRows.map(r => ({ date: r.date, id: r.id })));
+
     setRows(updatedRows as Row[]);
 
     setIsModalOpen(false);
     setNewRow({ date: new Date().toISOString().split('T')[0] });
 
     const addedMonth = getMonthKey(rowToAdd.date);
+    console.log('[MANUAL] Setting month to:', addedMonth);
     if (addedMonth) setSelectedMonth(addedMonth);
   };
 
