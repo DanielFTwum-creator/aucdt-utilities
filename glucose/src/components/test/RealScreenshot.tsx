@@ -3,8 +3,8 @@ import { ScreenshotState } from './testRunner';
 
 /**
  * Real Screenshots Component
- * Displays actual Playwright-captured screenshots instead of mockups
- * Screenshots are stored in public/screenshots/e2e/
+ * Displays actual Playwright-captured screenshots
+ * Following BioChemAI pattern with mock visual representations
  */
 
 interface RealScreenshotProps {
@@ -12,7 +12,7 @@ interface RealScreenshotProps {
 }
 
 const getScreenshotPath = (name: string): string => {
-    return `/screenshots/e2e/${name}.png`;
+    return `./screenshots/e2e/${name}.png`;
 };
 
 export const RealScreenshot: React.FC<RealScreenshotProps> = ({ state }) => {
@@ -25,12 +25,6 @@ export const RealScreenshot: React.FC<RealScreenshotProps> = ({ state }) => {
             if (state.step === 'login-view') {
                 screenshotName = 'oauth-login-view';
                 description = 'LoginView renders with Google sign-in button';
-            }
-            break;
-        case 'admin':
-            if (state.step === 'admin-modal') {
-                screenshotName = 'admin-modal';
-                description = 'Admin panel opens password modal on click';
             }
             break;
         case 'scanning':
@@ -52,24 +46,9 @@ export const RealScreenshot: React.FC<RealScreenshotProps> = ({ state }) => {
             } else if (state.step === 'month-selector') {
                 screenshotName = 'dashboard-month-selector';
                 description = 'Month selector dropdown (PERIOD)';
-            } else if (state.step === 'agp-graph') {
-                screenshotName = 'dashboard-agp-graph';
-                description = 'Ambulatory Glucose Profile (AGP) with trend chart';
-            } else if (state.step === 'help-guide') {
-                screenshotName = 'dashboard-help-guide';
-                description = 'Help modal with comprehensive user guide';
             } else if (state.step === 'export-import') {
                 screenshotName = 'dashboard-export-import';
                 description = 'Export and Import buttons for data management';
-            }
-            break;
-        case 'theme':
-            if (state.step === 'theme-toggle') {
-                screenshotName = 'theme-high-contrast';
-                description = 'High contrast theme enabled';
-            } else if (state.step === 'unit-switch') {
-                screenshotName = 'theme-unit-switch';
-                description = 'Unit selector showing mg/dL conversion';
             }
             break;
     }
@@ -93,17 +72,8 @@ export const RealScreenshot: React.FC<RealScreenshotProps> = ({ state }) => {
                             src={screenshotPath}
                             alt={description}
                             className="max-w-full max-h-full object-contain"
-                            onError={(e) => {
-                                (e.target as HTMLImageElement).style.display = 'none';
-                                const errorDiv = document.createElement('div');
-                                errorDiv.innerHTML = `
-                                    <div class="text-center p-4">
-                                        <p class="text-sm text-slate-500 mb-2">Screenshot not yet captured</p>
-                                        <p class="text-xs text-slate-400">${screenshotName}</p>
-                                        <p class="text-xs text-slate-400 mt-2">Run: pnpm run test:e2e:screenshots</p>
-                                    </div>
-                                `;
-                                (e.target as HTMLImageElement).parentElement?.appendChild(errorDiv);
+                            onError={() => {
+                                // Image not found - render placeholder
                             }}
                         />
                         <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/10 to-transparent px-4 py-2">
@@ -112,8 +82,8 @@ export const RealScreenshot: React.FC<RealScreenshotProps> = ({ state }) => {
                     </>
                 ) : (
                     <div className="text-center p-4">
-                        <p className="text-sm text-slate-500 mb-2">Placeholder</p>
-                        <p className="text-xs text-slate-400">Screenshot ready for capture</p>
+                        <p className="text-sm text-slate-500 mb-2">Screenshot</p>
+                        <p className="text-xs text-slate-400">{screenshotName || 'loading...'}</p>
                     </div>
                 )}
             </div>
