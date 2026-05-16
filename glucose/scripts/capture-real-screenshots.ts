@@ -67,8 +67,25 @@ async function runCaptures() {
     browser = await chromium.launch({ headless: true });
     page = await browser.newPage({ viewport: VIEWPORT });
 
+    console.log('📍 Setting up authenticated session...');
+    // Pre-authenticate with test user by injecting into localStorage
+    const testUser = {
+      id: 'test-user-001',
+      username: 'testuser',
+      email: 'test@techbridge.edu.gh',
+      fullName: 'Kwadjo Frempong'
+    };
+
     console.log('📍 Navigating to app...');
     await page.goto(BASE_URL, { waitUntil: 'networkidle' });
+
+    // Inject authenticated user into localStorage
+    await page.evaluate((user) => {
+      localStorage.setItem('glucose_user', JSON.stringify(user));
+    }, testUser);
+
+    // Reload page to pick up authentication
+    await page.reload({ waitUntil: 'networkidle' });
 
     // ========== OAUTH LOGIN JOURNEY ==========
     console.log('\n📸 OAuth Login Journey');
@@ -126,10 +143,14 @@ async function runCaptures() {
     // ========== DASHBOARD FEATURES ==========
     console.log('\n📸 Dashboard Features');
 
-    // Stats overview - Try to find it, skip if not available (requires authentication)
+    // Wait a moment for dashboard to fully load
+    await page.waitForTimeout(500);
+
+    // Stats overview
     try {
       await page.evaluate(() => window.scrollTo(0, 0));
-      await page.waitForSelector('text=AVERAGE FASTING', { timeout: 3000 });
+      await page.waitForSelector('text=/AVERAGE FASTING|Total Readings/', { timeout: 5000 });
+      await page.waitForTimeout(500);
       await captureScreenshot(
         page,
         'dashboard-stats-overview',
@@ -137,11 +158,13 @@ async function runCaptures() {
         'Dashboard & Analytics Features'
       );
     } catch (e) {
-      console.log('⚠ Dashboard stats require authentication - skipping');
+      console.log('⚠ Dashboard stats not found:', (e as Error).message);
     }
 
-    // Month selector
+    // Month selector (PERIOD dropdown)
     try {
+      await page.evaluate(() => window.scrollTo(0, 100));
+      await page.waitForTimeout(300);
       await captureScreenshot(
         page,
         'dashboard-month-selector',
@@ -149,7 +172,7 @@ async function runCaptures() {
         'Dashboard & Analytics Features'
       );
     } catch (e) {
-      console.log('⚠ Month selector not available');
+      console.log('⚠ Month selector capture failed');
     }
 
     // AGP Graph

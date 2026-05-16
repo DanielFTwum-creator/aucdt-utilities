@@ -1,5 +1,5 @@
 import express from 'express';
-import Anthropic from '@anthropic-ai/sdk';
+import { GoogleGenAI, Type } from '@google/genai';
 import dotenv from 'dotenv';
 
 dotenv.config({ path: '.env.local' });
@@ -7,8 +7,8 @@ dotenv.config({ path: '.env.local' });
 const app = express();
 app.use(express.json({ limit: '10mb' }));
 
-const client = new Anthropic({
-  apiKey: process.env.VITE_ANTHROPIC_API_KEY,
+const client = new GoogleGenAI({
+  apiKey: process.env.VITE_GEMINI_API_KEY,
 });
 
 interface ScanRequest {
@@ -26,7 +26,7 @@ interface ReadingData {
   post_dinner: string;
 }
 
-app.post('/api/scan-glucose', async (req, res) => {
+app.post(['/api/scan-glucose', '/glucose/api/scan-glucose'], async (req, res) => {
   console.log('[SCAN-API] Received POST request');
   console.log('[SCAN-API] Content-Type:', req.get('content-type'));
   console.log('[SCAN-API] Body size:', JSON.stringify(req.body).length, 'bytes');
@@ -41,34 +41,61 @@ app.post('/api/scan-glucose', async (req, res) => {
 
     console.log('[SCAN-API] Processing image, size:', imageData.length, 'chars');
 
-    const response = await client.messages.create({
-      model: 'claude-3-5-sonnet-20241022',
-      max_tokens: 1024,
-      messages: [
-        {
-          role: 'user',
-          content: [
-            {
-              type: 'image',
-              source: {
-                type: 'base64',
-                media_type: mimeType as 'image/jpeg' | 'image/png' | 'image/gif' | 'image/webp',
-                data: imageData,
-              },
+    const responseStream = await client.models.generateContentStream({
+      model: 'gemini-3.1-pro-preview',
+      contents: {
+        parts: [
+          {
+            text: `Role: You are a highly accurate clinical data entry assistant.
+Request: Extract all handwritten blood glucose reading logs from the attached photo.
+Result: A valid JSON array of objects.
+Requirements:
+- Each object must map to a row containing these keys: date, fasting, post_breakfast, pre_lunch, post_lunch, pre_dinner, post_dinner.
+- Format the date appropriately to MM/DD/YYYY if possible.
+- The values are blood glucose measurements in mmol/L. Keep decimals exactly as written.
+Rules:
+- Leave fields empty (as an empty string "") if there is no reading recorded in that cell.
+- Ignore blank rows completely. Only return rows with at least one reading.
+Restrictions:
+- ONLY output the JSON array. Make sure the output precisely matches the JSON response schema.`,
+          },
+          {
+            inlineData: {
+              data: imageData,
+              mimeType: mimeType,
             },
-            {
-              type: 'text',
-              text: `Extract all handwritten blood glucose readings from this image.
-Return ONLY a JSON array with no markdown formatting.
-Each object: {date: "MM/DD/YYYY", fasting: "X.X", post_breakfast: "X.X", pre_lunch: "X.X", post_lunch: "X.X", pre_dinner: "X.X", post_dinner: "X.X"}
-Empty fields as "". Include only rows with at least one reading. Values in mmol/L.`,
+          },
+        ],
+      },
+      config: {
+        temperature: 0,
+        responseMimeType: 'application/json',
+        responseSchema: {
+          type: Type.ARRAY,
+          items: {
+            type: Type.OBJECT,
+            properties: {
+              date: { type: Type.STRING },
+              fasting: { type: Type.STRING },
+              post_breakfast: { type: Type.STRING },
+              pre_lunch: { type: Type.STRING },
+              post_lunch: { type: Type.STRING },
+              pre_dinner: { type: Type.STRING },
+              post_dinner: { type: Type.STRING },
             },
-          ],
+            required: ['date'],
+          },
         },
-      ],
+      },
     });
 
-    const text = response.content[0].type === 'text' ? response.content[0].text : '';
+    let text = '';
+    for await (const chunk of responseStream) {
+      if (chunk.text) {
+        text += chunk.text;
+      }
+    }
+
     console.log('[SCAN-API] Response received, length:', text.length);
 
     if (!text.trim()) {
@@ -103,5 +130,5 @@ app.get('/api/health', (req, res) => {
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`[GLUCOSE-API] Server running on http://0.0.0.0:${PORT}`);
-  console.log(`[GLUCOSE-API] Claude API key configured: ${!!process.env.VITE_ANTHROPIC_API_KEY}`);
+  console.log(`[GLUCOSE-API] Gemini API key configured: ${!!process.env.VITE_GEMINI_API_KEY}`);
 });
