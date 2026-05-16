@@ -3,6 +3,7 @@ import { Printer, Plus, X, Trash2, LogOut, ShieldCheck, Activity, Eye, FileText,
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, ReferenceArea } from 'recharts';
 import { useAuth } from './contexts/AuthContext';
 import { AdminProvider, useAdmin } from './contexts/AdminContext';
+import { TestContainer } from './components/test/TestContainer';
 import {
   getAllReadings, upsertReading, deleteReading, batchUpsertReadings,
   getProfile, saveProfile, ReadingRow, getAdminConfig
@@ -72,6 +73,7 @@ function convertTarget(limit: number, unit: 'mmol/L' | 'mg/dL') {
 
 function AppContent() {
   const { isAdmin, adminLogin, adminLogout } = useAdmin();
+  const { logout } = useAuth();
   const [passwordInput, setPasswordInput] = useState('');
   const [loginError, setLoginError] = useState('');
   const [isFirstTime, setIsFirstTime] = useState<boolean | null>(null);
@@ -85,7 +87,7 @@ function AppContent() {
   // UI preferences
   const [unit, setUnit] = useState<'mmol/L' | 'mg/dL'>('mmol/L');
   const [showLogData, setShowLogData] = useState(true);
-  const [activeTab, setActiveTab] = useState<'log' | 'agp'>('log');
+  const [activeTab, setActiveTab] = useState<'log' | 'agp' | 'test'>('log');
   const [isHighContrast, setIsHighContrast] = useState(false);
 
   // New reading form state
@@ -539,7 +541,7 @@ function AppContent() {
             <Upload className="w-5 h-5" />
           </label>
 
-          <button onClick={adminLogout} className={`p-2.5 rounded-lg transition-colors focus:ring-2 focus:ring-blue-300 h-10 ${isHighContrast ? 'text-gray-400 hover:text-white hover:bg-gray-800' : 'text-slate-400 hover:text-[#1F3864] hover:bg-slate-200'}`} title="Sign out">
+          <button onClick={() => { adminLogout(); logout(); }} className={`p-2.5 rounded-lg transition-colors focus:ring-2 focus:ring-blue-300 h-10 ${isHighContrast ? 'text-gray-400 hover:text-white hover:bg-gray-800' : 'text-slate-400 hover:text-[#1F3864] hover:bg-slate-200'}`} title="Sign out">
             <LogOut className="w-5 h-5" />
           </button>
 
@@ -656,21 +658,30 @@ function AppContent() {
 
         {/* Tab Navigation */}
         <div className="flex items-center gap-6 border-b border-slate-200 print:hidden mt-4">
-          <button 
+          <button
             className={`pb-3 text-[15px] font-bold uppercase tracking-widest transition-all ${activeTab === 'log' ? (isHighContrast ? 'text-white border-b-[4px] border-white' : 'text-[#1F3864] border-b-[4px] border-[#D4A373]') : 'text-slate-400 hover:text-slate-600'}`}
             onClick={() => setActiveTab('log')}
           >
             Raw Log Data
           </button>
-          <button 
+          <button
             className={`pb-3 text-[15px] font-bold uppercase tracking-widest transition-all ${activeTab === 'agp' ? (isHighContrast ? 'text-white border-b-[4px] border-white' : 'text-[#1F3864] border-b-[4px] border-[#D4A373]') : 'text-slate-400 hover:text-slate-600'}`}
             onClick={() => setActiveTab('agp')}
           >
             Ambulatory Glucose Profile (AGP)
           </button>
+          <button
+            className={`pb-3 text-[15px] font-bold uppercase tracking-widest transition-all ${activeTab === 'test' ? (isHighContrast ? 'text-white border-b-[4px] border-white' : 'text-[#1F3864] border-b-[4px] border-[#D4A373]') : 'text-slate-400 hover:text-slate-600'}`}
+            onClick={() => setActiveTab('test')}
+          >
+            E2E Test
+          </button>
         </div>
 
         {/* Tab Content */}
+        {activeTab === 'test' ? (
+          <TestContainer />
+        ) : (
         <div className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden flex flex-col max-h-[70vh] min-h-[500px] print:max-h-none print:h-auto print:border-none print:shadow-none">
           {activeTab === 'agp' ? (
             <div className={`p-6 flex-grow flex flex-col ${isHighContrast ? 'bg-gray-900 text-white' : ''}`}>
@@ -803,6 +814,7 @@ function AppContent() {
             </>
           )}
         </div>
+        )}
       </div>
 
       <footer className={`mt-8 flex flex-wrap items-center gap-6 text-[10.5px] font-bold uppercase tracking-widest print:hidden ${isHighContrast ? 'text-gray-500' : 'text-slate-400'}`}>
