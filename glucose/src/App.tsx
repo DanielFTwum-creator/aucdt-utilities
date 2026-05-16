@@ -94,11 +94,13 @@ const themeClasses = {
 
 // Get initials from name (use first and last letter for uniqueness)
 const getInitials = (name: string): string => {
-  const parts = name.trim().split(/\s+/);
-  if (parts.length >= 2) {
-    return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+  const parts = name.trim().split(/\s+/).filter(p => p.length > 0);
+  const titles = ['dr', 'dr.', 'prof', 'prof.', 'mr', 'mr.', 'mrs', 'mrs.', 'ms', 'ms.'];
+  const filtered = parts.filter(p => !titles.includes(p.toLowerCase()));
+  if (filtered.length >= 2) {
+    return (filtered[0][0] + filtered[filtered.length - 1][0]).toUpperCase();
   }
-  return parts[0]?.[0]?.toUpperCase() || '—';
+  return filtered[0]?.[0]?.toUpperCase() || '—';
 };
 
 function AppContent() {
