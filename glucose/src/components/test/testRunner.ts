@@ -17,7 +17,8 @@ export type ScreenshotState =
     | { type: 'admin', step: 'admin-modal' | 'admin-error' | 'admin-success' | 'admin-panel' }
     | { type: 'scanning', step: 'file-picker' | 'scanning-progress' | 'scan-complete' | 'readings-displayed' }
     | { type: 'data', step: 'entry-modal' | 'date-picker' | 'data-saved' | 'table-updated' | 'delete-success' }
-    | { type: 'theme', step: 'theme-toggle' | 'unit-switch' | 'logout-complete' | 'login-fresh' };
+    | { type: 'theme', step: 'theme-toggle' | 'unit-switch' | 'logout-complete' | 'login-fresh' }
+    | { type: 'dashboard', step: 'stats-overview' | 'month-selector' | 'agp-graph' | 'help-guide' | 'export-import' };
 
 const testSuite: TestSuiteResult[] = [
     {
@@ -69,6 +70,17 @@ const testSuite: TestSuiteResult[] = [
             { description: 'Unit selector switches between mmol/L and mg/dL', status: 'idle', screenshotState: { type: 'theme', step: 'unit-switch' } },
             { description: 'Logout button clears OAuth and admin sessions', status: 'idle', screenshotState: { type: 'theme', step: 'logout-complete' } },
             { description: 'Page returns to LoginView after logout', status: 'idle', screenshotState: { type: 'theme', step: 'login-fresh' } },
+        ],
+    },
+    {
+        name: 'Dashboard & Analytics Features',
+        status: 'idle',
+        tests: [
+            { description: 'Stats cards display current month averages (Fasting, Post-Meal) and total reading count', status: 'idle', screenshotState: { type: 'dashboard', step: 'stats-overview' } },
+            { description: 'PERIOD dropdown enables filtering data view by calendar month', status: 'idle', screenshotState: { type: 'dashboard', step: 'month-selector' } },
+            { description: 'Ambulatory Glucose Profile (AGP) tab renders time-series trend chart', status: 'idle', screenshotState: { type: 'dashboard', step: 'agp-graph' } },
+            { description: 'Help button (?) opens comprehensive user guide modal with instructions', status: 'idle', screenshotState: { type: 'dashboard', step: 'help-guide' } },
+            { description: 'Export/Import buttons provide data backup (JSON) and recovery workflows', status: 'idle', screenshotState: { type: 'dashboard', step: 'export-import' } },
         ],
     },
 ];

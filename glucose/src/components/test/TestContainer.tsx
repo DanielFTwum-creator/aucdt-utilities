@@ -58,7 +58,7 @@ export const TestContainer: React.FC = () => {
                     <h1 className="text-3xl font-bold text-slate-900">E2E Self-Test</h1>
                 </div>
                 <p className="text-slate-600 mb-6 text-sm">
-                    This test suite verifies critical user journeys of the glucose monitoring app. Click below to run the tests and see visual mockups of each state.
+                    This test suite verifies critical user journeys. To see real screenshots from the actual running application, run <code className="bg-gray-100 px-2 py-1 rounded text-[12px] font-mono">pnpm run test:e2e:screenshots</code> which captures actual browser screenshots using Playwright.
                 </p>
                 <button
                     onClick={handleRunTests}
