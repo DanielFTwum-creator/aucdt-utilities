@@ -672,7 +672,68 @@ function AppContent() {
 
 ---
 
+## 16. GLUCOSE PROJECT PATTERNS & LEARNINGS (May 2026)
+
+### Security Patterns
+
+**Login Screen Privacy (Critical)**
+- ❌ Never pre-populate email/username fields from stored state
+- ❌ Never show personalized greetings on login screen (shoulder-surfing risk)
+- ✅ Keep login screen generic: "Welcome Back" (no names, no hints about returning users)
+- ✅ Move personalized greeting post-auth: show "Good to see you, [name]" in dashboard header only
+- ✅ Optional safe middle ground: avatar initial + dismissible "Not you?" prompt (no plaintext email)
+
+**Reason:** Shared devices, shoulder-surfers, and local history can expose which email was last used.
+
+### Data State Management
+
+**IndexedDB + React State Sync**
+- Always log state transitions to debug mismatches between UI count and database count
+- Use dedicated `[DB]` and `[APP]` log prefixes for traceability
+- Track: before-save count, after-upsert count, after-fetch count, after-state-update count
+- Common issue: stale `rows` state lagging behind actual database due to async setState
+
+**Total Readings Count Bug Pattern**
+- ❌ Calculate total from filtered data (`filteredRows.length`)
+- ✅ Calculate from unfiltered data (`rows.length` = all months, not current month)
+- The UI month selector filters the grid, but stats should always reflect complete dataset
+- Remember: users see filtered grid but expect total summary to match DB reality, not filter reality
+
+### Data Import/Rescan Patterns
+
+**Duplicate Handling on Rescan**
+- Index readings by date (primary key per day)
+- On rescan of same document, check for `existingRow = rows.find(r => r.date === formattedDate)`
+- If exists: **update** (merge with new extracted data, preserve createdAt, update updatedAt)
+- If new: **create** (assign new ID, set createdAt = now)
+- Log updates vs new creations separately for visibility
+
+**Month Auto-Selection After Scan**
+- ✅ DO: Auto-select the scanned month on first import (helps user see new data immediately)
+- ❌ DON'T: Auto-select on manual entry for different month (preserves user context)
+- Different UX patterns for different flows — be explicit about intent
+
+### UI/UX Patterns
+
+**Read-Only Fields After Auto-Population**
+- If Patient Name auto-populates from OAuth user.fullName: make it `readOnly`
+- Prevents accidental edits to identity-tied fields
+- Cursor style: `cursor-default` on read-only inputs for visual feedback
+
+**Default Values in Admin Panel**
+- Doctor Name defaults to `"Dr Yacoba Atiase"` (TUC protocol)
+- Preserve on page reload: if profile is empty, use default (don't wipe on admin entry)
+- Pattern: `setDoctorName(profile.doctorName || 'Dr Yacoba Atiase')`
+
+**Comprehensive Console Logging Strategy**
+- Phase 1: High-level flow logging (`[SCAN]`, `[MANUAL]`, `[APP]`)
+- Phase 2: Database layer logging (`[DB]`)
+- Always log: before state, action, after state
+- Example progression: `Starting → Fetching → Updated → Rendering`
+
+---
+
 *Last updated: May 2026 — Daniel Frempong Twum / TUC ICT*
 *College Landing Page Generator: Dynamic positioning, TUC branding, Gemini AI integration, dmcdai HTML patterns*
 *LuxThumb Designer: First TUC project on Capacitor — iOS/Android ready (v1.0.0)*
-*Glucose: Blood glucose monitoring with Gemini vision OCR + dual-auth logout fixed (v1.0.0)*
+*Glucose: Blood glucose monitoring with Gemini vision OCR, privacy-first login UX, IndexedDB state sync patterns (v1.1.0)*
