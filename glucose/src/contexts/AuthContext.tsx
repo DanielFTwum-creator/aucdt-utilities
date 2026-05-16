@@ -4,13 +4,14 @@ export interface User {
   id: string;
   username: string;
   email: string;
+  fullName?: string;
 }
 
 interface AuthContextType {
   isAuthenticated: boolean;
   user: User | null;
   login: (userOrUsername: User | string, password?: string) => Promise<{ success: boolean; message?: string }>;
-  register: (username: string, email: string, password: string) => Promise<{ success: boolean; message?: string }>;
+  register: (username: string, email: string, password: string, fullName?: string) => Promise<{ success: boolean; message?: string }>;
   logout: () => void;
 }
 
@@ -59,12 +60,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
-  const register = async (username: string, email: string, password: string) => {
+  const register = async (username: string, email: string, password: string, fullName?: string) => {
     try {
       const res = await fetch('/api/auth/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, email, password }),
+        body: JSON.stringify({ username, email, password, fullName }),
       });
       const data = await res.json();
       if (data.success && data.user) {
