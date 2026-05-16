@@ -1,0 +1,107 @@
+{
+  "generated": "2026-05-16T17:30:00Z",
+  "description": "E2E Test Screenshots - Real application UI captured with Puppeteer",
+  "screenshots": [
+    {
+      "name": "oauth-login-view",
+      "description": "LoginView renders with Google sign-in button",
+      "path": "/screenshots/e2e/oauth-login-view.png",
+      "testSuite": "OAuth Login Journey",
+      "status": "pending_capture"
+    },
+    {
+      "name": "oauth-authenticated",
+      "description": "User authenticated via Google, App renders with patient data",
+      "path": "/screenshots/e2e/oauth-authenticated.png",
+      "testSuite": "OAuth Login Journey",
+      "status": "pending_capture"
+    },
+    {
+      "name": "admin-modal",
+      "description": "Admin panel opens password modal on click",
+      "path": "/screenshots/e2e/admin-modal.png",
+      "testSuite": "Admin Access Journey",
+      "status": "pending_capture"
+    },
+    {
+      "name": "admin-success",
+      "description": "Correct password grants admin access",
+      "path": "/screenshots/e2e/admin-success.png",
+      "testSuite": "Admin Access Journey",
+      "status": "pending_capture"
+    },
+    {
+      "name": "data-scan-interface",
+      "description": "Scan photo button for AI extraction",
+      "path": "/screenshots/e2e/data-scan-interface.png",
+      "testSuite": "Image Scanning Journey",
+      "status": "pending_capture"
+    },
+    {
+      "name": "scanning-progress",
+      "description": "Loading overlay shows scanning progress",
+      "path": "/screenshots/e2e/scanning-progress.png",
+      "testSuite": "Image Scanning Journey",
+      "status": "pending_capture"
+    },
+    {
+      "name": "data-manual-entry-modal",
+      "description": "Manual entry modal for adding readings",
+      "path": "/screenshots/e2e/data-manual-entry-modal.png",
+      "testSuite": "Data Management Journey",
+      "status": "pending_capture"
+    },
+    {
+      "name": "dashboard-stats-overview",
+      "description": "Stats cards showing Average Fasting, Post-Meal, Total Readings",
+      "path": "/screenshots/e2e/dashboard-stats-overview.png",
+      "testSuite": "Dashboard & Analytics Features",
+      "status": "pending_capture"
+    },
+    {
+      "name": "dashboard-month-selector",
+      "description": "Month selector dropdown (PERIOD)",
+      "path": "/screenshots/e2e/dashboard-month-selector.png",
+      "testSuite": "Dashboard & Analytics Features",
+      "status": "pending_capture"
+    },
+    {
+      "name": "dashboard-agp-graph",
+      "description": "Ambulatory Glucose Profile (AGP) with trend chart",
+      "path": "/screenshots/e2e/dashboard-agp-graph.png",
+      "testSuite": "Dashboard & Analytics Features",
+      "status": "pending_capture"
+    },
+    {
+      "name": "dashboard-help-guide",
+      "description": "Help modal with comprehensive user guide",
+      "path": "/screenshots/e2e/dashboard-help-guide.png",
+      "testSuite": "Dashboard & Analytics Features",
+      "status": "pending_capture"
+    },
+    {
+      "name": "dashboard-export-import",
+      "description": "Export and Import buttons for data management",
+      "path": "/screenshots/e2e/dashboard-export-import.png",
+      "testSuite": "Dashboard & Analytics Features",
+      "status": "pending_capture"
+    },
+    {
+      "name": "theme-high-contrast",
+      "description": "High contrast theme enabled",
+      "path": "/screenshots/e2e/theme-high-contrast.png",
+      "testSuite": "Theme & Logout Journey",
+      "status": "pending_capture"
+    },
+    {
+      "name": "theme-unit-switch",
+      "description": "Unit selector showing mg/dL conversion",
+      "path": "/screenshots/e2e/theme-unit-switch.png",
+      "testSuite": "Theme & Logout Journey",
+      "status": "pending_capture"
+    }
+  ],
+  "notes": "Screenshots can be captured by running: pnpm run test:e2e:screenshots (requires working dev server on port 3000)",
+  "totalTests": 26,
+  "testsReferencingScreenshots": 14
+}

@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
-import { Printer, Plus, X, Trash2, LogOut, ShieldCheck, Activity, Eye, FileText, Settings, Camera, Loader2, Download, Upload } from 'lucide-react';
+import { Printer, Plus, X, Trash2, LogOut, ShieldCheck, Activity, Eye, FileText, Settings, Camera, Loader2, Download, Upload, HelpCircle } from 'lucide-react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, ReferenceArea } from 'recharts';
 import { useAuth } from './contexts/AuthContext';
 import { AdminProvider, useAdmin } from './contexts/AdminContext';
 import { TestContainer } from './components/test/TestContainer';
+import { HelpModal } from './components/HelpModal';
 import {
   getAllReadings, upsertReading, deleteReading, batchUpsertReadings,
   getProfile, saveProfile, ReadingRow, getAdminConfig
@@ -89,6 +90,7 @@ function AppContent() {
   const [showLogData, setShowLogData] = useState(true);
   const [activeTab, setActiveTab] = useState<'log' | 'agp' | 'test'>('log');
   const [isHighContrast, setIsHighContrast] = useState(false);
+  const [isHelpOpen, setIsHelpOpen] = useState(false);
 
   // New reading form state
   const [newRow, setNewRow] = useState<Partial<Row>>({ date: new Date().toISOString().split('T')[0] });
@@ -592,6 +594,14 @@ function AppContent() {
             <Upload className="w-5 h-5" />
           </label>
 
+          <button
+            onClick={() => setIsHelpOpen(true)}
+            className={`p-2.5 rounded-lg transition-colors focus:ring-2 focus:ring-blue-300 h-10 ${isHighContrast ? 'text-gray-400 hover:text-white hover:bg-gray-800' : 'text-slate-400 hover:text-[#1F3864] hover:bg-slate-200'}`}
+            title="View user guide"
+          >
+            <HelpCircle className="w-5 h-5" />
+          </button>
+
           <button onClick={() => { adminLogout(); logout(); }} className={`p-2.5 rounded-lg transition-colors focus:ring-2 focus:ring-blue-300 h-10 ${isHighContrast ? 'text-gray-400 hover:text-white hover:bg-gray-800' : 'text-slate-400 hover:text-[#1F3864] hover:bg-slate-200'}`} title="Sign out">
             <LogOut className="w-5 h-5" />
           </button>
@@ -950,6 +960,8 @@ function AppContent() {
           </div>
         </div>
       )}
+
+      <HelpModal isOpen={isHelpOpen} onClose={() => setIsHelpOpen(false)} />
       </div>
     </div>
   );
