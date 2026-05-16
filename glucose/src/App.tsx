@@ -85,6 +85,8 @@ function AppContent() {
   const [selectedMonth, setSelectedMonth] = useState<string>('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
+  const [viewMode, setViewMode] = useState<'month' | 'year'>('month');
+  const [selectedYear, setSelectedYear] = useState<string>('');
 
   // UI preferences
   const [unit, setUnit] = useState<'mmol/L' | 'mg/dL'>('mmol/L');
@@ -294,18 +296,40 @@ function AppContent() {
     return Array.from(keys).sort();
   }, [rows]);
 
+  const yearOptions = useMemo(() => {
+    const years = new Set<string>();
+    rows.forEach(r => {
+      const yr = r.date.split('-')[0];
+      if (yr) years.add(yr);
+    });
+    return Array.from(years).sort().reverse();
+  }, [rows]);
+
   useEffect(() => {
-    if (monthOptions.length && !selectedMonth) {
-      setSelectedMonth(monthOptions[monthOptions.length - 1]);
-    } else if (monthOptions.length && !monthOptions.includes(selectedMonth)) {
-      setSelectedMonth(monthOptions[monthOptions.length - 1]);
+    if (viewMode === 'month') {
+      if (monthOptions.length && !selectedMonth) {
+        setSelectedMonth(monthOptions[monthOptions.length - 1]);
+      } else if (monthOptions.length && !monthOptions.includes(selectedMonth)) {
+        setSelectedMonth(monthOptions[monthOptions.length - 1]);
+      }
+    } else {
+      if (yearOptions.length && !selectedYear) {
+        setSelectedYear(yearOptions[0]);
+      } else if (yearOptions.length && !yearOptions.includes(selectedYear)) {
+        setSelectedYear(yearOptions[0]);
+      }
     }
-  }, [monthOptions, selectedMonth]);
+  }, [monthOptions, selectedMonth, yearOptions, selectedYear, viewMode]);
 
   const filteredRows = useMemo(() => {
-    if (!selectedMonth) return [];
-    return rows.filter(r => getMonthKey(r.date) === selectedMonth).sort((a, b) => a.date.localeCompare(b.date));
-  }, [rows, selectedMonth]);
+    if (viewMode === 'month') {
+      if (!selectedMonth) return [];
+      return rows.filter(r => getMonthKey(r.date) === selectedMonth).sort((a, b) => a.date.localeCompare(b.date));
+    } else {
+      if (!selectedYear) return [];
+      return rows.filter(r => r.date.startsWith(selectedYear)).sort((a, b) => a.date.localeCompare(b.date));
+    }
+  }, [rows, selectedMonth, selectedYear, viewMode]);
 
   const handleAddReading = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -428,10 +452,15 @@ function AppContent() {
   };
 
   const currentMonthLabel = useMemo(() => {
-    if (!selectedMonth) return '—';
-    const [yr, mo] = selectedMonth.split('-');
-    return `${MONTH_NAMES[parseInt(mo) - 1]} ${yr}`;
-  }, [selectedMonth]);
+    if (viewMode === 'month') {
+      if (!selectedMonth) return '—';
+      const [yr, mo] = selectedMonth.split('-');
+      return `${MONTH_NAMES[parseInt(mo) - 1]} ${yr}`;
+    } else {
+      if (!selectedYear) return '—';
+      return `Year ${selectedYear}`;
+    }
+  }, [selectedMonth, selectedYear, viewMode]);
 
   // Calculations for summary (filtered by current month)
   const fastVals = filteredRows.map(r => r.fasting);
@@ -627,18 +656,58 @@ function AppContent() {
             <LogOut className="w-5 h-5" />
           </button>
 
-          <div className={`border rounded-lg px-3 flex items-center shadow-sm h-10 ${isHighContrast ? 'bg-gray-900 border-gray-700' : 'bg-white border-slate-200'}`}>
-            <span className="text-[11px] font-bold text-slate-400 pl-1 pr-2 hidden sm:inline tracking-wider">PERIOD</span>
-            <select 
-              value={selectedMonth} 
-              onChange={e => setSelectedMonth(e.target.value)}
-              className={`text-sm px-2 py-1 bg-transparent border-none outline-none focus:ring-0 font-bold cursor-pointer ${isHighContrast ? 'text-white' : 'text-[#1F3864]'}`}
-            >
-              {monthOptions.map(k => {
-                const [yr, mo] = k.split('-');
-                return <option key={k} value={k} className={isHighContrast ? 'bg-gray-900 text-white' : ''}>{MONTH_NAMES[parseInt(mo) - 1]} {yr}</option>;
-              })}
-            </select>
+          <div className={`border rounded-lg flex items-center shadow-sm h-10 ${isHighContrast ? 'bg-gray-900 border-gray-700' : 'bg-white border-slate-200'}`}>
+            <span className="text-[11px] font-bold text-slate-400 pl-3 pr-2 hidden sm:inline tracking-wider">PERIOD</span>
+
+            {/* View Mode Toggle */}
+            <div className={`flex border-r ${isHighContrast ? 'border-gray-700' : 'border-slate-200'}`}>
+              <button
+                onClick={() => setViewMode('month')}
+                className={`px-3 py-1 text-xs font-bold uppercase transition-colors ${
+                  viewMode === 'month'
+                    ? isHighContrast ? 'bg-blue-900 text-white' : 'bg-blue-100 text-[#1F3864]'
+                    : isHighContrast ? 'text-gray-400 hover:text-white' : 'text-slate-500 hover:text-slate-700'
+                }`}
+                title="View by month"
+              >
+                Month
+              </button>
+              <button
+                onClick={() => setViewMode('year')}
+                className={`px-3 py-1 text-xs font-bold uppercase transition-colors ${
+                  viewMode === 'year'
+                    ? isHighContrast ? 'bg-blue-900 text-white' : 'bg-blue-100 text-[#1F3864]'
+                    : isHighContrast ? 'text-gray-400 hover:text-white' : 'text-slate-500 hover:text-slate-700'
+                }`}
+                title="View by year"
+              >
+                Year
+              </button>
+            </div>
+
+            {/* Selector based on view mode */}
+            {viewMode === 'month' ? (
+              <select
+                value={selectedMonth}
+                onChange={e => setSelectedMonth(e.target.value)}
+                className={`flex-1 text-sm px-3 py-1 bg-transparent border-none outline-none focus:ring-0 font-bold cursor-pointer ${isHighContrast ? 'text-white' : 'text-[#1F3864]'}`}
+              >
+                {monthOptions.map(k => {
+                  const [yr, mo] = k.split('-');
+                  return <option key={k} value={k} className={isHighContrast ? 'bg-gray-900 text-white' : ''}>{MONTH_NAMES[parseInt(mo) - 1]} {yr}</option>;
+                })}
+              </select>
+            ) : (
+              <select
+                value={selectedYear}
+                onChange={e => setSelectedYear(e.target.value)}
+                className={`flex-1 text-sm px-3 py-1 bg-transparent border-none outline-none focus:ring-0 font-bold cursor-pointer ${isHighContrast ? 'text-white' : 'text-[#1F3864]'}`}
+              >
+                {yearOptions.map(yr => (
+                  <option key={yr} value={yr} className={isHighContrast ? 'bg-gray-900 text-white' : ''}>Year {yr}</option>
+                ))}
+              </select>
+            )}
           </div>
           
           <button 

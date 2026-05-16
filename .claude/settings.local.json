@@ -117,7 +117,8 @@
       "Bash(Select-Object -Last 30)",
       "Bash(scp -r dist/* danieltwum@techbridge.edu.gh:/var/www/html/ai-tools/glucose/)",
       "PowerShell(ssh -o StrictHostKeyChecking=no root@66.226.72.199 \"ls -la /var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/ | grep glucose\")",
-      "PowerShell(ssh -o StrictHostKeyChecking=no root@66.226.72.199 \"ls -la /var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/glucose/\")"
+      "PowerShell(ssh -o StrictHostKeyChecking=no root@66.226.72.199 \"ls -la /var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/glucose/\")",
+      "Bash(pkill -f \"vite --port\")"
     ]
   }
 }
