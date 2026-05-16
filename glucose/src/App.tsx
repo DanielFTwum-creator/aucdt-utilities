@@ -213,11 +213,19 @@ function AppContent() {
       await batchUpsertReadings(rowsToSave);
       const refreshed = await getAllReadings();
       console.log('[SCAN] DB now has', refreshed.length, 'readings');
-      setRows(refreshed as Row[]);
 
-      const firstScannedMonth = rowsToSave.length > 0 ? getMonthKey(rowsToSave[0].date) : null;
-      if (firstScannedMonth) {
-        setSelectedMonth(firstScannedMonth);
+      const refreshedTyped = refreshed as Row[];
+      setRows(refreshedTyped);
+
+      const scannedMonths = new Set<string>();
+      rowsToSave.forEach(r => {
+        const m = getMonthKey(r.date);
+        if (m) scannedMonths.add(m);
+      });
+      const latestScannedMonth = Array.from(scannedMonths).sort().pop();
+      console.log('[SCAN] Scanned months:', Array.from(scannedMonths), 'selecting:', latestScannedMonth);
+      if (latestScannedMonth) {
+        setSelectedMonth(latestScannedMonth);
       }
 
       setUploadProgress(100);
