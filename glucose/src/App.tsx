@@ -658,7 +658,7 @@ function AppContent() {
       {/* Header Section */}
       <header className="flex flex-col md:flex-row items-start md:items-center justify-between mb-8 gap-4 print:hidden">
         <div className="flex items-center gap-5">
-          <div className={`border-[2.5px] px-3.5 py-1 text-xl font-bold tracking-tighter rounded-md shadow-sm ${isHighContrast ? 'border-white text-white' : 'border-[#1F3864] text-[#1F3864]'}`}>ROPHE</div>
+          <img src="/rophe-logo.jpg" alt="ROPHE Logo" className="h-12 object-contain" />
           <div>
             <h1 className={`text-lg font-bold leading-tight ${isHighContrast ? 'text-white' : 'text-slate-900'}`}>Blood Glucose Monitoring</h1>
             <p className={`text-[11px] uppercase tracking-[0.15em] font-bold mt-0.5 ${isHighContrast ? 'text-blue-300' : 'text-[#2E75B6]'}`}>Specialist Care Portal</p>
