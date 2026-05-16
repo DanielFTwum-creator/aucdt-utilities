@@ -10,7 +10,9 @@
     "preview": "vite preview",
     "clean": "rm -rf dist",
     "lint": "tsc --noEmit",
-    "test:e2e:screenshots": "tsx scripts/capture-real-screenshots.ts"
+    "test:e2e:screenshots": "tsx scripts/capture-real-screenshots.ts",
+    "deploy": "powershell -File deploy.ps1 -Build",
+    "deploy:verify": "tsx scripts/verify-deployment.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.96.0",
