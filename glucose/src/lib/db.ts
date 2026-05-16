@@ -77,12 +77,17 @@ export const getAuditLog = async (): Promise<AuditLogEntry[]> => {
 
 export const getAllReadings = async (): Promise<ReadingRow[]> => {
   const db = await initDB();
-  return db.getAll('readings');
+  const allReadings = await db.getAll('readings');
+  console.log('[DB] getAllReadings returned', allReadings.length, 'readings');
+  return allReadings;
 };
 
 export const upsertReading = async (row: ReadingRow): Promise<void> => {
   const db = await initDB();
+  console.log('[DB] Upserting reading:', row.id, 'date:', row.date, 'fasting:', row.fasting);
   await db.put('readings', row);
+  const allAfter = await db.getAll('readings');
+  console.log('[DB] After upsert, DB has', allAfter.length, 'readings');
 };
 
 export const deleteReading = async (id: string): Promise<void> => {
@@ -92,11 +97,15 @@ export const deleteReading = async (id: string): Promise<void> => {
 
 export const batchUpsertReadings = async (rows: ReadingRow[]): Promise<void> => {
   const db = await initDB();
+  console.log('[DB] batchUpsertReadings starting with', rows.length, 'rows');
   const tx = db.transaction('readings', 'readwrite');
   for (const row of rows) {
+    console.log('[DB] batch put:', row.id, 'date:', row.date);
     tx.store.put(row);
   }
   await tx.done;
+  const allAfter = await db.getAll('readings');
+  console.log('[DB] After batch upsert, DB has', allAfter.length, 'readings');
 };
 
 export const getProfile = async (): Promise<Profile | undefined> => {
