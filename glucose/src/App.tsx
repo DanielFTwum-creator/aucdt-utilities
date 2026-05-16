@@ -963,8 +963,8 @@ function AppContent() {
                               name={`${line.name} Trend`}
                               dataKey={`${line.id}_trend`}
                               stroke={line.color}
-                              strokeWidth={2}
-                              strokeDasharray="5 5"
+                              strokeWidth={3}
+                              strokeOpacity={0.9}
                               dot={false}
                               connectNulls
                               isAnimationActive={false}
