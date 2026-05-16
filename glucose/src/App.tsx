@@ -242,18 +242,23 @@ function AppContent() {
 
   useEffect(() => {
     if (!isAdmin) {
+      console.log('[APP] Not admin, clearing rows');
       setRows([]);
       setPatientName(user?.fullName || '');
       setDoctorName('Dr Yacoba Atiase');
       return;
     }
+    console.log('[APP] Admin mode, loading profile and readings...');
     getProfile().then(profile => {
       if (profile) {
         setPatientName(profile.patientName || user?.fullName || '');
         setDoctorName(profile.doctorName || 'Dr Yacoba Atiase');
       }
     });
-    getAllReadings().then(fetched => setRows(fetched as Row[]));
+    getAllReadings().then(fetched => {
+      console.log('[APP] getAllReadings returned', fetched.length, 'rows, setting state');
+      setRows(fetched as Row[]);
+    });
   }, [isAdmin]);
 
   // Save profile changes
@@ -266,6 +271,7 @@ function AppContent() {
   }, [patientName, doctorName, isAdmin]);
 
   const monthOptions = useMemo(() => {
+    console.log('[APP] monthOptions computed: rows.length =', rows.length);
     const keys = new Set<string>();
     rows.forEach(r => {
       const k = getMonthKey(r.date);
