@@ -92,6 +92,15 @@ const themeClasses = {
   inputBg: (isHighContrast: boolean) => isHighContrast ? 'bg-gray-800 border-gray-700 text-white' : 'bg-white border-slate-200 text-slate-900',
 };
 
+// Get initials from name (use first and last letter for uniqueness)
+const getInitials = (name: string): string => {
+  const parts = name.trim().split(/\s+/);
+  if (parts.length >= 2) {
+    return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+  }
+  return parts[0]?.[0]?.toUpperCase() || '—';
+};
+
 function AppContent() {
   const { isAdmin, adminLogin, adminLogout } = useAdmin();
   const { logout, user } = useAuth();
@@ -781,7 +790,7 @@ function AppContent() {
       {/* User Meta Strip */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6 print:mb-4">
         <div className={`border rounded-xl p-4 flex items-center gap-4 shadow-sm transition-shadow focus-within:ring-2 focus-within:ring-[#D6E4F0] ${isHighContrast ? 'bg-black border-gray-600' : 'bg-white border-slate-200'}`}>
-          <div className="w-11 h-11 rounded-full bg-[#D6E4F0] flex items-center justify-center text-[#1F3864] font-bold text-lg uppercase shrink-0">{patientName.split(' ')[0]?.[0] || 'PT'}</div>
+          <div className="w-11 h-11 rounded-full bg-[#D6E4F0] flex items-center justify-center text-[#1F3864] font-bold text-sm uppercase shrink-0 tracking-tight">{patientName ? getInitials(patientName) : 'PT'}</div>
           <div className="flex-1">
             <p className={`text-[10px] font-bold uppercase tracking-widest ${isHighContrast ? 'text-gray-400' : 'text-slate-400'}`}>Patient</p>
             <input
@@ -793,7 +802,7 @@ function AppContent() {
           </div>
         </div>
         <div className={`border rounded-xl p-4 flex items-center gap-4 shadow-sm transition-shadow focus-within:ring-2 focus-within:ring-[#D6E4F0] ${isHighContrast ? 'bg-black border-gray-600' : 'bg-white border-slate-200'}`}>
-          <div className="w-11 h-11 rounded-full bg-indigo-50 flex items-center justify-center text-indigo-600 font-bold text-lg uppercase shrink-0">{doctorName.split(' ')[0]?.[0] || 'DR'}</div>
+          <div className="w-11 h-11 rounded-full bg-indigo-50 flex items-center justify-center text-indigo-600 font-bold text-sm uppercase shrink-0 tracking-tight">{doctorName ? getInitials(doctorName) : 'DR'}</div>
           <div className="flex-1">
             <p className={`text-[10px] font-bold uppercase tracking-widest ${isHighContrast ? 'text-gray-400' : 'text-slate-400'}`}>Physician</p>
             <input
