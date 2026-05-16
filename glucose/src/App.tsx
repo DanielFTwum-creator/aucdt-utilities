@@ -179,6 +179,8 @@ function AppContent() {
       const rowsToSave: ReadingRow[] = [];
       const now = Date.now();
       let successCount = 0;
+      let updateCount = 0;
+      let newCount = 0;
 
       for (const row of rowsToAdd) {
         let formattedDate = row.date;
@@ -193,6 +195,14 @@ function AppContent() {
 
         const existingRow = rows.find(r => r.date === formattedDate);
         const newRowId = existingRow ? existingRow.id : `row_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
+
+        if (existingRow) {
+          console.log('[SCAN] Updating existing reading for', formattedDate, '(id:', existingRow.id + ')');
+          updateCount++;
+        } else {
+          console.log('[SCAN] Creating new reading for', formattedDate, '(id:', newRowId + ')');
+          newCount++;
+        }
 
         rowsToSave.push({
           id: newRowId,
@@ -209,6 +219,7 @@ function AppContent() {
         successCount++;
       }
 
+      console.log('[SCAN] Summary: extracted', successCount, 'readings (' + newCount + ' new, ' + updateCount + ' updated)');
       console.log('[SCAN] Saving', rowsToSave.length, 'rows...');
       await batchUpsertReadings(rowsToSave);
       const refreshed = await getAllReadings();
