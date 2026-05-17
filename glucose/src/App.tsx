@@ -345,19 +345,19 @@ function AppContent() {
 
   useEffect(() => {
     if (viewMode === 'month') {
-      if (monthOptions.length && !selectedMonth) {
-        setSelectedMonth(monthOptions[monthOptions.length - 1]);
-      } else if (monthOptions.length && !monthOptions.includes(selectedMonth)) {
-        setSelectedMonth(monthOptions[monthOptions.length - 1]);
+      const latestMonth = monthOptions[monthOptions.length - 1];
+      if (latestMonth && (!selectedMonth || !monthOptions.includes(selectedMonth))) {
+        console.log('[APP] Auto-selecting latest month:', latestMonth);
+        setSelectedMonth(latestMonth);
       }
     } else {
-      if (yearOptions.length && !selectedYear) {
-        setSelectedYear(yearOptions[0]);
-      } else if (yearOptions.length && !yearOptions.includes(selectedYear)) {
-        setSelectedYear(yearOptions[0]);
+      const latestYear = yearOptions[0];
+      if (latestYear && (!selectedYear || !yearOptions.includes(selectedYear))) {
+        console.log('[APP] Auto-selecting latest year:', latestYear);
+        setSelectedYear(latestYear);
       }
     }
-  }, [monthOptions, selectedMonth, yearOptions, selectedYear, viewMode]);
+  }, [monthOptions, yearOptions, viewMode]);
 
   const filteredRows = useMemo(() => {
     if (viewMode === 'month') {
