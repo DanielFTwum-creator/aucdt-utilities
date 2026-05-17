@@ -77,13 +77,18 @@ export const runTestSuite = async (
         for (const test of suite.tests) {
             test.status = 'running';
             onProgress([...currentResults]);
-            await delay(700);
+            await delay(500);
 
             // Capture real-time screenshot of current app state
             if (captureScreenshot) {
                 try {
-                    const mainContent = document.querySelector('main') || document.body;
-                    test.liveScreenshot = await captureScreenshot(mainContent as HTMLElement);
+                    const appRoot = document.querySelector('[data-test="app-root"]') ||
+                                   document.querySelector('main') ||
+                                   document.querySelector('.min-h-screen') ||
+                                   document.body;
+                    test.liveScreenshot = await captureScreenshot(appRoot as HTMLElement);
+                    onProgress([...currentResults]); // Update UI immediately after capture
+                    await delay(300);
                 } catch (e) {
                     console.warn('Real-time screenshot capture failed:', e);
                 }
