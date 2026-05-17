@@ -88,7 +88,7 @@ export const runTestSuite = async (
                         test.liveScreenshot = await captureScreenshot({ element: appRoot });
                     }
                 } catch (e) {
-                    console.warn('Real-time screenshot unavailable for this test');
+                    // Screenshot capture may fail due to CSS parsing - continue without error
                 }
             }
 
