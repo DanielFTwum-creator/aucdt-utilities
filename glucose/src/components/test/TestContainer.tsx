@@ -10,13 +10,18 @@ export const TestContainer: React.FC = () => {
     const [results, setResults] = useState<TestSuiteResult[]>([]);
 
     const handleRunTests = useCallback(() => {
+        console.log('[E2E] User clicked "Run Full Test Suite"');
         setStatus('running');
         setResults([]);
 
         runTestSuite((progress) => {
             setResults(progress);
         }).then((finalResults) => {
+            console.log('[E2E] All tests completed, displaying results');
             setResults(finalResults);
+            setStatus('complete');
+        }).catch((error) => {
+            console.error('[E2E] Test suite error:', error);
             setStatus('complete');
         });
     }, []);
