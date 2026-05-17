@@ -118,12 +118,21 @@ async function runCaptures() {
 
     // ========== 1. LOGIN SCENARIO ==========
     console.log('\n📸 1. Login & Authentication\n');
+
+    // Capture empty password field state
     await captureScreenshot(page, 'login-password-empty', 'Password gate (empty state)', 'Login');
 
-    // Set password and enter
+    // Capture filled password field state
     await page.fill('input[type="password"]', '1234');
-    await page.click('button[type="submit"]');
-    await page.waitForTimeout(1000); // Wait for client-side auth state update
+    await page.waitForTimeout(200);
+    await captureScreenshot(page, 'login-password-filled', 'Password gate (filled)', 'Login');
+
+    // Submit password and enter authenticated state
+    const submitButton = await page.$('button[type="submit"]');
+    if (submitButton) {
+      await submitButton.click();
+      await page.waitForTimeout(1000);
+    }
     await page.waitForLoadState('networkidle');
 
     // Inject test data for authenticated state
