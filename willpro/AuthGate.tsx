@@ -1,8 +1,16 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, createContext, useContext } from 'react';
 
 const AUTH_KEY = 'tuc_auth_willpro';
 const USER_KEY = 'willpro_user';
 const ACCENT   = '#ea580c';
+
+const AuthContext = createContext<{ handleLogout: () => void } | null>(null);
+
+export function useLogout() {
+  const ctx = useContext(AuthContext);
+  if (!ctx) throw new Error('useLogout must be used inside AuthGate');
+  return ctx.handleLogout;
+}
 
 interface User {
   id?: string;
@@ -10,7 +18,7 @@ interface User {
   email: string;
 }
 
-export function AuthGate({ children }: { children: React.ReactNode }) {
+export function AuthGate({ children, onLogout }: { children: React.ReactNode; onLogout?: () => void }) {
   const [authed, setAuthed] = useState(
     () => sessionStorage.getItem(AUTH_KEY) === '1' || !!localStorage.getItem(USER_KEY)
   );
@@ -87,7 +95,16 @@ export function AuthGate({ children }: { children: React.ReactNode }) {
     };
   }, []);
 
-  if (authed) return <>{children}</>;
+  const handleLogout = () => {
+    sessionStorage.removeItem(AUTH_KEY);
+    localStorage.removeItem(USER_KEY);
+    localStorage.removeItem('oauth_token_temp');
+    onLogout?.();
+  };
+
+  if (authed) {
+    return <AuthContext.Provider value={{ handleLogout }}>{children}</AuthContext.Provider>;
+  }
 
   const handleGoogleLogin = () => {
     const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
