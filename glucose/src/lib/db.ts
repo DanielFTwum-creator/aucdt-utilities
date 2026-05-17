@@ -26,6 +26,8 @@ export interface ReadingRow {
 export interface Profile {
   patientName: string;
   doctorName: string;
+  doctorPhone: string;
+  doctorCountry: string;
   updatedAt: number;
 }
 
