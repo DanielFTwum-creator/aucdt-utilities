@@ -113,6 +113,8 @@ function AppContent() {
   const [rows, setRows] = useState<Row[]>([]);
   const [patientName, setPatientName] = useState('');
   const [doctorName, setDoctorName] = useState('Dr Yacoba Atiase');
+  const [doctorPhone, setDoctorPhone] = useState('');
+  const [doctorCountry, setDoctorCountry] = useState('');
   const [selectedMonth, setSelectedMonth] = useState<string>('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -294,6 +296,8 @@ function AppContent() {
       setRows([]);
       setPatientName(user?.fullName || '');
       setDoctorName('Dr Yacoba Atiase');
+      setDoctorPhone('');
+      setDoctorCountry('');
       return;
     }
     console.log('[APP] Admin mode, loading profile and readings...');
@@ -301,6 +305,8 @@ function AppContent() {
       if (profile) {
         setPatientName(profile.patientName || user?.fullName || '');
         setDoctorName(profile.doctorName || 'Dr Yacoba Atiase');
+        setDoctorPhone(profile.doctorPhone || '');
+        setDoctorCountry(profile.doctorCountry || '');
       }
     });
     getAllReadings().then(fetched => {
@@ -313,10 +319,10 @@ function AppContent() {
   useEffect(() => {
     if (!isAdmin || (!patientName && !doctorName)) return;
     const timeout = setTimeout(() => {
-      saveProfile({ patientName, doctorName });
+      saveProfile({ patientName, doctorName, doctorPhone, doctorCountry });
     }, 1000);
     return () => clearTimeout(timeout);
-  }, [patientName, doctorName, isAdmin]);
+  }, [patientName, doctorName, doctorPhone, doctorCountry, isAdmin]);
 
   const monthOptions = useMemo(() => {
     console.log('[APP] monthOptions computed: rows.length =', rows.length);
@@ -440,7 +446,7 @@ function AppContent() {
       version: 1,
       exportedAt: new Date().toISOString(),
       readings: rows,
-      profile: { patientName, doctorName },
+      profile: { patientName, doctorName, doctorPhone, doctorCountry },
     };
     const json = JSON.stringify(exportData, null, 2);
     const blob = new Blob([json], { type: 'application/json' });
@@ -469,6 +475,8 @@ function AppContent() {
       if (data.profile) {
         setPatientName(data.profile.patientName || '');
         setDoctorName(data.profile.doctorName || '');
+        setDoctorPhone(data.profile.doctorPhone || '');
+        setDoctorCountry(data.profile.doctorCountry || '');
       }
 
       const refreshed = await getAllReadings();
@@ -569,7 +577,7 @@ function AppContent() {
         <div className="border-2 border-[#1F3864] text-[#1F3864] px-6 py-2 text-3xl font-bold tracking-tighter rounded-lg mb-6 shadow-sm">
           ROPHE
         </div>
-        <h1 className="text-2xl font-semibold mb-1 text-slate-900">Blood Glucose Monitoring</h1>
+        <h1 className="text-2xl font-semibold mb-1 text-slate-900">Self Monitoring of Blood Glucose</h1>
         <p className="text-slate-500 mb-8 max-w-sm text-sm">
           {isFirstTime === null
             ? 'Loading...'
@@ -660,7 +668,7 @@ function AppContent() {
         <div className="flex items-center gap-5">
           <img src="./rophe-logo.jpg" alt="ROPHE Logo" className="h-12 object-contain" />
           <div>
-            <h1 className={`text-lg font-bold leading-tight ${isHighContrast ? 'text-white' : 'text-slate-900'}`}>Blood Glucose Monitoring</h1>
+            <h1 className={`text-lg font-bold leading-tight ${isHighContrast ? 'text-white' : 'text-slate-900'}`}>Self Monitoring of Blood Glucose</h1>
             <p className={`text-[11px] uppercase tracking-[0.15em] font-bold mt-0.5 ${isHighContrast ? 'text-blue-300' : 'text-[#2E75B6]'}`}>Specialist Care Portal</p>
           </div>
         </div>
@@ -815,6 +823,27 @@ function AppContent() {
             />
           </div>
         </div>
+
+        <div className="grid grid-cols-2 gap-3">
+          <div className={`border rounded-xl p-4 shadow-sm transition-shadow focus-within:ring-2 focus-within:ring-[#D6E4F0] ${isHighContrast ? 'bg-black border-gray-600' : 'bg-white border-slate-200'}`}>
+            <p className={`text-[10px] font-bold uppercase tracking-widest mb-2 ${isHighContrast ? 'text-gray-400' : 'text-slate-400'}`}>Country</p>
+            <input
+              value={doctorCountry}
+              onChange={e => setDoctorCountry(e.target.value)}
+              className={`font-semibold text-[15px] outline-none w-full bg-transparent ${isHighContrast ? 'text-white placeholder-gray-600' : 'text-slate-900 placeholder-slate-300'}`}
+              placeholder="e.g. GH +233"
+            />
+          </div>
+          <div className={`border rounded-xl p-4 shadow-sm transition-shadow focus-within:ring-2 focus-within:ring-[#D6E4F0] ${isHighContrast ? 'bg-black border-gray-600' : 'bg-white border-slate-200'}`}>
+            <p className={`text-[10px] font-bold uppercase tracking-widest mb-2 ${isHighContrast ? 'text-gray-400' : 'text-slate-400'}`}>Phone</p>
+            <input
+              value={doctorPhone}
+              onChange={e => setDoctorPhone(e.target.value)}
+              className={`font-semibold text-[15px] outline-none w-full bg-transparent ${isHighContrast ? 'text-white placeholder-gray-600' : 'text-slate-900 placeholder-slate-300'}`}
+              placeholder="e.g. 20 152 9933"
+            />
+          </div>
+        </div>
       </div>
 
       {/* Main Content Area */}
@@ -864,7 +893,8 @@ function AppContent() {
                <Plus className="w-5 h-5 mr-2" strokeWidth={2.5} />
                <span className="text-[12px] font-bold uppercase tracking-widest text-center">Manual Entry</span>
             </button>
-            <label 
+            <label
+              data-testid="scan-button"
               className={`flex-1 rounded-2xl flex items-center justify-center p-3 transition-all duration-200 cursor-pointer shadow-sm focus-within:outline-none focus-within:ring-4 focus-within:ring-[#D6E4F0] border-2
                 ${isHighContrast ? 'bg-black border-gray-700 text-white hover:bg-gray-800' : 'bg-white border-[#D4A373] text-[#1F3864] hover:bg-orange-50'} ${isUploading ? 'opacity-50 pointer-events-none' : ''}`}
             >
@@ -1001,7 +1031,7 @@ function AppContent() {
                   <tbody className="text-[13px] font-medium">
                     {filteredRows.length === 0 ? (
                       <tr>
-                        <td colSpan={8} className="py-20 text-center text-[13px] text-slate-400 italic">
+                        <td colSpan={8} data-testid="empty-state" className="py-20 text-center text-[13px] text-slate-400 italic">
                           No readings recorded for this period.
                         </td>
                       </tr>

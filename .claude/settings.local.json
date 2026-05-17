@@ -118,7 +118,13 @@
       "Bash(scp -r dist/* danieltwum@techbridge.edu.gh:/var/www/html/ai-tools/glucose/)",
       "PowerShell(ssh -o StrictHostKeyChecking=no root@66.226.72.199 \"ls -la /var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/ | grep glucose\")",
       "PowerShell(ssh -o StrictHostKeyChecking=no root@66.226.72.199 \"ls -la /var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/glucose/\")",
-      "Bash(pkill -f \"vite --port\")"
+      "Bash(pkill -f \"vite --port\")",
+      "PowerShell(Test-Path \"C:\\\\Development\\\\github\\\\aucdt-utilities\\\\glucose\\\\dist\" && \\(Get-ChildItem \"C:\\\\Development\\\\github\\\\aucdt-utilities\\\\glucose\\\\dist\" -Recurse -File | Measure-Object\\).Count)",
+      "Bash(echo \"Dev server started \\(PID: $!\\)\")",
+      "Bash(Format-Table -AutoSize)",
+      "PowerShell(Get-ChildItem -Path \"C:\\\\Development\\\\github\\\\aucdt-utilities\\\\willpro\" -Recurse -File | Where-Object { $_.FullName -notmatch 'node_modules' } | Select-Object -ExpandProperty FullName)",
+      "Bash(cat)",
+      "Bash(node /tmp/test-willpro.js)"
     ]
   }
 }
