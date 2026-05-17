@@ -21,34 +21,37 @@ export const RealScreenshot: React.FC<RealScreenshotProps> = ({ state }) => {
 
     // Map test states to screenshot files
     switch (state.type) {
-        case 'oauth':
-            if (state.step === 'login-view') {
-                screenshotName = 'oauth-login-view';
-                description = 'LoginView renders with Google sign-in button';
-            }
-            break;
-        case 'scanning':
-            if (state.step === 'file-picker') {
-                screenshotName = 'data-scan-interface';
-                description = 'Scan photo button for AI extraction';
-            }
-            break;
-        case 'data':
-            if (state.step === 'entry-modal') {
-                screenshotName = 'data-manual-entry-modal';
-                description = 'Manual entry modal for adding readings';
+        case 'auth':
+            if (state.step === 'login-password-empty') {
+                screenshotName = 'login-password-empty';
+                description = 'Password gate (empty state)';
             }
             break;
         case 'dashboard':
-            if (state.step === 'stats-overview') {
-                screenshotName = 'dashboard-stats-overview';
-                description = 'Stats cards showing Average Fasting, Post-Meal, Total Readings';
-            } else if (state.step === 'month-selector') {
-                screenshotName = 'dashboard-month-selector';
-                description = 'Month selector dropdown (PERIOD)';
-            } else if (state.step === 'export-import') {
-                screenshotName = 'dashboard-export-import';
-                description = 'Export and Import buttons for data management';
+            if (state.step === 'dashboard-default') {
+                screenshotName = 'dashboard-default';
+                description = 'Full dashboard with stats, chart, and readings table';
+            }
+            break;
+        case 'table':
+            if (state.step === 'table-empty-state') {
+                screenshotName = 'table-empty-state';
+                description = 'Empty table state (no readings)';
+            }
+            break;
+        case 'scan':
+            if (state.step === 'scan-interface') {
+                screenshotName = 'scan-interface';
+                description = 'Scan photo button in dashboard header';
+            } else if (state.step === 'scan-overlay-progress') {
+                screenshotName = 'scan-overlay-progress';
+                description = 'Scanning progress overlay (40% complete)';
+            } else if (state.step === 'scan-overlay-success') {
+                screenshotName = 'scan-overlay-success';
+                description = 'Scan success overlay (readings extracted)';
+            } else if (state.step === 'scan-overlay-error') {
+                screenshotName = 'scan-overlay-error';
+                description = 'Scan error overlay (extraction failed)';
             }
             break;
     }

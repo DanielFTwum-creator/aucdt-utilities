@@ -13,42 +13,38 @@ export interface TestSuiteResult {
 }
 
 export type ScreenshotState =
-    | { type: 'oauth', step: 'login-view' }
-    | { type: 'scanning', step: 'file-picker' }
-    | { type: 'data', step: 'entry-modal' }
-    | { type: 'dashboard', step: 'stats-overview' }
-    | { type: 'dashboard', step: 'month-selector' }
-    | { type: 'dashboard', step: 'export-import' };
+    | { type: 'auth', step: 'login-password-empty' }
+    | { type: 'dashboard', step: 'dashboard-default' }
+    | { type: 'table', step: 'table-empty-state' }
+    | { type: 'scan', step: 'scan-interface' }
+    | { type: 'scan', step: 'scan-overlay-progress' }
+    | { type: 'scan', step: 'scan-overlay-success' }
+    | { type: 'scan', step: 'scan-overlay-error' };
 
 const testSuite: TestSuiteResult[] = [
     {
-        name: 'OAuth Login Journey',
+        name: 'Login & Authentication',
         status: 'idle',
         tests: [
-            { description: 'LoginView renders with Google sign-in button', status: 'idle', screenshotState: { type: 'oauth', step: 'login-view' } },
+            { description: 'Password gate renders on first load (empty state)', status: 'idle', screenshotState: { type: 'auth', step: 'login-password-empty' } },
         ],
     },
     {
-        name: 'Image Scanning Journey',
+        name: 'Dashboard & Data Management',
         status: 'idle',
         tests: [
-            { description: 'Scan Photo button opens file picker', status: 'idle', screenshotState: { type: 'scanning', step: 'file-picker' } },
+            { description: 'Full dashboard renders with stats, chart, and glucose readings table', status: 'idle', screenshotState: { type: 'dashboard', step: 'dashboard-default' } },
+            { description: 'Empty state message displays when all readings have been deleted', status: 'idle', screenshotState: { type: 'table', step: 'table-empty-state' } },
         ],
     },
     {
-        name: 'Data Management Journey',
+        name: 'Image Scanning (Gemini Vision OCR)',
         status: 'idle',
         tests: [
-            { description: 'Manual Entry button opens add reading modal', status: 'idle', screenshotState: { type: 'data', step: 'entry-modal' } },
-        ],
-    },
-    {
-        name: 'Dashboard & Analytics Features',
-        status: 'idle',
-        tests: [
-            { description: 'Stats cards display current month averages (Fasting, Post-Meal) and total reading count', status: 'idle', screenshotState: { type: 'dashboard', step: 'stats-overview' } },
-            { description: 'PERIOD dropdown enables filtering data view by calendar month', status: 'idle', screenshotState: { type: 'dashboard', step: 'month-selector' } },
-            { description: 'Export/Import buttons provide data backup (JSON) and recovery workflows', status: 'idle', screenshotState: { type: 'dashboard', step: 'export-import' } },
+            { description: 'Scan photo button visible in dashboard header', status: 'idle', screenshotState: { type: 'scan', step: 'scan-interface' } },
+            { description: 'Scanning progress overlay displays during image processing (40% complete)', status: 'idle', screenshotState: { type: 'scan', step: 'scan-overlay-progress' } },
+            { description: 'Success overlay confirms readings extracted from image', status: 'idle', screenshotState: { type: 'scan', step: 'scan-overlay-success' } },
+            { description: 'Error overlay shows when image extraction fails or is unreadable', status: 'idle', screenshotState: { type: 'scan', step: 'scan-overlay-error' } },
         ],
     },
 ];
