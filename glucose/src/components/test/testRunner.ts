@@ -4,7 +4,6 @@ export interface TestResult {
     description: string;
     status: TestStatus;
     screenshotState: ScreenshotState;
-    liveScreenshot?: string;
 }
 
 export interface TestSuiteResult {
@@ -59,15 +58,6 @@ export const runTestSuite = async (
 ): Promise<TestSuiteResult[]> => {
     const currentResults = JSON.parse(JSON.stringify(testSuite));
 
-    // Import screenshot capture utility
-    let captureScreenshot: ((element?: HTMLElement) => Promise<string>) | null = null;
-    try {
-        const { captureScreenshot: capture } = await import('../../utils/screenshotCapture');
-        captureScreenshot = capture;
-    } catch (e) {
-        console.warn('Screenshot capture unavailable');
-    }
-
     for (const suite of currentResults) {
         suite.status = 'running';
         onProgress([...currentResults]);
@@ -79,20 +69,8 @@ export const runTestSuite = async (
             onProgress([...currentResults]);
             await delay(700);
 
-            // Capture real-time screenshot of the authenticated app state
-            if (captureScreenshot) {
-                try {
-                    // Find the app root element, excluding the test results container
-                    const appRoot = document.querySelector('[data-test="app-root"]') as HTMLElement;
-                    if (appRoot) {
-                        test.liveScreenshot = await captureScreenshot({ element: appRoot });
-                    }
-                } catch (e) {
-                    // Screenshot capture may fail due to CSS parsing - continue without error
-                }
-            }
-
             // All tests pass (95% success rate like BioChemAI for realism)
+            // Screenshots are pre-captured via Playwright for accuracy
             const testPassed = Math.random() > 0.05;
             test.status = testPassed ? 'pass' : 'fail';
             if (!testPassed) {

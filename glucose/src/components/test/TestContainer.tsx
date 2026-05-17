@@ -102,9 +102,9 @@ export const TestContainer: React.FC = () => {
                                         {test.status !== 'idle' && test.status !== 'running' && (
                                             <div className="mt-3">
                                                 <p className="text-xs font-semibold text-slate-500 mb-3 uppercase tracking-wider">
-                                                    {test.liveScreenshot ? '🎬 Live App State:' : '📸 Pre-captured:'}
+                                                    📸 Captured Screenshot:
                                                 </p>
-                                                <RealScreenshot state={test.screenshotState} liveCapture={test.liveScreenshot} />
+                                                <RealScreenshot state={test.screenshotState} />
                                             </div>
                                         )}
                                     </div>
