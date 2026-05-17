@@ -8,7 +8,7 @@ if (rootElement) {
     const root = ReactDOM.createRoot(rootElement);
     root.render(
   <React.StrictMode>
-    <AuthGate><App /></AuthGate>
+    <AuthGate onLogout={() => window.location.href = '/'}><App /></AuthGate>
   </React.StrictMode>
 );
 }

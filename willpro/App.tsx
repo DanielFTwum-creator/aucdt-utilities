@@ -1,6 +1,6 @@
 
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import ProgressBar from './components/ProgressBar.tsx';
 import JurisdictionStep from './components/JurisdictionStep.tsx';
 import TestatorStep from './components/TestatorStep.tsx';
@@ -11,6 +11,9 @@ import DistributionStep from './components/DistributionStep.tsx';
 import ResiduaryStep from './components/ResiduaryStep.tsx';
 import ReviewStep from './components/ReviewStep.tsx';
 import AuditLogModal from './components/AuditLogModal.tsx';
+import PreviewPanel from './components/PreviewPanel.tsx';
+import { saveDraft, loadDraft, deleteDraft } from './db';
+import { useLogout } from './AuthGate';
 
 export interface FormData {
     jurisdiction: string;
@@ -73,6 +76,7 @@ const Logo = () => (
 
 
 const App = () => {
+    const handleLogout = useLogout();
     const [currentStep, setCurrentStep] = useState(1);
     const [formData, setFormData] = useState<FormData>({
         jurisdiction: 'UK',
@@ -90,8 +94,10 @@ const App = () => {
     });
     const [auditLogs, setAuditLogs] = useState<AuditLog[]>([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isSaved, setIsSaved] = useState(false);
     const importFileRef = useRef<HTMLInputElement>(null);
-    
+    const saveTimeoutRef = useRef<number | null>(null);
+
     const totalSteps = 8;
 
     const addAuditLog = (event: string) => {
@@ -103,8 +109,35 @@ const App = () => {
     };
     
     useEffect(() => {
-        addAuditLog('New will creation process started');
+        loadDraft()
+            .then((draft) => {
+                if (draft) {
+                    setCurrentStep(draft.step);
+                    setFormData(draft.formData);
+                    addAuditLog(`Draft restored from ${new Date(draft.updatedAt).toLocaleString()}`);
+                } else {
+                    addAuditLog('New will creation process started');
+                }
+            })
+            .catch(() => {
+                addAuditLog('New will creation process started');
+            });
     }, []);
+
+    const debouncedSave = useCallback(() => {
+        if (saveTimeoutRef.current) clearTimeout(saveTimeoutRef.current);
+        saveTimeoutRef.current = window.setTimeout(() => {
+            saveDraft(currentStep, formData).catch((err) => {
+                console.error('Failed to save draft:', err);
+            });
+            setIsSaved(true);
+            setTimeout(() => setIsSaved(false), 1000);
+        }, 500);
+    }, [currentStep, formData]);
+
+    useEffect(() => {
+        debouncedSave();
+    }, [formData, currentStep, debouncedSave]);
 
     const handleNext = () => setCurrentStep(prev => Math.min(prev + 1, totalSteps));
     const handleBack = () => setCurrentStep(prev => Math.max(prev - 1, 1));
@@ -149,6 +182,7 @@ const App = () => {
             gifts: [],
             residuaryBeneficiaryName: '',
         });
+        deleteDraft().catch((err) => console.error('Failed to delete draft:', err));
         addAuditLog('New will creation process started');
     };
 
@@ -217,13 +251,44 @@ const App = () => {
         <div className="app-container">
             <header className="header">
                 <Logo />
-                <button className="audit-logs-btn" onClick={() => setIsModalOpen(true)}>View Audit Logs</button>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                    {isSaved && (
+                        <span style={{
+                            fontSize: '12px',
+                            color: '#10b981',
+                            opacity: isSaved ? 1 : 0,
+                            transition: 'opacity 0.3s',
+                        }}>
+                            ✓ Saved
+                        </span>
+                    )}
+                    <button className="audit-logs-btn" onClick={() => setIsModalOpen(true)}>View Audit Logs</button>
+                    <button
+                        onClick={handleLogout}
+                        style={{
+                            padding: '8px 14px',
+                            background: '#ef4444',
+                            color: '#fff',
+                            border: 'none',
+                            borderRadius: '6px',
+                            fontSize: '13px',
+                            fontWeight: '600',
+                            cursor: 'pointer',
+                            transition: 'background 0.2s',
+                        }}
+                        onMouseEnter={(e) => (e.currentTarget.style.background = '#dc2626')}
+                        onMouseLeave={(e) => (e.currentTarget.style.background = '#ef4444')}
+                    >
+                        Sign Out
+                    </button>
+                </div>
             </header>
             <ProgressBar currentStep={currentStep} totalSteps={totalSteps} />
             <main className="main-content">
                 {renderStep()}
             </main>
-            <AuditLogModal 
+            <PreviewPanel formData={formData} />
+            <AuditLogModal
                 isOpen={isModalOpen}
                 onClose={() => setIsModalOpen(false)}
                 logs={auditLogs}
