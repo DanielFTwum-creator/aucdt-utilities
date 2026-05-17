@@ -565,7 +565,7 @@ function AppContent() {
 
   if (!isAdmin) {
     return (
-      <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center p-6 text-center">
+      <div data-test="app-root" className="min-h-screen bg-slate-50 flex flex-col items-center justify-center p-6 text-center">
         <div className="border-2 border-[#1F3864] text-[#1F3864] px-6 py-2 text-3xl font-bold tracking-tighter rounded-lg mb-6 shadow-sm">
           ROPHE
         </div>
@@ -611,7 +611,7 @@ function AppContent() {
   }
 
   return (
-    <div className={`min-h-screen font-sans p-6 print:bg-white print:p-0 flex flex-col items-center selection:bg-[#D6E4F0] selection:text-[#1F3864] transition-colors duration-300 ${isHighContrast ? 'bg-black text-white' : 'bg-slate-50 text-slate-900'}`}>
+    <div data-test="app-root" className={`min-h-screen font-sans p-6 print:bg-white print:p-0 flex flex-col items-center selection:bg-[#D6E4F0] selection:text-[#1F3864] transition-colors duration-300 ${isHighContrast ? 'bg-black text-white' : 'bg-slate-50 text-slate-900'}`}>
       
       {/* Upload Progress Overlay */}
       {isUploading && (
