@@ -25,6 +25,9 @@ export const RealScreenshot: React.FC<RealScreenshotProps> = ({ state }) => {
             if (state.step === 'login-password-empty') {
                 screenshotName = 'login-password-empty';
                 description = 'Password gate (empty state)';
+            } else if (state.step === 'login-password-filled') {
+                screenshotName = 'login-password-filled';
+                description = 'Password gate (filled)';
             }
             break;
         case 'dashboard':

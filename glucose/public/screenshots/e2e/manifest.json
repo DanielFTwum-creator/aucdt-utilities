@@ -3,49 +3,56 @@
     "name": "login-password-empty",
     "description": "Password gate (empty state)",
     "path": "./screenshots/e2e/login-password-empty.png",
-    "timestamp": "2026-05-17T07:47:43.015Z",
+    "timestamp": "2026-05-17T07:53:48.002Z",
+    "testSuite": "Login"
+  },
+  {
+    "name": "login-password-filled",
+    "description": "Password gate (filled)",
+    "path": "./screenshots/e2e/login-password-filled.png",
+    "timestamp": "2026-05-17T07:53:48.307Z",
     "testSuite": "Login"
   },
   {
     "name": "dashboard-default",
     "description": "Full dashboard (default theme)",
     "path": "./screenshots/e2e/dashboard-default.png",
-    "timestamp": "2026-05-17T07:47:45.779Z",
+    "timestamp": "2026-05-17T07:53:51.053Z",
     "testSuite": "Dashboard"
   },
   {
     "name": "table-empty-state",
     "description": "Empty table state",
     "path": "./screenshots/e2e/table-empty-state.png",
-    "timestamp": "2026-05-17T07:47:50.986Z",
+    "timestamp": "2026-05-17T07:53:56.250Z",
     "testSuite": "Table"
   },
   {
     "name": "scan-interface",
     "description": "Scan button visible (default state)",
     "path": "./screenshots/e2e/scan-interface.png",
-    "timestamp": "2026-05-17T07:47:52.648Z",
+    "timestamp": "2026-05-17T07:53:57.922Z",
     "testSuite": "Scanning"
   },
   {
     "name": "scan-overlay-progress",
     "description": "Scan progress overlay (40%)",
     "path": "./screenshots/e2e/scan-overlay-progress.png",
-    "timestamp": "2026-05-17T07:47:52.923Z",
+    "timestamp": "2026-05-17T07:53:58.205Z",
     "testSuite": "Scanning"
   },
   {
     "name": "scan-overlay-success",
     "description": "Scan success overlay",
     "path": "./screenshots/e2e/scan-overlay-success.png",
-    "timestamp": "2026-05-17T07:47:53.182Z",
+    "timestamp": "2026-05-17T07:53:58.473Z",
     "testSuite": "Scanning"
   },
   {
     "name": "scan-overlay-error",
     "description": "Scan error overlay",
     "path": "./screenshots/e2e/scan-overlay-error.png",
-    "timestamp": "2026-05-17T07:47:53.448Z",
+    "timestamp": "2026-05-17T07:53:58.739Z",
     "testSuite": "Scanning"
   }
 ]

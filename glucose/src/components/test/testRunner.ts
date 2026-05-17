@@ -14,6 +14,7 @@ export interface TestSuiteResult {
 
 export type ScreenshotState =
     | { type: 'auth', step: 'login-password-empty' }
+    | { type: 'auth', step: 'login-password-filled' }
     | { type: 'dashboard', step: 'dashboard-default' }
     | { type: 'table', step: 'table-empty-state' }
     | { type: 'scan', step: 'scan-interface' }
@@ -27,6 +28,7 @@ const testSuite: TestSuiteResult[] = [
         status: 'idle',
         tests: [
             { description: 'Password gate renders on first load (empty state)', status: 'idle', screenshotState: { type: 'auth', step: 'login-password-empty' } },
+            { description: 'Password field accepts input and updates state', status: 'idle', screenshotState: { type: 'auth', step: 'login-password-filled' } },
         ],
     },
     {
