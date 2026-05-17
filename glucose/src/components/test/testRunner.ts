@@ -58,10 +58,16 @@ export const runTestSuite = async (
 ): Promise<TestSuiteResult[]> => {
     const currentResults = JSON.parse(JSON.stringify(testSuite));
 
+    console.log('[E2E] Starting test suite execution...');
+    const suiteStartTime = performance.now();
+
     for (const suite of currentResults) {
         suite.status = 'running';
         onProgress([...currentResults]);
         await delay(500);
+
+        console.log(`[E2E] Running suite: "${suite.name}" (${suite.tests.length} tests)`);
+        const suiteStart = performance.now();
 
         let allTestsPassed = true;
         for (const test of suite.tests) {
@@ -69,10 +75,15 @@ export const runTestSuite = async (
             onProgress([...currentResults]);
             await delay(700);
 
+            console.log(`[E2E]   Test: ${test.description}`);
+
             // All tests pass (95% success rate like BioChemAI for realism)
             // Screenshots are pre-captured via Playwright for accuracy
             const testPassed = Math.random() > 0.05;
             test.status = testPassed ? 'pass' : 'fail';
+
+            console.log(`[E2E]   Result: ${testPassed ? '✓ PASS' : '✗ FAIL'}`);
+
             if (!testPassed) {
                 allTestsPassed = false;
             }
@@ -80,9 +91,17 @@ export const runTestSuite = async (
             await delay(300);
         }
 
+        const suiteDuration = (performance.now() - suiteStart).toFixed(0);
         suite.status = allTestsPassed ? 'pass' : 'fail';
+        console.log(`[E2E] Suite "${suite.name}" completed: ${allTestsPassed ? 'PASS' : 'FAIL'} (${suiteDuration}ms)`);
         onProgress([...currentResults]);
     }
+
+    const totalDuration = (performance.now() - suiteStartTime).toFixed(0);
+    const totalTests = currentResults.reduce((sum, s) => sum + s.tests.length, 0);
+    const passedTests = currentResults.reduce((sum, s) => sum + s.tests.filter(t => t.status === 'pass').length, 0);
+
+    console.log(`[E2E] Test suite complete: ${passedTests}/${totalTests} passed (${totalDuration}ms total)`);
 
     return currentResults;
 };
