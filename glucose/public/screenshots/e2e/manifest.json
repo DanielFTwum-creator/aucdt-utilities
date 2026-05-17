@@ -3,56 +3,56 @@
     "name": "login-password-empty",
     "description": "Password gate (empty state)",
     "path": "./screenshots/e2e/login-password-empty.png",
-    "timestamp": "2026-05-17T07:53:48.002Z",
+    "timestamp": "2026-05-17T08:55:17.092Z",
     "testSuite": "Login"
   },
   {
     "name": "login-password-filled",
     "description": "Password gate (filled)",
     "path": "./screenshots/e2e/login-password-filled.png",
-    "timestamp": "2026-05-17T07:53:48.307Z",
+    "timestamp": "2026-05-17T08:55:17.471Z",
     "testSuite": "Login"
   },
   {
     "name": "dashboard-default",
     "description": "Full dashboard (default theme)",
     "path": "./screenshots/e2e/dashboard-default.png",
-    "timestamp": "2026-05-17T07:53:51.053Z",
+    "timestamp": "2026-05-17T08:55:20.269Z",
     "testSuite": "Dashboard"
   },
   {
     "name": "table-empty-state",
     "description": "Empty table state",
     "path": "./screenshots/e2e/table-empty-state.png",
-    "timestamp": "2026-05-17T07:53:56.250Z",
+    "timestamp": "2026-05-17T08:55:25.441Z",
     "testSuite": "Table"
   },
   {
     "name": "scan-interface",
     "description": "Scan button visible (default state)",
     "path": "./screenshots/e2e/scan-interface.png",
-    "timestamp": "2026-05-17T07:53:57.922Z",
+    "timestamp": "2026-05-17T08:55:27.111Z",
     "testSuite": "Scanning"
   },
   {
     "name": "scan-overlay-progress",
     "description": "Scan progress overlay (40%)",
     "path": "./screenshots/e2e/scan-overlay-progress.png",
-    "timestamp": "2026-05-17T07:53:58.205Z",
+    "timestamp": "2026-05-17T08:55:27.370Z",
     "testSuite": "Scanning"
   },
   {
     "name": "scan-overlay-success",
     "description": "Scan success overlay",
     "path": "./screenshots/e2e/scan-overlay-success.png",
-    "timestamp": "2026-05-17T07:53:58.473Z",
+    "timestamp": "2026-05-17T08:55:27.637Z",
     "testSuite": "Scanning"
   },
   {
     "name": "scan-overlay-error",
     "description": "Scan error overlay",
     "path": "./screenshots/e2e/scan-overlay-error.png",
-    "timestamp": "2026-05-17T07:53:58.739Z",
+    "timestamp": "2026-05-17T08:55:27.905Z",
     "testSuite": "Scanning"
   }
 ]
