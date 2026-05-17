@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AUCDT Utilities - Script Documentation</title>
+    <style>
+        :root {
+            --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+            --color-bg-primary: #0A192F;
+            --color-bg-secondary: #172A45;
+            --color-text-primary: #CCD6F6;
+            --color-text-secondary: #8892B0;
+            --color-accent: #64FFDA;
+            --color-accent-hover: #4CD8B6;
+            --color-border: #233554;
+            --shadow-soft: 0 10px 30px -15px rgba(2, 12, 27, 0.7);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            background-color: var(--color-bg-primary);
+            color: var(--color-text-primary);
+            line-height: 1.6;
+            padding: 2rem;
+            min-height: 100vh;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 4rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            color: var(--color-text-primary);
+            margin-bottom: 1rem;
+            letter-spacing: -0.5px;
+        }
+
+        h1 span {
+            color: var(--color-accent);
+        }
+
+        .subtitle {
+            color: var(--color-text-secondary);
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+
+        .category-card {
+            background-color: var(--color-bg-secondary);
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: var(--shadow-soft);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid transparent;
+        }
+
+        .category-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--color-accent);
+            box-shadow: 0 20px 40px -15px rgba(2, 12, 27, 0.9);
+        }
+
+        .category-icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            display: inline-block;
+        }
+
+        h2 {
+            color: var(--color-accent);
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .script-list {
+            list-style: none;
+        }
+
+        .script-item {
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .script-item:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+
+        .script-name {
+            font-family: monospace;
+            color: var(--color-text-primary);
+            font-weight: 600;
+            background: rgba(100, 255, 218, 0.1);
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            display: inline-block;
+            margin-bottom: 0.5rem;
+        }
+
+        .script-desc {
+            color: var(--color-text-secondary);
+            font-size: 0.9rem;
+        }
+
+        /* Glassmorphism search bar */
+        .search-container {
+            margin: 0 auto 3rem auto;
+            max-width: 600px;
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 1rem 1.5rem;
+            background: rgba(23, 42, 69, 0.5);
+            border: 1px solid var(--color-border);
+            border-radius: 30px;
+            color: var(--color-text-primary);
+            font-size: 1rem;
+            backdrop-filter: blur(10px);
+            transition: border-color 0.3s ease;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--color-accent);
+        }
+
+        .search-input::placeholder {
+            color: var(--color-text-secondary);
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>AUCDT <span>Scripts Dictionary</span></h1>
+        <p class="subtitle">A comprehensive guide to the automation, patching, and generation scripts powering the monorepo architecture.</p>
+    </header>
+
+    <div class="search-container">
+        <input type="text" id="searchInput" class="search-input" placeholder="Search for a script (e.g., 'phase1', 'docker')...">
+    </div>
+
+    <div class="container" id="cardsContainer">
+        
+        <!-- Generators -->
+        <div class="category-card">
+            <h2>🚀 Generators</h2>
+            <ul class="script-list">
+                <li class="script-item">
+                    <span class="script-name">generate_enhanced_react_apps.py</span>
+                    <p class="script-desc">Master Python script for scaffolding new React applications with TUC styling standards.</p>
+                </li>
+                <li class="script-item">
+                    <span class="script-name">generate-ultimate-blueprint.js</span>
+                    <p class="script-desc">Compiles entire projects into monolithic AGENT.md self-replicating blueprints.</p>
+                </li>
+                <li class="script-item">
+                    <span class="script-name">generate_all_srs.py</span>
+                    <p class="script-desc">Generates detailed Software Requirements Specification (SRS) markdown for all apps.</p>
+                </li>
+                <li class="script-item">
+                    <span class="script-name">generate-gallery.js</span>
+                    <p class="script-desc">Builds the visual HTML gallery for the master catalog using captured screenshots.</p>
+                </li>
+            </ul>
+        </div>
+
+        <!-- The Phase Execution Pipeline -->
+        <div class="category-card">
+            <h2>⚙️ Phase Execution (Pipelines)</h2>
+            <ul class="script-list">
+                <li class="script-item">
+                    <span class="script-name">phase1-react-pin.js</span>
+                    <p class="script-desc">Phase 1: Pins all apps to React 19.2.5 and standardizes package.json.</p>
+                </li>
+                <li class="script-item">
+                    <span class="script-name">phase2-auth-admin.js</span>
+                    <p class="script-desc">Phase 2: Injects authentication gates, admin dashboards, and MARKAI.md specs.</p>
+                </li>
+                <li class="script-item">
+                    <span class="script-name">phase3-test-scaffold.js</span>
+                    <p class="script-desc">Phase 3: Scaffolds Playwright/Vitest E2E testing environments for validation.</p>
+                </li>
+                <li class="script-item">
+                    <span class="script-name">phase4-docs-gen.js</span>
+                    <p class="script-desc">Phase 4: Generates deployment documentation and alignment artifacts.</p>
+                </li>
+                <li class="script-item">
+                    <span class="script-name">phase5-srs-sync.js</span>
+                    <p class="script-desc">Phase 5: Synchronizes project state with Gap Analysis and finishes delivery.</p>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Patchers and Fixers -->
+        <div class="category-card">
+            <h2>🩹 Patchers & Standardizers</h2>
+            <ul class="script-list">
+                <li class="script-item">
+                    <span class="script-name">fix-tailwind-v4.js</span>
+                    <p class="script-desc">Migrates older Tailwind CSS v3 configurations to the new Vite v4 implementation.</p>
+                </li>
+                <li class="script-item">
+                    <span class="script-name">patch-auth-gates.js</span>
+                    <p class="script-desc">Fixes infinite redirect loops and missing auth provider wrappers across apps.</p>
+                </li>
+                <li class="script-item">
+                    <span class="script-name">standardize.js</span>
+                    <p class="script-desc">Runs cross-repository linting and structural standardization checks.</p>
+                </li>
+                <li class="script-item">
+                    <span class="script-name">patch-favicons.mjs</span>
+                    <p class="script-desc">Injects standard TUC branding favicons and meta tags into index.html files.</p>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Testing and Screenshots -->
+        <div class="category-card">
+            <h2>📸 Testing & Visual Validation</h2>
+            <ul class="script-list">
+                <li class="script-item">
+                    <span class="script-name">screenshot-all.mjs</span>
+                    <p class="script-desc">Uses Puppeteer to capture E2E visual evidence of running applications.</p>
+                </li>
+                <li class="script-item">
+                    <span class="script-name">fast-html-validator.js</span>
+                    <p class="script-desc">Performs high-speed HTML semantic validation against W3C standards.</p>
+                </li>
+                <li class="script-item">
+                    <span class="script-name">agentic-verification-test.ts</span>
+                    <p class="script-desc">Runs automated agentic validation tests on deployed environments.</p>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Deployment and Docker -->
+        <div class="category-card">
+            <h2>🐳 Deployment & Docker</h2>
+            <ul class="script-list">
+                <li class="script-item">
+                    <span class="script-name">generate-dockerfiles.sh</span>
+                    <p class="script-desc">Scaffolds standardized Nginx Alpine Dockerfiles for all frontend projects.</p>
+                </li>
+                <li class="script-item">
+                    <span class="script-name">docker-batch-start.sh</span>
+                    <p class="script-desc">Utility to execute batch docker-compose up operations.</p>
+                </li>
+                <li class="script-item">
+                    <span class="script-name">verify-deployments.ts</span>
+                    <p class="script-desc">Checks the status of live applications on Plesk/Nginx servers (ai-tools.techbridge).</p>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Utility and Misc -->
+        <div class="category-card">
+            <h2>🧰 Misc Utilities</h2>
+            <ul class="script-list">
+                <li class="script-item">
+                    <span class="script-name">extract-blueprint.js</span>
+                    <p class="script-desc">Extracts an application from a monolithic AGENT.md self-replicating file.</p>
+                </li>
+                <li class="script-item">
+                    <span class="script-name">install-failed-apps.js</span>
+                    <p class="script-desc">Reruns package installations for applications that failed due to dependency conflicts.</p>
+                </li>
+                <li class="script-item">
+                    <span class="script-name">root-reorganise.js</span>
+                    <p class="script-desc">Maintains directory structural integrity at the workspace level.</p>
+                </li>
+            </ul>
+        </div>
+
+    </div>
+
+    <script>
+        // Simple search functionality
+        document.getElementById('searchInput').addEventListener('input', function(e) {
+            const term = e.target.value.toLowerCase();
+            const cards = document.querySelectorAll('.category-card');
+            
+            cards.forEach(card => {
+                let hasVisibleItem = false;
+                const items = card.querySelectorAll('.script-item');
+                
+                items.forEach(item => {
+                    const text = item.textContent.toLowerCase();
+                    if (text.includes(term)) {
+                        item.style.display = 'block';
+                        hasVisibleItem = true;
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+                
+                if (hasVisibleItem || card.querySelector('h2').textContent.toLowerCase().includes(term)) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

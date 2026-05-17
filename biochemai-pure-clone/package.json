@@ -1,0 +1,49 @@
+{
+  "name": "biochemai-v151120252049",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "vitest",
+    "test:ui": "vitest --ui",
+    "test:coverage": "vitest run --coverage",
+    "test:e2e": "playwright test",
+    "build:ios": "pnpm build && npx capacitor sync ios",
+    "build:android": "pnpm build && npx capacitor sync android",
+    "mobile:sync": "npx capacitor sync",
+    "mobile:open:ios": "npx capacitor open ios",
+    "mobile:open:android": "npx capacitor open android"
+  },
+  "dependencies": {
+    "@google/genai": "^2.0.1",
+    "@google/generative-ai": "^0.24.1",
+    "idb": "^8.0.3",
+    "jspdf": "^4.2.1",
+    "lucide-react": "^1.14.0",
+    "react": "19.2.6",
+    "react-dom": "19.2.6"
+  },
+  "devDependencies": {
+    "@capacitor/android": "^8.3.3",
+    "@capacitor/cli": "^8.3.3",
+    "@capacitor/core": "^8.3.3",
+    "@capacitor/ios": "^8.3.3",
+    "@tailwindcss/vite": "^4.3.0",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.2",
+    "@testing-library/user-event": "^14.6.1",
+    "@types/node": "^25.6.2",
+    "@vitejs/plugin-react": "^6.0.1",
+    "@vitest/coverage-v8": "^4.1.6",
+    "@vitest/ui": "^4.1.6",
+    "baseline-browser-mapping": "^2.10.29",
+    "jsdom": "^29.1.1",
+    "tailwindcss": "^4.3.0",
+    "typescript": "~6.0.3",
+    "vite": "^8.0.12",
+    "vitest": "^4.1.6"
+  }
+}
