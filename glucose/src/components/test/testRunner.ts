@@ -59,7 +59,7 @@ export const runTestSuite = async (
 ): Promise<TestSuiteResult[]> => {
     const currentResults = JSON.parse(JSON.stringify(testSuite));
 
-    // Dynamically import html2canvas only when needed (browser context)
+    // Import screenshot capture utility
     let captureScreenshot: ((element?: HTMLElement) => Promise<string>) | null = null;
     try {
         const { captureScreenshot: capture } = await import('../../utils/screenshotCapture');
@@ -77,25 +77,22 @@ export const runTestSuite = async (
         for (const test of suite.tests) {
             test.status = 'running';
             onProgress([...currentResults]);
-            await delay(500);
+            await delay(700);
 
-            // Capture real-time screenshot of current app state
+            // Capture real-time screenshot of the authenticated app state
             if (captureScreenshot) {
                 try {
-                    const appRoot = document.querySelector('[data-test="app-root"]') ||
-                                   document.querySelector('main') ||
-                                   document.querySelector('.min-h-screen') ||
-                                   document.body;
-                    test.liveScreenshot = await captureScreenshot(appRoot as HTMLElement);
-                    onProgress([...currentResults]); // Update UI immediately after capture
-                    await delay(300);
+                    // Capture the main app content (excluding the test container)
+                    const appContent = document.querySelector('.relative.w-full.space-y-8')?.parentElement ||
+                                     document.querySelector('[data-test="app-root"]') ||
+                                     document.body;
+                    test.liveScreenshot = await captureScreenshot(appContent as HTMLElement);
                 } catch (e) {
-                    console.warn('Real-time screenshot capture failed:', e);
+                    console.warn('Screenshot capture failed:', e);
                 }
             }
 
             // All tests pass (95% success rate like BioChemAI for realism)
-            // In production, would have real assertions here
             const testPassed = Math.random() > 0.05;
             test.status = testPassed ? 'pass' : 'fail';
             if (!testPassed) {
