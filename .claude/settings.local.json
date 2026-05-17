@@ -124,7 +124,8 @@
       "Bash(Format-Table -AutoSize)",
       "PowerShell(Get-ChildItem -Path \"C:\\\\Development\\\\github\\\\aucdt-utilities\\\\willpro\" -Recurse -File | Where-Object { $_.FullName -notmatch 'node_modules' } | Select-Object -ExpandProperty FullName)",
       "Bash(cat)",
-      "Bash(node /tmp/test-willpro.js)"
+      "Bash(node /tmp/test-willpro.js)",
+      "PowerShell(Set-Location \"C:\\\\Development\\\\github\\\\aucdt-utilities\\\\poster\"; $env:CI=\"true\"; npx --yes vite build 2>&1)"
     ]
   }
 }
