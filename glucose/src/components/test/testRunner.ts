@@ -82,13 +82,13 @@ export const runTestSuite = async (
             // Capture real-time screenshot of the authenticated app state
             if (captureScreenshot) {
                 try {
-                    // Capture the main app content (excluding the test container)
-                    const appContent = document.querySelector('.relative.w-full.space-y-8')?.parentElement ||
-                                     document.querySelector('[data-test="app-root"]') ||
-                                     document.body;
-                    test.liveScreenshot = await captureScreenshot(appContent as HTMLElement);
+                    // Find the app root element, excluding the test results container
+                    const appRoot = document.querySelector('[data-test="app-root"]') as HTMLElement;
+                    if (appRoot) {
+                        test.liveScreenshot = await captureScreenshot({ element: appRoot });
+                    }
                 } catch (e) {
-                    console.warn('Screenshot capture failed:', e);
+                    console.warn('Real-time screenshot unavailable for this test');
                 }
             }
 
