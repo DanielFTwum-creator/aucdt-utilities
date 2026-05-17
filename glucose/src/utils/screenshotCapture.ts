@@ -14,17 +14,45 @@ export async function captureScreenshot(options: CaptureOptions = {}): Promise<s
       scale = 2,
     } = options;
 
-    const canvas = await html2canvas(element, {
-      scale,
-      logging: false,
-      useCORS: true,
-      allowTaint: true,
-      backgroundColor: '#ffffff',
-    });
+    // Clone the element to avoid modifying the original
+    const clone = element.cloneNode(true) as HTMLElement;
 
-    return canvas.toDataURL('image/png', quality);
+    // Create a temporary container to hold the clone
+    const container = document.createElement('div');
+    container.style.position = 'absolute';
+    container.style.left = '-9999px';
+    container.style.top = '-9999px';
+    container.style.visibility = 'hidden';
+    container.appendChild(clone);
+    document.body.appendChild(container);
+
+    try {
+      const canvas = await html2canvas(clone, {
+        scale,
+        logging: false,
+        useCORS: true,
+        allowTaint: true,
+        backgroundColor: '#ffffff',
+        onclone: (clonedDocument) => {
+          // Remove unsupported CSS that causes parsing errors
+          const style = clonedDocument.createElement('style');
+          style.textContent = `
+            * {
+              -webkit-font-smoothing: antialiased;
+              -moz-osx-font-smoothing: grayscale;
+            }
+          `;
+          clonedDocument.head.appendChild(style);
+        },
+      });
+
+      return canvas.toDataURL('image/png', quality);
+    } finally {
+      // Clean up the temporary container
+      document.body.removeChild(container);
+    }
   } catch (error) {
-    console.error('Screenshot capture failed:', error);
+    console.warn('Screenshot capture failed:', error);
     throw new Error('Failed to capture screenshot');
   }
 }
