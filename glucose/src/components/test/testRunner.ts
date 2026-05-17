@@ -4,6 +4,7 @@ export interface TestResult {
     description: string;
     status: TestStatus;
     screenshotState: ScreenshotState;
+    liveScreenshot?: string;
 }
 
 export interface TestSuiteResult {
@@ -58,6 +59,15 @@ export const runTestSuite = async (
 ): Promise<TestSuiteResult[]> => {
     const currentResults = JSON.parse(JSON.stringify(testSuite));
 
+    // Dynamically import html2canvas only when needed (browser context)
+    let captureScreenshot: ((element?: HTMLElement) => Promise<string>) | null = null;
+    try {
+        const { captureScreenshot: capture } = await import('../../utils/screenshotCapture');
+        captureScreenshot = capture;
+    } catch (e) {
+        console.warn('Screenshot capture unavailable');
+    }
+
     for (const suite of currentResults) {
         suite.status = 'running';
         onProgress([...currentResults]);
@@ -68,6 +78,16 @@ export const runTestSuite = async (
             test.status = 'running';
             onProgress([...currentResults]);
             await delay(700);
+
+            // Capture real-time screenshot of current app state
+            if (captureScreenshot) {
+                try {
+                    const mainContent = document.querySelector('main') || document.body;
+                    test.liveScreenshot = await captureScreenshot(mainContent as HTMLElement);
+                } catch (e) {
+                    console.warn('Real-time screenshot capture failed:', e);
+                }
+            }
 
             // All tests pass (95% success rate like BioChemAI for realism)
             // In production, would have real assertions here

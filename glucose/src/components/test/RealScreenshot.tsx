@@ -9,15 +9,42 @@ import { ScreenshotState } from './testRunner';
 
 interface RealScreenshotProps {
     state: ScreenshotState;
+    liveCapture?: string;
 }
 
 const getScreenshotPath = (name: string): string => {
     return `./screenshots/e2e/${name}.png`;
 };
 
-export const RealScreenshot: React.FC<RealScreenshotProps> = ({ state }) => {
+export const RealScreenshot: React.FC<RealScreenshotProps> = ({ state, liveCapture }) => {
     let screenshotName = '';
     let description = '';
+
+    // If live capture is available, use it (real-time screenshot from running app)
+    if (liveCapture) {
+        return (
+            <div className="w-full rounded-lg border-2 border-slate-300 overflow-hidden bg-white shadow-sm">
+                {/* Browser Chrome */}
+                <div className="bg-slate-100 h-6 flex items-center px-2 gap-1.5 border-b border-slate-300">
+                    <div className="w-3 h-3 bg-red-400 rounded-full"></div>
+                    <div className="w-3 h-3 bg-yellow-400 rounded-full"></div>
+                    <div className="w-3 h-3 bg-green-400 rounded-full"></div>
+                </div>
+
+                {/* Live Screenshot Container */}
+                <div className="w-full h-80 bg-gray-50 flex flex-col items-center justify-center overflow-hidden relative">
+                    <img
+                        src={liveCapture}
+                        alt="Live app screenshot"
+                        className="max-w-full max-h-full object-contain"
+                    />
+                    <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/10 to-transparent px-4 py-2">
+                        <p className="text-xs text-slate-700 font-semibold">🎬 Real-time capture from running app</p>
+                    </div>
+                </div>
+            </div>
+        );
+    }
 
     // Map test states to screenshot files
     switch (state.type) {
