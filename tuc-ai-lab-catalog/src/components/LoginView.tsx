@@ -26,7 +26,7 @@ export const LoginView: React.FC = () => {
     const redirectUri = import.meta.env.VITE_GOOGLE_REDIRECT_URI
       || `${window.location.origin}/auth/google/callback`;
     const state = Math.random().toString(36).substring(7);
-    sessionStorage.setItem('oauth_state', state);
+    localStorage.setItem('oauth_state', state);
 
     const params = new URLSearchParams({
       client_id: clientId,

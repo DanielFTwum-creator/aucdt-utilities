@@ -37,10 +37,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const code = params.get('code');
     const state = params.get('state');
     const error = params.get('error');
+    const storedState = localStorage.getItem('oauth_state');
 
     if (error) {
       console.error('OAuth error:', error);
-    } else if (code && state === sessionStorage.getItem('oauth_state')) {
+    } else if (code && state && state === storedState) {
+      localStorage.removeItem('oauth_state');
       exchangeCodeForUser(code);
     }
   }, []);
