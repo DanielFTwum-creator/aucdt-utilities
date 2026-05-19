@@ -55,7 +55,7 @@ Write-Host "Installing backend dependencies..." -ForegroundColor Yellow
 ssh -o StrictHostKeyChecking=no $RemoteHost "cd $RemotePath && npm install --production 2>&1 | tail -3" | Out-Null
 
 Write-Host "Creating .htaccess..." -ForegroundColor Yellow
-$htaccessContent = @"
+$htaccessContent = @'
 <IfModule mod_rewrite.c>
   RewriteEngine On
   RewriteBase /ai-lab/
@@ -68,7 +68,7 @@ $htaccessContent = @"
   RewriteRule ^api/(.*)$ http://localhost:3003/api/$1 [P,L]
   RewriteRule ^ /ai-lab/index.html [QSA,L]
 </IfModule>
-"@
+'@
 $htaccessContent | ssh -o StrictHostKeyChecking=no $RemoteHost "cat > '$RemotePath/.htaccess'" 2>&1 | Out-Null
 
 Write-Host "Copying .env..." -ForegroundColor Yellow
