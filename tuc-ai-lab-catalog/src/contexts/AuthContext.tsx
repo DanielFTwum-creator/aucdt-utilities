@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { getUserSession, setUserSession, clearUserSession } from '../utils/indexedDB';
 
 export interface User {
   id: string;
@@ -21,30 +22,30 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
-    const stored = localStorage.getItem('tuc_ai_lab_user');
-    if (stored) {
-      try {
-        const parsed = JSON.parse(stored);
-        setUser(parsed);
+    const restoreSession = async () => {
+      // Restore user session from IndexedDB
+      const stored = await getUserSession();
+      if (stored) {
+        setUser(stored as User);
         setIsAuthenticated(true);
-      } catch {
-        localStorage.removeItem('tuc_ai_lab_user');
       }
-    }
 
-    // Handle OAuth callback
-    const params = new URLSearchParams(window.location.search);
-    const code = params.get('code');
-    const state = params.get('state');
-    const error = params.get('error');
-    const storedState = localStorage.getItem('oauth_state');
+      // Handle OAuth callback
+      const params = new URLSearchParams(window.location.search);
+      const code = params.get('code');
+      const state = params.get('state');
+      const error = params.get('error');
+      const storedState = localStorage.getItem('oauth_state');
 
-    if (error) {
-      console.error('OAuth error:', error);
-    } else if (code && state && state === storedState) {
-      localStorage.removeItem('oauth_state');
-      exchangeCodeForUser(code);
-    }
+      if (error) {
+        console.error('OAuth error:', error);
+      } else if (code && state && state === storedState) {
+        localStorage.removeItem('oauth_state');
+        exchangeCodeForUser(code);
+      }
+    };
+
+    restoreSession();
   }, []);
 
   const exchangeCodeForUser = async (code: string) => {
@@ -69,7 +70,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (typeof userOrUsername === 'object') {
       setIsAuthenticated(true);
       setUser(userOrUsername);
-      localStorage.setItem('tuc_ai_lab_user', JSON.stringify(userOrUsername));
+      await setUserSession({
+        id: userOrUsername.id,
+        username: userOrUsername.username,
+        email: userOrUsername.email,
+        timestamp: Date.now(),
+      });
       return { success: true };
     }
 
@@ -102,7 +108,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (data.success && data.user) {
         setIsAuthenticated(true);
         setUser(data.user);
-        localStorage.setItem('tuc_ai_lab_user', JSON.stringify(data.user));
+        await setUserSession({
+          id: data.user.id,
+          username: data.user.username,
+          email: data.user.email,
+          timestamp: Date.now(),
+        });
       }
       return { success: data.success, message: data.message };
     } catch (err) {
@@ -110,10 +121,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
-  const logout = () => {
+  const logout = async () => {
     setIsAuthenticated(false);
     setUser(null);
-    localStorage.removeItem('tuc_ai_lab_user');
+    await clearUserSession();
   };
 
   return (
