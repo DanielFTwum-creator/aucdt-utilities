@@ -27,28 +27,65 @@ const LoginView: React.FC = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   useEffect(() => {
+    const OAUTH_TIMEOUT_MS = 5000;
+
     const handleMessage = async (event: MessageEvent) => {
-      if (event.data?.type !== 'OAUTH_TOKEN_SUCCESS') return;
-      const { access_token } = event.data;
-      try {
-        setIsLoading(true);
-        const res = await fetch('https://www.googleapis.com/oauth2/v2/userinfo', {
-          headers: { Authorization: `Bearer ${access_token}` }
-        });
-        if (!res.ok) throw new Error('Failed to fetch user info');
-        const userInfo = await res.json();
-        login({
-          id: userInfo.id,
-          name: userInfo.name,
-          email: userInfo.email,
-          picture: userInfo.picture,
-          tier: 'free',
-        });
-      } catch (err) {
-        setError('Google Login failed. Please try again.');
+      // Validate origin matches current location
+      if (event.origin !== window.location.origin) {
+        console.warn('[OAuth] Message from different origin, ignoring:', event.origin);
+        return;
+      }
+
+      if (event.data?.type === 'OAUTH_TOKEN_SUCCESS') {
+        const { access_token } = event.data;
+        try {
+          setIsLoading(true);
+          console.log('[OAuth] Processing token, fetching user info...');
+
+          const controller = new AbortController();
+          const timeoutId = setTimeout(() => controller.abort(), OAUTH_TIMEOUT_MS);
+
+          const res = await fetch('https://www.googleapis.com/oauth2/v2/userinfo', {
+            headers: { Authorization: `Bearer ${access_token}` },
+            signal: controller.signal
+          });
+
+          clearTimeout(timeoutId);
+
+          if (!res.ok) {
+            const errorText = await res.text();
+            console.error('[OAuth] User info fetch failed:', res.status, errorText);
+            throw new Error(`Google API error: ${res.status} ${res.statusText}`);
+          }
+
+          const userInfo = await res.json();
+          console.log('[OAuth] User info received, logging in...');
+          login({
+            id: userInfo.id,
+            name: userInfo.name,
+            email: userInfo.email,
+            picture: userInfo.picture,
+            tier: 'free',
+          });
+        } catch (err) {
+          if (err instanceof Error && err.name === 'AbortError') {
+            console.error('[OAuth] Request timeout');
+            setError('Google login took too long. Please try again.');
+          } else {
+            const errorMsg = err instanceof Error ? err.message : String(err);
+            console.error('[OAuth] Token processing failed:', errorMsg);
+            setError(`Google login failed: ${errorMsg}`);
+          }
+          setIsLoading(false);
+        }
+      } else if (event.data?.type === 'OAUTH_TOKEN_ERROR') {
+        console.error('[OAuth] Error from callback:', event.data);
+        setError(`OAuth error: ${event.data.error}${event.data.error_description ? ' - ' + event.data.error_description : ''}`);
         setIsLoading(false);
       }
     };
+
+    console.log('[OAuth] Setting up message listener');
     window.addEventListener('message', handleMessage);
     return () => window.removeEventListener('message', handleMessage);
   }, [login]);
@@ -273,21 +310,21 @@ const LoginView: React.FC = () => {
                     {error && <p className="text-red-500 text-sm animate-fade-in">{error}</p>}
                 </div>
                 
-                <button type="submit" disabled={isLoading} className="mt-4 w-full bg-gradient-to-r from-accent-primary to-accent-secondary text-white font-bold py-3 px-4 rounded-lg hover:opacity-90 transition flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed">
+                <button type="submit" disabled={isLoading} className="w-full bg-gradient-to-r from-accent-primary to-accent-secondary text-white font-bold py-3.5 px-4 rounded-lg hover:opacity-90 transition flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed">
                     {isLoading ? <Spinner /> : (mode === 'login' ? 'Sign In' : 'Create Account')}
                 </button>
 
-                <div className="my-4 flex items-center justify-center space-x-2">
-                    <div className="h-px bg-default flex-1"></div>
-                    <span className="text-secondary text-sm">or</span>
-                    <div className="h-px bg-default flex-1"></div>
+                <div className="relative flex items-center gap-3 my-6">
+                    <div className="flex-1 h-px bg-default"></div>
+                    <span className="text-secondary text-xs uppercase font-semibold">Or</span>
+                    <div className="flex-1 h-px bg-default"></div>
                 </div>
 
                 <button
                   type="button"
                   onClick={handleGoogleLogin}
                   disabled={isLoading}
-                  className="w-full bg-primary text-primary font-bold py-3 px-4 rounded-lg hover:bg-secondary border border-default transition flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed mb-2"
+                  className="w-full bg-white border-2 border-default text-primary font-bold py-3.5 px-4 rounded-lg hover:bg-secondary/50 transition flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <svg className="w-5 h-5 mr-2" viewBox="0 0 24 24">
                     <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
