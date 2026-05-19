@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+  <!-- TUC AI Lab - Academic Shield with AI symbol -->
+  <rect width="256" height="256" fill="#f5f0e8"/>
+
+  <!-- Shield shape -->
+  <path d="M 128 20 L 180 50 L 180 120 C 180 160 128 220 128 220 C 128 220 76 160 76 120 L 76 50 Z" fill="#C9A84C" stroke="#8B7034" stroke-width="2"/>
+
+  <!-- AI symbol - neural network nodes -->
+  <circle cx="110" cy="100" r="8" fill="#1F3864"/>
+  <circle cx="128" cy="85" r="8" fill="#1F3864"/>
+  <circle cx="146" cy="100" r="8" fill="#1F3864"/>
+  <circle cx="128" cy="130" r="8" fill="#1F3864"/>
+
+  <!-- Connections -->
+  <line x1="110" y1="100" x2="128" y2="85" stroke="#1F3864" stroke-width="1.5" opacity="0.6"/>
+  <line x1="128" y1="85" x2="146" y2="100" stroke="#1F3864" stroke-width="1.5" opacity="0.6"/>
+  <line x1="110" y1="100" x2="128" y2="130" stroke="#1F3864" stroke-width="1.5" opacity="0.6"/>
+  <line x1="146" y1="100" x2="128" y2="130" stroke="#1F3864" stroke-width="1.5" opacity="0.6"/>
+</svg>
