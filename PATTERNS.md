@@ -527,5 +527,134 @@ Always log: before state → action → after state.
 
 ---
 
+---
+
+## PATTERN 7: PLESK VITE DEPLOYMENT (Peace Vinyl Template)
+
+**Projects:** peace-vinyl, any Vite + React app on Plesk  
+**Platform:** Ubuntu + Plesk + Apache  
+**Target:** ai-tools.techbridge.edu.gh/[project]/
+
+### Deployment Script Pattern (deploy.ps1)
+
+```powershell
+param([string]$RemoteHost = "root@66.226.72.199", [string]$RemotePath = "...", [switch]$Build = $false)
+
+# 1. Copy .env.local from shared source (glucose pattern)
+Copy-Item "../glucose/.env.local" "./.env.local" -Force
+
+# 2. Build locally
+if ($Build) { pnpm build }
+
+# 3. Create remote directory & clean
+ssh ... "mkdir -p $RemotePath && rm -rf $RemotePath/*"
+
+# 4. Copy dist/ via SCP (bash required on Windows)
+bash -c "scp -r dist/* $RemoteHost:$RemotePath"
+
+# 5. Write .htaccess via SSH heredoc (CRITICAL: avoids PowerShell BOM)
+ssh ... "cat > $RemotePath/.htaccess << 'EOF'
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /$PROJECT/
+  RewriteCond %{REQUEST_FILENAME} -f [OR]
+  RewriteCond %{REQUEST_FILENAME} -d
+  RewriteRule ^ - [L]
+  RewriteRule ^ /$PROJECT/index.html [QSA,L]
+</IfModule>
+EOF"
+
+# 6. Set permissions
+ssh ... "chown -R techbridge.edu.gh_md:psacln $RemotePath && chmod -R 755 $RemotePath"
+```
+
+### Critical: .htaccess & PowerShell BOM Issue
+
+**Problem:** PowerShell heredoc syntax (`@"..."@`) adds UTF-8 BOM to file content  
+**Symptom:** Apache 500 error, `.htaccess` not parsed  
+**Solution:** Write `.htaccess` **directly on server** via SSH heredoc (`cat > file << 'EOF'`)
+
+```powershell
+# ❌ WRONG — adds BOM, Apache rejects file
+@"<IfModule...>"@ | ssh ... "cat > $RemotePath/.htaccess"
+
+# ✅ CORRECT — no BOM, Apache parses correctly
+ssh ... "cat > $RemotePath/.htaccess << 'EOF'
+<IfModule...>
+EOF"
+```
+
+### SPA Routing Rules
+
+All Vite + React apps need rewrite rules to route non-file/non-directory URLs to `index.html`:
+
+```apache
+RewriteBase /project/
+RewriteCond %{REQUEST_FILENAME} -f [OR]     # Is file
+RewriteCond %{REQUEST_FILENAME} -d          # Is directory
+RewriteRule ^ - [L]                         # Serve as-is
+RewriteRule ^ /project/index.html [QSA,L]   # Route to SPA entry
+```
+
+### HTML Head Pattern (index.html)
+
+```html
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="[Project description for SEO]" />
+  <meta name="theme-color" content="#[brand-color]" />
+  <title>[Project Name] — [Tagline]</title>
+</head>
+```
+
+### Directory Naming
+
+- ❌ Avoid special characters in project names: `peace-&-one-love-vinyl`
+  - Breaks shell path resolution in scripts
+  - Issues with bash `cd` and npm path handling
+  
+- ✅ Use dashes only: `peace-vinyl`
+  - Works across all shells (bash, PowerShell, Windows)
+  - Cleaner in URLs: `/peace/` not `/peace-&-one-love-vinyl/`
+
+### Environment Variable Sharing
+
+TUC projects share credentials via central `.env.local` files:
+
+```
+glucose/.env.local  ← Source of truth (Google OAuth, Gemini API)
+peace-vinyl/        ← Copy at deploy time (deploy.ps1 does this)
+markai/             ← Same credentials, same app
+```
+
+Benefits:
+
+- Single point of update for org-wide credentials
+- Consistent OAuth redirect URIs
+- One Gemini API quota shared safely
+
+### Deployment Verification
+
+After SCP transfer, verify:
+
+```bash
+# Files transferred
+ls -la /var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/peace/
+
+# .htaccess parsed (no BOM, proper syntax)
+apache2ctl configtest  # Should return OK
+
+# Permissions correct
+stat /var/www/vhosts/.../peace/
+
+# HTTP status test
+curl -s -o /dev/null -w "%{http_code}\n" https://ai-tools.techbridge.edu.gh/peace/
+```
+
+Expected: HTTP 200, files present, owned by `techbridge.edu.gh_md:psacln`, permissions 755/644.
+
+---
+
 *Last updated: May 2026 — Daniel Frempong Twum / TUC ICT*  
 *Core session directives → see CLAUDE.md*
