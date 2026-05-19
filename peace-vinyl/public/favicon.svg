@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+  <!-- Peace Vinyl - Vinyl Record themed -->
+  <rect width="256" height="256" fill="#0a0806"/>
+
+  <!-- Vinyl record -->
+  <circle cx="128" cy="128" r="90" fill="#1a1a1a" stroke="#d4af37" stroke-width="2"/>
+
+  <!-- Grooves -->
+  <circle cx="128" cy="128" r="75" fill="none" stroke="#444" stroke-width="1" opacity="0.5"/>
+  <circle cx="128" cy="128" r="60" fill="none" stroke="#444" stroke-width="1" opacity="0.5"/>
+  <circle cx="128" cy="128" r="45" fill="none" stroke="#444" stroke-width="1" opacity="0.5"/>
+
+  <!-- Center label -->
+  <circle cx="128" cy="128" r="25" fill="#ea580c"/>
+  <circle cx="128" cy="128" r="15" fill="#0a0806"/>
+
+  <!-- Audio wave accent -->
+  <path d="M 128 100 Q 135 95 142 100" stroke="#f97316" stroke-width="2" fill="none" stroke-linecap="round"/>
+  <path d="M 128 156 Q 135 161 142 156" stroke="#f97316" stroke-width="2" fill="none" stroke-linecap="round"/>
+</svg>

@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+  <!-- WillPro - Document/Will symbol -->
+  <rect width="256" height="256" fill="#f5f0e8"/>
+
+  <!-- Document -->
+  <rect x="50" y="40" width="156" height="180" rx="8" fill="#D4AF37" stroke="#8B7034" stroke-width="2"/>
+
+  <!-- Document lines -->
+  <line x1="70" y1="70" x2="186" y2="70" stroke="#8B7034" stroke-width="2"/>
+  <line x1="70" y1="90" x2="186" y2="90" stroke="#8B7034" stroke-width="1.5" opacity="0.6"/>
+  <line x1="70" y1="110" x2="186" y2="110" stroke="#8B7034" stroke-width="1.5" opacity="0.6"/>
+  <line x1="70" y1="130" x2="160" y2="130" stroke="#8B7034" stroke-width="1.5" opacity="0.6"/>
+
+  <!-- Checkmark (approved) -->
+  <path d="M 140 150 L 155 165 L 175 145" stroke="#2E75B6" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

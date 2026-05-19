@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+  <!-- Groove Streamer - Audio waveform -->
+  <rect width="256" height="256" fill="#1a1a2e"/>
+
+  <!-- Waveform bars (equalizer style) -->
+  <g fill="#00ff88">
+    <rect x="50" y="140" width="16" height="56" rx="2"/>
+    <rect x="80" y="100" width="16" height="96" rx="2"/>
+    <rect x="110" y="80" width="16" height="136" rx="2"/>
+    <rect x="140" y="100" width="16" height="96" rx="2"/>
+    <rect x="170" y="130" width="16" height="76" rx="2"/>
+    <rect x="200" y="145" width="16" height="46" rx="2"/>
+  </g>
+
+  <!-- Play button overlay (subtle) -->
+  <path d="M 190 50 L 230 75 L 190 100 Z" fill="#00ff88" opacity="0.6"/>
+</svg>
