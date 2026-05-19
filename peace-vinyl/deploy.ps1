@@ -56,8 +56,8 @@ scp -o StrictHostKeyChecking=no "server.js" "package.json" "${RemoteHost}:${Remo
 Write-Host "Installing backend dependencies..." -ForegroundColor Yellow
 ssh -o StrictHostKeyChecking=no $RemoteHost "cd $RemotePath && npm install --production 2>&1 | tail -3" | Out-Null
 
-Write-Host "Creating .htaccess via SSH heredoc..." -ForegroundColor Yellow
-ssh -o StrictHostKeyChecking=no $RemoteHost "cat > '$RemotePath/.htaccess' << 'HTACCESS_EOF'
+Write-Host "Creating .htaccess..." -ForegroundColor Yellow
+$htaccessContent = @'
 <IfModule mod_rewrite.c>
   RewriteEngine On
   RewriteBase /peace/
@@ -66,10 +66,11 @@ ssh -o StrictHostKeyChecking=no $RemoteHost "cat > '$RemotePath/.htaccess' << 'H
   RewriteRule ^ - [L]
   RewriteCond %{HTTP:Upgrade} !websocket [NC]
   RewriteCond %{HTTP:Connection} !Upgrade [NC]
-  RewriteRule ^api/(.*)$ http://localhost:3001/api/\$1 [P,L]
+  RewriteRule ^api/(.*)$ http://localhost:3001/api/$1 [P,L]
   RewriteRule ^ /peace/index.html [QSA,L]
 </IfModule>
-HTACCESS_EOF" 2>&1 | Out-Null
+'@
+$htaccessContent | ssh -o StrictHostKeyChecking=no $RemoteHost "cat > '$RemotePath/.htaccess'" 2>&1 | Out-Null
 
 Write-Host "Copying .env file..." -ForegroundColor Yellow
 scp -o StrictHostKeyChecking=no ".env.local" "${RemoteHost}:${RemotePath}/.env" 2>&1 | Out-Null

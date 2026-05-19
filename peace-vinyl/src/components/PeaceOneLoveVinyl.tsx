@@ -466,7 +466,7 @@ export default function PeaceOneLoveVinyl() {
   const [showFlash, setShowFlash] = useState(false);
   const [flashImage, setFlashImage] = useState('');
   const [bgImage, setBgImage] = useState(UPLOADED_IMAGES[7]); // Default to one of the images
-  const [showBg, setShowBg] = useState(false);
+  const [showBg, setShowBg] = useState(true);
   const [aspectRatio, setAspectRatio] = useState('16:9');
   const [customAssets, setCustomAssets] = useState<string[]>([]);
 
