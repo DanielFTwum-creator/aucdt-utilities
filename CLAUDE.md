@@ -2,74 +2,77 @@
 
 > This file is read automatically by Claude Code on every session.
 > It governs AI model allocation, workflow protocols, and project standards.
+> Pattern library → see PATTERNS.md
 
 ---
 
-## ⚡ CORE OPERATING PRINCIPLES (Read First)
+## ⚡ SESSION START PROTOCOL (Do This First, Every Time)
 
-### 1. Don't Assume. Don't Hide Confusion. Surface Tradeoffs.
+Before generating any output on an existing project:
 
-- **Ask before assuming:** If requirements are ambiguous, incomplete, or contradictory, say so explicitly. Don't fill gaps with guesses.
-- **Surface confusion visibly:** When trade-offs exist (performance vs. complexity, coverage vs. scope, speed vs. correctness), lay them out clearly with options, not buried in implementation.
-- **Clarify constraints:** Before committing to a path, state what I'm optimizing for. Call out if constraints conflict.
-- **Document decisions:** If I pick option A over option B, explain why (and what was lost by not picking B).
-- **Example:** Instead of silently choosing between "fast but incomplete" and "slow but thorough," ask: *"This can be done two ways: (1) sync update in 2 sec, loses detail; (2) async in 10 sec, full data. Which matters more?"*
+1. **Identify scope** — Which project in `aucdt-utilities/` are we working on? If unclear, ask.
+2. **Read project root** — Check for a local `CLAUDE.md` or `README.md` in the project directory. Local files override global defaults.
+3. **Check file tree** — Run a top-level `ls` or `tree -L 2` to orient. Never assume the structure.
+4. **Confirm the task** — Restate the goal in one sentence and list any assumptions. Invite correction before writing any code.
+5. **Check for active SRS** — If a `/docs` directory exists, note the latest SRS document ID.
+
+---
+
+## ⚡ CORE OPERATING PRINCIPLES
+
+### 1. Don't Assume. Surface Tradeoffs.
+
+- Ask before assuming. If requirements are ambiguous, say so explicitly — don't fill gaps with guesses.
+- When trade-offs exist, lay them out clearly with options. Don't bury decisions in implementation.
+- Document every non-obvious choice: what was picked, why, and what was traded off.
+- **Example:** *"This can be done two ways: (1) sync in 2 sec, loses detail; (2) async in 10 sec, full data. Which matters more?"*
 
 ### 2. Minimum Code That Solves the Problem. Nothing Speculative.
 
-- **Solve the stated problem, nothing more:** Don't add features "because they might be useful later," don't anticipate future needs, don't over-engineer.
-- **No speculative abstractions:** Don't create generic frameworks, reusable utilities, or layers that aren't required by the current task. YAGNI (You Ain't Gonna Need It).
-- **Concrete before generic:** Write working code first. If duplication emerges across three places, refactor then—not before.
-- **Ship the MVP:** The goal is to reduce scope to the essential, deliver it, and iterate. Scope creep kills projects.
-- **Example:** If asked for a timer, build a timer. Don't add pause/resume/lap/history until explicitly requested.
+- Solve the stated problem, nothing more. No features "for later." No over-engineering. YAGNI.
+- No speculative abstractions. No generic frameworks unless the current task requires them.
+- Concrete before generic. If duplication appears across three places, refactor then — not before.
+- **Example:** Asked for a timer? Build a timer. Don't add pause/resume/lap/history until requested.
 
 ### 3. Touch Only What You Must. Clean Up Only Your Own Mess.
 
-- **Surgical edits:** When modifying existing code or documents, change only the lines/sections that solve the problem. Don't reformat, refactor, or "improve" unrelated code.
-- **No unnecessary reorganisation:** Don't move files around, rename things, or restructure unless it's essential to the task.
-- **Your mess only:** If I create temporary files, debugging output, or intermediate artifacts, clean them up. Don't touch pre-existing junk unless it blocks progress.
-- **Preserve style:** Match the existing code style, naming conventions, and structure. Don't impose new standards.
-- **Example:** If fixing a bug in line 42, don't reformat lines 1–50. If adding a feature, don't refactor unrelated functions.
+- Surgical edits only. Change the lines that solve the problem. Don't reformat unrelated code.
+- No reorganisation unless it's essential to the task.
+- Match the existing code style, naming conventions, and structure. Don't impose new standards.
+- **Example:** Fixing a bug on line 42? Don't reformat lines 1–50.
 
 ### 4. Define Success Criteria. Loop Until Verified.
 
-- **Success is explicit:** Before starting, ask: *"How do you know this is done?"* Define acceptance criteria upfront (tests pass, feature works end-to-end, outputs match spec).
-- **Verify before finishing:** Don't assume success. Run tests, check outputs, walk through the happy path. Call out any gaps.
-- **Iterative loops:** If criteria aren't met, loop back and fix. Don't hand off incomplete work with "probably works."
-- **Example success criteria:**
-  - Unit tests pass (80%+ coverage on new code)
-  - Feature works on iPhone 8 (minimum target device)
-  - API response < 3 sec on 5 Mbps connection
-  - No compiler warnings
-  - Data persists across app restart
+- Before starting, establish: *"How do we know this is done?"*
+- Don't assume success. Run tests, check outputs, walk through the happy path.
+- If criteria aren't met, loop back. Don't hand off incomplete work with "probably works."
+- **Example criteria:** Tests pass at 80%+ coverage · API < 3 sec · Data persists across restart · No compiler warnings.
 
 ---
 
-## Task Delegation
+## TASK DELEGATION
 
 When spawning subagents, use the cheapest model that can handle the task:
-- Haiku: bulk mechanical tasks - file ops, formatting, renaming, 
-  simple transformations. No judgment required.
-- Sonnet: scoped research, code exploration, summarization, 
-  synthesis across sources.
-- Opus: only when real planning or tradeoffs are involved - 
-  architecture, ambiguous requirements, high-stakes decisions.
 
-### Spawn rules:
-- Haiku subagents cannot spawn further subagents. 
-  If they need to, the task was wrong-sized - return to parent.
-- Max spawn depth: 2 (parent → subagent → one more tier, no deeper)
-- If a subagent realizes it needs a smarter model, 
-  it returns to the parent instead of escalating on its own.
+- **Haiku** — Bulk mechanical tasks: file ops, formatting, renaming, simple transformations. No judgement required.
+- **Sonnet** — Scoped research, code exploration, summarisation, synthesis across sources.
+- **Opus** — Only when real planning or trade-offs are involved: architecture, ambiguous requirements, high-stakes decisions.
 
-## Preferred Tools (cheapest effective option first)
+### Spawn Rules
 
-- Public pages: use WebFetch - free, text-only, fast
-- Dynamic pages or auth-walled content: use agent-browser CLI 
-  (~82% fewer tokens than screenshot-based tools)
-- PDFs: use pdftotext instead of the Read tool
-When the same fetch pattern repeats more than twice, 
-wrap it as a reusable tool instead of re-running it each time.
+- Haiku subagents cannot spawn further subagents. If they need to, the task was wrong-sized — return to parent.
+- Max spawn depth: 2 (parent → subagent → one more tier, no deeper).
+- If a subagent needs a smarter model, it returns to the parent instead of escalating.
+- **Never ask Sonnet one small thing at a time.** Group 3–5 related decisions into one message.
+
+---
+
+## PREFERRED TOOLS (Cheapest Effective Option First)
+
+- Public pages → `WebFetch` (free, text-only, fast)
+- Dynamic pages or auth-walled content → `agent-browser CLI` (~82% fewer tokens than screenshot tools)
+- PDFs → `pdftotext` instead of the Read tool
+- When the same fetch pattern repeats more than twice, wrap it as a reusable tool.
 
 ---
 
@@ -88,10 +91,7 @@ wrap it as a reusable tool instead of re-running it each time.
 
 ## 2. MODEL ALLOCATION PROTOCOL
 
-Tokens are limited. Strictly follow this split on every task.
-
 ### Claude Sonnet — HIGH-VALUE ONLY
-Use Sonnet for tasks that require judgement, architecture, or standards compliance:
 
 - IEEE SRS drafting, review, and final sign-off
 - System & database architecture decisions
@@ -103,7 +103,6 @@ Use Sonnet for tasks that require judgement, architecture, or standards complian
 - Any task requiring cross-domain reasoning
 
 ### Claude Haiku — DELEGATE EVERYTHING REPETITIVE
-Use Haiku for all boilerplate and scaffolding:
 
 - React / Angular / TypeScript component boilerplate
 - CRUD endpoints (Spring Boot / Express / FastAPI)
@@ -114,10 +113,6 @@ Use Haiku for all boilerplate and scaffolding:
 - CSS / Tailwind styling of pre-designed components
 - Config files: nginx, pm2, .env templates
 - README files for individual modules
-
-### Batching Rule
-**Never ask Sonnet one small thing at a time.**
-Group 3–5 related decisions into one message. Context switching wastes tokens.
 
 ---
 
@@ -138,7 +133,7 @@ Group 3–5 related decisions into one message. Context switching wastes tokens.
 ## 4. PROJECT REFRESH CHECKLIST
 
 Run this checklist when refreshing or auditing any existing project.
-Work through items in order. Confirm each with ✅ before proceeding.
+Confirm each item with ✅ before proceeding. Stop and report if any item fails.
 
 ```
 ☐ 1. FOUNDATION
@@ -169,99 +164,51 @@ Work through items in order. Confirm each with ✅ before proceeding.
    - Organise all files in /docs directory              [Haiku]
    - SRS ↔ Implemented Features Gap Analysis            [Sonnet]
 
-☐ 6. APP STORE DEPLOYMENT (For Web Apps Targeting iOS/Android)
+☐ 6. APP STORE DEPLOYMENT (Web Apps Targeting iOS/Android)
    - Install Capacitor 8.3.3                            [Haiku]
    - Add iOS and Android platforms                       [Haiku]
    - Create capacitor.config.ts with app ID & name      [Haiku]
    - Update package.json version to 1.0.0               [Haiku]
-   - Write APP_STORE_GUIDE.md (complete submission SOP) [Sonnet]
-   - Write MOBILE_BUILD_GUIDE.md (build/test workflow)  [Sonnet]
-   - Write APP_ICONS_GUIDE.md (icon generation process) [Haiku]
+   - Write APP_STORE_GUIDE.md                            [Sonnet]
+   - Write MOBILE_BUILD_GUIDE.md                        [Sonnet]
+   - Write APP_ICONS_GUIDE.md                            [Haiku]
    - Create privacy.html (GDPR/CCPA/GDPA compliant)    [Sonnet]
-   - Create APPSTORE_READY.md (pre-submission checklist)[Haiku]
+   - Create APPSTORE_READY.md                            [Haiku]
    - Add npm scripts for mobile builds & device testing [Haiku]
    - Test on iOS simulator and Android emulator         [Haiku]
-   - Verify exports, theming, admin panel on devices    [Haiku]
 ```
-
-**Duration:** 1 session (design choice) → 1 session (builds + docs) → ready for submission
 
 ---
 
 ## 5. TECHNOLOGY STACK
 
-### Preferred Languages & Frameworks
+### Languages & Frameworks
+
 - **Frontend:** React · Angular · TypeScript · JavaScript · Tailwind CSS
 - **Backend:** Java (Spring Boot) · Node.js (Express) · Python (FastAPI)
-- **Database:** MySQL · MariaDB
+- **Database:** MySQL · MariaDB (port 3307)
 - **Infrastructure:** Ubuntu · Docker · Plesk · Nginx · Apache
 - **AI Tools:** Claude (Sonnet + Haiku) · Gemini CLI · Suno.ai
 
 ### Package Manager
+
 - **All projects use pnpm** (not npm or yarn)
-- Run `pnpm install` to install dependencies
-- Run `pnpm build` to build projects
-- Commit `pnpm-lock.yaml` to version control (not package-lock.json)
-- Delete `package-lock.json` if migrating from npm projects
+- Commit `pnpm-lock.yaml` — delete `package-lock.json` if migrating from npm
 
 ### Code Standards
+
 - UK British English in all documentation and comments
-- IEEE SRS format for all project specifications
-- Structured JSON outputs for visual/media description tasks
-- Production-ready deliverables — no theoretical outlines
-- Iterative, tested code only — no placeholders
-
-### Frontend HTML Patterns (from dmcdai)
-Apply these patterns to all React/frontend `index.html` files for consistency:
-
-**Meta Tags:**
-- TUC Standard Meta comments block (charset, viewport, http-equiv)
-- SEO meta tags (description, keywords, author, publisher, canonical, robots)
-- Geographic meta tags (geo.region, geo.placename, geo.position for Accra)
-- Open Graph tags (og:type, og:url, og:title, og:description, og:image, og:locale)
-- Twitter Card tags (twitter:card, twitter:site, twitter:creator, twitter:title, twitter:description, twitter:image)
-- Theme & branding (theme-color, msapplication-TileColor, copyright, referrer)
-
-**Font Loading:**
-- Preconnect to Google Fonts API (`fonts.googleapis.com` and `fonts.gstatic.com`)
-- Load fonts via link tag BEFORE style definitions (prevents CSS optimisation warnings)
-- Include weight variants needed (e.g., `Inter:wght@300;400;500;600;700`)
-
-**Analytics & Scripts:**
-- Google Analytics integration with tracking ID (G-FKXTELQ71R for TUC properties)
-- Place analytics script in head, before styles
-
-**CSS Variables & Theming:**
-- Define `:root` + `[data-theme='dark']` for dark mode defaults
-- Define `[data-theme='light']` and `[data-theme='high-contrast']` variants
-- Use semantic variable names: `--color-background-main`, `--color-foreground`, `--color-primary`, etc.
-- Apply smooth transitions on body: `transition: background-color 0.3s ease, color 0.3s ease`
-
-**Font Family System:**
-- `.font-playfair` for headings (h1, h2, h3)
-- `.font-outfit` for secondary headings
-- `.font-space-grotesk` for technical/mono content
-- Default body font: Inter (sans-serif)
-
-**Animations:**
-- Define `@keyframes fadeIn` and `@keyframes slideIn` at minimum
-- Use `.animate-fade-in` and `.animate-slide-in` utility classes
-- Prefer `opacity` + `transform` over single properties for performance
-
-**Theme Persistence:**
-- Store theme preference in localStorage with key pattern: `{project}-theme` (e.g., `clpg-theme`)
-- Auto-apply theme on page load via inline script (before DOM renders)
+- IEEE SRS format (IEEE 29148) for all project specifications
+- Document IDs: `TUC-ICT-SRS-YYYY-NNN` / Incident IDs: `TUC-INC-YYYY-NNN`
+- Production-ready deliverables — no placeholders, no theoretical outlines
+- Iterative, tested code only
 
 ---
 
 ## 6. DOCUMENTATION STANDARDS
 
-All formal documents must follow these conventions:
-
 - **Standard:** IEEE 830 / IEEE 29148 SRS format
 - **Language:** UK British English
-- **Naming:** `TUC-ICT-SRS-YYYY-NNN` (e.g. `TUC-ICT-SRS-2026-009`)
-- **Incident IDs:** `TUC-INC-YYYY-NNN`
 - **Diagrams:** SVG format, embedded in SRS
 - **File organisation:** All docs in `/docs` directory
 
@@ -269,7 +216,7 @@ All formal documents must follow these conventions:
 
 ## 7. ACTIVE PLATFORMS & PROJECTS
 
-All projects below are located in `aucdt-utilities/` as a single monorepo. Refer to project name when scoping work.
+All projects in `aucdt-utilities/` monorepo.
 
 | Project | Stack | Status |
 |---|---|---|
@@ -300,14 +247,15 @@ All projects below are located in `aucdt-utilities/` as a single monorepo. Refer
 ## 9. GENERAL RULES FOR CLAUDE CODE
 
 1. **Read this file first** on every session before generating any output.
-2. **Plan before coding** — confirm the approach in one message, then execute.
-3. **Never generate placeholders** — all code must be production-ready.
-4. **One project at a time** — context switching burns tokens.
-5. **Confirm checklist items** with ✅ before moving to the next.
-6. **Stop and report** if any checklist item fails — do not skip.
-7. **Use artifacts for long outputs** to keep context window lean.
-8. **Batch related decisions** into single messages — never one-liners to Sonnet.
-9. **Specify project scope** — In multi-project work, always name the project (e.g., "I'm updating LearnAI's API schema"). This prevents ambiguous requests and avoids context-switching mistakes.
+2. **Follow the Session Start Protocol** — orient before acting.
+3. **Plan before coding** — confirm the approach in one message, then execute.
+4. **Never generate placeholders** — all code must be production-ready.
+5. **One project at a time** — context switching burns tokens.
+6. **Confirm checklist items** with ✅ before moving to the next.
+7. **Stop and report** if any checklist item fails — do not skip.
+8. **Use artifacts for long outputs** to keep context window lean.
+9. **Batch related decisions** into single messages — never one-liners to Sonnet.
+10. **Specify project scope** — always name the project when working in the monorepo.
 
 ---
 
@@ -315,425 +263,39 @@ All projects below are located in `aucdt-utilities/` as a single monorepo. Refer
 
 ### When Given a Task
 
-1. **Clarify before coding:** Ask clarifying questions if scope, constraints, or success criteria are unclear. Don't guess.
-2. **State assumptions:** List what I'm assuming. Invite correction.
-3. **Map tradeoffs:** If multiple paths exist, lay them out. Don't hide the decision.
-4. **Build minimum:** Write only what's needed. No speculation.
-5. **Test & verify:** Run the code. Check outputs. Call out what still needs work.
-6. **Document decisions:** Brief note on *why* I chose this path and what was traded off.
+1. **Clarify before coding.** Ask if scope, constraints, or success criteria are unclear. Don't guess.
+2. **State assumptions.** List them. Invite correction.
+3. **Map trade-offs.** If multiple paths exist, lay them out. Don't hide the decision.
+4. **Build minimum.** Write only what's needed. No speculation.
+5. **Test & verify.** Run the code. Check outputs. Call out what still needs work.
+6. **Document decisions.** Brief note on *why* this path was chosen and what was traded off.
 
 ### When Reviewing Code
 
-- Point out assumptions
-- Highlight scope creep
-- Call out speculative abstractions
-- Ask for success criteria
-- Verify against the spec
+- Point out assumptions · Highlight scope creep · Call out speculative abstractions
+- Ask for success criteria · Verify against the spec
 
 ### When Unsure
 
 Say it:
-- *"I don't have enough info to decide between A and B. What matters more—performance or flexibility?"*
+- *"I don't have enough info to decide between A and B. What matters more — performance or flexibility?"*
 - *"This adds complexity not in the spec. Should I include it?"*
-- *"I can't verify this works without [missing info]. Can you provide [X]?"*
+- *"I can't verify this works without [X]. Can you provide it?"*
 
 ---
 
 ## 11. ANTI-PATTERNS (DON'T DO THIS)
 
-
-
-❌ Assume requirements. Ask instead.  
-❌ Add features not in scope. Scope creep kills projects.  
-❌ Over-engineer or create generic frameworks. Concrete beats abstract.  
-❌ Hide trade-offs or decisions. Make them visible.  
-❌ Refactor code you didn't write (unless it blocks your task).  
-❌ Leave cleanup mess. Clean only your own.  
-❌ Hand off without testing. Verify success criteria first.  
-❌ Use past context to fill gaps. Ask current questions.  
+❌ Assume requirements — ask instead  
+❌ Add features not in scope — scope creep kills projects  
+❌ Over-engineer or create generic frameworks — concrete beats abstract  
+❌ Hide trade-offs or decisions — make them visible  
+❌ Refactor code you didn't write (unless it blocks your task)  
+❌ Leave cleanup mess — clean only your own  
+❌ Hand off without testing — verify success criteria first  
+❌ Use past context to fill gaps — ask current questions  
 
 ---
 
-## 12. STANDARD USER JOURNEY WORKFLOW PATTERN
-
-Every TUC application must capture a complete, convincing user flow from entry to exit. The **BioChemAI pattern** is the standard—it demonstrates how to make user interactions feel natural, progressive, and visually compelling.
-
-### The BioChemAI User Journey (Template)
-
-**Architecture:** State machine with progressive disclosure and smooth transitions.
-
-```
-Entry → Auth Check → Mode Selection → Workflow State → Results/Exit
-```
-
-**Key Components:**
-
-1. **Mode System** (AppMode enum)
-   - `Chat`: Conversational AI interaction (default entry point)
-   - `Quiz`: Structured assessment with generation + progression
-   - `Test`: Self-testing with animated results
-   - `Docs`: Reference material
-   - `Admin`: Password-gated admin panel
-   - `Voice`: Voice input variant
-
-2. **State Machine Pattern** (per mode)
-   ```typescript
-   type QuizState = 'setup' | 'loading' | 'active' | 'results' | 'error';
-   ```
-   - **Setup:** User configures (topic, difficulty, question count)
-   - **Loading:** Visual spinner with contextual message ("Generating 10 questions...")
-   - **Active:** Interactive progression (user answers, immediate feedback)
-   - **Results:** Summary with score, breakdown, restart option
-   - **Error:** Graceful recovery with actionable message
-
-3. **Persistence Pattern**
-   - Store all state in `localStorage` with `LOCAL_STORAGE_KEYS` constants
-   - Messages, learning level, theme, preferences survive refresh
-   - `useEffect` hooks sync state to storage on every change
-
-4. **Beautiful Loading States**
-   - **Animated dots:** Three-dot pulse for "thinking" states
-   - **Contextual copy:** "BioChemAI is preparing 10 questions for you" (not just "Loading...")
-   - **Visual containment:** Spinner inside rounded card with theme colors
-   - **No jarring transitions:** Use opacity + transform, not scale/bounce
-
-5. **Progressive Disclosure**
-   - User sees only what's relevant to current state
-   - Quiz results show visual feedback per question (✅ correct / ❌ incorrect)
-   - Test container shows real-time results as tests complete
-   - Admin panel behind password modal (gated, not hidden)
-
-6. **Error Handling (User-Facing)**
-   ```
-   Catch → Display error message → Offer "Try Again" button → Reset state
-   ```
-   - Show what went wrong, not technical details
-   - One clear action to recover
-   - Return to last safe state (setup) on failure
-
-7. **Theme & CSS Variables**
-   - Colors tied to theme via CSS variables: `--color-bg-secondary`, `--color-accent-primary`, etc.
-   - Smooth theme switching without page reload
-   - All components respond to theme dynamically
-
-### How to Apply to New Projects
-
-**Step 1: Define modes** — What are the primary user interactions?
-- Example (ai-exam-generator): `Setup` → `Building` → `ExamActive` → `Grading` → `Results`
-- Example (brainiac-challenge): `Browse` → `AttemptChallenge` → `Scoring` → `LeaderboardView`
-
-**Step 2: Implement state machine** — Create a top-level state enum, not inline strings.
-```typescript
-type AppState = 'setup' | 'loading' | 'active' | 'results';
-const [state, setState] = useState<AppState>('setup');
-```
-
-**Step 3: Add localStorage persistence** — Every state change persists.
-```typescript
-useEffect(() => {
-  localStorage.setItem('my_app_state', JSON.stringify({ state, data }));
-}, [state, data]);
-```
-
-**Step 4: Build loading states** — Animated spinners with contextual messages.
-- 3-dot pulse animation
-- Message that explains what's happening
-- Nested inside rounded card with theme colors
-
-**Step 5: Results visualization** — Show progress, scores, breakdown.
-- Real-time test results (like TestContainer in BioChemAI)
-- Screenshot mockups of each state (for testing)
-- Restart/retry buttons that reset cleanly
-
-**Step 6: Test the flow** — End-to-end, click through every state.
-- Welcome → Configure → Loading → Active → Results → Restart → Back to welcome
-- Verify localStorage persists across refresh
-- Verify theme switching works in all states
-- Verify error state recovery
-
-### Visual Checklist (The "Beautiful" Test)
-
-When you click the Test button:
-- ✅ Spinner animates smoothly (no jank)
-- ✅ Each test result slides in with transition
-- ✅ Status badges (RUNNING/PASS/FAIL) appear in real-time
-- ✅ Screenshot visualization shows what the test verified
-- ✅ No layout shift—cards maintain consistent width
-- ✅ Loading message matches test name ("Chat Mode User Journey...")
-- ✅ Results flow down naturally, like a waterfall
-
-### Projects Ready for User Journey Pattern
-
-- ✅ biochemai (reference implementation)
-- 🟡 brainiac-challenge (quiz-based → needs state machine)
-- 🟡 ai-exam-generator (test generation → needs loading + results states)
-- 🟡 agenticai-masterclass (lesson progression → needs checkpoint persistence)
-- 🟡 academic-integrity-detector (document upload → analysis → report)
-
----
-
-## 13. CAPACITOR MOBILE APP DEPLOYMENT (Reusable Process)
-
-For any React web app that needs iOS and Android app store deployment:
-
-### Option A: Quick Setup (30 min, after web build is complete)
-
-```bash
-# From project root (where package.json is)
-pnpm install @capacitor/core @capacitor/cli @capacitor/ios @capacitor/android
-npx capacitor init --appName "App Name" --appId com.company.appname --webDir dist
-npx capacitor add ios
-npx capacitor add android
-
-# Update version in package.json, then:
-npm run build
-npx capacitor sync
-```
-
-### Option B: Full Documentation (when submitting to app stores)
-
-Create in `/docs/`:
-1. **APP_STORE_GUIDE.md** — Complete iOS App Store + Google Play submission steps
-2. **MOBILE_BUILD_GUIDE.md** — Build workflow, debugging, CI/CD examples
-3. **APP_ICONS_GUIDE.md** — Icon generation (1024→all sizes), placement for both platforms
-4. **privacy.html** in `/public/` — GDPR/CCPA/GDPA compliant privacy policy
-
-### Option C: Pre-Submission Checklist
-
-Create **APPSTORE_READY.md** with:
-- ✅/❌ checklist of all completed setup items
-- Timeline estimate (1–2 weeks before submission)
-- Next steps (icons, screenshots, accounts, testing)
-- Common issues and fixes
-- Build size estimates
-
-### Key Commands (Add to package.json scripts)
-
-```json
-{
-  "scripts": {
-    "build": "vite build",
-    "build:web": "vite build && capacitor copy ios && capacitor copy android",
-    "build:ios": "npm run build:web && npx capacitor build ios",
-    "build:android": "npm run build:web && npx capacitor build android",
-    "ios:open": "open ios/App/App.xcworkspace",
-    "android:open": "open android",
-    "mobile:sync": "capacitor sync"
-  }
-}
-```
-
-### Critical Paths
-
-- **iOS:** `ios/App/App.xcodeproj/` + `.plist` configuration
-- **Android:** `android/app/build.gradle` + `AndroidManifest.xml`
-- **Config:** `capacitor.config.ts` (app ID, version, web directory)
-- **Privacy:** Must be public URL (e.g., `https://domain.com/privacy.html`)
-
-### Timeline for Any Project
-
-| Phase | Duration | Owner |
-|-------|----------|-------|
-| Setup Capacitor + platforms | 30 min | Haiku |
-| Create documentation (3 guides) | 2 hours | Sonnet |
-| Create icons (design required externally) | 1–2 hours | — |
-| Test on devices | 1 hour | Haiku |
-| Submit to App Store | 1 hour | Manual |
-| Approval (iOS: 3–5 days, Android: 1–2 hours) | 3–5 days | App Stores |
-
-### Don't Repeat
-
-This process is identical across all TUC web app projects (LearnAI, BioChemAI, ThesisAI, etc.).
-Once the docs are written for one project, copy `docs/APP_STORE_GUIDE.md` and adapt app ID + name.
-
----
-
-## 14. GOOGLE GEMINI API INTEGRATION PATTERNS
-
-For AI vision tasks (document scanning, OCR, handwriting extraction), use the proven Glucose project pattern.
-
-### Model Selection
-
-**Use `gemini-3.1-pro-preview` for vision tasks requiring structured output.**
-
-❌ **Avoid:**
-- `gemini-1.5-flash` — Not available on free tier, throws 404
-- `gemini-2.0-flash-exp` — Experimental, not available for structured responses
-
-✅ **Use:**
-- `gemini-3.1-pro-preview` — Stable, supports streaming + JSON schema validation
-
-### Implementation Pattern (Proven in Glucose Project)
-
-```typescript
-import { GoogleGenAI, Type } from '@google/genai';
-
-const client = new GoogleGenAI({ apiKey: process.env.VITE_GEMINI_API_KEY });
-
-const responseStream = await client.models.generateContentStream({
-  model: 'gemini-3.1-pro-preview',
-  contents: {
-    parts: [
-      { text: 'Your instruction prompt...' },
-      {
-        inlineData: {
-          data: base64ImageData,
-          mimeType: 'image/png',
-        },
-      },
-    ],
-  },
-  config: {
-    temperature: 0,  // Deterministic for data extraction
-    responseMimeType: 'application/json',
-    responseSchema: {
-      type: Type.ARRAY,
-      items: {
-        type: Type.OBJECT,
-        properties: {
-          field1: { type: Type.STRING },
-          field2: { type: Type.STRING },
-        },
-        required: ['field1'],
-      },
-    },
-  },
-});
-
-let text = '';
-for await (const chunk of responseStream) {
-  if (chunk.text) {
-    text += chunk.text;
-  }
-}
-const results = JSON.parse(text);
-```
-
-**Key Points:**
-- Must use `generateContentStream` (not `generateContent`) for structured responses
-- Schema defined via `Type` enum, not TypeScript interfaces
-- Response arrives as valid JSON (no markdown parsing needed)
-- `temperature: 0` ensures deterministic, reproducible extraction
-
-### Real-World Example: Glucose Project
-
-**Task:** Extract handwritten glucose readings from photo
-- Input: Base64 image + JSON schema describing expected output
-- Model: `gemini-3.1-pro-preview` with streaming
-- Output: Array of 20+ readings extracted from single handwritten page
-- Success: Deployed to production 2026-05-16, handles real patient data
-
----
-
-## 15. DUAL-AUTH LOGOUT PATTERN (OAuth + Local Session)
-
-For apps with two-layer authentication (OAuth + local password/session), **call both logout functions** to avoid users remaining authenticated.
-
-### The Problem
-
-Apps like Glucose have:
-1. **OAuth Layer** — Google Sign-In, stored in `localStorage`
-2. **Admin Layer** — Local password, stored in `sessionStorage`
-
-If only the admin logout is called, OAuth session persists → user remains authenticated → admin auto-grants on next visit → user cycles back instead of exiting.
-
-### The Solution
-
-```typescript
-import { useAuth } from './contexts/AuthContext';       // OAuth logout
-import { useAdmin } from './contexts/AdminContext';     // Local admin logout
-
-function AppContent() {
-  const { logout } = useAuth();
-  const { adminLogout } = useAdmin();
-
-  const handleLogout = () => {
-    adminLogout();  // Clear local session + sessionStorage
-    logout();       // Clear OAuth + localStorage
-  };
-
-  return <button onClick={handleLogout}>Sign Out</button>;
-}
-```
-
-### State Transitions
-
-```
-[Authenticated + Admin]
-    ↓ logout clicked
-[adminLogout() removes sessionStorage]
-    ↓ MUST ALSO call
-[logout() removes localStorage]
-    ↓
-[LoginView with fresh OAuth flow required]
-```
-
-**Real-World Fix:** Glucose project, 2026-05-16 — logout was cycling users back to password screen instead of login because OAuth session persisted.
-
----
-
-## 16. GLUCOSE PROJECT PATTERNS & LEARNINGS (May 2026)
-
-### Security Patterns
-
-**Login Screen Privacy (Critical)**
-- ❌ Never pre-populate email/username fields from stored state
-- ❌ Never show personalized greetings on login screen (shoulder-surfing risk)
-- ✅ Keep login screen generic: "Welcome Back" (no names, no hints about returning users)
-- ✅ Move personalized greeting post-auth: show "Good to see you, [name]" in dashboard header only
-- ✅ Optional safe middle ground: avatar initial + dismissible "Not you?" prompt (no plaintext email)
-
-**Reason:** Shared devices, shoulder-surfers, and local history can expose which email was last used.
-
-### Data State Management
-
-**IndexedDB + React State Sync**
-- Always log state transitions to debug mismatches between UI count and database count
-- Use dedicated `[DB]` and `[APP]` log prefixes for traceability
-- Track: before-save count, after-upsert count, after-fetch count, after-state-update count
-- Common issue: stale `rows` state lagging behind actual database due to async setState
-
-**Total Readings Count Bug Pattern**
-- ❌ Calculate total from filtered data (`filteredRows.length`)
-- ✅ Calculate from unfiltered data (`rows.length` = all months, not current month)
-- The UI month selector filters the grid, but stats should always reflect complete dataset
-- Remember: users see filtered grid but expect total summary to match DB reality, not filter reality
-
-### Data Import/Rescan Patterns
-
-**Duplicate Handling on Rescan**
-- Index readings by date (primary key per day)
-- On rescan of same document, check for `existingRow = rows.find(r => r.date === formattedDate)`
-- If exists: **update** (merge with new extracted data, preserve createdAt, update updatedAt)
-- If new: **create** (assign new ID, set createdAt = now)
-- Log updates vs new creations separately for visibility
-
-**Month Auto-Selection After Scan**
-- ✅ DO: Auto-select the scanned month on first import (helps user see new data immediately)
-- ❌ DON'T: Auto-select on manual entry for different month (preserves user context)
-- Different UX patterns for different flows — be explicit about intent
-
-### UI/UX Patterns
-
-**Read-Only Fields After Auto-Population**
-- If Patient Name auto-populates from OAuth user.fullName: make it `readOnly`
-- Prevents accidental edits to identity-tied fields
-- Cursor style: `cursor-default` on read-only inputs for visual feedback
-
-**Default Values in Admin Panel**
-- Doctor Name defaults to `"Dr Yacoba Atiase"` (TUC protocol)
-- Preserve on page reload: if profile is empty, use default (don't wipe on admin entry)
-- Pattern: `setDoctorName(profile.doctorName || 'Dr Yacoba Atiase')`
-
-**Comprehensive Console Logging Strategy**
-- Phase 1: High-level flow logging (`[SCAN]`, `[MANUAL]`, `[APP]`)
-- Phase 2: Database layer logging (`[DB]`)
-- Always log: before state, action, after state
-- Example progression: `Starting → Fetching → Updated → Rendering`
-
----
-
-*Last updated: May 2026 — Daniel Frempong Twum / TUC ICT*
-*College Landing Page Generator: Dynamic positioning, TUC branding, Gemini AI integration, dmcdai HTML patterns*
-*LuxThumb Designer: First TUC project on Capacitor — iOS/Android ready (v1.0.0)*
-*Glucose: Blood glucose monitoring with Gemini vision OCR, privacy-first login UX, IndexedDB state sync patterns (v1.1.0)*
+*Last updated: May 2026 — Daniel Frempong Twum / TUC ICT*  
+*Pattern library (User Journey, Capacitor, Gemini, Glucose) → see PATTERNS.md*

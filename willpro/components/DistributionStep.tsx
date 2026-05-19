@@ -24,11 +24,11 @@ const DistributionStep = ({ formData, handleListChange, handleRemoveItem, handle
     return (
         <div className="distribution-step">
             <h2 className="step-title">Specific Gifts</h2>
-            <p className="step-subtitle">List any specific items or possessions you wish to give to a particular person (next of kin).</p>
-            
+            <p className="step-subtitle">List any specific items or possessions you wish to give to a particular person.</p>
+
             <div className="add-item-box">
                 <div className="form-section">
-                    <label htmlFor="beneficiaryName" className="form-label">Beneficiary's Full Name (Next of Kin)</label>
+                    <label htmlFor="beneficiaryName" className="form-label">Beneficiary's Full Name</label>
                     <input type="text" id="beneficiaryName" className="form-input" value={beneficiary} onChange={(e) => setBeneficiary(e.target.value)} placeholder="e.g. John Doe" />
                 </div>
                 <div className="form-section">

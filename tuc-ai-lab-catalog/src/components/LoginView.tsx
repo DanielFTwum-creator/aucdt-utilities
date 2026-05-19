@@ -17,43 +17,80 @@ export const LoginView: React.FC = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   useEffect(() => {
+    const OAUTH_TIMEOUT_MS = 5000;
+    const STORAGE_FALLBACK_POLL_MS = 100;
+
     const handleOAuthToken = async (access_token: string) => {
       try {
         setIsSubmitting(true);
+        console.log('[OAuth] Processing token, fetching user info...');
+
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), OAUTH_TIMEOUT_MS);
+
         const res = await fetch('https://www.googleapis.com/oauth2/v2/userinfo', {
-          headers: { Authorization: `Bearer ${access_token}` }
+          headers: { Authorization: `Bearer ${access_token}` },
+          signal: controller.signal
         });
-        if (!res.ok) throw new Error('Failed to fetch user info');
+
+        clearTimeout(timeoutId);
+
+        if (!res.ok) {
+          const errorText = await res.text();
+          console.error('[OAuth] User info fetch failed:', res.status, errorText);
+          throw new Error(`Google API error: ${res.status} ${res.statusText}`);
+        }
+
         const userInfo = await res.json();
+        console.log('[OAuth] User info received:', { id: userInfo.id, name: userInfo.name, email: userInfo.email });
+
         await login({ id: userInfo.id, username: userInfo.name, email: userInfo.email });
-        // Clear temp token
+        console.log('[OAuth] Login successful, redirecting...');
         localStorage.removeItem('oauth_token_temp');
       } catch (err) {
-        setError('Google login failed. Please try again.');
+        if (err instanceof Error && err.name === 'AbortError') {
+          console.error('[OAuth] Request timeout');
+          setError('Google login took too long. Please try again.');
+        } else {
+          const errorMsg = err instanceof Error ? err.message : String(err);
+          console.error('[OAuth] Token processing failed:', errorMsg);
+          setError(`Google login failed: ${errorMsg}`);
+        }
         setIsSubmitting(false);
       }
     };
 
-    // Listen for postMessage
+    // Listen for postMessage from callback window
     const handleMessage = (event: MessageEvent) => {
-      console.log('Message event received:', event.data?.type);
+      // Validate origin matches current location
+      if (event.origin !== window.location.origin) {
+        console.warn('[OAuth] Message from different origin, ignoring:', event.origin);
+        return;
+      }
+
+      console.log('[OAuth] Message event received:', event.data?.type);
       if (event.data?.type === 'OAUTH_TOKEN_SUCCESS') {
-        console.log('✓ Got OAUTH_TOKEN_SUCCESS message');
+        console.log('[OAuth] ✓ Token received via postMessage');
         handleOAuthToken(event.data.access_token);
+      } else if (event.data?.type === 'OAUTH_TOKEN_ERROR') {
+        console.error('[OAuth] Error from callback:', event.data);
+        setError(`OAuth error: ${event.data.error}${event.data.error_description ? ' - ' + event.data.error_description : ''}`);
+        setIsSubmitting(false);
       }
     };
-    console.log('Setting up message listener');
+
+    console.log('[OAuth] Setting up message listener');
     window.addEventListener('message', handleMessage);
 
     // Also check localStorage (fallback if postMessage fails)
     const checkLocalStorage = setInterval(() => {
       const token = localStorage.getItem('oauth_token_temp');
       if (token) {
-        console.log('✓ Found token in localStorage');
+        console.log('[OAuth] ✓ Found token in localStorage (fallback)');
         handleOAuthToken(token);
         clearInterval(checkLocalStorage);
       }
-    }, 100);
+    }, STORAGE_FALLBACK_POLL_MS);
 
     return () => {
       window.removeEventListener('message', handleMessage);

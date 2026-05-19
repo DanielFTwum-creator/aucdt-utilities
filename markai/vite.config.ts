@@ -11,10 +11,16 @@ export default defineConfig({
         warn(warning);
       },
       output: {
-        manualChunks: {
-          'vendor-react':   ['react', 'react-dom'],
-          'vendor-motion':  ['framer-motion'],
-          'vendor-lucide':  ['lucide-react'],
+        manualChunks: (id) => {
+          if (id.includes('react')) {
+            return 'vendor-react';
+          }
+          if (id.includes('framer-motion')) {
+            return 'vendor-motion';
+          }
+          if (id.includes('lucide-react')) {
+            return 'vendor-lucide';
+          }
         },
       },
     },
