@@ -18,7 +18,7 @@ function decodeJWT(token: string) {
 
 async function startServer() {
   const app = express();
-  const PORT = 3000;
+  const PORT = process.env.PORT || 3003;
 
   app.use(express.json());
 
@@ -29,11 +29,11 @@ async function startServer() {
   app.get('/auth/google/callback', (req, res) => {
     const { code, state, error } = req.query;
     if (error) {
-      return res.redirect(`/?error=${error}`);
+      return res.redirect(`/ai-lab/?error=${error}`);
     }
     // Redirect to frontend with code + state in URL params
     // Frontend will handle the token exchange via /api/auth/google/token
-    res.redirect(`/?code=${code}&state=${state}`);
+    res.redirect(`/ai-lab/?code=${code}&state=${state}`);
   });
 
   // OAuth token exchange endpoint

@@ -64,7 +64,8 @@ $htaccessContent = @"
   RewriteRule ^ - [L]
   RewriteCond %{HTTP:Upgrade} !websocket [NC]
   RewriteCond %{HTTP:Connection} !Upgrade [NC]
-  RewriteRule ^api/(.*)$ http://localhost:3000/api/$1 [P,L]
+  RewriteRule ^auth/google/callback http://localhost:3003/auth/google/callback [P,L]
+  RewriteRule ^api/(.*)$ http://localhost:3003/api/$1 [P,L]
   RewriteRule ^ /ai-lab/index.html [QSA,L]
 </IfModule>
 "@

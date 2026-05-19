@@ -31,7 +31,37 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         localStorage.removeItem('tuc_ai_lab_user');
       }
     }
+
+    // Handle OAuth callback
+    const params = new URLSearchParams(window.location.search);
+    const code = params.get('code');
+    const state = params.get('state');
+    const error = params.get('error');
+
+    if (error) {
+      console.error('OAuth error:', error);
+    } else if (code && state === sessionStorage.getItem('oauth_state')) {
+      exchangeCodeForUser(code);
+    }
   }, []);
+
+  const exchangeCodeForUser = async (code: string) => {
+    const redirectUri = import.meta.env.VITE_GOOGLE_REDIRECT_URI || `${window.location.origin}/auth/google/callback`;
+    try {
+      const response = await fetch('/api/auth/google/token', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ code, redirectUri }),
+      });
+
+      if (response.ok) {
+        const { user: userData } = await response.json();
+        login(userData);
+      }
+    } catch (err) {
+      console.error('OAuth exchange error:', err);
+    }
+  };
 
   const login = async (userOrUsername: User | string, password?: string) => {
     if (typeof userOrUsername === 'object') {
