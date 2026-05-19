@@ -34,7 +34,7 @@ Write-Host "Copying files..." -ForegroundColor Yellow
 bash -c "cd 'C:\Development\github\aucdt-utilities\biochemai' && scp -r -o StrictHostKeyChecking=no dist/* $RemoteHost`:$RemotePath 2>/dev/null"
 
 Write-Host "Creating .htaccess..." -ForegroundColor Yellow
-@"
+$htaccessContent = @"
 <IfModule mod_rewrite.c>
   RewriteEngine On
   RewriteBase /biochemai/
@@ -43,7 +43,8 @@ Write-Host "Creating .htaccess..." -ForegroundColor Yellow
   RewriteRule ^ - [L]
   RewriteRule ^ /biochemai/index.html [QSA,L]
 </IfModule>
-"@ | ssh -o StrictHostKeyChecking=no $RemoteHost "cat > $RemotePath/.htaccess" 2>$null
+"@
+$htaccessContent | ssh -o StrictHostKeyChecking=no $RemoteHost "cat > '$RemotePath/.htaccess'"
 
 Write-Host "Setting permissions..." -ForegroundColor Yellow
 ssh -o StrictHostKeyChecking=no $RemoteHost "chown -R techbridge.edu.gh_md:psaserv $RemotePath && chmod -R 755 $RemotePath && chmod 644 $RemotePath/.htaccess 2>/dev/null; true" | Out-Null
