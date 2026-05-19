@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+  <!-- Background -->
+  <rect width="256" height="256" fill="#0a0806"/>
+
+  <!-- Neural network nodes and connections representing AI -->
+  <!-- Center node -->
+  <circle cx="128" cy="128" r="20" fill="#f97316" opacity="0.9"/>
+
+  <!-- Surrounding nodes -->
+  <circle cx="80" cy="90" r="12" fill="#ea580c" opacity="0.7"/>
+  <circle cx="176" cy="90" r="12" fill="#ea580c" opacity="0.7"/>
+  <circle cx="60" cy="140" r="12" fill="#ea580c" opacity="0.7"/>
+  <circle cx="196" cy="140" r="12" fill="#ea580c" opacity="0.7"/>
+  <circle cx="90" cy="180" r="12" fill="#ea580c" opacity="0.7"/>
+  <circle cx="166" cy="180" r="12" fill="#ea580c" opacity="0.7"/>
+
+  <!-- Connecting lines (neural pathways) -->
+  <line x1="128" y1="128" x2="80" y2="90" stroke="#f97316" stroke-width="2" opacity="0.5"/>
+  <line x1="128" y1="128" x2="176" y2="90" stroke="#f97316" stroke-width="2" opacity="0.5"/>
+  <line x1="128" y1="128" x2="60" y2="140" stroke="#f97316" stroke-width="2" opacity="0.5"/>
+  <line x1="128" y1="128" x2="196" y2="140" stroke="#f97316" stroke-width="2" opacity="0.5"/>
+  <line x1="128" y1="128" x2="90" y2="180" stroke="#f97316" stroke-width="2" opacity="0.5"/>
+  <line x1="128" y1="128" x2="166" y2="180" stroke="#f97316" stroke-width="2" opacity="0.5"/>
+
+  <!-- Secondary connections -->
+  <line x1="80" y1="90" x2="60" y2="140" stroke="#ea580c" stroke-width="1.5" opacity="0.3"/>
+  <line x1="176" y1="90" x2="196" y2="140" stroke="#ea580c" stroke-width="1.5" opacity="0.3"/>
+  <line x1="60" y1="140" x2="90" y2="180" stroke="#ea580c" stroke-width="1.5" opacity="0.3"/>
+  <line x1="196" y1="140" x2="166" y2="180" stroke="#ea580c" stroke-width="1.5" opacity="0.3"/>
+
+  <!-- Glow effect on center node -->
+  <circle cx="128" cy="128" r="20" fill="none" stroke="#f97316" stroke-width="1" opacity="0.4">
+    <animate attributeName="r" from="20" to="28" dur="2s" repeatCount="indefinite" />
+    <animate attributeName="opacity" from="0.4" to="0" dur="2s" repeatCount="indefinite" />
+  </circle>
+</svg>

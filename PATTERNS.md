@@ -16,6 +16,8 @@
 | 4 | Google Gemini API Integration | Glucose, any vision/OCR task |
 | 5 | Dual-Auth Logout | Any app with OAuth + local session |
 | 6 | Glucose Project Learnings | General React + IndexedDB apps |
+| 7 | Secure OAuth 2.0 (Authorization Code Flow) | Peace Vinyl, TUC AI Lab, all OAuth apps |
+| 8 | PowerShell Deployment Script Fixes | All Plesk/Apache apps |
 
 ---
 
@@ -653,6 +655,334 @@ curl -s -o /dev/null -w "%{http_code}\n" https://ai-tools.techbridge.edu.gh/peac
 ```
 
 Expected: HTTP 200, files present, owned by `techbridge.edu.gh_md:psacln`, permissions 755/644.
+
+---
+
+## PATTERN 8: SAFE DEPLOYMENT (SSH Heredoc + Health Checks)
+
+**Scope:** All Vite + React projects on Plesk/Ubuntu  
+**File:** `deploy.template.ps1` + `deploy.config.template.json`  
+**Platform:** Windows PowerShell calling SSH/bash
+
+### The Problem Solved
+
+**1. UTF-8 BOM Corruption**
+- PowerShell `@"..."@` heredoc adds UTF-8 BOM to output
+- `.htaccess` with BOM → Apache 500 error, silent rewrite engine failure
+- Users see blank page or infinite redirects, no clear error
+
+**2. Incomplete Deployments**
+- No build verification — ships corrupted or empty dist/
+- No health checks — assumes success without testing
+- Silent SSH failures — script exits normally even if files didn't transfer
+- .htaccess syntax never validated
+
+**3. Missing Configuration**
+- Hard-coded paths, no reusable pattern
+- Each project reinvents the wheel with slightly different bugs
+- No consistency in pre-flight or error handling
+
+### The Solution
+
+**deploy.template.ps1** — 6-step structured deployment:
+
+```
+Step 1: Load & validate configuration
+Step 2: Pre-flight checks (.env files, package.json, build script)
+Step 3: Build locally (optional, with error capture)
+Step 4: Verify build output (index.html present, not empty)
+Step 5: Deploy to remote (SSH + SCP + health checks)
+Step 6: Health checks (file presence, .htaccess syntax, HTTP routing)
+```
+
+**Key Safeguards:**
+
+1. **SSH Heredoc for .htaccess** (no BOM)
+   ```powershell
+   # ❌ Wrong
+   $htaccess | ssh ... "cat > .htaccess"
+   
+   # ✅ Correct
+   ssh ... "cat > .htaccess << 'EOF'
+   ... content ...
+   EOF"
+   ```
+
+2. **Pre-flight Checks** (fail fast, before deployment)
+   - .env.local exists
+   - Required env vars present (VITE_GOOGLE_CLIENT_ID, etc.)
+   - package.json has build script
+   - Output directory will exist post-build
+
+3. **Build Verification** (empty dist/ is caught)
+   - Check dist/ exists
+   - Check dist/ is not empty
+   - Check index.html present specifically
+   - Report file count and size
+
+4. **Health Checks** (post-deploy validation)
+   - Verify index.html exists on remote
+   - Test .htaccess syntax via `apache2ctl configtest`
+   - Curl health check URL and verify HTTP 200
+   - Wait 5 sec for server to settle
+
+5. **Clear Error Messages** (no suppression with `2>/dev/null`)
+   - Show actual SSH errors, not silence them
+   - Fail early and loudly if remote mkdir fails
+   - Report HTTP status code and timeouts clearly
+
+### Configuration File Pattern
+
+**deploy.config.json** (copy from template, customise per project):
+
+```json
+{
+  "projectName": "peace-vinyl",
+  "remoteHost": "root@techbridge.edu.gh",
+  "deployPath": "/var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/peace",
+  "buildTool": "pnpm",
+  "outputDir": "dist",
+  "requiredEnvVars": ["VITE_GOOGLE_CLIENT_ID"],
+  "healthCheckUrl": "https://ai-tools.techbridge.edu.gh/peace/"
+}
+```
+
+### Usage
+
+1. Copy `deploy.template.ps1` to project root as `deploy.ps1`
+2. Create `deploy.config.json` with project settings
+3. Run: `.\deploy.ps1 -ConfigFile deploy.config.json -Build`
+
+Optional flags:
+- `-DryRun` — simulate deployment without SSH/SCP
+- `-SkipHealthCheck` — skip remote validation (use only if health checks fail for infra reasons)
+
+### Deployment Review Checklist (8 Items)
+
+Before pushing any project deploy.ps1, verify:
+
+- [ ] Configuration file matches actual remote paths (`ssh root@host 'ls /var/www/.../project/'`)
+- [ ] Build tool is correct (pnpm, not npm)
+- [ ] Output directory matches Vite config (`vite.config.ts` + actual build output)
+- [ ] Required env vars are listed (check .env.local for API keys)
+- [ ] .htaccess base path matches deploy path (e.g., `/peace/` for `/peace-vinyl/`)
+- [ ] Health check URL is public and accessible (no auth walls)
+- [ ] SSH host format is correct (`root@domain` or `user@ip`)
+- [ ] Pre-flight checks catch missing files (run with invalid .env, verify failure)
+
+### Common Issues & Fixes
+
+| Issue | Symptom | Fix |
+|---|---|---|
+| UTF-8 BOM in .htaccess | Apache 500 error, blank page | Use SSH heredoc, not PowerShell `@"..."@` |
+| Wrong deploy path | Files in wrong location, 404 | Verify with `ssh root@host 'ls /var/www/.../actual-path/'` |
+| Missing .env vars | "VITE_GOOGLE_CLIENT_ID undefined" in browser | Ensure .env.local on local machine before build |
+| Dist/ empty after build | Health check fails immediately | Run `pnpm build` locally, check vite.config.ts for outDir |
+| .htaccess syntax error | Apache refuses to start | Test locally: `cd dist && apache2ctl -t` (if Apache on local machine) |
+| SSH timeout | "Connection refused" or hangs | Check SSH key at `~/.ssh/id_rsa`, verify host reachable (`ping root@domain`) |
+
+### References
+
+- `deploy.template.ps1` — Template implementation (copy this to each project)
+- `deploy.config.template.json` — Configuration template
+- PATTERNS.md §7 — .htaccess & BOM issue deep dive
+- `DEPLOY_GUIDE.md` — User-facing deployment instructions
+
+---
+
+## PATTERN 8: SECURE OAUTH 2.0 (AUTHORIZATION CODE FLOW)
+
+### Why Not Implicit Flow?
+
+**NEVER use response_type='token'** in production OAuth flows. The implicit flow exposes access tokens in the browser URL, which:
+- Appear in browser history
+- Get logged in access logs
+- Are vulnerable to XSS attacks
+- Violate OAuth 2.0 security best practices
+
+**Always use response_type='code'** with a backend token exchange.
+
+### Architecture
+
+```
+Frontend (React) → Google OAuth → Authorization Code
+     ↓
+Frontend receives code + state → Backend Token Exchange
+     ↓
+Backend (Node.js) ↔ Google OAuth servers → id_token + access_token
+     ↓
+Backend extracts user info → Returns user object to frontend
+     ↓
+Frontend stores user in sessionStorage (NOT localStorage for auth)
+```
+
+### Implementation Checklist
+
+**Frontend (React/AuthContext.tsx):**
+- [ ] Generate random state, store in sessionStorage (CSRF protection)
+- [ ] Request code via: `https://accounts.google.com/o/oauth2/v2/auth?response_type=code&...state=...&prompt=select_account`
+- [ ] On callback, extract code + state from URL params
+- [ ] Validate state matches sessionStorage value
+- [ ] POST code to `/api/auth/google/token` endpoint
+- [ ] Receive user object, store in sessionStorage (NOT localStorage)
+- [ ] Clear oauth_state from sessionStorage after successful exchange
+
+**Backend (Node.js/Express):**
+- [ ] POST `/api/auth/google/token` endpoint
+- [ ] Extract code from request body
+- [ ] Exchange code with Google: `POST https://oauth2.googleapis.com/token` with client_id, client_secret, code
+- [ ] Decode id_token JWT (do NOT rely on access_token)
+- [ ] Extract user info: id, email, name from JWT payload
+- [ ] Return user object as JSON
+- [ ] NEVER expose GOOGLE_CLIENT_SECRET in response (only client_id in frontend)
+
+### Code Patterns
+
+**Frontend:**
+```typescript
+const exchangeCodeForUser = async (code: string) => {
+  const response = await fetch('/api/auth/google/token', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ code, redirectUri: REDIRECT_URI }),
+  });
+  const { user } = await response.json();
+  setUser(user);
+  sessionStorage.setItem('peace_user', JSON.stringify(user));
+};
+```
+
+**Backend:**
+```typescript
+app.post('/api/auth/google/token', async (req, res) => {
+  const { code } = req.body;
+  const tokenResponse = await fetch('https://oauth2.googleapis.com/token', {
+    method: 'POST',
+    body: new URLSearchParams({
+      client_id: process.env.GOOGLE_CLIENT_ID,
+      client_secret: process.env.GOOGLE_CLIENT_SECRET,
+      code,
+      grant_type: 'authorization_code',
+      redirect_uri: process.env.VITE_GOOGLE_REDIRECT_URI,
+    }),
+  });
+  const tokens = await tokenResponse.json();
+  const user = decodeJWT(tokens.id_token); // Extract from JWT
+  res.json({ user: { id: user.sub, email: user.email, name: user.name } });
+});
+```
+
+### Environment Variables
+
+**Frontend (.env.local):**
+```
+VITE_GOOGLE_CLIENT_ID=xxxxx.apps.googleusercontent.com
+VITE_GOOGLE_REDIRECT_URI=https://ai-tools.techbridge.edu.gh/peace/auth/google/callback
+```
+
+**Backend (.env):**
+```
+GOOGLE_CLIENT_ID=xxxxx.apps.googleusercontent.com
+GOOGLE_CLIENT_SECRET=GOCSPX-xxxxx (NEVER commit or expose)
+```
+
+### Common Issues
+
+| Issue | Symptom | Fix |
+|---|---|---|
+| Gmail account selector not showing | Only one Google account option | Add `prompt=select_account` to OAuth URL |
+| state mismatch error | OAuth callback rejected | Ensure state stored/validated in sessionStorage |
+| 500 error on token exchange | Backend can't reach Google | Check GOOGLE_CLIENT_SECRET is set, verify internet |
+| User object undefined | Login completes but app crashes | Check backend returns JSON, not HTML error |
+
+### References
+
+- Peace Vinyl (`src/contexts/AuthContext.tsx`, `server.js`) — Full reference implementation
+- TUC AI Lab (`src/contexts/AuthContext.tsx`, `server.ts`) — Secondary implementation
+
+---
+
+## PATTERN 8: POWERSHELL DEPLOYMENT SCRIPT FIXES
+
+### The .htaccess Corruption Problem
+
+**Symptom:** After deployment, `.htaccess` contains literal string `HTACCESS_EOF` at the end and broken rewrite rules.
+
+**Root Cause:** PowerShell's SSH heredoc syntax inside quoted strings doesn't work as expected. The closing delimiter gets included in the file.
+
+### Solution: Use PowerShell Here-Strings with Piped SSH
+
+**WRONG:**
+```powershell
+ssh $host "cat > .htaccess << 'EOF'
+<IfModule>
+  RewriteRule ^api/(.*)$ http://localhost:3000/api/\$1 [P,L]
+</IfModule>
+EOF"
+```
+Result: File contains literal `EOF` string + malformed rewrite rule `api/\` (no captured group).
+
+**CORRECT:**
+```powershell
+$htaccessContent = @"
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteRule ^api/(.*)$ http://localhost:3000/api/$1 [P,L]
+</IfModule>
+"@
+$htaccessContent | ssh $host "cat > '$RemotePath/.htaccess'"
+```
+
+### Breakdown
+
+1. **PowerShell here-string** (`@"..."@`) — Preserves newlines, allows variable interpolation with `$var`
+2. **Pipe to ssh** — Avoids quoting issues, sends content via stdin
+3. **No escaping in here-string** — `$1` works directly (no need for `\$1`)
+
+### Full Deployment Pattern
+
+```powershell
+# 1. Define .htaccess as here-string (not heredoc in SSH)
+$htaccessContent = @"
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /ai-lab/
+  RewriteCond %{REQUEST_FILENAME} -f [OR]
+  RewriteCond %{REQUEST_FILENAME} -d
+  RewriteRule ^ - [L]
+  RewriteRule ^api/(.*)$ http://localhost:3000/api/$1 [P,L]
+  RewriteRule ^ /ai-lab/index.html [QSA,L]
+</IfModule>
+"@
+
+# 2. Pipe to SSH
+$htaccessContent | ssh $RemoteHost "cat > '$RemotePath/.htaccess'"
+
+# 3. Verify
+ssh $RemoteHost "cat '$RemotePath/.htaccess'"
+```
+
+### Verification After Deployment
+
+Always check:
+```bash
+ssh root@host "cat /path/to/.htaccess | grep -c 'HTACCESS_EOF'"  # Should be 0
+ssh root@host "cat /path/to/.htaccess | grep 'RewriteRule.*api'"  # Should show correct rule
+curl -s https://app.url/ -I | grep "HTTP" # Should be 200, not 500
+```
+
+### Apply to All TUC Apps
+
+Update these deploy.ps1 files:
+- [ ] peace-vinyl/deploy.ps1
+- [ ] tuc-ai-lab-catalog/deploy.ps1
+- [ ] glucose/deploy.ps1 (if using .htaccess)
+- [ ] Any future Plesk app
+
+### References
+
+- tuc-ai-lab-catalog/deploy.ps1 — Corrected implementation
+- PATTERNS.md §7 — Plesk Vite Deployment pattern (includes earlier .htaccess fixes)
 
 ---
 
