@@ -150,7 +150,8 @@
       "PowerShell(ssh -o StrictHostKeyChecking=no root@66.226.72.199 \"cat /var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/peace/.htaccess\")",
       "PowerShell(ssh -o StrictHostKeyChecking=no root@66.226.72.199 \"cat /var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/ai-lab/.htaccess\")",
       "PowerShell(ssh -o StrictHostKeyChecking=no root@66.226.72.199 \"apache2ctl -M 2>/dev/null | grep -i proxy\")",
-      "PowerShell(ssh -o StrictHostKeyChecking=no root@66.226.72.199 \"echo '=== PEACE ===' && cat /var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/peace/.htaccess && echo '' && echo '=== AI-LAB ===' && cat /var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/ai-lab/.htaccess\")"
+      "PowerShell(ssh -o StrictHostKeyChecking=no root@66.226.72.199 \"echo '=== PEACE ===' && cat /var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/peace/.htaccess && echo '' && echo '=== AI-LAB ===' && cat /var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/ai-lab/.htaccess\")",
+      "PowerShell(ssh -o StrictHostKeyChecking=no root@66.226.72.199 \"systemctl restart apache2 && sleep 2 && curl -I https://ai-tools.techbridge.edu.gh/ai-lab/ 2>&1 | grep -E 'HTTP|Server'\")"
     ]
   }
 }
