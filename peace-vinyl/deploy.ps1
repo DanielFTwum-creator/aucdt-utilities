@@ -43,7 +43,7 @@ Write-Host "Copying files..." -ForegroundColor Yellow
 bash -c "cd 'C:\Development\github\aucdt-utilities\peace-vinyl' && scp -r -o StrictHostKeyChecking=no dist/* $RemoteHost`:$RemotePath 2>/dev/null"
 
 Write-Host "Creating .htaccess..." -ForegroundColor Yellow
-@"
+ssh -o StrictHostKeyChecking=no $RemoteHost "cat > $RemotePath/.htaccess << 'HTACCESS_EOF'
 <IfModule mod_rewrite.c>
   RewriteEngine On
   RewriteBase /peace/
@@ -52,7 +52,7 @@ Write-Host "Creating .htaccess..." -ForegroundColor Yellow
   RewriteRule ^ - [L]
   RewriteRule ^ /peace/index.html [QSA,L]
 </IfModule>
-"@ | ssh -o StrictHostKeyChecking=no $RemoteHost "cat > $RemotePath/.htaccess" 2>$null
+HTACCESS_EOF" 2>$null
 
 Write-Host "Setting permissions..." -ForegroundColor Yellow
 ssh -o StrictHostKeyChecking=no $RemoteHost "chown -R techbridge.edu.gh_md:psacln $RemotePath && chmod -R 755 $RemotePath && chmod 644 $RemotePath/.htaccess 2>/dev/null; true" | Out-Null
