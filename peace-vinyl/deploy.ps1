@@ -1,4 +1,4 @@
-# Peace & One Love Vinyl Deployment Script
+# Peace Vinyl Deployment Script
 # Deployment to ai-tools.techbridge.edu.gh/peace
 # Reuses .env.local from glucose project
 
@@ -8,7 +8,7 @@ param(
     [switch]$Build = $false
 )
 
-Write-Host "=== PEACE & ONE LOVE VINYL DEPLOYMENT ===" -ForegroundColor Cyan
+Write-Host "=== PEACE VINYL DEPLOYMENT ===" -ForegroundColor Cyan
 Write-Host "Remote: $RemoteHost"
 Write-Host "Path: $RemotePath`n"
 
@@ -40,7 +40,7 @@ Write-Host "Creating directory..." -ForegroundColor Yellow
 ssh -o StrictHostKeyChecking=no $RemoteHost "mkdir -p $RemotePath && rm -rf $RemotePath/*" | Out-Null
 
 Write-Host "Copying files..." -ForegroundColor Yellow
-bash -c "cd 'C:\Development\github\aucdt-utilities\peace-&-one-love-vinyl' && scp -r -o StrictHostKeyChecking=no dist/* $RemoteHost`:$RemotePath 2>/dev/null"
+bash -c "cd 'C:\Development\github\aucdt-utilities\peace-vinyl' && scp -r -o StrictHostKeyChecking=no dist/* $RemoteHost`:$RemotePath 2>/dev/null"
 
 Write-Host "Creating .htaccess..." -ForegroundColor Yellow
 @"
