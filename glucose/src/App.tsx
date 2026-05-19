@@ -128,6 +128,7 @@ function AppContent() {
   const [activeTab, setActiveTab] = useState<'log' | 'agp' | 'test'>('log');
   const [isHighContrast, setIsHighContrast] = useState(false);
   const [isHelpOpen, setIsHelpOpen] = useState(false);
+  const [showContactFields, setShowContactFields] = useState(false);
 
   // New reading form state
   const [newRow, setNewRow] = useState<Partial<Row>>({ date: new Date().toISOString().split('T')[0] });
@@ -666,7 +667,12 @@ function AppContent() {
       {/* Header Section */}
       <header className="flex flex-col md:flex-row items-start md:items-center justify-between mb-8 gap-4 print:hidden">
         <div className="flex items-center gap-5">
-          <img src="./rophe-logo.jpg" alt="ROPHE Logo" className="h-12 object-contain" />
+          <div className="flex flex-col items-center gap-1">
+            <img src="./rophe-logo.jpg" alt="ROPHE Logo" className="h-12 object-contain" />
+            <a href="https://wa.me/233201529933" target="_blank" rel="noopener noreferrer" className={`text-xs font-semibold hover:underline ${isHighContrast ? 'text-blue-400 hover:text-blue-300' : 'text-[#2E75B6] hover:text-[#1F3864]'}`}>
+              +233 20 152 9933
+            </a>
+          </div>
           <div>
             <h1 className={`text-lg font-bold leading-tight ${isHighContrast ? 'text-white' : 'text-slate-900'}`}>Self Monitoring of Blood Glucose</h1>
             <p className={`text-[11px] uppercase tracking-[0.15em] font-bold mt-0.5 ${isHighContrast ? 'text-blue-300' : 'text-[#2E75B6]'}`}>Specialist Care Portal</p>
@@ -824,26 +830,34 @@ function AppContent() {
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-3">
-          <div className={`border rounded-xl p-4 shadow-sm transition-shadow focus-within:ring-2 focus-within:ring-[#D6E4F0] ${isHighContrast ? 'bg-black border-gray-600' : 'bg-white border-slate-200'}`}>
-            <p className={`text-[10px] font-bold uppercase tracking-widest mb-2 ${isHighContrast ? 'text-gray-400' : 'text-slate-400'}`}>Country</p>
-            <input
-              value={doctorCountry}
-              onChange={e => setDoctorCountry(e.target.value)}
-              className={`font-semibold text-[15px] outline-none w-full bg-transparent ${isHighContrast ? 'text-white placeholder-gray-600' : 'text-slate-900 placeholder-slate-300'}`}
-              placeholder="e.g. GH +233"
-            />
+        {showContactFields && (
+          <div className="grid grid-cols-2 gap-3">
+            <div className={`border rounded-xl p-4 shadow-sm transition-shadow focus-within:ring-2 focus-within:ring-[#D6E4F0] ${isHighContrast ? 'bg-black border-gray-600' : 'bg-white border-slate-200'}`}>
+              <p className={`text-[10px] font-bold uppercase tracking-widest mb-2 ${isHighContrast ? 'text-gray-400' : 'text-slate-400'}`}>Country</p>
+              <input
+                value={doctorCountry}
+                onChange={e => setDoctorCountry(e.target.value)}
+                className={`font-semibold text-[15px] outline-none w-full bg-transparent ${isHighContrast ? 'text-white placeholder-gray-600' : 'text-slate-900 placeholder-slate-300'}`}
+                placeholder="e.g. GH +233"
+              />
+            </div>
+            <div className={`border rounded-xl p-4 shadow-sm transition-shadow focus-within:ring-2 focus-within:ring-[#D6E4F0] ${isHighContrast ? 'bg-black border-gray-600' : 'bg-white border-slate-200'}`}>
+              <p className={`text-[10px] font-bold uppercase tracking-widest mb-2 ${isHighContrast ? 'text-gray-400' : 'text-slate-400'}`}>Phone</p>
+              <input
+                value={doctorPhone}
+                onChange={e => setDoctorPhone(e.target.value)}
+                className={`font-semibold text-[15px] outline-none w-full bg-transparent ${isHighContrast ? 'text-white placeholder-gray-600' : 'text-slate-900 placeholder-slate-300'}`}
+                placeholder="e.g. 20 152 9933"
+              />
+            </div>
           </div>
-          <div className={`border rounded-xl p-4 shadow-sm transition-shadow focus-within:ring-2 focus-within:ring-[#D6E4F0] ${isHighContrast ? 'bg-black border-gray-600' : 'bg-white border-slate-200'}`}>
-            <p className={`text-[10px] font-bold uppercase tracking-widest mb-2 ${isHighContrast ? 'text-gray-400' : 'text-slate-400'}`}>Phone</p>
-            <input
-              value={doctorPhone}
-              onChange={e => setDoctorPhone(e.target.value)}
-              className={`font-semibold text-[15px] outline-none w-full bg-transparent ${isHighContrast ? 'text-white placeholder-gray-600' : 'text-slate-900 placeholder-slate-300'}`}
-              placeholder="e.g. 20 152 9933"
-            />
-          </div>
-        </div>
+        )}
+        <button
+          onClick={() => setShowContactFields(!showContactFields)}
+          className={`text-xs font-semibold uppercase tracking-wider px-3 py-2 rounded-lg transition-colors ${isHighContrast ? 'bg-gray-800 text-blue-400 hover:bg-gray-700' : 'bg-slate-100 text-[#2E75B6] hover:bg-slate-200'}`}
+        >
+          {showContactFields ? '▼ Hide' : '▶ Show'} Country & Phone
+        </button>
       </div>
 
       {/* Main Content Area */}

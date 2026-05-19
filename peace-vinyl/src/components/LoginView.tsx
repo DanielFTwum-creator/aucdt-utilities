@@ -4,14 +4,34 @@ export default function LoginView() {
   const { login, isLoading } = useAuth();
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#0a0806] via-[#1a1410] to-[#0f0d0a] flex items-center justify-center p-4">
-      <div className="max-w-sm w-full text-center">
+    <div className="min-h-screen relative overflow-hidden bg-gradient-to-br from-[#0a0806] via-[#1a1410] to-[#0f0d0a]">
+      {/* Video background */}
+      <video
+        autoPlay
+        muted
+        loop
+        className="absolute inset-0 w-full h-full object-cover"
+        style={{ filter: 'brightness(0.4)' }}
+      >
+        <source
+          src="https://images.nightcafe.studio/assets/home-hero-video-720p.mp4?tr=q-35"
+          type="video/mp4"
+        />
+      </video>
+
+      {/* Animated gradient overlay */}
+      <div className="absolute inset-0 bg-gradient-to-r from-amber-900/20 via-orange-900/10 to-red-900/20 animate-pulse" />
+
+      {/* Content */}
+      <div className="relative z-10 min-h-screen flex items-center justify-center p-4">
+        <div className="max-w-sm w-full text-center">
         <h1 className="text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-orange-400 to-red-500 mb-2">
           Peace Vinyl
         </h1>
-        <p className="text-amber-200/70 text-sm uppercase tracking-widest mb-8">AI Music Generation</p>
+        <p className="text-amber-200/70 text-sm uppercase tracking-widest mb-8">AI Video Generation</p>
 
         <button
+          type="button"
           onClick={login}
           disabled={isLoading}
           className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200 flex items-center justify-center gap-3"
@@ -36,6 +56,7 @@ export default function LoginView() {
           </svg>
           {isLoading ? 'Signing in...' : 'Sign in with Google'}
         </button>
+        </div>
       </div>
     </div>
   );

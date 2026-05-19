@@ -1,5 +1,5 @@
 # TUC AI Lab Catalog Deployment Script
-# Simple SCP-based deployment
+# Deploys frontend (dist/) + backend (server.ts) with OAuth support
 
 param(
     [string]$RemoteHost = "root@66.226.72.199",
@@ -11,10 +11,25 @@ Write-Host "=== TUC AI LAB CATALOG DEPLOYMENT ===" -ForegroundColor Cyan
 Write-Host "Remote: $RemoteHost"
 Write-Host "Path: $RemotePath`n"
 
+# Validate .env.local
+Write-Host "Validating .env.local..." -ForegroundColor Yellow
+if (-not (Test-Path "./.env.local")) {
+    Write-Host "Error: .env.local not found!" -ForegroundColor Red
+    exit 1
+}
+
+$envContent = Get-Content "./.env.local" -Raw
+if ($envContent -notmatch "VITE_GOOGLE_CLIENT_ID") {
+    Write-Host "Error: VITE_GOOGLE_CLIENT_ID missing in .env.local" -ForegroundColor Red
+    exit 1
+}
+
+Write-Host "✓ OAuth credentials found in .env.local"
+
 # Build if requested
 if ($Build) {
     Write-Host "Building..." -ForegroundColor Yellow
-    pnpm run build:web
+    pnpm run build
     if ($LASTEXITCODE -ne 0) {
         Write-Host "Build failed!" -ForegroundColor Red
         exit 1
@@ -27,26 +42,53 @@ if (-not (Test-Path "dist")) {
     exit 1
 }
 
-Write-Host "Creating directory..." -ForegroundColor Yellow
-ssh -o StrictHostKeyChecking=no $RemoteHost "mkdir -p $RemotePath && rm -rf $RemotePath/*" | Out-Null
+Write-Host "Creating directory on remote..." -ForegroundColor Yellow
+ssh -o StrictHostKeyChecking=no $RemoteHost "mkdir -p $RemotePath && rm -rf $RemotePath/* $RemotePath/.htaccess 2>/dev/null || true" | Out-Null
 
-Write-Host "Copying files..." -ForegroundColor Yellow
-bash -c "cd 'C:\Development\github\aucdt-utilities\tuc-ai-lab-catalog' && scp -r -o StrictHostKeyChecking=no dist/* $RemoteHost`:$RemotePath 2>/dev/null"
+Write-Host "Copying frontend files..." -ForegroundColor Yellow
+bash -c "cd 'C:\Development\github\aucdt-utilities\tuc-ai-lab-catalog' && scp -r -o StrictHostKeyChecking=no dist/* $RemoteHost`:$RemotePath 2>&1 | head -20"
+
+Write-Host "Copying backend files..." -ForegroundColor Yellow
+scp -o StrictHostKeyChecking=no "server.ts" "package.json" "${RemoteHost}:${RemotePath}" 2>&1 | Select-Object -First 5
+
+Write-Host "Installing backend dependencies..." -ForegroundColor Yellow
+ssh -o StrictHostKeyChecking=no $RemoteHost "cd $RemotePath && npm install --production 2>&1 | tail -3" | Out-Null
 
 Write-Host "Creating .htaccess..." -ForegroundColor Yellow
-@"
+$htaccessContent = @"
 <IfModule mod_rewrite.c>
   RewriteEngine On
   RewriteBase /ai-lab/
   RewriteCond %{REQUEST_FILENAME} -f [OR]
   RewriteCond %{REQUEST_FILENAME} -d
   RewriteRule ^ - [L]
+  RewriteCond %{HTTP:Upgrade} !websocket [NC]
+  RewriteCond %{HTTP:Connection} !Upgrade [NC]
+  RewriteRule ^api/(.*)$ http://localhost:3000/api/$1 [P,L]
   RewriteRule ^ /ai-lab/index.html [QSA,L]
 </IfModule>
-"@ | ssh -o StrictHostKeyChecking=no $RemoteHost "cat > $RemotePath/.htaccess" 2>$null
+"@
+$htaccessContent | ssh -o StrictHostKeyChecking=no $RemoteHost "cat > '$RemotePath/.htaccess'" 2>&1 | Out-Null
+
+Write-Host "Copying .env..." -ForegroundColor Yellow
+scp -o StrictHostKeyChecking=no ".env.local" "${RemoteHost}:${RemotePath}/.env" 2>&1 | Out-Null
 
 Write-Host "Setting permissions..." -ForegroundColor Yellow
-ssh -o StrictHostKeyChecking=no $RemoteHost "chown -R techbridge.edu.gh_md:psacln $RemotePath && chmod -R 755 $RemotePath && chmod 644 $RemotePath/.htaccess 2>/dev/null; true" | Out-Null
+ssh -o StrictHostKeyChecking=no $RemoteHost "chown -R techbridge.edu.gh_md:psacln $RemotePath && chmod -R 755 $RemotePath && chmod 644 $RemotePath/.htaccess $RemotePath/.env 2>/dev/null || true" | Out-Null
+
+Write-Host "Starting backend server..." -ForegroundColor Yellow
+ssh -o StrictHostKeyChecking=no $RemoteHost "cd $RemotePath && nohup tsx server.ts > server.log 2>&1 &" 2>&1 | Out-Null
+
+Start-Sleep -Seconds 2
+
+Write-Host "Health checks..." -ForegroundColor Yellow
+ssh -o StrictHostKeyChecking=no $RemoteHost "test -f $RemotePath/index.html && echo '✅ Frontend deployed' || echo '❌ Frontend missing'" | Out-Null
+ssh -o StrictHostKeyChecking=no $RemoteHost "test -f $RemotePath/server.ts && echo '✅ Backend deployed' || echo '❌ Backend missing'" | Out-Null
+
+Write-Host ""
+Write-Host "✅ Deployment complete!" -ForegroundColor Green
+Write-Host "URL: https://ai-tools.techbridge.edu.gh/ai-lab"
+Write-Host "Backend running on port 3001 (internal)`n"
 
 Write-Host "✅ Deployment complete!" -ForegroundColor Green
 Write-Host "URL: https://ai-tools.techbridge.edu.gh/ai-lab`n"
