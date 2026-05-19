@@ -99,54 +99,125 @@ export const LoginView: React.FC = () => {
     clearForm();
   };
 
+  const MolecularWatermark = () => (
+    <svg
+      className="fixed inset-0 w-full h-full pointer-events-none"
+      style={{ opacity: 0.07, zIndex: 0 }}
+      viewBox="0 0 1000 1000"
+      preserveAspectRatio="xMidYMid slice"
+    >
+      {/* Benzene ring - center */}
+      <g stroke="#a78bfa" strokeWidth="1.5" fill="none">
+        {/* Hexagon vertices */}
+        {[0, 60, 120, 180, 240, 300].map((angle) => {
+          const rad = (angle * Math.PI) / 180;
+          const x = 500 + 80 * Math.cos(rad);
+          const y = 500 + 80 * Math.sin(rad);
+          return (
+            <circle key={`vertex-${angle}`} cx={x} cy={y} r="8" />
+          );
+        })}
+        {/* Connect vertices */}
+        <polygon points="580,420 660,450 660,530 580,580 500,550 500,470" />
+        {/* Aromaticity circle */}
+        <circle cx="500" cy="500" r="20" strokeDasharray="4 3" />
+        {/* Central nucleus */}
+        <circle cx="500" cy="500" r="5" fill="#a78bfa" />
+      </g>
+
+      {/* Orbital rings */}
+      <g stroke="#a78bfa" strokeWidth="1.5" fill="none" opacity="0.6">
+        <ellipse cx="500" cy="500" rx="55" ry="20" transform="rotate(-30 500 500)" />
+        <ellipse cx="500" cy="500" rx="55" ry="20" transform="rotate(30 500 500)" />
+        <ellipse cx="500" cy="500" rx="55" ry="20" transform="rotate(90 500 500)" />
+      </g>
+
+      {/* Molecule clusters */}
+      <g stroke="#a78bfa" strokeWidth="1.5" fill="none">
+        {/* Top-left cluster */}
+        {[{ x: 120, y: 120, r: 12 }, { x: 160, y: 100, r: 10 }, { x: 180, y: 150, r: 14 }, { x: 140, y: 180, r: 11 }, { x: 100, y: 160, r: 13 }].map((c, i) => (
+          <circle key={`tl-${i}`} cx={c.x} cy={c.y} r={c.r} />
+        ))}
+        {/* Top-right cluster */}
+        {[{ x: 880, y: 100, r: 11 }, { x: 920, y: 140, r: 13 }, { x: 900, y: 180, r: 12 }, { x: 850, y: 170, r: 10 }, { x: 830, y: 120, r: 14 }, { x: 870, y: 60, r: 11 }].map((c, i) => (
+          <circle key={`tr-${i}`} cx={c.x} cy={c.y} r={c.r} />
+        ))}
+        {/* Bottom-left cluster */}
+        {[{ x: 100, y: 850, r: 13 }, { x: 150, y: 880, r: 11 }, { x: 200, y: 860, r: 12 }, { x: 180, y: 800, r: 10 }, { x: 120, y: 820, r: 14 }, { x: 70, y: 900, r: 11 }].map((c, i) => (
+          <circle key={`bl-${i}`} cx={c.x} cy={c.y} r={c.r} />
+        ))}
+        {/* Bottom-right cluster */}
+        {[{ x: 880, y: 880, r: 12 }, { x: 930, y: 860, r: 10 }, { x: 900, y: 820, r: 13 }, { x: 850, y: 840, r: 11 }].map((c, i) => (
+          <circle key={`br-${i}`} cx={c.x} cy={c.y} r={c.r} />
+        ))}
+      </g>
+    </svg>
+  );
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 flex flex-col items-center justify-center p-6">
-      <div className="w-full max-w-sm">
+    <div className="min-h-screen bg-[#0a0f1e] relative overflow-hidden flex flex-col items-center justify-center p-6">
+      <MolecularWatermark />
+
+      <div className="w-full max-w-sm relative z-10">
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-violet-600 to-indigo-600 mb-2">
-            BioChemAI
-          </h1>
-          <p className="text-slate-500 text-sm">Your 24/7 Biochemistry Expert</p>
+          <h1 className="text-5xl font-black text-[#a78bfa] mb-1">BioChemAI</h1>
+          <p className="text-[#6b7280] text-xs font-semibold uppercase tracking-[0.1em]">Your 24/7 Biochemistry Expert</p>
         </div>
 
-        <div className="bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden p-8">
-          <h2 className="text-2xl font-bold text-center text-slate-900 mb-2">
+        <div
+          className="rounded-2xl overflow-hidden p-8 relative"
+          style={{
+            background: 'rgba(255, 255, 255, 0.05)',
+            border: '1px solid rgba(167, 139, 250, 0.2)',
+            backdropFilter: 'blur(12px)',
+            WebkitBackdropFilter: 'blur(12px)',
+            boxShadow: '0 8px 32px rgba(0, 0, 0, 0.4)',
+          }}
+        >
+          <h2 className="text-2xl font-bold text-center text-white mb-1">
             {mode === 'login' ? 'Welcome Back' : 'Create Account'}
           </h2>
-          <p className="text-center text-slate-500 mb-6 text-sm">
-            {mode === 'login' ? 'Sign in to access biochemistry learning' : 'Create an account to get started'}
+          <p className="text-center text-[#d1d5db] text-xs mb-6 font-medium">
+            {mode === 'login' ? 'Sign in to continue' : 'Get started'}
           </p>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             {mode === 'login' ? (
-              <>
-                <div>
-                  <label htmlFor="identifier" className="block text-xs font-bold text-slate-500 mb-2 uppercase tracking-wider">
-                    Username or Email
-                  </label>
-                  <div className="relative">
-                    <UserIcon className="absolute top-1/2 left-4 -translate-y-1/2 w-5 h-5 text-slate-400" />
-                    <input
-                      id="identifier"
-                      type="text"
-                      value={identifier}
-                      onChange={e => setIdentifier(e.target.value)}
-                      placeholder="Enter username or email"
-                      disabled={isSubmitting}
-                      className="w-full border border-slate-300 rounded-xl px-4 py-3.5 pl-12 text-sm font-medium outline-none focus:ring-4 focus:ring-violet-100 focus:border-violet-600 shadow-sm disabled:opacity-50"
-                      required
-                    />
-                  </div>
+              <div>
+                <label htmlFor="identifier" className="block text-[0.7rem] font-semibold text-[#6b7280] mb-2 uppercase tracking-[0.06em]">Username or Email</label>
+                <div className="relative">
+                  <UserIcon className="absolute top-1/2 left-4 -translate-y-1/2 w-5 h-5 text-[#9ca3af]" />
+                  <input
+                    id="identifier"
+                    type="text"
+                    value={identifier}
+                    onChange={e => setIdentifier(e.target.value)}
+                    placeholder="Enter username or email"
+                    disabled={isSubmitting}
+                    className="w-full rounded-[10px] px-4 py-3.5 pl-12 text-sm font-medium outline-none transition-all disabled:opacity-50"
+                    style={{
+                      background: 'rgba(255, 255, 255, 0.06)',
+                      border: '1px solid rgba(255, 255, 255, 0.1)',
+                      color: '#f9fafb',
+                    }}
+                    onFocus={(e) => {
+                      e.currentTarget.style.borderColor = 'rgba(124, 58, 237, 0.6)';
+                      e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.15)';
+                    }}
+                    onBlur={(e) => {
+                      e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.1)';
+                      e.currentTarget.style.boxShadow = 'none';
+                    }}
+                    required
+                  />
                 </div>
-              </>
+              </div>
             ) : (
               <>
                 <div>
-                  <label htmlFor="username" className="block text-xs font-bold text-slate-500 mb-2 uppercase tracking-wider">
-                    Username
-                  </label>
+                  <label htmlFor="username" className="block text-[0.7rem] font-semibold text-[#6b7280] mb-2 uppercase tracking-[0.06em]">Username</label>
                   <div className="relative">
-                    <UserIcon className="absolute top-1/2 left-4 -translate-y-1/2 w-5 h-5 text-slate-400" />
+                    <UserIcon className="absolute top-1/2 left-4 -translate-y-1/2 w-5 h-5 text-[#9ca3af]" />
                     <input
                       id="username"
                       type="text"
@@ -154,17 +225,28 @@ export const LoginView: React.FC = () => {
                       onChange={e => setUsername(e.target.value)}
                       placeholder="Choose a username"
                       disabled={isSubmitting}
-                      className="w-full border border-slate-300 rounded-xl px-4 py-3.5 pl-12 text-sm font-medium outline-none focus:ring-4 focus:ring-violet-100 focus:border-violet-600 shadow-sm disabled:opacity-50"
+                      className="w-full rounded-[10px] px-4 py-3.5 pl-12 text-sm font-medium outline-none transition-all disabled:opacity-50"
+                      style={{
+                        background: 'rgba(255, 255, 255, 0.06)',
+                        border: '1px solid rgba(255, 255, 255, 0.1)',
+                        color: '#f9fafb',
+                      }}
+                      onFocus={(e) => {
+                        e.currentTarget.style.borderColor = 'rgba(124, 58, 237, 0.6)';
+                        e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.15)';
+                      }}
+                      onBlur={(e) => {
+                        e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.1)';
+                        e.currentTarget.style.boxShadow = 'none';
+                      }}
                       required
                     />
                   </div>
                 </div>
                 <div>
-                  <label htmlFor="email" className="block text-xs font-bold text-slate-500 mb-2 uppercase tracking-wider">
-                    Email
-                  </label>
+                  <label htmlFor="email" className="block text-[0.7rem] font-semibold text-[#6b7280] mb-2 uppercase tracking-[0.06em]">Email</label>
                   <div className="relative">
-                    <UserIcon className="absolute top-1/2 left-4 -translate-y-1/2 w-5 h-5 text-slate-400" />
+                    <UserIcon className="absolute top-1/2 left-4 -translate-y-1/2 w-5 h-5 text-[#9ca3af]" />
                     <input
                       id="email"
                       type="email"
@@ -172,17 +254,28 @@ export const LoginView: React.FC = () => {
                       onChange={e => setEmail(e.target.value)}
                       placeholder="Enter your email"
                       disabled={isSubmitting}
-                      className="w-full border border-slate-300 rounded-xl px-4 py-3.5 pl-12 text-sm font-medium outline-none focus:ring-4 focus:ring-violet-100 focus:border-violet-600 shadow-sm disabled:opacity-50"
+                      className="w-full rounded-[10px] px-4 py-3.5 pl-12 text-sm font-medium outline-none transition-all disabled:opacity-50"
+                      style={{
+                        background: 'rgba(255, 255, 255, 0.06)',
+                        border: '1px solid rgba(255, 255, 255, 0.1)',
+                        color: '#f9fafb',
+                      }}
+                      onFocus={(e) => {
+                        e.currentTarget.style.borderColor = 'rgba(124, 58, 237, 0.6)';
+                        e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.15)';
+                      }}
+                      onBlur={(e) => {
+                        e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.1)';
+                        e.currentTarget.style.boxShadow = 'none';
+                      }}
                       required
                     />
                   </div>
                 </div>
                 <div>
-                  <label htmlFor="phone" className="block text-xs font-bold text-slate-500 mb-2 uppercase tracking-wider">
-                    Phone (Optional)
-                  </label>
+                  <label htmlFor="phone" className="block text-[0.7rem] font-semibold text-[#6b7280] mb-2 uppercase tracking-[0.06em]">Phone (Optional)</label>
                   <div className="relative">
-                    <Phone className="absolute top-1/2 left-4 -translate-y-1/2 w-5 h-5 text-slate-400" />
+                    <Phone className="absolute top-1/2 left-4 -translate-y-1/2 w-5 h-5 text-[#9ca3af]" />
                     <input
                       id="phone"
                       type="tel"
@@ -190,7 +283,20 @@ export const LoginView: React.FC = () => {
                       onChange={e => setPhone(e.target.value)}
                       placeholder="Enter phone number"
                       disabled={isSubmitting}
-                      className="w-full border border-slate-300 rounded-xl px-4 py-3.5 pl-12 text-sm font-medium outline-none focus:ring-4 focus:ring-violet-100 focus:border-violet-600 shadow-sm disabled:opacity-50"
+                      className="w-full rounded-[10px] px-4 py-3.5 pl-12 text-sm font-medium outline-none transition-all disabled:opacity-50"
+                      style={{
+                        background: 'rgba(255, 255, 255, 0.06)',
+                        border: '1px solid rgba(255, 255, 255, 0.1)',
+                        color: '#f9fafb',
+                      }}
+                      onFocus={(e) => {
+                        e.currentTarget.style.borderColor = 'rgba(124, 58, 237, 0.6)';
+                        e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.15)';
+                      }}
+                      onBlur={(e) => {
+                        e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.1)';
+                        e.currentTarget.style.boxShadow = 'none';
+                      }}
                     />
                   </div>
                 </div>
@@ -198,11 +304,9 @@ export const LoginView: React.FC = () => {
             )}
 
             <div>
-              <label htmlFor="password" className="block text-xs font-bold text-slate-500 mb-2 uppercase tracking-wider">
-                Password
-              </label>
+              <label htmlFor="password" className="block text-[0.7rem] font-semibold text-[#6b7280] mb-2 uppercase tracking-[0.06em]">Password</label>
               <div className="relative">
-                <Lock className="absolute top-1/2 left-4 -translate-y-1/2 w-5 h-5 text-slate-400" />
+                <Lock className="absolute top-1/2 left-4 -translate-y-1/2 w-5 h-5 text-[#9ca3af]" />
                 <input
                   id="password"
                   type={showPassword ? 'text' : 'password'}
@@ -210,13 +314,26 @@ export const LoginView: React.FC = () => {
                   onChange={e => setPassword(e.target.value)}
                   placeholder="Enter password"
                   disabled={isSubmitting}
-                  className="w-full border border-slate-300 rounded-xl px-4 py-3.5 pl-12 pr-12 text-sm font-medium outline-none focus:ring-4 focus:ring-violet-100 focus:border-violet-600 shadow-sm disabled:opacity-50"
+                  className="w-full rounded-[10px] px-4 py-3.5 pl-12 pr-12 text-sm font-medium outline-none transition-all disabled:opacity-50"
+                  style={{
+                    background: 'rgba(255, 255, 255, 0.06)',
+                    border: '1px solid rgba(255, 255, 255, 0.1)',
+                    color: '#f9fafb',
+                  }}
+                  onFocus={(e) => {
+                    e.currentTarget.style.borderColor = 'rgba(124, 58, 237, 0.6)';
+                    e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.15)';
+                  }}
+                  onBlur={(e) => {
+                    e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.1)';
+                    e.currentTarget.style.boxShadow = 'none';
+                  }}
                   required
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute top-1/2 right-4 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition"
+                  className="absolute top-1/2 right-4 -translate-y-1/2 text-[#9ca3af] hover:text-[#d1d5db] transition"
                   disabled={isSubmitting}
                 >
                   {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
@@ -226,11 +343,9 @@ export const LoginView: React.FC = () => {
 
             {mode === 'register' && (
               <div>
-                <label htmlFor="confirmPassword" className="block text-xs font-bold text-slate-500 mb-2 uppercase tracking-wider">
-                  Confirm Password
-                </label>
+                <label htmlFor="confirmPassword" className="block text-[0.7rem] font-semibold text-[#6b7280] mb-2 uppercase tracking-[0.06em]">Confirm Password</label>
                 <div className="relative">
-                  <Lock className="absolute top-1/2 left-4 -translate-y-1/2 w-5 h-5 text-slate-400" />
+                  <Lock className="absolute top-1/2 left-4 -translate-y-1/2 w-5 h-5 text-[#9ca3af]" />
                   <input
                     id="confirmPassword"
                     type={showConfirmPassword ? 'text' : 'password'}
@@ -238,13 +353,26 @@ export const LoginView: React.FC = () => {
                     onChange={e => setConfirmPassword(e.target.value)}
                     placeholder="Confirm password"
                     disabled={isSubmitting}
-                    className="w-full border border-slate-300 rounded-xl px-4 py-3.5 pl-12 pr-12 text-sm font-medium outline-none focus:ring-4 focus:ring-violet-100 focus:border-violet-600 shadow-sm disabled:opacity-50"
+                    className="w-full rounded-[10px] px-4 py-3.5 pl-12 pr-12 text-sm font-medium outline-none transition-all disabled:opacity-50"
+                    style={{
+                      background: 'rgba(255, 255, 255, 0.06)',
+                      border: '1px solid rgba(255, 255, 255, 0.1)',
+                      color: '#f9fafb',
+                    }}
+                    onFocus={(e) => {
+                      e.currentTarget.style.borderColor = 'rgba(124, 58, 237, 0.6)';
+                      e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.15)';
+                    }}
+                    onBlur={(e) => {
+                      e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.1)';
+                      e.currentTarget.style.boxShadow = 'none';
+                    }}
                     required
                   />
                   <button
                     type="button"
                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                    className="absolute top-1/2 right-4 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition"
+                    className="absolute top-1/2 right-4 -translate-y-1/2 text-[#9ca3af] hover:text-[#d1d5db] transition"
                     disabled={isSubmitting}
                   >
                     {showConfirmPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
@@ -258,22 +386,39 @@ export const LoginView: React.FC = () => {
             <button
               type="submit"
               disabled={isSubmitting}
-              className="w-full bg-gradient-to-r from-violet-600 to-indigo-600 text-white px-8 py-3.5 rounded-xl font-medium hover:shadow-lg transition-all shadow-md focus:ring-4 focus:ring-violet-100 outline-none disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full text-white px-8 py-3.5 rounded-[10px] font-medium transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+              style={{
+                background: '#7c3aed',
+                border: 'none',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.boxShadow = '0 0 28px rgba(124, 58, 237, 0.5)';
+                e.currentTarget.style.transform = 'translateY(-1px)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.boxShadow = 'none';
+                e.currentTarget.style.transform = 'translateY(0)';
+              }}
             >
               {isSubmitting ? 'Please wait...' : (mode === 'login' ? 'Sign In' : 'Create Account')}
             </button>
 
             <div className="relative flex items-center gap-3 my-6">
-              <div className="flex-1 h-px bg-slate-200"></div>
-              <span className="text-xs text-slate-400 uppercase font-semibold">Or</span>
-              <div className="flex-1 h-px bg-slate-200"></div>
+              <div className="flex-1 h-px bg-[rgba(255,255,255,0.1)]"></div>
+              <span className="text-xs text-[#6b7280] uppercase font-semibold">Or</span>
+              <div className="flex-1 h-px bg-[rgba(255,255,255,0.1)]"></div>
             </div>
 
             <button
               type="button"
               onClick={handleGoogleLogin}
               disabled={isSubmitting}
-              className="w-full bg-white border-2 border-slate-300 text-slate-700 px-8 py-3.5 rounded-xl font-medium hover:bg-slate-50 transition-colors shadow-sm flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full px-8 py-3.5 rounded-[10px] font-medium transition-colors flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed"
+              style={{
+                background: 'rgba(255, 255, 255, 0.04)',
+                border: '1px solid rgba(255, 255, 255, 0.1)',
+                color: '#d1d5db',
+              }}
             >
               <svg className="w-5 h-5" viewBox="0 0 24 24">
                 <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
@@ -285,11 +430,14 @@ export const LoginView: React.FC = () => {
             </button>
           </form>
 
-          <p className="text-center text-slate-500 text-sm mt-6">
+          <p className="text-center text-[#d1d5db] text-xs mt-6">
             {mode === 'login' ? "Don't have an account? " : 'Already have an account? '}
             <button
               onClick={() => handleModeChange(mode === 'login' ? 'register' : 'login')}
-              className="text-violet-600 font-medium hover:text-indigo-600 transition-colors"
+              className="transition-colors"
+              style={{ color: '#a78bfa' }}
+              onMouseEnter={(e) => (e.currentTarget.style.color = '#c4b5fd')}
+              onMouseLeave={(e) => (e.currentTarget.style.color = '#a78bfa')}
             >
               {mode === 'login' ? 'Sign up' : 'Sign in'}
             </button>
