@@ -162,8 +162,22 @@ export const LoginView: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 flex flex-col items-center justify-center p-6">
-      <div className="w-full max-w-sm">
+    <div className="min-h-screen relative overflow-hidden flex flex-col items-center justify-center p-6">
+      {/* Video Background */}
+      <video
+        autoPlay
+        muted
+        loop
+        className="absolute inset-0 w-full h-full object-cover"
+        style={{ filter: 'brightness(0.5) blur(2px)' }}
+      >
+        <source src="https://techbridge.edu.gh/static/campus_tour.mp4" type="video/mp4" />
+      </video>
+
+      {/* Overlay */}
+      <div className="absolute inset-0 bg-gradient-to-br from-slate-900/40 to-slate-800/40" />
+
+      <div className="relative z-10 w-full max-w-sm">
         <div className="text-center mb-8">
           <img
             src="https://techbridge.edu.gh/static/TUC_LOGO_1.png"
@@ -171,8 +185,8 @@ export const LoginView: React.FC = () => {
             className="h-12 w-auto object-contain mx-auto mb-4"
             referrerPolicy="no-referrer"
           />
-          <h1 className="text-3xl font-bold text-slate-900 mb-1">TUC AI Lab</h1>
-          <p className="text-slate-500 text-sm">Strategic AI solutions for West Africa</p>
+          <h1 className="text-3xl font-bold text-white mb-1">TUC AI Lab</h1>
+          <p className="text-slate-100 text-sm">Strategic AI solutions for West Africa</p>
         </div>
 
         <div className="bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden p-8">
