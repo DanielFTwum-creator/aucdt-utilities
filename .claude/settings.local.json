@@ -125,7 +125,19 @@
       "PowerShell(Get-ChildItem -Path \"C:\\\\Development\\\\github\\\\aucdt-utilities\\\\willpro\" -Recurse -File | Where-Object { $_.FullName -notmatch 'node_modules' } | Select-Object -ExpandProperty FullName)",
       "Bash(cat)",
       "Bash(node /tmp/test-willpro.js)",
-      "PowerShell(Set-Location \"C:\\\\Development\\\\github\\\\aucdt-utilities\\\\poster\"; $env:CI=\"true\"; npx --yes vite build 2>&1)"
+      "PowerShell(Set-Location \"C:\\\\Development\\\\github\\\\aucdt-utilities\\\\poster\"; $env:CI=\"true\"; npx --yes vite build 2>&1)",
+      "PowerShell(Get-ChildItem \"C:\\\\Development\\\\github\\\\aucdt-utilities\" -Directory | Where-Object {$_.Name -match \"glucose|oauth|google\"})",
+      "Bash(scp *)",
+      "Bash(xargs grep -l \"contact\\\\|ROPHE\\\\|Rophe\")",
+      "Bash(awk '{print $NF}')",
+      "Bash([ -f \"C:/Development/github/aucdt-utilities/$dir/src/contexts/AuthContext.tsx\" ])",
+      "Bash(grep -l 'oauth\\\\|GOOGLE_CLIENT' C:/Development/github/aucdt-utilities/__TRACKED_VAR__/src/contexts/AuthContext.tsx)",
+      "Bash([ -f \"C:/Development/github/aucdt-utilities/$dir/package.json\" ])",
+      "Bash(grep -E '\"react\"|\"@react|\"next\"' C:/Development/github/aucdt-utilities/__TRACKED_VAR__/package.json)",
+      "Bash([ -f \"C:/Development/github/aucdt-utilities/$app/vite.config.ts\" ])",
+      "Bash(grep -n base: C:/Development/github/aucdt-utilities/__TRACKED_VAR__/vite.config.ts)",
+      "Bash(wait)",
+      "PowerShell(ssh -o StrictHostKeyChecking=no root@66.226.72.199 \"tail -30 /var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/ai-lab/server.log 2>/dev/null || echo 'Log file not yet created'\")"
     ]
   }
 }

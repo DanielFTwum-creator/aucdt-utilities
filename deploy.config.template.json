@@ -1,0 +1,11 @@
+{
+  "projectName": "PROJECT_NAME",
+  "remoteHost": "root@techbridge.edu.gh",
+  "deployPath": "/var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/PROJECT_NAME",
+  "buildTool": "pnpm",
+  "outputDir": "dist",
+  "requiredEnvVars": [
+    "VITE_GOOGLE_CLIENT_ID"
+  ],
+  "healthCheckUrl": "https://ai-tools.techbridge.edu.gh/PROJECT_NAME/"
+}
