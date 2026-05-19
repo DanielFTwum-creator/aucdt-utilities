@@ -1,0 +1,6 @@
+{
+  "name": "Peace & One Love Vinyl",
+  "description": "An interactive spinning 45 LP vinyl record with impressionist album art and a synchronized 8-beat canvas light show.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
