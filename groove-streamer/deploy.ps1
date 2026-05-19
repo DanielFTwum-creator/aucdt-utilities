@@ -1,13 +1,13 @@
-# Bridge Radio Deployment Script
-# SCP-based deployment using bash
+# Groove Streamer Deployment Script
+# Safe deployment using SSH heredoc (no UTF-8 BOM)
 
 param(
     [string]$RemoteHost = "root@66.226.72.199",
-    [string]$RemotePath = "/var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/bridge-radio/",
+    [string]$RemotePath = "/var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/groove-streamer/",
     [switch]$Build = $false
 )
 
-Write-Host "=== BRIDGE RADIO DEPLOYMENT ===" -ForegroundColor Cyan
+Write-Host "=== GROOVE STREAMER DEPLOYMENT ===" -ForegroundColor Cyan
 Write-Host "Remote: $RemoteHost"
 Write-Host "Path: $RemotePath`n"
 
@@ -28,25 +28,30 @@ if (-not (Test-Path "dist")) {
 }
 
 Write-Host "Creating directory..." -ForegroundColor Yellow
-ssh -o StrictHostKeyChecking=no $RemoteHost "mkdir -p $RemotePath && rm -rf $RemotePath/*" | Out-Null
+ssh -o StrictHostKeyChecking=no $RemoteHost "mkdir -p $RemotePath && rm -rf $RemotePath/* $RemotePath/.htaccess 2>/dev/null || true" | Out-Null
 
 Write-Host "Copying files..." -ForegroundColor Yellow
-bash -c "cd 'C:\Development\github\aucdt-utilities\groove-streamer' && scp -r -o StrictHostKeyChecking=no dist/* $RemoteHost`:$RemotePath 2>/dev/null"
+bash -c "cd 'C:\Development\github\aucdt-utilities\groove-streamer' && scp -r -o StrictHostKeyChecking=no dist/* $RemoteHost`:$RemotePath 2>&1 | head -20"
 
 Write-Host "Creating .htaccess..." -ForegroundColor Yellow
-@"
+$htaccessContent = @"
 <IfModule mod_rewrite.c>
   RewriteEngine On
-  RewriteBase /bridge-radio/
+  RewriteBase /groove-streamer/
   RewriteCond %{REQUEST_FILENAME} -f [OR]
   RewriteCond %{REQUEST_FILENAME} -d
   RewriteRule ^ - [L]
-  RewriteRule ^ /bridge-radio/index.html [QSA,L]
+  RewriteRule ^ /groove-streamer/index.html [QSA,L]
 </IfModule>
-"@ | ssh -o StrictHostKeyChecking=no $RemoteHost "cat > $RemotePath/.htaccess" 2>$null
+"@
+$htaccessContent | ssh -o StrictHostKeyChecking=no $RemoteHost "cat > '$RemotePath/.htaccess'"
 
 Write-Host "Setting permissions..." -ForegroundColor Yellow
-ssh -o StrictHostKeyChecking=no $RemoteHost "chown -R techbridge.edu.gh_md:psacln $RemotePath && chmod -R 755 $RemotePath && chmod 644 $RemotePath/.htaccess 2>/dev/null; true" | Out-Null
+ssh -o StrictHostKeyChecking=no $RemoteHost "chmod -R 755 '$RemotePath' && chmod 644 '$RemotePath/.htaccess' 2>/dev/null || true" | Out-Null
+
+Write-Host "Health check: Verifying index.html on remote..." -ForegroundColor Yellow
+ssh -o StrictHostKeyChecking=no $RemoteHost "test -f '$RemotePath/index.html' && echo '✅ index.html present' || echo '❌ index.html missing'" | Out-Null
 
 Write-Host "✅ Deployment complete!" -ForegroundColor Green
-Write-Host "URL: https://ai-tools.techbridge.edu.gh/bridge-radio`n"
+Write-Host "URL: https://ai-tools.techbridge.edu.gh/groove-streamer"
+Write-Host "Note: Verify at https://ai-tools.techbridge.edu.gh/groove-streamer/`n"

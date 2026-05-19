@@ -1,5 +1,5 @@
 # WillPro Deployment Script
-# SCP-based deployment using bash
+# Safe deployment using SSH heredoc (no UTF-8 BOM)
 
 param(
     [string]$RemoteHost = "root@techbridge.edu.gh",
@@ -28,13 +28,13 @@ if (-not (Test-Path "dist")) {
 }
 
 Write-Host "Creating directory..." -ForegroundColor Yellow
-ssh -o StrictHostKeyChecking=no $RemoteHost "mkdir -p $RemotePath && rm -rf $RemotePath/*" | Out-Null
+ssh -o StrictHostKeyChecking=no $RemoteHost "mkdir -p '$RemotePath' && rm -rf '$RemotePath'/* '$RemotePath'/.htaccess 2>/dev/null || true" | Out-Null
 
 Write-Host "Copying files..." -ForegroundColor Yellow
-bash -c "cd 'C:\Development\github\aucdt-utilities\willpro' && scp -r -o StrictHostKeyChecking=no dist/* $RemoteHost`:$RemotePath 2>/dev/null"
+bash -c "cd 'C:\Development\github\aucdt-utilities\willpro' && scp -r -o StrictHostKeyChecking=no dist/* $RemoteHost`:$RemotePath 2>&1 | head -20"
 
 Write-Host "Creating .htaccess..." -ForegroundColor Yellow
-@"
+$htaccessContent = @"
 <IfModule mod_rewrite.c>
   RewriteEngine On
   RewriteBase /willpro/
@@ -43,11 +43,16 @@ Write-Host "Creating .htaccess..." -ForegroundColor Yellow
   RewriteRule ^ - [L]
   RewriteRule ^ /willpro/index.html [QSA,L]
 </IfModule>
-"@ | ssh -o StrictHostKeyChecking=no $RemoteHost "cat > $RemotePath/.htaccess" 2>$null
+"@
+$htaccessContent | ssh -o StrictHostKeyChecking=no $RemoteHost "cat > '$RemotePath/.htaccess'"
 
 Write-Host "Setting permissions..." -ForegroundColor Yellow
-ssh -o StrictHostKeyChecking=no $RemoteHost "chown -R techbridge.edu.gh_md:psacln $RemotePath && chmod -R 755 $RemotePath && chmod 644 $RemotePath/.htaccess 2>/dev/null; true" | Out-Null
+ssh -o StrictHostKeyChecking=no $RemoteHost "chmod -R 755 '$RemotePath' && chmod 644 '$RemotePath/.htaccess' 2>/dev/null || true" | Out-Null
+
+Write-Host "Health check: Verifying index.html on remote..." -ForegroundColor Yellow
+ssh -o StrictHostKeyChecking=no $RemoteHost "test -f '$RemotePath/index.html' && echo '✅ index.html present' || echo '❌ index.html missing'" | Out-Null
 
 Write-Host "✅ Deployment complete!" -ForegroundColor Green
-Write-Host "URL: https://ai-tools.techbridge.edu.gh/willpro`n"
+Write-Host "URL: https://ai-tools.techbridge.edu.gh/willpro"
+Write-Host "Note: Verify at https://ai-tools.techbridge.edu.gh/willpro/`n"
 
