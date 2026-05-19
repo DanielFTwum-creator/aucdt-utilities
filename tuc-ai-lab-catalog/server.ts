@@ -3,14 +3,88 @@ import path from "path";
 import express from "express";
 import { createServer as createViteServer } from "vite";
 import fs from "fs";
+import fetch from "node-fetch";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const isBuilt = __dirname.endsWith('dist') || !fs.existsSync(path.join(__dirname, 'server.ts'));
 const baseDir = __dirname;
 
+function decodeJWT(token: string) {
+  const parts = token.split('.');
+  if (parts.length !== 3) throw new Error('Invalid token');
+  const decoded = Buffer.from(parts[1], 'base64').toString('utf-8');
+  return JSON.parse(decoded);
+}
+
 async function startServer() {
   const app = express();
   const PORT = 3000;
+
+  app.use(express.json());
+
+  const GOOGLE_CLIENT_ID = process.env.VITE_GOOGLE_CLIENT_ID;
+  const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
+
+  // OAuth callback handler (receives code + state from Google redirect)
+  app.get('/auth/google/callback', (req, res) => {
+    const { code, state, error } = req.query;
+    if (error) {
+      return res.redirect(`/?error=${error}`);
+    }
+    // Redirect to frontend with code + state in URL params
+    // Frontend will handle the token exchange via /api/auth/google/token
+    res.redirect(`/?code=${code}&state=${state}`);
+  });
+
+  // OAuth token exchange endpoint
+  app.post('/api/auth/google/token', async (req, res) => {
+    const { code, redirectUri } = req.body;
+
+    if (!code) {
+      return res.status(400).json({ error: 'Missing authorization code' });
+    }
+
+    if (!GOOGLE_CLIENT_ID || !GOOGLE_CLIENT_SECRET) {
+      console.error('Missing Google OAuth credentials');
+      return res.status(500).json({ error: 'OAuth not configured' });
+    }
+
+    try {
+      const tokenResponse = await fetch('https://oauth2.googleapis.com/token', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          client_id: GOOGLE_CLIENT_ID,
+          client_secret: GOOGLE_CLIENT_SECRET,
+          code,
+          grant_type: 'authorization_code',
+          redirect_uri: redirectUri,
+        }),
+      });
+
+      if (!tokenResponse.ok) {
+        const error = await tokenResponse.json();
+        console.error('Token exchange error:', error);
+        return res.status(400).json({ error: 'Token exchange failed' });
+      }
+
+      const tokens = await tokenResponse.json();
+      const { id_token } = tokens;
+
+      const userInfo = decodeJWT(id_token);
+
+      res.json({
+        user: {
+          id: userInfo.sub,
+          email: userInfo.email,
+          username: userInfo.name,
+        },
+      });
+    } catch (error) {
+      console.error('OAuth callback error:', error);
+      res.status(500).json({ error: 'Internal server error' });
+    }
+  });
 
   // Serve callback page and static files BEFORE vite middleware (so they're found first)
   app.use(express.static(path.join(__dirname, "public")));
