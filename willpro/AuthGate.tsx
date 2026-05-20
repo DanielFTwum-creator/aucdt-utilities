@@ -38,61 +38,35 @@ export function AuthGate({ children, onLogout }: { children: React.ReactNode; on
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    let oauthHandled = false;
-
-    const completeOAuthLogin = async (accessToken: string) => {
-      if (oauthHandled) return;
-      oauthHandled = true;
-
+    // Hydrate from server-set cookie after OAuth callback (one-shot)
+    const cookieValue = document.cookie
+      .split('; ')
+      .find(row => row.startsWith('willpro_user='))
+      ?.split('=')[1];
+    if (cookieValue) {
       try {
-        setLoading(true);
-        setError('');
-        const res = await fetch('https://www.googleapis.com/oauth2/v2/userinfo', {
-          headers: { Authorization: `Bearer ${accessToken}` },
-        });
-        if (!res.ok) throw new Error('Failed to fetch user info');
-        const userInfo = await res.json();
-        const userData: User = {
-          id: userInfo.id,
-          name: userInfo.name,
-          email: userInfo.email,
+        const userData = JSON.parse(atob(decodeURIComponent(cookieValue))) as User & { username?: string };
+        const normalized: User = {
+          id: userData.id,
+          name: userData.name || userData.username,
+          email: userData.email,
         };
-        localStorage.setItem(USER_KEY, JSON.stringify(userData));
-        localStorage.removeItem('oauth_token_temp');
+        localStorage.setItem(USER_KEY, JSON.stringify(normalized));
         sessionStorage.setItem(AUTH_KEY, '1');
-        setUser(userData);
+        setUser(normalized);
         setAuthed(true);
-      } catch {
-        setError('Google login failed. Please try again.');
-        setLoading(false);
+        document.cookie = 'willpro_user=; max-age=0; path=/willpro/';
+      } catch (e) {
+        console.error('Failed to parse user cookie:', e);
       }
-    };
+    }
 
-    const handleMessage = (event: MessageEvent) => {
-      if (event.origin !== window.location.origin) return;
-      if (event.data?.type === 'OAUTH_TOKEN_SUCCESS') {
-        completeOAuthLogin(event.data.access_token);
-      }
-      if (event.data?.type === 'OAUTH_TOKEN_ERROR') {
-        setError(event.data.error_description || event.data.error || 'Google login failed. Please try again.');
-        setLoading(false);
-      }
-    };
-
-    window.addEventListener('message', handleMessage);
-
-    const fallback = window.setInterval(() => {
-      const token = localStorage.getItem('oauth_token_temp');
-      if (token) {
-        completeOAuthLogin(token);
-        window.clearInterval(fallback);
-      }
-    }, 100);
-
-    return () => {
-      window.removeEventListener('message', handleMessage);
-      window.clearInterval(fallback);
-    };
+    // Surface OAuth error from query string
+    const params = new URLSearchParams(window.location.search);
+    const oauthError = params.get('error');
+    if (oauthError) {
+      setError(`Google login failed: ${oauthError}`);
+    }
   }, []);
 
   const handleLogout = () => {
@@ -114,20 +88,18 @@ export function AuthGate({ children, onLogout }: { children: React.ReactNode; on
     }
 
     const redirectUri = import.meta.env.VITE_GOOGLE_REDIRECT_URI
-      || `${window.location.origin}/auth/google/callback`;
+      || `${window.location.origin}/willpro/callback`;
+    const state = Math.random().toString(36).substring(7);
+    sessionStorage.setItem('oauth_state', state);
     const params = new URLSearchParams({
       client_id: clientId,
       redirect_uri: redirectUri,
-      response_type: 'token',
+      response_type: 'code',
       scope: 'openid email profile',
       prompt: 'select_account',
+      state,
     });
-    const authWindow = window.open(
-      `https://accounts.google.com/o/oauth2/v2/auth?${params}`,
-      'oauth_popup',
-      'width=600,height=700'
-    );
-    if (!authWindow) setError('Popup blocked. Please allow popups for this site.');
+    window.location.href = `https://accounts.google.com/o/oauth2/v2/auth?${params}`;
   };
 
   const handleSubmit = (e: React.FormEvent) => {
