@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
+import { setOAuthAppContext, getOAuthAppContext, getAppDashboardPath, APP_NAME, APP_PATH } from '../utils/appContext';
 
 interface User {
   id: string;
@@ -37,10 +38,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const code = params.get('code');
     const state = params.get('state');
     const error = params.get('error');
+    const storedState = sessionStorage.getItem('oauth_state');
+    const appContext = getOAuthAppContext();
 
     if (error) {
       console.error('OAuth error:', error);
-    } else if (code && state === sessionStorage.getItem('oauth_state')) {
+    } else if (code && state && state === storedState) {
+      sessionStorage.removeItem('oauth_state');
+      // Redirect to correct app dashboard if needed
+      const currentPath = window.location.pathname;
+      const targetPath = getAppDashboardPath(appContext);
+      if (!currentPath.includes(targetPath)) {
+        window.location.href = targetPath + `?code=${code}&state=${state}`;
+        return;
+      }
       exchangeCodeForUser(code);
     }
 
@@ -78,11 +89,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const responseType = 'code';
     const oauthState = Math.random().toString(36).substring(7);
 
+    // Construct redirect URI dynamically at runtime
+    const redirectUri = `${window.location.origin}${APP_PATH}callback`;
+
+    // Store app context before OAuth redirect
+    setOAuthAppContext(APP_NAME);
     sessionStorage.setItem('oauth_state', oauthState);
 
     const params = new URLSearchParams({
       client_id: CLIENT_ID,
-      redirect_uri: REDIRECT_URI,
+      redirect_uri: redirectUri,
       response_type: responseType,
       scope,
       state: oauthState,

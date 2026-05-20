@@ -25,6 +25,15 @@ if (!GOOGLE_CLIENT_ID || !GOOGLE_CLIENT_SECRET) {
   process.exit(1);
 }
 
+// OAuth callback handler - receives code + state from Google redirect
+app.get('/callback', (req, res) => {
+  const { code, state, error } = req.query;
+  if (error) {
+    return res.redirect(`/peace/?error=${error}`);
+  }
+  res.redirect(`/peace/?code=${code}&state=${state}`);
+});
+
 app.post('/api/auth/google/token', async (req, res) => {
   const { code, redirectUri } = req.body;
 
@@ -77,7 +86,7 @@ app.post('/api/auth/google/token', async (req, res) => {
 });
 
 // Serve the React app for all other routes (SPA fallback)
-app.get('*', (req, res) => {
+app.get(/.*/, (req, res) => {
   const indexPath = path.join(__dirname, 'dist', 'index.html');
   if (fs.existsSync(indexPath)) {
     res.sendFile(indexPath);
