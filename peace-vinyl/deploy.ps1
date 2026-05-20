@@ -4,7 +4,7 @@
 param(
     [string]$RemoteHost = "root@66.226.72.199",
     [string]$RemotePath = "/var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/peace/",
-    [switch]$Build = $false
+    [switch]$Build = $true
 )
 
 Write-Host "=== PEACE VINYL DEPLOYMENT ===" -ForegroundColor Cyan
@@ -66,6 +66,7 @@ $htaccessContent = @'
   RewriteRule ^ - [L]
   RewriteCond %{HTTP:Upgrade} !websocket [NC]
   RewriteCond %{HTTP:Connection} !Upgrade [NC]
+  RewriteRule ^callback http://localhost:3001/callback [P,L]
   RewriteRule ^api/(.*)$ http://localhost:3001/api/$1 [P,L]
   RewriteRule ^ /peace/index.html [QSA,L]
 </IfModule>
@@ -79,7 +80,7 @@ Write-Host "Setting permissions and ownership..." -ForegroundColor Yellow
 ssh -o StrictHostKeyChecking=no $RemoteHost "chown -R techbridge.edu.gh_md:psacln '$RemotePath' && chmod -R 755 '$RemotePath' && chmod 644 '$RemotePath/.htaccess' '$RemotePath/.env' 2>/dev/null || true" | Out-Null
 
 Write-Host "Starting backend server..." -ForegroundColor Yellow
-ssh -o StrictHostKeyChecking=no $RemoteHost "cd $RemotePath && nohup node server.js > server.log 2>&1 &" 2>&1 | Out-Null
+ssh -o StrictHostKeyChecking=no $RemoteHost "cd $RemotePath && NODE_ENV=production nohup node server.js > server.log 2>&1 &" 2>&1 | Out-Null
 
 Start-Sleep -Seconds 2
 
