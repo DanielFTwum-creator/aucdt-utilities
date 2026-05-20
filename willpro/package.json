@@ -14,11 +14,16 @@
     "test:e2e": "playwright test"
   },
   "dependencies": {
+    "cookie-parser": "^1.4.7",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
     "jspdf": "4.2.1",
     "lucide-react": "^1.16.0",
+    "node-fetch": "^3.3.2",
     "react": "19.2.6",
     "react-dom": "19.2.6",
-    "react-router-dom": "^7.15.1"
+    "react-router-dom": "^7.15.1",
+    "tsx": "^4.22.3"
   },
   "devDependencies": {
     "@playwright/test": "^1.60.0",
@@ -26,6 +31,8 @@
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",
     "@testing-library/user-event": "^14.6.1",
+    "@types/cookie-parser": "^1.4.10",
+    "@types/express": "^5.0.6",
     "@types/node": "^25.8.0",
     "@vitejs/plugin-react": "^6.0.2",
     "@vitest/coverage-v8": "^4.1.6",
