@@ -53,7 +53,13 @@ const AdminDashboard: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const [logs, setLogs] = useState<AuditEntry[]>([]);
   const [tab, setTab] = useState<'logs' | 'diagnostics'>('logs');
   const [storageTest, setStorageTest] = useState<'idle' | 'pass' | 'fail'>('idle');
-  useEffect(() => { setLogs(getAuditLogs()); }, []);
+  const [apiHealth, setApiHealth] = useState<'checking' | 'configured' | 'missing'>('checking');
+  useEffect(() => {
+    setLogs(getAuditLogs());
+    fetch('/api/health')
+      .then(r => setApiHealth(r.ok ? 'configured' : 'missing'))
+      .catch(() => setApiHealth('missing'));
+  }, []);
   const handleLogout = () => { appendAuditLog('ADMIN_LOGOUT'); sessionStorage.removeItem(ADMIN_SESSION_KEY); onClose(); };
   const runStorageTest = () => {
     try { localStorage.setItem('__diag__', '1'); localStorage.removeItem('__diag__'); setStorageTest('pass'); appendAuditLog('DIAGNOSTIC_RUN', 'localStorage: PASS'); }
@@ -103,8 +109,8 @@ const AdminDashboard: React.FC<{ onClose: () => void }> = ({ onClose }) => {
               </div>
             </div>
             <div className="flex items-center justify-between p-4 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg">
-              <div><p className="text-sm font-medium text-gray-900 dark:text-white">Gemini API Key</p><p className="text-xs text-gray-500">Checks environment variable</p></div>
-              <span role="status" className={`text-xs font-bold px-2 py-1 rounded ${process.env.API_KEY ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>{process.env.API_KEY ? 'CONFIGURED' : 'MISSING'}</span>
+              <div><p className="text-sm font-medium text-gray-900 dark:text-white">Backend API</p><p className="text-xs text-gray-500">Server-side Gemini proxy</p></div>
+              <span role="status" className={`text-xs font-bold px-2 py-1 rounded ${apiHealth === 'configured' ? 'bg-green-100 text-green-700' : apiHealth === 'missing' ? 'bg-red-100 text-red-700' : 'bg-gray-100 text-gray-700'}`}>{apiHealth === 'configured' ? 'OK' : apiHealth === 'missing' ? 'UNREACHABLE' : 'CHECKING...'}</span>
             </div>
           </section>
         )}
