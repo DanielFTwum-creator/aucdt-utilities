@@ -4,6 +4,19 @@ import express from "express";
 import { createServer as createViteServer } from "vite";
 import fs from "fs";
 import fetch from "node-fetch";
+import cookieParser from "cookie-parser";
+import dotenv from "dotenv";
+
+dotenv.config();
+
+interface GoogleTokenResponse {
+  id_token: string;
+  access_token?: string;
+  refresh_token?: string;
+  expires_in?: number;
+  token_type?: string;
+  scope?: string;
+}
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const isBuilt = __dirname.endsWith('dist') || !fs.existsSync(path.join(__dirname, 'server.ts'));
@@ -18,26 +31,136 @@ function decodeJWT(token: string) {
 
 async function startServer() {
   const app = express();
-  const PORT = process.env.PORT || 3003;
+  const PORT = Number(process.env.PORT) || 3003;
 
   app.use(express.json());
+  app.use(cookieParser());
 
   const GOOGLE_CLIENT_ID = process.env.VITE_GOOGLE_CLIENT_ID;
   const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
 
-  // OAuth callback handler (receives code + state from Google redirect)
-  app.get('/auth/google/callback', (req, res) => {
+  // OAuth callback handler - Google redirects here with code + state
+  // Server-side exchange to avoid WAF blocks on URL parameters
+  app.get(['/callback', '/ai-lab/callback'], async (req, res) => {
     const { code, state, error } = req.query;
+
     if (error) {
       return res.redirect(`/ai-lab/?error=${error}`);
     }
-    // Redirect to frontend with code + state in URL params
-    // Frontend will handle the token exchange via /api/auth/google/token
-    res.redirect(`/ai-lab/?code=${code}&state=${state}`);
+
+    if (!code) {
+      return res.redirect(`/ai-lab/?error=missing_code`);
+    }
+
+    try {
+      const redirectUri = `${process.env.VITE_GOOGLE_REDIRECT_URI || 'https://ai-tools.techbridge.edu.gh/ai-lab/callback'}`;
+
+      // Exchange code for tokens server-side
+      const tokenResponse = await fetch('https://oauth2.googleapis.com/token', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          client_id: GOOGLE_CLIENT_ID,
+          client_secret: GOOGLE_CLIENT_SECRET,
+          code,
+          grant_type: 'authorization_code',
+          redirect_uri: redirectUri,
+        }),
+      });
+
+      if (!tokenResponse.ok) {
+        const error = await tokenResponse.json();
+        console.error('Token exchange error:', error);
+        return res.redirect(`/ai-lab/?error=token_exchange_failed`);
+      }
+
+      const tokens = await tokenResponse.json() as GoogleTokenResponse;
+      const { id_token } = tokens;
+
+      const userInfo = decodeJWT(id_token);
+
+      // Cookie is readable by JS so AuthContext can hydrate user state on page load
+      const userJson = JSON.stringify({
+        id: userInfo.sub,
+        email: userInfo.email,
+        username: userInfo.name,
+      });
+
+      res.cookie('ai_lab_user', Buffer.from(userJson).toString('base64'), {
+        httpOnly: false,
+        secure: true,
+        sameSite: 'lax',
+        maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+      });
+
+      // Redirect to dashboard WITHOUT parameters
+      res.redirect(`/ai-lab/`);
+    } catch (error) {
+      console.error('OAuth callback error:', error);
+      res.redirect(`/ai-lab/?error=internal_error`);
+    }
+  });
+
+  // Legacy callback path for backwards compatibility
+  app.get(['/auth/google/callback', '/ai-lab/auth/google/callback'], async (req, res) => {
+    const { code, error } = req.query;
+
+    if (error) {
+      return res.redirect(`/ai-lab/?error=${error}`);
+    }
+
+    if (!code) {
+      return res.redirect(`/ai-lab/?error=missing_code`);
+    }
+
+    try {
+      const redirectUri = `${process.env.VITE_GOOGLE_REDIRECT_URI || 'https://ai-tools.techbridge.edu.gh/ai-lab/auth/google/callback'}`;
+
+      const tokenResponse = await fetch('https://oauth2.googleapis.com/token', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          client_id: GOOGLE_CLIENT_ID,
+          client_secret: GOOGLE_CLIENT_SECRET,
+          code,
+          grant_type: 'authorization_code',
+          redirect_uri: redirectUri,
+        }),
+      });
+
+      if (!tokenResponse.ok) {
+        const error = await tokenResponse.json();
+        console.error('Token exchange error:', error);
+        return res.redirect(`/ai-lab/?error=token_exchange_failed`);
+      }
+
+      const tokens = await tokenResponse.json() as GoogleTokenResponse;
+      const { id_token } = tokens;
+
+      const userInfo = decodeJWT(id_token);
+
+      const userJson = JSON.stringify({
+        id: userInfo.sub,
+        email: userInfo.email,
+        username: userInfo.name,
+      });
+
+      res.cookie('ai_lab_user', Buffer.from(userJson).toString('base64'), {
+        httpOnly: false,
+        secure: true,
+        sameSite: 'lax',
+        maxAge: 7 * 24 * 60 * 60 * 1000,
+      });
+
+      res.redirect(`/ai-lab/`);
+    } catch (error) {
+      console.error('OAuth callback error:', error);
+      res.redirect(`/ai-lab/?error=internal_error`);
+    }
   });
 
   // OAuth token exchange endpoint
-  app.post('/api/auth/google/token', async (req, res) => {
+  app.post(['/api/auth/google/token', '/ai-lab/api/auth/google/token'], async (req, res) => {
     const { code, redirectUri } = req.body;
 
     if (!code) {
@@ -68,7 +191,7 @@ async function startServer() {
         return res.status(400).json({ error: 'Token exchange failed' });
       }
 
-      const tokens = await tokenResponse.json();
+      const tokens = await tokenResponse.json() as GoogleTokenResponse;
       const { id_token } = tokens;
 
       const userInfo = decodeJWT(id_token);
@@ -91,7 +214,9 @@ async function startServer() {
   app.use("/public", express.static(path.join(__dirname, "public")));
 
   // Serve pre-generated screenshots
-  app.get("/api/screenshot", (req, res) => {
+  app.get(["/api/health", "/ai-lab/api/health"], (_req, res) => res.json({ ok: true }));
+
+  app.get(["/api/screenshot", "/ai-lab/api/screenshot"], (req, res) => {
     const slug = req.query.slug as string;
 
     if (!slug) {
@@ -123,9 +248,9 @@ async function startServer() {
     // otherwise serve from a 'dist' subdirectory.
     const distPath = isBuilt ? baseDir : path.join(baseDir, 'dist');
     console.log(`[Server] Serving static files from: ${distPath}`);
-    
+
     app.use(express.static(distPath));
-    app.get("*", (req, res) => {
+    app.get(/.*/, (req, res) => {
       const indexPath = path.join(distPath, "index.html");
       if (fs.existsSync(indexPath)) {
         res.sendFile(indexPath);

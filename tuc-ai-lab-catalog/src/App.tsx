@@ -294,13 +294,14 @@ export default function App() {
                 <h1 className="text-3xl font-bold text-slate-900 tracking-tight">AI Lab</h1>
                 <p className="text-slate-500 mt-1 max-w-xl">Live AI agents and tools running in real-time. Monitor, control, and deploy solutions.</p>
                 {activeCategory !== "All" && (
-                  <div className="mt-3 flex items-center gap-2">
-                    <span className="text-xs text-slate-500 uppercase tracking-wider font-semibold">Viewing:</span>
+                  <div className="mt-4 flex items-center gap-2">
+                    <span className="text-[11px] text-slate-500 uppercase tracking-widest font-bold">Active Filter:</span>
                     <button
                       onClick={() => setActiveCategory("All")}
-                      className="inline-flex items-center gap-1.5 px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-semibold hover:bg-blue-200 transition-colors"
+                      className="inline-flex items-center gap-2 px-4 py-1.5 bg-gradient-to-r from-blue-50 to-blue-100 text-blue-700 rounded-lg text-xs font-bold hover:from-blue-100 hover:to-blue-200 transition-all border border-blue-300/50 shadow-sm"
                     >
-                      {activeCategory} <X className="w-3 h-3" />
+                      {activeCategory}
+                      <X className="w-3.5 h-3.5 opacity-70 hover:opacity-100" />
                     </button>
                   </div>
                 )}
@@ -308,10 +309,10 @@ export default function App() {
               <div className="flex items-center gap-3">
                 <div className="relative">
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-                  <input 
+                  <input
                     type="text"
                     placeholder="Search tools..."
-                    className="pl-9 pr-4 py-2 border border-slate-200 rounded-md bg-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all w-64"
+                    className="pl-9 pr-4 py-2.5 border border-slate-300 rounded-lg bg-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:border-blue-500 transition-all w-72 shadow-sm"
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
                   />
@@ -337,7 +338,7 @@ export default function App() {
           <div className="grow overflow-y-auto px-8 pb-12 custom-scrollbar">
             {filteredTools.length > 0 ? (
               <div className={viewMode === "grid"
-                ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
+                ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 auto-rows-max"
                 : "flex flex-col gap-3"
               }>
                 <AnimatePresence mode="popLayout">
@@ -378,17 +379,17 @@ export default function App() {
           </div>
 
           {/* Footer Status Bar */}
-          <footer className="px-8 py-3 flex items-center justify-between text-[11px] text-slate-400 border-t border-slate-200 bg-white shrink-0">
-            <div className="flex gap-4">
-              <span className="flex items-center gap-1.5 text-slate-500 font-medium">
-                <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></span> 
+          <footer className="px-8 py-2.5 flex items-center justify-between text-[10px] text-slate-500 border-t border-slate-200/50 bg-white/50 backdrop-blur-sm shrink-0">
+            <div className="flex gap-6">
+              <span className="flex items-center gap-1.5 text-slate-600 font-medium">
+                <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></span>
                 All Nodes Operational
               </span>
-              <span className="border-l border-slate-200 pl-4 uppercase tracking-tighter">Last Sync: {new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}</span>
+              <span className="text-slate-400 tracking-widest uppercase font-mono">Last Sync: {new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}</span>
             </div>
-            <div className="flex gap-4">
-              <span className="bg-slate-100 px-2 py-0.5 rounded text-slate-400">Ver 2.4.9 Stable</span>
-              <span className="font-semibold text-slate-600 underline cursor-pointer hover:text-blue-600 transition-colors">Lab Manifesto (PDF)</span>
+            <div className="flex gap-5 items-center">
+              <span className="text-slate-400 text-[9px]">Ver 2.4.9 Stable</span>
+              <span className="font-semibold text-slate-600 cursor-pointer hover:text-blue-600 transition-colors">Lab Manifesto (PDF)</span>
             </div>
           </footer>
         </main>
@@ -498,27 +499,26 @@ function ToolCard({ tool, index, viewMode, onOpen }: { tool: Tool, index: number
             <ToolSpecificIcon className="w-6 h-6" />
           </div>
           <div className="flex-1 min-w-0">
-            <h4 className="font-bold text-white text-base leading-tight tracking-tight line-clamp-2">
+            <h4 className="font-bold text-white text-lg leading-tight tracking-tight line-clamp-2">
               {tool.title}
             </h4>
             <div className="flex items-center gap-2 mt-2">
-              <div className={`w-1.5 h-1.5 rounded-full ${isActive ? 'bg-emerald-400 animate-pulse-2-5s' : 'bg-slate-500'}`} />
-              <span className="text-[9px] font-semibold text-white uppercase tracking-wide">{nodeStatus}</span>
+              <div className={`status-dot ${isActive ? 'active' : ''}`} />
+              <span className="text-[8px] font-bold text-white/90 uppercase tracking-widest">{nodeStatus}</span>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Floating Category Badge - Refined Outline Pill */}
-      <div className="absolute top-4 right-4 z-20">
-        <span className={`text-[9px] font-bold uppercase tracking-widest px-3 py-1.5 rounded-full border backdrop-blur-md ${
-          tool.cat === "AI & ML"
-            ? "border-blue-400/60 text-blue-300 bg-transparent"
-            : `${badgeClass} shadow-lg bg-slate-900/60 border-slate-700`
-        }`}>
-          {tool.cat}
-        </span>
-      </div>
+      {/* Floating Category Badge - Only shown for non-primary categories */}
+      {tool.cat !== "AI & ML" && (
+        <div className="absolute top-4 right-4 z-20">
+          <span className={`text-[8px] font-bold uppercase tracking-widest px-3 py-1 rounded-lg border backdrop-blur-md ${
+            badgeClass} shadow-md`}>
+            {tool.cat}
+          </span>
+        </div>
+      )}
 
       {/* Hardware Accents (Recipe 3) */}
       <div className="absolute inset-0 border-[0.5px] border-white/5 pointer-events-none z-10 group-hover:border-blue-500/30 transition-colors duration-500" />
@@ -532,13 +532,13 @@ function ToolCard({ tool, index, viewMode, onOpen }: { tool: Tool, index: number
         animate={isHovered ? { y: -8 } : { y: 0 }}
         transition={{ duration: 0.3, ease: "easeOut" }}
       >
-        <p className="text-[13px] text-slate-300 leading-relaxed line-clamp-3 mb-4 font-medium opacity-90 group-hover:opacity-100 transition-opacity">
+        <p className="text-[13px] text-slate-200 leading-relaxed line-clamp-3 mb-5 font-medium opacity-95 group-hover:opacity-100 transition-opacity">
           {tool.desc}
         </p>
 
-        <p className="text-[10px] text-slate-400 font-semibold mb-5 flex items-center gap-1.5">
-          <span className="w-1.5 h-1.5 rounded-full bg-amber-400"></span>
-          <span>Used {usageWeek} times this week</span>
+        <p className="text-[9px] text-slate-500 font-medium mb-4 flex items-center gap-1.5 opacity-75">
+          <span className="w-1 h-1 rounded-full bg-amber-400/60"></span>
+          <span>Used {usageWeek}× this week</span>
         </p>
 
         <div className="pt-5 border-t border-white/10 flex items-center justify-between">
@@ -552,9 +552,9 @@ function ToolCard({ tool, index, viewMode, onOpen }: { tool: Tool, index: number
             </span>
           </div>
           <button
-            className="text-[11px] font-bold text-white flex items-center gap-2 hover:gap-3 transition-all bg-gradient-to-r from-amber-500/80 to-orange-500/80 hover:from-amber-500 hover:to-orange-500 px-5 py-2.5 rounded-lg shadow-lg border border-amber-400/40 hover:border-amber-300/80"
+            className="btn-launch text-[11px] flex items-center gap-2 hover:gap-3 transition-all"
           >
-            Launch <ChevronRight className="w-4 h-4" />
+            Launch <ChevronRight className="w-3.5 h-3.5" />
           </button>
         </div>
       </motion.div>
@@ -598,7 +598,7 @@ function DetailModal({ tool, onClose }: { tool: Tool, onClose: () => void }) {
                 href={`${BASE_URL}/${tool.slug}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center justify-center gap-2 w-full py-3 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white rounded-xl font-bold text-sm transition-all shadow-lg border border-amber-400/40 hover:border-amber-300/80"
+                className="btn-launch flex items-center justify-center gap-2 w-full py-3 text-sm"
               >
                 Launch Demo <ExternalLink className="w-4 h-4" />
               </a>

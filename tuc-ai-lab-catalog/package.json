@@ -29,11 +29,12 @@
     "@google/genai": "^2.0.1",
     "@tailwindcss/vite": "^4.3.0",
     "@vitejs/plugin-react": "^6.0.1",
+    "cookie-parser": "^1.4.6",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
     "lucide-react": "^1.14.0",
-    "node-fetch": "^3.3.2",
     "motion": "^12.38.0",
+    "node-fetch": "^3.3.2",
     "react": "^19.2.6",
     "react-dom": "^19.2.6",
     "tsx": "^4.21.0"
@@ -41,6 +42,7 @@
   "devDependencies": {
     "@capacitor/cli": "^8.3.3",
     "@playwright/test": "^1.59.1",
+    "@types/cookie-parser": "^1.4.10",
     "@types/express": "^5.0.6",
     "@types/node": "^25.6.2",
     "@types/react": "^19.2.14",
