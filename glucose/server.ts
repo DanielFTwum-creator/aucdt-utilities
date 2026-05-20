@@ -3,13 +3,17 @@ import { GoogleGenAI, Type } from '@google/genai';
 import dotenv from 'dotenv';
 
 dotenv.config({ path: '.env.local' });
+dotenv.config();
 
 const app = express();
 app.use(express.json({ limit: '10mb' }));
 
-const client = new GoogleGenAI({
-  apiKey: process.env.VITE_GEMINI_API_KEY,
-});
+const apiKey = process.env.GEMINI_API_KEY || process.env.VITE_GEMINI_API_KEY;
+if (!apiKey) {
+  console.error('[GLUCOSE-API] FATAL: GEMINI_API_KEY not set in environment');
+  process.exit(1);
+}
+const client = new GoogleGenAI({ apiKey });
 
 interface ScanRequest {
   imageData: string;
@@ -123,12 +127,12 @@ Restrictions:
   }
 });
 
-app.get('/api/health', (req, res) => {
+app.get(['/api/health', '/glucose/api/health'], (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
-const PORT = process.env.PORT || 3001;
+const PORT = Number(process.env.PORT) || 3006;
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`[GLUCOSE-API] Server running on http://0.0.0.0:${PORT}`);
-  console.log(`[GLUCOSE-API] Gemini API key configured: ${!!process.env.VITE_GEMINI_API_KEY}`);
+  console.log(`[GLUCOSE-API] Gemini API key configured: ${!!apiKey}`);
 });
