@@ -38,3 +38,6 @@ lerna-debug.log*
 
 # Vitest
 .vitest/
+
+# Claude Code agent worktrees (ephemeral, contain their own git state)
+.claude/worktrees/

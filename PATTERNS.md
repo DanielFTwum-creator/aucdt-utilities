@@ -16,8 +16,10 @@
 | 4 | Google Gemini API Integration | Glucose, any vision/OCR task |
 | 5 | Dual-Auth Logout | Any app with OAuth + local session |
 | 6 | Glucose Project Learnings | General React + IndexedDB apps |
-| 7 | Secure OAuth 2.0 (Authorization Code Flow) | Peace Vinyl, TUC AI Lab, all OAuth apps |
-| 8 | PowerShell Deployment Script Fixes | All Plesk/Apache apps |
+| 7 | Plesk Vite Deployment (Peace Vinyl Template) | All Plesk Vite + React apps |
+| 8 | Safe Deployment (SSH Heredoc + Health Checks) | All deploy scripts |
+| 9 | Secure OAuth 2.0 (Authorization Code Flow) | Peace Vinyl, TUC AI Lab, all OAuth apps |
+| 10 | PowerShell Deployment Script Fixes | All Plesk/Apache apps |
 
 ---
 
@@ -790,7 +792,7 @@ Before pushing any project deploy.ps1, verify:
 
 ---
 
-## PATTERN 8: SECURE OAUTH 2.0 (AUTHORIZATION CODE FLOW)
+## PATTERN 9: SECURE OAUTH 2.0 (AUTHORIZATION CODE FLOW)
 
 ### Why Not Implicit Flow?
 
@@ -894,15 +896,38 @@ GOOGLE_CLIENT_SECRET=GOCSPX-xxxxx (NEVER commit or expose)
 | state mismatch error | OAuth callback rejected | Ensure state stored/validated in sessionStorage |
 | 500 error on token exchange | Backend can't reach Google | Check GOOGLE_CLIENT_SECRET is set, verify internet |
 | User object undefined | Login completes but app crashes | Check backend returns JSON, not HTML error |
+| `redirect_uri_mismatch` Error 400 from Google | Access blocked page | Decode the `authError=` base64 from the Google error URL to see the exact `redirect_uri` Google received. Byte-compare against the Authorised redirect URIs list in Google Cloud Console. Re-type entries to rule out hidden characters. |
+| Frontend builds an `undefined`-containing redirect URI | URI shows `/undefinedcallback` or similar | Check `LoginView.tsx` imports — Vite silently transpiles `undefined` identifiers. Must import `APP_PATH` (and any other URL builders) from `appContext.ts`. |
+| 403 Forbidden on `/<app>/callback` after Google succeeds | Backend never reached | Comodo WAF rule **210580** flags `.profile` substring in OAuth `scope` query param. Add Plesk vhost directive (NOT `.htaccess`): `<LocationMatch "^/<app>/(callback\|auth/google/callback)"> SecRuleRemoveById 210580 </LocationMatch>` via Plesk → Apache & nginx Settings → Additional Apache directives (HTTPS field). |
+| Backend log: "Could not determine client ID from request" | Token exchange fails | `server.ts` needs explicit `import dotenv from "dotenv"; dotenv.config();` at top. The runtime does not auto-load `.env`. |
+| OAuth completes but app loops back to login | No frontend error visible | Two possibilities: (a) backend sets `httpOnly: true` cookie → frontend's `document.cookie` reader sees nothing → flip to `httpOnly: false`; (b) frontend calls `atob(cookie)` without `decodeURIComponent` first — Express URL-encodes cookie values automatically. |
+| User IP timing out across all apps | Even working apps appear "down" | Plesk fail2ban `plesk-modsecurity` jail bans IPs after repeated WAF hits. `ssh root@... "fail2ban-client set plesk-modsecurity unbanip <IP>"`. |
+
+### Callback Path Migration (ai-tools monorepo)
+
+Apps in this monorepo are mid-migration between two callback path conventions. The Google OAuth client must have whichever path each deployed bundle actually sends.
+
+- **Old style:** `/<app>/auth/google/callback` — peace, biochemai, willpro, glucose, groove-streamer
+- **New flat style:** `/<app>/callback` — ai-lab
+
+**Rule:** before editing the Authorised redirect URIs list in Google Cloud Console, ssh and grep each deployed bundle at `/var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/<app>/assets/*.js` for what URL the code actually sends. Deleting a URI that any live bundle still uses will break that app immediately.
+
+**Diagnostic order when OAuth breaks:**
+1. Frontend redirect_uri construction (check `LoginView.tsx` imports)
+2. Google Cloud Console URI list (decode `authError=` blob; byte-compare)
+3. WAF rule 210580 on the callback path (vhost log: `/var/www/vhosts/system/ai-tools.techbridge.edu.gh/logs/error_log`)
+4. Backend `dotenv.config()` loaded (`server.log` shows "injected env" line on startup)
+5. Cookie `httpOnly: false` + `decodeURIComponent` before `atob` in AuthContext
 
 ### References
 
-- Peace Vinyl (`src/contexts/AuthContext.tsx`, `server.js`) — Full reference implementation
-- TUC AI Lab (`src/contexts/AuthContext.tsx`, `server.ts`) — Secondary implementation
+- Peace Vinyl (`src/contexts/AuthContext.tsx`, `server.js`) — Old-style `/peace/auth/google/callback`
+- TUC AI Lab (`src/contexts/AuthContext.tsx`, `server.ts`) — New-style `/ai-lab/callback`, full server-side token exchange with cookie handoff
+- Plesk vhost config: `/var/www/vhosts/system/ai-tools.techbridge.edu.gh/conf/vhost_ssl.conf` (managed via Plesk UI)
 
 ---
 
-## PATTERN 8: POWERSHELL DEPLOYMENT SCRIPT FIXES
+## PATTERN 10: POWERSHELL DEPLOYMENT SCRIPT FIXES
 
 ### The .htaccess Corruption Problem
 
