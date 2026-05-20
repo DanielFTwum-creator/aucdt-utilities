@@ -102,7 +102,29 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({ content }) =
     processedContent = processedContent.replace(infographicMatch[0], '');
   }
 
+  // Second pass: extract SVG blocks and replace with placeholders so the
+  // line-splitter below doesn't fragment them across multiple paragraphs.
+  const svgBlocks: string[] = [];
+  processedContent = processedContent.replace(/<svg[\s\S]*?<\/svg>/gi, (match) => {
+    const idx = svgBlocks.push(match) - 1;
+    return `\n@@SVG_BLOCK_${idx}@@\n`;
+  });
+
   processedContent.split('\n').forEach((line, index) => {
+    const svgPlaceholderMatch = line.trim().match(/^@@SVG_BLOCK_(\d+)@@$/);
+    if (svgPlaceholderMatch) {
+      flushList();
+      const svgHtml = svgBlocks[parseInt(svgPlaceholderMatch[1], 10)];
+      elements.push(
+        <div
+          key={`svg-${index}`}
+          className="my-4 flex justify-center overflow-x-auto"
+          dangerouslySetInnerHTML={{ __html: svgHtml }}
+        />
+      );
+      return;
+    }
+
     // Check for code block markers
     if (line.trim().startsWith('```')) {
       if (inCodeBlock) {

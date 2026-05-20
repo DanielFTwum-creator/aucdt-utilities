@@ -29,11 +29,24 @@ const renderHTML = (content: string) => {
           color: var(--color-accent-primary);
           font-weight: bold;
         }
-        .html-doc aside {
+        .html-doc aside,
+        .html-doc aside[style],
+        .html-doc div[style*="background"] {
           margin: 1.5rem 0;
           padding: 1.5rem;
-          border-left: 5px solid var(--color-accent-primary);
-          background-color: var(--color-bg-secondary);
+          border-left: 5px solid var(--color-accent-primary) !important;
+          background-color: var(--color-bg-secondary) !important;
+          color: var(--color-text-primary) !important;
+          border-radius: 8px;
+        }
+        .html-doc aside *,
+        .html-doc aside[style] *,
+        .html-doc div[style*="background"] * {
+          color: var(--color-text-primary) !important;
+        }
+        .html-doc aside strong,
+        .html-doc div[style*="background"] strong {
+          color: var(--color-accent-primary) !important;
         }
         .html-doc ul, .html-doc ol {
           margin-left: 1.5rem;

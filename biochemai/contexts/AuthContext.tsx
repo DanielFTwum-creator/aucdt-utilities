@@ -24,6 +24,26 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         // Initialize IndexedDB session service
         await initSessionService();
 
+        // Check for server-set cookie from OAuth callback (one-shot)
+        const cookieValue = document.cookie
+          .split('; ')
+          .find(row => row.startsWith('biochemai_user='))
+          ?.split('=')[1];
+        if (cookieValue) {
+          try {
+            const userData = JSON.parse(atob(decodeURIComponent(cookieValue))) as AuthUser;
+            setIsAuthenticated(true);
+            setUser(userData);
+            localStorage.setItem('biochemai_user', JSON.stringify(userData));
+            await createSession(userData.email, userData.username);
+            document.cookie = 'biochemai_user=; max-age=0; path=/biochemai/';
+            setIsLoading(false);
+            return;
+          } catch (e) {
+            console.error('Failed to parse user cookie:', e);
+          }
+        }
+
         const token = AuthService.getToken();
         if (!token) {
           // Try to restore from IndexedDB
