@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
+import { setOAuthAppContext, APP_NAME, APP_PATH } from '../utils/appContext';
 import { Eye, EyeOff, User as UserIcon, Lock, Phone } from 'lucide-react';
 
 export const LoginView: React.FC = () => {
@@ -23,10 +24,13 @@ export const LoginView: React.FC = () => {
       setError('Google login is not configured. Use username/password instead.');
       return;
     }
-    const redirectUri = import.meta.env.VITE_GOOGLE_REDIRECT_URI
-      || `${window.location.origin}/auth/google/callback`;
+
+    // Construct redirect URI dynamically at runtime
+    const redirectUri = `${window.location.origin}${APP_PATH}callback`;
     const state = Math.random().toString(36).substring(7);
-    localStorage.setItem('oauth_state', state);
+
+    setOAuthAppContext(APP_NAME);
+    sessionStorage.setItem('oauth_state', state);
 
     const params = new URLSearchParams({
       client_id: clientId,

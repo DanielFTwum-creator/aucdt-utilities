@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { getUserSession, setUserSession, clearUserSession } from '../utils/indexedDB';
+import { getOAuthAppContext, getAppDashboardPath } from '../utils/appContext';
 
 export interface User {
   id: string;
@@ -30,17 +31,45 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         setIsAuthenticated(true);
       }
 
-      // Handle OAuth callback
+      // Check for server-set cookie from OAuth callback
+      const cookieValue = document.cookie
+        .split('; ')
+        .find(row => row.startsWith('ai_lab_user='))
+        ?.split('=')[1];
+
+      if (cookieValue) {
+        try {
+          const userJson = atob(decodeURIComponent(cookieValue));
+          const userData = JSON.parse(userJson);
+          setUser(userData);
+          setIsAuthenticated(true);
+          // Clear the cookie after reading
+          document.cookie = 'ai_lab_user=; max-age=0; path=/ai-lab/';
+          return;
+        } catch (e) {
+          console.error('Failed to parse user cookie:', e);
+        }
+      }
+
+      // Handle URL-based OAuth callback (legacy, from Peace Vinyl pattern)
       const params = new URLSearchParams(window.location.search);
       const code = params.get('code');
       const state = params.get('state');
       const error = params.get('error');
-      const storedState = localStorage.getItem('oauth_state');
+      const storedState = sessionStorage.getItem('oauth_state');
+      const appContext = getOAuthAppContext();
 
       if (error) {
         console.error('OAuth error:', error);
       } else if (code && state && state === storedState) {
-        localStorage.removeItem('oauth_state');
+        sessionStorage.removeItem('oauth_state');
+        // Redirect to correct app dashboard if needed
+        const currentPath = window.location.pathname;
+        const targetPath = getAppDashboardPath(appContext);
+        if (!currentPath.includes(targetPath)) {
+          window.location.href = targetPath + `?code=${code}&state=${state}`;
+          return;
+        }
         exchangeCodeForUser(code);
       }
     };

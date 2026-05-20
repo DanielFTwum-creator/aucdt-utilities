@@ -4,7 +4,7 @@
 param(
     [string]$RemoteHost = "root@66.226.72.199",
     [string]$RemotePath = "/var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/ai-lab/",
-    [switch]$Build = $false
+    [switch]$Build = $true
 )
 
 Write-Host "=== TUC AI LAB CATALOG DEPLOYMENT ===" -ForegroundColor Cyan
@@ -55,6 +55,8 @@ Write-Host "Installing backend dependencies..." -ForegroundColor Yellow
 ssh -o StrictHostKeyChecking=no $RemoteHost "cd $RemotePath && npm install --production 2>&1 | tail -3" | Out-Null
 
 Write-Host "Creating .htaccess..." -ForegroundColor Yellow
+# Note: WAF rule 210580 exclusion lives in Plesk vhost_ssl.conf (LocationMatch);
+# NOT in .htaccess (SecRuleRemoveById is not permitted in .htaccess on this Plesk build).
 $htaccessContent = @'
 <IfModule mod_rewrite.c>
   RewriteEngine On
@@ -64,6 +66,7 @@ $htaccessContent = @'
   RewriteRule ^ - [L]
   RewriteCond %{HTTP:Upgrade} !websocket [NC]
   RewriteCond %{HTTP:Connection} !Upgrade [NC]
+  RewriteRule ^callback http://localhost:3003/callback [P,L]
   RewriteRule ^auth/google/callback http://localhost:3003/auth/google/callback [P,L]
   RewriteRule ^api/(.*)$ http://localhost:3003/api/$1 [P,L]
   RewriteRule ^ /ai-lab/index.html [QSA,L]
@@ -78,7 +81,7 @@ Write-Host "Setting permissions..." -ForegroundColor Yellow
 ssh -o StrictHostKeyChecking=no $RemoteHost "chown -R techbridge.edu.gh_md:psacln $RemotePath && chmod -R 755 $RemotePath && chmod 644 $RemotePath/.htaccess $RemotePath/.env 2>/dev/null || true" | Out-Null
 
 Write-Host "Starting backend server..." -ForegroundColor Yellow
-ssh -o StrictHostKeyChecking=no $RemoteHost "cd $RemotePath && nohup tsx server.ts > server.log 2>&1 &" 2>&1 | Out-Null
+ssh -o StrictHostKeyChecking=no $RemoteHost "fuser -k 3003/tcp 2>/dev/null ; sleep 1 ; cd $RemotePath && NODE_ENV=production setsid nohup tsx server.ts > server.log 2>&1 < /dev/null &" 2>&1 | Out-Null
 
 Start-Sleep -Seconds 2
 
