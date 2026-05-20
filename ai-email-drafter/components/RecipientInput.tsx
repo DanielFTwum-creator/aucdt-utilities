@@ -24,7 +24,7 @@ export const RecipientInput: React.FC<RecipientInputProps> = ({ recipients, setR
   const [inputValue, setInputValue] = useState('');
 
   const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
-    if (['Enter', 'Tab', ',', ' '].includes(e.key) && inputValue.trim()) {
+    if (['Enter', 'Tab', ','].includes(e.key) && inputValue.trim()) {
       e.preventDefault();
       const newRecipients = inputValue.trim().split(/[\s,]+/).filter(email => email && !recipients.includes(email));
       if (newRecipients.length > 0) {
@@ -68,7 +68,7 @@ export const RecipientInput: React.FC<RecipientInputProps> = ({ recipients, setR
           <RecipientPill key={index} email={email} onRemove={() => removeRecipient(index)} />
         ))}
         <input
-          type="email"
+          type="text"
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
           onKeyDown={handleKeyDown}

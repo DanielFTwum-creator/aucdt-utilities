@@ -2,6 +2,14 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
+import { AuthProvider, useAuth } from './src/contexts/AuthContext';
+import { LoginView } from './src/components/LoginView';
+
+const Gated: React.FC = () => {
+  const { isAuthenticated, isLoading } = useAuth();
+  if (isLoading) return null;
+  return isAuthenticated ? <App /> : <LoginView />;
+};
 
 const rootElement = document.getElementById('root');
 if (!rootElement) {
@@ -11,6 +19,8 @@ if (!rootElement) {
 const root = ReactDOM.createRoot(rootElement);
 root.render(
   <React.StrictMode>
-    <App />
+    <AuthProvider>
+      <Gated />
+    </AuthProvider>
   </React.StrictMode>
 );
