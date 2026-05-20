@@ -4,16 +4,9 @@
  * @methodology 6R (Readability, Reliability, Reusability, Resilience, Rigour, Refinement)
  */
 
-import { 
-  GoogleGenerativeAI, 
-  SchemaType, 
-  GenerateContentRequest
-} from "@google/generative-ai";
 import { LearningLevel, Source, QuizQuestion } from '../types';
 
-// Authentication via Vite environment variables
-const API_KEY = import.meta.env.VITE_GEMINI_API_KEY || "";
-const genAI = new GoogleGenerativeAI(API_KEY);
+// Gemini calls are proxied through the backend at /api/gemini/* so the API key never reaches the browser.
 
 const TECHBRIGE_CONFIG = {
   brandVoice: `
@@ -21,7 +14,6 @@ const TECHBRIGE_CONFIG = {
     - Language: British International English (strictly use 's' instead of 'z' for verbs like 'optimise').
     - Tone: Academic, clear, and authoritative.
   `,
-  model: "gemini-2.5-flash" 
 };
 
 /**
@@ -115,10 +107,12 @@ const getSystemInstruction = (level: LearningLevel): string => {
     6. Offer 1–2 follow-up questions to encourage deeper exploration.
 
     **For Medical/Drug Responses:**
-    End with this disclaimer:
-    <div style="margin-top: 2rem; padding: 1rem; border: 1px solid #D4AF37; background-color: #f9f9f9;">
+    End with this disclaimer (use semantic markup only — DO NOT add inline color/background styles; the app's theme system handles colours):
+    <aside class="disclaimer">
       <strong>⚠️ Educational Disclaimer (AI for Good):</strong> This information is for educational purposes only and is not a substitute for professional medical advice. Always consult qualified healthcare providers or literature before making decisions.
-    </div>
+    </aside>
+
+    **Styling rule:** Never emit hardcoded hex colours, background-color, or color styles in inline HTML. Use only semantic tags (<aside>, <strong>, <em>, <code>, <h1>-<h4>, <ul>, <ol>, <li>, <p>) and let the host page's CSS variables apply the theme. SVG diagrams may use specific colours for clarity.
 
     **Visual Content Checklist:**
     ✓ SVG diagram OR infographic OR image-suggestion included?
@@ -133,36 +127,17 @@ const getSystemInstruction = (level: LearningLevel): string => {
  * Updated based on image_9bf2ba.png to use 'googleSearch'.
  */
 export const generateBioChemResponse = async (
-  prompt: string, 
+  prompt: string,
   level: LearningLevel
 ): Promise<{ text: string; sources: Source[] }> => {
-  if (!API_KEY) throw new Error("BioChemAI Auth Error: VITE_GEMINI_API_KEY is undefined.");
-
   try {
-    const model = genAI.getGenerativeModel({
-      model: TECHBRIGE_CONFIG.model,
-      systemInstruction: getSystemInstruction(level),
+    const res = await fetch('/biochemai/api/gemini/bio-chem', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ prompt, systemInstruction: getSystemInstruction(level) }),
     });
-
-    const request: GenerateContentRequest = {
-      contents: [{ role: "user", parts: [{ text: prompt }] }],
-      // FIX: Changed from googleSearchRetrieval to googleSearch as per image_9bf2ba.png
-      tools: [{ googleSearch: {} } as any],
-    };
-
-    const result = await model.generateContent(request);
-    const response = await result.response;
-    const text = response.text();
-    
-    // Extracting sources from grounding metadata
-    const sources: Source[] = (response.candidates?.[0]?.groundingMetadata?.groundingChunks || [])
-      .filter((chunk: any) => chunk.web)
-      .map((chunk: any) => ({ 
-        uri: chunk.web.uri, 
-        title: chunk.web.title || "Academic Reference" 
-      }));
-
-    return { text, sources };
+    if (!res.ok) throw new Error(`Proxy returned ${res.status}`);
+    return await res.json();
   } catch (error: any) {
     console.error("6R Resilience Failure:", error.message);
     throw new Error("BioChemAI service is currently unable to process this request. Please verify tool configuration.");
@@ -190,35 +165,12 @@ export const generateQuiz = async (
     Make suggestions specific and actionable for image generation or search.
   `;
 
-  const model = genAI.getGenerativeModel({
-    model: TECHBRIGE_CONFIG.model,
-    systemInstruction: quizSystemInstruction,
-    generationConfig: {
-      responseMimeType: "application/json",
-      responseSchema: {
-        type: SchemaType.OBJECT,
-        properties: {
-          questions: {
-            type: SchemaType.ARRAY,
-            items: {
-              type: SchemaType.OBJECT,
-              properties: {
-                questionText: { type: SchemaType.STRING },
-                options: { type: SchemaType.ARRAY, items: { type: SchemaType.STRING } },
-                correctAnswerIndex: { type: SchemaType.NUMBER },
-                explanation: { type: SchemaType.STRING },
-                imageSuggestion: { type: SchemaType.STRING },
-              },
-              required: ["questionText", "options", "correctAnswerIndex", "explanation", "imageSuggestion"],
-            },
-          },
-        },
-        required: ["questions"],
-      },
-    },
+  const res = await fetch('/biochemai/api/gemini/quiz', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ topic, level, numQuestions, systemInstruction: quizSystemInstruction }),
   });
-
-  const result = await model.generateContent(`Generate a ${numQuestions}-question quiz on ${topic} for ${level}. Each question MUST include a helpful imageSuggestion.`);
-  const response = await result.response;
-  return JSON.parse(response.text()).questions;
+  if (!res.ok) throw new Error(`Quiz proxy returned ${res.status}`);
+  const data = await res.json();
+  return data.questions;
 };

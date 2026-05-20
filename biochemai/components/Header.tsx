@@ -4,9 +4,10 @@ import { THEMES } from '../constants';
 import {
     FlaskConicalIcon, BrainIcon, TrophyIcon, BookIcon, TestIcon, AdminIcon,
     DownloadIcon, CrownIcon, SparklesIcon, SquareIcon, FilmIcon, CopyIcon, CheckIcon, InfoIcon,
-    MicrophoneIcon
+    MicrophoneIcon, LogoutIcon
 } from './Icons';
 import { TemplateSelector } from './TemplateSelector';
+import { useAuth } from '../contexts/AuthContext';
 
 interface HeaderProps {
     mode: AppMode;
@@ -103,6 +104,7 @@ const ExportDropdown: React.FC<{onExportChat: () => void, onExportMarkdown: () =
 };
 
 export const Header: React.FC<HeaderProps> = ({ mode, setMode, onExportChat, onExportMarkdown, onCopyChat, onOpenAbout, theme, setTheme, responseTemplate, setResponseTemplate }) => {
+    const { user, logout } = useAuth();
     const themeColors: Record<Theme, string> = {
         [Theme.Ocean]: '#64FFDA',
         [Theme.Golden]: '#D4AF37',
@@ -186,6 +188,17 @@ export const Header: React.FC<HeaderProps> = ({ mode, setMode, onExportChat, onE
                 </button>
               ))}
             </div>
+
+            {user && (
+              <button
+                onClick={logout}
+                className="text-[var(--color-text-secondary)] hover:bg-[var(--color-bg-tertiary)] hover:text-[var(--color-accent-primary)] p-2 rounded-lg transition-all duration-200"
+                title={`Sign out (${user.email})`}
+                aria-label={`Sign out ${user.email}`}
+              >
+                <LogoutIcon className="w-5 h-5" />
+              </button>
+            )}
           </div>
         </div>
       </div>
