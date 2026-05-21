@@ -38,6 +38,8 @@ import { saveLastState, getLastState, saveProjectSnapshot, getProjectHistory, Pr
 import { db, handleFirestoreError, OperationType } from "./lib/firebase";
 import { registerUser, loginUser, clearSession, getSession, sendHelpdeskNotification, SessionUser } from "./lib/auth";
 import { useAuth } from "./contexts/AuthContext";
+import { LoginView } from "./components/LoginView";
+import { AuthProvider } from "./contexts/AuthContext";
 import { 
   doc, 
   setDoc, 
@@ -696,145 +698,11 @@ export default function App() {
   }
 
   if (!user) {
+    // Show OAuth LoginView wrapped in AuthProvider
     return (
-      <div className="h-screen w-screen bg-bg-main overflow-hidden flex flex-col relative select-none font-sans">
-        <ResonanceBackdrop />
-        
-        {/* Top Navbar */}
-        <nav className="h-20 flex items-center justify-between px-8 z-10 border-b border-border-standard bg-bg-panel/50 backdrop-blur-md">
-          <div className="flex items-center gap-4">
-            <div className="w-10 h-10 bg-slate-900 rounded-xl flex items-center justify-center text-white shadow-lg">
-              <Code className="w-6 h-6" />
-            </div>
-            <div>
-              <h1 className="font-bold text-lg tracking-tighter">Techbridge AI Blueprint</h1>
-              <p className="text-[9px] font-bold text-brand uppercase tracking-[0.2em] opacity-80">[TAB] System</p>
-            </div>
-          </div>
-          <a href="/privacy.html" className="text-[10px] font-bold text-text-tertiary hover:text-brand uppercase tracking-[0.1em] transition-colors focus:outline-none ring-offset-2 focus:ring-2 focus:ring-brand rounded px-2 py-1">Privacy Policy</a>
-        </nav>
-
-        <main className="flex-1 flex items-center justify-center p-6 z-10">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="w-full max-w-md bg-white border border-border-standard p-10 rounded-[2.5rem] shadow-2xl relative overflow-hidden"
-          >
-            <div className="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-brand via-success to-brand" />
-
-            <div className="text-center mb-8">
-              <div className="w-16 h-16 bg-slate-900 rounded-3xl flex items-center justify-center mx-auto mb-5 shadow-2xl shadow-brand/20 ring-4 ring-slate-100">
-                <Shield className="w-8 h-8 text-white" />
-              </div>
-              <h2 className="text-2xl font-black tracking-tighter text-text-primary mb-1">
-                {authMode === 'login' ? 'Welcome Back' : 'Create Account'}
-              </h2>
-              <p className="text-xs text-text-secondary mt-1">TUC ICT Platform — Blueprint Mission Access</p>
-            </div>
-
-            <form onSubmit={authMode === 'login' ? handleLogin : handleRegister} className="space-y-4">
-              {authMode === 'register' && (
-                <div>
-                  <label className="text-[10px] font-bold text-text-tertiary uppercase tracking-wider block mb-1.5">Full Name</label>
-                  <input
-                    type="text"
-                    value={authName}
-                    onChange={e => setAuthName(e.target.value)}
-                    placeholder="e.g. Kwame Mensah"
-                    className="w-full bg-slate-50 border border-border-standard rounded-xl py-2.5 px-3 text-sm focus:ring-2 focus:ring-brand outline-none transition-all"
-                    required
-                  />
-                </div>
-              )}
-              <div>
-                <label className="text-[10px] font-bold text-text-tertiary uppercase tracking-wider block mb-1.5">Email Address</label>
-                <input
-                  type="email"
-                  value={authEmail}
-                  onChange={e => setAuthEmail(e.target.value)}
-                  placeholder="you@techbridge.edu.gh"
-                  className="w-full bg-slate-50 border border-border-standard rounded-xl py-2.5 px-3 text-sm focus:ring-2 focus:ring-brand outline-none transition-all"
-                  required
-                />
-              </div>
-              <div>
-                <label className="text-[10px] font-bold text-text-tertiary uppercase tracking-wider block mb-1.5">Password</label>
-                <div className="relative">
-                  <input
-                    type={showAuthPassword ? 'text' : 'password'}
-                    value={authPassword}
-                    onChange={e => setAuthPassword(e.target.value)}
-                    placeholder="Min. 8 characters"
-                    className="w-full bg-slate-50 border border-border-standard rounded-xl py-2.5 pl-3 pr-10 text-sm focus:ring-2 focus:ring-brand outline-none transition-all"
-                    required
-                  />
-                  <button type="button" onClick={() => setShowAuthPassword(v => !v)} className="absolute right-3 top-1/2 -translate-y-1/2 text-text-tertiary hover:text-text-primary transition-colors">
-                    {showAuthPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                  </button>
-                </div>
-              </div>
-              {authMode === 'register' && (
-                <div>
-                  <label className="text-[10px] font-bold text-text-tertiary uppercase tracking-wider block mb-1.5">Confirm Password</label>
-                  <input
-                    type={showAuthPassword ? 'text' : 'password'}
-                    value={authConfirm}
-                    onChange={e => setAuthConfirm(e.target.value)}
-                    placeholder="Repeat password"
-                    className="w-full bg-slate-50 border border-border-standard rounded-xl py-2.5 px-3 text-sm focus:ring-2 focus:ring-brand outline-none transition-all"
-                    required
-                  />
-                </div>
-              )}
-
-              {authError && (
-                <p className="text-[11px] text-danger font-bold flex items-center gap-1.5" role="alert">
-                  <AlertCircle className="w-3.5 h-3.5 shrink-0" />
-                  {authError}
-                </p>
-              )}
-
-              <button
-                type="submit"
-                disabled={authLoading}
-                className="w-full h-12 bg-slate-900 text-white text-sm font-black rounded-2xl hover:bg-slate-700 active:scale-[0.98] transition-all disabled:opacity-50 disabled:cursor-not-allowed mt-2"
-              >
-                {authLoading ? 'Please wait...' : authMode === 'login' ? 'Sign In' : 'Create Account'}
-              </button>
-            </form>
-
-            <p className="text-center text-xs text-text-tertiary mt-6">
-              {authMode === 'login' ? "Don't have an account? " : "Already have an account? "}
-              <button
-                onClick={() => { setAuthMode(m => m === 'login' ? 'register' : 'login'); setAuthError(''); }}
-                className="text-brand font-bold hover:underline focus:outline-none"
-              >
-                {authMode === 'login' ? 'Register' : 'Sign In'}
-              </button>
-            </p>
-
-            <div className="mt-8 pt-6 border-t border-border-subtle text-center">
-              <p className="text-[10px] font-black text-text-tertiary uppercase tracking-[0.2em] mb-3">Enterprise Security Architecture</p>
-              <div className="flex items-center justify-center gap-6 opacity-30 grayscale">
-                <div className="flex flex-col items-center gap-1"><Workflow className="w-4 h-4" /><span className="text-[7px] font-bold uppercase">Workflow</span></div>
-                <div className="flex flex-col items-center gap-1"><Shield className="w-4 h-4" /><span className="text-[7px] font-bold uppercase">Zero-Trust</span></div>
-                <div className="flex flex-col items-center gap-1"><Lock className="w-4 h-4" /><span className="text-[7px] font-bold uppercase">Encrypted</span></div>
-              </div>
-            </div>
-          </motion.div>
-        </main>
-
-        <footer className="h-16 flex flex-col items-center justify-center px-8 z-10 border-t border-border-standard gap-1">
-          <p className="text-[10px] font-bold text-text-tertiary uppercase tracking-widest">
-            &copy; 2026 Techbridge University College • ICT Dept • Daniel Twum
-          </p>
-          <div className="flex items-center gap-3 text-[8px] font-mono text-text-tertiary/60 uppercase tracking-tighter">
-            <span>Branch: {gitInfo.branch}</span>
-            <span className="w-1 h-1 rounded-full bg-border-strong"></span>
-            <span>Commit: {gitInfo.commit}</span>
-          </div>
-        </footer>
-      </div>
+      <AuthProvider>
+        <LoginView />
+      </AuthProvider>
     );
   }
 
