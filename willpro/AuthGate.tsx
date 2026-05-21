@@ -36,19 +36,8 @@ export function AuthGate({ children, onLogout }: { children: React.ReactNode; on
   const [password, setPassword] = useState('');
   const [error, setError]       = useState('');
   const [loading, setLoading] = useState(false);
-  const [isOAuthCallback, setIsOAuthCallback] = useState(false);
 
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const hasCode = params.has('code');
-    const oauthError = params.get('error');
-
-    if (hasCode) {
-      setIsOAuthCallback(true);
-    } else if (oauthError) {
-      setError(`Google login failed: ${oauthError}`);
-    }
-
     // Hydrate from server-set cookie after OAuth callback (one-shot)
     const cookieValue = document.cookie
       .split('; ')
@@ -71,6 +60,13 @@ export function AuthGate({ children, onLogout }: { children: React.ReactNode; on
         console.error('Failed to parse user cookie:', e);
       }
     }
+
+    // Surface OAuth error from query string
+    const params = new URLSearchParams(window.location.search);
+    const oauthError = params.get('error');
+    if (oauthError) {
+      setError(`Google login failed: ${oauthError}`);
+    }
   }, []);
 
   const handleLogout = () => {
@@ -82,24 +78,6 @@ export function AuthGate({ children, onLogout }: { children: React.ReactNode; on
 
   if (authed) {
     return <AuthContext.Provider value={{ handleLogout }}>{children}</AuthContext.Provider>;
-  }
-
-  // Show loading state during OAuth callback instead of login form
-  if (isOAuthCallback && !authed) {
-    return (
-      <div style={{minHeight:'100vh',background:'#f8fafc',display:'flex',alignItems:'center',justifyContent:'center',fontFamily:'Inter,system-ui,sans-serif'}}>
-        <div style={{textAlign:'center'}}>
-          <div style={{width:'48px',height:'48px',border:'4px solid #e5e7eb',borderTop:'4px solid #ea580c',borderRadius:'50%',margin:'0 auto 24px',animation:'spin 1s linear infinite'}} />
-          <h2 style={{fontSize:'18px',fontWeight:'600',color:'#0f172a',margin:'0 0 8px 0'}}>Signing you in...</h2>
-          <p style={{fontSize:'14px',color:'#94a3b8',margin:0}}>Processing your Google credentials</p>
-          <style>{`
-            @keyframes spin {
-              to { transform: rotate(360deg); }
-            }
-          `}</style>
-        </div>
-      </div>
-    );
   }
 
   const handleGoogleLogin = () => {

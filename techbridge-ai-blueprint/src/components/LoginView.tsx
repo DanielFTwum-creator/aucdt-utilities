@@ -1,17 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { FormLoginView } from './FormLoginView';
 
 export const LoginView: React.FC = () => {
   const { login, register } = useAuth();
-  const [isOAuthCallback, setIsOAuthCallback] = useState(false);
-
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    if (params.has('code')) {
-      setIsOAuthCallback(true);
-    }
-  }, []);
 
   const handleGoogleLogin = () => {
     const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
@@ -47,23 +39,6 @@ export const LoginView: React.FC = () => {
       throw new Error(result.message || 'Registration failed');
     }
   };
-
-  if (isOAuthCallback) {
-    return (
-      <div style={{minHeight:'100vh',background:'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',display:'flex',alignItems:'center',justifyContent:'center',fontFamily:'Inter,system-ui,sans-serif'}}>
-        <div style={{textAlign:'center'}}>
-          <div style={{width:'56px',height:'56px',border:'4px solid rgba(255,255,255,0.2)',borderTop:'4px solid #fff',borderRadius:'50%',margin:'0 auto 24px',animation:'spin 1s linear infinite'}} />
-          <h2 style={{fontSize:'20px',fontWeight:'600',color:'#fff',margin:'0 0 8px 0'}}>Signing you in...</h2>
-          <p style={{fontSize:'14px',color:'rgba(255,255,255,0.8)',margin:0}}>Processing your Google credentials</p>
-          <style>{`
-            @keyframes spin {
-              to { transform: rotate(360deg); }
-            }
-          `}</style>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <FormLoginView

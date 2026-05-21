@@ -1,0 +1,20 @@
+{
+  "name": "cypress",
+  "version": "1.0.0",
+  "description": "Cypress E2E tests for Techbridge Admissions Portal",
+  "main": "index.js",
+  "scripts": {
+    "test": "cypress run",
+    "test:admissions": "cypress run --spec 'cypress/e2e/techbridge/admissions.cy.ts' --browser chrome"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "dependencies": {
+    "cypress": "^15.15.0"
+  },
+  "devDependencies": {
+    "typescript": "^6.0.3"
+  }
+}
