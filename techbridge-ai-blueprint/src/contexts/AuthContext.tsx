@@ -11,7 +11,7 @@ interface AuthContextType {
   user: User | null;
   login: (userOrUsername: User | string, password?: string) => Promise<{ success: boolean; message?: string }>;
   register: (username: string, email: string, password: string) => Promise<{ success: boolean; message?: string }>;
-  logout: () => void;
+  logout: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -21,6 +21,25 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
+    // Check for server-set cookie from OAuth callback (one-shot)
+    const cookieValue = document.cookie
+      .split('; ')
+      .find(row => row.startsWith('blueprint_user='))
+      ?.split('=')[1];
+    if (cookieValue) {
+      try {
+        const userData = JSON.parse(atob(decodeURIComponent(cookieValue))) as User;
+        setUser(userData);
+        setIsAuthenticated(true);
+        localStorage.setItem('techbridge_ai_blueprint_user', JSON.stringify(userData));
+        document.cookie = 'blueprint_user=; max-age=0; path=/blueprint/';
+        return;
+      } catch (e) {
+        console.error('Failed to parse user cookie:', e);
+      }
+    }
+
+    // Fallback: restore from localStorage
     const stored = localStorage.getItem('techbridge_ai_blueprint_user');
     if (stored) {
       try {
@@ -78,10 +97,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
-  const logout = () => {
+  const logout = async () => {
     setUser(null);
     setIsAuthenticated(false);
     localStorage.removeItem('techbridge_ai_blueprint_user');
+    document.cookie = 'blueprint_user=; max-age=0; path=/blueprint/; secure; samesite=lax';
+    try {
+      await fetch('/api/auth/logout', { method: 'POST', credentials: 'include' }).catch(() => {});
+    } finally {
+      window.location.href = '/blueprint/';
+    }
   };
 
   return (
