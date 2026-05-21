@@ -1,8 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { setOAuthAppContext, APP_NAME, APP_PATH } from '../utils/appContext';
 
 export const LoginView: React.FC = () => {
   const [error, setError] = useState('');
+  const [isOAuthCallback, setIsOAuthCallback] = useState(false);
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.has('code')) {
+      setIsOAuthCallback(true);
+    }
+  }, []);
 
   const handleGoogleLogin = () => {
     const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
@@ -29,8 +37,36 @@ export const LoginView: React.FC = () => {
     window.location.href = `https://accounts.google.com/o/oauth2/v2/auth?${params}`;
   };
 
+  if (isOAuthCallback) {
+    return (
+      <div style={{minHeight:'100vh',background:'#0f172a',display:'flex',alignItems:'center',justifyContent:'center',fontFamily:'Inter,system-ui,sans-serif'}}>
+        <div style={{textAlign:'center'}}>
+          <div style={{width:'56px',height:'56px',border:'4px solid rgba(59,130,246,0.2)',borderTop:'4px solid #3b82f6',borderRadius:'50%',margin:'0 auto 24px',animation:'spin 1s linear infinite'}} />
+          <h2 style={{fontSize:'20px',fontWeight:'600',color:'#fff',margin:'0 0 8px 0'}}>Signing you in...</h2>
+          <p style={{fontSize:'14px',color:'rgba(255,255,255,0.7)',margin:0}}>Processing your Google credentials</p>
+          <style>{`
+            @keyframes spin {
+              to { transform: rotate(360deg); }
+            }
+          `}</style>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="min-h-screen flex items-center justify-center p-6 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
+    <div className="min-h-screen flex items-center justify-center p-6 bg-slate-900 relative overflow-hidden">
+      <video
+        autoPlay
+        muted
+        loop
+        className="absolute inset-0 w-full h-full object-cover"
+        style={{ zIndex: 0 }}
+      >
+        <source src="https://techbridge.edu.gh/static/campus_tour.mp4" type="video/mp4" />
+      </video>
+      <div className="absolute inset-0 bg-black/40" style={{ zIndex: 1 }}></div>
+      <div className="relative z-10 w-full">
       <div className="w-full max-w-sm">
         <div className="text-center mb-8">
           <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-blue-600 mb-4">
@@ -65,6 +101,7 @@ export const LoginView: React.FC = () => {
 
           {error && <p role="alert" className="mt-4 text-red-500 text-sm text-center">{error}</p>}
         </div>
+      </div>
       </div>
     </div>
   );
