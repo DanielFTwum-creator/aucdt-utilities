@@ -19,7 +19,8 @@
 | 7 | Plesk Vite Deployment (Peace Vinyl Template) | All Plesk Vite + React apps |
 | 8 | Safe Deployment (SSH Heredoc + Health Checks) | All deploy scripts |
 | 9 | Secure OAuth 2.0 (Authorization Code Flow) | Peace Vinyl, TUC AI Lab, all OAuth apps |
-| 10 | PowerShell Deployment Script Fixes | All Plesk/Apache apps |
+| 10 | Standardised Login Forms (FormLoginView) | Blueprint, BiochemAI, WillPro, Email-Drafter |
+| 11 | PowerShell Deployment Script Fixes | All Plesk/Apache apps |
 
 ---
 
@@ -927,7 +928,215 @@ Apps in this monorepo are mid-migration between two callback path conventions. T
 
 ---
 
-## PATTERN 10: POWERSHELL DEPLOYMENT SCRIPT FIXES
+## PATTERN 10: STANDARDISED LOGIN FORMS (FormLoginView)
+
+**Projects:** techbridge-ai-blueprint, biochemai, willpro, ai-email-drafter (OAuth-only exception)  
+**File:** `src/components/FormLoginView.tsx` (shared template)  
+**Purpose:** Consistent authentication UI across form-heavy TUC apps
+
+### Overview
+
+Four recent TUC projects implemented login pages with OAuth 2.0 authorization-code flow. Each had:
+- Custom styling (colours, spacing, typography)
+- Duplicate form logic (identical inputs, validation, error handling)
+- Inconsistent spacing and visual hierarchy
+
+**Solution:** Reusable `FormLoginView` component that accepts theme configuration and supports:
+- Light theme (Blueprint, WillPro)
+- Dark glassmorphic theme with SVG watermark (BiochemAI)
+- Optional registration mode (Blueprint, BiochemAI) or login-only (WillPro)
+- All forms use authorization-code OAuth flow
+- Google button always positioned OUTSIDE the form (prevents form submission conflicts)
+
+### Architecture
+
+```
+FormLoginView (configurable component)
+├── appName, appSubtitle
+├── primaryColorHex, buttonHoverClass
+├── backgroundClass, cardBgClass
+├── inputBorderClass, inputFocusRingClass
+├── onGoogleLogin (callback)
+├── onLocalLogin (identifier, password) → Promise
+├── onRegister? (username, email, password) → Promise [optional]
+├── supportRegister = true | false
+└── watermarkSvg? (React node) [optional]
+```
+
+### Implementation Pattern
+
+**Step 1: Copy FormLoginView to your app**
+```powershell
+Copy-Item "..\techbridge-ai-blueprint\src\components\FormLoginView.tsx" `
+          "..\your-app\src\components\FormLoginViewBase.tsx"
+```
+
+**Step 2: Create your app-specific LoginView wrapper**
+```typescript
+// your-app/src/components/LoginView.tsx
+import { FormLoginView } from './FormLoginViewBase';
+import { useAuth } from '../contexts/AuthContext';
+
+export const LoginView: React.FC = () => {
+  const { login, register } = useAuth();
+
+  const handleGoogleLogin = () => {
+    // OAuth logic: build redirect URI, generate state, redirect to Google
+  };
+
+  return (
+    <FormLoginView
+      appName="Your App Name"
+      appSubtitle="Your subtitle"
+      primaryColor="text-blue-700"
+      primaryColorHex="#2563eb"
+      borderColorClass="border border-blue-200"
+      inputBorderClass="border border-slate-300"
+      inputFocusRingClass="focus:ring-4 focus:ring-blue-100"
+      inputFocusBorderClass="focus:border-blue-600"
+      buttonHoverClass="hover:bg-blue-700"
+      backgroundClass="bg-gradient-to-br from-slate-50 to-slate-100"
+      cardBgClass="bg-white"
+      onGoogleLogin={handleGoogleLogin}
+      onLocalLogin={async (id, pw) => {
+        const result = await login(id, pw);
+        if (!result.success) throw new Error(result.message);
+      }}
+      onRegister={async (un, em, pw) => {
+        const result = await register(un, em, pw);
+        if (!result.success) throw new Error(result.message);
+      }}
+      supportRegister={true}  // or false for login-only
+    />
+  );
+};
+```
+
+**Step 3: Configure theme for your brand**
+
+Light theme (Blueprint, WillPro):
+```typescript
+primaryColor="text-[#your-color]"
+primaryColorHex="#your-hex"
+backgroundClass="bg-gradient-to-br from-slate-50 to-slate-100"
+cardBgClass="bg-white"
+inputBorderClass="border border-gray-300"
+```
+
+Dark glassmorphic theme (BiochemAI):
+```typescript
+primaryColor="text-[#a78bfa]"
+backgroundClass="bg-[#0a0f1e]"
+cardBgClass="bg-[rgba(255,255,255,0.05)] backdrop-blur-lg"
+inputBorderClass="border border-[rgba(255,255,255,0.1)] bg-[rgba(255,255,255,0.06)]"
+textColorClass="text-white"
+labelColorClass="text-[rgba(255,255,255,0.8)]"
+subtitleColorClass="text-[rgba(255,255,255,0.6)]"
+watermarkSvg={<YourSVGWatermark />}
+```
+
+### Standardised Layout & Spacing
+
+All forms follow this structure:
+```
+Header (app name + subtitle)
+  ↓
+Card (max-width: 28rem / 448px)
+  ├─ Title ("Welcome Back" / "Create Account")
+  ├─ Subtitle
+  ├─ Form
+  │  ├─ [Login Mode]: Identifier input
+  │  ├─ [Register Mode]: Username, Email inputs
+  │  ├─ Password input
+  │  ├─ [Register Mode]: Confirm Password input
+  │  └─ Error message (if any)
+  ├─ Submit button (w-full)
+  ├─ Divider ("Or")
+  └─ Google OAuth button [OUTSIDE FORM] ← Critical
+  ├─ Mode toggle link ("Sign up" / "Sign in") [if supportRegister=true]
+```
+
+### Google Button Positioning (CRITICAL)
+
+**WRONG:**
+```tsx
+<form>
+  <input... />
+  <button type="submit">Submit</button>
+  <button onClick={googleLogin}>Google</button>  ← Inside form!
+</form>
+```
+Problem: Clicking Google button submits form with empty fields first.
+
+**CORRECT:**
+```tsx
+<form>
+  <input... />
+  <button type="submit">Submit</button>
+</form>
+
+<div className="my-6"><!-- Divider --></div>
+
+<button type="button" onClick={googleLogin}>  ← type="button", OUTSIDE form
+  Google
+</button>
+```
+
+FormLoginView implements this correctly. Never move the Google button back inside the form.
+
+### Example: Applied Projects
+
+**Blueprint** (light theme with gradient bg):
+- `primaryColorHex="#2563eb"` (blue)
+- `backgroundClass="bg-gradient-to-br from-slate-50 to-slate-100"`
+- Registration enabled
+- No watermark
+
+**BiochemAI** (dark glassmorphic):
+- `primaryColorHex="#a78bfa"` (purple)
+- `backgroundClass="bg-[#0a0f1e]"`
+- `cardBgClass="bg-[rgba(255,255,255,0.05)] backdrop-blur-lg"`
+- Registration enabled
+- Molecular watermark SVG
+- Custom text colors (white for light theme)
+
+**WillPro** (minimal light):
+- `primaryColorHex="#630f12"` (maroon)
+- `backgroundClass="bg-gray-50"`
+- Registration **disabled** (`supportRegister=false`)
+- Uses Router navigation on login success
+
+**Peace Vinyl** (OAuth-only exception):
+- Does NOT use FormLoginView
+- Full-screen video background
+- Single "Sign in with Google" button
+- No local authentication
+- Documented as architectural exception in this standardisation
+
+### Testing Checklist
+
+- [ ] Inputs have icons (User, Lock) left-aligned
+- [ ] Labels are uppercase, bold, small (text-xs)
+- [ ] Focus rings appear on input focus
+- [ ] Password field shows/hides with eye icon
+- [ ] Google button is outside form, has type="button"
+- [ ] Error message appears below form (red text)
+- [ ] Form disables on submit (disabled opacity)
+- [ ] Mode toggle hides if supportRegister=false
+- [ ] Watermark renders at low opacity (does not interfere)
+- [ ] Light and dark variants maintain readability
+
+### References
+
+- `techbridge-ai-blueprint/src/components/FormLoginView.tsx` — Reference implementation
+- `techbridge-ai-blueprint/src/components/LoginView.tsx` — Configuration example (light theme)
+- `biochemai/src/components/LoginView.tsx` — Configuration example (dark glassmorphic)
+- `willpro/src/pages/FormLoginPage.tsx` — Configuration example (login-only, Router navigation)
+- `LOGIN_STANDARDIZATION.md` — Audit of pre-standardisation implementations
+
+---
+
+## PATTERN 11: POWERSHELL DEPLOYMENT SCRIPT FIXES
 
 ### The .htaccess Corruption Problem
 

@@ -1,7 +1,8 @@
 import { useState, useMemo, useEffect } from "react";
-import { Search, LayoutGrid, List as ListIcon, ExternalLink, Cpu, Sparkles, Code, Briefcase, Settings, Gamepad2, ChevronRight, Check, X, Shield, Zap, Globe, LogOut, PenTool, Beaker, Mic, BookOpen, Palette, MessageSquare, Music, ImageIcon, BarChart3, Home, Users, Clock, Activity, DollarSign } from "lucide-react";
+import { Search, LayoutGrid, List as ListIcon, ExternalLink, Cpu, Sparkles, Code, Briefcase, Settings, Gamepad2, ChevronRight, Check, X, Shield, Zap, Globe, LogOut, PenTool, Beaker, Mic, BookOpen, Palette, MessageSquare, Music, ImageIcon, BarChart3, Home, Users, Clock, Activity, DollarSign, Sun, Moon } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { useAuth } from "./contexts/AuthContext";
+import { useTheme } from "./contexts/ThemeContext";
 
 const BASE_URL = "https://ai-tools.techbridge.edu.gh";
 
@@ -169,6 +170,7 @@ const CAT_LIST = ["All", ...Object.keys(CATEGORIES)];
 
 export default function App() {
   const { isAuthenticated, logout } = useAuth();
+  const { theme, toggle: toggleTheme } = useTheme();
   const [search, setSearch] = useState("");
   const [activeCategory, setActiveCategory] = useState("All");
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
@@ -204,7 +206,7 @@ export default function App() {
   return (
     <div className="flex flex-col h-screen overflow-hidden text-slate-900 bg-slate-50 font-sans">
       {/* Header Navigation */}
-      <nav className="h-16 flex items-center justify-between px-8 bg-white border-b border-slate-200 shrink-0 z-10 shadow-sm">
+      <nav className="navbar-glass h-16 flex items-center justify-between px-8 shrink-0 z-10">
         <div className="flex items-center gap-5">
           <img
             src="https://techbridge.edu.gh/static/TUC_LOGO_1.png"
@@ -234,20 +236,28 @@ export default function App() {
             <a href="#" className="text-blue-600 border-b-2 border-blue-600 pb-5 translate-y-2.5">AI Lab Catalog</a>
           </div>
           <div className="h-8 w-px bg-slate-200"></div>
+          <button
+            onClick={toggleTheme}
+            className="theme-toggle"
+            aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} theme`}
+            title={`Switch to ${theme === 'light' ? 'dark' : 'light'} theme`}
+          >
+            {theme === 'light' ? <Moon className="w-4 h-4" /> : <Sun className="w-4 h-4" />}
+          </button>
           <button onClick={logout} className="flex items-center gap-2 px-4 py-1.5 text-slate-600 text-sm font-semibold hover:text-slate-900 transition-colors">
             <LogOut className="w-4 h-4" />
             Sign Out
           </button>
-          <button className="px-4 py-1.5 bg-slate-900 text-white text-sm font-semibold rounded-md hover:bg-slate-800 transition-colors">Contact Lab</button>
+          <button className="btn-cta">Contact Lab</button>
         </div>
       </nav>
 
       {/* Main Content Area */}
       <div className="flex grow overflow-hidden">
         {/* Sidebar Filters */}
-        <aside className="w-64 border-r border-slate-200 bg-white p-6 shrink-0 flex flex-col overflow-y-auto hidden md:flex">
+        <aside className="bg-surface w-64 border-r border-subtle p-6 shrink-0 flex flex-col overflow-y-auto hidden md:flex">
           <div className="mb-8">
-            <h3 className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-4 px-2">Framework Categories</h3>
+            <h3 className="section-label mb-4 px-2">Framework Categories</h3>
             <div className="space-y-1">
               {CAT_LIST.map((cat) => (
                 <button
@@ -256,31 +266,27 @@ export default function App() {
                   className={`sidebar-item w-full ${activeCategory === cat ? 'active' : ''}`}
                 >
                   <span>{cat}</span>
-                  <span className={`text-[10px] px-1.5 py-0.5 rounded ${activeCategory === cat ? 'bg-blue-200' : 'bg-slate-100 text-slate-400'}`}>
-                    {countsByCat[cat]}
-                  </span>
+                  <span className="count-pill">{countsByCat[cat]}</span>
                 </button>
               ))}
             </div>
           </div>
 
           <div>
-            <h3 className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-4 px-2">Deployment Tier</h3>
+            <h3 className="section-label mb-4 px-2">Deployment Tier</h3>
             <div className="space-y-2 px-2">
               {["Edge Computing", "Cloud Clusters", "Hybrid Hub"].map((tier, idx) => (
-                <button
+                <label
                   key={tier}
-                  className={`w-full flex items-center gap-2 px-3 py-2.5 rounded-lg transition-all font-medium text-sm cursor-pointer border ${
-                    idx % 2 === 0
-                      ? 'bg-blue-50 border-blue-200 text-blue-700 hover:bg-blue-100 hover:border-blue-300'
-                      : 'bg-white border-slate-200 text-slate-600 hover:border-slate-300 hover:bg-slate-50'
-                  }`}
+                  className="flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer text-sm text-muted hover:text-primary transition-colors"
                 >
-                  <div className={`w-4 h-4 rounded flex items-center justify-center flex-shrink-0 ${idx % 2 === 0 ? 'bg-blue-600' : 'bg-slate-300'}`}>
-                    {idx % 2 === 0 && <Check className="w-3 h-3 text-white" />}
-                  </div>
+                  <input
+                    type="checkbox"
+                    className="tier-toggle"
+                    defaultChecked={idx % 2 === 0}
+                  />
                   <span className="truncate">{tier}</span>
-                </button>
+                </label>
               ))}
             </div>
           </div>
@@ -291,8 +297,8 @@ export default function App() {
           <header className="px-8 pt-8 pb-6 bg-slate-50/80 backdrop-blur-sm z-1 shrink-0">
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
               <div>
-                <h1 className="text-3xl font-bold text-slate-900 tracking-tight">AI Lab</h1>
-                <p className="text-slate-500 mt-1 max-w-xl">Live AI agents and tools running in real-time. Monitor, control, and deploy solutions.</p>
+                <h1 className="font-display text-3xl font-bold tracking-tight text-primary">AI Lab</h1>
+                <p className="text-muted mt-2 max-w-xl">Live AI agents and tools running in real-time. Monitor, control, and deploy solutions.</p>
                 {activeCategory !== "All" && (
                   <div className="mt-4 flex items-center gap-2">
                     <span className="text-[11px] text-slate-500 uppercase tracking-widest font-bold">Active Filter:</span>
@@ -308,11 +314,11 @@ export default function App() {
               </div>
               <div className="flex items-center gap-3">
                 <div className="relative">
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted" />
                   <input
                     type="text"
                     placeholder="Search tools..."
-                    className="pl-9 pr-4 py-2.5 border border-slate-300 rounded-lg bg-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:border-blue-500 transition-all w-72 shadow-sm"
+                    className="search-input pl-9 pr-4 py-2.5 rounded-lg text-sm w-72"
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
                   />
@@ -336,6 +342,11 @@ export default function App() {
           </header>
 
           <div className="grow overflow-y-auto px-8 pb-12 custom-scrollbar">
+            <div className="section-label mb-5">
+              {filteredTools.length} TOOL{filteredTools.length === 1 ? '' : 'S'}
+              {activeCategory !== "All" && <> · {activeCategory.toUpperCase()}</>}
+              {' '}· SORTED BY ACTIVITY
+            </div>
             {filteredTools.length > 0 ? (
               <div className={viewMode === "grid"
                 ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 auto-rows-max"
@@ -379,17 +390,17 @@ export default function App() {
           </div>
 
           {/* Footer Status Bar */}
-          <footer className="px-8 py-2.5 flex items-center justify-between text-[10px] text-slate-500 border-t border-slate-200/50 bg-white/50 backdrop-blur-sm shrink-0">
-            <div className="flex gap-6">
-              <span className="flex items-center gap-1.5 text-slate-600 font-medium">
-                <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></span>
-                All Nodes Operational
+          <footer className="px-8 py-2.5 flex items-center justify-between text-[10px] border-t border-subtle bg-surface/50 backdrop-blur-sm shrink-0">
+            <div className="flex gap-6 items-center">
+              <span className="flex items-center gap-2 text-primary font-medium">
+                <span className="status-dot" />
+                <span className="section-label" style={{ letterSpacing: '0.08em' }}>All Nodes Operational</span>
               </span>
-              <span className="text-slate-400 tracking-widest uppercase font-mono">Last Sync: {new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}</span>
+              <span className="usage-chip">Last Sync · {new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}</span>
             </div>
             <div className="flex gap-5 items-center">
-              <span className="text-slate-400 text-[9px]">Ver 2.4.9 Stable</span>
-              <span className="font-semibold text-slate-600 cursor-pointer hover:text-blue-600 transition-colors">Lab Manifesto (PDF)</span>
+              <span className="usage-chip">Ver 2.4.9 Stable</span>
+              <span className="section-label cursor-pointer hover:text-primary transition-colors">Lab Manifesto (PDF)</span>
             </div>
           </footer>
         </main>
@@ -462,7 +473,8 @@ function ToolCard({ tool, index, viewMode, onOpen }: { tool: Tool, index: number
 
   return (
     <div
-      className="venture-card group h-[380px] flex flex-col cursor-pointer overflow-hidden border-none shadow-sm relative bg-slate-800/8"
+      className="venture-card group h-[380px] flex flex-col cursor-pointer overflow-hidden border-none shadow-sm relative"
+      style={{ ['--i' as string]: index }}
       onClick={onOpen}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
@@ -499,12 +511,13 @@ function ToolCard({ tool, index, viewMode, onOpen }: { tool: Tool, index: number
             <ToolSpecificIcon className="w-6 h-6" />
           </div>
           <div className="flex-1 min-w-0">
-            <h4 className="font-bold text-white text-lg leading-tight tracking-tight line-clamp-2">
+            <h4 className="font-display font-bold text-white text-lg leading-tight tracking-tight line-clamp-2">
               {tool.title}
             </h4>
-            <div className="flex items-center gap-2 mt-2">
-              <div className={`status-dot ${isActive ? 'active' : ''}`} />
-              <span className="text-[8px] font-bold text-white/90 uppercase tracking-widest">{nodeStatus}</span>
+            <div className="mt-2">
+              <span className={`status-pill ${isActive ? 'active' : nodeStatus === 'Queued' ? 'queued' : ''}`}>
+                {nodeStatus}
+              </span>
             </div>
           </div>
         </div>
@@ -536,10 +549,9 @@ function ToolCard({ tool, index, viewMode, onOpen }: { tool: Tool, index: number
           {tool.desc}
         </p>
 
-        <p className="text-[9px] text-slate-500 font-medium mb-4 flex items-center gap-1.5 opacity-75">
-          <span className="w-1 h-1 rounded-full bg-amber-400/60"></span>
-          <span>Used {usageWeek}× this week</span>
-        </p>
+        <div className="mb-4">
+          <span className="usage-chip">Used {usageWeek}× this week</span>
+        </div>
 
         <div className="pt-5 border-t border-white/10 flex items-center justify-between">
           <div className="flex items-center gap-3">

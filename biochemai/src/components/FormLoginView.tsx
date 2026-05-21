@@ -5,14 +5,6 @@ import { FormLoginView } from './FormLoginViewBase';
 export const BiochemAILoginView: React.FC = () => {
   const { login, register } = useAuth();
   const [error, setError] = useState('');
-  const [isOAuthCallback, setIsOAuthCallback] = useState(false);
-
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    if (params.has('code')) {
-      setIsOAuthCallback(true);
-    }
-  }, []);
 
   useEffect(() => {
     const handleMessage = async (event: MessageEvent) => {
@@ -68,23 +60,6 @@ export const BiochemAILoginView: React.FC = () => {
       throw new Error(result.message || 'Registration failed');
     }
   };
-
-  if (isOAuthCallback) {
-    return (
-      <div style={{minHeight:'100vh',background:'#0f172a',display:'flex',alignItems:'center',justifyContent:'center',fontFamily:'Inter,system-ui,sans-serif'}}>
-        <div style={{textAlign:'center'}}>
-          <div style={{width:'56px',height:'56px',border:'4px solid rgba(167,139,250,0.2)',borderTop:'4px solid #a78bfa',borderRadius:'50%',margin:'0 auto 24px',animation:'spin 1s linear infinite'}} />
-          <h2 style={{fontSize:'20px',fontWeight:'600',color:'#fff',margin:'0 0 8px 0'}}>Signing you in...</h2>
-          <p style={{fontSize:'14px',color:'rgba(255,255,255,0.7)',margin:0}}>Processing your Google credentials</p>
-          <style>{`
-            @keyframes spin {
-              to { transform: rotate(360deg); }
-            }
-          `}</style>
-        </div>
-      </div>
-    );
-  }
 
   const MolecularWatermark = () => (
     <svg
