@@ -710,10 +710,11 @@ export default function App() {
         <nav className="flex-1 p-6 space-y-1.5 overflow-y-auto custom-scrollbar" role="navigation">
           <div className="text-[9px] font-black text-text-tertiary uppercase tracking-[0.15em] mb-3 px-3">System PHASES</div>
           {PHASES.map((p) => (
-            <button 
+            <button
               key={p.id}
               onClick={() => {
                 setOpenPhase(p.id);
+                setActiveTab("checklist");
                 logAction("Phase View Changed", "user", `Navigated to Phase ${p.id}: ${p.title}`);
               }}
               className={`w-full flex items-center gap-4 px-4 py-3 rounded-xl text-sm font-semibold tracking-tight transition-all duration-200 group ${
