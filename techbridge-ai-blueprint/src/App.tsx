@@ -367,11 +367,27 @@ export default function App() {
   const [showAuthPassword, setShowAuthPassword] = useState(false);
 
   // Restore session on mount
+  const { user: oauthUser, isAuthenticated } = useAuth();
+
   useEffect(() => {
+    // Check OAuth user first (from Google login)
+    if (oauthUser && isAuthenticated) {
+      setUser({
+        id: oauthUser.id,
+        name: oauthUser.username,
+        email: oauthUser.email,
+        provider: 'google',
+        timestamp: new Date().toISOString()
+      } as SessionUser);
+      setIsAuthLoading(false);
+      return;
+    }
+
+    // Fallback: check Firebase session
     const session = getSession();
     if (session) setUser(session);
     setIsAuthLoading(false);
-  }, []);
+  }, [oauthUser, isAuthenticated]);
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
