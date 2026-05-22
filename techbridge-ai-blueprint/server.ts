@@ -67,11 +67,12 @@ async function startServer() {
       const tokens = await tokenResponse.json() as GoogleTokenResponse;
       const userInfo = decodeJWT(tokens.id_token);
 
-      const userJson = JSON.stringify({
+      const userData = {
         id: userInfo.sub,
         username: userInfo.name,
         email: userInfo.email,
-      });
+      };
+      const userJson = JSON.stringify(userData);
 
       res.cookie('blueprint_user', Buffer.from(userJson).toString('base64'), {
         httpOnly: false,
@@ -81,7 +82,9 @@ async function startServer() {
         path: '/blueprint/',
       });
 
-      res.redirect(`/blueprint/`);
+      // Also pass user data in URL as fallback if cookie doesn't work
+      const encodedUser = Buffer.from(userJson).toString('base64');
+      res.redirect(`/blueprint/?user=${encodedUser}`);
     } catch (error) {
       console.error('[Blueprint] OAuth callback error:', error);
       res.redirect(`/blueprint/?error=internal_error`);
