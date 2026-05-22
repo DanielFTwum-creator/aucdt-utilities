@@ -21,35 +21,66 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
-    // Check for server-set cookie from OAuth callback (one-shot)
-    const cookieValue = document.cookie
-      .split('; ')
-      .find(row => row.startsWith('blueprint_user='))
-      ?.split('=')[1];
-    if (cookieValue) {
-      try {
-        const userData = JSON.parse(atob(decodeURIComponent(cookieValue))) as User;
-        setUser(userData);
-        setIsAuthenticated(true);
-        localStorage.setItem('techbridge_ai_blueprint_user', JSON.stringify(userData));
-        document.cookie = 'blueprint_user=; max-age=0; path=/blueprint/';
-        return;
-      } catch (e) {
-        console.error('Failed to parse user cookie:', e);
+    const initAuth = () => {
+      // Check for user data in URL (fallback from OAuth callback)
+      const params = new URLSearchParams(window.location.search);
+      const urlUser = params.get('user');
+      if (urlUser) {
+        try {
+          const userData = JSON.parse(atob(urlUser)) as User;
+          setUser(userData);
+          setIsAuthenticated(true);
+          localStorage.setItem('techbridge_ai_blueprint_user', JSON.stringify(userData));
+          // Clean URL after processing
+          window.history.replaceState({}, '', '/blueprint/');
+          return;
+        } catch (e) {
+          console.error('Failed to parse user from URL:', e);
+        }
       }
-    }
 
-    // Fallback: restore from localStorage
-    const stored = localStorage.getItem('techbridge_ai_blueprint_user');
-    if (stored) {
-      try {
-        const userData = JSON.parse(stored);
-        setUser(userData);
-        setIsAuthenticated(true);
-      } catch (err) {
-        localStorage.removeItem('techbridge_ai_blueprint_user');
+      // Check for server-set cookie from OAuth callback (one-shot)
+      const cookieValue = document.cookie
+        .split('; ')
+        .find(row => row.startsWith('blueprint_user='))
+        ?.split('=')[1];
+      if (cookieValue) {
+        try {
+          const userData = JSON.parse(atob(decodeURIComponent(cookieValue))) as User;
+          setUser(userData);
+          setIsAuthenticated(true);
+          localStorage.setItem('techbridge_ai_blueprint_user', JSON.stringify(userData));
+          document.cookie = 'blueprint_user=; max-age=0; path=/blueprint/';
+          // Clean URL after OAuth callback
+          if (window.location.search.includes('code=')) {
+            window.history.replaceState({}, '', '/blueprint/');
+          }
+          return;
+        } catch (e) {
+          console.error('Failed to parse user cookie:', e);
+        }
       }
-    }
+
+      // Fallback: restore from localStorage
+      const stored = localStorage.getItem('techbridge_ai_blueprint_user');
+      if (stored) {
+        try {
+          const userData = JSON.parse(stored);
+          setUser(userData);
+          setIsAuthenticated(true);
+        } catch (err) {
+          localStorage.removeItem('techbridge_ai_blueprint_user');
+        }
+      }
+
+      // Check for OAuth errors
+      const oauthError = params.get('error');
+      if (oauthError) {
+        console.error('OAuth error:', oauthError);
+      }
+    };
+
+    initAuth();
   }, []);
 
   const login = async (userOrUsername: User | string, password?: string) => {
