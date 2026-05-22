@@ -21,7 +21,25 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Restore Google session from sessionStorage
+    const params = new URLSearchParams(window.location.search);
+
+    // 1. Check for user data in URL (from OAuth callback)
+    const urlUser = params.get('user');
+    if (urlUser) {
+      try {
+        const u = JSON.parse(atob(urlUser)) as User;
+        setUser(u);
+        setIsAuthenticated(true);
+        sessionStorage.setItem(GOOGLE_SESSION_KEY, JSON.stringify(u));
+        // Hard redirect to reload without URL params
+        window.location.href = '/willpro/';
+        return;
+      } catch (e) {
+        console.error('Failed to parse user from URL:', e);
+      }
+    }
+
+    // 2. Restore Google session from sessionStorage
     const storedGoogle = sessionStorage.getItem(GOOGLE_SESSION_KEY);
     if (storedGoogle) {
       try {
@@ -30,7 +48,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       } catch { sessionStorage.removeItem(GOOGLE_SESSION_KEY); }
     }
 
-    // Check for server-set cookie from OAuth callback (one-shot)
+    // 3. Check for server-set cookie from OAuth callback (one-shot)
     const cookieValue = document.cookie
       .split('; ')
       .find(row => row.startsWith('willpro_user='))
