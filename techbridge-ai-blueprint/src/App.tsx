@@ -373,11 +373,9 @@ export default function App() {
     // Check OAuth user first (from Google login)
     if (oauthUser && isAuthenticated) {
       setUser({
-        id: oauthUser.id,
+        uid: oauthUser.id,
         name: oauthUser.username,
-        email: oauthUser.email,
-        provider: 'google',
-        timestamp: new Date().toISOString()
+        email: oauthUser.email
       } as SessionUser);
       setIsAuthLoading(false);
       return;
