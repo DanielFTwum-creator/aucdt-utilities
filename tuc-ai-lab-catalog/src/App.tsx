@@ -6,6 +6,19 @@ import { useTheme } from "./contexts/ThemeContext";
 
 const BASE_URL = "https://ai-tools.techbridge.edu.gh";
 
+// Map app slugs to their actual deployment paths
+const SLUG_TO_PATH: Record<string, string> = {
+  "techbridge-ai-blueprint": "/blueprint/",
+  "ai-email-drafter": "/email-drafter/",
+  "biochemai": "/biochemai/",
+  // Add more mappings as needed — defaults to slug if not found
+};
+
+const getAppUrl = (slug: string) => {
+  const path = SLUG_TO_PATH[slug] || `/${slug}/`;
+  return `${BASE_URL}${path}`;
+};
+
 const CATEGORIES = {
   "AI & ML": { badge: "badge-ai-ml", icon: Cpu, color: "#2563eb", accentColor: "#3b82f6" },
   "Academic": { badge: "badge-academic", icon: BookOpen, color: "#14b8a6", accentColor: "#06d6a0" },
@@ -607,7 +620,7 @@ function DetailModal({ tool, onClose }: { tool: Tool, onClose: () => void }) {
             
             <div className="mt-auto pt-12 space-y-4 w-full">
               <a
-                href={`${BASE_URL}/${tool.slug}`}
+                href={getAppUrl(tool.slug)}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="btn-launch flex items-center justify-center gap-2 w-full py-3 text-sm"
