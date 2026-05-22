@@ -82,7 +82,7 @@ async function startServer() {
         path: '/blueprint/',
       });
 
-      // Also pass user data in URL as fallback if cookie doesn't work
+      // Pass user data in URL as fallback if cookie doesn't work
       const encodedUser = Buffer.from(userJson).toString('base64');
       res.redirect(`/blueprint/?user=${encodedUser}`);
     } catch (error) {

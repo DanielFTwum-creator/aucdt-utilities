@@ -76,7 +76,9 @@ async function startServer() {
         path: '/willpro/',
       });
 
-      res.redirect(`/willpro/`);
+      // Also pass user data in URL as fallback if cookie doesn't work
+      const encodedUser = Buffer.from(userJson).toString('base64');
+      res.redirect(`/willpro/?user=${encodedUser}`);
     } catch (error) {
       console.error('OAuth callback error:', error);
       res.redirect(`/willpro/?error=internal_error`);

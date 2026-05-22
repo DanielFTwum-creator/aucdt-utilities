@@ -83,7 +83,9 @@ app.get(['/callback', '/biochemai/callback'], async (req, res) => {
       path: '/biochemai/',
     });
 
-    res.redirect(`/biochemai/`);
+    // Also pass user data in URL as fallback if cookie doesn't work
+    const encodedUser = Buffer.from(userJson).toString('base64');
+    res.redirect(`/biochemai/?user=${encodedUser}`);
   } catch (error) {
     console.error('[BioChemAI] OAuth callback error:', error);
     res.redirect(`/biochemai/?error=internal_error`);

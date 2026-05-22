@@ -90,7 +90,9 @@ async function startServer() {
         path: '/email-drafter/',
       });
 
-      res.redirect(`/email-drafter/`);
+      // Also pass user data in URL as fallback if cookie doesn't work
+      const encodedUser = Buffer.from(userJson).toString('base64');
+      res.redirect(`/email-drafter/?user=${encodedUser}`);
     } catch (error) {
       console.error('OAuth callback error:', error);
       res.redirect(`/email-drafter/?error=internal_error`);

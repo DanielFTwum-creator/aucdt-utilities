@@ -35,23 +35,9 @@ import {
 } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { saveLastState, getLastState, saveProjectSnapshot, getProjectHistory, ProjectState as LocalProjectState } from "./lib/db";
-import { db, handleFirestoreError, OperationType } from "./lib/firebase";
+import { getProjectsByOwner, saveProject, deleteProject } from "./lib/indexeddb";
 import { registerUser, loginUser, clearSession, getSession, sendHelpdeskNotification, SessionUser } from "./lib/auth";
 import { useAuth } from "./contexts/AuthContext";
-import { 
-  doc, 
-  setDoc, 
-  getDoc, 
-  collection, 
-  addDoc, 
-  query, 
-  where, 
-  onSnapshot, 
-  serverTimestamp, 
-  orderBy, 
-  limit,
-  Timestamp
-} from "firebase/firestore";
 
 // --- Types & Constants ---
 
@@ -424,24 +410,7 @@ export default function App() {
   // DB Sync - Initial Load
   useEffect(() => {
     const loadState = async () => {
-      const urlParams = new URLSearchParams(window.location.search);
-      const shareId = urlParams.get("share");
-
-      if (shareId) {
-        try {
-          const shareDoc = await getDoc(doc(db, "shares", shareId));
-          if (shareDoc.exists()) {
-            const data = shareDoc.data();
-            setProjectName(data.projectName);
-            setCheckedItems(data.checkedItems);
-            setOpenPhase(4); // Focus on Docs for shared diagrams
-            logAction("Shared State Loaded", "system", `Viewing read-only share: ${shareId}`);
-            return; // Don't load local state if viewing a share
-          }
-        } catch (error) {
-          console.error("Failed to load share", error);
-        }
-      }
+      // Share loading temporarily disabled — migrate to IndexedDB if needed
 
       const saved = await getLastState();
       if (saved) {
@@ -456,32 +425,31 @@ export default function App() {
     loadState();
   }, []);
 
-  // Firestore History Sync
+  // IndexedDB History Sync
   useEffect(() => {
-    if (!user) {
-      setProjectHistory([]);
-      return;
-    }
+    const loadProjects = async () => {
+      if (!user) {
+        setProjectHistory([]);
+        return;
+      }
 
-    const q = query(
-      collection(db, "projects"),
-      where("ownerId", "==", user.uid),
-      orderBy("updatedAt", "desc"),
-      limit(20)
-    );
+      try {
+        const projects = await getProjectsByOwner(user.uid);
+        const sorted = projects
+          .sort((a, b) => b.updatedAt - a.updatedAt)
+          .slice(0, 20)
+          .map(p => ({
+            id: p.id,
+            ...p,
+            timestamp: p.updatedAt
+          }));
+        setProjectHistory(sorted);
+      } catch (error) {
+        console.error('[App] Failed to load projects from IndexedDB:', error);
+      }
+    };
 
-    const unsubscribe = onSnapshot(q, (snapshot) => {
-      const projects = snapshot.docs.map(d => ({
-        id: d.id,
-        ...d.data(),
-        timestamp: (d.data().updatedAt as Timestamp)?.toMillis() || Date.now()
-      }));
-      setProjectHistory(projects);
-    }, (error) => {
-      handleFirestoreError(error, OperationType.LIST, "projects");
-    });
-
-    return () => unsubscribe();
+    loadProjects();
   }, [user]);
 
   // DB Sync - Save State
@@ -503,6 +471,7 @@ export default function App() {
     }
 
     const projectId = `p-${Date.now()}`;
+    const now = Date.now();
     const snapshot = {
       id: projectId,
       ownerId: user.uid,
@@ -510,15 +479,15 @@ export default function App() {
       checkedItems,
       openPhase,
       activeTab,
-      updatedAt: serverTimestamp(),
-      createdAt: serverTimestamp()
+      updatedAt: now,
+      createdAt: now
     };
-    
+
     try {
-      await setDoc(doc(db, "projects", projectId), snapshot);
-      logAction("Cloud Snapshot Created", "system", `State pushed to TUC ICT Node: ${projectId}`);
+      await saveProject(snapshot);
+      logAction("Snapshot Created", "system", `State saved to IndexedDB: ${projectId}`);
     } catch (error) {
-      handleFirestoreError(error, OperationType.WRITE, `projects/${projectId}`);
+      console.error('[App] Failed to save snapshot:', error);
     }
   };
 
@@ -556,22 +525,6 @@ export default function App() {
       details,
     };
     setAuditLogs(prev => [newLog, ...prev].slice(0, 100));
-
-    // Persist to Firestore if logged in
-    if (user) {
-      try {
-        await setDoc(doc(db, "audit_logs", logId), {
-          timestamp: serverTimestamp(),
-          userId: user.uid,
-          userEmail: user.email,
-          action,
-          resource: "system",
-          details
-        });
-      } catch (err) {
-        console.error("Failed to persist log", err);
-      }
-    }
   };
 
   const handleAdminLogin = (e: React.FormEvent) => {
@@ -639,17 +592,18 @@ export default function App() {
       checkedItems,
       sharedBy: user.email,
       sharedById: user.uid,
-      createdAt: serverTimestamp(),
+      createdAt: Date.now(),
     };
 
     try {
-      await setDoc(doc(db, "shares", shareId), shareData);
+      // Store share in IndexedDB or local storage
+      localStorage.setItem(`share_${shareId}`, JSON.stringify(shareData));
       const url = `${window.location.origin}?share=${shareId}`;
       setShareLink(url);
       await navigator.clipboard.writeText(url);
       logAction("Diagrams Shared", "user", `Public share link generated: ${shareId}`);
     } catch (error) {
-      handleFirestoreError(error, OperationType.WRITE, `shares/${shareId}`);
+      console.error('[App] Failed to create share:', error);
     }
   };
 

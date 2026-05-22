@@ -24,7 +24,25 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Restore from sessionStorage
+    const params = new URLSearchParams(window.location.search);
+
+    // 1. Check for user data in URL (from OAuth callback)
+    const urlUser = params.get('user');
+    if (urlUser) {
+      try {
+        const userData = JSON.parse(atob(urlUser)) as User;
+        setUser(userData);
+        setIsAuthenticated(true);
+        sessionStorage.setItem(SESSION_KEY, JSON.stringify(userData));
+        // Hard redirect to reload without URL params
+        window.location.href = '/email-drafter/';
+        return;
+      } catch (e) {
+        console.error('Failed to parse user from URL:', e);
+      }
+    }
+
+    // 2. Restore from sessionStorage
     const stored = sessionStorage.getItem(SESSION_KEY);
     if (stored) {
       try {
@@ -36,7 +54,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
     }
 
-    // Check for server-set cookie from OAuth callback
+    // 3. Check for server-set cookie from OAuth callback
     const cookieValue = document.cookie
       .split('; ')
       .find(row => row.startsWith(`${SESSION_KEY}=`))
@@ -55,8 +73,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
     }
 
-    // Handle URL-based OAuth callback fallback (frontend exchange)
-    const params = new URLSearchParams(window.location.search);
+    // 4. Handle URL-based OAuth callback fallback (frontend exchange)
     const code = params.get('code');
     const state = params.get('state');
     const error = params.get('error');

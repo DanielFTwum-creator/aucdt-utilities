@@ -22,22 +22,25 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   useEffect(() => {
     const initAuth = () => {
-      // Check for user data in URL (fallback from OAuth callback)
       const params = new URLSearchParams(window.location.search);
+
+      // 1. Check for user data in URL (from OAuth callback)
       const urlUser = params.get('user');
       if (urlUser) {
         try {
           const userData = JSON.parse(atob(urlUser)) as User;
+          setUser(userData);
+          setIsAuthenticated(true);
           localStorage.setItem('techbridge_ai_blueprint_user', JSON.stringify(userData));
           // Hard redirect to reload the app with auth in localStorage
           window.location.href = '/blueprint/';
           return;
         } catch (e) {
-          console.error('Failed to parse user from URL:', e);
+          console.error('[Auth] Failed to parse user from URL:', e);
         }
       }
 
-      // Check for server-set cookie from OAuth callback (one-shot)
+      // 2. Check for server-set cookie from OAuth callback (one-shot)
       const cookieValue = document.cookie
         .split('; ')
         .find(row => row.startsWith('blueprint_user='))
@@ -55,11 +58,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           }
           return;
         } catch (e) {
-          console.error('Failed to parse user cookie:', e);
+          console.error('[Auth] Failed to parse user cookie:', e);
         }
       }
 
-      // Fallback: restore from localStorage
+      // 3. Restore from localStorage
       const stored = localStorage.getItem('techbridge_ai_blueprint_user');
       if (stored) {
         try {
@@ -71,10 +74,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         }
       }
 
-      // Check for OAuth errors
+      // 4. Check for OAuth errors
       const oauthError = params.get('error');
       if (oauthError) {
-        console.error('OAuth error:', oauthError);
+        console.error('[Auth] OAuth error:', oauthError);
       }
     };
 
