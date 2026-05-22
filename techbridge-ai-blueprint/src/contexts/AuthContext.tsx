@@ -28,11 +28,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (urlUser) {
         try {
           const userData = JSON.parse(atob(urlUser)) as User;
-          setUser(userData);
-          setIsAuthenticated(true);
           localStorage.setItem('techbridge_ai_blueprint_user', JSON.stringify(userData));
-          // Clean URL after processing
-          window.history.replaceState({}, '', '/blueprint/');
+          // Hard redirect to reload the app with auth in localStorage
+          window.location.href = '/blueprint/';
           return;
         } catch (e) {
           console.error('Failed to parse user from URL:', e);
