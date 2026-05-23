@@ -188,7 +188,12 @@
       "Bash(echo \"✅ Splash\")",
       "Bash(echo \"❌ No splash\")",
       "Bash(echo \"✅\")",
-      "Bash(echo \"❌\")"
+      "Bash(echo \"❌\")",
+      "WebFetch(domain:ai-tools.techbridge.edu.gh)",
+      "Bash(grep -c 'og:title\\\\|og:description' __TRACKED_VAR__/index.html)",
+      "Bash(grep -c 'href=\"\\\\..*favicon' __TRACKED_VAR__/index.html)",
+      "Bash([ -f \"$app/deploy.ps1\" ])",
+      "Bash(echo 'SEO=__TRACKED_VAR__ Favicon=__TRACKED_VAR__ Deploy=__TRACKED_VAR__')"
     ]
   }
 }
