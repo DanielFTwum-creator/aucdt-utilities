@@ -1,6 +1,6 @@
 # Deployment Tracker & Lessons Learned
 
-## Production Apps Status (as of 2026-05-19)
+## Production Apps Status (as of 2026-05-23)
 
 ### ✅ FULLY DEPLOYED (Production Treatment Complete)
 
@@ -9,6 +9,7 @@
 | Glucose | https://ai-tools.techbridge.edu.gh/glucose | N/A | ✅ Blood drop themed | N/A | ✅ WhatsApp link | E2E glucose monitoring |
 | Peace Vinyl | https://ai-tools.techbridge.edu.gh/peace | ✅ Code Flow | ✅ Vinyl record | ✅ Video (MusicGen video) | N/A | Video background music viz |
 | BioChemAI | https://ai-tools.techbridge.edu.gh/biochemai | ⚠️ Partial | ✅ DNA helix | N/A | N/A | OAuth pattern started, needs completion |
+| Stephanie's DaaRo Water | https://ai-tools.techbridge.edu.gh/sdwater | N/A | ✅ TUC Logo / Logo themed | N/A | ✅ WhatsApp link | Offline-first distributor dashboard & order portal |
 
 ### 🔄 IN PROGRESS (Deployment Ongoing)
 
@@ -112,7 +113,10 @@ RewriteRule ^ /ai-lab/index.html [QSA,L]  # Catch-all at END
 
 ## Deployment History
 
-### 2026-05-19 (Current Session)
+### 2026-05-23 (Current Session)
+- ✅ **Stephanie's DaaRo Water (sdwater)**: Deployed with relative assets base path (`./`), flat ridged screw cap visual bottle calibration, custom sachet graphic, 4 standard products (Sachet, 350ml, 600ml, 1L) with verified GHS pricing (10, 23, 30, 50), and native PowerShell deployment pipeline (`deploy.ps1`).
+
+### 2026-05-19
 - ✅ **Peace Vinyl**: Deployed with unique favicon, OAuth working
 - ✅ **Glucose**: Deployed with WhatsApp contact link, favicon
 - ✅ **BioChemAI**: Deployed with favicon
