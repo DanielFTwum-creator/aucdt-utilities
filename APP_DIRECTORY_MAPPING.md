@@ -19,7 +19,7 @@ This document maps production endpoint names to local monorepo directories. **Al
 | 7 | `/daaro-distributor/` | `daaro-distributor/` | ✅ Standardised | Direct match |
 | 8 | `/dictation/` | `dictation-app/` | ❌ Not standardised | Shortened URL name |
 | 9 | `/dmcdai/` | `dmcdai-digital-media-communication-design/` | ❌ Not standardised | Shortened URL name |
-| 10 | `/elephant/` | `health-wellness-portal/` | ❌ Not standardised | Shortened URL name |
+| 10 | `/elephant/` | `An-Elephant-on-Parade/` | ❌ Not standardised | Shortened URL name |
 | 11 | `/email-drafter/` | `ai-email-drafter/` | ❌ Not standardised | Shortened URL name |
 | 12 | `/enrollment-2026/` | `enrollment-management-system/` | ❌ Not standardised | Shortened URL name |
 | 13 | `/glucose/` | `glucose/` | ✅ Standardised | Direct match |
@@ -69,7 +69,7 @@ Apps that need production-ready standard applied:
 3. `care` ← `rophe-specialist-care-rpms`
 4. `dictation` ← `dictation-app`
 5. `dmcdai` ← `dmcdai-digital-media-communication-design`
-6. `elephant` ← `health-wellness-portal`
+6. `elephant` ← `An-Elephant-on-Parade`
 7. `email-drafter` ← `ai-email-drafter`
 8. `enrollment-2026` ← `enrollment-management-system`
 9. `impact-ventures` ← `impact-ventures-dashboard`
