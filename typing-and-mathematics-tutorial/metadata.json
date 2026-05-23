@@ -1,0 +1,6 @@
+{
+  "name": "Typing and Mathematics Tutorial",
+  "description": "An interactive, gamified typing tutorial that reinforces math concepts for children, focusing on visual arithmetic, fractions, and numeric rows.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

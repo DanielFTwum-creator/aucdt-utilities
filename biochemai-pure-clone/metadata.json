@@ -1,7 +1,0 @@
-{
-  "name": "BioChemAI v151120252049",
-  "description": "An intelligent web-based teaching assistant designed to provide adaptive biochemistry education across multiple learning levels, leveraging AI to deliver personalized, level-appropriate explanations with source citations.",
-  "requestFramePermissions": [
-    "microphone"
-  ]
-}

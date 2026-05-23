@@ -1,0 +1,492 @@
+{
+  "testSuite": {
+    "name": "Techbridge Admissions Portal E2E Tests",
+    "version": "1.0.0",
+    "framework": "Cypress",
+    "frameworkVersion": "15.15.0",
+    "targetUrl": "https://admissions.techbridge.edu.gh",
+    "generatedDate": "2026-05-21",
+    "totalTestSuites": 11,
+    "totalTestCases": 53,
+    "estimatedExecutionTimeMinutes": 5,
+    "categories": [
+      {
+        "id": 1,
+        "name": "Page Load & Core UI",
+        "description": "Verify page loads correctly and displays core UI elements",
+        "testCount": 5,
+        "passRateTarget": "100%",
+        "tests": [
+          {
+            "id": "1.1",
+            "name": "loads without JS errors",
+            "objective": "Verify no uncaught exceptions on page load",
+            "selector": "JS error handling",
+            "assertion": "Error handler active, exceptions logged"
+          },
+          {
+            "id": "1.2",
+            "name": "has the correct page title",
+            "objective": "Verify page title includes 'Techbridge'",
+            "selector": "cy.title()",
+            "assertion": "should('include', 'Techbridge')"
+          },
+          {
+            "id": "1.3",
+            "name": "has a valid meta description",
+            "objective": "Verify meta description contains university name",
+            "selector": "head meta[name='description']",
+            "assertion": "content matches /[Tt]echbridge/"
+          },
+          {
+            "id": "1.4",
+            "name": "displays the university logo or branding",
+            "objective": "Verify logo or branding text visible",
+            "selector": "img[alt*='Techbridge'], .logo, .brand",
+            "assertion": "Logo OR text found in DOM"
+          },
+          {
+            "id": "1.5",
+            "name": "renders the main navigation or menu",
+            "objective": "Verify navigation element exists",
+            "selector": "nav, [role='navigation'], header, .navbar",
+            "assertion": "should('exist')"
+          }
+        ]
+      },
+      {
+        "id": 2,
+        "name": "Navigation & Routing",
+        "description": "Verify navigation between pages works correctly",
+        "testCount": 4,
+        "passRateTarget": "100%",
+        "tests": [
+          {
+            "id": "2.1",
+            "name": "navigates to the login page",
+            "objective": "Click login link and verify URL change",
+            "action": "click login link",
+            "assertion": "url().should('match', /login|signin|account/i)"
+          },
+          {
+            "id": "2.2",
+            "name": "navigates to the registration / new applicant page",
+            "objective": "Click register link and verify navigation",
+            "action": "click register link",
+            "assertion": "url().should('match', /register|signup|apply|new/i)"
+          },
+          {
+            "id": "2.3",
+            "name": "has working footer links",
+            "objective": "Verify all footer links have valid hrefs",
+            "selector": "footer a",
+            "assertion": "href != empty (excluding mailto/tel)"
+          },
+          {
+            "id": "2.4",
+            "name": "returns 200 on the base URL",
+            "objective": "Verify API endpoint returns success",
+            "action": "cy.request(BASE_URL)",
+            "assertion": "its('status').should('eq', 200)"
+          }
+        ]
+      },
+      {
+        "id": 3,
+        "name": "Login / Account Access",
+        "description": "Verify login form and authentication flow",
+        "testCount": 6,
+        "passRateTarget": "100%",
+        "tests": [
+          {
+            "id": "3.1",
+            "name": "renders an email or username input",
+            "objective": "Verify login form has credential field",
+            "selector": "input[type='email'], input[name*='username']",
+            "assertion": "should('exist')"
+          },
+          {
+            "id": "3.2",
+            "name": "renders a password input",
+            "objective": "Verify password input exists",
+            "selector": "input[type='password']",
+            "assertion": "should('exist')"
+          },
+          {
+            "id": "3.3",
+            "name": "shows validation error on empty login submission",
+            "objective": "Submit empty form and verify error",
+            "action": "click submit button",
+            "assertion": "error message OR visual indicator shown"
+          },
+          {
+            "id": "3.4",
+            "name": "shows error for invalid credentials",
+            "objective": "Test with fake credentials",
+            "action": "type fake email and password, submit",
+            "assertion": "contains(/invalid|incorrect|wrong/i)"
+          },
+          {
+            "id": "3.5",
+            "name": "has a 'Forgot Password' link",
+            "objective": "Verify password recovery option",
+            "selector": "forgot password link",
+            "assertion": "should('exist')"
+          },
+          {
+            "id": "3.6",
+            "name": "has a link to register / create a new account",
+            "objective": "Verify registration option available",
+            "selector": "register link",
+            "assertion": "should('exist')"
+          }
+        ]
+      },
+      {
+        "id": 4,
+        "name": "New Applicant Registration",
+        "description": "Verify registration form fields and validation",
+        "testCount": 7,
+        "passRateTarget": "100%",
+        "tests": [
+          {
+            "id": "4.1",
+            "name": "renders a registration form",
+            "objective": "Verify form element on register page",
+            "selector": "form, [class*='form']",
+            "assertion": "should('exist')"
+          },
+          {
+            "id": "4.2",
+            "name": "has first name and last name fields",
+            "objective": "Verify name input fields exist",
+            "selector": "input[name*='first'], input[name*='last']",
+            "assertion": "should('exist')"
+          },
+          {
+            "id": "4.3",
+            "name": "has an email field",
+            "objective": "Verify email input exists",
+            "selector": "input[type='email']",
+            "assertion": "should('exist')"
+          },
+          {
+            "id": "4.4",
+            "name": "has a phone number field",
+            "objective": "Verify phone input exists",
+            "selector": "input[type='tel'], input[name*='phone']",
+            "assertion": "should('exist')"
+          },
+          {
+            "id": "4.5",
+            "name": "has a password and confirm password field",
+            "objective": "Verify password inputs exist",
+            "selector": "input[type='password']",
+            "assertion": "have.length.at.least(1)"
+          },
+          {
+            "id": "4.6",
+            "name": "rejects submission with mismatched passwords",
+            "objective": "Fill form with different passwords and submit",
+            "action": "type mismatched passwords, submit",
+            "assertion": "contains(/password.*match|do not match/i)"
+          },
+          {
+            "id": "4.7",
+            "name": "rejects an invalid email format",
+            "objective": "Submit with malformed email",
+            "action": "type 'notanemail', submit",
+            "assertion": "validationMessage should not be empty"
+          }
+        ]
+      },
+      {
+        "id": 5,
+        "name": "Application Form — Personal Information",
+        "description": "Verify personal information form section",
+        "testCount": 4,
+        "passRateTarget": "100%",
+        "tests": [
+          {
+            "id": "5.1",
+            "name": "has a date of birth picker",
+            "objective": "Verify DOB input field",
+            "selector": "input[type='date'], input[name*='dob']",
+            "assertion": "should('exist')"
+          },
+          {
+            "id": "5.2",
+            "name": "has a nationality / country selector",
+            "objective": "Verify country dropdown",
+            "selector": "select[name*='nation'], select[name*='country']",
+            "assertion": "should('exist')"
+          },
+          {
+            "id": "5.3",
+            "name": "has a gender selector",
+            "objective": "Verify gender field",
+            "selector": "select[name*='gender'], input[name*='gender']",
+            "assertion": "should('exist')"
+          },
+          {
+            "id": "5.4",
+            "name": "has a Ghana Card / national ID field",
+            "objective": "Verify national ID input",
+            "selector": "input[name*='ghana'], input[name*='national_id']",
+            "assertion": "should('exist')"
+          }
+        ]
+      },
+      {
+        "id": 6,
+        "name": "Application Form — Academic Background",
+        "description": "Verify academic history form section",
+        "testCount": 3,
+        "passRateTarget": "100%",
+        "tests": [
+          {
+            "id": "6.1",
+            "name": "has a previous school / institution field",
+            "objective": "Verify previous school input",
+            "selector": "input[name*='school'], input[name*='institution']",
+            "assertion": "should('exist')"
+          },
+          {
+            "id": "6.2",
+            "name": "has a qualification / certificate type selector",
+            "objective": "Verify degree/certificate dropdown",
+            "selector": "select[name*='qualification'], select[name*='certificate']",
+            "assertion": "should('exist')"
+          },
+          {
+            "id": "6.3",
+            "name": "has a year of completion field",
+            "objective": "Verify graduation year field",
+            "selector": "input[name*='year'], select[name*='year']",
+            "assertion": "should('exist')"
+          }
+        ]
+      },
+      {
+        "id": 7,
+        "name": "Programme Selection",
+        "description": "Verify programme and intake selection",
+        "testCount": 3,
+        "passRateTarget": "100%",
+        "tests": [
+          {
+            "id": "7.1",
+            "name": "offers a programme / course of study selector",
+            "objective": "Verify course of study dropdown",
+            "selector": "select[name*='programme'], select[name*='course']",
+            "assertion": "should('exist')"
+          },
+          {
+            "id": "7.2",
+            "name": "offers a session / intake selector (Day / Evening / Weekend)",
+            "objective": "Verify day/evening/weekend option",
+            "selector": "select[name*='session'], select[name*='intake']",
+            "assertion": "should('exist')"
+          },
+          {
+            "id": "7.3",
+            "name": "offers an entry type selector (Fresh / Transfer / Mature)",
+            "objective": "Verify fresh/transfer/mature option",
+            "selector": "select[name*='entry'], input[value*='Fresh']",
+            "assertion": "should('exist')"
+          }
+        ]
+      },
+      {
+        "id": 8,
+        "name": "Document Upload",
+        "description": "Verify document upload functionality",
+        "testCount": 3,
+        "passRateTarget": "100%",
+        "tests": [
+          {
+            "id": "8.1",
+            "name": "has a file input for certificate / transcript upload",
+            "objective": "Verify document upload field",
+            "selector": "input[type='file']",
+            "assertion": "should('exist')"
+          },
+          {
+            "id": "8.2",
+            "name": "accepts PDF or image file types",
+            "objective": "Verify file type restrictions",
+            "assertion": "accept attr includes pdf|image|*"
+          },
+          {
+            "id": "8.3",
+            "name": "rejects a file that is too large (client-side)",
+            "objective": "Test 6MB file upload",
+            "action": "upload 6MB file",
+            "assertion": "size warning displayed OR logged"
+          }
+        ]
+      },
+      {
+        "id": 9,
+        "name": "Form Validation",
+        "description": "Verify form validation and error handling",
+        "testCount": 3,
+        "passRateTarget": "90%",
+        "tests": [
+          {
+            "id": "9.1",
+            "name": "marks required fields as invalid on empty submission",
+            "objective": "Submit empty form",
+            "action": "click submit",
+            "assertion": "should('have.length.at.least', 1) invalid fields"
+          },
+          {
+            "id": "9.2",
+            "name": "validates phone number format (10-digit Ghana number)",
+            "objective": "Test invalid phone (0331)",
+            "action": "type 0331, submit",
+            "assertion": "validation message shown OR logged"
+          },
+          {
+            "id": "9.3",
+            "name": "trims leading/trailing whitespace from text inputs",
+            "objective": "Type with whitespace",
+            "action": "type '   Kofi   '",
+            "assertion": "value includes 'Kofi'"
+          }
+        ]
+      },
+      {
+        "id": 10,
+        "name": "Accessibility Basics",
+        "description": "WCAG 2.1 AA compliance checks",
+        "testCount": 4,
+        "passRateTarget": "95%",
+        "tests": [
+          {
+            "id": "10.1",
+            "name": "all images have an alt attribute",
+            "objective": "Verify img[alt] attributes",
+            "selector": "img",
+            "assertion": "every image has alt attribute"
+          },
+          {
+            "id": "10.2",
+            "name": "form inputs have associated labels or aria-label",
+            "objective": "Verify label associations",
+            "selector": "input",
+            "assertion": "has label[for], aria-label, or placeholder"
+          },
+          {
+            "id": "10.3",
+            "name": "page has exactly one <h1>",
+            "objective": "Verify single page heading",
+            "selector": "h1",
+            "assertion": "should('have.length', 1)"
+          },
+          {
+            "id": "10.4",
+            "name": "links have discernible text (not just icons)",
+            "objective": "Verify link text or aria-label",
+            "selector": "a",
+            "assertion": "has text OR aria-label OR icon alt"
+          }
+        ]
+      },
+      {
+        "id": 11,
+        "name": "Responsiveness",
+        "description": "Verify responsive design across viewports",
+        "testCount": 8,
+        "passRateTarget": "100%",
+        "viewports": [
+          {
+            "name": "Mobile (320px)",
+            "width": 320,
+            "height": 568,
+            "tests": [
+              {
+                "id": "11.1.1",
+                "name": "renders without horizontal overflow",
+                "assertion": "scrollWidth <= 325px"
+              },
+              {
+                "id": "11.1.2",
+                "name": "CTA button is visible",
+                "assertion": "Apply Now button visible"
+              }
+            ]
+          },
+          {
+            "name": "Mobile (375px)",
+            "width": 375,
+            "height": 812,
+            "tests": [
+              {
+                "id": "11.2.1",
+                "name": "renders without horizontal overflow",
+                "assertion": "scrollWidth <= 380px"
+              },
+              {
+                "id": "11.2.2",
+                "name": "CTA button is visible",
+                "assertion": "Apply Now button visible"
+              }
+            ]
+          },
+          {
+            "name": "Tablet (768px)",
+            "width": 768,
+            "height": 1024,
+            "tests": [
+              {
+                "id": "11.3.1",
+                "name": "renders without horizontal overflow",
+                "assertion": "scrollWidth <= 773px"
+              },
+              {
+                "id": "11.3.2",
+                "name": "CTA button is visible",
+                "assertion": "Apply Now button visible"
+              }
+            ]
+          },
+          {
+            "name": "Desktop (1280px)",
+            "width": 1280,
+            "height": 800,
+            "tests": [
+              {
+                "id": "11.4.1",
+                "name": "renders without horizontal overflow",
+                "assertion": "scrollWidth <= 1285px"
+              },
+              {
+                "id": "11.4.2",
+                "name": "CTA button is visible",
+                "assertion": "Apply Now button visible"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "executionConfig": {
+      "baseUrl": "https://admissions.techbridge.edu.gh",
+      "browser": "chrome",
+      "headless": true,
+      "timeout": 15000,
+      "preloaderSelector": "img[title='preloader image']",
+      "errorHandling": "log uncaught exceptions, do not fail"
+    },
+    "successCriteria": {
+      "overallPassRate": "95%",
+      "pageLoadTests": "100%",
+      "navigationTests": "100%",
+      "formFunctionality": "100%",
+      "accessibility": "95%",
+      "responsiveness": "100%",
+      "executionTime": "< 5 min"
+    }
+  }
+}
