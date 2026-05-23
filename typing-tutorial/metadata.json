@@ -1,0 +1,6 @@
+{
+  "name": "Typing Tutorial",
+  "description": "An interactive typing tutorial and assessment system for Techbridge University College.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

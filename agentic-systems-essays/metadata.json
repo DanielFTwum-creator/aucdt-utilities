@@ -1,0 +1,6 @@
+{
+  "name": "Agentic Systems Essays",
+  "description": "An interactive digital publication and reader for essays exploring the frontiers of autonomous software agents, system constraints, context, and institutional memory.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

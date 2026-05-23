@@ -1,0 +1,6 @@
+{
+  "name": "Deliberate Magic Reader",
+  "description": "An elegant, interactive essay reader and drafting platform for the 'Deliberate Magic' tech-industry chronicles (part of the Techbridge AI Blueprint [TAB] initiative).",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

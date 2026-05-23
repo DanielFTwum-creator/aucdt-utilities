@@ -1,0 +1,202 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Space+Grotesk:wght@500;600;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+  --font-serif: "Playfair Display", Georgia, serif;
+  --font-display: "Space Grotesk", sans-serif;
+  --color-cream: #F9F7F4;
+  --color-editorial-border: #F2EEE9;
+  --color-editorial-black: #1A1A1A;
+}
+
+body {
+  background-color: #F9F7F4;
+  color: #1A1A1A;
+}
+
+/* Accessibility Highlight Theme: Override primary zinc/charcoal colors with highly accessible warm ambers */
+html.accessibility-amber,
+html.accessibility-amber body {
+  color: #451a03 !important; /* amber-950/deep robust dark amber */
+}
+
+/* Base Headings & Titles in light mode */
+html.accessibility-amber h1,
+html.accessibility-amber h2,
+html.accessibility-amber h3,
+html.accessibility-amber h4,
+html.accessibility-amber .text-black,
+html.accessibility-amber .text-zinc-900 {
+  color: #451a03 !important;
+}
+
+/* Standard Paragraphs & Essays */
+html.accessibility-amber p,
+html.accessibility-amber article,
+html.accessibility-amber .text-zinc-800 {
+  color: #78350f !important; /* amber-900 */
+}
+
+/* Muted / Secondary elements */
+html.accessibility-amber .text-zinc-650,
+html.accessibility-amber .text-zinc-550,
+html.accessibility-amber .text-zinc-500 {
+  color: #b45309 !important; /* amber-700 */
+}
+
+/* Dark theme active modifications for accessibility */
+html.accessibility-amber.dark,
+html.accessibility-amber.dark body {
+  color: #fef3c7 !important; /* amber-100 */
+}
+
+html.accessibility-amber.dark h1,
+html.accessibility-amber.dark h2,
+html.accessibility-amber.dark h3,
+html.accessibility-amber.dark h4,
+html.accessibility-amber.dark .text-white,
+html.accessibility-amber.dark .text-zinc-50,
+html.accessibility-amber.dark .text-stone-100 {
+  color: #fcd34d !important; /* amber-300 */
+}
+
+html.accessibility-amber.dark p,
+html.accessibility-amber.dark article,
+html.accessibility-amber.dark .text-zinc-200,
+html.accessibility-amber.dark .text-zinc-300 {
+  color: #fbbf24 !important; /* amber-400 */
+}
+
+html.accessibility-amber.dark .text-zinc-650,
+html.accessibility-amber.dark .text-zinc-500,
+html.accessibility-amber.dark .text-zinc-450,
+html.accessibility-amber.dark .text-zinc-400 {
+  color: #f59e0b !important; /* amber-500 */
+}
+
+/* Accessibility Blue Theme: Override primary colors with highly accessible high-contrast blue choices */
+html.accessibility-blue,
+html.accessibility-blue body {
+  color: #0f172a !important; /* slate-900 / deep dark slate-blue */
+}
+
+html.accessibility-blue h1,
+html.accessibility-blue h2,
+html.accessibility-blue h3,
+html.accessibility-blue h4,
+html.accessibility-blue .text-black,
+html.accessibility-blue .text-zinc-900 {
+  color: #1e3a8a !important; /* blue-900 */
+}
+
+html.accessibility-blue p,
+html.accessibility-blue article,
+html.accessibility-blue .text-zinc-800 {
+  color: #1e40af !important; /* blue-850 */
+}
+
+html.accessibility-blue .text-zinc-650,
+html.accessibility-blue .text-zinc-550,
+html.accessibility-blue .text-zinc-500 {
+  color: #2563eb !important; /* blue-600 */
+}
+
+/* Dark theme active modifications for blue accessibility */
+html.accessibility-blue.dark,
+html.accessibility-blue.dark body {
+  color: #f0fdf4 !important; /* clean light text */
+  color: #eff6ff !important; /* blue-50 */
+}
+
+html.accessibility-blue.dark h1,
+html.accessibility-blue.dark h2,
+html.accessibility-blue.dark h3,
+html.accessibility-blue.dark h4,
+html.accessibility-blue.dark .text-white,
+html.accessibility-blue.dark .text-zinc-50,
+html.accessibility-blue.dark .text-stone-100 {
+  color: #93c5fd !important; /* blue-300 */
+}
+
+html.accessibility-blue.dark p,
+html.accessibility-blue.dark article,
+html.accessibility-blue.dark .text-zinc-200,
+html.accessibility-blue.dark .text-zinc-300 {
+  color: #60a5fa !important; /* blue-400 */
+}
+
+html.accessibility-blue.dark .text-zinc-650,
+html.accessibility-blue.dark .text-zinc-500,
+html.accessibility-blue.dark .text-zinc-450,
+html.accessibility-blue.dark .text-zinc-400 {
+  color: #3b82f6 !important; /* blue-500 */
+}
+
+/* Global Serif Font Theme Override */
+html.font-theme-serif {
+  --font-sans: "Playfair Display", Georgia, serif;
+  --font-display: "Playfair Display", Georgia, serif;
+  --font-serif: "Playfair Display", Georgia, serif;
+}
+html.font-theme-serif,
+html.font-theme-serif body,
+html.font-theme-serif button,
+html.font-theme-serif input,
+html.font-theme-serif select,
+html.font-theme-serif textarea,
+html.font-theme-serif p,
+html.font-theme-serif h1,
+html.font-theme-serif h2,
+html.font-theme-serif h3,
+html.font-theme-serif h4,
+html.font-theme-serif span,
+html.font-theme-serif article {
+  font-family: var(--font-serif) !important;
+}
+
+/* Global Sans-serif Font Theme Override */
+html.font-theme-sans {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Space Grotesk", sans-serif;
+  --font-serif: "Inter", ui-sans-serif, system-ui, sans-serif;
+}
+html.font-theme-sans,
+html.font-theme-sans body,
+html.font-theme-sans button,
+html.font-theme-sans input,
+html.font-theme-sans select,
+html.font-theme-sans textarea,
+html.font-theme-sans p,
+html.font-theme-sans h1,
+html.font-theme-sans h2,
+html.font-theme-sans h3,
+html.font-theme-sans h4,
+html.font-theme-sans span,
+html.font-theme-sans article {
+  font-family: var(--font-sans) !important;
+}
+
+/* Global Monospace Font Theme Override */
+html.font-theme-mono {
+  --font-sans: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+  --font-display: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+  --font-serif: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+}
+html.font-theme-mono,
+html.font-theme-mono body,
+html.font-theme-mono button,
+html.font-theme-mono input,
+html.font-theme-mono select,
+html.font-theme-mono textarea,
+html.font-theme-mono p,
+html.font-theme-mono h1,
+html.font-theme-mono h2,
+html.font-theme-mono h3,
+html.font-theme-mono h4,
+html.font-theme-mono span,
+html.font-theme-mono article {
+  font-family: var(--font-mono) !important;
+}
