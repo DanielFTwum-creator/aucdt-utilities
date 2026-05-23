@@ -46,9 +46,100 @@
         }
       })();
     </script>
+    <style id="glucose-splash-styles">
+      body.loading {
+        background: linear-gradient(135deg, #f5f0e8 0%, #fffbf5 100%) !important;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        font-family: 'Lora', serif;
+        overflow: hidden;
+      }
+      .glucose-splash {
+        text-align: center;
+        border: 1px solid rgba(227, 76, 60, 0.2);
+        padding: 60px 80px;
+        background: rgba(255, 251, 245, 0.95);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(46, 117, 182, 0.08);
+        position: relative;
+      }
+      .glucose-splash::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 6px;
+        background: linear-gradient(90deg, #E74C3C, #2E75B6);
+        border-top-left-radius: 20px;
+        border-top-right-radius: 20px;
+      }
+      .glucose-logo {
+        color: #2E75B6;
+        font-size: 2.8rem;
+        font-weight: 700;
+        letter-spacing: 0.05em;
+        margin-bottom: 8px;
+        display: block;
+      }
+      .glucose-logo span {
+        color: #E74C3C;
+      }
+      .glucose-status {
+        color: #52525B;
+        text-transform: uppercase;
+        letter-spacing: 0.3em;
+        font-size: 0.75rem;
+        font-weight: 600;
+        opacity: 0.8;
+      }
+      .glucose-loading {
+        margin-top: 25px;
+        height: 3px;
+        width: 120px;
+        background: rgba(46, 117, 182, 0.15);
+        margin-left: auto;
+        margin-right: auto;
+        position: relative;
+        overflow: hidden;
+        border-radius: 3px;
+      }
+      .glucose-loading::after {
+        content: "";
+        position: absolute;
+        left: -100%;
+        width: 50%;
+        height: 100%;
+        background: #2E75B6;
+        animation: glucose-load 1.6s infinite ease-in-out;
+      }
+      @keyframes glucose-load {
+        to { left: 150%; }
+      }
+    </style>
+    <script>
+      document.body.classList.add('loading');
+      document.addEventListener('DOMContentLoaded', () => {
+        document.body.classList.remove('loading');
+      });
+      window.addEventListener('load', () => {
+        document.body.classList.remove('loading');
+      });
+    </script>
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <div class="glucose-splash">
+        <span class="glucose-logo">Glu<span>cose</span></span>
+        <div class="glucose-status">Health Monitor</div>
+        <div class="glucose-loading"></div>
+      </div>
+    </div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

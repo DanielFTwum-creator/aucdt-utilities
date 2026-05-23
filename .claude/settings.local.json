@@ -182,7 +182,13 @@
       "Bash(ls -lh __TRACKED_VAR__/deploy.ps1)",
       "Bash(echo \"NO DEPLOY SCRIPT\")",
       "Bash(head -35 __TRACKED_VAR__/index.html)",
-      "Bash(grep base: __TRACKED_VAR__/vite.config.ts)"
+      "Bash(grep base: __TRACKED_VAR__/vite.config.ts)",
+      "Bash(echo -n '__TRACKED_VAR__: ')",
+      "Bash(grep -q splash __TRACKED_VAR__/index.html)",
+      "Bash(echo \"✅ Splash\")",
+      "Bash(echo \"❌ No splash\")",
+      "Bash(echo \"✅\")",
+      "Bash(echo \"❌\")"
     ]
   }
 }
