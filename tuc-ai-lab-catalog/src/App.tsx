@@ -3,6 +3,7 @@ import { Search, LayoutGrid, List as ListIcon, ExternalLink, Cpu, Sparkles, Code
 import { motion, AnimatePresence } from "motion/react";
 import { useAuth } from "./contexts/AuthContext";
 import { useTheme } from "./contexts/ThemeContext";
+import AppCatalog from "./components/AppCatalog";
 
 const BASE_URL = "https://ai-tools.techbridge.edu.gh";
 
@@ -188,6 +189,7 @@ export default function App() {
   const [activeCategory, setActiveCategory] = useState("All");
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [selectedTool, setSelectedTool] = useState<Tool | null>(null);
+  const [activeView, setActiveView] = useState<"lab" | "catalog">("lab");
 
   // Body scroll lock
   useEffect(() => {
@@ -246,7 +248,18 @@ export default function App() {
         </div>
         <div className="flex items-center gap-8">
           <div className="hidden md:flex gap-6 text-sm font-medium text-slate-600">
-            <a href="#" className="text-blue-600 border-b-2 border-blue-600 pb-5 translate-y-2.5">AI Lab Catalog</a>
+            <button
+              onClick={() => setActiveView("lab")}
+              className={`pb-5 translate-y-2.5 transition-colors ${activeView === "lab" ? "text-blue-600 border-b-2 border-blue-600" : "hover:text-blue-600"}`}
+            >
+              AI Lab Tools
+            </button>
+            <button
+              onClick={() => setActiveView("catalog")}
+              className={`pb-5 translate-y-2.5 transition-colors ${activeView === "catalog" ? "text-blue-600 border-b-2 border-blue-600" : "hover:text-blue-600"}`}
+            >
+              App Catalog
+            </button>
           </div>
           <div className="h-8 w-px bg-slate-200"></div>
           <button
@@ -266,6 +279,9 @@ export default function App() {
       </nav>
 
       {/* Main Content Area */}
+      {activeView === "catalog" ? (
+        <AppCatalog />
+      ) : (
       <div className="flex grow overflow-hidden">
         {/* Sidebar Filters */}
         <aside className="bg-surface w-64 border-r border-subtle p-6 shrink-0 flex flex-col overflow-y-auto hidden md:flex">
@@ -417,11 +433,11 @@ export default function App() {
             </div>
           </footer>
         </main>
+        <AnimatePresence>
+          {selectedTool && <DetailModal tool={selectedTool} onClose={() => setSelectedTool(null)} />}
+        </AnimatePresence>
       </div>
-
-      <AnimatePresence>
-        {selectedTool && <DetailModal tool={selectedTool} onClose={() => setSelectedTool(null)} />}
-      </AnimatePresence>
+      )}
     </div>
   );
 }

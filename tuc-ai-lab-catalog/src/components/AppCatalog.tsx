@@ -36,39 +36,39 @@ export default function AppCatalog() {
   });
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 p-8">
+    <div className="min-h-screen bg-gradient-to-br from-white via-blue-50 to-cyan-50 p-8">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="mb-12">
-          <h1 className="text-4xl font-bold text-slate-900 mb-2">TUC AI Lab Catalog</h1>
-          <p className="text-lg text-slate-600">Complete registry of all 28 deployed applications</p>
+        <div className="mb-12 bg-gradient-to-r from-blue-600 to-cyan-500 rounded-xl p-8 text-white shadow-lg">
+          <h1 className="text-4xl font-bold mb-2">✨ TUC AI Lab Catalog</h1>
+          <p className="text-lg text-blue-100">Complete registry of all 28 deployed applications</p>
         </div>
 
         {/* Summary Cards */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-          <div className="bg-white rounded-lg shadow p-6 border-l-4 border-emerald-500">
+          <div className="bg-gradient-to-br from-emerald-50 to-emerald-100 rounded-lg shadow-md p-6 border border-emerald-300">
             <div className="text-3xl font-bold text-emerald-600">{summary.standardised}</div>
-            <div className="text-sm text-slate-600">Production Ready</div>
+            <div className="text-sm text-emerald-700 font-semibold">✅ Production Ready</div>
           </div>
-          <div className="bg-white rounded-lg shadow p-6 border-l-4 border-amber-500">
+          <div className="bg-gradient-to-br from-amber-50 to-amber-100 rounded-lg shadow-md p-6 border border-amber-300">
             <div className="text-3xl font-bold text-amber-600">{summary.inProgress}</div>
-            <div className="text-sm text-slate-600">In Progress</div>
+            <div className="text-sm text-amber-700 font-semibold">🔄 In Progress</div>
           </div>
-          <div className="bg-white rounded-lg shadow p-6 border-l-4 border-red-500">
+          <div className="bg-gradient-to-br from-red-50 to-red-100 rounded-lg shadow-md p-6 border border-red-300">
             <div className="text-3xl font-bold text-red-600">{summary.notStarted}</div>
-            <div className="text-sm text-slate-600">Not Standardised</div>
+            <div className="text-sm text-red-700 font-semibold">⏳ Not Standardised</div>
           </div>
-          <div className="bg-white rounded-lg shadow p-6 border-l-4 border-blue-500">
+          <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg shadow-md p-6 border border-blue-300">
             <div className="text-3xl font-bold text-blue-600">{summary.completeness}%</div>
-            <div className="text-sm text-slate-600">Overall Progress</div>
+            <div className="text-sm text-blue-700 font-semibold">📊 Overall Progress</div>
           </div>
         </div>
 
         {/* Filters */}
-        <div className="bg-white rounded-lg shadow p-6 mb-8">
+        <div className="bg-gradient-to-r from-white to-blue-50 rounded-lg shadow-md border border-blue-200 p-6 mb-8">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label className="block text-sm font-semibold text-slate-700 mb-3">Status</label>
+              <label className="block text-sm font-semibold text-blue-900 mb-3">🔎 Filter by Status</label>
               <div className="flex flex-wrap gap-2">
                 {['all', 'standardised', 'in-progress', 'not-started'].map((status) => (
                   <button
@@ -86,11 +86,11 @@ export default function AppCatalog() {
               </div>
             </div>
             <div>
-              <label className="block text-sm font-semibold text-slate-700 mb-3">Category</label>
+              <label className="block text-sm font-semibold text-blue-900 mb-3">🏷️ Filter by Category</label>
               <select
                 value={filterCategory}
                 onChange={(e) => setFilterCategory(e.target.value as any)}
-                className="w-full md:w-64 px-4 py-2 border border-slate-300 rounded-lg font-medium focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full md:w-64 px-4 py-2 border border-blue-300 rounded-lg font-medium bg-gradient-to-r from-white to-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-500 text-blue-900"
               >
                 <option value="all">All Categories</option>
                 <option value="education">Education</option>
@@ -110,7 +110,7 @@ export default function AppCatalog() {
             return (
               <div
                 key={app.id}
-                className={`rounded-lg shadow-lg border-2 p-6 transition hover:shadow-xl ${
+                className={`rounded-xl shadow-md border-2 p-6 transition hover:shadow-xl hover:-translate-y-1 ${
                   statusColors[app.status]
                 }`}
               >
@@ -174,17 +174,17 @@ export default function AppCatalog() {
                     href={`https://ai-tools.techbridge.edu.gh${app.url}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-xs px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
+                    className="text-xs px-4 py-2 bg-gradient-to-r from-blue-500 to-cyan-500 text-white rounded-lg hover:shadow-lg transition font-semibold"
                   >
-                    Open App ↗
+                    🚀 Open App
                   </a>
                   <a
                     href={`https://github.com/DanielFTwum-creator/aucdt-utilities/tree/main/${app.localDir}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-xs px-3 py-1 bg-slate-600 text-white rounded hover:bg-slate-700 transition"
+                    className="text-xs px-4 py-2 bg-gradient-to-r from-slate-400 to-slate-500 text-white rounded-lg hover:shadow-lg transition font-semibold"
                   >
-                    GitHub
+                    💾 Code
                   </a>
                 </div>
 
