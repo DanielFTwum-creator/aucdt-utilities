@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+  <!-- Typing & Math Island - Shield with Calculator -->
+  <rect width="256" height="256" fill="#f5f0e8"/>
+
+  <!-- Shield shape -->
+  <path d="M 128 20 L 180 50 L 180 120 C 180 160 128 220 128 220 C 128 220 76 160 76 120 L 76 50 Z" fill="#06B6D4" stroke="#0891B2" stroke-width="2"/>
+
+  <!-- Calculator symbol -->
+  <rect x="105" y="80" width="46" height="50" fill="none" stroke="#10B981" stroke-width="2" rx="2"/>
+
+  <!-- Display -->
+  <rect x="110" y="85" width="36" height="12" fill="#10B981" opacity="0.2"/>
+
+  <!-- Buttons -->
+  <rect x="110" y="102" width="8" height="8" fill="#10B981" opacity="0.6"/>
+  <rect x="121" y="102" width="8" height="8" fill="#10B981" opacity="0.6"/>
+  <rect x="132" y="102" width="8" height="8" fill="#10B981" opacity="0.6"/>
+  <rect x="110" y="113" width="8" height="8" fill="#10B981" opacity="0.6"/>
+  <rect x="121" y="113" width="8" height="8" fill="#10B981" opacity="0.6"/>
+</svg>

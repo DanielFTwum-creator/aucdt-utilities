@@ -173,7 +173,16 @@
       "Bash(git check-ignore *)",
       "Bash(grep -oE 'GOCSPX-[A-Za-z0-9_-]{8,}')",
       "Bash(grep -lE 'AIzaSy[A-Za-z0-9_-]{30,}' dist/ -r)",
-      "Bash(pnpm up *)"
+      "Bash(pnpm up *)",
+      "Bash(git worktree *)",
+      "Bash(cd \"C:\\\\Development\\\\github\\\\aucdt-utilities\")",
+      "Bash(echo '=== __TRACKED_VAR__ ===')",
+      "Bash(ls -lh __TRACKED_VAR__/public/favicon.svg)",
+      "Bash(echo \"NO FAVICON\")",
+      "Bash(ls -lh __TRACKED_VAR__/deploy.ps1)",
+      "Bash(echo \"NO DEPLOY SCRIPT\")",
+      "Bash(head -35 __TRACKED_VAR__/index.html)",
+      "Bash(grep base: __TRACKED_VAR__/vite.config.ts)"
     ]
   }
 }

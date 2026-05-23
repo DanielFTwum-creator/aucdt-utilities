@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+  <!-- Deliberate Magic - Shield with Code Symbol -->
+  <rect width="256" height="256" fill="#0f172a"/>
+
+  <!-- Shield shape -->
+  <path d="M 128 20 L 180 50 L 180 120 C 180 160 128 220 128 220 C 128 220 76 160 76 120 L 76 50 Z" fill="#818CF8" stroke="#6366F1" stroke-width="2"/>
+
+  <!-- Code brackets symbol -->
+  <path d="M 110 95 L 100 105 L 110 115" stroke="#f8fafc" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+  <path d="M 146 95 L 156 105 L 146 115" stroke="#f8fafc" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+  <line x1="125" y1="85" x2="131" y2="125" stroke="#f8fafc" stroke-width="2" opacity="0.8"/>
+</svg>

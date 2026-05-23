@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+  <!-- TUC Water Distributor - Shield with Water Drop -->
+  <rect width="256" height="256" fill="#f5f0e8"/>
+
+  <!-- Shield shape -->
+  <path d="M 128 20 L 180 50 L 180 120 C 180 160 128 220 128 220 C 128 220 76 160 76 120 L 76 50 Z" fill="#3B82F6" stroke="#1E40AF" stroke-width="2"/>
+
+  <!-- Water drop inside shield -->
+  <path d="M 128 70 C 128 70 115 85 115 95 C 115 108 121 115 128 115 C 135 115 141 108 141 95 C 141 85 128 70 128 70 Z" fill="#10B981" opacity="0.9"/>
+
+  <!-- Water waves below drop -->
+  <path d="M 110 125 Q 128 130 146 125" stroke="#10B981" stroke-width="2" fill="none" opacity="0.7"/>
+  <path d="M 105 135 Q 128 140 151 135" stroke="#10B981" stroke-width="1.5" fill="none" opacity="0.5"/>
+</svg>
