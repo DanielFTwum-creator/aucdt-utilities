@@ -1,5 +1,5 @@
 ﻿# TUC Project Deployment Script
-# Safe deployment pattern using SSH heredoc for .htaccess
+# Safe deployment pattern using SSH pipe for .htaccess
 # Prevents UTF-8 BOM issues and adds comprehensive health checks
 
 param(
@@ -18,7 +18,7 @@ $ErrorActionPreference = "Stop"
 Write-Host "Step 1/6: Validating configuration..." -ForegroundColor Cyan
 
 if (-not (Test-Path $ConfigFile)) {
-    Write-Host "[FAIL] Configuration file not found: $ConfigFile" -ForegroundColor Red
+    Write-Host "❌ Configuration file not found: $ConfigFile" -ForegroundColor Red
     exit 1
 }
 
@@ -27,7 +27,6 @@ $config = Get-Content $ConfigFile | ConvertFrom-Json
 $ProjectName = $config.projectName
 $RemoteHost = $config.remoteHost
 $DeployPath = $config.deployPath
-
 $BuildTool = if ($config.buildTool) { $config.buildTool } else { "pnpm" }
 $OutputDir = if ($config.outputDir) { $config.outputDir } else { "dist" }
 $RequiredEnvVars = if ($config.requiredEnvVars) { $config.requiredEnvVars } else { @() }
@@ -48,7 +47,7 @@ Write-Host "Step 2/6: Pre-flight checks..." -ForegroundColor Cyan
 
 $preflight_errors = @()
 
-# Check .env files (supporting both .env.local and .env)
+# Check .env files
 if ($RequiredEnvVars.Count -gt 0) {
     $envPath = ""
     if (Test-Path ".env.local") {
@@ -85,14 +84,14 @@ if (-not $Build -and -not (Test-Path $OutputDir)) {
 }
 
 if ($preflight_errors.Count -gt 0) {
-    Write-Host "  [FAIL] Pre-flight checks failed:" -ForegroundColor Red
+    Write-Host "  ❌ Pre-flight checks failed:" -ForegroundColor Red
     foreach ($err in $preflight_errors) {
         Write-Host "     - $err" -ForegroundColor Red
     }
     exit 1
 }
 
-Write-Host "  [OK] All checks passed"
+Write-Host "  ✅ All checks passed"
 Write-Host ""
 
 # ============================================================================
@@ -105,10 +104,10 @@ if ($Build) {
     & $BuildTool build
 
     if ($LASTEXITCODE -ne 0) {
-        Write-Host "  [FAIL] Build failed with exit code $LASTEXITCODE" -ForegroundColor Red
+        Write-Host "  ❌ Build failed with exit code $LASTEXITCODE" -ForegroundColor Red
         exit 1
     }
-    Write-Host "  [OK] Build successful"
+    Write-Host "  ✅ Build successful"
 } else {
     Write-Host "Step 3/6: Skipping build (not requested)" -ForegroundColor Cyan
 }
@@ -120,23 +119,23 @@ Write-Host ""
 Write-Host "Step 4/6: Verifying build output..." -ForegroundColor Cyan
 
 if (-not (Test-Path $OutputDir)) {
-    Write-Host "  [FAIL] Output directory not found: $OutputDir" -ForegroundColor Red
+    Write-Host "  ❌ Output directory not found: $OutputDir" -ForegroundColor Red
     exit 1
 }
 
 $outputFiles = @(Get-ChildItem -Path $OutputDir -File -Recurse)
 if ($outputFiles.Count -eq 0) {
-    Write-Host "  [FAIL] Output directory is empty: $OutputDir" -ForegroundColor Red
+    Write-Host "  ❌ Output directory is empty: $OutputDir" -ForegroundColor Red
     exit 1
 }
 
 if (-not (Test-Path "$OutputDir/index.html")) {
-    Write-Host "  [FAIL] Critical file missing: index.html" -ForegroundColor Red
+    Write-Host "  ❌ Critical file missing: index.html" -ForegroundColor Red
     exit 1
 }
 
 $totalSize = ($outputFiles | Measure-Object -Property Length -Sum).Sum / 1MB
-Write-Host "  [OK] Output verified: $($outputFiles.Count) files, $([Math]::Round($totalSize, 2)) MB"
+Write-Host "  ✅ Output verified: $($outputFiles.Count) files, $([Math]::Round($totalSize, 2)) MB"
 Write-Host ""
 
 # ============================================================================
@@ -145,32 +144,36 @@ Write-Host ""
 Write-Host "Step 5/6: Deploying to remote server (SCP-only)..." -ForegroundColor Cyan
 
 if ($DryRun) {
-    Write-Host "  [DRY RUN] Would deploy to ${RemoteHost}:${DeployPath}" -ForegroundColor Yellow
+    Write-Host "  🔍 DRY RUN: Would deploy to ${RemoteHost}:${DeployPath}" -ForegroundColor Yellow
 } else {
-    $OutputDirPath = (Resolve-Path $OutputDir).Path
-    $SubdomainPath = $DeployPath.Split("/")[-1]
+    # Parse remote host format
+    $remoteHostParts = $RemoteHost -split "@"
+    if ($remoteHostParts.Count -eq 2) {
+        $remoteUser = $remoteHostParts[0]
+        $remoteServer = $remoteHostParts[1]
+        $sshTarget = $RemoteHost
+    } else {
+        $remoteUser = "root"
+        $remoteServer = $RemoteHost
+        $sshTarget = "root@$RemoteHost"
+    }
 
-    # Write .htaccess locally (prevents BOM issues by using UTF-8 without BOM)
-    Write-Host "  Generating .htaccess locally..." -ForegroundColor Yellow
-    $htaccessContent = @"
-<IfModule mod_rewrite.c>
-  RewriteEngine On
-  RewriteBase /$SubdomainPath/
-  RewriteCond %{REQUEST_FILENAME} -f [OR]
-  RewriteCond %{REQUEST_FILENAME} -d
-  RewriteRule ^ - [L]
-  RewriteRule ^ /$SubdomainPath/index.html [QSA,L]
-</IfModule>
-"@
-    $htaccessPath = Join-Path $OutputDirPath ".htaccess"
-    try {
-        $utf8NoBom = New-Object System.Text.UTF8Encoding($false)
-        [System.IO.File]::WriteAllText($htaccessPath, $htaccessContent, $utf8NoBom)
-        Write-Host "    [OK] Generated .htaccess at: $htaccessPath (UTF-8 without BOM)"
-    } catch {
-        Write-Host "  [FAIL] Failed to generate local .htaccess: $_" -ForegroundColor Red
+    # Create directory structure
+    Write-Host "  Creating directory structure..." -ForegroundColor Yellow
+    ssh -o StrictHostKeyChecking=no $sshTarget "mkdir -p '$DeployPath'" 2>&1 | Where-Object { $_ -notmatch "already exists" } | ForEach-Object { Write-Host "    $_" }
+
+    if ($LASTEXITCODE -ne 0 -and $LASTEXITCODE -ne 127) {
+        Write-Host "  ❌ Failed to create directory on remote" -ForegroundColor Red
         exit 1
     }
+
+    # Clear old files
+    Write-Host "  Clearing old deployment..." -ForegroundColor Yellow
+    ssh -o StrictHostKeyChecking=no $sshTarget "rm -rf '$DeployPath'/* '$DeployPath'/.htaccess 2>/dev/null || true" | Out-Null
+
+    # Deploy files
+    Write-Host "  Deploying files via SCP..." -ForegroundColor Yellow
+    $OutputDirPath = (Resolve-Path $OutputDir).Path
 
     # Gather files to copy, including hidden items like .htaccess
     $items = Get-ChildItem -Path $OutputDirPath -Force
@@ -180,24 +183,43 @@ if ($DryRun) {
     }
 
     if ($filePaths.Count -eq 0) {
-        Write-Host "  [FAIL] No files to deploy in $OutputDirPath" -ForegroundColor Red
+        Write-Host "  ❌ No files to deploy in $OutputDirPath" -ForegroundColor Red
         exit 1
-    }
-
-    Write-Host "  Deploying files via SCP (single-session transfer)..." -ForegroundColor Yellow
-    foreach ($path in $filePaths) {
-        Write-Host "    Queueing: $(Split-Path $path -Leaf)"
     }
 
     # Run native SCP command to transfer all files/folders in one go
-    & scp -r -o StrictHostKeyChecking=no -o ConnectTimeout=30 $filePaths "${RemoteHost}:${DeployPath}/"
+    & scp -r -o StrictHostKeyChecking=no -o ConnectTimeout=30 $filePaths "${sshTarget}:${DeployPath}/"
 
     if ($LASTEXITCODE -ne 0) {
-        Write-Host "  [FAIL] SCP transfer failed with exit code $LASTEXITCODE" -ForegroundColor Red
+        Write-Host "  ❌ File transfer failed" -ForegroundColor Red
         exit 1
     }
 
-    Write-Host "  [OK] SCP transfer complete"
+    # Create .htaccess via SSH pipe (prevents heredoc/BOM issues)
+    Write-Host "  Creating .htaccess..." -ForegroundColor Yellow
+
+    $SubdomainPath = $DeployPath.Split("/")[-1]
+
+    $htaccessContent = "<IfModule mod_rewrite.c>`n" +
+                       "  RewriteEngine On`n" +
+                       "  RewriteBase /$SubdomainPath/`n" +
+                       "  RewriteCond %{REQUEST_FILENAME} -f [OR]`n" +
+                       "  RewriteCond %{REQUEST_FILENAME} -d`n" +
+                       "  RewriteRule ^ - [L]`n" +
+                       "  RewriteRule ^ /$SubdomainPath/index.html [QSA,L]`n" +
+                       "</IfModule>"
+
+    $htaccessContent | ssh -o StrictHostKeyChecking=no $sshTarget "cat > '$DeployPath/.htaccess'"
+
+    if ($LASTEXITCODE -ne 0) {
+        Write-Host "  ⚠️  Warning: .htaccess creation may have failed" -ForegroundColor Yellow
+    }
+
+    # Set permissions
+    Write-Host "  Setting file permissions..." -ForegroundColor Yellow
+    ssh -o StrictHostKeyChecking=no $sshTarget "chmod -R 755 '$DeployPath' && chmod 644 '$DeployPath/.htaccess' 2>/dev/null || true" | Out-Null
+
+    Write-Host "  ✅ Deployment complete"
 }
 Write-Host ""
 
@@ -207,21 +229,54 @@ Write-Host ""
 if (-not $SkipHealthCheck -and -not $DryRun) {
     Write-Host "Step 6/6: Health checks..." -ForegroundColor Cyan
 
-    # Testing HTTP routing
-    Write-Host "  Testing HTTP routing (waiting 3 sec for server to settle)..." -ForegroundColor Yellow
-    Start-Sleep -Seconds 3
+    $healthCheckPassed = $true
 
+    # Parse remote host format
+    $remoteHostParts = $RemoteHost -split "@"
+    $sshTarget = if ($remoteHostParts.Count -eq 2) { $RemoteHost } else { "root@$RemoteHost" }
+
+    # Check 1: Remote index.html exists
+    Write-Host "  Checking remote index.html..." -ForegroundColor Yellow
+    ssh -o StrictHostKeyChecking=no $sshTarget "test -f '$DeployPath/index.html'" 2>&1 | Out-Null
+
+    if ($LASTEXITCODE -eq 0) {
+        Write-Host "    ✅ index.html present"
+    } else {
+        Write-Host "    ❌ index.html missing on remote" -ForegroundColor Red
+        $healthCheckPassed = $false
+    }
+
+    # Check 2: .htaccess syntax
+    Write-Host "  Checking .htaccess syntax..." -ForegroundColor Yellow
+    ssh -o StrictHostKeyChecking=no $sshTarget "apache2ctl -t 2>&1 | grep -i syntax" 2>&1 | Out-Null
+
+    if ($LASTEXITCODE -eq 0 -or $LASTEXITCODE -eq 1) {
+        Write-Host "    ✅ .htaccess syntax OK"
+    } else {
+        Write-Host "    ⚠️  Cannot verify .htaccess syntax (apache2ctl not available)" -ForegroundColor Yellow
+    }
+
+    # Check 3: HTTP routing test (wait 5 seconds for server)
+    Write-Host "  Testing HTTP routing (waiting 5 sec for server)..." -ForegroundColor Yellow
+    Start-Sleep -Seconds 5
+
+    $httpTest = $null
     try {
-        $httpTest = Invoke-WebRequest -Uri $HealthCheckUrl -UseBasicParsing -TimeoutSec 15 -ErrorAction SilentlyContinue
+        $httpTest = Invoke-WebRequest -Uri $HealthCheckUrl -UseBasicParsing -TimeoutSec 10 -ErrorAction SilentlyContinue
         if ($httpTest.StatusCode -eq 200) {
-            Write-Host "    [OK] HTTP 200 OK from $HealthCheckUrl"
-            Write-Host "  [OK] All health checks passed"
+            Write-Host "    ✅ HTTP 200 OK from $HealthCheckUrl"
         } else {
-            Write-Host "    [WARN] Unexpected status code: $($httpTest.StatusCode) from $HealthCheckUrl" -ForegroundColor Yellow
+            Write-Host "    ⚠️  Unexpected status code: $($httpTest.StatusCode)" -ForegroundColor Yellow
         }
     } catch {
-        Write-Host "    [WARN] Could not reach health check URL (may be firewall/DNS/routing)" -ForegroundColor Yellow
+        Write-Host "    ⚠️  Could not reach health check URL (may be firewall/DNS)" -ForegroundColor Yellow
         Write-Host "       URL: $HealthCheckUrl" -ForegroundColor Yellow
+    }
+
+    if ($healthCheckPassed) {
+        Write-Host "  ✅ All health checks passed"
+    } else {
+        Write-Host "  ⚠️  Some health checks failed — review manually" -ForegroundColor Yellow
     }
 } else {
     Write-Host "Step 6/6: Skipping health checks" -ForegroundColor Yellow
@@ -231,9 +286,9 @@ Write-Host ""
 # ============================================================================
 # Summary
 # ============================================================================
-Write-Host "--------------------------------------------------------------" -ForegroundColor Green
-Write-Host "  [SUCCESS] DEPLOYMENT COMPLETE" -ForegroundColor Green
-Write-Host "--------------------------------------------------------------" -ForegroundColor Green
+Write-Host "╔════════════════════════════════════════════════════════════╗" -ForegroundColor Green
+Write-Host "║  ✅ DEPLOYMENT COMPLETE                                    ║" -ForegroundColor Green
+Write-Host "╚════════════════════════════════════════════════════════════╝" -ForegroundColor Green
 Write-Host ""
 Write-Host "Project:        $ProjectName"
 Write-Host "Remote:         $RemoteHost"
