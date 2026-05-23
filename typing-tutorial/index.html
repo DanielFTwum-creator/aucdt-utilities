@@ -1,13 +1,152 @@
-<!doctype html>
-<html lang="en">
-  <head>
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
     <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>My Google AI Studio App</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
-</html>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Master touch typing with our professional typing tutor! Practice standard lessons, take speed tests, play typing games, and track WPM progress." />
+    <meta name="keywords" content="Touch Typing, Learn Typing, Typing Speed Test, WPM Trainer, Keyboarding Lessons, TUC, Google AI Studio" />
+    <meta name="author" content="Techbridge University College" />
+    <meta name="publisher" content="TUC ICT Operations" />
+    <meta name="robots" content="index, follow" />
+    
+    <!-- Open Graph Tags -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Touch Typing Tutorial | Professional Tutor" />
+    <meta property="og:description" content="Step-by-step touch typing lessons, speed metrics, accuracy graphs, and interactive learning. Deployable as a web and mobile app." />
+    <meta property="og:locale" content="en_GB" />
+    
+    <title>Touch Typing Tutorial | Professional Tutor</title>
 
+    <!-- Google Fonts: Inter & JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        overflow-x: hidden;
+      }
+      #root {
+        min-height: 100vh;
+      }
+      .skip-to-main {
+        position: absolute;
+        left: -9999px;
+        top: auto;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        z-index: 9999;
+      }
+      .skip-to-main:focus {
+        left: 8px;
+        width: auto;
+        height: auto;
+      }
+    </style>
+
+    <!-- Splash Screen Styles -->
+    <style id="tutor-splash-styles">
+      body { 
+        background: radial-gradient(circle at 50% 50%, #fafafa 0%, #f4f4f5 100%) !important; 
+        margin: 0; 
+        padding: 0; 
+        display: flex; 
+        align-items: center; 
+        justify-content: center; 
+        min-height: 100vh; 
+        font-family: 'Inter', sans-serif; 
+        overflow: hidden; 
+      }
+      .tutor-splash { 
+        text-align: center; 
+        border: 1px solid rgba(228, 228, 231, 0.8); 
+        padding: 55px 75px; 
+        background: rgba(255, 255, 255, 0.9); 
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border-radius: 24px;
+        box-shadow: 0 10px 30px -10px rgba(9, 9, 11, 0.05);
+        position: relative; 
+      }
+      .tutor-splash::before { 
+        content: ""; 
+        position: absolute; 
+        top: 0; 
+        left: 0; 
+        width: 100%; 
+        height: 5px; 
+        background: linear-gradient(90deg, #2563eb, #3b82f6); 
+        border-top-left-radius: 24px;
+        border-top-right-radius: 24px;
+      }
+      .tutor-logo { 
+        color: #18181b; 
+        font-size: 2.3rem; 
+        font-weight: 800; 
+        letter-spacing: -0.02em; 
+        margin-bottom: 6px; 
+        display: block; 
+      }
+      .tutor-logo span {
+        color: #2563eb;
+        font-family: 'JetBrains Mono', monospace;
+      }
+      .tutor-status { 
+        color: #71717a; 
+        text-transform: uppercase; 
+        letter-spacing: 0.35em; 
+        font-size: 0.75rem; 
+        font-weight: 600;
+        opacity: 0.9; 
+      }
+      .tutor-loading { 
+        margin-top: 25px; 
+        height: 3px; 
+        width: 130px; 
+        background: rgba(37, 99, 235, 0.1); 
+        margin-left: auto; 
+        margin-right: auto; 
+        position: relative; 
+        overflow: hidden; 
+        border-radius: 3px;
+      }
+      .tutor-loading::after { 
+        content: ""; 
+        position: absolute; 
+        left: -100%; 
+        width: 50%; 
+        height: 100%; 
+        background: #2563eb; 
+        border-radius: 3px;
+        animation: tutor-load 1.5s infinite ease-in-out; 
+      }
+      @keyframes tutor-load { 
+        0% { left: -100%; } 
+        100% { left: 150%; } 
+      }
+    </style>
+</head>
+<body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <a href="#main-content" class="skip-to-main">Skip to main content</a>
+    
+    <div id="root">
+      <div class="tutor-splash">
+        <span class="tutor-logo">Typing <span>Tutor</span></span>
+        <div class="tutor-status">Touch Typing Speed Academy</div>
+        <div class="tutor-loading"></div>
+      </div>
+    </div>
+
+    <script type="module" src="/src/main.tsx"></script>
+</body>
+</html>

@@ -4,7 +4,7 @@ import { defineConfig } from 'vite';
 
 export default defineConfig(() => {
     return {
-      base: '/willpro/',
+      base: './',
       plugins: [tailwindcss()],
       build: {
         chunkSizeWarningLimit: 1000,

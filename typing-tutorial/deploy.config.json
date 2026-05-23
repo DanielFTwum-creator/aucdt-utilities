@@ -1,0 +1,9 @@
+{
+  "projectName": "typing-tutorial",
+  "remoteHost": "root@techbridge.edu.gh",
+  "deployPath": "/var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/typing-tutor",
+  "buildTool": "pnpm",
+  "outputDir": "dist",
+  "requiredEnvVars": [],
+  "healthCheckUrl": "https://ai-tools.techbridge.edu.gh/typing-tutor/"
+}

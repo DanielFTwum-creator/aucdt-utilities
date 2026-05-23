@@ -1,13 +1,151 @@
-<!doctype html>
-<html lang="en">
-  <head>
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
     <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>My Google AI Studio App</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
-</html>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Embark on a gamified journey on Mathematics Island! Combine touch-typing practice with educational math puzzles and fraction drills for children." />
+    <meta name="keywords" content="Math Island, Kids Math Game, Typing Game, Gamified Education, Learn Fractions, TUC, Google AI Studio" />
+    <meta name="author" content="Techbridge University College" />
+    <meta name="publisher" content="TUC ICT Operations" />
+    <meta name="robots" content="index, follow" />
+    
+    <!-- Open Graph Tags -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Typing & Mathematics Island | Gamified Learning" />
+    <meta property="og:description" content="Practice touch typing and learn mathematics on a tropical island. Play educational levels, earn stars, and guide your companion!" />
+    <meta property="og:locale" content="en_GB" />
+    
+    <title>Typing & Mathematics Island | Gamified Learning</title>
 
+    <!-- Google Fonts: Fredoka & Outfit (Playful educational font family) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        overflow-x: hidden;
+      }
+      #root {
+        min-height: 100vh;
+      }
+      .skip-to-main {
+        position: absolute;
+        left: -9999px;
+        top: auto;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        z-index: 9999;
+      }
+      .skip-to-main:focus {
+        left: 8px;
+        width: auto;
+        height: auto;
+      }
+    </style>
+
+    <!-- Splash Screen Styles -->
+    <style id="island-splash-styles">
+      body { 
+        background: linear-gradient(135deg, #e0f2fe 0%, #d1fae5 100%) !important; 
+        margin: 0; 
+        padding: 0; 
+        display: flex; 
+        align-items: center; 
+        justify-content: center; 
+        min-height: 100vh; 
+        font-family: 'Fredoka', sans-serif; 
+        overflow: hidden; 
+      }
+      .island-splash { 
+        text-align: center; 
+        border: 2px solid rgba(16, 185, 129, 0.15); 
+        padding: 50px 70px; 
+        background: rgba(255, 255, 255, 0.85); 
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border-radius: 32px;
+        box-shadow: 0 20px 40px -15px rgba(6, 78, 59, 0.08);
+        position: relative; 
+      }
+      .island-splash::before { 
+        content: ""; 
+        position: absolute; 
+        top: 0; 
+        left: 0; 
+        width: 100%; 
+        height: 6px; 
+        background: linear-gradient(90deg, #0ea5e9, #10b981); 
+        border-top-left-radius: 32px;
+        border-top-right-radius: 32px;
+      }
+      .island-logo { 
+        color: #0369a1; 
+        font-size: 2.4rem; 
+        font-weight: 700; 
+        letter-spacing: -0.01em; 
+        margin-bottom: 6px; 
+        display: block; 
+      }
+      .island-logo span {
+        color: #059669;
+      }
+      .island-status { 
+        color: #047857; 
+        text-transform: uppercase; 
+        letter-spacing: 0.25em; 
+        font-size: 0.8rem; 
+        font-weight: 600;
+        opacity: 0.9; 
+      }
+      .island-loading { 
+        margin-top: 25px; 
+        height: 6px; 
+        width: 140px; 
+        background: rgba(14, 165, 233, 0.1); 
+        margin-left: auto; 
+        margin-right: auto; 
+        position: relative; 
+        overflow: hidden; 
+        border-radius: 6px;
+      }
+      .island-loading::after { 
+        content: ""; 
+        position: absolute; 
+        left: -100%; 
+        width: 40%; 
+        height: 100%; 
+        background: linear-gradient(90deg, #0ea5e9, #10b981); 
+        border-radius: 6px;
+        animation: island-load 1.6s infinite ease-in-out; 
+      }
+      @keyframes island-load { 
+        0% { left: -100%; } 
+        100% { left: 150%; } 
+      }
+    </style>
+</head>
+<body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <a href="#main-content" class="skip-to-main">Skip to main content</a>
+    
+    <div id="root">
+      <div class="island-splash">
+        <span class="island-logo">Math <span>Island</span></span>
+        <div class="island-status">Typing &amp; Math Quest</div>
+        <div class="island-loading"></div>
+      </div>
+    </div>
+
+    <script type="module" src="/src/main.tsx"></script>
+</body>
+</html>

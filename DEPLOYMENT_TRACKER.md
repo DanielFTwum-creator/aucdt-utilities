@@ -10,6 +10,9 @@
 | Peace Vinyl | https://ai-tools.techbridge.edu.gh/peace | ✅ Code Flow | ✅ Vinyl record | ✅ Video (MusicGen video) | N/A | Video background music viz |
 | BioChemAI | https://ai-tools.techbridge.edu.gh/biochemai | ⚠️ Partial | ✅ DNA helix | N/A | N/A | OAuth pattern started, needs completion |
 | Stephanie's DaaRo Water | https://ai-tools.techbridge.edu.gh/sdwater | N/A | ✅ TUC Logo / Logo themed | N/A | ✅ WhatsApp link | Offline-first distributor dashboard & order portal |
+| Deliberate Magic Reader | https://ai-tools.techbridge.edu.gh/magic-reader | N/A | ✅ TUC Logo / Logo themed | N/A | N/A | Interactive chronicle reader & drafting workshop |
+| Typing & Mathematics Island | https://ai-tools.techbridge.edu.gh/math-island | N/A | ✅ TUC Logo / Logo themed | N/A | N/A | Gamified typing and mathematics educational suite |
+| Touch Typing Tutorial | https://ai-tools.techbridge.edu.gh/typing-tutor | N/A | ✅ TUC Logo / Logo themed | N/A | N/A | Touch typing practice & speed tutorial |
 
 ### 🔄 IN PROGRESS (Deployment Ongoing)
 
@@ -115,6 +118,9 @@ RewriteRule ^ /ai-lab/index.html [QSA,L]  # Catch-all at END
 
 ### 2026-05-23 (Current Session)
 - ✅ **Stephanie's DaaRo Water (sdwater)**: Deployed with relative assets base path (`./`), flat ridged screw cap visual bottle calibration, custom sachet graphic, 4 standard products (Sachet, 350ml, 600ml, 1L) with verified GHS pricing (10, 23, 30, 50), and native PowerShell deployment pipeline (`deploy.ps1`).
+- ✅ **Deliberate Magic Reader (magic-reader)**: Deployed with relative assets base path (`./`), TUC logo themed favicon, custom SEO/meta tags, glassmorphic dark-slate splash screen, and full-stack Express service running on Port 3008 with Gemini API integration.
+- ✅ **Typing & Mathematics Island (math-island)**: Deployed with relative assets base path (`./`), TUC logo themed favicon, custom SEO/meta tags, playful sea-blue/emerald splash screen, and frontend SPA hosting configuration.
+- ✅ **Touch Typing Tutorial (typing-tutor)**: Deployed with relative assets base path (`./`), TUC logo themed favicon, custom SEO/meta tags, clean professional light-themed splash screen, and frontend SPA hosting configuration.
 
 ### 2026-05-19
 - ✅ **Peace Vinyl**: Deployed with unique favicon, OAuth working
