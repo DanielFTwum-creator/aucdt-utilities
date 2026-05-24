@@ -1,0 +1,9 @@
+{
+  "projectName": "ckt-utas-modern-website",
+  "remoteHost": "root@techbridge.edu.gh",
+  "deployPath": "/var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/ckt-utas-modern-website",
+  "buildTool": "pnpm",
+  "outputDir": "dist",
+  "requiredEnvVars": [],
+  "healthCheckUrl": "https://ai-tools.techbridge.edu.gh/ckt-utas-modern-website/"
+}

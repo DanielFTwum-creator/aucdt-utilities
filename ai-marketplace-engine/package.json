@@ -1,5 +1,5 @@
 {
-  "name": "ai-marketplace-engine",
+  "name": "ai-marketplace-engine",`n  "packageManager": "pnpm@10.30.1",
   "version": "2.0.0",
   "private": true,
   "description": "Platform infrastructure and capabilities - App ID 161",

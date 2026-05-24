@@ -207,7 +207,29 @@
       "Bash(echo \"---\")",
       "PowerShell(Test-Path *)",
       "PowerShell(cd \"C:\\\\Development\\\\github\\\\aucdt-utilities\" ; Get-ChildItem -Directory | Where-Object { $_.Name -match \"bionic\" -or $_.Name -match \"Bionic\" } | Select-Object Name)",
-      "PowerShell(Join-Path *)"
+      "PowerShell(Join-Path *)",
+      "Bash(ConvertTo-Json)",
+      "Bash(cd C:/Development/github/aucdt-utilities)",
+      "Bash(echo '✓ __TRACKED_VAR__')",
+      "Bash(echo '✗ __TRACKED_VAR__')",
+      "Bash(pkill -f \"deploy.ps1\")",
+      "Bash(xargs grep -l \"from.*idb\")",
+      "Bash(Get-Job -Name \"pnpm-dev\" -ErrorAction SilentlyContinue)",
+      "Bash(Select-Object Id, Name, State)",
+      "Bash([ -f \"/c/Development/github/aucdt-utilities/$dir/deploy.ps1\" ])",
+      "Bash(echo \"deploy.ps1\")",
+      "Bash(echo \"NO DEPLOY\")",
+      "Bash([ -f \"/c/Development/github/aucdt-utilities/$dir/vite.config.ts\" ])",
+      "Bash(echo \"vite\")",
+      "Bash(echo \"[NO vite.config.ts]\")",
+      "Bash([ -f \"C:/Development/github/aucdt-utilities/$app/public/favicon.svg\" ])",
+      "Bash(echo \"favicon.svg EXISTS\")",
+      "Bash(echo \"favicon.svg MISSING\")",
+      "Bash(echo \"[no public/ dir]\")",
+      "Bash(grep -i 'favicon\\\\|rel=\"icon\"' C:/Development/github/aucdt-utilities/__TRACKED_VAR__/index.html)",
+      "Bash(echo \"[no favicon in index.html]\")",
+      "Bash(echo '=== __TRACKED_VAR__: head section ===')",
+      "Bash(head -20 C:/Development/github/aucdt-utilities/__TRACKED_VAR__/index.html)"
     ]
   }
 }

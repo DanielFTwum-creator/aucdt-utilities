@@ -1,5 +1,5 @@
 {
-  "name": "carbon-credit-tracker",
+  "name": "carbon-credit-tracker",`n  "packageManager": "pnpm@10.30.1",
   "version": "2.0.0",
   "private": true,
   "description": "Autonomous operations and management - App ID 210",

@@ -1,0 +1,9 @@
+{
+  "projectName": "midjourney-prompt-helper",
+  "remoteHost": "root@techbridge.edu.gh",
+  "deployPath": "/var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/midjourney-prompt-helper",
+  "buildTool": "pnpm",
+  "outputDir": "dist",
+  "requiredEnvVars": ["GEMINI_API_KEY"],
+  "healthCheckUrl": "https://ai-tools.techbridge.edu.gh/midjourney-prompt-helper/"
+}

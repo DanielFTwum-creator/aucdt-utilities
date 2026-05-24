@@ -1,5 +1,5 @@
 {
-  "name": "plcrp-production-level-content-rights-platform",
+  "name": "plcrp-production-level-content-rights-platform",`n  "packageManager": "pnpm@10.30.1",
   "private": true,
   "version": "1.0.0",
   "type": "module",

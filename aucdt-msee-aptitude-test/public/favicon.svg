@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+  <!-- ROPHE Glucose - Blood Drop with glucose meter -->
+  <rect width="256" height="256" fill="#f5f0e8"/>
+
+  <!-- Blood drop shape -->
+  <path d="M 128 30 C 128 30 100 70 100 95 C 100 120 110 135 128 135 C 146 135 156 120 156 95 C 156 70 128 30 128 30 Z" fill="#E74C3C" opacity="0.9"/>
+
+  <!-- Glucose meter accent - small chart bars inside drop -->
+  <rect x="110" y="85" width="5" height="20" fill="#2E75B6" opacity="0.8"/>
+  <rect x="120" y="80" width="5" height="25" fill="#2E75B6" opacity="0.8"/>
+  <rect x="130" y="75" width="5" height="30" fill="#2E75B6" opacity="0.8"/>
+  <rect x="140" y="85" width="5" height="20" fill="#2E75B6" opacity="0.8"/>
+
+  <!-- Heart rate indicator line -->
+  <path d="M 110 110 L 115 105 L 120 115 L 125 108 L 145 110" stroke="#2E75B6" stroke-width="1.5" fill="none" opacity="0.7"/>
+</svg>

@@ -1,5 +1,5 @@
 {
-  "name": "thumbnail-generator",
+  "name": "thumbnail-generator",`n  "packageManager": "pnpm@10.30.1",
   "private": true,
   "version": "0.1.0",
   "type": "module",

@@ -1,5 +1,5 @@
 {
-  "name": "umat-tracker",
+  "name": "umat-tracker",`n  "packageManager": "pnpm@10.30.1",
   "version": "1.0.0",
   "description": "UMaT Curriculum Recommendations Tracker",
   "type": "module",

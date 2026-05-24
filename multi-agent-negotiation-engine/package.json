@@ -1,5 +1,5 @@
 {
-  "name": "multi-agent-negotiation-engine",
+  "name": "multi-agent-negotiation-engine",`n  "packageManager": "pnpm@10.30.1",
   "version": "2.0.0",
   "private": true,
   "description": "AI managing AI and meta-level systems - App ID 249",

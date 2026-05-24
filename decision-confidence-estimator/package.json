@@ -1,5 +1,5 @@
 {
-  "name": "decision-confidence-estimator",
+  "name": "decision-confidence-estimator",`n  "packageManager": "pnpm@10.30.1",
   "version": "2.0.0",
   "private": true,
   "description": "AI managing AI and meta-level systems - App ID 241",

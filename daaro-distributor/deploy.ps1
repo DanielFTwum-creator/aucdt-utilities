@@ -1,4 +1,4 @@
-﻿# TUC Project Deployment Script
+# TUC Project Deployment Script
 # Safe deployment pattern using SSH pipe for .htaccess
 # Prevents UTF-8 BOM issues and adds comprehensive health checks
 

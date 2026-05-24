@@ -1,5 +1,5 @@
 {
-  "name": "aucdt-msee-aptitude-test",
+  "name": "aucdt-msee-aptitude-test",`n  "packageManager": "pnpm@10.30.1",
   "private": true,
   "version": "0.0.0",
   "type": "module",
