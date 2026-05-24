@@ -96,6 +96,16 @@ Write-Host ""
 # STEP 3/6: Build Phase
 # ============================================================================
 if ($Build) {
+    Write-Host "Step 3/6: Installing dependencies..." -ForegroundColor Cyan
+    Write-Host "  Running: $BuildTool install"
+    & $BuildTool install
+
+    if ($LASTEXITCODE -ne 0) {
+        Write-Host "  ⚠️  Install completed with warnings (continuing anyway)" -ForegroundColor Yellow
+    } else {
+        Write-Host "  ✅ Dependencies installed"
+    }
+
     Write-Host "Step 3/6: Building project..." -ForegroundColor Cyan
     Write-Host "  Running: $BuildTool build"
     & $BuildTool build

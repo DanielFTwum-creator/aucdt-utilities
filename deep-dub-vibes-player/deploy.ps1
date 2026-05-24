@@ -54,7 +54,7 @@ Write-Host "Copying backend files..." -ForegroundColor Yellow
 scp -o StrictHostKeyChecking=no "server.js" "package.json" "${RemoteHost}:${RemotePath}" 2>&1 | Select-Object -First 5
 
 Write-Host "Installing backend dependencies..." -ForegroundColor Yellow
-ssh -o StrictHostKeyChecking=no $RemoteHost "cd '$RemotePath' && npm install --production 2>&1 | tail -3" | Out-Null
+ssh -o StrictHostKeyChecking=no $RemoteHost "cd '$RemotePath' && npm install --omit=dev --legacy-peer-deps 2>&1 | tail -3" | Out-Null
 
 Write-Host "Creating .htaccess..." -ForegroundColor Yellow
 $htaccessContent = @'

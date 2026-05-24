@@ -229,7 +229,31 @@
       "Bash(grep -i 'favicon\\\\|rel=\"icon\"' C:/Development/github/aucdt-utilities/__TRACKED_VAR__/index.html)",
       "Bash(echo \"[no favicon in index.html]\")",
       "Bash(echo '=== __TRACKED_VAR__: head section ===')",
-      "Bash(head -20 C:/Development/github/aucdt-utilities/__TRACKED_VAR__/index.html)"
+      "Bash(head -20 C:/Development/github/aucdt-utilities/__TRACKED_VAR__/index.html)",
+      "PowerShell(Invoke-WebRequest -Uri 'https://ai-tools.techbridge.edu.gh/ai-lab/' -UseBasicParsing -TimeoutSec 10 | Select-Object StatusCode, @{Name='Size';Expression={$_.Content.Length}})",
+      "PowerShell(ls *)",
+      "PowerShell($content = Get-Content 'C:\\\\Development\\\\github\\\\aucdt-utilities\\\\omniextract\\\\.env.local'; foreach \\($var in @\\(\"GEMINI_API_KEY\", \"VITE_GOOGLE_CLIENT_ID\", \"VITE_GOOGLE_REDIRECT_URI\", \"GOOGLE_CLIENT_SECRET\"\\)\\) { if \\($content -match \"^$var=\"\\) { Write-Host \"✓ $var found\" } else { Write-Host \"✗ $var NOT found\" } })",
+      "PowerShell(cd 'C:\\\\Development\\\\github\\\\aucdt-utilities\\\\omniextract'; $config = Get-Content deploy.config.json | ConvertFrom-Json; $RequiredEnvVars = $config.requiredEnvVars; $envContent = Get-Content .env.local; Write-Host \"Checking vars: $RequiredEnvVars\"; foreach \\($var in $RequiredEnvVars\\) { Write-Host \"Checking: $var\"; if \\($envContent -notmatch \"^$var=\"\\) { Write-Host \"  MISSING\" } else { Write-Host \"  Found\" } })",
+      "PowerShell(cd 'C:\\\\Development\\\\github\\\\aucdt-utilities\\\\omniextract'; $envContent = Get-Content .env.local; Write-Host \"Type: $\\($envContent.GetType\\(\\)\\)\"; Write-Host \"Is Array: $\\($envContent -is [array]\\)\"; Write-Host \"Count: $\\($envContent.Count\\)\"; $envContent | ForEach-Object { Write-Host \"Line: $_\" })",
+      "PowerShell(cd 'C:\\\\Development\\\\github\\\\aucdt-utilities\\\\omniextract'; $envContent = Get-Content .env.local; $envString = $envContent -join \"`n\"; foreach \\($var in @\\(\"GEMINI_API_KEY\", \"VITE_GOOGLE_CLIENT_ID\"\\)\\) { if \\($envString -match \"^$var=\"\\) { Write-Host \"✓ $var found\" } else { Write-Host \"✗ $var NOT found\" } })",
+      "PowerShell(cd 'C:\\\\Development\\\\github\\\\aucdt-utilities\\\\biochemai'; $config = Get-Content deploy.config.json | ConvertFrom-Json; $RequiredEnvVars = $config.requiredEnvVars; $envContent = Get-Content .env.local; Write-Host \"Vars needed: $RequiredEnvVars\"; Write-Host \"Content type: $\\($envContent.GetType\\(\\).Name\\)\"; $envContent -match \"^GEMINI\" | Write-Host)",
+      "PowerShell(cd 'C:\\\\Development\\\\github\\\\aucdt-utilities\\\\omniextract'; $config = Get-Content deploy.config.json | ConvertFrom-Json; $RequiredEnvVars = $config.requiredEnvVars; $envLines = @\\(Get-Content .env.local\\); foreach \\($var in $RequiredEnvVars\\) { $found = $envLines | Where-Object { $_ -match \"^$var=\" }; if \\($found\\) { Write-Host \"✓ $var\" } else { Write-Host \"✗ $var\" } })",
+      "PowerShell(Copy-Item *)",
+      "PowerShell(Select-String *)",
+      "PowerShell(wc *)",
+      "PowerShell(dir *)",
+      "Bash(npx cypress *)",
+      "PowerShell(ssh -o StrictHostKeyChecking=no root@66.226.72.199 \"ps aux | grep -E '\\(tsx|node|npm\\)' | grep -v grep | tail -10\")",
+      "PowerShell(Invoke-WebRequest -Uri \"https://ai-tools.techbridge.edu.gh/ai-lab/\" -SkipCertificateCheck 2>&1 | Select-Object -Property StatusCode, @{Name=\"HasGlucose\";Expression={$_ -match \"glucose\"}})",
+      "Bash(findstr /N \"FormLoginView\" App.tsx)",
+      "Bash(grep -E \"\\\\.\\(tsx|ts|jsx\\)$\")",
+      "Bash(xargs grep -l \"callback\\\\|auth/google\")",
+      "Bash(xargs grep -l \"base64\\\\|btoa\\\\|JSON.stringify\")",
+      "Bash(xargs grep -l \"AppWithAuth\")",
+      "PowerShell(Get-ChildItem -Path 'C:\\\\Development\\\\github\\\\aucdt-utilities\\\\biochemai' -Recurse -Depth 2 | Where-Object {$_.Extension -eq '.tsx' -or $_.Extension -eq '.ts'} | Select-Object -First 15)",
+      "PowerShell(ssh -o StrictHostKeyChecking=no root@techbridge.edu.gh \"sleep 3 && ss -tlnp 2>/dev/null | grep ':3002' || echo 'Port 3002 not yet listening'\")",
+      "PowerShell(ssh -o StrictHostKeyChecking=no root@techbridge.edu.gh \"curl -s http://localhost:3002/api/health | head -c 100\")",
+      "PowerShell(ssh -o StrictHostKeyChecking=no root@techbridge.edu.gh \"grep -A2 'Redirect without URL' /var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/biochemai/server.ts\")"
     ]
   }
 }

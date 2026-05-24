@@ -1,0 +1,322 @@
+{
+  "timestamp": "2026-05-24T21:19:40.609Z",
+  "total_apps": 62,
+  "test_suite_version": "1.0.0",
+  "base_url": "https://ai-tools.techbridge.edu.gh",
+  "viewport": {
+    "width": 1280,
+    "height": 1024
+  },
+  "apps_tested": [
+    {
+      "slug": "blueprint",
+      "name": "TechBridge AI Blueprint",
+      "url": "/ai-tools.techbridge.edu.gh/blueprint/"
+    },
+    {
+      "slug": "workshop-flyer",
+      "name": "AI Workshop Flyer",
+      "url": "/ai-tools.techbridge.edu.gh/workshop-flyer/"
+    },
+    {
+      "slug": "assessment",
+      "name": "Assessment Platform",
+      "url": "/ai-tools.techbridge.edu.gh/assessment/"
+    },
+    {
+      "slug": "lead-gen",
+      "name": "Lead Generation Infographic",
+      "url": "/ai-tools.techbridge.edu.gh/lead-gen/"
+    },
+    {
+      "slug": "media-club",
+      "name": "Media Club Platform",
+      "url": "/ai-tools.techbridge.edu.gh/media-club/"
+    },
+    {
+      "slug": "poster-studio",
+      "name": "Poster Studio",
+      "url": "/ai-tools.techbridge.edu.gh/poster-studio/"
+    },
+    {
+      "slug": "strategy",
+      "name": "Strategy Dashboard",
+      "url": "/ai-tools.techbridge.edu.gh/strategy/"
+    },
+    {
+      "slug": "student-register",
+      "name": "Student Population Register",
+      "url": "/ai-tools.techbridge.edu.gh/student-register/"
+    },
+    {
+      "slug": "tech-quiz",
+      "name": "Technical Quiz Platform",
+      "url": "/ai-tools.techbridge.edu.gh/tech-quiz/"
+    },
+    {
+      "slug": "banner",
+      "name": "University College Banner",
+      "url": "/ai-tools.techbridge.edu.gh/banner/"
+    },
+    {
+      "slug": "ai-email-drafter",
+      "name": "AI Email Drafter",
+      "url": "/ai-tools.techbridge.edu.gh/ai-email-drafter/"
+    },
+    {
+      "slug": "brand-guideline-checker",
+      "name": "Brand Guideline Checker",
+      "url": "/ai-tools.techbridge.edu.gh/brand-guideline-checker/"
+    },
+    {
+      "slug": "biochemai",
+      "name": "BioChemAI",
+      "url": "/ai-tools.techbridge.edu.gh/biochemai/"
+    },
+    {
+      "slug": "dictation",
+      "name": "Dictation App",
+      "url": "/ai-tools.techbridge.edu.gh/dictation/"
+    },
+    {
+      "slug": "youtube-genie",
+      "name": "YouTube Genie",
+      "url": "/ai-tools.techbridge.edu.gh/youtube-genie/"
+    },
+    {
+      "slug": "ghana-news-aggregator",
+      "name": "Ghana News Aggregator",
+      "url": "/ai-tools.techbridge.edu.gh/ghana-news-aggregator/"
+    },
+    {
+      "slug": "luxthumb-agent",
+      "name": "LuxThumb Agent",
+      "url": "/ai-tools.techbridge.edu.gh/luxthumb-agent/"
+    },
+    {
+      "slug": "markai",
+      "name": "markAI",
+      "url": "/ai-tools.techbridge.edu.gh/markai/"
+    },
+    {
+      "slug": "midjourney-prompt-helper",
+      "name": "Midjourney Prompt Helper",
+      "url": "/ai-tools.techbridge.edu.gh/midjourney-prompt-helper/"
+    },
+    {
+      "slug": "omniextract",
+      "name": "OmniExtract",
+      "url": "/ai-tools.techbridge.edu.gh/omniextract/"
+    },
+    {
+      "slug": "smartscale-ai-presentation-platform",
+      "name": "SmartScale AI",
+      "url": "/ai-tools.techbridge.edu.gh/smartscale-ai-presentation-platform/"
+    },
+    {
+      "slug": "ai-stand-up-workshop-prep",
+      "name": "AI Workshop Prep",
+      "url": "/ai-tools.techbridge.edu.gh/ai-stand-up-workshop-prep/"
+    },
+    {
+      "slug": "ai-techbridge",
+      "name": "AI at TechBridge",
+      "url": "/ai-tools.techbridge.edu.gh/ai-techbridge/"
+    },
+    {
+      "slug": "aucdt-msee-aptitude-test",
+      "name": "MSEE Aptitude Test",
+      "url": "/ai-tools.techbridge.edu.gh/aucdt-msee-aptitude-test/"
+    },
+    {
+      "slug": "ckt-utas-modern-website",
+      "name": "CKT-UTAS Website",
+      "url": "/ai-tools.techbridge.edu.gh/ckt-utas-modern-website/"
+    },
+    {
+      "slug": "dmcdai",
+      "name": "dmcdAI",
+      "url": "/ai-tools.techbridge.edu.gh/dmcdai/"
+    },
+    {
+      "slug": "fashion-design-brochure",
+      "name": "Fashion Design Brochure",
+      "url": "/ai-tools.techbridge.edu.gh/fashion-design-brochure/"
+    },
+    {
+      "slug": "fees-comparison-dashboard",
+      "name": "Fees Comparison Dashboard",
+      "url": "/ai-tools.techbridge.edu.gh/fees-comparison-dashboard/"
+    },
+    {
+      "slug": "lecturer-assessment",
+      "name": "Lecturer Assessment Portal",
+      "url": "/ai-tools.techbridge.edu.gh/lecturer-assessment/"
+    },
+    {
+      "slug": "lecturer-assessment-system",
+      "name": "Lecturer Assessment System",
+      "url": "/ai-tools.techbridge.edu.gh/lecturer-assessment-system/"
+    },
+    {
+      "slug": "mature-exam",
+      "name": "Mature Students Exam",
+      "url": "/ai-tools.techbridge.edu.gh/mature-exam/"
+    },
+    {
+      "slug": "playgrow",
+      "name": "PlayGrow",
+      "url": "/ai-tools.techbridge.edu.gh/playgrow/"
+    },
+    {
+      "slug": "scholarship-bond-portal",
+      "name": "Scholarship Bond Portal",
+      "url": "/ai-tools.techbridge.edu.gh/scholarship-bond-portal/"
+    },
+    {
+      "slug": "shortcuts",
+      "name": "Shortcut Master",
+      "url": "/ai-tools.techbridge.edu.gh/shortcuts/"
+    },
+    {
+      "slug": "ai-lab",
+      "name": "TUC AI Lab Catalog",
+      "url": "/ai-tools.techbridge.edu.gh/ai-lab/"
+    },
+    {
+      "slug": "typing-tutor",
+      "name": "Touch Typing Tutorial",
+      "url": "/ai-tools.techbridge.edu.gh/typing-tutor/"
+    },
+    {
+      "slug": "math-island",
+      "name": "Typing & Maths Island",
+      "url": "/ai-tools.techbridge.edu.gh/math-island/"
+    },
+    {
+      "slug": "verb-explorer",
+      "name": "Verb Explorer Toolkit",
+      "url": "/ai-tools.techbridge.edu.gh/verb-explorer/"
+    },
+    {
+      "slug": "visual-quiz-master",
+      "name": "Visual Quiz Master",
+      "url": "/ai-tools.techbridge.edu.gh/visual-quiz-master/"
+    },
+    {
+      "slug": "msee",
+      "name": "MSEE Program Info",
+      "url": "/ai-tools.techbridge.edu.gh/msee/"
+    },
+    {
+      "slug": "tvet-progress",
+      "name": "TVET Progress Dashboard",
+      "url": "/ai-tools.techbridge.edu.gh/tvet-progress/"
+    },
+    {
+      "slug": "ai-flyer-generator",
+      "name": "AI Flyer Generator",
+      "url": "/ai-tools.techbridge.edu.gh/ai-flyer-generator/"
+    },
+    {
+      "slug": "ai-scene-visualizer",
+      "name": "AI Scene Visualizer",
+      "url": "/ai-tools.techbridge.edu.gh/ai-scene-visualizer/"
+    },
+    {
+      "slug": "bridge-radio",
+      "name": "Bridge Radio (HLS Streamer)",
+      "url": "/ai-tools.techbridge.edu.gh/bridge-radio/"
+    },
+    {
+      "slug": "fashionprompt-ai",
+      "name": "FashionPrompt AI",
+      "url": "/ai-tools.techbridge.edu.gh/fashionprompt-ai/"
+    },
+    {
+      "slug": "groove-streamer",
+      "name": "Groove Streamer",
+      "url": "/ai-tools.techbridge.edu.gh/groove-streamer/"
+    },
+    {
+      "slug": "peace-vinyl",
+      "name": "Peace Vinyl",
+      "url": "/ai-tools.techbridge.edu.gh/peace-vinyl/"
+    },
+    {
+      "slug": "playgrow",
+      "name": "PlayGrow",
+      "url": "/ai-tools.techbridge.edu.gh/playgrow/"
+    },
+    {
+      "slug": "smartscale-ai-presentation-platform",
+      "name": "SmartScale Presentations",
+      "url": "/ai-tools.techbridge.edu.gh/smartscale-ai-presentation-platform/"
+    },
+    {
+      "slug": "youtube-genie",
+      "name": "YouTube Genie Music",
+      "url": "/ai-tools.techbridge.edu.gh/youtube-genie/"
+    },
+    {
+      "slug": "ai-techbridge",
+      "name": "AI Stack Debugger",
+      "url": "/ai-tools.techbridge.edu.gh/ai-techbridge/"
+    },
+    {
+      "slug": "code-assistant",
+      "name": "Code Assistant",
+      "url": "/ai-tools.techbridge.edu.gh/code-assistant/"
+    },
+    {
+      "slug": "expensepro",
+      "name": "ExpensePro",
+      "url": "/ai-tools.techbridge.edu.gh/expensepro/"
+    },
+    {
+      "slug": "impact-ventures-dashboard",
+      "name": "Impact Ventures Dashboard",
+      "url": "/ai-tools.techbridge.edu.gh/impact-ventures-dashboard/"
+    },
+    {
+      "slug": "rophe-care-rpms",
+      "name": "Rophe Care RPMS",
+      "url": "/ai-tools.techbridge.edu.gh/rophe-care-rpms/"
+    },
+    {
+      "slug": "techbridge-ai-application-portal",
+      "name": "TechBridge AI Application Portal",
+      "url": "/ai-tools.techbridge.edu.gh/techbridge-ai-application-portal/"
+    },
+    {
+      "slug": "glucose",
+      "name": "Glucose (GlucoSentinel)",
+      "url": "/ai-tools.techbridge.edu.gh/glucose/"
+    },
+    {
+      "slug": "rophe-sugar-logger",
+      "name": "Rophe Sugar Logger",
+      "url": "/ai-tools.techbridge.edu.gh/rophe-sugar-logger/"
+    },
+    {
+      "slug": "orbit-walk-reminder",
+      "name": "Orbit Walk Reminder",
+      "url": "/ai-tools.techbridge.edu.gh/orbit-walk-reminder/"
+    },
+    {
+      "slug": "ai-studio-project-refresh",
+      "name": "AI Studio Project Refresh",
+      "url": "/ai-tools.techbridge.edu.gh/ai-studio-project-refresh/"
+    },
+    {
+      "slug": "ai-transformation-framework",
+      "name": "AI Transformation Framework",
+      "url": "/ai-tools.techbridge.edu.gh/ai-transformation-framework/"
+    },
+    {
+      "slug": "brainiac-challenge",
+      "name": "Brainiac Challenge",
+      "url": "/ai-tools.techbridge.edu.gh/brainiac-challenge/"
+    }
+  ]
+}

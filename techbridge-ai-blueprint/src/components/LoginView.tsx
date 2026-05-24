@@ -44,22 +44,22 @@ export const LoginView: React.FC = () => {
     <FormLoginView
       appName="TUC Blueprint"
       appSubtitle="Techbridge University College Innovation Hub"
-      primaryColor="text-blue-700"
-      primaryColorHex="#2563eb"
-      borderColorClass="border border-blue-200"
-      inputBorderClass="border border-slate-300"
-      inputFocusRingClass="focus:ring-4 focus:ring-blue-100"
-      inputFocusBorderClass="focus:border-blue-600"
-      buttonHoverClass="hover:bg-blue-700"
-      backgroundClass="bg-slate-900"
+      primaryColor="text-red-700"
+      primaryColorHex="#8b1a1a"
+      borderColorClass="border border-yellow-400"
+      inputBorderClass="border border-yellow-300"
+      inputFocusRingClass="focus:ring-4 focus:ring-yellow-200"
+      inputFocusBorderClass="focus:border-yellow-400"
+      buttonHoverClass="hover:bg-red-800"
+      backgroundClass="bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900"
       cardBgClass="bg-white"
       onGoogleLogin={handleGoogleLogin}
       onLocalLogin={handleLocalLogin}
       onRegister={handleRegister}
       videoBackground="https://techbridge.edu.gh/static/campus_tour.mp4"
-      textColorClass="text-white"
-      labelColorClass="text-white"
-      subtitleColorClass="text-gray-300"
+      textColorClass="text-slate-900"
+      labelColorClass="text-slate-700"
+      subtitleColorClass="text-slate-600"
     />
   );
 };

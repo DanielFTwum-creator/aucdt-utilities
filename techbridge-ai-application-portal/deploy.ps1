@@ -10,6 +10,12 @@ Write-Host "Remote: $RemoteHost"
 Write-Host "Path: $RemotePath`n"
 
 if ($Build) {
+    Write-Host "Installing dependencies..." -ForegroundColor Yellow
+    pnpm install
+    if ($LASTEXITCODE -ne 0) {
+        Write-Host "⚠️  Install completed with warnings (continuing anyway)" -ForegroundColor Yellow
+    }
+
     Write-Host "Building..." -ForegroundColor Yellow
     pnpm build
     if ($LASTEXITCODE -ne 0) { Write-Host "Build failed!" -ForegroundColor Red; exit 1 }

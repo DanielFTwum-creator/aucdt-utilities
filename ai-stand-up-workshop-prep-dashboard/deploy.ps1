@@ -207,7 +207,8 @@ if ($DryRun) {
                        "  RewriteCond %{REQUEST_FILENAME} -d`n" +
                        "  RewriteRule ^ - [L]`n" +
                        "  RewriteRule ^ /$SubdomainPath/index.html [QSA,L]`n" +
-                       "</IfModule>"
+                       "$cacheControl + "
+" + </IfModule>"
 
     $htaccessContent | ssh -o StrictHostKeyChecking=no $sshTarget "cat > '$DeployPath/.htaccess'"
 
@@ -300,3 +301,4 @@ Write-Host "  1. Visit $HealthCheckUrl to verify deployment"
 Write-Host "  2. Check browser console for errors (F12)"
 Write-Host "  3. Verify .env vars are present on remote"
 Write-Host ""
+

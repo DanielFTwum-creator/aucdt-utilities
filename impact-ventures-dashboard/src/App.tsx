@@ -37,7 +37,8 @@ import {
   ZAxis, 
   Tooltip, 
   ResponsiveContainer,
-  Cell
+  Cell,
+  ReferenceLine
 } from 'recharts';
 import { APP_DATA, STRATEGIC_OBSERVATIONS, type AppRanking } from './data';
 import { cn } from './lib/utils';
@@ -326,6 +327,15 @@ export default function App() {
   const [activeCategory, setActiveCategory] = useState<AppRanking['category'] | 'all'>('all');
   const [showAdminLogin, setShowAdminLogin] = useState(false);
   const [showAdmin, setShowAdmin] = useState(false);
+  const [roiWeight, setRoiWeight] = useState(0.5);
+  const goodWeight = 1 - roiWeight;
+
+  const scatterData = useMemo(() => {
+    return APP_DATA.map(app => ({
+      ...app,
+      zScore: app.m * roiWeight + app.g * goodWeight
+    }));
+  }, [roiWeight, goodWeight]);
 
   // Restore admin session and handle #/admin hash route
   useEffect(() => {
@@ -409,8 +419,11 @@ export default function App() {
       const matchesM = app.m >= mRange[0] && app.m <= mRange[1];
       const matchesG = app.g >= gRange[0] && app.g <= gRange[1];
       return matchesSearch && matchesTier && matchesCategory && matchesM && matchesG;
-    });
-  }, [searchTerm, activeTier, activeCategory, mRange, gRange]);
+    }).map(app => {
+      const compositeScore = app.m * roiWeight + app.g * goodWeight;
+      return { ...app, compositeScore };
+    }).sort((a, b) => b.compositeScore - a.compositeScore);
+  }, [searchTerm, activeTier, activeCategory, mRange, gRange, roiWeight, goodWeight]);
 
   const stats = useMemo(() => ({
     total: APP_DATA.length,
@@ -462,6 +475,55 @@ export default function App() {
         </div>
       </header>
 
+      {/* Scenario Weight Modeler */}
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="bg-brand-surface/30 border border-white/5 rounded-sm p-6 md:p-8 space-y-6 relative overflow-hidden group shadow-[0_0_50px_rgba(0,0,0,0.3)] backdrop-blur-md"
+      >
+        <div className="absolute top-0 left-0 w-24 h-1 bg-brand-amber" />
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+          <div className="space-y-2">
+            <h2 className="text-[11px] font-mono font-bold uppercase tracking-[0.3em] text-slate-500 flex items-center gap-3">
+              <TrendingUp size={14} className="text-brand-amber animate-pulse" />
+              SCENARIO_WEIGHT_MODELER <span className="text-slate-800 tracking-normal px-2 bg-white/5 rounded-xs">LIVE_COMPUTE</span>
+            </h2>
+            <p className="text-xs text-slate-400 font-mono uppercase tracking-wider leading-relaxed max-w-2xl">
+              Shift the weighting balance between Commercial Monetisation (ROI) and Sovereign Social Good (Impact) to calculate dynamic asset prioritization.
+            </p>
+          </div>
+          <div className="flex gap-6 items-center bg-brand-depth/80 border border-white/5 px-6 py-4 rounded-sm">
+            <div className="space-y-1">
+              <span className="block text-[8px] font-mono font-bold text-slate-600 uppercase tracking-widest">ROI_WEIGHT</span>
+              <span className="text-lg font-mono font-bold text-brand-cyan">{(roiWeight * 100).toFixed(0)}%</span>
+            </div>
+            <div className="h-8 w-px bg-white/5" />
+            <div className="space-y-1">
+              <span className="block text-[8px] font-mono font-bold text-slate-600 uppercase tracking-widest">IMPACT_WEIGHT</span>
+              <span className="text-lg font-mono font-bold text-brand-mint">{(goodWeight * 100).toFixed(0)}%</span>
+            </div>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-6">
+          <span className="text-[10px] font-mono font-bold text-brand-cyan uppercase tracking-widest w-28 text-right shrink-0">Commercial ROI</span>
+          <div className="flex-grow relative flex items-center">
+            <input 
+              type="range" 
+              min="0" 
+              max="1" 
+              step="0.05" 
+              value={roiWeight} 
+              onChange={(e) => setRoiWeight(parseFloat(e.target.value))}
+              className="w-full accent-brand-cyan h-1.5 bg-slate-800 rounded-none cursor-ew-resize focus:outline-none focus:ring-1 focus:ring-brand-cyan/20"
+              aria-label="Weight balance between ROI and Impact"
+            />
+            <div className="absolute left-1/2 -translate-x-1/2 h-3 w-px bg-white/20 pointer-events-none" />
+          </div>
+          <span className="text-[10px] font-mono font-bold text-brand-mint uppercase tracking-widest w-28 shrink-0">Social Good</span>
+        </div>
+      </motion.div>
+
       {/* Matrix Section */}
       <section id="main-content" aria-label="Impact matrix and strategic intelligence" className="grid grid-cols-1 lg:grid-cols-3 gap-12">
         <div className="lg:col-span-2 bg-brand-surface/20 border border-white/5 rounded-sm p-8 relative overflow-hidden group">
@@ -502,18 +564,36 @@ export default function App() {
                   fontWeight={500}
                   tickFormatter={(val) => `G${val}`}
                 />
-                <ZAxis type="number" range={[100, 400]} />
+                <ZAxis type="number" dataKey="zScore" range={[100, 500]} />
+                <ReferenceLine x={3} stroke="rgba(255, 255, 255, 0.1)" strokeDasharray="4 4" />
+                <ReferenceLine y={3} stroke="rgba(255, 255, 255, 0.1)" strokeDasharray="4 4" />
                 <Tooltip 
                   cursor={{ strokeDasharray: '3 3' }}
                   content={({ active, payload }) => {
                     if (active && payload && payload.length) {
-                      const data = payload[0].payload as AppRanking;
+                      const data = payload[0].payload as AppRanking & { compositeScore?: number };
+                      const currentScore = data.compositeScore ?? (data.m * roiWeight + data.g * goodWeight);
                       return (
-                        <div className="bg-slate-900 border border-slate-600 p-4 rounded-lg shadow-2xl backdrop-blur-md">
-                          <p className="text-sm font-mono font-bold text-brand-cyan mb-2">{data.name}</p>
-                          <div className="flex justify-between gap-6">
-                            <span className="text-xs font-bold text-slate-200 uppercase">Tier {data.tier}</span>
-                            <span className="text-xs font-bold text-white">M:{data.m} G:{data.g}</span>
+                        <div className="bg-brand-surface/90 border border-white/10 p-5 rounded-sm shadow-2xl backdrop-blur-md font-mono">
+                          <p className="text-sm font-bold text-brand-cyan mb-2 uppercase tracking-wider">{data.name.split('-').join(' ')}</p>
+                          <div className="space-y-1.5 text-[10px]">
+                            <div className="flex justify-between gap-6 text-slate-400">
+                              <span>TIER:</span>
+                              <span className="text-white font-bold">T{data.tier}</span>
+                            </div>
+                            <div className="flex justify-between gap-6 text-slate-400">
+                              <span>ROI (M):</span>
+                              <span className="text-brand-cyan font-bold">{data.m}.00</span>
+                            </div>
+                            <div className="flex justify-between gap-6 text-slate-400">
+                              <span>GOOD (G):</span>
+                              <span className="text-brand-mint font-bold">{data.g}.00</span>
+                            </div>
+                            <div className="h-px bg-white/5 my-1" />
+                            <div className="flex justify-between gap-6 text-brand-amber font-bold">
+                              <span>COMPOSITE:</span>
+                              <span>{currentScore.toFixed(2)}</span>
+                            </div>
                           </div>
                         </div>
                       );
@@ -521,13 +601,13 @@ export default function App() {
                     return null;
                   }}
                 />
-                <Scatter data={APP_DATA} animationBegin={500} animationDuration={1500} animationEasing="ease-out">
-                  {APP_DATA.map((entry, index) => (
+                <Scatter data={scatterData} animationBegin={500} animationDuration={1500} animationEasing="ease-out">
+                  {scatterData.map((entry, index) => (
                     <Cell 
                       key={`cell-${index}`} 
-                      fill={entry.tier === 1 ? '#22d3ee' : entry.tier === 2 ? '#10b981' : entry.tier === 3 ? '#f59e0b' : '#94a3b8'} 
+                      fill={entry.tier === 1 ? '#00FFD1' : entry.tier === 2 ? '#2DD4BF' : entry.tier === 3 ? '#F5A623' : '#94a3b8'} 
                       onClick={() => setSelectedApp(entry)}
-                      className="cursor-pointer hover:opacity-80 transition-opacity"
+                      className="cursor-pointer hover:opacity-85 transition-opacity"
                     />
                   ))}
                 </Scatter>
@@ -798,23 +878,28 @@ export default function App() {
                     </div>
 
                     <div className="flex items-center justify-between pt-6 border-t border-slate-800/60">
-                      <button 
-                        onClick={(e) => toggleCompare(app.rank, e)}
-                        className={cn(
-                          "flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.2em] px-4 py-2 rounded-sm transition-all overflow-hidden relative group/compare",
-                          compareIds.includes(app.rank) 
-                            ? "bg-brand-cyan text-brand-depth" 
-                            : "bg-brand-depth text-brand-amber border border-brand-amber/20 hover:border-brand-amber/50"
-                        )}
-                      >
-                         <motion.div 
-                          className="flex items-center gap-2"
-                          animate={{ x: compareIds.includes(app.rank) ? 0 : -4 }}
-                         >
-                           <ChevronRight size={12} className={cn("transition-transform", compareIds.includes(app.rank) ? "rotate-90" : "")} />
-                           <span>{compareIds.includes(app.rank) ? 'MAPPED' : 'COMPARE'}</span>
-                         </motion.div>
-                      </button>
+                      <div className="flex items-center gap-3">
+                        <button 
+                          onClick={(e) => toggleCompare(app.rank, e)}
+                          className={cn(
+                            "flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.2em] px-4 py-2 rounded-sm transition-all overflow-hidden relative group/compare",
+                            compareIds.includes(app.rank) 
+                              ? "bg-brand-cyan text-brand-depth" 
+                              : "bg-brand-depth text-brand-amber border border-brand-amber/20 hover:border-brand-amber/50"
+                          )}
+                        >
+                           <motion.div 
+                            className="flex items-center gap-2"
+                            animate={{ x: compareIds.includes(app.rank) ? 0 : -4 }}
+                           >
+                             <ChevronRight size={12} className={cn("transition-transform", compareIds.includes(app.rank) ? "rotate-90" : "")} />
+                             <span>{compareIds.includes(app.rank) ? 'MAPPED' : 'COMPARE'}</span>
+                           </motion.div>
+                        </button>
+                        <span className="px-2 py-1 text-[9px] font-mono font-bold text-brand-cyan bg-brand-cyan/5 border border-brand-cyan/15 rounded-xs uppercase tracking-widest">
+                          SCORE {app.compositeScore.toFixed(2)}
+                        </span>
+                      </div>
 
                       <div className="absolute bottom-0 right-0 translate-y-1/2 group-hover:translate-y-0 transition-transform duration-500">
                         <TierBadge tier={app.tier} />
@@ -869,9 +954,18 @@ export default function App() {
                 </button>
               </div>
 
-              <div className="grid grid-cols-2 gap-12 mb-12 border-y border-white/5 py-10">
+              <div className="grid grid-cols-3 gap-8 mb-12 border-y border-white/5 py-10">
                 <MetricIndicator value={selectedApp.m} label="ROI_CAPACITY_INDEX" />
                 <MetricIndicator value={selectedApp.g} label="SOCIAL_LIQUIDITY" colorClass="bg-brand-mint" />
+                <div className="w-full space-y-1.5 flex flex-col justify-center pl-4 border-l border-white/5">
+                  <span className="text-[10px] font-mono font-bold uppercase text-slate-500 tracking-wider">SCENARIO_COMPOSITE</span>
+                  <span className="text-3xl font-mono font-bold text-brand-cyan">
+                    {(selectedApp.m * roiWeight + selectedApp.g * goodWeight).toFixed(2)}
+                  </span>
+                  <span className="text-[8px] font-mono text-slate-600 uppercase tracking-tighter">
+                    ({(roiWeight*100).toFixed(0)}:{(goodWeight*100).toFixed(0)} RATIO)
+                  </span>
+                </div>
               </div>
 
               <div className="space-y-6">
@@ -888,16 +982,19 @@ export default function App() {
                   <motion.div
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="mt-8 bg-brand-depth border border-brand-cyan/20 p-8 rounded-sm space-y-6"
+                    className="mt-8 bg-black/40 border border-brand-cyan/20 rounded-xs overflow-hidden"
                   >
-                    <div className="flex items-center gap-3 text-brand-cyan">
-                      <div className="w-1.5 h-1.5 bg-brand-cyan rounded-full animate-pulse" />
-                      <span className="text-[10px] font-mono font-bold uppercase tracking-[0.4em]">AI_SYNTHESIS_STREAM</span>
+                    <div className="bg-brand-surface px-4 py-2.5 border-b border-brand-cyan/10 flex justify-between items-center">
+                      <div className="flex items-center gap-2 text-brand-cyan">
+                        <div className="w-1.5 h-1.5 bg-brand-cyan rounded-full animate-pulse" />
+                        <span className="text-[9px] font-mono font-bold uppercase tracking-[0.3em]">AI_SYNTHESIS_STREAM</span>
+                      </div>
+                      <span className="text-[8px] font-mono text-slate-600">SECURE_CHANNEL_ACTIVE</span>
                     </div>
-                    <div className="text-xs text-slate-300 leading-relaxed font-mono space-y-4">
+                    <div className="p-6 text-xs text-slate-300 leading-relaxed font-mono space-y-4 max-h-60 overflow-y-auto">
                       {briefs[selectedApp.rank].text.split('\n').filter(line => line.trim()).map((line, idx) => (
                         <div key={idx} className="flex gap-3 opacity-90">
-                          <span className="text-brand-cyan font-bold transition-all group-hover:scale-125">»</span>
+                          <span className="text-brand-cyan font-bold">»</span>
                           <span>{line.replace(/^[•\-\d\.]+\s*/, '')}</span>
                         </div>
                       ))}
@@ -927,11 +1024,22 @@ export default function App() {
                   disabled={briefs[selectedApp.rank]?.loading}
                   className={cn(
                     "flex-1 bg-brand-cyan text-brand-depth font-bold py-5 rounded-sm text-[10px] uppercase tracking-[0.2em] hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-3 group",
-                    briefs[selectedApp.rank]?.loading && "opacity-50 cursor-not-allowed animate-pulse"
+                    briefs[selectedApp.rank]?.loading && "opacity-50 cursor-not-allowed"
                   )}
                 >
-                  <div className="w-1 h-1 bg-brand-depth rounded-full group-hover:scale-150 transition-transform" />
-                  {briefs[selectedApp.rank]?.loading ? 'SYNTHESIZING_COMPUTE...' : briefs[selectedApp.rank]?.text ? 'REGENERATE_ANALYSIS' : 'GENERATE_BRIEF'}
+                  {briefs[selectedApp.rank]?.loading ? (
+                    <div className="flex items-center gap-2">
+                      <span className="w-1.5 h-1.5 bg-brand-depth rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+                      <span className="w-1.5 h-1.5 bg-brand-depth rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+                      <span className="w-1.5 h-1.5 bg-brand-depth rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+                      <span className="ml-2 font-mono">COMPUTE_ACTIVE...</span>
+                    </div>
+                  ) : (
+                    <>
+                      <div className="w-1 h-1 bg-brand-depth rounded-full group-hover:scale-150 transition-transform" />
+                      {briefs[selectedApp.rank]?.text ? 'REGENERATE_ANALYSIS' : 'GENERATE_BRIEF'}
+                    </>
+                  )}
                 </button>
                 <button onClick={() => setSelectedApp(null)} className="px-8 border border-white/10 text-slate-400 font-bold py-5 rounded-sm text-[10px] uppercase tracking-[0.2em] hover:bg-white/5 transition-all">
                   CLOSE_NODE

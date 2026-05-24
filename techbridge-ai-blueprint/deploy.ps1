@@ -96,6 +96,16 @@ Write-Host ""
 # STEP 3/6: Build Phase
 # ============================================================================
 if ($Build) {
+    Write-Host "Step 3/6: Installing dependencies..." -ForegroundColor Cyan
+    Write-Host "  Running: $BuildTool install"
+    & $BuildTool install
+
+    if ($LASTEXITCODE -ne 0) {
+        Write-Host "  ⚠️  Install completed with warnings (continuing anyway)" -ForegroundColor Yellow
+    } else {
+        Write-Host "  ✅ Dependencies installed"
+    }
+
     Write-Host "Step 3/6: Building project..." -ForegroundColor Cyan
     Write-Host "  Running: $BuildTool build"
     & $BuildTool build
@@ -190,6 +200,27 @@ if ($DryRun) {
                        "  RewriteCond %{REQUEST_FILENAME} -d`n" +
                        "  RewriteRule ^ - [L]`n" +
                        "  RewriteRule ^ /$SubdomainPath/index.html [QSA,L]`n" +
+                       "</IfModule>`n" +
+                       "`n" +
+                       "<IfModule mod_expires.c>`n" +
+                       "  ExpiresActive On`n" +
+                       "  # Hash-busted assets (cache indefinitely)`n" +
+                       "  <FilesMatch '\.(js|css|png|jpg|jpeg|gif|svg|woff2|woff|ttf|eot|ico)$'>`n" +
+                       "    ExpiresDefault 'max-age=31536000'`n" +
+                       "    Header set Cache-Control 'public, immutable'`n" +
+                       "  </FilesMatch>`n" +
+                       "  # HTML files (revalidate on every request)`n" +
+                       "  <FilesMatch '\.(html|json)$'>`n" +
+                       "    ExpiresDefault 'max-age=0'`n" +
+                       "    Header set Cache-Control 'public, must-revalidate'`n" +
+                       "  </FilesMatch>`n" +
+                       "</IfModule>`n" +
+                       "`n" +
+                       "<IfModule mod_headers.c>`n" +
+                       "  # Disable browser caching for HTML as fallback`n" +
+                       "  <FilesMatch '\.(html)$'>`n" +
+                       "    Header set Cache-Control 'public, must-revalidate, max-age=0'`n" +
+                       "  </FilesMatch>`n" +
                        "</IfModule>"
 
     $htaccessContent | ssh -o StrictHostKeyChecking=no $sshTarget "cat > '$DeployPath/.htaccess'"
