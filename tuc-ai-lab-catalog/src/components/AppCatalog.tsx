@@ -36,12 +36,24 @@ export default function AppCatalog() {
   });
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-slate-100 to-slate-50 p-8">
+    <div className="min-h-screen bg-slate-50 p-8" style={{ backgroundColor: '#f8fafc' }}>
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700&display=swap');
+        .tuc-catalog-header {
+          font-family: 'Barlow Condensed', sans-serif !important;
+          background: linear-gradient(to right, #1e3a8a, #1e40af, #1e3a8a) !important;
+        }
+        .tuc-catalog-header h1 {
+          font-family: 'Barlow Condensed', sans-serif !important;
+          font-size: 2.5rem !important;
+          font-weight: 700 !important;
+          letter-spacing: -0.01em !important;
+        }
+      `}</style>
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <style>{`@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700&display=swap');`}</style>
-        <div className="mb-12 bg-gradient-to-r from-blue-900 via-blue-800 to-blue-900 rounded-xl p-8 text-white shadow-2xl" style={{ fontFamily: 'Barlow Condensed, sans-serif' }}>
-          <h1 className="text-5xl font-bold mb-2 tracking-tight">TUC AI LAB CATALOG</h1>
+        <div className="tuc-catalog-header mb-12 rounded-xl p-8 text-white shadow-2xl">
+          <h1 className="mb-2 tracking-tight text-white">TUC AI LAB CATALOG</h1>
           <p className="text-lg text-blue-100">Complete registry of all 28 deployed applications</p>
           <div className="mt-4 flex gap-3">
             <a href="/" className="text-xs px-4 py-2 bg-blue-700 hover:bg-blue-600 text-white rounded-lg transition font-semibold">← Back to AI Lab</a>
@@ -49,40 +61,105 @@ export default function AppCatalog() {
         </div>
 
         {/* Summary Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8" style={{ fontFamily: 'Barlow Condensed, sans-serif' }}>
-          <div className="bg-white rounded-lg shadow-md p-6 border-l-4 border-l-green-600 hover:shadow-lg transition">
-            <div className="text-4xl font-bold text-green-700">{summary.standardised}</div>
-            <div className="text-sm text-green-800 font-semibold mt-1">✅ Production Ready</div>
+        <style>{`
+          .summary-card {
+            background: white !important;
+            border-radius: 0.5rem !important;
+            padding: 1.5rem !important;
+            transition: all 0.3s ease !important;
+          }
+          .summary-card:hover { box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1) !important; }
+          .summary-card-value {
+            font-size: 2rem !important;
+            font-weight: 700 !important;
+          }
+          .summary-card-label {
+            font-size: 0.875rem !important;
+            font-weight: 600 !important;
+            margin-top: 0.25rem !important;
+          }
+        `}</style>
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+          <div className="summary-card" style={{ borderLeft: '4px solid #16a34a' }}>
+            <div className="summary-card-value" style={{ color: '#15803d' }}>{summary.standardised}</div>
+            <div className="summary-card-label" style={{ color: '#166534' }}>✅ Production Ready</div>
           </div>
-          <div className="bg-white rounded-lg shadow-md p-6 border-l-4 border-l-yellow-600 hover:shadow-lg transition">
-            <div className="text-4xl font-bold text-yellow-700">{summary.inProgress}</div>
-            <div className="text-sm text-yellow-800 font-semibold mt-1">🔄 In Progress</div>
+          <div className="summary-card" style={{ borderLeft: '4px solid #ca8a04' }}>
+            <div className="summary-card-value" style={{ color: '#b45309' }}>{summary.inProgress}</div>
+            <div className="summary-card-label" style={{ color: '#92400e' }}>🔄 In Progress</div>
           </div>
-          <div className="bg-white rounded-lg shadow-md p-6 border-l-4 border-l-red-600 hover:shadow-lg transition">
-            <div className="text-4xl font-bold text-red-700">{summary.notStarted}</div>
-            <div className="text-sm text-red-800 font-semibold mt-1">⏳ Not Standardised</div>
+          <div className="summary-card" style={{ borderLeft: '4px solid #dc2626' }}>
+            <div className="summary-card-value" style={{ color: '#b91c1c' }}>{summary.notStarted}</div>
+            <div className="summary-card-label" style={{ color: '#7f1d1d' }}>⏳ Not Standardised</div>
           </div>
-          <div className="bg-white rounded-lg shadow-md p-6 border-l-4 border-l-blue-900 hover:shadow-lg transition">
-            <div className="text-4xl font-bold text-blue-900">{summary.completeness}%</div>
-            <div className="text-sm text-blue-900 font-semibold mt-1">📊 Overall Progress</div>
+          <div className="summary-card" style={{ borderLeft: '4px solid #1e3a8a' }}>
+            <div className="summary-card-value" style={{ color: '#1e3a8a' }}>{summary.completeness}%</div>
+            <div className="summary-card-label" style={{ color: '#1e3a8a' }}>📊 Overall Progress</div>
           </div>
         </div>
 
         {/* Filters */}
-        <div className="bg-white rounded-lg shadow-md border border-slate-200 p-6 mb-8" style={{ fontFamily: 'Barlow Condensed, sans-serif' }}>
+        <style>{`
+          .filter-section {
+            background: white !important;
+            border-radius: 0.5rem !important;
+            padding: 1.5rem !important;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
+            border: 1px solid #e2e8f0 !important;
+          }
+          .filter-label {
+            font-size: 0.875rem !important;
+            font-weight: 600 !important;
+            color: #0f172a !important;
+            margin-bottom: 0.75rem !important;
+            display: block !important;
+          }
+          .filter-button {
+            padding: 0.5rem 1rem !important;
+            border-radius: 0.5rem !important;
+            font-weight: 500 !important;
+            border: 1px solid !important;
+            transition: all 0.2s !important;
+          }
+          .filter-button.active {
+            background: #1e3a8a !important;
+            color: white !important;
+            border-color: #1e3a8a !important;
+          }
+          .filter-button:not(.active) {
+            background: white !important;
+            color: #475569 !important;
+            border-color: #cbd5e1 !important;
+          }
+          .filter-button:not(.active):hover {
+            border-color: #94a3b8 !important;
+          }
+          .filter-select {
+            width: 100% !important;
+            max-width: 16rem !important;
+            padding: 0.5rem 1rem !important;
+            border: 1px solid #cbd5e1 !important;
+            border-radius: 0.5rem !important;
+            font-weight: 500 !important;
+            background: white !important;
+            color: #0f172a !important;
+          }
+          .filter-select:focus {
+            outline: none !important;
+            ring: 2px solid #1e3a8a !important;
+            border-color: #1e3a8a !important;
+          }
+        `}</style>
+        <div className="filter-section mb-8">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label className="block text-sm font-semibold text-slate-900 mb-3">🔎 Filter by Status</label>
+              <label className="filter-label">🔎 Filter by Status</label>
               <div className="flex flex-wrap gap-2">
                 {['all', 'standardised', 'in-progress', 'not-started'].map((status) => (
                   <button
                     key={status}
                     onClick={() => setFilterStatus(status as any)}
-                    className={`px-4 py-2 rounded-lg font-medium transition border ${
-                      filterStatus === status
-                        ? 'bg-blue-900 text-white border-blue-900'
-                        : 'bg-white text-slate-700 border-slate-300 hover:border-slate-400'
-                    }`}
+                    className={`filter-button ${filterStatus === status ? 'active' : ''}`}
                   >
                     {status === 'all' ? 'All' : statusBadge[status as CatalogApp['status']]}
                   </button>
@@ -90,11 +167,11 @@ export default function AppCatalog() {
               </div>
             </div>
             <div>
-              <label className="block text-sm font-semibold text-slate-900 mb-3">🏷️ Filter by Category</label>
+              <label className="filter-label">🏷️ Filter by Category</label>
               <select
                 value={filterCategory}
                 onChange={(e) => setFilterCategory(e.target.value as any)}
-                className="w-full md:w-64 px-4 py-2 border border-slate-300 rounded-lg font-medium bg-white focus:outline-none focus:ring-2 focus:ring-blue-900 text-slate-900"
+                className="filter-select"
               >
                 <option value="all">All Categories</option>
                 <option value="education">Education</option>
@@ -108,23 +185,74 @@ export default function AppCatalog() {
         </div>
 
         {/* App Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" style={{ fontFamily: 'Barlow Condensed, sans-serif' }}>
+        <style>{`
+          .app-card {
+            background: white !important;
+            border-radius: 0.5rem !important;
+            padding: 1.5rem !important;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
+            transition: all 0.3s ease !important;
+            border-left: 4px solid #ddd !important;
+          }
+          .app-card:hover {
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1) !important;
+            transform: translateY(-2px) !important;
+          }
+          .app-card.status-standardised { border-left-color: #16a34a !important; }
+          .app-card.status-in-progress { border-left-color: #ca8a04 !important; }
+          .app-card.status-not-started { border-left-color: #dc2626 !important; }
+          .app-card-title {
+            font-size: 1.125rem !important;
+            font-weight: 700 !important;
+            color: #0f172a !important;
+            line-height: 1.4 !important;
+          }
+          .app-card-desc {
+            font-size: 0.875rem !important;
+            color: #475569 !important;
+            margin-top: 0.5rem !important;
+            line-height: 1.5 !important;
+          }
+          .app-card-badge {
+            display: inline-block !important;
+            padding: 0.25rem 0.75rem !important;
+            border-radius: 0.375rem !important;
+            font-size: 0.75rem !important;
+            font-weight: 600 !important;
+            border: 1px solid !important;
+          }
+          .app-card-checklist { font-size: 0.875rem !important; }
+          .app-card-link {
+            display: inline-block !important;
+            padding: 0.5rem 0.75rem !important;
+            border-radius: 0.375rem !important;
+            font-size: 0.75rem !important;
+            font-weight: 600 !important;
+            transition: all 0.2s !important;
+            color: white !important;
+            text-decoration: none !important;
+          }
+          .app-card-link-primary { background: #1e3a8a !important; }
+          .app-card-link-primary:hover { background: #1e40af !important; }
+          .app-card-link-secondary { background: #475569 !important; }
+          .app-card-link-secondary:hover { background: #334155 !important; }
+        `}</style>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredApps.map((app) => {
             const completeness = getCompletenessScore(app);
+            const statusClass = `status-${app.status.replace('-', '-')}`;
             return (
               <div
                 key={app.id}
-                className={`rounded-lg shadow-md p-6 transition hover:shadow-xl hover:-translate-y-1 bg-white border ${
-                  statusColors[app.status]
-                }`}
+                className={`app-card ${statusClass}`}
               >
                 {/* Header */}
                 <div className="flex items-start justify-between mb-3">
                   <div className="flex-1">
-                    <h3 className="text-lg font-bold text-slate-900 leading-tight">{app.name}</h3>
-                    <p className="text-xs text-slate-600 mt-2 leading-snug">{app.description}</p>
+                    <h3 className="app-card-title">{app.name}</h3>
+                    <p className="app-card-desc">{app.description}</p>
                   </div>
-                  <span className={`px-3 py-1 rounded-md text-xs font-semibold whitespace-nowrap ml-2 border ${categoryColors[app.category]}`}>
+                  <span className={`app-card-badge whitespace-nowrap ml-2 ${categoryColors[app.category]}`} style={{ borderColor: 'currentColor', opacity: 0.8 }}>
                     {app.category}
                   </span>
                 </div>
@@ -135,39 +263,44 @@ export default function AppCatalog() {
                 </div>
 
                 {/* Checklist */}
-                <div className="space-y-1 mb-4 text-xs">
+                <div className="app-card-checklist space-y-1 mb-4">
                   <div className="flex items-center gap-2">
-                    <span className={app.vite ? '✅' : '❌'}></span>
-                    <span className="text-slate-700">Vite: base = './'</span>
+                    <span>{app.vite ? '✅' : '❌'}</span>
+                    <span style={{ color: '#475569' }}>Vite: base = './'</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <span className={app.favicon ? '✅' : '❌'}></span>
-                    <span className="text-slate-700">Favicon SVG</span>
+                    <span>{app.favicon ? '✅' : '❌'}</span>
+                    <span style={{ color: '#475569' }}>Favicon SVG</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <span className={app.seo ? '✅' : '❌'}></span>
-                    <span className="text-slate-700">SEO Meta Tags</span>
+                    <span>{app.seo ? '✅' : '❌'}</span>
+                    <span style={{ color: '#475569' }}>SEO Meta Tags</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <span className={app.splash ? '✅' : '❌'}></span>
-                    <span className="text-slate-700">Splash Screen</span>
+                    <span>{app.splash ? '✅' : '❌'}</span>
+                    <span style={{ color: '#475569' }}>Splash Screen</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <span className={app.deploy ? '✅' : '❌'}></span>
-                    <span className="text-slate-700">Deploy Script</span>
+                    <span>{app.deploy ? '✅' : '❌'}</span>
+                    <span style={{ color: '#475569' }}>Deploy Script</span>
                   </div>
                 </div>
 
                 {/* Completeness */}
                 <div className="mb-4">
                   <div className="flex justify-between items-center mb-1">
-                    <span className="text-xs font-semibold text-slate-700">Standardisation</span>
-                    <span className="text-xs font-bold text-blue-900">{completeness}%</span>
+                    <span style={{ fontSize: '0.875rem', fontWeight: 600, color: '#475569' }}>Standardisation</span>
+                    <span style={{ fontSize: '0.875rem', fontWeight: 700, color: '#1e3a8a' }}>{completeness}%</span>
                   </div>
-                  <div className="w-full bg-slate-200 rounded-full h-2">
+                  <div style={{ width: '100%', backgroundColor: '#e2e8f0', borderRadius: '9999px', height: '0.5rem' }}>
                     <div
-                      className="bg-blue-900 h-2 rounded-full transition-all duration-300"
-                      style={{ width: `${completeness}%` }}
+                      style={{
+                        backgroundColor: '#1e3a8a',
+                        height: '0.5rem',
+                        borderRadius: '9999px',
+                        transition: 'all 0.3s ease',
+                        width: `${completeness}%`,
+                      }}
                     ></div>
                   </div>
                 </div>
@@ -178,7 +311,7 @@ export default function AppCatalog() {
                     href={`https://ai-tools.techbridge.edu.gh${app.url}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-xs px-3 py-2 bg-blue-900 hover:bg-blue-800 text-white rounded-lg transition font-semibold"
+                    className="app-card-link app-card-link-primary"
                   >
                     🚀 Open
                   </a>
@@ -186,16 +319,16 @@ export default function AppCatalog() {
                     href={`https://github.com/DanielFTwum-creator/aucdt-utilities/tree/main/${app.localDir}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-xs px-3 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg transition font-semibold"
+                    className="app-card-link app-card-link-secondary"
                   >
                     💾 Code
                   </a>
                 </div>
 
                 {/* Metadata */}
-                <div className="pt-3 border-t border-slate-200 text-xs text-slate-500">
-                  <p><code className="bg-slate-100 px-2 py-0.5 rounded text-slate-700">{app.localDir}</code></p>
-                  <p className="mt-1">Updated: {app.lastUpdated}</p>
+                <div style={{ paddingTop: '0.75rem', borderTop: '1px solid #e2e8f0', fontSize: '0.875rem', color: '#64748b' }}>
+                  <p><code style={{ backgroundColor: '#f1f5f9', padding: '0.125rem 0.5rem', borderRadius: '0.25rem', color: '#475569' }}>{app.localDir}</code></p>
+                  <p style={{ marginTop: '0.25rem' }}>Updated: {app.lastUpdated}</p>
                 </div>
               </div>
             );
