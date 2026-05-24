@@ -218,389 +218,242 @@ export default function App() {
     return counts;
   }, []);
 
+  const NAVY = '#1a1f3c';
+  const CRIMSON = '#8b1a1a';
+  const GOLD = '#f5c518';
+
   return (
-    <div className="flex flex-col h-screen overflow-hidden text-slate-900 bg-slate-50 font-sans">
-      {/* Header Navigation */}
-      <nav className="navbar-glass h-16 flex items-center justify-between px-8 shrink-0 z-10">
-        <div className="flex items-center gap-5">
-          <img
-            src="https://techbridge.edu.gh/static/TUC_LOGO_1.png"
-            alt="TUC Logo"
-            className="h-10 w-auto object-contain"
-            referrerPolicy="no-referrer"
-          />
-          <div className="flex flex-col gap-0.5">
-            <div className="text-[10px] font-bold text-slate-500 tracking-[0.15em] uppercase">Techbridge</div>
-            <div className="text-base font-bold tracking-tight">
-              <span className="text-slate-900">TUC AI Lab</span>
-            </div>
+    <div style={{ display:'flex', flexDirection:'column', height:'100vh', overflow:'hidden', fontFamily:"'DM Sans','Inter',sans-serif", backgroundColor:'#f7f5f0' }}>
+
+      {/* Topbar */}
+      <nav style={{ background:NAVY, padding:'0 16px', display:'flex', alignItems:'center', justifyContent:'space-between', height:'54px', flexShrink:0 }}>
+        <div style={{ display:'flex', alignItems:'center', gap:'10px' }}>
+          <div style={{ width:'36px', height:'36px', background:GOLD, borderRadius:'50%', display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0 }}>
+            <Shield style={{ width:'16px', height:'16px', color:NAVY }} />
           </div>
-          <div className="ml-4 pl-4 border-l-2 border-slate-200">
-            <div className="flex items-center gap-3">
-              <span className="text-[11px] font-semibold text-slate-600 tracking-wider">{TOOLS.length}</span>
-              <span className="text-[10px] text-slate-500 tracking-widest uppercase">Tools</span>
-              <span className="inline-flex items-center gap-1.5 px-2 py-1 bg-emerald-50 rounded-full border border-emerald-200">
-                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse-2-5s"></span>
-                <span className="text-[10px] font-semibold text-emerald-700 tracking-wider">3 ACTIVE</span>
-              </span>
+          <div style={{ display:'flex', flexDirection:'column' }}>
+            <div style={{ fontFamily:"'Barlow Condensed','Arial Narrow',sans-serif", fontSize:'21px', fontWeight:700, letterSpacing:'0.03em', lineHeight:1, color:'#fff', textTransform:'uppercase' }}>
+              TECHBRIDGE <span style={{ color:GOLD }}>UNIVERSITY COLLEGE</span>
             </div>
+            <div style={{ fontSize:'9px', color:'#7880b0', fontStyle:'italic', marginTop:'2px' }}>Formerly AsanSka University College of Design and Technology</div>
           </div>
         </div>
-        <div className="flex items-center gap-8">
-          <div className="hidden md:flex gap-6 text-sm font-medium text-slate-600">
-            <button
-              onClick={() => setActiveView("lab")}
-              className={`pb-5 translate-y-2.5 transition-colors ${activeView === "lab" ? "text-blue-600 border-b-2 border-blue-600" : "hover:text-blue-600"}`}
-            >
-              AI Lab Tools
-            </button>
-            <button
-              onClick={() => setActiveView("catalog")}
-              className={`pb-5 translate-y-2.5 transition-colors ${activeView === "catalog" ? "text-blue-600 border-b-2 border-blue-600" : "hover:text-blue-600"}`}
-            >
-              App Catalog
-            </button>
-          </div>
-          <div className="h-8 w-px bg-slate-200"></div>
-          <button
-            onClick={toggleTheme}
-            className="theme-toggle"
-            aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} theme`}
-            title={`Switch to ${theme === 'light' ? 'dark' : 'light'} theme`}
-          >
-            {theme === 'light' ? <Moon className="w-4 h-4" /> : <Sun className="w-4 h-4" />}
-          </button>
-          <button onClick={logout} className="flex items-center gap-2 px-4 py-1.5 text-slate-600 text-sm font-semibold hover:text-slate-900 transition-colors">
-            <LogOut className="w-4 h-4" />
-            Sign Out
-          </button>
-          <button className="btn-cta">Contact Lab</button>
+        <div style={{ display:'flex', flex:1, maxWidth:'300px', margin:'0 14px', alignItems:'center', gap:'8px', background:'rgba(255,255,255,0.07)', border:'0.5px solid rgba(255,255,255,0.11)', borderRadius:'8px', padding:'0 11px', height:'34px' }}>
+          <Search style={{ width:'13px', height:'13px', color:'#5a6090', flexShrink:0 }} />
+          <input
+            type="text"
+            placeholder="Search AI tools or describe a task…"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            style={{ background:'none', border:'none', outline:'none', color:'#fff', fontSize:'12px', flex:1, fontFamily:'inherit' }}
+          />
+        </div>
+        <div style={{ display:'flex', alignItems:'center', gap:'4px' }}>
+          <button onClick={() => setActiveView("lab")} style={{ fontSize:'11px', color: activeView==='lab' ? '#fff' : '#8b90b8', background: activeView==='lab' ? 'rgba(255,255,255,0.1)' : 'none', border:'none', cursor:'pointer', padding:'5px 9px', borderRadius:'6px' }}>AI Lab Tools</button>
+          <button onClick={() => setActiveView("catalog")} style={{ fontSize:'11px', color: activeView==='catalog' ? '#fff' : '#8b90b8', background: activeView==='catalog' ? 'rgba(255,255,255,0.1)' : 'none', border:'none', cursor:'pointer', padding:'5px 9px', borderRadius:'6px' }}>App Catalog</button>
+          <button style={{ fontSize:'11px', background:GOLD, color:NAVY, border:'none', borderRadius:'6px', padding:'6px 12px', cursor:'pointer', fontWeight:700, fontFamily:"'Barlow Condensed','Arial Narrow',sans-serif", letterSpacing:'0.04em', textTransform:'uppercase', marginLeft:'4px' }}>Contact Lab</button>
         </div>
       </nav>
 
-      {/* Main Content Area */}
+      {/* Subnav */}
+      <div style={{ background:CRIMSON, display:'flex', alignItems:'center', justifyContent:'space-between', padding:'0 16px', height:'34px', borderBottom:`2px solid ${GOLD}`, flexShrink:0 }}>
+        <div style={{ display:'flex', gap:'1px' }}>
+          {['Home','About TUC','Academics','AI Lab','Admissions','Newsroom','Apps'].map(lnk => (
+            <span key={lnk} style={{ fontSize:'10px', color: lnk==='AI Lab' ? '#fff' : 'rgba(255,255,255,0.7)', padding:'4px 8px', borderRadius:'4px', cursor:'pointer', textTransform:'uppercase', letterSpacing:'0.05em', background: lnk==='AI Lab' ? 'rgba(0,0,0,0.2)' : 'none' }}>{lnk}</span>
+          ))}
+        </div>
+        <div style={{ fontSize:'10px', background:GOLD, color:NAVY, padding:'3px 9px', borderRadius:'20px', fontWeight:700, letterSpacing:'0.04em', fontFamily:"'Barlow Condensed','Arial Narrow',sans-serif", textTransform:'uppercase' }}>July 2026 Admissions Open</div>
+      </div>
+
+      {/* Main Content */}
       {activeView === "catalog" ? (
-        <div className="flex-1 overflow-y-auto">
+        <div style={{ flex:1, overflowY:'auto' }}>
           <AppCatalog />
         </div>
       ) : (
-      <div className="flex grow overflow-hidden">
-        {/* Sidebar Filters */}
-        <aside className="bg-surface w-64 border-r border-subtle p-6 shrink-0 flex flex-col overflow-y-auto hidden md:flex">
-          <div className="mb-8">
-            <h3 className="section-label mb-4 px-2">Framework Categories</h3>
-            <div className="space-y-1">
-              {CAT_LIST.map((cat) => (
-                <button
-                  key={cat}
-                  onClick={() => setActiveCategory(cat)}
-                  className={`sidebar-item w-full ${activeCategory === cat ? 'active' : ''}`}
-                >
-                  <span>{cat}</span>
-                  <span className="count-pill">{countsByCat[cat]}</span>
-                </button>
-              ))}
-            </div>
-          </div>
+        <div style={{ display:'flex', flex:1, overflow:'hidden' }}>
 
-          <div>
-            <h3 className="section-label mb-4 px-2">Deployment Tier</h3>
-            <div className="space-y-2 px-2">
-              {["Edge Computing", "Cloud Clusters", "Hybrid Hub"].map((tier, idx) => (
-                <label
-                  key={tier}
-                  className="flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer text-sm text-muted hover:text-primary transition-colors"
-                >
-                  <input
-                    type="checkbox"
-                    className="tier-toggle"
-                    defaultChecked={idx % 2 === 0}
-                  />
-                  <span className="truncate">{tier}</span>
-                </label>
-              ))}
-            </div>
-          </div>
-        </aside>
+          {/* Sidebar */}
+          <aside style={{ width:'166px', flexShrink:0, background:'#fff', borderRight:'0.5px solid #e2e0d8', padding:'14px 10px', overflowY:'auto' }}>
+            <div style={{ fontSize:'10px', color:'#b0b3c6', letterSpacing:'0.07em', textTransform:'uppercase', margin:'0 4px 8px' }}>Categories</div>
+            {CAT_LIST.map((cat) => (
+              <div key={cat} onClick={() => setActiveCategory(cat)} style={{ display:'flex', alignItems:'center', justifyContent:'space-between', padding:'6px 8px', borderRadius:'6px', cursor:'pointer', marginBottom:'2px', background: activeCategory===cat ? '#fff8dc' : 'transparent' }}>
+                <span style={{ fontSize:'12px', color: activeCategory===cat ? CRIMSON : '#5a5d78', fontWeight: activeCategory===cat ? 500 : 400 }}>{cat === 'All' ? 'All tools' : cat}</span>
+                <span style={{ fontSize:'10px', background: activeCategory===cat ? '#fde68a' : '#f0f1f7', color: activeCategory===cat ? '#92400e' : '#9396a8', padding:'1px 6px', borderRadius:'10px' }}>{countsByCat[cat]}</span>
+              </div>
+            ))}
+            <div style={{ fontSize:'10px', color:'#b0b3c6', letterSpacing:'0.07em', textTransform:'uppercase', margin:'14px 4px 7px' }}>Deployment</div>
+            {["Edge Computing","Cloud Clusters","Hybrid Hub"].map((tier, idx) => (
+              <div key={tier} style={{ display:'flex', alignItems:'center', gap:'7px', padding:'5px 8px', cursor:'pointer', borderRadius:'6px', marginBottom:'2px' }}>
+                <div style={{ width:'14px', height:'14px', borderRadius:'3px', border: idx%2===0 ? 'none' : '1px solid #d0d3e6', background: idx%2===0 ? CRIMSON : '#fff', flexShrink:0, display:'flex', alignItems:'center', justifyContent:'center' }}>
+                  {idx%2===0 && <Check style={{ width:'9px', height:'9px', color:'#fff' }} />}
+                </div>
+                <span style={{ fontSize:'12px', color:'#7a7d96' }}>{tier}</span>
+              </div>
+            ))}
+          </aside>
 
-        {/* Product Grid Section */}
-        <main className="grow flex flex-col overflow-hidden bg-slate-50">
-          <header className="px-8 pt-8 pb-6 bg-slate-50/80 backdrop-blur-sm z-1 shrink-0">
-            <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
-              <div>
-                <h1 className="font-display text-3xl font-bold tracking-tight text-primary">AI Lab</h1>
-                <p className="text-muted mt-2 max-w-xl">Live AI agents and tools running in real-time. Monitor, control, and deploy solutions.</p>
-                {activeCategory !== "All" && (
-                  <div className="mt-4 flex items-center gap-2">
-                    <span className="text-[11px] text-slate-500 uppercase tracking-widest font-bold">Active Filter:</span>
-                    <button
-                      onClick={() => setActiveCategory("All")}
-                      className="inline-flex items-center gap-2 px-4 py-1.5 bg-gradient-to-r from-blue-50 to-blue-100 text-blue-700 rounded-lg text-xs font-bold hover:from-blue-100 hover:to-blue-200 transition-all border border-blue-300/50 shadow-sm"
-                    >
-                      {activeCategory}
-                      <X className="w-3.5 h-3.5 opacity-70 hover:opacity-100" />
-                    </button>
+          {/* Main area */}
+          <main style={{ flex:1, display:'flex', flexDirection:'column', overflow:'hidden' }}>
+
+            {/* KPI Bar */}
+            <div style={{ display:'grid', gridTemplateColumns:'repeat(4,1fr)', background:NAVY, borderBottom:`2px solid ${GOLD}`, flexShrink:0 }}>
+              {[
+                { label:'Total tools', value: TOOLS.length, suffix:'↑ 4', up:true },
+                { label:'Runs today', value:'1,284', suffix:'↑ 12%', up:true },
+                { label:'Active now', value:'3', suffix:`/ ${TOOLS.length}`, up:false },
+                { label:'Avg response', value:'1.2s', suffix:'fast', up:true },
+              ].map((kpi, i) => (
+                <div key={i} style={{ padding:'10px 14px', borderRight: i<3 ? '0.5px solid rgba(255,255,255,0.06)' : 'none' }}>
+                  <div style={{ fontSize:'9px', color:'#8b90b8', marginBottom:'3px', letterSpacing:'0.06em', textTransform:'uppercase' }}>{kpi.label}</div>
+                  <div style={{ fontSize:'18px', fontWeight:500, color:'#fff', fontFamily:"'Barlow Condensed','Arial Narrow',sans-serif" }}>
+                    {kpi.value}<span style={{ fontSize:'10px', marginLeft:'3px', color: kpi.up ? '#4ade80' : '#6b70a0' }}>{kpi.suffix}</span>
                   </div>
-                )}
-              </div>
-              <div className="flex items-center gap-3">
-                <div className="relative">
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted" />
-                  <input
-                    type="text"
-                    placeholder="Search tools..."
-                    className="search-input pl-9 pr-4 py-2.5 rounded-lg text-sm w-72"
-                    value={search}
-                    onChange={(e) => setSearch(e.target.value)}
-                  />
                 </div>
-                <div className="flex p-0.5 bg-slate-200 rounded-md">
-                  <button 
-                    onClick={() => setViewMode("grid")}
-                    className={`p-1.5 rounded transition-all ${viewMode === "grid" ? 'bg-white shadow-sm text-blue-600' : 'text-slate-500 hover:text-slate-700'}`}
-                  >
-                    <LayoutGrid className="w-4 h-4" />
-                  </button>
-                  <button 
-                    onClick={() => setViewMode("list")}
-                    className={`p-1.5 rounded transition-all ${viewMode === "list" ? 'bg-white shadow-sm text-blue-600' : 'text-slate-500 hover:text-slate-700'}`}
-                  >
-                    <ListIcon className="w-4 h-4" />
-                  </button>
+              ))}
+            </div>
+
+            {/* Toolbar */}
+            <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', padding:'9px 14px', background:'#fff', borderBottom:'0.5px solid #e2e0d8', flexShrink:0 }}>
+              <div style={{ display:'flex', alignItems:'center', gap:'8px' }}>
+                <span style={{ fontSize:'12px', color:'#9396a8' }}>Sort</span>
+                <select style={{ background:'#f7f5f0', border:'0.5px solid #e2e0d8', color:'#5a5d78', fontSize:'12px', borderRadius:'6px', padding:'4px 8px', outline:'none' }}>
+                  <option>Activity</option><option>Name</option><option>Status</option>
+                </select>
+                <div style={{ display:'flex', background:'#f7f5f0', borderRadius:'6px', border:'0.5px solid #e2e0d8', overflow:'hidden' }}>
+                  <button onClick={() => setViewMode("grid")} style={{ padding:'5px 10px', border:'none', background: viewMode==='grid' ? '#fff' : 'none', color: viewMode==='grid' ? CRIMSON : '#b0b3c6', cursor:'pointer', borderRadius:'5px', fontSize:'13px' }}><LayoutGrid style={{ width:'13px', height:'13px' }} /></button>
+                  <button onClick={() => setViewMode("list")} style={{ padding:'5px 10px', border:'none', background: viewMode==='list' ? '#fff' : 'none', color: viewMode==='list' ? CRIMSON : '#b0b3c6', cursor:'pointer', borderRadius:'5px', fontSize:'13px' }}><ListIcon style={{ width:'13px', height:'13px' }} /></button>
                 </div>
               </div>
+              <span style={{ fontSize:'11px', color:'#b0b3c6' }}>Showing {filteredTools.length} of {TOOLS.length} tools</span>
             </div>
-          </header>
 
-          <div className="grow overflow-y-auto px-8 pb-12 custom-scrollbar">
-            <div className="section-label mb-5">
-              {filteredTools.length} TOOL{filteredTools.length === 1 ? '' : 'S'}
-              {activeCategory !== "All" && <> · {activeCategory.toUpperCase()}</>}
-              {' '}· SORTED BY ACTIVITY
+            {/* Tool Grid */}
+            <div style={{ flex:1, overflowY:'auto', padding:'1px', background:'#e2e0d8' }}>
+              <div style={{ display:'grid', gridTemplateColumns: viewMode==='grid' ? 'repeat(auto-fill,minmax(185px,1fr))' : '1fr', gap:'1px', background:'#e2e0d8' }}>
+                {filteredTools.map((tool, i) => {
+                  const globalIndex = TOOLS.findIndex(t => t.slug === tool.slug);
+                  return <ToolCard key={tool.slug} tool={tool} index={globalIndex} viewMode={viewMode} onOpen={() => setSelectedTool(tool)} />;
+                })}
+              </div>
+              {filteredTools.length === 0 && (
+                <div style={{ display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', padding:'80px 0', color:'#9396a8' }}>
+                  <Search style={{ width:'40px', height:'40px', opacity:0.2, marginBottom:'12px' }} />
+                  <p style={{ fontSize:'14px' }}>No matches found</p>
+                  <button onClick={() => { setSearch(""); setActiveCategory("All"); }} style={{ marginTop:'8px', fontSize:'12px', color:CRIMSON, background:'none', border:'none', cursor:'pointer', textDecoration:'underline' }}>Clear filters</button>
+                </div>
+              )}
             </div>
-            {filteredTools.length > 0 ? (
-              <div className={viewMode === "grid"
-                ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 auto-rows-max"
-                : "flex flex-col gap-3"
-              }>
-                <AnimatePresence mode="popLayout">
-                    {filteredTools.map((tool) => {
-                      const globalIndex = TOOLS.findIndex(t => t.slug === tool.slug);
-                      return (
-                        <motion.div
-                          key={tool.slug}
-                          layout
-                          initial={{ opacity: 0, y: 12 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          exit={{ opacity: 0, y: 12 }}
-                          transition={{ duration: 0.4, delay: globalIndex * 0.05 }}
-                        >
-                          <ToolCard 
-                            tool={tool} 
-                            index={globalIndex} 
-                            viewMode={viewMode} 
-                            onOpen={() => setSelectedTool(tool)} 
-                          />
-                        </motion.div>
-                      );
-                    })}
-                </AnimatePresence>
-              </div>
-            ) : (
-              <div className="flex flex-col items-center justify-center py-32 text-slate-400">
-                <Search className="w-12 h-12 mb-4 opacity-20" />
-                <p className="text-lg font-medium">No matches found</p>
-                <button 
-                  onClick={() => { setSearch(""); setActiveCategory("All"); }}
-                  className="mt-2 text-blue-600 font-semibold hover:underline bg-blue-50 px-3 py-1 rounded-full text-sm"
-                >
-                  Clear all filters
-                </button>
-              </div>
-            )}
-          </div>
 
-          {/* Footer Status Bar */}
-          <footer className="px-8 py-2.5 flex items-center justify-between text-[10px] border-t border-subtle bg-surface/50 backdrop-blur-sm shrink-0">
-            <div className="flex gap-6 items-center">
-              <span className="flex items-center gap-2 text-primary font-medium">
-                <span className="status-dot" />
-                <span className="section-label" style={{ letterSpacing: '0.08em' }}>All Nodes Operational</span>
-              </span>
-              <span className="usage-chip">Last Sync · {new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}</span>
-            </div>
-            <div className="flex gap-5 items-center">
-              <span className="usage-chip">Ver 2.4.9 Stable</span>
-              <span className="section-label cursor-pointer hover:text-primary transition-colors">Lab Manifesto (PDF)</span>
-            </div>
-          </footer>
-        </main>
-        <AnimatePresence>
-          {selectedTool && <DetailModal tool={selectedTool} onClose={() => setSelectedTool(null)} />}
-        </AnimatePresence>
-      </div>
+            {/* Status Bar */}
+            <footer style={{ background:NAVY, display:'flex', alignItems:'center', justifyContent:'space-between', padding:'7px 16px', flexShrink:0 }}>
+              <div style={{ display:'flex', alignItems:'center', gap:'6px', fontSize:'10px', color:'#4ade80' }}>
+                <div style={{ width:'6px', height:'6px', borderRadius:'50%', background:'#4ade80' }} />
+                All nodes operational · Last sync {new Date().toLocaleTimeString('en-US', { hour:'2-digit', minute:'2-digit' })}
+              </div>
+              <div style={{ display:'flex', gap:'14px', alignItems:'center', fontSize:'10px', color:'#6b70a0' }}>
+                <span>Ver 2.4.9 Stable</span>
+                <a href="https://ai-tools.techbridge.edu.gh/blueprint/" target="_blank" rel="noopener noreferrer" style={{ color:GOLD, cursor:'pointer', textDecoration:'none', fontWeight:500 }}>
+                  <ExternalLink style={{ width:'11px', height:'11px', verticalAlign:'-1px', marginRight:'3px' }} />AI Blueprint
+                </a>
+                <button onClick={logout} style={{ background:'none', border:'none', color:'#6b70a0', cursor:'pointer', fontSize:'10px' }}>Sign out</button>
+              </div>
+            </footer>
+          </main>
+
+          <AnimatePresence>
+            {selectedTool && <DetailModal tool={selectedTool} onClose={() => setSelectedTool(null)} />}
+          </AnimatePresence>
+        </div>
       )}
     </div>
   );
 }
 
 function ToolCard({ tool, index, viewMode, onOpen }: { tool: Tool, index: number, viewMode: "grid" | "list", onOpen: () => void }) {
-  const [screenshotFailed, setScreenshotFailed] = useState(false);
-  const [isHovered, setIsHovered] = useState(false);
   const CatIcon = CATEGORIES[tool.cat as keyof typeof CATEGORIES]?.icon || Cpu;
   const ToolSpecificIcon = TOOL_ICONS[tool.slug] || CatIcon;
-  const badgeClass = CATEGORIES[tool.cat as keyof typeof CATEGORIES]?.badge || "badge-slate";
   const accentColor = CATEGORIES[tool.cat as keyof typeof CATEGORIES]?.accentColor || "#2563eb";
+  const CRIMSON = '#8b1a1a';
 
-  // Status mapping - random for now, can be dynamic later
-  const statusOptions = ["Active model", "Queued", "Idle"];
+  const statusOptions = ["Active", "Queued", "Idle"] as const;
   const nodeStatus = statusOptions[index % statusOptions.length];
-  const isActive = nodeStatus === "Active model";
-  const usageWeek = Math.floor(Math.random() * 100) + 10;
+  const isActive = nodeStatus === "Active";
+  const usageWeek = ((index * 37 + 13) % 100) + 10;
 
-  const cardNumber = String(index + 1).padStart(3, '0');
+  const iconBgs: Record<string, string> = {
+    "AI & ML": '#eff2ff', Academic: '#f0fdf4', Creative: '#fff1f2',
+    "Dev Tools": '#fff8e1', Business: '#fef2f2', Admin: '#f1f5f9', Games: '#ecfeff',
+  };
+  const iconColors: Record<string, string> = {
+    "AI & ML": '#3730a3', Academic: '#166534', Creative: '#be185d',
+    "Dev Tools": '#b45309', Business: '#b91c1c', Admin: '#334155', Games: '#155e75',
+  };
 
-  // Status messages for placeholder
-  const statusMessages = ["In the lab", "Soon to be installed", "Coming soon"];
-  const statusMessage = statusMessages[index % statusMessages.length];
+  const dotColor = isActive ? '#22c55e' : nodeStatus === 'Queued' ? '#f59e0b' : '#d1d5db';
+  const statusColor = isActive ? '#15803d' : nodeStatus === 'Queued' ? '#b45309' : '#9ca3af';
+
+  const cardStyle: React.CSSProperties = {
+    background: '#fff',
+    padding: '15px',
+    cursor: 'pointer',
+    position: 'relative',
+    transition: 'background 0.12s',
+  };
 
   if (viewMode === "list") {
     return (
-      <button
-        onClick={onOpen}
-        className="w-full flex items-center justify-between p-4 bg-white border border-slate-200 rounded-lg hover:border-blue-300 hover:shadow-lg hover:bg-slate-50 transition-all group text-left"
-      >
-        <div className="flex items-center gap-4 flex-1 min-w-0">
-          <div className="text-[10px] font-mono text-slate-400 font-bold w-12 shrink-0">#{cardNumber}</div>
-          <div className="w-12 h-12 rounded bg-slate-100 overflow-hidden shrink-0 border border-slate-200">
-            <img
-              src={`/api/screenshot?url=${encodeURIComponent(BASE_URL + "/" + tool.slug)}&slug=${tool.slug}`}
-              alt={tool.title}
-              className="w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition-opacity"
-            />
-          </div>
-          <div className="w-10 h-10 rounded-md bg-slate-50 flex items-center justify-center text-slate-400 group-hover:bg-blue-50 group-hover:text-blue-500 transition-colors shrink-0" style={{ color: accentColor }}>
-            <ToolSpecificIcon className="w-5 h-5" />
-          </div>
-          <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-2 mb-1">
-              <h3 className="font-bold text-slate-800 text-sm group-hover:text-blue-600 transition-colors">{tool.title}</h3>
-              <div className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${isActive ? 'bg-emerald-400' : 'bg-slate-300'}`} />
-            </div>
-            <p className="text-xs text-slate-500 truncate max-w-md">{tool.desc}</p>
-            <p className="text-[10px] text-slate-400 mt-1 flex items-center gap-1">
-              <span className="w-1.5 h-1.5 rounded-full bg-amber-400"></span>
-              Used {usageWeek}× this week
-            </p>
-          </div>
+      <div onClick={onOpen} style={{ ...cardStyle, display:'flex', alignItems:'center', gap:'12px', padding:'10px 14px' }}>
+        <div style={{ width:'36px', height:'36px', borderRadius:'10px', background: iconBgs[tool.cat] || '#f1f5f9', display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0 }}>
+          <ToolSpecificIcon style={{ width:'17px', height:'17px', color: iconColors[tool.cat] || '#334155' }} />
         </div>
-        <div className="flex items-center gap-4 shrink-0 ml-4">
-          <span className={`badge ${badgeClass} text-[9px]`}>{tool.cat}</span>
-          <ChevronRight className="w-4 h-4 text-slate-300 group-hover:text-blue-400 transition-colors" />
+        <div style={{ flex:1, minWidth:0 }}>
+          <div style={{ fontSize:'13px', fontWeight:500, color:'#1a1f3c', marginBottom:'2px' }}>{tool.title}</div>
+          <div style={{ fontSize:'11px', color:'#9396a8' }}>{tool.desc}</div>
         </div>
-      </button>
+        <div style={{ display:'flex', alignItems:'center', gap:'4px', fontSize:'10px', fontWeight:500 }}>
+          <div style={{ width:'6px', height:'6px', borderRadius:'50%', background:dotColor, flexShrink:0 }} />
+          <span style={{ color:statusColor }}>{nodeStatus}</span>
+        </div>
+        <div style={{ fontSize:'10px', color:'#b0b3c6' }}>{usageWeek}× this week</div>
+        <button onClick={(e) => { e.stopPropagation(); window.open(getAppUrl(tool.slug), '_blank'); }}
+          style={{ fontSize:'11px', fontWeight:600, background:CRIMSON, color:'#fff', border:'none', borderRadius:'6px', padding:'5px 11px', cursor:'pointer', fontFamily:"'Barlow Condensed','Arial Narrow',sans-serif", letterSpacing:'0.04em', textTransform:'uppercase', flexShrink:0 }}>
+          Launch
+        </button>
+      </div>
     );
   }
 
   return (
-    <div
-      className="venture-card group h-[380px] flex flex-col cursor-pointer overflow-hidden border-none shadow-sm relative"
-      style={{ ['--i' as string]: index }}
-      onClick={onOpen}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
+    <div onClick={onOpen} style={cardStyle}
+      onMouseEnter={e => (e.currentTarget.style.background = '#fffdf5')}
+      onMouseLeave={e => (e.currentTarget.style.background = '#fff')}
     >
-      {/* Full Bleed Background Screenshot via Local Playwright API */}
-      <div className="absolute inset-0 z-0 bg-slate-800/8 overflow-hidden">
-        {!screenshotFailed && (
-          <img
-            src={`/api/screenshot?url=${encodeURIComponent(BASE_URL + "/" + tool.slug)}&slug=${tool.slug}`}
-            alt={`${tool.title} background`}
-            className="w-full h-full object-cover object-top filter contrast-[1.05] brightness-[0.6] saturate-[0.9] transition-all duration-[1500ms] ease-out group-hover:scale-105 group-hover:brightness-[0.8] group-hover:contrast-[1.1]"
-            loading="lazy"
-            referrerPolicy="no-referrer"
-            onError={() => setScreenshotFailed(true)}
-          />
-        )}
-        {screenshotFailed && (
-          <div className="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-slate-900/80 to-slate-950/80">
-            <div className="text-center">
-              <Sparkles className="w-12 h-12 text-blue-400/60 mx-auto mb-3" />
-              <p className="text-blue-300/80 text-sm font-medium">{statusMessage}</p>
-            </div>
-          </div>
-        )}
-        {/* Scanline Effect (Recipe 3) */}
-        <div className="absolute inset-0 bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06))] bg-[length:100%_2px,3px_100%] pointer-events-none opacity-20" />
-        <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/40 to-transparent transition-opacity duration-700 group-hover:opacity-50" />
+      {/* Status top-right */}
+      <div style={{ position:'absolute', top:'11px', right:'11px', display:'flex', alignItems:'center', gap:'4px', fontSize:'10px', fontWeight:500 }}>
+        <div style={{ width:'6px', height:'6px', borderRadius:'50%', background:dotColor }} />
+        <span style={{ color:statusColor }}>{nodeStatus}</span>
       </div>
 
-      {/* Header Section - Top Left w/ Icon & Title */}
-      <div className="absolute top-0 left-0 right-0 z-20 p-5 bg-gradient-to-b from-black/60 via-black/30 to-transparent">
-        <div className="flex items-start gap-3">
-          <div className="w-12 h-12 rounded-lg bg-white/10 backdrop-blur-2xl border border-white/20 flex items-center justify-center text-white flex-shrink-0" style={{ color: accentColor }}>
-            <ToolSpecificIcon className="w-6 h-6" />
-          </div>
-          <div className="flex-1 min-w-0">
-            <h4 className="font-display font-bold text-white text-lg leading-tight tracking-tight line-clamp-2">
-              {tool.title}
-            </h4>
-            <div className="mt-2">
-              <span className={`status-pill ${isActive ? 'active' : nodeStatus === 'Queued' ? 'queued' : ''}`}>
-                {nodeStatus}
-              </span>
-            </div>
-          </div>
-        </div>
+      {/* Icon */}
+      <div style={{ width:'36px', height:'36px', borderRadius:'10px', background: iconBgs[tool.cat] || '#f1f5f9', display:'flex', alignItems:'center', justifyContent:'center', marginBottom:'11px' }}>
+        <ToolSpecificIcon style={{ width:'17px', height:'17px', color: iconColors[tool.cat] || '#334155' }} />
       </div>
 
-      {/* Floating Category Badge - Only shown for non-primary categories */}
-      {tool.cat !== "AI & ML" && (
-        <div className="absolute top-4 right-4 z-20">
-          <span className={`text-[8px] font-bold uppercase tracking-widest px-3 py-1 rounded-lg border backdrop-blur-md ${
-            badgeClass} shadow-md`}>
-            {tool.cat}
-          </span>
-        </div>
-      )}
+      {/* Title + desc */}
+      <div style={{ fontSize:'13px', fontWeight:500, color:'#1a1f3c', marginBottom:'4px' }}>{tool.title}</div>
+      <div style={{ fontSize:'11px', color:'#9396a8', lineHeight:1.55, marginBottom:'11px' }}>{tool.desc}</div>
 
-      {/* Hardware Accents (Recipe 3) */}
-      <div className="absolute inset-0 border-[0.5px] border-white/5 pointer-events-none z-10 group-hover:border-blue-500/30 transition-colors duration-500" />
-      <div className="absolute top-0 left-0 w-8 h-[0.5px] bg-white/20 z-10" />
-      <div className="absolute top-0 left-0 w-[0.5px] h-8 bg-white/20 z-10" />
-      
-      {/* Overlay Content (Bottom) */}
-      <motion.div
-        className="mt-auto relative z-10 p-6 backdrop-blur-[2px] bg-gradient-to-t from-slate-900 via-slate-900/80 to-transparent pt-24 transition-all duration-500 group-hover:via-slate-900/60"
-        initial={{ y: 0 }}
-        animate={isHovered ? { y: -8 } : { y: 0 }}
-        transition={{ duration: 0.3, ease: "easeOut" }}
-      >
-        <p className="text-[13px] text-slate-200 leading-relaxed line-clamp-3 mb-5 font-medium opacity-95 group-hover:opacity-100 transition-opacity">
-          {tool.desc}
-        </p>
-
-        <div className="mb-4">
-          <span className="usage-chip">Used {usageWeek}× this week</span>
+      {/* Footer */}
+      <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between' }}>
+        <div style={{ fontSize:'10px', color:'#b0b3c6', display:'flex', alignItems:'center', gap:'3px' }}>
+          <BarChart3 style={{ width:'11px', height:'11px' }} />{usageWeek}× this week
         </div>
-
-        <div className="pt-5 border-t border-white/10 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="relative flex items-center justify-center">
-              <div className="w-2 h-2 rounded-full bg-emerald-500 animate-ping absolute opacity-20" />
-              <div className="w-2 h-2 rounded-full bg-emerald-500" />
-            </div>
-            <span className="text-[10px] font-mono text-slate-400 font-bold tracking-[0.25em] uppercase opacity-0 group-hover:opacity-100 transition-opacity">
-              {tool.slug}
-            </span>
-          </div>
-          <button
-            className="btn-launch text-[11px] flex items-center gap-2 hover:gap-3 transition-all"
-          >
-            Launch <ChevronRight className="w-3.5 h-3.5" />
-          </button>
-        </div>
-      </motion.div>
+        <button onClick={(e) => { e.stopPropagation(); window.open(getAppUrl(tool.slug), '_blank'); }}
+          style={{ fontSize:'11px', fontWeight:600, background:CRIMSON, color:'#fff', border:'none', borderRadius:'6px', padding:'5px 11px', cursor:'pointer', fontFamily:"'Barlow Condensed','Arial Narrow',sans-serif", letterSpacing:'0.04em', textTransform:'uppercase' }}>
+          Launch
+        </button>
+      </div>
     </div>
   );
 }
