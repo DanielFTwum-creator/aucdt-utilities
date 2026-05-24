@@ -280,7 +280,9 @@ export default function App() {
 
       {/* Main Content Area */}
       {activeView === "catalog" ? (
-        <AppCatalog />
+        <div className="flex-1 overflow-y-auto">
+          <AppCatalog />
+        </div>
       ) : (
       <div className="flex grow overflow-hidden">
         {/* Sidebar Filters */}
