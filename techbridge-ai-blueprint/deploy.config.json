@@ -1,0 +1,9 @@
+{
+  "projectName": "techbridge-ai-blueprint",
+  "outputDir": "dist",
+  "deployPath": "/var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/blueprint/",
+  "remoteHost": "root@techbridge.edu.gh",
+  "buildTool": "pnpm",
+  "requiredEnvVars": [],
+  "healthCheckUrl": "https://ai-tools.techbridge.edu.gh/blueprint/"
+}

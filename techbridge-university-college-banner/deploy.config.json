@@ -1,0 +1,9 @@
+{
+  "projectName": "techbridge-university-college-banner",
+  "outputDir": "dist",
+  "deployPath": "/var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/banner/",
+  "remoteHost": "root@techbridge.edu.gh",
+  "buildTool": "pnpm",
+  "requiredEnvVars": [],
+  "healthCheckUrl": "https://ai-tools.techbridge.edu.gh/banner/"
+}
