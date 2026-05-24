@@ -271,6 +271,38 @@ export default function App() {
         <div style={{ fontSize:'10px', background:GOLD, color:NAVY, padding:'3px 9px', borderRadius:'20px', fontWeight:700, letterSpacing:'0.04em', fontFamily:"'Barlow Condensed','Arial Narrow',sans-serif", textTransform:'uppercase' }}>July 2026 Admissions Open</div>
       </div>
 
+      {/* Featured Apps Marquee */}
+      <div style={{ background:'#fff', borderBottom:'0.5px solid #e2e0d8', padding:'0', flexShrink:0, overflow:'hidden', height:'56px', display:'flex', alignItems:'center' }}>
+        <motion.div
+          style={{ display:'flex', gap:'12px', paddingX:'16px' }}
+          animate={{ x: [0, -2000] }}
+          transition={{ duration: 25, repeat: Infinity, ease: 'linear' }}
+        >
+          {["biochemai", "dictation-app", "markai", "omniextract", "playgrow", "techbridge-ai-blueprint"].map((slug) => {
+            const tool = TOOLS.find(t => t.slug === slug);
+            if (!tool) return null;
+            const Icon = TOOL_ICONS[slug] || Sparkles;
+            return (
+              <motion.div key={slug} whileHover={{ scale: 1.05 }} style={{ display:'flex', alignItems:'center', gap:'8px', padding:'10px 14px', background:'#f7f5f0', borderRadius:'8px', cursor:'pointer', border:'1px solid #e2e0d8', flexShrink:0, minWidth:'fit-content' }} onClick={() => setSelectedTool(tool)}>
+                <Icon style={{ width:'18px', height:'18px', color:CRIMSON, flexShrink:0 }} />
+                <span style={{ fontSize:'12px', fontWeight:500, color:'#1a1f3c', whiteSpace:'nowrap' }}>{tool.title}</span>
+              </motion.div>
+            );
+          })}
+          {["biochemai", "dictation-app", "markai", "omniextract", "playgrow", "techbridge-ai-blueprint"].map((slug) => {
+            const tool = TOOLS.find(t => t.slug === slug);
+            if (!tool) return null;
+            const Icon = TOOL_ICONS[slug] || Sparkles;
+            return (
+              <motion.div key={`${slug}-2`} whileHover={{ scale: 1.05 }} style={{ display:'flex', alignItems:'center', gap:'8px', padding:'10px 14px', background:'#f7f5f0', borderRadius:'8px', cursor:'pointer', border:'1px solid #e2e0d8', flexShrink:0, minWidth:'fit-content' }} onClick={() => setSelectedTool(tool)}>
+                <Icon style={{ width:'18px', height:'18px', color:CRIMSON, flexShrink:0 }} />
+                <span style={{ fontSize:'12px', fontWeight:500, color:'#1a1f3c', whiteSpace:'nowrap' }}>{tool.title}</span>
+              </motion.div>
+            );
+          })}
+        </motion.div>
+      </div>
+
       {/* Main Content */}
       {activeView === "catalog" ? (
         <div style={{ flex:1, overflowY:'auto' }}>
