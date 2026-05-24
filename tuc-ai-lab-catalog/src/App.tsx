@@ -190,6 +190,7 @@ export default function App() {
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [selectedTool, setSelectedTool] = useState<Tool | null>(null);
   const [activeView, setActiveView] = useState<"lab" | "catalog">("lab");
+  const [visibleCount, setVisibleCount] = useState(24);
 
   // Body scroll lock
   useEffect(() => {
@@ -199,6 +200,11 @@ export default function App() {
       document.body.classList.remove('modal-open');
     }
   }, [selectedTool]);
+
+  // Reset visible count on search/category change
+  useEffect(() => {
+    setVisibleCount(24);
+  }, [search, activeCategory]);
 
   const filteredTools = useMemo(() => {
     return TOOLS.filter((tool) => {
@@ -271,95 +277,135 @@ export default function App() {
           <AppCatalog />
         </div>
       ) : (
-        <div style={{ display:'flex', flex:1, overflow:'hidden' }}>
+        <div style={{ display:'flex', flexDirection:'column', flex:1, overflow:'hidden' }}>
 
-          {/* Sidebar */}
-          <aside style={{ width:'166px', flexShrink:0, background:'#fff', borderRight:'0.5px solid #e2e0d8', padding:'14px 10px', overflowY:'auto' }}>
-            <div style={{ fontSize:'10px', color:'#b0b3c6', letterSpacing:'0.07em', textTransform:'uppercase', margin:'0 4px 8px' }}>Categories</div>
-            {CAT_LIST.map((cat) => (
-              <div key={cat} onClick={() => setActiveCategory(cat)} style={{ display:'flex', alignItems:'center', justifyContent:'space-between', padding:'6px 8px', borderRadius:'6px', cursor:'pointer', marginBottom:'2px', background: activeCategory===cat ? '#fff8dc' : 'transparent' }}>
-                <span style={{ fontSize:'12px', color: activeCategory===cat ? CRIMSON : '#5a5d78', fontWeight: activeCategory===cat ? 500 : 400 }}>{cat === 'All' ? 'All tools' : cat}</span>
-                <span style={{ fontSize:'10px', background: activeCategory===cat ? '#fde68a' : '#f0f1f7', color: activeCategory===cat ? '#92400e' : '#9396a8', padding:'1px 6px', borderRadius:'10px' }}>{countsByCat[cat]}</span>
+          {/* Hero Search */}
+          <div style={{ background:'#fff', padding:'20px 16px', borderBottom:'0.5px solid #e2e0d8', flexShrink:0 }}>
+            <div style={{ maxWidth:'600px', margin:'0 auto' }}>
+              <div style={{ position:'relative', display:'flex', alignItems:'center' }}>
+                <Search style={{ position:'absolute', left:'12px', width:'16px', height:'16px', color:'#a0a6b8', flexShrink:0, pointerEvents:'none' }} />
+                <input
+                  type="text"
+                  placeholder="Search for a tool or describe what you need…"
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  style={{ width:'100%', paddingLeft:'36px', paddingRight:'16px', paddingTop:'12px', paddingBottom:'12px', fontSize:'13px', border:'1px solid #d1d5e0', borderRadius:'8px', outline:'none', fontFamily:'inherit', background:'#f9fafb' }}
+                />
               </div>
-            ))}
-            <div style={{ fontSize:'10px', color:'#b0b3c6', letterSpacing:'0.07em', textTransform:'uppercase', margin:'14px 4px 7px' }}>Deployment</div>
-            {["Edge Computing","Cloud Clusters","Hybrid Hub"].map((tier, idx) => (
-              <div key={tier} style={{ display:'flex', alignItems:'center', gap:'7px', padding:'5px 8px', cursor:'pointer', borderRadius:'6px', marginBottom:'2px' }}>
-                <div style={{ width:'14px', height:'14px', borderRadius:'3px', border: idx%2===0 ? 'none' : '1px solid #d0d3e6', background: idx%2===0 ? CRIMSON : '#fff', flexShrink:0, display:'flex', alignItems:'center', justifyContent:'center' }}>
-                  {idx%2===0 && <Check style={{ width:'9px', height:'9px', color:'#fff' }} />}
-                </div>
-                <span style={{ fontSize:'12px', color:'#7a7d96' }}>{tier}</span>
-              </div>
-            ))}
-          </aside>
+            </div>
+          </div>
 
-          {/* Main area */}
-          <main style={{ flex:1, display:'flex', flexDirection:'column', overflow:'hidden' }}>
-
-            {/* KPI Bar */}
-            <div style={{ display:'grid', gridTemplateColumns:'repeat(4,1fr)', background:NAVY, borderBottom:`2px solid ${GOLD}`, flexShrink:0 }}>
-              {[
-                { label:'Total tools', value: TOOLS.length, suffix:'↑ 4', up:true },
-                { label:'Runs today', value:'1,284', suffix:'↑ 12%', up:true },
-                { label:'Active now', value:'3', suffix:`/ ${TOOLS.length}`, up:false },
-                { label:'Avg response', value:'1.2s', suffix:'fast', up:true },
-              ].map((kpi, i) => (
-                <div key={i} style={{ padding:'10px 14px', borderRight: i<3 ? '0.5px solid rgba(255,255,255,0.06)' : 'none' }}>
-                  <div style={{ fontSize:'9px', color:'#8b90b8', marginBottom:'3px', letterSpacing:'0.06em', textTransform:'uppercase' }}>{kpi.label}</div>
-                  <div style={{ fontSize:'18px', fontWeight:500, color:'#fff', fontFamily:"'Barlow Condensed','Arial Narrow',sans-serif" }}>
-                    {kpi.value}<span style={{ fontSize:'10px', marginLeft:'3px', color: kpi.up ? '#4ade80' : '#6b70a0' }}>{kpi.suffix}</span>
-                  </div>
-                </div>
+          {/* Category Tabs */}
+          <div style={{ background:'#fff', padding:'10px 16px', borderBottom:'0.5px solid #e2e0d8', flexShrink:0, overflowX:'auto' }}>
+            <div style={{ display:'flex', gap:'8px', minWidth:'min-content', justifyContent:'center', flexWrap:'wrap' }}>
+              {CAT_LIST.map((cat) => (
+                <button
+                  key={cat}
+                  onClick={() => setActiveCategory(cat)}
+                  style={{
+                    padding:'6px 12px',
+                    fontSize:'12px',
+                    fontWeight:500,
+                    border:'1px solid',
+                    borderRadius:'6px',
+                    cursor:'pointer',
+                    background: activeCategory===cat ? CRIMSON : '#fff',
+                    color: activeCategory===cat ? '#fff' : '#5a5d78',
+                    borderColor: activeCategory===cat ? CRIMSON : '#d1d5e0',
+                    textTransform:'capitalize',
+                    whiteSpace:'nowrap',
+                    transition:'all 0.2s',
+                  }}
+                >
+                  {cat === 'All' ? `All (${countsByCat['All']})` : `${cat} (${countsByCat[cat] || 0})`}
+                </button>
               ))}
             </div>
+          </div>
 
-            {/* Toolbar */}
-            <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', padding:'9px 14px', background:'#fff', borderBottom:'0.5px solid #e2e0d8', flexShrink:0 }}>
-              <div style={{ display:'flex', alignItems:'center', gap:'8px' }}>
-                <span style={{ fontSize:'12px', color:'#9396a8' }}>Sort</span>
-                <select style={{ background:'#f7f5f0', border:'0.5px solid #e2e0d8', color:'#5a5d78', fontSize:'12px', borderRadius:'6px', padding:'4px 8px', outline:'none' }}>
-                  <option>Activity</option><option>Name</option><option>Status</option>
-                </select>
-                <div style={{ display:'flex', background:'#f7f5f0', borderRadius:'6px', border:'0.5px solid #e2e0d8', overflow:'hidden' }}>
-                  <button onClick={() => setViewMode("grid")} style={{ padding:'5px 10px', border:'none', background: viewMode==='grid' ? '#fff' : 'none', color: viewMode==='grid' ? CRIMSON : '#b0b3c6', cursor:'pointer', borderRadius:'5px', fontSize:'13px' }}><LayoutGrid style={{ width:'13px', height:'13px' }} /></button>
-                  <button onClick={() => setViewMode("list")} style={{ padding:'5px 10px', border:'none', background: viewMode==='list' ? '#fff' : 'none', color: viewMode==='list' ? CRIMSON : '#b0b3c6', cursor:'pointer', borderRadius:'5px', fontSize:'13px' }}><ListIcon style={{ width:'13px', height:'13px' }} /></button>
-                </div>
-              </div>
-              <span style={{ fontSize:'11px', color:'#b0b3c6' }}>Showing {filteredTools.length} of {TOOLS.length} tools</span>
-            </div>
+          {/* Scrollable Content */}
+          <div style={{ flex:1, overflowY:'auto', padding:'24px 16px', background:'#f7f5f0' }}>
+            <div style={{ maxWidth:'1200px', margin:'0 auto' }}>
 
-            {/* Tool Grid */}
-            <div style={{ flex:1, overflowY:'auto', padding:'1px', background:'#e2e0d8' }}>
-              <div style={{ display:'grid', gridTemplateColumns: viewMode==='grid' ? 'repeat(auto-fill,minmax(220px,1fr))' : '1fr', gap:'1px', background:'#e2e0d8' }}>
-                {filteredTools.map((tool, i) => {
-                  const globalIndex = TOOLS.findIndex(t => t.slug === tool.slug);
-                  return <ToolCard key={tool.slug} tool={tool} index={globalIndex} viewMode={viewMode} onOpen={() => setSelectedTool(tool)} />;
-                })}
-              </div>
-              {filteredTools.length === 0 && (
-                <div style={{ display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', padding:'80px 0', color:'#9396a8' }}>
-                  <Search style={{ width:'40px', height:'40px', opacity:0.2, marginBottom:'12px' }} />
-                  <p style={{ fontSize:'14px' }}>No matches found</p>
-                  <button onClick={() => { setSearch(""); setActiveCategory("All"); }} style={{ marginTop:'8px', fontSize:'12px', color:CRIMSON, background:'none', border:'none', cursor:'pointer', textDecoration:'underline' }}>Clear filters</button>
-                </div>
+              {/* Featured Section */}
+              {search === "" && activeCategory === "All" && (
+                <section style={{ marginBottom:'40px' }}>
+                  <h2 style={{ fontSize:'18px', fontWeight:700, color:'#1a1f3c', marginBottom:'16px', letterSpacing:'-0.5px' }}>Featured Tools</h2>
+                  <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fit, minmax(300px, 1fr))', gap:'12px' }}>
+                    {["biochemai", "dictation-app", "markai", "omniextract", "playgrow", "techbridge-ai-blueprint"].map((slug) => {
+                      const tool = TOOLS.find(t => t.slug === slug);
+                      if (!tool) return null;
+                      return <FeaturedCard key={slug} tool={tool} onOpen={() => setSelectedTool(tool)} />;
+                    })}
+                  </div>
+                </section>
               )}
-            </div>
 
-            {/* Status Bar */}
-            <footer style={{ background:NAVY, display:'flex', alignItems:'center', justifyContent:'space-between', padding:'7px 16px', flexShrink:0 }}>
-              <div style={{ display:'flex', alignItems:'center', gap:'6px', fontSize:'10px', color:'#4ade80' }}>
-                <div style={{ width:'6px', height:'6px', borderRadius:'50%', background:'#4ade80' }} />
-                All nodes operational · Last sync {new Date().toLocaleTimeString('en-US', { hour:'2-digit', minute:'2-digit' })}
-              </div>
-              <div style={{ display:'flex', gap:'14px', alignItems:'center', fontSize:'10px', color:'#6b70a0' }}>
-                <span>Ver 2.4.9 Stable</span>
-                <a href="https://ai-tools.techbridge.edu.gh/blueprint/" target="_blank" rel="noopener noreferrer" style={{ color:GOLD, cursor:'pointer', textDecoration:'none', fontWeight:500 }}>
-                  <ExternalLink style={{ width:'11px', height:'11px', verticalAlign:'-1px', marginRight:'3px' }} />AI Blueprint
-                </a>
-                <button onClick={logout} style={{ background:'none', border:'none', color:'#6b70a0', cursor:'pointer', fontSize:'10px' }}>Sign out</button>
-              </div>
-            </footer>
-          </main>
+              {/* All Tools / Filtered Results */}
+              <section>
+                <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:'16px' }}>
+                  <h2 style={{ fontSize:'18px', fontWeight:700, color:'#1a1f3c', letterSpacing:'-0.5px' }}>
+                    {activeCategory === "All" ? "All Tools" : activeCategory}
+                  </h2>
+                  <span style={{ fontSize:'13px', color:'#9396a8' }}>{filteredTools.length} tool{filteredTools.length !== 1 ? 's' : ''}</span>
+                </div>
+
+                {filteredTools.length === 0 ? (
+                  <div style={{ display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', padding:'60px 0', color:'#9396a8' }}>
+                    <Search style={{ width:'40px', height:'40px', opacity:0.2, marginBottom:'12px' }} />
+                    <p style={{ fontSize:'14px' }}>No matches found</p>
+                    <button onClick={() => { setSearch(""); setActiveCategory("All"); }} style={{ marginTop:'8px', fontSize:'12px', color:CRIMSON, background:'none', border:'none', cursor:'pointer', textDecoration:'underline' }}>Clear filters</button>
+                  </div>
+                ) : (
+                  <>
+                    <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fill, minmax(220px, 1fr))', gap:'1px', background:'#e2e0d8', borderRadius:'4px', padding:'1px', overflow:'hidden' }}>
+                      {filteredTools.slice(0, visibleCount).map((tool) => (
+                        <ToolCard key={tool.slug} tool={tool} index={TOOLS.findIndex(t => t.slug === tool.slug)} viewMode="grid" onOpen={() => setSelectedTool(tool)} />
+                      ))}
+                    </div>
+
+                    {visibleCount < filteredTools.length && (
+                      <div style={{ display:'flex', justifyContent:'center', marginTop:'24px' }}>
+                        <button
+                          onClick={() => setVisibleCount(v => v + 24)}
+                          style={{
+                            padding:'10px 20px',
+                            fontSize:'13px',
+                            fontWeight:600,
+                            background: CRIMSON,
+                            color:'#fff',
+                            border:'none',
+                            borderRadius:'6px',
+                            cursor:'pointer',
+                            fontFamily:"'Barlow Condensed','Arial Narrow',sans-serif",
+                            letterSpacing:'0.04em',
+                            textTransform:'uppercase',
+                          }}
+                        >
+                          Load more ({filteredTools.length - visibleCount} remaining)
+                        </button>
+                      </div>
+                    )}
+                  </>
+                )}
+              </section>
+            </div>
+          </div>
+
+          {/* Status Bar */}
+          <footer style={{ background:NAVY, display:'flex', alignItems:'center', justifyContent:'space-between', padding:'7px 16px', flexShrink:0 }}>
+            <div style={{ display:'flex', alignItems:'center', gap:'6px', fontSize:'10px', color:'#4ade80' }}>
+              <div style={{ width:'6px', height:'6px', borderRadius:'50%', background:'#4ade80' }} />
+              All nodes operational · Last sync {new Date().toLocaleTimeString('en-US', { hour:'2-digit', minute:'2-digit' })}
+            </div>
+            <div style={{ display:'flex', gap:'14px', alignItems:'center', fontSize:'10px', color:'#6b70a0' }}>
+              <span>Ver 2.4.9 Stable</span>
+              <a href="https://ai-tools.techbridge.edu.gh/blueprint/" target="_blank" rel="noopener noreferrer" style={{ color:GOLD, cursor:'pointer', textDecoration:'none', fontWeight:500 }}>
+                <ExternalLink style={{ width:'11px', height:'11px', verticalAlign:'-1px', marginRight:'3px' }} />AI Blueprint
+              </a>
+              <button onClick={logout} style={{ background:'none', border:'none', color:'#6b70a0', cursor:'pointer', fontSize:'10px' }}>Sign out</button>
+            </div>
+          </footer>
 
           <AnimatePresence>
             {selectedTool && <DetailModal tool={selectedTool} onClose={() => setSelectedTool(null)} />}
@@ -370,16 +416,10 @@ export default function App() {
   );
 }
 
-function ToolCard({ tool, index, viewMode, onOpen }: { tool: Tool, index: number, viewMode: "grid" | "list", onOpen: () => void }) {
-  const CatIcon = CATEGORIES[tool.cat as keyof typeof CATEGORIES]?.icon || Cpu;
-  const ToolSpecificIcon = TOOL_ICONS[tool.slug] || CatIcon;
-  const accentColor = CATEGORIES[tool.cat as keyof typeof CATEGORIES]?.accentColor || "#2563eb";
+function FeaturedCard({ tool, onOpen }: { tool: Tool, onOpen: () => void }) {
+  const ToolSpecificIcon = TOOL_ICONS[tool.slug] || CATEGORIES[tool.cat as keyof typeof CATEGORIES]?.icon || Cpu;
   const CRIMSON = '#8b1a1a';
-
-  const statusOptions = ["Active", "Queued", "Idle"] as const;
-  const nodeStatus = statusOptions[index % statusOptions.length];
-  const isActive = nodeStatus === "Active";
-  const usageWeek = ((index * 37 + 13) % 100) + 10;
+  const GOLD = '#f5c518';
 
   const iconBgs: Record<string, string> = {
     "AI & ML": '#eff2ff', Academic: '#f0fdf4', Creative: '#fff1f2',
@@ -390,8 +430,58 @@ function ToolCard({ tool, index, viewMode, onOpen }: { tool: Tool, index: number
     "Dev Tools": '#b45309', Business: '#b91c1c', Admin: '#334155', Games: '#155e75',
   };
 
-  const dotColor = isActive ? '#22c55e' : nodeStatus === 'Queued' ? '#f59e0b' : '#d1d5db';
-  const statusColor = isActive ? '#15803d' : nodeStatus === 'Queued' ? '#b45309' : '#9ca3af';
+  return (
+    <div onClick={onOpen} style={{
+      background: '#fff',
+      padding: '20px',
+      cursor: 'pointer',
+      position: 'relative',
+      borderLeft: `4px solid ${CRIMSON}`,
+      transition: 'all 0.2s',
+      display:'flex',
+      gap:'16px',
+      alignItems:'flex-start',
+    }}
+      onMouseEnter={e => (e.currentTarget.style.background = '#fffdf5')}
+      onMouseLeave={e => (e.currentTarget.style.background = '#fff')}
+    >
+      {/* Featured Badge */}
+      <div style={{ position:'absolute', top:'12px', right:'12px', background:GOLD, color:'#1a1f3c', fontSize:'11px', fontWeight:700, padding:'3px 8px', borderRadius:'4px', letterSpacing:'0.03em', textTransform:'uppercase' }}>
+        Featured
+      </div>
+
+      {/* Icon */}
+      <div style={{ width:'60px', height:'60px', borderRadius:'12px', background: iconBgs[tool.cat] || '#f1f5f9', display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0 }}>
+        <ToolSpecificIcon style={{ width:'28px', height:'28px', color: iconColors[tool.cat] || '#334155' }} />
+      </div>
+
+      {/* Content */}
+      <div style={{ flex:1, minWidth:0, paddingRight:'60px' }}>
+        <div style={{ fontSize:'15px', fontWeight:600, color:'#1a1f3c', marginBottom:'6px', lineHeight:1.3 }}>{tool.title}</div>
+        <div style={{ fontSize:'13px', color:'#6b7280', lineHeight:1.5, marginBottom:'12px' }}>{tool.desc}</div>
+        <button onClick={(e) => { e.stopPropagation(); window.open(getAppUrl(tool.slug), '_blank'); }}
+          style={{ fontSize:'11px', fontWeight:600, background:CRIMSON, color:'#fff', border:'none', borderRadius:'6px', padding:'6px 14px', cursor:'pointer', fontFamily:"'Barlow Condensed','Arial Narrow',sans-serif", letterSpacing:'0.04em', textTransform:'uppercase' }}>
+          Launch
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function ToolCard({ tool, index, viewMode, onOpen }: { tool: Tool, index: number, viewMode: "grid" | "list", onOpen: () => void }) {
+  const CatIcon = CATEGORIES[tool.cat as keyof typeof CATEGORIES]?.icon || Cpu;
+  const ToolSpecificIcon = TOOL_ICONS[tool.slug] || CatIcon;
+  const accentColor = CATEGORIES[tool.cat as keyof typeof CATEGORIES]?.accentColor || "#2563eb";
+  const CRIMSON = '#8b1a1a';
+
+  const iconBgs: Record<string, string> = {
+    "AI & ML": '#eff2ff', Academic: '#f0fdf4', Creative: '#fff1f2',
+    "Dev Tools": '#fff8e1', Business: '#fef2f2', Admin: '#f1f5f9', Games: '#ecfeff',
+  };
+  const iconColors: Record<string, string> = {
+    "AI & ML": '#3730a3', Academic: '#166534', Creative: '#be185d',
+    "Dev Tools": '#b45309', Business: '#b91c1c', Admin: '#334155', Games: '#155e75',
+  };
 
   const cardStyle: React.CSSProperties = {
     background: '#fff',
@@ -399,61 +489,28 @@ function ToolCard({ tool, index, viewMode, onOpen }: { tool: Tool, index: number
     cursor: 'pointer',
     position: 'relative',
     transition: 'background 0.12s',
+    borderLeft: `4px solid ${accentColor}`,
   };
-
-  if (viewMode === "list") {
-    return (
-      <div onClick={onOpen} style={{ ...cardStyle, display:'flex', alignItems:'center', gap:'12px', padding:'10px 14px' }}>
-        <div style={{ width:'36px', height:'36px', borderRadius:'10px', background: iconBgs[tool.cat] || '#f1f5f9', display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0 }}>
-          <ToolSpecificIcon style={{ width:'17px', height:'17px', color: iconColors[tool.cat] || '#334155' }} />
-        </div>
-        <div style={{ flex:1, minWidth:0 }}>
-          <div style={{ fontSize:'13px', fontWeight:500, color:'#1a1f3c', marginBottom:'2px' }}>{tool.title}</div>
-          <div style={{ fontSize:'11px', color:'#9396a8' }}>{tool.desc}</div>
-        </div>
-        <div style={{ display:'flex', alignItems:'center', gap:'4px', fontSize:'10px', fontWeight:500 }}>
-          <div style={{ width:'6px', height:'6px', borderRadius:'50%', background:dotColor, flexShrink:0 }} />
-          <span style={{ color:statusColor }}>{nodeStatus}</span>
-        </div>
-        <div style={{ fontSize:'10px', color:'#b0b3c6' }}>{usageWeek}× this week</div>
-        <button onClick={(e) => { e.stopPropagation(); window.open(getAppUrl(tool.slug), '_blank'); }}
-          style={{ fontSize:'11px', fontWeight:600, background:CRIMSON, color:'#fff', border:'none', borderRadius:'6px', padding:'5px 11px', cursor:'pointer', fontFamily:"'Barlow Condensed','Arial Narrow',sans-serif", letterSpacing:'0.04em', textTransform:'uppercase', flexShrink:0 }}>
-          Launch
-        </button>
-      </div>
-    );
-  }
 
   return (
     <div onClick={onOpen} style={cardStyle}
       onMouseEnter={e => (e.currentTarget.style.background = '#fffdf5')}
       onMouseLeave={e => (e.currentTarget.style.background = '#fff')}
     >
-      {/* Status top-right */}
-      <div style={{ position:'absolute', top:'11px', right:'11px', display:'flex', alignItems:'center', gap:'4px', fontSize:'10px', fontWeight:500 }}>
-        <div style={{ width:'6px', height:'6px', borderRadius:'50%', background:dotColor }} />
-        <span style={{ color:statusColor }}>{nodeStatus}</span>
-      </div>
-
       {/* Icon */}
       <div style={{ width:'40px', height:'40px', borderRadius:'10px', background: iconBgs[tool.cat] || '#f1f5f9', display:'flex', alignItems:'center', justifyContent:'center', marginBottom:'12px' }}>
         <ToolSpecificIcon style={{ width:'20px', height:'20px', color: iconColors[tool.cat] || '#334155' }} />
       </div>
 
       {/* Title + desc */}
-      <div style={{ fontSize:'14px', fontWeight:600, color:'#1a1f3c', marginBottom:'6px', lineHeight:1.3 }}>{tool.title}</div>
-      <div style={{ fontSize:'12px', color:'#5a5d78', lineHeight:1.6, marginBottom:'12px' }}>{tool.desc}</div>
+      <div style={{ fontSize:'15px', fontWeight:600, color:'#1a1f3c', marginBottom:'6px', lineHeight:1.3 }}>{tool.title}</div>
+      <div style={{ fontSize:'12px', color:'#6b7280', lineHeight:1.5, marginBottom:'12px' }}>{tool.desc}</div>
 
-      {/* Footer */}
-      <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between' }}>
-        <div style={{ fontSize:'10px', color:'#b0b3c6', display:'flex', alignItems:'center', gap:'3px' }}>
-          <BarChart3 style={{ width:'11px', height:'11px' }} />{usageWeek}× this week
-        </div>
-        <button onClick={(e) => { e.stopPropagation(); window.open(getAppUrl(tool.slug), '_blank'); }}
-          style={{ fontSize:'11px', fontWeight:600, background:CRIMSON, color:'#fff', border:'none', borderRadius:'6px', padding:'5px 11px', cursor:'pointer', fontFamily:"'Barlow Condensed','Arial Narrow',sans-serif", letterSpacing:'0.04em', textTransform:'uppercase' }}>
-          Launch
-        </button>
-      </div>
+      {/* Launch Button */}
+      <button onClick={(e) => { e.stopPropagation(); window.open(getAppUrl(tool.slug), '_blank'); }}
+        style={{ fontSize:'11px', fontWeight:600, background:CRIMSON, color:'#fff', border:'none', borderRadius:'6px', padding:'6px 14px', cursor:'pointer', fontFamily:"'Barlow Condensed','Arial Narrow',sans-serif", letterSpacing:'0.04em', textTransform:'uppercase', width:'100%' }}>
+        Launch
+      </button>
     </div>
   );
 }
