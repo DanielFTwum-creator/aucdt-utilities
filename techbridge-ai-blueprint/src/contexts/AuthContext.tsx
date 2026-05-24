@@ -130,13 +130,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const logout = async () => {
-    setUser(null);
-    setIsAuthenticated(false);
     localStorage.removeItem('techbridge_ai_blueprint_user');
     document.cookie = 'blueprint_user=; max-age=0; path=/blueprint/; secure; samesite=lax';
     try {
       await fetch('/api/auth/logout', { method: 'POST', credentials: 'include' }).catch(() => {});
     } finally {
+      setUser(null);
+      setIsAuthenticated(false);
       window.location.href = '/blueprint/';
     }
   };
