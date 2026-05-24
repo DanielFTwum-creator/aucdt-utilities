@@ -207,8 +207,25 @@ if ($DryRun) {
                        "  RewriteCond %{REQUEST_FILENAME} -d`n" +
                        "  RewriteRule ^ - [L]`n" +
                        "  RewriteRule ^ /$SubdomainPath/index.html [QSA,L]`n" +
-                       "$cacheControl + "
-" + </IfModule>"
+                       "</IfModule>`n" +
+                       "`n" +
+                       "<IfModule mod_expires.c>`n" +
+                       "  ExpiresActive On`n" +
+                       "  <FilesMatch '\.(js|css|png|jpg|jpeg|gif|svg|woff2|woff|ttf|eot|ico)$'>`n" +
+                       "    ExpiresDefault 'max-age=31536000'`n" +
+                       "    Header set Cache-Control 'public, immutable'`n" +
+                       "  </FilesMatch>`n" +
+                       "  <FilesMatch '\.(html|json)$'>`n" +
+                       "    ExpiresDefault 'max-age=0'`n" +
+                       "    Header set Cache-Control 'public, must-revalidate'`n" +
+                       "  </FilesMatch>`n" +
+                       "</IfModule>`n" +
+                       "`n" +
+                       "<IfModule mod_headers.c>`n" +
+                       "  <FilesMatch '\.(html)$'>`n" +
+                       "    Header set Cache-Control 'public, must-revalidate, max-age=0'`n" +
+                       "  </FilesMatch>`n" +
+                       "</IfModule>"
 
     $htaccessContent | ssh -o StrictHostKeyChecking=no $sshTarget "cat > '$DeployPath/.htaccess'"
 

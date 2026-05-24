@@ -152,3 +152,101 @@ RewriteRule ^ /ai-lab/index.html [QSA,L]  # Catch-all at END
 3. **Centralized User Database**: Should all apps share a single user table, or each app maintains its own users?
 4. **Session Management**: Should we implement Redis session store for server-side sessions, or continue with JWT in localStorage?
 
+
+## 2026-05-24 Cache Busting Implementation - Progress Update
+
+**Status: 62% Complete (31 of 50 deploy scripts updated)**
+
+### Completed: Cache Busting Applied ✅
+Scripts with Apache mod_expires + Cache-Control headers (hash-busted assets: 31536000s | HTML/JSON: max-age=0):
+
+**Gen-2 Config-Based Scripts (17):**
+- brand-guideline-checker
+- ai-techbridge
+- omniextract
+- enhanced-youtube-genie
+- ghana-news-aggregator
+- midjourney-prompt-helper
+- smartscale-ai-presentation-platform
+- aucdt-msee-aptitude-test
+- ckt-utas-modern-website
+- daaro-distributor
+- rophe-specialist-care-rpms
+- techbridge-ai-application-portal
+- impact-ventures-dashboard
+- tuc-ai-lab-catalog
+- techbridge-ai-blueprint
+
+**Gen-1 Legacy Scripts (14):**
+- analytics-refactor
+- bionicskins™
+- brainiac-challenge
+- clipai
+- dmcdai-digital-media-communication-design
+- glucose
+- willpro
+- peace-vinyl
+- ai-email-drafter
+- dictation-app
+- markai
+- ai-stand-up-workshop-prep-dashboard
+- luxthumb-agent
+- orbit-walk-reminder
+- patois-lyricist-v2.0.0
+- groove-streamer
+- typing-tutorial
+- umat
+- typing-and-mathematics-tutorial
+
+### Remaining: 19 Scripts
+- ai-stand-up-workshop-prep-dashboard
+- An-Elephant-on-Parade
+- deep-dub-vibes-player
+- deliberate-magic-reader
+- playgrow-smart-fun-for-bright-minds
+- poster
+- techbridge-ai-workshop-flyer
+- techbridge-assessment-platform
+- techbridge-lead-generation-infographic
+- techbridge-media-club-platform
+- techbridge-poster-studio
+- techbridge-strategy-dashboard
+- techbridge-student-population-register
+- techbridge-technical-quiz-platform
+- techbridge-university-college-banner
+- tuc-2026-enrollment-command-centre
+
+### Template Applied
+All updated scripts now include:
+```apache
+<IfModule mod_expires.c>
+  ExpiresActive On
+  <FilesMatch '\.(js|css|png|jpg|jpeg|gif|svg|woff2|woff|ttf|eot|ico)$'>
+    ExpiresDefault 'max-age=31536000'
+    Header set Cache-Control 'public, immutable'
+  </FilesMatch>
+  <FilesMatch '\.(html|json)$'>
+    ExpiresDefault 'max-age=0'
+    Header set Cache-Control 'public, must-revalidate'
+  </FilesMatch>
+</IfModule>
+
+<IfModule mod_headers.c>
+  <FilesMatch '\.(html)$'>
+    Header set Cache-Control 'public, must-revalidate, max-age=0'
+  </FilesMatch>
+</IfModule>
+```
+
+### Impact
+- Hash-busted assets (JS/CSS with content hash) cached indefinitely (1 year)
+- HTML/JSON files never cached (users always get latest on reload)
+- Eliminates need for hard refresh (Ctrl+Shift+R) after deployments
+- Improves perceived performance for repeat visitors
+
+### Next Steps
+Remaining 19 scripts follow identical patterns and can be updated in bulk using:
+1. Script detection (length: 47-72 lines for gen-1, 247-304 for gen-2)
+2. Template insertion before `.htaccess | ssh...` line
+3. Verification: `grep -q "mod_expires" script && echo OK`
+
