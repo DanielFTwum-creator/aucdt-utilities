@@ -1,0 +1,9 @@
+{
+  "projectName": "techbridge-poster-studio",
+  "outputDir": "dist",
+  "deployPath": "/var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/poster-studio/",
+  "remoteHost": "root@techbridge.edu.gh",
+  "buildTool": "pnpm",
+  "requiredEnvVars": [],
+  "healthCheckUrl": "https://ai-tools.techbridge.edu.gh/poster-studio/"
+}
