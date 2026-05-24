@@ -193,7 +193,21 @@
       "Bash(grep -c 'og:title\\\\|og:description' __TRACKED_VAR__/index.html)",
       "Bash(grep -c 'href=\"\\\\..*favicon' __TRACKED_VAR__/index.html)",
       "Bash([ -f \"$app/deploy.ps1\" ])",
-      "Bash(echo 'SEO=__TRACKED_VAR__ Favicon=__TRACKED_VAR__ Deploy=__TRACKED_VAR__')"
+      "Bash(echo 'SEO=__TRACKED_VAR__ Favicon=__TRACKED_VAR__ Deploy=__TRACKED_VAR__')",
+      "PowerShell(cd C:\\\\Development\\\\github\\\\aucdt-utilities\\\\agenticai-masterclass; Get-ChildItem -Depth 1 | Where-Object { $_.Name -match \"vite.config|package.json|index.html\" })",
+      "Bash(Sort-Object)",
+      "Bash([ -f \"$app/vite.config.ts\" ])",
+      "Bash(echo 'FOUND: __TRACKED_VAR__/vite.config.ts')",
+      "Bash([ -f \"$app/client/vite.config.ts\" ])",
+      "Bash(echo 'FOUND: __TRACKED_VAR__/client/vite.config.ts')",
+      "Bash(echo 'NOT FOUND: __TRACKED_VAR__')",
+      "Bash(ls C:/Development/github/aucdt-utilities/__TRACKED_VAR__/)",
+      "Bash(ls C:/Development/github/aucdt-utilities/__TRACKED_VAR__/public/)",
+      "Bash(echo \"[no public dir]\")",
+      "Bash(echo \"---\")",
+      "PowerShell(Test-Path *)",
+      "PowerShell(cd \"C:\\\\Development\\\\github\\\\aucdt-utilities\" ; Get-ChildItem -Directory | Where-Object { $_.Name -match \"bionic\" -or $_.Name -match \"Bionic\" } | Select-Object Name)",
+      "PowerShell(Join-Path *)"
     ]
   }
 }

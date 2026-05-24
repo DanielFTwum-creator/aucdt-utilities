@@ -42,7 +42,7 @@
     <meta name="copyright" content="Techbridge University College" />
     <meta name="referrer" content="origin-when-cross-origin" />
     <!-- ────────────────────────────────────────────────────────────── -->
-    <link rel="icon" type="image/png" href="https://techbridge.edu.gh/static/TUC_LOGO.png" />
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI Stand-up & Workshop Prep</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -130,9 +130,94 @@
 }
 </script>
 <link rel="stylesheet" href="/index.css">
+    <style id="workshop-splash-styles">
+      body {
+        background: radial-gradient(circle at 50% 50%, #fafafa 0%, #f4f4f5 100%) !important;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        font-family: 'Poppins', sans-serif;
+        overflow: hidden;
+      }
+      .workshop-splash {
+        text-align: center;
+        border: 1px solid rgba(228, 228, 231, 0.8);
+        padding: 55px 75px;
+        background: rgba(255, 255, 255, 0.9);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border-radius: 24px;
+        box-shadow: 0 10px 30px -10px rgba(9, 9, 11, 0.05);
+        position: relative;
+      }
+      .workshop-splash::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 5px;
+        background: linear-gradient(90deg, #2563eb, #3b82f6);
+        border-top-left-radius: 24px;
+        border-top-right-radius: 24px;
+      }
+      .workshop-logo {
+        color: #18181b;
+        font-size: 2.3rem;
+        font-weight: 800;
+        letter-spacing: -0.02em;
+        margin-bottom: 6px;
+        display: block;
+      }
+      .workshop-logo span {
+        color: #2563eb;
+      }
+      .workshop-status {
+        color: #71717a;
+        text-transform: uppercase;
+        letter-spacing: 0.35em;
+        font-size: 0.75rem;
+        font-weight: 600;
+        opacity: 0.9;
+      }
+      .workshop-loading {
+        margin-top: 25px;
+        height: 3px;
+        width: 130px;
+        background: rgba(37, 99, 235, 0.1);
+        margin-left: auto;
+        margin-right: auto;
+        position: relative;
+        overflow: hidden;
+        border-radius: 3px;
+      }
+      .workshop-loading::after {
+        content: "";
+        position: absolute;
+        left: -100%;
+        width: 50%;
+        height: 100%;
+        background: #2563eb;
+        border-radius: 3px;
+        animation: workshop-load 1.5s infinite ease-in-out;
+      }
+      @keyframes workshop-load {
+        0% { left: -100%; }
+        100% { left: 150%; }
+      }
+    </style>
 </head>
 <body class="bg-[var(--color-background)] text-[var(--color-text-primary)]">
-    <div id="root"></div>
+    <div id="root">
+      <div class="workshop-splash">
+        <span class="workshop-logo">Workshop <span>Prep</span></span>
+        <div class="workshop-status">AI Strategy Tool</div>
+        <div class="workshop-loading"></div>
+      </div>
+    </div>
 <script type="module" src="/index.tsx"></script>
 </body>
 </html>

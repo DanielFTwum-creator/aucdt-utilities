@@ -16,7 +16,7 @@ try {
 
 export default defineConfig(() => {
   return {
-    base: '/blueprint/',
+    base: './',
     plugins: [react(), tailwindcss()],
     define: {
       '__GIT_COMMIT__': JSON.stringify(commitHash),
