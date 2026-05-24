@@ -38,12 +38,13 @@ This document maps production endpoint names to local monorepo directories. **Al
 | 26 | `/techbridge-ai-application-portal/` | `techbridge-ai-application-portal/` | ❌ Not standardised | Direct match (long) |
 | 27 | `/willpro/` | `willpro/` | ✅ Standardised | Direct match |
 | 28 | `/workshop/` | `ai-stand-up-workshop-prep-dashboard/` | ✅ Standardised | Shortened URL name |
+| 29 | `/deep-dub-vibes-player/` | `deep-dub-vibes-player/` | ✅ Standardised | Direct match |
 
 ---
 
 ## Summary by Status
 
-### ✅ Standardised (10 apps)
+### ✅ Standardised (11 apps)
 Apps that meet the full production-ready standard:
 
 1. `ai-lab` ← `tuc-ai-lab-catalog`
@@ -56,6 +57,7 @@ Apps that meet the full production-ready standard:
 8. `sdwater` ← `daaro-distributor` (alias)
 9. `willpro` ← `willpro`
 10. `workshop` ← `ai-stand-up-workshop-prep-dashboard`
+11. `deep-dub-vibes-player` ← `deep-dub-vibes-player`
 
 **Notes**:
 - `sdwater` is an alias for `daaro-distributor` (same app, two URLs)

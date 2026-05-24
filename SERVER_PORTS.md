@@ -12,6 +12,7 @@ Each app's Node.js/Express backend listens on a unique port. Apache mod_rewrite 
 | WillPro | `/willpro/` | 3006 | ⏳ No backend yet | Frontend-only; needs OAuth backend |
 | Email Drafter | `/email-drafter/` | 3007 | ✅ Configured | Via `process.env.PORT \|\| 3007` |
 | Deliberate Magic Reader | `/magic-reader/` | 3008 | ✅ Configured | Via `process.env.PORT \|\| 3008` |
+| Deep Dub Vibes Player | `/deep-dub-vibes-player/` | 3009 | ✅ Configured | Via `process.env.PORT \|\| 3009` |
 
 ---
 

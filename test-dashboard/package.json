@@ -1,5 +1,5 @@
 {
-  "name": "cypress-test-dashboard",
+  "name": "cypress-test-dashboard",`n  "packageManager": "pnpm@10.30.1",
   "version": "1.0.0",
   "description": "Interactive React dashboard for Cypress E2E test suite results - Techbridge University College",
   "author": "Daniel Frempong Twum <daniel.twum@techbridge.edu.gh>",

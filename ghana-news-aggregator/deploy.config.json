@@ -1,0 +1,9 @@
+{
+  "projectName": "ghana-news-aggregator",
+  "remoteHost": "root@techbridge.edu.gh",
+  "deployPath": "/var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/ghana-news-aggregator",
+  "buildTool": "pnpm",
+  "outputDir": "dist",
+  "requiredEnvVars": ["GEMINI_API_KEY"],
+  "healthCheckUrl": "https://ai-tools.techbridge.edu.gh/ghana-news-aggregator/"
+}

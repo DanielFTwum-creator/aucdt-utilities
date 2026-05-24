@@ -1,4 +1,4 @@
-﻿﻿# Touch Typing Tutorial Deployment Script
+﻿# Touch Typing Tutorial Deployment Script
 
 # Deploys frontend static assets (dist/) to remote server.
 

@@ -1,5 +1,5 @@
 {
-  "name": "microcredit-risk-scorer",
+  "name": "microcredit-risk-scorer",`n  "packageManager": "pnpm@10.30.1",
   "version": "2.0.0",
   "private": true,
   "description": "Financial technology and services - App ID 138",

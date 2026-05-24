@@ -1,5 +1,5 @@
 {
-  "name": "data-lineage-tracker",
+  "name": "data-lineage-tracker",`n  "packageManager": "pnpm@10.30.1",
   "version": "2.0.0",
   "private": true,
   "description": "Infrastructure monitoring and management - App ID 120",

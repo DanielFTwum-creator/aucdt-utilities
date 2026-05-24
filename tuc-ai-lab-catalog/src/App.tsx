@@ -330,7 +330,7 @@ export default function App() {
 
             {/* Tool Grid */}
             <div style={{ flex:1, overflowY:'auto', padding:'1px', background:'#e2e0d8' }}>
-              <div style={{ display:'grid', gridTemplateColumns: viewMode==='grid' ? 'repeat(auto-fill,minmax(185px,1fr))' : '1fr', gap:'1px', background:'#e2e0d8' }}>
+              <div style={{ display:'grid', gridTemplateColumns: viewMode==='grid' ? 'repeat(auto-fill,minmax(220px,1fr))' : '1fr', gap:'1px', background:'#e2e0d8' }}>
                 {filteredTools.map((tool, i) => {
                   const globalIndex = TOOLS.findIndex(t => t.slug === tool.slug);
                   return <ToolCard key={tool.slug} tool={tool} index={globalIndex} viewMode={viewMode} onOpen={() => setSelectedTool(tool)} />;
@@ -395,7 +395,7 @@ function ToolCard({ tool, index, viewMode, onOpen }: { tool: Tool, index: number
 
   const cardStyle: React.CSSProperties = {
     background: '#fff',
-    padding: '15px',
+    padding: '18px',
     cursor: 'pointer',
     position: 'relative',
     transition: 'background 0.12s',
@@ -436,13 +436,13 @@ function ToolCard({ tool, index, viewMode, onOpen }: { tool: Tool, index: number
       </div>
 
       {/* Icon */}
-      <div style={{ width:'36px', height:'36px', borderRadius:'10px', background: iconBgs[tool.cat] || '#f1f5f9', display:'flex', alignItems:'center', justifyContent:'center', marginBottom:'11px' }}>
-        <ToolSpecificIcon style={{ width:'17px', height:'17px', color: iconColors[tool.cat] || '#334155' }} />
+      <div style={{ width:'40px', height:'40px', borderRadius:'10px', background: iconBgs[tool.cat] || '#f1f5f9', display:'flex', alignItems:'center', justifyContent:'center', marginBottom:'12px' }}>
+        <ToolSpecificIcon style={{ width:'20px', height:'20px', color: iconColors[tool.cat] || '#334155' }} />
       </div>
 
       {/* Title + desc */}
-      <div style={{ fontSize:'13px', fontWeight:500, color:'#1a1f3c', marginBottom:'4px' }}>{tool.title}</div>
-      <div style={{ fontSize:'11px', color:'#9396a8', lineHeight:1.55, marginBottom:'11px' }}>{tool.desc}</div>
+      <div style={{ fontSize:'14px', fontWeight:600, color:'#1a1f3c', marginBottom:'6px', lineHeight:1.3 }}>{tool.title}</div>
+      <div style={{ fontSize:'12px', color:'#5a5d78', lineHeight:1.6, marginBottom:'12px' }}>{tool.desc}</div>
 
       {/* Footer */}
       <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between' }}>

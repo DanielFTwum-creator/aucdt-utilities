@@ -1,4 +1,4 @@
-﻿﻿# Typing & Mathematics Island Deployment Script
+﻿# Typing & Mathematics Island Deployment Script
 
 # Deploys frontend static assets (dist/) to remote server.
 

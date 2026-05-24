@@ -1,0 +1,9 @@
+{
+  "projectName": "smartscale-ai-presentation-platform",
+  "remoteHost": "root@techbridge.edu.gh",
+  "deployPath": "/var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/smartscale-ai-presentation-platform",
+  "buildTool": "pnpm",
+  "outputDir": "dist",
+  "requiredEnvVars": ["GEMINI_API_KEY"],
+  "healthCheckUrl": "https://ai-tools.techbridge.edu.gh/smartscale-ai-presentation-platform/"
+}
