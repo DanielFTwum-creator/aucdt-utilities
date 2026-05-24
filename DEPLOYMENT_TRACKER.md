@@ -116,7 +116,14 @@ RewriteRule ^ /ai-lab/index.html [QSA,L]  # Catch-all at END
 
 ## Deployment History
 
-### 2026-05-23 (Current Session)
+### 2026-05-24 (Current Session - Part 2)
+**Theme: Puppeteer fix + Catalog redesign**
+- ✅ **TUC AI Lab Catalog (ai-lab)**: Redeployed with navy/condensed branding (Barlow Condensed font), refined UI with left-border status indicators, improved app card layout, live filters, and Blueprint link. Backend running on port 3003.
+- ✅ **Glucose (glucose)**: Redeployed with .puppeteerrc.cjs fix (PUPPETEER_SKIP_DOWNLOAD=true) to prevent postinstall failures. Backend running on port 3006.
+- ✅ **Orbit Walk Reminder (orbit-walk-reminder)**: Deployed with puppeteer fix, frontend SPA hosting configuration.
+- 🔧 **Puppeteer Fix Applied To**: animator-agent-desktop, college-landing-page-generator (added .puppeteerrc.cjs to prevent browser download timeout during pnpm install)
+
+### 2026-05-23
 - ✅ **Stephanie's DaaRo Water (sdwater)**: Deployed with relative assets base path (`./`), flat ridged screw cap visual bottle calibration, custom sachet graphic, 4 standard products (Sachet, 350ml, 600ml, 1L) with verified GHS pricing (10, 23, 30, 50), and native PowerShell deployment pipeline (`deploy.ps1`).
 - ✅ **Deliberate Magic Reader (magic-reader)**: Deployed with relative assets base path (`./`), TUC logo themed favicon, custom SEO/meta tags, glassmorphic dark-slate splash screen, and full-stack Express service running on Port 3008 with Gemini API integration.
 - ✅ **Typing & Mathematics Island (math-island)**: Deployed with relative assets base path (`./`), TUC logo themed favicon, custom SEO/meta tags, playful sea-blue/emerald splash screen, and frontend SPA hosting configuration.
