@@ -41,6 +41,24 @@ Write-Host "Creating .htaccess..." -ForegroundColor Yellow
   RewriteRule ^ - [L]
   RewriteRule ^ /techbridge-ai-application-portal/index.html [QSA,L]
 </IfModule>
+
+<IfModule mod_expires.c>
+  ExpiresActive On
+  <FilesMatch '\.(js|css|png|jpg|jpeg|gif|svg|woff2|woff|ttf|eot|ico)$'>
+    ExpiresDefault 'max-age=31536000'
+    Header set Cache-Control 'public, immutable'
+  </FilesMatch>
+  <FilesMatch '\.(html|json)$'>
+    ExpiresDefault 'max-age=0'
+    Header set Cache-Control 'public, must-revalidate'
+  </FilesMatch>
+</IfModule>
+
+<IfModule mod_headers.c>
+  <FilesMatch '\.(html)$'>
+    Header set Cache-Control 'public, must-revalidate, max-age=0'
+  </FilesMatch>
+</IfModule>
 "@ | ssh -o StrictHostKeyChecking=no $RemoteHost "cat > $RemotePath/.htaccess" 2>$null
 
 Write-Host "Setting permissions..." -ForegroundColor Yellow
