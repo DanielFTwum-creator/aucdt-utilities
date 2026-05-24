@@ -1,44 +1,69 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { AuthService } from '../services/AuthService';
 
-interface User { id: string; username: string; role: string }
+interface User {
+  id?: string;
+  name?: string;
+  email: string;
+}
+
 interface AuthContextValue {
   isAuthenticated: boolean;
   user: User | null;
-  login: (u: string, p: string) => Promise<{ success: boolean; message?: string }>;
   logout: () => void;
   isLoading: boolean;
 }
 
+const AUTH_KEY = 'tuc_auth_omniextract';
+const USER_KEY = 'omniextract_user';
+
 const AuthContext = createContext<AuthContextValue | null>(null);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [isAuthenticated, setIsAuthenticated] = useState(AuthService.isAuthenticated());
-  const [user, setUser] = useState<User | null>(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(
+    () => sessionStorage.getItem(AUTH_KEY) === '1' || !!localStorage.getItem(USER_KEY)
+  );
+  const [user, setUser] = useState<User | null>(() => {
+    const stored = localStorage.getItem(USER_KEY);
+    if (!stored) return null;
+    try {
+      return JSON.parse(stored) as User;
+    } catch {
+      localStorage.removeItem(USER_KEY);
+      return null;
+    }
+  });
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const token = AuthService.getToken();
-    if (!token) { setIsLoading(false); return; }
-    AuthService.validateToken(token)
-      .then((res: any) => {
-        if (res.valid && res.user) { setIsAuthenticated(true); setUser(res.user); }
-        else { AuthService.logout(); setIsAuthenticated(false); }
-      })
-      .catch(() => { /* backend unreachable — keep state */ })
-      .finally(() => setIsLoading(false));
+    // Hydrate from server-set cookie after OAuth callback (one-shot)
+    const cookieValue = document.cookie
+      .split('; ')
+      .find(row => row.startsWith('omniextract_user='))
+      ?.split('=')[1];
+    if (cookieValue) {
+      try {
+        const userData = JSON.parse(atob(decodeURIComponent(cookieValue))) as User;
+        localStorage.setItem(USER_KEY, JSON.stringify(userData));
+        sessionStorage.setItem(AUTH_KEY, '1');
+        setUser(userData);
+        setIsAuthenticated(true);
+        document.cookie = 'omniextract_user=; max-age=0; path=/omniextract/';
+      } catch (e) {
+        console.error('Failed to parse user cookie:', e);
+      }
+    }
+    setIsLoading(false);
   }, []);
 
-  const login = async (username: string, password: string) => {
-    const res = await AuthService.login(username, password);
-    if (res.success && res.user) { setIsAuthenticated(true); setUser(res.user); }
-    return { success: res.success, message: res.message };
+  const logout = () => {
+    sessionStorage.removeItem(AUTH_KEY);
+    localStorage.removeItem(USER_KEY);
+    setIsAuthenticated(false);
+    setUser(null);
   };
 
-  const logout = () => { AuthService.logout(); setIsAuthenticated(false); setUser(null); };
-
   return (
-    <AuthContext.Provider value={{ isAuthenticated, user, login, logout, isLoading }}>
+    <AuthContext.Provider value={{ isAuthenticated, user, logout, isLoading }}>
       {children}
     </AuthContext.Provider>
   );
