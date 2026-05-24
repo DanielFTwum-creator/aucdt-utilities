@@ -12,6 +12,8 @@ const SLUG_TO_PATH: Record<string, string> = {
   "techbridge-ai-blueprint": "/blueprint/",
   "ai-email-drafter": "/email-drafter/",
   "biochemai": "/biochemai/",
+  "dictation-app": "/dictation/",
+  "glucose": "/glucose/",
   // Add more mappings as needed — defaults to slug if not found
 };
 
@@ -50,6 +52,7 @@ const TOOL_ICONS: Record<string, React.ComponentType<{className?: string}>> = {
   "ai-studio-project-refresh": Settings,
   "ai-transformation-framework": BarChart3,
   "expensepro": DollarSign,
+  "glucose": Activity,
   "glucosentinel": Activity,
   "rophe-specialist-care-rpms": Home,
   "rophe-sugar-logger": Activity,
@@ -144,6 +147,7 @@ const TOOLS: Tool[] = [
   { slug: "ai-transformation-framework", title: "AI Transformation Framework", desc: "Interactive guide for scaling enterprise AI adoption", cat: "Business" },
   { slug: "bionicskins", title: "BionicSkins", desc: "Advanced prosthetics provider combining MIT tech and care", cat: "Business" },
   { slug: "expensepro", title: "ExpensePro", desc: "Expense tracker with budgets, AI receipts, and analytics", cat: "Business" },
+  { slug: "glucose", title: "Glucose", desc: "WHO-aligned diabetes self-management platform", cat: "Business" },
   { slug: "glucosentinel", title: "GlucoSentinel", desc: "WHO-aligned diabetes self-management platform", cat: "Business" },
   { slug: "impact-ventures-dashboard", title: "Impact Ventures Dashboard", desc: "Ranks AI apps by monetisation and social impact potential", cat: "Business" },
   { slug: "lfpaperworks", title: "LFPaperWorks", desc: "E-commerce platform for handcrafted paper art products", cat: "Business" },
@@ -255,19 +259,14 @@ export default function App() {
           />
         </div>
         <div style={{ display:'flex', alignItems:'center', gap:'4px' }}>
-          <button onClick={() => setActiveView("lab")} style={{ fontSize:'11px', color: activeView==='lab' ? '#fff' : '#8b90b8', background: activeView==='lab' ? 'rgba(255,255,255,0.1)' : 'none', border:'none', cursor:'pointer', padding:'5px 9px', borderRadius:'6px' }}>AI Lab Tools</button>
-          <button onClick={() => setActiveView("catalog")} style={{ fontSize:'11px', color: activeView==='catalog' ? '#fff' : '#8b90b8', background: activeView==='catalog' ? 'rgba(255,255,255,0.1)' : 'none', border:'none', cursor:'pointer', padding:'5px 9px', borderRadius:'6px' }}>App Catalog</button>
-          <button style={{ fontSize:'11px', background:GOLD, color:NAVY, border:'none', borderRadius:'6px', padding:'6px 12px', cursor:'pointer', fontWeight:700, fontFamily:"'Barlow Condensed','Arial Narrow',sans-serif", letterSpacing:'0.04em', textTransform:'uppercase', marginLeft:'4px' }}>Contact Lab</button>
+          <button title="View AI Lab Tools" onClick={() => setActiveView("lab")} style={{ fontSize:'11px', color: activeView==='lab' ? '#fff' : '#8b90b8', background: activeView==='lab' ? 'rgba(255,255,255,0.1)' : 'none', border:'none', cursor:'pointer', padding:'5px 9px', borderRadius:'6px' }}>AI Lab Tools</button>
+          <button title="View App Catalog" onClick={() => setActiveView("catalog")} style={{ fontSize:'11px', color: activeView==='catalog' ? '#fff' : '#8b90b8', background: activeView==='catalog' ? 'rgba(255,255,255,0.1)' : 'none', border:'none', cursor:'pointer', padding:'5px 9px', borderRadius:'6px' }}>App Catalog</button>
+          <button title="Contact the AI Lab" style={{ fontSize:'11px', background:GOLD, color:NAVY, border:'none', borderRadius:'6px', padding:'6px 12px', cursor:'pointer', fontWeight:700, fontFamily:"'Barlow Condensed','Arial Narrow',sans-serif", letterSpacing:'0.04em', textTransform:'uppercase', marginLeft:'4px' }}>Contact Lab</button>
         </div>
       </nav>
 
       {/* Subnav */}
-      <div style={{ background:CRIMSON, display:'flex', alignItems:'center', justifyContent:'space-between', padding:'0 16px', height:'34px', borderBottom:`2px solid ${GOLD}`, flexShrink:0 }}>
-        <div style={{ display:'flex', gap:'1px' }}>
-          {['Home','About TUC','Academics','AI Lab','Admissions','Newsroom','Apps'].map(lnk => (
-            <span key={lnk} style={{ fontSize:'10px', color: lnk==='AI Lab' ? '#fff' : 'rgba(255,255,255,0.7)', padding:'4px 8px', borderRadius:'4px', cursor:'pointer', textTransform:'uppercase', letterSpacing:'0.05em', background: lnk==='AI Lab' ? 'rgba(0,0,0,0.2)' : 'none' }}>{lnk}</span>
-          ))}
-        </div>
+      <div style={{ background:CRIMSON, display:'flex', alignItems:'center', justifyContent:'flex-end', padding:'0 16px', height:'34px', borderBottom:`2px solid ${GOLD}`, flexShrink:0 }}>
         <div style={{ fontSize:'10px', background:GOLD, color:NAVY, padding:'3px 9px', borderRadius:'20px', fontWeight:700, letterSpacing:'0.04em', fontFamily:"'Barlow Condensed','Arial Narrow',sans-serif", textTransform:'uppercase' }}>July 2026 Admissions Open</div>
       </div>
 
@@ -278,7 +277,7 @@ export default function App() {
           animate={{ x: [0, -2000] }}
           transition={{ duration: 25, repeat: Infinity, ease: 'linear' }}
         >
-          {["biochemai", "dictation-app", "markai", "omniextract", "playgrow", "techbridge-ai-blueprint"].map((slug) => {
+          {["biochemai", "dictation-app", "markai", "omniextract", "playgrow", "techbridge-ai-blueprint", "glucose"].map((slug) => {
             const tool = TOOLS.find(t => t.slug === slug);
             if (!tool) return null;
             const Icon = TOOL_ICONS[slug] || Sparkles;
@@ -289,7 +288,7 @@ export default function App() {
               </motion.div>
             );
           })}
-          {["biochemai", "dictation-app", "markai", "omniextract", "playgrow", "techbridge-ai-blueprint"].map((slug) => {
+          {["biochemai", "dictation-app", "markai", "omniextract", "playgrow", "techbridge-ai-blueprint", "glucose"].map((slug) => {
             const tool = TOOLS.find(t => t.slug === slug);
             if (!tool) return null;
             const Icon = TOOL_ICONS[slug] || Sparkles;
@@ -332,6 +331,7 @@ export default function App() {
             <div style={{ display:'flex', gap:'8px', minWidth:'min-content', justifyContent:'center', flexWrap:'wrap' }}>
               {CAT_LIST.map((cat) => (
                 <button
+                  title={`Filter tools by ${cat} category`}
                   key={cat}
                   onClick={() => setActiveCategory(cat)}
                   style={{
@@ -364,7 +364,7 @@ export default function App() {
                 <section style={{ marginBottom:'40px' }}>
                   <h2 style={{ fontSize:'18px', fontWeight:700, color:'#1a1f3c', marginBottom:'16px', letterSpacing:'-0.5px' }}>Featured Tools</h2>
                   <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fit, minmax(300px, 1fr))', gap:'12px' }}>
-                    {["biochemai", "dictation-app", "markai", "omniextract", "playgrow", "techbridge-ai-blueprint"].map((slug) => {
+                    {["biochemai", "dictation-app", "markai", "omniextract", "playgrow", "techbridge-ai-blueprint", "glucose"].map((slug) => {
                       const tool = TOOLS.find(t => t.slug === slug);
                       if (!tool) return null;
                       return <FeaturedCard key={slug} tool={tool} onOpen={() => setSelectedTool(tool)} />;
@@ -386,7 +386,7 @@ export default function App() {
                   <div style={{ display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', padding:'60px 0', color:'#9396a8' }}>
                     <Search style={{ width:'40px', height:'40px', opacity:0.2, marginBottom:'12px' }} />
                     <p style={{ fontSize:'14px' }}>No matches found</p>
-                    <button onClick={() => { setSearch(""); setActiveCategory("All"); }} style={{ marginTop:'8px', fontSize:'12px', color:CRIMSON, background:'none', border:'none', cursor:'pointer', textDecoration:'underline' }}>Clear filters</button>
+                    <button title="Clear search and category filters" onClick={() => { setSearch(""); setActiveCategory("All"); }} style={{ marginTop:'8px', fontSize:'12px', color:CRIMSON, background:'none', border:'none', cursor:'pointer', textDecoration:'underline' }}>Clear filters</button>
                   </div>
                 ) : (
                   <>
@@ -399,6 +399,7 @@ export default function App() {
                     {visibleCount < filteredTools.length && (
                       <div style={{ display:'flex', justifyContent:'center', marginTop:'24px' }}>
                         <button
+                          title="Load more tools"
                           onClick={() => setVisibleCount(v => v + 24)}
                           style={{
                             padding:'10px 20px',
@@ -435,7 +436,7 @@ export default function App() {
               <a href="https://ai-tools.techbridge.edu.gh/blueprint/" target="_blank" rel="noopener noreferrer" style={{ color:GOLD, cursor:'pointer', textDecoration:'none', fontWeight:500 }}>
                 <ExternalLink style={{ width:'11px', height:'11px', verticalAlign:'-1px', marginRight:'3px' }} />AI Blueprint
               </a>
-              <button onClick={logout} style={{ background:'none', border:'none', color:'#6b70a0', cursor:'pointer', fontSize:'10px' }}>Sign out</button>
+              <button title="Sign out of your account" onClick={logout} style={{ background:'none', border:'none', color:'#6b70a0', cursor:'pointer', fontSize:'10px' }}>Sign out</button>
             </div>
           </footer>
 
@@ -491,7 +492,7 @@ function FeaturedCard({ tool, onOpen }: { tool: Tool, onOpen: () => void }) {
       <div style={{ flex:1, minWidth:0, paddingRight:'60px' }}>
         <div style={{ fontSize:'15px', fontWeight:600, color:'#1a1f3c', marginBottom:'6px', lineHeight:1.3 }}>{tool.title}</div>
         <div style={{ fontSize:'13px', color:'#6b7280', lineHeight:1.5, marginBottom:'12px' }}>{tool.desc}</div>
-        <button onClick={(e) => { e.stopPropagation(); window.open(getAppUrl(tool.slug), '_blank'); }}
+        <button title={`Launch ${tool.title}`} onClick={(e) => { e.stopPropagation(); window.open(getAppUrl(tool.slug), '_blank'); }}
           style={{ fontSize:'11px', fontWeight:600, background:CRIMSON, color:'#fff', border:'none', borderRadius:'6px', padding:'6px 14px', cursor:'pointer', fontFamily:"'Barlow Condensed','Arial Narrow',sans-serif", letterSpacing:'0.04em', textTransform:'uppercase' }}>
           Launch
         </button>
@@ -539,7 +540,7 @@ function ToolCard({ tool, index, viewMode, onOpen }: { tool: Tool, index: number
       <div style={{ fontSize:'12px', color:'#6b7280', lineHeight:1.5, marginBottom:'12px' }}>{tool.desc}</div>
 
       {/* Launch Button */}
-      <button onClick={(e) => { e.stopPropagation(); window.open(getAppUrl(tool.slug), '_blank'); }}
+      <button title={`Launch ${tool.title}`} onClick={(e) => { e.stopPropagation(); window.open(getAppUrl(tool.slug), '_blank'); }}
         style={{ fontSize:'11px', fontWeight:600, background:CRIMSON, color:'#fff', border:'none', borderRadius:'6px', padding:'6px 14px', cursor:'pointer', fontFamily:"'Barlow Condensed','Arial Narrow',sans-serif", letterSpacing:'0.04em', textTransform:'uppercase', width:'100%' }}>
         Launch
       </button>

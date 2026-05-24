@@ -378,12 +378,18 @@
       }
     </style>
     <script>
-      document.body.classList.add('loading');
+      if (document.body) {
+        document.body.classList.add('loading');
+      }
       document.addEventListener('DOMContentLoaded', () => {
-        document.body.classList.remove('loading');
+        if (document.body) {
+          document.body.classList.remove('loading');
+        }
       });
       window.addEventListener('load', () => {
-        document.body.classList.remove('loading');
+        if (document.body) {
+          document.body.classList.remove('loading');
+        }
       });
     </script>
 </head>

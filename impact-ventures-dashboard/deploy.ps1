@@ -28,7 +28,7 @@ Write-Host "Creating directory..." -ForegroundColor Yellow
 ssh -o StrictHostKeyChecking=no $RemoteHost "mkdir -p $RemotePath && rm -rf $RemotePath/*" | Out-Null
 
 Write-Host "Copying files..." -ForegroundColor Yellow
-bash -c "cd 'C:\Development\github\aucdt-utilities\impact-ventures-dashboard' && scp -r -o StrictHostKeyChecking=no dist/* $RemoteHost`:$RemotePath 2>/dev/null"
+scp -r -o StrictHostKeyChecking=no dist/. "${RemoteHost}:${RemotePath}"
 
 Write-Host "Creating .htaccess..." -ForegroundColor Yellow
 @"
@@ -45,5 +45,5 @@ Write-Host "Creating .htaccess..." -ForegroundColor Yellow
 Write-Host "Setting permissions..." -ForegroundColor Yellow
 ssh -o StrictHostKeyChecking=no $RemoteHost "chown -R techbridge.edu.gh_md:psacln $RemotePath && chmod -R 755 $RemotePath && chmod 644 $RemotePath/.htaccess 2>/dev/null; true" | Out-Null
 
-Write-Host "✅ Deployment complete!" -ForegroundColor Green
+Write-Host "[SUCCESS] Deployment complete!" -ForegroundColor Green
 Write-Host "URL: https://ai-tools.techbridge.edu.gh/impact-ventures`n"
