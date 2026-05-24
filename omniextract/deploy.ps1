@@ -58,9 +58,10 @@ if ($RequiredEnvVars.Count -gt 0) {
     if ($envPath -eq "") {
         $preflight_errors += "Neither .env.local nor .env found (required for env vars)"
     } else {
-        $envContent = Get-Content $envPath
+        $envLines = @(Get-Content $envPath)
         foreach ($var in $RequiredEnvVars) {
-            if ($envContent -notmatch "^$var=") {
+            $found = $envLines | Where-Object { $_ -match "^$var=" }
+            if (-not $found) {
                 $preflight_errors += "Required env var missing in ${envPath}: $var"
             }
         }

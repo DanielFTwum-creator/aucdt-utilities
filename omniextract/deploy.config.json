@@ -4,6 +4,7 @@
   "deployPath": "/var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/omniextract",
   "buildTool": "pnpm",
   "outputDir": "dist",
-  "requiredEnvVars": ["GEMINI_API_KEY"],
+  "requiredEnvVars": ["GEMINI_API_KEY", "VITE_GOOGLE_CLIENT_ID", "VITE_GOOGLE_REDIRECT_URI", "GOOGLE_CLIENT_SECRET"],
+  "backendPort": 3009,
   "healthCheckUrl": "https://ai-tools.techbridge.edu.gh/omniextract/"
 }
