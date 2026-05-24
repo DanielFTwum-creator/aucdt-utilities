@@ -1,0 +1,9 @@
+{
+  "projectName": "ai-stand-up-workshop-prep-dashboard",
+  "remoteHost": "root@techbridge.edu.gh",
+  "deployPath": "/var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/workshop",
+  "buildTool": "pnpm",
+  "outputDir": "dist",
+  "requiredEnvVars": [],
+  "healthCheckUrl": "https://ai-tools.techbridge.edu.gh/workshop/"
+}

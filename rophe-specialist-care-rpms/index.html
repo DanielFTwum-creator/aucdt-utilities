@@ -52,7 +52,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&family=Lora:wght@400;700&display=swap" rel="stylesheet">
 
     <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="https://techbridge.edu.gh/favicon.ico" />
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
 
     <style>
       :root, [data-theme='gold-luxury'] {
@@ -96,25 +96,94 @@
 
     <script type="module" src="./index.tsx"></script>
   
-    <style id="tuc-splash-styles">
-      body { background-color: #0F0C07 !important; margin: 0; padding: 0; display: flex; align-items: center; justify-content: center; min-height: 100vh; font-family: serif; overflow: hidden; }
-      .tuc-splash { text-align: center; border: 1px solid rgba(200,168,75,0.2); padding: 60px; background: #141210; position: relative; }
-      .tuc-splash::before { content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 4px; background: #C8A84B; }
-      .tuc-logo { color: #C8A84B; font-size: 3rem; font-weight: 900; letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 10px; display: block; }
-      .tuc-status { color: #D4C4A0; font-family: sans-serif; text-transform: uppercase; letter-spacing: 0.4em; font-size: 0.7rem; opacity: 0.6; }
-      .tuc-loading { margin-top: 30px; height: 1px; width: 100px; background: rgba(200,168,75,0.2); margin-left: auto; margin-right: auto; position: relative; overflow: hidden; }
-      .tuc-loading::after { content: ""; position: absolute; left: -100%; width: 50%; height: 100%; background: #C8A84B; animation: tuc-load 2s infinite; }
-      @keyframes tuc-load { to { left: 150%; } }
+    <style id="rpms-splash-styles">
+      body {
+        background: radial-gradient(circle at 50% 50%, #fafafa 0%, #f4f4f5 100%) !important;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        font-family: 'Lora', serif;
+        overflow: hidden;
+      }
+      .rpms-splash {
+        text-align: center;
+        border: 1px solid rgba(228, 228, 231, 0.8);
+        padding: 55px 75px;
+        background: rgba(255, 255, 255, 0.9);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border-radius: 24px;
+        box-shadow: 0 10px 30px -10px rgba(9, 9, 11, 0.05);
+        position: relative;
+      }
+      .rpms-splash::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 5px;
+        background: linear-gradient(90deg, #2563eb, #3b82f6);
+        border-top-left-radius: 24px;
+        border-top-right-radius: 24px;
+      }
+      .rpms-logo {
+        color: #18181b;
+        font-size: 2.3rem;
+        font-weight: 800;
+        letter-spacing: -0.02em;
+        margin-bottom: 6px;
+        display: block;
+      }
+      .rpms-logo span {
+        color: #2563eb;
+      }
+      .rpms-status {
+        color: #71717a;
+        text-transform: uppercase;
+        letter-spacing: 0.35em;
+        font-size: 0.75rem;
+        font-weight: 600;
+        opacity: 0.9;
+      }
+      .rpms-loading {
+        margin-top: 25px;
+        height: 3px;
+        width: 130px;
+        background: rgba(37, 99, 235, 0.1);
+        margin-left: auto;
+        margin-right: auto;
+        position: relative;
+        overflow: hidden;
+        border-radius: 3px;
+      }
+      .rpms-loading::after {
+        content: "";
+        position: absolute;
+        left: -100%;
+        width: 50%;
+        height: 100%;
+        background: #2563eb;
+        border-radius: 3px;
+        animation: rpms-load 1.5s infinite ease-in-out;
+      }
+      @keyframes rpms-load {
+        0% { left: -100%; }
+        100% { left: 150%; }
+      }
     </style>
 </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     
     <div id="root">
-      <div class="tuc-splash">
-        <span class="tuc-logo">TECHBRIDGE</span>
-        <div class="tuc-status">rophe specialist care rpms</div>
-        <div class="tuc-loading"></div>
+      <div class="rpms-splash">
+        <span class="rpms-logo">Rophe <span>Care</span></span>
+        <div class="rpms-status">Patient Management</div>
+        <div class="rpms-loading"></div>
       </div>
     </div>
 
