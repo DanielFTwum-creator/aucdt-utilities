@@ -9,7 +9,7 @@ const auth = async (req, res, next) => {
     if (!token) return res.status(401).json({ message: 'No token provided' });
     
     const decoded = jwt.verify(token, JWT_SECRET);
-    const [rows] = await db.execute('SELECT id, full_name, email, role, department, staff_id, is_active FROM users WHERE id = ?', [decoded.id]);
+    const [rows] = await db.execute('SELECT id, full_name, email, role, department, staff_id, is_active FROM tuc_rms_users WHERE id = ?', [decoded.id]);
     
     if (!rows[0] || !rows[0].is_active) return res.status(401).json({ message: 'User not found or deactivated' });
     
