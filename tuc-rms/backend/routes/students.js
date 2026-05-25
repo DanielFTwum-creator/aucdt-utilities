@@ -165,12 +165,14 @@ router.put('/:studentId/reviews/:reviewId', auth, requireRole('registrar', 'qa_o
   try {
     const { status, resolution, priority } = req.body;
     const resolved_at = (status === 'Resolved' || status === 'Closed') ? new Date() : null;
+    const updatePriority = priority || 'Medium';
     await db.execute(
       'UPDATE student_reviews SET status=?, resolution=?, priority=?, resolved_at=? WHERE id=? AND student_id=?',
-      [status, resolution || null, priority, resolved_at, req.params.reviewId, req.params.studentId]
+      [status, resolution || null, updatePriority, resolved_at, req.params.reviewId, req.params.studentId]
     );
     res.json({ message: 'Review updated' });
   } catch (err) {
+    console.error('Review update error:', err);
     res.status(500).json({ message: 'Server error' });
   }
 });
