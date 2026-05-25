@@ -261,7 +261,27 @@
       "PowerShell(Get-ChildItem -Path 'C:\\\\Development\\\\github\\\\aucdt-utilities\\\\tuc-rms' -File | Select-Object -First 20 | ForEach-Object { $_.Name })",
       "PowerShell(Get-ChildItem -Path 'C:\\\\Development\\\\github\\\\aucdt-utilities\\\\tuc-rms' -Directory | ForEach-Object { $_.Name })",
       "PowerShell(cd C:\\\\Development\\\\github\\\\aucdt-utilities; Get-ChildItem -Directory | Where-Object {$_.Name -match '^\\(daaro-distributor|typing-and-mathematics-tutorial|typing-tutorial|ai-stand-up-workshop-prep-dashboard|bionicskins|dictation-app|dmcdai|impact-ventures|luxthumb|markai|orbit-walk|patois|rophe|techbridge-ai-application|glucose|peace-vinyl|biochemai|deliberate-magic|tuc-ai-lab|willpro|techbridge-ai-blueprint|ai-email|groove-streamer\\)' } | Select-Object -ExpandProperty Name | Sort-Object)",
-      "PowerShell(pnpm build *)"
+      "PowerShell(pnpm build *)",
+      "PowerShell(tree *)",
+      "PowerShell(Get-Command *)",
+      "PowerShell(&\"C:\\\\Program Files\\\\Docker\\\\Docker\\\\Docker Desktop.exe\" > $null 2>&1; Start-Sleep -Seconds 15; docker ps)",
+      "PowerShell(Invoke-WebRequest -Uri \"http://localhost:5000/api/health\" -UseBasicParsing | ConvertFrom-Json)",
+      "PowerShell(docker exec tuc-rms-mysql *)",
+      "PowerShell(docker exec tuc-rms-backend *)",
+      "PowerShell(docker exec tuc-rms-mysql mysql -u root -pKuku12$ tuc_rms -e \"UPDATE users SET password_hash = '\\\\$2b\\\\$10\\\\$QhIRgGJO4DnMKRgbn3B/7.UcKsAqg2gNXnKc14OgBxc7AuVnMBTuO' WHERE 1=1;\")",
+      "PowerShell(docker exec *)",
+      "PowerShell(Invoke-WebRequest -Uri \"http://localhost:5173\" -UseBasicParsing -TimeoutSec 5 | Select-Object -Property StatusCode, @{N='loads';E={$_.Content.Length -gt 1000}})",
+      "PowerShell(cd \"C:\\\\Development\\\\github\\\\aucdt-utilities\\\\tuc-rms\" && pwsh .\\\\test-api.ps1)",
+      "Bash(Sort-Object FullName)",
+      "Bash(sed -i \"s/from '\\\\.\\\\.\\\\/components\\\\/Layout'/from '..\\\\/components\\\\/Layout'/g\" *.tsx)",
+      "Bash(sed -i \"s/from '\\\\.\\\\.\\\\/context\\\\/AuthContext'/from '..\\\\/context\\\\/AuthContext'/g\" *.tsx)",
+      "Bash(npm list *)",
+      "Bash(node -e ' *)",
+      "Bash(grep -o '$2b$10$GRgQc59gybQp.QHhvGmIm.heLMROupzyY9OooB1kzeTz9lBB55822' backend/database.sql)",
+      "PowerShell(docker restart tuc-rms-backend *)",
+      "PowerShell(docker restart tuc-rms-frontend *)",
+      "Bash(ConvertFrom-Json)",
+      "Bash(Format-List)"
     ]
   }
 }

@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg viewBox="0 0 1200 900" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      .table-box { fill: white; stroke: #6B0020; stroke-width: 2; }
+      .table-central { fill: #fffacd; stroke: #F5A800; stroke-width: 2.5; }
+      .table-name { font-size: 12px; font-weight: bold; fill: #6B0020; }
+      .column { font-size: 10px; fill: #333; }
+      .pk { font-weight: bold; fill: #6B0020; }
+      .fk { fill: #F5A800; }
+      .relationship { stroke: #6B0020; stroke-width: 1.5; fill: none; }
+      .label { font-size: 9px; fill: #333; }
+    </style>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="900" fill="#fafafa"/>
+
+  <!-- Title -->
+  <text x="600" y="30" text-anchor="middle" style="font-size: 18px; font-weight: bold; fill: #6B0020;">
+    TUC RMS — Database Entity Relationship Diagram (ERD)
+  </text>
+
+  <!-- USERS Table -->
+  <rect x="30" y="80" width="140" height="140" class="table-box" rx="4"/>
+  <text x="100" y="100" class="table-name" text-anchor="middle">users</text>
+  <line x1="40" y1="108" x2="160" y2="108" stroke="#6B0020" stroke-width="1"/>
+  <text x="45" y="122" class="pk">PK id</text>
+  <text x="45" y="135" class="column">email</text>
+  <text x="45" y="148" class="column">role</text>
+  <text x="45" y="161" class="column">password_hash</text>
+  <text x="45" y="174" class="column">created_at</text>
+  <text x="45" y="187" class="column">updated_at</text>
+  <text x="45" y="200" class="column">is_active</text>
+
+  <!-- STUDENTS Table -->
+  <rect x="220" y="80" width="140" height="140" class="table-box" rx="4"/>
+  <text x="290" y="100" class="table-name" text-anchor="middle">students</text>
+  <line x1="230" y1="108" x2="350" y2="108" stroke="#6B0020" stroke-width="1"/>
+  <text x="235" y="122" class="pk">PK id</text>
+  <text x="235" y="135" class="fk">FK user_id</text>
+  <text x="235" y="148" class="column">student_id</text>
+  <text x="235" y="161" class="column">first_name</text>
+  <text x="235" y="174" class="column">last_name</text>
+  <text x="235" y="187" class="column">enrolled_date</text>
+
+  <!-- COURSES Table -->
+  <rect x="410" y="80" width="140" height="140" class="table-box" rx="4"/>
+  <text x="480" y="100" class="table-name" text-anchor="middle">courses</text>
+  <line x1="420" y1="108" x2="540" y2="108" stroke="#6B0020" stroke-width="1"/>
+  <text x="425" y="122" class="pk">PK id</text>
+  <text x="425" y="135" class="fk">FK lecturer_id</text>
+  <text x="425" y="148" class="column">code</text>
+  <text x="425" y="161" class="column">title</text>
+  <text x="425" y="174" class="column">credits</text>
+  <text x="425" y="187" class="column">semester</text>
+
+  <!-- LECTURERS Table -->
+  <rect x="600" y="80" width="140" height="140" class="table-box" rx="4"/>
+  <text x="670" y="100" class="table-name" text-anchor="middle">lecturers</text>
+  <line x1="610" y1="108" x2="730" y2="108" stroke="#6B0020" stroke-width="1"/>
+  <text x="615" y="122" class="pk">PK id</text>
+  <text x="615" y="135" class="fk">FK user_id</text>
+  <text x="615" y="148" class="column">first_name</text>
+  <text x="615" y="161" class="column">last_name</text>
+  <text x="615" y="174" class="column">department</text>
+  <text x="615" y="187" class="column">hired_date</text>
+
+  <!-- AUDIT_LOG Table -->
+  <rect x="790" y="80" width="140" height="140" class="table-box" rx="4"/>
+  <text x="860" y="100" class="table-name" text-anchor="middle">audit_log</text>
+  <line x1="800" y1="108" x2="920" y2="108" stroke="#6B0020" stroke-width="1"/>
+  <text x="805" y="122" class="pk">PK id</text>
+  <text x="805" y="135" class="fk">FK user_id</text>
+  <text x="805" y="148" class="column">action</text>
+  <text x="805" y="161" class="column">table_name</text>
+  <text x="805" y="174" class="column">record_id</text>
+  <text x="805" y="187" class="column">timestamp</text>
+
+  <!-- NOTIFICATIONS Table -->
+  <rect x="980" y="80" width="140" height="140" class="table-box" rx="4"/>
+  <text x="1050" y="100" class="table-name" text-anchor="middle">notifications</text>
+  <line x1="990" y1="108" x2="1110" y2="108" stroke="#6B0020" stroke-width="1"/>
+  <text x="995" y="122" class="pk">PK id</text>
+  <text x="995" y="135" class="fk">FK user_id</text>
+  <text x="995" y="148" class="column">message</text>
+  <text x="995" y="161" class="column">read</text>
+  <text x="995" y="174" class="column">created_at</text>
+
+  <!-- ENROLLMENTS Table (Mid-level) -->
+  <rect x="220" y="300" width="140" height="140" class="table-box" rx="4"/>
+  <text x="290" y="320" class="table-name" text-anchor="middle">enrollments</text>
+  <line x1="230" y1="328" x2="350" y2="328" stroke="#6B0020" stroke-width="1"/>
+  <text x="235" y="342" class="pk">PK id</text>
+  <text x="235" y="355" class="fk">FK student_id</text>
+  <text x="235" y="368" class="fk">FK course_id</text>
+  <text x="235" y="381" class="column">enrolled_date</text>
+  <text x="235" y="394" class="column">status</text>
+
+  <!-- RESULTS Table (CENTRAL - Highlighted) -->
+  <rect x="440" y="300" width="180" height="160" class="table-central" rx="4"/>
+  <text x="530" y="325" class="table-name" text-anchor="middle">results</text>
+  <line x1="450" y1="333" x2="610" y2="333" stroke="#F5A800" stroke-width="1.5"/>
+  <text x="455" y="350" class="pk">PK id</text>
+  <text x="455" y="365" class="fk">FK enrollment_id</text>
+  <text x="455" y="380" class="fk">FK course_id</text>
+  <text x="455" y="395" class="fk">FK student_id</text>
+  <text x="455" y="410" class="column">score</text>
+  <text x="455" y="425" class="column">grade</text>
+  <text x="455" y="440" class="column">status</text>
+
+  <!-- STUDENT_REVIEWS Table -->
+  <rect x="700" y="300" width="140" height="140" class="table-box" rx="4"/>
+  <text x="770" y="320" class="table-name" text-anchor="middle">student_reviews</text>
+  <line x1="710" y1="328" x2="830" y2="328" stroke="#6B0020" stroke-width="1"/>
+  <text x="715" y="342" class="pk">PK id</text>
+  <text x="715" y="355" class="fk">FK student_id</text>
+  <text x="715" y="368" class="fk">FK reviewer_id</text>
+  <text x="715" y="381" class="column">comments</text>
+  <text x="715" y="394" class="column">date</text>
+
+  <!-- SYSTEM_CONFIG Table -->
+  <rect x="930" y="300" width="140" height="140" class="table-box" rx="4"/>
+  <text x="1000" y="320" class="table-name" text-anchor="middle">system_config</text>
+  <line x1="940" y1="328" x2="1060" y2="328" stroke="#6B0020" stroke-width="1"/>
+  <text x="945" y="342" class="pk">PK id</text>
+  <text x="945" y="355" class="column">key</text>
+  <text x="945" y="368" class="column">value</text>
+  <text x="945" y="381" class="column">updated_at</text>
+
+  <!-- Relationships (Crow's Foot Notation) -->
+  <!-- users -> students -->
+  <path d="M 100 220 L 100 280 L 290 280 L 290 300" class="relationship"/>
+  <text x="140" y="260" class="label">1..N</text>
+
+  <!-- users -> lecturers -->
+  <path d="M 170 150 L 600 150" class="relationship"/>
+  <text x="380" y="140" class="label">1..1</text>
+
+  <!-- lecturers -> courses -->
+  <path d="M 670 220 L 480 280 L 480 300" class="relationship"/>
+  <text x="520" y="260" class="label">1..N</text>
+
+  <!-- students -> enrollments -->
+  <path d="M 290 220 L 290 300" class="relationship"/>
+  <text x="305" y="260" class="label">1..N</text>
+
+  <!-- courses -> enrollments -->
+  <path d="M 480 220 L 290 280 L 290 300" class="relationship"/>
+  <text x="360" y="250" class="label">1..N</text>
+
+  <!-- enrollments -> results -->
+  <path d="M 360 370 L 440 370" class="relationship"/>
+  <text x="395" y="360" class="label">1..1</text>
+
+  <!-- courses -> results -->
+  <path d="M 480 220 L 530 300" class="relationship"/>
+  <text x="495" y="260" class="label">1..N</text>
+
+  <!-- students -> results -->
+  <path d="M 290 220 L 480 320" class="relationship"/>
+  <text x="360" y="270" class="label">1..N</text>
+
+  <!-- results -> student_reviews -->
+  <path d="M 620 370 L 700 370" class="relationship"/>
+  <text x="655" y="360" class="label">1..N</text>
+
+  <!-- students -> student_reviews -->
+  <path d="M 360 220 L 750 300" class="relationship"/>
+  <text x="500" y="260" class="label">1..N</text>
+
+  <!-- users -> audit_log -->
+  <path d="M 860 220 L 860 280 L 860 300" class="relationship"/>
+  <text x="875" y="260" class="label">1..N</text>
+
+  <!-- users -> notifications -->
+  <path d="M 1050 220 L 1050 280 L 1050 320" class="relationship" stroke-dasharray="5,5"/>
+  <text x="1065" y="270" class="label">1..N</text>
+
+  <!-- Legend -->
+  <g transform="translate(50, 550)">
+    <text x="0" y="0" style="font-size: 12px; font-weight: bold; fill: #6B0020;">LEGEND</text>
+    <rect x="0" y="10" width="100" height="40" class="table-box" rx="2"/>
+    <text x="10" y="30" class="label">Normal Table</text>
+
+    <rect x="120" y="10" width="100" height="40" class="table-central" rx="2"/>
+    <text x="130" y="30" class="label">Central Entity</text>
+
+    <text x="240" y="22" class="pk">PK</text>
+    <text x="280" y="22" class="label">Primary Key</text>
+
+    <text x="240" y="40" class="fk">FK</text>
+    <text x="280" y="40" class="label">Foreign Key</text>
+
+    <path d="M 0 80 L 30 80" class="relationship"/>
+    <text x="40" y="85" class="label">1..N Relationship</text>
+
+    <path d="M 0 100 L 30 100" class="relationship" stroke-dasharray="5,5"/>
+    <text x="40" y="105" class="label">Optional Relationship</text>
+  </g>
+
+  <!-- Statistics -->
+  <g transform="translate(50, 700)">
+    <text x="0" y="0" style="font-size: 11px; fill: #333;">Database Statistics:</text>
+    <text x="0" y="18" class="label">• Total Tables: 10</text>
+    <text x="0" y="33" class="label">• Total Relationships: 13</text>
+    <text x="0" y="48" class="label">• Central Entity: results</text>
+    <text x="0" y="63" class="label">• Primary Keys: All tables have auto-increment INT PRIMARY KEY</text>
+    <text x="0" y="78" class="label">• Indexes: (user_id, email, student_id, course_id, enrollment_id)</text>
+  </g>
+
+  <!-- Footer -->
+  <text x="600" y="880" text-anchor="middle" class="label">
+    Crow's-foot notation: one-to-many relationships shown with line-to-fork pattern
+  </text>
+</svg>

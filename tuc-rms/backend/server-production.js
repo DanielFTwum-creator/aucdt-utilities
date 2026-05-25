@@ -5,6 +5,9 @@ const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const path = require('path');
+const rateLimit = require('express-rate-limit');
+const { auditMiddleware } = require('./middleware');
+const db = require('./db');
 
 dotenv.config();
 
@@ -25,6 +28,18 @@ app.use(cors({
 
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+
+// Audit middleware (logs authenticated POST/PUT/DELETE)
+app.use(auditMiddleware);
+
+// Rate limiting on login
+const loginLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 5, // 5 requests per windowMs
+  message: 'Too many login attempts, please try again later',
+  standardHeaders: true,
+  legacyHeaders: false
+});
 
 // ============================================================================
 // MIDDLEWARE: SECURITY HEADERS
@@ -62,12 +77,58 @@ app.use(logRequest);
 // ============================================================================
 
 app.get('/api/health', (req, res) => {
+  const uptime = Math.floor(process.uptime());
   res.json({
-    status: 'TUC RMS Online',
+    status: 'ok',
+    service: 'tuc-rms-api',
     timestamp: new Date().toISOString(),
-    uptime: process.uptime(),
+    uptime: uptime,
     environment: NODE_ENV
   });
+});
+
+app.get('/api/health/full', async (req, res) => {
+  const uptime = Math.floor(process.uptime());
+  const memUsage = process.memoryUsage();
+
+  try {
+    await db.execute('SELECT 1');
+    res.json({
+      status: 'ok',
+      service: 'tuc-rms-api',
+      timestamp: new Date().toISOString(),
+      uptime: uptime,
+      environment: NODE_ENV,
+      database: {
+        status: 'ok',
+        error: null
+      },
+      memory: {
+        heapUsed: Math.round(memUsage.heapUsed / 1024 / 1024),
+        heapTotal: Math.round(memUsage.heapTotal / 1024 / 1024),
+        external: Math.round(memUsage.external / 1024 / 1024),
+        rss: Math.round(memUsage.rss / 1024 / 1024)
+      }
+    });
+  } catch (err) {
+    res.json({
+      status: 'degraded',
+      service: 'tuc-rms-api',
+      timestamp: new Date().toISOString(),
+      uptime: uptime,
+      environment: NODE_ENV,
+      database: {
+        status: 'error',
+        error: err.message
+      },
+      memory: {
+        heapUsed: Math.round(memUsage.heapUsed / 1024 / 1024),
+        heapTotal: Math.round(memUsage.heapTotal / 1024 / 1024),
+        external: Math.round(memUsage.external / 1024 / 1024),
+        rss: Math.round(memUsage.rss / 1024 / 1024)
+      }
+    });
+  }
 });
 
 app.get('/health', (req, res) => {
@@ -79,14 +140,17 @@ app.get('/health', (req, res) => {
 // ============================================================================
 
 try {
-  app.use('/api/auth', require('./routes/auth'));
+  app.use('/api/auth/login', loginLimiter);
+  const authRouter = require('./routes/auth');
+  app.use('/api/auth', authRouter);
   app.use('/api/users', require('./routes/users'));
   app.use('/api/students', require('./routes/students'));
   app.use('/api/courses', require('./routes/courses'));
   app.use('/api/results', require('./routes/results'));
   app.use('/api/reports', require('./routes/reports'));
   app.use('/api/dashboard', require('./routes/dashboard'));
-  
+  app.use('/api/test', require('./routes/test-runner'));
+
   console.log('[✓] All routes loaded successfully');
 } catch (err) {
   console.error('[✗] Failed to load routes:', err.message);

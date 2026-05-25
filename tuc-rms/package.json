@@ -1,0 +1,15 @@
+{
+  "name": "tuc-rms",
+  "version": "1.0.0",
+  "private": true,
+  "description": "TUC Results Management System — E2E Testing Suite",
+  "scripts": {
+    "test": "playwright test",
+    "test:ui": "playwright test --ui",
+    "test:report": "playwright show-report"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.49.0",
+    "@axe-core/playwright": "^4.8.0"
+  }
+}

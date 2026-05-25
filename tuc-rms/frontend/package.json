@@ -1,16 +1,24 @@
 {
   "name": "frontend",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "build:prod": "vite build --config vite.config.production.js",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "mobile:sync": "cap sync",
+    "mobile:android": "cap add android && cap sync android",
+    "mobile:ios": "cap add ios && cap sync ios",
+    "mobile:run:android": "cap run android",
+    "mobile:run:ios": "cap run ios"
   },
   "dependencies": {
+    "@capacitor/android": "^8.3.3",
+    "@capacitor/core": "^8.3.3",
+    "@capacitor/ios": "^8.3.3",
     "axios": "^1.15.2",
     "html2canvas": "^1.4.1",
     "jspdf": "^4.2.1",
@@ -21,7 +29,9 @@
     "react-router-dom": "^7.14.2"
   },
   "devDependencies": {
+    "@capacitor/cli": "^8.3.3",
     "@eslint/js": "^10.0.1",
+    "@types/node": "^20.0.0",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^6.0.1",
@@ -29,6 +39,7 @@
     "eslint-plugin-react-hooks": "^7.1.1",
     "eslint-plugin-react-refresh": "^0.5.2",
     "globals": "^17.5.0",
+    "typescript": "^5.6.0",
     "vite": "^8.0.10"
   }
 }
