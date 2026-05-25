@@ -49,7 +49,7 @@ Write-Host "Creating directory on remote..." -ForegroundColor Yellow
 ssh -o StrictHostKeyChecking=no $RemoteHost "mkdir -p $RemotePath && rm -rf $RemotePath/* $RemotePath/.htaccess 2>/dev/null || true" | Out-Null
 
 Write-Host "Copying frontend files..." -ForegroundColor Yellow
-bash -c "cd 'C:\Development\github\aucdt-utilities\dfs-website' && scp -r -o StrictHostKeyChecking=no dist/* $RemoteHost`:$RemotePath 2>&1 | head -20"
+scp -r -o StrictHostKeyChecking=no "dist\*" "${RemoteHost}:${RemotePath}" 2>&1 | Select-Object -First 20
 
 Write-Host "Copying backend files..." -ForegroundColor Yellow
 scp -o StrictHostKeyChecking=no "server.ts" "package.json" "${RemoteHost}:${RemotePath}" 2>&1 | Select-Object -First 5
@@ -101,7 +101,7 @@ Write-Host "Setting permissions..." -ForegroundColor Yellow
 ssh -o StrictHostKeyChecking=no $RemoteHost "chown -R techbridge.edu.gh_md:psacln $RemotePath && chmod -R 755 $RemotePath && chmod 644 $RemotePath/.htaccess $RemotePath/.env 2>/dev/null || true" | Out-Null
 
 Write-Host "Starting backend server..." -ForegroundColor Yellow
-ssh -o StrictHostKeyChecking=no $RemoteHost "fuser -k 3007/tcp 2>/dev/null ; sleep 1 ; cd $RemotePath && NODE_ENV=production setsid nohup tsx server.ts > server.log 2>&1 < /dev/null &" 2>&1 | Out-Null
+ssh -o StrictHostKeyChecking=no $RemoteHost "fuser -k 3007/tcp 2>/dev/null ; sleep 1 ; cd $RemotePath && NODE_ENV=production PORT=3007 setsid nohup tsx server.ts > server.log 2>&1 < /dev/null &" 2>&1 | Out-Null
 
 Start-Sleep -Seconds 3
 
