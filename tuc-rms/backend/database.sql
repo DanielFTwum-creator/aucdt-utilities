@@ -184,22 +184,22 @@ INSERT IGNORE INTO programmes (name, code, department_id, programme_type, durati
 ('DMCD Certificate', 'CDMCD', 1, 'certificate', 1);
 
 INSERT IGNORE INTO users (full_name, email, password_hash, role, department, staff_id) VALUES
-('Dr. Andrew Richard Owusu Addo', 'registrar@tuc.edu.gh', '$2b$10$9TX9GoXflOmKtDgtINNt7OuCeHVcNAT0HiI89rKLMhpOBVwJGsaLO', 'registrar', NULL, 'REG001'),
-('QA Officer', 'qa@tuc.edu.gh', '$2b$10$9TX9GoXflOmKtDgtINNt7OuCeHVcNAT0HiI89rKLMhpOBVwJGsaLO', 'qa_officer', NULL, 'QA001'),
-('Mr. Robert Bunkangsang Buchag', 'buchag@tuc.edu.gh', '$2b$10$9TX9GoXflOmKtDgtINNt7OuCeHVcNAT0HiI89rKLMhpOBVwJGsaLO', 'lecturer', 'DMCD', 'LEC001'),
-('Mr. Samuel Wellington', 'wellington@tuc.edu.gh', '$2b$10$9TX9GoXflOmKtDgtINNt7OuCeHVcNAT0HiI89rKLMhpOBVwJGsaLO', 'lecturer', 'DMCD', 'LEC002'),
-('Mr. Selasi Ahiabu', 'ahiabu@tuc.edu.gh', '$2b$10$9TX9GoXflOmKtDgtINNt7OuCeHVcNAT0HiI89rKLMhpOBVwJGsaLO', 'lecturer', 'DMCD', 'LEC003'),
-('Mr. Bright Agbosu', 'agbosu@tuc.edu.gh', '$2b$10$9TX9GoXflOmKtDgtINNt7OuCeHVcNAT0HiI89rKLMhpOBVwJGsaLO', 'lecturer', 'DMCD', 'LEC004'),
-('Mr. Daniel Boateng', 'boateng@tuc.edu.gh', '$2b$10$9TX9GoXflOmKtDgtINNt7OuCeHVcNAT0HiI89rKLMhpOBVwJGsaLO', 'lecturer', 'DMCD', 'LEC005'),
-('Mr. William Daitey', 'daitey@tuc.edu.gh', '$2b$10$9TX9GoXflOmKtDgtINNt7OuCeHVcNAT0HiI89rKLMhpOBVwJGsaLO', 'lecturer', 'DMCD', 'LEC006'),
-('Ms. Mary Eddy Takyi', 'takyi@tuc.edu.gh', '$2b$10$9TX9GoXflOmKtDgtINNt7OuCeHVcNAT0HiI89rKLMhpOBVwJGsaLO', 'lecturer', 'FDT', 'LEC007'),
-('Ms. Florence Kushitor', 'kushitor@tuc.edu.gh', '$2b$10$9TX9GoXflOmKtDgtINNt7OuCeHVcNAT0HiI89rKLMhpOBVwJGsaLO', 'lecturer', 'FDT', 'LEC008'),
-('Mr. Nutifafa Fiadzomor', 'nutifafa@tuc.edu.gh', '$2b$10$9TX9GoXflOmKtDgtINNt7OuCeHVcNAT0HiI89rKLMhpOBVwJGsaLO', 'lecturer', 'FDT', 'LEC009'),
-('Mr. Selete Komla Delali Ofori', 'ofori@tuc.edu.gh', '$2b$10$9TX9GoXflOmKtDgtINNt7OuCeHVcNAT0HiI89rKLMhpOBVwJGsaLO', 'lecturer', 'JDT', 'LEC010'),
-('Mr. Kwame Baah Panin Owusu', 'owusu@tuc.edu.gh', '$2b$10$9TX9GoXflOmKtDgtINNt7OuCeHVcNAT0HiI89rKLMhpOBVwJGsaLO', 'lecturer', 'JDT', 'LEC011'),
-('Mr. Aaron Adjacodjoe', 'adjacodjoe@tuc.edu.gh', '$2b$10$9TX9GoXflOmKtDgtINNt7OuCeHVcNAT0HiI89rKLMhpOBVwJGsaLO', 'lecturer', 'PDE', 'LEC012'),
-('Mr. Kwame Ntim Pipim', 'ntimpipim@tuc.edu.gh', '$2b$10$9TX9GoXflOmKtDgtINNt7OuCeHVcNAT0HiI89rKLMhpOBVwJGsaLO', 'lecturer', 'PDE', 'LEC013'),
-('Mr. Isaac N. Ofori Obeng', 'obeng@tuc.edu.gh', '$2b$10$9TX9GoXflOmKtDgtINNt7OuCeHVcNAT0HiI89rKLMhpOBVwJGsaLO', 'lecturer', 'DMCD', 'LEC014');
+('Dr. Andrew Richard Owusu Addo', 'registrar@tuc.edu.gh', '$2b$10$GRgQc59gybQp.QHhvGmIm.heLMROupzyY9OooB1kzeTz9lBB55822', 'registrar', NULL, 'REG001'),
+('QA Officer', 'qa@tuc.edu.gh', '$2b$10$GRgQc59gybQp.QHhvGmIm.heLMROupzyY9OooB1kzeTz9lBB55822', 'qa_officer', NULL, 'QA001'),
+('Mr. Robert Bunkangsang Buchag', 'buchag@tuc.edu.gh', '$2b$10$GRgQc59gybQp.QHhvGmIm.heLMROupzyY9OooB1kzeTz9lBB55822', 'lecturer', 'DMCD', 'LEC001'),
+('Mr. Samuel Wellington', 'wellington@tuc.edu.gh', '$2b$10$GRgQc59gybQp.QHhvGmIm.heLMROupzyY9OooB1kzeTz9lBB55822', 'lecturer', 'DMCD', 'LEC002'),
+('Mr. Selasi Ahiabu', 'ahiabu@tuc.edu.gh', '$2b$10$GRgQc59gybQp.QHhvGmIm.heLMROupzyY9OooB1kzeTz9lBB55822', 'lecturer', 'DMCD', 'LEC003'),
+('Mr. Bright Agbosu', 'agbosu@tuc.edu.gh', '$2b$10$GRgQc59gybQp.QHhvGmIm.heLMROupzyY9OooB1kzeTz9lBB55822', 'lecturer', 'DMCD', 'LEC004'),
+('Mr. Daniel Boateng', 'boateng@tuc.edu.gh', '$2b$10$GRgQc59gybQp.QHhvGmIm.heLMROupzyY9OooB1kzeTz9lBB55822', 'lecturer', 'DMCD', 'LEC005'),
+('Mr. William Daitey', 'daitey@tuc.edu.gh', '$2b$10$GRgQc59gybQp.QHhvGmIm.heLMROupzyY9OooB1kzeTz9lBB55822', 'lecturer', 'DMCD', 'LEC006'),
+('Ms. Mary Eddy Takyi', 'takyi@tuc.edu.gh', '$2b$10$GRgQc59gybQp.QHhvGmIm.heLMROupzyY9OooB1kzeTz9lBB55822', 'lecturer', 'FDT', 'LEC007'),
+('Ms. Florence Kushitor', 'kushitor@tuc.edu.gh', '$2b$10$GRgQc59gybQp.QHhvGmIm.heLMROupzyY9OooB1kzeTz9lBB55822', 'lecturer', 'FDT', 'LEC008'),
+('Mr. Nutifafa Fiadzomor', 'nutifafa@tuc.edu.gh', '$2b$10$GRgQc59gybQp.QHhvGmIm.heLMROupzyY9OooB1kzeTz9lBB55822', 'lecturer', 'FDT', 'LEC009'),
+('Mr. Selete Komla Delali Ofori', 'ofori@tuc.edu.gh', '$2b$10$GRgQc59gybQp.QHhvGmIm.heLMROupzyY9OooB1kzeTz9lBB55822', 'lecturer', 'JDT', 'LEC010'),
+('Mr. Kwame Baah Panin Owusu', 'owusu@tuc.edu.gh', '$2b$10$GRgQc59gybQp.QHhvGmIm.heLMROupzyY9OooB1kzeTz9lBB55822', 'lecturer', 'JDT', 'LEC011'),
+('Mr. Aaron Adjacodjoe', 'adjacodjoe@tuc.edu.gh', '$2b$10$GRgQc59gybQp.QHhvGmIm.heLMROupzyY9OooB1kzeTz9lBB55822', 'lecturer', 'PDE', 'LEC012'),
+('Mr. Kwame Ntim Pipim', 'ntimpipim@tuc.edu.gh', '$2b$10$GRgQc59gybQp.QHhvGmIm.heLMROupzyY9OooB1kzeTz9lBB55822', 'lecturer', 'PDE', 'LEC013'),
+('Mr. Isaac N. Ofori Obeng', 'obeng@tuc.edu.gh', '$2b$10$GRgQc59gybQp.QHhvGmIm.heLMROupzyY9OooB1kzeTz9lBB55822', 'lecturer', 'DMCD', 'LEC014');
 
 INSERT IGNORE INTO courses (course_code, course_name, credit_hours, department_id, level, semester, programme_id) VALUES
 ('AUCDT115','Introduction to African Art & Culture',3,1,100,1,1),
