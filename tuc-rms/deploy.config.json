@@ -1,0 +1,22 @@
+{
+  "projectName": "tuc-rms",
+  "remoteHost": "root@66.226.72.199",
+  "remoteUser": "root",
+  "deployPath": "/var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/tuc-rms",
+  "buildTool": "pnpm",
+  "outputDir": "dist",
+  "requiredEnvVars": [
+    "DB_HOST",
+    "DB_USER",
+    "DB_PASS",
+    "DB_NAME",
+    "JWT_SECRET"
+  ],
+  "healthCheckUrl": "https://ai-tools.techbridge.edu.gh/tuc-rms/",
+  "backendHealthCheckUrl": "http://localhost:5000/api/health",
+  "htaccessRewriteBase": "/tuc-rms/",
+  "dryRun": false,
+  "skipHealthCheck": false,
+  "backendPort": 5000,
+  "pm2ProcessName": "tuc-rms-api"
+}
