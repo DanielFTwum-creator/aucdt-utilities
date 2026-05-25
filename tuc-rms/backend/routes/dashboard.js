@@ -8,7 +8,7 @@ router.get('/stats', auth, requireRole('registrar', 'qa_officer'), async (req, r
     const [[active]]     = await db.execute("SELECT COUNT(*) as cnt FROM students WHERE status='active'");
     const [[courses]]    = await db.execute('SELECT COUNT(*) as total FROM courses');
     const [[programmes]] = await db.execute('SELECT COUNT(*) as total FROM programmes');
-    const [[staff]]      = await db.execute("SELECT COUNT(*) as total FROM users WHERE is_active=1");
+    const [[staff]]      = await db.execute("SELECT COUNT(*) as total FROM tuc_rms_users WHERE is_active=1");
     const [[submitted]]  = await db.execute("SELECT COUNT(DISTINCT course_id) as cnt FROM results WHERE status='submitted'");
     const [[approved]]   = await db.execute("SELECT COUNT(DISTINCT course_id) as cnt FROM results WHERE status='approved'");
     const [[rejected]]   = await db.execute("SELECT COUNT(*) as cnt FROM results WHERE status='draft' AND submitted_at IS NOT NULL");
