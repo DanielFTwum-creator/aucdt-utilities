@@ -257,7 +257,11 @@
       "Bash(chmod +x /tmp/patch_cache_busting.sh)",
       "Bash(bash /tmp/patch_cache_busting.sh)",
       "Bash(chmod +x /tmp/apply_remaining_cache_busting.sh)",
-      "PowerShell(Get-Content *)"
+      "PowerShell(Get-Content *)",
+      "PowerShell(Get-ChildItem -Path 'C:\\\\Development\\\\github\\\\aucdt-utilities\\\\tuc-rms' -File | Select-Object -First 20 | ForEach-Object { $_.Name })",
+      "PowerShell(Get-ChildItem -Path 'C:\\\\Development\\\\github\\\\aucdt-utilities\\\\tuc-rms' -Directory | ForEach-Object { $_.Name })",
+      "PowerShell(cd C:\\\\Development\\\\github\\\\aucdt-utilities; Get-ChildItem -Directory | Where-Object {$_.Name -match '^\\(daaro-distributor|typing-and-mathematics-tutorial|typing-tutorial|ai-stand-up-workshop-prep-dashboard|bionicskins|dictation-app|dmcdai|impact-ventures|luxthumb|markai|orbit-walk|patois|rophe|techbridge-ai-application|glucose|peace-vinyl|biochemai|deliberate-magic|tuc-ai-lab|willpro|techbridge-ai-blueprint|ai-email|groove-streamer\\)' } | Select-Object -ExpandProperty Name | Sort-Object)",
+      "PowerShell(pnpm build *)"
     ]
   }
 }
