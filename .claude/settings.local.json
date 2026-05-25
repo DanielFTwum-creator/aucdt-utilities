@@ -281,7 +281,19 @@
       "PowerShell(docker restart tuc-rms-backend *)",
       "PowerShell(docker restart tuc-rms-frontend *)",
       "Bash(ConvertFrom-Json)",
-      "Bash(Format-List)"
+      "Bash(Format-List)",
+      "PowerShell(ssh root@66.226.72.199 \"mysql -u root -e 'SELECT user, host FROM mysql.user WHERE user NOT IN \\(\\\\\"mysql.sys\\\\\", \\\\\"mysql.session\\\\\"\\);'\")",
+      "PowerShell(ssh root@66.226.72.199 \"cat /root/.my.cnf 2>/dev/null || cat ~/.my.cnf 2>/dev/null || cat /etc/mysql/debian.cnf 2>/dev/null || echo 'No config found'\")",
+      "PowerShell(ssh root@66.226.72.199 \"mysql -u root aucdt_online_dev -e 'SHOW TABLES;'\")",
+      "PowerShell(ssh root@66.226.72.199 \"mysql --socket=/var/run/mysqld/mysqld.sock -u root aucdt_online_dev -e 'SHOW TABLES;' 2>&1 | head -30\")",
+      "PowerShell(ssh root@66.226.72.199 \"mysql --socket=/var/run/mysqld/mysqld.sock -u root --password='' aucdt_online_dev -e 'SHOW TABLES;' 2>&1 | head -30\")",
+      "PowerShell(ssh root@66.226.72.199 \"sudo mysql -u root aucdt_online_dev -e 'SHOW TABLES;' 2>&1 | head -30\")",
+      "PowerShell(ssh root@66.226.72.199 \"mysql -u aucdtadmin_dev -p'#4Dwsf07-dev' aucdt_online_dev -e 'DESCRIBE users;'\")",
+      "PowerShell(Out-Null *)",
+      "PowerShell(ssh root@66.226.72.199 \"mysql -u aucdtadmin_dev -p'#4Dwsf07-dev' aucdt_online_dev -e \\\\\"UPDATE tuc_rms_users SET full_name='Stephanie Acquah-Djan', email='stephanie.acquah-djan@techbridge.edu.gh', role='registrar', staff_id='REG001', department='Registrar Office' WHERE id=1)",
+      "PowerShell(\\\\\"\")",
+      "PowerShell(ssh root@66.226.72.199 \"mysql -u aucdtadmin_dev -p'#4Dwsf07-dev' aucdt_online_dev -e 'SELECT id, full_name, email, role, staff_id FROM tuc_rms_users WHERE role=\\\\\"registrar\\\\\";'\")",
+      "PowerShell(docker cp \"C:\\\\Development\\\\github\\\\aucdt-utilities\\\\tuc-rms\\\\backend\\\\fix-hashes.sql\" tuc-rms-mysql:/tmp/fix-hashes.sql)"
     ]
   }
 }

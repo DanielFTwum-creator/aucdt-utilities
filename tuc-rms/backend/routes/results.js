@@ -86,7 +86,7 @@ router.post('/submit/:courseId', auth, async (req, res) => {
       "UPDATE results SET status='submitted', submitted_at=NOW() WHERE course_id=? AND status='draft'",
       [courseId]
     );
-    const [registrars] = await db.execute("SELECT id FROM users WHERE role='registrar' AND is_active=1");
+    const [registrars] = await db.execute("SELECT id FROM tuc_rms_users WHERE role='registrar' AND is_active=1");
     const [courseRow] = await db.execute('SELECT course_name, course_code FROM courses WHERE id=?', [courseId]);
     for (const reg of registrars) {
       await db.execute(
@@ -161,7 +161,7 @@ router.get('/course/:courseId', auth, async (req, res) => {
       FROM results r
       JOIN students s ON r.student_id = s.id
       JOIN courses c ON r.course_id = c.id
-      JOIN users u ON r.lecturer_id = u.id
+      JOIN tuc_rms_users u ON r.lecturer_id = u.id
       WHERE r.course_id = ?
       ORDER BY s.full_name
     `, [courseId]);
@@ -184,7 +184,7 @@ router.get('/pending', auth, requireRole('registrar', 'qa_officer'), async (req,
       JOIN courses c ON r.course_id = c.id
       JOIN departments d ON c.department_id = d.id
       LEFT JOIN programmes p ON c.programme_id = p.id
-      JOIN users u ON r.lecturer_id = u.id
+      JOIN tuc_rms_users u ON r.lecturer_id = u.id
       WHERE r.status IN ('submitted','approved')
       GROUP BY c.id, r.status, r.submitted_at, u.id
       ORDER BY r.submitted_at DESC

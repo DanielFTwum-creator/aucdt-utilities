@@ -59,7 +59,7 @@ router.post('/login', async (req, res) => {
     const { email, password } = req.body;
     if (!email || !password) return res.status(400).json({ message: 'Email and password required' });
 
-    const [rows] = await db.execute('SELECT * FROM users WHERE email = ? AND is_active = 1', [email]);
+    const [rows] = await db.execute('SELECT * FROM tuc_rms_users WHERE email = ? AND is_active = 1', [email]);
     if (!rows[0]) return res.status(401).json({ message: 'Invalid credentials' });
 
     const user = rows[0];
@@ -107,7 +107,7 @@ router.post('/verify-otp', async (req, res) => {
     }
 
     // Get user
-    const [rows] = await db.execute('SELECT * FROM users WHERE id = ?', [decoded.id]);
+    const [rows] = await db.execute('SELECT * FROM tuc_rms_users WHERE id = ?', [decoded.id]);
     if (!rows[0]) return res.status(401).json({ message: 'User not found' });
 
     const user = rows[0];
@@ -144,12 +144,12 @@ router.post('/change-password', auth, async (req, res) => {
     if (!current_password || !new_password) return res.status(400).json({ message: 'Both passwords required' });
     if (new_password.length < 6) return res.status(400).json({ message: 'New password must be at least 6 characters' });
 
-    const [rows] = await db.execute('SELECT password_hash FROM users WHERE id = ?', [req.user.id]);
+    const [rows] = await db.execute('SELECT password_hash FROM tuc_rms_users WHERE id = ?', [req.user.id]);
     const match = await bcrypt.compare(current_password, rows[0].password_hash);
     if (!match) return res.status(401).json({ message: 'Current password incorrect' });
 
     const hash = await bcrypt.hash(new_password, 10);
-    await db.execute('UPDATE users SET password_hash = ? WHERE id = ?', [hash, req.user.id]);
+    await db.execute('UPDATE tuc_rms_users SET password_hash = ? WHERE id = ?', [hash, req.user.id]);
 
     res.json({ message: 'Password changed successfully' });
   } catch (err) {
@@ -169,7 +169,7 @@ router.post('/verify-admin', auth, async (req, res) => {
     if (!password) return res.status(400).json({ message: 'Password required' });
 
     // Fetch user's password hash
-    const [rows] = await db.execute('SELECT password_hash FROM users WHERE id = ?', [req.user.id]);
+    const [rows] = await db.execute('SELECT password_hash FROM tuc_rms_users WHERE id = ?', [req.user.id]);
     if (!rows[0]) return res.status(401).json({ message: 'User not found' });
 
     // Compare passwords
