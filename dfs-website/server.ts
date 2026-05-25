@@ -116,7 +116,11 @@ async function startServer() {
     });
     app.use(vite.middlewares);
   } else {
-    const distPath = path.join(process.cwd(), "dist");
+    // In production, serve static files from current directory or dist/
+    // Check if dist/ exists, otherwise use current directory
+    const distPath = fs.existsSync(path.join(process.cwd(), "dist"))
+      ? path.join(process.cwd(), "dist")
+      : process.cwd();
     app.use(express.static(distPath));
     app.get("*", (req, res) => {
       res.sendFile(path.join(distPath, "index.html"));
