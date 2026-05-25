@@ -1,0 +1,43 @@
+# TUC Results Management System — Apache SPA Routing Configuration
+# Place this file in the tuc-rms directory on the server
+# This ensures all non-file/non-directory requests route to index.html for React Router
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  
+  # Set the base URL path for the application
+  # Change '/tuc-rms/' to match your actual deployment path
+  RewriteBase /tuc-rms/
+  
+  # Skip rewriting for actual files that exist
+  RewriteCond %{REQUEST_FILENAME} -f
+  RewriteRule ^ - [L]
+  
+  # Skip rewriting for actual directories that exist
+  RewriteCond %{REQUEST_FILENAME} -d
+  RewriteRule ^ - [L]
+  
+  # Rewrite all other requests to index.html
+  # This allows React Router to handle all routes on the client side
+  RewriteRule ^ index.html [QSA,L]
+</IfModule>
+
+# Optional: Compression for faster delivery
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css text/javascript application/javascript application/json
+</IfModule>
+
+# Optional: Caching headers for static assets
+<FilesMatch "\.js$|\.css$|\.woff|\.woff2|\.ttf|\.svg|\.eot">
+  Header set Cache-Control "max-age=31536000, public"
+</FilesMatch>
+
+<FilesMatch "\.html$">
+  Header set Cache-Control "max-age=3600, must-revalidate"
+</FilesMatch>
+
+# Security Headers
+Header set X-Content-Type-Options "nosniff"
+Header set X-Frame-Options "DENY"
+Header set X-XSS-Protection "1; mode=block"
+Header set Strict-Transport-Security "max-age=31536000; includeSubDomains"
