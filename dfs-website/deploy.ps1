@@ -78,17 +78,21 @@ $htaccessContent = @'
     ExpiresDefault 'max-age=31536000'
     Header set Cache-Control 'public, immutable'
   </FilesMatch>
-  # HTML files (revalidate on every request)
+  # HTML files (always revalidate with server)
   <FilesMatch '\.(html|json)$'>
     ExpiresDefault 'max-age=0'
-    Header set Cache-Control 'public, must-revalidate'
+    Header set Cache-Control 'no-cache, no-store, must-revalidate, private'
+    Header set Pragma 'no-cache'
+    Header set Expires '-1'
   </FilesMatch>
 </IfModule>
 
 <IfModule mod_headers.c>
-  # Disable browser caching for HTML as fallback
+  # Additional cache-busting for HTML
   <FilesMatch '\.(html)$'>
-    Header set Cache-Control 'public, must-revalidate, max-age=0'
+    Header set Cache-Control 'no-cache, no-store, must-revalidate, private, max-age=0'
+    Header set Pragma 'no-cache'
+    Header set Expires '-1'
   </FilesMatch>
 </IfModule>
 '@
