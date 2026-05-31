@@ -1,4 +1,26 @@
-﻿# Touch Typing Tutorial Deployment Script
+# Touch Typing Tutorial Deployment Script
+
+# Deploys frontend static assets (dist/) to remote server.
+
+
+
+param(
+
+    [string]$ConfigFile = "./deploy.config.json",
+
+    [switch]$Build = $false,
+
+    [switch]$DryRun = $false,
+
+    [switch]$SkipHealthCheck = $false
+
+)
+
+
+
+
+# Timestamped logging helper (injected by standardisation pass — May 2026)
+# Touch Typing Tutorial Deployment Script
 
 # Deploys frontend static assets (dist/) to remote server.
 
@@ -24,11 +46,11 @@ $OutputEncoding = [System.Text.Encoding]::UTF8
 
 
 
-Write-Host "==========================================================" -ForegroundColor Blue
+Log "INFO" "==========================================================" Cyan -ForegroundColor Blue
 
 Write-Host "        TOUCH TYPING TUTORIAL DEPLOYMENT PIPELINE         " -ForegroundColor Blue
 
-Write-Host "==========================================================" -ForegroundColor Blue
+Log "INFO" "==========================================================" Cyan -ForegroundColor Blue
 
 
 
@@ -36,7 +58,7 @@ Write-Host "==========================================================" -Foregro
 
 if (-not (Test-Path $ConfigFile)) {
 
-    Write-Host "Error: Config file not found at $ConfigFile" -ForegroundColor Red
+    Log "ERROR" "Error: Config file not found at $ConfigFile" Red
 
     exit 1
 
@@ -60,25 +82,17 @@ $HealthCheckUrl = $config.healthCheckUrl
 
 
 
-Write-Host "Step 1/6: Validating configuration..." -ForegroundColor Yellow
+Log "INFO" "Step 1/6: Validating configuration..." Yellow
 
-Write-Host "  Project:        $ProjectName"
-
-Write-Host "  Remote host:    $RemoteHost"
-
-Write-Host "  Deploy path:    $RemotePath"
-
-Write-Host "  Build tool:     $BuildTool"
-
-Write-Host "  Output dir:     $OutputDir"
-
-Write-Host "  Health check:   $HealthCheckUrl"
-
-
-
+Log "INFO" "  Project:        $ProjectName"
+Log "INFO" "  Remote host:    $RemoteHost"
+Log "INFO" "  Deploy path:    $RemotePath"
+Log "INFO" "  Build tool:     $BuildTool"
+Log "INFO" "  Output dir:     $OutputDir"
+Log "INFO" "  Health check:   $HealthCheckUrl"
 if ($DryRun) {
 
-    Write-Host "Dry run completed successfully." -ForegroundColor Green
+    Log "SUCCESS" "Dry run completed successfully." Green
 
     exit 0
 
@@ -88,7 +102,7 @@ if ($DryRun) {
 
 # 2. Pre-flight Checks
 
-Write-Host "Step 2/6: Pre-flight checks..." -ForegroundColor Yellow
+Log "INFO" "Step 2/6: Pre-flight checks..." Yellow
 
 $preflightPassed = $true
 
@@ -108,11 +122,11 @@ if ($sshCheck -ne "auth_ok") {
 
     $errList += "Cannot authenticate with remote server via SSH. Verify keys."
 
-    Write-Host " FAILED" -ForegroundColor Red
+    Log "ERROR" " FAILED" Red
 
 } else {
 
-    Write-Host " OK" -ForegroundColor Green
+    Log "SUCCESS" " OK" Green
 
 }
 
@@ -120,11 +134,11 @@ if ($sshCheck -ne "auth_ok") {
 
 if (-not $preflightPassed) {
 
-    Write-Host "`nPre-flight checks failed:" -ForegroundColor Red
+    Log "ERROR" "`nPre-flight checks failed:" Red
 
     foreach ($err in $errList) {
 
-        Write-Host "  - $err" -ForegroundColor Red
+        Log "ERROR" "  - $err" Red
 
     }
 
@@ -132,41 +146,36 @@ if (-not $preflightPassed) {
 
 }
 
-Write-Host "  ? All checks passed"
-
-
-
+Log "INFO" "  ? All checks passed"
 # 3. Build Project
 
 if ($Build) {
 
-    Write-Host "Step 3/6: Building project..." -ForegroundColor Yellow
+    Log "INFO" "Step 3/6: Building project..." Yellow
 
-    Write-Host "  Running: $BuildTool run build"
-
+    Log "INFO" "  Running: $BuildTool run build"
     & $BuildTool run build
 
     if ($LASTEXITCODE -ne 0) {
 
-        Write-Host "  Build failed!" -ForegroundColor Red
+        Log "ERROR" "  Build failed!" Red
 
         exit 1
 
     }
 
-    Write-Host "  ? Build successful"
-
+    Log "INFO" "  ? Build successful"
 }
 
 
 
 # 4. Verify Build Output
 
-Write-Host "Step 4/6: Verifying build output..." -ForegroundColor Yellow
+Log "INFO" "Step 4/6: Verifying build output..." Yellow
 
 if (-not (Test-Path "dist/index.html")) {
 
-    Write-Host "  Error: Built files (dist/index.html) not found." -ForegroundColor Red
+    Log "ERROR" "  Error: Built files (dist/index.html) not found." Red
 
     exit 1
 
@@ -174,44 +183,37 @@ if (-not (Test-Path "dist/index.html")) {
 
 $fileCount = (Get-ChildItem -Path dist -Recurse | Where-Object { -not $_.PSIsContainer }).Count
 
-Write-Host "  ? Output verified: $fileCount files"
-
-
-
+Log "INFO" "  ? Output verified: $fileCount files"
 # 5. Deploy to Remote Server
 
-Write-Host "Step 5/6: Deploying to remote server (SCP-only)..." -ForegroundColor Yellow
+Log "INFO" "Step 5/6: Deploying to remote server (SCP-only)..." Yellow
 
 
 
 # Create directory structure
 
-Write-Host "  Creating directory structure..."
-
+Log "INFO" "  Creating directory structure..."
 ssh -o StrictHostKeyChecking=no $RemoteHost "mkdir -p $RemotePath" 2>&1 | Out-Null
 
 
 
 # Clean old static files but preserve config
 
-Write-Host "  Clearing old files..."
-
+Log "INFO" "  Clearing old files..."
 ssh -o StrictHostKeyChecking=no $RemoteHost "find $RemotePath -maxdepth 1 -mindepth 1 ! -name '.env' ! -name 'server.log' ! -name 'node_modules' -exec rm -rf {} + 2>/dev/null || true" 2>&1 | Out-Null
 
 
 
 # Upload dist directory files via SCP
 
-Write-Host "  Deploying build bundle via SCP..."
-
+Log "INFO" "  Deploying build bundle via SCP..."
 scp -r -o StrictHostKeyChecking=no dist/* "${RemoteHost}:${RemotePath}/"
 
 
 
 # Create .htaccess file for SPA routing
 
-Write-Host "  Configuring Apache routing rewrite rules..."
-
+Log "INFO" "  Configuring Apache routing rewrite rules..."
 $htaccessContent = @"
 
 <IfModule mod_rewrite.c>
@@ -264,21 +266,17 @@ $htaccessContent | ssh -o StrictHostKeyChecking=no $RemoteHost "cat > '$RemotePa
 
 # Set folder ownership and read permissions
 
-Write-Host "  Setting server file permissions..."
-
+Log "INFO" "  Setting server file permissions..."
 ssh -o StrictHostKeyChecking=no $RemoteHost "chown -R techbridge.edu.gh_md:psacln $RemotePath && chmod -R 755 $RemotePath && chmod 644 $RemotePath/.htaccess 2>/dev/null || true" 2>&1 | Out-Null
 
 
 
-Write-Host "  ? Deployment complete"
-
-
-
+Log "INFO" "  ? Deployment complete"
 # 6. Health Checks
 
 if (-not $SkipHealthCheck) {
 
-    Write-Host "Step 6/6: Health checks..." -ForegroundColor Yellow
+    Log "INFO" "Step 6/6: Health checks..." Yellow
 
     
 
@@ -288,11 +286,11 @@ if (-not $SkipHealthCheck) {
 
     if ($indexHtmlCheck.Trim() -eq "yes") {
 
-        Write-Host "    ? index.html present" -ForegroundColor Green
+        Log "SUCCESS" "    ? index.html present" Green
 
     } else {
 
-        Write-Host "    X index.html missing!" -ForegroundColor Red
+        Log "ERROR" "    X index.html missing!" Red
 
     }
 
@@ -304,11 +302,11 @@ if (-not $SkipHealthCheck) {
 
     if ($htaccessCheck.Trim() -eq "yes") {
 
-        Write-Host "    ? .htaccess syntax OK" -ForegroundColor Green
+        Log "SUCCESS" "    ? .htaccess syntax OK" Green
 
     } else {
 
-        Write-Host "    X .htaccess missing!" -ForegroundColor Red
+        Log "ERROR" "    X .htaccess missing!" Red
 
     }
 
@@ -316,27 +314,313 @@ if (-not $SkipHealthCheck) {
 
 
 
-Write-Host "`n╔════════════════════════════════════════════════════════════╗" -ForegroundColor Green
+Log "SUCCESS" "`n╔════════════════════════════════════════════════════════════╗" Green
 
-Write-Host "║  ? DEPLOYMENT COMPLETE                                    ║" -ForegroundColor Green
+Log "SUCCESS" "║  ? DEPLOYMENT COMPLETE                                    ║" Green
 
-Write-Host "╚════════════════════════════════════════════════════════════╝" -ForegroundColor Green
-
-
-
-Write-Host "Project:        $ProjectName"
-
-Write-Host "Remote:         $RemoteHost"
-
-Write-Host "Path:           $RemotePath"
-
-Write-Host "Health check:   $HealthCheckUrl"
+Log "SUCCESS" "╚════════════════════════════════════════════════════════════╝" Green
 
 
 
-Write-Host "Next steps:"
+Log "INFO" "Project:        $ProjectName"
+Log "INFO" "Remote:         $RemoteHost"
+Log "INFO" "Path:           $RemotePath"
+Log "INFO" "Health check:   $HealthCheckUrl"
+Log "INFO" "Next steps:"
+Log "INFO" "  1. Visit $HealthCheckUrl to verify deployment"
+Log "INFO" "  2. Check browser console for network errors (F12)"
+_deployStart = Get-Date
+function Log {
+    param([string]$Level = "INFO", [string]$Msg, [ConsoleColor]$Color = "White")
+    $ts = (Get-Date).ToString("yyyy-MM-dd HH:mm:ss")
+    Write-Host "[$ts][$Level] $Msg" -ForegroundColor $Color
+}
+# Force standard output encoding
 
-Write-Host "  1. Visit $HealthCheckUrl to verify deployment"
+$OutputEncoding = [System.Text.Encoding]::UTF8
 
-Write-Host "  2. Check browser console for network errors (F12)"
 
+
+Log "INFO" "==========================================================" Cyan -ForegroundColor Blue
+
+Write-Host "        TOUCH TYPING TUTORIAL DEPLOYMENT PIPELINE         " -ForegroundColor Blue
+
+Log "INFO" "==========================================================" Cyan -ForegroundColor Blue
+
+
+
+# 1. Read Configuration
+
+if (-not (Test-Path $ConfigFile)) {
+
+    Log "ERROR" "Error: Config file not found at $ConfigFile" Red
+
+    exit 1
+
+}
+
+
+
+$config = Get-Content $ConfigFile -Raw | ConvertFrom-Json
+
+$ProjectName = $config.projectName
+
+$RemoteHost = $config.remoteHost
+
+$RemotePath = $config.deployPath
+
+$BuildTool = $config.buildTool
+
+$OutputDir = $config.outputDir
+
+$HealthCheckUrl = $config.healthCheckUrl
+
+
+
+Log "INFO" "Step 1/6: Validating configuration..." Yellow
+
+Log "INFO" "  Project:        $ProjectName"
+Log "INFO" "  Remote host:    $RemoteHost"
+Log "INFO" "  Deploy path:    $RemotePath"
+Log "INFO" "  Build tool:     $BuildTool"
+Log "INFO" "  Output dir:     $OutputDir"
+Log "INFO" "  Health check:   $HealthCheckUrl"
+if ($DryRun) {
+
+    Log "SUCCESS" "Dry run completed successfully." Green
+
+    exit 0
+
+}
+
+
+
+# 2. Pre-flight Checks
+
+Log "INFO" "Step 2/6: Pre-flight checks..." Yellow
+
+$preflightPassed = $true
+
+$errList = @()
+
+
+
+# Verify ssh keys
+
+Write-Host "  Checking SSH access..." -NoNewline
+
+$sshCheck = ssh -o ConnectTimeout=5 -o StrictHostKeyChecking=no $RemoteHost "echo 'auth_ok'" 2>$null
+
+if ($sshCheck -ne "auth_ok") {
+
+    $preflightPassed = $false
+
+    $errList += "Cannot authenticate with remote server via SSH. Verify keys."
+
+    Log "ERROR" " FAILED" Red
+
+} else {
+
+    Log "SUCCESS" " OK" Green
+
+}
+
+
+
+if (-not $preflightPassed) {
+
+    Log "ERROR" "`nPre-flight checks failed:" Red
+
+    foreach ($err in $errList) {
+
+        Log "ERROR" "  - $err" Red
+
+    }
+
+    exit 1
+
+}
+
+Log "INFO" "  ? All checks passed"
+# 3. Build Project
+
+if ($Build) {
+
+    Log "INFO" "Step 3/6: Building project..." Yellow
+
+    Log "INFO" "  Running: $BuildTool run build"
+    & $BuildTool run build
+
+    if ($LASTEXITCODE -ne 0) {
+
+        Log "ERROR" "  Build failed!" Red
+
+        exit 1
+
+    }
+
+    Log "INFO" "  ? Build successful"
+}
+
+
+
+# 4. Verify Build Output
+
+Log "INFO" "Step 4/6: Verifying build output..." Yellow
+
+if (-not (Test-Path "dist/index.html")) {
+
+    Log "ERROR" "  Error: Built files (dist/index.html) not found." Red
+
+    exit 1
+
+}
+
+$fileCount = (Get-ChildItem -Path dist -Recurse | Where-Object { -not $_.PSIsContainer }).Count
+
+Log "INFO" "  ? Output verified: $fileCount files"
+# 5. Deploy to Remote Server
+
+Log "INFO" "Step 5/6: Deploying to remote server (SCP-only)..." Yellow
+
+
+
+# Create directory structure
+
+Log "INFO" "  Creating directory structure..."
+ssh -o StrictHostKeyChecking=no $RemoteHost "mkdir -p $RemotePath" 2>&1 | Out-Null
+
+
+
+# Clean old static files but preserve config
+
+Log "INFO" "  Clearing old files..."
+ssh -o StrictHostKeyChecking=no $RemoteHost "find $RemotePath -maxdepth 1 -mindepth 1 ! -name '.env' ! -name 'server.log' ! -name 'node_modules' -exec rm -rf {} + 2>/dev/null || true" 2>&1 | Out-Null
+
+
+
+# Upload dist directory files via SCP
+
+Log "INFO" "  Deploying build bundle via SCP..."
+scp -r -o StrictHostKeyChecking=no dist/* "${RemoteHost}:${RemotePath}/"
+
+
+
+# Create .htaccess file for SPA routing
+
+Log "INFO" "  Configuring Apache routing rewrite rules..."
+$htaccessContent = @"
+
+<IfModule mod_rewrite.c>
+
+  RewriteEngine On
+
+  RewriteBase /typing-tutor/
+
+  
+
+  # Skip physical files/directories
+
+  RewriteCond %{REQUEST_FILENAME} -f [OR]
+
+  RewriteCond %{REQUEST_FILENAME} -d
+
+  RewriteRule ^ - [L]
+
+  
+
+  # Catch-all to index.html for SPA routing
+
+  RewriteRule ^ /typing-tutor/index.html [QSA,L]
+
+</IfModule>
+
+<IfModule mod_expires.c>
+  ExpiresActive On
+  <FilesMatch '\.(js|css|png|jpg|jpeg|gif|svg|woff2|woff|ttf|eot|ico)$'>
+    ExpiresDefault 'max-age=31536000'
+    Header set Cache-Control 'public, immutable'
+  </FilesMatch>
+  <FilesMatch '\.(html|json)$'>
+    ExpiresDefault 'max-age=0'
+    Header set Cache-Control 'public, must-revalidate'
+  </FilesMatch>
+</IfModule>
+
+<IfModule mod_headers.c>
+  <FilesMatch '\.(html)$'>
+    Header set Cache-Control 'public, must-revalidate, max-age=0'
+  </FilesMatch>
+</IfModule>
+
+"@
+
+$htaccessContent | ssh -o StrictHostKeyChecking=no $RemoteHost "cat > '$RemotePath/.htaccess'"
+
+
+
+# Set folder ownership and read permissions
+
+Log "INFO" "  Setting server file permissions..."
+ssh -o StrictHostKeyChecking=no $RemoteHost "chown -R techbridge.edu.gh_md:psacln $RemotePath && chmod -R 755 $RemotePath && chmod 644 $RemotePath/.htaccess 2>/dev/null || true" 2>&1 | Out-Null
+
+
+
+Log "INFO" "  ? Deployment complete"
+# 6. Health Checks
+
+if (-not $SkipHealthCheck) {
+
+    Log "INFO" "Step 6/6: Health checks..." Yellow
+
+    
+
+    Write-Host "  Checking remote index.html..." -NoNewline
+
+    $indexHtmlCheck = ssh -o StrictHostKeyChecking=no $RemoteHost "test -f $RemotePath/index.html && echo 'yes' || echo 'no'"
+
+    if ($indexHtmlCheck.Trim() -eq "yes") {
+
+        Log "SUCCESS" "    ? index.html present" Green
+
+    } else {
+
+        Log "ERROR" "    X index.html missing!" Red
+
+    }
+
+    
+
+    Write-Host "  Checking .htaccess configuration..." -NoNewline
+
+    $htaccessCheck = ssh -o StrictHostKeyChecking=no $RemoteHost "test -f $RemotePath/.htaccess && echo 'yes' || echo 'no'"
+
+    if ($htaccessCheck.Trim() -eq "yes") {
+
+        Log "SUCCESS" "    ? .htaccess syntax OK" Green
+
+    } else {
+
+        Log "ERROR" "    X .htaccess missing!" Red
+
+    }
+
+}
+
+
+
+Log "SUCCESS" "`n╔════════════════════════════════════════════════════════════╗" Green
+
+Log "SUCCESS" "║  ? DEPLOYMENT COMPLETE                                    ║" Green
+
+Log "SUCCESS" "╚════════════════════════════════════════════════════════════╝" Green
+
+
+
+Log "INFO" "Project:        $ProjectName"
+Log "INFO" "Remote:         $RemoteHost"
+Log "INFO" "Path:           $RemotePath"
+Log "INFO" "Health check:   $HealthCheckUrl"
+Log "INFO" "Next steps:"
+Log "INFO" "  1. Visit $HealthCheckUrl to verify deployment"
+Log "INFO" "  2. Check browser console for network errors (F12)"

@@ -18,7 +18,7 @@
 - [ ] **Vision API / OCR task** (document scanning, handwriting)? → Use **Pattern 4** (Gemini API)
 - [ ] **Mobile target** (iOS App Store / Google Play)? → Add **Pattern 3** (Capacitor Mobile)
 - [ ] **Building a form-heavy app**? → Use **Pattern 10** (Login Forms) + **Pattern 12** (Form Security)
-- [ ] **Writing tests**? → Use **Pattern 13** (Playwright Testing Standards)
+- [ ] **Writing tests**? → Use **Pattern 13** (Testing Standards: Playwright & Cypress)
 - [ ] **Managing shared credentials** across projects? → Use **Pattern 14** (Environment Variable Management)
 
 **Time saved by selecting patterns at start:** ~6 hours per project.
@@ -46,7 +46,7 @@
 | 5 | Dual-Auth Logout | Logout from both OAuth + local session | Glucose, dual-auth apps |
 | 6 | Glucose Learnings | Project-specific insights (health data, scanning) | Health-data apps, form patterns |
 | 12 | **Form Security** | Identity binding, read-only fields, defaults | All form-heavy apps (20+) |
-| 13 | **Playwright Testing** | Accessibility + E2E + health checks | All tested apps (50+) |
+| 13 | **Playwright & Cypress** | Accessibility + E2E + health checks + timestamps | All tested apps (50+) |
 | 14 | **Environment Variable Management** | Share credentials safely across projects | All projects using .env |
 | 15 | **React Component Resilience** | Safe terminal rendering, safe fetch parsing | Dashboard, data-heavy apps |
 | 16 | **Vite Chunk Splitting** | Prevent monolithic 500kb+ index.js bundles | All Vite/React projects |
@@ -829,6 +829,26 @@ ssh root@host "grep -r 'callback' /var/www/vhosts/techbridge.edu.gh/ai-tools.tec
 | `dotenv` vars undefined | Env variables not loaded | 1. Check `server.ts` top: `import dotenv; dotenv.config();` 2. Restart server. |
 | Undefined in redirect URI | URI shows `undefined/callback` | 1. Check `LoginView.tsx` imports `APP_PATH` from context. 2. Rebuild and deploy. |
 
+### Full-Page OAuth Only — No Popups — CEMENTED
+
+**Rule:** All TUC apps use a **full-page redirect** for Google sign-in. The popup +
+`window.open` + `postMessage` + bridge-page pattern (the old MARKAI.md flow) is
+**deprecated** — popups are blocked, lose state, and the bridge page drifts from the
+registered `redirect_uri` (which silently breaks login).
+
+**Full-page flow:**
+1. "Continue with Google" sets a pending state, then `window.location.href = <google auth url>`
+   (no `window.open`). `redirect_uri = ${origin}/<app>/callback`, registered in Google Console.
+2. Google returns to `/<app>/callback`; the SPA loads there (`.htaccess` SPA routing).
+3. On load, the app reads the OAuth response from the URL:
+   - **Implicit** (client-side, no backend): `access_token` in the URL **hash** → fetch
+     `https://www.googleapis.com/oauth2/v2/userinfo` → `login(user)`. *(reference: `glucose/src/contexts/AuthContext.tsx`)*
+   - **Code flow** (preferred, with backend): `code` in the query → `POST` to the shared
+     backend token endpoint. *(reference: `dictation-app/src/auth/AuthContext.tsx`)*
+4. `window.history.replaceState` to strip the token/code and land on `/<app>/`.
+
+No popup, no `postMessage`, no `oauth_popup` window, no `public/auth/google/callback` bridge.
+
 ### Multi-App SPA Callback Pattern (Sub-Apps on the Shared ai-tools Origin) — CEMENTED
 
 **Context:** `ai-tools.techbridge.edu.gh` hosts many SPA sub-apps at `/<app>/`. A single shared Node backend (`localhost:3003`) handles OAuth token exchange and APIs under `/ai-lab/api/`. **Its GET callback hardcodes `res.redirect('/ai-lab/')`** — so it cannot be the callback for any other app (it would dump users on AI-Lab). Do **not** proxy a sub-app's callback to that backend.
@@ -1119,12 +1139,35 @@ Always log before form submission, after data change, on error.
 
 ---
 
-## PATTERN 13: PLAYWRIGHT TESTING STANDARDS (NEW)
+## PATTERN 13: TESTING STANDARDS (PLAYWRIGHT & CYPRESS)
 
 **Projects:** All tested apps (50+)  
-**Purpose:** Accessibility + E2E + health checks  
+**Purpose:** Accessibility + E2E + health checks + Real-Time Logging
 
-### Test File Structure
+### Cypress Testing & Output Timestamps (CEMENTED)
+
+When running Cypress E2E tests in terminal or CI/CD pipelines, long runs or hung processes can be difficult to diagnose without timestamps.
+
+Always wrap the Cypress execution command with a timestamp logger:
+
+#### PowerShell (Windows Development / local runners)
+```powershell
+pnpm exec cypress run | ForEach-Object { "$((Get-Date).ToString('HH:mm:ss')) $_" }
+```
+
+#### Bash / Unix (Linux CI/CD / Ubuntu deploy scripts)
+```bash
+pnpm exec cypress run | while read -r line; do echo "[$(date +'%H:%M:%S')] $line"; done
+```
+
+#### Node.js Programmatic API (test-dashboard integration)
+```javascript
+const cypress = require('cypress');
+cypress.run({ project: './' }).then((results) => { ... });
+```
+
+### Playwright Testing Standards
+
 
 ```
 src/
@@ -1457,6 +1500,82 @@ export default defineConfig({
 | **2.0** | **30 May 2026** | **Merged 7+11, added 12/13/14, cross-references, quick-start checklist** |
 
 ---
+---
 
-*Last updated: 30 May 2026 — Daniel Frempong Twum / TUC ICT*  
-*Core session directives → see CLAUDE.md*
+## Pattern 9 — Dismissible Onboarding Tutorial
+
+**When:** Any app or tool where users land for the first time without context.
+
+**Trigger:** `localStorage.getItem('APP_tutorial_dismissed_vN')` is null.
+
+**Implementation (React/TSX):**
+
+```tsx
+const TUTORIAL_KEY = 'dictation_tutorial_dismissed_v1';
+
+const TUTORIAL_STEPS = [
+  { icon: <Icon />, title: 'Step title', body: 'Explanation text.' },
+  // ...up to 4 steps
+];
+
+function OnboardingTutorial({ onDismiss }: { onDismiss: () => void }) {
+  const [step, setStep] = useState(0);
+  const isLast = step === TUTORIAL_STEPS.length - 1;
+
+  return (
+    <div className="tutorial-overlay" role="dialog" aria-modal>
+      <div className="tutorial-card">
+        {/* X dismiss, step dots, icon, title, body, Back/Next buttons */}
+        {isLast
+          ? <button onClick={onDismiss}>Get started</button>
+          : <button onClick={() => setStep(s => s + 1)}>Next</button>
+        }
+      </div>
+    </div>
+  );
+}
+
+// In the parent component:
+const [showTutorial, setShowTutorial] = useState(
+  () => !localStorage.getItem(TUTORIAL_KEY)
+);
+const dismissTutorial = () => {
+  localStorage.setItem(TUTORIAL_KEY, '1');
+  setShowTutorial(false);
+};
+
+// In JSX (first child inside container):
+{showTutorial && <OnboardingTutorial onDismiss={dismissTutorial} />}
+```
+
+**CSS classes required** (from `index.css` / globals):
+
+```css
+.tutorial-overlay {
+  position: fixed; inset: 0;
+  background: rgba(8,12,20,0.88);
+  backdrop-filter: blur(8px);
+  z-index: 1000;
+  display: flex; align-items: center; justify-content: center;
+}
+.tutorial-card {
+  background: var(--studio-panel);
+  border: 1px solid var(--studio-border-bright);
+  border-radius: 16px; padding: 2.5rem; max-width: 420px;
+  position: relative;
+}
+.tutorial-card::before { /* gradient top-border */ }
+.tutorial-step-dot     { /* inactive dot */ }
+.tutorial-step-dot.active { background: var(--accent); box-shadow: glow; }
+```
+
+**Rules:**
+- Version the key (`_v1`, `_v2`) when you want existing users to see it again after a major update.
+- Always include an X (skip) button — never force completion.
+- Max 4 steps. Each step = one clear concept. No marketing copy.
+- Announce the dialog with `role="dialog" aria-modal aria-label="..."`.
+- The `onDismiss` callback must set localStorage before closing (prevents flicker on remount).
+
+**Used in:** `dictation-app/App.tsx` (v1, 3 steps, May 2026)
+
+*Last updated: 31 May 2026 — Daniel Frempong Twum / TUC ICT*

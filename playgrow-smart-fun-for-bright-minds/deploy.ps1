@@ -15,10 +15,10 @@ $ErrorActionPreference = "Stop"
 # ============================================================================
 # STEP 1/6: Load Configuration
 # ============================================================================
-Write-Host "Step 1/6: Validating configuration..." -ForegroundColor Cyan
+Log "INFO" "Step 1/6: Validating configuration..." Cyan
 
 if (-not (Test-Path $ConfigFile)) {
-    Write-Host "❌ Configuration file not found: $ConfigFile" -ForegroundColor Red
+    Log "ERROR" "❌ Configuration file not found: $ConfigFile" Red
     exit 1
 }
 
@@ -32,18 +32,18 @@ $OutputDir = if ($config.outputDir) { $config.outputDir } else { "dist" }
 $RequiredEnvVars = if ($config.requiredEnvVars) { $config.requiredEnvVars } else { @() }
 $HealthCheckUrl = $config.healthCheckUrl
 
-Write-Host "  Project:        $ProjectName"
-Write-Host "  Remote host:    $RemoteHost"
-Write-Host "  Deploy path:    $DeployPath"
-Write-Host "  Build tool:     $BuildTool"
-Write-Host "  Output dir:     $OutputDir"
-Write-Host "  Health check:   $HealthCheckUrl"
+Log "INFO" "  Project:        $ProjectName"
+Log "INFO" "  Remote host:    $RemoteHost"
+Log "INFO" "  Deploy path:    $DeployPath"
+Log "INFO" "  Build tool:     $BuildTool"
+Log "INFO" "  Output dir:     $OutputDir"
+Log "INFO" "  Health check:   $HealthCheckUrl"
 Write-Host ""
 
 # ============================================================================
 # STEP 2/6: Pre-flight Checks
 # ============================================================================
-Write-Host "Step 2/6: Pre-flight checks..." -ForegroundColor Cyan
+Log "INFO" "Step 2/6: Pre-flight checks..." Cyan
 
 $preflight_errors = @()
 
@@ -82,66 +82,66 @@ if (-not $Build -and -not (Test-Path $OutputDir)) {
 }
 
 if ($preflight_errors.Count -gt 0) {
-    Write-Host "  ❌ Pre-flight checks failed:" -ForegroundColor Red
+    Log "ERROR" "  ❌ Pre-flight checks failed:" Red
     foreach ($err in $preflight_errors) {
-        Write-Host "     - $err" -ForegroundColor Red
+        Log "ERROR" "     - $err" Red
     }
     exit 1
 }
 
-Write-Host "  ✅ All checks passed"
+Log "INFO" "  ✅ All checks passed"
 Write-Host ""
 
 # ============================================================================
 # STEP 3/6: Build Phase
 # ============================================================================
 if ($Build) {
-    Write-Host "Step 3/6: Building project..." -ForegroundColor Cyan
-    Write-Host "  Running: $BuildTool build"
+    Log "INFO" "Step 3/6: Building project..." Cyan
+    Log "INFO" "  Running: $BuildTool build"
     & $BuildTool build
 
     if ($LASTEXITCODE -ne 0) {
-        Write-Host "  ❌ Build failed with exit code $LASTEXITCODE" -ForegroundColor Red
+        Log "ERROR" "  ❌ Build failed with exit code $LASTEXITCODE" Red
         exit 1
     }
-    Write-Host "  ✅ Build successful"
+    Log "INFO" "  ✅ Build successful"
 } else {
-    Write-Host "Step 3/6: Skipping build (not requested)" -ForegroundColor Cyan
+    Log "INFO" "Step 3/6: Skipping build (not requested)" Cyan
 }
 Write-Host ""
 
 # ============================================================================
 # STEP 4/6: Verify Build Output
 # ============================================================================
-Write-Host "Step 4/6: Verifying build output..." -ForegroundColor Cyan
+Log "INFO" "Step 4/6: Verifying build output..." Cyan
 
 if (-not (Test-Path $OutputDir)) {
-    Write-Host "  ❌ Output directory not found: $OutputDir" -ForegroundColor Red
+    Log "ERROR" "  ❌ Output directory not found: $OutputDir" Red
     exit 1
 }
 
 $outputFiles = @(Get-ChildItem -Path $OutputDir -File -Recurse)
 if ($outputFiles.Count -eq 0) {
-    Write-Host "  ❌ Output directory is empty: $OutputDir" -ForegroundColor Red
+    Log "ERROR" "  ❌ Output directory is empty: $OutputDir" Red
     exit 1
 }
 
 if (-not (Test-Path "$OutputDir/index.html")) {
-    Write-Host "  ❌ Critical file missing: index.html" -ForegroundColor Red
+    Log "ERROR" "  ❌ Critical file missing: index.html" Red
     exit 1
 }
 
 $totalSize = ($outputFiles | Measure-Object -Property Length -Sum).Sum / 1MB
-Write-Host "  ✅ Output verified: $($outputFiles.Count) files, $([Math]::Round($totalSize, 2)) MB"
+Log "INFO" "  ✅ Output verified: $($outputFiles.Count) files, $([Math]::Round($totalSize, 2)) MB"
 Write-Host ""
 
 # ============================================================================
 # STEP 5/6: Deploy to Remote
 # ============================================================================
-Write-Host "Step 5/6: Deploying to remote server (SCP-only)..." -ForegroundColor Cyan
+Log "INFO" "Step 5/6: Deploying to remote server (SCP-only)..." Cyan
 
 if ($DryRun) {
-    Write-Host "  🔍 DRY RUN: Would deploy to ${RemoteHost}:${DeployPath}" -ForegroundColor Yellow
+    Log "INFO" "  🔍 DRY RUN: Would deploy to ${RemoteHost}:${DeployPath}" Yellow
 } else {
     $remoteHostParts = $RemoteHost -split "@"
     if ($remoteHostParts.Count -eq 2) {
@@ -154,13 +154,13 @@ if ($DryRun) {
         $sshTarget = "root@$RemoteHost"
     }
 
-    Write-Host "  Creating directory structure..." -ForegroundColor Yellow
+    Log "INFO" "  Creating directory structure..." Yellow
     ssh -o StrictHostKeyChecking=no $sshTarget "mkdir -p '$DeployPath'" 2>&1 | Where-Object { $_ -notmatch "already exists" } | ForEach-Object { Write-Host "    $_" }
 
-    Write-Host "  Clearing old deployment..." -ForegroundColor Yellow
+    Log "INFO" "  Clearing old deployment..." Yellow
     ssh -o StrictHostKeyChecking=no $sshTarget "rm -rf '$DeployPath'/* '$DeployPath'/.htaccess 2>/dev/null || true" | Out-Null
 
-    Write-Host "  Deploying files via SCP..." -ForegroundColor Yellow
+    Log "INFO" "  Deploying files via SCP..." Yellow
     $OutputDirPath = (Resolve-Path $OutputDir).Path
     $items = Get-ChildItem -Path $OutputDirPath -Force
     $filePaths = @()
@@ -169,18 +169,18 @@ if ($DryRun) {
     }
 
     if ($filePaths.Count -eq 0) {
-        Write-Host "  ❌ No files to deploy in $OutputDirPath" -ForegroundColor Red
+        Log "ERROR" "  ❌ No files to deploy in $OutputDirPath" Red
         exit 1
     }
 
     & scp -r -o StrictHostKeyChecking=no -o ConnectTimeout=30 $filePaths "${sshTarget}:${DeployPath}/"
 
     if ($LASTEXITCODE -ne 0) {
-        Write-Host "  ❌ File transfer failed" -ForegroundColor Red
+        Log "ERROR" "  ❌ File transfer failed" Red
         exit 1
     }
 
-    Write-Host "  Creating .htaccess..." -ForegroundColor Yellow
+    Log "INFO" "  Creating .htaccess..." Yellow
     $SubdomainPath = $DeployPath.Split("/")[-1]
 
     $htaccessContent = "<IfModule mod_rewrite.c>`n" +
@@ -212,10 +212,10 @@ if ($DryRun) {
 
     $htaccessContent | ssh -o StrictHostKeyChecking=no $sshTarget "cat > '$DeployPath/.htaccess'"
 
-    Write-Host "  Setting file permissions..." -ForegroundColor Yellow
+    Log "INFO" "  Setting file permissions..." Yellow
     ssh -o StrictHostKeyChecking=no $sshTarget "chmod -R 755 '$DeployPath' && chmod 644 '$DeployPath/.htaccess' 2>/dev/null || true" | Out-Null
 
-    Write-Host "  ✅ Deployment complete"
+    Log "INFO" "  ✅ Deployment complete"
 }
 Write-Host ""
 
@@ -223,50 +223,50 @@ Write-Host ""
 # STEP 6/6: Health Checks
 # ============================================================================
 if (-not $SkipHealthCheck -and -not $DryRun) {
-    Write-Host "Step 6/6: Health checks..." -ForegroundColor Cyan
+    Log "INFO" "Step 6/6: Health checks..." Cyan
 
     $healthCheckPassed = $true
     $remoteHostParts = $RemoteHost -split "@"
     $sshTarget = if ($remoteHostParts.Count -eq 2) { $RemoteHost } else { "root@$RemoteHost" }
 
-    Write-Host "  Checking remote index.html..." -ForegroundColor Yellow
+    Log "INFO" "  Checking remote index.html..." Yellow
     ssh -o StrictHostKeyChecking=no $sshTarget "test -f '$DeployPath/index.html'" 2>&1 | Out-Null
     if ($LASTEXITCODE -eq 0) {
-        Write-Host "    ✅ index.html present"
+        Log "INFO" "    ✅ index.html present"
     } else {
-        Write-Host "    ❌ index.html missing on remote" -ForegroundColor Red
+        Log "ERROR" "    ❌ index.html missing on remote" Red
         $healthCheckPassed = $false
     }
 
-    Write-Host "  Testing HTTP routing..." -ForegroundColor Yellow
+    Log "INFO" "  Testing HTTP routing..." Yellow
     Start-Sleep -Seconds 3
     try {
         $httpTest = Invoke-WebRequest -Uri $HealthCheckUrl -UseBasicParsing -TimeoutSec 10 -ErrorAction SilentlyContinue
         if ($httpTest.StatusCode -eq 200) {
-            Write-Host "    ✅ HTTP 200 OK from $HealthCheckUrl"
+            Log "INFO" "    ✅ HTTP 200 OK from $HealthCheckUrl"
         } else {
-            Write-Host "    ⚠️  Unexpected status code: $($httpTest.StatusCode)" -ForegroundColor Yellow
+            Log "INFO" "    ⚠️  Unexpected status code: $($httpTest.StatusCode)" Yellow
         }
     } catch {
-        Write-Host "    ⚠️  Could not reach health check URL: $HealthCheckUrl" -ForegroundColor Yellow
+        Log "INFO" "    ⚠️  Could not reach health check URL: $HealthCheckUrl" Yellow
     }
 
     if ($healthCheckPassed) {
-        Write-Host "  ✅ All health checks passed"
+        Log "INFO" "  ✅ All health checks passed"
     } else {
-        Write-Host "  ⚠️  Some health checks failed — review manually" -ForegroundColor Yellow
+        Log "INFO" "  ⚠️  Some health checks failed — review manually" Yellow
     }
 } else {
-    Write-Host "Step 6/6: Skipping health checks" -ForegroundColor Yellow
+    Log "INFO" "Step 6/6: Skipping health checks" Yellow
 }
 Write-Host ""
 
-Write-Host "╔════════════════════════════════════════════════════════════╗" -ForegroundColor Green
-Write-Host "║  ✅ DEPLOYMENT COMPLETE                                    ║" -ForegroundColor Green
-Write-Host "╚════════════════════════════════════════════════════════════╝" -ForegroundColor Green
+Log "SUCCESS" "╔════════════════════════════════════════════════════════════╗" Green
+Log "SUCCESS" "║  ✅ DEPLOYMENT COMPLETE                                    ║" Green
+Log "SUCCESS" "╚════════════════════════════════════════════════════════════╝" Green
 Write-Host ""
-Write-Host "Project:        $ProjectName"
-Write-Host "Remote:         $RemoteHost"
-Write-Host "Path:           $DeployPath"
-Write-Host "Health check:   $HealthCheckUrl"
+Log "INFO" "Project:        $ProjectName"
+Log "INFO" "Remote:         $RemoteHost"
+Log "INFO" "Path:           $DeployPath"
+Log "INFO" "Health check:   $HealthCheckUrl"
 Write-Host ""
