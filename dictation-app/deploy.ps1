@@ -27,24 +27,37 @@ Log "INFO" ""
 $commit = git rev-parse --short HEAD
 Log "INFO" "Commit : $commit"
 
-Log "INFO" "Step 1: Server-side build (git clone + npm build)..." Yellow
+Log "INFO" "Step 1: Server-side build (git clone + pnpm build)..." Yellow
 
 $repoUrl = "https://github.com/DanielFTwum-creator/aucdt-utilities.git"
 $buildDir = "/tmp/dictation_deploy_$commit"
 
 $serverScript = @"
 set -e
+
+# ── Ensure pnpm is available ──────────────────────────────────
+if ! command -v pnpm &>/dev/null; then
+  echo '[setup] Installing pnpm via corepack...'
+  corepack enable 2>/dev/null || npm install -g pnpm --silent
+  export PATH="\$HOME/.local/share/pnpm:\$PATH"
+fi
+echo "[setup] Using pnpm \$(pnpm --version)"
+
 echo '[1/5] Cleaning previous temp build...'
 rm -rf $buildDir
+
 echo '[2/5] Cloning dictation-app from GitHub (sparse, depth 1)...'
 git clone --depth 1 --filter=blob:none --sparse '$repoUrl' $buildDir
 cd $buildDir
 git sparse-checkout set dictation-app
 cd dictation-app
-echo '[3/5] Installing dependencies...'
-npm install -g pnpm --silent 2>/dev/null || true && pnpm install --frozen-lockfile --silent 2>/dev/null || npm install --legacy-peer-deps --silent
+
+echo '[3/5] Installing dependencies (pnpm)...'
+pnpm install --no-frozen-lockfile --silent
+
 echo '[4/5] Building...'
-pnpm exec vite build 2>/dev/null || npx vite build
+pnpm exec vite build
+
 echo '[5/5] Deploying dist/ to web root...'
 mkdir -p $RemotePath
 cp -r dist/. $RemotePath
