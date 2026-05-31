@@ -5,6 +5,7 @@ import { useAuth } from './contexts/AuthContext';
 import { AdminProvider, useAdmin } from './contexts/AdminContext';
 import { TestContainer } from './components/test/TestContainer';
 import { HelpModal } from './components/HelpModal';
+import { ClinicalAnalysis } from './components/ClinicalAnalysis';
 import {
   getAllReadings, upsertReading, deleteReading, batchUpsertReadings,
   getProfile, saveProfile, ReadingRow, getAdminConfig
@@ -515,6 +516,12 @@ function AppContent() {
   const af = toCurrentUnit(getAverage(fastVals), unit);
   const ap = toCurrentUnit(getAverage(postVals), unit);
 
+  // Base (mmol/L) metrics for the clinical-analysis bands
+  const avgFastingBase = getAverage(fastVals) != null ? parseFloat(getAverage(fastVals)!) : null;
+  const avgPostBase = getAverage(postVals) != null ? parseFloat(getAverage(postVals)!) : null;
+  const overallBase = getAverage(allVals.map(String)) != null ? parseFloat(getAverage(allVals.map(String))!) : null;
+  const highestBase = allVals.length ? Math.max(...allVals) : null;
+
   const hiCls = hi && parseFloat(hi) >= parseFloat(convertTarget(8.9, unit)) ? (isHighContrast ? 'text-[#D00000]' : 'text-red-600') : (isHighContrast ? 'text-[#006400]' : 'text-green-600');
   const afCls = af && parseFloat(af) >= parseFloat(convertTarget(7.0, unit)) ? (isHighContrast ? 'text-[#D00000]' : 'text-red-600') : (isHighContrast ? 'text-[#006400]' : 'text-green-600');
   const apCls = ap && parseFloat(ap) >= parseFloat(convertTarget(8.9, unit)) ? (isHighContrast ? 'text-[#D00000]' : 'text-red-600') : (isHighContrast ? 'text-[#006400]' : 'text-green-600');
@@ -920,6 +927,17 @@ function AppContent() {
             </label>
           </div>
         </div>
+
+        {/* Clinical Analysis summary — band-coloured metric cards + range legend */}
+        <ClinicalAnalysis
+          avgFasting={avgFastingBase}
+          avgPostMeal={avgPostBase}
+          highest={highestBase}
+          overall={overallBase}
+          readingCount={allReadingsVals.length}
+          unit={unit}
+          isHighContrast={isHighContrast}
+        />
 
         {/* Tab Navigation */}
         <div className="flex items-center gap-6 border-b border-slate-200 print:hidden mt-4">

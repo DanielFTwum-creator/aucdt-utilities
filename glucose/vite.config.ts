@@ -30,10 +30,12 @@ export default defineConfig(({mode}) => {
       chunkSizeWarningLimit: 1000,
       rollupOptions: {
         output: {
-          manualChunks: {
-            recharts: ['recharts'],
-            genai: ['@google/genai'],
-            idb: ['idb'],
+          manualChunks(id) {
+            if (id.includes('node_modules')) {
+              if (id.includes('recharts')) return 'recharts';
+              if (id.includes('@google/genai')) return 'genai';
+              if (id.includes('idb')) return 'idb';
+            }
           },
         },
       },
