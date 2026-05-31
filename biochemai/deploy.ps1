@@ -50,26 +50,42 @@ $buildDir = "/tmp/biochemai_deploy_$commit"
 
 $serverScript = @"
 set -e
-echo '[1/6] Cleaning previous temp build...'
+
+# ── Ensure pnpm is available ──────────────────────────────────
+if ! command -v pnpm &>/dev/null; then
+  echo '[setup] Installing pnpm via corepack...'
+  corepack enable 2>/dev/null || npm install -g pnpm --silent
+  export PATH="\$HOME/.local/share/pnpm:\$PATH"
+fi
+echo "[setup] Using pnpm \$(pnpm --version)"
+
+echo '[1/7] Cleaning previous temp build...'
 rm -rf $buildDir
-echo '[2/6] Cloning biochemai from GitHub (sparse, depth 1)...'
+
+echo '[2/7] Cloning biochemai from GitHub (sparse, depth 1)...'
 git clone --depth 1 --filter=blob:none --sparse '$repoUrl' $buildDir
 cd $buildDir
 git sparse-checkout set biochemai
 cd biochemai
-echo '[3/6] Injecting .env.local for Vite build...'
+
+echo '[3/7] Injecting .env.local for Vite build...'
 cp /tmp/biochemai_env_$commit .env.local 2>/dev/null || echo 'Warning: .env.local not found — VITE_ vars will be empty'
-echo '[4/6] Installing dependencies...'
-npm install -g pnpm --silent 2>/dev/null || true && pnpm install --frozen-lockfile --silent 2>/dev/null || npm install --legacy-peer-deps --silent
-echo '[5/6] Building (with VITE_ env vars)...'
-pnpm exec vite build 2>/dev/null || npx vite build
+
+echo '[4/7] Installing dependencies (pnpm)...'
+pnpm install --no-frozen-lockfile --silent
+
+echo '[5/7] Building...'
+pnpm exec vite build
+
 echo '[6/7] Deploying dist/ to web root...'
 mkdir -p $RemotePath
 cp -r dist/. $RemotePath
 cp server.ts package.json $RemotePath
-echo '[7/7] Installing backend deps on server...'
+
+echo '[7/7] Installing backend deps...'
 cd $RemotePath
-pnpm install --prod --silent 2>/dev/null || npm install --omit=dev --silent
+pnpm install --prod --silent
+
 echo 'Build and deploy complete.'
 "@
 
