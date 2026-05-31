@@ -8,8 +8,6 @@ import React from 'react';
  */
 
 interface ClinicalAnalysisProps {
-  avgFasting: number | null;   // base mmol/L
-  avgPostMeal: number | null;  // base mmol/L
   highest: number | null;      // base mmol/L
   overall: number | null;      // base mmol/L
   readingCount: number;
@@ -21,8 +19,9 @@ const RED = '#dc2626';
 const GREEN = '#059669';
 const AMBER = '#d97706';
 
-// Fasting / general clinical bands (mmol/L)
-function band(v: number | null) {
+// Fasting / general clinical bands (mmol/L) — shared so the top stat cards and
+// this analysis section colour identically (DRY).
+export function band(v: number | null) {
   if (v == null) return null;
   if (v < 3.9) return { label: 'Low', color: RED };
   if (v <= 5.5) return { label: 'Normal', color: GREEN };
@@ -31,7 +30,7 @@ function band(v: number | null) {
 }
 
 // Post-prandial (2 hrs) bands (mmol/L)
-function bandPost(v: number | null) {
+export function bandPost(v: number | null) {
   if (v == null) return null;
   if (v < 7.8) return { label: 'On target', color: GREEN };
   if (v <= 11.0) return { label: 'Elevated', color: AMBER };
@@ -39,7 +38,7 @@ function bandPost(v: number | null) {
 }
 
 export const ClinicalAnalysis: React.FC<ClinicalAnalysisProps> = ({
-  avgFasting, avgPostMeal, highest, overall, readingCount, unit, isHighContrast,
+  highest, overall, readingCount, unit, isHighContrast,
 }) => {
   const toMgdl = unit === 'mg/dL';
   const disp = (v: number | null) => v == null ? '—' : (toMgdl ? Math.round(v * 18.0182).toString() : v.toFixed(1));
@@ -48,8 +47,6 @@ export const ClinicalAnalysis: React.FC<ClinicalAnalysisProps> = ({
     lo == null ? `< ${f(hiV!)}` : hiV == null ? `≥ ${f(lo)}` : `${f(lo)}–${f(hiV)}`;
 
   const cards = [
-    { label: 'Average Fasting', v: avgFasting, b: band(avgFasting), note: 'Across the period' },
-    { label: 'Avg Post-Meal', v: avgPostMeal, b: bandPost(avgPostMeal), note: '2 hrs after meals' },
     { label: 'Highest Reading', v: highest, b: band(highest), note: 'Peak in the period' },
     { label: 'Overall Average', v: overall, b: band(overall), note: `${readingCount} readings recorded` },
   ];
@@ -70,7 +67,7 @@ export const ClinicalAnalysis: React.FC<ClinicalAnalysisProps> = ({
       <h2 className={`text-[11px] font-bold uppercase tracking-widest ${subCol}`}>Clinical Analysis ({unit})</h2>
 
       {/* Metric cards — left accent driven by clinical band */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 print:flex print:flex-wrap">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 print:flex print:flex-wrap">
         {cards.map((c) => (
           <div
             key={c.label}

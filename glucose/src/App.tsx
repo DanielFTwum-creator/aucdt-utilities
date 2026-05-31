@@ -5,7 +5,7 @@ import { useAuth } from './contexts/AuthContext';
 import { AdminProvider, useAdmin } from './contexts/AdminContext';
 import { TestContainer } from './components/test/TestContainer';
 import { HelpModal } from './components/HelpModal';
-import { ClinicalAnalysis } from './components/ClinicalAnalysis';
+import { ClinicalAnalysis, band, bandPost } from './components/ClinicalAnalysis';
 import {
   getAllReadings, upsertReading, deleteReading, batchUpsertReadings,
   getProfile, saveProfile, ReadingRow, getAdminConfig
@@ -521,6 +521,8 @@ function AppContent() {
   const avgPostBase = getAverage(postVals) != null ? parseFloat(getAverage(postVals)!) : null;
   const overallBase = getAverage(allVals.map(String)) != null ? parseFloat(getAverage(allVals.map(String))!) : null;
   const highestBase = allVals.length ? Math.max(...allVals) : null;
+  const fastingBand = band(avgFastingBase);
+  const postBand = bandPost(avgPostBase);
 
   const hiCls = hi && parseFloat(hi) >= parseFloat(convertTarget(8.9, unit)) ? (isHighContrast ? 'text-[#D00000]' : 'text-red-600') : (isHighContrast ? 'text-[#006400]' : 'text-green-600');
   const afCls = af && parseFloat(af) >= parseFloat(convertTarget(7.0, unit)) ? (isHighContrast ? 'text-[#D00000]' : 'text-red-600') : (isHighContrast ? 'text-[#006400]' : 'text-green-600');
@@ -876,9 +878,9 @@ function AppContent() {
           <div className={`${isHighContrast ? 'bg-black border-gray-600' : 'bg-white border-slate-200'} border rounded-2xl p-6 shadow-sm flex flex-col justify-center print:border-slate-300 print:shadow-none`}>
             <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest mb-3">Average Fasting ({unit})</p>
             <div className="flex items-end gap-3 mb-1">
-              <div className={`text-4xl font-mono font-bold tabular-nums tracking-tighter ${afCls}`}>{af ? af : '—'}</div>
-              {af && parseFloat(af) >= parseFloat(convertTarget(7.0, unit)) && (
-                <span className="text-[10px] bg-red-100 text-red-700 px-2 py-1 rounded font-bold uppercase tracking-wider mb-1.5">High</span>
+              <div className="text-4xl font-mono font-bold tabular-nums tracking-tighter" style={{ color: fastingBand?.color || (isHighContrast ? '#ffffff' : '#0f172a') }}>{af ? af : '—'}</div>
+              {fastingBand && (
+                <span className="text-[10px] px-2 py-1 rounded font-bold uppercase tracking-wider mb-1.5" style={{ backgroundColor: fastingBand.color + '1A', color: fastingBand.color }}>{fastingBand.label}</span>
               )}
             </div>
             <p className="text-[12px] font-medium text-slate-500 mt-1">Target (&lt; {convertTarget(7.0, unit)})</p>
@@ -888,9 +890,9 @@ function AppContent() {
           <div className={`${isHighContrast ? 'bg-black border-gray-600' : 'bg-white border-slate-200'} border rounded-2xl p-6 shadow-sm flex flex-col justify-center print:border-slate-300 print:shadow-none relative overflow-hidden`}>
             <p className={`text-[10px] font-bold uppercase tracking-widest mb-3 z-10 ${isHighContrast ? 'text-slate-400' : 'text-slate-500'}`}>Avg Post-Meal ({unit})</p>
             <div className="flex items-end gap-3 mb-1 z-10">
-              <div className={`text-4xl font-mono font-bold tabular-nums tracking-tighter ${isHighContrast ? apCls : (ap && parseFloat(ap) >= parseFloat(convertTarget(8.9, unit)) ? 'text-rose-600' : 'text-slate-900')}`}>{ap ? ap : ''}</div>
-              {ap && parseFloat(ap) >= parseFloat(convertTarget(8.9, unit)) && (
-                <span className="text-[10px] bg-red-100 text-red-700 px-2 py-1 rounded font-bold uppercase tracking-wider mb-1.5">Action</span>
+              <div className="text-4xl font-mono font-bold tabular-nums tracking-tighter" style={{ color: postBand?.color || (isHighContrast ? '#ffffff' : '#0f172a') }}>{ap ? ap : '—'}</div>
+              {postBand && (
+                <span className="text-[10px] px-2 py-1 rounded font-bold uppercase tracking-wider mb-1.5" style={{ backgroundColor: postBand.color + '1A', color: postBand.color }}>{postBand.label}</span>
               )}
             </div>
             <p className={`text-[12px] font-medium mt-1 z-10 ${isHighContrast ? 'text-slate-500' : 'text-slate-500'}`}>Target (&lt; {convertTarget(8.9, unit)})</p>
@@ -930,8 +932,6 @@ function AppContent() {
 
         {/* Clinical Analysis summary — band-coloured metric cards + range legend */}
         <ClinicalAnalysis
-          avgFasting={avgFastingBase}
-          avgPostMeal={avgPostBase}
           highest={highestBase}
           overall={overallBase}
           readingCount={allReadingsVals.length}
