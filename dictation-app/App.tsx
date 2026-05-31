@@ -334,82 +334,84 @@ export default function App() {
 
       {/* Main Content */}
       <main className="flex-1 bg-gradient-to-b from-slate-50 to-white dark:from-slate-900 dark:to-slate-900">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          {/* Title (R1 contrast, R5 definition) */}
-          <input
-            type="text"
-            className="text-4xl font-display font-bold w-full outline-none bg-transparent
-              text-slate-900 dark:text-white
-              placeholder:text-slate-400 dark:placeholder:text-slate-500
-              border-b-2 border-slate-200 dark:border-slate-700 focus:border-blue-500
-              rounded-none px-4 py-2 transition-colors"
-            placeholder="Untitled Note"
-            value={currentNote.title}
-            onChange={e => setCurrentNote({ ...currentNote, title: e.target.value })}
-            disabled={isRecording}
-            aria-label="Note title"
-          />
-          {/* Owner (R3 — Firstname Lastname of the logged-in user) */}
-          <p className="px-4 mt-2 mb-8 text-sm text-slate-500 dark:text-slate-400">
-            Owner: <span className="font-medium text-slate-700 dark:text-slate-200">{user?.username || 'You'}</span>
-          </p>
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          {/* Note surface — contains the document so it reads as a card, not loose text on a void */}
+          <div className="bg-white dark:bg-slate-800/40 rounded-2xl border border-slate-200 dark:border-slate-700/60 shadow-sm p-6 sm:p-8">
+            {/* Title */}
+            <input
+              type="text"
+              className="text-3xl sm:text-4xl font-display font-bold w-full outline-none bg-transparent
+                text-slate-900 dark:text-white
+                placeholder:text-slate-400 dark:placeholder:text-slate-500
+                border-b border-slate-200 dark:border-slate-700 focus:border-blue-500
+                rounded-none pb-2 transition-colors"
+              placeholder="Untitled Note"
+              value={currentNote.title}
+              onChange={e => setCurrentNote({ ...currentNote, title: e.target.value })}
+              disabled={isRecording}
+              aria-label="Note title"
+            />
+            {/* Owner (R3 — Firstname Lastname of the logged-in user) */}
+            <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">
+              Owner: <span className="font-medium text-slate-700 dark:text-slate-200">{user?.username || 'You'}</span>
+            </p>
 
-          {/* Tabs & Status */}
-          <div className="mb-8">
-            <div className="flex items-center justify-between mb-6">
-              <Tabs
-                tabs={[
-                  {
-                    id: 'polished',
-                    label: 'Polished Note',
-                    content: (
-                      <div className="prose dark:prose-invert max-w-none prose-headings:font-display prose-a:text-blue-500 dark:prose-a:text-blue-400">
-                        {currentNote.polishedNote ? (
-                          <div dangerouslySetInnerHTML={{ __html: currentNote.polishedNote }} />
-                        ) : (
-                          <p className="text-slate-500 dark:text-slate-400 italic">
-                            Start recording to see polished notes here.
-                          </p>
-                        )}
-                      </div>
-                    ),
-                  },
-                  {
-                    id: 'raw',
-                    label: 'Raw Transcript',
-                    content: (
-                      <div className="text-slate-700 dark:text-slate-300 font-mono text-sm whitespace-pre-wrap leading-relaxed">
-                        {currentNote.rawTranscription || (
-                          <p className="text-slate-500 dark:text-slate-400 italic">
-                            Raw transcript will appear here after recording.
-                          </p>
-                        )}
-                      </div>
-                    ),
-                  },
-                ]}
-                defaultTab="polished"
-                onChange={id => setActiveTab(id as 'polished' | 'raw')}
-              />
-
-              {status !== 'Ready to record' && status !== 'Complete' && !isRecording && (
-                <div className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400 animate-pulse">
-                  <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></div>
-                  {status}
+            {(!currentNote.rawTranscription && !isRecording && status === 'Ready to record') ? (
+              /* Single empty state (no redundant tab placeholder) */
+              <div className="flex flex-col items-center justify-center text-center py-14">
+                <div className="w-16 h-16 rounded-2xl bg-blue-50 dark:bg-blue-500/10 flex items-center justify-center mb-4">
+                  <Mic className="w-8 h-8 text-blue-500 dark:text-blue-400" />
                 </div>
-              )}
-            </div>
-
-            {/* Empty State */}
-            {!currentNote.rawTranscription && !isRecording && status === 'Ready to record' && (
-              <div className="flex flex-col items-center justify-center py-16 text-center min-h-[55vh]">
-                <Mic className="w-16 h-16 text-slate-300 dark:text-slate-500 mb-4" />
-                <h3 className="text-2xl font-display font-semibold text-slate-900 dark:text-white mb-2">
+                <h3 className="text-xl font-display font-semibold text-slate-900 dark:text-white mb-2">
                   Capture your thoughts
                 </h3>
-                <p className="text-slate-600 dark:text-slate-400 max-w-md">
-                  Press the microphone button to start recording. AI will instantly transcribe and polish your notes.
+                <p className="text-slate-600 dark:text-slate-400 max-w-sm text-sm leading-relaxed">
+                  Press <span className="font-medium text-slate-800 dark:text-slate-200">Record</span> to start —
+                  AI will instantly transcribe and polish your notes.
                 </p>
+              </div>
+            ) : (
+              <div className="mt-6">
+                {status !== 'Ready to record' && status !== 'Complete' && !isRecording && (
+                  <div className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400 animate-pulse mb-4">
+                    <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></div>
+                    {status}
+                  </div>
+                )}
+                <Tabs
+                  tabs={[
+                    {
+                      id: 'polished',
+                      label: 'Polished Note',
+                      content: (
+                        <div className="prose dark:prose-invert max-w-none prose-headings:font-display prose-a:text-blue-500 dark:prose-a:text-blue-400">
+                          {currentNote.polishedNote ? (
+                            <div dangerouslySetInnerHTML={{ __html: currentNote.polishedNote }} />
+                          ) : (
+                            <p className="text-slate-500 dark:text-slate-400 italic">
+                              Your polished note will appear here.
+                            </p>
+                          )}
+                        </div>
+                      ),
+                    },
+                    {
+                      id: 'raw',
+                      label: 'Raw Transcript',
+                      content: (
+                        <div className="text-slate-700 dark:text-slate-300 font-mono text-sm whitespace-pre-wrap leading-relaxed">
+                          {currentNote.rawTranscription || (
+                            <p className="text-slate-500 dark:text-slate-400 italic">
+                              The raw transcript will appear here after recording.
+                            </p>
+                          )}
+                        </div>
+                      ),
+                    },
+                  ]}
+                  defaultTab="polished"
+                  onChange={id => setActiveTab(id as 'polished' | 'raw')}
+                />
               </div>
             )}
           </div>
