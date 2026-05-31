@@ -68,6 +68,17 @@ export const FormLoginView: React.FC<FormLoginViewProps> = ({
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [showForgot, setShowForgot] = useState(false);
   const [isRedirecting, setIsRedirecting] = useState(false);
+
+  // Resolve props — Studio Control Room defaults (cyan on near-black)
+  const primaryColorResolved = primaryColor || 'text-[#00D4FF]';
+  const primaryColorHexResolved = primaryColorHex || '#00D4FF';
+  const borderColorClassResolved = borderColorClass || 'border border-[rgba(0,212,255,0.18)]';
+  const inputBorderClassResolved = inputBorderClass || 'bg-[rgba(13,21,40,0.6)] border border-[rgba(0,212,255,0.15)]';
+  const inputFocusRingClassResolved = inputFocusRingClass || 'focus:ring-4 focus:ring-[rgba(0,212,255,0.2)]';
+  const inputFocusBorderClassResolved = inputFocusBorderClass || 'focus:border-[#00D4FF]';
+  const buttonHoverClassResolved = buttonHoverClass || 'hover:shadow-[0_0_24px_rgba(0,212,255,0.35)]';
+  const cardBgClassResolved = cardBgClass || 'bg-[rgba(13,21,40,0.82)] backdrop-blur-[20px]';
+
   // P2-2: respect reduced-motion — pause/hide the video; the still fallback remains.
   const [reduceMotion, setReduceMotion] = useState(false);
   React.useEffect(() => {
@@ -116,58 +127,65 @@ export const FormLoginView: React.FC<FormLoginViewProps> = ({
 
   return (
     <div
-      className="min-h-screen w-full flex flex-col items-center justify-center p-6 relative overflow-hidden transition-opacity duration-500 bg-cover bg-center"
-      style={{ opacity: isRedirecting ? 0 : 1, backgroundImage: posterImage ? `url(${posterImage})` : undefined }}
+      className="min-h-screen w-full flex flex-col items-center justify-center p-6 relative overflow-hidden transition-opacity duration-500"
+      style={{
+        opacity: isRedirecting ? 0 : 1,
+        background: 'var(--studio-black, #080C14)',
+        backgroundImage: [
+          'radial-gradient(ellipse 60% 40% at 10% 60%, rgba(0,212,255,0.04), transparent)',
+          'radial-gradient(ellipse 50% 35% at 90% 20%, rgba(245,158,11,0.03), transparent)',
+        ].join(', '),
+      }}
     >
-      {/* P0-3: still fallback (backgroundImage above) renders instantly; the video
-          overlays it once it can play. P2-2: skip video entirely on reduced-motion. */}
-      {videoBackground && !reduceMotion && (
-        <video
-          autoPlay
-          muted
-          loop
-          playsInline
-          preload="auto"
-          poster={posterImage}
-          className="absolute inset-0 w-full h-full object-cover"
-          style={{ zIndex: 0 }}
-        >
-          {videoWebm && <source src={videoWebm} type="video/webm" />}
-          <source src={videoBackground} type="video/mp4" />
-        </video>
-      )}
-
-      {/* Scrim between video and card */}
+      {/* Studio grid overlay */}
       <div
-        className="absolute inset-0"
-        style={{ zIndex: 1, background: 'linear-gradient(135deg, rgba(0,0,0,0.45) 0%, rgba(0,0,0,0.35) 100%)' }}
-      ></div>
+        className="fixed inset-0 pointer-events-none"
+        style={{
+          backgroundImage: 'linear-gradient(rgba(0,212,255,0.015) 1px, transparent 1px), linear-gradient(90deg, rgba(0,212,255,0.015) 1px, transparent 1px)',
+          backgroundSize: '48px 48px',
+          zIndex: 0,
+        }}
+      />
 
       {watermarkSvg && <div className="fixed inset-0 pointer-events-none" style={{ zIndex: 2 }}>{watermarkSvg}</div>}
 
-      <div className="w-full max-w-md relative z-10 flex flex-col items-center">
+      <div className="w-full max-w-2xl relative z-10 flex flex-col items-center">
         {/* Login Card — owns all brand identity (P1-2) so contrast is guaranteed */}
         <div
-          className="w-full rounded-[16px] p-10 shadow-[0_8px_32px_rgba(0,0,0,0.3)] border animate-fade-in-up"
+          className={`w-full rounded-[16px] p-10 sm:p-12 shadow-[0_8px_32px_rgba(0,0,0,0.3)] border animate-fade-in-up flex flex-col items-center ${cardBgClassResolved} ${borderColorClassResolved}`}
           style={{
-            background: 'rgba(15,20,30,0.55)',
-            backdropFilter: 'blur(18px) saturate(1.3)',
             WebkitBackdropFilter: 'blur(18px) saturate(1.3)',
-            borderColor: 'rgba(255,255,255,0.18)',
             animationDelay: '0.2s'
           }}
         >
-          {/* Brand block — moved inside the card (P1-2), separated for clearer hierarchy */}
-          <div className="flex flex-col items-center text-center pb-6 mb-7 border-b border-white/10">
-            <img src="https://techbridge.edu.gh/static/TUC_LOGO_1.png" alt="TUC Logo" className="w-14 h-auto mb-4" />
-            <h1 className="font-dmsans text-[20px] font-semibold text-white tracking-wide">{appName}</h1>
-            <p className="font-dmsans text-[12px] text-white/55 mt-1">Powered by Techbridge AI</p>
+          {/* Brand block */}
+          <div
+            className="flex flex-col items-center text-center pb-6 mb-8 w-full"
+            style={{ borderBottom: '1px solid rgba(0,212,255,0.1)' }}
+          >
+            {/* Signal indicator + wordmark */}
+            <div className="flex items-center gap-2 mb-1">
+              <span className="signal-dot" />
+              <h1
+                className="font-mono text-[13px] font-bold uppercase tracking-[0.12em]"
+                style={{ color: '#00D4FF', textShadow: '0 0 12px rgba(0,212,255,0.3)' }}
+              >
+                {appName}
+              </h1>
+              <span
+                className="text-[9px] font-mono font-bold tracking-widest uppercase px-1.5 py-0.5 rounded"
+                style={{ background: 'rgba(0,212,255,0.08)', border: '1px solid rgba(0,212,255,0.15)', color: '#5D7EA8' }}
+              >
+                AI-02
+              </span>
+            </div>
+            <p className="font-mono text-[10px]" style={{ color: '#3D5070' }}>{appSubtitle}</p>
           </div>
 
-          <h2 className="font-playfair text-[26px] font-bold text-center text-white mb-1.5">
+          <h2 className="font-playfair text-[26px] font-bold text-center text-white mb-2 w-full">
             {mode === 'login' ? 'Welcome Back' : 'Create Account'}
           </h2>
-          <p className="text-center text-white/70 font-dmsans text-[14px] mb-7">
+          <p className="text-center text-white/70 font-dmsans text-[14px] mb-8 w-full">
             {mode === 'login' ? 'Sign in to continue' : 'Create an account to get started'}
           </p>
 
@@ -179,7 +197,7 @@ export const FormLoginView: React.FC<FormLoginViewProps> = ({
               setTimeout(() => onGoogleLogin(), 300);
             }}
             disabled={isSubmitting || isLoading || isRedirecting}
-            className="w-full bg-white border border-[#dadce0] text-[#3c4043] font-dmsans text-[14px] px-4 py-2.5 rounded-[4px] font-medium hover:bg-[#f8f9fa] hover:shadow-sm transition duration-200 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed mb-6"
+            className="w-full max-w-[50%] mx-auto bg-white border border-[#dadce0] text-[#3c4043] font-dmsans text-[14px] px-4 py-2.5 rounded-[4px] font-medium hover:bg-[#f8f9fa] hover:shadow-sm transition duration-200 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed mb-8"
           >
             {googleIcon || (
               <svg className="w-5 h-5" viewBox="0 0 24 24">
@@ -193,16 +211,16 @@ export const FormLoginView: React.FC<FormLoginViewProps> = ({
           </button>
 
           {/* OR Divider */}
-          <div className="relative flex items-center gap-3 mb-6">
+          <div className="relative flex items-center gap-3 mb-8 w-full max-w-[50%]">
             <div className="flex-1 h-px bg-white/20"></div>
-            <span className="text-[12px] text-white/50 font-dmsans uppercase tracking-wider">Or</span>
+            <span className="text-[12px] text-white/55 font-dmsans uppercase tracking-wider">Or</span>
             <div className="flex-1 h-px bg-white/20"></div>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-4" autoComplete="off">
+          <form onSubmit={handleSubmit} className="space-y-6 flex flex-col items-center w-full" autoComplete="off">
             {mode === 'login' || !supportRegister ? (
-              <div>
-                <label htmlFor="identifier" className="block font-dmsans text-[12px] font-medium text-white/75 mb-2 tracking-[0.03em]">
+              <div className="w-full max-w-[50%]">
+                <label htmlFor="identifier" className="block font-dmsans text-[12px] font-medium text-white/75 mb-2.5 tracking-[0.03em]">
                   {supportRegister ? 'Username or Email' : 'Username'}
                 </label>
                 <div className="relative">
@@ -215,7 +233,9 @@ export const FormLoginView: React.FC<FormLoginViewProps> = ({
                     onChange={e => setIdentifier(e.target.value)}
                     placeholder={supportRegister ? 'Enter username or email' : 'Enter your username'}
                     disabled={isSubmitting || isLoading}
-                    className="w-full bg-white/10 border border-white/20 text-white placeholder:text-white/45 rounded-[10px] h-[48px] pl-12 pr-4 text-sm outline-none focus:border-[#C9A84C] focus:ring-4 focus:ring-[#C9A84C]/25 transition duration-200 disabled:opacity-50"
+                    aria-describedby={error ? "error-message" : undefined}
+                    className={`w-full text-white placeholder:text-white/45 rounded-[10px] h-[48px] pl-12 pr-4 text-sm outline-none ${inputBorderClassResolved} ${inputFocusRingClassResolved} ${inputFocusBorderClassResolved} transition duration-200 disabled:opacity-50`}
+                    style={{ paddingLeft: '48px' }}
                     autoComplete="off"
                     required
                   />
@@ -223,8 +243,8 @@ export const FormLoginView: React.FC<FormLoginViewProps> = ({
               </div>
             ) : supportRegister ? (
               <>
-                <div>
-                  <label htmlFor="username" className="block font-dmsans text-[12px] font-medium text-white/75 mb-2 tracking-[0.03em]">
+                <div className="w-full max-w-[50%]">
+                  <label htmlFor="username" className="block font-dmsans text-[12px] font-medium text-white/75 mb-2.5 tracking-[0.03em]">
                     Username
                   </label>
                   <div className="relative">
@@ -236,13 +256,15 @@ export const FormLoginView: React.FC<FormLoginViewProps> = ({
                       onChange={e => setUsername(e.target.value)}
                       placeholder="Choose a username"
                       disabled={isSubmitting || isLoading}
-                      className="w-full bg-white/10 border border-white/20 text-white placeholder:text-white/45 rounded-[10px] h-[48px] pl-12 pr-4 text-sm outline-none focus:border-[#C9A84C] focus:ring-4 focus:ring-[#C9A84C]/25 transition duration-200 disabled:opacity-50"
+                      aria-describedby={error ? "error-message" : undefined}
+                      className={`w-full text-white placeholder:text-white/45 rounded-[10px] h-[48px] pl-12 pr-4 text-sm outline-none ${inputBorderClassResolved} ${inputFocusRingClassResolved} ${inputFocusBorderClassResolved} transition duration-200 disabled:opacity-50`}
+                      style={{ paddingLeft: '48px' }}
                       required
                     />
                   </div>
                 </div>
-                <div>
-                  <label htmlFor="email" className="block font-dmsans text-[12px] font-medium text-white/75 mb-2 tracking-[0.03em]">
+                <div className="w-full max-w-[50%]">
+                  <label htmlFor="email" className="block font-dmsans text-[12px] font-medium text-white/75 mb-2.5 tracking-[0.03em]">
                     Email
                   </label>
                   <div className="relative">
@@ -254,7 +276,9 @@ export const FormLoginView: React.FC<FormLoginViewProps> = ({
                       onChange={e => setEmail(e.target.value)}
                       placeholder="Enter your email"
                       disabled={isSubmitting || isLoading}
-                      className="w-full bg-white/10 border border-white/20 text-white placeholder:text-white/45 rounded-[10px] h-[48px] pl-12 pr-4 text-sm outline-none focus:border-[#C9A84C] focus:ring-4 focus:ring-[#C9A84C]/25 transition duration-200 disabled:opacity-50"
+                      aria-describedby={error ? "error-message" : undefined}
+                      className={`w-full text-white placeholder:text-white/45 rounded-[10px] h-[48px] pl-12 pr-4 text-sm outline-none ${inputBorderClassResolved} ${inputFocusRingClassResolved} ${inputFocusBorderClassResolved} transition duration-200 disabled:opacity-50`}
+                      style={{ paddingLeft: '48px' }}
                       required
                     />
                   </div>
@@ -262,8 +286,8 @@ export const FormLoginView: React.FC<FormLoginViewProps> = ({
               </>
             ) : null}
 
-            <div>
-              <label htmlFor="password" className="block font-dmsans text-[12px] font-medium text-white/75 mb-2 tracking-[0.03em]">
+            <div className="w-full max-w-[50%]">
+              <label htmlFor="password" className="block font-dmsans text-[12px] font-medium text-white/75 mb-2.5 tracking-[0.03em]">
                 Password
               </label>
               <div className="relative">
@@ -275,13 +299,16 @@ export const FormLoginView: React.FC<FormLoginViewProps> = ({
                   onChange={e => setPassword(e.target.value)}
                   placeholder="Enter password"
                   disabled={isSubmitting || isLoading}
-                  className="w-full bg-white/10 border border-white/20 text-white placeholder:text-white/45 rounded-[10px] h-[48px] pl-12 pr-12 text-sm outline-none focus:border-[#C9A84C] focus:ring-4 focus:ring-[#C9A84C]/25 transition duration-200 disabled:opacity-50"
+                  aria-describedby={error ? "error-message" : undefined}
+                  className={`w-full text-white placeholder:text-white/45 rounded-[10px] h-[48px] pl-12 pr-12 text-sm outline-none ${inputBorderClassResolved} ${inputFocusRingClassResolved} ${inputFocusBorderClassResolved} transition duration-200 disabled:opacity-50`}
+                  style={{ paddingLeft: '48px' }}
                   autoComplete="new-password"
                   required
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
+                  aria-label={showPassword ? "Hide password" : "Show password"}
                   className="absolute top-1/2 right-4 -translate-y-1/2 text-white/50 hover:text-white transition duration-200"
                   disabled={isSubmitting || isLoading}
                 >
@@ -291,7 +318,7 @@ export const FormLoginView: React.FC<FormLoginViewProps> = ({
             </div>
 
             {mode === 'login' && (
-              <div className="flex justify-end -mt-2">
+              <div className="flex justify-end -mt-3.5 w-full max-w-[50%]">
                 <button
                   type="button"
                   onClick={() => setShowForgot(true)}
@@ -303,8 +330,8 @@ export const FormLoginView: React.FC<FormLoginViewProps> = ({
             )}
 
             {supportRegister && mode === 'register' && (
-              <div>
-                <label htmlFor="confirmPassword" className="block font-dmsans text-[12px] font-medium text-white/75 mb-2 tracking-[0.03em]">
+              <div className="w-full max-w-[50%]">
+                <label htmlFor="confirmPassword" className="block font-dmsans text-[12px] font-medium text-white/75 mb-2.5 tracking-[0.03em]">
                   Confirm Password
                 </label>
                 <div className="relative">
@@ -316,12 +343,15 @@ export const FormLoginView: React.FC<FormLoginViewProps> = ({
                     onChange={e => setConfirmPassword(e.target.value)}
                     placeholder="Confirm password"
                     disabled={isSubmitting || isLoading}
-                    className="w-full bg-white/10 border border-white/20 text-white placeholder:text-white/45 rounded-[10px] h-[48px] pl-12 pr-12 text-sm outline-none focus:border-[#C9A84C] focus:ring-4 focus:ring-[#C9A84C]/25 transition duration-200 disabled:opacity-50"
+                    aria-describedby={error ? "error-message" : undefined}
+                    className={`w-full text-white placeholder:text-white/45 rounded-[10px] h-[48px] pl-12 pr-12 text-sm outline-none ${inputBorderClassResolved} ${inputFocusRingClassResolved} ${inputFocusBorderClassResolved} transition duration-200 disabled:opacity-50`}
+                    style={{ paddingLeft: '48px' }}
                     required
                   />
                   <button
                     type="button"
                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    aria-label={showConfirmPassword ? "Hide password" : "Show password"}
                     className="absolute top-1/2 right-4 -translate-y-1/2 text-white/50 hover:text-white transition duration-200"
                     disabled={isSubmitting || isLoading}
                   >
@@ -331,24 +361,30 @@ export const FormLoginView: React.FC<FormLoginViewProps> = ({
               </div>
             )}
 
-            {error && <p className="text-red-400 text-sm font-medium">{error}</p>}
+            {error && (
+              <div id="error-message" role="alert" aria-live="polite" className="w-full max-w-[50%] text-red-400 text-sm font-medium text-center">
+                {error}
+              </div>
+            )}
 
             <button
               type="submit"
               disabled={isSubmitting || isLoading}
-              className="w-full bg-[#8B1A1A] border-t-2 border-[#C9A84C]/60 text-white font-dmsans font-[600] tracking-[0.03em] text-[15px] h-[50px] rounded-[10px] hover:-translate-y-[1px] hover:bg-[#6B1212] active:scale-[0.98] transition-all duration-200 shadow-md outline-none disabled:opacity-50 disabled:cursor-not-allowed mt-2"
+              style={{ backgroundColor: primaryColorHexResolved, borderTopColor: primaryColorHexResolved }}
+              className={`w-full max-w-[50%] text-white font-dmsans font-[600] tracking-[0.03em] text-[15px] h-[50px] rounded-[10px] hover:-translate-y-[1px] active:scale-[0.98] transition-all duration-200 shadow-md outline-none disabled:opacity-50 disabled:cursor-not-allowed mt-3 ${buttonHoverClassResolved}`}
             >
               {isSubmitting || isLoading ? 'Please wait...' : (mode === 'login' ? 'Sign In' : 'Create Account')}
             </button>
           </form>
 
           {supportRegister && (
-            <p className="text-center text-white/60 font-dmsans text-sm mt-6">
+            <p className="text-center text-white/60 font-dmsans text-sm mt-8 w-full">
               {mode === 'login' ? "Don't have an account? " : 'Already have an account? '}
               <button
                 type="button"
                 onClick={() => handleModeChange(mode === 'login' ? 'register' : 'login')}
-                className="text-[#C9A84C] font-medium hover:underline transition-all"
+                style={{ color: primaryColorHexResolved }}
+                className="font-medium hover:underline transition-all"
               >
                 {mode === 'login' ? 'Sign up' : 'Sign in'}
               </button>
@@ -372,13 +408,14 @@ export const FormLoginView: React.FC<FormLoginViewProps> = ({
             <h3 className="font-playfair text-[22px] font-bold text-white mb-3">Reset your password</h3>
             <p className="text-white/70 font-dmsans text-[14px] mb-6 leading-relaxed">
               Password resets are handled by TUC ICT. Email{' '}
-              <a href="mailto:daniel.twum@techbridge.edu.gh?subject=Dictation%20App%20password%20reset" className="text-[#C9A84C] hover:underline">daniel.twum@techbridge.edu.gh</a>{' '}
+              <a href="mailto:daniel.twum@techbridge.edu.gh?subject=Dictation%20App%20password%20reset" style={{ color: primaryColorHexResolved }} className="hover:underline">daniel.twum@techbridge.edu.gh</a>{' '}
               and we will restore your access.
             </p>
             <button
               type="button"
               onClick={() => setShowForgot(false)}
-              className="w-full bg-[#8B1A1A] text-white font-dmsans font-[600] h-[46px] rounded-[10px] hover:bg-[#6B1212] transition duration-200"
+              style={{ backgroundColor: primaryColorHexResolved }}
+              className={`w-full text-white font-dmsans font-[600] h-[46px] rounded-[10px] transition duration-200 ${buttonHoverClassResolved}`}
             >
               Close
             </button>
