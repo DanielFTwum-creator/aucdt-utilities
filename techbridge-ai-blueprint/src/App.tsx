@@ -331,6 +331,7 @@ export default function App() {
   const [projectName, setProjectName] = useState("Techbridge AI Blueprint [TAB]");
   const [checkedItems, setCheckedItems] = useState<Record<string, boolean>>({});
   const [openPhase, setOpenPhase] = useState<number | null>(1);
+  const [guideDismissed, setGuideDismissed] = useState(() => localStorage.getItem("tuc-blueprint-guide-dismissed") === "1");
   const [isAdmin, setIsAdmin] = useState(false);
   const [showLogin, setShowLogin] = useState(false);
   const [password, setPassword] = useState("");
@@ -1148,6 +1149,78 @@ export default function App() {
               </motion.div>
             ) : (
               <>
+                {/* Getting-Started guide — shown to new users until they tick their first item */}
+                {totals.completed === 0 && !guideDismissed && (
+                  <motion.div
+                    layout
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="bg-white border border-brand/20 rounded-2xl p-6 shadow-xl shadow-brand/5 relative overflow-hidden mb-8"
+                  >
+                    <div className="flex items-start justify-between mb-4">
+                      <div className="flex items-center gap-2">
+                        <Info className="w-4 h-4 text-brand" />
+                        <h2 className="font-bold text-sm uppercase tracking-widest text-text-primary opacity-80">Start here — new to the Blueprint?</h2>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => { setGuideDismissed(true); localStorage.setItem("tuc-blueprint-guide-dismissed", "1"); }}
+                        className="text-xs font-semibold text-text-tertiary hover:text-text-primary transition-colors"
+                      >
+                        Dismiss
+                      </button>
+                    </div>
+                    <p className="text-sm text-text-secondary mb-5 leading-relaxed">
+                      The Blueprint turns the TUC AI workflow into a guided, phase-by-phase checklist. Follow these steps:
+                    </p>
+                    <ol className="space-y-3">
+                      {[
+                        ["Name your project", "Set the Project Context (top-left) to the aucdt-utilities project you are working on."],
+                        ["Pick a phase & platform", "Choose a phase in the sidebar (start with Foundation) and a platform tab (Claude / AI Studio / Master)."],
+                        ["Copy the directive", "Read the Active Directive below and press Copy Directive, then paste it into your AI assistant. Each task is tagged with the model to use — SONNET for reasoning, HAIKU for mechanical work."],
+                        ["Tick items as you go", "Check off completed items; the Implementation Roadmap tracks your progress to 100%."],
+                        ["Export, Save or Deploy", "Use the top-right actions to export your plan, save progress, or deploy."],
+                      ].map(([title, desc], i) => (
+                        <li key={i} className="flex gap-3">
+                          <span className="flex-shrink-0 w-6 h-6 rounded-full bg-brand text-white text-xs font-bold flex items-center justify-center">{i + 1}</span>
+                          <div>
+                            <p className="text-sm font-semibold text-text-primary">{title}</p>
+                            <p className="text-xs text-text-secondary leading-relaxed">{desc}</p>
+                          </div>
+                        </li>
+                      ))}
+                    </ol>
+                  </motion.div>
+                )}
+
+                {/* Active Directive Pane (Moved to Center) */}
+                <motion.div 
+                  layout
+                  className="bg-white border border-brand/20 rounded-2xl p-6 shadow-xl shadow-brand/5 relative overflow-hidden mb-8"
+                >
+                  <div className="flex items-center justify-between mb-4">
+                    <h2 className="font-bold text-sm tracking-tighter text-text-primary uppercase tracking-widest px-1 opacity-80">Active Directive</h2>
+                    <Target className="w-4 h-4 text-brand animate-pulse" />
+                  </div>
+                  <div className="relative group">
+                    <textarea 
+                      readOnly
+                      value={currentDirective}
+                      className="w-full h-32 p-4 text-sm border border-brand/20 bg-slate-50 shadow-inner text-brand-dark rounded-xl focus:outline-none resize-none font-bold leading-relaxed transition-all custom-scrollbar"
+                      aria-label="Current AI Directive"
+                    />
+                    <div className="absolute bottom-3 right-3 shadow-lg rounded-lg">
+                      <CopyButton text={currentDirective} />
+                    </div>
+                  </div>
+                  <div className="mt-4 p-3 bg-brand/5 border border-brand/10 rounded-lg">
+                    <p className="text-xs text-text-secondary font-medium leading-relaxed italic">
+                      <Info className="w-4 h-4 inline mr-1 text-brand opacity-60 mb-0.5" />
+                      {openPhase ? PHASES.find(p => p.id === openPhase)?.note : "Select a phase to see technical notes."}
+                    </p>
+                  </div>
+                </motion.div>
+
                 {/* Status Card */}
                 <motion.div 
                   layout
@@ -1383,30 +1456,6 @@ export default function App() {
 
       {/* Right Sidebar: Directives */}
       <aside className="w-80 bg-bg-sidebar border-l border-border-standard flex flex-col h-full shrink-0 shadow-2xl shadow-black/5 z-20 transition-all duration-300">
-        <div className="p-6 border-b border-border-subtle bg-bg-panel/50 backdrop-blur-sm">
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="font-bold text-sm tracking-tighter text-text-primary uppercase tracking-widest px-1 opacity-80">Active Directive</h2>
-            <Target className="w-4 h-4 text-brand animate-pulse" />
-          </div>
-          <div className="relative group">
-            <textarea 
-              readOnly
-              value={currentDirective}
-              className="w-full h-56 p-4 text-xs border border-brand/20 bg-white shadow-inner text-brand-dark rounded-xl focus:outline-none resize-none font-bold leading-relaxed transition-all scrollbar-hide"
-              aria-label="Current AI Directive"
-            />
-            <div className="absolute bottom-3 right-3 shadow-lg rounded-lg">
-              <CopyButton text={currentDirective} />
-            </div>
-          </div>
-          <div className="mt-4 p-3 bg-brand/5 border border-brand/10 rounded-lg">
-            <p className="text-[10px] text-text-secondary font-medium leading-relaxed italic">
-              <Info className="w-3 h-3 inline mr-1 text-brand opacity-60 mb-0.5" />
-              {openPhase ? PHASES.find(p => p.id === openPhase)?.note : "Select a phase to see technical notes."}
-            </p>
-          </div>
-        </div>
-
         <div className="flex-1 overflow-y-auto p-6 space-y-6 custom-scrollbar">
           <h3 className="text-[9px] font-black text-text-tertiary uppercase tracking-[0.2em] px-1">Mission Timeline</h3>
           <div className="space-y-4">
