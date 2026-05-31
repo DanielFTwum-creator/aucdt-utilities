@@ -1,7 +1,7 @@
 import React from 'react';
 import { useTheme } from '../../contexts/ThemeContext';
 import { Button } from './Button';
-import { Menu, LogOut, Moon, Sun } from 'lucide-react';
+import { LogOut, Sun, Moon, Radio } from 'lucide-react';
 
 interface HeaderProps {
   title: string;
@@ -11,71 +11,111 @@ interface HeaderProps {
   actions?: React.ReactNode;
 }
 
-export function Header({
-  title,
-  subtitle,
-  icon,
-  onLogout,
-  actions,
-}: HeaderProps) {
+export function Header({ title, subtitle, icon, onLogout, actions }: HeaderProps) {
   const { theme, toggleTheme } = useTheme();
 
   return (
-    <header className="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 sticky top-0 z-40 shadow-sm">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16 gap-4">
-          {/* Left: Logo & Title */}
-          <div className="flex items-center gap-3 min-w-0">
-            {icon && (
-              <div className="flex-shrink-0 w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center text-white shadow-md">
-                {icon}
-              </div>
-            )}
-            <div className="min-w-0">
-              <h1 className="text-lg font-semibold text-slate-900 dark:text-white truncate">
-                {title}
-              </h1>
-              {subtitle && (
-                <p className="text-xs text-slate-500 dark:text-slate-400 truncate">
-                  {subtitle}
-                </p>
-              )}
-            </div>
+    <header className="app-header">
+      {/* Left: Brand */}
+      <div className="flex items-center gap-3 min-w-0">
+        {/* Signal dot */}
+        <span className="signal-dot flex-shrink-0" title="System online" />
+
+        {/* Icon */}
+        {icon && (
+          <div className="flex-shrink-0 w-9 h-9 rounded-lg flex items-center justify-center"
+            style={{
+              background: 'rgba(0,212,255,0.08)',
+              border: '1px solid rgba(0,212,255,0.18)',
+              color: 'var(--cyan)',
+            }}
+          >
+            {icon}
           </div>
+        )}
 
-          {/* Right: Actions & Controls */}
-          <div className="flex items-center gap-2 flex-shrink-0">
-            {actions}
-
-            {/* Theme Toggle */}
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={toggleTheme}
-              title={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
-              aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
-              className="p-2"
+        {/* Title / subtitle */}
+        <div className="min-w-0">
+          <div className="flex items-center gap-2">
+            <h1
+              className="text-sm font-mono font-bold uppercase tracking-[0.12em] truncate"
+              style={{ color: 'var(--cyan)', textShadow: '0 0 12px rgba(0,212,255,0.3)' }}
             >
-              {theme === 'light' ? (
-                <Moon className="w-5 h-5 text-slate-600" />
-              ) : (
-                <Sun className="w-5 h-5 text-slate-400" />
-              )}
-            </Button>
-
-            {/* Logout Button */}
-            {onLogout && (
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={onLogout}
-                title="Sign out"
-                aria-label="Sign out"
-                icon={<LogOut className="w-4 h-4" />}
-              />
-            )}
+              {title}
+            </h1>
+            {/* Broadcast-style channel label */}
+            <span
+              className="hidden sm:inline-flex text-[9px] font-mono font-bold tracking-widest uppercase px-1.5 py-0.5 rounded"
+              style={{
+                background: 'rgba(0,212,255,0.08)',
+                border: '1px solid rgba(0,212,255,0.15)',
+                color: 'var(--text-secondary)',
+              }}
+            >
+              AI-01
+            </span>
           </div>
+          {subtitle && (
+            <p className="text-[10px] font-mono truncate" style={{ color: 'var(--text-muted)' }}>
+              {subtitle}
+            </p>
+          )}
         </div>
+      </div>
+
+      {/* Right: Controls */}
+      <div className="flex items-center gap-2 flex-shrink-0">
+        {actions}
+
+        {/* Theme Toggle */}
+        <button
+          onClick={toggleTheme}
+          title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
+          aria-label="Toggle theme"
+          className="w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-200"
+          style={{
+            background: 'rgba(0,212,255,0.05)',
+            border: '1px solid rgba(0,212,255,0.1)',
+            color: 'var(--text-secondary)',
+          }}
+          onMouseEnter={e => {
+            (e.currentTarget as HTMLButtonElement).style.borderColor = 'rgba(0,212,255,0.3)';
+            (e.currentTarget as HTMLButtonElement).style.color = 'var(--cyan)';
+          }}
+          onMouseLeave={e => {
+            (e.currentTarget as HTMLButtonElement).style.borderColor = 'rgba(0,212,255,0.1)';
+            (e.currentTarget as HTMLButtonElement).style.color = 'var(--text-secondary)';
+          }}
+        >
+          {theme === 'dark'
+            ? <Sun className="w-3.5 h-3.5" />
+            : <Moon className="w-3.5 h-3.5" />}
+        </button>
+
+        {/* Logout */}
+        {onLogout && (
+          <button
+            onClick={onLogout}
+            title="Sign out"
+            aria-label="Sign out"
+            className="w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-200"
+            style={{
+              background: 'rgba(0,212,255,0.05)',
+              border: '1px solid rgba(0,212,255,0.1)',
+              color: 'var(--text-secondary)',
+            }}
+            onMouseEnter={e => {
+              (e.currentTarget as HTMLButtonElement).style.borderColor = 'rgba(255,45,85,0.3)';
+              (e.currentTarget as HTMLButtonElement).style.color = 'var(--rec-red)';
+            }}
+            onMouseLeave={e => {
+              (e.currentTarget as HTMLButtonElement).style.borderColor = 'rgba(0,212,255,0.1)';
+              (e.currentTarget as HTMLButtonElement).style.color = 'var(--text-secondary)';
+            }}
+          >
+            <LogOut className="w-3.5 h-3.5" />
+          </button>
+        )}
       </div>
     </header>
   );

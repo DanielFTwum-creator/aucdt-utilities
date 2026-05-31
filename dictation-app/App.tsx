@@ -6,7 +6,108 @@ import { useTheme } from './src/contexts/ThemeContext';
 import { Header } from './src/components/shared/Header';
 import { Button } from './src/components/shared/Button';
 import { Tabs } from './src/components/shared/Tabs';
-import { Mic, Plus } from 'lucide-react';
+import { Mic, Plus, X, ChevronRight, ChevronLeft, Mic2, FileText, Sparkles } from 'lucide-react';
+
+// ── Dismissible Onboarding Tutorial ─────────────────────────────
+const TUTORIAL_KEY = 'dictation_tutorial_dismissed_v1';
+
+const TUTORIAL_STEPS = [
+  {
+    icon: <Mic2 className="w-8 h-8" style={{ color: 'var(--cyan)' }} />,
+    title: 'Welcome to Dictation Studio',
+    body: 'A professional AI-powered note-taking environment. Speak naturally — the AI transcribes and polishes your words instantly.',
+  },
+  {
+    icon: <Sparkles className="w-8 h-8" style={{ color: 'var(--amber)' }} />,
+    title: 'One-tap recording',
+    body: 'Hit the microphone button in the header or the standby screen to start. A live waveform and broadcast timer appear while you speak. Tap the stop square when done.',
+  },
+  {
+    icon: <FileText className="w-8 h-8" style={{ color: '#22D3A0' }} />,
+    title: 'Polished & Raw views',
+    body: 'Switch between your AI-polished note and the raw transcript. New note resets the session. Your work is auto-saved.',
+  },
+];
+
+function OnboardingTutorial({ onDismiss }: { onDismiss: () => void }) {
+  const [step, setStep] = useState(0);
+  const current = TUTORIAL_STEPS[step];
+  const isLast = step === TUTORIAL_STEPS.length - 1;
+
+  const next = () => isLast ? onDismiss() : setStep(s => s + 1);
+  const back = () => setStep(s => s - 1);
+
+  return (
+    <div className="tutorial-overlay" role="dialog" aria-modal aria-label="Getting started tutorial">
+      <div className="tutorial-card">
+        {/* Dismiss X */}
+        <button
+          onClick={onDismiss}
+          aria-label="Skip tutorial"
+          className="absolute top-4 right-4 w-7 h-7 rounded-lg flex items-center justify-center transition-colors"
+          style={{ background: 'rgba(0,212,255,0.06)', border: '1px solid rgba(0,212,255,0.1)', color: 'var(--text-muted)' }}
+          onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.color = 'var(--text-primary)'; }}
+          onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.color = 'var(--text-muted)'; }}
+        >
+          <X className="w-3.5 h-3.5" />
+        </button>
+
+        {/* Step dots */}
+        <div className="flex gap-2 mb-6">
+          {TUTORIAL_STEPS.map((_, i) => (
+            <span key={i} className={`tutorial-step-dot ${i === step ? 'active' : ''}`} />
+          ))}
+        </div>
+
+        {/* Icon */}
+        <div
+          className="w-14 h-14 rounded-2xl flex items-center justify-center mb-4"
+          style={{ background: 'rgba(0,212,255,0.06)', border: '1px solid rgba(0,212,255,0.1)' }}
+        >
+          {current.icon}
+        </div>
+
+        {/* Text */}
+        <h2
+          className="font-display font-bold mb-3"
+          style={{ fontSize: '1.15rem', color: 'var(--text-primary)' }}
+        >
+          {current.title}
+        </h2>
+        <p className="text-sm leading-relaxed mb-8" style={{ color: 'var(--text-secondary)' }}>
+          {current.body}
+        </p>
+
+        {/* Navigation */}
+        <div className="flex items-center justify-between">
+          {step > 0 ? (
+            <button
+              onClick={back}
+              className="flex items-center gap-1.5 text-sm px-3 py-1.5 rounded-lg transition-colors"
+              style={{ color: 'var(--text-secondary)', background: 'rgba(0,212,255,0.05)' }}
+            >
+              <ChevronLeft className="w-4 h-4" /> Back
+            </button>
+          ) : <span />}
+
+          <button
+            onClick={next}
+            className="flex items-center gap-1.5 text-sm font-semibold px-4 py-2 rounded-lg transition-all"
+            style={{
+              background: 'var(--cyan)',
+              color: 'var(--studio-black)',
+              boxShadow: '0 0 16px rgba(0,212,255,0.25)',
+            }}
+            onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.boxShadow = '0 0 28px rgba(0,212,255,0.45)'; }}
+            onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.boxShadow = '0 0 16px rgba(0,212,255,0.25)'; }}
+          >
+            {isLast ? 'Get started' : (<>Next <ChevronRight className="w-4 h-4" /></>)}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 const MODEL_NAME = 'gemini-2.5-flash';
 const store = new RecordingStore();
@@ -18,6 +119,15 @@ export default function App() {
   // State
   const [isRecording, setIsRecording] = useState(false);
   const [status, setStatus] = useState('Ready to record');
+
+  // Onboarding tutorial — shown once to new users
+  const [showTutorial, setShowTutorial] = useState<boolean>(
+    () => !localStorage.getItem(TUTORIAL_KEY)
+  );
+  const dismissTutorial = () => {
+    localStorage.setItem(TUTORIAL_KEY, '1');
+    setShowTutorial(false);
+  };
   const [activeTab, setActiveTab] = useState<'polished' | 'raw'>('polished');
   const [currentNote, setCurrentNote] = useState<Note>({
     id: 'new',
@@ -94,7 +204,11 @@ export default function App() {
     const barWidth = Math.max(1, totalWidth * 0.7);
     const spacing = Math.max(0, totalWidth * 0.3);
     
-    ctx.fillStyle = '#f43f5e';
+    const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+    gradient.addColorStop(0, '#f43f5e'); // Rose
+    gradient.addColorStop(0.5, '#D4AF37'); // Gold
+    gradient.addColorStop(1, '#8B1538'); // Burgundy
+    ctx.fillStyle = gradient;
     let x = 0;
     
     for (let i = 0; i < numBars; i++) {
@@ -274,130 +388,225 @@ export default function App() {
 
   return (
     <div className={`app-container ${theme}`}>
-      {/* Header */}
+      {/* ── Onboarding Tutorial ───────────────────────────────── */}
+      {showTutorial && <OnboardingTutorial onDismiss={dismissTutorial} />}
+
+      {/* ── Header ─────────────────────────────────────────────── */}
       {!isRecording ? (
         <Header
-          title="Dictation App"
-          subtitle={user ? `Signed in as ${user.username}` : 'System Ready'}
-          icon={<Mic className="w-6 h-6" />}
+          title="Dictation Studio"
+          subtitle={user ? `OPERATOR · ${user.username.toUpperCase()}` : 'SYSTEM READY'}
+          icon={<Mic className="w-4 h-4" />}
           onLogout={logout}
           actions={
             <div className="flex items-center gap-2">
-              <Button
-                variant="primary"
-                size="sm"
+              {/* Record button */}
+              <button
                 onClick={toggleRecording}
-                icon={<Mic className="w-4 h-4" />}
-                title="Start Recording"
+                title="Start recording"
+                className="record-button"
+                aria-label="Start recording"
               >
-                Record
-              </Button>
-              <Button
-                variant="ghost"
-                size="sm"
+                <Mic className="w-5 h-5" />
+              </button>
+              {/* New note */}
+              <button
                 onClick={handleNewNote}
-                icon={<Plus className="w-4 h-4" />}
-                title="New Note"
+                title="New note"
                 aria-label="Create new note"
-              />
+                className="w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-200"
+                style={{
+                  background: 'rgba(0,212,255,0.05)',
+                  border: '1px solid rgba(0,212,255,0.1)',
+                  color: 'var(--text-secondary)',
+                }}
+              >
+                <Plus className="w-3.5 h-3.5" />
+              </button>
             </div>
           }
         />
       ) : (
-        <header className="bg-gradient-to-r from-rose-500 via-rose-600 to-rose-700 sticky top-0 z-40 shadow-lg">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex flex-col items-center justify-center py-10 gap-5">
-              <div className="live-timer font-mono text-5xl text-white font-light tracking-widest drop-shadow-[0_0_12px_rgba(255,255,255,0.4)]">
-                {formatTime(recordingTimeMs)}
-              </div>
-
-              <canvas ref={canvasRef} className="w-full max-w-[500px] h-[60px]" />
-
-              <Button
-                onClick={toggleRecording}
-                variant="secondary"
-                size="lg"
-                className="w-24 h-24 rounded-full shadow-2xl bg-white text-rose-600 hover:bg-slate-50 flex-shrink-0"
-              >
-                <svg className="w-10 h-10" fill="currentColor" viewBox="0 0 20 20">
-                  <rect x="5" y="5" width="10" height="10" />
-                </svg>
-              </Button>
-
-              <p className="text-white text-sm font-medium animate-pulse tracking-wide uppercase">
-                Recording Live...
-              </p>
-            </div>
+        /* ── Broadcast Recording Header ─────────────────────── */
+        <header className="app-header recording sticky top-0 z-40">
+          {/* REC badge */}
+          <div className="rec-badge mb-1">
+            <span className="rec-dot" />
+            REC
           </div>
+
+          {/* Timer */}
+          <div className="live-timer">{formatTime(recordingTimeMs)}</div>
+
+          {/* Waveform canvas */}
+          <canvas
+            ref={canvasRef}
+            className="w-full max-w-[480px] h-[44px] my-1"
+            style={{ opacity: 0.9 }}
+          />
+
+          {/* Stop button */}
+          <button
+            onClick={toggleRecording}
+            aria-label="Stop recording"
+            className="record-button recording mt-1"
+            style={{ width: 52, height: 52 }}
+          >
+            {/* Stop square icon */}
+            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+              <rect x="5" y="5" width="10" height="10" rx="1" />
+            </svg>
+          </button>
         </header>
       )}
 
-      {/* Main Content */}
-      <main className="flex-1 flex flex-col items-center bg-gradient-to-b from-slate-50 to-white dark:from-slate-900 dark:to-slate-950">
-        <div className="w-full max-w-3xl px-4 sm:px-6 lg:px-8 py-8 flex-1 flex flex-col">
-          {/* Note surface — a generous, centred document card that fills the height */}
-          <div className="flex-1 flex flex-col bg-white dark:bg-slate-800/40 rounded-2xl border border-slate-200 dark:border-slate-700/60 shadow-sm p-6 sm:p-10">
-            {/* Title */}
-            <input
-              type="text"
-              className="text-3xl sm:text-4xl font-display font-bold w-full outline-none bg-transparent
-                text-slate-900 dark:text-white
-                placeholder:text-slate-400 dark:placeholder:text-slate-500
-                border-b border-slate-200 dark:border-slate-700 focus:border-blue-500
-                rounded-none pb-2 transition-colors"
-              placeholder="Untitled Note"
-              value={currentNote.title}
-              onChange={e => setCurrentNote({ ...currentNote, title: e.target.value })}
-              disabled={isRecording}
-              aria-label="Note title"
-            />
-            {/* Owner (R3 — Firstname Lastname of the logged-in user) */}
-            <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">
-              Owner: <span className="font-medium text-slate-700 dark:text-slate-200">{user?.username || 'You'}</span>
-            </p>
+      {/* ── Main Canvas ────────────────────────────────────────── */}
+      <main
+        className="flex-1 flex flex-col items-center relative z-10"
+        style={{ padding: '1.5rem 1rem' }}
+      >
+        <div className="w-full max-w-4xl flex-1 flex flex-col gap-0">
 
-            {(!currentNote.rawTranscription && !isRecording && status === 'Ready to record') ? (
-              /* Single hero empty state with a large, central record CTA */
-              <div className="flex-1 flex flex-col items-center justify-center text-center py-10">
-                <div className="w-20 h-20 rounded-3xl bg-blue-50 dark:bg-blue-500/10 flex items-center justify-center mb-5">
-                  <Mic className="w-10 h-10 text-blue-500 dark:text-blue-400" />
-                </div>
-                <h3 className="text-2xl font-display font-semibold text-slate-900 dark:text-white mb-2">
-                  Capture your thoughts
-                </h3>
-                <p className="text-slate-600 dark:text-slate-400 max-w-sm text-sm leading-relaxed mb-7">
-                  Tap the button and start talking — AI will instantly transcribe and polish your notes.
-                </p>
-                <button
-                  type="button"
-                  onClick={toggleRecording}
-                  className="inline-flex items-center gap-2.5 px-7 h-12 rounded-full bg-rose-600 hover:bg-rose-700 text-white font-semibold shadow-lg shadow-rose-600/25 transition-all hover:-translate-y-0.5 active:scale-[0.98]"
+          {/* Monitor panel */}
+          <div
+            className="flex-1 flex flex-col rounded-2xl overflow-hidden"
+            style={{
+              background: 'rgba(13,21,40,0.7)',
+              border: '1px solid rgba(0,212,255,0.1)',
+              boxShadow: '0 0 0 1px rgba(0,212,255,0.04), 0 24px 48px rgba(0,0,0,0.5)',
+              backdropFilter: 'blur(12px)',
+            }}
+          >
+            {/* Panel top-bar */}
+            <div
+              className="flex items-center justify-between px-5 py-3 flex-shrink-0"
+              style={{
+                borderBottom: '1px solid rgba(0,212,255,0.08)',
+                background: 'rgba(8,12,20,0.5)',
+              }}
+            >
+              <div className="flex items-center gap-2">
+                {/* Panel indicator dots */}
+                <span className="w-2.5 h-2.5 rounded-full" style={{ background: 'var(--rec-red)', opacity: 0.7 }} />
+                <span className="w-2.5 h-2.5 rounded-full" style={{ background: 'var(--amber)', opacity: 0.7 }} />
+                <span className="w-2.5 h-2.5 rounded-full" style={{ background: '#22D3A0', opacity: 0.7 }} />
+                <span
+                  className="ml-3 text-[10px] font-mono uppercase tracking-widest"
+                  style={{ color: 'var(--text-muted)' }}
                 >
-                  <span className="w-2.5 h-2.5 rounded-full bg-white animate-pulse"></span>
-                  Start recording
-                </button>
+                  NOTE MONITOR
+                </span>
               </div>
-            ) : (
-              <div className="mt-6">
-                {status !== 'Ready to record' && status !== 'Complete' && !isRecording && (
-                  <div className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400 animate-pulse mb-4">
-                    <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></div>
-                    {status}
-                  </div>
-                )}
+
+              {/* Processing status pill */}
+              {status !== 'Ready to record' && status !== 'Complete' && !isRecording && (
+                <div
+                  className="flex items-center gap-2 text-[10px] font-mono px-2.5 py-1 rounded-full"
+                  style={{
+                    background: 'rgba(0,212,255,0.06)',
+                    border: '1px solid rgba(0,212,255,0.15)',
+                    color: 'var(--cyan)',
+                  }}
+                >
+                  <div className="spinner" style={{ width: 10, height: 10 }} />
+                  {status}
+                </div>
+              )}
+            </div>
+
+            {/* Content area */}
+            <div className="flex-1 flex flex-col p-6 sm:p-8">
+              {/* Title input */}
+              <input
+                type="text"
+                className="w-full outline-none bg-transparent font-display font-bold pb-3 mb-1 transition-colors"
+                style={{
+                  fontSize: 'clamp(1.5rem, 3vw, 2.25rem)',
+                  color: 'var(--text-primary)',
+                  borderBottom: '1px solid rgba(0,212,255,0.12)',
+                  caretColor: 'var(--cyan)',
+                }}
+                placeholder="Untitled Session"
+                value={currentNote.title}
+                onChange={e => setCurrentNote({ ...currentNote, title: e.target.value })}
+                disabled={isRecording}
+                aria-label="Note title"
+                onFocus={e => { (e.target as HTMLInputElement).style.borderBottomColor = 'rgba(0,212,255,0.4)'; }}
+                onBlur={e => { (e.target as HTMLInputElement).style.borderBottomColor = 'rgba(0,212,255,0.12)'; }}
+              />
+
+              {/* Owner */}
+              <p
+                className="text-[11px] font-mono mb-6"
+                style={{ color: 'var(--text-muted)' }}
+              >
+                OPERATOR:{' '}
+                <span style={{ color: 'var(--text-secondary)' }}>
+                  {user?.username?.toUpperCase() || 'UNKNOWN'}
+                </span>
+              </p>
+
+              {/* Tabs */}
+              <div className="flex-1 flex flex-col">
                 <Tabs
                   tabs={[
                     {
                       id: 'polished',
                       label: 'Polished Note',
                       content: (
-                        <div className="prose dark:prose-invert max-w-none prose-headings:font-display prose-a:text-blue-500 dark:prose-a:text-blue-400">
+                        <div className="note-editor">
                           {currentNote.polishedNote ? (
                             <div dangerouslySetInnerHTML={{ __html: currentNote.polishedNote }} />
                           ) : (
-                            <p className="text-slate-500 dark:text-slate-400 italic">
-                              Your polished note will appear here.
-                            </p>
+                            /* ── STANDBY empty state ─── */
+                            <div className="flex flex-col items-center justify-center text-center py-16">
+                              {/* Sonar mic button */}
+                              <div className="relative mb-8">
+                                <div className="sonar-ring" />
+                                <div className="sonar-ring" style={{ animationDelay: '1s' }} />
+                                <div className="sonar-ring" style={{ animationDelay: '2s' }} />
+                                <div
+                                  className="relative w-20 h-20 rounded-full flex items-center justify-center"
+                                  style={{
+                                    background: 'rgba(0,212,255,0.08)',
+                                    border: '1px solid rgba(0,212,255,0.22)',
+                                    boxShadow: '0 0 32px rgba(0,212,255,0.08)',
+                                  }}
+                                >
+                                  <Mic className="w-9 h-9" style={{ color: 'var(--cyan)' }} />
+                                </div>
+                              </div>
+
+                              <div
+                                className="text-[9px] font-mono font-bold tracking-[0.25em] uppercase mb-3"
+                                style={{ color: 'var(--text-muted)' }}
+                              >
+                                ◈ STANDBY ◈
+                              </div>
+
+                              <h3
+                                className="font-display font-semibold mb-2"
+                                style={{ fontSize: '1.25rem', color: 'var(--text-primary)' }}
+                              >
+                                Ready to capture
+                              </h3>
+                              <p
+                                className="text-sm max-w-xs leading-relaxed mb-8"
+                                style={{ color: 'var(--text-secondary)' }}
+                              >
+                                Tap the microphone to begin your session. AI will transcribe and polish your notes in real time.
+                              </p>
+
+                              {/* Inline record CTA */}
+                              <button
+                                onClick={toggleRecording}
+                                className="record-button"
+                                style={{ width: 56, height: 56 }}
+                                aria-label="Start recording"
+                              >
+                                <Mic className="w-5 h-5" />
+                              </button>
+                            </div>
                           )}
                         </div>
                       ),
@@ -406,10 +615,16 @@ export default function App() {
                       id: 'raw',
                       label: 'Raw Transcript',
                       content: (
-                        <div className="text-slate-700 dark:text-slate-300 font-mono text-sm whitespace-pre-wrap leading-relaxed">
+                        <div
+                          className="text-sm whitespace-pre-wrap leading-relaxed"
+                          style={{ fontFamily: 'var(--font-mono)', color: 'var(--text-secondary)' }}
+                        >
                           {currentNote.rawTranscription || (
-                            <p className="text-slate-500 dark:text-slate-400 italic">
-                              The raw transcript will appear here after recording.
+                            <p
+                              className="text-center py-10 text-sm italic"
+                              style={{ color: 'var(--text-muted)' }}
+                            >
+                              Raw transcript will appear here after recording.
                             </p>
                           )}
                         </div>
@@ -420,7 +635,7 @@ export default function App() {
                   onChange={id => setActiveTab(id as 'polished' | 'raw')}
                 />
               </div>
-            )}
+            </div>
           </div>
         </div>
       </main>
