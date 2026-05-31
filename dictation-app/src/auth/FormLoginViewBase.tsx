@@ -26,6 +26,8 @@ interface FormLoginViewProps {
   labelColorClass?: string;
   subtitleColorClass?: string;
   videoBackground?: string;
+  videoWebm?: string;
+  posterImage?: string;
 }
 
 export const FormLoginView: React.FC<FormLoginViewProps> = ({
@@ -51,6 +53,8 @@ export const FormLoginView: React.FC<FormLoginViewProps> = ({
   labelColorClass = 'text-slate-700',
   subtitleColorClass = 'text-slate-600',
   videoBackground,
+  videoWebm,
+  posterImage,
 }) => {
   const [mode, setMode] = useState<'login' | 'register'>('login');
   const [identifier, setIdentifier] = useState('');
@@ -62,7 +66,17 @@ export const FormLoginView: React.FC<FormLoginViewProps> = ({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [showForgot, setShowForgot] = useState(false);
   const [isRedirecting, setIsRedirecting] = useState(false);
+  // P2-2: respect reduced-motion — pause/hide the video; the still fallback remains.
+  const [reduceMotion, setReduceMotion] = useState(false);
+  React.useEffect(() => {
+    const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+    setReduceMotion(mq.matches);
+    const handler = (e: MediaQueryListEvent) => setReduceMotion(e.matches);
+    mq.addEventListener('change', handler);
+    return () => mq.removeEventListener('change', handler);
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -102,17 +116,23 @@ export const FormLoginView: React.FC<FormLoginViewProps> = ({
 
   return (
     <div
-      className="min-h-screen w-full flex flex-col items-center justify-center p-6 relative overflow-hidden transition-opacity duration-500"
-      style={{ opacity: isRedirecting ? 0 : 1 }}
+      className="min-h-screen w-full flex flex-col items-center justify-center p-6 relative overflow-hidden transition-opacity duration-500 bg-cover bg-center"
+      style={{ opacity: isRedirecting ? 0 : 1, backgroundImage: posterImage ? `url(${posterImage})` : undefined }}
     >
-      {videoBackground && (
+      {/* P0-3: still fallback (backgroundImage above) renders instantly; the video
+          overlays it once it can play. P2-2: skip video entirely on reduced-motion. */}
+      {videoBackground && !reduceMotion && (
         <video
           autoPlay
           muted
           loop
+          playsInline
+          preload="auto"
+          poster={posterImage}
           className="absolute inset-0 w-full h-full object-cover"
           style={{ zIndex: 0 }}
         >
+          {videoWebm && <source src={videoWebm} type="video/webm" />}
           <source src={videoBackground} type="video/mp4" />
         </video>
       )}
@@ -126,23 +146,24 @@ export const FormLoginView: React.FC<FormLoginViewProps> = ({
       {watermarkSvg && <div className="fixed inset-0 pointer-events-none" style={{ zIndex: 2 }}>{watermarkSvg}</div>}
 
       <div className="w-full max-w-md relative z-10 flex flex-col items-center">
-        {/* Header */}
-        <div className="text-center mb-8 animate-fade-in-down flex flex-col items-center">
-          <img src="https://techbridge.edu.gh/static/TUC_LOGO_1.png" alt="TUC Logo" className="w-14 h-auto mb-4" />
-          <h1 className="font-playfair text-[28px] font-bold text-white mb-1 tracking-wide">{appName}</h1>
-          <p className="font-dmsans text-[13px] text-white/65">Powered by Techbridge AI</p>
-        </div>
-
-        {/* Login Card */}
+        {/* Login Card — owns all brand identity (P1-2) so contrast is guaranteed */}
         <div
-          className="w-full rounded-[20px] p-10 shadow-[0_8px_32px_rgba(0,0,0,0.3)] border border-white/25 animate-fade-in-up"
+          className="w-full rounded-[16px] p-10 shadow-[0_8px_32px_rgba(0,0,0,0.3)] border animate-fade-in-up"
           style={{
-            background: 'rgba(255,255,255,0.12)',
-            backdropFilter: 'blur(18px) saturate(160%)',
-            WebkitBackdropFilter: 'blur(18px) saturate(160%)',
+            background: 'rgba(15,20,30,0.55)',
+            backdropFilter: 'blur(18px) saturate(1.3)',
+            WebkitBackdropFilter: 'blur(18px) saturate(1.3)',
+            borderColor: 'rgba(255,255,255,0.18)',
             animationDelay: '0.2s'
           }}
         >
+          {/* Brand block — moved inside the card (P1-2) */}
+          <div className="flex flex-col items-center text-center mb-6">
+            <img src="https://techbridge.edu.gh/static/TUC_LOGO_1.png" alt="TUC Logo" className="w-12 h-auto mb-3" />
+            <h1 className="font-dmsans text-[18px] font-medium text-white">{appName}</h1>
+            <p className="font-dmsans text-[12px] text-white/60">Powered by Techbridge AI</p>
+          </div>
+
           <h2 className="font-playfair text-[26px] font-bold text-center text-white mb-2">
             {mode === 'login' ? 'Welcome Back' : 'Create Account'}
           </h2>
@@ -158,7 +179,7 @@ export const FormLoginView: React.FC<FormLoginViewProps> = ({
               setTimeout(() => onGoogleLogin(), 300);
             }}
             disabled={isSubmitting || isLoading || isRedirecting}
-            className="w-full bg-white/15 border border-white/35 text-white font-dmsans text-[14px] px-8 py-3.5 rounded-[10px] font-medium hover:bg-white/25 transition duration-200 flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed mb-6"
+            className="w-full bg-white border border-[#dadce0] text-[#3c4043] font-dmsans text-[14px] px-4 py-2.5 rounded-[4px] font-medium hover:bg-[#f8f9fa] hover:shadow-sm transition duration-200 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed mb-6"
           >
             {googleIcon || (
               <svg className="w-5 h-5" viewBox="0 0 24 24">
@@ -181,13 +202,14 @@ export const FormLoginView: React.FC<FormLoginViewProps> = ({
           <form onSubmit={handleSubmit} className="space-y-4" autoComplete="off">
             {mode === 'login' || !supportRegister ? (
               <div>
-                <label htmlFor="identifier" className="block font-dmsans text-[11px] text-white/60 mb-2 uppercase tracking-[0.08em]">
+                <label htmlFor="identifier" className="block font-dmsans text-[12px] font-medium text-white/75 mb-2 tracking-[0.03em]">
                   {supportRegister ? 'Username or Email' : 'Username'}
                 </label>
                 <div className="relative">
                   <UserIcon className="absolute top-1/2 left-4 -translate-y-1/2 w-5 h-5 text-white/50" />
                   <input
                     id="identifier"
+                    autoFocus
                     type="text"
                     value={identifier}
                     onChange={e => setIdentifier(e.target.value)}
@@ -202,7 +224,7 @@ export const FormLoginView: React.FC<FormLoginViewProps> = ({
             ) : supportRegister ? (
               <>
                 <div>
-                  <label htmlFor="username" className="block font-dmsans text-[11px] text-white/60 mb-2 uppercase tracking-[0.08em]">
+                  <label htmlFor="username" className="block font-dmsans text-[12px] font-medium text-white/75 mb-2 tracking-[0.03em]">
                     Username
                   </label>
                   <div className="relative">
@@ -220,7 +242,7 @@ export const FormLoginView: React.FC<FormLoginViewProps> = ({
                   </div>
                 </div>
                 <div>
-                  <label htmlFor="email" className="block font-dmsans text-[11px] text-white/60 mb-2 uppercase tracking-[0.08em]">
+                  <label htmlFor="email" className="block font-dmsans text-[12px] font-medium text-white/75 mb-2 tracking-[0.03em]">
                     Email
                   </label>
                   <div className="relative">
@@ -241,7 +263,7 @@ export const FormLoginView: React.FC<FormLoginViewProps> = ({
             ) : null}
 
             <div>
-              <label htmlFor="password" className="block font-dmsans text-[11px] text-white/60 mb-2 uppercase tracking-[0.08em]">
+              <label htmlFor="password" className="block font-dmsans text-[12px] font-medium text-white/75 mb-2 tracking-[0.03em]">
                 Password
               </label>
               <div className="relative">
@@ -268,9 +290,21 @@ export const FormLoginView: React.FC<FormLoginViewProps> = ({
               </div>
             </div>
 
+            {mode === 'login' && (
+              <div className="flex justify-end -mt-2">
+                <button
+                  type="button"
+                  onClick={() => setShowForgot(true)}
+                  className="font-dmsans text-[13px] text-white/65 hover:text-white hover:underline transition duration-200"
+                >
+                  Forgot password?
+                </button>
+              </div>
+            )}
+
             {supportRegister && mode === 'register' && (
               <div>
-                <label htmlFor="confirmPassword" className="block font-dmsans text-[11px] text-white/60 mb-2 uppercase tracking-[0.08em]">
+                <label htmlFor="confirmPassword" className="block font-dmsans text-[12px] font-medium text-white/75 mb-2 tracking-[0.03em]">
                   Confirm Password
                 </label>
                 <div className="relative">
@@ -322,6 +356,35 @@ export const FormLoginView: React.FC<FormLoginViewProps> = ({
           )}
         </div>
       </div>
+
+      {/* Forgot-password modal (P0-1 — contact-IT flow; no self-service reset endpoint) */}
+      {showForgot && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-6"
+          style={{ background: 'rgba(0,0,0,0.6)' }}
+          onClick={() => setShowForgot(false)}
+        >
+          <div
+            className="w-full max-w-sm rounded-[16px] p-8 text-center"
+            style={{ background: 'rgba(15,20,30,0.92)', backdropFilter: 'blur(18px)', border: '1px solid rgba(255,255,255,0.18)' }}
+            onClick={e => e.stopPropagation()}
+          >
+            <h3 className="font-playfair text-[22px] font-bold text-white mb-3">Reset your password</h3>
+            <p className="text-white/70 font-dmsans text-[14px] mb-6 leading-relaxed">
+              Password resets are handled by TUC ICT. Email{' '}
+              <a href="mailto:daniel.twum@techbridge.edu.gh?subject=Dictation%20App%20password%20reset" className="text-[#C9A84C] hover:underline">daniel.twum@techbridge.edu.gh</a>{' '}
+              and we will restore your access.
+            </p>
+            <button
+              type="button"
+              onClick={() => setShowForgot(false)}
+              className="w-full bg-[#8B1A1A] text-white font-dmsans font-[600] h-[46px] rounded-[10px] hover:bg-[#6B1212] transition duration-200"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

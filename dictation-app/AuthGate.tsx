@@ -65,7 +65,9 @@ export const AuthGate: React.FC<{ children: React.ReactNode }> = ({ children }) 
         buttonHoverClass="hover:bg-red-700"
         backgroundClass="bg-cover bg-center bg-no-repeat relative"
         cardBgClass="bg-white/10 backdrop-blur-2xl border border-white/20 shadow-2xl"
-        videoBackground="https://techbridge.edu.gh/static/campus_tour.mp4"
+        videoBackground={`${import.meta.env.BASE_URL}assets/campus.mp4`}
+        videoWebm={`${import.meta.env.BASE_URL}assets/campus.webm`}
+        posterImage={`${import.meta.env.BASE_URL}assets/campus-bg-fallback.jpg`}
         onGoogleLogin={handleGoogleLogin}
         onLocalLogin={async (id, pwd) => {
           const res = await login(id, pwd);
