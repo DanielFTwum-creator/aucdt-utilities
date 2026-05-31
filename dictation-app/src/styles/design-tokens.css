@@ -1,0 +1,185 @@
+/* Design Tokens — TUC Unified Design System */
+
+:root {
+  /* ===== COLOR PALETTE ===== */
+
+  /* Primary Colors */
+  --color-primary: #1f3864;           /* TUC Navy */
+  --color-primary-light: #2e75b6;     /* TUC Light Blue */
+  --color-secondary: #d4a373;         /* TUC Tan */
+
+  /* Semantic Colors */
+  --color-success: #10b981;           /* Emerald */
+  --color-warning: #f59e0b;           /* Amber */
+  --color-error: #ef4444;             /* Red */
+  --color-info: #3b82f6;              /* Blue */
+  --color-accent-rose: #f43f5e;       /* Rose (for recording) */
+
+  /* Neutral Palette */
+  --color-white: #ffffff;
+  --color-black: #000000;
+  --color-slate-50: #f8fafc;
+  --color-slate-100: #f1f5f9;
+  --color-slate-200: #e2e8f0;
+  --color-slate-300: #cbd5e1;
+  --color-slate-400: #94a3b8;
+  --color-slate-500: #64748b;
+  --color-slate-600: #475569;
+  --color-slate-700: #334155;
+  --color-slate-800: #1e293b;
+  --color-slate-900: #0f172a;
+
+  /* ===== TYPOGRAPHY ===== */
+
+  --font-display: 'Fraunces', 'Outfit', serif;
+  --font-body: 'Inter', 'DM Sans', sans-serif;
+  --font-mono: 'Source Code Pro', 'JetBrains Mono', monospace;
+
+  /* Font Sizes */
+  --text-xs: 0.75rem;      /* 12px */
+  --text-sm: 0.875rem;     /* 14px */
+  --text-base: 1rem;       /* 16px */
+  --text-lg: 1.125rem;     /* 18px */
+  --text-xl: 1.25rem;      /* 20px */
+  --text-2xl: 1.5rem;      /* 24px */
+  --text-3xl: 1.875rem;    /* 30px */
+  --text-4xl: 2.25rem;     /* 36px */
+
+  /* Font Weights */
+  --weight-light: 300;
+  --weight-normal: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+  --weight-bold: 700;
+
+  /* Line Heights */
+  --line-tight: 1.25;
+  --line-normal: 1.5;
+  --line-relaxed: 1.625;
+  --line-loose: 2;
+
+  /* Letter Spacing */
+  --tracking-tight: -0.02em;
+  --tracking-normal: 0;
+  --tracking-wide: 0.025em;
+  --tracking-wider: 0.05em;
+
+  /* ===== SPACING ===== */
+
+  --spacing-0: 0;
+  --spacing-1: 0.25rem;    /* 4px */
+  --spacing-2: 0.5rem;     /* 8px */
+  --spacing-3: 0.75rem;    /* 12px */
+  --spacing-4: 1rem;       /* 16px */
+  --spacing-6: 1.5rem;     /* 24px */
+  --spacing-8: 2rem;       /* 32px */
+  --spacing-12: 3rem;      /* 48px */
+  --spacing-16: 4rem;      /* 64px */
+
+  /* ===== BORDER RADIUS ===== */
+
+  --radius-none: 0;
+  --radius-sm: 0.375rem;   /* 6px */
+  --radius-md: 0.5rem;     /* 8px */
+  --radius-lg: 1rem;       /* 16px */
+  --radius-xl: 1.5rem;     /* 24px */
+  --radius-full: 9999px;
+
+  /* ===== SHADOWS ===== */
+
+  --shadow-none: none;
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+  --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+
+  /* ===== TRANSITIONS ===== */
+
+  --transition-fast: 150ms ease-in-out;
+  --transition-base: 200ms ease-in-out;
+  --transition-slow: 300ms ease-in-out;
+
+  /* ===== THEME COLORS (Light Mode - Default) ===== */
+
+  --bg-primary: var(--color-white);
+  --bg-secondary: var(--color-slate-50);
+  --bg-tertiary: var(--color-slate-100);
+  --bg-interactive: var(--color-slate-100);
+  --bg-interactive-hover: var(--color-slate-200);
+
+  --text-primary: var(--color-slate-900);
+  --text-secondary: var(--color-slate-600);
+  --text-tertiary: var(--color-slate-500);
+  --text-inverse: var(--color-white);
+
+  --border-color: var(--color-slate-200);
+  --border-color-light: var(--color-slate-100);
+  --border-color-dark: var(--color-slate-300);
+
+  --input-bg: var(--color-white);
+  --input-border: var(--color-slate-300);
+  --input-text: var(--color-slate-900);
+  --input-placeholder: var(--color-slate-500);
+}
+
+/* ===== DARK MODE ===== */
+
+[data-theme="dark"],
+[data-theme="dark"] body {
+  --bg-primary: var(--color-slate-900);
+  --bg-secondary: var(--color-slate-800);
+  --bg-tertiary: #1e293b;
+  --bg-interactive: var(--color-slate-700);
+  --bg-interactive-hover: var(--color-slate-600);
+
+  --text-primary: var(--color-white);
+  --text-secondary: var(--color-slate-300);
+  --text-tertiary: var(--color-slate-400);
+  --text-inverse: var(--color-slate-900);
+
+  --border-color: var(--color-slate-700);
+  --border-color-light: var(--color-slate-800);
+  --border-color-dark: var(--color-slate-600);
+
+  --input-bg: var(--color-slate-800);
+  --input-border: var(--color-slate-700);
+  --input-text: var(--color-white);
+  --input-placeholder: var(--color-slate-400);
+}
+
+/* ===== UTILITY CLASSES ===== */
+
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  line-height: var(--line-normal);
+  transition: background-color var(--transition-base), color var(--transition-base);
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-secondary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-slate-400);
+  border-radius: var(--radius-full);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-slate-500);
+}
+
+/* Selection */
+::selection {
+  background-color: var(--color-primary-light);
+  color: var(--color-white);
+}

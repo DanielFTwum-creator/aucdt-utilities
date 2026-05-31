@@ -1,2 +1,5 @@
 onlyBuiltDependencies:
+  - '@google/genai'
+  - cypress
   - esbuild
+  - protobufjs
