@@ -29,6 +29,13 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     const root = document.documentElement;
     root.setAttribute('data-theme', theme);
 
+    // Set class on body for Tailwind/Cypress tests
+    if (theme === 'dark') {
+      document.body.classList.add('dark');
+    } else {
+      document.body.classList.remove('dark');
+    }
+
     // Save preference
     localStorage.setItem('theme', theme);
   }, [theme]);

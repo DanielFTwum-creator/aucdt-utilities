@@ -1,0 +1,12 @@
+[20260530_115024][INFO] ========================================
+[20260530_115024][INFO] Bionicskins Deployment Started
+[20260530_115024][INFO] ========================================
+[20260530_115024][INFO] Remote : root@66.226.72.199
+[20260530_115024][INFO] Path   : /var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/bionicskins
+[20260530_115024][INFO] URL    : https://ai-tools.techbridge.edu.gh/bionicskins
+[20260530_115024][INFO] Backend: False
+[20260530_115024][INFO] Log    : C:\Development\github\aucdt-utilities\bionicskins-tm\deploy_20260530_115024.log
+[20260530_115024][INFO] 
+[20260530_115024][INFO] Step 1: Pre-flight checks...
+[20260530_115024][SUCCESS] Pre-flight OK
+[20260530_115024][INFO] Step 2: Building...

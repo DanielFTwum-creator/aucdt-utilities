@@ -1,6 +1,6 @@
 import React from 'react';
 import { useAuth } from './contexts/AuthContext';
-import { LoginView } from './components/LoginView';
+import { LoginView } from './src/components/LoginView';
 import App from './App';
 
 /**

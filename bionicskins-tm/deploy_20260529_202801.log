@@ -1,0 +1,13 @@
+[20260529_202801][INFO] ========================================
+[20260529_202801][INFO] Bionicskins Deployment Started
+[20260529_202801][INFO] ========================================
+[20260529_202801][INFO] Remote : root@66.226.72.199
+[20260529_202801][INFO] Path   : /var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/bionicskins
+[20260529_202801][INFO] URL    : https://ai-tools.techbridge.edu.gh/bionicskins
+[20260529_202801][INFO] Backend: False
+[20260529_202801][INFO] Log    : C:\Development\github\aucdt-utilities\bionicskins-tm\deploy_20260529_202801.log
+[20260529_202801][INFO] 
+[20260529_202801][INFO] Step 1: Pre-flight checks...
+[20260529_202801][SUCCESS] Pre-flight OK
+[20260529_202801][INFO] Step 2: Building...
+[20260529_202801][ERROR] DEPLOYMENT FAILED: Build failed.

@@ -1,10 +1,10 @@
 describe('Theme Management', () => {
   beforeEach(() => {
-    cy.visit('/');
     // Clear localStorage before each test
     cy.window().then((win) => {
       win.localStorage.clear();
     });
+    cy.visit('/');
   });
 
   it('should load with light mode by default', () => {

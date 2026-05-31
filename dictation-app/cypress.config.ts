@@ -2,7 +2,7 @@ import { defineConfig } from 'cypress';
 
 export default defineConfig({
   e2e: {
-    baseUrl: 'http://localhost:5174',
+    baseUrl: 'http://localhost:5174/dictation/',
     viewportWidth: 1280,
     viewportHeight: 720,
     defaultCommandTimeout: 10000,
