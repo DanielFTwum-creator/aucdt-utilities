@@ -51,17 +51,21 @@ Log "INFO" "Step 3: Syncing to server..." Yellow
 Log "INFO" "Creating remote directory..."
 ssh -o StrictHostKeyChecking=no $RemoteHost "mkdir -p $RemotePath && rm -rf $RemotePath/* $RemotePath/.htaccess 2>/dev/null || true" | Out-Null
 
-Log "INFO" "Copying frontend files..."
-# Use native scp (no WSL bash wrapper) — copy each dist/ item individually
-Get-ChildItem -Path "dist" | ForEach-Object {
-    if ($_.PSIsContainer) {
-        scp -r -o StrictHostKeyChecking=no "$($_.FullName)" "${RemoteHost}:${RemotePath}"
-    } else {
-        scp -o StrictHostKeyChecking=no "$($_.FullName)" "${RemoteHost}:${RemotePath}"
+Log "INFO" "Copying frontend files (tar over SSH)..."
+# Pipe dist/ as a tar archive over the SSH connection — avoids scp Windows path issues
+$tarResult = cmd /c "tar -czf - -C dist . 2>nul | ssh -o StrictHostKeyChecking=no %RemoteHost% ""tar -xzf - -C %RemotePath%""" 2>&1
+if ($LASTEXITCODE -eq 0) {
+    Log "SUCCESS" "Frontend files copied via tar+ssh" Green
+} else {
+    Log "WARN" "tar+ssh exited $LASTEXITCODE — falling back to scp" Yellow
+    # Fallback: individual scp per file
+    Push-Location dist
+    Get-ChildItem -Recurse -File | ForEach-Object {
+        $rel = $_.FullName.Replace((Get-Location).Path + '\', '').Replace('\','/')
+        scp -o StrictHostKeyChecking=no $_.FullName "${RemoteHost}:${RemotePath}${rel}" 2>$null
     }
+    Pop-Location
 }
-if ($LASTEXITCODE -ne 0) { Log "WARN" "scp exited $LASTEXITCODE (non-fatal)" Yellow }
-else { Log "SUCCESS" "Frontend files copied" Green }
 
 Log "INFO" "Copying backend files..."
 scp -o StrictHostKeyChecking=no "server.ts" "package.json" "${RemoteHost}:${RemotePath}" 2>&1 | Select-Object -First 5
