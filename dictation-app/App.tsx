@@ -333,10 +333,10 @@ export default function App() {
       )}
 
       {/* Main Content */}
-      <main className="flex-1 bg-gradient-to-b from-slate-50 to-white dark:from-slate-900 dark:to-slate-900">
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          {/* Note surface — contains the document so it reads as a card, not loose text on a void */}
-          <div className="bg-white dark:bg-slate-800/40 rounded-2xl border border-slate-200 dark:border-slate-700/60 shadow-sm p-6 sm:p-8">
+      <main className="flex-1 flex flex-col items-center bg-gradient-to-b from-slate-50 to-white dark:from-slate-900 dark:to-slate-950">
+        <div className="w-full max-w-3xl px-4 sm:px-6 lg:px-8 py-8 flex-1 flex flex-col">
+          {/* Note surface — a generous, centred document card that fills the height */}
+          <div className="flex-1 flex flex-col bg-white dark:bg-slate-800/40 rounded-2xl border border-slate-200 dark:border-slate-700/60 shadow-sm p-6 sm:p-10">
             {/* Title */}
             <input
               type="text"
@@ -357,18 +357,25 @@ export default function App() {
             </p>
 
             {(!currentNote.rawTranscription && !isRecording && status === 'Ready to record') ? (
-              /* Single empty state (no redundant tab placeholder) */
-              <div className="flex flex-col items-center justify-center text-center py-14">
-                <div className="w-16 h-16 rounded-2xl bg-blue-50 dark:bg-blue-500/10 flex items-center justify-center mb-4">
-                  <Mic className="w-8 h-8 text-blue-500 dark:text-blue-400" />
+              /* Single hero empty state with a large, central record CTA */
+              <div className="flex-1 flex flex-col items-center justify-center text-center py-10">
+                <div className="w-20 h-20 rounded-3xl bg-blue-50 dark:bg-blue-500/10 flex items-center justify-center mb-5">
+                  <Mic className="w-10 h-10 text-blue-500 dark:text-blue-400" />
                 </div>
-                <h3 className="text-xl font-display font-semibold text-slate-900 dark:text-white mb-2">
+                <h3 className="text-2xl font-display font-semibold text-slate-900 dark:text-white mb-2">
                   Capture your thoughts
                 </h3>
-                <p className="text-slate-600 dark:text-slate-400 max-w-sm text-sm leading-relaxed">
-                  Press <span className="font-medium text-slate-800 dark:text-slate-200">Record</span> to start —
-                  AI will instantly transcribe and polish your notes.
+                <p className="text-slate-600 dark:text-slate-400 max-w-sm text-sm leading-relaxed mb-7">
+                  Tap the button and start talking — AI will instantly transcribe and polish your notes.
                 </p>
+                <button
+                  type="button"
+                  onClick={toggleRecording}
+                  className="inline-flex items-center gap-2.5 px-7 h-12 rounded-full bg-rose-600 hover:bg-rose-700 text-white font-semibold shadow-lg shadow-rose-600/25 transition-all hover:-translate-y-0.5 active:scale-[0.98]"
+                >
+                  <span className="w-2.5 h-2.5 rounded-full bg-white animate-pulse"></span>
+                  Start recording
+                </button>
               </div>
             ) : (
               <div className="mt-6">
