@@ -1,5 +1,6 @@
 # BioChemAI Deployment Script
-# Deploys frontend (dist/) + backend (server.ts on port 3002) with Gemini proxy
+# Strategy: SSH to server -> git clone -> build on server -> serve
+# Avoids all Windows scp/tar file-transfer failures.
 
 param(
     [string]$RemoteHost = "root@techbridge.edu.gh",
@@ -12,17 +13,17 @@ $__deployStart = Get-Date
 function Log {
     param([string]$Level = "INFO", [string]$Msg, [ConsoleColor]$Color = "White")
     $ts = (Get-Date).ToString("yyyy-MM-dd HH:mm:ss")
-    $line = "[$ts][$Level] $Msg"
-    Write-Host $line -ForegroundColor $Color
+    Write-Host "[$ts][$Level] $Msg" -ForegroundColor $Color
 }
 
-Log "INFO"  "========================================"  Cyan
-Log "INFO"  "BIOCHEMAI DEPLOYMENT"                      Cyan
-Log "INFO"  "========================================"  Cyan
-Log "INFO"  "Remote : $RemoteHost"
-Log "INFO"  "Path   : $RemotePath"
+Log "INFO" "========================================" Cyan
+Log "INFO" "BIOCHEMAI DEPLOYMENT" Cyan
+Log "INFO" "========================================" Cyan
+Log "INFO" "Remote : $RemoteHost"
+Log "INFO" "Path   : $RemotePath"
+Log "INFO" ""
 
-# Validate .env.local
+# Step 1: Validate .env.local
 Log "INFO" "Step 1: Pre-flight checks..." Yellow
 if (-not (Test-Path "./.env.local")) {
     Log "ERROR" ".env.local not found!" Red; exit 1
@@ -35,45 +36,51 @@ foreach ($key in @("GEMINI_API_KEY","VITE_GOOGLE_CLIENT_ID","GOOGLE_CLIENT_SECRE
 }
 Log "SUCCESS" "Pre-flight OK (.env.local validated)" Green
 
-# Build if requested
-if ($Build) {
-    Log "INFO" "Step 2: Building..." Yellow
-    pnpm exec vite build
-    if ($LASTEXITCODE -ne 0) { Log "ERROR" "Build failed!" Red; exit 1 }
-    Log "SUCCESS" "Build complete" Green
-}
+# Step 2: Push latest code to GitHub (ensure server pulls the newest commit)
+Log "INFO" "Step 2: Verifying git state..." Yellow
+$commit = git rev-parse --short HEAD
+$branch = git branch --show-current
+Log "INFO" "Commit : $commit on $branch"
 
-if (-not (Test-Path "dist")) {
-    Log "ERROR" "dist/ not found — run with -Build flag" Red; exit 1
-}
+# Step 3: Server-side build and deploy via SSH
+Log "INFO" "Step 3: Server-side build (git clone + npm build)..." Yellow
 
-Log "INFO" "Step 3: Syncing to server..." Yellow
-Log "INFO" "Creating remote directory..."
-ssh -o StrictHostKeyChecking=no $RemoteHost "mkdir -p $RemotePath && rm -rf $RemotePath/* $RemotePath/.htaccess 2>/dev/null || true" | Out-Null
+$repoUrl = "https://github.com/DanielFTwum-creator/aucdt-utilities.git"
+$buildDir = "/tmp/biochemai_deploy_$commit"
 
-Log "INFO" "Copying frontend files (tar over SSH)..."
-# Pipe dist/ as a tar archive over the SSH connection — avoids scp Windows path issues
-$tarResult = cmd /c "tar -czf - -C dist . 2>nul | ssh -o StrictHostKeyChecking=no %RemoteHost% ""tar -xzf - -C %RemotePath%""" 2>&1
-if ($LASTEXITCODE -eq 0) {
-    Log "SUCCESS" "Frontend files copied via tar+ssh" Green
+$serverScript = @"
+set -e
+echo '[1/6] Cleaning previous temp build...'
+rm -rf $buildDir
+echo '[2/6] Cloning biochemai from GitHub (sparse, depth 1)...'
+git clone --depth 1 --filter=blob:none --sparse '$repoUrl' $buildDir
+cd $buildDir
+git sparse-checkout set biochemai
+cd biochemai
+echo '[3/6] Installing dependencies...'
+npm install --legacy-peer-deps --silent
+echo '[4/6] Building...'
+npx vite build
+echo '[5/6] Deploying dist/ to web root...'
+mkdir -p $RemotePath
+cp -r dist/. $RemotePath
+cp server.ts package.json $RemotePath
+echo '[6/6] Installing backend deps on server...'
+cd $RemotePath
+npm install --omit=dev --silent
+echo 'Build and deploy complete.'
+"@
+
+ssh -o StrictHostKeyChecking=no $RemoteHost "$serverScript"
+
+if ($LASTEXITCODE -ne 0) {
+    Log "WARN" "Server deploy returned $LASTEXITCODE — check output above" Yellow
 } else {
-    Log "WARN" "tar+ssh exited $LASTEXITCODE — falling back to scp" Yellow
-    # Fallback: individual scp per file
-    Push-Location dist
-    Get-ChildItem -Recurse -File | ForEach-Object {
-        $rel = $_.FullName.Replace((Get-Location).Path + '\', '').Replace('\','/')
-        scp -o StrictHostKeyChecking=no $_.FullName "${RemoteHost}:${RemotePath}${rel}" 2>$null
-    }
-    Pop-Location
+    Log "SUCCESS" "Server-side build and file sync complete" Green
 }
 
-Log "INFO" "Copying backend files..."
-scp -o StrictHostKeyChecking=no "server.ts" "package.json" "${RemoteHost}:${RemotePath}" 2>&1 | Select-Object -First 5
-
-Log "INFO" "Installing backend dependencies..."
-ssh -o StrictHostKeyChecking=no $RemoteHost "cd $RemotePath && npm install --omit=dev 2>&1 | tail -3" | Out-Null
-
-Log "INFO" "Writing .htaccess..."
+# Step 4: Write .htaccess
+Log "INFO" "Step 4: Writing .htaccess..." Yellow
 $htaccessContent = @'
 <IfModule mod_rewrite.c>
   RewriteEngine On
@@ -90,12 +97,10 @@ $htaccessContent = @'
 
 <IfModule mod_expires.c>
   ExpiresActive On
-  # Hash-busted assets (cache indefinitely)
   <FilesMatch '\.(js|css|png|jpg|jpeg|gif|svg|woff2|woff|ttf|eot|ico)$'>
     ExpiresDefault 'max-age=31536000'
     Header set Cache-Control 'public, immutable'
   </FilesMatch>
-  # HTML files (revalidate on every request)
   <FilesMatch '\.(html|json)$'>
     ExpiresDefault 'max-age=0'
     Header set Cache-Control 'public, must-revalidate'
@@ -103,7 +108,6 @@ $htaccessContent = @'
 </IfModule>
 
 <IfModule mod_headers.c>
-  # Disable browser caching for HTML as fallback
   <FilesMatch '\.(html)$'>
     Header set Cache-Control 'public, must-revalidate, max-age=0'
   </FilesMatch>
@@ -111,26 +115,27 @@ $htaccessContent = @'
 '@
 $htaccessContent | ssh -o StrictHostKeyChecking=no $RemoteHost "cat > '$RemotePath/.htaccess'" 2>&1 | Out-Null
 
-Log "INFO" "Copying .env..."
+# Step 5: Copy .env + set permissions
+Log "INFO" "Step 5: Configuring server environment..." Yellow
 scp -o StrictHostKeyChecking=no ".env.local" "${RemoteHost}:${RemotePath}/.env" 2>&1 | Out-Null
-
-Log "INFO" "Setting permissions..."
 ssh -o StrictHostKeyChecking=no $RemoteHost "chown -R techbridge.edu.gh_md:psaserv $RemotePath && chmod -R 755 $RemotePath && chmod 644 $RemotePath/.htaccess $RemotePath/.env 2>/dev/null; true" | Out-Null
 
-Log "INFO" "Starting backend server (port 3002)..."
-ssh -o StrictHostKeyChecking=no $RemoteHost "fuser -k 3002/tcp 2>/dev/null ; sleep 1 ; cd $RemotePath && setsid nohup tsx server.ts > server.log 2>&1 < /dev/null &" 2>&1 | Out-Null
-
+# Step 6: Restart backend + health checks
+Log "INFO" "Step 6: Restarting backend..." Yellow
+ssh -o StrictHostKeyChecking=no $RemoteHost "fuser -k 3002/tcp 2>/dev/null; sleep 1; cd $RemotePath && setsid nohup tsx server.ts > server.log 2>&1 < /dev/null &" 2>&1 | Out-Null
 Start-Sleep -Seconds 3
 
-Log "INFO" "Step 4: Health checks..." Yellow
-ssh -o StrictHostKeyChecking=no $RemoteHost "test -f $RemotePath/index.html && echo 'OK Frontend deployed' || echo 'X Frontend missing'"
-ssh -o StrictHostKeyChecking=no $RemoteHost "test -f $RemotePath/server.ts && echo 'OK Backend deployed' || echo 'X Backend missing'"
-ssh -o StrictHostKeyChecking=no $RemoteHost "ss -tlnp 2>/dev/null | grep -q ':3002' && echo 'OK Port 3002 listening' || echo 'X Port 3002 NOT listening'"
-ssh -o StrictHostKeyChecking=no $RemoteHost "curl -sS -o /dev/null -w 'HTTP %{http_code}' http://localhost:3002/api/health && echo ' (backend health OK)'"
+Log "INFO" "Health checks..." Yellow
+ssh -o StrictHostKeyChecking=no $RemoteHost "test -f $RemotePath/index.html && echo 'OK index.html present' || echo 'X index.html MISSING'"
+ssh -o StrictHostKeyChecking=no $RemoteHost "ss -tlnp 2>/dev/null | grep -q ':3002' && echo 'OK port 3002 listening' || echo 'X port 3002 not up'"
+ssh -o StrictHostKeyChecking=no $RemoteHost "curl -sS -o /dev/null -w 'HTTP %{http_code}' http://localhost:3002/api/health && echo ' (backend OK)'"
+
+# Step 7: Cleanup temp build on server
+ssh -o StrictHostKeyChecking=no $RemoteHost "rm -rf $buildDir" 2>$null | Out-Null
 
 $elapsed = [math]::Round(((Get-Date) - $__deployStart).TotalSeconds, 1)
-Log "SUCCESS" "========================================"  Green
-Log "SUCCESS" "DEPLOYMENT COMPLETE in ${elapsed}s"       Green
+Log "SUCCESS" "========================================" Green
+Log "SUCCESS" "DEPLOYMENT COMPLETE in ${elapsed}s" Green
 Log "SUCCESS" "URL:  https://ai-tools.techbridge.edu.gh/biochemai" Green
 Log "SUCCESS" "Port: 3002" Green
 Log "SUCCESS" "========================================" Green
