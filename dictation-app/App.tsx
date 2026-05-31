@@ -278,7 +278,7 @@ export default function App() {
       {!isRecording ? (
         <Header
           title="Dictation App"
-          subtitle="System Ready"
+          subtitle={user ? `Signed in as ${user.username}` : 'System Ready'}
           icon={<Mic className="w-6 h-6" />}
           onLogout={logout}
           actions={
@@ -335,19 +335,24 @@ export default function App() {
       {/* Main Content */}
       <main className="flex-1 bg-gradient-to-b from-slate-50 to-white dark:from-slate-900 dark:to-slate-900">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          {/* Title */}
+          {/* Title (R1 contrast, R5 definition) */}
           <input
             type="text"
-            className="text-4xl font-display font-bold w-full mb-8 outline-none bg-transparent
+            className="text-4xl font-display font-bold w-full outline-none bg-transparent
               text-slate-900 dark:text-white
-              placeholder:text-slate-400 dark:placeholder:text-slate-600
-              focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-slate-900
-              rounded-lg px-4 py-2 transition-all"
+              placeholder:text-slate-400 dark:placeholder:text-slate-500
+              border-b-2 border-slate-200 dark:border-slate-700 focus:border-blue-500
+              rounded-none px-4 py-2 transition-colors"
             placeholder="Untitled Note"
             value={currentNote.title}
             onChange={e => setCurrentNote({ ...currentNote, title: e.target.value })}
             disabled={isRecording}
+            aria-label="Note title"
           />
+          {/* Owner (R3 — Firstname Lastname of the logged-in user) */}
+          <p className="px-4 mt-2 mb-8 text-sm text-slate-500 dark:text-slate-400">
+            Owner: <span className="font-medium text-slate-700 dark:text-slate-200">{user?.username || 'You'}</span>
+          </p>
 
           {/* Tabs & Status */}
           <div className="mb-8">
@@ -397,8 +402,8 @@ export default function App() {
 
             {/* Empty State */}
             {!currentNote.rawTranscription && !isRecording && status === 'Ready to record' && (
-              <div className="flex flex-col items-center justify-center py-16 text-center">
-                <Mic className="w-16 h-16 text-slate-300 dark:text-slate-600 mb-4" />
+              <div className="flex flex-col items-center justify-center py-16 text-center min-h-[55vh]">
+                <Mic className="w-16 h-16 text-slate-300 dark:text-slate-500 mb-4" />
                 <h3 className="text-2xl font-display font-semibold text-slate-900 dark:text-white mb-2">
                   Capture your thoughts
                 </h3>
