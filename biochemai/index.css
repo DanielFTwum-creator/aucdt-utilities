@@ -1,2 +1,83 @@
 @import "tailwindcss";
 
+@theme {
+  --font-space-grotesk: 'Space Grotesk', sans-serif;
+}
+
+/* ── BioChemAI Login Animations ─────────────────────────────── */
+@keyframes float-c1 {
+  0%, 100% { transform: translate(0px, 0px); }
+  50%       { transform: translate(18px, -15px); }
+}
+@keyframes float-c2 {
+  0%, 100% { transform: translate(0px, 0px); }
+  50%       { transform: translate(-20px, 12px); }
+}
+@keyframes float-c3 {
+  0%, 100% { transform: translate(0px, 0px); }
+  50%       { transform: translate(15px, 18px); }
+}
+@keyframes float-c4 {
+  0%, 100% { transform: translate(0px, 0px); }
+  50%       { transform: translate(-18px, -12px); }
+}
+@keyframes float-c5 {
+  0%, 100% { transform: translate(0px, 0px); }
+  50%       { transform: translate(12px, -20px); }
+}
+@keyframes float-c6 {
+  0%, 100% { transform: translate(0px, 0px); }
+  50%       { transform: translate(-15px, 15px); }
+}
+.cluster-1 { animation: float-c1 8s   ease-in-out infinite; }
+.cluster-2 { animation: float-c2 10s  ease-in-out infinite 1s; }
+.cluster-3 { animation: float-c3 7s   ease-in-out infinite 2s; }
+.cluster-4 { animation: float-c4 9s   ease-in-out infinite 0.5s; }
+.cluster-5 { animation: float-c5 8.5s ease-in-out infinite 1.5s; }
+.cluster-6 { animation: float-c6 9.5s ease-in-out infinite 2.5s; }
+
+@keyframes shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position:  200% center; }
+}
+.shimmer-gradient {
+  background: linear-gradient(90deg, #7C3AED 0%, #A78BFA 50%, #7C3AED 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shimmer 3s linear infinite;
+}
+
+@keyframes fadeInDown {
+  from { opacity: 0; transform: translateY(-20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-in-down {
+  animation: fadeInDown 0.5s ease-out forwards;
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-in-up {
+  animation: fadeInUp 0.5s ease-out forwards;
+}
+
+/* ── KineticsSandbox Animations ─────────────────────────────── */
+@keyframes countUp {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes chartDraw {
+  from { stroke-dashoffset: 1000; }
+  to   { stroke-dashoffset: 0; }
+}
+
+/* ── Login Submit Particle Burst ────────────────────────────── */
+@keyframes loginBurst {
+  0%   { transform: translate(-50%, -50%) translate(0, 0) scale(1); opacity: 1; }
+  100% { transform: translate(-50%, -50%) translate(var(--burst-dx), var(--burst-dy)) scale(0); opacity: 0; }
+}
