@@ -61,7 +61,7 @@ import { QuizContainer } from './components/quiz/QuizContainer';
 import { DocsContainer } from './components/docs/DocsContainer';
 import { TestContainer } from './components/test/TestContainer';
 import { AdminContainer } from './components/admin/AdminContainer';
-import { LoginView } from './components/LoginView';
+import { LoginView } from './src/components/LoginView';
 import { PasswordModal } from './components/PasswordModal';
 import { AboutModal } from './components/AboutModal';
 import { HeroStats } from './components/HeroStats';
@@ -372,11 +372,19 @@ function AppContent() {
         responseTemplate={responseTemplate}
         setResponseTemplate={setResponseTemplate}
       />
-      {mode === AppMode.Chat && <HeroStats />}
-
-      <main className={`w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 ${mode === AppMode.Chat || mode === AppMode.Voice ? 'flex-1 overflow-y-auto custom-scrollbar' : ''}`}>
-        {renderCurrentMode()}
-      </main>
+      {/* Chat layout: left stat nav + scrollable main content */}
+      {mode === AppMode.Chat ? (
+        <div className="flex flex-1 overflow-hidden w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 gap-6">
+          <HeroStats />
+          <main className="flex-1 overflow-y-auto custom-scrollbar">
+            {renderCurrentMode()}
+          </main>
+        </div>
+      ) : (
+        <main className={`w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 ${mode === AppMode.Voice ? 'flex-1 overflow-y-auto custom-scrollbar' : ''}`}>
+          {renderCurrentMode()}
+        </main>
+      )}
       
       {mode === AppMode.Chat && (
         <InputFooter

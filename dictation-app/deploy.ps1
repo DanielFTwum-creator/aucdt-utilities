@@ -42,9 +42,9 @@ cd $buildDir
 git sparse-checkout set dictation-app
 cd dictation-app
 echo '[3/5] Installing dependencies...'
-npm install --legacy-peer-deps --silent
+npm install -g pnpm --silent 2>/dev/null || true && pnpm install --frozen-lockfile --silent 2>/dev/null || npm install --legacy-peer-deps --silent
 echo '[4/5] Building...'
-npx vite build
+pnpm exec vite build 2>/dev/null || npx vite build
 echo '[5/5] Deploying dist/ to web root...'
 mkdir -p $RemotePath
 cp -r dist/. $RemotePath
