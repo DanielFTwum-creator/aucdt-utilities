@@ -157,17 +157,17 @@ export const FormLoginView: React.FC<FormLoginViewProps> = ({
             animationDelay: '0.2s'
           }}
         >
-          {/* Brand block — moved inside the card (P1-2) */}
-          <div className="flex flex-col items-center text-center mb-6">
-            <img src="https://techbridge.edu.gh/static/TUC_LOGO_1.png" alt="TUC Logo" className="w-12 h-auto mb-3" />
-            <h1 className="font-dmsans text-[18px] font-medium text-white">{appName}</h1>
-            <p className="font-dmsans text-[12px] text-white/60">Powered by Techbridge AI</p>
+          {/* Brand block — moved inside the card (P1-2), separated for clearer hierarchy */}
+          <div className="flex flex-col items-center text-center pb-6 mb-7 border-b border-white/10">
+            <img src="https://techbridge.edu.gh/static/TUC_LOGO_1.png" alt="TUC Logo" className="w-14 h-auto mb-4" />
+            <h1 className="font-dmsans text-[20px] font-semibold text-white tracking-wide">{appName}</h1>
+            <p className="font-dmsans text-[12px] text-white/55 mt-1">Powered by Techbridge AI</p>
           </div>
 
-          <h2 className="font-playfair text-[26px] font-bold text-center text-white mb-2">
+          <h2 className="font-playfair text-[26px] font-bold text-center text-white mb-1.5">
             {mode === 'login' ? 'Welcome Back' : 'Create Account'}
           </h2>
-          <p className="text-center text-white/70 font-dmsans text-[14px] mb-6">
+          <p className="text-center text-white/70 font-dmsans text-[14px] mb-7">
             {mode === 'login' ? 'Sign in to continue' : 'Create an account to get started'}
           </p>
 
