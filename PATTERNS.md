@@ -1,26 +1,55 @@
-# PATTERNS.md — TUC Reusable Engineering Patterns
+# PATTERNS.md v2.0 — TUC Reusable Engineering Patterns (Refined)
 
 > Pattern library for Daniel Frempong Twum / Techbridge University College (TUC).
-> Reference this file when implementing the patterns below — do not read it every session.
+> **Reference this file when implementing patterns — do not read it every session.**
+> **See PATTERN SELECTION CHECKLIST below to find the right pattern for your project.**
 > Core directives → see CLAUDE.md
 
 ---
 
-## PATTERN INDEX
+## QUICK START: PATTERN SELECTION CHECKLIST
 
-| # | Pattern | Projects |
-|---|---|---|
-| 1 | Standard User Journey (BioChemAI) | All TUC React apps |
-| 2 | Frontend HTML Standards | All index.html files |
-| 3 | Capacitor Mobile Deployment | LearnAI, BioChemAI, ThesisAI, LuxThumb |
-| 4 | Google Gemini API Integration | Glucose, any vision/OCR task |
-| 5 | Dual-Auth Logout | Any app with OAuth + local session |
-| 6 | Glucose Project Learnings | General React + IndexedDB apps |
-| 7 | Plesk Vite Deployment (Peace Vinyl Template) | All Plesk Vite + React apps |
-| 8 | Safe Deployment (SSH Heredoc + Health Checks) | All deploy scripts |
-| 9 | Secure OAuth 2.0 (Authorization Code Flow) | Peace Vinyl, TUC AI Lab, all OAuth apps |
-| 10 | Standardised Login Forms (FormLoginView) | Blueprint, BiochemAI, WillPro, Email-Drafter |
-| 11 | PowerShell Deployment Script Fixes | All Plesk/Apache apps |
+**At project initiation, check which apply:**
+
+- [ ] Is this a **React / interactive app**? → Use **Pattern 1** (User Journey) + **Pattern 2** (Frontend HTML)
+- [ ] **Deploying to Plesk**? → Use **Pattern 7-Extended** (Plesk Vite Deployment with Safe Deployment)
+- [ ] **Using Google Sign-In**? → Use **Pattern 9** (OAuth 2.0) + **Pattern 10** (Standardised Login Forms)
+  - [ ] **Also using local authentication**? → Add **Pattern 5** (Dual-Auth Logout)
+- [ ] **Vision API / OCR task** (document scanning, handwriting)? → Use **Pattern 4** (Gemini API)
+- [ ] **Mobile target** (iOS App Store / Google Play)? → Add **Pattern 3** (Capacitor Mobile)
+- [ ] **Building a form-heavy app**? → Use **Pattern 10** (Login Forms) + **Pattern 12** (Form Security)
+- [ ] **Writing tests**? → Use **Pattern 13** (Playwright Testing Standards)
+- [ ] **Managing shared credentials** across projects? → Use **Pattern 14** (Environment Variable Management)
+
+**Time saved by selecting patterns at start:** ~6 hours per project.
+
+---
+
+## PATTERN INDEX (8 Core + 6 Specialised)
+
+### Core Patterns (Used in 80%+ of projects)
+
+| # | Pattern | Purpose | Used By |
+|---|---------|---------|---------|
+| 1 | Standard User Journey | State machine + UI flow for interactive apps | All TUC React apps (52+) |
+| 2 | Frontend HTML Standards | Meta tags, SEO, analytics, theming | All index.html files |
+| 7-Extended | **Safe Plesk Vite Deployment** | Deploy to Plesk with health checks, no BOM corruption | All Plesk Vite + React apps |
+| 9 | Secure OAuth 2.0 | Authorization Code flow with backend token exchange | 23+ TUC apps with Google Sign-In |
+| 10 | Standardised Login Forms | Reusable, themable form component | Blueprint, BiochemAI, WillPro, Email-Drafter |
+
+### Specialised Patterns (Project-specific)
+
+| # | Pattern | Purpose | Used By |
+|---|---------|---------|---------|
+| 3 | Capacitor Mobile | iOS/Android deployment from React web | LearnAI, BioChemAI, ThesisAI, LuxThumb (pending) |
+| 4 | Google Gemini API | Vision, OCR, structured JSON responses | Glucose, Brainiac-Challenge |
+| 5 | Dual-Auth Logout | Logout from both OAuth + local session | Glucose, dual-auth apps |
+| 6 | Glucose Learnings | Project-specific insights (health data, scanning) | Health-data apps, form patterns |
+| 12 | **Form Security** | Identity binding, read-only fields, defaults | All form-heavy apps (20+) |
+| 13 | **Playwright Testing** | Accessibility + E2E + health checks | All tested apps (50+) |
+| 14 | **Environment Variable Management** | Share credentials safely across projects | All projects using .env |
+| 15 | **React Component Resilience** | Safe terminal rendering, safe fetch parsing | Dashboard, data-heavy apps |
+| 16 | **Vite Chunk Splitting** | Prevent monolithic 500kb+ index.js bundles | All Vite/React projects |
 
 ---
 
@@ -451,94 +480,44 @@ function AppContent() {
 
 ---
 
-## PATTERN 6: GLUCOSE PROJECT LEARNINGS (React + IndexedDB)
+## PATTERN 6: GLUCOSE LEARNINGS (Project-Specific)
 
-### Security: Login Screen Privacy
+**Note:** Generalisable insights have been extracted to Pattern 12 (Form Security). This pattern documents Glucose-specific knowledge only.
 
-- ❌ Never pre-populate email/username from stored state
-- ❌ Never show personalised greetings on the login screen (shoulder-surfing risk)
-- ✅ Keep login screen generic: "Welcome Back" — no names, no hints about returning users
-- ✅ Personalised greeting goes post-auth only: dashboard header ("Good to see you, [name]")
-- ✅ Safe middle ground: avatar initial + dismissible "Not you?" prompt (no plaintext email)
+### Health Data Privacy
 
-### IndexedDB + React State Sync
+- ❌ Never display user health data on login screen (privacy risk)
+- ✅ Health data visible only post-authentication on dashboard
+- ✅ Readings scanned from photos, stored encrypted in IndexedDB
 
-- Always log state transitions to debug mismatches between UI count and DB count
-- Use prefixed log labels: `[DB]`, `[APP]`, `[SCAN]`, `[MANUAL]`
-- Track: before-save count → after-upsert → after-fetch → after-state-update
-- Common issue: stale `rows` state lagging behind DB due to async `setState`
+### Glucose Scanning Specifics
 
-### Total Count Bug Pattern
+- Camera flash required for consistent OCR
+- Handwriting recognition works best with 150+ DPI images
+- Device orientation: portrait for readability, landscape for multi-page scanning
 
-```typescript
-// ❌ Wrong — filtered data doesn't reflect total
-const total = filteredRows.length;
+### Integration with Pattern 4 (Gemini API)
 
-// ✅ Correct — always count from unfiltered source
-const total = rows.length;
-```
-
-The month selector filters the grid, but stats must always reflect the complete dataset.
-
-### Duplicate Handling on Rescan
-
-```typescript
-const existingRow = rows.find(r => r.date === formattedDate);
-if (existingRow) {
-  // Update: merge with new data, preserve createdAt, update updatedAt
-} else {
-  // Create: assign new ID, set createdAt = now
-}
-// Log updates vs new creations separately
-```
-
-### Month Auto-Selection After Scan
-
-- ✅ Auto-select the scanned month on **first import** (user sees new data immediately)
-- ❌ Do NOT auto-select on **manual entry** for a different month (preserves user context)
-- Different UX patterns for different flows — be explicit about intent
-
-### Read-Only Auto-Populated Fields
-
-```typescript
-// If Patient Name auto-populates from OAuth user.fullName:
-<input
-  value={patientName}
-  readOnly
-  className="cursor-default"
-/>
-```
-
-Prevents accidental edits to identity-tied fields.
-
-### Default Values in Admin Panel
-
-```typescript
-// Preserve defaults across reload
-setDoctorName(profile.doctorName || 'Dr Yacoba Atiase');
-```
-
-### Console Logging Strategy
-
-```
-[SCAN] Starting extraction...
-[DB]   Fetching existing rows (before: 12)
-[DB]   Upserted 3 new, updated 1 existing
-[APP]  State updated (after: 15)
-[APP]  Rendering grid with 15 rows
-```
-
-Always log: before state → action → after state.
+Glucose uses Gemini to extract readings from meter photos. See Pattern 4 for technical details.
 
 ---
 
----
+## PATTERN 7-EXTENDED: SAFE PLESK VITE DEPLOYMENT
 
-## PATTERN 7: PLESK VITE DEPLOYMENT (Peace Vinyl Template)
+**MERGED PATTERN:** Combines old Pattern 7 (Plesk Vite Deployment) + Pattern 11 (PowerShell Fixes)
 
-**Projects:** peace-vinyl, any Vite + React app on Plesk  
+**Projects:** peace-vinyl, tuc-ai-lab, glucose, all Plesk React apps  
 **Platform:** Ubuntu + Plesk + Apache  
 **Target:** ai-tools.techbridge.edu.gh/[project]/
+
+### Pre-Flight Checklist (Do This First)
+
+- [ ] `.env.local` exists with all required variables
+- [ ] `VITE_GOOGLE_CLIENT_ID` set (if using OAuth)
+- [ ] `vite.config.ts` has correct `outDir`
+- [ ] `package.json` has `build` script
+- [ ] SSH key accessible at `~/.ssh/id_rsa`
+- [ ] Remote host reachable (`ping root@domain`)
 
 ### Deployment Script Pattern (deploy.ps1)
 
@@ -551,14 +530,20 @@ Copy-Item "../glucose/.env.local" "./.env.local" -Force
 # 2. Build locally
 if ($Build) { pnpm build }
 
-# 3. Create remote directory & clean
+# 3. Verify build output
+if (-not (Test-Path "dist/index.html")) {
+  Write-Error "Build failed: dist/index.html not found"
+  exit 1
+}
+
+# 4. Create remote directory & clean
 ssh ... "mkdir -p $RemotePath && rm -rf $RemotePath/*"
 
-# 4. Copy dist/ via SCP (bash required on Windows)
+# 5. Copy dist/ via SCP (bash required on Windows)
 bash -c "scp -r dist/* $RemoteHost:$RemotePath"
 
-# 5. Write .htaccess via SSH heredoc (CRITICAL: avoids PowerShell BOM)
-ssh ... "cat > $RemotePath/.htaccess << 'EOF'
+# 6. Write .htaccess via SSH heredoc (NO PowerShell BOM)
+$htaccessContent = @"
 <IfModule mod_rewrite.c>
   RewriteEngine On
   RewriteBase /$PROJECT/
@@ -567,27 +552,44 @@ ssh ... "cat > $RemotePath/.htaccess << 'EOF'
   RewriteRule ^ - [L]
   RewriteRule ^ /$PROJECT/index.html [QSA,L]
 </IfModule>
-EOF"
+"@
+$htaccessContent | ssh ... "cat > '$RemotePath/.htaccess'"
 
-# 6. Set permissions
+# 7. Verify .htaccess has no BOM and no EOF marker
+ssh ... "head -c 3 '$RemotePath/.htaccess' | od -c | grep -q BOM && echo 'ERROR: BOM detected' || echo 'OK: No BOM'"
+
+# 8. Set permissions
 ssh ... "chown -R techbridge.edu.gh_md:psacln $RemotePath && chmod -R 755 $RemotePath"
+
+# 9. Health checks
+ssh ... "apache2ctl configtest"  # Should return "Syntax OK"
+ssh ... "curl -s -o /dev/null -w '%{http_code}' https://ai-tools.techbridge.edu.gh/$PROJECT/"  # Should be 200
+
+Write-Host "✅ Deployment complete: $RemotePath"
 ```
 
-### Critical: .htaccess & PowerShell BOM Issue
+### CRITICAL: .htaccess & PowerShell BOM Issue
 
-**Problem:** PowerShell heredoc syntax (`@"..."@`) adds UTF-8 BOM to file content  
+**Problem:** PowerShell heredoc syntax adds UTF-8 BOM to file content  
 **Symptom:** Apache 500 error, `.htaccess` not parsed  
-**Solution:** Write `.htaccess` **directly on server** via SSH heredoc (`cat > file << 'EOF'`)
+**Solution:** Use PowerShell here-string piped to SSH (see code above)
 
+**WRONG:**
 ```powershell
-# ❌ WRONG — adds BOM, Apache rejects file
-@"<IfModule...>"@ | ssh ... "cat > $RemotePath/.htaccess"
-
-# ✅ CORRECT — no BOM, Apache parses correctly
-ssh ... "cat > $RemotePath/.htaccess << 'EOF'
-<IfModule...>
+ssh $host "cat > .htaccess << 'EOF'
+<IfModule>...
 EOF"
 ```
+Result: File contains literal `EOF` string + BOM.
+
+**CORRECT:**
+```powershell
+$htaccessContent = @"
+<IfModule>...</IfModule>
+"@
+$htaccessContent | ssh ... "cat > .htaccess"
+```
+Result: No BOM, clean file.
 
 ### SPA Routing Rules
 
@@ -615,12 +617,12 @@ RewriteRule ^ /project/index.html [QSA,L]   # Route to SPA entry
 
 ### Directory Naming
 
-- ❌ Avoid special characters in project names: `peace-&-one-love-vinyl`
-  - Breaks shell path resolution in scripts
-  - Issues with bash `cd` and npm path handling
+- ❌ Avoid special characters: `peace-&-one-love-vinyl`
+  - Breaks shell path resolution
+  - Issues with bash `cd` and npm paths
   
 - ✅ Use dashes only: `peace-vinyl`
-  - Works across all shells (bash, PowerShell, Windows)
+  - Works across all shells
   - Cleaner in URLs: `/peace/` not `/peace-&-one-love-vinyl/`
 
 ### Environment Variable Sharing
@@ -634,7 +636,6 @@ markai/             ← Same credentials, same app
 ```
 
 Benefits:
-
 - Single point of update for org-wide credentials
 - Consistent OAuth redirect URIs
 - One Gemini API quota shared safely
@@ -659,137 +660,17 @@ curl -s -o /dev/null -w "%{http_code}\n" https://ai-tools.techbridge.edu.gh/peac
 
 Expected: HTTP 200, files present, owned by `techbridge.edu.gh_md:psacln`, permissions 755/644.
 
----
-
-## PATTERN 8: SAFE DEPLOYMENT (SSH Heredoc + Health Checks)
-
-**Scope:** All Vite + React projects on Plesk/Ubuntu  
-**File:** `deploy.template.ps1` + `deploy.config.template.json`  
-**Platform:** Windows PowerShell calling SSH/bash
-
-### The Problem Solved
-
-**1. UTF-8 BOM Corruption**
-- PowerShell `@"..."@` heredoc adds UTF-8 BOM to output
-- `.htaccess` with BOM → Apache 500 error, silent rewrite engine failure
-- Users see blank page or infinite redirects, no clear error
-
-**2. Incomplete Deployments**
-- No build verification — ships corrupted or empty dist/
-- No health checks — assumes success without testing
-- Silent SSH failures — script exits normally even if files didn't transfer
-- .htaccess syntax never validated
-
-**3. Missing Configuration**
-- Hard-coded paths, no reusable pattern
-- Each project reinvents the wheel with slightly different bugs
-- No consistency in pre-flight or error handling
-
-### The Solution
-
-**deploy.template.ps1** — 6-step structured deployment:
-
-```
-Step 1: Load & validate configuration
-Step 2: Pre-flight checks (.env files, package.json, build script)
-Step 3: Build locally (optional, with error capture)
-Step 4: Verify build output (index.html present, not empty)
-Step 5: Deploy to remote (SSH + SCP + health checks)
-Step 6: Health checks (file presence, .htaccess syntax, HTTP routing)
-```
-
-**Key Safeguards:**
-
-1. **SSH Heredoc for .htaccess** (no BOM)
-   ```powershell
-   # ❌ Wrong
-   $htaccess | ssh ... "cat > .htaccess"
-   
-   # ✅ Correct
-   ssh ... "cat > .htaccess << 'EOF'
-   ... content ...
-   EOF"
-   ```
-
-2. **Pre-flight Checks** (fail fast, before deployment)
-   - .env.local exists
-   - Required env vars present (VITE_GOOGLE_CLIENT_ID, etc.)
-   - package.json has build script
-   - Output directory will exist post-build
-
-3. **Build Verification** (empty dist/ is caught)
-   - Check dist/ exists
-   - Check dist/ is not empty
-   - Check index.html present specifically
-   - Report file count and size
-
-4. **Health Checks** (post-deploy validation)
-   - Verify index.html exists on remote
-   - Test .htaccess syntax via `apache2ctl configtest`
-   - Curl health check URL and verify HTTP 200
-   - Wait 5 sec for server to settle
-
-5. **Clear Error Messages** (no suppression with `2>/dev/null`)
-   - Show actual SSH errors, not silence them
-   - Fail early and loudly if remote mkdir fails
-   - Report HTTP status code and timeouts clearly
-
-### Configuration File Pattern
-
-**deploy.config.json** (copy from template, customise per project):
-
-```json
-{
-  "projectName": "peace-vinyl",
-  "remoteHost": "root@techbridge.edu.gh",
-  "deployPath": "/var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/peace",
-  "buildTool": "pnpm",
-  "outputDir": "dist",
-  "requiredEnvVars": ["VITE_GOOGLE_CLIENT_ID"],
-  "healthCheckUrl": "https://ai-tools.techbridge.edu.gh/peace/"
-}
-```
-
-### Usage
-
-1. Copy `deploy.template.ps1` to project root as `deploy.ps1`
-2. Create `deploy.config.json` with project settings
-3. Run: `.\deploy.ps1 -ConfigFile deploy.config.json -Build`
-
-Optional flags:
-- `-DryRun` — simulate deployment without SSH/SCP
-- `-SkipHealthCheck` — skip remote validation (use only if health checks fail for infra reasons)
-
-### Deployment Review Checklist (8 Items)
-
-Before pushing any project deploy.ps1, verify:
-
-- [ ] Configuration file matches actual remote paths (`ssh root@host 'ls /var/www/.../project/'`)
-- [ ] Build tool is correct (pnpm, not npm)
-- [ ] Output directory matches Vite config (`vite.config.ts` + actual build output)
-- [ ] Required env vars are listed (check .env.local for API keys)
-- [ ] .htaccess base path matches deploy path (e.g., `/peace/` for `/peace-vinyl/`)
-- [ ] Health check URL is public and accessible (no auth walls)
-- [ ] SSH host format is correct (`root@domain` or `user@ip`)
-- [ ] Pre-flight checks catch missing files (run with invalid .env, verify failure)
-
 ### Common Issues & Fixes
 
 | Issue | Symptom | Fix |
 |---|---|---|
-| UTF-8 BOM in .htaccess | Apache 500 error, blank page | Use SSH heredoc, not PowerShell `@"..."@` |
+| UTF-8 BOM in .htaccess | Apache 500 error, blank page | Use here-string pipe method above |
 | Wrong deploy path | Files in wrong location, 404 | Verify with `ssh root@host 'ls /var/www/.../actual-path/'` |
-| Missing .env vars | "VITE_GOOGLE_CLIENT_ID undefined" in browser | Ensure .env.local on local machine before build |
-| Dist/ empty after build | Health check fails immediately | Run `pnpm build` locally, check vite.config.ts for outDir |
-| .htaccess syntax error | Apache refuses to start | Test locally: `cd dist && apache2ctl -t` (if Apache on local machine) |
-| SSH timeout | "Connection refused" or hangs | Check SSH key at `~/.ssh/id_rsa`, verify host reachable (`ping root@domain`) |
-
-### References
-
-- `deploy.template.ps1` — Template implementation (copy this to each project)
-- `deploy.config.template.json` — Configuration template
-- PATTERNS.md §7 — .htaccess & BOM issue deep dive
-- `DEPLOY_GUIDE.md` — User-facing deployment instructions
+| Missing .env vars | "VITE_GOOGLE_CLIENT_ID undefined" | Ensure .env.local exists before build |
+| Dist/ empty after build | Health check fails immediately | Run `pnpm build` locally, check vite.config.ts |
+| Vite build hangs indefinitely | Powershell block with `vite build` on Windows | Change `vite build` script to `node node_modules/vite/bin/vite.js build` |
+| .htaccess syntax error | Apache refuses to start | Verify with `apache2ctl configtest` |
+| SSH timeout | "Connection refused" | Check SSH key, verify host reachable |
 
 ---
 
@@ -797,13 +678,48 @@ Before pushing any project deploy.ps1, verify:
 
 ### Why Not Implicit Flow?
 
-**NEVER use response_type='token'** in production OAuth flows. The implicit flow exposes access tokens in the browser URL, which:
+**NEVER use response_type='token'** in production. Implicit flow exposes access tokens in the browser URL:
 - Appear in browser history
 - Get logged in access logs
-- Are vulnerable to XSS attacks
+- Vulnerable to XSS attacks
 - Violate OAuth 2.0 security best practices
 
 **Always use response_type='code'** with a backend token exchange.
+
+### OAuth 2.0 Setup Checklist (Do This BEFORE Coding)
+
+- [ ] **Google Cloud Project Created**
+  - Project name: [your-app]
+  - Enable APIs: Google+ API, Oauth 2.0
+
+- [ ] **OAuth 2.0 Credentials Configured**
+  - Application Type: Web Application
+  - Client ID generated: `xxxxx.apps.googleusercontent.com`
+  - Client Secret generated: `GOCSPX-xxxxx` (KEEP SECRET)
+  - Authorised JavaScript origins: `https://ai-tools.techbridge.edu.gh`, `http://localhost:3000`
+  - Authorised redirect URIs: `https://ai-tools.techbridge.edu.gh/[app]/callback` (exact match required)
+
+- [ ] **Frontend Environment Variables Set**
+  - `VITE_GOOGLE_CLIENT_ID` = your Client ID
+  - `VITE_GOOGLE_REDIRECT_URI` = exact redirect path
+
+- [ ] **Backend Environment Variables Set**
+  - `GOOGLE_CLIENT_ID` = your Client ID
+  - `GOOGLE_CLIENT_SECRET` = your Client Secret (server-side only)
+
+- [ ] **Plesk WAF Rule 210580 Exempted** (if applicable)
+  - Modsecurity rule 210580 blocks OAuth `scope` parameter
+  - Add vhost directive: `SecRuleRemoveById 210580` in auth callback path
+  - See Pattern 7-Extended for details
+
+- [ ] **Frontend Code Has Proper Imports**
+  - Check `LoginView.tsx`: imports `APP_PATH` from `appContext.ts`
+  - Does NOT construct `undefined` in redirect URI
+  - Vite transpiles `undefined` silently if not imported
+
+- [ ] **Backend `dotenv.config()` Loaded**
+  - `server.ts` top line: `import dotenv from "dotenv"; dotenv.config();`
+  - Verify startup log shows: "Env variables injected"
 
 ### Architecture
 
@@ -870,7 +786,7 @@ app.post('/api/auth/google/token', async (req, res) => {
     }),
   });
   const tokens = await tokenResponse.json();
-  const user = decodeJWT(tokens.id_token); // Extract from JWT
+  const user = decodeJWT(tokens.id_token);
   res.json({ user: { id: user.sub, email: user.email, name: user.name } });
 });
 ```
@@ -880,7 +796,7 @@ app.post('/api/auth/google/token', async (req, res) => {
 **Frontend (.env.local):**
 ```
 VITE_GOOGLE_CLIENT_ID=xxxxx.apps.googleusercontent.com
-VITE_GOOGLE_REDIRECT_URI=https://ai-tools.techbridge.edu.gh/peace/auth/google/callback
+VITE_GOOGLE_REDIRECT_URI=https://ai-tools.techbridge.edu.gh/peace/callback
 ```
 
 **Backend (.env):**
@@ -889,42 +805,54 @@ GOOGLE_CLIENT_ID=xxxxx.apps.googleusercontent.com
 GOOGLE_CLIENT_SECRET=GOCSPX-xxxxx (NEVER commit or expose)
 ```
 
-### Common Issues
+### Callback Path Convention (TUC Monorepo)
 
-| Issue | Symptom | Fix |
-|---|---|---|
-| Gmail account selector not showing | Only one Google account option | Add `prompt=select_account` to OAuth URL |
-| state mismatch error | OAuth callback rejected | Ensure state stored/validated in sessionStorage |
-| 500 error on token exchange | Backend can't reach Google | Check GOOGLE_CLIENT_SECRET is set, verify internet |
-| User object undefined | Login completes but app crashes | Check backend returns JSON, not HTML error |
-| `redirect_uri_mismatch` Error 400 from Google | Access blocked page | Decode the `authError=` base64 from the Google error URL to see the exact `redirect_uri` Google received. Byte-compare against the Authorised redirect URIs list in Google Cloud Console. Re-type entries to rule out hidden characters. |
-| Frontend builds an `undefined`-containing redirect URI | URI shows `/undefinedcallback` or similar | Check `LoginView.tsx` imports — Vite silently transpiles `undefined` identifiers. Must import `APP_PATH` (and any other URL builders) from `appContext.ts`. |
-| 403 Forbidden on `/<app>/callback` after Google succeeds | Backend never reached | Comodo WAF rule **210580** flags `.profile` substring in OAuth `scope` query param. Add Plesk vhost directive (NOT `.htaccess`): `<LocationMatch "^/<app>/(callback\|auth/google/callback)"> SecRuleRemoveById 210580 </LocationMatch>` via Plesk → Apache & nginx Settings → Additional Apache directives (HTTPS field). |
-| Backend log: "Could not determine client ID from request" | Token exchange fails | `server.ts` needs explicit `import dotenv from "dotenv"; dotenv.config();` at top. The runtime does not auto-load `.env`. |
-| OAuth completes but app loops back to login | No frontend error visible | Two possibilities: (a) backend sets `httpOnly: true` cookie → frontend's `document.cookie` reader sees nothing → flip to `httpOnly: false`; (b) frontend calls `atob(cookie)` without `decodeURIComponent` first — Express URL-encodes cookie values automatically. |
-| User IP timing out across all apps | Even working apps appear "down" | Plesk fail2ban `plesk-modsecurity` jail bans IPs after repeated WAF hits. `ssh root@... "fail2ban-client set plesk-modsecurity unbanip <IP>"`. |
+Apps are mid-migration between two callback path conventions. Check which your deployed bundle uses:
 
-### Callback Path Migration (ai-tools monorepo)
-
-Apps in this monorepo are mid-migration between two callback path conventions. The Google OAuth client must have whichever path each deployed bundle actually sends.
+```bash
+ssh root@host "grep -r 'callback' /var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/[app]/assets/*.js | head -1"
+```
 
 - **Old style:** `/<app>/auth/google/callback` — peace, biochemai, willpro, glucose, groove-streamer
 - **New flat style:** `/<app>/callback` — ai-lab
 
-**Rule:** before editing the Authorised redirect URIs list in Google Cloud Console, ssh and grep each deployed bundle at `/var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/<app>/assets/*.js` for what URL the code actually sends. Deleting a URI that any live bundle still uses will break that app immediately.
+**Rule:** Before editing Google Cloud Console's Authorised redirect URIs list, verify which path your deployed app actually uses. Deleting a URI that any live app still uses will break that app immediately.
 
-**Diagnostic order when OAuth breaks:**
-1. Frontend redirect_uri construction (check `LoginView.tsx` imports)
-2. Google Cloud Console URI list (decode `authError=` blob; byte-compare)
-3. WAF rule 210580 on the callback path (vhost log: `/var/www/vhosts/system/ai-tools.techbridge.edu.gh/logs/error_log`)
-4. Backend `dotenv.config()` loaded (`server.log` shows "injected env" line on startup)
-5. Cookie `httpOnly: false` + `decodeURIComponent` before `atob` in AuthContext
+### Common Issues & Diagnostic Order
 
-### References
+| Issue | Symptom | Diagnostic Order |
+|---|---|---|
+| `redirect_uri_mismatch` 400 | Access blocked page | 1. Decode `authError=` base64. 2. Byte-compare against Google Cloud Console. 3. Re-type entries (hidden chars?). |
+| 403 Forbidden on callback path | Backend never reached | 1. Check Plesk WAF log. 2. Add `SecRuleRemoveById 210580` if 210580 triggered. |
+| 404 Not Found on `/api/auth...`| Nginx proxy bypass | 1. Verify frontend `fetch()` uses app proxy prefix (e.g. `/glucose/api/`) instead of absolute `/api/`. |
+| 500 error on token exchange | Backend can't reach Google | 1. Check `GOOGLE_CLIENT_SECRET` set. 2. Verify internet connectivity. |
+| `dotenv` vars undefined | Env variables not loaded | 1. Check `server.ts` top: `import dotenv; dotenv.config();` 2. Restart server. |
+| Undefined in redirect URI | URI shows `undefined/callback` | 1. Check `LoginView.tsx` imports `APP_PATH` from context. 2. Rebuild and deploy. |
 
-- Peace Vinyl (`src/contexts/AuthContext.tsx`, `server.js`) — Old-style `/peace/auth/google/callback`
-- TUC AI Lab (`src/contexts/AuthContext.tsx`, `server.ts`) — New-style `/ai-lab/callback`, full server-side token exchange with cookie handoff
-- Plesk vhost config: `/var/www/vhosts/system/ai-tools.techbridge.edu.gh/conf/vhost_ssl.conf` (managed via Plesk UI)
+### Multi-App SPA Callback Pattern (Sub-Apps on the Shared ai-tools Origin) — CEMENTED
+
+**Context:** `ai-tools.techbridge.edu.gh` hosts many SPA sub-apps at `/<app>/`. A single shared Node backend (`localhost:3003`) handles OAuth token exchange and APIs under `/ai-lab/api/`. **Its GET callback hardcodes `res.redirect('/ai-lab/')`** — so it cannot be the callback for any other app (it would dump users on AI-Lab). Do **not** proxy a sub-app's callback to that backend.
+
+**The standard flow for a new sub-app** (reference impl: `dictation-app/src/auth/`):
+
+1. **`appContext.ts`** — `APP_NAME = '<app>'`, `APP_PATH = '/<app>/'`, add `'<app>': '/<app>/'` to `getAppDashboardPath`. Call `setOAuthAppContext('<app>')`.
+2. **Auth request** (`AuthGate`/`LoginView`) — `redirect_uri = ${origin}${APP_PATH}callback` → flat per-app `/<app>/callback`.
+3. **Google Cloud Console** — add `https://ai-tools.techbridge.edu.gh/<app>/callback` to the **shared client** (`537671076222-…`) Authorised redirect URIs. **Never remove** other apps' URIs.
+4. **WAF** — the OAuth `scope` param (contains `https://…`) trips Comodo/ModSecurity **rule 210580** → 403 on the callback. Add `<app>` to the `LocationMatch` in
+   `/var/www/vhosts/system/ai-tools.techbridge.edu.gh/conf/vhost_ssl.conf`:
+
+   ```apache
+   <LocationMatch "^/(<app>|ai-lab|…)/(callback|auth/google/callback)">
+     SecRuleRemoveById 210580
+   </LocationMatch>
+   ```
+
+   `apache2ctl configtest && systemctl reload apache2`. **Also add it via the Plesk panel** (Apache & nginx → Additional HTTPS directives) so it survives a domain reconfigure.
+5. **Do NOT proxy `/<app>/callback`** in nginx — let the SPA serve it (`.htaccess` SPA routing to `index.html`).
+6. **Client-side exchange** — the SPA `AuthContext` reads `code`+`state` from the URL, validates `state`, then `POST /ai-lab/api/auth/google/token { code, redirectUri }` (the shared backend's client-side endpoint). `redirectUri` **must equal** the auth-request + Console URI.
+7. **On success** — store session (IndexedDB) and `window.history.replaceState({}, '', APP_PATH)` to strip `?code/&state` and land on `/<app>/`.
+
+**The three redirect_uri's must be byte-identical:** auth request · token-exchange body · Google Console. **WAF 210580** is the `scope`-param 403. **Backend redirect hardcode** is why sub-apps never proxy their callback.
 
 ---
 
@@ -1084,35 +1012,6 @@ Problem: Clicking Google button submits form with empty fields first.
 
 FormLoginView implements this correctly. Never move the Google button back inside the form.
 
-### Example: Applied Projects
-
-**Blueprint** (light theme with gradient bg):
-- `primaryColorHex="#2563eb"` (blue)
-- `backgroundClass="bg-gradient-to-br from-slate-50 to-slate-100"`
-- Registration enabled
-- No watermark
-
-**BiochemAI** (dark glassmorphic):
-- `primaryColorHex="#a78bfa"` (purple)
-- `backgroundClass="bg-[#0a0f1e]"`
-- `cardBgClass="bg-[rgba(255,255,255,0.05)] backdrop-blur-lg"`
-- Registration enabled
-- Molecular watermark SVG
-- Custom text colors (white for light theme)
-
-**WillPro** (minimal light):
-- `primaryColorHex="#630f12"` (maroon)
-- `backgroundClass="bg-gray-50"`
-- Registration **disabled** (`supportRegister=false`)
-- Uses Router navigation on login success
-
-**Peace Vinyl** (OAuth-only exception):
-- Does NOT use FormLoginView
-- Full-screen video background
-- Single "Sign in with Google" button
-- No local authentication
-- Documented as architectural exception in this standardisation
-
 ### Testing Checklist
 
 - [ ] Inputs have icons (User, Lock) left-aligned
@@ -1126,99 +1025,438 @@ FormLoginView implements this correctly. Never move the Google button back insid
 - [ ] Watermark renders at low opacity (does not interfere)
 - [ ] Light and dark variants maintain readability
 
-### References
+---
 
-- `techbridge-ai-blueprint/src/components/FormLoginView.tsx` — Reference implementation
-- `techbridge-ai-blueprint/src/components/LoginView.tsx` — Configuration example (light theme)
-- `biochemai/src/components/LoginView.tsx` — Configuration example (dark glassmorphic)
-- `willpro/src/pages/FormLoginPage.tsx` — Configuration example (login-only, Router navigation)
-- `LOGIN_STANDARDIZATION.md` — Audit of pre-standardisation implementations
+## PATTERN 12: FORM SECURITY BEST PRACTICES (NEW)
+
+**Extracted from:** Pattern 6 (Glucose Learnings)  
+**Projects:** All form-heavy apps (20+)  
+**Purpose:** Identity binding, read-only fields, secure defaults
+
+### Identity-Bound Fields (Read-Only)
+
+When a field's value is auto-populated from OAuth user data, make it read-only:
+
+```typescript
+// If Patient Name auto-populates from OAuth user.fullName:
+<input
+  value={patientName}
+  readOnly
+  className="cursor-default opacity-75"
+/>
+```
+
+Prevents accidental or malicious edits to identity-tied fields.
+
+### Default Values Across Reload
+
+Preserve app defaults when user reloads:
+
+```typescript
+// Preserve defaults across reload
+setDoctorName(profile.doctorName || 'Dr Yacoba Atiase');
+```
+
+### Form Submission Pattern
+
+```typescript
+const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+  
+  // 1. Validate all required fields
+  if (!patientName || !readings.length) {
+    setError('Complete all required fields');
+    return;
+  }
+  
+  // 2. Disable form during submission
+  setIsSubmitting(true);
+  
+  try {
+    // 3. Submit data
+    await submitForm({ patientName, readings, doctorName });
+    
+    // 4. Clear form and show success
+    setReadings([]);
+    setSuccess(true);
+  } catch (err) {
+    // 5. Show error, form remains filled (user can retry)
+    setError(err.message);
+  } finally {
+    setIsSubmitting(false);
+  }
+};
+```
+
+### Field Validation Order
+
+1. **Required fields** — Empty check
+2. **Type validation** — Correct data type
+3. **Length validation** — Within bounds
+4. **Pattern validation** — Matches expected format (email, date, etc.)
+5. **Cross-field validation** — Interactions between fields (e.g., start date before end date)
+
+### Error Messages (User-Friendly)
+
+- ❌ "ValidationError: email field regex failed"
+- ✅ "Please enter a valid email address (example@domain.com)"
+
+### Console Logging for Form State
+
+```typescript
+const logFormState = (label: string) => {
+  console.log(`[FORM] ${label}:`, {
+    patientName,
+    readingCount: readings.length,
+    isValid: validateForm(),
+    isSubmitting,
+    error: error || 'none',
+  });
+};
+```
+
+Always log before form submission, after data change, on error.
 
 ---
 
-## PATTERN 11: POWERSHELL DEPLOYMENT SCRIPT FIXES
+## PATTERN 13: PLAYWRIGHT TESTING STANDARDS (NEW)
 
-### The .htaccess Corruption Problem
+**Projects:** All tested apps (50+)  
+**Purpose:** Accessibility + E2E + health checks  
 
-**Symptom:** After deployment, `.htaccess` contains literal string `HTACCESS_EOF` at the end and broken rewrite rules.
+### Test File Structure
 
-**Root Cause:** PowerShell's SSH heredoc syntax inside quoted strings doesn't work as expected. The closing delimiter gets included in the file.
-
-### Solution: Use PowerShell Here-Strings with Piped SSH
-
-**WRONG:**
-```powershell
-ssh $host "cat > .htaccess << 'EOF'
-<IfModule>
-  RewriteRule ^api/(.*)$ http://localhost:3000/api/\$1 [P,L]
-</IfModule>
-EOF"
 ```
-Result: File contains literal `EOF` string + malformed rewrite rule `api/\` (no captured group).
-
-**CORRECT:**
-```powershell
-$htaccessContent = @"
-<IfModule mod_rewrite.c>
-  RewriteEngine On
-  RewriteRule ^api/(.*)$ http://localhost:3000/api/$1 [P,L]
-</IfModule>
-"@
-$htaccessContent | ssh $host "cat > '$RemotePath/.htaccess'"
+src/
+├── components/
+│   ├── LoginView.tsx
+│   └── LoginView.test.tsx        ← Test next to component
+├── pages/
+│   ├── Dashboard.tsx
+│   └── Dashboard.test.tsx
+└── __tests__/
+    ├── e2e/
+    │   ├── auth.test.ts
+    │   ├── workflow.test.ts
+    │   └── accessibility.test.ts
+    └── integration/
+        ├── api.test.ts
+        └── database.test.ts
 ```
 
-### Breakdown
+### Accessibility Testing (a11y)
 
-1. **PowerShell here-string** (`@"..."@`) — Preserves newlines, allows variable interpolation with `$var`
-2. **Pipe to ssh** — Avoids quoting issues, sends content via stdin
-3. **No escaping in here-string** — `$1` works directly (no need for `\$1`)
+```typescript
+import { test, expect } from '@playwright/test';
+import { injectAxe, getViolations } from 'axe-playwright';
 
-### Full Deployment Pattern
+test('LoginView meets WCAG 2.1 AA', async ({ page }) => {
+  await page.goto('/login');
+  await injectAxe(page);
+  
+  const violations = await getViolations(page);
+  expect(violations).toEqual([]);
+});
 
-```powershell
-# 1. Define .htaccess as here-string (not heredoc in SSH)
-$htaccessContent = @"
-<IfModule mod_rewrite.c>
-  RewriteEngine On
-  RewriteBase /ai-lab/
-  RewriteCond %{REQUEST_FILENAME} -f [OR]
-  RewriteCond %{REQUEST_FILENAME} -d
-  RewriteRule ^ - [L]
-  RewriteRule ^api/(.*)$ http://localhost:3000/api/$1 [P,L]
-  RewriteRule ^ /ai-lab/index.html [QSA,L]
-</IfModule>
-"@
-
-# 2. Pipe to SSH
-$htaccessContent | ssh $RemoteHost "cat > '$RemotePath/.htaccess'"
-
-# 3. Verify
-ssh $RemoteHost "cat '$RemotePath/.htaccess'"
+test('Form inputs have associated labels', async ({ page }) => {
+  await page.goto('/login');
+  
+  const emailInput = page.locator('input[name="email"]');
+  const emailLabel = page.locator('label[for="email"]');
+  
+  await expect(emailLabel).toBeVisible();
+});
 ```
 
-### Verification After Deployment
+### E2E Testing (Happy Path)
 
-Always check:
+```typescript
+test('Complete login flow', async ({ page }) => {
+  // 1. Navigate
+  await page.goto('/login');
+  await expect(page).toHaveTitle(/Welcome/);
+  
+  // 2. Fill form
+  await page.fill('input[name="email"]', 'user@example.com');
+  await page.fill('input[name="password"]', 'Password123!');
+  
+  // 3. Submit
+  await page.click('button[type="submit"]');
+  
+  // 4. Verify success state
+  await expect(page).toHaveURL('/dashboard');
+  await expect(page.locator('h1')).toContainText('Welcome');
+});
+```
+
+### Error State Testing
+
+```typescript
+test('Show error on invalid credentials', async ({ page }) => {
+  await page.goto('/login');
+  await page.fill('input[name="email"]', 'wrong@example.com');
+  await page.fill('input[name="password"]', 'WrongPassword');
+  await page.click('button[type="submit"]');
+  
+  const errorMsg = page.locator('[role="alert"]');
+  await expect(errorMsg).toContainText('Invalid credentials');
+});
+```
+
+### Health Check Testing
+
+```typescript
+test('API health check', async ({ request }) => {
+  const response = await request.get('/api/health');
+  expect(response.status()).toBe(200);
+  
+  const body = await response.json();
+  expect(body).toHaveProperty('status', 'ok');
+  expect(body).toHaveProperty('timestamp');
+});
+```
+
+### Running Tests
+
 ```bash
-ssh root@host "cat /path/to/.htaccess | grep -c 'HTACCESS_EOF'"  # Should be 0
-ssh root@host "cat /path/to/.htaccess | grep 'RewriteRule.*api'"  # Should show correct rule
-curl -s https://app.url/ -I | grep "HTTP" # Should be 200, not 500
+# Run all tests
+pnpm exec playwright test
+
+# Run with UI mode (visual debugging)
+pnpm exec playwright test --ui
+
+# Run specific test file
+pnpm exec playwright test src/__tests__/e2e/auth.test.ts
+
+# Generate coverage report
+pnpm exec playwright test --reporter=html
 ```
 
-### Apply to All TUC Apps
+### package.json Scripts
 
-Update these deploy.ps1 files:
-- [ ] peace-vinyl/deploy.ps1
-- [ ] tuc-ai-lab-catalog/deploy.ps1
-- [ ] glucose/deploy.ps1 (if using .htaccess)
-- [ ] Any future Plesk app
-
-### References
-
-- tuc-ai-lab-catalog/deploy.ps1 — Corrected implementation
-- PATTERNS.md §7 — Plesk Vite Deployment pattern (includes earlier .htaccess fixes)
+```json
+{
+  "scripts": {
+    "test": "playwright test",
+    "test:ui": "playwright test --ui",
+    "test:debug": "playwright test --debug",
+    "test:report": "playwright show-report"
+  }
+}
+```
 
 ---
 
-*Last updated: May 2026 — Daniel Frempong Twum / TUC ICT*  
+## PATTERN 14: ENVIRONMENT VARIABLE MANAGEMENT (NEW)
+
+**Projects:** All projects using `.env`  
+**Purpose:** Share credentials safely across projects
+
+### The Problem
+
+TUC projects need shared credentials (Google OAuth, Gemini API) but must not expose secrets.
+
+### The Solution: Central .env.local
+
+```
+glucose/.env.local  ← Source of truth
+├── VITE_GOOGLE_CLIENT_ID (shared across projects)
+├── VITE_GOOGLE_REDIRECT_URI (per-project, same client ID)
+└── VITE_GEMINI_API_KEY (shared across projects)
+```
+
+Other projects copy from glucose on deploy:
+
+```powershell
+# In deploy.ps1 of any project
+Copy-Item "../glucose/.env.local" "./.env.local" -Force
+```
+
+### .env File Organization
+
+**Frontend (.env.local — shared parts)**
+```
+# Shared: These are same across all TUC projects
+VITE_GOOGLE_CLIENT_ID=xxxxx.apps.googleusercontent.com
+VITE_GEMINI_API_KEY=AIzaSy...
+
+# Per-project: These vary by app
+VITE_GOOGLE_REDIRECT_URI=https://ai-tools.techbridge.edu.gh/[app]/callback
+VITE_APP_NAME=[app-name]
+```
+
+**Backend (.env — server-side only)**
+```
+# Server-side secrets NEVER exposed to frontend
+GOOGLE_CLIENT_SECRET=GOCSPX-xxxxx
+DATABASE_URL=postgresql://...
+REDIS_URL=redis://...
+
+# Shared reference (for verification only)
+VITE_GOOGLE_CLIENT_ID=xxxxx.apps.googleusercontent.com
+```
+
+### Best Practices
+
+1. **Never commit `.env` files** — Add to `.gitignore`
+2. **Use `.env.example`** — Document required variables
+3. **Server-side secrets only** — Frontend gets no `_SECRET` vars
+4. **Per-environment files** — `.env.local` (dev), `.env.staging`, `.env.production`
+5. **Validate at startup** — Check all required vars present
+
+### Validation Script
+
+```typescript
+// server.ts
+const requiredEnvVars = [
+  'GOOGLE_CLIENT_ID',
+  'GOOGLE_CLIENT_SECRET',
+  'DATABASE_URL',
+  'REDIS_URL',
+];
+
+const missing = requiredEnvVars.filter(v => !process.env[v]);
+if (missing.length > 0) {
+  throw new Error(`Missing required env vars: ${missing.join(', ')}`);
+}
+
+console.log('✅ All required env variables present');
+```
+
+### Rotation Plan
+
+When API keys expire:
+
+1. **Generate new key** in Google Cloud / API provider
+2. **Update glucose/.env.local** (source of truth)
+3. **Run deploy scripts** for all dependent projects
+4. **Verify all projects** still authenticate
+5. **Document rotation date** in PATTERNS.md
+6. **Archive old key** (for audit trail)
+
+---
+
+## PATTERN 15: REACT COMPONENT RESILIENCE (NEW)
+
+**Projects:** ci-cd-dashboard, data-heavy apps  
+**Purpose:** Prevent unhandled React UI crashes from asynchronous dependencies and malformed API responses.
+
+### Safe Xterm.js Initialization
+
+**The Problem:** `xterm-addon-fit` attempts to read DOM container dimensions immediately. If called precisely during React mount before the layout engine has sized the `div`, it throws `TypeError: Cannot read properties of undefined (reading 'dimensions')`, causing the entire React tree to unmount/freeze.
+
+**The Solution:** Defer the `fit()` calculation to the end of the event loop with `setTimeout`, allowing layout computation to finish, and wrap in a `try/catch`.
+
+```typescript
+const fitAddon = new FitAddon();
+term.loadAddon(fitAddon);
+term.open(terminalRef.current);
+
+// ❌ WRONG: Crashes UI if dimensions aren't ready
+// fitAddon.fit();
+
+// ✅ CORRECT: Defer until layout is complete
+setTimeout(() => {
+  try { fitAddon.fit(); } catch (e) {}
+}, 50);
+```
+
+### Safe JSON Parsing from Reverse Proxies
+
+**The Problem:** If an API endpoint fails, goes offline, or is misrouted, Nginx (or another proxy) will often return an HTML error page (e.g., `<!DOCTYPE HTML>... 404 Not Found`). Calling `await res.json()` directly throws an unhandled `SyntaxError`, breaking the UI.
+
+**The Solution:** Fetch the response as `text` first, then safely parse.
+
+```typescript
+// ❌ WRONG: Crashes if proxy intercepts with an HTML 404/500 page
+// const data = await (await fetch('/api/data')).json();
+
+// ✅ CORRECT: Safe parsing
+try {
+  const res = await fetch('/api/data');
+  const text = await res.text();
+  try {
+    const data = JSON.parse(text);
+    setData(data);
+  } catch (parseErr) {
+    console.error('Invalid JSON response:', text.substring(0, 100));
+  }
+} catch (netErr) {
+  console.error('Network error', netErr);
+}
+```
+
+---
+
+## PATTERN 16: VITE CHUNK SPLITTING OPTIMIZATION (NEW)
+
+**Projects:** tuc-ai-lab-catalog, ai-email-drafter, any Vite-based app  
+**Purpose:** Eliminate the `Some chunks are larger than 500 kBs` build warning and improve caching/loading performance.
+
+### The Monolithic Bundle Problem
+
+**The Problem:** By default, Vite bundles your application code AND all dependencies (`node_modules`) into a single massive `index-[hash].js` file. This produces build warnings and forces users to re-download massive libraries (like React or Firebase) every time you change a single line of your own UI code.
+
+**The Solution:** Use Rollup's `manualChunks` in `vite.config.ts` to separate vendor libraries into distinct, cacheable chunks.
+
+```typescript
+// vite.config.ts
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+
+export default defineConfig({
+  plugins: [react()],
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          // Check if the module is from node_modules
+          if (id.includes('node_modules')) {
+            // Group React core libraries
+            if (id.includes('react') || id.includes('react-dom')) {
+              return 'vendor-react';
+            }
+            // Group large icon libraries
+            if (id.includes('lucide-react')) {
+              return 'vendor-icons';
+            }
+            // Group heavy SDKs (like Gemini, Firebase, etc.)
+            if (id.includes('@google/genai')) {
+              return 'vendor-google';
+            }
+            // Fallback for everything else
+            return 'vendor-core'; 
+          }
+        }
+      }
+    }
+  }
+});
+```
+
+**Why this works:** Browsers can cache `vendor-react.js` and `vendor-core.js` for months. When you push an update to your app components, users only download a tiny `index-[newhash].js` file containing just your changes.
+
+---
+
+## CROSS-PATTERN REFERENCES
+
+**Using OAuth?** → Start with Pattern 9, then Pattern 10 (login form)  
+**Deploying to Plesk?** → Use Pattern 7-Extended (includes health checks)  
+**Building a form?** → Use Pattern 10 (login forms) + Pattern 12 (form security)  
+**Testing?** → Use Pattern 13 (Playwright standards)  
+**Sharing credentials?** → Use Pattern 14 (environment variables)  
+**Heavy Bundle?** → Use Pattern 16 (Vite chunk splitting)  
+
+---
+
+## VERSION HISTORY
+
+| Version | Date | Changes |
+|---------|------|---------|
+| 1.0 | May 2026 | Original 11 patterns |
+| **2.0** | **30 May 2026** | **Merged 7+11, added 12/13/14, cross-references, quick-start checklist** |
+
+---
+
+*Last updated: 30 May 2026 — Daniel Frempong Twum / TUC ICT*  
 *Core session directives → see CLAUDE.md*
