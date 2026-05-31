@@ -134,7 +134,7 @@ export const LoginView: React.FC = () => {
     }
 
     const redirectUri = import.meta.env.VITE_GOOGLE_REDIRECT_URI
-      || `${window.location.origin}/auth/google/callback`;
+      || `${window.location.origin}/glucose/callback`;
 
     const params = new URLSearchParams({
       client_id: clientId,
@@ -144,19 +144,10 @@ export const LoginView: React.FC = () => {
       prompt: 'select_account'
     });
 
-    const authWindow = window.open(
-      `https://accounts.google.com/o/oauth2/v2/auth?${params}`,
-      'oauth_popup',
-      'width=600,height=700'
-    );
-
-    if (!authWindow) {
-      setError('Popup blocked. Please enable popups for this site, then try again.');
-      setLastSubmitError({ message: 'Popup blocked', timestamp: Date.now() });
-      return;
-    }
-
     setOAuthState('pending');
+    // Full-page redirect (no popup). Google returns to redirect_uri with the
+    // access_token in the URL hash, which AuthContext processes on load.
+    window.location.href = `https://accounts.google.com/o/oauth2/v2/auth?${params}`;
   };
 
   const validateForm = (): boolean => {

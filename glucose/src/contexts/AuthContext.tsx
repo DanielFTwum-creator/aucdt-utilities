@@ -22,6 +22,33 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
+    // Full-page Google OAuth callback: the access_token arrives in the URL hash
+    // (no popup). Exchange it for the user profile, then clean the URL.
+    const hash = window.location.hash || '';
+    if (hash.includes('access_token=')) {
+      const params = new URLSearchParams(hash.replace(/^#/, ''));
+      const accessToken = params.get('access_token');
+      if (accessToken) {
+        (async () => {
+          try {
+            const res = await fetch('https://www.googleapis.com/oauth2/v2/userinfo', {
+              headers: { Authorization: `Bearer ${accessToken}` },
+            });
+            if (res.ok) {
+              const info = await res.json();
+              await login({ id: info.id, username: info.name, email: info.email, fullName: info.name });
+            }
+          } catch {
+            /* fall through to the login screen */
+          } finally {
+            const cleanPath = window.location.pathname.replace(/callback\/?$/, '') || '/glucose/';
+            window.history.replaceState({}, document.title, cleanPath);
+          }
+        })();
+        return;
+      }
+    }
+
     const stored = localStorage.getItem('glucose_user');
     if (stored) {
       try {
