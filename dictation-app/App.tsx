@@ -306,7 +306,7 @@ export default function App() {
       ) : (
         <header className="bg-gradient-to-r from-rose-500 via-rose-600 to-rose-700 sticky top-0 z-40 shadow-lg">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex flex-col items-center justify-center h-64 gap-6">
+            <div className="flex flex-col items-center justify-center py-10 gap-5">
               <div className="live-timer font-mono text-5xl text-white font-light tracking-widest drop-shadow-[0_0_12px_rgba(255,255,255,0.4)]">
                 {formatTime(recordingTimeMs)}
               </div>
