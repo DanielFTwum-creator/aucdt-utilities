@@ -57,19 +57,32 @@ git clone --depth 1 --filter=blob:none --sparse '$repoUrl' $buildDir
 cd $buildDir
 git sparse-checkout set biochemai
 cd biochemai
-echo '[3/6] Installing dependencies...'
+echo '[3/6] Injecting .env.local for Vite build...'
+cp /tmp/biochemai_env_$commit .env.local 2>/dev/null || echo 'Warning: .env.local not found — VITE_ vars will be empty'
+echo '[4/6] Installing dependencies...'
 npm install --legacy-peer-deps --silent
-echo '[4/6] Building...'
+echo '[5/6] Building (with VITE_ env vars)...'
 npx vite build
-echo '[5/6] Deploying dist/ to web root...'
+echo '[6/7] Deploying dist/ to web root...'
 mkdir -p $RemotePath
 cp -r dist/. $RemotePath
 cp server.ts package.json $RemotePath
-echo '[6/6] Installing backend deps on server...'
+echo '[7/7] Installing backend deps on server...'
 cd $RemotePath
 npm install --omit=dev --silent
 echo 'Build and deploy complete.'
 "@
+
+# Stream .env.local to server BEFORE building — Vite needs it at build time
+# VITE_* vars are inlined during `vite build`; without this, Google OAuth breaks.
+Log "INFO" "Uploading .env.local to server for build..." Yellow
+$envContent = Get-Content ".env.local" -Raw
+$envContent | ssh -o StrictHostKeyChecking=no $RemoteHost "mkdir -p /tmp && cat > /tmp/biochemai_env_$commit"
+if ($LASTEXITCODE -eq 0) {
+    Log "SUCCESS" ".env.local uploaded" Green
+} else {
+    Log "WARN" ".env.local upload failed — Google OAuth may not work in build" Yellow
+}
 
 ssh -o StrictHostKeyChecking=no $RemoteHost "$serverScript"
 
@@ -78,6 +91,9 @@ if ($LASTEXITCODE -ne 0) {
 } else {
     Log "SUCCESS" "Server-side build and file sync complete" Green
 }
+
+# Clean up the uploaded env file
+ssh -o StrictHostKeyChecking=no $RemoteHost "rm -f /tmp/biochemai_env_$commit" 2>$null | Out-Null
 
 # Step 4: Write .htaccess
 Log "INFO" "Step 4: Writing .htaccess..." Yellow
