@@ -91,16 +91,26 @@ When spawning subagents, use the cheapest model that can handle the task:
 
 ## 2. MODEL ALLOCATION PROTOCOL
 
-### Claude Sonnet — HIGH-VALUE ONLY
+> **Model IDs:** Opus 4.8 `claude-opus-4-8` · Sonnet 4.6 `claude-sonnet-4-6` · Haiku 4.5 `claude-haiku-4-5`
+> Default to the latest, most capable model for the tier.
 
-- IEEE SRS drafting, review, and final sign-off
+### Claude Opus 4.8 — STRATEGIC & ARCHITECTURAL (flagship)
+
 - System & database architecture decisions
 - Security design, audit logic, auth flows
 - Complex debugging and root cause analysis
+- Ambiguous requirements where trade-offs must be mapped before coding
+- High-stakes, hard-to-reverse decisions
+- Final architectural sign-off
+- Any task requiring deep cross-domain reasoning
+
+### Claude Sonnet — HIGH-VALUE EXECUTION
+
+- IEEE SRS drafting, review, and final sign-off
+- Scoped research, code exploration, summarisation, synthesis across sources
 - SVG architecture and database diagrams
 - CLAUDE.md, deployment guides, admin guides
 - Final QA review of all Haiku-generated output
-- Any task requiring cross-domain reasoning
 
 ### Claude Haiku — DELEGATE EVERYTHING REPETITIVE
 

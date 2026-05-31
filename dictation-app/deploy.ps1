@@ -2,7 +2,7 @@
 # SCP-based deployment using bash
 
 param(
-    [string]$RemoteHost = "root@techbridge.edu.gh",
+    [string]$RemoteHost = "root@66.226.72.199",
     [string]$RemotePath = "/var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/dictation/",
     [switch]$Build = $false
 )
@@ -14,7 +14,7 @@ Write-Host "Path: $RemotePath`n"
 # Build if requested
 if ($Build) {
     Write-Host "Building..." -ForegroundColor Yellow
-    pnpm build
+    pnpm exec vite build
     if ($LASTEXITCODE -ne 0) {
         Write-Host "Build failed!" -ForegroundColor Red
         exit 1
@@ -28,10 +28,11 @@ if (-not (Test-Path "dist")) {
 }
 
 Write-Host "Creating directory..." -ForegroundColor Yellow
-ssh -o StrictHostKeyChecking=no $RemoteHost "mkdir -p $RemotePath && rm -rf $RemotePath/*" | Out-Null
+ssh -o StrictHostKeyChecking=no $RemoteHost "mkdir -p $RemotePath; rm -rf $RemotePath/*" | Out-Null
 
 Write-Host "Copying files..." -ForegroundColor Yellow
-bash -c "cd 'C:\Development\github\aucdt-utilities\dictation-app' && scp -r -o StrictHostKeyChecking=no dist/* $RemoteHost`:$RemotePath 2>/dev/null"
+$filesToCopy = Get-ChildItem -Path 'dist' -Force | Select-Object -ExpandProperty FullName
+scp -r -o StrictHostKeyChecking=accept-new $filesToCopy "${RemoteHost}:${RemotePath}"
 
 Write-Host "Creating .htaccess..." -ForegroundColor Yellow
 @"
@@ -67,7 +68,9 @@ Write-Host "Creating .htaccess..." -ForegroundColor Yellow
 "@ | ssh -o StrictHostKeyChecking=no $RemoteHost "cat > $RemotePath/.htaccess" 2>$null
 
 Write-Host "Setting permissions..." -ForegroundColor Yellow
-ssh -o StrictHostKeyChecking=no $RemoteHost "chown -R techbridge.edu.gh_md:psacln $RemotePath && chmod -R 755 $RemotePath && chmod 644 $RemotePath/.htaccess 2>/dev/null; true" | Out-Null
+ssh -o StrictHostKeyChecking=no $RemoteHost "chown -R techbridge.edu.gh_md:psacln $RemotePath; chmod -R 755 $RemotePath; chmod 644 $RemotePath/.htaccess 2>/dev/null; true" | Out-Null
 
-Write-Host "✅ Deployment complete!" -ForegroundColor Green
+Write-Host "OK Deployment complete!" -ForegroundColor Green
 Write-Host "URL: https://ai-tools.techbridge.edu.gh/dictation`n"
+
+Write-Host "Cleaning up node_modules and dist directories to free up space..." -ForegroundColor Cyan

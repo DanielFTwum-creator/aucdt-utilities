@@ -116,7 +116,7 @@ export const FormLoginView: React.FC<FormLoginViewProps> = ({
           <source src={videoBackground} type="video/mp4" />
         </video>
       )}
-      
+
       {/* Scrim between video and card */}
       <div
         className="absolute inset-0"
@@ -124,7 +124,7 @@ export const FormLoginView: React.FC<FormLoginViewProps> = ({
       ></div>
 
       {watermarkSvg && <div className="fixed inset-0 pointer-events-none" style={{ zIndex: 2 }}>{watermarkSvg}</div>}
-      
+
       <div className="w-full max-w-md relative z-10 flex flex-col items-center">
         {/* Header */}
         <div className="text-center mb-8 animate-fade-in-down flex flex-col items-center">
@@ -134,13 +134,13 @@ export const FormLoginView: React.FC<FormLoginViewProps> = ({
         </div>
 
         {/* Login Card */}
-        <div 
+        <div
           className="w-full rounded-[20px] p-10 shadow-[0_8px_32px_rgba(0,0,0,0.3)] border border-white/25 animate-fade-in-up"
-          style={{ 
-            background: 'rgba(255,255,255,0.12)', 
+          style={{
+            background: 'rgba(255,255,255,0.12)',
             backdropFilter: 'blur(18px) saturate(160%)',
             WebkitBackdropFilter: 'blur(18px) saturate(160%)',
-            animationDelay: '0.2s' 
+            animationDelay: '0.2s'
           }}
         >
           <h2 className="font-playfair text-[26px] font-bold text-center text-white mb-2">
