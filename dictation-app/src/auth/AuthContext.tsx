@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { getUserSession, setUserSession, clearUserSession } from './indexedDB';
-import { getOAuthAppContext, getAppDashboardPath } from './appContext';
+import { getOAuthAppContext, getAppDashboardPath, APP_PATH } from './appContext';
 
 export interface User {
   id: string;
@@ -80,9 +80,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, []);
 
   const exchangeCodeForUser = async (code: string) => {
-    const redirectUri = import.meta.env.VITE_GOOGLE_REDIRECT_URI || `${window.location.origin}/auth/google/callback`;
+    // Standard TUC SPA-callback pattern: this app's own /<app>/callback is
+    // WAF-exempted and served by the SPA (not proxied to the ai-lab backend,
+    // whose GET callback hardcodes a redirect to /ai-lab/). We exchange the code
+    // client-side against the shared backend token endpoint, then return to our
+    // own dashboard. redirect_uri MUST match the auth request + Google Console.
+    const redirectUri = import.meta.env.VITE_GOOGLE_REDIRECT_URI || `${window.location.origin}${APP_PATH}callback`;
     try {
-      const response = await fetch('/api/auth/google/token', {
+      const response = await fetch('/ai-lab/api/auth/google/token', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ code, redirectUri }),
@@ -90,7 +95,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
       if (response.ok) {
         const { user: userData } = await response.json();
-        login(userData);
+        await login(userData);
+        // Clean the ?code/&state off the URL and land on our own dashboard.
+        window.history.replaceState({}, document.title, APP_PATH);
+      } else {
+        console.error('OAuth token exchange failed:', response.status);
       }
     } catch (err) {
       console.error('OAuth exchange error:', err);
