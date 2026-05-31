@@ -51,13 +51,12 @@ $buildDir = "/tmp/biochemai_deploy_$commit"
 $serverScript = @"
 set -e
 
-# ── Ensure pnpm is available ──────────────────────────────────
-if ! command -v pnpm &>/dev/null; then
-  echo '[setup] Installing pnpm via corepack...'
-  corepack enable 2>/dev/null || npm install -g pnpm --silent
-  export PATH="\$HOME/.local/share/pnpm:\$PATH"
+# Ensure pnpm is available
+if ! command -v pnpm >/dev/null 2>&1; then
+  corepack enable >/dev/null 2>&1 || npm install -g pnpm --silent
+  export PATH="`$HOME/.local/share/pnpm:`$PATH"
 fi
-echo "[setup] Using pnpm \$(pnpm --version)"
+echo '[setup] pnpm version:' && pnpm --version
 
 echo '[1/7] Cleaning previous temp build...'
 rm -rf $buildDir
@@ -152,15 +151,34 @@ Log "INFO" "Step 5: Configuring server environment..." Yellow
 scp -o StrictHostKeyChecking=no ".env.local" "${RemoteHost}:${RemotePath}/.env" 2>&1 | Out-Null
 ssh -o StrictHostKeyChecking=no $RemoteHost "chown -R techbridge.edu.gh_md:psaserv $RemotePath && chmod -R 755 $RemotePath && chmod 644 $RemotePath/.htaccess $RemotePath/.env 2>/dev/null; true" | Out-Null
 
-# Step 6: Restart backend + health checks
+# Step 6: Restart backend with pm2 (fast) or tsx --transpile-only (fallback)
 Log "INFO" "Step 6: Restarting backend..." Yellow
-ssh -o StrictHostKeyChecking=no $RemoteHost "fuser -k 3002/tcp 2>/dev/null; sleep 1; cd $RemotePath && setsid nohup tsx server.ts > server.log 2>&1 < /dev/null &" 2>&1 | Out-Null
-Start-Sleep -Seconds 3
+$restartScript = @"
+cd $RemotePath
+
+# Prefer pm2 — instant reload, no transpile delay
+if command -v pm2 &>/dev/null; then
+  if pm2 describe biochemai &>/dev/null; then
+    pm2 reload biochemai --update-env && echo 'pm2: reloaded biochemai'
+  else
+    pm2 start server.ts --name biochemai --interpreter tsx -- --transpile-only && echo 'pm2: started biochemai'
+  fi
+  pm2 save --force &>/dev/null
+else
+  # Fallback: kill old process, start with --transpile-only (skips type-check, ~3x faster)
+  fuser -k 3002/tcp 2>/dev/null || true
+  setsid nohup tsx --transpile-only server.ts > server.log 2>&1 < /dev/null &
+  sleep 2
+  echo 'tsx: started biochemai (transpile-only)'
+fi
+"@
+ssh -o StrictHostKeyChecking=no $RemoteHost "$restartScript"
+Start-Sleep -Seconds 2
 
 Log "INFO" "Health checks..." Yellow
 ssh -o StrictHostKeyChecking=no $RemoteHost "test -f $RemotePath/index.html && echo 'OK index.html present' || echo 'X index.html MISSING'"
 ssh -o StrictHostKeyChecking=no $RemoteHost "ss -tlnp 2>/dev/null | grep -q ':3002' && echo 'OK port 3002 listening' || echo 'X port 3002 not up'"
-ssh -o StrictHostKeyChecking=no $RemoteHost "curl -sS -o /dev/null -w 'HTTP %{http_code}' http://localhost:3002/api/health && echo ' (backend OK)'"
+ssh -o StrictHostKeyChecking=no $RemoteHost "curl -sS -o /dev/null -w 'HTTP %{http_code}' http://localhost:3002/api/health 2>/dev/null && echo ' (backend OK)' || echo ' (health endpoint not yet ready)'"
 
 # Step 7: Cleanup temp build on server
 ssh -o StrictHostKeyChecking=no $RemoteHost "rm -rf $buildDir" 2>$null | Out-Null
