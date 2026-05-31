@@ -1,0 +1,618 @@
+[
+  {
+    "id": "accessibility-1",
+    "name": "should use semantic header element",
+    "suite": "Accessibility (WCAG 2.1 AA)",
+    "status": "pass",
+    "duration": 8479,
+    "timestamp": "2026-05-31T16:15:58.138Z"
+  },
+  {
+    "id": "accessibility-2",
+    "name": "should use semantic main element",
+    "suite": "Accessibility (WCAG 2.1 AA)",
+    "status": "pass",
+    "duration": 1574,
+    "timestamp": "2026-05-31T16:15:58.138Z"
+  },
+  {
+    "id": "accessibility-3",
+    "name": "should have proper button elements",
+    "suite": "Accessibility (WCAG 2.1 AA)",
+    "status": "pass",
+    "duration": 1578,
+    "timestamp": "2026-05-31T16:15:58.138Z"
+  },
+  {
+    "id": "accessibility-4",
+    "name": "should have proper input elements with labels",
+    "suite": "Accessibility (WCAG 2.1 AA)",
+    "status": "pass",
+    "duration": 1579,
+    "timestamp": "2026-05-31T16:15:58.138Z"
+  },
+  {
+    "id": "accessibility-5",
+    "name": "should have ARIA role on tabs",
+    "suite": "Accessibility (WCAG 2.1 AA)",
+    "status": "pass",
+    "duration": 1639,
+    "timestamp": "2026-05-31T16:15:58.138Z"
+  },
+  {
+    "id": "accessibility-6",
+    "name": "should have aria-selected on tab buttons",
+    "suite": "Accessibility (WCAG 2.1 AA)",
+    "status": "pass",
+    "duration": 1587,
+    "timestamp": "2026-05-31T16:15:58.138Z"
+  },
+  {
+    "id": "accessibility-7",
+    "name": "should have aria-controls on tabs",
+    "suite": "Accessibility (WCAG 2.1 AA)",
+    "status": "pass",
+    "duration": 1361,
+    "timestamp": "2026-05-31T16:15:58.138Z"
+  },
+  {
+    "id": "accessibility-8",
+    "name": "should have aria-label on icon buttons",
+    "suite": "Accessibility (WCAG 2.1 AA)",
+    "status": "pass",
+    "duration": 1677,
+    "timestamp": "2026-05-31T16:15:58.138Z"
+  },
+  {
+    "id": "accessibility-9",
+    "name": "should be navigable with Tab key",
+    "suite": "Accessibility (WCAG 2.1 AA)",
+    "status": "pass",
+    "duration": 1418,
+    "timestamp": "2026-05-31T16:15:58.138Z"
+  },
+  {
+    "id": "accessibility-10",
+    "name": "should trap focus in visible interactive elements",
+    "suite": "Accessibility (WCAG 2.1 AA)",
+    "status": "pass",
+    "duration": 2774,
+    "timestamp": "2026-05-31T16:15:58.138Z"
+  },
+  {
+    "id": "accessibility-11",
+    "name": "should support Enter key on buttons",
+    "suite": "Accessibility (WCAG 2.1 AA)",
+    "status": "pass",
+    "duration": 2369,
+    "timestamp": "2026-05-31T16:15:58.138Z"
+  },
+  {
+    "id": "accessibility-12",
+    "name": "should support arrow keys in tabs",
+    "suite": "Accessibility (WCAG 2.1 AA)",
+    "status": "pass",
+    "duration": 2447,
+    "timestamp": "2026-05-31T16:15:58.138Z"
+  },
+  {
+    "id": "accessibility-13",
+    "name": "should have sufficient contrast in light mode",
+    "suite": "Accessibility (WCAG 2.1 AA)",
+    "status": "pass",
+    "duration": 2118,
+    "timestamp": "2026-05-31T16:15:58.138Z"
+  },
+  {
+    "id": "accessibility-14",
+    "name": "should have sufficient contrast in dark mode",
+    "suite": "Accessibility (WCAG 2.1 AA)",
+    "status": "pass",
+    "duration": 1702,
+    "timestamp": "2026-05-31T16:15:58.138Z"
+  },
+  {
+    "id": "accessibility-15",
+    "name": "should not rely on color alone for information",
+    "suite": "Accessibility (WCAG 2.1 AA)",
+    "status": "pass",
+    "duration": 1517,
+    "timestamp": "2026-05-31T16:15:58.138Z"
+  },
+  {
+    "id": "accessibility-16",
+    "name": "should have visible focus indicators on all buttons",
+    "suite": "Accessibility (WCAG 2.1 AA)",
+    "status": "pass",
+    "duration": 1687,
+    "timestamp": "2026-05-31T16:15:58.138Z"
+  },
+  {
+    "id": "accessibility-17",
+    "name": "should have visible focus indicators on inputs",
+    "suite": "Accessibility (WCAG 2.1 AA)",
+    "status": "pass",
+    "duration": 1754,
+    "timestamp": "2026-05-31T16:15:58.138Z"
+  },
+  {
+    "id": "accessibility-18",
+    "name": "should have 2px focus ring",
+    "suite": "Accessibility (WCAG 2.1 AA)",
+    "status": "pass",
+    "duration": 2067,
+    "timestamp": "2026-05-31T16:15:58.138Z"
+  },
+  {
+    "id": "accessibility-19",
+    "name": "should use readable font sizes",
+    "suite": "Accessibility (WCAG 2.1 AA)",
+    "status": "pass",
+    "duration": 1651,
+    "timestamp": "2026-05-31T16:15:58.138Z"
+  },
+  {
+    "id": "accessibility-20",
+    "name": "should have proper line height",
+    "suite": "Accessibility (WCAG 2.1 AA)",
+    "status": "pass",
+    "duration": 1275,
+    "timestamp": "2026-05-31T16:15:58.138Z"
+  },
+  {
+    "id": "accessibility-21",
+    "name": "should provide clear empty state messaging",
+    "suite": "Accessibility (WCAG 2.1 AA)",
+    "status": "pass",
+    "duration": 1424,
+    "timestamp": "2026-05-31T16:15:58.138Z"
+  },
+  {
+    "id": "accessibility-22",
+    "name": "should use semantic headings",
+    "suite": "Accessibility (WCAG 2.1 AA)",
+    "status": "pass",
+    "duration": 1146,
+    "timestamp": "2026-05-31T16:15:58.138Z"
+  },
+  {
+    "id": "header-23",
+    "name": "should render header with title and icon",
+    "suite": "Header Component",
+    "status": "pass",
+    "duration": 2712,
+    "timestamp": "2026-05-31T16:16:48.153Z"
+  },
+  {
+    "id": "header-24",
+    "name": "should have theme toggle button",
+    "suite": "Header Component",
+    "status": "pass",
+    "duration": 1112,
+    "timestamp": "2026-05-31T16:16:48.153Z"
+  },
+  {
+    "id": "header-25",
+    "name": "should have Record button",
+    "suite": "Header Component",
+    "status": "pass",
+    "duration": 974,
+    "timestamp": "2026-05-31T16:16:48.153Z"
+  },
+  {
+    "id": "header-26",
+    "name": "should have New Note button",
+    "suite": "Header Component",
+    "status": "pass",
+    "duration": 924,
+    "timestamp": "2026-05-31T16:16:48.153Z"
+  },
+  {
+    "id": "header-27",
+    "name": "should have logout button",
+    "suite": "Header Component",
+    "status": "pass",
+    "duration": 950,
+    "timestamp": "2026-05-31T16:16:48.153Z"
+  },
+  {
+    "id": "header-28",
+    "name": "should have proper accessibility attributes",
+    "suite": "Header Component",
+    "status": "pass",
+    "duration": 1095,
+    "timestamp": "2026-05-31T16:16:48.153Z"
+  },
+  {
+    "id": "header-29",
+    "name": "should show focus ring on button focus",
+    "suite": "Header Component",
+    "status": "pass",
+    "duration": 1025,
+    "timestamp": "2026-05-31T16:16:48.153Z"
+  },
+  {
+    "id": "header-30",
+    "name": "should be sticky at top of page",
+    "suite": "Header Component",
+    "status": "pass",
+    "duration": 955,
+    "timestamp": "2026-05-31T16:16:48.153Z"
+  },
+  {
+    "id": "header-31",
+    "name": "should render microphone icon",
+    "suite": "Header Component",
+    "status": "pass",
+    "duration": 948,
+    "timestamp": "2026-05-31T16:16:48.153Z"
+  },
+  {
+    "id": "responsive-32",
+    "name": "should be fully visible on small mobile",
+    "suite": "Responsive Design",
+    "status": "pass",
+    "duration": 2036,
+    "timestamp": "2026-05-31T16:17:02.124Z"
+  },
+  {
+    "id": "responsive-33",
+    "name": "should have readable text on small mobile",
+    "suite": "Responsive Design",
+    "status": "pass",
+    "duration": 1060,
+    "timestamp": "2026-05-31T16:17:02.124Z"
+  },
+  {
+    "id": "responsive-34",
+    "name": "should have touchable button sizes",
+    "suite": "Responsive Design",
+    "status": "pass",
+    "duration": 1068,
+    "timestamp": "2026-05-31T16:17:02.124Z"
+  },
+  {
+    "id": "responsive-35",
+    "name": "should not have horizontal overflow",
+    "suite": "Responsive Design",
+    "status": "pass",
+    "duration": 961,
+    "timestamp": "2026-05-31T16:17:02.124Z"
+  },
+  {
+    "id": "responsive-36",
+    "name": "should have proper spacing on small screen",
+    "suite": "Responsive Design",
+    "status": "pass",
+    "duration": 967,
+    "timestamp": "2026-05-31T16:17:02.124Z"
+  },
+  {
+    "id": "responsive-37",
+    "name": "should be readable on tablet",
+    "suite": "Responsive Design",
+    "status": "pass",
+    "duration": 1009,
+    "timestamp": "2026-05-31T16:17:02.124Z"
+  },
+  {
+    "id": "responsive-38",
+    "name": "should have proper layout on tablet",
+    "suite": "Responsive Design",
+    "status": "pass",
+    "duration": 914,
+    "timestamp": "2026-05-31T16:17:02.124Z"
+  },
+  {
+    "id": "responsive-39",
+    "name": "should not have excessive whitespace",
+    "suite": "Responsive Design",
+    "status": "pass",
+    "duration": 1021,
+    "timestamp": "2026-05-31T16:17:02.124Z"
+  },
+  {
+    "id": "responsive-40",
+    "name": "should display properly on wide screens",
+    "suite": "Responsive Design",
+    "status": "pass",
+    "duration": 1048,
+    "timestamp": "2026-05-31T16:17:02.124Z"
+  },
+  {
+    "id": "responsive-41",
+    "name": "should use full width efficiently",
+    "suite": "Responsive Design",
+    "status": "pass",
+    "duration": 902,
+    "timestamp": "2026-05-31T16:17:02.124Z"
+  },
+  {
+    "id": "responsive-42",
+    "name": "should have proper spacing on desktop",
+    "suite": "Responsive Design",
+    "status": "pass",
+    "duration": 933,
+    "timestamp": "2026-05-31T16:17:02.124Z"
+  },
+  {
+    "id": "responsive-43",
+    "name": "should scale text on small screens",
+    "suite": "Responsive Design",
+    "status": "pass",
+    "duration": 908,
+    "timestamp": "2026-05-31T16:17:02.124Z"
+  },
+  {
+    "id": "responsive-44",
+    "name": "should maintain readability on all screens",
+    "suite": "Responsive Design",
+    "status": "pass",
+    "duration": 1060,
+    "timestamp": "2026-05-31T16:17:02.124Z"
+  },
+  {
+    "id": "responsive-45",
+    "name": "should have proper button size on mobile",
+    "suite": "Responsive Design",
+    "status": "pass",
+    "duration": 1043,
+    "timestamp": "2026-05-31T16:17:02.124Z"
+  },
+  {
+    "id": "responsive-46",
+    "name": "should have proper button size on desktop",
+    "suite": "Responsive Design",
+    "status": "pass",
+    "duration": 973,
+    "timestamp": "2026-05-31T16:17:02.124Z"
+  },
+  {
+    "id": "responsive-47",
+    "name": "should adapt to sm breakpoint (640px)",
+    "suite": "Responsive Design",
+    "status": "pass",
+    "duration": 845,
+    "timestamp": "2026-05-31T16:17:02.124Z"
+  },
+  {
+    "id": "responsive-48",
+    "name": "should adapt to md breakpoint (768px)",
+    "suite": "Responsive Design",
+    "status": "pass",
+    "duration": 873,
+    "timestamp": "2026-05-31T16:17:02.124Z"
+  },
+  {
+    "id": "responsive-49",
+    "name": "should adapt to lg breakpoint (1024px)",
+    "suite": "Responsive Design",
+    "status": "pass",
+    "duration": 1030,
+    "timestamp": "2026-05-31T16:17:02.124Z"
+  },
+  {
+    "id": "responsive-50",
+    "name": "should display properly in landscape on mobile",
+    "suite": "Responsive Design",
+    "status": "pass",
+    "duration": 849,
+    "timestamp": "2026-05-31T16:17:02.124Z"
+  },
+  {
+    "id": "tabs-51",
+    "name": "should render both tabs",
+    "suite": "Tabs Component",
+    "status": "pass",
+    "duration": 2139,
+    "timestamp": "2026-05-31T16:17:24.636Z"
+  },
+  {
+    "id": "tabs-52",
+    "name": "should have Polished Note tab active by default",
+    "suite": "Tabs Component",
+    "status": "pass",
+    "duration": 1075,
+    "timestamp": "2026-05-31T16:17:24.636Z"
+  },
+  {
+    "id": "tabs-53",
+    "name": "should switch to Raw Transcript tab on click",
+    "suite": "Tabs Component",
+    "status": "pass",
+    "duration": 942,
+    "timestamp": "2026-05-31T16:17:24.636Z"
+  },
+  {
+    "id": "tabs-54",
+    "name": "should display correct content for each tab",
+    "suite": "Tabs Component",
+    "status": "pass",
+    "duration": 925,
+    "timestamp": "2026-05-31T16:17:24.636Z"
+  },
+  {
+    "id": "tabs-55",
+    "name": "should support keyboard navigation",
+    "suite": "Tabs Component",
+    "status": "pass",
+    "duration": 992,
+    "timestamp": "2026-05-31T16:17:24.636Z"
+  },
+  {
+    "id": "tabs-56",
+    "name": "should have proper ARIA attributes",
+    "suite": "Tabs Component",
+    "status": "pass",
+    "duration": 922,
+    "timestamp": "2026-05-31T16:17:24.636Z"
+  },
+  {
+    "id": "tabs-57",
+    "name": "should maintain tab state across page interactions",
+    "suite": "Tabs Component",
+    "status": "pass",
+    "duration": 1349,
+    "timestamp": "2026-05-31T16:17:24.636Z"
+  },
+  {
+    "id": "theme-58",
+    "name": "should load with light mode by default",
+    "suite": "Theme Management",
+    "status": "pass",
+    "duration": 1527,
+    "timestamp": "2026-05-31T16:17:35.614Z"
+  },
+  {
+    "id": "theme-59",
+    "name": "should toggle between light and dark modes",
+    "suite": "Theme Management",
+    "status": "pass",
+    "duration": 1384,
+    "timestamp": "2026-05-31T16:17:35.614Z"
+  },
+  {
+    "id": "theme-60",
+    "name": "should persist theme preference in localStorage",
+    "suite": "Theme Management",
+    "status": "pass",
+    "duration": 1237,
+    "timestamp": "2026-05-31T16:17:35.614Z"
+  },
+  {
+    "id": "theme-61",
+    "name": "should apply dark mode styles to all components",
+    "suite": "Theme Management",
+    "status": "pass",
+    "duration": 1123,
+    "timestamp": "2026-05-31T16:17:35.614Z"
+  },
+  {
+    "id": "theme-62",
+    "name": "should have proper contrast in both modes",
+    "suite": "Theme Management",
+    "status": "pass",
+    "duration": 1201,
+    "timestamp": "2026-05-31T16:17:35.614Z"
+  },
+  {
+    "id": "ui-components-63",
+    "name": "should render title input field",
+    "suite": "UI Components & Layout",
+    "status": "pass",
+    "duration": 2746,
+    "timestamp": "2026-05-31T16:17:45.839Z"
+  },
+  {
+    "id": "ui-components-64",
+    "name": "should accept text input",
+    "suite": "UI Components & Layout",
+    "status": "pass",
+    "duration": 1896,
+    "timestamp": "2026-05-31T16:17:45.839Z"
+  },
+  {
+    "id": "ui-components-65",
+    "name": "should have proper styling in light mode",
+    "suite": "UI Components & Layout",
+    "status": "pass",
+    "duration": 1347,
+    "timestamp": "2026-05-31T16:17:45.839Z"
+  },
+  {
+    "id": "ui-components-66",
+    "name": "should show focus ring on focus",
+    "suite": "UI Components & Layout",
+    "status": "pass",
+    "duration": 1100,
+    "timestamp": "2026-05-31T16:17:45.839Z"
+  },
+  {
+    "id": "ui-components-67",
+    "name": "should be disabled during recording",
+    "suite": "UI Components & Layout",
+    "status": "pending",
+    "duration": 0,
+    "timestamp": "2026-05-31T16:17:45.839Z"
+  },
+  {
+    "id": "ui-components-68",
+    "name": "should display empty state initially",
+    "suite": "UI Components & Layout",
+    "status": "pass",
+    "duration": 1107,
+    "timestamp": "2026-05-31T16:17:45.839Z"
+  },
+  {
+    "id": "ui-components-69",
+    "name": "should show microphone icon in empty state",
+    "suite": "UI Components & Layout",
+    "status": "pass",
+    "duration": 1138,
+    "timestamp": "2026-05-31T16:17:45.839Z"
+  },
+  {
+    "id": "ui-components-70",
+    "name": "should display helper text",
+    "suite": "UI Components & Layout",
+    "status": "pass",
+    "duration": 1207,
+    "timestamp": "2026-05-31T16:17:45.839Z"
+  },
+  {
+    "id": "ui-components-71",
+    "name": "should have proper text styling",
+    "suite": "UI Components & Layout",
+    "status": "pass",
+    "duration": 1566,
+    "timestamp": "2026-05-31T16:17:45.839Z"
+  },
+  {
+    "id": "ui-components-72",
+    "name": "should have proper main element structure",
+    "suite": "UI Components & Layout",
+    "status": "pass",
+    "duration": 1195,
+    "timestamp": "2026-05-31T16:17:45.839Z"
+  },
+  {
+    "id": "ui-components-73",
+    "name": "should have max-width container",
+    "suite": "UI Components & Layout",
+    "status": "pass",
+    "duration": 1251,
+    "timestamp": "2026-05-31T16:17:45.839Z"
+  },
+  {
+    "id": "ui-components-74",
+    "name": "should be responsive",
+    "suite": "UI Components & Layout",
+    "status": "pass",
+    "duration": 1273,
+    "timestamp": "2026-05-31T16:17:45.839Z"
+  },
+  {
+    "id": "ui-components-75",
+    "name": "should have proper gradient background",
+    "suite": "UI Components & Layout",
+    "status": "pass",
+    "duration": 1325,
+    "timestamp": "2026-05-31T16:17:45.839Z"
+  },
+  {
+    "id": "ui-components-76",
+    "name": "should have visible focus indicators on all interactive elements",
+    "suite": "UI Components & Layout",
+    "status": "pass",
+    "duration": 1521,
+    "timestamp": "2026-05-31T16:17:45.839Z"
+  },
+  {
+    "id": "ui-components-77",
+    "name": "should maintain focus order",
+    "suite": "UI Components & Layout",
+    "status": "pass",
+    "duration": 1722,
+    "timestamp": "2026-05-31T16:17:45.839Z"
+  }
+]

@@ -1,0 +1,7 @@
+{
+  "id": "TUC-DICTATION-E2E-2026-05-31",
+  "version": "1.0.0-LIVE",
+  "updated": "2026-05-31",
+  "target": "http://localhost:5174/dictation/",
+  "framework": "React 19 + Vite"
+}

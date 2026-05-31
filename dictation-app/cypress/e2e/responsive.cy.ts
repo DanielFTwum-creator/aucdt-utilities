@@ -72,6 +72,10 @@ describe('Responsive Design', () => {
   });
 
   describe('Responsive Text', () => {
+    beforeEach(() => {
+      cy.visit('/');
+    });
+
     it('should scale text on small screens', () => {
       cy.viewport('iphone-se2');
       cy.get('h3').should('have.class', 'text-2xl');
@@ -92,6 +96,10 @@ describe('Responsive Design', () => {
   });
 
   describe('Responsive Buttons', () => {
+    beforeEach(() => {
+      cy.visit('/');
+    });
+
     it('should have proper button size on mobile', () => {
       cy.viewport('iphone-se2');
       cy.get('button').first().should('have.css', 'padding');
@@ -104,6 +112,10 @@ describe('Responsive Design', () => {
   });
 
   describe('Layout Breakpoints', () => {
+    beforeEach(() => {
+      cy.visit('/');
+    });
+
     it('should adapt to sm breakpoint (640px)', () => {
       cy.viewport(640, 800);
       cy.get('main').should('be.visible');
@@ -121,6 +133,10 @@ describe('Responsive Design', () => {
   });
 
   describe('Landscape Orientation', () => {
+    beforeEach(() => {
+      cy.visit('/');
+    });
+
     it('should display properly in landscape on mobile', () => {
       cy.viewport('iphone-x', 'landscape');
       cy.get('header').should('be.visible');

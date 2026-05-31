@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { Eye, EyeOff, User as UserIcon, Lock, Phone } from 'lucide-react';
-import { SVGNetworkBackground } from './SVGNetworkBackground';
-import { GlassmorphismCard } from './GlassmorphismCard';
+import { AnimatedMolecularBackground } from './AnimatedMolecularBackground';
 
 export const LoginView: React.FC = () => {
   const { login, register } = useAuth();
@@ -80,22 +79,201 @@ export const LoginView: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 flex flex-col items-center justify-center p-6 relative overflow-hidden">
-      <SVGNetworkBackground accentColor="--color-accent-primary" opacity={0.07} />
+    <style>{`
+      @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap');
+
+      @keyframes fadeInDown {
+        from {
+          opacity: 0;
+          transform: translateY(-20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @keyframes shimmer {
+        0%, 100% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+      }
+
+      .biochem-wordmark {
+        font-family: 'Space Grotesk', sans-serif;
+        font-size: 38px;
+        font-weight: 700;
+        background: linear-gradient(135deg, #7C3AED 0%, #5B21B6 100%);
+        background-size: 200% 200%;
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        animation: shimmer 3s ease-in-out infinite, fadeInDown 0.5s ease-out;
+        margin-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.75rem;
+      }
+
+      .biochem-tagline {
+        font-family: 'Inter', sans-serif;
+        font-size: 14px;
+        font-weight: 400;
+        color: #6B7280;
+      }
+
+      .biochem-card {
+        animation: fadeInUp 0.5s ease-out 0.15s both;
+      }
+
+      .biochem-heading {
+        font-family: 'Space Grotesk', sans-serif;
+        font-size: 26px;
+        font-weight: 700;
+        color: #1E1B4B;
+      }
+
+      .biochem-subheading {
+        font-family: 'Inter', sans-serif;
+        font-size: 14px;
+        font-weight: 400;
+        color: #6B7280;
+      }
+
+      .biochem-label {
+        font-family: 'Space Grotesk', sans-serif;
+        font-size: 11px;
+        font-weight: 700;
+        color: #7C3AED;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .biochem-input {
+        font-family: 'Inter', sans-serif;
+        border: 1px solid rgba(124, 58, 237, 0.15);
+        transition: all 0.2s ease-out;
+      }
+
+      .biochem-input:focus {
+        border-color: #7C3AED;
+        box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.15);
+        outline: none;
+      }
+
+      .biochem-input::placeholder {
+        color: #9CA3AF;
+      }
+
+      .biochem-button-primary {
+        font-family: 'Inter', sans-serif;
+        background: linear-gradient(135deg, #7C3AED 0%, #6D28D9 100%);
+        border-radius: 10px;
+        font-weight: 500;
+        transition: all 0.3s ease-out;
+      }
+
+      .biochem-button-primary:hover:not(:disabled) {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(124, 58, 237, 0.4);
+      }
+
+      .biochem-button-primary:active:not(:disabled) {
+        transform: scale(0.98);
+      }
+
+      .biochem-button-sso {
+        border: 1px solid rgba(124, 58, 237, 0.2);
+        transition: all 0.2s ease-out;
+      }
+
+      .biochem-button-sso:hover:not(:disabled) {
+        background-color: #F5F3FF;
+        border-color: rgba(124, 58, 237, 0.4);
+      }
+
+      .biochem-divider-text {
+        color: #A78BFA;
+        font-family: 'Inter', sans-serif;
+        font-size: 12px;
+      }
+
+      .biochem-divider-line {
+        background-color: rgba(124, 58, 237, 0.15);
+      }
+
+      .biochem-icon {
+        color: #A78BFA;
+      }
+
+      .biochem-link {
+        color: #7C3AED;
+        transition: color 0.2s ease-out;
+      }
+
+      .biochem-link:hover {
+        color: #5B21B6;
+      }
+
+      .radial-glow {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: radial-gradient(ellipse 700px 500px at 50% 38%, rgba(124, 58, 237, 0.09) 0%, transparent 70%);
+        pointer-events: none;
+        z-index: 1;
+      }
+    `}</style>
+    <div className="min-h-screen flex flex-col items-center justify-center p-6 relative overflow-hidden" style={{ backgroundColor: '#F5F3FF' }}>
+      <div className="radial-glow" />
+      <AnimatedMolecularBackground />
 
       <div className="w-full max-w-sm relative z-10">
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-violet-600 to-indigo-600 mb-2">
+          <div className="biochem-wordmark">
+            <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="16" cy="10" r="3" fill="#7C3AED" />
+              <circle cx="22" cy="18" r="3" fill="#7C3AED" />
+              <circle cx="10" cy="18" r="3" fill="#7C3AED" />
+              <circle cx="16" cy="26" r="3" fill="#7C3AED" />
+              <line x1="16" y1="13" x2="16" y2="23" stroke="#7C3AED" strokeWidth="1.5" />
+              <line x1="18.5" y1="11.5" x2="20.5" y2="16.5" stroke="#7C3AED" strokeWidth="1.5" />
+              <line x1="13.5" y1="11.5" x2="11.5" y2="16.5" stroke="#7C3AED" strokeWidth="1.5" />
+            </svg>
             BioChemAI
-          </h1>
-          <p className="text-slate-500 text-sm">Your 24/7 Biochemistry Expert</p>
+          </div>
+          <p className="biochem-tagline">Your 24/7 Biochemistry Expert</p>
         </div>
 
-        <GlassmorphismCard className="overflow-hidden">
-          <h2 className="text-2xl font-bold text-center text-slate-900 mb-2">
+        <div className="biochem-card" style={{
+          borderRadius: '20px',
+          border: '1px solid rgba(124, 58, 237, 0.15)',
+          backgroundColor: 'rgba(255, 255, 255, 0.95)',
+          backdropFilter: 'blur(12px)',
+          boxShadow: '0 4px 6px rgba(124, 58, 237, 0.06), 0 20px 60px rgba(124, 58, 237, 0.10)',
+          padding: '2.5rem'
+        }}>
+          <h2 className="biochem-heading text-center mb-2">
             {mode === 'login' ? 'Welcome Back' : 'Create Account'}
           </h2>
-          <p className="text-center text-slate-500 mb-6 text-sm">
+          <p className="biochem-subheading text-center mb-6">
             {mode === 'login' ? 'Sign in to access biochemistry learning' : 'Create an account to get started'}
           </p>
 
@@ -103,7 +281,7 @@ export const LoginView: React.FC = () => {
             type="button"
             onClick={handleGoogleLogin}
             disabled={isSubmitting}
-            className="w-full bg-white border-2 border-slate-300 text-slate-700 px-8 py-3.5 rounded-xl font-medium hover:bg-slate-50 transition-colors shadow-sm flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed mb-6"
+            className="biochem-button-sso w-full bg-white text-slate-700 px-8 py-3.5 rounded-xl font-medium flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed mb-6"
           >
             <svg className="w-5 h-5" viewBox="0 0 24 24">
               <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
@@ -115,20 +293,20 @@ export const LoginView: React.FC = () => {
           </button>
 
           <div className="relative flex items-center gap-3 mb-6">
-            <div className="flex-1 h-px bg-slate-200"></div>
-            <span className="text-xs text-slate-400 uppercase font-semibold">Or</span>
-            <div className="flex-1 h-px bg-slate-200"></div>
+            <div className="biochem-divider-line flex-1 h-px"></div>
+            <span className="biochem-divider-text uppercase font-semibold">Or</span>
+            <div className="biochem-divider-line flex-1 h-px"></div>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             {mode === 'login' ? (
               <>
                 <div>
-                  <label htmlFor="identifier" className="block text-xs font-bold text-slate-500 mb-2 uppercase tracking-wider">
+                  <label htmlFor="identifier" className="biochem-label block mb-2">
                     Username or Email
                   </label>
                   <div className="relative">
-                    <UserIcon className="absolute top-1/2 left-4 -translate-y-1/2 w-5 h-5 text-slate-400" />
+                    <UserIcon className="biochem-icon absolute top-1/2 left-4 -translate-y-1/2 w-5 h-5" />
                     <input
                       id="identifier"
                       type="text"
@@ -136,7 +314,7 @@ export const LoginView: React.FC = () => {
                       onChange={e => setIdentifier(e.target.value)}
                       placeholder="Enter username or email"
                       disabled={isSubmitting}
-                      className="w-full border border-slate-300 rounded-xl px-4 py-3.5 pl-12 text-sm font-medium outline-none focus:ring-4 focus:ring-violet-100 focus:border-violet-600 shadow-sm disabled:opacity-50"
+                      className="biochem-input w-full px-4 py-3.5 pl-12 text-sm font-medium rounded-xl disabled:opacity-50"
                       required
                     />
                   </div>
@@ -145,11 +323,11 @@ export const LoginView: React.FC = () => {
             ) : (
               <>
                 <div>
-                  <label htmlFor="username" className="block text-xs font-bold text-slate-500 mb-2 uppercase tracking-wider">
+                  <label htmlFor="username" className="biochem-label block mb-2">
                     Username
                   </label>
                   <div className="relative">
-                    <UserIcon className="absolute top-1/2 left-4 -translate-y-1/2 w-5 h-5 text-slate-400" />
+                    <UserIcon className="biochem-icon absolute top-1/2 left-4 -translate-y-1/2 w-5 h-5" />
                     <input
                       id="username"
                       type="text"
@@ -157,17 +335,17 @@ export const LoginView: React.FC = () => {
                       onChange={e => setUsername(e.target.value)}
                       placeholder="Choose a username"
                       disabled={isSubmitting}
-                      className="w-full border border-slate-300 rounded-xl px-4 py-3.5 pl-12 text-sm font-medium outline-none focus:ring-4 focus:ring-violet-100 focus:border-violet-600 shadow-sm disabled:opacity-50"
+                      className="biochem-input w-full px-4 py-3.5 pl-12 text-sm font-medium rounded-xl disabled:opacity-50"
                       required
                     />
                   </div>
                 </div>
                 <div>
-                  <label htmlFor="email" className="block text-xs font-bold text-slate-500 mb-2 uppercase tracking-wider">
+                  <label htmlFor="email" className="biochem-label block mb-2">
                     Email
                   </label>
                   <div className="relative">
-                    <UserIcon className="absolute top-1/2 left-4 -translate-y-1/2 w-5 h-5 text-slate-400" />
+                    <UserIcon className="biochem-icon absolute top-1/2 left-4 -translate-y-1/2 w-5 h-5" />
                     <input
                       id="email"
                       type="email"
@@ -175,17 +353,17 @@ export const LoginView: React.FC = () => {
                       onChange={e => setEmail(e.target.value)}
                       placeholder="Enter your email"
                       disabled={isSubmitting}
-                      className="w-full border border-slate-300 rounded-xl px-4 py-3.5 pl-12 text-sm font-medium outline-none focus:ring-4 focus:ring-violet-100 focus:border-violet-600 shadow-sm disabled:opacity-50"
+                      className="biochem-input w-full px-4 py-3.5 pl-12 text-sm font-medium rounded-xl disabled:opacity-50"
                       required
                     />
                   </div>
                 </div>
                 <div>
-                  <label htmlFor="phone" className="block text-xs font-bold text-slate-500 mb-2 uppercase tracking-wider">
+                  <label htmlFor="phone" className="biochem-label block mb-2">
                     Phone (Optional)
                   </label>
                   <div className="relative">
-                    <Phone className="absolute top-1/2 left-4 -translate-y-1/2 w-5 h-5 text-slate-400" />
+                    <Phone className="biochem-icon absolute top-1/2 left-4 -translate-y-1/2 w-5 h-5" />
                     <input
                       id="phone"
                       type="tel"
@@ -193,7 +371,7 @@ export const LoginView: React.FC = () => {
                       onChange={e => setPhone(e.target.value)}
                       placeholder="Enter phone number"
                       disabled={isSubmitting}
-                      className="w-full border border-slate-300 rounded-xl px-4 py-3.5 pl-12 text-sm font-medium outline-none focus:ring-4 focus:ring-violet-100 focus:border-violet-600 shadow-sm disabled:opacity-50"
+                      className="biochem-input w-full px-4 py-3.5 pl-12 text-sm font-medium rounded-xl disabled:opacity-50"
                     />
                   </div>
                 </div>
@@ -201,11 +379,11 @@ export const LoginView: React.FC = () => {
             )}
 
             <div>
-              <label htmlFor="password" className="block text-xs font-bold text-slate-500 mb-2 uppercase tracking-wider">
+              <label htmlFor="password" className="biochem-label block mb-2">
                 Password
               </label>
               <div className="relative">
-                <Lock className="absolute top-1/2 left-4 -translate-y-1/2 w-5 h-5 text-slate-400" />
+                <Lock className="biochem-icon absolute top-1/2 left-4 -translate-y-1/2 w-5 h-5" />
                 <input
                   id="password"
                   type={showPassword ? 'text' : 'password'}
@@ -213,13 +391,13 @@ export const LoginView: React.FC = () => {
                   onChange={e => setPassword(e.target.value)}
                   placeholder="Enter password"
                   disabled={isSubmitting}
-                  className="w-full border border-slate-300 rounded-xl px-4 py-3.5 pl-12 pr-12 text-sm font-medium outline-none focus:ring-4 focus:ring-violet-100 focus:border-violet-600 shadow-sm disabled:opacity-50"
+                  className="biochem-input w-full px-4 py-3.5 pl-12 pr-12 text-sm font-medium rounded-xl disabled:opacity-50"
                   required
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute top-1/2 right-4 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition"
+                  className="biochem-icon absolute top-1/2 right-4 -translate-y-1/2 hover:text-purple-700 transition disabled:opacity-50"
                   disabled={isSubmitting}
                 >
                   {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
@@ -229,11 +407,11 @@ export const LoginView: React.FC = () => {
 
             {mode === 'register' && (
               <div>
-                <label htmlFor="confirmPassword" className="block text-xs font-bold text-slate-500 mb-2 uppercase tracking-wider">
+                <label htmlFor="confirmPassword" className="biochem-label block mb-2">
                   Confirm Password
                 </label>
                 <div className="relative">
-                  <Lock className="absolute top-1/2 left-4 -translate-y-1/2 w-5 h-5 text-slate-400" />
+                  <Lock className="biochem-icon absolute top-1/2 left-4 -translate-y-1/2 w-5 h-5" />
                   <input
                     id="confirmPassword"
                     type={showConfirmPassword ? 'text' : 'password'}
@@ -241,13 +419,13 @@ export const LoginView: React.FC = () => {
                     onChange={e => setConfirmPassword(e.target.value)}
                     placeholder="Confirm password"
                     disabled={isSubmitting}
-                    className="w-full border border-slate-300 rounded-xl px-4 py-3.5 pl-12 pr-12 text-sm font-medium outline-none focus:ring-4 focus:ring-violet-100 focus:border-violet-600 shadow-sm disabled:opacity-50"
+                    className="biochem-input w-full px-4 py-3.5 pl-12 pr-12 text-sm font-medium rounded-xl disabled:opacity-50"
                     required
                   />
                   <button
                     type="button"
                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                    className="absolute top-1/2 right-4 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition"
+                    className="biochem-icon absolute top-1/2 right-4 -translate-y-1/2 hover:text-purple-700 transition disabled:opacity-50"
                     disabled={isSubmitting}
                   >
                     {showConfirmPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
@@ -261,7 +439,7 @@ export const LoginView: React.FC = () => {
             <button
               type="submit"
               disabled={isSubmitting}
-              className="w-full bg-gradient-to-r from-violet-600 to-indigo-600 text-white px-8 py-3.5 rounded-xl font-medium hover:shadow-lg transition-all shadow-md focus:ring-4 focus:ring-violet-100 outline-none disabled:opacity-50 disabled:cursor-not-allowed"
+              className="biochem-button-primary w-full text-white px-8 py-3.5 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isSubmitting ? 'Please wait...' : (mode === 'login' ? 'Sign In' : 'Create Account')}
             </button>
@@ -271,12 +449,12 @@ export const LoginView: React.FC = () => {
             {mode === 'login' ? "Don't have an account? " : 'Already have an account? '}
             <button
               onClick={() => handleModeChange(mode === 'login' ? 'register' : 'login')}
-              className="text-violet-600 font-medium hover:text-indigo-600 transition-colors"
+              className="biochem-link font-medium"
             >
               {mode === 'login' ? 'Sign up' : 'Sign in'}
             </button>
           </p>
-        </GlassmorphismCard>
+        </div>
       </div>
     </div>
   );

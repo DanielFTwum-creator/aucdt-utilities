@@ -27,7 +27,11 @@ describe('Header Component', () => {
 
   it('should have proper accessibility attributes', () => {
     cy.get('header button').each(($btn) => {
-      cy.wrap($btn).should('have.attr', 'title').or('have.attr', 'aria-label');
+      cy.wrap($btn).should(($el) => {
+        const title = $el.attr('title');
+        const ariaLabel = $el.attr('aria-label');
+        expect(title || ariaLabel).to.exist;
+      });
     });
   });
 

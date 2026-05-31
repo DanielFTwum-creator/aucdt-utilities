@@ -30,6 +30,36 @@ export function Tabs({
     onChange?.(tabId);
   };
 
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    const enabledTabs = tabs.filter(tab => !tab.disabled);
+    const currentIndex = enabledTabs.findIndex(tab => tab.id === activeTab);
+    if (currentIndex === -1) return;
+
+    let nextIndex = currentIndex;
+
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+      nextIndex = (currentIndex + 1) % enabledTabs.length;
+    } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+      nextIndex = (currentIndex - 1 + enabledTabs.length) % enabledTabs.length;
+    } else if (e.key === 'Home') {
+      nextIndex = 0;
+    } else if (e.key === 'End') {
+      nextIndex = enabledTabs.length - 1;
+    } else {
+      return;
+    }
+
+    e.preventDefault();
+    const nextTab = enabledTabs[nextIndex];
+    if (nextTab) {
+      handleTabChange(nextTab.id);
+      setTimeout(() => {
+        const nextButton = document.getElementById(`tab-${nextTab.id}`);
+        nextButton?.focus();
+      }, 0);
+    }
+  };
+
   const activeTabData = tabs.find(tab => tab.id === activeTab);
 
   return (
@@ -45,6 +75,7 @@ export function Tabs({
           }
         `}
         role="tablist"
+        onKeyDown={handleKeyDown}
       >
         {tabs.map(tab => (
           <button
@@ -64,7 +95,7 @@ export function Tabs({
               ${
                 variant === 'default'
                   ? activeTab === tab.id
-                    ? 'text-blue-600 dark:text-blue-400 border-b-2 border-blue-600 dark:border-blue-400'
+                    ? 'text-[var(--accent-primary)] border-b-2 border-[var(--accent-primary)]'
                     : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
                   : activeTab === tab.id
                     ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm'
