@@ -1579,3 +1579,116 @@ const dismissTutorial = () => {
 **Used in:** `dictation-app/App.tsx` (v1, 3 steps, May 2026)
 
 *Last updated: 31 May 2026 — Daniel Frempong Twum / TUC ICT*
+---
+
+## Pattern 10 — Server-Side Git-Clone Deploy (Windows → Linux via SSH)
+
+**Problem:** `scp` on Windows fails with exit 255 regardless of method (WSL absent, OpenSSH path issues). File transfer from Windows to the server is unreliable.
+
+**Solution:** SSH to the server, git sparse-clone the monorepo, build there, copy `dist/` to the web root. No file transfer from Windows at all.
+
+### Deploy script template (`deploy.ps1`)
+
+```powershell
+param(
+    [string]$RemoteHost = "root@techbridge.edu.gh",
+    [string]$RemotePath = "/var/www/vhosts/.../myapp/",
+    [switch]$Build = $true
+)
+
+$__deployStart = Get-Date
+function Log {
+    param([string]$Level = "INFO", [string]$Msg, [ConsoleColor]$Color = "White")
+    $ts = (Get-Date).ToString("yyyy-MM-dd HH:mm:ss")
+    Write-Host "[$ts][$Level] $Msg" -ForegroundColor $Color
+}
+
+$commit  = git rev-parse --short HEAD
+$repoUrl = "https://github.com/DanielFTwum-creator/aucdt-utilities.git"
+$buildDir = "/tmp/myapp_deploy_$commit"
+$subPath  = "myapp"   # folder name inside monorepo
+
+$serverScript = @"
+set -e
+
+# Ensure pnpm is available (use backtick-escape for bash vars inside PS @"..."@)
+if ! command -v pnpm >/dev/null 2>&1; then
+  corepack enable >/dev/null 2>&1 || npm install -g pnpm --silent
+  export PATH="`$HOME/.local/share/pnpm:`$PATH"
+fi
+echo '[setup] pnpm version:' && pnpm --version
+
+echo '[1] Cleaning...'
+rm -rf $buildDir
+
+echo '[2] Cloning (sparse)...'
+git clone --depth 1 --filter=blob:none --sparse '$repoUrl' $buildDir
+cd $buildDir
+
+# CRITICAL: remove monorepo workspace config BEFORE entering the app subdir.
+# pnpm-workspace.yaml makes pnpm try to resolve all packages -> exit 254.
+rm -f pnpm-workspace.yaml package.json
+
+git sparse-checkout set $subPath
+cd $subPath
+
+echo '[3] Installing...'
+pnpm install --no-frozen-lockfile --ignore-workspace --silent 2>/dev/null \
+  || npm install --legacy-peer-deps --silent
+
+echo '[4] Building...'
+pnpm exec vite build 2>/dev/null || npx vite build
+
+echo '[5] Deploying...'
+mkdir -p $RemotePath
+cp -r dist/. $RemotePath
+echo 'Done.'
+"@
+
+# Upload .env.local BEFORE server build (Vite bakes VITE_* vars at build time)
+Get-Content ".env.local" -Raw | ssh -o StrictHostKeyChecking=no $RemoteHost "cat > /tmp/myapp_env_$commit"
+
+ssh -o StrictHostKeyChecking=no $RemoteHost "$serverScript"
+
+# Write .htaccess, set permissions, restart backend (see below)
+```
+
+### Key rules — learned through failures
+
+| Rule | Why |
+|---|---|
+| **Use backtick `` ` ``, not `\` to escape bash `$` in PS `@"..."@`** | `\$HOME` → PowerShell passes `\C:\Users\DELL` to bash. `` `$HOME `` → bash sees literal `$HOME`. |
+| **Delete `pnpm-workspace.yaml` from sparse clone root** | Sparse clone includes the monorepo root files. pnpm sees the workspace config and tries to resolve all packages → exit 254. |
+| **Upload `.env.local` via SSH pipe before building** | Vite inlines `VITE_*` vars at build time. Without the env file on the server, OAuth client IDs bake in as `undefined`. |
+| **Use `pnpm install --ignore-workspace`** | Prevents pnpm from treating the cloned app as a workspace member even if workspace config was partially read. |
+| **Fall back to `npm install --legacy-peer-deps`** | pnpm may not be installed on the server; npm is always available. |
+| **Never use `bash -c "... scp ..."` on Windows** | WSL bash often absent. Windows `scp.exe` fails with path issues. Use SSH-only approach. |
+| **Don't use `npm install -g pnpm \|\| true && pnpm install`** | `\|\| true` always succeeds, `&&` then runs, but pnpm isn't in `$PATH` yet. Must use `export PATH=...` first. |
+| **`$HOME`, `$PATH`, `$(cmd)` in `@"..."@` must be backtick-escaped** | These are PowerShell variables/subexpressions inside a double-quoted string. |
+
+### Backend restart (fast)
+
+```powershell
+$restartScript = @"
+cd $RemotePath
+if command -v pm2 >/dev/null 2>&1; then
+  pm2 describe myapp >/dev/null 2>&1 \
+    && pm2 reload myapp --update-env \
+    || pm2 start server.ts --name myapp --interpreter tsx -- --transpile-only
+  pm2 save --force >/dev/null
+else
+  fuser -k 3002/tcp 2>/dev/null || true
+  setsid nohup tsx --transpile-only server.ts > server.log 2>&1 < /dev/null &
+  sleep 2
+fi
+"@
+ssh -o StrictHostKeyChecking=no $RemoteHost "$restartScript"
+```
+
+- **pm2 reload** = zero-downtime restart (preferred).
+- **tsx --transpile-only** = 3× faster than full `tsx` (skips type-checking).
+- Remove the `sleep 3` wait — `pm2` is instant; `tsx` needs 2s.
+
+**Used in:** `biochemai/deploy.ps1`, `dictation-app/deploy.ps1` (May 2026)
+
+*Last updated: 1 June 2026 — Daniel Frempong Twum / TUC ICT*
