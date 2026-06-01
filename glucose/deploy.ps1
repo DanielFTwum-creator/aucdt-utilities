@@ -162,7 +162,7 @@ Log "INFO" "Setting permissions..." Yellow
 ssh -o StrictHostKeyChecking=no $RemoteHost "chown -R techbridge.edu.gh_md:psacln $RemotePath && chmod -R 755 $RemotePath && chmod 644 $RemotePath/.htaccess $RemotePath/.env 2>/dev/null; true" | Out-Null
 
 Log "INFO" "Starting backend server..." Yellow
-ssh -o StrictHostKeyChecking=no $RemoteHost "fuser -k 3006/tcp 2>/dev/null ; sleep 1 ; cd $RemotePath && NODE_ENV=production setsid nohup tsx server.ts > server.log 2>&1 < /dev/null &" 2>&1 | Out-Null
+ssh -o StrictHostKeyChecking=no $RemoteHost "fuser -k 3006/tcp 2>/dev/null ; sleep 1 ; cd $RemotePath && NODE_ENV=production setsid nohup tsx --transpile-only server.ts > server.log 2>&1 < /dev/null &" 2>&1 | Out-Null
 
 Start-Sleep -Seconds 3
 
@@ -269,7 +269,7 @@ Log "INFO" "Setting permissions..." Yellow
 ssh -o StrictHostKeyChecking=no $RemoteHost "chown -R techbridge.edu.gh_md:psacln $RemotePath && chmod -R 755 $RemotePath && chmod 644 $RemotePath/.htaccess $RemotePath/.env 2>/dev/null; true" | Out-Null
 
 Log "INFO" "Starting backend server..." Yellow
-ssh -o StrictHostKeyChecking=no $RemoteHost "fuser -k 3006/tcp 2>/dev/null ; sleep 1 ; cd $RemotePath && NODE_ENV=production setsid nohup tsx server.ts > server.log 2>&1 < /dev/null &" 2>&1 | Out-Null
+ssh -o StrictHostKeyChecking=no $RemoteHost "fuser -k 3006/tcp 2>/dev/null ; sleep 1 ; cd $RemotePath && NODE_ENV=production setsid nohup tsx --transpile-only server.ts > server.log 2>&1 < /dev/null &" 2>&1 | Out-Null
 
 Start-Sleep -Seconds 3
 
@@ -389,7 +389,7 @@ Log "INFO" "Setting permissions..." Yellow
 ssh -o StrictHostKeyChecking=no $RemoteHost "chown -R techbridge.edu.gh_md:psacln $RemotePath && chmod -R 755 $RemotePath && chmod 644 $RemotePath/.htaccess $RemotePath/.env 2>/dev/null; true" | Out-Null
 
 Log "INFO" "Starting backend server..." Yellow
-ssh -o StrictHostKeyChecking=no $RemoteHost "fuser -k 3006/tcp 2>/dev/null ; sleep 1 ; cd $RemotePath && NODE_ENV=production setsid nohup tsx server.ts > server.log 2>&1 < /dev/null &" 2>&1 | Out-Null
+ssh -o StrictHostKeyChecking=no $RemoteHost "fuser -k 3006/tcp 2>/dev/null ; sleep 1 ; cd $RemotePath && NODE_ENV=production setsid nohup tsx --transpile-only server.ts > server.log 2>&1 < /dev/null &" 2>&1 | Out-Null
 
 Start-Sleep -Seconds 3
 
@@ -496,7 +496,7 @@ Log "INFO" "Setting permissions..." Yellow
 ssh -o StrictHostKeyChecking=no $RemoteHost "chown -R techbridge.edu.gh_md:psacln $RemotePath && chmod -R 755 $RemotePath && chmod 644 $RemotePath/.htaccess $RemotePath/.env 2>/dev/null; true" | Out-Null
 
 Log "INFO" "Starting backend server..." Yellow
-ssh -o StrictHostKeyChecking=no $RemoteHost "fuser -k 3006/tcp 2>/dev/null ; sleep 1 ; cd $RemotePath && NODE_ENV=production setsid nohup tsx server.ts > server.log 2>&1 < /dev/null &" 2>&1 | Out-Null
+ssh -o StrictHostKeyChecking=no $RemoteHost "fuser -k 3006/tcp 2>/dev/null ; sleep 1 ; cd $RemotePath && NODE_ENV=production setsid nohup tsx --transpile-only server.ts > server.log 2>&1 < /dev/null &" 2>&1 | Out-Null
 
 Start-Sleep -Seconds 3
 
@@ -617,7 +617,7 @@ Log "INFO" "Setting permissions..." Yellow
 ssh -o StrictHostKeyChecking=no $RemoteHost "chown -R techbridge.edu.gh_md:psacln $RemotePath && chmod -R 755 $RemotePath && chmod 644 $RemotePath/.htaccess $RemotePath/.env 2>/dev/null; true" | Out-Null
 
 Log "INFO" "Starting backend server..." Yellow
-ssh -o StrictHostKeyChecking=no $RemoteHost "fuser -k 3006/tcp 2>/dev/null ; sleep 1 ; cd $RemotePath && NODE_ENV=production setsid nohup tsx server.ts > server.log 2>&1 < /dev/null &" 2>&1 | Out-Null
+ssh -o StrictHostKeyChecking=no $RemoteHost "fuser -k 3006/tcp 2>/dev/null ; sleep 1 ; cd $RemotePath && NODE_ENV=production setsid nohup tsx --transpile-only server.ts > server.log 2>&1 < /dev/null &" 2>&1 | Out-Null
 
 Start-Sleep -Seconds 3
 
@@ -724,7 +724,7 @@ Log "INFO" "Setting permissions..." Yellow
 ssh -o StrictHostKeyChecking=no $RemoteHost "chown -R techbridge.edu.gh_md:psacln $RemotePath && chmod -R 755 $RemotePath && chmod 644 $RemotePath/.htaccess $RemotePath/.env 2>/dev/null; true" | Out-Null
 
 Log "INFO" "Starting backend server..." Yellow
-ssh -o StrictHostKeyChecking=no $RemoteHost "fuser -k 3006/tcp 2>/dev/null ; sleep 1 ; cd $RemotePath && NODE_ENV=production setsid nohup tsx server.ts > server.log 2>&1 < /dev/null &" 2>&1 | Out-Null
+ssh -o StrictHostKeyChecking=no $RemoteHost "fuser -k 3006/tcp 2>/dev/null ; sleep 1 ; cd $RemotePath && NODE_ENV=production setsid nohup tsx --transpile-only server.ts > server.log 2>&1 < /dev/null &" 2>&1 | Out-Null
 
 Start-Sleep -Seconds 3
 
@@ -790,7 +790,7 @@ Log "INFO" "Setting permissions..." Yellow
 ssh -o StrictHostKeyChecking=no $RemoteHost "chown -R techbridge.edu.gh_md:psacln $RemotePath && chmod -R 755 $RemotePath && chmod 644 $RemotePath/.htaccess $RemotePath/.env 2>/dev/null; true" | Out-Null
 
 Log "INFO" "Starting backend server..." Yellow
-ssh -o StrictHostKeyChecking=no $RemoteHost "fuser -k 3006/tcp 2>/dev/null ; sleep 1 ; cd $RemotePath && NODE_ENV=production setsid nohup tsx server.ts > server.log 2>&1 < /dev/null &" 2>&1 | Out-Null
+ssh -o StrictHostKeyChecking=no $RemoteHost "fuser -k 3006/tcp 2>/dev/null ; sleep 1 ; cd $RemotePath && NODE_ENV=production setsid nohup tsx --transpile-only server.ts > server.log 2>&1 < /dev/null &" 2>&1 | Out-Null
 
 Start-Sleep -Seconds 3
 
@@ -954,7 +954,7 @@ Log "INFO" "Setting permissions..." Yellow
 ssh -o StrictHostKeyChecking=no $RemoteHost "chown -R techbridge.edu.gh_md:psacln $RemotePath && chmod -R 755 $RemotePath && chmod 644 $RemotePath/.htaccess $RemotePath/.env 2>/dev/null; true" | Out-Null
 
 Log "INFO" "Starting backend server..." Yellow
-ssh -o StrictHostKeyChecking=no $RemoteHost "fuser -k 3006/tcp 2>/dev/null ; sleep 1 ; cd $RemotePath && NODE_ENV=production setsid nohup tsx server.ts > server.log 2>&1 < /dev/null &" 2>&1 | Out-Null
+ssh -o StrictHostKeyChecking=no $RemoteHost "fuser -k 3006/tcp 2>/dev/null ; sleep 1 ; cd $RemotePath && NODE_ENV=production setsid nohup tsx --transpile-only server.ts > server.log 2>&1 < /dev/null &" 2>&1 | Out-Null
 
 Start-Sleep -Seconds 3
 
@@ -1061,7 +1061,7 @@ Log "INFO" "Setting permissions..." Yellow
 ssh -o StrictHostKeyChecking=no $RemoteHost "chown -R techbridge.edu.gh_md:psacln $RemotePath && chmod -R 755 $RemotePath && chmod 644 $RemotePath/.htaccess $RemotePath/.env 2>/dev/null; true" | Out-Null
 
 Log "INFO" "Starting backend server..." Yellow
-ssh -o StrictHostKeyChecking=no $RemoteHost "fuser -k 3006/tcp 2>/dev/null ; sleep 1 ; cd $RemotePath && NODE_ENV=production setsid nohup tsx server.ts > server.log 2>&1 < /dev/null &" 2>&1 | Out-Null
+ssh -o StrictHostKeyChecking=no $RemoteHost "fuser -k 3006/tcp 2>/dev/null ; sleep 1 ; cd $RemotePath && NODE_ENV=production setsid nohup tsx --transpile-only server.ts > server.log 2>&1 < /dev/null &" 2>&1 | Out-Null
 
 Start-Sleep -Seconds 3
 
@@ -1181,7 +1181,7 @@ Log "INFO" "Setting permissions..." Yellow
 ssh -o StrictHostKeyChecking=no $RemoteHost "chown -R techbridge.edu.gh_md:psacln $RemotePath && chmod -R 755 $RemotePath && chmod 644 $RemotePath/.htaccess $RemotePath/.env 2>/dev/null; true" | Out-Null
 
 Log "INFO" "Starting backend server..." Yellow
-ssh -o StrictHostKeyChecking=no $RemoteHost "fuser -k 3006/tcp 2>/dev/null ; sleep 1 ; cd $RemotePath && NODE_ENV=production setsid nohup tsx server.ts > server.log 2>&1 < /dev/null &" 2>&1 | Out-Null
+ssh -o StrictHostKeyChecking=no $RemoteHost "fuser -k 3006/tcp 2>/dev/null ; sleep 1 ; cd $RemotePath && NODE_ENV=production setsid nohup tsx --transpile-only server.ts > server.log 2>&1 < /dev/null &" 2>&1 | Out-Null
 
 Start-Sleep -Seconds 3
 
@@ -1288,7 +1288,7 @@ Log "INFO" "Setting permissions..." Yellow
 ssh -o StrictHostKeyChecking=no $RemoteHost "chown -R techbridge.edu.gh_md:psacln $RemotePath && chmod -R 755 $RemotePath && chmod 644 $RemotePath/.htaccess $RemotePath/.env 2>/dev/null; true" | Out-Null
 
 Log "INFO" "Starting backend server..." Yellow
-ssh -o StrictHostKeyChecking=no $RemoteHost "fuser -k 3006/tcp 2>/dev/null ; sleep 1 ; cd $RemotePath && NODE_ENV=production setsid nohup tsx server.ts > server.log 2>&1 < /dev/null &" 2>&1 | Out-Null
+ssh -o StrictHostKeyChecking=no $RemoteHost "fuser -k 3006/tcp 2>/dev/null ; sleep 1 ; cd $RemotePath && NODE_ENV=production setsid nohup tsx --transpile-only server.ts > server.log 2>&1 < /dev/null &" 2>&1 | Out-Null
 
 Start-Sleep -Seconds 3
 
@@ -1409,7 +1409,7 @@ Log "INFO" "Setting permissions..." Yellow
 ssh -o StrictHostKeyChecking=no $RemoteHost "chown -R techbridge.edu.gh_md:psacln $RemotePath && chmod -R 755 $RemotePath && chmod 644 $RemotePath/.htaccess $RemotePath/.env 2>/dev/null; true" | Out-Null
 
 Log "INFO" "Starting backend server..." Yellow
-ssh -o StrictHostKeyChecking=no $RemoteHost "fuser -k 3006/tcp 2>/dev/null ; sleep 1 ; cd $RemotePath && NODE_ENV=production setsid nohup tsx server.ts > server.log 2>&1 < /dev/null &" 2>&1 | Out-Null
+ssh -o StrictHostKeyChecking=no $RemoteHost "fuser -k 3006/tcp 2>/dev/null ; sleep 1 ; cd $RemotePath && NODE_ENV=production setsid nohup tsx --transpile-only server.ts > server.log 2>&1 < /dev/null &" 2>&1 | Out-Null
 
 Start-Sleep -Seconds 3
 
@@ -1516,7 +1516,7 @@ Log "INFO" "Setting permissions..." Yellow
 ssh -o StrictHostKeyChecking=no $RemoteHost "chown -R techbridge.edu.gh_md:psacln $RemotePath && chmod -R 755 $RemotePath && chmod 644 $RemotePath/.htaccess $RemotePath/.env 2>/dev/null; true" | Out-Null
 
 Log "INFO" "Starting backend server..." Yellow
-ssh -o StrictHostKeyChecking=no $RemoteHost "fuser -k 3006/tcp 2>/dev/null ; sleep 1 ; cd $RemotePath && NODE_ENV=production setsid nohup tsx server.ts > server.log 2>&1 < /dev/null &" 2>&1 | Out-Null
+ssh -o StrictHostKeyChecking=no $RemoteHost "fuser -k 3006/tcp 2>/dev/null ; sleep 1 ; cd $RemotePath && NODE_ENV=production setsid nohup tsx --transpile-only server.ts > server.log 2>&1 < /dev/null &" 2>&1 | Out-Null
 
 Start-Sleep -Seconds 3
 
@@ -1582,7 +1582,7 @@ Log "INFO" "Setting permissions..." Yellow
 ssh -o StrictHostKeyChecking=no $RemoteHost "chown -R techbridge.edu.gh_md:psacln $RemotePath && chmod -R 755 $RemotePath && chmod 644 $RemotePath/.htaccess $RemotePath/.env 2>/dev/null; true" | Out-Null
 
 Log "INFO" "Starting backend server..." Yellow
-ssh -o StrictHostKeyChecking=no $RemoteHost "fuser -k 3006/tcp 2>/dev/null ; sleep 1 ; cd $RemotePath && NODE_ENV=production setsid nohup tsx server.ts > server.log 2>&1 < /dev/null &" 2>&1 | Out-Null
+ssh -o StrictHostKeyChecking=no $RemoteHost "fuser -k 3006/tcp 2>/dev/null ; sleep 1 ; cd $RemotePath && NODE_ENV=production setsid nohup tsx --transpile-only server.ts > server.log 2>&1 < /dev/null &" 2>&1 | Out-Null
 
 Start-Sleep -Seconds 3
 
