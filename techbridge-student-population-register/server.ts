@@ -1,12 +1,48 @@
 import express from "express";
 import { createServer as createViteServer } from "vite";
 import playwright from '@playwright/test';
+import dotenv from 'dotenv';
+import cookieParser from 'cookie-parser';
+
+dotenv.config();
+
+const OAUTH_CLIENT_ID     = process.env.VITE_GOOGLE_CLIENT_ID     || '';
+const OAUTH_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET       || '';
+const OAUTH_REDIRECT_URI  = process.env.VITE_GOOGLE_REDIRECT_URI   || 'https://ai-tools.techbridge.edu.gh/techbridge-student-population-register/callback';
+
+function decodeJWT(token: string): Record<string, string> {
+  const parts = token.split('.');
+  if (parts.length !== 3) throw new Error('Invalid JWT');
+  return JSON.parse(Buffer.from(parts[1], 'base64').toString('utf-8'));
+}
 
 async function startServer() {
   const app = express();
-  const PORT = 3000;
+  const PORT = process.env.PORT || 3013;
 
   app.use(express.json());
+  app.use(cookieParser());
+
+  // OAuth callback handler
+  app.get(['/callback', '/techbridge-student-population-register/callback'], async (req, res) => {
+    const { code, error } = req.query as Record<string, string>;
+    if (error) return res.redirect(`/techbridge-student-population-register/?error=${encodeURIComponent(error)}`);
+    if (!code) return res.redirect('/techbridge-student-population-register/?error=missing_code');
+    try {
+      const tokenResponse = await fetch('https://oauth2.googleapis.com/token', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ client_id: OAUTH_CLIENT_ID, client_secret: OAUTH_CLIENT_SECRET, code, grant_type: 'authorization_code', redirect_uri: OAUTH_REDIRECT_URI }),
+      });
+      if (!tokenResponse.ok) { const e = await tokenResponse.json(); console.error('[techbridge-student-population-register] token exchange failed:', e); return res.redirect('/techbridge-student-population-register/?error=token_exchange_failed'); }
+      const tokens = await tokenResponse.json() as { id_token?: string };
+      if (!tokens.id_token) return res.redirect('/techbridge-student-population-register/?error=no_id_token');
+      const userInfo = decodeJWT(tokens.id_token);
+      const userJson = JSON.stringify({ id: userInfo.sub, name: userInfo.name, email: userInfo.email });
+      res.cookie('techbridge_student_population_register_user', Buffer.from(userJson).toString('base64'), { httpOnly: false, secure: true, sameSite: 'lax', maxAge: 7 * 24 * 60 * 60 * 1000, path: '/techbridge-student-population-register/' });
+      return res.redirect('/techbridge-student-population-register/');
+    } catch (err) { console.error('[techbridge-student-population-register] OAuth error:', err); return res.redirect('/techbridge-student-population-register/?error=internal_error'); }
+  });
 
   // API routes FIRST
   app.get("/api/health", (req, res) => {

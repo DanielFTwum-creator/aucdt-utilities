@@ -20,7 +20,7 @@ interface SVGNetworkBackgroundProps {
  */
 export const SVGNetworkBackground: React.FC<SVGNetworkBackgroundProps> = ({
   accentColor = '--color-accent-primary',
-  opacity = 0.07,
+  opacity = 0.25,
   scale = 1,
   className = '',
 }) => {

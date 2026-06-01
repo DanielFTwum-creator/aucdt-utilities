@@ -2,13 +2,25 @@ import express from "express";
 import path from "path";
 import { GoogleGenAI } from "@google/genai";
 import dotenv from "dotenv";
+import cookieParser from 'cookie-parser';
 
 dotenv.config();
+
+const OAUTH_CLIENT_ID     = process.env.VITE_GOOGLE_CLIENT_ID     || '';
+const OAUTH_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET       || '';
+const OAUTH_REDIRECT_URI  = process.env.VITE_GOOGLE_REDIRECT_URI   || 'https://ai-tools.techbridge.edu.gh/magic-reader/callback';
+
+function decodeJWT(token: string): Record<string, string> {
+  const parts = token.split('.');
+  if (parts.length !== 3) throw new Error('Invalid JWT');
+  return JSON.parse(Buffer.from(parts[1], 'base64').toString('utf-8'));
+}
 
 const app = express();
 const PORT = process.env.PORT || 3008;
 
 app.use(express.json());
+app.use(cookieParser());
 
 // Initialize Gemini SDK lazily, with standard safety guard as requested in Guidelines
 let aiClient: GoogleGenAI | null = null;
@@ -29,6 +41,27 @@ function getGeminiClient(): GoogleGenAI {
   }
   return aiClient;
 }
+
+// OAuth callback handler
+app.get(['/callback', '/magic-reader/callback'], async (req: any, res: any) => {
+  const { code, error } = req.query as Record<string, string>;
+  if (error) return res.redirect(`/magic-reader/?error=${encodeURIComponent(error)}`);
+  if (!code) return res.redirect('/magic-reader/?error=missing_code');
+  try {
+    const tokenResponse = await fetch('https://oauth2.googleapis.com/token', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ client_id: OAUTH_CLIENT_ID, client_secret: OAUTH_CLIENT_SECRET, code, grant_type: 'authorization_code', redirect_uri: OAUTH_REDIRECT_URI }),
+    });
+    if (!tokenResponse.ok) { const e = await tokenResponse.json(); console.error('[magic-reader] token exchange failed:', e); return res.redirect('/magic-reader/?error=token_exchange_failed'); }
+    const tokens = await tokenResponse.json() as { id_token?: string };
+    if (!tokens.id_token) return res.redirect('/magic-reader/?error=no_id_token');
+    const userInfo = decodeJWT(tokens.id_token);
+    const userJson = JSON.stringify({ id: userInfo.sub, name: userInfo.name, email: userInfo.email });
+    res.cookie('magic_reader_user', Buffer.from(userJson).toString('base64'), { httpOnly: false, secure: true, sameSite: 'lax', maxAge: 7 * 24 * 60 * 60 * 1000, path: '/magic-reader/' });
+    return res.redirect('/magic-reader/');
+  } catch (err) { console.error('[magic-reader] OAuth error:', err); return res.redirect('/magic-reader/?error=internal_error'); }
+});
 
 // 1. Get Essays API
 app.get("/api/essays", (req, res) => {

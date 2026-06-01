@@ -8,6 +8,16 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
+const OAUTH_CLIENT_ID     = process.env.VITE_GOOGLE_CLIENT_ID     || '';
+const OAUTH_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET       || '';
+const OAUTH_REDIRECT_URI  = process.env.VITE_GOOGLE_REDIRECT_URI   || 'https://ai-tools.techbridge.edu.gh/orbit-walk-reminder/callback';
+
+function decodeJWT(token: string): Record<string, string> {
+  const parts = token.split('.');
+  if (parts.length !== 3) throw new Error('Invalid JWT');
+  return JSON.parse(Buffer.from(parts[1], 'base64').toString('utf-8'));
+}
+
 const app = express();
 const PORT = 3000;
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "tuc-admin-2026";
@@ -22,6 +32,27 @@ if (!fs.existsSync(path.dirname(LOG_FILE))) {
 app.use(express.json());
 app.use(cookieParser());
 app.use("/api/admin/screenshots", express.static(path.join(process.cwd(), "logs")));
+
+// OAuth callback handler
+app.get(['/callback', '/orbit-walk-reminder/callback'], async (req: any, res: any) => {
+  const { code, error } = req.query as Record<string, string>;
+  if (error) return res.redirect(`/orbit-walk-reminder/?error=${encodeURIComponent(error)}`);
+  if (!code) return res.redirect('/orbit-walk-reminder/?error=missing_code');
+  try {
+    const tokenResponse = await fetch('https://oauth2.googleapis.com/token', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ client_id: OAUTH_CLIENT_ID, client_secret: OAUTH_CLIENT_SECRET, code, grant_type: 'authorization_code', redirect_uri: OAUTH_REDIRECT_URI }),
+    });
+    if (!tokenResponse.ok) { const e = await tokenResponse.json(); console.error('[orbit-walk-reminder] token exchange failed:', e); return res.redirect('/orbit-walk-reminder/?error=token_exchange_failed'); }
+    const tokens = await tokenResponse.json() as { id_token?: string };
+    if (!tokens.id_token) return res.redirect('/orbit-walk-reminder/?error=no_id_token');
+    const userInfo = decodeJWT(tokens.id_token);
+    const userJson = JSON.stringify({ id: userInfo.sub, name: userInfo.name, email: userInfo.email });
+    res.cookie('orbit_walk_reminder_user', Buffer.from(userJson).toString('base64'), { httpOnly: false, secure: true, sameSite: 'lax', maxAge: 7 * 24 * 60 * 60 * 1000, path: '/orbit-walk-reminder/' });
+    return res.redirect('/orbit-walk-reminder/');
+  } catch (err) { console.error('[orbit-walk-reminder] OAuth error:', err); return res.redirect('/orbit-walk-reminder/?error=internal_error'); }
+});
 
 const auditLog = (admin: string, action: string, resource: string, ip: string) => {
   const logEntry = {

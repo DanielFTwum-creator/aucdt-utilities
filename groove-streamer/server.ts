@@ -5,8 +5,19 @@ import { fileURLToPath } from 'url';
 import dotenv from 'dotenv';
 import { google } from 'googleapis';
 import session from 'express-session';
+import cookieParser from 'cookie-parser';
 
 dotenv.config();
+
+const OAUTH_CLIENT_ID     = process.env.VITE_GOOGLE_CLIENT_ID     || '';
+const OAUTH_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET       || '';
+const OAUTH_REDIRECT_URI  = process.env.VITE_GOOGLE_REDIRECT_URI   || 'https://ai-tools.techbridge.edu.gh/groove-streamer/callback';
+
+function decodeJWT(token: string): Record<string, string> {
+  const parts = token.split('.');
+  if (parts.length !== 3) throw new Error('Invalid JWT');
+  return JSON.parse(Buffer.from(parts[1], 'base64').toString('utf-8'));
+}
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -15,6 +26,7 @@ async function startServer() {
   const PORT = process.env.PORT || 3004;
 
   app.use(express.json());
+  app.use(cookieParser());
   app.use(session({
     secret: process.env.SESSION_SECRET || 'super-secret-key',
     resave: false,
@@ -25,6 +37,27 @@ async function startServer() {
       httpOnly: true,
     }
   }));
+
+  // OAuth callback handler
+  app.get(['/callback', '/groove-streamer/callback'], async (req: any, res: any) => {
+    const { code, error } = req.query as Record<string, string>;
+    if (error) return res.redirect(`/groove-streamer/?error=${encodeURIComponent(error)}`);
+    if (!code) return res.redirect('/groove-streamer/?error=missing_code');
+    try {
+      const tokenResponse = await fetch('https://oauth2.googleapis.com/token', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ client_id: OAUTH_CLIENT_ID, client_secret: OAUTH_CLIENT_SECRET, code, grant_type: 'authorization_code', redirect_uri: OAUTH_REDIRECT_URI }),
+      });
+      if (!tokenResponse.ok) { const e = await tokenResponse.json(); console.error('[groove-streamer] token exchange failed:', e); return res.redirect('/groove-streamer/?error=token_exchange_failed'); }
+      const tokens = await tokenResponse.json() as { id_token?: string };
+      if (!tokens.id_token) return res.redirect('/groove-streamer/?error=no_id_token');
+      const userInfo = decodeJWT(tokens.id_token);
+      const userJson = JSON.stringify({ id: userInfo.sub, name: userInfo.name, email: userInfo.email });
+      res.cookie('groove_streamer_user', Buffer.from(userJson).toString('base64'), { httpOnly: false, secure: true, sameSite: 'lax', maxAge: 7 * 24 * 60 * 60 * 1000, path: '/groove-streamer/' });
+      return res.redirect('/groove-streamer/');
+    } catch (err) { console.error('[groove-streamer] OAuth error:', err); return res.redirect('/groove-streamer/?error=internal_error'); }
+  });
 
   // API routes
   app.post('/api/admin/login', (req, res) => {

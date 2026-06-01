@@ -1,17 +1,17 @@
-# ghana-news-aggregator — Deploy Script
-# URL: https://ai-tools.techbridge.edu.gh/ghana-news-aggregator/
+# tuc-rms — Deploy Script
+# URL: https://ai-tools.techbridge.edu.gh/tuc-rms/
 # Usage: .\deploy.ps1 -Build
 
 param(
     [string]$RemoteHost = "root@techbridge.edu.gh",
-    [string]$RemotePath = "/var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/ghana-news-aggregator/",
+    [string]$RemotePath = "/var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/tuc-rms/",
     [switch]$Build = $false
 )
 
 $ErrorActionPreference = "Stop"
 $__deployStart = Get-Date
 $GITHUB_REPO   = "https://github.com/DanielFTwum-creator/aucdt-utilities.git"
-$SUBFOLDER     = "ghana-news-aggregator"
+$SUBFOLDER     = "tuc-rms"
 
 function Log {
     param([string]$Level = "INFO", [string]$Msg, [ConsoleColor]$Color = "White")
@@ -20,7 +20,7 @@ function Log {
 }
 
 Log "INFO" "========================================" Cyan
-Log "INFO" "ghana-news-aggregator DEPLOYMENT" Cyan
+Log "INFO" "tuc-rms DEPLOYMENT" Cyan
 Log "INFO" "========================================" Cyan
 Log "INFO" "Remote : $RemoteHost"
 Log "INFO" "Path   : $RemotePath"
@@ -37,7 +37,7 @@ try { git push origin $branch 2>&1 | Out-Null } catch { Log "WARN" "git push fai
 
 if ($Build) {
     Log "INFO" "Step 3: Server-side build (git clone + pnpm build)..." Yellow
-    $buildDir = "/tmp/ghana-news-aggregator_deploy_$commit"
+    $buildDir = "/tmp/tuc-rms_deploy_$commit"
     $serverScript = @"
 set -e
 log() { echo "[`$(date '+%Y-%m-%d %H:%M:%S')][SERVER] `$1"; }
@@ -48,11 +48,11 @@ fi
 log "pnpm `$(pnpm --version)"
 log '[1/5] Cleaning previous temp build...'
 rm -rf $buildDir
-log '[2/5] Cloning ghana-news-aggregator (sparse, depth 1)...'
+log '[2/5] Cloning tuc-rms (sparse, depth 1)...'
 git clone --depth 1 --filter=blob:none --sparse '$GITHUB_REPO' $buildDir
 cd $buildDir
-git sparse-checkout set ghana-news-aggregator
-cd ghana-news-aggregator
+git sparse-checkout set tuc-rms
+cd tuc-rms
 log '[3/5] Installing dependencies...'
 pnpm install --no-frozen-lockfile --silent 2>/dev/null || npm install --silent
 log '[4/5] Building...'
@@ -79,11 +79,11 @@ Log "INFO" "Step 4: Writing .htaccess..." Yellow
 @"
 <IfModule mod_rewrite.c>
   RewriteEngine On
-  RewriteBase /ghana-news-aggregator/
+  RewriteBase /tuc-rms/
   RewriteCond %{REQUEST_FILENAME} -f [OR]
   RewriteCond %{REQUEST_FILENAME} -d
   RewriteRule ^ - [L]
-  RewriteRule ^ /ghana-news-aggregator/index.html [QSA,L]
+  RewriteRule ^ /tuc-rms/index.html [QSA,L]
 </IfModule>
 <IfModule mod_expires.c>
   ExpiresActive On
@@ -110,6 +110,6 @@ $elapsed = [math]::Round(((Get-Date) - $__deployStart).TotalSeconds, 1)
 $timeStr = if ($elapsed -ge 60) { "$([math]::Floor($elapsed/60))m $([math]::Round($elapsed%60,1))s" } else { "${elapsed}s" }
 Log "SUCCESS" "========================================" Green
 Log "SUCCESS" "DEPLOYMENT COMPLETE" Green
-Log "SUCCESS" "URL  : https://ai-tools.techbridge.edu.gh/ghana-news-aggregator/" Green
+Log "SUCCESS" "URL  : https://ai-tools.techbridge.edu.gh/tuc-rms/" Green
 Log "SUCCESS" "Time : $timeStr total" Green
 Log "SUCCESS" "========================================" Green

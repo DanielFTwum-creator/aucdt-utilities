@@ -1,14 +1,18 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
+import { AuthService } from '../services/AuthService';
 
 interface User {
   id?: string;
+  username?: string;
   name?: string;
-  email: string;
+  email?: string;
+  role?: string;
 }
 
 interface AuthContextValue {
   isAuthenticated: boolean;
   user: User | null;
+  login: (username: string, password: string) => ReturnType<typeof AuthService.login>;
   logout: () => void;
   isLoading: boolean;
 }
@@ -55,15 +59,31 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setIsLoading(false);
   }, []);
 
+  const login = async (username: string, password: string) => {
+    const result = await AuthService.login(username, password);
+    if (result.success) {
+      const userData: User = {
+        id: result.user?.id,
+        username: result.user?.username,
+        email: result.user?.username,
+        role: result.user?.role,
+      };
+      setUser(userData);
+      setIsAuthenticated(true);
+    }
+    return result;
+  };
+
   const logout = () => {
     sessionStorage.removeItem(AUTH_KEY);
     localStorage.removeItem(USER_KEY);
+    AuthService.logout();
     setIsAuthenticated(false);
     setUser(null);
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, user, logout, isLoading }}>
+    <AuthContext.Provider value={{ isAuthenticated, user, login, logout, isLoading }}>
       {children}
     </AuthContext.Provider>
   );

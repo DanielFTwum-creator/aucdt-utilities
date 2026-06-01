@@ -23,7 +23,7 @@ export const ChatArea: React.FC<ChatAreaProps> = ({ messages, isLoading }) => {
 
   return (
     <div className="relative">
-      <SVGNetworkBackground accentColor="--color-accent-primary" opacity={0.07} />
+      <SVGNetworkBackground accentColor="--color-accent-primary" opacity={0.25} />
       <div className="space-y-4 mb-6 relative z-10">
         {messages.map((msg) => (
           <MessageBubble key={msg.id} message={msg} />

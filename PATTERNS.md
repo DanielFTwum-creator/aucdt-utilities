@@ -1649,7 +1649,9 @@ echo 'Done.'
 # Upload .env.local BEFORE server build (Vite bakes VITE_* vars at build time)
 Get-Content ".env.local" -Raw | ssh -o StrictHostKeyChecking=no $RemoteHost "cat > /tmp/myapp_env_$commit"
 
-ssh -o StrictHostKeyChecking=no $RemoteHost "$serverScript"
+$b64Script = [Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes($serverScript))
+$executeCmd = "echo $b64Script | base64 -d | bash"
+ssh -o StrictHostKeyChecking=no $RemoteHost $executeCmd
 
 # Write .htaccess, set permissions, restart backend (see below)
 ```
@@ -1683,7 +1685,9 @@ else
   sleep 2
 fi
 "@
-ssh -o StrictHostKeyChecking=no $RemoteHost "$restartScript"
+$b64Restart = [Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes($restartScript))
+$executeRestart = "echo $b64Restart | base64 -d | bash"
+ssh -o StrictHostKeyChecking=no $RemoteHost $executeRestart
 ```
 
 - **pm2 reload** = zero-downtime restart (preferred).

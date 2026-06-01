@@ -14,7 +14,17 @@ const SLUG_TO_PATH: Record<string, string> = {
   "biochemai": "/biochemai/",
   "dictation-app": "/dictation/",
   "glucose": "/glucose/",
-  // Add more mappings as needed — defaults to slug if not found
+  "typing-and-mathematics-tutorial": "/math-island/",
+  "typing-tutorial": "/typing-tutor/",
+  "patois-lyricist": "/lyricist/",
+  "rophe-specialist-care-rpms": "/care/",
+  "deep-dub-vibes-player": "/deep-dub-vibes-player/",
+  "omniextract": "/omniextract/",
+  "playgrow": "/playgrow/",
+  "brand-guideline-checker": "/brand-guideline-checker/",
+  "orbit-walk-reminder": "/orbit-walk-reminder/",
+  "groove-streamer": "/groove-streamer/",
+  "youtube-genie": "/youtube-genie/",
 };
 
 const getAppUrl = (slug: string) => {
@@ -182,6 +192,8 @@ const TOOLS: Tool[] = [
   { slug: "flydee", title: "Flydee", desc: "Gamified plane-spotting app using camera and GPS", cat: "Games" },
   { slug: "gemini-slingshot-3", title: "Gemini Slingshot", desc: "Gemini-powered webcam bubble shooter game", cat: "Games" },
   { slug: "what-color-is-your-parachute-personality-quiz", title: "Parachute Personality Quiz", desc: "Three-phase quiz generating a personalised personality profile", cat: "Games" },
+  { slug: "typing-and-mathematics-tutorial", title: "Math Island Typing", desc: "Gamified journey combining touch-typing with fraction and maths puzzles", cat: "Games" },
+  { slug: "typing-tutorial", title: "Touch Typing Tutor", desc: "Professional touch typing academy with speed tests and progressive lessons", cat: "Academic" },
 ];
 
 const CAT_LIST = ["All", ...Object.keys(CATEGORIES)];
@@ -364,7 +376,7 @@ export default function App() {
                 <section style={{ marginBottom:'40px' }}>
                   <h2 style={{ fontSize:'18px', fontWeight:700, color:'#1a1f3c', marginBottom:'16px', letterSpacing:'-0.5px' }}>Featured Tools</h2>
                   <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fit, minmax(300px, 1fr))', gap:'12px' }}>
-                    {["biochemai", "dictation-app", "markai", "omniextract", "playgrow", "techbridge-ai-blueprint", "glucose"].map((slug) => {
+                    {["biochemai", "dictation-app", "markai", "omniextract", "playgrow", "techbridge-ai-blueprint", "glucose", "typing-and-mathematics-tutorial", "typing-tutorial"].map((slug) => {
                       const tool = TOOLS.find(t => t.slug === slug);
                       if (!tool) return null;
                       return <FeaturedCard key={slug} tool={tool} onOpen={() => setSelectedTool(tool)} />;

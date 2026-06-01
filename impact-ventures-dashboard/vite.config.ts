@@ -8,13 +8,15 @@ export default defineConfig(({ mode }) => {
   return {
     base: './',
     server: {
-      port: 3000,
+      port: 3012,
       host: '0.0.0.0',
     },
     plugins: [react(), tailwindcss()],
     define: {
       'process.env.API_KEY': JSON.stringify(env.GEMINI_API_KEY),
       'process.env.GEMINI_API_KEY': JSON.stringify(env.GEMINI_API_KEY),
+      'import.meta.env.VITE_GOOGLE_CLIENT_ID': JSON.stringify(env.VITE_GOOGLE_CLIENT_ID),
+      'import.meta.env.VITE_GOOGLE_REDIRECT_URI': JSON.stringify(env.VITE_GOOGLE_REDIRECT_URI),
     },
     resolve: {
       alias: {

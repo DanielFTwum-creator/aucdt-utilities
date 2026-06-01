@@ -1,12 +1,14 @@
 import { defineConfig } from 'vitest/config';
 import react from '@vitejs/plugin-react';
+import type { PluginOption } from 'vite';
 
 // Vitest unit test configuration — omniextract
 // TUC coverage target: >70% for core utilities
 export default defineConfig({
-  plugins: [react()],
+  plugins: [react() as unknown as PluginOption],
   test: {
     environment: 'jsdom',
+    pool: 'threads',
     globals: true,
     setupFiles: './src/__tests__/setup.ts',
     include: ['src/**/*.{test,spec}.{ts,tsx,js,jsx}'],

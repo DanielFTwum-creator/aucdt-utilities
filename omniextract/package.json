@@ -11,7 +11,12 @@
     "test": "vitest",
     "test:ui": "vitest --ui",
     "test:coverage": "vitest run --coverage",
-    "test:e2e": "vitest run --config vitest.e2e.config.ts"
+    "test:e2e": "vitest run --config vitest.e2e.config.ts",
+    "cy:open": "cypress open --config-file cypress.config.ts",
+    "cy:run": "cypress run --config-file cypress.config.ts",
+    "cy:run:auth": "cypress run --config-file cypress.config.ts --spec cypress/e2e/auth.cy.ts",
+    "cy:run:extraction": "cypress run --config-file cypress.config.ts --spec cypress/e2e/extraction.cy.ts",
+    "cy:run:ui": "cypress run --config-file cypress.config.ts --spec cypress/e2e/ui.cy.ts"
   },
   "dependencies": {
     "@google/genai": "latest",
@@ -28,6 +33,7 @@
     "@types/cookie-parser": "^1.4.8",
     "@types/express": "^4.17.21",
     "@types/node": "^22.17.1",
+    "cypress": "^13.17.0",
     "serve": "14.2.5",
     "typescript": "~5.8.3",
     "vite": "7.3.1",

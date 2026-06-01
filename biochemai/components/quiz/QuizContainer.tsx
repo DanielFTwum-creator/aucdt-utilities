@@ -118,7 +118,7 @@ export const QuizContainer: React.FC = () => {
 
     return (
         <div className="w-full relative">
-            <SVGNetworkBackground accentColor="--color-accent-primary" opacity={0.07} />
+            <SVGNetworkBackground accentColor="--color-accent-primary" opacity={0.25} />
             <div className="relative z-10">
                 {renderContent()}
             </div>
