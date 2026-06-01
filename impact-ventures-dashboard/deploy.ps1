@@ -1,136 +1,91 @@
-# impact-ventures-dashboard — Deploy Script
-# URL: https://ai-tools.techbridge.edu.gh/impact-ventures-dashboard/
-# Usage: .\deploy.ps1 -Build
+# ============================================================
+# Impact Ventures Dashboard — Deploy Script
+# Remote : root@techbridge.edu.gh
+# Path   : /var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/impact-ventures-dashboard
+# Port   : 3012  |  PM2 app: impact-ventures
+# Usage  : .\deploy.ps1
+# ============================================================
 
-param(
-    [string]$RemoteHost = "root@techbridge.edu.gh",
-    [string]$RemotePath = "/var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/impact-ventures-dashboard/",
-    [switch]$Build = $false
-)
+param([switch]$Build)
 
-$ErrorActionPreference = "Stop"
-$__deployStart = Get-Date
-$GITHUB_REPO   = "https://github.com/DanielFTwum-creator/aucdt-utilities.git"
-$SUBFOLDER     = "impact-ventures-dashboard"
+$ErrorActionPreference = 'Stop'
+$REMOTE      = 'root@techbridge.edu.gh'
+$DEPLOY_PATH = '/var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/impact-ventures-dashboard'
+$PORT        = 3012
+$PM2_APP     = 'impact-ventures'
+$HEALTH_URL  = 'https://ai-tools.techbridge.edu.gh/impact-ventures-dashboard'
+$GITHUB_REPO = 'https://github.com/DanielFTwum-creator/aucdt-utilities'
+$SUBFOLDER   = 'impact-ventures-dashboard'
+$SSH_OPTS    = @('-o', 'StrictHostKeyChecking=no', '-o', 'BatchMode=yes')
+$SSH = 'ssh'; $SCP = 'scp'; $START_TIME = Get-Date
 
-function Log {
-    param([string]$Level = "INFO", [string]$Msg, [ConsoleColor]$Color = "White")
-    $ts = (Get-Date).ToString("yyyy-MM-dd HH:mm:ss")
-    Write-Host "[$ts][$Level] $Msg" -ForegroundColor $Color
-}
+function Log { param([string]$Level='INFO',[string]$Msg,[ConsoleColor]$Color='White'); Write-Host "[$((Get-Date).ToString('yyyy-MM-dd HH:mm:ss'))[$Level] $Msg" -ForegroundColor $Color }
+function Write-LfFile($path,$content) { $content=$content -replace "`r`n","`n"; [System.IO.File]::WriteAllText($path,$content,(New-Object System.Text.UTF8Encoding $false)) }
 
-Log "INFO" "========================================" Cyan
-Log "INFO" "impact-ventures-dashboard DEPLOYMENT" Cyan
-Log "INFO" "========================================" Cyan
-Log "INFO" "Remote : $RemoteHost"
-Log "INFO" "Path   : $RemotePath"
-Log "INFO" ""
+Log -Level 'INFO' -Msg '========================================' -Color Cyan
+Log -Level 'INFO' -Msg 'IMPACT VENTURES DASHBOARD DEPLOYMENT' -Color Cyan
+Log -Level 'INFO' -Msg '========================================' -Color Cyan
+Log -Level 'INFO' -Msg "Remote : $REMOTE"; Log -Level 'INFO' -Msg "Path   : $DEPLOY_PATH/"; Log -Level 'INFO' -Msg ''
 
-Log "INFO" "Step 1: Pre-flight checks..." Yellow
-Log "SUCCESS" "Pre-flight OK" Green
+Log -Level 'INFO' -Msg 'Step 1: Pre-flight checks...' -Color Yellow
+if (-not (Test-Path '.env.local')) { Log -Level 'ERROR' -Msg '.env.local not found' -Color Red; exit 1 }
+$envContent = Get-Content '.env.local' -Raw
+foreach ($key in @('VITE_GOOGLE_CLIENT_ID','GOOGLE_CLIENT_SECRET')) { if ($envContent -notmatch $key) { Log -Level 'ERROR' -Msg "$key missing" -Color Red; exit 1 } }
+Log -Level 'SUCCESS' -Msg 'Pre-flight OK' -Color Green
 
-Log "INFO" "Step 2: Verifying git state..." Yellow
-$commit = (git rev-parse --short HEAD 2>$null).Trim()
-$branch = (git rev-parse --abbrev-ref HEAD 2>$null).Trim()
-Log "INFO" "Commit : $commit on $branch"
-try { git push origin $branch 2>&1 | Out-Null } catch { Log "WARN" "git push failed (non-fatal)" Yellow }
+Log -Level 'INFO' -Msg 'Step 2: Verifying git state...' -Color Yellow
+$COMMIT=(git rev-parse --short HEAD 2>$null).Trim(); $BRANCH=(git rev-parse --abbrev-ref HEAD 2>$null).Trim()
+Log -Level 'INFO' -Msg "Commit : $COMMIT on $BRANCH"
+try { git push origin $BRANCH 2>&1|Out-Null; Log -Level 'INFO' -Msg "Pushed $BRANCH to GitHub" -Color DarkGray } catch { Log -Level 'WARN' -Msg 'git push failed' -Color Yellow }
 
-if ($Build) {
-    Log "INFO" "Step 3: Server-side build (git clone + pnpm build)..." Yellow
-    $buildDir = "/tmp/impact-ventures-dashboard_deploy_$commit"
-    $serverScript = @"
+Log -Level 'INFO' -Msg 'Step 3: Server-side build...' -Color Yellow
+& $SCP @SSH_OPTS .env.local "${REMOTE}:/tmp/.env.${PM2_APP}" 2>&1|Out-Null
+if ($LASTEXITCODE -ne 0) { Log -Level 'ERROR' -Msg 'Failed to upload .env.local' -Color Red; exit 1 }
+Log -Level 'SUCCESS' -Msg '.env.local uploaded' -Color Green
+
+$remoteBuildScript = @"
+#!/usr/bin/env bash
 set -e
-log() { echo "[`$(date '+%Y-%m-%d %H:%M:%S')][SERVER] `$1"; }
-if ! command -v pnpm >/dev/null 2>&1; then
-  corepack enable >/dev/null 2>&1 || npm install -g pnpm --silent
-  export PATH="`$HOME/.local/share/pnpm:`$PATH"
-fi
-log "pnpm `$(pnpm --version)"
-log '[1/5] Cleaning previous temp build...'
-rm -rf $buildDir
-log '[2/5] Cloning impact-ventures-dashboard (sparse, depth 1)...'
-git clone --depth 1 --filter=blob:none --sparse '$GITHUB_REPO' $buildDir
-cd $buildDir
-git sparse-checkout set impact-ventures-dashboard
-cd impact-ventures-dashboard
-log '[3/5] Installing dependencies...'
-pnpm install --no-frozen-lockfile --silent 2>/dev/null || npm install --silent
-log '[4/5] Building...'
-pnpm build
-log '[5/5] Deploying dist/ to web root...'
-mkdir -p $RemotePath
-rsync -a --delete dist/. $RemotePath
-log 'Build and deploy complete.'
+TMPDIR=/tmp/${SUBFOLDER}_deploy_${COMMIT}
+DEPLOY_PATH=${DEPLOY_PATH}
+REPO=${GITHUB_REPO}
+log() { NOW=`$(date '+%Y-%m-%d %H:%M:%S'); echo "[`$NOW][SERVER] `$1"; }
+pnpm_ver=`$(pnpm --version 2>/dev/null || echo 'not found'); log "pnpm `$pnpm_ver"
+log '[1/7] Cleaning...'; rm -rf "`$TMPDIR"
+log '[2/7] Cloning ${SUBFOLDER}...'
+git clone --filter=blob:none --sparse --depth 1 "`$REPO" "`$TMPDIR"
+cd "`$TMPDIR" && git sparse-checkout set ${SUBFOLDER} && cd ${SUBFOLDER}
+log '[3/7] Injecting .env.local...'; cp /tmp/.env.${PM2_APP} .env.local
+log '[4/7] Installing...'; pnpm install --frozen-lockfile --silent 2>/dev/null || pnpm install --no-frozen-lockfile --silent
+log '[5/7] Building...'; pnpm build
+log '[6/7] Deploying...'; mkdir -p "`$DEPLOY_PATH" && rsync -a --delete dist/ "`$DEPLOY_PATH/dist/"; cp index.html "`$DEPLOY_PATH/dist/index.html" 2>/dev/null || true
+log '[7/7] Backend deps...'; cp server.js package.json "`$DEPLOY_PATH/" 2>/dev/null || true; cd "`$DEPLOY_PATH" && npm install --omit=dev --silent 2>/dev/null || true
+log 'Done.'
 "@
-    $b64 = [Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes($serverScript.Replace("`r", "")))
-    ssh -o StrictHostKeyChecking=no $RemoteHost "echo $b64 | base64 -d | bash"
-    if ($LASTEXITCODE -eq 0) { Log "SUCCESS" "Server-side build and file sync complete" Green }
-    else { Log "WARN" "Server build returned $LASTEXITCODE" Yellow }
-    ssh -o StrictHostKeyChecking=no $RemoteHost "rm -rf $buildDir" 2>$null | Out-Null
-} else {
-    Log "INFO" "Step 3: Copying local dist/ to server..." Yellow
-    if (-not (Test-Path "dist")) { Log "ERROR" "dist/ not found. Run with -Build flag." Red; exit 1 }
-    ssh -o StrictHostKeyChecking=no $RemoteHost "mkdir -p $RemotePath && rm -rf ${RemotePath}*"
-    scp -r -o StrictHostKeyChecking=no dist/* "${RemoteHost}:${RemotePath}"
-    Log "SUCCESS" "dist/* copied to server" Green
-}
 
-Log "INFO" "Step 4: Writing .htaccess..." Yellow
-@"
-<IfModule mod_rewrite.c>
-  RewriteEngine On
-  RewriteBase /impact-ventures-dashboard/
-  RewriteCond %{REQUEST_FILENAME} -f [OR]
-  RewriteCond %{REQUEST_FILENAME} -d
-  RewriteRule ^ - [L]
-  RewriteRule ^ /impact-ventures-dashboard/index.html [QSA,L]
-</IfModule>
-<IfModule mod_expires.c>
-  ExpiresActive On
-  <FilesMatch '\.(js|css|png|jpg|jpeg|gif|svg|woff2|woff|ttf|eot|ico)$'>
-    ExpiresDefault 'max-age=31536000'
-    Header set Cache-Control 'public, immutable'
-  </FilesMatch>
-  <FilesMatch '\.(html|json)$'>
-    ExpiresDefault 'max-age=0'
-    Header set Cache-Control 'no-cache, no-store, must-revalidate'
-    Header set Pragma 'no-cache'
-    Header set Expires '0'
-  </FilesMatch>
-</IfModule>
-"@ | ssh -o StrictHostKeyChecking=no $RemoteHost "cat > ${RemotePath}.htaccess" 2>$null
+$ls=[System.IO.Path]::Combine([System.IO.Path]::GetTempPath(),"${PM2_APP}_$([Guid]::NewGuid().ToString('N')).sh")
+Write-LfFile $ls $remoteBuildScript
+& $SCP @SSH_OPTS $ls "${REMOTE}:/tmp/${PM2_APP}_build.sh"
+& $SSH @SSH_OPTS $REMOTE "bash /tmp/${PM2_APP}_build.sh"; $bx=$LASTEXITCODE
+Remove-Item $ls -Force -EA SilentlyContinue; & $SSH @SSH_OPTS $REMOTE "rm -f /tmp/${PM2_APP}_build.sh" 2>$null
+if ($bx -ne 0) { Log -Level 'ERROR' -Msg "Build failed ($bx)" -Color Red; exit 1 }
+Log -Level 'SUCCESS' -Msg 'Build complete' -Color Green
 
-Log "INFO" "Step 5: Setting permissions..." Yellow
-ssh -o StrictHostKeyChecking=no $RemoteHost "chown -R techbridge.edu.gh_md:psaserv $RemotePath && chmod -R 755 $RemotePath && chmod 644 ${RemotePath}.htaccess 2>/dev/null; true" | Out-Null
+Log -Level 'INFO' -Msg 'Step 4: Server environment...' -Color Yellow
+& $SSH @SSH_OPTS $REMOTE "cp /tmp/.env.${PM2_APP} ${DEPLOY_PATH}/.env; chown -R techbridge.edu.gh_md:psaserv ${DEPLOY_PATH} 2>/dev/null||true; find ${DEPLOY_PATH} -type d -exec chmod 755 {} \; 2>/dev/null||true; find ${DEPLOY_PATH} -type f -exec chmod 644 {} \; 2>/dev/null||true"
 
-Log "INFO" "Step 6: Deploying backend files..." Yellow
-scp -o StrictHostKeyChecking=no server.js package.json pnpm-lock.yaml "${RemoteHost}:${RemotePath}" 2>$null | Out-Null
-if (Test-Path ".env.local") { scp -o StrictHostKeyChecking=no ".env.local" "${RemoteHost}:${RemotePath}.env" 2>$null | Out-Null }
-ssh -o StrictHostKeyChecking=no $RemoteHost "cd $RemotePath && pnpm install --prod --silent 2>/dev/null || npm install --omit=dev --silent"
+Log -Level 'INFO' -Msg 'Step 5: Restarting backend...' -Color Yellow
+$r=& $SSH @SSH_OPTS $REMOTE "if pm2 describe ${PM2_APP}>\/dev\/null 2>&1; then pm2 reload ${PM2_APP}; echo 'pm2: reloaded'; else cd ${DEPLOY_PATH}; PORT=${PORT} pm2 start server.js --name ${PM2_APP}; echo 'pm2: started'; fi"
+Write-Host $r -ForegroundColor DarkGray
 
-Log "INFO" "Step 7: Restarting backend (PM2)..." Yellow
-$restartCmd = @"
-if command -v pm2 &>/dev/null; then
-  if pm2 describe impact-ventures-dashboard &>/dev/null; then
-    pm2 reload impact-ventures-dashboard --update-env && echo 'pm2: reloaded impact-ventures-dashboard'
-  else
-    cd $RemotePath && PORT=3000 pm2 start server.js --name impact-ventures-dashboard --interpreter npx --interpreter-args tsx
-    echo 'pm2: started impact-ventures-dashboard'
-  fi
-  pm2 save --force &>/dev/null
-fi
-"@
-$b64r = [Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes($restartCmd.Replace("`r", "")))
-ssh -o StrictHostKeyChecking=no $RemoteHost "echo $b64r | base64 -d | bash"
+Log -Level 'INFO' -Msg 'Health checks...' -Color Yellow; Start-Sleep -Seconds 8
+$ic=& $SSH @SSH_OPTS $REMOTE "test -f ${DEPLOY_PATH}/dist/index.html && echo 'OK index.html present' || echo 'MISSING index.html'"
+Write-Host $ic -ForegroundColor $(if($ic -match '^OK'){'Green'}else{'Red'})
+$pc=& $SSH @SSH_OPTS $REMOTE "ss -tlnp | grep -q :${PORT} && echo 'OK port ${PORT} listening' || echo 'WARN port ${PORT} not found'"
+Write-Host $pc -ForegroundColor $(if($pc -match '^OK'){'Green'}else{'Yellow'})
 
-Log "INFO" "Health check..." Yellow
-ssh -o StrictHostKeyChecking=no $RemoteHost "test -f ${RemotePath}index.html && echo 'OK index.html present' || echo 'MISSING index.html'"
-ssh -o StrictHostKeyChecking=no $RemoteHost "ss -tlnp | grep -q ':3000' && echo 'OK port 3000 listening' || echo 'WARN port 3000 not found'"
-
-$elapsed = [math]::Round(((Get-Date) - $__deployStart).TotalSeconds, 1)
-$timeStr = if ($elapsed -ge 60) { "$([math]::Floor($elapsed/60))m $([math]::Round($elapsed%60,1))s" } else { "${elapsed}s" }
-Log "SUCCESS" "========================================" Green
-Log "SUCCESS" "DEPLOYMENT COMPLETE" Green
-Log "SUCCESS" "URL  : https://ai-tools.techbridge.edu.gh/impact-ventures-dashboard/" Green
-Log "SUCCESS" "Time : $timeStr total" Green
-Log "SUCCESS" "========================================" Green
+$DURATION=[math]::Round(((Get-Date)-$START_TIME).TotalSeconds,1)
+Log -Level 'SUCCESS' -Msg '========================================' -Color Green
+Log -Level 'SUCCESS' -Msg "DEPLOYMENT COMPLETE in ${DURATION}s" -Color Green
+Log -Level 'SUCCESS' -Msg "URL:  $HEALTH_URL" -Color Green
+Log -Level 'SUCCESS' -Msg '========================================' -Color Green
