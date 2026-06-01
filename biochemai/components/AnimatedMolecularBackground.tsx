@@ -78,7 +78,7 @@ export const AnimatedMolecularBackground: React.FC = () => {
         </defs>
 
         {/* Connection lines */}
-        <g stroke="rgba(124, 58, 237, 0.08)" strokeWidth="0.5" opacity="0.6">
+        <g stroke="rgba(124, 58, 237, 0.35)" strokeWidth="0.4" opacity="1">
           {connections.map(([i, j]) => (
             <line
               key={`line-${i}-${j}`}
@@ -97,7 +97,7 @@ export const AnimatedMolecularBackground: React.FC = () => {
               cx={`${node.cx}%`}
               cy={`${node.cy}%`}
               r={node.r}
-              fill="rgba(124, 58, 237, 0.15)"
+              fill="rgba(124, 58, 237, 0.4)"
               style={{
                 animation: `float${idx + 1} ${node.duration}s ease-in-out ${node.delay}s infinite`,
                 transformOrigin: `${node.cx}% ${node.cy}%`,
@@ -107,7 +107,7 @@ export const AnimatedMolecularBackground: React.FC = () => {
               cx={`${node.cx}%`}
               cy={`${node.cy}%`}
               r={node.r * 0.6}
-              fill="rgba(124, 58, 237, 0.3)"
+              fill="rgba(124, 58, 237, 0.6)"
               style={{
                 animation: `float${idx + 1} ${node.duration}s ease-in-out ${node.delay}s infinite`,
                 transformOrigin: `${node.cx}% ${node.cy}%`,

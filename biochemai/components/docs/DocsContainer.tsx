@@ -33,7 +33,7 @@ export const DocsContainer: React.FC = () => {
 
     return (
         <div className="relative w-full">
-            <SVGNetworkBackground accentColor="--color-accent-primary" opacity={0.07} />
+            <SVGNetworkBackground accentColor="--color-accent-primary" opacity={0.25} />
 
             <GlassmorphismCard>
                 <div className="mb-6 sm:mb-8 border-b border-[var(--color-border-primary)] pb-4">

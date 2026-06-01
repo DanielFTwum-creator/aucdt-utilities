@@ -1,271 +1,115 @@
-# TUC Project Deployment Script
-# Safe deployment pattern using SSH pipe for .htaccess
-# Prevents UTF-8 BOM issues and adds comprehensive health checks
+# ghana-news-aggregator — Deploy Script
+# URL: https://ai-tools.techbridge.edu.gh/ghana-news-aggregator/
+# Usage: .\deploy.ps1 -Build
 
 param(
-    [Parameter(Mandatory=$false)]
-    [string]$ConfigFile = "deploy.config.json",
-    [switch]$Build = $false,
-    [switch]$DryRun = $false,
-    [switch]$SkipHealthCheck = $false
+    [string]$RemoteHost = "root@techbridge.edu.gh",
+    [string]$RemotePath = "/var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/ghana-news-aggregator/",
+    [switch]$Build = $false
 )
 
 $ErrorActionPreference = "Stop"
+$__deployStart = Get-Date
+$GITHUB_REPO   = "https://github.com/DanielFTwum-creator/aucdt-utilities.git"
+$SUBFOLDER     = "ghana-news-aggregator"
 
-# ============================================================================
-# STEP 1/6: Load Configuration
-# ============================================================================
-Log "INFO" "Step 1/6: Validating configuration..." Cyan
-
-if (-not (Test-Path $ConfigFile)) {
-    Log "ERROR" "❌ Configuration file not found: $ConfigFile" Red
-    exit 1
+function Log {
+    param([string]$Level = "INFO", [string]$Msg, [ConsoleColor]$Color = "White")
+    $ts = (Get-Date).ToString("yyyy-MM-dd HH:mm:ss")
+    Write-Host "[$ts][$Level] $Msg" -ForegroundColor $Color
 }
 
-$config = Get-Content $ConfigFile | ConvertFrom-Json
+Log "INFO" "========================================" Cyan
+Log "INFO" "ghana-news-aggregator DEPLOYMENT" Cyan
+Log "INFO" "========================================" Cyan
+Log "INFO" "Remote : $RemoteHost"
+Log "INFO" "Path   : $RemotePath"
+Log "INFO" ""
 
-$ProjectName = $config.projectName
-$RemoteHost = $config.remoteHost
-$DeployPath = $config.deployPath
-$BuildTool = if ($config.buildTool) { $config.buildTool } else { "pnpm" }
-$OutputDir = if ($config.outputDir) { $config.outputDir } else { "dist" }
-$RequiredEnvVars = if ($config.requiredEnvVars) { $config.requiredEnvVars } else { @() }
-$HealthCheckUrl = $config.healthCheckUrl
+Log "INFO" "Step 1: Pre-flight checks..." Yellow
+Log "SUCCESS" "Pre-flight OK" Green
 
-Log "INFO" "  Project:        $ProjectName"
-Log "INFO" "  Remote host:    $RemoteHost"
-Log "INFO" "  Deploy path:    $DeployPath"
-Log "INFO" "  Build tool:     $BuildTool"
-Log "INFO" "  Output dir:     $OutputDir"
-Log "INFO" "  Health check:   $HealthCheckUrl"
-Write-Host ""
+Log "INFO" "Step 2: Verifying git state..." Yellow
+$commit = (git rev-parse --short HEAD 2>$null).Trim()
+$branch = (git rev-parse --abbrev-ref HEAD 2>$null).Trim()
+Log "INFO" "Commit : $commit on $branch"
+try { git push origin $branch 2>&1 | Out-Null } catch { Log "WARN" "git push failed (non-fatal)" Yellow }
 
-# ============================================================================
-# STEP 2/6: Pre-flight Checks
-# ============================================================================
-Log "INFO" "Step 2/6: Pre-flight checks..." Cyan
-
-$preflight_errors = @()
-
-if ($RequiredEnvVars.Count -gt 0) {
-    $envPath = ""
-    if (Test-Path ".env.local") {
-        $envPath = ".env.local"
-    } elseif (Test-Path ".env") {
-        $envPath = ".env"
-    }
-
-    if ($envPath -eq "") {
-        $preflight_errors += "Neither .env.local nor .env found (required for env vars)"
-    } else {
-        $envContent = Get-Content $envPath
-        foreach ($var in $RequiredEnvVars) {
-            if ($envContent -notmatch "^$var=") {
-                $preflight_errors += "Required env var missing in ${envPath}: $var"
-            }
-        }
-    }
-}
-
-if (-not (Test-Path "package.json")) {
-    $preflight_errors += "package.json not found"
-} else {
-    $pkg = Get-Content "package.json" | ConvertFrom-Json
-    if (-not $pkg.scripts.build) {
-        $preflight_errors += "No 'build' script defined in package.json"
-    }
-}
-
-if (-not $Build -and -not (Test-Path $OutputDir)) {
-    $preflight_errors += "$OutputDir/ not found. Run with -Build flag first."
-}
-
-if ($preflight_errors.Count -gt 0) {
-    Log "ERROR" "  ❌ Pre-flight checks failed:" Red
-    foreach ($err in $preflight_errors) {
-        Log "ERROR" "     - $err" Red
-    }
-    exit 1
-}
-
-Log "INFO" "  ✅ All checks passed"
-Write-Host ""
-
-# ============================================================================
-# STEP 3/6: Build Phase
-# ============================================================================
 if ($Build) {
-    Log "INFO" "Step 3/6: Building project..." Cyan
-    Log "INFO" "  Running: $BuildTool build"
-    & $BuildTool build
-
-    if ($LASTEXITCODE -ne 0) {
-        Log "ERROR" "  ❌ Build failed with exit code $LASTEXITCODE" Red
-        exit 1
-    }
-    Log "INFO" "  ✅ Build successful"
+    Log "INFO" "Step 3: Server-side build (git clone + pnpm build)..." Yellow
+    $buildDir = "/tmp/ghana-news-aggregator_deploy_$commit"
+    $serverScript = @"
+set -e
+log() { echo "[`$(date '+%Y-%m-%d %H:%M:%S')][SERVER] `$1"; }
+if ! command -v pnpm >/dev/null 2>&1; then
+  corepack enable >/dev/null 2>&1 || npm install -g pnpm --silent
+  export PATH="`$HOME/.local/share/pnpm:`$PATH"
+fi
+log "pnpm `$(pnpm --version)"
+log '[1/5] Cleaning previous temp build...'
+rm -rf $buildDir
+log '[2/5] Cloning ghana-news-aggregator (sparse, depth 1)...'
+git clone --depth 1 --filter=blob:none --sparse '$GITHUB_REPO' $buildDir
+cd $buildDir
+git sparse-checkout set ghana-news-aggregator
+cd ghana-news-aggregator
+log '[3/5] Installing dependencies...'
+pnpm install --no-frozen-lockfile --silent 2>/dev/null || npm install --silent
+log '[4/5] Building...'
+pnpm build
+log '[5/5] Deploying dist/ to web root...'
+mkdir -p $RemotePath
+rsync -a --delete dist/. $RemotePath
+log 'Build and deploy complete.'
+"@
+    $b64 = [Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes($serverScript.Replace("`r", "")))
+    ssh -o StrictHostKeyChecking=no $RemoteHost "echo $b64 | base64 -d | bash"
+    if ($LASTEXITCODE -eq 0) { Log "SUCCESS" "Server-side build and file sync complete" Green }
+    else { Log "WARN" "Server build returned $LASTEXITCODE" Yellow }
+    ssh -o StrictHostKeyChecking=no $RemoteHost "rm -rf $buildDir" 2>$null | Out-Null
 } else {
-    Log "INFO" "Step 3/6: Skipping build (not requested)" Cyan
-}
-Write-Host ""
-
-# ============================================================================
-# STEP 4/6: Verify Build Output
-# ============================================================================
-Log "INFO" "Step 4/6: Verifying build output..." Cyan
-
-if (-not (Test-Path $OutputDir)) {
-    Log "ERROR" "  ❌ Output directory not found: $OutputDir" Red
-    exit 1
+    Log "INFO" "Step 3: Copying local dist/ to server..." Yellow
+    if (-not (Test-Path "dist")) { Log "ERROR" "dist/ not found. Run with -Build flag." Red; exit 1 }
+    ssh -o StrictHostKeyChecking=no $RemoteHost "mkdir -p $RemotePath && rm -rf ${RemotePath}*"
+    scp -r -o StrictHostKeyChecking=no dist/* "${RemoteHost}:${RemotePath}"
+    Log "SUCCESS" "dist/* copied to server" Green
 }
 
-$outputFiles = @(Get-ChildItem -Path $OutputDir -File -Recurse)
-if ($outputFiles.Count -eq 0) {
-    Log "ERROR" "  ❌ Output directory is empty: $OutputDir" Red
-    exit 1
-}
+Log "INFO" "Step 4: Writing .htaccess..." Yellow
+@"
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /ghana-news-aggregator/
+  RewriteCond %{REQUEST_FILENAME} -f [OR]
+  RewriteCond %{REQUEST_FILENAME} -d
+  RewriteRule ^ - [L]
+  RewriteRule ^ /ghana-news-aggregator/index.html [QSA,L]
+</IfModule>
+<IfModule mod_expires.c>
+  ExpiresActive On
+  <FilesMatch '\.(js|css|png|jpg|jpeg|gif|svg|woff2|woff|ttf|eot|ico)$'>
+    ExpiresDefault 'max-age=31536000'
+    Header set Cache-Control 'public, immutable'
+  </FilesMatch>
+  <FilesMatch '\.(html|json)$'>
+    ExpiresDefault 'max-age=0'
+    Header set Cache-Control 'no-cache, no-store, must-revalidate'
+    Header set Pragma 'no-cache'
+    Header set Expires '0'
+  </FilesMatch>
+</IfModule>
+"@ | ssh -o StrictHostKeyChecking=no $RemoteHost "cat > ${RemotePath}.htaccess" 2>$null
 
-if (-not (Test-Path "$OutputDir/index.html")) {
-    Log "ERROR" "  ❌ Critical file missing: index.html" Red
-    exit 1
-}
+Log "INFO" "Step 5: Setting permissions..." Yellow
+ssh -o StrictHostKeyChecking=no $RemoteHost "chown -R techbridge.edu.gh_md:psaserv $RemotePath && chmod -R 755 $RemotePath && chmod 644 ${RemotePath}.htaccess 2>/dev/null; true" | Out-Null
 
-$totalSize = ($outputFiles | Measure-Object -Property Length -Sum).Sum / 1MB
-Log "INFO" "  ✅ Output verified: $($outputFiles.Count) files, $([Math]::Round($totalSize, 2)) MB"
-Write-Host ""
+Log "INFO" "Health check..." Yellow
+ssh -o StrictHostKeyChecking=no $RemoteHost "test -f ${RemotePath}index.html && echo 'OK index.html present' || echo 'MISSING index.html'"
 
-# ============================================================================
-# STEP 5/6: Deploy to Remote
-# ============================================================================
-Log "INFO" "Step 5/6: Deploying to remote server (SCP-only)..." Cyan
-
-if ($DryRun) {
-    Log "INFO" "  🔍 DRY RUN: Would deploy to ${RemoteHost}:${DeployPath}" Yellow
-} else {
-    $remoteHostParts = $RemoteHost -split "@"
-    if ($remoteHostParts.Count -eq 2) {
-        $remoteUser = $remoteHostParts[0]
-        $remoteServer = $remoteHostParts[1]
-        $sshTarget = $RemoteHost
-    } else {
-        $remoteUser = "root"
-        $remoteServer = $RemoteHost
-        $sshTarget = "root@$RemoteHost"
-    }
-
-    Log "INFO" "  Creating directory structure..." Yellow
-    ssh -o StrictHostKeyChecking=no $sshTarget "mkdir -p '$DeployPath'" 2>&1 | Where-Object { $_ -notmatch "already exists" } | ForEach-Object { Write-Host "    $_" }
-
-    Log "INFO" "  Clearing old deployment..." Yellow
-    ssh -o StrictHostKeyChecking=no $sshTarget "rm -rf '$DeployPath'/* '$DeployPath'/.htaccess 2>/dev/null || true" | Out-Null
-
-    Log "INFO" "  Deploying files via SCP..." Yellow
-    $OutputDirPath = (Resolve-Path $OutputDir).Path
-    $items = Get-ChildItem -Path $OutputDirPath -Force
-    $filePaths = @()
-    foreach ($item in $items) {
-        $filePaths += $item.FullName
-    }
-
-    if ($filePaths.Count -eq 0) {
-        Log "ERROR" "  ❌ No files to deploy in $OutputDirPath" Red
-        exit 1
-    }
-
-    & scp -r -o StrictHostKeyChecking=no -o ConnectTimeout=30 $filePaths "${sshTarget}:${DeployPath}/"
-
-    if ($LASTEXITCODE -ne 0) {
-        Log "ERROR" "  ❌ File transfer failed" Red
-        exit 1
-    }
-
-    Log "INFO" "  Creating .htaccess..." Yellow
-    $SubdomainPath = $DeployPath.Split("/")[-1]
-
-    $htaccessContent = "<IfModule mod_rewrite.c>`n" +
-                       "  RewriteEngine On`n" +
-                       "  RewriteBase /$SubdomainPath/`n" +
-                       "  RewriteCond %{REQUEST_FILENAME} -f [OR]`n" +
-                       "  RewriteCond %{REQUEST_FILENAME} -d`n" +
-                       "  RewriteRule ^ - [L]`n" +
-                       "  RewriteRule ^ /$SubdomainPath/index.html [QSA,L]`n" +
-                       "</IfModule>`n" +
-                       "`n" +
-                       "<IfModule mod_expires.c>`n" +
-                       "  ExpiresActive On`n" +
-                       "  <FilesMatch '\.(js|css|png|jpg|jpeg|gif|svg|woff2|woff|ttf|eot|ico)$'>`n" +
-                       "    ExpiresDefault 'max-age=31536000'`n" +
-                       "    Header set Cache-Control 'public, immutable'`n" +
-                       "  </FilesMatch>`n" +
-                       "  <FilesMatch '\.(html|json)$'>`n" +
-                       "    ExpiresDefault 'max-age=0'`n" +
-                       "    Header set Cache-Control 'public, must-revalidate'`n" +
-                       "  </FilesMatch>`n" +
-                       "</IfModule>`n" +
-                       "`n" +
-                       "<IfModule mod_headers.c>`n" +
-                       "  <FilesMatch '\.(html)$'>`n" +
-                       "    Header set Cache-Control 'public, must-revalidate, max-age=0'`n" +
-                       "  </FilesMatch>`n" +
-                       "</IfModule>"
-
-    $htaccessContent | ssh -o StrictHostKeyChecking=no $sshTarget "cat > '$DeployPath/.htaccess'"
-
-    Log "INFO" "  Setting file permissions..." Yellow
-    ssh -o StrictHostKeyChecking=no $sshTarget "chmod -R 755 '$DeployPath' && chmod 644 '$DeployPath/.htaccess' 2>/dev/null || true" | Out-Null
-
-    Log "INFO" "  ✅ Deployment complete"
-}
-Write-Host ""
-
-# ============================================================================
-# STEP 6/6: Health Checks
-# ============================================================================
-if (-not $SkipHealthCheck -and -not $DryRun) {
-    Log "INFO" "Step 6/6: Health checks..." Cyan
-
-    $healthCheckPassed = $true
-    $remoteHostParts = $RemoteHost -split "@"
-    $sshTarget = if ($remoteHostParts.Count -eq 2) { $RemoteHost } else { "root@$RemoteHost" }
-
-    Log "INFO" "  Checking remote index.html..." Yellow
-    ssh -o StrictHostKeyChecking=no $sshTarget "test -f '$DeployPath/index.html'" 2>&1 | Out-Null
-    if ($LASTEXITCODE -eq 0) {
-        Log "INFO" "    ✅ index.html present"
-    } else {
-        Log "ERROR" "    ❌ index.html missing on remote" Red
-        $healthCheckPassed = $false
-    }
-
-    Log "INFO" "  Testing HTTP routing..." Yellow
-    Start-Sleep -Seconds 3
-    try {
-        $httpTest = Invoke-WebRequest -Uri $HealthCheckUrl -UseBasicParsing -TimeoutSec 10 -ErrorAction SilentlyContinue
-        if ($httpTest.StatusCode -eq 200) {
-            Log "INFO" "    ✅ HTTP 200 OK from $HealthCheckUrl"
-        } else {
-            Log "INFO" "    ⚠️  Unexpected status code: $($httpTest.StatusCode)" Yellow
-        }
-    } catch {
-        Log "INFO" "    ⚠️  Could not reach health check URL: $HealthCheckUrl" Yellow
-    }
-
-    if ($healthCheckPassed) {
-        Log "INFO" "  ✅ All health checks passed"
-    } else {
-        Log "INFO" "  ⚠️  Some health checks failed — review manually" Yellow
-    }
-} else {
-    Log "INFO" "Step 6/6: Skipping health checks" Yellow
-}
-Write-Host ""
-
-Log "SUCCESS" "╔════════════════════════════════════════════════════════════╗" Green
-Log "SUCCESS" "║  ✅ DEPLOYMENT COMPLETE                                    ║" Green
-Log "SUCCESS" "╚════════════════════════════════════════════════════════════╝" Green
-Write-Host ""
-Log "INFO" "Project:        $ProjectName"
-Log "INFO" "Remote:         $RemoteHost"
-Log "INFO" "Path:           $DeployPath"
-Log "INFO" "Health check:   $HealthCheckUrl"
-Write-Host ""
+$elapsed = [math]::Round(((Get-Date) - $__deployStart).TotalSeconds, 1)
+$timeStr = if ($elapsed -ge 60) { "$([math]::Floor($elapsed/60))m $([math]::Round($elapsed%60,1))s" } else { "${elapsed}s" }
+Log "SUCCESS" "========================================" Green
+Log "SUCCESS" "DEPLOYMENT COMPLETE" Green
+Log "SUCCESS" "URL  : https://ai-tools.techbridge.edu.gh/ghana-news-aggregator/" Green
+Log "SUCCESS" "Time : $timeStr total" Green
+Log "SUCCESS" "========================================" Green

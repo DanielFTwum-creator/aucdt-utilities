@@ -8,7 +8,7 @@ import { GlassmorphismCard } from '../GlassmorphismCard';
 export const AdminContainer: React.FC = () => {
   return (
     <div className="relative w-full space-y-8">
-      <SVGNetworkBackground accentColor="--color-accent-primary" opacity={0.07} />
+      <SVGNetworkBackground accentColor="--color-accent-primary" opacity={0.25} />
 
       <GlassmorphismCard>
         <h1 className="text-3xl sm:text-4xl font-bold text-[var(--color-text-primary)]">Admin Panel</h1>

@@ -34,7 +34,7 @@ export const TestContainer: React.FC = () => {
 
     return (
         <div className="relative w-full space-y-8">
-            <SVGNetworkBackground accentColor="--color-accent-primary" opacity={0.07} />
+            <SVGNetworkBackground accentColor="--color-accent-primary" opacity={0.25} />
 
             <GlassmorphismCard>
                 <div className="flex items-center mb-4">

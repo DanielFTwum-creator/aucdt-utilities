@@ -1,213 +1,207 @@
-# OmniExtract Deployment Script
-# Strategy: SSH to server -> git clone -> build on server -> serve
-# Avoids all Windows scp/tar file-transfer failures.
+# ============================================================
+# OmniExtract — Deploy Script
+# Remote : root@techbridge.edu.gh
+# Path   : /var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/omniextract
+# Port   : 3009  |  PM2 app: omniextract
+# Usage  : .\deploy.ps1 -Build
+# ============================================================
 
-param(
-    [string]$RemoteHost = "root@techbridge.edu.gh",
-    [string]$RemotePath = "/var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/omniextract/",
-    [switch]$Build = $true
-)
+param([switch]$Build)
 
-# Timestamped logging helper
-$__deployStart = Get-Date
+$ErrorActionPreference = 'Stop'
+
+$REMOTE      = 'root@techbridge.edu.gh'
+$DEPLOY_PATH = '/var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/omniextract'
+$PORT        = 3009
+$PM2_APP     = 'omniextract'
+$HEALTH_URL  = 'https://ai-tools.techbridge.edu.gh/omniextract'
+$GITHUB_REPO = 'https://github.com/DanielFTwum-creator/aucdt-utilities'
+$SUBFOLDER   = 'omniextract'
+$SSH_OPTS    = @('-o','StrictHostKeyChecking=no','-o','BatchMode=yes')
+$SSH         = 'ssh'
+$SCP         = 'scp'
+$START_TIME  = Get-Date
+
 function Log {
-    param([string]$Level = "INFO", [string]$Msg, [ConsoleColor]$Color = "White")
-    $ts = (Get-Date).ToString("yyyy-MM-dd HH:mm:ss")
+    param([string]$Level = 'INFO', [string]$Msg, [ConsoleColor]$Color = 'White')
+    $ts = (Get-Date).ToString('yyyy-MM-dd HH:mm:ss')
     Write-Host "[$ts][$Level] $Msg" -ForegroundColor $Color
 }
 
-Log "INFO" "========================================" Cyan
-Log "INFO" "OMNIEXTRACT DEPLOYMENT" Cyan
-Log "INFO" "========================================" Cyan
-Log "INFO" "Remote : $RemoteHost"
-Log "INFO" "Path   : $RemotePath"
-Log "INFO" ""
-
-# Step 1: Validate .env.local
-Log "INFO" "Step 1: Pre-flight checks..." Yellow
-if (-not (Test-Path "./.env.local")) {
-    Log "ERROR" ".env.local not found!" Red; exit 1
+function Write-LfFile($path, $content) {
+    $content = $content -replace "`r`n", "`n"
+    [System.IO.File]::WriteAllText($path, $content, (New-Object System.Text.UTF8Encoding $false))
 }
-$envContent = Get-Content "./.env.local" -Raw
-foreach ($key in @("GEMINI_API_KEY","VITE_GOOGLE_CLIENT_ID","GOOGLE_CLIENT_SECRET")) {
+
+Log -Level 'INFO' -Msg '========================================' -Color Cyan
+Log -Level 'INFO' -Msg 'OMNIEXTRACT DEPLOYMENT'                   -Color Cyan
+Log -Level 'INFO' -Msg '========================================' -Color Cyan
+Log -Level 'INFO' -Msg "Remote : $REMOTE"
+Log -Level 'INFO' -Msg "Path   : $DEPLOY_PATH/"
+Log -Level 'INFO' -Msg ''
+
+# Step 1: Pre-flight
+Log -Level 'INFO' -Msg 'Step 1: Pre-flight checks...' -Color Yellow
+if (-not (Test-Path '.env.local')) {
+    Log -Level 'ERROR' -Msg '.env.local not found — aborting' -Color Red
+    exit 1
+}
+$envContent = Get-Content '.env.local' -Raw
+foreach ($key in @('GEMINI_API_KEY','VITE_GOOGLE_CLIENT_ID','VITE_GOOGLE_REDIRECT_URI','GOOGLE_CLIENT_SECRET')) {
     if ($envContent -notmatch $key) {
-        Log "ERROR" "$key missing in .env.local" Red; exit 1
+        Log -Level 'ERROR' -Msg "$key missing in .env.local" -Color Red
+        exit 1
     }
 }
-Log "SUCCESS" "Pre-flight OK (.env.local validated)" Green
+Log -Level 'SUCCESS' -Msg 'Pre-flight OK (.env.local validated)' -Color Green
 
-# Step 2: Push latest code to GitHub (ensure server pulls the newest commit)
-Log "INFO" "Step 2: Verifying git state..." Yellow
-$commit = git rev-parse --short HEAD
-$branch = git branch --show-current
-Log "INFO" "Commit : $commit on $branch"
+# Step 2: Git state
+Log -Level 'INFO' -Msg 'Step 2: Verifying git state...' -Color Yellow
+$COMMIT = (git rev-parse --short HEAD 2>$null).Trim()
+$BRANCH = (git rev-parse --abbrev-ref HEAD 2>$null).Trim()
+Log -Level 'INFO' -Msg "Commit : $COMMIT on $BRANCH"
 
-# Step 3: Server-side build and deploy via SSH
-Log "INFO" "Step 3: Server-side build (git clone + npm build)..." Yellow
+try {
+    git push origin $BRANCH 2>&1 | Out-Null
+    Log -Level 'INFO' -Msg "Pushed $BRANCH to GitHub" -Color DarkGray
+} catch {
+    Log -Level 'WARN' -Msg 'git push failed (non-fatal) — server will clone existing HEAD' -Color Yellow
+}
 
-$repoUrl = "https://github.com/DanielFTwum-creator/aucdt-utilities.git"
-$buildDir = "/tmp/omniextract_deploy_$commit"
+# Step 3: Server-side build
+Log -Level 'INFO' -Msg 'Step 3: Server-side build (git clone + pnpm build)' -Color Yellow
 
-$serverScript = @"
+Log -Level 'INFO' -Msg 'Uploading .env.local to server for build...' -Color DarkGray
+& $SCP @SSH_OPTS .env.local "${REMOTE}:/tmp/.env.omniextract" 2>&1 | Out-Null
+if ($LASTEXITCODE -eq 0) {
+    Log -Level 'SUCCESS' -Msg '.env.local uploaded' -Color Green
+} else {
+    Log -Level 'ERROR' -Msg 'Failed to upload .env.local' -Color Red
+    exit 1
+}
+
+$remoteBuildScript = @"
+#!/usr/bin/env bash
 set -e
+TMPDIR=/tmp/${SUBFOLDER}_deploy_${COMMIT}
+DEPLOY_PATH=${DEPLOY_PATH}
+REPO=${GITHUB_REPO}
 
-# Timestamped log helper (server-side bash)
-log() { echo "[`$(date '+%Y-%m-%d %H:%M:%S')][SERVER] `$1"; }
+log() {
+  NOW=`$(date '+%Y-%m-%d %H:%M:%S')
+  echo "[`$NOW][SERVER] `$1"
+}
 
-# Ensure pnpm is available
-if ! command -v pnpm >/dev/null 2>&1; then
-  corepack enable >/dev/null 2>&1 || npm install -g pnpm --silent
-  export PATH="`$HOME/.local/share/pnpm:`$PATH"
-fi
-log "pnpm `$(pnpm --version)"
+pnpm_ver=`$(pnpm --version 2>/dev/null || echo 'not found')
+log "pnpm `$pnpm_ver"
 
 log '[1/7] Cleaning previous temp build...'
-rm -rf $buildDir
+rm -rf "`$TMPDIR"
 
-log '[2/7] Cloning omniextract (sparse, depth 1)...'
-git clone --depth 1 --filter=blob:none --sparse '$repoUrl' $buildDir
-cd $buildDir
-rm -f pnpm-workspace.yaml package.json
-git sparse-checkout set omniextract
-cd omniextract
+log '[2/7] Cloning ${SUBFOLDER} (sparse, depth 1)...'
+git clone --filter=blob:none --sparse --depth 1 "`$REPO" "`$TMPDIR"
+cd "`$TMPDIR"
+git sparse-checkout set ${SUBFOLDER}
+cd ${SUBFOLDER}
 
 log '[3/7] Injecting .env.local for Vite build...'
-cp /tmp/omniextract_env_$commit .env.local 2>/dev/null || log 'Warning: .env.local not found'
+cp /tmp/.env.omniextract .env.local
 
 log '[4/7] Installing dependencies...'
-pnpm install --no-frozen-lockfile --ignore-workspace --silent 2>/dev/null \
-  || npm install --legacy-peer-deps --silent
+pnpm install --frozen-lockfile --silent 2>/dev/null || pnpm install --no-frozen-lockfile --silent
 
 log '[5/7] Building...'
-pnpm exec vite build 2>/dev/null || npx vite build
+pnpm build
 
 log '[6/7] Deploying dist/ to web root...'
-mkdir -p $RemotePath
-cp -r dist/. $RemotePath
-cp server.ts package.json $RemotePath
+mkdir -p "`$DEPLOY_PATH"
+rsync -a --delete dist/ "`$DEPLOY_PATH/dist/"
+cp index.html "`$DEPLOY_PATH/dist/index.html" 2>/dev/null || true
 
 log '[7/7] Installing backend deps...'
-cd $RemotePath
-pnpm install --prod --silent
+cp server.ts package.json pnpm-lock.yaml "`$DEPLOY_PATH/" 2>/dev/null || true
+cd "`$DEPLOY_PATH"
+pnpm install --prod --silent 2>/dev/null || npm install --omit=dev --silent
+
 log 'Build and deploy complete.'
-
-echo 'Build and deploy complete.'
 "@
 
-# Stream .env.local to server BEFORE building — Vite needs it at build time
-Log "INFO" "Uploading .env.local to server for build..." Yellow
-$envContent = Get-Content ".env.local" -Raw
-$envContent | ssh -o StrictHostKeyChecking=no $RemoteHost "mkdir -p /tmp && cat > /tmp/omniextract_env_$commit"
-if ($LASTEXITCODE -eq 0) {
-    Log "SUCCESS" ".env.local uploaded" Green
-}
+$localBuildScript = [System.IO.Path]::Combine([System.IO.Path]::GetTempPath(), "omniextract_build_$([Guid]::NewGuid().ToString('N')).sh")
+Write-LfFile -path $localBuildScript -content $remoteBuildScript
+& $SCP @SSH_OPTS $localBuildScript "${REMOTE}:/tmp/omniextract_build.sh"
 if ($LASTEXITCODE -ne 0) {
-    Log "WARN" ".env.local upload failed — Google OAuth may not work in build" Yellow
+    Log 'ERROR' 'Failed to upload remote build script'
+    Remove-Item -Path $localBuildScript -Force -ErrorAction SilentlyContinue
+    exit 1
 }
+& $SSH @SSH_OPTS $REMOTE "bash /tmp/omniextract_build.sh"
+$buildExit = $LASTEXITCODE
+Remove-Item -Path $localBuildScript -Force -ErrorAction SilentlyContinue
+& $SSH @SSH_OPTS $REMOTE "rm -f /tmp/omniextract_build.sh" 2>$null
 
-$scriptPath = [System.IO.Path]::GetTempFileName()
-Set-Content -Path $scriptPath -Value $serverScript -Encoding UTF8
-cmd.exe /c "ssh -o StrictHostKeyChecking=no $RemoteHost bash -s < $scriptPath"
-
-if ($LASTEXITCODE -ne 0) {
-    Log "WARN" "Server deploy returned $LASTEXITCODE — check output above" Yellow
+if ($buildExit -ne 0) {
+    Log -Level 'ERROR' -Msg "Remote build failed with exit code $buildExit" -Color Red
+    exit 1
 }
-if ($LASTEXITCODE -eq 0) {
-    Log "SUCCESS" "Server-side build and file sync complete" Green
-}
-Remove-Item -Path $scriptPath -Force
+Log -Level 'SUCCESS' -Msg 'Server-side build and file sync complete' -Color Green
 
-if ($LASTEXITCODE -ne 0) {
-    Log "WARN" "Server deploy returned $LASTEXITCODE — check output above" Yellow
-}
-if ($LASTEXITCODE -eq 0) {
-    Log "SUCCESS" "Server-side build and file sync complete" Green
-}
-
-# Clean up the uploaded env file
-ssh -o StrictHostKeyChecking=no $RemoteHost "rm -f /tmp/omniextract_env_$commit" 2>$null | Out-Null
-
-# Step 4: Write .htaccess
-Log "INFO" "Step 4: Writing .htaccess..." Yellow
+# Step 4: .htaccess
+Log -Level 'INFO' -Msg 'Step 4: Writing .htaccess...' -Color Yellow
 $htaccessContent = @'
-<IfModule mod_rewrite.c>
-  RewriteEngine On
-  RewriteBase /omniextract/
-  RewriteCond %{REQUEST_FILENAME} -f [OR]
-  RewriteCond %{REQUEST_FILENAME} -d
-  RewriteRule ^ - [L]
-  RewriteCond %{HTTP:Upgrade} !websocket [NC]
-  RewriteCond %{HTTP:Connection} !Upgrade [NC]
-  RewriteRule ^callback http://localhost:3009/callback [P,L]
-  RewriteRule ^api/(.*)$ http://localhost:3009/api/$1 [P,L]
-  RewriteRule ^ /omniextract/index.html [QSA,L]
-</IfModule>
+Options -MultiViews
+RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^ index.html [QSA,L]
 
-<IfModule mod_expires.c>
-  ExpiresActive On
-  <FilesMatch '\.(js|css|png|jpg|jpeg|gif|svg|woff2|woff|ttf|eot|ico)$'>
-    ExpiresDefault 'max-age=31536000'
-    Header set Cache-Control 'public, immutable'
-  </FilesMatch>
-  <FilesMatch '\.(html|json)$'>
-    ExpiresDefault 'max-age=0'
-    Header set Cache-Control 'public, must-revalidate'
-  </FilesMatch>
-</IfModule>
-
-<IfModule mod_headers.c>
-  <FilesMatch '\.(html)$'>
-    Header set Cache-Control 'public, must-revalidate, max-age=0'
-  </FilesMatch>
-</IfModule>
+<FilesMatch "\.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+</FilesMatch>
+<FilesMatch "index\.html$">
+    Header set Cache-Control "no-cache, no-store, must-revalidate"
+</FilesMatch>
 '@
-$htaccessContent | ssh -o StrictHostKeyChecking=no $RemoteHost "cat > '$RemotePath/.htaccess'" 2>&1 | Out-Null
+$localHtaccess = [System.IO.Path]::Combine([System.IO.Path]::GetTempPath(), "omniextract_htaccess_$([Guid]::NewGuid().ToString('N')).txt")
+Write-LfFile -path $localHtaccess -content $htaccessContent
+& $SSH @SSH_OPTS $REMOTE "mkdir -p ${DEPLOY_PATH}/dist"
+& $SCP @SSH_OPTS $localHtaccess "${REMOTE}:${DEPLOY_PATH}/dist/.htaccess"
+if ($LASTEXITCODE -ne 0) {
+    Log -Level 'ERROR' -Msg 'Failed to upload .htaccess' -Color Red
+    Remove-Item -Path $localHtaccess -Force -ErrorAction SilentlyContinue
+    exit 1
+}
+Remove-Item -Path $localHtaccess -Force -ErrorAction SilentlyContinue
 
-# Step 5: Copy .env + set permissions
-Log "INFO" "Step 5: Configuring server environment..." Yellow
-scp -o StrictHostKeyChecking=no ".env.local" "${RemoteHost}:${RemotePath}/.env" 2>&1 | Out-Null
-ssh -o StrictHostKeyChecking=no $RemoteHost "chown -R techbridge.edu.gh_md:psaserv $RemotePath && chmod -R 755 $RemotePath && chmod 644 $RemotePath/.htaccess $RemotePath/.env 2>/dev/null; true" | Out-Null
+# Step 5: Server environment
+Log -Level 'INFO' -Msg 'Step 5: Configuring server environment...' -Color Yellow
+& $SSH @SSH_OPTS $REMOTE "cp /tmp/.env.omniextract ${DEPLOY_PATH}/.env; chown -R techbridge.edu.gh_md:psaserv ${DEPLOY_PATH} 2>/dev/null || true; find ${DEPLOY_PATH} -type d -exec chmod 755 {} \; 2>/dev/null || true; find ${DEPLOY_PATH} -type f -exec chmod 644 {} \; 2>/dev/null || true"
 
-# Step 6: Restart backend with pm2 (fast) or tsx --transpile-only (fallback)
-Log "INFO" "Step 6: Restarting backend..." Yellow
-$restartScript = @"
-cd $RemotePath
+# Step 6: Restart backend
+Log -Level 'INFO' -Msg 'Step 6: Restarting backend...' -Color Yellow
+$pm2Result = & $SSH @SSH_OPTS $REMOTE "if pm2 describe ${PM2_APP} > /dev/null 2>&1; then pm2 reload ${PM2_APP}; echo 'pm2: reloaded ${PM2_APP}'; else cd ${DEPLOY_PATH}; PORT=${PORT} pm2 start server.ts --name ${PM2_APP} --interpreter npx --interpreter-args tsx; echo 'pm2: started ${PM2_APP}'; fi"
+Write-Host $pm2Result -ForegroundColor DarkGray
 
-# Prefer pm2 — instant reload, no transpile delay
-if command -v pm2 &>/dev/null; then
-  if pm2 describe omniextract &>/dev/null; then
-    pm2 reload omniextract --update-env && echo 'pm2: reloaded omniextract'
-  else
-    PORT=3009 pm2 start server.ts --name omniextract --interpreter tsx -- --transpile-only && echo 'pm2: started omniextract'
-  fi
-  pm2 save --force &>/dev/null
-else
-  # Fallback: kill old process, start with --transpile-only
-  fuser -k 3009/tcp 2>/dev/null || true
-  PORT=3009 setsid nohup tsx --transpile-only server.ts > server.log 2>&1 < /dev/null &
-  sleep 2
-  echo 'tsx: started omniextract (transpile-only)'
-fi
-"@
-ssh -o StrictHostKeyChecking=no $RemoteHost "$restartScript"
-Start-Sleep -Seconds 2
+# Health checks
+Log -Level 'INFO' -Msg 'Health checks...' -Color Yellow
+Start-Sleep -Seconds 8
 
-Log "INFO" "Health checks..." Yellow
-ssh -o StrictHostKeyChecking=no $RemoteHost "test -f $RemotePath/index.html && echo 'OK index.html present' || echo 'X index.html MISSING'"
-ssh -o StrictHostKeyChecking=no $RemoteHost "ss -tlnp 2>/dev/null | grep -q ':3009' && echo 'OK port 3009 listening' || echo 'X port 3009 not up'"
-ssh -o StrictHostKeyChecking=no $RemoteHost "curl -sS -o /dev/null -w 'HTTP %{http_code}' http://localhost:3009/api/health 2>/dev/null && echo ' (backend OK)' || echo ' (health endpoint not yet ready)'"
+$indexCheck = & $SSH @SSH_OPTS $REMOTE "test -f ${DEPLOY_PATH}/dist/index.html && echo 'OK index.html present' || echo 'MISSING index.html'"
+Write-Host $indexCheck -ForegroundColor $(if ($indexCheck -match '^OK') { 'Green' } else { 'Red' })
 
-# Step 7: Cleanup temp build on server
-ssh -o StrictHostKeyChecking=no $RemoteHost "rm -rf $buildDir" 2>$null | Out-Null
+$portCheck = & $SSH @SSH_OPTS $REMOTE "ss -tlnp | grep -q :${PORT} && echo 'OK port ${PORT} listening' || echo 'WARN port ${PORT} not found'"
+Write-Host $portCheck -ForegroundColor $(if ($portCheck -match '^OK') { 'Green' } else { 'Yellow' })
 
-$elapsed    = [math]::Round(((Get-Date) - $__deployStart).TotalSeconds, 1)
-$elapsedMin = [math]::Floor($elapsed / 60)
-$elapsedSec = [math]::Round($elapsed % 60, 1)
-$timeStr    = if ($elapsedMin -gt 0) { "${elapsedMin}m ${elapsedSec}s" } else { "${elapsed}s" }
+try {
+    $r = Invoke-WebRequest -Uri "${HEALTH_URL}/api/health" -TimeoutSec 10 -UseBasicParsing -ErrorAction Stop
+    Write-Host "HTTP $($r.StatusCode) (backend OK)" -ForegroundColor Green
+} catch {
+    Write-Host 'WARN health check unreachable' -ForegroundColor Yellow
+}
 
-Log "SUCCESS" "========================================" Green
-Log "SUCCESS" "DEPLOYMENT COMPLETE" Green
-Log "SUCCESS" "URL  : https://ai-tools.techbridge.edu.gh/omniextract" Green
-Log "SUCCESS" "Port : 3009" Green
-Log "SUCCESS" "Time : $timeStr total" Green
-Log "SUCCESS" "========================================" Green
+$DURATION = [math]::Round(((Get-Date) - $START_TIME).TotalSeconds, 1)
+Log -Level 'SUCCESS' -Msg '========================================' -Color Green
+Log -Level 'SUCCESS' -Msg "DEPLOYMENT COMPLETE in ${DURATION}s"    -Color Green
+Log -Level 'SUCCESS' -Msg "URL:  $HEALTH_URL"                       -Color Green
+Log -Level 'SUCCESS' -Msg "Port: $PORT"                             -Color Green
+Log -Level 'SUCCESS' -Msg '========================================' -Color Green
+

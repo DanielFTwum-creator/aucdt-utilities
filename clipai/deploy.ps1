@@ -1,489 +1,90 @@
+# clipai — Deploy Script
+# URL: https://ai-tools.techbridge.edu.gh/clipai/
+# Usage: .\deploy.ps1 -Build
+
 param(
-    [string]$Environment = "production",
-    [switch]$Force = $false
-)
-
-
-# Timestamped logging helper (injected by standardisation pass — May 2026)
-param(
-    [string]$Environment = "production",
-    [switch]$Force = $false
-)
-
-$ErrorActionPreference = "Stop"
-
-# Configuration
-$RemoteHost = "root@techbridge.edu.gh"
-$RemotePath = "/var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/clipai/"
-$FileOwnership = "aucdtadmin:psacln"
-$HtaccessRewriteBase = "/clipai/"
-$LocalBuildPath = "dist"
-
-# Colors for output
-$InfoColor = "Cyan"
-$SuccessColor = "Green"
-$ErrorColor = "Red"
-$WarningColor = "Yellow"
-
-function Write-Info {
-    param([string]$Message)
-    Write-Host $Message -ForegroundColor $InfoColor
-}
-
-function Write-Success {
-    param([string]$Message)
-    Write-Host $Message -ForegroundColor $SuccessColor
-}
-
-function Write-Error-Custom {
-    param([string]$Message)
-    Write-Host $Message -ForegroundColor $ErrorColor
-}
-
-function Write-Warning-Custom {
-    param([string]$Message)
-    Write-Host $Message -ForegroundColor $WarningColor
-}
-
-Write-Info "ClipAI Deployment Script"
-Write-Info "Environment: $Environment"
-Write-Info "================================"
-
-# Step 1: Build the project
-Write-Info ""
-Write-Info "Step 1: Building project..."
-if (-not (Test-Path "package.json")) {
-    Write-Error-Custom "package.json not found. Run from project root."
-    exit 1
-}
-
-pnpm install
-if ($LASTEXITCODE -ne 0) {
-    Write-Error-Custom "pnpm install failed"
-    exit 1
-}
-
-pnpm build
-if ($LASTEXITCODE -ne 0) {
-    Write-Error-Custom "pnpm build failed"
-    exit 1
-}
-
-Write-Success "Build completed"
-
-# Step 2: Verify dist directory
-Write-Info ""
-Write-Info "Step 2: Verifying build output..."
-if (-not (Test-Path $LocalBuildPath)) {
-    Write-Error-Custom "Build output directory '$LocalBuildPath' not found"
-    exit 1
-}
-
-$FileCount = (Get-ChildItem -Path $LocalBuildPath -Recurse).Count
-Write-Success "Build output verified ($FileCount files)"
-
-# Step 3: Deploy to remote server
-Write-Info ""
-Write-Info "Step 3: Deploying to remote server..."
-Write-Info "Remote: $RemoteHost"
-Write-Info "Path: $RemotePath"
-
-# Create remote directory if it doesn't exist
-ssh $RemoteHost "mkdir -p $RemotePath" 2>$null
-if ($LASTEXITCODE -ne 0) {
-    Write-Error-Custom "Failed to create remote directory"
-    exit 1
-}
-
-# Upload files via scp
-Write-Info "Uploading files..."
-$SourcePath = (Get-Item $LocalBuildPath).FullName
-scp -r "$SourcePath/*" "$RemoteHost`:$RemotePath"
-if ($LASTEXITCODE -ne 0) {
-    Write-Error-Custom "Failed to upload files"
-    exit 1
-}
-
-Write-Success "Files uploaded"
-
-# Step 4: Set file permissions
-Write-Info ""
-Write-Info "Step 4: Setting file permissions..."
-ssh $RemoteHost "chown -R $FileOwnership $RemotePath && chmod -R 755 $RemotePath"
-if ($LASTEXITCODE -ne 0) {
-    Write-Error-Custom "Failed to set permissions"
-    exit 1
-}
-
-Write-Success "Permissions set"
-
-# Step 5: Create/update .htaccess
-Write-Info ""
-Write-Info "Step 5: Configuring .htaccess..."
-$HtaccessContent = @"
-<IfModule mod_rewrite.c>
-  RewriteEngine On
-  RewriteBase $HtaccessRewriteBase
-  RewriteRule ^index\.html$ - [L]
-  RewriteCond %{REQUEST_FILENAME} !-f
-  RewriteCond %{REQUEST_FILENAME} !-d
-  RewriteRule . index.html [L]
-</IfModule>
-
-<IfModule mod_expires.c>
-  ExpiresActive On
-  <FilesMatch '\.(js|css|png|jpg|jpeg|gif|svg|woff2|woff|ttf|eot|ico)$'>
-    ExpiresDefault 'max-age=31536000'
-    Header set Cache-Control 'public, immutable'
-  </FilesMatch>
-  <FilesMatch '\.(html|json)$'>
-    ExpiresDefault 'max-age=0'
-    Header set Cache-Control 'public, must-revalidate'
-  </FilesMatch>
-</IfModule>
-
-<IfModule mod_headers.c>
-  <FilesMatch '\.(html)$'>
-    Header set Cache-Control 'public, must-revalidate, max-age=0'
-  </FilesMatch>
-</IfModule>
-"@
-
-$TempHtaccess = New-TemporaryFile
-Set-Content -Path $TempHtaccess -Value $HtaccessContent -Encoding UTF8
-
-scp $TempHtaccess "$RemoteHost`:$RemotePath/.htaccess"
-if ($LASTEXITCODE -ne 0) {
-    Write-Error-Custom "Failed to upload .htaccess"
-    Remove-Item $TempHtaccess
-    exit 1
-}
-
-ssh $RemoteHost "chown $FileOwnership $RemotePath/.htaccess && chmod 644 $RemotePath/.htaccess"
-Remove-Item $TempHtaccess
-
-Write-Success ".htaccess configured"
-
-# Step 6: Verify deployment
-Write-Info ""
-Write-Info "Step 6: Verifying deployment..."
-ssh $RemoteHost "test -f $RemotePath/index.html && echo 'index.html found'" 2>$null
-if ($LASTEXITCODE -eq 0) {
-    Write-Success "Deployment verified"
-} else {
-    Write-Error-Custom "Deployment verification failed"
-    exit 1
-}
-
-Write-Info ""
-Write-Success "ClipAI deployed successfully!"
-Write-Info "Access: https://ai-tools.techbridge.edu.gh/clipai/"
-param(
-    [string]$Environment = "production",
-    [switch]$Force = $false
-)
-
-
-# Timestamped logging helper (injected by standardisation pass — May 2026)
-param(
-    [string]$Environment = "production",
-    [switch]$Force = $false
+    [string]$RemoteHost = "root@techbridge.edu.gh",
+    [string]$RemotePath = "/var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/clipai/",
+    [switch]$Build = $false
 )
 
 $ErrorActionPreference = "Stop"
+$__deployStart = Get-Date
+$GITHUB_REPO   = "https://github.com/DanielFTwum-creator/aucdt-utilities.git"
+$SUBFOLDER     = "clipai"
 
-# Configuration
-$RemoteHost = "root@techbridge.edu.gh"
-$RemotePath = "/var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/clipai/"
-$FileOwnership = "aucdtadmin:psacln"
-$HtaccessRewriteBase = "/clipai/"
-$LocalBuildPath = "dist"
-
-# Colors for output
-$InfoColor = "Cyan"
-$SuccessColor = "Green"
-$ErrorColor = "Red"
-$WarningColor = "Yellow"
-
-function Write-Info {
-    param([string]$Message)
-    Write-Host $Message -ForegroundColor $InfoColor
-}
-
-function Write-Success {
-    param([string]$Message)
-    Write-Host $Message -ForegroundColor $SuccessColor
-}
-
-function Write-Error-Custom {
-    param([string]$Message)
-    Write-Host $Message -ForegroundColor $ErrorColor
-}
-
-function Write-Warning-Custom {
-    param([string]$Message)
-    Write-Host $Message -ForegroundColor $WarningColor
-}
-
-Write-Info "ClipAI Deployment Script"
-Write-Info "Environment: $Environment"
-Write-Info "================================"
-
-# Step 1: Build the project
-Write-Info ""
-Write-Info "Step 1: Building project..."
-if (-not (Test-Path "package.json")) {
-    Write-Error-Custom "package.json not found. Run from project root."
-    exit 1
-}
-
-pnpm install
-if ($LASTEXITCODE -ne 0) {
-    Write-Error-Custom "pnpm install failed"
-    exit 1
-}
-
-pnpm build
-if ($LASTEXITCODE -ne 0) {
-    Write-Error-Custom "pnpm build failed"
-    exit 1
-}
-
-Write-Success "Build completed"
-
-# Step 2: Verify dist directory
-Write-Info ""
-Write-Info "Step 2: Verifying build output..."
-if (-not (Test-Path $LocalBuildPath)) {
-    Write-Error-Custom "Build output directory '$LocalBuildPath' not found"
-    exit 1
-}
-
-$FileCount = (Get-ChildItem -Path $LocalBuildPath -Recurse).Count
-Write-Success "Build output verified ($FileCount files)"
-
-# Step 3: Deploy to remote server
-Write-Info ""
-Write-Info "Step 3: Deploying to remote server..."
-Write-Info "Remote: $RemoteHost"
-Write-Info "Path: $RemotePath"
-
-# Create remote directory if it doesn't exist
-ssh $RemoteHost "mkdir -p $RemotePath" 2>$null
-if ($LASTEXITCODE -ne 0) {
-    Write-Error-Custom "Failed to create remote directory"
-    exit 1
-}
-
-# Upload files via scp
-Write-Info "Uploading files..."
-$SourcePath = (Get-Item $LocalBuildPath).FullName
-scp -r "$SourcePath/*" "$RemoteHost`:$RemotePath"
-if ($LASTEXITCODE -ne 0) {
-    Write-Error-Custom "Failed to upload files"
-    exit 1
-}
-
-Write-Success "Files uploaded"
-
-# Step 4: Set file permissions
-Write-Info ""
-Write-Info "Step 4: Setting file permissions..."
-ssh $RemoteHost "chown -R $FileOwnership $RemotePath && chmod -R 755 $RemotePath"
-if ($LASTEXITCODE -ne 0) {
-    Write-Error-Custom "Failed to set permissions"
-    exit 1
-}
-
-Write-Success "Permissions set"
-
-# Step 5: Create/update .htaccess
-Write-Info ""
-Write-Info "Step 5: Configuring .htaccess..."
-$HtaccessContent = @"
-<IfModule mod_rewrite.c>
-  RewriteEngine On
-  RewriteBase $HtaccessRewriteBase
-  RewriteRule ^index\.html$ - [L]
-  RewriteCond %{REQUEST_FILENAME} !-f
-  RewriteCond %{REQUEST_FILENAME} !-d
-  RewriteRule . index.html [L]
-</IfModule>
-
-<IfModule mod_expires.c>
-  ExpiresActive On
-  <FilesMatch '\.(js|css|png|jpg|jpeg|gif|svg|woff2|woff|ttf|eot|ico)$'>
-    ExpiresDefault 'max-age=31536000'
-    Header set Cache-Control 'public, immutable'
-  </FilesMatch>
-  <FilesMatch '\.(html|json)$'>
-    ExpiresDefault 'max-age=0'
-    Header set Cache-Control 'public, must-revalidate'
-  </FilesMatch>
-</IfModule>
-
-<IfModule mod_headers.c>
-  <FilesMatch '\.(html)$'>
-    Header set Cache-Control 'public, must-revalidate, max-age=0'
-  </FilesMatch>
-</IfModule>
-"@
-
-$TempHtaccess = New-TemporaryFile
-Set-Content -Path $TempHtaccess -Value $HtaccessContent -Encoding UTF8
-
-scp $TempHtaccess "$RemoteHost`:$RemotePath/.htaccess"
-if ($LASTEXITCODE -ne 0) {
-    Write-Error-Custom "Failed to upload .htaccess"
-    Remove-Item $TempHtaccess
-    exit 1
-}
-
-ssh $RemoteHost "chown $FileOwnership $RemotePath/.htaccess && chmod 644 $RemotePath/.htaccess"
-Remove-Item $TempHtaccess
-
-Write-Success ".htaccess configured"
-
-# Step 6: Verify deployment
-Write-Info ""
-Write-Info "Step 6: Verifying deployment..."
-ssh $RemoteHost "test -f $RemotePath/index.html && echo 'index.html found'" 2>$null
-if ($LASTEXITCODE -eq 0) {
-    Write-Success "Deployment verified"
-} else {
-    Write-Error-Custom "Deployment verification failed"
-    exit 1
-}
-
-Write-Info ""
-Write-Success "ClipAI deployed successfully!"
-Write-Info "Access: https://ai-tools.techbridge.edu.gh/clipai/"
-_deployStart = Get-Date
 function Log {
     param([string]$Level = "INFO", [string]$Msg, [ConsoleColor]$Color = "White")
     $ts = (Get-Date).ToString("yyyy-MM-dd HH:mm:ss")
     Write-Host "[$ts][$Level] $Msg" -ForegroundColor $Color
 }
-$ErrorActionPreference = "Stop"
 
-# Configuration
-$RemoteHost = "root@techbridge.edu.gh"
-$RemotePath = "/var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/clipai/"
-$FileOwnership = "aucdtadmin:psacln"
-$HtaccessRewriteBase = "/clipai/"
-$LocalBuildPath = "dist"
+Log "INFO" "========================================" Cyan
+Log "INFO" "clipai DEPLOYMENT" Cyan
+Log "INFO" "========================================" Cyan
+Log "INFO" "Remote : $RemoteHost"
+Log "INFO" "Path   : $RemotePath"
+Log "INFO" ""
 
-# Colors for output
-$InfoColor = "Cyan"
-$SuccessColor = "Green"
-$ErrorColor = "Red"
-$WarningColor = "Yellow"
+Log "INFO" "Step 1: Pre-flight checks..." Yellow
+Log "SUCCESS" "Pre-flight OK" Green
 
-function Write-Info {
-    param([string]$Message)
-    Write-Host $Message -ForegroundColor $InfoColor
-}
+Log "INFO" "Step 2: Verifying git state..." Yellow
+$commit = (git rev-parse --short HEAD 2>$null).Trim()
+$branch = (git rev-parse --abbrev-ref HEAD 2>$null).Trim()
+Log "INFO" "Commit : $commit on $branch"
+try { git push origin $branch 2>&1 | Out-Null } catch { Log "WARN" "git push failed (non-fatal)" Yellow }
 
-function Write-Success {
-    param([string]$Message)
-    Write-Host $Message -ForegroundColor $SuccessColor
-}
-
-function Write-Error-Custom {
-    param([string]$Message)
-    Write-Host $Message -ForegroundColor $ErrorColor
-}
-
-function Write-Warning-Custom {
-    param([string]$Message)
-    Write-Host $Message -ForegroundColor $WarningColor
-}
-
-Write-Info "ClipAI Deployment Script"
-Write-Info "Environment: $Environment"
-Write-Info "================================"
-
-# Step 1: Build the project
-Write-Info ""
-Write-Info "Step 1: Building project..."
-if (-not (Test-Path "package.json")) {
-    Write-Error-Custom "package.json not found. Run from project root."
-    exit 1
-}
-
-pnpm install
-if ($LASTEXITCODE -ne 0) {
-    Write-Error-Custom "pnpm install failed"
-    exit 1
-}
-
+if ($Build) {
+    Log "INFO" "Step 3: Server-side build (git clone + pnpm build)..." Yellow
+    $buildDir = "/tmp/clipai_deploy_$commit"
+    $serverScript = @"
+set -e
+log() { echo "[`$(date '+%Y-%m-%d %H:%M:%S')][SERVER] `$1"; }
+if ! command -v pnpm >/dev/null 2>&1; then
+  corepack enable >/dev/null 2>&1 || npm install -g pnpm --silent
+  export PATH="`$HOME/.local/share/pnpm:`$PATH"
+fi
+log "pnpm `$(pnpm --version)"
+log '[1/5] Cleaning previous temp build...'
+rm -rf $buildDir
+log '[2/5] Cloning clipai (sparse, depth 1)...'
+git clone --depth 1 --filter=blob:none --sparse '$GITHUB_REPO' $buildDir
+cd $buildDir
+git sparse-checkout set clipai
+cd clipai
+log '[3/5] Installing dependencies...'
+pnpm install --no-frozen-lockfile --silent 2>/dev/null || npm install --silent
+log '[4/5] Building...'
 pnpm build
-if ($LASTEXITCODE -ne 0) {
-    Write-Error-Custom "pnpm build failed"
-    exit 1
+log '[5/5] Deploying dist/ to web root...'
+mkdir -p $RemotePath
+rsync -a --delete dist/. $RemotePath
+log 'Build and deploy complete.'
+"@
+    $b64 = [Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes($serverScript.Replace("`r", "")))
+    ssh -o StrictHostKeyChecking=no $RemoteHost "echo $b64 | base64 -d | bash"
+    if ($LASTEXITCODE -eq 0) { Log "SUCCESS" "Server-side build and file sync complete" Green }
+    else { Log "WARN" "Server build returned $LASTEXITCODE" Yellow }
+    ssh -o StrictHostKeyChecking=no $RemoteHost "rm -rf $buildDir" 2>$null | Out-Null
+} else {
+    Log "INFO" "Step 3: Copying local dist/ to server..." Yellow
+    if (-not (Test-Path "dist")) { Log "ERROR" "dist/ not found. Run with -Build flag." Red; exit 1 }
+    ssh -o StrictHostKeyChecking=no $RemoteHost "mkdir -p $RemotePath && rm -rf ${RemotePath}*"
+    scp -r -o StrictHostKeyChecking=no dist/* "${RemoteHost}:${RemotePath}"
+    Log "SUCCESS" "dist/* copied to server" Green
 }
 
-Write-Success "Build completed"
-
-# Step 2: Verify dist directory
-Write-Info ""
-Write-Info "Step 2: Verifying build output..."
-if (-not (Test-Path $LocalBuildPath)) {
-    Write-Error-Custom "Build output directory '$LocalBuildPath' not found"
-    exit 1
-}
-
-$FileCount = (Get-ChildItem -Path $LocalBuildPath -Recurse).Count
-Write-Success "Build output verified ($FileCount files)"
-
-# Step 3: Deploy to remote server
-Write-Info ""
-Write-Info "Step 3: Deploying to remote server..."
-Write-Info "Remote: $RemoteHost"
-Write-Info "Path: $RemotePath"
-
-# Create remote directory if it doesn't exist
-ssh $RemoteHost "mkdir -p $RemotePath" 2>$null
-if ($LASTEXITCODE -ne 0) {
-    Write-Error-Custom "Failed to create remote directory"
-    exit 1
-}
-
-# Upload files via scp
-Write-Info "Uploading files..."
-$SourcePath = (Get-Item $LocalBuildPath).FullName
-scp -r "$SourcePath/*" "$RemoteHost`:$RemotePath"
-if ($LASTEXITCODE -ne 0) {
-    Write-Error-Custom "Failed to upload files"
-    exit 1
-}
-
-Write-Success "Files uploaded"
-
-# Step 4: Set file permissions
-Write-Info ""
-Write-Info "Step 4: Setting file permissions..."
-ssh $RemoteHost "chown -R $FileOwnership $RemotePath && chmod -R 755 $RemotePath"
-if ($LASTEXITCODE -ne 0) {
-    Write-Error-Custom "Failed to set permissions"
-    exit 1
-}
-
-Write-Success "Permissions set"
-
-# Step 5: Create/update .htaccess
-Write-Info ""
-Write-Info "Step 5: Configuring .htaccess..."
-$HtaccessContent = @"
+Log "INFO" "Step 4: Writing .htaccess..." Yellow
+@"
 <IfModule mod_rewrite.c>
   RewriteEngine On
-  RewriteBase $HtaccessRewriteBase
-  RewriteRule ^index\.html$ - [L]
-  RewriteCond %{REQUEST_FILENAME} !-f
-  RewriteCond %{REQUEST_FILENAME} !-d
-  RewriteRule . index.html [L]
+  RewriteBase /clipai/
+  RewriteCond %{REQUEST_FILENAME} -f [OR]
+  RewriteCond %{REQUEST_FILENAME} -d
+  RewriteRule ^ - [L]
+  RewriteRule ^ /clipai/index.html [QSA,L]
 </IfModule>
-
 <IfModule mod_expires.c>
   ExpiresActive On
   <FilesMatch '\.(js|css|png|jpg|jpeg|gif|svg|woff2|woff|ttf|eot|ico)$'>
@@ -492,217 +93,23 @@ $HtaccessContent = @"
   </FilesMatch>
   <FilesMatch '\.(html|json)$'>
     ExpiresDefault 'max-age=0'
-    Header set Cache-Control 'public, must-revalidate'
+    Header set Cache-Control 'no-cache, no-store, must-revalidate'
+    Header set Pragma 'no-cache'
+    Header set Expires '0'
   </FilesMatch>
 </IfModule>
+"@ | ssh -o StrictHostKeyChecking=no $RemoteHost "cat > ${RemotePath}.htaccess" 2>$null
 
-<IfModule mod_headers.c>
-  <FilesMatch '\.(html)$'>
-    Header set Cache-Control 'public, must-revalidate, max-age=0'
-  </FilesMatch>
-</IfModule>
-"@
+Log "INFO" "Step 5: Setting permissions..." Yellow
+ssh -o StrictHostKeyChecking=no $RemoteHost "chown -R techbridge.edu.gh_md:psaserv $RemotePath && chmod -R 755 $RemotePath && chmod 644 ${RemotePath}.htaccess 2>/dev/null; true" | Out-Null
 
-$TempHtaccess = New-TemporaryFile
-Set-Content -Path $TempHtaccess -Value $HtaccessContent -Encoding UTF8
+Log "INFO" "Health check..." Yellow
+ssh -o StrictHostKeyChecking=no $RemoteHost "test -f ${RemotePath}index.html && echo 'OK index.html present' || echo 'MISSING index.html'"
 
-scp $TempHtaccess "$RemoteHost`:$RemotePath/.htaccess"
-if ($LASTEXITCODE -ne 0) {
-    Write-Error-Custom "Failed to upload .htaccess"
-    Remove-Item $TempHtaccess
-    exit 1
-}
-
-ssh $RemoteHost "chown $FileOwnership $RemotePath/.htaccess && chmod 644 $RemotePath/.htaccess"
-Remove-Item $TempHtaccess
-
-Write-Success ".htaccess configured"
-
-# Step 6: Verify deployment
-Write-Info ""
-Write-Info "Step 6: Verifying deployment..."
-ssh $RemoteHost "test -f $RemotePath/index.html && echo 'index.html found'" 2>$null
-if ($LASTEXITCODE -eq 0) {
-    Write-Success "Deployment verified"
-} else {
-    Write-Error-Custom "Deployment verification failed"
-    exit 1
-}
-
-Write-Info ""
-Write-Success "ClipAI deployed successfully!"
-Write-Info "Access: https://ai-tools.techbridge.edu.gh/clipai/"
-_deployStart = Get-Date
-function Log {
-    param([string]$Level = "INFO", [string]$Msg, [ConsoleColor]$Color = "White")
-    $ts = (Get-Date).ToString("yyyy-MM-dd HH:mm:ss")
-    Write-Host "[$ts][$Level] $Msg" -ForegroundColor $Color
-}
-$ErrorActionPreference = "Stop"
-
-# Configuration
-$RemoteHost = "root@techbridge.edu.gh"
-$RemotePath = "/var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/clipai/"
-$FileOwnership = "aucdtadmin:psacln"
-$HtaccessRewriteBase = "/clipai/"
-$LocalBuildPath = "dist"
-
-# Colors for output
-$InfoColor = "Cyan"
-$SuccessColor = "Green"
-$ErrorColor = "Red"
-$WarningColor = "Yellow"
-
-function Write-Info {
-    param([string]$Message)
-    Write-Host $Message -ForegroundColor $InfoColor
-}
-
-function Write-Success {
-    param([string]$Message)
-    Write-Host $Message -ForegroundColor $SuccessColor
-}
-
-function Write-Error-Custom {
-    param([string]$Message)
-    Write-Host $Message -ForegroundColor $ErrorColor
-}
-
-function Write-Warning-Custom {
-    param([string]$Message)
-    Write-Host $Message -ForegroundColor $WarningColor
-}
-
-Write-Info "ClipAI Deployment Script"
-Write-Info "Environment: $Environment"
-Write-Info "================================"
-
-# Step 1: Build the project
-Write-Info ""
-Write-Info "Step 1: Building project..."
-if (-not (Test-Path "package.json")) {
-    Write-Error-Custom "package.json not found. Run from project root."
-    exit 1
-}
-
-pnpm install
-if ($LASTEXITCODE -ne 0) {
-    Write-Error-Custom "pnpm install failed"
-    exit 1
-}
-
-pnpm build
-if ($LASTEXITCODE -ne 0) {
-    Write-Error-Custom "pnpm build failed"
-    exit 1
-}
-
-Write-Success "Build completed"
-
-# Step 2: Verify dist directory
-Write-Info ""
-Write-Info "Step 2: Verifying build output..."
-if (-not (Test-Path $LocalBuildPath)) {
-    Write-Error-Custom "Build output directory '$LocalBuildPath' not found"
-    exit 1
-}
-
-$FileCount = (Get-ChildItem -Path $LocalBuildPath -Recurse).Count
-Write-Success "Build output verified ($FileCount files)"
-
-# Step 3: Deploy to remote server
-Write-Info ""
-Write-Info "Step 3: Deploying to remote server..."
-Write-Info "Remote: $RemoteHost"
-Write-Info "Path: $RemotePath"
-
-# Create remote directory if it doesn't exist
-ssh $RemoteHost "mkdir -p $RemotePath" 2>$null
-if ($LASTEXITCODE -ne 0) {
-    Write-Error-Custom "Failed to create remote directory"
-    exit 1
-}
-
-# Upload files via scp
-Write-Info "Uploading files..."
-$SourcePath = (Get-Item $LocalBuildPath).FullName
-scp -r "$SourcePath/*" "$RemoteHost`:$RemotePath"
-if ($LASTEXITCODE -ne 0) {
-    Write-Error-Custom "Failed to upload files"
-    exit 1
-}
-
-Write-Success "Files uploaded"
-
-# Step 4: Set file permissions
-Write-Info ""
-Write-Info "Step 4: Setting file permissions..."
-ssh $RemoteHost "chown -R $FileOwnership $RemotePath && chmod -R 755 $RemotePath"
-if ($LASTEXITCODE -ne 0) {
-    Write-Error-Custom "Failed to set permissions"
-    exit 1
-}
-
-Write-Success "Permissions set"
-
-# Step 5: Create/update .htaccess
-Write-Info ""
-Write-Info "Step 5: Configuring .htaccess..."
-$HtaccessContent = @"
-<IfModule mod_rewrite.c>
-  RewriteEngine On
-  RewriteBase $HtaccessRewriteBase
-  RewriteRule ^index\.html$ - [L]
-  RewriteCond %{REQUEST_FILENAME} !-f
-  RewriteCond %{REQUEST_FILENAME} !-d
-  RewriteRule . index.html [L]
-</IfModule>
-
-<IfModule mod_expires.c>
-  ExpiresActive On
-  <FilesMatch '\.(js|css|png|jpg|jpeg|gif|svg|woff2|woff|ttf|eot|ico)$'>
-    ExpiresDefault 'max-age=31536000'
-    Header set Cache-Control 'public, immutable'
-  </FilesMatch>
-  <FilesMatch '\.(html|json)$'>
-    ExpiresDefault 'max-age=0'
-    Header set Cache-Control 'public, must-revalidate'
-  </FilesMatch>
-</IfModule>
-
-<IfModule mod_headers.c>
-  <FilesMatch '\.(html)$'>
-    Header set Cache-Control 'public, must-revalidate, max-age=0'
-  </FilesMatch>
-</IfModule>
-"@
-
-$TempHtaccess = New-TemporaryFile
-Set-Content -Path $TempHtaccess -Value $HtaccessContent -Encoding UTF8
-
-scp $TempHtaccess "$RemoteHost`:$RemotePath/.htaccess"
-if ($LASTEXITCODE -ne 0) {
-    Write-Error-Custom "Failed to upload .htaccess"
-    Remove-Item $TempHtaccess
-    exit 1
-}
-
-ssh $RemoteHost "chown $FileOwnership $RemotePath/.htaccess && chmod 644 $RemotePath/.htaccess"
-Remove-Item $TempHtaccess
-
-Write-Success ".htaccess configured"
-
-# Step 6: Verify deployment
-Write-Info ""
-Write-Info "Step 6: Verifying deployment..."
-ssh $RemoteHost "test -f $RemotePath/index.html && echo 'index.html found'" 2>$null
-if ($LASTEXITCODE -eq 0) {
-    Write-Success "Deployment verified"
-} else {
-    Write-Error-Custom "Deployment verification failed"
-    exit 1
-}
-
-Write-Info ""
-Write-Success "ClipAI deployed successfully!"
-Write-Info "Access: https://ai-tools.techbridge.edu.gh/clipai/"
+$elapsed = [math]::Round(((Get-Date) - $__deployStart).TotalSeconds, 1)
+$timeStr = if ($elapsed -ge 60) { "$([math]::Floor($elapsed/60))m $([math]::Round($elapsed%60,1))s" } else { "${elapsed}s" }
+Log "SUCCESS" "========================================" Green
+Log "SUCCESS" "DEPLOYMENT COMPLETE" Green
+Log "SUCCESS" "URL  : https://ai-tools.techbridge.edu.gh/clipai/" Green
+Log "SUCCESS" "Time : $timeStr total" Green
+Log "SUCCESS" "========================================" Green

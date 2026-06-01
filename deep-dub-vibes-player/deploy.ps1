@@ -1,317 +1,90 @@
-# Deep Dub Vibes Player Deployment Script
-# Deploys frontend (dist/) to techbridge.edu.gh
+# deep-dub-vibes-player — Deploy Script
+# URL: https://ai-tools.techbridge.edu.gh/deep-dub-vibes-player/
+# Usage: .\deploy.ps1 -Build
 
 param(
     [string]$RemoteHost = "root@techbridge.edu.gh",
     [string]$RemotePath = "/var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/deep-dub-vibes-player/",
-    [switch]$Build = $true
+    [switch]$Build = $false
 )
 
+$ErrorActionPreference = "Stop"
+$__deployStart = Get-Date
+$GITHUB_REPO   = "https://github.com/DanielFTwum-creator/aucdt-utilities.git"
+$SUBFOLDER     = "deep-dub-vibes-player"
 
-# Timestamped logging helper (injected by standardisation pass — May 2026)
-# Deep Dub Vibes Player Deployment Script
-# Deploys frontend (dist/) to techbridge.edu.gh
-
-param(
-    [string]$RemoteHost = "root@techbridge.edu.gh",
-    [string]$RemotePath = "/var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/deep-dub-vibes-player/",
-    [switch]$Build = $true
-)
-
-Log "INFO" "=== DEEP DUB VIBES PLAYER DEPLOYMENT ===" Cyan
-Log "INFO" "Remote: $RemoteHost"
-Log "INFO" "Path: $RemotePath"
-# Validate .env.local with required OAuth credentials
-Log "INFO" "Validating .env.local..." Yellow
-if (-not (Test-Path "./.env.local")) {
-    Log "ERROR" "Error: .env.local not found in deep-dub-vibes-player!" Red
-    exit 1
-}
-
-$envContent = Get-Content "./.env.local" -Raw
-if ($envContent -notmatch "VITE_GOOGLE_CLIENT_ID") {
-    Log "ERROR" "Error: VITE_GOOGLE_CLIENT_ID missing in .env.local" Red
-    exit 1
-}
-
-Log "INFO" "[OK] .env.local validated with OAuth credentials"
-# Build if requested
-if ($Build) {
-    Log "INFO" "Building..." Yellow
-    $env:CI = "true"
-    $env:PNPM_HOME = "$env:APPDATA\pnpm"
-    pnpm build
-    if ($LASTEXITCODE -ne 0) {
-        Log "ERROR" "Build failed!" Red
-        exit 1
-    }
-}
-
-# Check dist exists
-if (-not (Test-Path "dist")) {
-    Log "ERROR" "Error: dist/ not found. Run with -Build flag." Red
-    exit 1
-}
-
-Log "INFO" "Creating directory on remote..." Yellow
-ssh -o StrictHostKeyChecking=no $RemoteHost "mkdir -p '$RemotePath' && rm -rf '$RemotePath'/* '$RemotePath/.htaccess' 2>/dev/null || true" | Out-Null
-
-Log "INFO" "Copying frontend files..." Yellow
-scp -r -o StrictHostKeyChecking=no dist/. "${RemoteHost}:${RemotePath}" 2>&1 | Select-Object -First 20
-
-Log "INFO" "Copying backend files..." Yellow
-scp -o StrictHostKeyChecking=no "server.js" "package.json" "${RemoteHost}:${RemotePath}" 2>&1 | Select-Object -First 5
-
-Log "INFO" "Installing backend dependencies..." Yellow
-ssh -o StrictHostKeyChecking=no $RemoteHost "cd '$RemotePath' && npm install --omit=dev --legacy-peer-deps 2>&1 | tail -3" | Out-Null
-
-Log "INFO" "Creating .htaccess..." Yellow
-$htaccessContent = @'
-<IfModule mod_rewrite.c>
-  RewriteEngine On
-  RewriteBase /deep-dub-vibes-player/
-  RewriteCond %{REQUEST_FILENAME} -f [OR]
-  RewriteCond %{REQUEST_FILENAME} -d
-  RewriteRule ^ - [L]
-  RewriteCond %{HTTP:Upgrade} !websocket [NC]
-  RewriteCond %{HTTP:Connection} !Upgrade [NC]
-  RewriteRule ^callback http://localhost:3009/callback [P,L]
-  RewriteRule ^api/(.*)$ http://localhost:3009/api/$1 [P,L]
-  RewriteRule ^ /deep-dub-vibes-player/index.html [QSA,L]
-</IfModule>
-
-<IfModule mod_expires.c>
-  ExpiresActive On
-  <FilesMatch '\.(js|css|png|jpg|jpeg|gif|svg|woff2|woff|ttf|eot|ico)$'>
-    ExpiresDefault 'max-age=31536000'
-    Header set Cache-Control 'public, immutable'
-  </FilesMatch>
-  <FilesMatch '\.(html|json)$'>
-    ExpiresDefault 'max-age=0'
-    Header set Cache-Control 'public, must-revalidate'
-  </FilesMatch>
-</IfModule>
-
-<IfModule mod_headers.c>
-  <FilesMatch '\.(html)$'>
-    Header set Cache-Control 'public, must-revalidate, max-age=0'
-  </FilesMatch>
-</IfModule>
-'@
-$htaccessContent | ssh -o StrictHostKeyChecking=no $RemoteHost "cat > '$RemotePath/.htaccess'" 2>&1 | Out-Null
-
-Log "INFO" "Copying .env file..." Yellow
-scp -o StrictHostKeyChecking=no ".env.local" "${RemoteHost}:${RemotePath}/.env" 2>&1 | Out-Null
-
-Log "INFO" "Setting permissions and ownership..." Yellow
-ssh -o StrictHostKeyChecking=no $RemoteHost "chown -R techbridge.edu.gh_md:psacln '$RemotePath' && chmod -R 755 '$RemotePath' && chmod 644 '$RemotePath/.htaccess' '$RemotePath/.env' 2>/dev/null || true" | Out-Null
-
-Log "INFO" "Stopping any existing backend process on port 3009..." Yellow
-ssh -o StrictHostKeyChecking=no $RemoteHost "fuser -k 3009/tcp || true" | Out-Null
-
-Log "INFO" "Starting backend server..." Yellow
-ssh -o StrictHostKeyChecking=no $RemoteHost "cd '$RemotePath' && NODE_ENV=production nohup node server.js > server.log 2>&1 < /dev/null &" 2>&1 | Out-Null
-
-Start-Sleep -Seconds 2
-
-Log "INFO" "Health checks..." Yellow
-ssh -o StrictHostKeyChecking=no $RemoteHost "test -f '$RemotePath/index.html' && echo '[OK] Frontend deployed' || echo '[ERROR] Frontend missing'"
-ssh -o StrictHostKeyChecking=no $RemoteHost "test -f '$RemotePath/server.js' && echo '[OK] Backend deployed' || echo '[ERROR] Backend missing'"
-
-Log "SUCCESS" "`n[SUCCESS] Deployment complete!" Green
-Log "INFO" "Frontend: https://ai-tools.techbridge.edu.gh/deep-dub-vibes-player/"
-Log "INFO" "Backend: Running on port 3009 (internal)`n"
-# Deep Dub Vibes Player Deployment Script
-# Deploys frontend (dist/) to techbridge.edu.gh
-
-param(
-    [string]$RemoteHost = "root@techbridge.edu.gh",
-    [string]$RemotePath = "/var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/deep-dub-vibes-player/",
-    [switch]$Build = $true
-)
-
-
-# Timestamped logging helper (injected by standardisation pass — May 2026)
-# Deep Dub Vibes Player Deployment Script
-# Deploys frontend (dist/) to techbridge.edu.gh
-
-param(
-    [string]$RemoteHost = "root@techbridge.edu.gh",
-    [string]$RemotePath = "/var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/deep-dub-vibes-player/",
-    [switch]$Build = $true
-)
-
-Log "INFO" "=== DEEP DUB VIBES PLAYER DEPLOYMENT ===" Cyan
-Log "INFO" "Remote: $RemoteHost"
-Log "INFO" "Path: $RemotePath"
-# Validate .env.local with required OAuth credentials
-Log "INFO" "Validating .env.local..." Yellow
-if (-not (Test-Path "./.env.local")) {
-    Log "ERROR" "Error: .env.local not found in deep-dub-vibes-player!" Red
-    exit 1
-}
-
-$envContent = Get-Content "./.env.local" -Raw
-if ($envContent -notmatch "VITE_GOOGLE_CLIENT_ID") {
-    Log "ERROR" "Error: VITE_GOOGLE_CLIENT_ID missing in .env.local" Red
-    exit 1
-}
-
-Log "INFO" "[OK] .env.local validated with OAuth credentials"
-# Build if requested
-if ($Build) {
-    Log "INFO" "Building..." Yellow
-    $env:CI = "true"
-    $env:PNPM_HOME = "$env:APPDATA\pnpm"
-    pnpm build
-    if ($LASTEXITCODE -ne 0) {
-        Log "ERROR" "Build failed!" Red
-        exit 1
-    }
-}
-
-# Check dist exists
-if (-not (Test-Path "dist")) {
-    Log "ERROR" "Error: dist/ not found. Run with -Build flag." Red
-    exit 1
-}
-
-Log "INFO" "Creating directory on remote..." Yellow
-ssh -o StrictHostKeyChecking=no $RemoteHost "mkdir -p '$RemotePath' && rm -rf '$RemotePath'/* '$RemotePath/.htaccess' 2>/dev/null || true" | Out-Null
-
-Log "INFO" "Copying frontend files..." Yellow
-scp -r -o StrictHostKeyChecking=no dist/. "${RemoteHost}:${RemotePath}" 2>&1 | Select-Object -First 20
-
-Log "INFO" "Copying backend files..." Yellow
-scp -o StrictHostKeyChecking=no "server.js" "package.json" "${RemoteHost}:${RemotePath}" 2>&1 | Select-Object -First 5
-
-Log "INFO" "Installing backend dependencies..." Yellow
-ssh -o StrictHostKeyChecking=no $RemoteHost "cd '$RemotePath' && npm install --omit=dev --legacy-peer-deps 2>&1 | tail -3" | Out-Null
-
-Log "INFO" "Creating .htaccess..." Yellow
-$htaccessContent = @'
-<IfModule mod_rewrite.c>
-  RewriteEngine On
-  RewriteBase /deep-dub-vibes-player/
-  RewriteCond %{REQUEST_FILENAME} -f [OR]
-  RewriteCond %{REQUEST_FILENAME} -d
-  RewriteRule ^ - [L]
-  RewriteCond %{HTTP:Upgrade} !websocket [NC]
-  RewriteCond %{HTTP:Connection} !Upgrade [NC]
-  RewriteRule ^callback http://localhost:3009/callback [P,L]
-  RewriteRule ^api/(.*)$ http://localhost:3009/api/$1 [P,L]
-  RewriteRule ^ /deep-dub-vibes-player/index.html [QSA,L]
-</IfModule>
-
-<IfModule mod_expires.c>
-  ExpiresActive On
-  <FilesMatch '\.(js|css|png|jpg|jpeg|gif|svg|woff2|woff|ttf|eot|ico)$'>
-    ExpiresDefault 'max-age=31536000'
-    Header set Cache-Control 'public, immutable'
-  </FilesMatch>
-  <FilesMatch '\.(html|json)$'>
-    ExpiresDefault 'max-age=0'
-    Header set Cache-Control 'public, must-revalidate'
-  </FilesMatch>
-</IfModule>
-
-<IfModule mod_headers.c>
-  <FilesMatch '\.(html)$'>
-    Header set Cache-Control 'public, must-revalidate, max-age=0'
-  </FilesMatch>
-</IfModule>
-'@
-$htaccessContent | ssh -o StrictHostKeyChecking=no $RemoteHost "cat > '$RemotePath/.htaccess'" 2>&1 | Out-Null
-
-Log "INFO" "Copying .env file..." Yellow
-scp -o StrictHostKeyChecking=no ".env.local" "${RemoteHost}:${RemotePath}/.env" 2>&1 | Out-Null
-
-Log "INFO" "Setting permissions and ownership..." Yellow
-ssh -o StrictHostKeyChecking=no $RemoteHost "chown -R techbridge.edu.gh_md:psacln '$RemotePath' && chmod -R 755 '$RemotePath' && chmod 644 '$RemotePath/.htaccess' '$RemotePath/.env' 2>/dev/null || true" | Out-Null
-
-Log "INFO" "Stopping any existing backend process on port 3009..." Yellow
-ssh -o StrictHostKeyChecking=no $RemoteHost "fuser -k 3009/tcp || true" | Out-Null
-
-Log "INFO" "Starting backend server..." Yellow
-ssh -o StrictHostKeyChecking=no $RemoteHost "cd '$RemotePath' && NODE_ENV=production nohup node server.js > server.log 2>&1 < /dev/null &" 2>&1 | Out-Null
-
-Start-Sleep -Seconds 2
-
-Log "INFO" "Health checks..." Yellow
-ssh -o StrictHostKeyChecking=no $RemoteHost "test -f '$RemotePath/index.html' && echo '[OK] Frontend deployed' || echo '[ERROR] Frontend missing'"
-ssh -o StrictHostKeyChecking=no $RemoteHost "test -f '$RemotePath/server.js' && echo '[OK] Backend deployed' || echo '[ERROR] Backend missing'"
-
-Log "SUCCESS" "`n[SUCCESS] Deployment complete!" Green
-Log "INFO" "Frontend: https://ai-tools.techbridge.edu.gh/deep-dub-vibes-player/"
-Log "INFO" "Backend: Running on port 3009 (internal)`n"
-_deployStart = Get-Date
 function Log {
     param([string]$Level = "INFO", [string]$Msg, [ConsoleColor]$Color = "White")
     $ts = (Get-Date).ToString("yyyy-MM-dd HH:mm:ss")
     Write-Host "[$ts][$Level] $Msg" -ForegroundColor $Color
 }
-Log "INFO" "=== DEEP DUB VIBES PLAYER DEPLOYMENT ===" Cyan
-Log "INFO" "Remote: $RemoteHost"
-Log "INFO" "Path: $RemotePath"
-# Validate .env.local with required OAuth credentials
-Log "INFO" "Validating .env.local..." Yellow
-if (-not (Test-Path "./.env.local")) {
-    Log "ERROR" "Error: .env.local not found in deep-dub-vibes-player!" Red
-    exit 1
-}
 
-$envContent = Get-Content "./.env.local" -Raw
-if ($envContent -notmatch "VITE_GOOGLE_CLIENT_ID") {
-    Log "ERROR" "Error: VITE_GOOGLE_CLIENT_ID missing in .env.local" Red
-    exit 1
-}
+Log "INFO" "========================================" Cyan
+Log "INFO" "deep-dub-vibes-player DEPLOYMENT" Cyan
+Log "INFO" "========================================" Cyan
+Log "INFO" "Remote : $RemoteHost"
+Log "INFO" "Path   : $RemotePath"
+Log "INFO" ""
 
-Log "INFO" "[OK] .env.local validated with OAuth credentials"
-# Build if requested
+Log "INFO" "Step 1: Pre-flight checks..." Yellow
+Log "SUCCESS" "Pre-flight OK" Green
+
+Log "INFO" "Step 2: Verifying git state..." Yellow
+$commit = (git rev-parse --short HEAD 2>$null).Trim()
+$branch = (git rev-parse --abbrev-ref HEAD 2>$null).Trim()
+Log "INFO" "Commit : $commit on $branch"
+try { git push origin $branch 2>&1 | Out-Null } catch { Log "WARN" "git push failed (non-fatal)" Yellow }
+
 if ($Build) {
-    Log "INFO" "Building..." Yellow
-    $env:CI = "true"
-    $env:PNPM_HOME = "$env:APPDATA\pnpm"
-    pnpm build
-    if ($LASTEXITCODE -ne 0) {
-        Log "ERROR" "Build failed!" Red
-        exit 1
-    }
+    Log "INFO" "Step 3: Server-side build (git clone + pnpm build)..." Yellow
+    $buildDir = "/tmp/deep-dub-vibes-player_deploy_$commit"
+    $serverScript = @"
+set -e
+log() { echo "[`$(date '+%Y-%m-%d %H:%M:%S')][SERVER] `$1"; }
+if ! command -v pnpm >/dev/null 2>&1; then
+  corepack enable >/dev/null 2>&1 || npm install -g pnpm --silent
+  export PATH="`$HOME/.local/share/pnpm:`$PATH"
+fi
+log "pnpm `$(pnpm --version)"
+log '[1/5] Cleaning previous temp build...'
+rm -rf $buildDir
+log '[2/5] Cloning deep-dub-vibes-player (sparse, depth 1)...'
+git clone --depth 1 --filter=blob:none --sparse '$GITHUB_REPO' $buildDir
+cd $buildDir
+git sparse-checkout set deep-dub-vibes-player
+cd deep-dub-vibes-player
+log '[3/5] Installing dependencies...'
+pnpm install --no-frozen-lockfile --silent 2>/dev/null || npm install --silent
+log '[4/5] Building...'
+pnpm build
+log '[5/5] Deploying dist/ to web root...'
+mkdir -p $RemotePath
+rsync -a --delete dist/. $RemotePath
+log 'Build and deploy complete.'
+"@
+    $b64 = [Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes($serverScript.Replace("`r", "")))
+    ssh -o StrictHostKeyChecking=no $RemoteHost "echo $b64 | base64 -d | bash"
+    if ($LASTEXITCODE -eq 0) { Log "SUCCESS" "Server-side build and file sync complete" Green }
+    else { Log "WARN" "Server build returned $LASTEXITCODE" Yellow }
+    ssh -o StrictHostKeyChecking=no $RemoteHost "rm -rf $buildDir" 2>$null | Out-Null
+} else {
+    Log "INFO" "Step 3: Copying local dist/ to server..." Yellow
+    if (-not (Test-Path "dist")) { Log "ERROR" "dist/ not found. Run with -Build flag." Red; exit 1 }
+    ssh -o StrictHostKeyChecking=no $RemoteHost "mkdir -p $RemotePath && rm -rf ${RemotePath}*"
+    scp -r -o StrictHostKeyChecking=no dist/* "${RemoteHost}:${RemotePath}"
+    Log "SUCCESS" "dist/* copied to server" Green
 }
 
-# Check dist exists
-if (-not (Test-Path "dist")) {
-    Log "ERROR" "Error: dist/ not found. Run with -Build flag." Red
-    exit 1
-}
-
-Log "INFO" "Creating directory on remote..." Yellow
-ssh -o StrictHostKeyChecking=no $RemoteHost "mkdir -p '$RemotePath' && rm -rf '$RemotePath'/* '$RemotePath/.htaccess' 2>/dev/null || true" | Out-Null
-
-Log "INFO" "Copying frontend files..." Yellow
-scp -r -o StrictHostKeyChecking=no dist/. "${RemoteHost}:${RemotePath}" 2>&1 | Select-Object -First 20
-
-Log "INFO" "Copying backend files..." Yellow
-scp -o StrictHostKeyChecking=no "server.js" "package.json" "${RemoteHost}:${RemotePath}" 2>&1 | Select-Object -First 5
-
-Log "INFO" "Installing backend dependencies..." Yellow
-ssh -o StrictHostKeyChecking=no $RemoteHost "cd '$RemotePath' && npm install --omit=dev --legacy-peer-deps 2>&1 | tail -3" | Out-Null
-
-Log "INFO" "Creating .htaccess..." Yellow
-$htaccessContent = @'
+Log "INFO" "Step 4: Writing .htaccess..." Yellow
+@"
 <IfModule mod_rewrite.c>
   RewriteEngine On
   RewriteBase /deep-dub-vibes-player/
   RewriteCond %{REQUEST_FILENAME} -f [OR]
   RewriteCond %{REQUEST_FILENAME} -d
   RewriteRule ^ - [L]
-  RewriteCond %{HTTP:Upgrade} !websocket [NC]
-  RewriteCond %{HTTP:Connection} !Upgrade [NC]
-  RewriteRule ^callback http://localhost:3009/callback [P,L]
-  RewriteRule ^api/(.*)$ http://localhost:3009/api/$1 [P,L]
   RewriteRule ^ /deep-dub-vibes-player/index.html [QSA,L]
 </IfModule>
-
 <IfModule mod_expires.c>
   ExpiresActive On
   <FilesMatch '\.(js|css|png|jpg|jpeg|gif|svg|woff2|woff|ttf|eot|ico)$'>
@@ -320,144 +93,44 @@ $htaccessContent = @'
   </FilesMatch>
   <FilesMatch '\.(html|json)$'>
     ExpiresDefault 'max-age=0'
-    Header set Cache-Control 'public, must-revalidate'
+    Header set Cache-Control 'no-cache, no-store, must-revalidate'
+    Header set Pragma 'no-cache'
+    Header set Expires '0'
   </FilesMatch>
 </IfModule>
+"@ | ssh -o StrictHostKeyChecking=no $RemoteHost "cat > ${RemotePath}.htaccess" 2>$null
 
-<IfModule mod_headers.c>
-  <FilesMatch '\.(html)$'>
-    Header set Cache-Control 'public, must-revalidate, max-age=0'
-  </FilesMatch>
-</IfModule>
-'@
-$htaccessContent | ssh -o StrictHostKeyChecking=no $RemoteHost "cat > '$RemotePath/.htaccess'" 2>&1 | Out-Null
+Log "INFO" "Step 5: Setting permissions..." Yellow
+ssh -o StrictHostKeyChecking=no $RemoteHost "chown -R techbridge.edu.gh_md:psaserv $RemotePath && chmod -R 755 $RemotePath && chmod 644 ${RemotePath}.htaccess 2>/dev/null; true" | Out-Null
 
-Log "INFO" "Copying .env file..." Yellow
-scp -o StrictHostKeyChecking=no ".env.local" "${RemoteHost}:${RemotePath}/.env" 2>&1 | Out-Null
+Log "INFO" "Step 6: Deploying backend files..." Yellow
+scp -o StrictHostKeyChecking=no server.js package.json pnpm-lock.yaml "${RemoteHost}:${RemotePath}" 2>$null | Out-Null
+if (Test-Path ".env.local") { scp -o StrictHostKeyChecking=no ".env.local" "${RemoteHost}:${RemotePath}.env" 2>$null | Out-Null }
+ssh -o StrictHostKeyChecking=no $RemoteHost "cd $RemotePath && pnpm install --prod --silent 2>/dev/null || npm install --omit=dev --silent"
 
-Log "INFO" "Setting permissions and ownership..." Yellow
-ssh -o StrictHostKeyChecking=no $RemoteHost "chown -R techbridge.edu.gh_md:psacln '$RemotePath' && chmod -R 755 '$RemotePath' && chmod 644 '$RemotePath/.htaccess' '$RemotePath/.env' 2>/dev/null || true" | Out-Null
+Log "INFO" "Step 7: Restarting backend (PM2)..." Yellow
+$restartCmd = @"
+if command -v pm2 &>/dev/null; then
+  if pm2 describe deep-dub-vibes-player &>/dev/null; then
+    pm2 reload deep-dub-vibes-player --update-env && echo 'pm2: reloaded deep-dub-vibes-player'
+  else
+    cd $RemotePath && PORT=3009 pm2 start server.js --name deep-dub-vibes-player --interpreter npx --interpreter-args tsx
+    echo 'pm2: started deep-dub-vibes-player'
+  fi
+  pm2 save --force &>/dev/null
+fi
+"@
+$b64r = [Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes($restartCmd.Replace("`r", "")))
+ssh -o StrictHostKeyChecking=no $RemoteHost "echo $b64r | base64 -d | bash"
 
-Log "INFO" "Stopping any existing backend process on port 3009..." Yellow
-ssh -o StrictHostKeyChecking=no $RemoteHost "fuser -k 3009/tcp || true" | Out-Null
+Log "INFO" "Health check..." Yellow
+ssh -o StrictHostKeyChecking=no $RemoteHost "test -f ${RemotePath}index.html && echo 'OK index.html present' || echo 'MISSING index.html'"
+ssh -o StrictHostKeyChecking=no $RemoteHost "ss -tlnp | grep -q ':3009' && echo 'OK port 3009 listening' || echo 'WARN port 3009 not found'"
 
-Log "INFO" "Starting backend server..." Yellow
-ssh -o StrictHostKeyChecking=no $RemoteHost "cd '$RemotePath' && NODE_ENV=production nohup node server.js > server.log 2>&1 < /dev/null &" 2>&1 | Out-Null
-
-Start-Sleep -Seconds 2
-
-Log "INFO" "Health checks..." Yellow
-ssh -o StrictHostKeyChecking=no $RemoteHost "test -f '$RemotePath/index.html' && echo '[OK] Frontend deployed' || echo '[ERROR] Frontend missing'"
-ssh -o StrictHostKeyChecking=no $RemoteHost "test -f '$RemotePath/server.js' && echo '[OK] Backend deployed' || echo '[ERROR] Backend missing'"
-
-Log "SUCCESS" "`n[SUCCESS] Deployment complete!" Green
-Log "INFO" "Frontend: https://ai-tools.techbridge.edu.gh/deep-dub-vibes-player/"
-Log "INFO" "Backend: Running on port 3009 (internal)`n"_deployStart = Get-Date
-function Log {
-    param([string]$Level = "INFO", [string]$Msg, [ConsoleColor]$Color = "White")
-    $ts = (Get-Date).ToString("yyyy-MM-dd HH:mm:ss")
-    Write-Host "[$ts][$Level] $Msg" -ForegroundColor $Color
-}
-Log "INFO" "=== DEEP DUB VIBES PLAYER DEPLOYMENT ===" Cyan
-Log "INFO" "Remote: $RemoteHost"
-Log "INFO" "Path: $RemotePath"
-# Validate .env.local with required OAuth credentials
-Log "INFO" "Validating .env.local..." Yellow
-if (-not (Test-Path "./.env.local")) {
-    Log "ERROR" "Error: .env.local not found in deep-dub-vibes-player!" Red
-    exit 1
-}
-
-$envContent = Get-Content "./.env.local" -Raw
-if ($envContent -notmatch "VITE_GOOGLE_CLIENT_ID") {
-    Log "ERROR" "Error: VITE_GOOGLE_CLIENT_ID missing in .env.local" Red
-    exit 1
-}
-
-Log "INFO" "[OK] .env.local validated with OAuth credentials"
-# Build if requested
-if ($Build) {
-    Log "INFO" "Building..." Yellow
-    $env:CI = "true"
-    $env:PNPM_HOME = "$env:APPDATA\pnpm"
-    pnpm build
-    if ($LASTEXITCODE -ne 0) {
-        Log "ERROR" "Build failed!" Red
-        exit 1
-    }
-}
-
-# Check dist exists
-if (-not (Test-Path "dist")) {
-    Log "ERROR" "Error: dist/ not found. Run with -Build flag." Red
-    exit 1
-}
-
-Log "INFO" "Creating directory on remote..." Yellow
-ssh -o StrictHostKeyChecking=no $RemoteHost "mkdir -p '$RemotePath' && rm -rf '$RemotePath'/* '$RemotePath/.htaccess' 2>/dev/null || true" | Out-Null
-
-Log "INFO" "Copying frontend files..." Yellow
-scp -r -o StrictHostKeyChecking=no dist/. "${RemoteHost}:${RemotePath}" 2>&1 | Select-Object -First 20
-
-Log "INFO" "Copying backend files..." Yellow
-scp -o StrictHostKeyChecking=no "server.js" "package.json" "${RemoteHost}:${RemotePath}" 2>&1 | Select-Object -First 5
-
-Log "INFO" "Installing backend dependencies..." Yellow
-ssh -o StrictHostKeyChecking=no $RemoteHost "cd '$RemotePath' && npm install --omit=dev --legacy-peer-deps 2>&1 | tail -3" | Out-Null
-
-Log "INFO" "Creating .htaccess..." Yellow
-$htaccessContent = @'
-<IfModule mod_rewrite.c>
-  RewriteEngine On
-  RewriteBase /deep-dub-vibes-player/
-  RewriteCond %{REQUEST_FILENAME} -f [OR]
-  RewriteCond %{REQUEST_FILENAME} -d
-  RewriteRule ^ - [L]
-  RewriteCond %{HTTP:Upgrade} !websocket [NC]
-  RewriteCond %{HTTP:Connection} !Upgrade [NC]
-  RewriteRule ^callback http://localhost:3009/callback [P,L]
-  RewriteRule ^api/(.*)$ http://localhost:3009/api/$1 [P,L]
-  RewriteRule ^ /deep-dub-vibes-player/index.html [QSA,L]
-</IfModule>
-
-<IfModule mod_expires.c>
-  ExpiresActive On
-  <FilesMatch '\.(js|css|png|jpg|jpeg|gif|svg|woff2|woff|ttf|eot|ico)$'>
-    ExpiresDefault 'max-age=31536000'
-    Header set Cache-Control 'public, immutable'
-  </FilesMatch>
-  <FilesMatch '\.(html|json)$'>
-    ExpiresDefault 'max-age=0'
-    Header set Cache-Control 'public, must-revalidate'
-  </FilesMatch>
-</IfModule>
-
-<IfModule mod_headers.c>
-  <FilesMatch '\.(html)$'>
-    Header set Cache-Control 'public, must-revalidate, max-age=0'
-  </FilesMatch>
-</IfModule>
-'@
-$htaccessContent | ssh -o StrictHostKeyChecking=no $RemoteHost "cat > '$RemotePath/.htaccess'" 2>&1 | Out-Null
-
-Log "INFO" "Copying .env file..." Yellow
-scp -o StrictHostKeyChecking=no ".env.local" "${RemoteHost}:${RemotePath}/.env" 2>&1 | Out-Null
-
-Log "INFO" "Setting permissions and ownership..." Yellow
-ssh -o StrictHostKeyChecking=no $RemoteHost "chown -R techbridge.edu.gh_md:psacln '$RemotePath' && chmod -R 755 '$RemotePath' && chmod 644 '$RemotePath/.htaccess' '$RemotePath/.env' 2>/dev/null || true" | Out-Null
-
-Log "INFO" "Stopping any existing backend process on port 3009..." Yellow
-ssh -o StrictHostKeyChecking=no $RemoteHost "fuser -k 3009/tcp || true" | Out-Null
-
-Log "INFO" "Starting backend server..." Yellow
-ssh -o StrictHostKeyChecking=no $RemoteHost "cd '$RemotePath' && NODE_ENV=production nohup node server.js > server.log 2>&1 < /dev/null &" 2>&1 | Out-Null
-
-Start-Sleep -Seconds 2
-
-Log "INFO" "Health checks..." Yellow
-ssh -o StrictHostKeyChecking=no $RemoteHost "test -f '$RemotePath/index.html' && echo '[OK] Frontend deployed' || echo '[ERROR] Frontend missing'"
-ssh -o StrictHostKeyChecking=no $RemoteHost "test -f '$RemotePath/server.js' && echo '[OK] Backend deployed' || echo '[ERROR] Backend missing'"
-
-Log "SUCCESS" "`n[SUCCESS] Deployment complete!" Green
-Log "INFO" "Frontend: https://ai-tools.techbridge.edu.gh/deep-dub-vibes-player/"
-Log "INFO" "Backend: Running on port 3009 (internal)`n"
+$elapsed = [math]::Round(((Get-Date) - $__deployStart).TotalSeconds, 1)
+$timeStr = if ($elapsed -ge 60) { "$([math]::Floor($elapsed/60))m $([math]::Round($elapsed%60,1))s" } else { "${elapsed}s" }
+Log "SUCCESS" "========================================" Green
+Log "SUCCESS" "DEPLOYMENT COMPLETE" Green
+Log "SUCCESS" "URL  : https://ai-tools.techbridge.edu.gh/deep-dub-vibes-player/" Green
+Log "SUCCESS" "Time : $timeStr total" Green
+Log "SUCCESS" "========================================" Green

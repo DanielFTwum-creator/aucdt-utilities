@@ -209,7 +209,7 @@ export const VoiceContainer: React.FC = () => {
     if (status === 'idle' || status === 'error') {
         return (
             <div className="relative flex flex-col items-center justify-center h-full text-center">
-                <SVGNetworkBackground accentColor="--color-accent-primary" opacity={0.07} />
+                <SVGNetworkBackground accentColor="--color-accent-primary" opacity={0.25} />
 
                 <MicrophoneIcon className="w-24 h-24 text-[var(--color-text-tertiary)] mb-4" />
                 <h1 className="text-3xl font-bold text-[var(--color-text-primary)]">Conversational Voice Mode</h1>
@@ -237,7 +237,7 @@ export const VoiceContainer: React.FC = () => {
     
     return (
         <div className="relative flex flex-col h-full">
-            <SVGNetworkBackground accentColor="--color-accent-primary" opacity={0.07} />
+            <SVGNetworkBackground accentColor="--color-accent-primary" opacity={0.25} />
 
             <GlassmorphismCard className="flex flex-col h-full m-0 rounded-none">
                 <div className="p-4 border-b border-[var(--color-border-primary)]">
