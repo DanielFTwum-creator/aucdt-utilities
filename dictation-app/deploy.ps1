@@ -45,30 +45,40 @@ if ! command -v pnpm >/dev/null 2>&1; then
 fi
 log "pnpm `$(pnpm --version)"
 
-echo '[1/5] Cleaning previous temp build...'
+log '[1/6] Cleaning previous temp build...'
 rm -rf $buildDir
 
-echo '[2/5] Cloning dictation-app from GitHub (sparse, depth 1)...'
+log '[2/6] Cloning dictation-app (sparse, depth 1)...'
 git clone --depth 1 --filter=blob:none --sparse '$repoUrl' $buildDir
 cd $buildDir
-# Remove monorepo workspace config — prevents pnpm treating this as a workspace
 rm -f pnpm-workspace.yaml package.json
 git sparse-checkout set dictation-app
 cd dictation-app
 
-echo '[3/5] Installing dependencies...'
-# pnpm install in isolation (no workspace parent)
+log '[3/6] Injecting .env.local for Vite build...'
+cp /tmp/dictation_env_$commit .env.local 2>/dev/null || log 'Warning: .env.local not found'
+
+log '[4/6] Installing dependencies...'
 pnpm install --no-frozen-lockfile --ignore-workspace --silent 2>/dev/null \
   || npm install --legacy-peer-deps --silent
 
-echo '[4/5] Building...'
+log '[5/6] Building...'
 pnpm exec vite build 2>/dev/null || npx vite build
 
-echo '[5/5] Deploying dist/ to web root...'
+log '[6/6] Deploying dist/ to web root...'
 mkdir -p $RemotePath
 cp -r dist/. $RemotePath
+log 'Build and deploy complete.'
 echo 'Build and deploy complete.'
 "@
+
+# Upload .env.local BEFORE build — Vite bakes VITE_* vars at build time
+if (Test-Path ".env.local") {
+    Log "INFO" "Uploading .env.local to server for build..." Yellow
+    Get-Content ".env.local" -Raw | ssh -o StrictHostKeyChecking=no $RemoteHost "cat > /tmp/dictation_env_$commit"
+    if ($LASTEXITCODE -eq 0) { Log "SUCCESS" ".env.local uploaded" Green }
+    else { Log "WARN" ".env.local upload failed — Google OAuth may not work" Yellow }
+}
 
 ssh -o StrictHostKeyChecking=no $RemoteHost "$serverScript"
 
@@ -77,6 +87,7 @@ if ($LASTEXITCODE -ne 0) {
 } else {
     Log "SUCCESS" "Server-side build and file sync complete" Green
 }
+ssh -o StrictHostKeyChecking=no $RemoteHost "rm -f /tmp/dictation_env_$commit" 2>$null | Out-Null
 
 # .htaccess
 Log "INFO" "Step 2: Writing .htaccess..." Yellow
