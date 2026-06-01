@@ -1,8 +1,10 @@
 import http from 'http';
-import url from 'url';
+import url, { fileURLToPath } from 'url';
 import querystring from 'querystring';
 import fs from 'fs';
 import path from 'path';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const PORT = parseInt(process.env.PORT || '3000', 10);
 const GOOGLE_CLIENT_ID = process.env.VITE_GOOGLE_CLIENT_ID || '';
