@@ -51,42 +51,45 @@ $buildDir = "/tmp/biochemai_deploy_$commit"
 $serverScript = @"
 set -e
 
+# Timestamped log helper (server-side bash)
+log() { echo "[`$(date '+%Y-%m-%d %H:%M:%S')][SERVER] `$1"; }
+
 # Ensure pnpm is available
 if ! command -v pnpm >/dev/null 2>&1; then
   corepack enable >/dev/null 2>&1 || npm install -g pnpm --silent
   export PATH="`$HOME/.local/share/pnpm:`$PATH"
 fi
-echo '[setup] pnpm version:' && pnpm --version
+log "pnpm `$(pnpm --version)"
 
-echo '[1/7] Cleaning previous temp build...'
+log '[1/7] Cleaning previous temp build...'
 rm -rf $buildDir
 
-echo '[2/7] Cloning biochemai from GitHub (sparse, depth 1)...'
+log '[2/7] Cloning biochemai (sparse, depth 1)...'
 git clone --depth 1 --filter=blob:none --sparse '$repoUrl' $buildDir
 cd $buildDir
-# Remove monorepo workspace config so pnpm treats this as a standalone project
 rm -f pnpm-workspace.yaml package.json
 git sparse-checkout set biochemai
 cd biochemai
 
-echo '[3/7] Injecting .env.local for Vite build...'
-cp /tmp/biochemai_env_$commit .env.local 2>/dev/null || echo 'Warning: .env.local not found — VITE_ vars will be empty'
+log '[3/7] Injecting .env.local for Vite build...'
+cp /tmp/biochemai_env_$commit .env.local 2>/dev/null || log 'Warning: .env.local not found'
 
-echo '[4/7] Installing dependencies...'
+log '[4/7] Installing dependencies...'
 pnpm install --no-frozen-lockfile --ignore-workspace --silent 2>/dev/null \
   || npm install --legacy-peer-deps --silent
 
-echo '[5/7] Building...'
+log '[5/7] Building...'
 pnpm exec vite build 2>/dev/null || npx vite build
 
-echo '[6/7] Deploying dist/ to web root...'
+log '[6/7] Deploying dist/ to web root...'
 mkdir -p $RemotePath
 cp -r dist/. $RemotePath
 cp server.ts package.json $RemotePath
 
-echo '[7/7] Installing backend deps...'
+log '[7/7] Installing backend deps...'
 cd $RemotePath
 pnpm install --prod --silent
+log 'Build and deploy complete.'
 
 echo 'Build and deploy complete.'
 "@

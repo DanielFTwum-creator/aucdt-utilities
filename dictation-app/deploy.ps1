@@ -35,13 +35,15 @@ $buildDir = "/tmp/dictation_deploy_$commit"
 $serverScript = @"
 set -e
 
-# ── Ensure pnpm is available ──────────────────────────────────
-if ! command -v pnpm &>/dev/null; then
-  echo '[setup] Installing pnpm via corepack...'
-  corepack enable 2>/dev/null || npm install -g pnpm --silent
+# Timestamped log helper (server-side bash)
+log() { echo "[`$(date '+%Y-%m-%d %H:%M:%S')][SERVER] `$1"; }
+
+# Ensure pnpm is available
+if ! command -v pnpm >/dev/null 2>&1; then
+  corepack enable >/dev/null 2>&1 || npm install -g pnpm --silent
   export PATH="`$HOME/.local/share/pnpm:`$PATH"
 fi
-echo '[setup] pnpm version:' && pnpm --version
+log "pnpm `$(pnpm --version)"
 
 echo '[1/5] Cleaning previous temp build...'
 rm -rf $buildDir
