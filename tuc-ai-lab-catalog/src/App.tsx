@@ -475,8 +475,14 @@ function FeaturedCard({ tool, onOpen }: { tool: Tool, onOpen: () => void }) {
       gap:'16px',
       alignItems:'flex-start',
     }}
-      onMouseEnter={e => (e.currentTarget.style.background = '#fffdf5')}
-      onMouseLeave={e => (e.currentTarget.style.background = '#fff')}
+      onMouseEnter={e => {
+        e.currentTarget.style.background = '#fef4f4';
+        e.currentTarget.style.boxShadow = '0 4px 20px rgba(139,26,26,0.13)';
+      }}
+      onMouseLeave={e => {
+        e.currentTarget.style.background = '#fff';
+        e.currentTarget.style.boxShadow = 'none';
+      }}
     >
       {/* Featured Badge */}
       <div style={{ position:'absolute', top:'12px', right:'12px', background:GOLD, color:'#1a1f3c', fontSize:'11px', fontWeight:700, padding:'3px 8px', borderRadius:'4px', letterSpacing:'0.03em', textTransform:'uppercase' }}>
@@ -521,14 +527,20 @@ function ToolCard({ tool, index, viewMode, onOpen }: { tool: Tool, index: number
     padding: '18px',
     cursor: 'pointer',
     position: 'relative',
-    transition: 'background 0.12s',
+    transition: 'background 0.15s, box-shadow 0.15s',
     borderLeft: `4px solid ${accentColor}`,
   };
 
   return (
     <div onClick={onOpen} style={cardStyle}
-      onMouseEnter={e => (e.currentTarget.style.background = '#fffdf5')}
-      onMouseLeave={e => (e.currentTarget.style.background = '#fff')}
+      onMouseEnter={e => {
+        e.currentTarget.style.background = '#fef4f4';
+        e.currentTarget.style.boxShadow = '0 4px 20px rgba(139,26,26,0.13)';
+      }}
+      onMouseLeave={e => {
+        e.currentTarget.style.background = '#fff';
+        e.currentTarget.style.boxShadow = 'none';
+      }}
     >
       {/* Icon */}
       <div style={{ width:'40px', height:'40px', borderRadius:'10px', background: iconBgs[tool.cat] || '#f1f5f9', display:'flex', alignItems:'center', justifyContent:'center', marginBottom:'12px' }}>
