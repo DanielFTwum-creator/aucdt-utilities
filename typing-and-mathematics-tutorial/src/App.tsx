@@ -331,7 +331,7 @@ export default function App() {
 
       {/* Main Header bar */}
       <header className="border-b border-slate-900 bg-slate-950/80 backdrop-blur-md sticky top-0 z-40 px-4 py-3.5">
-        <div className="max-w-6xl w-full mx-auto flex items-center justify-between">
+        <div className="w-full flex items-center justify-between">
           {/* Logo Name */}
           <button
             onClick={() => setActiveScreen('map')}
@@ -412,7 +412,7 @@ export default function App() {
       </header>
 
       {/* Main Container Section */}
-      <main className="flex-1 max-w-5xl w-full mx-auto p-4 sm:p-6 flex flex-col gap-6 justify-center">
+      <main className="flex-1 w-full p-4 sm:p-6 flex flex-col gap-6 justify-center">
         <AnimatePresence mode="wait">
           {/* MATH progressive map screen */}
           {activeScreen === 'map' && (
