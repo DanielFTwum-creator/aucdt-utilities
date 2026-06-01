@@ -152,10 +152,14 @@ export const FormLoginView: React.FC<FormLoginViewProps> = ({
       <div className="w-full max-w-2xl relative z-10 flex flex-col items-center">
         {/* Login Card — owns all brand identity (P1-2) so contrast is guaranteed */}
         <div
-          className={`w-full rounded-[16px] p-10 sm:p-12 shadow-[0_8px_32px_rgba(0,0,0,0.3)] border animate-fade-in-up flex flex-col items-center ${cardBgClassResolved} ${borderColorClassResolved}`}
+          className={`w-full rounded-[16px] p-10 sm:p-12 flex flex-col items-center animate-fade-in-up ${cardBgClassResolved} ${borderColorClassResolved}`}
           style={{
-            WebkitBackdropFilter: 'blur(18px) saturate(1.3)',
-            animationDelay: '0.2s'
+            background: 'rgba(13,25,48,0.92)',
+            border: '1px solid rgba(0,212,255,0.22)',
+            boxShadow: '0 0 0 1px rgba(0,212,255,0.06), 0 24px 64px rgba(0,0,0,0.6), 0 0 40px rgba(0,212,255,0.04)',
+            backdropFilter: 'blur(20px)',
+            WebkitBackdropFilter: 'blur(20px)',
+            animationDelay: '0.15s',
           }}
         >
           {/* Brand block */}
