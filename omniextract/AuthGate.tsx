@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { FormLoginView } from './components/FormLoginView';
+import { FormLoginView } from './src/components/FormLoginView';
 
 const AUTH_KEY = 'tuc_auth_omniextract';
 

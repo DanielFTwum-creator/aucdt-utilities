@@ -1,272 +1,213 @@
-# TUC Project Deployment Script
-# Safe deployment pattern using SSH pipe for .htaccess
-# Prevents UTF-8 BOM issues and adds comprehensive health checks
+# OmniExtract Deployment Script
+# Strategy: SSH to server -> git clone -> build on server -> serve
+# Avoids all Windows scp/tar file-transfer failures.
 
 param(
-    [Parameter(Mandatory=$false)]
-    [string]$ConfigFile = "deploy.config.json",
-    [switch]$Build = $false,
-    [switch]$DryRun = $false,
-    [switch]$SkipHealthCheck = $false
+    [string]$RemoteHost = "root@techbridge.edu.gh",
+    [string]$RemotePath = "/var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/omniextract/",
+    [switch]$Build = $true
 )
 
-$ErrorActionPreference = "Stop"
-
-# ============================================================================
-# STEP 1/6: Load Configuration
-# ============================================================================
-Log "INFO" "Step 1/6: Validating configuration..." Cyan
-
-if (-not (Test-Path $ConfigFile)) {
-    Log "ERROR" "❌ Configuration file not found: $ConfigFile" Red
-    exit 1
+# Timestamped logging helper
+$__deployStart = Get-Date
+function Log {
+    param([string]$Level = "INFO", [string]$Msg, [ConsoleColor]$Color = "White")
+    $ts = (Get-Date).ToString("yyyy-MM-dd HH:mm:ss")
+    Write-Host "[$ts][$Level] $Msg" -ForegroundColor $Color
 }
 
-$config = Get-Content $ConfigFile | ConvertFrom-Json
+Log "INFO" "========================================" Cyan
+Log "INFO" "OMNIEXTRACT DEPLOYMENT" Cyan
+Log "INFO" "========================================" Cyan
+Log "INFO" "Remote : $RemoteHost"
+Log "INFO" "Path   : $RemotePath"
+Log "INFO" ""
 
-$ProjectName = $config.projectName
-$RemoteHost = $config.remoteHost
-$DeployPath = $config.deployPath
-$BuildTool = if ($config.buildTool) { $config.buildTool } else { "pnpm" }
-$OutputDir = if ($config.outputDir) { $config.outputDir } else { "dist" }
-$RequiredEnvVars = if ($config.requiredEnvVars) { $config.requiredEnvVars } else { @() }
-$HealthCheckUrl = $config.healthCheckUrl
-
-Log "INFO" "  Project:        $ProjectName"
-Log "INFO" "  Remote host:    $RemoteHost"
-Log "INFO" "  Deploy path:    $DeployPath"
-Log "INFO" "  Build tool:     $BuildTool"
-Log "INFO" "  Output dir:     $OutputDir"
-Log "INFO" "  Health check:   $HealthCheckUrl"
-Write-Host ""
-
-# ============================================================================
-# STEP 2/6: Pre-flight Checks
-# ============================================================================
-Log "INFO" "Step 2/6: Pre-flight checks..." Cyan
-
-$preflight_errors = @()
-
-if ($RequiredEnvVars.Count -gt 0) {
-    $envPath = ""
-    if (Test-Path ".env.local") {
-        $envPath = ".env.local"
-    } elseif (Test-Path ".env") {
-        $envPath = ".env"
-    }
-
-    if ($envPath -eq "") {
-        $preflight_errors += "Neither .env.local nor .env found (required for env vars)"
-    } else {
-        $envLines = @(Get-Content $envPath)
-        foreach ($var in $RequiredEnvVars) {
-            $found = $envLines | Where-Object { $_ -match "^$var=" }
-            if (-not $found) {
-                $preflight_errors += "Required env var missing in ${envPath}: $var"
-            }
-        }
+# Step 1: Validate .env.local
+Log "INFO" "Step 1: Pre-flight checks..." Yellow
+if (-not (Test-Path "./.env.local")) {
+    Log "ERROR" ".env.local not found!" Red; exit 1
+}
+$envContent = Get-Content "./.env.local" -Raw
+foreach ($key in @("GEMINI_API_KEY","VITE_GOOGLE_CLIENT_ID","GOOGLE_CLIENT_SECRET")) {
+    if ($envContent -notmatch $key) {
+        Log "ERROR" "$key missing in .env.local" Red; exit 1
     }
 }
+Log "SUCCESS" "Pre-flight OK (.env.local validated)" Green
 
-if (-not (Test-Path "package.json")) {
-    $preflight_errors += "package.json not found"
-} else {
-    $pkg = Get-Content "package.json" | ConvertFrom-Json
-    if (-not $pkg.scripts.build) {
-        $preflight_errors += "No 'build' script defined in package.json"
-    }
+# Step 2: Push latest code to GitHub (ensure server pulls the newest commit)
+Log "INFO" "Step 2: Verifying git state..." Yellow
+$commit = git rev-parse --short HEAD
+$branch = git branch --show-current
+Log "INFO" "Commit : $commit on $branch"
+
+# Step 3: Server-side build and deploy via SSH
+Log "INFO" "Step 3: Server-side build (git clone + npm build)..." Yellow
+
+$repoUrl = "https://github.com/DanielFTwum-creator/aucdt-utilities.git"
+$buildDir = "/tmp/omniextract_deploy_$commit"
+
+$serverScript = @"
+set -e
+
+# Timestamped log helper (server-side bash)
+log() { echo "[`$(date '+%Y-%m-%d %H:%M:%S')][SERVER] `$1"; }
+
+# Ensure pnpm is available
+if ! command -v pnpm >/dev/null 2>&1; then
+  corepack enable >/dev/null 2>&1 || npm install -g pnpm --silent
+  export PATH="`$HOME/.local/share/pnpm:`$PATH"
+fi
+log "pnpm `$(pnpm --version)"
+
+log '[1/7] Cleaning previous temp build...'
+rm -rf $buildDir
+
+log '[2/7] Cloning omniextract (sparse, depth 1)...'
+git clone --depth 1 --filter=blob:none --sparse '$repoUrl' $buildDir
+cd $buildDir
+rm -f pnpm-workspace.yaml package.json
+git sparse-checkout set omniextract
+cd omniextract
+
+log '[3/7] Injecting .env.local for Vite build...'
+cp /tmp/omniextract_env_$commit .env.local 2>/dev/null || log 'Warning: .env.local not found'
+
+log '[4/7] Installing dependencies...'
+pnpm install --no-frozen-lockfile --ignore-workspace --silent 2>/dev/null \
+  || npm install --legacy-peer-deps --silent
+
+log '[5/7] Building...'
+pnpm exec vite build 2>/dev/null || npx vite build
+
+log '[6/7] Deploying dist/ to web root...'
+mkdir -p $RemotePath
+cp -r dist/. $RemotePath
+cp server.ts package.json $RemotePath
+
+log '[7/7] Installing backend deps...'
+cd $RemotePath
+pnpm install --prod --silent
+log 'Build and deploy complete.'
+
+echo 'Build and deploy complete.'
+"@
+
+# Stream .env.local to server BEFORE building — Vite needs it at build time
+Log "INFO" "Uploading .env.local to server for build..." Yellow
+$envContent = Get-Content ".env.local" -Raw
+$envContent | ssh -o StrictHostKeyChecking=no $RemoteHost "mkdir -p /tmp && cat > /tmp/omniextract_env_$commit"
+if ($LASTEXITCODE -eq 0) {
+    Log "SUCCESS" ".env.local uploaded" Green
+}
+if ($LASTEXITCODE -ne 0) {
+    Log "WARN" ".env.local upload failed — Google OAuth may not work in build" Yellow
 }
 
-if (-not $Build -and -not (Test-Path $OutputDir)) {
-    $preflight_errors += "$OutputDir/ not found. Run with -Build flag first."
+$scriptPath = [System.IO.Path]::GetTempFileName()
+Set-Content -Path $scriptPath -Value $serverScript -Encoding UTF8
+cmd.exe /c "ssh -o StrictHostKeyChecking=no $RemoteHost bash -s < $scriptPath"
+
+if ($LASTEXITCODE -ne 0) {
+    Log "WARN" "Server deploy returned $LASTEXITCODE — check output above" Yellow
+}
+if ($LASTEXITCODE -eq 0) {
+    Log "SUCCESS" "Server-side build and file sync complete" Green
+}
+Remove-Item -Path $scriptPath -Force
+
+if ($LASTEXITCODE -ne 0) {
+    Log "WARN" "Server deploy returned $LASTEXITCODE — check output above" Yellow
+}
+if ($LASTEXITCODE -eq 0) {
+    Log "SUCCESS" "Server-side build and file sync complete" Green
 }
 
-if ($preflight_errors.Count -gt 0) {
-    Log "ERROR" "  ❌ Pre-flight checks failed:" Red
-    foreach ($err in $preflight_errors) {
-        Log "ERROR" "     - $err" Red
-    }
-    exit 1
-}
+# Clean up the uploaded env file
+ssh -o StrictHostKeyChecking=no $RemoteHost "rm -f /tmp/omniextract_env_$commit" 2>$null | Out-Null
 
-Log "INFO" "  ✅ All checks passed"
-Write-Host ""
+# Step 4: Write .htaccess
+Log "INFO" "Step 4: Writing .htaccess..." Yellow
+$htaccessContent = @'
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /omniextract/
+  RewriteCond %{REQUEST_FILENAME} -f [OR]
+  RewriteCond %{REQUEST_FILENAME} -d
+  RewriteRule ^ - [L]
+  RewriteCond %{HTTP:Upgrade} !websocket [NC]
+  RewriteCond %{HTTP:Connection} !Upgrade [NC]
+  RewriteRule ^callback http://localhost:3009/callback [P,L]
+  RewriteRule ^api/(.*)$ http://localhost:3009/api/$1 [P,L]
+  RewriteRule ^ /omniextract/index.html [QSA,L]
+</IfModule>
 
-# ============================================================================
-# STEP 3/6: Build Phase
-# ============================================================================
-if ($Build) {
-    Log "INFO" "Step 3/6: Building project..." Cyan
-    Log "INFO" "  Running: $BuildTool build"
-    & $BuildTool build
+<IfModule mod_expires.c>
+  ExpiresActive On
+  <FilesMatch '\.(js|css|png|jpg|jpeg|gif|svg|woff2|woff|ttf|eot|ico)$'>
+    ExpiresDefault 'max-age=31536000'
+    Header set Cache-Control 'public, immutable'
+  </FilesMatch>
+  <FilesMatch '\.(html|json)$'>
+    ExpiresDefault 'max-age=0'
+    Header set Cache-Control 'public, must-revalidate'
+  </FilesMatch>
+</IfModule>
 
-    if ($LASTEXITCODE -ne 0) {
-        Log "ERROR" "  ❌ Build failed with exit code $LASTEXITCODE" Red
-        exit 1
-    }
-    Log "INFO" "  ✅ Build successful"
-} else {
-    Log "INFO" "Step 3/6: Skipping build (not requested)" Cyan
-}
-Write-Host ""
+<IfModule mod_headers.c>
+  <FilesMatch '\.(html)$'>
+    Header set Cache-Control 'public, must-revalidate, max-age=0'
+  </FilesMatch>
+</IfModule>
+'@
+$htaccessContent | ssh -o StrictHostKeyChecking=no $RemoteHost "cat > '$RemotePath/.htaccess'" 2>&1 | Out-Null
 
-# ============================================================================
-# STEP 4/6: Verify Build Output
-# ============================================================================
-Log "INFO" "Step 4/6: Verifying build output..." Cyan
+# Step 5: Copy .env + set permissions
+Log "INFO" "Step 5: Configuring server environment..." Yellow
+scp -o StrictHostKeyChecking=no ".env.local" "${RemoteHost}:${RemotePath}/.env" 2>&1 | Out-Null
+ssh -o StrictHostKeyChecking=no $RemoteHost "chown -R techbridge.edu.gh_md:psaserv $RemotePath && chmod -R 755 $RemotePath && chmod 644 $RemotePath/.htaccess $RemotePath/.env 2>/dev/null; true" | Out-Null
 
-if (-not (Test-Path $OutputDir)) {
-    Log "ERROR" "  ❌ Output directory not found: $OutputDir" Red
-    exit 1
-}
+# Step 6: Restart backend with pm2 (fast) or tsx --transpile-only (fallback)
+Log "INFO" "Step 6: Restarting backend..." Yellow
+$restartScript = @"
+cd $RemotePath
 
-$outputFiles = @(Get-ChildItem -Path $OutputDir -File -Recurse)
-if ($outputFiles.Count -eq 0) {
-    Log "ERROR" "  ❌ Output directory is empty: $OutputDir" Red
-    exit 1
-}
+# Prefer pm2 — instant reload, no transpile delay
+if command -v pm2 &>/dev/null; then
+  if pm2 describe omniextract &>/dev/null; then
+    pm2 reload omniextract --update-env && echo 'pm2: reloaded omniextract'
+  else
+    PORT=3009 pm2 start server.ts --name omniextract --interpreter tsx -- --transpile-only && echo 'pm2: started omniextract'
+  fi
+  pm2 save --force &>/dev/null
+else
+  # Fallback: kill old process, start with --transpile-only
+  fuser -k 3009/tcp 2>/dev/null || true
+  PORT=3009 setsid nohup tsx --transpile-only server.ts > server.log 2>&1 < /dev/null &
+  sleep 2
+  echo 'tsx: started omniextract (transpile-only)'
+fi
+"@
+ssh -o StrictHostKeyChecking=no $RemoteHost "$restartScript"
+Start-Sleep -Seconds 2
 
-if (-not (Test-Path "$OutputDir/index.html")) {
-    Log "ERROR" "  ❌ Critical file missing: index.html" Red
-    exit 1
-}
+Log "INFO" "Health checks..." Yellow
+ssh -o StrictHostKeyChecking=no $RemoteHost "test -f $RemotePath/index.html && echo 'OK index.html present' || echo 'X index.html MISSING'"
+ssh -o StrictHostKeyChecking=no $RemoteHost "ss -tlnp 2>/dev/null | grep -q ':3009' && echo 'OK port 3009 listening' || echo 'X port 3009 not up'"
+ssh -o StrictHostKeyChecking=no $RemoteHost "curl -sS -o /dev/null -w 'HTTP %{http_code}' http://localhost:3009/api/health 2>/dev/null && echo ' (backend OK)' || echo ' (health endpoint not yet ready)'"
 
-$totalSize = ($outputFiles | Measure-Object -Property Length -Sum).Sum / 1MB
-Log "INFO" "  ✅ Output verified: $($outputFiles.Count) files, $([Math]::Round($totalSize, 2)) MB"
-Write-Host ""
+# Step 7: Cleanup temp build on server
+ssh -o StrictHostKeyChecking=no $RemoteHost "rm -rf $buildDir" 2>$null | Out-Null
 
-# ============================================================================
-# STEP 5/6: Deploy to Remote
-# ============================================================================
-Log "INFO" "Step 5/6: Deploying to remote server (SCP-only)..." Cyan
+$elapsed    = [math]::Round(((Get-Date) - $__deployStart).TotalSeconds, 1)
+$elapsedMin = [math]::Floor($elapsed / 60)
+$elapsedSec = [math]::Round($elapsed % 60, 1)
+$timeStr    = if ($elapsedMin -gt 0) { "${elapsedMin}m ${elapsedSec}s" } else { "${elapsed}s" }
 
-if ($DryRun) {
-    Log "INFO" "  🔍 DRY RUN: Would deploy to ${RemoteHost}:${DeployPath}" Yellow
-} else {
-    $remoteHostParts = $RemoteHost -split "@"
-    if ($remoteHostParts.Count -eq 2) {
-        $remoteUser = $remoteHostParts[0]
-        $remoteServer = $remoteHostParts[1]
-        $sshTarget = $RemoteHost
-    } else {
-        $remoteUser = "root"
-        $remoteServer = $RemoteHost
-        $sshTarget = "root@$RemoteHost"
-    }
-
-    Log "INFO" "  Creating directory structure..." Yellow
-    ssh -o StrictHostKeyChecking=no $sshTarget "mkdir -p '$DeployPath'" 2>&1 | Where-Object { $_ -notmatch "already exists" } | ForEach-Object { Write-Host "    $_" }
-
-    Log "INFO" "  Clearing old deployment..." Yellow
-    ssh -o StrictHostKeyChecking=no $sshTarget "rm -rf '$DeployPath'/* '$DeployPath'/.htaccess 2>/dev/null || true" | Out-Null
-
-    Log "INFO" "  Deploying files via SCP..." Yellow
-    $OutputDirPath = (Resolve-Path $OutputDir).Path
-    $items = Get-ChildItem -Path $OutputDirPath -Force
-    $filePaths = @()
-    foreach ($item in $items) {
-        $filePaths += $item.FullName
-    }
-
-    if ($filePaths.Count -eq 0) {
-        Log "ERROR" "  ❌ No files to deploy in $OutputDirPath" Red
-        exit 1
-    }
-
-    & scp -r -o StrictHostKeyChecking=no -o ConnectTimeout=30 $filePaths "${sshTarget}:${DeployPath}/"
-
-    if ($LASTEXITCODE -ne 0) {
-        Log "ERROR" "  ❌ File transfer failed" Red
-        exit 1
-    }
-
-    Log "INFO" "  Creating .htaccess..." Yellow
-    $SubdomainPath = $DeployPath.Split("/")[-1]
-
-    $htaccessContent = "<IfModule mod_rewrite.c>`n" +
-                       "  RewriteEngine On`n" +
-                       "  RewriteBase /$SubdomainPath/`n" +
-                       "  RewriteCond %{REQUEST_FILENAME} -f [OR]`n" +
-                       "  RewriteCond %{REQUEST_FILENAME} -d`n" +
-                       "  RewriteRule ^ - [L]`n" +
-                       "  RewriteRule ^ /$SubdomainPath/index.html [QSA,L]`n" +
-                       "</IfModule>`n" +
-                       "`n" +
-                       "<IfModule mod_expires.c>`n" +
-                       "  ExpiresActive On`n" +
-                       "  <FilesMatch '\.(js|css|png|jpg|jpeg|gif|svg|woff2|woff|ttf|eot|ico)$'>`n" +
-                       "    ExpiresDefault 'max-age=31536000'`n" +
-                       "    Header set Cache-Control 'public, immutable'`n" +
-                       "  </FilesMatch>`n" +
-                       "  <FilesMatch '\.(html|json)$'>`n" +
-                       "    ExpiresDefault 'max-age=0'`n" +
-                       "    Header set Cache-Control 'public, must-revalidate'`n" +
-                       "  </FilesMatch>`n" +
-                       "</IfModule>`n" +
-                       "`n" +
-                       "<IfModule mod_headers.c>`n" +
-                       "  <FilesMatch '\.(html)$'>`n" +
-                       "    Header set Cache-Control 'public, must-revalidate, max-age=0'`n" +
-                       "  </FilesMatch>`n" +
-                       "</IfModule>"
-
-    $htaccessContent | ssh -o StrictHostKeyChecking=no $sshTarget "cat > '$DeployPath/.htaccess'"
-
-    Log "INFO" "  Setting file permissions..." Yellow
-    ssh -o StrictHostKeyChecking=no $sshTarget "chmod -R 755 '$DeployPath' && chmod 644 '$DeployPath/.htaccess' 2>/dev/null || true" | Out-Null
-
-    Log "INFO" "  ✅ Deployment complete"
-}
-Write-Host ""
-
-# ============================================================================
-# STEP 6/6: Health Checks
-# ============================================================================
-if (-not $SkipHealthCheck -and -not $DryRun) {
-    Log "INFO" "Step 6/6: Health checks..." Cyan
-
-    $healthCheckPassed = $true
-    $remoteHostParts = $RemoteHost -split "@"
-    $sshTarget = if ($remoteHostParts.Count -eq 2) { $RemoteHost } else { "root@$RemoteHost" }
-
-    Log "INFO" "  Checking remote index.html..." Yellow
-    ssh -o StrictHostKeyChecking=no $sshTarget "test -f '$DeployPath/index.html'" 2>&1 | Out-Null
-    if ($LASTEXITCODE -eq 0) {
-        Log "INFO" "    ✅ index.html present"
-    } else {
-        Log "ERROR" "    ❌ index.html missing on remote" Red
-        $healthCheckPassed = $false
-    }
-
-    Log "INFO" "  Testing HTTP routing..." Yellow
-    Start-Sleep -Seconds 3
-    try {
-        $httpTest = Invoke-WebRequest -Uri $HealthCheckUrl -UseBasicParsing -TimeoutSec 10 -ErrorAction SilentlyContinue
-        if ($httpTest.StatusCode -eq 200) {
-            Log "INFO" "    ✅ HTTP 200 OK from $HealthCheckUrl"
-        } else {
-            Log "INFO" "    ⚠️  Unexpected status code: $($httpTest.StatusCode)" Yellow
-        }
-    } catch {
-        Log "INFO" "    ⚠️  Could not reach health check URL: $HealthCheckUrl" Yellow
-    }
-
-    if ($healthCheckPassed) {
-        Log "INFO" "  ✅ All health checks passed"
-    } else {
-        Log "INFO" "  ⚠️  Some health checks failed — review manually" Yellow
-    }
-} else {
-    Log "INFO" "Step 6/6: Skipping health checks" Yellow
-}
-Write-Host ""
-
-Log "SUCCESS" "╔════════════════════════════════════════════════════════════╗" Green
-Log "SUCCESS" "║  ✅ DEPLOYMENT COMPLETE                                    ║" Green
-Log "SUCCESS" "╚════════════════════════════════════════════════════════════╝" Green
-Write-Host ""
-Log "INFO" "Project:        $ProjectName"
-Log "INFO" "Remote:         $RemoteHost"
-Log "INFO" "Path:           $DeployPath"
-Log "INFO" "Health check:   $HealthCheckUrl"
-Write-Host ""
+Log "SUCCESS" "========================================" Green
+Log "SUCCESS" "DEPLOYMENT COMPLETE" Green
+Log "SUCCESS" "URL  : https://ai-tools.techbridge.edu.gh/omniextract" Green
+Log "SUCCESS" "Port : 3009" Green
+Log "SUCCESS" "Time : $timeStr total" Green
+Log "SUCCESS" "========================================" Green

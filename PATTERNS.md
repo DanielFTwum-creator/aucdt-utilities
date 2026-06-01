@@ -709,7 +709,8 @@ Expected: HTTP 200, files present, owned by `techbridge.edu.gh_md:psacln`, permi
 
 - [ ] **Plesk WAF Rule 210580 Exempted** (if applicable)
   - Modsecurity rule 210580 blocks OAuth `scope` parameter
-  - Add vhost directive: `SecRuleRemoveById 210580` in auth callback path
+  - **CRITICAL:** You must add this exemption via the Plesk GUI (Web Application Firewall -> Switch off security rule). 
+  - **DO NOT** attempt to add `SecRuleRemoveById 210580` into the `.htaccess` file. Plesk strictly forbids overriding ModSecurity rules via `.htaccess`, and doing so will instantly crash the site with a fatal Apache **500 Internal Server Error**.
   - See Pattern 7-Extended for details
 
 - [ ] **Frontend Code Has Proper Imports**
