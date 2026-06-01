@@ -41,6 +41,13 @@ const DEFAULT_PROGRESS: UserProgress = {
 };
 
 export default function App() {
+  // Remove splash screen body styles so app fills the full viewport
+  useEffect(() => {
+    const splashStyles = document.getElementById('island-splash-styles');
+    if (splashStyles) splashStyles.remove();
+    document.body.style.cssText = '';
+  }, []);
+
   // Navigation: 'map' | 'backpack' | 'play' | 'win_modal'
   const [activeScreen, setActiveScreen] = useState<'map' | 'backpack' | 'play' | 'win_modal'>('map');
 
