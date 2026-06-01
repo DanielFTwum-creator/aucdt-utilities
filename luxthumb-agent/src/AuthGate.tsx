@@ -1,7 +1,7 @@
 import React, { useEffect, useState, createContext, useContext } from 'react';
 
-const AUTH_KEY = 'tuc_auth_midjourney_prompt_helper';
-const USER_KEY = 'midjourney_prompt_helper_user';
+const AUTH_KEY = 'tuc_auth_luxthumb_agent';
+const USER_KEY = 'luxthumb_agent_user';
 
 const AuthContext = createContext<{ handleLogout: () => void } | null>(null);
 
@@ -43,7 +43,7 @@ export function AuthGate({
   useEffect(() => {
     const cookieValue = document
       .cookie.split('; ')
-      .find((row) => row.startsWith('midjourney_prompt_helper_user='))
+      .find((row) => row.startsWith('luxthumb_agent_user='))
       ?.split('=')[1];
 
     if (cookieValue) {
@@ -56,7 +56,7 @@ export function AuthGate({
         setUser(userData);
         setAuthed(true);
         document.cookie =
-          'midjourney_prompt_helper_user=; max-age=0; path=/midjourney-prompt-helper/';
+          'luxthumb_agent_user=; max-age=0; path=/luxthumb-agent/';
       } catch (e) {
         console.error(e);
       }
@@ -90,7 +90,7 @@ export function AuthGate({
 
     const redirectUri =
       import.meta.env.VITE_GOOGLE_REDIRECT_URI ||
-      `${window.location.origin}/midjourney-prompt-helper/callback`;
+      `${window.location.origin}/luxthumb-agent/callback`;
     const state = Math.random().toString(36).substring(7);
     sessionStorage.setItem('oauth_state', state);
 
