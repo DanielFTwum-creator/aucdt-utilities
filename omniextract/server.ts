@@ -1,131 +1,131 @@
-import http from 'http';
-import url, { fileURLToPath } from 'url';
-import querystring from 'querystring';
+import express from 'express';
+import cookieParser from 'cookie-parser';
+import dotenv from 'dotenv';
 import fs from 'fs';
 import path from 'path';
+import { fileURLToPath } from 'url';
+
+dotenv.config();
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-const PORT = parseInt(process.env.PORT || '3000', 10);
-const GOOGLE_CLIENT_ID = process.env.VITE_GOOGLE_CLIENT_ID || '';
-const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET || '';
-const BASE_URL = process.env.BASE_URL || 'https://ai-tools.techbridge.edu.gh/omniextract';
+const PORT = Number(process.env.PORT) || 3009;
+const GOOGLE_CLIENT_ID     = process.env.VITE_GOOGLE_CLIENT_ID     || '';
+const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET       || '';
+const REDIRECT_URI         = process.env.VITE_GOOGLE_REDIRECT_URI   || 'https://ai-tools.techbridge.edu.gh/omniextract/callback';
 
-async function exchangeCodeForToken(code: string): Promise<{ access_token: string; id_token?: string }> {
-  const params = new URLSearchParams({
-    client_id: GOOGLE_CLIENT_ID,
-    client_secret: GOOGLE_CLIENT_SECRET,
-    code,
-    grant_type: 'authorization_code',
-    redirect_uri: `${BASE_URL}/callback`,
-  });
-
-  const res = await fetch('https://oauth2.googleapis.com/token', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-    body: params.toString(),
-  });
-
-  if (!res.ok) throw new Error(`Token exchange failed: ${res.status}`);
-  return res.json();
+if (!GOOGLE_CLIENT_ID || !GOOGLE_CLIENT_SECRET) {
+  console.warn('[OmniExtract] WARNING: VITE_GOOGLE_CLIENT_ID or GOOGLE_CLIENT_SECRET not set — OAuth will fail');
 }
 
-async function fetchUserInfo(accessToken: string): Promise<{ sub: string; name: string; email: string }> {
-  const res = await fetch('https://openidconnect.googleapis.com/v1/userinfo', {
-    headers: { Authorization: `Bearer ${accessToken}` },
-  });
-
-  if (!res.ok) throw new Error(`User info fetch failed: ${res.status}`);
-  return res.json();
+function decodeJWT(token: string): Record<string, string> {
+  const parts = token.split('.');
+  if (parts.length !== 3) throw new Error('Invalid JWT');
+  return JSON.parse(Buffer.from(parts[1], 'base64').toString('utf-8'));
 }
 
-const server = http.createServer(async (req, res) => {
-  const parsedUrl = url.parse(req.url || '/', true);
-  const pathname = parsedUrl.pathname;
+const app = express();
+app.use(express.json({ limit: '1mb' }));
+app.use(cookieParser());
 
-  // OAuth callback endpoint
-  if (pathname === '/callback' && req.method === 'GET') {
-    const query = parsedUrl.query as Record<string, string>;
-    const code = query.code;
-    const error = query.error;
+// ── OAuth callback — handles both path variants Apache may forward ──
+app.get(['/callback', '/omniextract/callback'], async (req, res) => {
+  const { code, error } = req.query as Record<string, string>;
 
-    if (error) {
-      res.writeHead(302, { Location: `${BASE_URL}/?error=${encodeURIComponent(error)}` });
-      return res.end();
-    }
-
-    if (!code) {
-      res.writeHead(400, { 'Content-Type': 'text/plain' });
-      return res.end('Missing authorization code');
-    }
-
-    try {
-      const tokenData = await exchangeCodeForToken(code);
-      const userInfo = await fetchUserInfo(tokenData.access_token);
-
-      const userData = {
-        id: userInfo.sub,
-        name: userInfo.name,
-        email: userInfo.email,
-      };
-
-      // Set cookie with user data and redirect to app
-      const encodedUser = Buffer.from(JSON.stringify(userData)).toString('base64');
-      res.writeHead(302, {
-        Location: `${BASE_URL}/`,
-        'Set-Cookie': `omniextract_user=${encodeURIComponent(encodedUser)}; Path=/omniextract/; Max-Age=86400; Secure; SameSite=Lax`,
-      });
-      return res.end();
-    } catch (err) {
-      console.error('OAuth error:', err);
-      const errMsg = err instanceof Error ? err.message : 'Unknown error';
-      res.writeHead(302, { Location: `${BASE_URL}/?error=${encodeURIComponent(errMsg)}` });
-      return res.end();
-    }
+  if (error) {
+    console.error('[OmniExtract] OAuth error from Google:', error);
+    return res.redirect(`/omniextract/?error=${encodeURIComponent(error)}`);
   }
 
-  // Serve index.html for SPA routing
-  if (pathname === '/' || !pathname.includes('.')) {
-    try {
-      const indexPath = path.join(__dirname, 'dist', 'index.html');
-      const content = fs.readFileSync(indexPath, 'utf-8');
-      res.writeHead(200, { 'Content-Type': 'text/html' });
-      return res.end(content);
-    } catch {
-      res.writeHead(404, { 'Content-Type': 'text/plain' });
-      return res.end('Not found');
-    }
+  if (!code) {
+    return res.redirect('/omniextract/?error=missing_code');
   }
 
-  // Serve static files
   try {
-    const filePath = path.join(__dirname, 'dist', pathname);
-    const stat = fs.statSync(filePath);
-    if (stat.isFile()) {
-      const ext = path.extname(filePath);
-      const mimeTypes: Record<string, string> = {
-        '.js': 'text/javascript',
-        '.css': 'text/css',
-        '.html': 'text/html',
-        '.json': 'application/json',
-        '.svg': 'image/svg+xml',
-        '.png': 'image/png',
-        '.jpg': 'image/jpeg',
-        '.gif': 'image/gif',
-      };
-      const contentType = mimeTypes[ext] || 'application/octet-stream';
-      const content = fs.readFileSync(filePath);
-      res.writeHead(200, { 'Content-Type': contentType });
-      return res.end(content);
-    }
-  } catch (err) {
-    // Fall through to 404
-  }
+    // Exchange auth code for tokens
+    const tokenResponse = await fetch('https://oauth2.googleapis.com/token', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        client_id:     GOOGLE_CLIENT_ID,
+        client_secret: GOOGLE_CLIENT_SECRET,
+        code,
+        grant_type:    'authorization_code',
+        redirect_uri:  REDIRECT_URI,
+      }),
+    });
 
-  res.writeHead(404, { 'Content-Type': 'text/plain' });
-  res.end('Not found');
+    if (!tokenResponse.ok) {
+      const err = await tokenResponse.json();
+      console.error('[OmniExtract] Token exchange failed:', err);
+      return res.redirect('/omniextract/?error=token_exchange_failed');
+    }
+
+    const tokens = await tokenResponse.json() as { id_token?: string; access_token?: string };
+
+    // Decode user info from JWT — no extra round-trip needed
+    if (!tokens.id_token) {
+      console.error('[OmniExtract] No id_token in response');
+      return res.redirect('/omniextract/?error=no_id_token');
+    }
+
+    const userInfo = decodeJWT(tokens.id_token);
+
+    const userJson = JSON.stringify({
+      id:    userInfo.sub,
+      name:  userInfo.name,
+      email: userInfo.email,
+    });
+
+    // Cookie readable by JS so AuthContext can hydrate user on page load
+    res.cookie('omniextract_user', Buffer.from(userJson).toString('base64'), {
+      httpOnly: false,
+      secure:   true,
+      sameSite: 'lax',
+      maxAge:   7 * 24 * 60 * 60 * 1000, // 7 days
+      path:     '/omniextract/',
+    });
+
+    return res.redirect('/omniextract/');
+  } catch (err) {
+    console.error('[OmniExtract] OAuth callback error:', err);
+    return res.redirect('/omniextract/?error=internal_error');
+  }
 });
 
-server.listen(PORT, '0.0.0.0', () => {
-  console.log(`OmniExtract server listening on port ${PORT}`);
+// ── Health check ──
+app.get(['/api/health', '/omniextract/api/health'], (_req, res) => {
+  res.json({ ok: true, service: 'omniextract', port: PORT });
+});
+
+// ── Serve SPA — index.html with strict no-cache ──
+const distDir = path.join(__dirname, 'dist');
+
+app.use('/omniextract', express.static(distDir, {
+  maxAge: '1y',
+  immutable: true,
+  index: false, // We handle index.html manually to set no-cache
+  setHeaders(res, filePath) {
+    if (filePath.endsWith('.html')) {
+      res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+      res.setHeader('Pragma', 'no-cache');
+      res.setHeader('Expires', '0');
+    }
+  },
+}));
+
+app.get(['/omniextract', '/omniextract/*'], (_req, res) => {
+  const indexPath = path.join(distDir, 'index.html');
+  if (!fs.existsSync(indexPath)) {
+    return res.status(404).send('App not built — run pnpm build');
+  }
+  res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+  res.setHeader('Pragma', 'no-cache');
+  res.setHeader('Expires', '0');
+  res.sendFile(indexPath);
+});
+
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`[OmniExtract] Server listening on http://localhost:${PORT}`);
+  console.log(`[OmniExtract] Redirect URI: ${REDIRECT_URI}`);
 });
