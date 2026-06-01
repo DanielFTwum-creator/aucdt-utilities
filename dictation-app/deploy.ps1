@@ -39,9 +39,9 @@ set -e
 if ! command -v pnpm &>/dev/null; then
   echo '[setup] Installing pnpm via corepack...'
   corepack enable 2>/dev/null || npm install -g pnpm --silent
-  export PATH="\$HOME/.local/share/pnpm:\$PATH"
+  export PATH="`$HOME/.local/share/pnpm:`$PATH"
 fi
-echo "[setup] Using pnpm \$(pnpm --version)"
+echo '[setup] pnpm version:' && pnpm --version
 
 echo '[1/5] Cleaning previous temp build...'
 rm -rf $buildDir
@@ -49,14 +49,18 @@ rm -rf $buildDir
 echo '[2/5] Cloning dictation-app from GitHub (sparse, depth 1)...'
 git clone --depth 1 --filter=blob:none --sparse '$repoUrl' $buildDir
 cd $buildDir
+# Remove monorepo workspace config — prevents pnpm treating this as a workspace
+rm -f pnpm-workspace.yaml package.json
 git sparse-checkout set dictation-app
 cd dictation-app
 
-echo '[3/5] Installing dependencies (pnpm)...'
-pnpm install --no-frozen-lockfile --silent
+echo '[3/5] Installing dependencies...'
+# pnpm install in isolation (no workspace parent)
+pnpm install --no-frozen-lockfile --ignore-workspace --silent 2>/dev/null \
+  || npm install --legacy-peer-deps --silent
 
 echo '[4/5] Building...'
-pnpm exec vite build
+pnpm exec vite build 2>/dev/null || npx vite build
 
 echo '[5/5] Deploying dist/ to web root...'
 mkdir -p $RemotePath

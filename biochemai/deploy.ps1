@@ -64,17 +64,20 @@ rm -rf $buildDir
 echo '[2/7] Cloning biochemai from GitHub (sparse, depth 1)...'
 git clone --depth 1 --filter=blob:none --sparse '$repoUrl' $buildDir
 cd $buildDir
+# Remove monorepo workspace config so pnpm treats this as a standalone project
+rm -f pnpm-workspace.yaml package.json
 git sparse-checkout set biochemai
 cd biochemai
 
 echo '[3/7] Injecting .env.local for Vite build...'
 cp /tmp/biochemai_env_$commit .env.local 2>/dev/null || echo 'Warning: .env.local not found — VITE_ vars will be empty'
 
-echo '[4/7] Installing dependencies (pnpm)...'
-pnpm install --no-frozen-lockfile --silent
+echo '[4/7] Installing dependencies...'
+pnpm install --no-frozen-lockfile --ignore-workspace --silent 2>/dev/null \
+  || npm install --legacy-peer-deps --silent
 
 echo '[5/7] Building...'
-pnpm exec vite build
+pnpm exec vite build 2>/dev/null || npx vite build
 
 echo '[6/7] Deploying dist/ to web root...'
 mkdir -p $RemotePath
