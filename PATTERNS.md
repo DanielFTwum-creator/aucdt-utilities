@@ -1711,18 +1711,18 @@ ssh -o StrictHostKeyChecking=no $RemoteHost $executeRestart
 
 ### Swagger Docs
 
-`https://portal.aucdt.edu.gh/aucdt-dev/swagger-ui/#/common-controller/sendMailUsingPOST`
+`https://api.techbridge.edu.gh/aucdt-dev/swagger-ui/#/common-controller/sendMailUsingPOST`
 
 ### Endpoint
 
 ```
-POST https://portal.aucdt.edu.gh/aucdt-dev/sendMail
+POST https://api.techbridge.edu.gh/aucdt-dev/sendMail
 Content-Type: application/json
 ```
 
 Set via `.env` (override for QA/UAT):
 ```
-SMTP_GATEWAY_URL=https://portal.aucdt.edu.gh/aucdt-dev/sendMail
+SMTP_GATEWAY_URL=https://api.techbridge.edu.gh/aucdt-dev/sendMail
 ```
 
 ### Request Payload
@@ -1741,7 +1741,7 @@ SMTP_GATEWAY_URL=https://portal.aucdt.edu.gh/aucdt-dev/sendMail
 ### Node.js Implementation
 
 ```typescript
-const SMTP_GATEWAY_URL = process.env.SMTP_GATEWAY_URL || 'https://portal.aucdt.edu.gh/aucdt-dev/sendMail';
+const SMTP_GATEWAY_URL = process.env.SMTP_GATEWAY_URL || 'https://api.techbridge.edu.gh/aucdt-dev/sendMail';
 
 const sendEmail = async (to: string, subject: string, message: string, fullName: string) => {
   const res = await fetch(SMTP_GATEWAY_URL, {
