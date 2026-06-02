@@ -70,6 +70,8 @@ export default defineConfig(({mode}) => {
     define: {
       // GEMINI_API_KEY removed for security: client bundle should not contain API keys.
       // If Gemini features are needed, implement server-side endpoints and call from client.
+      'import.meta.env.VITE_GOOGLE_CLIENT_ID': JSON.stringify(env.VITE_GOOGLE_CLIENT_ID),
+      'import.meta.env.VITE_GOOGLE_REDIRECT_URI': JSON.stringify(env.VITE_GOOGLE_REDIRECT_URI),
     },
     resolve: {
       alias: {
