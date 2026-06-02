@@ -1,20 +1,40 @@
 const router = require('express').Router();
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const nodemailer = require('nodemailer');
 const db = require('../db');
 const { auth, JWT_SECRET } = require('../middleware/auth');
 
-// Email transporter for 2FA OTP
-const transporter = nodemailer.createTransport({
-  host: process.env.SMTP_HOST || 'localhost',
-  port: process.env.SMTP_PORT || 587,
-  secure: process.env.SMTP_SECURE === 'true',
-  auth: process.env.SMTP_USER ? {
-    user: process.env.SMTP_USER,
-    pass: process.env.SMTP_PASS
-  } : undefined
-});
+// Email delivery — use AUCDT Send Platform when deployed, fall back to sendmail
+// TODO: switch SEND_MAIL_URL to https://portal.aucdt.edu.gh/aucdt-uat/sendMail once deployed
+const SEND_MAIL_URL = process.env.SEND_MAIL_URL || '';
+
+const nodemailer = require('nodemailer');
+const sendmailTransport = nodemailer.createTransport({ sendmail: true, path: '/usr/sbin/sendmail' });
+
+const sendViaPlatform = async (to, subject, html, fullName) => {
+  if (SEND_MAIL_URL) {
+    const emailData = {
+      applicantId: 'RMS-' + Date.now(),
+      fullName,
+      senderEmailId: 'noreply@techbridge.edu.gh',
+      receiverEmailId: to,
+      subject,
+      message: html,
+    };
+    const form = new globalThis.FormData();
+    form.append('emailData', JSON.stringify(emailData));
+    const res = await fetch(SEND_MAIL_URL, { method: 'POST', body: form });
+    if (!res.ok) throw new Error(`Send platform returned ${res.status}`);
+  } else {
+    // Fallback: local sendmail via Postfix
+    await sendmailTransport.sendMail({
+      from: 'noreply@techbridge.edu.gh',
+      to,
+      subject,
+      html,
+    });
+  }
+};
 
 // In-memory OTP store (for dev; use Redis in production)
 const otpStore = {};
@@ -26,26 +46,18 @@ const sendOTP = async (userId, email, fullName) => {
 
   otpStore[userId] = { otp, expiresAt };
 
-  // In development, log OTP to console; in production, send via email
   if (process.env.NODE_ENV === 'development') {
     console.log(`[2FA-OTP] User ${email}: ${otp}`);
     return true;
   }
 
   try {
-    await transporter.sendMail({
-      from: process.env.SMTP_FROM || 'noreply@techbridge.edu.gh',
-      to: email,
-      subject: 'TUC RMS — Two-Factor Authentication Code',
-      html: `
-        <h2>Two-Factor Authentication</h2>
-        <p>Hi ${fullName},</p>
-        <p>Your one-time password (OTP) is:</p>
-        <h1 style="font-family:monospace;font-size:32px;letter-spacing:4px;">${otp}</h1>
-        <p>This code expires in 10 minutes.</p>
-        <p>If you did not attempt to log in, please ignore this email.</p>
-      `
-    });
+    await sendViaPlatform(
+      email,
+      'TUC RMS — Your Login Code',
+      `Hi ${fullName}, your one-time login code is: <strong style="font-family:monospace;font-size:24px;letter-spacing:4px;">${otp}</strong>. Expires in 10 minutes.`,
+      fullName
+    );
     return true;
   } catch (err) {
     console.error('Failed to send OTP email:', err);
@@ -53,18 +65,16 @@ const sendOTP = async (userId, email, fullName) => {
   }
 };
 
-// Step 1: Login (credentials only)
+// Step 1: Login (email-only — OTP sent to inbox)
 router.post('/login', async (req, res) => {
   try {
-    const { email, password } = req.body;
-    if (!email || !password) return res.status(400).json({ message: 'Email and password required' });
+    const { email } = req.body;
+    if (!email) return res.status(400).json({ message: 'Email and password required' });
 
     const [rows] = await db.execute('SELECT * FROM tuc_rms_users WHERE email = ? AND is_active = 1', [email]);
-    if (!rows[0]) return res.status(401).json({ message: 'Invalid credentials' });
+    if (!rows[0]) return res.status(401).json({ message: 'Email not found' });
 
     const user = rows[0];
-    const match = await bcrypt.compare(password, user.password_hash);
-    if (!match) return res.status(401).json({ message: 'Invalid credentials' });
 
     // Send OTP
     const otpSent = await sendOTP(user.id, user.email, user.full_name);
