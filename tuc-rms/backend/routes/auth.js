@@ -4,36 +4,24 @@ const jwt = require('jsonwebtoken');
 const db = require('../db');
 const { auth, JWT_SECRET } = require('../middleware/auth');
 
-// Email delivery — use AUCDT Send Platform when deployed, fall back to sendmail
-// TODO: switch SEND_MAIL_URL to https://portal.aucdt.edu.gh/aucdt-uat/sendMail once deployed
-const SEND_MAIL_URL = process.env.SEND_MAIL_URL || '';
+// AUCDT Send Platform — POST /aucdt-dev/sendMail (application/json)
+// Swagger: portal.aucdt.edu.gh/aucdt-dev/swagger-ui/#/common-controller/sendMailUsingPOST
+const SMTP_GATEWAY_URL = process.env.SMTP_GATEWAY_URL || 'https://portal.aucdt.edu.gh/aucdt-dev/sendMail';
 
-const nodemailer = require('nodemailer');
-const sendmailTransport = nodemailer.createTransport({ sendmail: true, path: '/usr/sbin/sendmail' });
-
-const sendViaPlatform = async (to, subject, html, fullName) => {
-  if (SEND_MAIL_URL) {
-    const emailData = {
+const sendViaPlatform = async (to, subject, message, fullName) => {
+  const res = await fetch(SMTP_GATEWAY_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
       applicantId: 'RMS-' + Date.now(),
       fullName,
       senderEmailId: 'noreply@techbridge.edu.gh',
       receiverEmailId: to,
       subject,
-      message: html,
-    };
-    const form = new globalThis.FormData();
-    form.append('emailData', JSON.stringify(emailData));
-    const res = await fetch(SEND_MAIL_URL, { method: 'POST', body: form });
-    if (!res.ok) throw new Error(`Send platform returned ${res.status}`);
-  } else {
-    // Fallback: local sendmail via Postfix
-    await sendmailTransport.sendMail({
-      from: 'noreply@techbridge.edu.gh',
-      to,
-      subject,
-      html,
-    });
-  }
+      message,
+    }),
+  });
+  if (!res.ok) throw new Error(`SMTP gateway returned ${res.status}`);
 };
 
 // In-memory OTP store (for dev; use Redis in production)

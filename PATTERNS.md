@@ -1709,22 +1709,23 @@ ssh -o StrictHostKeyChecking=no $RemoteHost $executeRestart
 
 **What it is:** The shared institutional email delivery service for all TUC/AUCDT apps. Do NOT use nodemailer, sendmail, or SMTP directly. Always route through this service.
 
-### Endpoints
+### Swagger Docs
 
-| Environment | URL |
-|---|---|
-| Dev | `https://portal.aucdt.edu.gh/aucdt-dev/sendMail` |
-| QA | `https://portal.aucdt.edu.gh/aucdt-qa/sendMail` |
-| UAT/Prod | `https://portal.aucdt.edu.gh/aucdt-uat/sendMail` |
+`https://portal.aucdt.edu.gh/aucdt-dev/swagger-ui/#/common-controller/sendMailUsingPOST`
 
-Set via `.env`:
+### Endpoint
+
 ```
-SEND_MAIL_URL=https://portal.aucdt.edu.gh/aucdt-uat/sendMail
+POST https://portal.aucdt.edu.gh/aucdt-dev/sendMail
+Content-Type: application/json
 ```
 
-### Request Format
+Set via `.env` (override for QA/UAT):
+```
+SMTP_GATEWAY_URL=https://portal.aucdt.edu.gh/aucdt-dev/sendMail
+```
 
-`multipart/form-data` (or `application/x-www-form-urlencoded`) with a single field `emailData` containing a JSON string:
+### Request Payload
 
 ```json
 {
@@ -1737,36 +1738,31 @@ SEND_MAIL_URL=https://portal.aucdt.edu.gh/aucdt-uat/sendMail
 }
 ```
 
-Optional: append `attachment` as a file field for attachments.
-
 ### Node.js Implementation
 
 ```typescript
-const SEND_MAIL_URL = process.env.SEND_MAIL_URL || 'https://portal.aucdt.edu.gh/aucdt-uat/sendMail';
+const SMTP_GATEWAY_URL = process.env.SMTP_GATEWAY_URL || 'https://portal.aucdt.edu.gh/aucdt-dev/sendMail';
 
 const sendEmail = async (to: string, subject: string, message: string, fullName: string) => {
-  const emailData = {
-    applicantId: 'APP-' + Date.now(),
-    fullName,
-    senderEmailId: 'noreply@techbridge.edu.gh',
-    receiverEmailId: to,
-    subject,
-    message,
-  };
-  const form = new URLSearchParams();
-  form.append('emailData', JSON.stringify(emailData));
-  const res = await fetch(SEND_MAIL_URL, {
+  const res = await fetch(SMTP_GATEWAY_URL, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-    body: form.toString(),
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      applicantId: 'APP-' + Date.now(),
+      fullName,
+      senderEmailId: 'noreply@techbridge.edu.gh',
+      receiverEmailId: to,
+      subject,
+      message,
+    }),
   });
-  if (!res.ok) throw new Error(`Send platform returned ${res.status}`);
+  if (!res.ok) throw new Error(`SMTP gateway returned ${res.status}`);
 };
 ```
 
 ### Tester App
 
-Use `aucdt-sendmail-api-tester` to verify the service is reachable and test payloads before integrating.
+Use `aucdt-sendmail-api-tester` to verify the service is reachable before integrating.
 
 **Success Criteria:**
 - HTTP 2xx from the Send Platform endpoint
