@@ -92,9 +92,15 @@ export default function Login() {
           <div style={{ fontSize: 11, color: 'var(--tuc-muted)', padding: '10px 14px', background: 'rgba(107,0,32,0.04)', borderRadius: 8 }}>
             The link expires in <strong>15 minutes</strong> and can only be used once.
           </div>
+          <a
+            href={`https://mail.google.com/mail/u/?authuser=${encodeURIComponent(email)}`}
+            target="_blank" rel="noopener noreferrer"
+            style={{ display: 'inline-flex', alignItems: 'center', gap: 8, marginTop: 20, padding: '10px 20px', background: '#16a34a', color: '#fff', borderRadius: 8, fontSize: 13, fontWeight: 600, textDecoration: 'none' }}>
+            <span style={{ fontSize: 16 }}>📩</span> Open Gmail Inbox
+          </a>
           <button
             onClick={() => { setLinkSent(false); setEmail('') }}
-            style={{ marginTop: 20, background: 'none', border: 'none', color: 'var(--tuc-maroon)', fontSize: 13, cursor: 'pointer', textDecoration: 'underline' }}>
+            style={{ display: 'block', margin: '12px auto 0', background: 'none', border: 'none', color: 'var(--tuc-maroon)', fontSize: 12, cursor: 'pointer', textDecoration: 'underline' }}>
             Use a different email
           </button>
           <div style={{ textAlign: 'center', marginTop: 16, fontSize: 11, color: '#bbb' }}>
