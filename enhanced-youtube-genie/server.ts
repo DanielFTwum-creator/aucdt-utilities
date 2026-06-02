@@ -47,7 +47,7 @@ app.get(['/api/health', '/youtube-genie/api/health'], (_req, res) => { res.json(
 
 const distDir = path.join(__dirname, 'dist');
 app.use('/youtube-genie', express.static(distDir, { maxAge: '1y', immutable: true, index: false }));
-app.get(['/youtube-genie', '/youtube-genie/*'], (_req, res) => {
+app.get(['/youtube-genie', '/youtube-genie/*path'], (_req, res) => {
   const indexPath = path.join(distDir, 'index.html');
   if (!fs.existsSync(indexPath)) return res.status(404).send('App not built');
   res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');

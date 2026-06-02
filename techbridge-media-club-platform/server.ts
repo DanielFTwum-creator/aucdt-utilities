@@ -47,7 +47,7 @@ app.get(['/api/health', '/techbridge-media-club-platform/api/health'], (_req, re
 
 const distDir = path.join(__dirname, 'dist');
 app.use('/techbridge-media-club-platform', express.static(distDir, { maxAge: '1y', immutable: true, index: false }));
-app.get(['/techbridge-media-club-platform', '/techbridge-media-club-platform/*'], (_req, res) => {
+app.get(['/techbridge-media-club-platform', '/techbridge-media-club-platform/*path'], (_req, res) => {
   const indexPath = path.join(distDir, 'index.html');
   if (!fs.existsSync(indexPath)) return res.status(404).send('App not built');
   res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');

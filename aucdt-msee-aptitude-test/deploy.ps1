@@ -110,7 +110,7 @@ Log "INFO" "Step 5: Setting permissions..." Yellow
 ssh -o StrictHostKeyChecking=no $RemoteHost "chown -R techbridge.edu.gh_md:psaserv $RemotePath && chmod -R 755 $RemotePath && chmod 644 ${RemotePath}.htaccess 2>/dev/null; true" | Out-Null
 
 Log "INFO" "Step 6: Deploying backend files..." Yellow
-scp -o StrictHostKeyChecking=no server.js package.json pnpm-lock.yaml "${RemoteHost}:${RemotePath}" 2>$null | Out-Null
+scp -o StrictHostKeyChecking=no server.ts package.json pnpm-lock.yaml "${RemoteHost}:${RemotePath}" 2>$null | Out-Null
 if (Test-Path ".env.local") { scp -o StrictHostKeyChecking=no ".env.local" "${RemoteHost}:${RemotePath}.env" 2>$null | Out-Null }
 ssh -o StrictHostKeyChecking=no $RemoteHost "cd $RemotePath && pnpm install --prod --silent 2>/dev/null || npm install --omit=dev --silent"
 
@@ -118,11 +118,10 @@ Log "INFO" "Step 7: Restarting backend (PM2)..." Yellow
 $restartCmd = @"
 if command -v pm2 &>/dev/null; then
   if pm2 describe aucdt-msee-aptitude-test &>/dev/null; then
-    pm2 reload aucdt-msee-aptitude-test --update-env && echo 'pm2: reloaded aucdt-msee-aptitude-test'
-  else
-    cd $RemotePath && PORT=3000 pm2 start server.js --name aucdt-msee-aptitude-test --interpreter npx --interpreter-args tsx
-    echo 'pm2: started aucdt-msee-aptitude-test'
+    pm2 delete aucdt-msee-aptitude-test
   fi
+  cd $RemotePath && PORT=3011 pm2 start server.ts --name aucdt-msee-aptitude-test --interpreter npx --interpreter-args tsx
+  echo 'pm2: started aucdt-msee-aptitude-test'
   pm2 save --force &>/dev/null
 fi
 "@
@@ -131,7 +130,7 @@ ssh -o StrictHostKeyChecking=no $RemoteHost "echo $b64r | base64 -d | bash"
 
 Log "INFO" "Health check..." Yellow
 ssh -o StrictHostKeyChecking=no $RemoteHost "test -f ${RemotePath}index.html && echo 'OK index.html present' || echo 'MISSING index.html'"
-ssh -o StrictHostKeyChecking=no $RemoteHost "ss -tlnp | grep -q ':3000' && echo 'OK port 3000 listening' || echo 'WARN port 3000 not found'"
+ssh -o StrictHostKeyChecking=no $RemoteHost "ss -tlnp | grep -q ':3011' && echo 'OK port 3011 listening' || echo 'WARN port 3011 not found'"
 
 $elapsed = [math]::Round(((Get-Date) - $__deployStart).TotalSeconds, 1)
 $timeStr = if ($elapsed -ge 60) { "$([math]::Floor($elapsed/60))m $([math]::Round($elapsed%60,1))s" } else { "${elapsed}s" }
