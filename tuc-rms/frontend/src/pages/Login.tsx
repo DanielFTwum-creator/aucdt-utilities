@@ -15,6 +15,7 @@ export default function Login() {
   const [loading, setLoading] = useState(false)
   const [linkSent, setLinkSent] = useState(false)
   const [verifying, setVerifying] = useState(false)
+  const [linkError, setLinkError] = useState('')
 
   // Handle magic link click — ?token=&otp= in URL
   useEffect(() => {
@@ -33,7 +34,7 @@ export default function Login() {
       })
         .then(r => r.json().then(d => ({ ok: r.ok, data: d })))
         .then(({ ok, data }) => {
-          if (!ok) { toast.error(data.message || 'Invalid or expired link'); setVerifying(false); return }
+          if (!ok) { setLinkError(data.message || 'This link has expired or already been used.'); setVerifying(false); return }
           login(data.token, data.user)
           toast.success('Welcome back!')
           setTimeout(() => navigate(redirect), 400)
@@ -61,6 +62,35 @@ export default function Login() {
     } finally {
       setLoading(false)
     }
+  }
+
+  // Magic link error — expired or already used
+  if (linkError) {
+    return (
+      <div className="login-page">
+        <div className="login-card" style={{ textAlign: 'center' }}>
+          <div className="login-logo-container">
+            <img src={TUC_LOGO} alt="TUC Logo" className="login-logo" />
+            <div className="login-school-name">Techbridge University College</div>
+            <div className="login-system-name">Results Management System</div>
+          </div>
+          <div className="login-divider" />
+          <div style={{ fontSize: 36, marginBottom: 12 }}>🔗</div>
+          <div style={{ fontSize: 17, fontWeight: 800, color: 'var(--tuc-maroon)', marginBottom: 8 }}>Link expired</div>
+          <div style={{ fontSize: 13, color: 'var(--tuc-muted)', lineHeight: 1.7, marginBottom: 24 }}>
+            {linkError}<br />Login links can only be used once and expire after 15 minutes.
+          </div>
+          <button className="btn btn-primary"
+            onClick={() => { setLinkError(''); setFirstName(''); setLastName('') }}
+            style={{ width: '100%', justifyContent: 'center', padding: '11px', fontSize: 14 }}>
+            Request a new link
+          </button>
+          <div style={{ textAlign: 'center', marginTop: 16, fontSize: 11, color: '#bbb' }}>
+            © {new Date().getFullYear()} Techbridge University College · Design and Build a Nation
+          </div>
+        </div>
+      </div>
+    )
   }
 
   // Magic link verification in progress
