@@ -1,0 +1,138 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`App > matches snapshot 1`] = `
+<div>
+  <div
+    class="min-h-screen bg-gray-900 text-gray-100 flex flex-col items-center p-4 sm:p-6 lg:p-8 font-sans"
+  >
+    <div
+      class="w-full max-w-3xl mx-auto"
+    >
+      <header
+        class="text-center"
+      >
+        <h1
+          class="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight"
+        >
+          <span
+            class="bg-gradient-to-r from-blue-400 to-teal-300 text-transparent bg-clip-text"
+          >
+            OmniExtract
+          </span>
+        </h1>
+        <p
+          class="mt-4 text-lg sm:text-xl text-gray-400 max-w-2xl mx-auto"
+        >
+          Unlock data from your PDFs. Extract emails & invoice details with AI precision.
+        </p>
+      </header>
+      <main
+        class="mt-8 bg-gray-800/50 backdrop-blur-sm rounded-2xl shadow-2xl p-6 sm:p-8 border border-gray-700"
+      >
+        <div
+          class="mb-8 p-1.5 bg-gray-900/80 rounded-xl flex w-full max-w-lg mx-auto shadow-inner border border-gray-700"
+        >
+          <button
+            aria-pressed="true"
+            class="flex-1 text-center py-3 px-4 font-semibold rounded-lg transition-all duration-300 flex items-center justify-center gap-2 focus:outline-none focus:ring-4 bg-blue-600 text-white shadow-lg scale-105 focus:ring-blue-500 focus:ring-opacity-50"
+          >
+            <svg
+              class="h-5 w-5"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+            Extract Emails
+          </button>
+          <button
+            aria-pressed="false"
+            class="flex-1 text-center py-3 px-4 font-semibold rounded-lg transition-all duration-300 flex items-center justify-center gap-2 focus:outline-none focus:ring-4 bg-gray-700/50 text-gray-300 hover:bg-gray-600/50 focus:ring-blue-500 focus:ring-opacity-50"
+          >
+            <svg
+              class="h-5 w-5"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+            Extract Invoice Data
+          </button>
+        </div>
+        <div
+          class="text-center border-2 border-dashed border-gray-600 rounded-xl p-8 hover:border-blue-400 transition-colors duration-300"
+        >
+          <div
+            class="flex flex-col items-center"
+          >
+            <input
+              accept=".pdf"
+              class="hidden"
+              id="pdfFile"
+              type="file"
+            />
+            <label
+              class="cursor-pointer inline-flex items-center gap-3 bg-blue-600 text-white font-semibold py-3 px-6 rounded-lg shadow-lg hover:bg-blue-700 transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-blue-400 focus:ring-opacity-50"
+              for="pdfFile"
+            >
+              <svg
+                class="h-6 w-6"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+              Choose PDF File
+            </label>
+            <p
+              class="mt-4 text-sm text-gray-400"
+            >
+              or drag and drop it here
+            </p>
+          </div>
+        </div>
+      </main>
+      <footer
+        class="text-center mt-8 text-gray-500 text-sm"
+      >
+        <p>
+          © 
+          2026
+           OmniExtract. All rights reserved.
+        </p>
+        <p
+          class="mt-2"
+        >
+          <button
+            class="text-blue-400 hover:text-blue-300 hover:underline focus:outline-none focus:ring-2 focus:ring-blue-400 rounded"
+            type="button"
+          >
+            Download SRS Document
+          </button>
+        </p>
+      </footer>
+    </div>
+  </div>
+</div>
+`;
