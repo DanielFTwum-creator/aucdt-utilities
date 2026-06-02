@@ -39,12 +39,6 @@ const nextCampusFrame = () => {
 };
 
 const sendMagicLink = async (userId, email, fullName, role, sessionToken, otp) => {
-  if (process.env.NODE_ENV === 'development') {
-    const link = `${APP_BASE}/?token=${encodeURIComponent(sessionToken)}&otp=${encodeURIComponent(otp)}`;
-    console.log(`[MAGIC-LINK] ${email}: ${link}`);
-    return true;
-  }
-
   const magicLink = `${APP_BASE}/?token=${encodeURIComponent(sessionToken)}&otp=${encodeURIComponent(otp)}`;
   const campusImg = nextCampusFrame();
   const html = `<!DOCTYPE html>
