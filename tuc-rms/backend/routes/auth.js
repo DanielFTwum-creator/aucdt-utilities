@@ -24,59 +24,68 @@ const sendViaPlatform = async (to, subject, message, fullName) => {
   if (!res.ok) throw new Error(`SMTP gateway returned ${res.status}`);
 };
 
-// In-memory OTP store (for dev; use Redis in production)
+// In-memory OTP store — keyed by userId, cleared on use
 const otpStore = {};
 
-// Generate and send OTP
-const sendOTP = async (userId, email, fullName) => {
-  const otp = Math.floor(100000 + Math.random() * 900000).toString();
-  const expiresAt = Date.now() + 10 * 60 * 1000; // 10 minutes
+// Role → landing page mapping
+const ROLE_LANDING = {
+  registrar:  '/dashboard',
+  qa_officer: '/dashboard',
+  lecturer:   '/courses',
+  hod:        '/courses',
+  ict:        '/dashboard',
+};
 
-  otpStore[userId] = { otp, expiresAt };
+// Generate and send magic login link
+const sendMagicLink = async (userId, email, fullName, role, sessionToken, otp) => {
+  const RMS_BASE = process.env.RMS_BASE_URL || 'https://rms.techbridge.edu.gh';
+  const landing = ROLE_LANDING[role] || '/dashboard';
+  const magicLink = `${RMS_BASE}/login?token=${encodeURIComponent(sessionToken)}&otp=${encodeURIComponent(otp)}&redirect=${encodeURIComponent(landing)}`;
 
   if (process.env.NODE_ENV === 'development') {
-    console.log(`[2FA-OTP] User ${email}: ${otp}`);
+    console.log(`[MAGIC-LINK] ${email}: ${magicLink}`);
     return true;
   }
 
-  try {
-    const html = `<!DOCTYPE html>
+  const html = `<!DOCTYPE html>
 <html lang="en">
 <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
 <body style="margin:0;padding:0;background:#f4f4f4;font-family:Arial,sans-serif;">
   <table width="100%" cellpadding="0" cellspacing="0" style="background:#f4f4f4;padding:32px 0;">
     <tr><td align="center">
       <table width="560" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:8px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.08);">
-        <!-- Header -->
         <tr>
           <td style="background:#6b0020;padding:28px 32px;text-align:center;">
             <div style="color:#f5a800;font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;margin-bottom:6px;">Techbridge University College</div>
             <div style="color:#ffffff;font-size:18px;font-weight:700;letter-spacing:1px;">Results Management System</div>
           </td>
         </tr>
-        <!-- Body -->
         <tr>
           <td style="padding:40px 32px;">
             <p style="margin:0 0 8px;font-size:15px;color:#444;">Hi <strong>${fullName}</strong>,</p>
-            <p style="margin:0 0 28px;font-size:14px;color:#666;line-height:1.6;">
-              You requested a login code for the TUC Results Management System. Use the code below to complete your sign-in.
+            <p style="margin:0 0 32px;font-size:14px;color:#666;line-height:1.6;">
+              Click the button below to sign in to the TUC Results Management System. This link expires in <strong>15 minutes</strong> and can only be used once.
             </p>
-            <!-- OTP Box -->
             <table width="100%" cellpadding="0" cellspacing="0">
-              <tr><td align="center" style="padding:24px 0;">
-                <div style="display:inline-block;background:#f9f3e8;border:2px solid #f5a800;border-radius:8px;padding:20px 40px;">
-                  <div style="font-size:11px;color:#999;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;">Your Login Code</div>
-                  <div style="font-size:40px;font-weight:700;letter-spacing:10px;color:#6b0020;font-family:monospace;">${otp}</div>
-                  <div style="font-size:12px;color:#999;margin-top:8px;">Expires in 10 minutes</div>
-                </div>
+              <tr><td align="center" style="padding:8px 0 32px;">
+                <a href="${magicLink}"
+                   style="display:inline-block;background:#6b0020;color:#ffffff;font-size:15px;font-weight:700;text-decoration:none;padding:16px 40px;border-radius:8px;letter-spacing:0.5px;">
+                  Sign In to RMS &rarr;
+                </a>
               </td></tr>
             </table>
-            <p style="margin:24px 0 0;font-size:13px;color:#999;line-height:1.6;">
-              If you did not request this code, please ignore this email. Your account remains secure.
+            <p style="margin:0 0 12px;font-size:12px;color:#aaa;line-height:1.6;">
+              Button not working? Copy and paste this link into your browser:
+            </p>
+            <p style="margin:0;font-size:11px;color:#aaa;word-break:break-all;line-height:1.6;">
+              <a href="${magicLink}" style="color:#6b0020;">${magicLink}</a>
+            </p>
+            <hr style="border:none;border-top:1px solid #eee;margin:28px 0;">
+            <p style="margin:0;font-size:12px;color:#bbb;line-height:1.6;">
+              If you did not request this link, please ignore this email. Your account remains secure.
             </p>
           </td>
         </tr>
-        <!-- Footer -->
         <tr>
           <td style="background:#f9f9f9;border-top:1px solid #eee;padding:16px 32px;text-align:center;">
             <p style="margin:0;font-size:11px;color:#bbb;">
@@ -89,20 +98,17 @@ const sendOTP = async (userId, email, fullName) => {
   </table>
 </body>
 </html>`;
-    await sendViaPlatform(
-      email,
-      'TUC RMS — Your Login Code',
-      html,
-      fullName
-    );
+
+  try {
+    await sendViaPlatform(email, 'Sign in to TUC RMS', html, fullName);
     return true;
   } catch (err) {
-    console.error('Failed to send OTP email:', err);
+    console.error('Failed to send magic link:', err);
     return false;
   }
 };
 
-// Step 1: Login (email-only — OTP sent to inbox)
+// Step 1: Login — sends magic link to inbox
 router.post('/login', async (req, res) => {
   try {
     const { email } = req.body;
@@ -113,17 +119,18 @@ router.post('/login', async (req, res) => {
 
     const user = rows[0];
 
-    // Send OTP
-    const otpSent = await sendOTP(user.id, user.email, user.full_name);
-    if (!otpSent) return res.status(500).json({ message: 'Failed to send OTP' });
-
-    // Return temporary session token (expires in 15 minutes)
+    // Generate OTP + session token together so both go into the magic link
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    otpStore[user.id] = { otp, expiresAt: Date.now() + 15 * 60 * 1000 };
     const sessionToken = jwt.sign({ id: user.id, pending_2fa: true }, JWT_SECRET, { expiresIn: '15m' });
+
+    const sent = await sendMagicLink(user.id, user.email, user.full_name, user.role, sessionToken, otp);
+    if (!sent) return res.status(500).json({ message: 'Failed to send login link' });
 
     res.json({
       pending_2fa: true,
       session_token: sessionToken,
-      message: 'OTP sent to your email'
+      message: 'Login link sent to your email'
     });
   } catch (err) {
     console.error(err);
