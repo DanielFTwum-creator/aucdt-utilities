@@ -76,7 +76,7 @@ const Module7UxUiDesign: React.FC = () => {
   };
  
   return (
-    <div className="max-w-5xl mx-auto">
+    <div className="max-w-7xl mx-auto">
       <div className="bg-[var(--color-background-card)] p-6 rounded-lg border border-[var(--color-border-card)] shadow-lg mb-8">
         <label htmlFor="prompt" className="block text-sm font-medium text-[var(--color-foreground-muted)] mb-2 font-inter">
           UI Prompt

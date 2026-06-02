@@ -29,7 +29,7 @@ const Module8Branding: React.FC = () => {
     };
 
     return (
-        <div className="max-w-6xl mx-auto space-y-8 animate-fade-in font-inter">
+        <div className="max-w-7xl mx-auto space-y-8 animate-fade-in font-inter">
             <div className="bg-[var(--color-background-card)] p-8 rounded-lg border border-[var(--color-border-card)] shadow-2xl">
                 <h3 className="text-2xl font-bold mb-8 text-[var(--color-foreground)] font-playfair border-l-4 border-[var(--color-primary)] pl-4">Institutional Identity Designer</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
