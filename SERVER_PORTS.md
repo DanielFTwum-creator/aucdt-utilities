@@ -13,6 +13,7 @@ Each app's Node.js/Express backend listens on a unique port. Apache mod_rewrite 
 | Email Drafter | `/email-drafter/` | 3007 | ✅ Configured | Via `process.env.PORT \|\| 3007` |
 | Deliberate Magic Reader | `/magic-reader/` | 3008 | ✅ Configured | Via `process.env.PORT \|\| 3008` |
 | Deep Dub Vibes Player | `/deep-dub-vibes-player/` | 3009 | ✅ Configured | Via `process.env.PORT \|\| 3009` |
+| Drumming for SEL (dfs-website) | `/dfs-website/` | 3010 | ✅ Configured | Via `process.env.PORT \|\| 3010` |
 
 ---
 
