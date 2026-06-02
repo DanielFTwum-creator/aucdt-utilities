@@ -12,7 +12,7 @@ $ErrorActionPreference = 'Stop'
 
 $REMOTE      = 'root@techbridge.edu.gh'
 $DEPLOY_PATH = '/var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/dfs-website'
-$PORT        = 3000
+$PORT        = 3010
 $PM2_APP     = 'dfs-website'
 $HEALTH_URL  = 'https://ai-tools.techbridge.edu.gh/dfs-website'
 $GITHUB_REPO = 'https://github.com/DanielFTwum-creator/aucdt-utilities'
