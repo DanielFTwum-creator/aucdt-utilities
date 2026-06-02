@@ -173,7 +173,7 @@ RewriteRule ^ index.html [QSA,L]
 <FilesMatch "index\.html$">
     Header set Cache-Control "no-cache, no-store, must-revalidate"
 </FilesMatch>
-'@
+"@
 $localHtaccess = [System.IO.Path]::Combine([System.IO.Path]::GetTempPath(), "omniextract_htaccess_$([Guid]::NewGuid().ToString('N')).txt")
 Write-LfFile -path $localHtaccess -content $htaccessContent
 & $SCP @SSH_OPTS $localHtaccess "${REMOTE}:${DEPLOY_PATH}/.htaccess"
