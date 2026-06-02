@@ -15,7 +15,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const SMTP_GATEWAY_URL = process.env.SMTP_GATEWAY_URL || 'https://api.techbridge.edu.gh/aucdt-dev/sendMail';
 const JWT_SECRET = process.env.JWT_SECRET || 'tuc_rms_jwt_secret_2026_secure';
 const RMS_BASE = process.env.RMS_BASE_URL || 'https://ai-tools.techbridge.edu.gh';
-const APP_BASE = `${RMS_BASE}/dmcdai-digital-media-communication-design`;
+const APP_BASE = `${RMS_BASE}/dmcdai`;
 
 const tlsAgent = new https.Agent({ rejectUnauthorized: false });
 
