@@ -29,7 +29,7 @@ const Module4Personalization: React.FC = () => {
   };
 
   return (
-    <div className="max-w-7xl mx-auto space-y-8 animate-fade-in">
+    <div className="w-full space-y-8 animate-fade-in">
       <div className="bg-[var(--color-background-card)] p-6 rounded-lg border border-[var(--color-border-card)] shadow-lg">
         <h3 className="text-xl font-semibold mb-6 text-[var(--color-foreground)] font-playfair">Audience Personalization Engine</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

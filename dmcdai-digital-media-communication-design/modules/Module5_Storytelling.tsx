@@ -69,7 +69,7 @@ const Module5Storytelling: React.FC = () => {
   };
 
   return (
-    <div className="max-w-7xl mx-auto h-[75vh] flex flex-col">
+    <div className="w-full h-[75vh] flex flex-col">
       <div 
         ref={chatContainerRef}
         className="flex-1 bg-[var(--color-background-card)]/50 p-6 rounded-t-lg border border-b-0 border-[var(--color-border-card)] overflow-y-auto space-y-4"

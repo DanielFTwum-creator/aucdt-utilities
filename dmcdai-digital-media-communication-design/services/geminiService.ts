@@ -129,7 +129,8 @@ export const generateImage = async (prompt: string, base64Image?: string, mimeTy
     await handleSimulator();
     addLog(`Initiating image generation: "${prompt.substring(0, 30)}..."`);
 
-    const response = await fetch('/api/generate-image', {
+    const url = (import.meta.env.BASE_URL || '/') + 'api/generate-image';
+    const response = await fetch(url.replace('//', '/'), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ prompt, base64Image, mimeType })
