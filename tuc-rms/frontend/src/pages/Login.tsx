@@ -39,7 +39,7 @@ export default function Login() {
           toast.success('Welcome back!')
           setTimeout(() => navigate(redirect), 400)
         })
-        .catch(() => { toast.error('Network error'); setVerifying(false) })
+        .catch((err) => { setLinkError(`Network error — please try again. (${err?.message || 'fetch failed'})`); setVerifying(false) })
     }
   }, [])
 
