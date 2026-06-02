@@ -101,6 +101,7 @@ log '[3/7] Injecting .env for Vite build...'
 cp /tmp/.env.dfs-website .env.local
 
 log '[4/7] Installing dependencies...'
+pnpm approve-builds || true
 pnpm install --config.ignore-scripts=false --frozen-lockfile --silent 2>/dev/null || pnpm install --config.ignore-scripts=false --no-frozen-lockfile --silent
 
 log '[5/7] Building...'
@@ -114,6 +115,7 @@ cp index.html "`$DEPLOY_PATH/dist/index.html" 2>/dev/null || true
 log '[7/7] Installing backend deps...'
 cp server.ts package.json pnpm-lock.yaml "`$DEPLOY_PATH/" 2>/dev/null || true
 cd "`$DEPLOY_PATH"
+pnpm approve-builds || true
 pnpm install --config.ignore-scripts=false --prod --silent 2>/dev/null || npm install --omit=dev --silent
 
 log 'Build and deploy complete.'
