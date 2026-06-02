@@ -62,7 +62,7 @@ const Module6SentimentAnalysis: React.FC = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8">
+    <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8">
       <div className="bg-[var(--color-background-card)] p-6 rounded-lg border border-[var(--color-border-card)] shadow-lg">
         <label htmlFor="text" className="block text-sm font-medium text-[var(--color-foreground-muted)] mb-2 font-inter">
           Text to Analyse

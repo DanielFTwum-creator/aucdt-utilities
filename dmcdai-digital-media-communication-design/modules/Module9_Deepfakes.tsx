@@ -43,7 +43,7 @@ const Module9Deepfakes: React.FC = () => {
     };
 
     return (
-        <div className="max-w-4xl mx-auto space-y-8 animate-fade-in font-inter">
+        <div className="max-w-7xl mx-auto space-y-8 animate-fade-in font-inter">
             <div className="bg-[var(--color-background-card)] p-8 rounded-lg border border-[var(--color-border-card)] shadow-2xl relative overflow-hidden">
                 {/* Decorative Pattern */}
                 <div className="absolute top-0 right-0 w-32 h-32 opacity-5 pointer-events-none">
