@@ -130,13 +130,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const logout = async () => {
+    // Clear state first so AppWithAuth re-renders to LoginView before redirect
+    setUser(null);
+    setIsAuthenticated(false);
     localStorage.removeItem('techbridge_ai_blueprint_user');
-    document.cookie = 'blueprint_user=; max-age=0; path=/blueprint/; secure; samesite=lax';
+    // Clear cookie with all matching attributes to ensure immediate removal
+    document.cookie = 'blueprint_user=; max-age=0; path=/blueprint/';
+    document.cookie = 'blueprint_user=; max-age=0; path=/';
     try {
       await fetch('/api/auth/logout', { method: 'POST', credentials: 'include' }).catch(() => {});
     } finally {
-      setUser(null);
-      setIsAuthenticated(false);
       window.location.href = '/blueprint/';
     }
   };

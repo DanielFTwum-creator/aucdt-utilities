@@ -665,16 +665,8 @@ export default function App() {
   }
 
   if (!user) {
-    // Firebase auth not initialized yet, show loading
-    // OAuth auth is handled by AppWithAuth component
-    return (
-      <div className="h-screen w-screen bg-bg-main flex items-center justify-center p-6 select-none font-sans">
-        <div className="flex flex-col items-center">
-          <div className="w-12 h-12 border-4 border-slate-900/10 border-t-slate-900 rounded-full animate-spin"></div>
-          <p className="text-xs text-text-tertiary mt-4 uppercase tracking-wider">Initializing Blueprint...</p>
-        </div>
-      </div>
-    );
+    // Auth gate is handled by AppWithAuth — return null to avoid spinner loop on logout
+    return null;
   }
 
   return (
