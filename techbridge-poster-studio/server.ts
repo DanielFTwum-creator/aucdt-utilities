@@ -1,5 +1,6 @@
 
 import express from "express";
+import cookieParser from "cookie-parser";
 import { createServer as createViteServer } from "vite";
 import path from "path";
 import fs from "fs";
@@ -10,13 +11,23 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
+function decodeJWT(token: string): Record<string, string> {
+  const parts = token.split('.');
+  if (parts.length !== 3) throw new Error('Invalid JWT');
+  return JSON.parse(Buffer.from(parts[1], 'base64').toString('utf-8'));
+}
+
 async function startServer() {
   const app = express();
   const PORT = process.env.PORT || 3000;
   const NODE_ENV = process.env.NODE_ENV || 'development';
+  const GOOGLE_CLIENT_ID = process.env.VITE_GOOGLE_CLIENT_ID || '';
+  const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET || '';
+  const REDIRECT_URI = process.env.VITE_GOOGLE_REDIRECT_URI || 'https://ai-tools.techbridge.edu.gh/poster/callback';
 
   app.use(express.json({ limit: '50mb' }));
   app.use(express.urlencoded({ limit: '50mb', extended: true }));
+  app.use(cookieParser());
 
   // CORS headers for mobile app
   app.use((req, res, next) => {
@@ -24,6 +35,55 @@ async function startServer() {
     res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
     res.header('Access-Control-Allow-Headers', 'Content-Type');
     next();
+  });
+
+  // OAuth callback handler
+  app.get(['/callback', '/poster/callback'], async (req, res) => {
+    const { code, error } = req.query as Record<string, string>;
+    if (error) return res.redirect(`/poster/?error=${encodeURIComponent(error)}`);
+    if (!code) return res.redirect('/poster/?error=missing_code');
+    try {
+      const tokenResponse = await fetch('https://oauth2.googleapis.com/token', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          client_id: GOOGLE_CLIENT_ID,
+          client_secret: GOOGLE_CLIENT_SECRET,
+          code,
+          grant_type: 'authorization_code',
+          redirect_uri: REDIRECT_URI,
+        }),
+      });
+      if (!tokenResponse.ok) {
+        const e = await tokenResponse.json();
+        console.error('[techbridge-poster-studio] token failed:', e);
+        return res.redirect('/poster/?error=token_exchange_failed');
+      }
+      const tokens = (await tokenResponse.json()) as { id_token?: string };
+      if (!tokens.id_token) return res.redirect('/poster/?error=no_id_token');
+      const userInfo = decodeJWT(tokens.id_token);
+      res.cookie(
+        'techbridge-poster-studio_user',
+        Buffer.from(
+          JSON.stringify({
+            id: userInfo.sub,
+            name: userInfo.name,
+            email: userInfo.email,
+          })
+        ).toString('base64'),
+        {
+          httpOnly: false,
+          secure: true,
+          sameSite: 'lax',
+          maxAge: 7 * 24 * 60 * 60 * 1000,
+          path: '/poster/',
+        }
+      );
+      return res.redirect('/poster/');
+    } catch (err) {
+      console.error('[techbridge-poster-studio] OAuth error:', err);
+      return res.redirect('/poster/?error=internal_error');
+    }
   });
 
   app.post("/api/generate", async (req, res) => {
