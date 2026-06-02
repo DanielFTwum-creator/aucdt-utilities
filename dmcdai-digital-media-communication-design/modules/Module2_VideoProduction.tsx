@@ -12,7 +12,7 @@ const Module2VideoProduction: React.FC = () => {
 
   if (!API_KEY) {
     return (
-      <div className="max-w-7xl mx-auto text-center bg-[var(--color-background-card)] p-8 rounded-lg border border-[var(--color-primary)]/50 font-inter">
+      <div className="w-full text-center bg-[var(--color-background-card)] p-8 rounded-lg border border-[var(--color-primary)]/50 font-inter">
         <h2 className="text-2xl font-bold text-[var(--color-primary)] mb-4 font-playfair">API Key Required</h2>
         <p className="text-[var(--color-foreground-muted)]">
           Video generation requires a Gemini API key with VEO access. Please set <code className="font-mono text-sm bg-[var(--color-background-card-hover)] px-1 rounded">VITE_GEMINI_API_KEY</code> in your <code className="font-mono text-sm bg-[var(--color-background-card-hover)] px-1 rounded">.env.local</code> file and restart the dev server.
@@ -49,7 +49,7 @@ const Module2VideoProduction: React.FC = () => {
 
 
   return (
-    <div className="max-w-7xl mx-auto">
+    <div className="w-full">
       <div className="bg-[var(--color-background-card)] p-6 rounded-lg border border-[var(--color-border-card)] shadow-lg">
         <label htmlFor="prompt" className="block text-sm font-medium text-[var(--color-foreground-muted)] mb-2 font-inter">
           Video Prompt
@@ -79,7 +79,7 @@ const Module2VideoProduction: React.FC = () => {
         {videoUrl && (
           <div className="bg-[var(--color-background-card)] p-4 rounded-lg border border-[var(--color-border-card)]">
             <h3 className="text-lg font-semibold mb-4 text-center text-[var(--color-foreground)]">Generated Video</h3>
-            <video src={videoUrl} controls autoPlay loop className="rounded-md w-full max-w-7xl mx-auto shadow-2xl" />
+            <video src={videoUrl} controls autoPlay loop className="rounded-md w-full w-full shadow-2xl" />
           </div>
         )}
       </div>

@@ -37,7 +37,7 @@ const Module3ContentCreation: React.FC = () => {
   };
 
   return (
-    <div className="max-w-7xl mx-auto">
+    <div className="w-full">
       <div className="bg-[var(--color-background-card)] p-6 rounded-lg border border-[var(--color-border-card)] shadow-lg grid grid-cols-1 md:grid-cols-3 gap-4">
         <div className="md:col-span-2">
             <label htmlFor="topic" className="block text-sm font-medium text-[var(--color-foreground-muted)] mb-2 font-inter">
