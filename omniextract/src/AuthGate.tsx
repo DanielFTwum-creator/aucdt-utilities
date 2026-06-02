@@ -131,41 +131,56 @@ export function AuthGate({ children, onLogout }: { children: React.ReactNode; on
             position: relative;
             z-index: 1;
           }
+          @keyframes emanate {
+            0% { opacity: 0; transform: translate(0, 0) scale(0.5); }
+            20% { opacity: 1; transform: translate(4px, -4px) scale(1); }
+            80% { opacity: 0.8; transform: translate(12px, -12px) scale(1.1); }
+            100% { opacity: 0; transform: translate(16px, -16px) scale(1.2); }
+          }
         `}
       </style>
       <div style={{minHeight:'100vh',background:'#f7f5f0',display:'flex',alignItems:'center',justifyContent:'center',fontFamily:'Inter,system-ui,sans-serif',padding:'16px', position: 'relative', overflow: 'hidden'}}>
         
         {/* Background Animated SVGs */}
-        <svg className="bg-svg" style={{ top: '10%', left: '10%', width: '120px', animation: 'float-pdf 8s ease-in-out infinite' }} viewBox="0 0 24 24" fill="none" stroke="#1a1f3c" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+        <svg className="bg-svg" style={{ top: '10%', left: '10%', width: '120px', animation: 'float-pdf 8s ease-in-out infinite', overflow: 'visible' }} viewBox="0 0 24 24" fill="none" stroke="#1a1f3c" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
           <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
           <polyline points="14 2 14 8 20 8"></polyline>
           <line x1="16" y1="13" x2="8" y2="13"></line>
           <line x1="16" y1="17" x2="8" y2="17"></line>
           <polyline points="10 9 9 9 8 9"></polyline>
+          <text x="26" y="-4" fill="#2563eb" fontSize="4" fontWeight="bold" stroke="none" style={{animation: 'emanate 3s ease-out infinite 0s'}}>Extract</text>
+          <text x="28" y="12" fill="#2563eb" fontSize="3" stroke="none" style={{animation: 'emanate 3s ease-out infinite 1s'}}>Data</text>
+          <text x="22" y="24" fill="#2563eb" fontSize="5" fontWeight="bold" stroke="none" style={{animation: 'emanate 3s ease-out infinite 2s'}}>Text</text>
         </svg>
 
-        <svg className="bg-svg" style={{ top: '60%', left: '15%', width: '80px', animation: 'float-pdf-reverse 12s ease-in-out infinite' }} viewBox="0 0 24 24" fill="none" stroke="#1a1f3c" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+        <svg className="bg-svg" style={{ top: '60%', left: '15%', width: '80px', animation: 'float-pdf-reverse 12s ease-in-out infinite', overflow: 'visible' }} viewBox="0 0 24 24" fill="none" stroke="#1a1f3c" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
           <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
           <polyline points="14 2 14 8 20 8"></polyline>
           <line x1="16" y1="13" x2="8" y2="13"></line>
           <line x1="16" y1="17" x2="8" y2="17"></line>
           <polyline points="10 9 9 9 8 9"></polyline>
+          <text x="24" y="-2" fill="#2563eb" fontSize="5" fontWeight="bold" stroke="none" style={{animation: 'emanate 3.5s ease-out infinite 0.5s'}}>JSON</text>
+          <text x="28" y="16" fill="#2563eb" fontSize="3" stroke="none" style={{animation: 'emanate 3.5s ease-out infinite 1.5s'}}>Table</text>
         </svg>
 
-        <svg className="bg-svg" style={{ top: '20%', right: '15%', width: '150px', animation: 'float-pdf-reverse 10s ease-in-out infinite' }} viewBox="0 0 24 24" fill="none" stroke="#1a1f3c" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+        <svg className="bg-svg" style={{ top: '20%', right: '15%', width: '150px', animation: 'float-pdf-reverse 10s ease-in-out infinite', overflow: 'visible' }} viewBox="0 0 24 24" fill="none" stroke="#1a1f3c" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
           <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
           <polyline points="14 2 14 8 20 8"></polyline>
           <line x1="16" y1="13" x2="8" y2="13"></line>
           <line x1="16" y1="17" x2="8" y2="17"></line>
           <polyline points="10 9 9 9 8 9"></polyline>
+          <text x="-12" y="0" fill="#2563eb" fontSize="4" fontWeight="bold" stroke="none" style={{animation: 'emanate 4s ease-out infinite 0s'}}>Parse</text>
+          <text x="-18" y="14" fill="#2563eb" fontSize="5" stroke="none" style={{animation: 'emanate 4s ease-out infinite 1.3s'}}>Export</text>
         </svg>
 
-        <svg className="bg-svg" style={{ bottom: '15%', right: '10%', width: '100px', animation: 'float-pdf 9s ease-in-out infinite' }} viewBox="0 0 24 24" fill="none" stroke="#1a1f3c" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+        <svg className="bg-svg" style={{ bottom: '15%', right: '10%', width: '100px', animation: 'float-pdf 9s ease-in-out infinite', overflow: 'visible' }} viewBox="0 0 24 24" fill="none" stroke="#1a1f3c" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
           <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
           <polyline points="14 2 14 8 20 8"></polyline>
           <line x1="16" y1="13" x2="8" y2="13"></line>
           <line x1="16" y1="17" x2="8" y2="17"></line>
           <polyline points="10 9 9 9 8 9"></polyline>
+          <text x="-16" y="-2" fill="#2563eb" fontSize="4" fontWeight="bold" stroke="none" style={{animation: 'emanate 3.2s ease-out infinite 0.2s'}}>Analyze</text>
+          <text x="-10" y="22" fill="#2563eb" fontSize="3" stroke="none" style={{animation: 'emanate 3.2s ease-out infinite 1.8s'}}>Structure</text>
         </svg>
 
         <div className="login-card" style={{background:'#fff',padding:'40px',borderRadius:'16px',boxShadow:'0 4px 24px rgba(0,0,0,0.10)',width:'100%',maxWidth:'420px'}}>
