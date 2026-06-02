@@ -38,6 +38,7 @@ try { git push origin $branch 2>&1 | Out-Null } catch { Log "WARN" "git push fai
 if ($Build) {
     Log "INFO" "Step 3: Server-side build (git clone + pnpm build)..." Yellow
     $buildDir = "/tmp/dmcdai_deploy_$commit"
+    scp -o StrictHostKeyChecking=no ".env.local" "${RemoteHost}:/tmp/.env.dmcdai" 2>$null | Out-Null
     $serverScript = @"
 set -e
 log() { echo "[`$(date '+%Y-%m-%d %H:%M:%S')][SERVER] `$1"; }
@@ -54,8 +55,10 @@ cd $buildDir
 git sparse-checkout set dmcdai-digital-media-communication-design
 cd dmcdai-digital-media-communication-design
 log '[3/5] Installing dependencies...'
+pnpm approve-builds || true
 npm install --silent
 log '[4/5] Building...'
+cp /tmp/.env.dmcdai .env.local
 npm run build
 log '[5/5] Deploying dist/ to web root...'
 mkdir -p $RemotePath
