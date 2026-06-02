@@ -47,8 +47,8 @@ Comprehensive results tracking and lifecycle management platform for Techbridge 
 | Build Tool | Vite | 8.0.10 |
 | Backend | Node.js / Express 5 | 5.2.1 |
 | Database | MySQL / MariaDB | 5.7+ |
-| Authentication | JWT + Rate Limiting | jsonwebtoken 9.0.3 |
-| Password | bcryptjs | 3.0.3 |
+| Authentication | Passwordless magic link + JWT | jsonwebtoken 9.0.3 |
+| SMTP Gateway | api.techbridge.edu.gh/aucdt-dev/sendMail | — |
 | Testing | Playwright | 1.49.0 |
 | Mobile | Capacitor | 8.3.3 |
 | Theme | localStorage + CSS vars | — |
@@ -79,17 +79,18 @@ Comprehensive results tracking and lifecycle management platform for Techbridge 
 ## 3. FUNCTIONAL REQUIREMENTS
 
 ### FR-AUTH (Authentication & Session)
-- **FR-AUTH-001:** JWT login with email/password (bcryptjs hashing)
+- **FR-AUTH-001:** Passwordless magic link authentication — user enters First Name + Last Name; system assembles `firstname.lastname@techbridge.edu.gh` and sends a signed magic link via the TUC SMTP gateway (`POST https://api.techbridge.edu.gh/aucdt-dev/sendMail`); link embeds a JWT + OTP and expires after 15 minutes; single-use
 - **FR-AUTH-002:** Persistent session with localStorage token
-- **FR-AUTH-003:** Role-based access control (registrar, qa_officer, lecturer)
+- **FR-AUTH-003:** Role-based access control (registrar, qa_officer, ict, lecturer, hod); registrar/qa_officer/ict land on `/dashboard`; lecturer/hod land on `/courses`
 - **FR-AUTH-004:** Session inactivity timeout (25-min warning, 30-min logout)
-- **FR-AUTH-005:** Rate limiting on login (5 req/15 min)
+- **FR-AUTH-005:** Rate limiting on magic link request (5 req/15 min per IP)
 - **FR-AUTH-006:** Secondary authentication for admin destructive actions
+- **FR-AUTH-007:** Magic link URL format: `https://rms.techbridge.edu.gh/login?token={jwt}&otp={otp}&redirect={roleLanding}`
+- **FR-AUTH-008:** Expired/used magic link shows "Link expired" screen with "Request a new link" button; "Open TUC Inbox" button links to `https://mail.google.com/a/techbridge.edu.gh`
 
 ### FR-SEC (Security & Audit)
 - **FR-SEC-001:** Audit logging middleware (all authenticated POST/PUT/DELETE)
 - **FR-SEC-002:** Audit log viewable by registrar only
-- **FR-SEC-003:** Bcrypt password hashing (10 rounds)
 
 ### FR-RESULTS (Results Management)
 - **FR-RESULTS-001:** Enter class + exam scores (lecturer)
@@ -141,7 +142,7 @@ Comprehensive results tracking and lifecycle management platform for Techbridge 
 | Uptime | 99.5% | Production dependency |
 | TypeScript Coverage | 100% | Type safety for maintainability |
 | Accessibility (WCAG) | AA | Inclusive platform |
-| Password Strength | bcryptjs 10 rounds | Secure credential storage |
+| Magic Link TTL | 15 minutes (single-use OTP) | Eliminate password-based credential risk |
 | Session TTL | 30 minutes | Balance security + usability |
 | Rate Limit | 5 req/15 min (login) | Prevent brute force |
 | Database Backup | Daily (Docker volume) | Disaster recovery |
@@ -154,7 +155,7 @@ Comprehensive results tracking and lifecycle management platform for Techbridge 
 
 | Table | Purpose | Key Fields |
 |-------|---------|-----------|
-| `users` | Staff credentials | id, email, password_hash, role, is_active |
+| `users` | Staff credentials | id, email, role, is_active |
 | `departments` | Academic departments | id, name, code |
 | `programmes` | Degree/diploma/cert | id, name, department_id, type |
 | `students` | Student records | id, index_number, programme_id, level, status |
@@ -164,6 +165,7 @@ Comprehensive results tracking and lifecycle management platform for Techbridge 
 | `student_reviews` | Case management | student_id, reviewer_id, status, comments |
 | `audit_log` | Action audit trail | user_id, action, details, ip_address, created_at |
 | `results_notifications` | Score alerts | recipient_id, title, message, is_read |
+| `otp_tokens` | Magic link OTPs | id, user_id (UNIQUE), otp, expires_at, created_at |
 
 ### Key Relationships
 
@@ -180,9 +182,9 @@ audit_log ← user_id → users
 ## 6. API ENDPOINTS (Expanded)
 
 ### Authentication
-- `POST /api/auth/login` — JWT login (5 req/15 min rate limit)
+- `POST /api/auth/request-link` — Submit First Name + Last Name; assembles institutional email and sends magic link (5 req/15 min rate limit)
+- `POST /api/auth/verify-link` — Consume `token` + `otp` from magic link URL; returns JWT on success; OTP is single-use and expires after 15 min
 - `GET /api/auth/me` — Current user
-- `POST /api/auth/change-password` — Update password
 - `POST /api/auth/verify-admin` — Secondary auth for destructive actions
 - `POST /api/auth/logout` — Clear session
 
@@ -217,7 +219,7 @@ audit_log ← user_id → users
 - `GET /api/users` — All staff (registrar only)
 - `POST /api/users` — Add user (registrar only)
 - `PUT /api/users/:id` — Edit user
-- `PUT /api/users/:id/password-reset` — Force password reset (registrar only)
+- `POST /api/users/:id/revoke-sessions` — Revoke all active tokens for a user (registrar only)
 - `PUT /api/users/:id/deactivate` — Deactivate user (registrar only)
 
 ### Testing
@@ -231,7 +233,7 @@ audit_log ← user_id → users
 
 | Suite | Tests | Coverage |
 |-------|-------|----------|
-| `auth.spec.js` | 6 | Login, logout, rate limit, invalid creds |
+| `auth.spec.js` | 6 | Magic link request, token verification, logout, rate limit, expired link, unknown user |
 | `admin-workflows.spec.js` | 10 | Dashboard, users table, theme switching |
 | `lecturer-workflows.spec.js` | 4 | Login, courses, enter scores, save draft |
 | `health-check.spec.js` | 2 | `/api/health` & `/api/health/full` |
@@ -243,17 +245,17 @@ audit_log ← user_id → users
 - Health check: `curl http://localhost:5000/api/health/full`
 - Theme switching: Verify `[data-theme]` attribute in DevTools
 - Session timeout: Idle 25 min (warning), 30 min (logout)
-- Admin actions: Password reset/user deactivation wrapped in ConfirmAdminAction modal
+- Admin actions: Session revocation/user deactivation wrapped in ConfirmAdminAction modal
 
 ---
 
 ## 8. SECURITY & COMPLIANCE
 
-### Authentication & Passwords
-- JWT tokens with 24h expiry
-- bcryptjs 10-round hashing
-- HTTPS/TLS enforced in production
-- Password requirements: min 6 characters
+### Authentication
+- Passwordless magic link — no passwords stored or transmitted
+- JWT tokens with 24h expiry embedded in magic link
+- OTPs stored in `otp_tokens` DB table; expire after 15 minutes; single-use (deleted on first consumption)
+- HTTPS/TLS enforced in production; magic links only sent to `@techbridge.edu.gh` addresses
 
 ### Session Management
 - localStorage token + in-memory state
@@ -273,7 +275,7 @@ audit_log ← user_id → users
 - GDPR/CCPA/GDPA compliance via privacy.html
 - Student data: index number + academic status only
 - No sensitive data in logs
-- Bcrypt hashing (not plain text or MD5)
+- No passwords stored — authentication is entirely passwordless via magic link
 
 ### Accessibility (WCAG 2.1 AA)
 - Semantic HTML (roles, labels, landmarks)
@@ -295,9 +297,9 @@ NODE_ENV=production
 PORT=5000
 DB_HOST=localhost
 DB_USER=tuc_rms_user
-DB_PASSWORD=secure_password
 DB_NAME=tuc_rms
 JWT_SECRET=secure_jwt_key
+SMTP_GATEWAY_URL=https://api.techbridge.edu.gh/aucdt-dev/sendMail
 ```
 
 **Frontend (.env):**
@@ -350,6 +352,7 @@ mysql < database.sql
 | 2.0 | Mar 2026 | Archived | Role-based workflows, Transcripts |
 | 2.1 | May 24, 2026 | Production | Bug fixes, Deployment guide |
 | 3.0 | May 25, 2026 | **FINAL** | TypeScript, Session timeout, Rate limiting, Audit middleware, Theme switching, Accessibility (WCAG AA), Testing framework (Playwright 25+ tests), Capacitor, Privacy page, Admin guides, Deployment guides |
+| 3.1 | June 2, 2026 | **FINAL** | Auth overhaul: passwordless magic link replaces email/password; `otp_tokens` table added; SMTP gateway via api.techbridge.edu.gh; bcrypt/password fields removed |
 
 ---
 
@@ -392,7 +395,7 @@ mysql < database.sql
 - [x] No implicit `any` in production code
 
 ### Functionality
-- [x] Login/logout with JWT + rate limiting
+- [x] Passwordless magic link login/logout with JWT + rate limiting
 - [x] Results submission/approval workflow
 - [x] Audit logging on all destructive actions
 - [x] Session timeout with 25-min warning
@@ -407,13 +410,13 @@ mysql < database.sql
 - [x] Skip link, modal focus trap, ARIA labels
 - [x] High-contrast theme option
 - [x] Privacy policy page deployed
-- [x] Password hashes bcrypt 10-round
+- [x] OTPs stored in `otp_tokens` table, expire 15 min, single-use
 - [x] Rate limiting on login
 - [x] Admin actions require secondary auth
 
 ### Deployment
 - [x] `docker-compose up -d` runs all 3 containers
-- [x] Database seeds with 16 demo users (password: "password")
+- [x] Database seeds with 16 demo users (no passwords; magic link auth only)
 - [x] Health checks pass: `GET /api/health/full`
 
 ---

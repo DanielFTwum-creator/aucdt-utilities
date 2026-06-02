@@ -48,15 +48,16 @@ User management allows you to create, edit, and manage accounts for registrars, 
 1. Navigate to **Users** from the sidebar
 2. Click the **Add User** button (top-right)
 3. Fill in the form:
-   - **Email:** A unique email address (e.g., `lecturer@tuc.edu.gh`)
+   - **First Name** and **Last Name** — Used to assemble the institutional email `firstname.lastname@techbridge.edu.gh`
    - **Role:** Select from:
      - **Registrar** — Full system access, can manage all users and results
      - **Lecturer** — Can only enter scores for their courses
-     - **Admin** — System administrator with additional security privileges
-   - **Initial Password:** The system generates a temporary password. The user will be prompted to change it on first login.
+     - **HOD** — Head of Department; views courses and results for their department
+     - **QA Officer** — Can review and approve results
+     - **ICT** — System administrator with additional security privileges
 4. Click **Add User**
 
-The new user will receive a notification email (if configured) with their temporary credentials.
+The new user logs in via the magic link flow — no password is set or required. They will use the login page to request a sign-in link to their `@techbridge.edu.gh` inbox.
 
 ### Editing a User
 
@@ -73,12 +74,14 @@ The new user will receive a notification email (if configured) with their tempor
 
 **Important:** Deactivated users cannot log in, but their historical records (results, audit logs) are retained for compliance.
 
-### Resetting a User's Password
+### Resetting a User's Access
 
-1. Navigate to **Users**
-2. Find the user and click **Reset Password**
-3. Confirm the action in the dialog
-4. A temporary password is generated and logged in the audit trail
+The system is passwordless — there are no passwords to reset. If a user cannot sign in:
+
+1. Verify the user record exists in **Users** with the correct First and Last Name spelling
+2. Confirm the user's `@techbridge.edu.gh` mailbox is active and accessible
+3. Ask the user to request a new magic link from the login page
+4. If the problem persists, deactivate and re-create the user account; the action is logged in the audit trail
 
 ---
 
@@ -310,12 +313,12 @@ For security, the system automatically logs you out after **30 minutes of inacti
 
 ## Security Best Practices
 
-### Password Management
+### Access Management
 
-- **Change your password regularly** — At least every 90 days
-- **Use strong passwords** — Mix uppercase, lowercase, numbers, and symbols (minimum 12 characters)
-- **Never share your password** — Including with other staff
-- **Reset forgotten passwords immediately** — Contact the IT department
+- **Keep your TUC inbox secure** — Magic links are sent to `@techbridge.edu.gh`; treat your email account as your credential
+- **Never forward magic link emails** — Each link is single-use and expires in 15 minutes
+- **Report missing sign-in emails** — Contact IT if a magic link does not arrive within a few minutes
+- **Do not share your inbox access** — Anyone with access to your email can sign in as you
 
 ### Account Security
 
@@ -333,8 +336,9 @@ For security, the system automatically logs you out after **30 minutes of inacti
 
 ### Phishing and Social Engineering
 
-- **Suspicious emails** — If an email asks you to "verify your account" by clicking a link, contact IT first
-- **Legitimate requests** — The system will never ask for your password via email
+- **Legitimate magic links** — RMS sign-in emails come from the TUC mail system, contain the TUC logo, and have a single "Sign In to RMS →" button. The link domain is always `rms.techbridge.edu.gh`
+- **Suspicious emails** — If an unexpected sign-in link arrives that you did not request, do not click it — your name may have been entered on the login page by someone else. Report it to IT
+- **The system never asks for a password** — RMS is passwordless; any email asking for a password is fraudulent
 - **Caller verification** — If someone calls claiming to be from IT, hang up and call IT directly using a known number
 
 ---
@@ -343,13 +347,14 @@ For security, the system automatically logs you out after **30 minutes of inacti
 
 ### I Cannot Log In
 
-**Problem:** "Invalid email or password" message appears.
+**Problem:** Sign-in link does not arrive, or "Link expired" screen is shown.
 
 **Solution:**
-1. Verify the email address is spelled correctly
-2. Check that **Caps Lock** is not enabled
-3. Request a password reset by clicking "Forgot Password?" on the login page
-4. If you still cannot access your account, contact the IT department
+1. Verify you entered your **First Name** and **Last Name** exactly as registered (spelling must match what is in the Users table)
+2. Check your `@techbridge.edu.gh` inbox at [mail.google.com/a/techbridge.edu.gh](https://mail.google.com/a/techbridge.edu.gh) — check Spam/Junk as well
+3. Magic links expire after **15 minutes** — click "Request a new link" on the "Link expired" screen if needed
+4. Each link is **single-use** — if you already clicked it, request a fresh one
+5. If you still cannot access your account, contact the IT department and confirm your name spelling in the system
 
 ### My Session Expired
 
@@ -357,7 +362,7 @@ For security, the system automatically logs you out after **30 minutes of inacti
 
 **Solution:**
 1. Click **Log In**
-2. Enter your credentials again
+2. Enter your First Name and Last Name to request a new magic link
 3. To prevent future timeouts, use the session extension button (see Session Management)
 
 ### Results Are Showing Incorrect Grades
