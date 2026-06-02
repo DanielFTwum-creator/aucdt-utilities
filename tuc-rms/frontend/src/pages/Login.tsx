@@ -9,7 +9,9 @@ const API = import.meta.env.VITE_API_URL || '/api'
 export default function Login() {
   const navigate = useNavigate()
   const { login } = useAuth()
-  const [email, setEmail] = useState('')
+  const [firstName, setFirstName] = useState('')
+  const [lastName, setLastName] = useState('')
+  const [email, setEmail] = useState('') // resolved full email, set after submit
   const [loading, setLoading] = useState(false)
   const [linkSent, setLinkSent] = useState(false)
   const [verifying, setVerifying] = useState(false)
@@ -43,8 +45,7 @@ export default function Login() {
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setLoading(true)
-    // Auto-append domain if user types only firstname.lastname
-    const resolvedEmail = email.includes('@') ? email.trim() : `${email.trim()}@techbridge.edu.gh`
+    const resolvedEmail = `${firstName.trim().toLowerCase()}.${lastName.trim().toLowerCase()}@techbridge.edu.gh`
     try {
       const response = await fetch(`${API}/auth/login`, {
         method: 'POST',
@@ -52,8 +53,8 @@ export default function Login() {
         body: JSON.stringify({ email: resolvedEmail }),
       })
       const data = await response.json()
-      if (!response.ok) { toast.error(data.message || 'Login failed'); return }
-      setEmail(resolvedEmail) // show full address on confirmation screen
+      if (!response.ok) { toast.error(data.message || 'Name not found — check your spelling'); return }
+      setEmail(resolvedEmail)
       setLinkSent(true)
     } catch {
       toast.error('Network error')
@@ -102,9 +103,9 @@ export default function Login() {
             <span style={{ fontSize: 16 }}>📩</span> Open Gmail Inbox
           </a>
           <button
-            onClick={() => { setLinkSent(false); setEmail('') }}
+            onClick={() => { setLinkSent(false); setEmail(''); setFirstName(''); setLastName('') }}
             style={{ display: 'block', margin: '12px auto 0', background: 'none', border: 'none', color: 'var(--tuc-maroon)', fontSize: 12, cursor: 'pointer', textDecoration: 'underline' }}>
-            Use a different email
+            Use a different name
           </button>
           <div style={{ textAlign: 'center', marginTop: 16, fontSize: 11, color: '#bbb' }}>
             © {new Date().getFullYear()} Techbridge University College · Design and Build a Nation
@@ -127,14 +128,21 @@ export default function Login() {
 
         <div style={{ marginBottom: 20 }}>
           <div style={{ fontSize: 19, fontWeight: 800, color: 'var(--tuc-maroon)' }}>Sign In</div>
-          <div style={{ fontSize: 12.5, color: 'var(--tuc-muted)', marginTop: 3 }}>Enter your name or staff email to receive a login link</div>
+          <div style={{ fontSize: 12.5, color: 'var(--tuc-muted)', marginTop: 3 }}>Enter your name to receive a login link</div>
         </div>
 
         <form onSubmit={handleSubmit}>
-          <div className="form-group">
-            <label className="form-label" htmlFor="email-input">Email Address</label>
-            <input id="email-input" className="form-control" type="text" placeholder="firstname.lastname"
-              value={email} onChange={e => setEmail(e.target.value)} autoFocus required />
+          <div style={{ display: 'flex', gap: 10 }}>
+            <div className="form-group" style={{ flex: 1 }}>
+              <label className="form-label" htmlFor="first-name">First Name</label>
+              <input id="first-name" className="form-control" type="text" placeholder="Daniel"
+                value={firstName} onChange={e => setFirstName(e.target.value)} autoFocus required />
+            </div>
+            <div className="form-group" style={{ flex: 1 }}>
+              <label className="form-label" htmlFor="last-name">Last Name</label>
+              <input id="last-name" className="form-control" type="text" placeholder="Twum"
+                value={lastName} onChange={e => setLastName(e.target.value)} required />
+            </div>
           </div>
           <button className="btn btn-primary" type="submit" disabled={loading}
             style={{ width: '100%', justifyContent: 'center', padding: '11px', fontSize: 14, marginTop: 8 }}>
