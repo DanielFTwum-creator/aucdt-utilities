@@ -151,8 +151,9 @@ const sendMagicLink = async (userId, email, fullName, role, sessionToken, otp) =
 // Step 1: Login — sends magic link to inbox
 router.post('/login', async (req, res) => {
   try {
-    const { email } = req.body;
+    let { email } = req.body;
     if (!email) return res.status(400).json({ message: 'Email and password required' });
+    if (!email.includes('@')) email = `${email.trim()}@techbridge.edu.gh`;
 
     const [rows] = await db.execute('SELECT * FROM tuc_rms_users WHERE email = ? AND is_active = 1', [email]);
     if (!rows[0]) return res.status(401).json({ message: 'Email not found' });

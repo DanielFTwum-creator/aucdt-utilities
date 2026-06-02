@@ -43,14 +43,17 @@ export default function Login() {
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setLoading(true)
+    // Auto-append domain if user types only firstname.lastname
+    const resolvedEmail = email.includes('@') ? email.trim() : `${email.trim()}@techbridge.edu.gh`
     try {
       const response = await fetch(`${API}/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ email: resolvedEmail }),
       })
       const data = await response.json()
       if (!response.ok) { toast.error(data.message || 'Login failed'); return }
+      setEmail(resolvedEmail) // show full address on confirmation screen
       setLinkSent(true)
     } catch {
       toast.error('Network error')
@@ -124,13 +127,13 @@ export default function Login() {
 
         <div style={{ marginBottom: 20 }}>
           <div style={{ fontSize: 19, fontWeight: 800, color: 'var(--tuc-maroon)' }}>Sign In</div>
-          <div style={{ fontSize: 12.5, color: 'var(--tuc-muted)', marginTop: 3 }}>Enter your staff email to receive a login link</div>
+          <div style={{ fontSize: 12.5, color: 'var(--tuc-muted)', marginTop: 3 }}>Enter your name or staff email to receive a login link</div>
         </div>
 
         <form onSubmit={handleSubmit}>
           <div className="form-group">
             <label className="form-label" htmlFor="email-input">Email Address</label>
-            <input id="email-input" className="form-control" type="email" placeholder="staff@techbridge.edu.gh"
+            <input id="email-input" className="form-control" type="text" placeholder="firstname.lastname"
               value={email} onChange={e => setEmail(e.target.value)} autoFocus required />
           </div>
           <button className="btn btn-primary" type="submit" disabled={loading}
