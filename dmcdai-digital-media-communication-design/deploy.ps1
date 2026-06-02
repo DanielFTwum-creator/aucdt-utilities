@@ -83,6 +83,12 @@ Log "INFO" "Step 4: Writing .htaccess..." Yellow
 <IfModule mod_rewrite.c>
   RewriteEngine On
   RewriteBase /dmcdai/
+
+  # Proxy API requests to PM2 running on port 3000
+  RewriteCond %{REQUEST_URI} ^/dmcdai/api/ [OR]
+  RewriteCond %{REQUEST_URI} ^/api/
+  RewriteRule ^api/(.*)$ http://localhost:3000/api/$1 [P,L]
+
   RewriteCond %{REQUEST_FILENAME} -f [OR]
   RewriteCond %{REQUEST_FILENAME} -d
   RewriteRule ^ - [L]

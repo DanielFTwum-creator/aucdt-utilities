@@ -132,16 +132,20 @@
 </style>
 <link rel="stylesheet" href="/index.css">
     <style id="dmcd-splash-styles">
-      body {
+      .splash-container {
+        position: fixed;
+        inset: 0;
+        z-index: 9999;
         background: radial-gradient(circle at 50% 50%, #fafafa 0%, #f4f4f5 100%) !important;
-        margin: 0;
-        padding: 0;
         display: flex;
         align-items: center;
         justify-content: center;
+      }
+      body {
+        margin: 0;
+        padding: 0;
         min-height: 100vh;
         font-family: 'Inter', sans-serif;
-        overflow: hidden;
       }
       .dmcd-splash {
         text-align: center;
@@ -219,10 +223,12 @@
         })();
     </script>
     <div id="root">
-      <div class="dmcd-splash">
-        <span class="dmcd-logo">DMCD <span>AI</span></span>
-        <div class="dmcd-status">Digital Media Design</div>
-        <div class="dmcd-loading"></div>
+      <div class="splash-container">
+        <div class="dmcd-splash">
+          <span class="dmcd-logo">DMCD <span>AI</span></span>
+          <div class="dmcd-status">Digital Media Design</div>
+          <div class="dmcd-loading"></div>
+        </div>
       </div>
     </div>
     <script type="module" src="/index.tsx"></script>
