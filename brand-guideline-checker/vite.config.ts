@@ -6,6 +6,12 @@ export default defineConfig(({ mode }) => {
     const env = loadEnv(mode, '.', '');
     return {
       base: './',
+      server: {
+        allowedHosts: ['ai-tools.techbridge.edu.gh'],
+      },
+      preview: {
+        allowedHosts: ['ai-tools.techbridge.edu.gh'],
+      },
   build: {
     chunkSizeWarningLimit: 1000,
     rollupOptions: {
