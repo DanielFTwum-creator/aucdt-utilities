@@ -108,59 +108,119 @@ export function AuthGate({ children, onLogout }: { children: React.ReactNode; on
   };
 
   return (
-    <div style={{minHeight:'100vh',background:'#f7f5f0',display:'flex',alignItems:'center',justifyContent:'center',fontFamily:'Inter,system-ui,sans-serif',padding:'16px'}}>
-      <div style={{background:'#fff',padding:'40px',borderRadius:'16px',boxShadow:'0 4px 24px rgba(0,0,0,0.10)',width:'100%',maxWidth:'420px'}}>
-        <div style={{display:'flex',flexDirection:'column',alignItems:'center',gap:'12px',marginBottom:'28px'}}>
-          <div style={{width:'48px',height:'48px',background:'#8b1a1a',borderRadius:'12px',display:'flex',alignItems:'center',justifyContent:'center',color:'#fff',fontSize:'24px',flexShrink:0}}>📄</div>
-          <h1 style={{fontSize:'22px',fontWeight:'700',color:'#1a1f3c',margin:0}}>OmniExtract</h1>
-          <p style={{fontSize:'14px',color:'#6b7280',margin:0,textAlign:'center'}}>AI-powered PDF data extraction</p>
-        </div>
+    <>
+      <style>
+        {`
+          @keyframes float-pdf {
+            0% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
+            100% { transform: translateY(0px) rotate(0deg); }
+          }
+          @keyframes float-pdf-reverse {
+            0% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(25px) rotate(-8deg); }
+            100% { transform: translateY(0px) rotate(0deg); }
+          }
+          .bg-svg {
+            position: absolute;
+            opacity: 0.04;
+            pointer-events: none;
+            z-index: 0;
+          }
+          .login-card {
+            position: relative;
+            z-index: 1;
+          }
+        `}
+      </style>
+      <div style={{minHeight:'100vh',background:'#f7f5f0',display:'flex',alignItems:'center',justifyContent:'center',fontFamily:'Inter,system-ui,sans-serif',padding:'16px', position: 'relative', overflow: 'hidden'}}>
+        
+        {/* Background Animated SVGs */}
+        <svg className="bg-svg" style={{ top: '10%', left: '10%', width: '120px', animation: 'float-pdf 8s ease-in-out infinite' }} viewBox="0 0 24 24" fill="none" stroke="#1a1f3c" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          <polyline points="14 2 14 8 20 8"></polyline>
+          <line x1="16" y1="13" x2="8" y2="13"></line>
+          <line x1="16" y1="17" x2="8" y2="17"></line>
+          <polyline points="10 9 9 9 8 9"></polyline>
+        </svg>
 
-        <button
-          onClick={handleGoogleLogin}
-          disabled={loading}
-          style={{
-            width:'100%',
-            padding:'12px 16px',
-            marginBottom:'16px',
-            background:'#fff',
-            border:'1.5px solid #d1d5e0',
-            borderRadius:'8px',
-            fontSize:'14px',
-            fontWeight:'600',
-            color:'#1a1f3c',
-            cursor:'pointer',
-            display:'flex',
-            alignItems:'center',
-            justifyContent:'center',
-            gap:'8px',
-            transition:'all 0.2s'
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.background = '#f9fafb';
-            e.currentTarget.style.borderColor = '#b0b5c5';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.background = '#fff';
-            e.currentTarget.style.borderColor = '#d1d5e0';
-          }}
-        >
-          <svg style={{width:'18px',height:'18px'}} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
-            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm3.5-9c.83 0 1.5-.67 1.5-1.5S16.33 8 15.5 8 14 8.67 14 9.5s.67 1.5 1.5 1.5zm-7 0c.83 0 1.5-.67 1.5-1.5S9.33 8 8.5 8 7 8.67 7 9.5 7.67 11 8.5 11zm3.5 6.5c2.33 0 4.31-1.46 5.11-3.5H6.89c.8 2.04 2.78 3.5 5.11 3.5z" />
-          </svg>
-          Continue with Google
-        </button>
+        <svg className="bg-svg" style={{ top: '60%', left: '15%', width: '80px', animation: 'float-pdf-reverse 12s ease-in-out infinite' }} viewBox="0 0 24 24" fill="none" stroke="#1a1f3c" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          <polyline points="14 2 14 8 20 8"></polyline>
+          <line x1="16" y1="13" x2="8" y2="13"></line>
+          <line x1="16" y1="17" x2="8" y2="17"></line>
+          <polyline points="10 9 9 9 8 9"></polyline>
+        </svg>
 
-        {error && (
-          <div style={{padding:'12px',background:'#fee2e2',border:'1px solid #fecaca',borderRadius:'8px',color:'#991b1b',fontSize:'13px',marginTop:'16px',textAlign:'center'}}>
-            {error}
+        <svg className="bg-svg" style={{ top: '20%', right: '15%', width: '150px', animation: 'float-pdf-reverse 10s ease-in-out infinite' }} viewBox="0 0 24 24" fill="none" stroke="#1a1f3c" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          <polyline points="14 2 14 8 20 8"></polyline>
+          <line x1="16" y1="13" x2="8" y2="13"></line>
+          <line x1="16" y1="17" x2="8" y2="17"></line>
+          <polyline points="10 9 9 9 8 9"></polyline>
+        </svg>
+
+        <svg className="bg-svg" style={{ bottom: '15%', right: '10%', width: '100px', animation: 'float-pdf 9s ease-in-out infinite' }} viewBox="0 0 24 24" fill="none" stroke="#1a1f3c" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          <polyline points="14 2 14 8 20 8"></polyline>
+          <line x1="16" y1="13" x2="8" y2="13"></line>
+          <line x1="16" y1="17" x2="8" y2="17"></line>
+          <polyline points="10 9 9 9 8 9"></polyline>
+        </svg>
+
+        <div className="login-card" style={{background:'#fff',padding:'40px',borderRadius:'16px',boxShadow:'0 4px 24px rgba(0,0,0,0.10)',width:'100%',maxWidth:'420px'}}>
+          <div style={{display:'flex',flexDirection:'column',alignItems:'center',gap:'12px',marginBottom:'28px'}}>
+            <div style={{width:'48px',height:'48px',background:'#8b1a1a',borderRadius:'12px',display:'flex',alignItems:'center',justifyContent:'center',color:'#fff',fontSize:'24px',flexShrink:0}}>📄</div>
+            <h1 style={{fontSize:'22px',fontWeight:'700',color:'#1a1f3c',margin:0}}>OmniExtract</h1>
+            <p style={{fontSize:'14px',color:'#6b7280',margin:0,textAlign:'center'}}>AI-powered PDF data extraction</p>
           </div>
-        )}
-
-        <p style={{fontSize:'12px',color:'#8b90b8',textAlign:'center',margin:'16px 0 0 0',lineHeight:'1.5'}}>
-          We use Google authentication to protect our tools from automated attacks.
-        </p>
+  
+          <button
+            onClick={handleGoogleLogin}
+            disabled={loading}
+            style={{
+              width:'100%',
+              padding:'12px 16px',
+              marginBottom:'16px',
+              background:'#fff',
+              border:'1.5px solid #d1d5e0',
+              borderRadius:'8px',
+              fontSize:'14px',
+              fontWeight:'600',
+              color:'#1a1f3c',
+              cursor:'pointer',
+              display:'flex',
+              alignItems:'center',
+              justifyContent:'center',
+              gap:'8px',
+              transition:'all 0.2s'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = '#f9fafb';
+              e.currentTarget.style.borderColor = '#b0b5c5';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = '#fff';
+              e.currentTarget.style.borderColor = '#d1d5e0';
+            }}
+          >
+            <svg style={{width:'18px',height:'18px'}} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm3.5-9c.83 0 1.5-.67 1.5-1.5S16.33 8 15.5 8 14 8.67 14 9.5s.67 1.5 1.5 1.5zm-7 0c.83 0 1.5-.67 1.5-1.5S9.33 8 8.5 8 7 8.67 7 9.5 7.67 11 8.5 11zm3.5 6.5c2.33 0 4.31-1.46 5.11-3.5H6.89c.8 2.04 2.78 3.5 5.11 3.5z" />
+            </svg>
+            Continue with Google
+          </button>
+  
+          {error && (
+            <div style={{padding:'12px',background:'#fee2e2',border:'1px solid #fecaca',borderRadius:'8px',color:'#991b1b',fontSize:'13px',marginTop:'16px',textAlign:'center'}}>
+              {error}
+            </div>
+          )}
+  
+          <p style={{fontSize:'12px',color:'#8b90b8',textAlign:'center',margin:'16px 0 0 0',lineHeight:'1.5'}}>
+            We use Google authentication to protect our tools from automated attacks.
+          </p>
+        </div>
       </div>
-    </div>
+    </>
   );
 }
