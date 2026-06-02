@@ -7,8 +7,12 @@ import https from 'https';
 import jwt from 'jsonwebtoken';
 import mysql from 'mysql2/promise';
 import dotenv from 'dotenv';
+import { GoogleGenAI } from '@google/genai';
 
 dotenv.config();
+
+const API_KEY = process.env.VITE_GEMINI_API_KEY || process.env.GEMINI_API_KEY;
+const imageAi = new GoogleGenAI({ apiKey: API_KEY, httpOptions: { apiVersion: 'v1' } });
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -203,6 +207,37 @@ async function startServer() {
     } catch (error) {
       console.error('Error proxying email:', error);
       res.status(500).json({ error: 'Failed to send email' });
+    }
+  });
+
+  // Image generation proxy to bypass CORS
+  app.post('/api/generate-image', async (req, res) => {
+    try {
+      const { prompt, base64Image, mimeType } = req.body;
+      let response;
+      if (base64Image && mimeType) {
+        response = await imageAi.models.editImage({
+          model: 'imagen-3.0-capability-001',
+          prompt,
+          referenceImages: [{ referenceImage: { imageBytes: base64Image, mimeType } }],
+          config: { numberOfImages: 1 },
+        });
+      } else {
+        response = await imageAi.models.generateImages({
+          model: 'imagen-3.0-generate-001',
+          prompt,
+          config: { numberOfImages: 1 },
+        });
+      }
+      
+      const generatedImage = response.generatedImages?.[0];
+      if (generatedImage?.image?.imageBytes) {
+        return res.json({ result: `data:image/png;base64,${generatedImage.image.imageBytes}` });
+      }
+      throw new Error("EMPTY_RESPONSE");
+    } catch (error) {
+      console.error('[DMCDAI] Image gen error:', error);
+      res.status(500).json({ error: error.message });
     }
   });
 

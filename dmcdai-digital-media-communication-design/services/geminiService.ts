@@ -129,34 +129,19 @@ export const generateImage = async (prompt: string, base64Image?: string, mimeTy
     await handleSimulator();
     addLog(`Initiating image generation: "${prompt.substring(0, 30)}..."`);
 
-    let response;
-    if (base64Image && mimeType) {
-      // Image editing with reference
-      response = await tryImageModels(IMAGE_EDIT_MODELS, async (model) => {
-        const styleRef = new StyleReferenceImage();
-        styleRef.referenceImage = { imageBytes: base64Image, mimeType };
-        return await imageAi.models.editImage({
-          model,
-          prompt,
-          referenceImages: [styleRef],
-          config: { numberOfImages: 1 },
-        });
-      });
-    } else {
-      // Text-to-image generation
-      response = await tryImageModels(IMAGE_GENERATE_MODELS, async (model) => {
-        return await imageAi.models.generateImages({
-          model,
-          prompt,
-          config: { numberOfImages: 1 },
-        });
-      });
+    const response = await fetch('/api/generate-image', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ prompt, base64Image, mimeType })
+    });
+    
+    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.error || "GENERIC_ERROR");
     }
-
-    // Extract the generated image
-    const generatedImage = response.generatedImages?.[0];
-    if (generatedImage?.image?.imageBytes) {
-      return `data:image/png;base64,${generatedImage.image.imageBytes}`;
+    
+    if (data.result) {
+      return data.result;
     }
     
     throw new Error("EMPTY_RESPONSE");
