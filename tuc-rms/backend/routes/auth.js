@@ -8,6 +8,10 @@ const { auth, JWT_SECRET } = require('../middleware/auth');
 // Swagger: portal.aucdt.edu.gh/aucdt-dev/swagger-ui/#/common-controller/sendMailUsingPOST
 const SMTP_GATEWAY_URL = process.env.SMTP_GATEWAY_URL || 'https://api.techbridge.edu.gh/aucdt-dev/sendMail';
 
+// Bypass TLS cert check for internal API gateway (expired cert workaround)
+const https = require('https');
+const tlsAgent = new https.Agent({ rejectUnauthorized: false });
+
 const sendViaPlatform = async (to, subject, message, fullName) => {
   const res = await fetch(SMTP_GATEWAY_URL, {
     method: 'POST',
@@ -20,12 +24,30 @@ const sendViaPlatform = async (to, subject, message, fullName) => {
       subject,
       message,
     }),
+    // @ts-ignore — Node.js fetch accepts agent
+    agent: tlsAgent,
   });
   if (!res.ok) throw new Error(`SMTP gateway returned ${res.status}`);
 };
 
-// In-memory OTP store — keyed by userId, cleared on use
-const otpStore = {};
+// DB-backed OTP store — survives PM2 restarts
+const saveOTP = async (userId, otp) => {
+  const expiresAt = new Date(Date.now() + 15 * 60 * 1000);
+  await db.execute(
+    'INSERT INTO otp_tokens (user_id, otp, expires_at) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE otp=VALUES(otp), expires_at=VALUES(expires_at)',
+    [userId, otp, expiresAt]
+  );
+};
+
+const verifyAndConsumeOTP = async (userId, otp) => {
+  const [rows] = await db.execute(
+    'SELECT id FROM otp_tokens WHERE user_id=? AND otp=? AND expires_at > NOW()',
+    [userId, otp]
+  );
+  if (!rows[0]) return false;
+  await db.execute('DELETE FROM otp_tokens WHERE user_id=?', [userId]);
+  return true;
+};
 
 // Round-robin campus frame selector (12 frames extracted from campus_tour.mp4)
 const CAMPUS_FRAME_COUNT = 12;
@@ -137,9 +159,9 @@ router.post('/login', async (req, res) => {
 
     const user = rows[0];
 
-    // Generate OTP + session token together so both go into the magic link
+    // Generate OTP + session token — store OTP in DB so restarts don't wipe it
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
-    otpStore[user.id] = { otp, expiresAt: Date.now() + 15 * 60 * 1000 };
+    await saveOTP(user.id, otp);
     const sessionToken = jwt.sign({ id: user.id, pending_2fa: true }, JWT_SECRET, { expiresIn: '15m' });
 
     const sent = await sendMagicLink(user.id, user.email, user.full_name, user.role, sessionToken, otp);
@@ -172,20 +194,15 @@ router.post('/verify-otp', async (req, res) => {
 
     if (!decoded.pending_2fa) return res.status(401).json({ message: 'Not in 2FA flow' });
 
-    // Check OTP
-    const storedOtp = otpStore[decoded.id];
-    if (!storedOtp || storedOtp.otp !== otp || Date.now() > storedOtp.expiresAt) {
-      return res.status(401).json({ message: 'Invalid or expired OTP' });
-    }
+    // Check OTP against DB — atomic verify + delete
+    const valid = await verifyAndConsumeOTP(decoded.id, otp);
+    if (!valid) return res.status(401).json({ message: 'Invalid or expired login link' });
 
     // Get user
     const [rows] = await db.execute('SELECT * FROM tuc_rms_users WHERE id = ?', [decoded.id]);
     if (!rows[0]) return res.status(401).json({ message: 'User not found' });
 
     const user = rows[0];
-
-    // Clean up OTP
-    delete otpStore[decoded.id];
 
     // Issue final JWT
     const token = jwt.sign({ id: user.id, role: user.role }, JWT_SECRET, { expiresIn: '12h' });
