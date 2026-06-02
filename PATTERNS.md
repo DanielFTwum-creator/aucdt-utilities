@@ -1794,4 +1794,19 @@ try {
 
 **Why:** Plain `node` as PM2 interpreter does not guarantee dotenv loads before process env is evaluated. `tsx` handles this differently. Any NODE_ENV conditional can silently skip email in production with no error.
 
+---
+
+## 34. Global Splash Screen Flex Constraints (React Apps)
+
+**Problem:**
+React applications (especially those built with Vite or Create React App) might exhibit severely restricted, narrow, or "boxed in" layouts with massive side margins. This often happens despite having responsive utility classes (like Tailwind's `w-full` or `max-w-screen-xl`) configured properly on the inner container components.
+
+**Root Cause:**
+A common pattern involves injecting a `<style>` block in `index.html` to create a pre-render splash/loading screen. If this style block applies flexbox centering properties directly to the `body` tag (e.g., `body { display: flex; align-items: center; justify-content: center; }`), those styles persist *after* the React app mounts. This inadvertently turns the entire `#root` container into a centered flex item, preventing it from utilizing the full viewport width and squishing all responsive UI elements inside it. 
+
+**Solution:**
+Do NOT apply flexbox centering properties to the global `body` tag for splash screens. Instead, wrap the splash screen elements in a dedicated container div (e.g., `<div class="splash-container">`) and apply absolute or fixed positioning with flex properties exclusively to that wrapper.
+- **❌ WRONG:** `body { display: flex; align-items: center; min-height: 100vh; }`
+- **✅ CORRECT:** `.splash-container { position: fixed; inset: 0; display: flex; align-items: center; }`
+
 *Last updated: 2 June 2026 — Daniel Frempong Twum / TUC ICT*
