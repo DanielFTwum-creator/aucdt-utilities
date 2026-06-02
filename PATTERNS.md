@@ -20,6 +20,7 @@
 - [ ] **Building a form-heavy app**? → Use **Pattern 10** (Login Forms) + **Pattern 12** (Form Security)
 - [ ] **Writing tests**? → Use **Pattern 13** (Testing Standards: Playwright & Cypress)
 - [ ] **Managing shared credentials** across projects? → Use **Pattern 14** (Environment Variable Management)
+- [ ] **Sending email** from any app? → Use **Pattern 15** (AUCDT Send Platform) — never SMTP/sendmail directly
 
 **Time saved by selecting patterns at start:** ~6 hours per project.
 
@@ -1696,4 +1697,83 @@ ssh -o StrictHostKeyChecking=no $RemoteHost $executeRestart
 
 **Used in:** `biochemai/deploy.ps1`, `dictation-app/deploy.ps1` (May 2026)
 
-*Last updated: 1 June 2026 — Daniel Frempong Twum / TUC ICT*
+---
+
+## Pattern 15 — AUCDT Send Platform (Institutional Email Service)
+
+**Task Budget:**
+- Time: 30 minutes (integration only)
+- Tokens: 1k–2k (Haiku)
+- Authority: Low (HTTP call only)
+- Risk: Low
+
+**What it is:** The shared institutional email delivery service for all TUC/AUCDT apps. Do NOT use nodemailer, sendmail, or SMTP directly. Always route through this service.
+
+### Endpoints
+
+| Environment | URL |
+|---|---|
+| Dev | `https://portal.aucdt.edu.gh/aucdt-dev/sendMail` |
+| QA | `https://portal.aucdt.edu.gh/aucdt-qa/sendMail` |
+| UAT/Prod | `https://portal.aucdt.edu.gh/aucdt-uat/sendMail` |
+
+Set via `.env`:
+```
+SEND_MAIL_URL=https://portal.aucdt.edu.gh/aucdt-uat/sendMail
+```
+
+### Request Format
+
+`multipart/form-data` (or `application/x-www-form-urlencoded`) with a single field `emailData` containing a JSON string:
+
+```json
+{
+  "applicantId": "APP-123",
+  "fullName": "Recipient Name",
+  "senderEmailId": "noreply@techbridge.edu.gh",
+  "receiverEmailId": "recipient@example.com",
+  "subject": "Your Subject",
+  "message": "HTML or plain text body"
+}
+```
+
+Optional: append `attachment` as a file field for attachments.
+
+### Node.js Implementation
+
+```typescript
+const SEND_MAIL_URL = process.env.SEND_MAIL_URL || 'https://portal.aucdt.edu.gh/aucdt-uat/sendMail';
+
+const sendEmail = async (to: string, subject: string, message: string, fullName: string) => {
+  const emailData = {
+    applicantId: 'APP-' + Date.now(),
+    fullName,
+    senderEmailId: 'noreply@techbridge.edu.gh',
+    receiverEmailId: to,
+    subject,
+    message,
+  };
+  const form = new URLSearchParams();
+  form.append('emailData', JSON.stringify(emailData));
+  const res = await fetch(SEND_MAIL_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: form.toString(),
+  });
+  if (!res.ok) throw new Error(`Send platform returned ${res.status}`);
+};
+```
+
+### Tester App
+
+Use `aucdt-sendmail-api-tester` to verify the service is reachable and test payloads before integrating.
+
+**Success Criteria:**
+- HTTP 2xx from the Send Platform endpoint
+- Email arrives in recipient inbox within 2 minutes
+
+**Failure Mode:** Sending directly via SMTP/sendmail bypasses institutional logging and may be blocked by server firewall rules.
+
+**Used by:** `tuc-rms/backend/routes/auth.js` (OTP delivery, June 2026)
+
+*Last updated: 2 June 2026 — Daniel Frempong Twum / TUC ICT*
