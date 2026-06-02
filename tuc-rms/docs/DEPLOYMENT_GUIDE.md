@@ -39,7 +39,8 @@
 ### Pre-Deployment Checklist
 
 - [ ] SSH access to production server
-- [ ] Database credentials (user and password)
+- [ ] Database credentials (DB user; no application-level passwords)
+- [ ] `SMTP_GATEWAY_URL` confirmed reachable from production server
 - [ ] SSL certificates obtained (or use Plesk auto-renewal)
 - [ ] Domain name pointing to server
 - [ ] Backup of current database completed
@@ -64,7 +65,6 @@ HOST=localhost
 DB_HOST=localhost
 DB_PORT=3306
 DB_USER=tuc_rms_user
-DB_PASSWORD=SecurePassword123!
 DB_NAME=tuc_rms_db
 
 # Frontend URL (for CORS)
@@ -74,11 +74,8 @@ FRONTEND_URL=https://results.tuc.edu.gh
 JWT_SECRET=YourSecretKeyHere_GenerateNewForProduction
 SESSION_SECRET=AnotherSecretKey_GenerateNewForProduction
 
-# Email (optional, for notifications)
-SMTP_HOST=mail.techbridge.edu.gh
-SMTP_PORT=587
-SMTP_USER=noreply@techbridge.edu.gh
-SMTP_PASSWORD=EmailPassword123!
+# SMTP Gateway (magic link delivery)
+SMTP_GATEWAY_URL=https://api.techbridge.edu.gh/aucdt-dev/sendMail
 
 # Logging
 LOG_LEVEL=info
@@ -103,6 +100,8 @@ NODE_ENV=production
 
 - **Store `.env` files securely** — Never commit to version control
 - **Rotate secrets regularly** — Change JWT_SECRET and SESSION_SECRET every 6 months
+- **No passwords in .env** — Authentication is passwordless; `DB_PASSWORD` is not required (DB user should be configured with socket auth or a separate secrets manager)
+- **SMTP_GATEWAY_URL** — Points to the shared TUC API gateway; no SMTP credentials are stored in .env
 - **Use a secret manager** — Consider HashiCorp Vault or AWS Secrets Manager for larger deployments
 - **File permissions:** `chmod 600 .env` to prevent unauthorised access
 
@@ -618,17 +617,18 @@ Use this checklist for each production deployment:
 
 - [ ] Code reviewed and merged to `main` branch
 - [ ] All tests passing (`npm test`)
-- [ ] Database migrations tested locally
-- [ ] `.env` variables verified on production server
+- [ ] Database migrations tested locally (confirm `otp_tokens` table present)
+- [ ] `.env` variables verified on production server — especially `SMTP_GATEWAY_URL` and `JWT_SECRET`
 - [ ] SSL certificate valid (check expiry)
 - [ ] Current backend/frontend backed up
 - [ ] Frontend built and deployed
 - [ ] Backend dependencies installed and PM2 started
-- [ ] Database tables verified
+- [ ] Database tables verified (including `otp_tokens`)
 - [ ] Health checks passing (all three endpoints)
 - [ ] Frontend loads in browser
-- [ ] Can log in as registrar
-- [ ] Can navigate to dashboard
+- [ ] Magic link flow works end-to-end: enter name → email arrives → click link → lands on correct role page
+- [ ] Expired/used link shows "Link expired" screen with "Request a new link" button
+- [ ] Can navigate to dashboard (registrar) and /courses (lecturer)
 - [ ] Audit log reflects login action
 - [ ] Apache logs show no errors
 - [ ] All stakeholders notified
