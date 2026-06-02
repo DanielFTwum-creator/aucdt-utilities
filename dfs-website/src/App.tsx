@@ -11,6 +11,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 
 // Lazy-loaded pages
+const BookPage = lazy(() => import("@/pages/BookPage"));
 const Home = lazy(() => import("@/pages/Home"));
 const About = lazy(() => import("@/pages/About"));
 const Programs = lazy(() => import("@/pages/Programs"));
@@ -49,6 +50,16 @@ export default function App() {
                 </Routes>
               </Suspense>
             </Layout>
+          }
+        />
+
+        {/* Book Companion - No Main Layout (has its own full-screen header/footer) */}
+        <Route
+          path="/book/*"
+          element={
+            <Suspense fallback={<PageLoader />}>
+              <BookPage />
+            </Suspense>
           }
         />
 
