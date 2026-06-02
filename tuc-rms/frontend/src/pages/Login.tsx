@@ -8,7 +8,7 @@ const API = import.meta.env.VITE_API_URL || '/api'
 
 export default function Login() {
   const navigate = useNavigate()
-  const { login } = useAuth()
+  const { setSession } = useAuth()
   const [firstName, setFirstName] = useState('')
   const [lastName, setLastName] = useState('')
   const [email, setEmail] = useState('') // resolved full email, set after submit
@@ -35,7 +35,7 @@ export default function Login() {
         .then(r => r.json().then(d => ({ ok: r.ok, data: d })))
         .then(({ ok, data }) => {
           if (!ok) { setLinkError(data.message || 'This link has expired or already been used.'); setVerifying(false); return }
-          login(data.token, data.user)
+          setSession(data.token, data.user)
           toast.success('Welcome back!')
           setTimeout(() => navigate(redirect), 400)
         })

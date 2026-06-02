@@ -13,6 +13,7 @@ export interface User {
 interface AuthContextValue {
   user: User | null
   login: (email: string, password: string) => Promise<{token: string; user: User}>
+  setSession: (token: string, user: User) => void
   logout: () => void
   loading: boolean
   showTimeoutWarning: boolean
@@ -94,6 +95,13 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     return res.data
   }
 
+  const setSession = (token: string, userData: User) => {
+    localStorage.setItem('tuc_token', token)
+    axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
+    setUser(userData)
+    resetInactivityTimer()
+  }
+
   const logout = () => {
     if (inactivityTimer) clearTimeout(inactivityTimer)
     if (warningTimer) clearTimeout(warningTimer)
@@ -109,7 +117,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   }
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, loading, showTimeoutWarning, dismissTimeoutWarning }}>
+    <AuthContext.Provider value={{ user, login, setSession, logout, loading, showTimeoutWarning, dismissTimeoutWarning }}>
       {children}
     </AuthContext.Provider>
   )
