@@ -65,15 +65,17 @@ const sendMagicLink = async (userId, email, fullName, role, sessionToken, otp) =
     <tr><td align="center">
       <table width="560" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:8px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.08);">
         <tr>
-          <td style="background:#6b0020;padding:28px 32px;text-align:center;">
-            <img src="https://techbridge.edu.gh/static/TUC_LOGO_1.png" alt="Techbridge University College" width="72" height="72" style="display:block;margin:0 auto 12px;border-radius:50%;background:#fff;padding:4px;" />
-            <div style="color:#f5a800;font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;margin-bottom:6px;">Techbridge University College</div>
-            <div style="color:#ffffff;font-size:18px;font-weight:700;letter-spacing:1px;">Results Management System</div>
-          </td>
-        </tr>
-        <tr>
-          <td style="padding:0;line-height:0;">
-            <img src="${campusImg}" alt="Techbridge University College Campus" width="560" style="display:block;width:100%;max-width:560px;height:200px;object-fit:cover;" />
+          <td style="padding:0;background:#3d0010;background-image:url('${campusImg}');background-size:cover;background-position:center;text-align:center;height:200px;"
+              background="${campusImg}">
+            <!--[if gte mso 9]><v:rect xmlns:v="urn:schemas-microsoft-com:vml" fill="true" stroke="false" style="width:560px;height:200px;"><v:fill type="frame" src="${campusImg}" color="#3d0010"/><v:textbox inset="0,0,0,0"><![endif]-->
+            <table width="100%" cellpadding="0" cellspacing="0" style="background:rgba(63,0,16,0.68);">
+              <tr><td style="padding:28px 32px;text-align:center;height:200px;vertical-align:middle;">
+                <img src="https://techbridge.edu.gh/static/TUC_LOGO_1.png" alt="Techbridge University College" width="64" height="64" style="display:block;margin:0 auto 10px;border-radius:50%;background:#fff;padding:4px;" />
+                <div style="color:#f5a800;font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;margin-bottom:5px;">Techbridge University College</div>
+                <div style="color:#ffffff;font-size:18px;font-weight:700;letter-spacing:1px;">Results Management System</div>
+              </td></tr>
+            </table>
+            <!--[if gte mso 9]></v:textbox></v:rect><![endif]-->
           </td>
         </tr>
         <tr>
