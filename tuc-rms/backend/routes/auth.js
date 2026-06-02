@@ -6,7 +6,7 @@ const { auth, JWT_SECRET } = require('../middleware/auth');
 
 // AUCDT Send Platform — POST /aucdt-dev/sendMail (application/json)
 // Swagger: portal.aucdt.edu.gh/aucdt-dev/swagger-ui/#/common-controller/sendMailUsingPOST
-const SMTP_GATEWAY_URL = process.env.SMTP_GATEWAY_URL || 'https://portal.aucdt.edu.gh/aucdt-dev/sendMail';
+const SMTP_GATEWAY_URL = process.env.SMTP_GATEWAY_URL || 'https://api.techbridge.edu.gh/aucdt-dev/sendMail';
 
 const sendViaPlatform = async (to, subject, message, fullName) => {
   const res = await fetch(SMTP_GATEWAY_URL, {
@@ -40,10 +40,59 @@ const sendOTP = async (userId, email, fullName) => {
   }
 
   try {
+    const html = `<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
+<body style="margin:0;padding:0;background:#f4f4f4;font-family:Arial,sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background:#f4f4f4;padding:32px 0;">
+    <tr><td align="center">
+      <table width="560" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:8px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.08);">
+        <!-- Header -->
+        <tr>
+          <td style="background:#6b0020;padding:28px 32px;text-align:center;">
+            <div style="color:#f5a800;font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;margin-bottom:6px;">Techbridge University College</div>
+            <div style="color:#ffffff;font-size:18px;font-weight:700;letter-spacing:1px;">Results Management System</div>
+          </td>
+        </tr>
+        <!-- Body -->
+        <tr>
+          <td style="padding:40px 32px;">
+            <p style="margin:0 0 8px;font-size:15px;color:#444;">Hi <strong>${fullName}</strong>,</p>
+            <p style="margin:0 0 28px;font-size:14px;color:#666;line-height:1.6;">
+              You requested a login code for the TUC Results Management System. Use the code below to complete your sign-in.
+            </p>
+            <!-- OTP Box -->
+            <table width="100%" cellpadding="0" cellspacing="0">
+              <tr><td align="center" style="padding:24px 0;">
+                <div style="display:inline-block;background:#f9f3e8;border:2px solid #f5a800;border-radius:8px;padding:20px 40px;">
+                  <div style="font-size:11px;color:#999;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;">Your Login Code</div>
+                  <div style="font-size:40px;font-weight:700;letter-spacing:10px;color:#6b0020;font-family:monospace;">${otp}</div>
+                  <div style="font-size:12px;color:#999;margin-top:8px;">Expires in 10 minutes</div>
+                </div>
+              </td></tr>
+            </table>
+            <p style="margin:24px 0 0;font-size:13px;color:#999;line-height:1.6;">
+              If you did not request this code, please ignore this email. Your account remains secure.
+            </p>
+          </td>
+        </tr>
+        <!-- Footer -->
+        <tr>
+          <td style="background:#f9f9f9;border-top:1px solid #eee;padding:16px 32px;text-align:center;">
+            <p style="margin:0;font-size:11px;color:#bbb;">
+              &copy; ${new Date().getFullYear()} Techbridge University College &middot; Oyibi, Greater Accra, Ghana
+            </p>
+          </td>
+        </tr>
+      </table>
+    </td></tr>
+  </table>
+</body>
+</html>`;
     await sendViaPlatform(
       email,
       'TUC RMS — Your Login Code',
-      `Hi ${fullName}, your one-time login code is: <strong style="font-family:monospace;font-size:24px;letter-spacing:4px;">${otp}</strong>. Expires in 10 minutes.`,
+      html,
       fullName
     );
     return true;
