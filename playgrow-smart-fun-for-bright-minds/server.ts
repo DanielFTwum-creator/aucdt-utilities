@@ -47,7 +47,7 @@ app.get(['/api/health', '/playgrow/api/health'], (_req, res) => { res.json({ ok:
 
 const distDir = path.join(__dirname, 'dist');
 app.use('/playgrow', express.static(distDir, { maxAge: '1y', immutable: true, index: false }));
-app.get(['/playgrow', '/playgrow/*'], (_req, res) => {
+app.get(['/playgrow', '/playgrow/*path'], (_req, res) => {
   const indexPath = path.join(distDir, 'index.html');
   if (!fs.existsSync(indexPath)) return res.status(404).send('App not built');
   res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');

@@ -95,7 +95,7 @@ app.use(
   express.static(distDir, { maxAge: '1y', immutable: true, index: false })
 );
 
-app.get(['/midjourney-prompt-helper', '/midjourney-prompt-helper/*'], (_req, res) => {
+app.get(['/midjourney-prompt-helper', '/midjourney-prompt-helper/*path'], (_req, res) => {
   const indexPath = path.join(distDir, 'index.html');
   if (!fs.existsSync(indexPath))
     return res.status(404).send('App not built');

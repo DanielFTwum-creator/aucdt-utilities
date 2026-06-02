@@ -86,7 +86,7 @@ app.get(['/api/health', '/clipai/api/health'], (_req, res) => {
 const distDir = path.join(__dirname, 'dist');
 app.use('/clipai', express.static(distDir, { maxAge: '1y', immutable: true, index: false }));
 
-app.get(['/clipai', '/clipai/*'], (_req, res) => {
+app.get(['/clipai', '/clipai/*path'], (_req, res) => {
   const indexPath = path.join(distDir, 'index.html');
   if (!fs.existsSync(indexPath)) return res.status(404).send('App not built');
   res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');

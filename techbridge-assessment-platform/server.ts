@@ -47,7 +47,7 @@ app.get(['/api/health', '/techbridge-assessment-platform/api/health'], (_req, re
 
 const distDir = path.join(__dirname, 'dist');
 app.use('/techbridge-assessment-platform', express.static(distDir, { maxAge: '1y', immutable: true, index: false }));
-app.get(['/techbridge-assessment-platform', '/techbridge-assessment-platform/*'], (_req, res) => {
+app.get(['/techbridge-assessment-platform', '/techbridge-assessment-platform/*path'], (_req, res) => {
   const indexPath = path.join(distDir, 'index.html');
   if (!fs.existsSync(indexPath)) return res.status(404).send('App not built');
   res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');

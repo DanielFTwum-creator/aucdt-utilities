@@ -47,7 +47,7 @@ app.get(['/api/health', '/smartscale-ai-presentation-platform/api/health'], (_re
 
 const distDir = path.join(__dirname, 'dist');
 app.use('/smartscale-ai-presentation-platform', express.static(distDir, { maxAge: '1y', immutable: true, index: false }));
-app.get(['/smartscale-ai-presentation-platform', '/smartscale-ai-presentation-platform/*'], (_req, res) => {
+app.get(['/smartscale-ai-presentation-platform', '/smartscale-ai-presentation-platform/*path'], (_req, res) => {
   const indexPath = path.join(distDir, 'index.html');
   if (!fs.existsSync(indexPath)) return res.status(404).send('App not built');
   res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');

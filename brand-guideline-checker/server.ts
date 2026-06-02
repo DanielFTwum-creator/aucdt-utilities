@@ -47,7 +47,7 @@ app.get(['/api/health', '/brand-guideline-checker/api/health'], (_req, res) => {
 
 const distDir = path.join(__dirname, 'dist');
 app.use('/brand-guideline-checker', express.static(distDir, { maxAge: '1y', immutable: true, index: false }));
-app.get(['/brand-guideline-checker', '/brand-guideline-checker/*'], (_req, res) => {
+app.get(['/brand-guideline-checker', '/brand-guideline-checker/*path'], (_req, res) => {
   const indexPath = path.join(distDir, 'index.html');
   if (!fs.existsSync(indexPath)) return res.status(404).send('App not built');
   res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');

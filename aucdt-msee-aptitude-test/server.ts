@@ -47,7 +47,7 @@ app.get(['/api/health', '/aucdt-msee-aptitude-test/api/health'], (_req, res) => 
 
 const distDir = path.join(__dirname, 'dist');
 app.use('/aucdt-msee-aptitude-test', express.static(distDir, { maxAge: '1y', immutable: true, index: false }));
-app.get(['/aucdt-msee-aptitude-test', '/aucdt-msee-aptitude-test/*'], (_req, res) => {
+app.get(['/aucdt-msee-aptitude-test', '/aucdt-msee-aptitude-test/*path'], (_req, res) => {
   const indexPath = path.join(distDir, 'index.html');
   if (!fs.existsSync(indexPath)) return res.status(404).send('App not built');
   res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');

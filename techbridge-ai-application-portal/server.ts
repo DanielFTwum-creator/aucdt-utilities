@@ -103,7 +103,7 @@ app.use(
 );
 
 app.get(
-  ['/techbridge-ai-application-portal', '/techbridge-ai-application-portal/*'],
+  ['/techbridge-ai-application-portal', '/techbridge-ai-application-portal/*path'],
   (_req, res) => {
     const indexPath = path.join(distDir, 'index.html');
     if (!fs.existsSync(indexPath))
