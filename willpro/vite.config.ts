@@ -6,6 +6,12 @@ export default defineConfig(() => {
     return {
       base: './',
       plugins: [tailwindcss()],
+      server: {
+        allowedHosts: ['ai-tools.techbridge.edu.gh'],
+      },
+      preview: {
+        allowedHosts: ['ai-tools.techbridge.edu.gh'],
+      },
       build: {
         chunkSizeWarningLimit: 1000,
         rollupOptions: {

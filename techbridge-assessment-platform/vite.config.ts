@@ -23,6 +23,12 @@ export default defineConfig(({ mode }) => {
         'import.meta.env.VITE_GOOGLE_CLIENT_ID': JSON.stringify(env.VITE_GOOGLE_CLIENT_ID),
         'import.meta.env.VITE_GOOGLE_REDIRECT_URI': JSON.stringify(env.VITE_GOOGLE_REDIRECT_URI),
       },
+      server: {
+        allowedHosts: ['ai-tools.techbridge.edu.gh'],
+      },
+      preview: {
+        allowedHosts: ['ai-tools.techbridge.edu.gh'],
+      },
       plugins: [react(), tailwindcss()],
       resolve: {
         alias: {
