@@ -1,17 +1,18 @@
 // TUC Results Management System — Production Backend Server
 // Enhanced with health checks, logging, error handling, and security headers
 
+const dotenv = require('dotenv');
+dotenv.config(); // must run before any module that reads process.env
+
 const express = require('express');
 const cors = require('cors');
-const dotenv = require('dotenv');
 const path = require('path');
 const rateLimit = require('express-rate-limit');
 const { auditMiddleware } = require('./middleware');
 const db = require('./db');
 
-dotenv.config();
-
 const app = express();
+app.set('trust proxy', 1); // trust nginx/Apache reverse proxy for rate limiting
 const PORT = process.env.PORT || 5000;
 const NODE_ENV = process.env.NODE_ENV || 'development';
 
