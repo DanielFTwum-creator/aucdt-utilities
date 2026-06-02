@@ -1,3 +1,4 @@
+/// <reference types="vite/client" />
 import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -18,6 +19,7 @@ const navItems = [
   { name: "About", path: "/about" },
   { name: "Programs", path: "/programs" },
   { name: "Seminars", path: "/seminars" },
+  { name: "🐘 Book Companion", path: "/book" },
   { name: "Blog", path: "/blog" },
 ];
 
