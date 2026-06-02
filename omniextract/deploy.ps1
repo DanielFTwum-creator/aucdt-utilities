@@ -172,8 +172,7 @@ RewriteRule ^ index.html [QSA,L]
 '@
 $localHtaccess = [System.IO.Path]::Combine([System.IO.Path]::GetTempPath(), "omniextract_htaccess_$([Guid]::NewGuid().ToString('N')).txt")
 Write-LfFile -path $localHtaccess -content $htaccessContent
-& $SSH @SSH_OPTS $REMOTE "mkdir -p ${DEPLOY_PATH}/dist"
-& $SCP @SSH_OPTS $localHtaccess "${REMOTE}:${DEPLOY_PATH}/dist/.htaccess"
+& $SCP @SSH_OPTS $localHtaccess "${REMOTE}:${DEPLOY_PATH}/.htaccess"
 if ($LASTEXITCODE -ne 0) {
     Log -Level 'ERROR' -Msg 'Failed to upload .htaccess' -Color Red
     Remove-Item -Path $localHtaccess -Force -ErrorAction SilentlyContinue
@@ -194,7 +193,7 @@ Write-Host $pm2Result -ForegroundColor DarkGray
 Log -Level 'INFO' -Msg 'Health checks...' -Color Yellow
 Start-Sleep -Seconds 8
 
-$indexCheck = & $SSH @SSH_OPTS $REMOTE "test -f ${DEPLOY_PATH}/dist/index.html && echo 'OK index.html present' || echo 'MISSING index.html'"
+$indexCheck = & $SSH @SSH_OPTS $REMOTE "test -f ${DEPLOY_PATH}/index.html && echo 'OK index.html present' || echo 'MISSING index.html'"
 Write-Host $indexCheck -ForegroundColor $(if ($indexCheck -match '^OK') { 'Green' } else { 'Red' })
 
 $portCheck = & $SSH @SSH_OPTS $REMOTE "ss -tlnp | grep -q :${PORT} && echo 'OK port ${PORT} listening' || echo 'WARN port ${PORT} not found'"
