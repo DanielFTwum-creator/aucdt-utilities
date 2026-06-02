@@ -27,6 +27,15 @@ const sendViaPlatform = async (to, subject, message, fullName) => {
 // In-memory OTP store — keyed by userId, cleared on use
 const otpStore = {};
 
+// Round-robin campus frame selector (12 frames extracted from campus_tour.mp4)
+const CAMPUS_FRAME_COUNT = 12;
+const CAMPUS_FRAME_BASE = 'https://techbridge.edu.gh/static/campus_frame_';
+let frameIndex = 0;
+const nextCampusFrame = () => {
+  frameIndex = (frameIndex % CAMPUS_FRAME_COUNT) + 1;
+  return `${CAMPUS_FRAME_BASE}${frameIndex}.jpg`;
+};
+
 // Role → landing page mapping
 const ROLE_LANDING = {
   registrar:  '/dashboard',
@@ -47,6 +56,7 @@ const sendMagicLink = async (userId, email, fullName, role, sessionToken, otp) =
     return true;
   }
 
+  const campusImg = nextCampusFrame();
   const html = `<!DOCTYPE html>
 <html lang="en">
 <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
@@ -59,6 +69,11 @@ const sendMagicLink = async (userId, email, fullName, role, sessionToken, otp) =
             <img src="https://techbridge.edu.gh/static/TUC_LOGO_1.png" alt="Techbridge University College" width="72" height="72" style="display:block;margin:0 auto 12px;border-radius:50%;background:#fff;padding:4px;" />
             <div style="color:#f5a800;font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;margin-bottom:6px;">Techbridge University College</div>
             <div style="color:#ffffff;font-size:18px;font-weight:700;letter-spacing:1px;">Results Management System</div>
+          </td>
+        </tr>
+        <tr>
+          <td style="padding:0;line-height:0;">
+            <img src="${campusImg}" alt="Techbridge University College Campus" width="560" style="display:block;width:100%;max-width:560px;height:200px;object-fit:cover;" />
           </td>
         </tr>
         <tr>
