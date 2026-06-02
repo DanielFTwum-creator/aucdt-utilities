@@ -1770,6 +1770,28 @@ Use `aucdt-sendmail-api-tester` to verify the service is reachable before integr
 
 **Failure Mode:** Sending directly via SMTP/sendmail bypasses institutional logging and may be blocked by server firewall rules.
 
-**Used by:** `tuc-rms/backend/routes/auth.js` (OTP delivery, June 2026)
+**Used by:** `tuc-rms/backend/routes/auth.js`, `dmcdai-digital-media-communication-design/server.js` (June 2026)
+
+### Critical Rule — Never Gate on NODE_ENV
+
+```typescript
+// ❌ WRONG — silently swallows emails when NODE_ENV check misfires
+if (process.env.NODE_ENV === 'development') {
+  console.log(`OTP: ${otp}`);
+  return true;
+}
+await sendViaPlatform(...);
+
+// ✅ CORRECT — always send, always log failures
+try {
+  await sendViaPlatform(...);
+  return true;
+} catch (err) {
+  console.error('Failed to send email:', err.message);
+  return false;
+}
+```
+
+**Why:** Plain `node` as PM2 interpreter does not guarantee dotenv loads before process env is evaluated. `tsx` handles this differently. Any NODE_ENV conditional can silently skip email in production with no error.
 
 *Last updated: 2 June 2026 — Daniel Frempong Twum / TUC ICT*
