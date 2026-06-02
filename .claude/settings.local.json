@@ -293,7 +293,10 @@
       "PowerShell(ssh root@66.226.72.199 \"mysql -u aucdtadmin_dev -p'#4Dwsf07-dev' aucdt_online_dev -e \\\\\"UPDATE tuc_rms_users SET full_name='Stephanie Acquah-Djan', email='stephanie.acquah-djan@techbridge.edu.gh', role='registrar', staff_id='REG001', department='Registrar Office' WHERE id=1)",
       "PowerShell(\\\\\"\")",
       "PowerShell(ssh root@66.226.72.199 \"mysql -u aucdtadmin_dev -p'#4Dwsf07-dev' aucdt_online_dev -e 'SELECT id, full_name, email, role, staff_id FROM tuc_rms_users WHERE role=\\\\\"registrar\\\\\";'\")",
-      "PowerShell(docker cp \"C:\\\\Development\\\\github\\\\aucdt-utilities\\\\tuc-rms\\\\backend\\\\fix-hashes.sql\" tuc-rms-mysql:/tmp/fix-hashes.sql)"
+      "PowerShell(docker cp \"C:\\\\Development\\\\github\\\\aucdt-utilities\\\\tuc-rms\\\\backend\\\\fix-hashes.sql\" tuc-rms-mysql:/tmp/fix-hashes.sql)",
+      "Bash(cd *)",
+      "Bash(rm \"C:/Development/github/aucdt-utilities/sentinel-agent/.git/index.lock\")",
+      "Bash(git rm *)"
     ]
   }
 }
