@@ -127,10 +127,10 @@ export default function Login() {
             The link expires in <strong>15 minutes</strong> and can only be used once.
           </div>
           <a
-            href={`https://mail.google.com/mail/u/?authuser=${encodeURIComponent(email)}`}
+            href="https://mail.google.com/a/techbridge.edu.gh"
             target="_blank" rel="noopener noreferrer"
             style={{ display: 'inline-flex', alignItems: 'center', gap: 8, marginTop: 20, padding: '10px 20px', background: '#16a34a', color: '#fff', borderRadius: 8, fontSize: 13, fontWeight: 600, textDecoration: 'none' }}>
-            <span style={{ fontSize: 16 }}>📩</span> Open Gmail Inbox
+            <span style={{ fontSize: 16 }}>📩</span> Open TUC Inbox
           </a>
           <button
             onClick={() => { setLinkSent(false); setEmail(''); setFirstName(''); setLastName('') }}
