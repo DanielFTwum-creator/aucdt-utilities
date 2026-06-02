@@ -42,11 +42,11 @@ Log -Level 'INFO' -Msg ''
 
 # Step 1: Pre-flight
 Log -Level 'INFO' -Msg 'Step 1: Pre-flight checks...' -Color Yellow
-if (-not (Test-Path '.env.local')) {
-    Log -Level 'ERROR' -Msg '.env.local not found — aborting' -Color Red
+if (-not (Test-Path '.env')) {
+    Log -Level 'ERROR' -Msg '.env not found — aborting' -Color Red
     exit 1
 }
-Log -Level 'SUCCESS' -Msg 'Pre-flight OK (.env.local validated)' -Color Green
+Log -Level 'SUCCESS' -Msg 'Pre-flight OK (.env validated)' -Color Green
 
 # Step 2: Git state
 Log -Level 'INFO' -Msg 'Step 2: Verifying git state...' -Color Yellow
@@ -64,12 +64,12 @@ try {
 # Step 3: Server-side build
 Log -Level 'INFO' -Msg 'Step 3: Server-side build (git clone + pnpm build)' -Color Yellow
 
-Log -Level 'INFO' -Msg 'Uploading .env.local to server for build...' -Color DarkGray
-& $SCP @SSH_OPTS .env.local "${REMOTE}:/tmp/.env.dfs-website" 2>&1 | Out-Null
+Log -Level 'INFO' -Msg 'Uploading .env to server for build...' -Color DarkGray
+& $SCP @SSH_OPTS .env "${REMOTE}:/tmp/.env.dfs-website" 2>&1 | Out-Null
 if ($LASTEXITCODE -eq 0) {
-    Log -Level 'SUCCESS' -Msg '.env.local uploaded' -Color Green
+    Log -Level 'SUCCESS' -Msg '.env uploaded' -Color Green
 } else {
-    Log -Level 'ERROR' -Msg 'Failed to upload .env.local' -Color Red
+    Log -Level 'ERROR' -Msg 'Failed to upload .env' -Color Red
     exit 1
 }
 
@@ -97,11 +97,11 @@ cd "`$TMPDIR"
 git sparse-checkout set ${SUBFOLDER}
 cd ${SUBFOLDER}
 
-log '[3/7] Injecting .env.local for Vite build...'
+log '[3/7] Injecting .env for Vite build...'
 cp /tmp/.env.dfs-website .env.local
 
 log '[4/7] Installing dependencies...'
-pnpm install --frozen-lockfile --silent 2>/dev/null || pnpm install --no-frozen-lockfile --silent
+pnpm install --config.ignore-scripts=false --frozen-lockfile --silent 2>/dev/null || pnpm install --config.ignore-scripts=false --no-frozen-lockfile --silent
 
 log '[5/7] Building...'
 pnpm build
@@ -114,7 +114,7 @@ cp index.html "`$DEPLOY_PATH/dist/index.html" 2>/dev/null || true
 log '[7/7] Installing backend deps...'
 cp server.ts package.json pnpm-lock.yaml "`$DEPLOY_PATH/" 2>/dev/null || true
 cd "`$DEPLOY_PATH"
-pnpm install --prod --silent 2>/dev/null || npm install --omit=dev --silent
+pnpm install --config.ignore-scripts=false --prod --silent 2>/dev/null || npm install --omit=dev --silent
 
 log 'Build and deploy complete.'
 "@
