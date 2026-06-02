@@ -76,9 +76,11 @@ app.get(['/callback', '/omniextract/callback'], async (req, res) => {
       name:  userInfo.name,
       email: userInfo.email,
     });
+    
+    const b64User = Buffer.from(userJson).toString('base64');
 
     // Cookie readable by JS so AuthContext can hydrate user on page load
-    res.cookie('omniextract_user', Buffer.from(userJson).toString('base64'), {
+    res.cookie('omniextract_user', b64User, {
       httpOnly: false,
       secure:   true,
       sameSite: 'lax',
@@ -86,7 +88,8 @@ app.get(['/callback', '/omniextract/callback'], async (req, res) => {
       path:     '/omniextract/',
     });
 
-    return res.redirect('/omniextract/');
+    // Fallback parameter for cookie-blocking browsers (Safari/iframes)
+    return res.redirect(`/omniextract/?user=${encodeURIComponent(b64User)}`);
   } catch (err) {
     console.error('[OmniExtract] OAuth callback error:', err);
     return res.redirect('/omniextract/?error=internal_error');

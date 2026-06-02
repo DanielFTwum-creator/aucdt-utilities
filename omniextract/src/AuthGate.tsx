@@ -35,26 +35,40 @@ export function AuthGate({ children, onLogout }: { children: React.ReactNode; on
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    // Hydrate from server-set cookie after OAuth callback (one-shot)
+    const params = new URLSearchParams(window.location.search);
+    
+    // 1. Try URL parameter first (Safari/iframe fallback)
+    const urlUser = params.get('user');
+    
+    // 2. Fallback to cookie
     const cookieValue = document.cookie
       .split('; ')
       .find(row => row.startsWith('omniextract_user='))
       ?.split('=')[1];
-    if (cookieValue) {
+      
+    const encodedData = urlUser || cookieValue;
+    
+    if (encodedData) {
       try {
-        const userData = JSON.parse(atob(decodeURIComponent(cookieValue))) as User;
+        const userData = JSON.parse(atob(decodeURIComponent(encodedData))) as User;
         localStorage.setItem(USER_KEY, JSON.stringify(userData));
         sessionStorage.setItem(AUTH_KEY, '1');
         setUser(userData);
         setAuthed(true);
-        document.cookie = 'omniextract_user=; max-age=0; path=/omniextract/';
+        
+        // Clean up
+        if (cookieValue) {
+          document.cookie = 'omniextract_user=; max-age=0; path=/omniextract/';
+        }
+        if (urlUser) {
+          window.history.replaceState({}, document.title, window.location.pathname);
+        }
       } catch (e) {
-        console.error('Failed to parse user cookie:', e);
+        console.error('Failed to parse user data:', e);
       }
     }
 
     // Surface OAuth error from query string
-    const params = new URLSearchParams(window.location.search);
     const oauthError = params.get('error');
     if (oauthError) {
       setError(`Google login failed: ${oauthError}`);
