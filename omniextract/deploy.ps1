@@ -115,8 +115,7 @@ pnpm build
 
 log '[6/7] Deploying dist/ to web root...'
 mkdir -p "`$DEPLOY_PATH"
-rsync -a --delete dist/ "`$DEPLOY_PATH/dist/"
-cp index.html "`$DEPLOY_PATH/dist/index.html" 2>/dev/null || true
+rsync -a --delete dist/. "`$DEPLOY_PATH/"
 
 log '[7/7] Installing backend deps...'
 cp server.ts package.json pnpm-lock.yaml "`$DEPLOY_PATH/" 2>/dev/null || true
