@@ -23,7 +23,7 @@ import { addLog } from './services/auditLogService';
 const getHash = () => typeof window !== 'undefined' ? window.location.hash.replace(/^#\/?/, '') : '';
 
 const App: React.FC = () => {
-  const { isAuthenticated, isAdmin } = useAuth();
+  const { isAuthenticated, isAdmin, user } = useAuth();
   const [activeModuleId, setActiveModuleId] = useState<ModuleId | 'admin' | null>(null);
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [currentHash, setCurrentHash] = useState<string>(getHash);
