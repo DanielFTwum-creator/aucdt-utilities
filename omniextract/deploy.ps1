@@ -149,6 +149,16 @@ Log -Level 'INFO' -Msg 'Step 4: Writing .htaccess...' -Color Yellow
 $htaccessContent = @'
 Options -MultiViews
 RewriteEngine On
+RewriteBase /omniextract/
+
+RewriteCond %{REQUEST_URI} ^/omniextract/callback [OR]
+RewriteCond %{REQUEST_URI} ^/callback
+RewriteRule ^(callback/?.*)$ http://localhost:3009/omniextract/$1 [P,L]
+
+RewriteCond %{REQUEST_URI} ^/omniextract/api/ [OR]
+RewriteCond %{REQUEST_URI} ^/api/
+RewriteRule ^(api/.*)$ http://localhost:3009/omniextract/$1 [P,L]
+
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^ index.html [QSA,L]
