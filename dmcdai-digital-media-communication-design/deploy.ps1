@@ -1,10 +1,10 @@
 # dmcdai-digital-media-communication-design — Deploy Script
-# URL: https://ai-tools.techbridge.edu.gh/dmcdai-digital-media-communication-design/
+# URL: https://ai-tools.techbridge.edu.gh/dmcdai/
 # Usage: .\deploy.ps1 -Build
 
 param(
     [string]$RemoteHost = "root@techbridge.edu.gh",
-    [string]$RemotePath = "/var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/dmcdai-digital-media-communication-design/",
+    [string]$RemotePath = "/var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/dmcdai/",
     [switch]$Build = $false
 )
 
@@ -79,11 +79,11 @@ Log "INFO" "Step 4: Writing .htaccess..." Yellow
 @"
 <IfModule mod_rewrite.c>
   RewriteEngine On
-  RewriteBase /dmcdai-digital-media-communication-design/
+  RewriteBase /dmcdai/
   RewriteCond %{REQUEST_FILENAME} -f [OR]
   RewriteCond %{REQUEST_FILENAME} -d
   RewriteRule ^ - [L]
-  RewriteRule ^ /dmcdai-digital-media-communication-design/index.html [QSA,L]
+  RewriteRule ^ /dmcdai/index.html [QSA,L]
 </IfModule>
 <IfModule mod_expires.c>
   ExpiresActive On
@@ -131,6 +131,6 @@ $elapsed = [math]::Round(((Get-Date) - $__deployStart).TotalSeconds, 1)
 $timeStr = if ($elapsed -ge 60) { "$([math]::Floor($elapsed/60))m $([math]::Round($elapsed%60,1))s" } else { "${elapsed}s" }
 Log "SUCCESS" "========================================" Green
 Log "SUCCESS" "DEPLOYMENT COMPLETE" Green
-Log "SUCCESS" "URL  : https://ai-tools.techbridge.edu.gh/dmcdai-digital-media-communication-design/" Green
+Log "SUCCESS" "URL  : https://ai-tools.techbridge.edu.gh/dmcdai/" Green
 Log "SUCCESS" "Time : $timeStr total" Green
 Log "SUCCESS" "========================================" Green

@@ -29,7 +29,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onClose, hideCancel = fa
     if (token && otp) {
       setVerifying(true);
       window.history.replaceState({}, '', window.location.pathname);
-      fetch('/dmcdai-digital-media-communication-design/api/auth/verify-otp', {
+      fetch('/dmcdai/api/auth/verify-otp', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ session_token: token, otp }),
@@ -49,7 +49,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onClose, hideCancel = fa
     const email = `${firstName.trim().toLowerCase()}.${lastName.trim().toLowerCase()}@techbridge.edu.gh`;
     setLoading(true);
     try {
-      const res = await fetch('/dmcdai-digital-media-communication-design/api/auth/login', {
+      const res = await fetch('/dmcdai/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email }),
