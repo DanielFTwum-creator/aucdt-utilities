@@ -54,10 +54,9 @@ cd $buildDir
 git sparse-checkout set dmcdai-digital-media-communication-design
 cd dmcdai-digital-media-communication-design
 log '[3/5] Installing dependencies...'
-pnpm approve-builds || true
-pnpm install --config.ignore-scripts=false --no-frozen-lockfile --silent 2>/dev/null || npm install --silent
+npm install --silent
 log '[4/5] Building...'
-pnpm build
+npm run build
 log '[5/5] Deploying dist/ to web root...'
 mkdir -p $RemotePath
 rsync -a --delete dist/. $RemotePath
@@ -107,7 +106,7 @@ ssh -o StrictHostKeyChecking=no $RemoteHost "chown -R techbridge.edu.gh_md:psase
 Log "INFO" "Step 6: Deploying backend files..." Yellow
 scp -o StrictHostKeyChecking=no server.js package.json pnpm-lock.yaml "${RemoteHost}:${RemotePath}" 2>$null | Out-Null
 if (Test-Path ".env.local") { scp -o StrictHostKeyChecking=no ".env.local" "${RemoteHost}:${RemotePath}.env" 2>$null | Out-Null }
-ssh -o StrictHostKeyChecking=no $RemoteHost "cd $RemotePath && pnpm approve-builds || true && pnpm install --config.ignore-scripts=false --prod --silent 2>/dev/null || npm install --omit=dev --silent"
+ssh -o StrictHostKeyChecking=no $RemoteHost "cd $RemotePath && npm install --omit=dev --silent"
 
 Log "INFO" "Step 7: Restarting backend (PM2)..." Yellow
 $restartCmd = @"
