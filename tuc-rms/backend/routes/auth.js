@@ -56,6 +56,7 @@ const sendMagicLink = async (userId, email, fullName, role, sessionToken, otp) =
       <table width="560" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:8px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.08);">
         <tr>
           <td style="background:#6b0020;padding:28px 32px;text-align:center;">
+            <img src="https://techbridge.edu.gh/static/TUC_LOGO_1.png" alt="Techbridge University College" width="72" height="72" style="display:block;margin:0 auto 12px;border-radius:50%;background:#fff;padding:4px;" />
             <div style="color:#f5a800;font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;margin-bottom:6px;">Techbridge University College</div>
             <div style="color:#ffffff;font-size:18px;font-weight:700;letter-spacing:1px;">Results Management System</div>
           </td>
