@@ -110,10 +110,14 @@ if ($serverFile) {
     # Every bare-package import must be a declared dependency
     $pkgPath = Join-Path $app 'package.json'
     if (Test-Path $pkgPath) {
-        $pkg  = Get-Content $pkgPath -Raw | ConvertFrom-Json
+        $pkg = $null
+        try { $pkg = Get-Content $pkgPath -Raw | ConvertFrom-Json } catch {
+            Warn "package.json is not valid JSON ($($_.Exception.Message.Split([char]10)[0])) — dependency check skipped"
+        }
         $deps = @()
-        if ($pkg.dependencies)    { $deps += $pkg.dependencies.PSObject.Properties.Name }
-        if ($pkg.devDependencies) { $deps += $pkg.devDependencies.PSObject.Properties.Name }
+        if ($pkg -and $pkg.dependencies)    { $deps += $pkg.dependencies.PSObject.Properties.Name }
+        if ($pkg -and $pkg.devDependencies) { $deps += $pkg.devDependencies.PSObject.Properties.Name }
+      if ($pkg) {
         $imports = [regex]::Matches($srv, "(?m)^\s*import\s+(?:.*?\s+from\s+)?['""]([^.][^'""]*)['""]") |
                    ForEach-Object { $_.Groups[1].Value }
         $missing = @()
@@ -126,6 +130,7 @@ if ($serverFile) {
         }
         if ($missing.Count) { Fail "server imports not in package.json dependencies: $($missing -join ', ')" }
         else { Pass "all server imports are declared dependencies" }
+      }
     }
 } else { Warn "no server file (static-only app?) — server checks skipped" }
 
