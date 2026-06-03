@@ -12,14 +12,23 @@ import type {
 
 const API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
 
-// Default client — v1beta (chat, text, etc.)
-const ai = new GoogleGenAI({ apiKey: API_KEY });
-
-// Imagen 3 is GA and served from v1
-const imageAi = new GoogleGenAI({ apiKey: API_KEY, httpOptions: { apiVersion: 'v1' } });
-
-// VEO video generation requires v1alpha
-const videoAi = new GoogleGenAI({ apiKey: API_KEY, httpOptions: { apiVersion: 'v1alpha' } });
+// Lazily construct the SDK clients. Instantiating GoogleGenAI at module load
+// throws "An API Key must be set when running in a browser" when no key is
+// baked in (which is intentional — keys must NOT be in the bundle). Lazy init
+// lets the app load; the individual AI calls still need a backend proxy, but
+// they only fail when invoked, not at import (which previously hung the app).
+let _ai: GoogleGenAI | null = null;
+let _imageAi: GoogleGenAI | null = null;
+let _videoAi: GoogleGenAI | null = null;
+const ai = new Proxy({} as GoogleGenAI, {
+  get(_t, prop) { (_ai ??= new GoogleGenAI({ apiKey: API_KEY })); return (_ai as any)[prop]; },
+});
+const imageAi = new Proxy({} as GoogleGenAI, {
+  get(_t, prop) { (_imageAi ??= new GoogleGenAI({ apiKey: API_KEY, httpOptions: { apiVersion: 'v1' } })); return (_imageAi as any)[prop]; },
+});
+const videoAi = new Proxy({} as GoogleGenAI, {
+  get(_t, prop) { (_videoAi ??= new GoogleGenAI({ apiKey: API_KEY, httpOptions: { apiVersion: 'v1alpha' } })); return (_videoAi as any)[prop]; },
+});
 
 // Candidate image models to try in order of preference
 const IMAGE_GENERATE_MODELS = ['imagen-3.0-generate-001', 'imagen-3.0-fast-generate-001'];
