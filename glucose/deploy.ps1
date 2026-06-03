@@ -162,6 +162,12 @@ $htaccessContent = @'
 <IfModule mod_rewrite.c>
   RewriteEngine On
   RewriteBase /glucose/
+
+  # Proxy API requests to PM2 running on port 3006
+  RewriteCond %{REQUEST_URI} ^/glucose/api/ [NC,OR]
+  RewriteCond %{REQUEST_URI} ^/api/ [NC]
+  RewriteRule ^api/(.*)$ http://localhost:3006/api/$1 [P,L,NC]
+
   RewriteCond %{REQUEST_FILENAME} -f [OR]
   RewriteCond %{REQUEST_FILENAME} -d
   RewriteRule ^ - [L]

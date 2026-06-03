@@ -1,0 +1,80 @@
+version: '3.9'
+
+# TUC NetScan — Docker Compose
+# Document: TUC-ICT-SRS-2026-012
+# Usage: make dev | make up | make down
+
+services:
+
+  # ── MariaDB ────────────────────────────────────────────────────────
+  mariadb:
+    image: mariadb:10.11
+    container_name: netscan-db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-netscan-root-2026}
+      MYSQL_DATABASE: netscan
+      MYSQL_USER: ${DB_USERNAME:-netscan}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-netscan-pass-2026}
+    ports:
+      - "3307:3306"   # TUC institutional standard port
+    volumes:
+      - mariadb_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ── Redis ──────────────────────────────────────────────────────────
+  redis:
+    image: redis:7-alpine
+    container_name: netscan-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+
+  # ── Backend ────────────────────────────────────────────────────────
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: netscan-backend
+    restart: unless-stopped
+    network_mode: host    # Required for LAN scanning (ARP/ICMP)
+    depends_on:
+      mariadb: { condition: service_healthy }
+      redis:   { condition: service_healthy }
+    environment:
+      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE:-dev}
+      DB_USERNAME: ${DB_USERNAME:-netscan}
+      DB_PASSWORD: ${DB_PASSWORD:-netscan-pass-2026}
+      JWT_SECRET: ${JWT_SECRET:-dev-secret-key-tuc-netscan-2026-not-for-production}
+      REDIS_HOST: localhost
+    ports:
+      - "8080:8080"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/api/v1/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # ── Frontend ───────────────────────────────────────────────────────
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: netscan-frontend
+    restart: unless-stopped
+    depends_on:
+      backend: { condition: service_healthy }
+    ports:
+      - "3000:80"
+
+volumes:
+  mariadb_data:

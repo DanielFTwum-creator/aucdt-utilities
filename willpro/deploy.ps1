@@ -1,4 +1,4 @@
-# willpro — Deploy Script
+# willpro - Deploy Script
 # URL: https://ai-tools.techbridge.edu.gh/willpro/
 # Usage: .\deploy.ps1 -Build
 
@@ -30,8 +30,8 @@ Log "INFO" "Step 0: Approval gate..." Yellow
 $gate = Join-Path $PSScriptRoot '..\Approve-App.ps1'
 if (Test-Path $gate) {
     & $gate -Path $PSScriptRoot -PreBuild
-    if ($LASTEXITCODE -ne 0) { Log "ERROR" "Approval gate REJECTED — fix issues above before deploying." Red; exit 1 }
-} else { Log "WARN" "Approve-App.ps1 not found — skipping gate" Yellow }
+    if ($LASTEXITCODE -ne 0) { Log "ERROR" "Approval gate REJECTED - fix issues above before deploying." Red; exit 1 }
+} else { Log "WARN" "Approve-App.ps1 not found - skipping gate" Yellow }
 
 Log "INFO" "Step 1: Pre-flight checks..." Yellow
 Log "SUCCESS" "Pre-flight OK" Green
@@ -63,17 +63,26 @@ cd willpro
 log '[3/5] Installing dependencies...'
 pnpm install --no-frozen-lockfile --silent 2>/dev/null || npm install --silent
 log '[4/5] Building...'
+cp /tmp/.env.willpro .env.local 2>/dev/null || true
 pnpm build
 log '[5/5] Deploying dist/ to web root...'
 mkdir -p $RemotePath
 rsync -a --delete dist/. $RemotePath
 log 'Build and deploy complete.'
 "@
+    # Upload env file so Vite can bake the client ID into the bundle
+    if (Test-Path ".env.local") {
+        Log "INFO" "Uploading .env.local to server for Vite build..." Yellow
+        scp -o StrictHostKeyChecking=no ".env.local" "${RemoteHost}:/tmp/.env.willpro"
+        Log "SUCCESS" ".env.local uploaded" Green
+    } else {
+        Log "WARN" ".env.local not found locally - Google OAuth may not work" Yellow
+    }
     $b64 = [Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes($serverScript.Replace("`r", "")))
     ssh -o StrictHostKeyChecking=no $RemoteHost "echo $b64 | base64 -d | bash"
     if ($LASTEXITCODE -eq 0) { Log "SUCCESS" "Server-side build and file sync complete" Green }
     else { Log "WARN" "Server build returned $LASTEXITCODE" Yellow }
-    ssh -o StrictHostKeyChecking=no $RemoteHost "rm -rf $buildDir" 2>$null | Out-Null
+    ssh -o StrictHostKeyChecking=no $RemoteHost "rm -rf $buildDir; rm -f /tmp/.env.willpro" 2>$null | Out-Null
 } else {
     Log "INFO" "Step 3: Copying local dist/ to server..." Yellow
     if (-not (Test-Path "dist")) { Log "ERROR" "dist/ not found. Run with -Build flag." Red; exit 1 }

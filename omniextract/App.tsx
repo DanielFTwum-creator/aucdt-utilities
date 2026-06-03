@@ -10,8 +10,10 @@ import FileUpload from './components/FileUpload';
 import LoadingSpinner from './components/LoadingSpinner';
 import ResultsDisplay from './components/ResultsDisplay';
 import MessageBox from './components/MessageBox';
+import { useLogout } from './src/AuthGate';
 
 const App: React.FC = () => {
+    const handleLogout = useLogout();
     const [fileInfo, setFileInfo] = useState('');
     const [loading, setLoading] = useState(false);
     const [progressMessage, setProgressMessage] = useState('');
@@ -98,7 +100,13 @@ const App: React.FC = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gray-900 text-gray-100 flex flex-col items-center p-4 sm:p-6 lg:p-8 font-sans">
+        <div className="min-h-screen bg-gray-900 text-gray-100 flex flex-col items-center p-4 sm:p-6 lg:p-8 font-sans relative">
+            <button
+                onClick={handleLogout}
+                className="absolute top-4 right-4 text-sm bg-red-600 hover:bg-red-500 text-white font-semibold py-2 px-4 rounded shadow-md transition-colors"
+            >
+                Sign Out
+            </button>
             <div className="w-full max-w-3xl mx-auto">
                 <Header />
                 <main className="mt-8 bg-gray-800/50 backdrop-blur-sm rounded-2xl shadow-2xl p-6 sm:p-8 border border-gray-700">
