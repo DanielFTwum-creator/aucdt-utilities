@@ -1,8 +1,9 @@
-import { GoogleGenAI, Modality } from "@google/genai";
+// Audio generation runs on the backend (/api/groove) so the GEMINI_API_KEY is
+// never bundled into the browser. This module builds the prompt client-side
+// and posts it to the proxy.
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
-const AUDIO_MODEL = "lyria-3-clip-preview" as const;
 const DEFAULT_BPM = 160;
 const BPM_MIN = 40;
 const BPM_MAX = 300;
@@ -145,51 +146,25 @@ async function streamGroove(
   style?: GrooveStyle,
   signal?: AbortSignal
 ): Promise<{ base64: string; mimeType: string }> {
-  const apiKey = process.env.GEMINI_API_KEY;
-  if (!apiKey) {
-    throw new Error(
-      "GEMINI_API_KEY is not set. Ensure the environment variable is configured."
-    );
-  }
-
-  const ai = new GoogleGenAI({ apiKey });
-  let audioBase64 = "";
-  let mimeType: string = DEFAULT_MIME;
-
   try {
-    const stream = await ai.models.generateContentStream({
-      model: AUDIO_MODEL,
-      contents: buildGroovePrompt(safeBpm, style),
-      config: {
-        responseModalities: [Modality.AUDIO],
-      },
+    const res = await fetch(`${import.meta.env.BASE_URL}api/groove`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ prompt: buildGroovePrompt(safeBpm, style) }),
+      signal,
     });
-
-    for await (const chunk of stream) {
-      // Honour cancellation between chunks
-      signal?.throwIfAborted();
-
-      const parts = chunk.candidates?.[0]?.content?.parts ?? [];
-      for (const part of parts) {
-        const inline = part.inlineData;
-        if (!inline?.data) continue;
-
-        // Capture MIME type from whichever chunk provides it first
-        if (inline.mimeType && mimeType === DEFAULT_MIME) {
-          mimeType = inline.mimeType;
-        }
-        audioBase64 += inline.data;
-      }
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.error || `Groove request failed (${res.status})`);
     }
+    const { base64, mimeType } = await res.json();
+    return { base64, mimeType: mimeType || DEFAULT_MIME };
   } catch (err) {
-    // Re-throw AbortError as-is; wrap everything else
     if (err instanceof Error && err.name === "AbortError") throw err;
     throw new Error(
       `Groove generation failed: ${err instanceof Error ? err.message : String(err)}`
     );
   }
-
-  return { base64: audioBase64, mimeType };
 }
 
 /**
