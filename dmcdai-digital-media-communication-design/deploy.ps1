@@ -83,10 +83,10 @@ Log "INFO" "Step 4: Writing .htaccess..." Yellow
   RewriteEngine On
   RewriteBase /dmcdai/
 
-  # Proxy API requests to PM2 running on port 3000
+  # Proxy API requests to PM2 running on port 3014 (matches ecosystem.config.js)
   RewriteCond %{REQUEST_URI} ^/dmcdai/api/ [OR]
   RewriteCond %{REQUEST_URI} ^/api/
-  RewriteRule ^api/(.*)$ http://localhost:3000/api/$1 [P,L]
+  RewriteRule ^api/(.*)$ http://localhost:3014/api/$1 [P,L]
 
   RewriteCond %{REQUEST_FILENAME} -f [OR]
   RewriteCond %{REQUEST_FILENAME} -d
@@ -122,7 +122,7 @@ if command -v pm2 &>/dev/null; then
   if pm2 describe dmcdai &>/dev/null; then
     pm2 reload dmcdai --update-env && echo 'pm2: reloaded dmcdai'
   else
-    cd $RemotePath && NODE_ENV=production PORT=3000 pm2 start server.js --name dmcdai --interpreter npx --interpreter-args tsx
+    cd $RemotePath && NODE_ENV=production PORT=3014 pm2 start server.js --name dmcdai --interpreter npx --interpreter-args tsx
     echo 'pm2: started dmcdai'
   fi
   pm2 save --force &>/dev/null
