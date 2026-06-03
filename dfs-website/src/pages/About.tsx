@@ -31,7 +31,7 @@ export default function About() {
               {/* Steve photo */}
               <div className="flex items-center gap-6">
                 <div className="w-28 h-28 rounded-full overflow-hidden shadow-lg shrink-0 border-4" style={{borderColor: "#c8921a"}}>
-                  <img src="/photos/steve.jpg" alt="Steve Ferraris" className="w-full h-full object-cover object-top" />
+                  <img src={`${import.meta.env.BASE_URL}photos/steve.jpg`} alt="Steve Ferraris" className="w-full h-full object-cover object-top" />
                 </div>
                 <div>
                   <h2 className="text-4xl font-serif">Steve Ferraris</h2>

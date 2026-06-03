@@ -10,7 +10,7 @@ export default function Home() {
       <section className="relative min-h-[85vh] flex items-center overflow-hidden" style={{background: "linear-gradient(135deg, #1c3a28 0%, #2d6a4f 50%, #3d5a2a 100%)"}}>
         {/* Real drum circle photo as background */}
         <div className="absolute inset-0 z-0">
-          <img src="/photos/circle.jpg" alt="" className="w-full h-full object-cover" aria-hidden="true" />
+          <img src={`${import.meta.env.BASE_URL}photos/circle.jpg`} alt="" className="w-full h-full object-cover" aria-hidden="true" />
           <div className="absolute inset-0" style={{background: "linear-gradient(135deg, rgba(28,58,40,0.88) 0%, rgba(45,106,79,0.78) 50%, rgba(28,58,40,0.85) 100%)"}} />
         </div>
 
@@ -161,7 +161,7 @@ export default function Home() {
             {/* Vermont outdoor drums photo */}
             <div className="relative">
               <div className="w-full aspect-[4/3] rounded-[32px] overflow-hidden shadow-2xl">
-                <img src="/photos/outdoor.jpg" alt="Drumming for SEL — outdoor classroom, Vermont" className="w-full h-full object-cover" />
+                <img src={`${import.meta.env.BASE_URL}photos/outdoor.jpg`} alt="Drumming for SEL — outdoor classroom, Vermont" className="w-full h-full object-cover" />
               </div>
               {/* Quote overlay card */}
               <div className="absolute -bottom-6 -left-6 bg-white p-6 rounded-[20px] shadow-xl max-w-xs hidden lg:block border-l-4" style={{borderColor: "#c8921a"}}>
@@ -234,10 +234,10 @@ export default function Home() {
       <section className="py-0">
         <div className="grid grid-cols-1 md:grid-cols-2 min-h-[400px]">
           <div className="aspect-[4/3] md:aspect-auto overflow-hidden">
-            <img src="/photos/workshop.jpg" alt="SEL drumming workshop — staff training session" className="w-full h-full object-cover" />
+            <img src={`${import.meta.env.BASE_URL}photos/workshop.jpg`} alt="SEL drumming workshop — staff training session" className="w-full h-full object-cover" />
           </div>
           <div className="aspect-[4/3] md:aspect-auto overflow-hidden">
-            <img src="/photos/students.jpg" alt="Students in a drumming circle — Bennington Vermont" className="w-full h-full object-cover" />
+            <img src={`${import.meta.env.BASE_URL}photos/students.jpg`} alt="Students in a drumming circle — Bennington Vermont" className="w-full h-full object-cover" />
           </div>
         </div>
       </section>
