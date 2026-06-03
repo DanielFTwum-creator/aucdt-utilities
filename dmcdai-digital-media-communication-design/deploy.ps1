@@ -26,6 +26,13 @@ Log "INFO" "Remote : $RemoteHost"
 Log "INFO" "Path   : $RemotePath"
 Log "INFO" ""
 
+Log "INFO" "Step 0: Approval gate..." Yellow
+$gate = Join-Path $PSScriptRoot '..\Approve-App.ps1'
+if (Test-Path $gate) {
+    & $gate -Path $PSScriptRoot -PreBuild
+    if ($LASTEXITCODE -ne 0) { Log "ERROR" "Approval gate REJECTED this app — fix the issues above before deploying." Red; exit 1 }
+} else { Log "WARN" "Approve-App.ps1 not found — skipping gate" Yellow }
+
 Log "INFO" "Step 1: Pre-flight checks..." Yellow
 Log "SUCCESS" "Pre-flight OK" Green
 

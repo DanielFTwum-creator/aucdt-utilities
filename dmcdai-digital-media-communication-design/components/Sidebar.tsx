@@ -7,6 +7,10 @@ interface SidebarProps {
   activeModuleId: ModuleId | 'admin' | null;
   setActiveModuleId: (id: ModuleId | 'admin' | null) => void;
   onAdminClick: () => void;
+  /** Mobile drawer open state. */
+  isOpen?: boolean;
+  /** Close the mobile drawer (backdrop tap / nav). */
+  onClose?: () => void;
 }
 
 const AdminIcon: React.FC = () => (
@@ -18,11 +22,24 @@ const AdminIcon: React.FC = () => (
 );
 
 
-export const Sidebar: React.FC<SidebarProps> = ({ activeModuleId, setActiveModuleId, onAdminClick }) => {
+export const Sidebar: React.FC<SidebarProps> = ({ activeModuleId, setActiveModuleId, onAdminClick, isOpen = false, onClose }) => {
   const { theme, setTheme } = useTheme();
 
   return (
-    <aside className="w-64 bg-[var(--color-background-card)]/50 backdrop-blur-lg flex-shrink-0 flex flex-col border-r border-[var(--color-border-card)]/50">
+    <>
+    {/* Mobile backdrop — only when the drawer is open, below md */}
+    {isOpen && (
+      <div
+        className="fixed inset-0 z-30 bg-black/50 md:hidden"
+        onClick={onClose}
+        aria-hidden="true"
+      />
+    )}
+    <aside
+      className={`w-64 bg-[var(--color-background-card)] md:bg-[var(--color-background-card)]/50 backdrop-blur-lg flex-shrink-0 flex flex-col border-r border-[var(--color-border-card)]/50
+        fixed inset-y-0 left-0 z-40 transform transition-transform duration-200 md:static md:z-auto md:translate-x-0
+        ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}
+    >
       <div className="h-20 flex items-center px-6 border-b border-[var(--color-border-card)]/50">
         <h1 className="text-2xl font-bold tracking-tighter text-[var(--color-foreground)] font-playfair">
           dmcd<span className="text-[var(--color-primary)]">AI</span>
@@ -80,5 +97,6 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeModuleId, setActiveModul
         <p>Institutional Sandbox</p>
       </div>
     </aside>
+    </>
   );
 };
