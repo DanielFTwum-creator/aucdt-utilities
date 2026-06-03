@@ -43,8 +43,8 @@ echo ""
 echo "PHASE 2: Build Frontend Locally"
 echo "  Building React app..."
 cd frontend
-npm install >/dev/null 2>&1
-npm run build:prod >/dev/null 2>&1
+pnpm install --silent 2>/dev/null || { echo "  [WARN] pnpm install failed — falling back to npm"; npm install >/dev/null 2>&1; }
+pnpm build:prod >/dev/null 2>&1 || { echo "  [WARN] pnpm build failed — falling back to npm"; npm run build:prod >/dev/null 2>&1; }
 cd ..
 echo "  ✅ Frontend build complete"
 
@@ -122,7 +122,7 @@ echo "  Uploading backend files..."
 ssh "$SSH_HOST" "rm -rf $APP_ROOT/tuc-rms-api/node_modules" >/dev/null 2>&1
 scp -r backend/* "$SSH_HOST:$APP_ROOT/tuc-rms-api/" >/dev/null 2>&1
 echo "  Installing dependencies..."
-ssh "$SSH_HOST" "cd $APP_ROOT/tuc-rms-api && npm install --production" >/dev/null 2>&1
+ssh "$SSH_HOST" "cd $APP_ROOT/tuc-rms-api && (pnpm install --prod 2>/dev/null || npm install --production)" >/dev/null 2>&1
 echo "  ✅ Backend deployed to $APP_ROOT/tuc-rms-api"
 
 # PHASE 8: Start Backend with PM2
