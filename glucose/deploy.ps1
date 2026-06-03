@@ -42,6 +42,14 @@ Log -Level 'INFO' -Msg "Remote : $RemoteHost"
 Log -Level 'INFO' -Msg "Path   : $RemotePath"
 Log -Level 'INFO' -Msg ''
 
+# Step 0: Approval gate
+Log -Level 'INFO' -Msg 'Step 0: Approval gate...' -Color Yellow
+$gate = Join-Path $PSScriptRoot '..\Approve-App.ps1'
+if (Test-Path $gate) {
+    & $gate -Path $PSScriptRoot -PreBuild
+    if ($LASTEXITCODE -ne 0) { Log -Level 'ERROR' -Msg 'Approval gate REJECTED — fix issues above before deploying.' -Color Red; exit 1 }
+} else { Log -Level 'WARN' -Msg 'Approve-App.ps1 not found — skipping gate' -Color Yellow }
+
 # Step 1: Pre-flight
 Log -Level 'INFO' -Msg 'Step 1: Pre-flight checks...' -Color Yellow
 if ((-not (Test-Path '.env.local')) -and (-not $Build)) {
@@ -67,6 +75,13 @@ try {
 # Step 3: Build or copy
 if ($Build) {
     Log -Level 'INFO' -Msg 'Step 3: Server-side build (git clone + pnpm build)...' -Color Yellow
+
+    # Upload .env.local so the server-side build can bake VITE_* vars
+    # (e.g. VITE_GOOGLE_CLIENT_ID) into the bundle. Without this the build
+    # runs with no env and OAuth gets client_id=undefined.
+    if (Test-Path '.env.local') {
+        & $SCP @SSH_OPTS '.env.local' "${RemoteHost}:/tmp/.env.${SUBFOLDER}" 2>$null | Out-Null
+    }
 
     $buildDir = "/tmp/${SUBFOLDER}_deploy_${commit}"
     $remoteBuildScript = @"
@@ -98,6 +113,9 @@ cd ${SUBFOLDER}
 
 log '[3/5] Installing dependencies...'
 pnpm install --no-frozen-lockfile --silent 2>/dev/null || npm install --silent
+
+log '[3.5/5] Injecting .env.local for Vite build (VITE_* vars)...'
+cp /tmp/.env.${SUBFOLDER} .env.local 2>/dev/null || true
 
 log '[4/5] Building...'
 pnpm build
@@ -179,15 +197,15 @@ Log -Level 'INFO' -Msg 'Step 5: Setting permissions...' -Color Yellow
 
 # Step 6: Backend files
 Log -Level 'INFO' -Msg 'Step 6: Deploying backend files...' -Color Yellow
-& $SCP @SSH_OPTS server.ts package.json pnpm-lock.yaml "${RemoteHost}:${RemotePath}" 2>$null | Out-Null
+& $SCP @SSH_OPTS server.ts package.json pnpm-lock.yaml pnpm-workspace.yaml "${RemoteHost}:${RemotePath}" 2>$null | Out-Null
 if (Test-Path '.env.local') {
     & $SCP @SSH_OPTS '.env.local' "${RemoteHost}:${RemotePath}.env" 2>$null | Out-Null
 }
-& $SSH @SSH_OPTS $RemoteHost "cd $RemotePath && pnpm install --prod --silent 2>/dev/null || npm install --omit=dev --silent"
+& $SSH @SSH_OPTS $RemoteHost "cd $RemotePath && pnpm install --prod --silent"
 
 # Step 7: Restart backend
 Log -Level 'INFO' -Msg 'Step 7: Restarting backend (PM2)...' -Color Yellow
-$pm2Result = & $SSH @SSH_OPTS $RemoteHost "if pm2 describe ${PM2_APP} > /dev/null 2>&1; then pm2 reload ${PM2_APP} --update-env; echo 'pm2: reloaded ${PM2_APP}'; else cd ${RemotePath} && PORT=${PORT} pm2 start server.ts --name ${PM2_APP} --interpreter npx --interpreter-args tsx; echo 'pm2: started ${PM2_APP}'; fi; pm2 save --force > /dev/null 2>&1 || true"
+$pm2Result = & $SSH @SSH_OPTS $RemoteHost "if pm2 describe ${PM2_APP} > /dev/null 2>&1; then pm2 reload ${PM2_APP} --update-env; echo 'pm2: reloaded ${PM2_APP}'; else cd ${RemotePath} && NODE_ENV=production PORT=${PORT} pm2 start server.ts --name ${PM2_APP} --interpreter npx --interpreter-args tsx; echo 'pm2: started ${PM2_APP}'; fi; pm2 save --force > /dev/null 2>&1 || true"
 Write-Host $pm2Result -ForegroundColor DarkGray
 
 # Health checks
