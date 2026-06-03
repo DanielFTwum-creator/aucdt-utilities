@@ -112,7 +112,7 @@ rsync -a --delete dist/ "`$DEPLOY_PATH/dist/"
 cp index.html "`$DEPLOY_PATH/dist/index.html" 2>/dev/null || true
 
 log '[7/7] Installing backend deps...'
-cp server.ts package.json pnpm-lock.yaml "`$DEPLOY_PATH/" 2>/dev/null || true
+cp server.ts package.json pnpm-lock.yaml pnpm-workspace.yaml "`$DEPLOY_PATH/" 2>/dev/null || true
 cd "`$DEPLOY_PATH"
 pnpm install --prod --silent
 
