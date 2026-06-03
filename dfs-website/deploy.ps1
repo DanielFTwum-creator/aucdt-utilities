@@ -41,6 +41,19 @@ Log -Level 'INFO' -Msg "Remote : $REMOTE"
 Log -Level 'INFO' -Msg "Path   : $DEPLOY_PATH/"
 Log -Level 'INFO' -Msg ''
 
+# Step 0: Approval gate — blocks the deploy if the app fails best-practice checks
+Log -Level 'INFO' -Msg 'Step 0: Approval gate...' -Color Yellow
+$gate = Join-Path $PSScriptRoot '..\Approve-App.ps1'
+if (Test-Path $gate) {
+    & $gate -Path $PSScriptRoot -Port $PORT -PreBuild
+    if ($LASTEXITCODE -ne 0) {
+        Log -Level 'ERROR' -Msg 'Approval gate REJECTED this app — fix the issues above before deploying.' -Color Red
+        exit 1
+    }
+} else {
+    Log -Level 'WARN' -Msg 'Approve-App.ps1 not found — skipping gate' -Color Yellow
+}
+
 # Step 1: Pre-flight
 Log -Level 'INFO' -Msg 'Step 1: Pre-flight checks...' -Color Yellow
 if (-not (Test-Path '.env')) {

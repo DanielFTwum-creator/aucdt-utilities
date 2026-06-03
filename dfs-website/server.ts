@@ -1,6 +1,7 @@
 import express from "express";
 import compression from "compression";
-import { createServer as createViteServer } from "vite";
+// vite is a devDependency, imported dynamically in the dev-only branch below;
+// a static top-level import crashes the production server after pnpm --prod.
 import path from "path";
 import { fileURLToPath } from "url";
 import { exec } from "child_process";
@@ -110,6 +111,7 @@ async function startServer() {
 
   // Vite middleware for development
   if (process.env.NODE_ENV !== "production") {
+    const { createServer: createViteServer } = await import("vite");
     const vite = await createViteServer({
       server: { middlewareMode: true },
       appType: "spa",
@@ -122,7 +124,7 @@ async function startServer() {
       ? path.join(process.cwd(), "dist")
       : process.cwd();
     app.use(express.static(distPath));
-    app.get("*", (req, res) => {
+    app.get(/.*/, (req, res) => {
       res.sendFile(path.join(distPath, "index.html"));
     });
   }
