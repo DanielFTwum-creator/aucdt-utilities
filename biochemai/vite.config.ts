@@ -1,10 +1,9 @@
 import path from 'path';
-import { defineConfig, loadEnv } from 'vite';
+import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite';
 
-export default defineConfig(({ mode }) => {
-    const env = loadEnv(mode, '.', 'VITE_');
+export default defineConfig(() => {
     return {
       base: './',
       server: {
@@ -12,10 +11,9 @@ export default defineConfig(({ mode }) => {
         host: '0.0.0.0',
       },
       plugins: [react(), tailwindcss()],
-      define: {
-        'process.env.API_KEY': JSON.stringify(env.GEMINI_API_KEY),
-        'process.env.GEMINI_API_KEY': JSON.stringify(env.GEMINI_API_KEY)
-      },
+      // SECURITY: do not inject GEMINI_API_KEY into the bundle. Gemini is
+      // proxied through the backend (/biochemai/api/gemini/*); the key stays
+      // server-side. Baking it here gets it auto-revoked by Google.
       resolve: {
         alias: {
           '@': path.resolve(__dirname, '.'),

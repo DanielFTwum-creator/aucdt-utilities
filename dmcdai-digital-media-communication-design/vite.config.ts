@@ -1,21 +1,20 @@
 import react from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite';
 import path from 'path';
-import { defineConfig, loadEnv } from 'vite';
+import { defineConfig } from 'vite';
 
-export default defineConfig(({ mode }) => {
-    const env = loadEnv(mode, '.', '');
-    return { 
+export default defineConfig(() => {
+    return {
       base: './',
       server: {
         port: 3000,
         host: '0.0.0.0',
       },
       plugins: [react(), tailwindcss()],
-      define: {
-        'process.env.API_KEY': JSON.stringify(env.GEMINI_API_KEY),
-        'process.env.GEMINI_API_KEY': JSON.stringify(env.GEMINI_API_KEY)
-      },
+      // NOTE: do NOT add a `define` block that injects GEMINI_API_KEY here.
+      // It bakes the key into the public JS bundle; Google's leak scanner
+      // auto-revokes it (and any app sharing it) within hours. All Gemini /
+      // Imagen calls go through the backend proxy (/api/generate-image).
       resolve: {
         alias: {
           '@': path.resolve(__dirname, '.'),
