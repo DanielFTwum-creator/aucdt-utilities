@@ -14,6 +14,12 @@ Cypress.Commands.add('bypassAuth', () => {
   });
 });
 
+Cypress.Commands.add('formLogin', (username, password) => {
+  cy.get('input[type="text"]').type(username);
+  cy.get('input[type="password"]').type(password);
+  cy.contains('button', 'Sign In').click();
+});
+
 // Clear all WillPro storage so each test starts clean
 Cypress.Commands.add('clearWillproStorage', () => {
   cy.window().then((win) => {
@@ -30,6 +36,7 @@ declare global {
     interface Chainable {
       bypassAuth(): Chainable<void>;
       clearWillproStorage(): Chainable<void>;
+      formLogin(username: string, password: string): Chainable<void>;
     }
   }
 }

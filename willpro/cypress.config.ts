@@ -11,6 +11,7 @@ export default defineConfig({
     video: true,
     screenshotOnRunFailure: true,
     defaultCommandTimeout: 10000,
+    blockHosts: ['*google-analytics.com', '*googletagmanager.com'],
     // Auth is handled via magic link — we bypass it in tests using a seeded session
     experimentalModifyObstructiveThirdPartyCode: true,
   },

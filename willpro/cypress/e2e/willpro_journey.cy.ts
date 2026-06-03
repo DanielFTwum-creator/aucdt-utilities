@@ -63,7 +63,7 @@ describe('WillPro — Complete E2E User Journey', () => {
     // ── Step 2: Testator ──
     cy.contains('h2', 'Testator').should('be.visible');
     cy.get('input[name="testatorName"]').type(TESTATOR);
-    cy.get('input[name="testatorAddress"]').type(ADDRESS);
+    cy.get('textarea[name="testatorAddress"]').type(ADDRESS);
     cy.get('input[name="testatorDob"]').type(DOB);
     cy.contains('button', 'Next').click();
 
@@ -194,7 +194,7 @@ describe('WillPro — Complete E2E User Journey', () => {
     cy.contains('h2', 'Testator').should('be.visible');
 
     cy.get('input[name="testatorName"]').type(TESTATOR);
-    cy.get('input[name="testatorAddress"]').type(ADDRESS);
+    cy.get('textarea[name="testatorAddress"]').type(ADDRESS);
     cy.get('input[name="testatorDob"]').type(DOB);
     cy.contains('button', 'Next').click();
 
@@ -216,5 +216,24 @@ describe('WillPro — Complete E2E User Journey', () => {
     cy.get('input[name="testatorName"]').type('A');
     // "✓ Saved" flash should appear within 2 seconds
     cy.contains('Saved', { timeout: 2000 }).should('be.visible');
+  });
+
+  // ─────────────────────────────────────────────
+  // FORM LOGIN — verifies staff credentials flow
+  // ─────────────────────────────────────────────
+  it('Form login — logs in successfully using admin / admin credentials', () => {
+    // Clear storage and reload so we hit the login form unauthenticated
+    cy.clearWillproStorage();
+    cy.visit('/');
+    cy.reload();
+
+    // Check we are at the login gate
+    cy.contains(/willpro/i).should('be.visible');
+    
+    // Perform credentials login
+    cy.formLogin('admin', 'admin');
+
+    // Should load the app successfully and show Step 1
+    cy.contains('h2', 'Jurisdiction').should('be.visible');
   });
 });
