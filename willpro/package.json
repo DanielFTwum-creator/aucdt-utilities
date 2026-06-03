@@ -37,6 +37,7 @@
     "@vitejs/plugin-react": "^6.0.2",
     "@vitest/coverage-v8": "^4.1.6",
     "@vitest/ui": "^4.1.6",
+    "cypress": "^15.16.0",
     "jsdom": "^29.1.1",
     "serve": "14.2.6",
     "tailwindcss": "^4.3.0",

@@ -2,7 +2,7 @@ import React, { useEffect, useState, createContext, useContext } from 'react';
 
 const AUTH_KEY = 'tuc_auth_willpro';
 const USER_KEY = 'willpro_user';
-const ACCENT   = '#ea580c';
+const ACCENT   = '#B58A3D';
 
 const AuthContext = createContext<{ handleLogout: () => void } | null>(null);
 
@@ -75,7 +75,10 @@ export function AuthGate({ children, onLogout }: { children: React.ReactNode; on
     localStorage.removeItem('oauth_token_temp');
     setAuthed(false);
     // Stay on WillPro — navigate to root so the login screen shows
-    window.location.replace('/willpro/');
+    const redirectPath = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+      ? '/'
+      : '/willpro/';
+    window.location.replace(redirectPath);
   };
 
   if (authed) {
@@ -115,18 +118,26 @@ export function AuthGate({ children, onLogout }: { children: React.ReactNode; on
   };
 
   return (
-    <div style={{minHeight:'100vh',background:'#f8fafc',display:'flex',alignItems:'center',justifyContent:'center',fontFamily:'Inter,system-ui,sans-serif'}}>
-      <div style={{background:'#fff',padding:'36px',borderRadius:'16px',boxShadow:'0 4px 24px rgba(0,0,0,0.10)',width:'100%',maxWidth:'420px'}}>
+    <div style={{minHeight:'100vh',background:'radial-gradient(circle at 10% 20%, #FAF9F6 0%, #EFEFEA 100%)',display:'flex',alignItems:'center',justifyContent:'center',fontFamily:'"Plus Jakarta Sans",system-ui,sans-serif'}}>
+      <div style={{background:'rgba(255, 255, 255, 0.85)',padding:'40px',borderRadius:'20px',border:'1px solid rgba(181, 138, 61, 0.22)',boxShadow:'0 20px 50px rgba(181, 138, 61, 0.1)',backdropFilter:'blur(16px)',WebkitBackdropFilter:'blur(16px)',width:'100%',maxWidth:'420px'}}>
         <div style={{display:'flex',alignItems:'center',gap:'12px',marginBottom:'6px'}}>
-          <div style={{width:'38px',height:'38px',background:ACCENT,borderRadius:'10px',display:'flex',alignItems:'center',justifyContent:'center',color:'#fff',fontSize:'20px',flexShrink:0}}>⚡</div>
-          <h1 style={{fontSize:'20px',fontWeight:'700',color:'#0f172a',margin:0}}>Willpro</h1>
+          <div style={{width:'38px',height:'38px',background:'linear-gradient(135deg, #B58A3D, #9F762E)',borderRadius:'10px',display:'flex',alignItems:'center',justifyContent:'center',color:'#fff',fontSize:'20px',flexShrink:0}}>🖋️</div>
+          <h1 style={{fontSize:'22px',fontWeight:'700',color:'#1F2937',fontFamily:'"Space Grotesk",sans-serif',margin:0}}>Willpro</h1>
         </div>
-        <p style={{fontSize:'13px',color:'#94a3b8',margin:'0 0 24px 0'}}>Sign in to continue</p>
+        <p style={{fontSize:'13px',color:'var(--text-secondary)',margin:'0 0 24px 0'}}>Sign in to continue</p>
         <button
           type="button"
           onClick={handleGoogleLogin}
           disabled={loading}
-          style={{width:'100%',padding:'10px',background:'#fff',color:'#0f172a',border:'1px solid #d1d5db',borderRadius:'8px',fontSize:'14px',fontWeight:'600',cursor:'pointer',marginBottom:'16px',display:'flex',alignItems:'center',justifyContent:'center',gap:'10px'}}
+          style={{width:'100%',padding:'11px',background:'#fff',color:'#1F2937',border:'1.5px solid rgba(181, 138, 61, 0.25)',borderRadius:'8px',fontSize:'14px',fontWeight:'700',cursor:'pointer',marginBottom:'16px',display:'flex',alignItems:'center',justifyContent:'center',gap:'10px',transition:'all 0.2s'}}
+          onMouseEnter={(e) => {
+              e.currentTarget.style.background = 'rgba(181, 138, 61, 0.05)';
+              e.currentTarget.style.borderColor = '#B58A3D';
+          }}
+          onMouseLeave={(e) => {
+              e.currentTarget.style.background = '#fff';
+              e.currentTarget.style.borderColor = 'rgba(181, 138, 61, 0.25)';
+          }}
         >
           <svg style={{width:'18px',height:'18px'}} viewBox="0 0 24 24" aria-hidden="true">
             <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
@@ -137,38 +148,62 @@ export function AuthGate({ children, onLogout }: { children: React.ReactNode; on
           {loading ? 'Please wait...' : 'Continue with Google'}
         </button>
         <div style={{display:'flex',alignItems:'center',gap:'12px',marginBottom:'16px'}}>
-          <div style={{height:'1px',background:'#e5e7eb',flex:1}} />
-          <span style={{fontSize:'11px',color:'#94a3b8',fontWeight:600,textTransform:'uppercase'}}>Or</span>
-          <div style={{height:'1px',background:'#e5e7eb',flex:1}} />
+          <div style={{height:'1px',background:'rgba(181, 138, 61, 0.15)',flex:1}} />
+          <span style={{fontSize:'11px',color:'var(--text-secondary)',fontWeight:700,textTransform:'uppercase',letterSpacing:'0.05em'}}>Or</span>
+          <div style={{height:'1px',background:'rgba(181, 138, 61, 0.15)',flex:1}} />
         </div>
         <form onSubmit={handleSubmit}>
-          <div style={{marginBottom:'14px'}}>
-            <label style={{display:'block',fontSize:'13px',fontWeight:'500',color:'#374151',marginBottom:'6px'}}>Username</label>
+          <div style={{marginBottom:'16px'}}>
+            <label style={{display:'block',fontSize:'13px',fontWeight:'600',color:'#1F2937',marginBottom:'6px'}}>Username</label>
             <input
               type="text"
               value={username}
               onChange={e => setUsername(e.target.value)}
-              style={{width:'100%',padding:'9px 12px',border:'1px solid #d1d5db',borderRadius:'8px',fontSize:'14px',outline:'none',boxSizing:'border-box'}}
+              style={{width:'100%',padding:'10px 14px',border:'1px solid #CBD5E1',borderRadius:'8px',fontSize:'14px',outline:'none',background:'rgba(255, 255, 255, 0.9)',color:'#1F2937',boxSizing:'border-box',transition:'all 0.2s'}}
+              onFocus={(e) => {
+                  e.currentTarget.style.borderColor = '#B58A3D';
+                  e.currentTarget.style.boxShadow = '0 0 0 3px rgba(181, 138, 61, 0.2)';
+              }}
+              onBlur={(e) => {
+                  e.currentTarget.style.borderColor = '#CBD5E1';
+                  e.currentTarget.style.boxShadow = 'none';
+              }}
             />
           </div>
-          <div style={{marginBottom:'14px'}}>
-            <label style={{display:'block',fontSize:'13px',fontWeight:'500',color:'#374151',marginBottom:'6px'}}>Password</label>
+          <div style={{marginBottom:'18px'}}>
+            <label style={{display:'block',fontSize:'13px',fontWeight:'600',color:'#1F2937',marginBottom:'6px'}}>Password</label>
             <input
               type="password"
               value={password}
               onChange={e => setPassword(e.target.value)}
-              style={{width:'100%',padding:'9px 12px',border:'1px solid #d1d5db',borderRadius:'8px',fontSize:'14px',outline:'none',boxSizing:'border-box'}}
+              style={{width:'100%',padding:'10px 14px',border:'1px solid #CBD5E1',borderRadius:'8px',fontSize:'14px',outline:'none',background:'rgba(255, 255, 255, 0.9)',color:'#1F2937',boxSizing:'border-box',transition:'all 0.2s'}}
+              onFocus={(e) => {
+                  e.currentTarget.style.borderColor = '#B58A3D';
+                  e.currentTarget.style.boxShadow = '0 0 0 3px rgba(181, 138, 61, 0.2)';
+              }}
+              onBlur={(e) => {
+                  e.currentTarget.style.borderColor = '#CBD5E1';
+                  e.currentTarget.style.boxShadow = 'none';
+              }}
             />
           </div>
-          {error && <p style={{color:'#ef4444',fontSize:'13px',margin:'0 0 12px 0'}}>{error}</p>}
+          {error && <p style={{color:'#ef4444',fontSize:'13px',margin:'0 0 14px 0',fontWeight:500}}>{error}</p>}
           <button
             type="submit"
-            style={{width:'100%',padding:'10px',background:ACCENT,color:'#fff',border:'none',borderRadius:'8px',fontSize:'14px',fontWeight:'600',cursor:'pointer'}}
+            style={{width:'100%',padding:'11px',background:'linear-gradient(135deg, #B58A3D, #9F762E)',color:'#fff',border:'none',borderRadius:'8px',fontSize:'14px',fontWeight:'700',cursor:'pointer',boxShadow:'0 4px 14px rgba(181, 138, 61, 0.25)',transition:'all 0.2s'}}
+            onMouseEnter={(e) => {
+                e.currentTarget.style.transform = 'translateY(-1px)';
+                e.currentTarget.style.boxShadow = '0 6px 20px rgba(181, 138, 61, 0.35)';
+            }}
+            onMouseLeave={(e) => {
+                e.currentTarget.style.transform = 'translateY(0)';
+                e.currentTarget.style.boxShadow = '0 4px 14px rgba(181, 138, 61, 0.25)';
+            }}
           >
             Sign In
           </button>
         </form>
-        <p style={{fontSize:'11px',color:'#cbd5e1',textAlign:'center',marginTop:'16px',marginBottom:0}}>Techbridge University College &nbsp;·&nbsp; admin / admin</p>
+        <p style={{fontSize:'11px',color:'var(--text-secondary)',textAlign:'center',marginTop:'18px',marginBottom:0}}>Techbridge University College &nbsp;·&nbsp; admin / admin</p>
       </div>
     </div>
   );
