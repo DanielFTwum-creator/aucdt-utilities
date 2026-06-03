@@ -90,14 +90,17 @@ Log "INFO" "Step 4: Writing .htaccess..." Yellow
 
   # Proxy OAuth callback + API to the PM2 backend on port 3015 (before SPA
   # fallback). willpro previously collided with groove-streamer on 3004.
-  RewriteCond %{HTTP:Upgrade} !websocket [NC]
-  RewriteCond %{HTTP:Connection} !Upgrade [NC]
-  RewriteRule ^callback http://localhost:3015/callback [P,L]
+  # Pattern mirrors the working omniextract proxy: anchor on REQUEST_URI.
+  RewriteCond %{REQUEST_URI} ^/willpro/callback [OR]
+  RewriteCond %{REQUEST_URI} ^/callback
+  RewriteRule ^(callback.*)$ http://localhost:3015/`$1 [P,L]
+
+  RewriteCond %{REQUEST_URI} ^/willpro/api/ [OR]
+  RewriteCond %{REQUEST_URI} ^/api/
   RewriteRule ^(api/.*)$ http://localhost:3015/`$1 [P,L]
 
-  RewriteCond %{REQUEST_FILENAME} -f [OR]
-  RewriteCond %{REQUEST_FILENAME} -d
-  RewriteRule ^ - [L]
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
   RewriteRule ^ /willpro/index.html [QSA,L]
 </IfModule>
 <IfModule mod_expires.c>
