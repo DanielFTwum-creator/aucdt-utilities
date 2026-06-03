@@ -1,5 +1,7 @@
 import express from 'express';
-import { createServer as createViteServer } from 'vite';
+// vite is a devDependency, imported dynamically inside the dev-only branch
+// below. A static top-level import crashes the production server
+// (ERR_MODULE_NOT_FOUND) after `pnpm install --prod` removes vite.
 import path from 'path';
 import { fileURLToPath } from 'url';
 import dotenv from 'dotenv';
@@ -167,6 +169,7 @@ async function startServer() {
 
   // Vite middleware for development
   if (process.env.NODE_ENV !== 'production') {
+    const { createServer as createViteServer } = await import('vite');
     const vite = await createViteServer({
       server: { middlewareMode: true },
       appType: 'spa',
