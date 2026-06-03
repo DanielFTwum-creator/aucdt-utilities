@@ -1,6 +1,8 @@
 allowBuilds:
   core-js: true
+  cypress: true
   esbuild: true
+
 onlyBuiltDependencies:
   - core-js
   - esbuild

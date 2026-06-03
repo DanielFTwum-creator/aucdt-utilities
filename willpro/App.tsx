@@ -43,7 +43,7 @@ const Logo = () => (
           <g transform="translate(15, 15)">
             {/* Shield Base */}
             <path d="M 25 5 C 10 5, 5 12, 5 22 L 5 35 C 5 45, 15 48, 25 50 C 35 48, 45 45, 45 35 L 45 22 C 45 12, 40 5, 25 5 Z" 
-                  fill="#0891b2"/>
+                  fill="#B58A3D"/>
             
             {/* W and P Monogram */}
             <path d="M 12 15 L 15 35 L 20 25 L 25 35 L 28 15 M 28 15 L 28 35 M 28 15 L 38 15 C 40 15, 42 17, 42 19 L 42 21 C 42 23, 40 25, 38 25 L 28 25" 
@@ -69,7 +69,7 @@ const Logo = () => (
                   fontFamily="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" 
                   fontSize="24" 
                   fontWeight="300" 
-                  fill="#0891b2">Pro</text>
+                  fill="#B58A3D">Pro</text>
           </g>
         </svg>
     </div>
@@ -291,24 +291,30 @@ const App = () => {
                     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', marginRight: '10px' }}>
                         <span style={{ fontSize: '11px', color: '#64748b', fontWeight: 600 }}>{currentFilename || 'Untitled Draft'}</span>
                     </div>
-                    <button className="audit-logs-btn" onClick={handleSaveAs} style={{ background: '#0891b2', color: '#fff', border: 'none', padding: '8px 14px', borderRadius: '6px', fontSize: '13px', fontWeight: 600, cursor: 'pointer' }}>Save As</button>
-                    <button className="audit-logs-btn" onClick={() => setIsVersionModalOpen(true)} style={{ background: '#f1f5f9', color: '#334155', border: '1px solid #cbd5e1', padding: '8px 14px', borderRadius: '6px', fontSize: '13px', fontWeight: 600, cursor: 'pointer' }}>Versions</button>
-                    <button className="audit-logs-btn" onClick={() => setIsModalOpen(true)} style={{ background: '#f1f5f9', color: '#334155', border: '1px solid #cbd5e1', padding: '8px 14px', borderRadius: '6px', fontSize: '13px', fontWeight: 600, cursor: 'pointer' }}>Audit Logs</button>
+                    <button className="audit-logs-btn" onClick={handleSaveAs} style={{ background: 'linear-gradient(135deg, #B58A3D, #9F762E)', color: '#fff', border: 'none', padding: '8px 14px', borderRadius: '6px', fontSize: '13px', fontWeight: 600, cursor: 'pointer', boxShadow: '0 2px 8px rgba(181, 138, 61, 0.2)' }}>Save As</button>
+                    <button className="audit-logs-btn" onClick={() => setIsVersionModalOpen(true)} style={{ background: 'rgba(181, 138, 61, 0.08)', color: '#B58A3D', border: '1.5px solid rgba(181, 138, 61, 0.25)', padding: '7px 14px', borderRadius: '6px', fontSize: '13px', fontWeight: 600, cursor: 'pointer' }}>Versions</button>
+                    <button className="audit-logs-btn" onClick={() => setIsModalOpen(true)} style={{ background: 'rgba(181, 138, 61, 0.08)', color: '#B58A3D', border: '1.5px solid rgba(181, 138, 61, 0.25)', padding: '7px 14px', borderRadius: '6px', fontSize: '13px', fontWeight: 600, cursor: 'pointer' }}>Audit Logs</button>
                     <button
                         onClick={handleLogout}
                         style={{
-                            padding: '8px 14px',
-                            background: '#ef4444',
-                            color: '#fff',
-                            border: 'none',
+                            padding: '7px 14px',
+                            background: 'rgba(239, 68, 68, 0.08)',
+                            color: '#EF4444',
+                            border: '1.5px solid rgba(239, 68, 68, 0.25)',
                             borderRadius: '6px',
                             fontSize: '13px',
                             fontWeight: '600',
                             cursor: 'pointer',
-                            transition: 'background 0.2s',
+                            transition: 'all 0.2s',
                         }}
-                        onMouseEnter={(e) => (e.currentTarget.style.background = '#dc2626')}
-                        onMouseLeave={(e) => (e.currentTarget.style.background = '#ef4444')}
+                        onMouseEnter={(e) => {
+                            e.currentTarget.style.background = '#ef4444';
+                            e.currentTarget.style.color = '#fff';
+                        }}
+                        onMouseLeave={(e) => {
+                            e.currentTarget.style.background = 'rgba(239, 68, 68, 0.08)';
+                            e.currentTarget.style.color = '#ef4444';
+                        }}
                     >
                         Sign Out
                     </button>

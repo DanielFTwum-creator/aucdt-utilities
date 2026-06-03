@@ -95,22 +95,30 @@ Address: _________________           Address: _________________
           position: 'fixed',
           bottom: '24px',
           right: '24px',
-          padding: '12px 20px',
-          background: '#0891b2',
+          padding: '12px 24px',
+          background: 'linear-gradient(135deg, #B58A3D, #9F762E)',
           color: '#fff',
           border: 'none',
-          borderRadius: '8px',
-          fontSize: '14px',
-          fontWeight: '600',
+          borderRadius: '30px',
+          fontSize: '13px',
+          fontWeight: '700',
+          letterSpacing: '0.05em',
+          textTransform: 'uppercase',
           cursor: 'pointer',
           zIndex: 100,
-          boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
-          transition: 'all 0.2s',
+          boxShadow: '0 8px 24px rgba(181, 138, 61, 0.3)',
+          transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
         }}
-        onMouseEnter={(e) => (e.currentTarget.style.background = '#0a7ea4')}
-        onMouseLeave={(e) => (e.currentTarget.style.background = '#0891b2')}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.transform = 'translateY(-2px)';
+          e.currentTarget.style.boxShadow = '0 12px 30px rgba(181, 138, 61, 0.4)';
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.transform = 'translateY(0)';
+          e.currentTarget.style.boxShadow = '0 8px 24px rgba(181, 138, 61, 0.3)';
+        }}
       >
-        {isOpen ? '✕ Preview' : '👁 Preview'}
+        {isOpen ? '✕ Close Preview' : '👁 View Will Preview'}
       </button>
 
       {isOpen && (
@@ -120,27 +128,29 @@ Address: _________________           Address: _________________
             top: 0,
             right: 0,
             width: '100%',
-            maxWidth: '480px',
+            maxWidth: '520px',
             height: '100vh',
-            background: '#fff',
-            boxShadow: '-4px 0 24px rgba(0,0,0,0.15)',
+            background: '#FAF9F6',
+            borderLeft: '1px solid rgba(181, 138, 61, 0.2)',
+            boxShadow: '-10px 0 40px rgba(181, 138, 61, 0.12)',
             zIndex: 101,
             display: 'flex',
             flexDirection: 'column',
-            animation: 'slideInRight 0.3s ease',
+            animation: 'slideInRight 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
           } as React.CSSProperties}
         >
           <div
             style={{
-              padding: '16px 20px',
-              borderBottom: '1px solid #e5e7eb',
+              padding: '20px 24px',
+              borderBottom: '1px solid rgba(181, 138, 61, 0.15)',
               display: 'flex',
               justifyContent: 'space-between',
               alignItems: 'center',
+              background: '#FFF',
             }}
           >
-            <h2 style={{ margin: 0, fontSize: '16px', fontWeight: '600', color: '#0f172a' }}>
-              Will Preview
+            <h2 style={{ margin: 0, fontSize: '15px', fontWeight: '700', color: '#1F2937', fontFamily: 'Space Grotesk, sans-serif', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+              Last Will & Testament Draft
             </h2>
             <button
               onClick={() => setIsOpen(false)}
@@ -149,8 +159,11 @@ Address: _________________           Address: _________________
                 border: 'none',
                 fontSize: '24px',
                 cursor: 'pointer',
-                color: '#94a3b8',
+                color: '#94A3B8',
+                transition: 'color 0.2s',
               }}
+              onMouseEnter={(e) => e.currentTarget.style.color = '#B58A3D'}
+              onMouseLeave={(e) => e.currentTarget.style.color = '#94A3B8'}
             >
               ✕
             </button>
@@ -160,23 +173,51 @@ Address: _________________           Address: _________________
             style={{
               flex: 1,
               overflow: 'auto',
-              padding: '20px',
-              fontFamily: '"Courier New", monospace',
-              fontSize: '12px',
-              lineHeight: '1.6',
-              color: '#1f2937',
-              whiteSpace: 'pre-wrap',
-              wordWrap: 'break-word',
+              padding: '24px',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'flex-start',
             }}
           >
-            {willText}
+            <div
+              style={{
+                width: '100%',
+                maxWidth: '460px',
+                background: '#FFFFFF',
+                border: '1px solid rgba(181, 138, 61, 0.18)',
+                boxShadow: '0 8px 30px rgba(27, 26, 25, 0.05)',
+                padding: '40px 32px',
+                fontFamily: 'Georgia, "Times New Roman", serif',
+                fontSize: '13px',
+                lineHeight: '1.8',
+                color: '#1F2937',
+                whiteSpace: 'pre-wrap',
+                wordWrap: 'break-word',
+                borderRadius: '4px',
+                position: 'relative',
+              }}
+            >
+              {/* Subtle watermark / background lining */}
+              <div style={{
+                position: 'absolute',
+                top: 0,
+                bottom: 0,
+                left: '20px',
+                width: '1px',
+                background: 'rgba(181, 138, 61, 0.08)',
+                pointerEvents: 'none'
+              }}></div>
+              <div style={{ paddingLeft: '12px' }}>
+                {willText}
+              </div>
+            </div>
           </div>
 
           <style>{`
             @keyframes slideInRight {
               from {
                 transform: translateX(100%);
-                opacity: 0;
+                opacity: 0.9;
               }
               to {
                 transform: translateX(0);

@@ -56,31 +56,27 @@ const VersionModal: React.FC<VersionModalProps> = ({ isOpen, onClose, onLoad, cu
     if (!isOpen) return null;
 
     return (
-        <div style={{
-            position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
-            background: 'rgba(0,0,0,0.55)', display: 'flex', alignItems: 'center',
-            justifyContent: 'center', zIndex: 9999
-        }}>
-            <div style={{
-                background: '#fff', borderRadius: '14px', width: '92%', maxWidth: '520px',
-                maxHeight: '80vh', display: 'flex', flexDirection: 'column',
-                overflow: 'hidden', boxShadow: '0 20px 60px rgba(0,0,0,0.2)'
-            }}>
+        <div className="modal-overlay" onClick={onClose}>
+            <div className="modal-content" onClick={e => e.stopPropagation()}>
                 {/* Header */}
-                <div style={{ padding: '18px 20px', borderBottom: '1px solid #e2e8f0', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div className="modal-header">
                     <div>
-                        <h2 style={{ margin: 0, fontSize: '16px', fontWeight: 700, color: '#0f172a' }}>Saved Versions</h2>
-                        <div style={{ fontSize: '11px', color: '#94a3b8', marginTop: 2 }}>Click a name to rename · Click a row to load</div>
+                        <h2>Saved Versions</h2>
+                        <div style={{ fontSize: '11px', color: 'var(--text-secondary)', marginTop: 4 }}>
+                            Click a name to rename inline · Click a row to restore version
+                        </div>
                     </div>
-                    <button onClick={onClose} style={{ background: 'none', border: 'none', fontSize: '20px', cursor: 'pointer', color: '#94a3b8', lineHeight: 1 }}>×</button>
+                    <button onClick={onClose} className="modal-close-btn">&times;</button>
                 </div>
 
                 {/* List */}
-                <div style={{ overflowY: 'auto', padding: '14px 16px', flex: 1 }}>
+                <div className="modal-body" style={{ padding: '4px 0' }}>
                     {drafts.length === 0 ? (
-                        <p style={{ color: '#94a3b8', textAlign: 'center', margin: '20px 0', fontSize: 13 }}>No saved versions yet.</p>
+                        <p style={{ color: 'var(--text-secondary)', textAlign: 'center', margin: '40px 0', fontSize: '14px' }}>
+                            No saved versions yet.
+                        </p>
                     ) : (
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                             {drafts.map((draft) => {
                                 const isCurrent = draft.id === currentDraftId;
                                 const isRenaming = renamingId === draft.id;
@@ -89,13 +85,29 @@ const VersionModal: React.FC<VersionModalProps> = ({ isOpen, onClose, onLoad, cu
                                         key={draft.id}
                                         onClick={() => { if (!isRenaming) { onLoad(draft); onClose(); } }}
                                         style={{
-                                            border: '1px solid ' + (isCurrent ? '#0891b2' : '#e2e8f0'),
-                                            background: isCurrent ? '#ecfeff' : '#fafafa',
-                                            borderRadius: '10px', padding: '10px 12px',
+                                            border: isCurrent ? '1.5px solid var(--accent-gold)' : '1px solid #CBD5E1',
+                                            background: isCurrent ? 'var(--accent-gold-light)' : '#FFFFFF',
+                                            borderRadius: '10px',
+                                            padding: '14px 18px',
                                             cursor: isRenaming ? 'default' : 'pointer',
-                                            display: 'flex', justifyContent: 'space-between',
-                                            alignItems: 'center', gap: 8,
-                                            transition: 'background 0.15s',
+                                            display: 'flex',
+                                            justifyContent: 'space-between',
+                                            alignItems: 'center',
+                                            gap: '12px',
+                                            transition: 'all 0.2s',
+                                            boxShadow: isCurrent ? '0 4px 12px rgba(181, 138, 61, 0.08)' : 'var(--shadow-sm)',
+                                        }}
+                                        onMouseEnter={(e) => {
+                                            if (!isRenaming && !isCurrent) {
+                                                e.currentTarget.style.borderColor = 'rgba(181, 138, 61, 0.4)';
+                                                e.currentTarget.style.transform = 'translateY(-1px)';
+                                            }
+                                        }}
+                                        onMouseLeave={(e) => {
+                                            if (!isRenaming && !isCurrent) {
+                                                e.currentTarget.style.borderColor = '#CBD5E1';
+                                                e.currentTarget.style.transform = 'translateY(0)';
+                                            }
                                         }}
                                     >
                                         {/* Left: name + timestamp */}
@@ -109,45 +121,84 @@ const VersionModal: React.FC<VersionModalProps> = ({ isOpen, onClose, onLoad, cu
                                                     onKeyDown={e => handleRenameKey(e, draft)}
                                                     onClick={e => e.stopPropagation()}
                                                     style={{
-                                                        width: '100%', fontSize: '13px', fontWeight: 600,
-                                                        border: '1px solid #0891b2', borderRadius: 6,
-                                                        padding: '4px 8px', outline: 'none',
-                                                        background: '#fff', color: '#0f172a',
+                                                        width: '100%',
+                                                        fontSize: '13px',
+                                                        fontWeight: 600,
+                                                        border: '1.5px solid var(--accent-gold)',
+                                                        borderRadius: '6px',
+                                                        padding: '6px 10px',
+                                                        outline: 'none',
+                                                        background: '#fff',
+                                                        color: 'var(--text-heading)',
                                                     }}
                                                     placeholder="Enter a name…"
                                                 />
                                             ) : (
-                                                <div
-                                                    onClick={(e) => startRename(e, draft)}
-                                                    title="Click to rename"
-                                                    style={{
-                                                        fontWeight: 600, color: '#0f172a', fontSize: '13px',
-                                                        whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
-                                                        cursor: 'text',
-                                                        borderBottom: '1px dashed #cbd5e1',
-                                                        display: 'inline-block', maxWidth: '100%',
-                                                    }}
-                                                >
-                                                    {draft.filename || 'Untitled Draft'}
+                                                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+                                                    <span
+                                                        onClick={(e) => startRename(e, draft)}
+                                                        title="Click to rename"
+                                                        style={{
+                                                            fontWeight: 700,
+                                                            color: 'var(--text-heading)',
+                                                            fontSize: '14px',
+                                                            whiteSpace: 'nowrap',
+                                                            overflow: 'hidden',
+                                                            textOverflow: 'ellipsis',
+                                                            cursor: 'text',
+                                                            borderBottom: '1px dashed var(--accent-gold)',
+                                                            display: 'inline-block',
+                                                            maxWidth: '240px',
+                                                        }}
+                                                    >
+                                                        {draft.filename || 'Untitled Draft'}
+                                                    </span>
                                                     {isCurrent && (
-                                                        <span style={{ marginLeft: 6, fontSize: '10px', background: '#0891b2', color: '#fff', padding: '1px 5px', borderRadius: 4 }}>
+                                                        <span style={{
+                                                            fontSize: '9px',
+                                                            fontWeight: 800,
+                                                            textTransform: 'uppercase',
+                                                            letterSpacing: '0.05em',
+                                                            background: 'linear-gradient(135deg, var(--accent-gold), #9F762E)',
+                                                            color: '#fff',
+                                                            padding: '2px 6px',
+                                                            borderRadius: '4px'
+                                                        }}>
                                                             Active
                                                         </span>
                                                     )}
                                                 </div>
                                             )}
-                                            <div style={{ fontSize: '11px', color: '#94a3b8', marginTop: 3 }}>
+                                            <div style={{ fontSize: '11px', color: 'var(--text-secondary)', marginTop: 4 }}>
                                                 Saved {new Date(draft.updatedAt).toLocaleString()}
                                             </div>
                                         </div>
 
                                         {/* Right: action buttons */}
-                                        <div style={{ display: 'flex', gap: 6, flexShrink: 0 }}>
+                                        <div style={{ display: 'flex', gap: '8px', flexShrink: 0 }}>
                                             {!isRenaming && (
                                                 <button
                                                     onClick={(e) => startRename(e, draft)}
                                                     title="Rename"
-                                                    style={{ background: '#f1f5f9', color: '#475569', border: 'none', padding: '5px 9px', borderRadius: 6, cursor: 'pointer', fontSize: '11px', fontWeight: 500 }}
+                                                    style={{
+                                                        background: 'rgba(181, 138, 61, 0.08)',
+                                                        color: 'var(--accent-gold)',
+                                                        border: 'none',
+                                                        padding: '6px 12px',
+                                                        borderRadius: '6px',
+                                                        cursor: 'pointer',
+                                                        fontSize: '11px',
+                                                        fontWeight: 700,
+                                                        transition: 'all 0.2s',
+                                                    }}
+                                                    onMouseEnter={(e) => {
+                                                        e.currentTarget.style.background = 'var(--accent-gold)';
+                                                        e.currentTarget.style.color = '#fff';
+                                                    }}
+                                                    onMouseLeave={(e) => {
+                                                        e.currentTarget.style.background = 'rgba(181, 138, 61, 0.08)';
+                                                        e.currentTarget.style.color = 'var(--accent-gold)';
+                                                    }}
                                                 >
                                                     ✏️ Rename
                                                 </button>
@@ -155,7 +206,25 @@ const VersionModal: React.FC<VersionModalProps> = ({ isOpen, onClose, onLoad, cu
                                             <button
                                                 onClick={(e) => handleDelete(e, draft.id)}
                                                 title="Delete"
-                                                style={{ background: '#fee2e2', color: '#ef4444', border: 'none', padding: '5px 9px', borderRadius: 6, cursor: 'pointer', fontSize: '11px', fontWeight: 500 }}
+                                                style={{
+                                                    background: 'rgba(239, 68, 68, 0.08)',
+                                                    color: '#EF4444',
+                                                    border: 'none',
+                                                    padding: '6px 12px',
+                                                    borderRadius: '6px',
+                                                    cursor: 'pointer',
+                                                    fontSize: '11px',
+                                                    fontWeight: 700,
+                                                    transition: 'all 0.2s',
+                                                }}
+                                                onMouseEnter={(e) => {
+                                                    e.currentTarget.style.background = '#EF4444';
+                                                    e.currentTarget.style.color = '#fff';
+                                                }}
+                                                onMouseLeave={(e) => {
+                                                    e.currentTarget.style.background = 'rgba(239, 68, 68, 0.08)';
+                                                    e.currentTarget.style.color = '#EF4444';
+                                                }}
                                             >
                                                 🗑 Delete
                                             </button>
@@ -168,8 +237,8 @@ const VersionModal: React.FC<VersionModalProps> = ({ isOpen, onClose, onLoad, cu
                 </div>
 
                 {/* Footer hint */}
-                <div style={{ padding: '10px 16px', borderTop: '1px solid #e2e8f0', fontSize: '11px', color: '#94a3b8', textAlign: 'center' }}>
-                    Versions are stored locally in your browser
+                <div style={{ padding: '16px 0 0 0', borderTop: '1px solid rgba(181, 138, 61, 0.12)', fontSize: '11px', color: 'var(--text-secondary)', textAlign: 'center' }}>
+                    Versions are stored securely in your browser's offline storage.
                 </div>
             </div>
         </div>
