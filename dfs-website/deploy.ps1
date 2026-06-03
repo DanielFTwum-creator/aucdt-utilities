@@ -1,8 +1,8 @@
 # ============================================================
-# BioChemAI — Deploy Script
+# Drumming for SEL Success (dfs-website) — Deploy Script
 # Remote : root@techbridge.edu.gh
 # Path   : /var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/dfs-website
-# Port   : 3000  |  PM2 app: dfs-website
+# Port   : 3012  |  PM2 app: dfs-website
 # Usage  : .\deploy.ps1
 # ============================================================
 
@@ -12,7 +12,7 @@ $ErrorActionPreference = 'Stop'
 
 $REMOTE      = 'root@techbridge.edu.gh'
 $DEPLOY_PATH = '/var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/dfs-website'
-$PORT        = 3010
+$PORT        = 3012
 $PM2_APP     = 'dfs-website'
 $HEALTH_URL  = 'https://ai-tools.techbridge.edu.gh/dfs-website'
 $GITHUB_REPO = 'https://github.com/DanielFTwum-creator/aucdt-utilities'
@@ -101,10 +101,10 @@ log '[3/7] Injecting .env for Vite build...'
 cp /tmp/.env.dfs-website .env.local
 
 log '[4/7] Installing dependencies...'
-npm install --silent
+pnpm install --silent
 
 log '[5/7] Building...'
-npm run build
+pnpm build
 
 log '[6/7] Deploying dist/ to web root...'
 mkdir -p "`$DEPLOY_PATH"
@@ -114,7 +114,7 @@ cp index.html "`$DEPLOY_PATH/dist/index.html" 2>/dev/null || true
 log '[7/7] Installing backend deps...'
 cp server.ts package.json pnpm-lock.yaml "`$DEPLOY_PATH/" 2>/dev/null || true
 cd "`$DEPLOY_PATH"
-npm install --omit=dev --silent
+pnpm install --prod --silent
 
 log 'Build and deploy complete.'
 "@
