@@ -105,7 +105,7 @@ Address: _________________           Address: _________________
           letterSpacing: '0.05em',
           textTransform: 'uppercase',
           cursor: 'pointer',
-          zIndex: 100,
+          zIndex: 500,
           boxShadow: '0 8px 24px rgba(181, 138, 61, 0.3)',
           transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
         }}
@@ -133,7 +133,7 @@ Address: _________________           Address: _________________
             background: '#FAF9F6',
             borderLeft: '1px solid rgba(181, 138, 61, 0.2)',
             boxShadow: '-10px 0 40px rgba(181, 138, 61, 0.12)',
-            zIndex: 101,
+            zIndex: 501,
             display: 'flex',
             flexDirection: 'column',
             animation: 'slideInRight 0.3s cubic-bezier(0.16, 1, 0.3, 1)',

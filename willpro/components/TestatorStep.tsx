@@ -2,7 +2,7 @@ import React from 'react';
 
 interface StepProps {
     formData: { testatorName: string; testatorAddress: string; testatorDob: string };
-    handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    handleChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
     handleNext: () => void;
     handleBack: () => void;
 }
@@ -19,7 +19,7 @@ const TestatorStep = ({ formData, handleChange, handleNext, handleBack }: StepPr
             </div>
             <div className="form-section">
                 <label htmlFor="testatorAddress" className="form-label">Full Address</label>
-                <input type="text" id="testatorAddress" name="testatorAddress" className="form-input" value={formData.testatorAddress} onChange={handleChange} required />
+                <textarea id="testatorAddress" name="testatorAddress" className="form-input" rows={3} value={formData.testatorAddress} onChange={handleChange} required style={{ resize: 'vertical' }} />
             </div>
             <div className="form-section">
                 <label htmlFor="testatorDob" className="form-label">Date of Birth</label>

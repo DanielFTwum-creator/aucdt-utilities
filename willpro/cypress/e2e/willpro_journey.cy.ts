@@ -141,6 +141,7 @@ describe('WillPro — Complete E2E User Journey', () => {
     cy.contains('button', 'Save As').click();
 
     // Open Versions modal
+    cy.get('.user-profile-trigger').click();
     cy.contains('button', 'Versions').click();
     cy.contains('h2', 'Saved Versions').should('be.visible');
     cy.get('.modal-content').contains(DRAFT_NAME).should('be.visible');
@@ -162,6 +163,7 @@ describe('WillPro — Complete E2E User Journey', () => {
   // ─────────────────────────────────────────────
   it('Sign Out — redirects back to WillPro login, not AI Lab', () => {
     cy.contains('h2', 'Jurisdiction').should('be.visible');
+    cy.get('.user-profile-trigger').click();
     cy.contains('button', 'Sign Out').click();
 
     // Should end up at the login screen (either / or /willpro/ depending on dev/prod)
