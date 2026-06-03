@@ -99,6 +99,7 @@ const App = () => {
     const [isSaved, setIsSaved] = useState(false);
     const [currentDraftId, setCurrentDraftId] = useState<string>(() => Date.now().toString());
     const [currentFilename, setCurrentFilename] = useState<string>('');
+    const [user, setUser] = useState<{ name?: string; email: string } | null>(null);
     const importFileRef = useRef<HTMLInputElement>(null);
     const saveTimeoutRef = useRef<number | null>(null);
 
@@ -113,6 +114,15 @@ const App = () => {
     };
     
     useEffect(() => {
+        const stored = localStorage.getItem('willpro_user');
+        if (stored) {
+            try {
+                setUser(JSON.parse(stored));
+            } catch (e) {
+                console.error('Failed to parse user session:', e);
+            }
+        }
+
         getMostRecentDraft()
             .then((draft) => {
                 if (draft) {
@@ -288,9 +298,16 @@ const App = () => {
                             ✓ Saved
                         </span>
                     )}
-                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', marginRight: '10px' }}>
-                        <span style={{ fontSize: '11px', color: '#64748b', fontWeight: 600 }}>{currentFilename || 'Untitled Draft'}</span>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', background: 'rgba(181, 138, 61, 0.05)', border: '1px dashed rgba(181, 138, 61, 0.25)', padding: '6px 12px', borderRadius: '6px', marginRight: '4px' }}>
+                        <span style={{ fontSize: '10px', color: '#64748b', textTransform: 'uppercase', fontWeight: 700, letterSpacing: '0.05em' }}>Draft:</span>
+                        <span style={{ fontSize: '12px', color: '#1F2937', fontWeight: 700 }}>{currentFilename || 'Untitled Draft'}</span>
                     </div>
+                    {user && (
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', background: 'rgba(181, 138, 61, 0.08)', padding: '6px 12px', borderRadius: '6px', border: '1px solid rgba(181, 138, 61, 0.15)', marginRight: '4px' }}>
+                            <span style={{ fontSize: '11px', color: '#B58A3D' }}>👤</span>
+                            <span style={{ fontSize: '11px', color: '#B58A3D', fontWeight: 800 }}>{user.name || user.email.split('@')[0]}</span>
+                        </div>
+                    )}
                     <button className="audit-logs-btn" onClick={handleSaveAs} style={{ background: 'linear-gradient(135deg, #B58A3D, #9F762E)', color: '#fff', border: 'none', padding: '8px 14px', borderRadius: '6px', fontSize: '13px', fontWeight: 600, cursor: 'pointer', boxShadow: '0 2px 8px rgba(181, 138, 61, 0.2)' }}>Save As</button>
                     <button className="audit-logs-btn" onClick={() => setIsVersionModalOpen(true)} style={{ background: 'rgba(181, 138, 61, 0.08)', color: '#B58A3D', border: '1.5px solid rgba(181, 138, 61, 0.25)', padding: '7px 14px', borderRadius: '6px', fontSize: '13px', fontWeight: 600, cursor: 'pointer' }}>Versions</button>
                     <button className="audit-logs-btn" onClick={() => setIsModalOpen(true)} style={{ background: 'rgba(181, 138, 61, 0.08)', color: '#B58A3D', border: '1.5px solid rgba(181, 138, 61, 0.25)', padding: '7px 14px', borderRadius: '6px', fontSize: '13px', fontWeight: 600, cursor: 'pointer' }}>Audit Logs</button>
