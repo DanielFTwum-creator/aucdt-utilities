@@ -45,7 +45,10 @@ export default function Login() {
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setLoading(true)
-    const resolvedEmail = `${emailHandle.trim().toLowerCase()}@techbridge.edu.gh`
+    // Accept "daniel.twum", "danieltwum", or a full email. Append the TUC
+    // domain only when the user typed just the handle (no @).
+    const handle = emailHandle.trim().toLowerCase()
+    const resolvedEmail = handle.includes('@') ? handle : `${handle}@techbridge.edu.gh`
     try {
       const response = await fetch(`${API}/auth/login`, {
         method: 'POST',
