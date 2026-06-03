@@ -118,9 +118,9 @@ mkdir -p "`$DEPLOY_PATH"
 rsync -a --delete dist/. "`$DEPLOY_PATH/"
 
 log '[7/7] Installing backend deps...'
-cp server.ts package.json pnpm-lock.yaml "`$DEPLOY_PATH/" 2>/dev/null || true
+cp server.ts package.json pnpm-lock.yaml pnpm-workspace.yaml "`$DEPLOY_PATH/" 2>/dev/null || true
 cd "`$DEPLOY_PATH"
-pnpm install --prod --silent 2>/dev/null || npm install --omit=dev --silent
+pnpm install --prod --silent
 
 log 'Build and deploy complete.'
 "@
@@ -190,7 +190,7 @@ Log -Level 'INFO' -Msg 'Step 5: Configuring server environment...' -Color Yellow
 
 # Step 6: Restart backend
 Log -Level 'INFO' -Msg 'Step 6: Restarting backend...' -Color Yellow
-$pm2Result = & $SSH @SSH_OPTS $REMOTE "if pm2 describe ${PM2_APP} > /dev/null 2>&1; then pm2 reload ${PM2_APP}; echo 'pm2: reloaded ${PM2_APP}'; else cd ${DEPLOY_PATH}; PORT=${PORT} pm2 start server.ts --name ${PM2_APP} --interpreter npx --interpreter-args tsx; echo 'pm2: started ${PM2_APP}'; fi"
+$pm2Result = & $SSH @SSH_OPTS $REMOTE "if pm2 describe ${PM2_APP} > /dev/null 2>&1; then pm2 reload ${PM2_APP} --update-env; echo 'pm2: reloaded ${PM2_APP}'; else cd ${DEPLOY_PATH}; NODE_ENV=production PORT=${PORT} pm2 start server.ts --name ${PM2_APP} --interpreter npx --interpreter-args tsx; echo 'pm2: started ${PM2_APP}'; fi; pm2 save > /dev/null 2>&1"
 Write-Host $pm2Result -ForegroundColor DarkGray
 
 # Health checks
