@@ -1,5 +1,5 @@
-# ============================================================
-# Approve-App.ps1 — ai-tools.techbridge.edu.gh pre-deploy gate
+﻿# ============================================================
+# Approve-App.ps1 - ai-tools.techbridge.edu.gh pre-deploy gate
 # ------------------------------------------------------------
 # Validates an app against the failure classes that have taken
 # down ai-tools apps. Run from an app folder, or pass -Path.
@@ -46,13 +46,13 @@ Write-Host " APPROVAL GATE: $name" -ForegroundColor Cyan
 Write-Host "========================================" -ForegroundColor Cyan
 
 # ── 1. SECURITY: no API key / secret baked into the bundle ──
-Write-Host "[1] Security — secrets must stay server-side" -ForegroundColor Yellow
+Write-Host "[1] Security - secrets must stay server-side" -ForegroundColor Yellow
 
 $viteCfg = Get-ChildItem -Path $app -Filter 'vite.config.*' -File -ErrorAction SilentlyContinue | Select-Object -First 1
 if ($viteCfg) {
     $vc = [IO.File]::ReadAllText($viteCfg.FullName)
     if ($vc -match "JSON\.stringify\(\s*env\.GEMINI_API_KEY") {
-        Fail "vite.config injects GEMINI_API_KEY into the bundle (define block) — Google auto-revokes leaked keys"
+        Fail "vite.config injects GEMINI_API_KEY into the bundle (define block) - Google auto-revokes leaked keys"
     } else { Pass "no GEMINI_API_KEY define block in vite.config" }
     if ($vc -match "JSON\.stringify\(\s*env\.GOOGLE_CLIENT_SECRET" -or $vc -match "CLIENT_SECRET'\s*:\s*JSON\.stringify") {
         Fail "vite.config injects GOOGLE_CLIENT_SECRET into the bundle"
@@ -66,7 +66,7 @@ foreach ($ef in @('.env', '.env.local', '.env.production')) {
     if (Test-Path $p) { $envText += [IO.File]::ReadAllText($p) }
 }
 if ($envText -match "(?m)^\s*VITE_GEMINI_API_KEY\s*=") {
-    Fail "VITE_GEMINI_API_KEY in .env — the VITE_ prefix bakes it into the bundle. Use GEMINI_API_KEY (backend only)."
+    Fail "VITE_GEMINI_API_KEY in .env - the VITE_ prefix bakes it into the bundle. Use GEMINI_API_KEY (backend only)."
 } else { Pass "no VITE_GEMINI_API_KEY in .env files" }
 
 # Built bundle must contain no live key
@@ -77,7 +77,7 @@ if (-not $PreBuild) {
                 Select-String -Pattern 'AIzaSy[A-Za-z0-9_\-]{20,}' -List | Select-Object -First 1
         if ($leak) { Fail "API key (AIzaSy...) found in built bundle: $($leak.Path)" }
         else       { Pass "no API key in dist/ bundle" }
-    } else { Warn "dist/ not built yet — bundle leak check skipped (run with -PreBuild to silence)" }
+    } else { Warn "dist/ not built yet - bundle leak check skipped (run with -PreBuild to silence)" }
 }
 
 # ── 2. SERVER: vite import, Express 5 routes, NODE_ENV ──
@@ -90,21 +90,21 @@ if ($serverFile) {
 
     # Static top-level vite import crashes prod after pnpm install --prod
     if ($srv -match "(?m)^\s*import\s+.*\bfrom\s+['""]vite['""]") {
-        Fail "$($serverFile.Name): static top-level vite import — crashes prod (ERR_MODULE_NOT_FOUND). Use a dynamic import() inside the dev-only branch."
+        Fail "$($serverFile.Name): static top-level vite import - crashes prod (ERR_MODULE_NOT_FOUND). Use a dynamic import() inside the dev-only branch."
     } else { Pass "no static top-level vite import in server" }
 
     # Express 5 / path-to-regexp 8 rejects bare '*'
     if ($srv -match "app\.(get|use|all)\(\s*['""]\*['""]") {
-        Fail "$($serverFile.Name): bare '*' route — invalid in Express 5. Use app.get(/.*/) or app.use(fn)."
+        Fail "$($serverFile.Name): bare '*' route - invalid in Express 5. Use app.get(/.*/) or app.use(fn)."
     } else { Pass "no Express-5-incompatible bare '*' route" }
 
     # Port should come from env, not hardcoded
     if ($srv -match "process\.env\.PORT") { Pass "server reads process.env.PORT" }
-    else { Warn "server does not reference process.env.PORT — may ignore the assigned port" }
+    else { Warn "server does not reference process.env.PORT - may ignore the assigned port" }
 
     # .js file containing TS syntax (type annotations) → node can't parse it
     if ($serverFile.Extension -eq '.js' -and $srv -match "(?m)(function\s+\w+\s*\([^)]*:\s*\w|:\s*(string|number|boolean|Record<|Request|Response)\b|^\s*interface\s)") {
-        Fail "$($serverFile.Name) has TypeScript syntax but a .js extension — rename to .ts and run with tsx"
+        Fail "$($serverFile.Name) has TypeScript syntax but a .js extension - rename to .ts and run with tsx"
     } else { Pass "server file extension matches its syntax" }
 
     # Every bare-package import must be a declared dependency
@@ -112,7 +112,7 @@ if ($serverFile) {
     if (Test-Path $pkgPath) {
         $pkg = $null
         try { $pkg = Get-Content $pkgPath -Raw | ConvertFrom-Json } catch {
-            Warn "package.json is not valid JSON ($($_.Exception.Message.Split([char]10)[0])) — dependency check skipped"
+            Warn "package.json is not valid JSON ($($_.Exception.Message.Split([char]10)[0])) - dependency check skipped"
         }
         $deps = @()
         if ($pkg -and $pkg.dependencies)    { $deps += $pkg.dependencies.PSObject.Properties.Name }
@@ -132,7 +132,7 @@ if ($serverFile) {
         else { Pass "all server imports are declared dependencies" }
       }
     }
-} else { Warn "no server file (static-only app?) — server checks skipped" }
+} else { Warn "no server file (static-only app?) - server checks skipped" }
 
 # deploy.ps1 must start pm2 with NODE_ENV=production
 $deploy = Join-Path $app 'deploy.ps1'
@@ -144,21 +144,21 @@ if (Test-Path $deploy) {
     }
     # workspace must be copied to deploy path for the prod install's allowBuilds
     if ((Have 'pnpm-workspace.yaml') -and $dp -match "pnpm install --prod" -and $dp -notmatch "pnpm-workspace\.yaml") {
-        Fail "deploy copies backend files but NOT pnpm-workspace.yaml — prod install can prompt-then-fail on build scripts"
+        Fail "deploy copies backend files but NOT pnpm-workspace.yaml - prod install can prompt-then-fail on build scripts"
     }
 } else { Warn "no deploy.ps1 in app folder" }
 
 # ── 3. INFRA: pnpm-only, workspace allowlist sane ──
 Write-Host "[3] Package manager & build config" -ForegroundColor Yellow
 
-if (Have 'package-lock.json') { Fail "package-lock.json present — pnpm-only policy (delete it)" }
+if (Have 'package-lock.json') { Fail "package-lock.json present - pnpm-only policy (delete it)" }
 else { Pass "no package-lock.json (pnpm-only)" }
 
 $ws = Join-Path $app 'pnpm-workspace.yaml'
 if (Test-Path $ws) {
     $wsTxt = [IO.File]::ReadAllText($ws)
     if ($wsTxt -match "set this to true or false") {
-        Fail "pnpm-workspace.yaml has placeholder 'set this to true or false' — pnpm ignores it and prompts-then-fails. Use true/false booleans."
+        Fail "pnpm-workspace.yaml has placeholder 'set this to true or false' - pnpm ignores it and prompts-then-fails. Use true/false booleans."
     } else { Pass "pnpm-workspace.yaml allowBuilds has no placeholder strings" }
 }
 
@@ -166,12 +166,12 @@ if (Test-Path $ws) {
 Write-Host ""
 Write-Host "========================================" -ForegroundColor Cyan
 if ($fails.Count -eq 0) {
-    Write-Host " APPROVED — $name is safe to deploy" -ForegroundColor Green
-    if ($warns.Count) { Write-Host " ($($warns.Count) warning(s) — review but non-blocking)" -ForegroundColor Yellow }
+    Write-Host " APPROVED - $name is safe to deploy" -ForegroundColor Green
+    if ($warns.Count) { Write-Host " ($($warns.Count) warning(s) - review but non-blocking)" -ForegroundColor Yellow }
     Write-Host "========================================" -ForegroundColor Cyan
     exit 0
 } else {
-    Write-Host " REJECTED — $($fails.Count) blocking issue(s):" -ForegroundColor Red
+    Write-Host " REJECTED - $($fails.Count) blocking issue(s):" -ForegroundColor Red
     $fails | ForEach-Object { Write-Host "   - $_" -ForegroundColor Red }
     Write-Host "========================================" -ForegroundColor Cyan
     exit 1

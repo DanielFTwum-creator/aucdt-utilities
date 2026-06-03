@@ -52,11 +52,12 @@ log '[2/5] Cloning tuc-rms (sparse, depth 1)...'
 git clone --depth 1 --filter=blob:none --sparse '$GITHUB_REPO' $buildDir
 cd $buildDir
 git sparse-checkout set tuc-rms
-cd tuc-rms
+cd tuc-rms/frontend
 log '[3/5] Installing dependencies...'
+rm -f ../../pnpm-workspace.yaml 2>/dev/null || true
 pnpm install --no-frozen-lockfile --silent 2>/dev/null || npm install --silent
 log '[4/5] Building...'
-pnpm build
+npm run build
 log '[5/5] Deploying dist/ to web root...'
 mkdir -p $RemotePath
 rsync -a --delete dist/. $RemotePath

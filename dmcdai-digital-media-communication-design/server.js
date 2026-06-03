@@ -10,8 +10,8 @@ import { GoogleGenAI } from '@google/genai';
 
 dotenv.config();
 
+// Imagen 4 and the gemini-*-image models require v1beta.
 const API_KEY = process.env.VITE_GEMINI_API_KEY || process.env.GEMINI_API_KEY;
-// Imagen 4 and the gemini-*-image models are served on v1beta (not v1).
 const imageAi = new GoogleGenAI({ apiKey: API_KEY, httpOptions: { apiVersion: 'v1beta' } });
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -216,35 +216,36 @@ async function startServer() {
       const { prompt, base64Image, mimeType } = req.body;
 
       if (base64Image && mimeType) {
-        // Edit path: Imagen has no edit model on this project, so use the
-        // Gemini image model, which edits via generateContent (image + text).
-        const response = await imageAi.models.generateContent({
-          model: 'gemini-3-pro-image',
-          contents: [
-            { inlineData: { data: base64Image, mimeType } },
-            { text: prompt },
-          ],
-        });
-        const parts = response.candidates?.[0]?.content?.parts ?? [];
-        const imgPart = parts.find((p) => p.inlineData?.data);
-        if (imgPart) {
-          const mt = imgPart.inlineData.mimeType || 'image/png';
-          return res.json({ result: `data:${mt};base64,${imgPart.inlineData.data}` });
-        }
-        throw new Error("EMPTY_RESPONSE");
-      }
-
-      // Generate path: Imagen 4 Ultra (highest fidelity) text-to-image.
-      const response = await imageAi.models.generateImages({
-        model: 'imagen-4.0-ultra-generate-001',
-        prompt,
-        config: { numberOfImages: 1 },
+      // Edit path: use gemini-2.0-flash-preview-image-generation which supports
+      // image-in, image-out editing via generateContent.
+      const response = await imageAi.models.generateContent({
+        model: 'gemini-2.0-flash-preview-image-generation',
+        contents: [
+          { inlineData: { data: base64Image, mimeType } },
+          { text: prompt },
+        ],
+        config: { responseModalities: ['IMAGE', 'TEXT'] },
       });
-      const generatedImage = response.generatedImages?.[0];
-      if (generatedImage?.image?.imageBytes) {
-        return res.json({ result: `data:image/png;base64,${generatedImage.image.imageBytes}` });
+      const parts = response.candidates?.[0]?.content?.parts ?? [];
+      const imgPart = parts.find((p) => p.inlineData?.data);
+      if (imgPart) {
+        const mt = imgPart.inlineData.mimeType || 'image/png';
+        return res.json({ result: `data:${mt};base64,${imgPart.inlineData.data}` });
       }
       throw new Error("EMPTY_RESPONSE");
+    }
+
+    // Generate path: Imagen 4 Ultra text-to-image.
+    const response = await imageAi.models.generateImages({
+      model: 'imagen-4.0-ultra-generate-001',
+      prompt,
+      config: { numberOfImages: 1 },
+    });
+    const generatedImage = response.generatedImages?.[0];
+    if (generatedImage?.image?.imageBytes) {
+      return res.json({ result: `data:image/png;base64,${generatedImage.image.imageBytes}` });
+    }
+    throw new Error("EMPTY_RESPONSE");
     } catch (error) {
       console.error('[DMCDAI] Image gen error:', error);
       res.status(500).json({ error: error.message });

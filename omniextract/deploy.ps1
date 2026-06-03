@@ -147,10 +147,6 @@ Log -Level 'SUCCESS' -Msg 'Server-side build and file sync complete' -Color Gree
 # Step 4: .htaccess
 Log -Level 'INFO' -Msg 'Step 4: Writing .htaccess...' -Color Yellow
 $htaccessContent = @"
-<IfModule mod_security2.c>
-  SecRuleRemoveById 210580
-</IfModule>
-
 Options -MultiViews
 RewriteEngine On
 RewriteBase /omniextract/

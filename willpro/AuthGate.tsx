@@ -73,7 +73,9 @@ export function AuthGate({ children, onLogout }: { children: React.ReactNode; on
     sessionStorage.removeItem(AUTH_KEY);
     localStorage.removeItem(USER_KEY);
     localStorage.removeItem('oauth_token_temp');
-    onLogout?.();
+    setAuthed(false);
+    // Stay on WillPro — navigate to root so the login screen shows
+    window.location.replace('/willpro/');
   };
 
   if (authed) {

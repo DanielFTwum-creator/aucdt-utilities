@@ -12,7 +12,8 @@ import ResiduaryStep from './components/ResiduaryStep.tsx';
 import ReviewStep from './components/ReviewStep.tsx';
 import AuditLogModal from './components/AuditLogModal.tsx';
 import PreviewPanel from './components/PreviewPanel.tsx';
-import { saveDraft, loadDraft, deleteDraft } from './db';
+import VersionModal from './components/VersionModal.tsx';
+import { saveDraft, getMostRecentDraft, deleteDraft, Draft } from './db';
 import { useLogout } from './AuthGate';
 
 export interface FormData {
@@ -94,7 +95,10 @@ const App = () => {
     });
     const [auditLogs, setAuditLogs] = useState<AuditLog[]>([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isVersionModalOpen, setIsVersionModalOpen] = useState(false);
     const [isSaved, setIsSaved] = useState(false);
+    const [currentDraftId, setCurrentDraftId] = useState<string>(() => Date.now().toString());
+    const [currentFilename, setCurrentFilename] = useState<string>('');
     const importFileRef = useRef<HTMLInputElement>(null);
     const saveTimeoutRef = useRef<number | null>(null);
 
@@ -109,11 +113,13 @@ const App = () => {
     };
     
     useEffect(() => {
-        loadDraft()
+        getMostRecentDraft()
             .then((draft) => {
                 if (draft) {
                     setCurrentStep(draft.step);
                     setFormData(draft.formData);
+                    setCurrentDraftId(draft.id);
+                    setCurrentFilename(draft.filename || '');
                     addAuditLog(`Draft restored from ${new Date(draft.updatedAt).toLocaleString()}`);
                 } else {
                     addAuditLog('New will creation process started');
@@ -127,13 +133,13 @@ const App = () => {
     const debouncedSave = useCallback(() => {
         if (saveTimeoutRef.current) clearTimeout(saveTimeoutRef.current);
         saveTimeoutRef.current = window.setTimeout(() => {
-            saveDraft(currentStep, formData).catch((err) => {
+            saveDraft(currentDraftId, currentStep, formData, currentFilename).catch((err) => {
                 console.error('Failed to save draft:', err);
             });
             setIsSaved(true);
             setTimeout(() => setIsSaved(false), 1000);
         }, 500);
-    }, [currentStep, formData]);
+    }, [currentStep, formData, currentDraftId, currentFilename]);
 
     useEffect(() => {
         debouncedSave();
@@ -182,8 +188,28 @@ const App = () => {
             gifts: [],
             residuaryBeneficiaryName: '',
         });
-        deleteDraft().catch((err) => console.error('Failed to delete draft:', err));
+        deleteDraft(currentDraftId).catch((err) => console.error('Failed to delete draft:', err));
         addAuditLog('New will creation process started');
+    };
+
+    const handleSaveAs = () => {
+        const name = prompt('Enter a name for this version:', currentFilename || 'Untitled Draft');
+        if (name !== null) {
+            const newId = Date.now().toString();
+            setCurrentDraftId(newId);
+            setCurrentFilename(name);
+            saveDraft(newId, currentStep, formData, name).then(() => {
+                addAuditLog(`Saved as new version: ${name}`);
+            });
+        }
+    };
+
+    const handleLoadDraft = (draft: Draft) => {
+        setCurrentDraftId(draft.id);
+        setCurrentFilename(draft.filename || '');
+        setCurrentStep(draft.step);
+        setFormData(draft.formData);
+        addAuditLog(`Loaded version: ${draft.filename || 'Untitled Draft'}`);
     };
 
     const handleExportLogs = () => {
@@ -262,7 +288,12 @@ const App = () => {
                             ✓ Saved
                         </span>
                     )}
-                    <button className="audit-logs-btn" onClick={() => setIsModalOpen(true)}>View Audit Logs</button>
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', marginRight: '10px' }}>
+                        <span style={{ fontSize: '11px', color: '#64748b', fontWeight: 600 }}>{currentFilename || 'Untitled Draft'}</span>
+                    </div>
+                    <button className="audit-logs-btn" onClick={handleSaveAs} style={{ background: '#0891b2', color: '#fff', border: 'none', padding: '8px 14px', borderRadius: '6px', fontSize: '13px', fontWeight: 600, cursor: 'pointer' }}>Save As</button>
+                    <button className="audit-logs-btn" onClick={() => setIsVersionModalOpen(true)} style={{ background: '#f1f5f9', color: '#334155', border: '1px solid #cbd5e1', padding: '8px 14px', borderRadius: '6px', fontSize: '13px', fontWeight: 600, cursor: 'pointer' }}>Versions</button>
+                    <button className="audit-logs-btn" onClick={() => setIsModalOpen(true)} style={{ background: '#f1f5f9', color: '#334155', border: '1px solid #cbd5e1', padding: '8px 14px', borderRadius: '6px', fontSize: '13px', fontWeight: 600, cursor: 'pointer' }}>Audit Logs</button>
                     <button
                         onClick={handleLogout}
                         style={{
@@ -294,6 +325,12 @@ const App = () => {
                 logs={auditLogs}
                 onExport={handleExportLogs}
                 onImport={triggerImport}
+            />
+            <VersionModal
+                isOpen={isVersionModalOpen}
+                onClose={() => setIsVersionModalOpen(false)}
+                onLoad={handleLoadDraft}
+                currentDraftId={currentDraftId}
             />
             <input type="file" ref={importFileRef} onChange={handleImportLogs} style={{ display: 'none' }} accept=".json" />
         </div>

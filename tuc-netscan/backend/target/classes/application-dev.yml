@@ -1,0 +1,68 @@
+spring:
+  application:
+    name: tuc-netscan
+
+  datasource:
+    url: jdbc:h2:mem:netscan;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;MODE=MySQL;DATABASE_TO_LOWER=TRUE
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+    database-platform: org.hibernate.dialect.H2Dialect
+
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      timeout: 500ms
+      connect-timeout: 500ms
+
+  cache:
+    type: simple
+
+  shell:
+    interactive:
+      enabled: false
+
+server:
+  port: 8080
+
+netscan:
+  mock:
+    enabled: true
+    device-count: 25
+    scan-interval-seconds: 30
+  jwt:
+    secret: dev-secret-key-tuc-netscan-2026-not-for-production-use
+    expiry-hours: 8
+  scan:
+    default-subnets: 192.168.1.0/24,10.0.0.0/24
+    interval-seconds: 60
+    max-concurrent-threads: 4
+  snmp:
+    community: public
+    timeout-ms: 1500
+    retries: 3
+  alert:
+    bandwidth-threshold-pct: 80
+    latency-threshold-ms: 200
+    packet-loss-threshold-pct: 5
+
+logging:
+  level:
+    edu.techbridge.netscan: DEBUG
+    org.springframework.security: WARN

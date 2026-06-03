@@ -9,8 +9,7 @@ const API = import.meta.env.VITE_API_URL || '/api'
 export default function Login() {
   const navigate = useNavigate()
   const { setSession } = useAuth()
-  const [firstName, setFirstName] = useState('')
-  const [lastName, setLastName] = useState('')
+  const [emailHandle, setEmailHandle] = useState('')
   const [email, setEmail] = useState('') // resolved full email, set after submit
   const [loading, setLoading] = useState(false)
   const [linkSent, setLinkSent] = useState(false)
@@ -46,7 +45,7 @@ export default function Login() {
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setLoading(true)
-    const resolvedEmail = `${firstName.trim().toLowerCase()}.${lastName.trim().toLowerCase()}@techbridge.edu.gh`
+    const resolvedEmail = `${emailHandle.trim().toLowerCase()}@techbridge.edu.gh`
     try {
       const response = await fetch(`${API}/auth/login`, {
         method: 'POST',
@@ -81,7 +80,7 @@ export default function Login() {
             {linkError}<br />Login links can only be used once and expire after 15 minutes.
           </div>
           <button className="btn btn-primary"
-            onClick={() => { setLinkError(''); setFirstName(''); setLastName('') }}
+            onClick={() => { setLinkError(''); setEmailHandle('') }}
             style={{ width: '100%', justifyContent: 'center', padding: '11px', fontSize: 14 }}>
             Request a new link
           </button>
@@ -133,7 +132,7 @@ export default function Login() {
             <span style={{ fontSize: 16 }}>📩</span> Open TUC Inbox
           </a>
           <button
-            onClick={() => { setLinkSent(false); setEmail(''); setFirstName(''); setLastName('') }}
+            onClick={() => { setLinkSent(false); setEmail(''); setEmailHandle('') }}
             style={{ display: 'block', margin: '12px auto 0', background: 'none', border: 'none', color: 'var(--tuc-maroon)', fontSize: 12, cursor: 'pointer', textDecoration: 'underline' }}>
             Use a different name
           </button>
@@ -162,16 +161,15 @@ export default function Login() {
         </div>
 
         <form onSubmit={handleSubmit}>
-          <div style={{ display: 'flex', gap: 10 }}>
-            <div className="form-group" style={{ flex: 1 }}>
-              <label className="form-label" htmlFor="first-name">First Name</label>
-              <input id="first-name" className="form-control" type="text" placeholder="Daniel"
-                value={firstName} onChange={e => setFirstName(e.target.value)} autoFocus required />
-            </div>
-            <div className="form-group" style={{ flex: 1 }}>
-              <label className="form-label" htmlFor="last-name">Last Name</label>
-              <input id="last-name" className="form-control" type="text" placeholder="Twum"
-                value={lastName} onChange={e => setLastName(e.target.value)} required />
+          <div className="form-group">
+            <label className="form-label" htmlFor="email-handle">TUC Email Address</label>
+            <div style={{ display: 'flex', alignItems: 'center' }}>
+              <input id="email-handle" className="form-control" type="text" placeholder="daniel.twum"
+                value={emailHandle} onChange={e => setEmailHandle(e.target.value)} autoFocus required 
+                style={{ flex: 1, borderTopRightRadius: 0, borderBottomRightRadius: 0 }} />
+              <div style={{ padding: '0 12px', background: '#f1f5f9', border: '1px solid #e2e8f0', borderLeft: 'none', height: 42, display: 'flex', alignItems: 'center', color: '#64748b', fontSize: 13, borderTopRightRadius: 8, borderBottomRightRadius: 8 }}>
+                @techbridge.edu.gh
+              </div>
             </div>
           </div>
           <button className="btn btn-primary" type="submit" disabled={loading}
