@@ -57,7 +57,7 @@ log '[3/5] Installing dependencies...'
 rm -f ../../pnpm-workspace.yaml 2>/dev/null || true
 pnpm install --no-frozen-lockfile --silent 2>/dev/null || npm install --silent
 log '[4/5] Building...'
-npm run build
+pnpm build || { echo '[WARN] pnpm build failed — falling back to npm run build'; npm run build; }
 log '[5/5] Deploying dist/ to web root...'
 mkdir -p $RemotePath
 rsync -a --delete dist/. $RemotePath
