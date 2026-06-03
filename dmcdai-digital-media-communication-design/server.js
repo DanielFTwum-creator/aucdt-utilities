@@ -259,7 +259,7 @@ async function startServer() {
       appType: 'spa',
     });
     app.use(vite.middlewares);
-    app.use('*', async (req, res, next) => {
+    app.use(async (req, res, next) => {
       if (req.path.startsWith('/api/')) return next();
       const url = req.originalUrl;
       try {
@@ -273,7 +273,7 @@ async function startServer() {
   } else {
     const distPath = path.join(__dirname, 'dist');
     app.use(express.static(distPath));
-    app.get('*', (req, res) => {
+    app.get(/.*/, (req, res) => {
       if (!req.path.startsWith('/api/')) {
         res.sendFile(path.join(distPath, 'index.html'));
       } else {

@@ -26,6 +26,7 @@ const App: React.FC = () => {
   const { isAuthenticated, isAdmin, user } = useAuth();
   const [activeModuleId, setActiveModuleId] = useState<ModuleId | 'admin' | null>(null);
   const [showLoginModal, setShowLoginModal] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false); // mobile drawer
   const [currentHash, setCurrentHash] = useState<string>(getHash);
   const initialMount = React.useRef(true);
 
@@ -147,10 +148,16 @@ const App: React.FC = () => {
     />
   ) : (
     <>
-      <Sidebar activeModuleId={activeModuleId} setActiveModuleId={setActiveModuleId} onAdminClick={handleAdminClick} />
-      <div className="flex flex-col flex-1">
-        <Header module={activeModule} onHomeClick={() => setActiveModuleId(null)} />
-        <main className="flex-1 p-6 lg:p-8 overflow-y-auto">
+      <Sidebar
+        activeModuleId={activeModuleId}
+        setActiveModuleId={(id) => { setActiveModuleId(id); setSidebarOpen(false); }}
+        onAdminClick={() => { handleAdminClick(); setSidebarOpen(false); }}
+        isOpen={sidebarOpen}
+        onClose={() => setSidebarOpen(false)}
+      />
+      <div className="flex flex-col flex-1 min-w-0">
+        <Header module={activeModule} onHomeClick={() => setActiveModuleId(null)} onMenuClick={() => setSidebarOpen(true)} />
+        <main className="flex-1 p-4 sm:p-6 lg:p-8 overflow-y-auto">
           {renderActiveModule()}
         </main>
       </div>
