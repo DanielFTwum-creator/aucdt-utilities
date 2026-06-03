@@ -87,6 +87,17 @@ Log "INFO" "Step 4: Writing .htaccess..." Yellow
 <IfModule mod_rewrite.c>
   RewriteEngine On
   RewriteBase /groove-streamer/
+
+  # Proxy API + OAuth callback to the PM2 backend on port 3004 (must come
+  # before the SPA fallback, else /api/* returns index.html).
+  RewriteCond %{REQUEST_URI} ^/groove-streamer/api/ [OR]
+  RewriteCond %{REQUEST_URI} ^/api/
+  RewriteRule ^(api/.*)$ http://localhost:3004/$1 [P,L]
+
+  RewriteCond %{REQUEST_URI} ^/groove-streamer/callback [OR]
+  RewriteCond %{REQUEST_URI} ^/callback
+  RewriteRule ^(callback.*)$ http://localhost:3004/$1 [P,L]
+
   RewriteCond %{REQUEST_FILENAME} -f [OR]
   RewriteCond %{REQUEST_FILENAME} -d
   RewriteRule ^ - [L]
