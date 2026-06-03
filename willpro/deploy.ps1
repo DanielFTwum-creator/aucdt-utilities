@@ -26,6 +26,13 @@ Log "INFO" "Remote : $RemoteHost"
 Log "INFO" "Path   : $RemotePath"
 Log "INFO" ""
 
+Log "INFO" "Step 0: Approval gate..." Yellow
+$gate = Join-Path $PSScriptRoot '..\Approve-App.ps1'
+if (Test-Path $gate) {
+    & $gate -Path $PSScriptRoot -PreBuild
+    if ($LASTEXITCODE -ne 0) { Log "ERROR" "Approval gate REJECTED — fix issues above before deploying." Red; exit 1 }
+} else { Log "WARN" "Approve-App.ps1 not found — skipping gate" Yellow }
+
 Log "INFO" "Step 1: Pre-flight checks..." Yellow
 Log "SUCCESS" "Pre-flight OK" Green
 
@@ -80,6 +87,14 @@ Log "INFO" "Step 4: Writing .htaccess..." Yellow
 <IfModule mod_rewrite.c>
   RewriteEngine On
   RewriteBase /willpro/
+
+  # Proxy OAuth callback + API to the PM2 backend on port 3015 (before SPA
+  # fallback). willpro previously collided with groove-streamer on 3004.
+  RewriteCond %{HTTP:Upgrade} !websocket [NC]
+  RewriteCond %{HTTP:Connection} !Upgrade [NC]
+  RewriteRule ^callback http://localhost:3015/callback [P,L]
+  RewriteRule ^(api/.*)$ http://localhost:3015/`$1 [P,L]
+
   RewriteCond %{REQUEST_FILENAME} -f [OR]
   RewriteCond %{REQUEST_FILENAME} -d
   RewriteRule ^ - [L]
@@ -104,7 +119,7 @@ Log "INFO" "Step 5: Setting permissions..." Yellow
 ssh -o StrictHostKeyChecking=no $RemoteHost "chown -R techbridge.edu.gh_md:psaserv $RemotePath && chmod -R 755 $RemotePath && chmod 644 ${RemotePath}.htaccess 2>/dev/null; true" | Out-Null
 
 Log "INFO" "Step 6: Deploying backend files..." Yellow
-scp -o StrictHostKeyChecking=no server.ts package.json pnpm-lock.yaml "${RemoteHost}:${RemotePath}" 2>$null | Out-Null
+scp -o StrictHostKeyChecking=no server.ts package.json pnpm-lock.yaml pnpm-workspace.yaml "${RemoteHost}:${RemotePath}" 2>$null | Out-Null
 if (Test-Path ".env.local") { scp -o StrictHostKeyChecking=no ".env.local" "${RemoteHost}:${RemotePath}.env" 2>$null | Out-Null }
 ssh -o StrictHostKeyChecking=no $RemoteHost "cd $RemotePath && pnpm install --prod --silent 2>/dev/null || npm install --omit=dev --silent"
 
@@ -114,7 +129,7 @@ if command -v pm2 &>/dev/null; then
   if pm2 describe willpro &>/dev/null; then
     pm2 reload willpro --update-env && echo 'pm2: reloaded willpro'
   else
-    cd $RemotePath && PORT=3004 pm2 start server.ts --name willpro --interpreter npx --interpreter-args tsx
+    cd $RemotePath && NODE_ENV=production PORT=3015 pm2 start server.ts --name willpro --interpreter npx --interpreter-args tsx
     echo 'pm2: started willpro'
   fi
   pm2 save --force &>/dev/null
@@ -125,7 +140,7 @@ ssh -o StrictHostKeyChecking=no $RemoteHost "echo $b64r | base64 -d | bash"
 
 Log "INFO" "Health check..." Yellow
 ssh -o StrictHostKeyChecking=no $RemoteHost "test -f ${RemotePath}index.html && echo 'OK index.html present' || echo 'MISSING index.html'"
-ssh -o StrictHostKeyChecking=no $RemoteHost "ss -tlnp | grep -q ':3004' && echo 'OK port 3004 listening' || echo 'WARN port 3004 not found'"
+ssh -o StrictHostKeyChecking=no $RemoteHost "ss -tlnp | grep -q ':3015' && echo 'OK port 3015 listening' || echo 'WARN port 3015 not found'"
 
 $elapsed = [math]::Round(((Get-Date) - $__deployStart).TotalSeconds, 1)
 $timeStr = if ($elapsed -ge 60) { "$([math]::Floor($elapsed/60))m $([math]::Round($elapsed%60,1))s" } else { "${elapsed}s" }

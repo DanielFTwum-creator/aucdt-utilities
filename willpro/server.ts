@@ -23,7 +23,7 @@ function decodeJWT(token: string) {
 
 async function startServer() {
   const app = express();
-  const PORT = Number(process.env.PORT) || 3004;
+  const PORT = Number(process.env.PORT) || 3015;
 
   app.use(express.json());
   app.use(cookieParser());
