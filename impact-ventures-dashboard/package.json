@@ -5,9 +5,9 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "node server.js",
-    "dev:server": "node server.js",
-    "start": "node server.js",
+    "dev": "tsx server.ts",
+    "dev:server": "tsx server.ts",
+    "start": "tsx server.ts",
     "build": "vite build",
     "preview": "vite preview",
     "clean": "rm -rf dist",
@@ -20,6 +20,8 @@
   "dependencies": {
     "@google/genai": "^1.50.1",
     "clsx": "^2.1.1",
+    "cookie-parser": "^1.4.7",
+    "dotenv": "^16.4.7",
     "express": "^5.2.1",
     "lucide-react": "^1.11.0",
     "motion": "^12.38.0",

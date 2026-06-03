@@ -1,5 +1,6 @@
 import express from 'express';
-import { createServer as createViteServer } from 'vite';
+// vite is a devDependency, imported dynamically in the dev-only branch below;
+// a static import crashes the production server after pnpm install --prod.
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -49,12 +50,13 @@ async function startServer() {
   });
 
   if (process.env.NODE_ENV !== 'production') {
+    const { createServer: createViteServer } = await import('vite');
     const vite = await createViteServer({
       server: { middlewareMode: true },
       appType: 'spa',
     });
     app.use(vite.middlewares);
-    app.use('*', async (req, res, next) => {
+    app.use(async (req, res, next) => {
       if (req.path.startsWith('/api/')) return next();
       const url = req.originalUrl;
       try {
@@ -68,7 +70,7 @@ async function startServer() {
   } else {
     const distPath = path.join(__dirname, 'dist');
     app.use(express.static(distPath));
-    app.get('*', (req, res) => {
+    app.get(/.*/, (req, res) => {
       if (!req.path.startsWith('/api/')) {
         res.sendFile(path.join(distPath, 'index.html'));
       } else {
