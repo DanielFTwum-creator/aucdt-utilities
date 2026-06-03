@@ -110,6 +110,8 @@ const App = () => {
     const [currentDraftId, setCurrentDraftId] = useState<string>(() => Date.now().toString());
     const [currentFilename, setCurrentFilename] = useState<string>('');
     const [user, setUser] = useState<{ name?: string; email: string } | null>(null);
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    const dropdownRef = useRef<HTMLDivElement>(null);
     const importFileRef = useRef<HTMLInputElement>(null);
     const saveTimeoutRef = useRef<number | null>(null);
 
@@ -126,6 +128,16 @@ const App = () => {
     useEffect(() => {
         localStorage.setItem('tuc_willpro_audit', JSON.stringify(auditLogs));
     }, [auditLogs]);
+
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+                setIsDropdownOpen(false);
+            }
+        };
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, []);
     
     useEffect(() => {
         const stored = localStorage.getItem('willpro_user');
@@ -178,7 +190,7 @@ const App = () => {
     const handleNext = () => setCurrentStep(prev => Math.min(prev + 1, totalSteps));
     const handleBack = () => setCurrentStep(prev => Math.max(prev - 1, 1));
     
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
         const { name, value, type } = e.target;
         const isCheckbox = type === 'checkbox';
         
@@ -307,9 +319,9 @@ const App = () => {
 
     return (
         <div className="app-container">
-            <header className="header">
+            <header className="header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <Logo />
-                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
                     {isSaved && (
                         <span style={{
                             fontSize: '12px',
@@ -320,43 +332,188 @@ const App = () => {
                             ✓ Saved
                         </span>
                     )}
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', background: 'rgba(181, 138, 61, 0.05)', border: '1px dashed rgba(181, 138, 61, 0.25)', padding: '6px 12px', borderRadius: '6px', marginRight: '4px' }}>
-                        <span style={{ fontSize: '10px', color: '#64748b', textTransform: 'uppercase', fontWeight: 700, letterSpacing: '0.05em' }}>Draft:</span>
-                        <span style={{ fontSize: '12px', color: '#1F2937', fontWeight: 700 }}>{currentFilename || 'Untitled Draft'}</span>
-                    </div>
-                    {user && (
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', background: 'rgba(181, 138, 61, 0.08)', padding: '6px 12px', borderRadius: '6px', border: '1px solid rgba(181, 138, 61, 0.15)', marginRight: '4px' }}>
-                            <span style={{ fontSize: '11px', color: '#B58A3D' }}>👤</span>
-                            <span style={{ fontSize: '11px', color: '#B58A3D', fontWeight: 800 }}>{user.name || user.email.split('@')[0]}</span>
-                        </div>
-                    )}
-                    <button className="audit-logs-btn" onClick={handleSaveAs} style={{ background: 'linear-gradient(135deg, #B58A3D, #9F762E)', color: '#fff', border: 'none', padding: '8px 14px', borderRadius: '6px', fontSize: '13px', fontWeight: 600, cursor: 'pointer', boxShadow: '0 2px 8px rgba(181, 138, 61, 0.2)' }}>Save As</button>
-                    <button className="audit-logs-btn" onClick={() => setIsVersionModalOpen(true)} style={{ background: 'rgba(181, 138, 61, 0.08)', color: '#B58A3D', border: '1.5px solid rgba(181, 138, 61, 0.25)', padding: '7px 14px', borderRadius: '6px', fontSize: '13px', fontWeight: 600, cursor: 'pointer' }}>Versions</button>
-                    <button className="audit-logs-btn" onClick={() => setIsModalOpen(true)} style={{ background: 'rgba(181, 138, 61, 0.08)', color: '#B58A3D', border: '1.5px solid rgba(181, 138, 61, 0.25)', padding: '7px 14px', borderRadius: '6px', fontSize: '13px', fontWeight: 600, cursor: 'pointer' }}>Audit Logs</button>
-                    <button
-                        onClick={handleLogout}
-                        style={{
-                            padding: '7px 14px',
-                            background: 'rgba(239, 68, 68, 0.08)',
-                            color: '#EF4444',
-                            border: '1.5px solid rgba(239, 68, 68, 0.25)',
-                            borderRadius: '6px',
-                            fontSize: '13px',
-                            fontWeight: '600',
-                            cursor: 'pointer',
-                            transition: 'all 0.2s',
-                        }}
-                        onMouseEnter={(e) => {
-                            e.currentTarget.style.background = '#ef4444';
-                            e.currentTarget.style.color = '#fff';
-                        }}
-                        onMouseLeave={(e) => {
-                            e.currentTarget.style.background = 'rgba(239, 68, 68, 0.08)';
-                            e.currentTarget.style.color = '#ef4444';
+                    
+                    <button 
+                        className="wp-btn-primary" 
+                        onClick={handleSaveAs}
+                        style={{ 
+                            background: 'linear-gradient(135deg, var(--wp-color-primary), var(--wp-color-primary-hover))', 
+                            color: '#fff', 
+                            border: 'none', 
+                            padding: '8px 16px', 
+                            borderRadius: 'var(--wp-radius-button)', 
+                            fontSize: '13px', 
+                            fontWeight: 600, 
+                            cursor: 'pointer', 
+                            boxShadow: '0 2px 8px rgba(166, 124, 55, 0.2)' 
                         }}
                     >
-                        Sign Out
+                        Save As
                     </button>
+
+                    {/* Consolidated User Profile Trigger with Dropdown */}
+                    <div ref={dropdownRef} style={{ position: 'relative' }}>
+                        <div 
+                            className="user-profile-trigger" 
+                            onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                            style={{ 
+                                display: 'flex', 
+                                alignItems: 'center', 
+                                gap: '10px', 
+                                cursor: 'pointer', 
+                                padding: '6px 14px', 
+                                borderRadius: '8px', 
+                                border: '1px solid rgba(181, 138, 61, 0.22)', 
+                                backgroundColor: 'rgba(255, 255, 255, 0.9)', 
+                                transition: 'all 0.2s ease',
+                                userSelect: 'none'
+                            }}
+                            onMouseEnter={(e) => {
+                                e.currentTarget.style.borderColor = 'var(--wp-color-primary)';
+                                e.currentTarget.style.boxShadow = '0 2px 8px rgba(166, 124, 55, 0.1)';
+                            }}
+                            onMouseLeave={(e) => {
+                                if (!isDropdownOpen) {
+                                    e.currentTarget.style.borderColor = 'rgba(181, 138, 61, 0.22)';
+                                    e.currentTarget.style.boxShadow = 'none';
+                                }
+                            }}
+                        >
+                            <div style={{ 
+                                width: '30px', 
+                                height: '30px', 
+                                borderRadius: '50%', 
+                                backgroundColor: 'var(--wp-color-primary-tint)', 
+                                color: 'var(--wp-color-primary)', 
+                                display: 'flex', 
+                                alignItems: 'center', 
+                                justifyContent: 'center', 
+                                fontWeight: 800, 
+                                fontSize: '12px' 
+                            }}>
+                                {user ? (user.name ? user.name.substring(0, 2).toUpperCase() : user.email.substring(0, 2).toUpperCase()) : 'G'}
+                            </div>
+                            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', lineHeight: '1.2' }}>
+                                <span style={{ fontSize: '12px', fontWeight: 700, color: 'var(--wp-color-text-main)' }}>
+                                    {user ? (user.name || user.email.split('@')[0]) : 'Guest'}
+                                </span>
+                                <span style={{ fontSize: '10px', color: 'var(--wp-color-text-muted)', maxWidth: '120px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                                    {currentFilename || 'Untitled Draft'}
+                                </span>
+                            </div>
+                            <span style={{ 
+                                fontSize: '10px', 
+                                color: 'var(--wp-color-primary)', 
+                                transform: isDropdownOpen ? 'rotate(180deg)' : 'rotate(0deg)', 
+                                transition: 'transform 0.2s ease',
+                                marginLeft: '2px'
+                            }}>
+                                ▼
+                            </span>
+                        </div>
+
+                        {isDropdownOpen && (
+                            <div 
+                                className="profile-dropdown" 
+                                style={{ 
+                                    position: 'absolute', 
+                                    right: 0, 
+                                    top: 'calc(100% + 8px)',
+                                    width: '220px', 
+                                    backgroundColor: '#FFFFFF', 
+                                    border: '1px solid rgba(181, 138, 61, 0.2)', 
+                                    borderRadius: '8px', 
+                                    boxShadow: '0 10px 25px rgba(166, 124, 55, 0.12)', 
+                                    zIndex: 100, 
+                                    display: 'flex', 
+                                    flexDirection: 'column', 
+                                    overflow: 'hidden',
+                                    animation: 'modalSlideUp 0.2s ease-out'
+                                }}
+                            >
+                                <div style={{ 
+                                    padding: '12px 16px', 
+                                    borderBottom: '1px solid rgba(181, 138, 61, 0.1)', 
+                                    backgroundColor: 'rgba(181, 138, 61, 0.03)' 
+                                }}>
+                                    <div style={{ fontSize: '10px', color: 'var(--wp-color-text-muted)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em' }}>Active Version</div>
+                                    <div style={{ fontSize: '13px', color: 'var(--wp-color-text-main)', fontWeight: 700, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', marginTop: '2px' }}>
+                                        {currentFilename || 'Untitled Draft'}
+                                    </div>
+                                </div>
+                                <button 
+                                    className="dropdown-item" 
+                                    onClick={() => { setIsDropdownOpen(false); setIsVersionModalOpen(true); }} 
+                                    style={{ 
+                                        display: 'flex', 
+                                        alignItems: 'center', 
+                                        gap: '8px', 
+                                        width: '100%', 
+                                        padding: '12px 16px', 
+                                        border: 'none', 
+                                        background: 'none', 
+                                        textAlign: 'left', 
+                                        cursor: 'pointer', 
+                                        fontSize: '13px', 
+                                        fontWeight: 600, 
+                                        color: 'var(--wp-color-text-main)',
+                                        transition: 'background-color 0.15s'
+                                    }}
+                                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'var(--wp-color-primary-tint)'}
+                                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+                                >
+                                    📂 Versions
+                                </button>
+                                <button 
+                                    className="dropdown-item" 
+                                    onClick={() => { setIsDropdownOpen(false); setIsModalOpen(true); }} 
+                                    style={{ 
+                                        display: 'flex', 
+                                        alignItems: 'center', 
+                                        gap: '8px', 
+                                        width: '100%', 
+                                        padding: '12px 16px', 
+                                        border: 'none', 
+                                        background: 'none', 
+                                        textAlign: 'left', 
+                                        cursor: 'pointer', 
+                                        fontSize: '13px', 
+                                        fontWeight: 600, 
+                                        color: 'var(--wp-color-text-main)',
+                                        transition: 'background-color 0.15s'
+                                    }}
+                                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'var(--wp-color-primary-tint)'}
+                                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+                                >
+                                    📜 Audit Logs
+                                </button>
+                                <button 
+                                    className="dropdown-item" 
+                                    onClick={() => { setIsDropdownOpen(false); handleLogout(); }} 
+                                    style={{ 
+                                        display: 'flex', 
+                                        alignItems: 'center', 
+                                        gap: '8px', 
+                                        width: '100%', 
+                                        padding: '12px 16px', 
+                                        border: 'none', 
+                                        background: 'none', 
+                                        borderTop: '1px solid #F1F5F9', 
+                                        textAlign: 'left', 
+                                        cursor: 'pointer', 
+                                        fontSize: '13px', 
+                                        fontWeight: 600, 
+                                        color: '#EF4444',
+                                        transition: 'background-color 0.15s'
+                                    }}
+                                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(239, 68, 68, 0.05)'}
+                                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+                                >
+                                    🚪 Sign Out
+                                </button>
+                            </div>
+                        )}
+                    </div>
                 </div>
             </header>
             <ProgressBar currentStep={currentStep} totalSteps={totalSteps} />
