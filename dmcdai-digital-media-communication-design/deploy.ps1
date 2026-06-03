@@ -55,11 +55,10 @@ cd $buildDir
 git sparse-checkout set dmcdai-digital-media-communication-design
 cd dmcdai-digital-media-communication-design
 log '[3/5] Installing dependencies...'
-pnpm approve-builds || true
-npm install --silent
+pnpm install --silent
 log '[4/5] Building...'
 cp /tmp/.env.dmcdai .env.local
-npm run build
+pnpm build
 log '[5/5] Deploying dist/ to web root...'
 mkdir -p $RemotePath
 rsync -a --delete dist/. $RemotePath
@@ -113,9 +112,9 @@ Log "INFO" "Step 5: Setting permissions..." Yellow
 ssh -o StrictHostKeyChecking=no $RemoteHost "chown -R techbridge.edu.gh_md:psaserv $RemotePath && chmod -R 755 $RemotePath && chmod 644 ${RemotePath}.htaccess 2>/dev/null; true" | Out-Null
 
 Log "INFO" "Step 6: Deploying backend files..." Yellow
-scp -o StrictHostKeyChecking=no server.js package.json pnpm-lock.yaml "${RemoteHost}:${RemotePath}" 2>$null | Out-Null
+scp -o StrictHostKeyChecking=no server.js package.json pnpm-lock.yaml pnpm-workspace.yaml "${RemoteHost}:${RemotePath}" 2>$null | Out-Null
 if (Test-Path ".env.local") { scp -o StrictHostKeyChecking=no ".env.local" "${RemoteHost}:${RemotePath}.env" 2>$null | Out-Null }
-ssh -o StrictHostKeyChecking=no $RemoteHost "cd $RemotePath && npm install --omit=dev --silent"
+ssh -o StrictHostKeyChecking=no $RemoteHost "cd $RemotePath && pnpm install --prod --silent"
 
 Log "INFO" "Step 7: Restarting backend (PM2)..." Yellow
 $restartCmd = @"
@@ -123,7 +122,7 @@ if command -v pm2 &>/dev/null; then
   if pm2 describe dmcdai &>/dev/null; then
     pm2 reload dmcdai --update-env && echo 'pm2: reloaded dmcdai'
   else
-    cd $RemotePath && PORT=3000 pm2 start server.js --name dmcdai --interpreter npx --interpreter-args tsx
+    cd $RemotePath && NODE_ENV=production PORT=3000 pm2 start server.js --name dmcdai --interpreter npx --interpreter-args tsx
     echo 'pm2: started dmcdai'
   fi
   pm2 save --force &>/dev/null
