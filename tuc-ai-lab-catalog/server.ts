@@ -1,7 +1,9 @@
 import { fileURLToPath } from "url";
 import path from "path";
 import express from "express";
-import { createServer as createViteServer } from "vite";
+// NOTE: vite is a devDependency and is imported dynamically inside the
+// dev-only branch below. A static top-level import crashes the production
+// server (ERR_MODULE_NOT_FOUND) after `pnpm install --prod` removes vite.
 import fs from "fs";
 import fetch from "node-fetch";
 import cookieParser from "cookie-parser";
@@ -238,6 +240,7 @@ async function startServer() {
 
   // Vite middleware for development
   if (process.env.NODE_ENV !== "production") {
+    const { createServer as createViteServer } = await import("vite");
     const vite = await createViteServer({
       server: { middlewareMode: true },
       appType: "spa",
