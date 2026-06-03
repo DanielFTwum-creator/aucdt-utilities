@@ -27,7 +27,7 @@ async function startServer() {
   const app = express();
   const PORT = process.env.PORT || 3004;
 
-  app.use(express.json());
+  app.use(express.json({ limit: '25mb' })); // audio base64 responses are large
   app.use(cookieParser());
   app.use(session({
     secret: process.env.SESSION_SECRET || 'super-secret-key',
@@ -68,6 +68,40 @@ async function startServer() {
       res.json({ success: true });
     } else {
       res.status(401).json({ success: false, message: 'Invalid password' });
+    }
+  });
+
+  // Groove (Lyria audio) generation proxy — keeps GEMINI_API_KEY server-side.
+  // The client builds the prompt; we stream the audio here and return base64.
+  app.post(['/api/groove', '/groove-streamer/api/groove'], async (req, res) => {
+    const apiKey = process.env.GEMINI_API_KEY;
+    if (!apiKey) return res.status(503).json({ error: 'GEMINI_API_KEY not configured.' });
+    const { prompt } = req.body as { prompt?: string };
+    if (!prompt) return res.status(400).json({ error: 'prompt is required.' });
+    try {
+      const { GoogleGenAI, Modality } = await import('@google/genai');
+      const ai = new GoogleGenAI({ apiKey });
+      const stream = await ai.models.generateContentStream({
+        model: 'lyria-3-clip-preview',
+        contents: prompt,
+        config: { responseModalities: [Modality.AUDIO] },
+      });
+      let base64 = '';
+      let mimeType = 'audio/wav';
+      for await (const chunk of stream) {
+        const parts = chunk.candidates?.[0]?.content?.parts ?? [];
+        for (const part of parts) {
+          const inline = part.inlineData;
+          if (!inline?.data) continue;
+          if (inline.mimeType && mimeType === 'audio/wav') mimeType = inline.mimeType;
+          base64 += inline.data;
+        }
+      }
+      if (!base64) return res.status(502).json({ error: 'No audio data from the model.' });
+      return res.json({ base64, mimeType });
+    } catch (err) {
+      console.error('[groove-streamer] groove gen error:', err);
+      return res.status(500).json({ error: 'Groove generation failed.' });
     }
   });
 
@@ -178,7 +212,7 @@ async function startServer() {
   } else {
     const distPath = path.join(__dirname, 'dist');
     app.use(express.static(distPath));
-    app.get('*', (req, res) => {
+    app.get(/.*/, (req, res) => {
       res.sendFile(path.join(distPath, 'index.html'));
     });
   }
