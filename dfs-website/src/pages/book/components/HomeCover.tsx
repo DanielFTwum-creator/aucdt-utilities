@@ -1,5 +1,5 @@
 import { BookOpen, Sparkles, Volume2, ShieldCheck, Heart } from 'lucide-react';
-const bannerImage = '/elephant_parade_banner.png';
+const bannerImage = `${import.meta.env.BASE_URL}elephant_parade_banner.png`;
 
 interface HomeCoverProps {
   onStartStory: () => void;
