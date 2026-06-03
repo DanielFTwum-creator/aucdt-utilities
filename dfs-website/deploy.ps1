@@ -106,10 +106,16 @@ pnpm install --silent
 log '[5/7] Building...'
 pnpm build
 
-log '[6/7] Deploying dist/ to web root...'
+log '[6/7] Deploying dist/ to web root (top level, like sibling apps)...'
 mkdir -p "`$DEPLOY_PATH"
-rsync -a --delete dist/ "`$DEPLOY_PATH/dist/"
-cp index.html "`$DEPLOY_PATH/dist/index.html" 2>/dev/null || true
+# Apache docroot is the vhost root, so /SUBFOLDER/ maps to DEPLOY_PATH itself,
+# NOT DEPLOY_PATH/dist/. The built SPA must live at the top level (matches biochemai).
+# rsync the build to the top level; --delete with excludes keeps backend files and
+# node_modules/.env intact while pruning stale hash-named assets.
+rsync -a --delete \
+  --exclude 'server.ts' --exclude 'package.json' --exclude 'pnpm-lock.yaml' \
+  --exclude 'pnpm-workspace.yaml' --exclude 'node_modules' --exclude '.env' \
+  dist/ "`$DEPLOY_PATH/"
 
 log '[7/7] Installing backend deps...'
 cp server.ts package.json pnpm-lock.yaml pnpm-workspace.yaml "`$DEPLOY_PATH/" 2>/dev/null || true
@@ -156,8 +162,8 @@ RewriteRule ^ index.html [QSA,L]
 '@
 $localHtaccess = [System.IO.Path]::Combine([System.IO.Path]::GetTempPath(), "dfs-website_htaccess_$([Guid]::NewGuid().ToString('N')).txt")
 Write-LfFile -path $localHtaccess -content $htaccessContent
-& $SSH @SSH_OPTS $REMOTE "mkdir -p ${DEPLOY_PATH}/dist"
-& $SCP @SSH_OPTS $localHtaccess "${REMOTE}:${DEPLOY_PATH}/dist/.htaccess"
+& $SSH @SSH_OPTS $REMOTE "mkdir -p ${DEPLOY_PATH}"
+& $SCP @SSH_OPTS $localHtaccess "${REMOTE}:${DEPLOY_PATH}/.htaccess"
 if ($LASTEXITCODE -ne 0) {
     Log -Level 'ERROR' -Msg 'Failed to upload .htaccess' -Color Red
     Remove-Item -Path $localHtaccess -Force -ErrorAction SilentlyContinue
@@ -171,14 +177,14 @@ Log -Level 'INFO' -Msg 'Step 5: Configuring server environment...' -Color Yellow
 
 # Step 6: Restart backend
 Log -Level 'INFO' -Msg 'Step 6: Restarting backend...' -Color Yellow
-$pm2Result = & $SSH @SSH_OPTS $REMOTE "if pm2 describe ${PM2_APP} > /dev/null 2>&1; then pm2 reload ${PM2_APP}; echo 'pm2: reloaded ${PM2_APP}'; else cd ${DEPLOY_PATH}; PORT=${PORT} pm2 start server.ts --name ${PM2_APP} --interpreter npx --interpreter-args tsx; echo 'pm2: started ${PM2_APP}'; fi"
+$pm2Result = & $SSH @SSH_OPTS $REMOTE "if pm2 describe ${PM2_APP} > /dev/null 2>&1; then pm2 reload ${PM2_APP} --update-env; echo 'pm2: reloaded ${PM2_APP}'; else cd ${DEPLOY_PATH}; NODE_ENV=production PORT=${PORT} pm2 start server.ts --name ${PM2_APP} --interpreter npx --interpreter-args tsx; echo 'pm2: started ${PM2_APP}'; fi; pm2 save > /dev/null 2>&1"
 Write-Host $pm2Result -ForegroundColor DarkGray
 
 # Health checks
 Log -Level 'INFO' -Msg 'Health checks...' -Color Yellow
 Start-Sleep -Seconds 8
 
-$indexCheck = & $SSH @SSH_OPTS $REMOTE "test -f ${DEPLOY_PATH}/dist/index.html && echo 'OK index.html present' || echo 'MISSING index.html'"
+$indexCheck = & $SSH @SSH_OPTS $REMOTE "test -f ${DEPLOY_PATH}/index.html && echo 'OK index.html present' || echo 'MISSING index.html'"
 Write-Host $indexCheck -ForegroundColor $(if ($indexCheck -match '^OK') { 'Green' } else { 'Red' })
 
 $portCheck = & $SSH @SSH_OPTS $REMOTE "ss -tlnp | grep -q :${PORT} && echo 'OK port ${PORT} listening' || echo 'WARN port ${PORT} not found'"
