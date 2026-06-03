@@ -10,7 +10,9 @@ import { fileURLToPath } from 'url';
 
 // --- Server Setup ---
 const app = express();
-const port = 3000;
+// Respect the PORT assigned by pm2/ecosystem.config.js (3011). Hardcoding 3000
+// collided with dmcdai and caused an EADDRINUSE crash loop.
+const port = process.env.PORT ? parseInt(process.env.PORT, 10) : 3011;
 const saltRounds = 10;
 
 const __filename = fileURLToPath(import.meta.url);
@@ -38,13 +40,15 @@ try {
 
 
 // --- Gemini API Initialization ---
+// Accept GEMINI_API_KEY (the monorepo/.env standard) and fall back to API_KEY.
+const GEMINI_KEY = process.env.GEMINI_API_KEY || process.env.API_KEY;
 let ai;
-if (!process.env.API_KEY) {
-  console.error('FATAL ERROR: API_KEY environment variable is not set.');
+if (!GEMINI_KEY) {
+  console.error('FATAL ERROR: GEMINI_API_KEY (or API_KEY) environment variable is not set.');
   process.exit(1);
 }
 try {
-  ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+  ai = new GoogleGenAI({ apiKey: GEMINI_KEY });
 } catch (e) {
   console.error("Error during Gemini AI client initialization.", e);
   process.exit(1);
@@ -244,8 +248,10 @@ app.post('/api/generate', authenticateToken, isAdmin, async (req, res) => {
 });
 
 // --- Static File Serving ---
+// Express 5 (path-to-regexp 8) rejects the bare '*' wildcard; use a regex
+// catch-all for the SPA fallback instead.
 app.use(express.static(__dirname));
-app.get('*', (req, res) => {
+app.get(/.*/, (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));
 });
 
