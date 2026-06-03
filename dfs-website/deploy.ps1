@@ -1,7 +1,8 @@
 # ============================================================
 # Drumming for SEL Success (dfs-website) — Deploy Script
 # Remote : root@techbridge.edu.gh
-# Path   : /var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/dfs-website
+# Path   : /var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/dfs
+# URL    : https://ai-tools.techbridge.edu.gh/dfs
 # Port   : 3012  |  PM2 app: dfs-website
 # Usage  : .\deploy.ps1
 # ============================================================
@@ -11,10 +12,10 @@ param([switch]$Build)
 $ErrorActionPreference = 'Stop'
 
 $REMOTE      = 'root@techbridge.edu.gh'
-$DEPLOY_PATH = '/var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/dfs-website'
+$DEPLOY_PATH = '/var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/dfs'
 $PORT        = 3012
 $PM2_APP     = 'dfs-website'
-$HEALTH_URL  = 'https://ai-tools.techbridge.edu.gh/dfs-website'
+$HEALTH_URL  = 'https://ai-tools.techbridge.edu.gh/dfs'
 $GITHUB_REPO = 'https://github.com/DanielFTwum-creator/aucdt-utilities'
 $SUBFOLDER   = 'dfs-website'
 $SSH_OPTS    = @('-o', 'StrictHostKeyChecking=no', '-o', 'BatchMode=yes')
@@ -149,6 +150,13 @@ Log -Level 'INFO' -Msg 'Step 4: Writing .htaccess...' -Color Yellow
 $htaccessContent = @'
 Options -MultiViews
 RewriteEngine On
+RewriteBase /dfs/
+
+# Proxy API requests to the PM2 backend (port 3012) before the SPA fallback.
+RewriteCond %{REQUEST_URI} ^/dfs/api/ [OR]
+RewriteCond %{REQUEST_URI} ^/api/
+RewriteRule ^(api/.*)$ http://localhost:3012/$1 [P,L]
+
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^ index.html [QSA,L]

@@ -56,7 +56,7 @@ export default function AdminDashboard() {
     auditLogService.log("Test Run", "Started Playwright test suite");
     
     try {
-      const response = await fetch("/api/admin/run-tests", { method: "POST" });
+      const response = await fetch(`${import.meta.env.BASE_URL}api/admin/run-tests`, { method: "POST" });
       const data = await response.json();
       setTestResults(data.results);
       if (data.success) {

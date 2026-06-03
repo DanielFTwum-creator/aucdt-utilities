@@ -16,7 +16,7 @@ export default function AdminTesting() {
     auditLogService.log("Test Run", "Started Puppeteer test suite");
     
     try {
-      const response = await fetch("/api/admin/run-tests", { method: "POST" });
+      const response = await fetch(`${import.meta.env.BASE_URL}api/admin/run-tests`, { method: "POST" });
       const data = await response.json();
       setTestResults(data.results);
       if (data.success) {

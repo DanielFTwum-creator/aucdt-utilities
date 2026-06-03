@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { CheckCircle2, Drum, Award, Calendar, User } from "lucide-react";
@@ -77,7 +77,7 @@ export default function VerifyCertificate() {
           </Card>
           
           <p className="text-center mt-8 text-sm text-muted-foreground">
-            Questions about this certification? <a href="/contact" className="text-primary font-bold hover:underline">Contact us</a>
+            Questions about this certification? <Link to="/contact" className="text-primary font-bold hover:underline">Contact us</Link>
           </p>
         </motion.div>
       </div>
