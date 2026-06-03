@@ -1,61 +1,24 @@
-import { GoogleGenAI, Type } from "@google/genai";
 import { getTextFromPdf, renderPdfPagesAsImages } from './pdfUtils';
 
-// This function assumes `process.env.API_KEY` is set in the execution environment.
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY! });
+// Gemini extraction runs on the backend (so the API key is never in the
+// browser bundle). This calls the server proxy; PDF parsing stays client-side.
+const EXTRACT_ENDPOINT = `${import.meta.env.BASE_URL}api/extract`;
 
-const invoiceSchema = {
-    type: Type.OBJECT,
-    properties: {
-        isInvoice: { 
-            type: Type.BOOLEAN, 
-            description: "Is the document an invoice or receipt? Responds false if it's not." 
-        },
-        vendorName: { 
-            type: Type.STRING, 
-            description: "The name of the business issuing the invoice (e.g., the chemist shop name)." 
-        },
-        customerName: { 
-            type: Type.STRING, 
-            description: "The name of the customer. Should be 'N/A' if not present." 
-        },
-        invoiceId: { 
-            type: Type.STRING, 
-            description: "The invoice number or ID." 
-        },
-        issueDate: { 
-            type: Type.STRING, 
-            description: "The date the invoice was issued." 
-        },
-        lineItems: {
-            type: Type.ARRAY,
-            description: "A list of all purchased items or services.",
-            items: {
-                type: Type.OBJECT,
-                properties: {
-                    quantity: { type: Type.NUMBER, description: "The quantity of the item." },
-                    description: { type: Type.STRING, description: "The description of the item." },
-                    unitPrice: { type: Type.NUMBER, description: "The price per unit (Rate)." },
-                    total: { type: Type.NUMBER, description: "The total price for the line item (Quantity * Rate)." }
-                },
-                required: ["quantity", "description", "unitPrice", "total"]
-            }
-        },
-        subtotal: { 
-            type: Type.NUMBER, 
-            description: "The total amount before discounts or taxes." 
-        },
-        discount: { 
-            type: Type.NUMBER, 
-            description: "The total discount amount applied. Should be 0 if not present." 
-        },
-        grandTotal: { 
-            type: Type.NUMBER, 
-            description: "The final amount to be paid (e.g., Total To Pay)." 
-        },
-    },
-    required: ["isInvoice", "vendorName", "invoiceId", "issueDate", "lineItems", "subtotal", "grandTotal"]
-};
+async function extractViaProxy(
+    payload: { text: string } | { imagePart: { inlineData: { mimeType: string; data: string } } }
+): Promise<any> {
+    const res = await fetch(EXTRACT_ENDPOINT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+    });
+    if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.error || `Extraction request failed (${res.status})`);
+    }
+    const { result } = await res.json();
+    return result;
+}
 
 /**
  * Converts an array of invoice JSON objects into a single, well-structured CSV string.
@@ -123,25 +86,15 @@ export const extractInvoiceDataAsCsv = async (
     const text = await getTextFromPdf(file, onProgress);
     const invoices: any[] = [];
 
-    const systemPrompt = `You are an expert invoice and receipt data extractor. Your task is to accurately pull out the key information according to the provided JSON schema. Pay close attention to line items, totals, and invoice details. If the document does not seem to be an invoice or a receipt, set 'isInvoice' to false and leave other fields blank.`;
-
     if (text) {
         onProgress('Analyzing text with AI...');
         try {
-            const response = await ai.models.generateContent({
-                model: "gemini-2.5-flash",
-                contents: `${systemPrompt} Text from PDF: ${text}`,
-                config: {
-                    responseMimeType: "application/json",
-                    responseSchema: invoiceSchema,
-                },
-            });
-            const parsedJson = JSON.parse(response.text.trim());
+            const parsedJson = await extractViaProxy({ text });
             if (parsedJson.isInvoice) {
                 invoices.push(parsedJson);
             }
         } catch (error) {
-            console.error("Gemini API error (text-based):", error);
+            console.error("AI error (text-based):", error);
             throw new Error("Failed to analyze invoice data with AI from the PDF text. The content may be unsupported.");
         }
     } else {
@@ -158,20 +111,9 @@ export const extractInvoiceDataAsCsv = async (
             onProgress(`Processing page ${pageNum} of ${imageParts.length} with AI...`);
             
             try {
-                const response = await ai.models.generateContent({
-                    model: "gemini-2.5-flash",
-                    contents: [ { text: `${systemPrompt} Extract data for the single invoice in the provided image.` }, part ],
-                    config: {
-                        responseMimeType: "application/json",
-                        responseSchema: invoiceSchema,
-                    },
-                });
-
-                if (response) {
-                    const parsedJson = JSON.parse(response.text.trim());
-                    if (parsedJson.isInvoice) {
-                        invoices.push(parsedJson);
-                    }
+                const parsedJson = await extractViaProxy({ imagePart: part });
+                if (parsedJson && parsedJson.isInvoice) {
+                    invoices.push(parsedJson);
                 }
             } catch (error) {
                 // Log the error for the specific page but continue processing others.

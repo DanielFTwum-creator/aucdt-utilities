@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { GoogleGenAI, Type } from '@google/genai';
 
 dotenv.config();
 
@@ -13,6 +14,43 @@ const PORT = Number(process.env.PORT) || 3009;
 const GOOGLE_CLIENT_ID     = process.env.VITE_GOOGLE_CLIENT_ID     || '';
 const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET       || '';
 const REDIRECT_URI         = process.env.VITE_GOOGLE_REDIRECT_URI   || 'https://ai-tools.techbridge.edu.gh/omniextract/callback';
+const GEMINI_API_KEY       = process.env.GEMINI_API_KEY            || process.env.API_KEY || '';
+
+// Gemini client is server-side only — the key must NEVER reach the browser bundle.
+const ai = new GoogleGenAI({ apiKey: GEMINI_API_KEY });
+
+// JSON schema for the invoice/receipt extraction (moved server-side from the
+// former client-side invoiceExtractor.ts).
+const invoiceSchema = {
+  type: Type.OBJECT,
+  properties: {
+    isInvoice:    { type: Type.BOOLEAN, description: "Is the document an invoice or receipt? Responds false if it's not." },
+    vendorName:   { type: Type.STRING,  description: 'The name of the business issuing the invoice.' },
+    customerName: { type: Type.STRING,  description: "The name of the customer. Should be 'N/A' if not present." },
+    invoiceId:    { type: Type.STRING,  description: 'The invoice number or ID.' },
+    issueDate:    { type: Type.STRING,  description: 'The date the invoice was issued.' },
+    lineItems: {
+      type: Type.ARRAY,
+      description: 'A list of all purchased items or services.',
+      items: {
+        type: Type.OBJECT,
+        properties: {
+          quantity:    { type: Type.NUMBER, description: 'The quantity of the item.' },
+          description: { type: Type.STRING, description: 'The description of the item.' },
+          unitPrice:   { type: Type.NUMBER, description: 'The price per unit (Rate).' },
+          total:       { type: Type.NUMBER, description: 'The total price for the line item.' },
+        },
+        required: ['quantity', 'description', 'unitPrice', 'total'],
+      },
+    },
+    subtotal:   { type: Type.NUMBER, description: 'The total amount before discounts or taxes.' },
+    discount:   { type: Type.NUMBER, description: 'The total discount amount applied. 0 if not present.' },
+    grandTotal: { type: Type.NUMBER, description: 'The final amount to be paid.' },
+  },
+  required: ['isInvoice', 'vendorName', 'invoiceId', 'issueDate', 'lineItems', 'subtotal', 'grandTotal'],
+};
+
+const SYSTEM_PROMPT = `You are an expert invoice and receipt data extractor. Your task is to accurately pull out the key information according to the provided JSON schema. Pay close attention to line items, totals, and invoice details. If the document does not seem to be an invoice or a receipt, set 'isInvoice' to false and leave other fields blank.`;
 
 if (!GOOGLE_CLIENT_ID || !GOOGLE_CLIENT_SECRET) {
   console.warn('[OmniExtract] WARNING: VITE_GOOGLE_CLIENT_ID or GOOGLE_CLIENT_SECRET not set — OAuth will fail');
@@ -25,7 +63,8 @@ function decodeJWT(token: string): Record<string, string> {
 }
 
 const app = express();
-app.use(express.json({ limit: '1mb' }));
+// Image-based extraction sends base64 page renders, so allow larger bodies.
+app.use(express.json({ limit: '25mb' }));
 app.use(cookieParser());
 
 // ── OAuth callback — handles both path variants Apache may forward ──
@@ -99,6 +138,42 @@ app.get(['/callback', '/omniextract/callback'], async (req, res) => {
 // ── Health check ──
 app.get(['/api/health', '/omniextract/api/health'], (_req, res) => {
   res.json({ ok: true, service: 'omniextract', port: PORT });
+});
+
+// ── Invoice extraction proxy ──
+// Keeps the Gemini API key server-side. Frontend extracts PDF text/images in
+// the browser, then posts them here for AI analysis. Accepts either
+// { text } (text-based PDFs) or { imagePart: { inlineData } } (scanned pages).
+app.post(['/api/extract', '/omniextract/api/extract'], async (req, res) => {
+  if (!GEMINI_API_KEY) {
+    return res.status(503).json({ error: 'GEMINI_API_KEY not configured on the server.' });
+  }
+  try {
+    const { text, imagePart } = req.body as {
+      text?: string;
+      imagePart?: { inlineData: { mimeType: string; data: string } };
+    };
+
+    const contents = imagePart
+      ? [{ text: `${SYSTEM_PROMPT} Extract data for the single invoice in the provided image.` }, imagePart]
+      : `${SYSTEM_PROMPT} Text from PDF: ${text ?? ''}`;
+
+    if (!imagePart && !text) {
+      return res.status(400).json({ error: 'Provide either text or imagePart.' });
+    }
+
+    const response = await ai.models.generateContent({
+      model: 'gemini-2.5-flash',
+      contents,
+      config: { responseMimeType: 'application/json', responseSchema: invoiceSchema },
+    });
+
+    const parsed = JSON.parse((response.text ?? '').trim());
+    return res.json({ result: parsed });
+  } catch (err) {
+    console.error('[OmniExtract] extract error:', err);
+    return res.status(500).json({ error: 'AI extraction failed.' });
+  }
 });
 
 // ── Serve SPA — index.html with strict no-cache ──
