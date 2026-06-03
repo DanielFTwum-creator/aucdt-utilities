@@ -372,67 +372,80 @@ Process is identical across TUC apps. Once written for one project, copy `APP_ST
 
 For AI vision tasks: document scanning, OCR, handwriting extraction.
 
+### ⚠️ SDK STANDARD (CEMENTED 2026-06-03) — use `@google/generative-ai`
+
+**The single TUC standard SDK is `@google/generative-ai` (pinned, e.g. `^0.24.1`).**
+Do **NOT** use `@google/genai`.
+
+**Why:** `@google/genai` (the newer "unified" SDK) rejects the valid shared TUC
+Gemini key with `API_KEY_INVALID` — it resolves auth toward Vertex/ADC unless
+explicitly pinned to the Gemini Developer API. The **same key works** under
+`@google/generative-ai`. This took down omniextract (2026-06-03); biochemai never
+broke because it uses `@google/generative-ai`. Always **pin** the version — never
+`"latest"` (an unpinned `@google/genai: "latest"` was the omniextract landmine).
+
+Diagnostic rule: if you see `API_KEY_INVALID`, FIRST test the key against the REST
+endpoint (`GET https://generativelanguage.googleapis.com/v1beta/models?key=...`
+→ should be 200), THEN check which SDK the app uses. Don't assume a dead key.
+
 ### Model Selection
 
-✅ Use: `gemini-3.1-pro-preview` — stable, supports streaming + JSON schema validation  
+✅ Use: `gemini-2.5-flash` — proven in biochemai + omniextract (structured JSON output)  
 ❌ Avoid: `gemini-1.5-flash` — throws 404 on free tier  
 ❌ Avoid: `gemini-2.0-flash-exp` — experimental, not available for structured responses  
 
-### Implementation Pattern
+### Implementation Pattern (`@google/generative-ai`)
 
 ```typescript
-import { GoogleGenAI, Type } from '@google/genai';
+import { GoogleGenerativeAI, SchemaType, type ResponseSchema } from '@google/generative-ai';
 
-const client = new GoogleGenAI({ apiKey: process.env.VITE_GEMINI_API_KEY });
+// Server-side only — the key must NEVER reach the browser bundle.
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
-const responseStream = await client.models.generateContentStream({
-  model: 'gemini-3.1-pro-preview',
-  contents: {
-    parts: [
-      { text: 'Your instruction prompt...' },
-      {
-        inlineData: {
-          data: base64ImageData,
-          mimeType: 'image/png',
-        },
-      },
-    ],
+// A standalone schema const must be cast `as ResponseSchema` (the SDK otherwise
+// infers a wide SchemaType and TS rejects it). Inline schemas don't need the cast.
+const schema = {
+  type: SchemaType.OBJECT,
+  properties: {
+    field1: { type: SchemaType.STRING },
+    field2: { type: SchemaType.NUMBER },
   },
-  config: {
-    temperature: 0,                           // Deterministic for data extraction
+  required: ['field1'],
+};
+
+const model = genAI.getGenerativeModel({
+  model: 'gemini-2.5-flash',
+  generationConfig: {
+    temperature: 0,                          // Deterministic for data extraction
     responseMimeType: 'application/json',
-    responseSchema: {
-      type: Type.ARRAY,
-      items: {
-        type: Type.OBJECT,
-        properties: {
-          field1: { type: Type.STRING },
-          field2: { type: Type.STRING },
-        },
-        required: ['field1'],
-      },
-    },
+    responseSchema: schema as ResponseSchema,
   },
 });
 
-// Collect streamed response
-let text = '';
-for await (const chunk of responseStream) {
-  if (chunk.text) text += chunk.text;
-}
-const results = JSON.parse(text);
+// contents shape: [{ role: 'user', parts: [...] }]. Mix text + inlineData for images.
+const result = await model.generateContent({
+  contents: [{ role: 'user', parts: [
+    { text: 'Your instruction prompt...' },
+    { inlineData: { data: base64ImageData, mimeType: 'image/png' } },
+  ] }],
+});
+
+const results = JSON.parse((await result.response).text().trim());
 ```
 
 ### Key Points
 
-- Must use `generateContentStream` (not `generateContent`) for structured responses
-- Schema defined via `Type` enum, not TypeScript interfaces
-- Response arrives as valid JSON — no markdown stripping needed
-- `temperature: 0` ensures deterministic, reproducible extraction
+- Client: `new GoogleGenerativeAI(KEY)` → `getGenerativeModel({ model, generationConfig })` → `model.generateContent({ contents })`.
+- Schema via `SchemaType` enum; cast a standalone schema const `as ResponseSchema`.
+- Response: `(await result.response).text()` (a method, not a `.text` property).
+- `temperature: 0` ensures deterministic, reproducible extraction.
+- Always call Gemini **from the backend** — never inject the key into a Vite bundle ([[feedback_gemini_backend_proxy]]).
 
 ### Proven In Production
 
-Glucose project (deployed 2026-05-16): extracts 20+ handwritten glucose readings from a single photo page.
+- **biochemai** — reference implementation (`@google/generative-ai`, `gemini-2.5-flash`).
+- **omniextract** (migrated 2026-06-03, commit 07e0d97a) — invoice/receipt extraction with `responseSchema`.
+- **Glucose** (2026-05-16) — extracts 20+ handwritten glucose readings from one photo page.
 
 ---
 
