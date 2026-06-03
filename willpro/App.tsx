@@ -93,7 +93,17 @@ const App = () => {
         gifts: [],
         residuaryBeneficiaryName: '',
     });
-    const [auditLogs, setAuditLogs] = useState<AuditLog[]>([]);
+    const [auditLogs, setAuditLogs] = useState<AuditLog[]>(() => {
+        const storedLogs = localStorage.getItem('tuc_willpro_audit');
+        if (storedLogs) {
+            try {
+                return JSON.parse(storedLogs);
+            } catch (e) {
+                console.error('Failed to parse stored audit logs:', e);
+            }
+        }
+        return [];
+    });
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isVersionModalOpen, setIsVersionModalOpen] = useState(false);
     const [isSaved, setIsSaved] = useState(false);
@@ -112,6 +122,10 @@ const App = () => {
         };
         setAuditLogs(prevLogs => [...prevLogs, newLog]);
     };
+
+    useEffect(() => {
+        localStorage.setItem('tuc_willpro_audit', JSON.stringify(auditLogs));
+    }, [auditLogs]);
     
     useEffect(() => {
         const stored = localStorage.getItem('willpro_user');
@@ -132,11 +146,17 @@ const App = () => {
                     setCurrentFilename(draft.filename || '');
                     addAuditLog(`Draft restored from ${new Date(draft.updatedAt).toLocaleString()}`);
                 } else {
-                    addAuditLog('New will creation process started');
+                    setAuditLogs([{
+                        timestamp: new Date().toISOString(),
+                        event: 'New will creation process started',
+                    }]);
                 }
             })
             .catch(() => {
-                addAuditLog('New will creation process started');
+                setAuditLogs([{
+                    timestamp: new Date().toISOString(),
+                    event: 'New will creation process started',
+                }]);
             });
     }, []);
 
@@ -196,10 +216,12 @@ const App = () => {
             alternateGuardianName: '',
             realEstate: [],
             gifts: [],
-            residuaryBeneficiaryName: '',
         });
         deleteDraft(currentDraftId).catch((err) => console.error('Failed to delete draft:', err));
-        addAuditLog('New will creation process started');
+        setAuditLogs([{
+            timestamp: new Date().toISOString(),
+            event: 'New will creation process started',
+        }]);
     };
 
     const handleSaveAs = () => {
