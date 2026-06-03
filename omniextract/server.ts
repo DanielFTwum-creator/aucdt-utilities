@@ -4,7 +4,7 @@ import dotenv from 'dotenv';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { GoogleGenAI, Type } from '@google/genai';
+import { GoogleGenerativeAI, SchemaType, type ResponseSchema } from '@google/generative-ai';
 
 dotenv.config();
 
@@ -17,35 +17,35 @@ const REDIRECT_URI         = process.env.VITE_GOOGLE_REDIRECT_URI   || 'https://
 const GEMINI_API_KEY       = process.env.GEMINI_API_KEY            || process.env.API_KEY || '';
 
 // Gemini client is server-side only — the key must NEVER reach the browser bundle.
-const ai = new GoogleGenAI({ apiKey: GEMINI_API_KEY });
+const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
 
 // JSON schema for the invoice/receipt extraction (moved server-side from the
 // former client-side invoiceExtractor.ts).
 const invoiceSchema = {
-  type: Type.OBJECT,
+  type: SchemaType.OBJECT,
   properties: {
-    isInvoice:    { type: Type.BOOLEAN, description: "Is the document an invoice or receipt? Responds false if it's not." },
-    vendorName:   { type: Type.STRING,  description: 'The name of the business issuing the invoice.' },
-    customerName: { type: Type.STRING,  description: "The name of the customer. Should be 'N/A' if not present." },
-    invoiceId:    { type: Type.STRING,  description: 'The invoice number or ID.' },
-    issueDate:    { type: Type.STRING,  description: 'The date the invoice was issued.' },
+    isInvoice:    { type: SchemaType.BOOLEAN, description: "Is the document an invoice or receipt? Responds false if it's not." },
+    vendorName:   { type: SchemaType.STRING,  description: 'The name of the business issuing the invoice.' },
+    customerName: { type: SchemaType.STRING,  description: "The name of the customer. Should be 'N/A' if not present." },
+    invoiceId:    { type: SchemaType.STRING,  description: 'The invoice number or ID.' },
+    issueDate:    { type: SchemaType.STRING,  description: 'The date the invoice was issued.' },
     lineItems: {
-      type: Type.ARRAY,
+      type: SchemaType.ARRAY,
       description: 'A list of all purchased items or services.',
       items: {
-        type: Type.OBJECT,
+        type: SchemaType.OBJECT,
         properties: {
-          quantity:    { type: Type.NUMBER, description: 'The quantity of the item.' },
-          description: { type: Type.STRING, description: 'The description of the item.' },
-          unitPrice:   { type: Type.NUMBER, description: 'The price per unit (Rate).' },
-          total:       { type: Type.NUMBER, description: 'The total price for the line item.' },
+          quantity:    { type: SchemaType.NUMBER, description: 'The quantity of the item.' },
+          description: { type: SchemaType.STRING, description: 'The description of the item.' },
+          unitPrice:   { type: SchemaType.NUMBER, description: 'The price per unit (Rate).' },
+          total:       { type: SchemaType.NUMBER, description: 'The total price for the line item.' },
         },
         required: ['quantity', 'description', 'unitPrice', 'total'],
       },
     },
-    subtotal:   { type: Type.NUMBER, description: 'The total amount before discounts or taxes.' },
-    discount:   { type: Type.NUMBER, description: 'The total discount amount applied. 0 if not present.' },
-    grandTotal: { type: Type.NUMBER, description: 'The final amount to be paid.' },
+    subtotal:   { type: SchemaType.NUMBER, description: 'The total amount before discounts or taxes.' },
+    discount:   { type: SchemaType.NUMBER, description: 'The total discount amount applied. 0 if not present.' },
+    grandTotal: { type: SchemaType.NUMBER, description: 'The final amount to be paid.' },
   },
   required: ['isInvoice', 'vendorName', 'invoiceId', 'issueDate', 'lineItems', 'subtotal', 'grandTotal'],
 };
@@ -154,21 +154,21 @@ app.post(['/api/extract', '/omniextract/api/extract'], async (req, res) => {
       imagePart?: { inlineData: { mimeType: string; data: string } };
     };
 
-    const contents = imagePart
-      ? [{ text: `${SYSTEM_PROMPT} Extract data for the single invoice in the provided image.` }, imagePart]
-      : `${SYSTEM_PROMPT} Text from PDF: ${text ?? ''}`;
-
     if (!imagePart && !text) {
       return res.status(400).json({ error: 'Provide either text or imagePart.' });
     }
 
-    const response = await ai.models.generateContent({
-      model: 'gemini-2.5-flash',
-      contents,
-      config: { responseMimeType: 'application/json', responseSchema: invoiceSchema },
-    });
+    const parts = imagePart
+      ? [{ text: `${SYSTEM_PROMPT} Extract data for the single invoice in the provided image.` }, imagePart]
+      : [{ text: `${SYSTEM_PROMPT} Text from PDF: ${text ?? ''}` }];
 
-    const parsed = JSON.parse((response.text ?? '').trim());
+    const model = genAI.getGenerativeModel({
+      model: 'gemini-2.5-flash',
+      generationConfig: { responseMimeType: 'application/json', responseSchema: invoiceSchema as ResponseSchema },
+    });
+    const result = await model.generateContent({ contents: [{ role: 'user', parts }] });
+
+    const parsed = JSON.parse((await result.response).text().trim());
     return res.json({ result: parsed });
   } catch (err) {
     console.error('[OmniExtract] extract error:', err);
