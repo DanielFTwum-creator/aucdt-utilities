@@ -764,6 +764,132 @@
               gap: 12px;
           }
         }
+
+        /* ============================================================
+           ENHANCED UI (ENABLE_ENHANCED_UI) — scoped under .wp-enhanced.
+           Brand: gold #B8840A, off-white #F0EDE6, charcoal #1C1612,
+           mid-grey #9C8B72. Toggling the flag off removes .wp-enhanced
+           wrappers, so none of the below applies.
+           ============================================================ */
+        @keyframes stepPulse {
+          0%   { transform: scale(1);   opacity: 1; }
+          100% { transform: scale(1.4); opacity: 0; }
+        }
+        @keyframes wpCardMount {
+          from { opacity: 0; transform: translateY(12px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes wpPreviewBounce {
+          0%   { transform: translateY(0); }
+          50%  { transform: translateY(-6px); }
+          100% { transform: translateY(0); }
+        }
+
+        /* --- Stepper --- */
+        .wp-enhanced .step.completed .step-number {
+          background: #B8840A;
+          border-color: #B8840A;
+          color: #fff;
+        }
+        .wp-enhanced .step.completed .step-number svg { width: 18px; height: 18px; stroke: #fff; }
+        .wp-enhanced .step.active .step-number {
+          position: relative;
+          background: #B8840A;
+          border-color: #B8840A;
+          color: #fff;
+          transform: none;
+          box-shadow: none;
+        }
+        .wp-enhanced .step.active .step-number::after {
+          content: '';
+          position: absolute;
+          inset: -4px;
+          border-radius: 50%;
+          border: 2px solid #B8840A;
+          animation: stepPulse 1.4s infinite;
+          pointer-events: none;
+        }
+        .wp-enhanced .step:not(.active):not(.completed) { opacity: 0.35; }
+        .wp-enhanced .step:not(.active):not(.completed) .step-label { color: transparent; }
+
+        @media (max-width: 900px) {
+          .wp-enhanced .step-label { display: none; }
+        }
+
+        /* --- Form card --- */
+        .wp-enhanced.testator-step {
+          border-radius: 16px;
+          box-shadow: 0 1px 3px rgba(28,22,18,0.06), 0 8px 32px rgba(28,22,18,0.10);
+          border-top: 3px solid rgba(184,132,10,0.18);
+          opacity: 0;
+          animation: wpCardMount 220ms ease-out forwards;
+        }
+        .wp-enhanced .step-title {
+          font-size: 24px;
+          font-weight: 700;
+          letter-spacing: -0.02em;
+        }
+        .wp-enhanced .step-subtitle { font-size: 13px; color: #7A6E63; }
+        .wp-enhanced .wp-privacy-line { display: block; font-size: 13px; color: #7A6E63; margin-top: 4px; }
+
+        /* --- Floating-label fields --- */
+        .wp-enhanced .wp-field { position: relative; max-width: 440px; margin: 0 auto 28px; width: 100%; }
+        .wp-enhanced .wp-field .wp-lead-icon {
+          position: absolute; left: 12px; top: 24px; transform: translateY(-50%);
+          width: 16px; height: 16px; color: #9C8B72; pointer-events: none; z-index: 2;
+        }
+        .wp-enhanced .wp-field .wp-input {
+          width: 100%; height: 48px; padding: 12px 16px 12px 40px;
+          border: 1px solid #9C8B72; border-radius: 10px; background: transparent;
+          color: #1C1612; font-family: var(--wp-font-family); font-size: 15px;
+          transition: border-color .2s ease, box-shadow .2s ease;
+        }
+        .wp-enhanced .wp-field textarea.wp-input { height: auto; min-height: 72px; resize: vertical; padding-top: 14px; }
+        .wp-enhanced .wp-field .wp-float-label {
+          position: absolute; left: 40px; top: 24px; transform: translateY(-50%);
+          font-size: 15px; color: #9C8B72; pointer-events: none;
+          transition: all .15s ease; background: #F0EDE6; padding: 0 4px;
+        }
+        .wp-enhanced .wp-field textarea.wp-input ~ .wp-float-label { top: 18px; }
+        .wp-enhanced .wp-field .wp-input:focus { outline: none; border-color: #B8840A; box-shadow: 0 0 0 3px rgba(184,132,10,0.15); }
+        .wp-enhanced .wp-field .wp-input:focus ~ .wp-float-label,
+        .wp-enhanced .wp-field .wp-input.has-value ~ .wp-float-label {
+          top: 0; left: 36px; transform: translateY(-50%); font-size: 11px; color: #B8840A;
+        }
+        .wp-enhanced .wp-field.invalid .wp-input { border-color: #C0392B; }
+        .wp-enhanced .wp-field .wp-helper { color: #C0392B; font-size: 12px; margin-top: 6px; }
+
+        /* --- DOB trigger + popover --- */
+        .wp-enhanced .wp-date-trigger {
+          width: 100%; height: 48px; padding: 12px 16px 12px 40px; text-align: left;
+          border: 1px solid #9C8B72; border-radius: 10px; background: transparent;
+          color: #1C1612; font-size: 15px; cursor: pointer;
+          transition: border-color .2s ease, box-shadow .2s ease;
+        }
+        .wp-enhanced .wp-date-trigger.placeholder { color: #9C8B72; }
+        .wp-enhanced .wp-date-trigger:focus { outline: none; border-color: #B8840A; box-shadow: 0 0 0 3px rgba(184,132,10,0.15); }
+        .wp-enhanced .wp-popover {
+          /* Above the fixed "View Will Preview" FAB (z-index 500) so the
+             calendar is never overlapped by it (brief requirement). */
+          position: absolute; z-index: 600; margin-top: 6px; background: #fff;
+          border-radius: 12px; border: 1px solid rgba(156,139,114,0.3);
+          box-shadow: 0 1px 3px rgba(28,22,18,0.06), 0 8px 32px rgba(28,22,18,0.10); padding: 8px;
+        }
+        .wp-enhanced .rdp-day_selected, .wp-enhanced .rdp-day.rdp-selected { background: #B8840A !important; color: #fff !important; }
+
+        /* --- Buttons --- */
+        .wp-enhanced .back-btn {
+          border: 1.5px solid #9C8B72; color: #5C4D38; background: transparent;
+        }
+        .wp-enhanced .back-btn:hover { background: #F0EDE6; border-color: #B8840A; color: #B8840A; }
+        .wp-enhanced .continue-btn {
+          display: inline-flex; align-items: center; transition: all 150ms ease;
+        }
+        .wp-enhanced .continue-btn .wp-chevron { margin-left: 8px; }
+        .wp-enhanced .continue-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(184,132,10,0.35); }
+
+        /* --- Floating preview button bounce (one-shot on load) --- */
+        .wp-preview-bounce { animation: wpPreviewBounce 800ms ease 600ms 1; }
     </style>
 
 
