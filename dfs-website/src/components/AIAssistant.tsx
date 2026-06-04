@@ -26,11 +26,31 @@ const AUDIENCES: Audience[] = [
 
 // Sanitise the model's rich HTML while ALLOWING inline SVG diagrams (the
 // AI-for-GOOD contract requires them). DOMPurify supports SVG via profiles.
+//
+// The model sometimes emits inline `style`/`class` (e.g. hardcoded text/background
+// colours that assume a white page), which causes low-contrast, unreadable text
+// inside the themed message bubble. Strip style/class on HTML elements so the
+// answer inherits the app's readable typography — but PRESERVE them on SVG nodes,
+// where colours are needed for the diagrams.
 function renderHtml(raw: string): string {
-  return DOMPurify.sanitize(raw, {
+  DOMPurify.addHook("uponSanitizeElement", (node: any) => {
+    if (node.nodeType === 1 && typeof node.tagName === "string") {
+      const tag = node.tagName.toLowerCase();
+      const isSvg = tag === "svg" || node.namespaceURI === "http://www.w3.org/2000/svg";
+      if (!isSvg) {
+        node.removeAttribute?.("style");
+        node.removeAttribute?.("class");
+        node.removeAttribute?.("bgcolor");
+        node.removeAttribute?.("color");
+      }
+    }
+  });
+  const clean = DOMPurify.sanitize(raw, {
     USE_PROFILES: { html: true, svg: true, svgFilters: true },
     ADD_TAGS: ["use"],
   });
+  DOMPurify.removeHook("uponSanitizeElement");
+  return clean;
 }
 
 export default function AIAssistant() {
@@ -128,12 +148,21 @@ export default function AIAssistant() {
                         className={`max-w-[90%] p-3 rounded-2xl text-sm ${
                           msg.role === "user"
                             ? "bg-primary text-primary-foreground"
-                            : "bg-white shadow-sm"
+                            : "bg-white text-slate-800 shadow-sm"
                         }`}
                       >
                         {msg.role === "ai" && msg.html ? (
                           <div
-                            className="dfs-ai-answer prose prose-sm max-w-none [&_svg]:max-w-full [&_svg]:h-auto"
+                            className="dfs-ai-answer text-slate-800 leading-relaxed space-y-2 max-w-none
+                              [&_h3]:text-base [&_h3]:font-semibold [&_h3]:text-slate-900 [&_h3]:mt-2
+                              [&_h4]:font-semibold [&_h4]:text-slate-900
+                              [&_strong]:text-slate-900 [&_strong]:font-semibold
+                              [&_a]:text-primary [&_a]:underline
+                              [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5
+                              [&_li]:my-0.5
+                              [&_aside]:bg-accent/10 [&_aside]:border-l-2 [&_aside]:border-primary [&_aside]:pl-3 [&_aside]:py-1.5 [&_aside]:my-2 [&_aside]:text-slate-700
+                              [&_table]:w-full [&_table]:text-xs [&_th]:text-left [&_th]:font-semibold [&_th]:text-slate-900 [&_td]:border-t [&_td]:border-slate-200 [&_td]:py-1
+                              [&_svg]:max-w-full [&_svg]:h-auto [&_svg]:my-2"
                             dangerouslySetInnerHTML={{ __html: renderHtml(msg.content) }}
                           />
                         ) : (
