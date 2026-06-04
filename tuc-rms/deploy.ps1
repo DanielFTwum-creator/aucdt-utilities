@@ -82,6 +82,10 @@ Log "INFO" "Step 4: Writing .htaccess..." Yellow
 # serves at "/", whereas the ai-tools sub-path serves at "/tuc-rms/". Using the
 # wrong base rewrites to a non-existent path and 500s the whole site.
 $base = if ($RemotePath -match '/tuc-rms/?$') { '/tuc-rms/' } else { '/' }
+# On the rms root vhost the backend is co-located on port 5000 — proxy /api/* to it
+# BEFORE the SPA fallback, or login POSTs return index.html (HTML, not JSON).
+# `$1 is backtick-escaped so PowerShell doesn't interpolate it to empty.
+$apiProxy = if ($base -eq '/') { "  RewriteRule ^api/(.*)`$ http://localhost:5000/api/`$1 [P,L,NC]`n" } else { '' }
 @"
 <IfModule mod_rewrite.c>
   RewriteEngine On
@@ -89,7 +93,7 @@ $base = if ($RemotePath -match '/tuc-rms/?$') { '/tuc-rms/' } else { '/' }
   RewriteCond %{REQUEST_FILENAME} -f [OR]
   RewriteCond %{REQUEST_FILENAME} -d
   RewriteRule ^ - [L]
-  RewriteRule ^ ${base}index.html [QSA,L]
+$apiProxy  RewriteRule ^ ${base}index.html [QSA,L]
 </IfModule>
 <IfModule mod_expires.c>
   ExpiresActive On
