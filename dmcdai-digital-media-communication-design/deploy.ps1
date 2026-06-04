@@ -95,8 +95,11 @@ Log "INFO" "Step 4: Writing .htaccess..." Yellow
   RewriteCond %{REQUEST_FILENAME} -d
   RewriteRule ^ - [L]
 
-  # Proxy /dmcdai/api/* to PM2 on port 3014
-  RewriteRule ^api/(.*)$ http://localhost:3014/api/$1 [P,L,NC]
+  # Proxy /dmcdai/api/* to PM2 on port 3014.
+  # NOTE: `$1 is backtick-escaped — this is a double-quoted (@"..."@) here-string,
+  # so a bare $1 would be interpolated by PowerShell to empty, dropping the
+  # sub-path and 404-ing every API call.
+  RewriteRule ^api/(.*)`$ http://localhost:3014/api/`$1 [P,L,NC]
 
   # SPA fallback
   RewriteRule ^ /dmcdai/index.html [QSA,L]

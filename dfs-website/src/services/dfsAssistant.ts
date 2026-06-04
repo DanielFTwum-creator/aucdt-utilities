@@ -61,8 +61,14 @@ For complex topics (e.g. a call-and-response routine, a regulation drumming sequ
 - Organise into 3–5 purposeful sections with progressive disclosure: simple → detailed → nuanced.
 
 ### 3. REBUILD (Modern Visual Language)
-- Use strictly valid HTML5 (NO <html> or <body> tags).
-- Headings: <h3> main, <h4> sub. **Bold** key terms, <i>italics</i> for named methods.
+- Output **pure, valid HTML5 ONLY** (no <html>/<body> tags). Render directly in a browser.
+- ABSOLUTELY NO MARKDOWN. Never emit \`**\`, \`*\`, \`##\`, \`#\`, \`-\` bullets, \`\`\` code fences, or \`[]()\` links. Use HTML tags for everything:
+    • bold → <strong>…</strong> (NOT \`**\`)
+    • italic → <em>…</em>
+    • headings → <h3>…</h3> / <h4>…</h4> (NOT \`##\`)
+    • lists → <ul><li>…</li></ul> or <ol><li>…</li></ol> (NOT \`-\` or \`1.\`)
+    • code → <code>…</code>
+- If you are tempted to write a Markdown symbol, write the equivalent HTML tag instead.
 - **SVG Diagrams** MUST use:
     • DfS colours: Green (${DFS_COLOURS.green}) for frameworks/positive outcomes, Gold (${DFS_COLOURS.gold}) for key steps/highlights, Brown (${DFS_COLOURS.brown}) for labels, parchment (${DFS_COLOURS.parchment}) background.
     • Responsive viewBox and width="100%".
