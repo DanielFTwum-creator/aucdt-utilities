@@ -98,6 +98,12 @@ export function AuthGate({ children, onLogout }: { children: React.ReactNode; on
   const handleLogout = () => {
     sessionStorage.removeItem(AUTH_KEY);
     localStorage.removeItem(USER_KEY);
+    // Also clear the OAuth cookie so a stale cookie doesn't re-auth on next render.
+    document.cookie = 'omniextract_user=; max-age=0; path=/omniextract/';
+    // Reset React state so the gate re-renders to the login screen immediately —
+    // clearing storage alone left `authed` true, so Sign Out appeared to do nothing.
+    setUser(null);
+    setAuthed(false);
     onLogout?.();
   };
 

@@ -78,14 +78,18 @@ log 'Build and deploy complete.'
 }
 
 Log "INFO" "Step 4: Writing .htaccess..." Yellow
+# Derive the SPA base from the deploy path: a root vhost (…/rms.techbridge.edu.gh/)
+# serves at "/", whereas the ai-tools sub-path serves at "/tuc-rms/". Using the
+# wrong base rewrites to a non-existent path and 500s the whole site.
+$base = if ($RemotePath -match '/tuc-rms/?$') { '/tuc-rms/' } else { '/' }
 @"
 <IfModule mod_rewrite.c>
   RewriteEngine On
-  RewriteBase /tuc-rms/
+  RewriteBase $base
   RewriteCond %{REQUEST_FILENAME} -f [OR]
   RewriteCond %{REQUEST_FILENAME} -d
   RewriteRule ^ - [L]
-  RewriteRule ^ /tuc-rms/index.html [QSA,L]
+  RewriteRule ^ ${base}index.html [QSA,L]
 </IfModule>
 <IfModule mod_expires.c>
   ExpiresActive On
