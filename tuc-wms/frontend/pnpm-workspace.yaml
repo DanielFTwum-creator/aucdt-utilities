@@ -1,0 +1,4 @@
+# Workspace boundary: makes tuc-wms/frontend a standalone pnpm project so
+# `pnpm install` here resolves its own deps and does NOT walk up to the
+# monorepo root. (See the tuc-rms/frontend lesson.)
+packages: []

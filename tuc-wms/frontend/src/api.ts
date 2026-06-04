@@ -1,0 +1,45 @@
+// Lightweight API client. The access JWT lives in memory only (NFR-SEC-008) —
+// never localStorage/sessionStorage. On a 401 it tries one silent refresh
+// (HttpOnly cookie) and retries the request once.
+
+let accessToken: string | null = null;
+let onAuthLost: (() => void) | null = null;
+
+export function setAccessToken(token: string | null) { accessToken = token; }
+export function getAccessToken() { return accessToken; }
+export function setOnAuthLost(cb: (() => void) | null) { onAuthLost = cb; }
+
+async function refresh(): Promise<boolean> {
+  const res = await fetch('/api/auth/refresh', { method: 'POST', credentials: 'include' });
+  if (!res.ok) return false;
+  const data = await res.json();
+  accessToken = data.access_token;
+  return true;
+}
+
+export async function api<T = any>(path: string, init: RequestInit = {}, retry = true): Promise<T> {
+  const headers = new Headers(init.headers);
+  if (accessToken) headers.set('Authorization', `Bearer ${accessToken}`);
+  if (init.body && !headers.has('Content-Type')) headers.set('Content-Type', 'application/json');
+
+  const res = await fetch(path, { ...init, headers, credentials: 'include' });
+
+  if (res.status === 401 && retry) {
+    if (await refresh()) return api<T>(path, init, false);
+    accessToken = null;
+    onAuthLost?.();
+    throw new Error('Session expired');
+  }
+  if (!res.ok) {
+    const text = await res.text();
+    let msg = text;
+    try { msg = JSON.parse(text).error || JSON.parse(text).message || text; } catch { /* keep text */ }
+    throw new Error(msg || `Request failed (${res.status})`);
+  }
+  if (res.status === 204) return undefined as T;
+  return res.json();
+}
+
+/** POST helper. */
+export const post = <T = any>(path: string, body?: unknown) =>
+  api<T>(path, { method: 'POST', body: body ? JSON.stringify(body) : undefined });
