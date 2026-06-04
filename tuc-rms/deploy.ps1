@@ -53,12 +53,13 @@ git clone --depth 1 --filter=blob:none --sparse '$GITHUB_REPO' $buildDir
 cd $buildDir
 git sparse-checkout set tuc-rms
 cd tuc-rms/frontend
+set -e
 log '[3/5] Installing dependencies...'
-rm -f ../../pnpm-workspace.yaml 2>/dev/null || true
-pnpm install --no-frozen-lockfile --silent 2>/dev/null || npm install --silent
+pnpm install --no-frozen-lockfile || { echo '[WARN] pnpm install failed — falling back to npm'; npm install; }
 log '[4/5] Building...'
 pnpm build || { echo '[WARN] pnpm build failed — falling back to npm run build'; npm run build; }
 log '[5/5] Deploying dist/ to web root...'
+if [ ! -f dist/index.html ]; then echo '[ERROR] build produced no dist/index.html — aborting, NOT touching web root'; exit 2; fi
 mkdir -p $RemotePath
 rsync -a --delete dist/. $RemotePath
 log 'Build and deploy complete.'
