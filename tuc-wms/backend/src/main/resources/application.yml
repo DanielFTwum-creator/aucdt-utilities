@@ -1,0 +1,50 @@
+server:
+  port: ${PORT:8080}
+  forward-headers-strategy: framework   # behind the Plesk/nginx reverse proxy
+
+spring:
+  application:
+    name: tuc-wms
+
+  # Local/dev default: H2 in-memory so the app + mock-OAuth E2E (AC-001) run with
+  # no external DB. Production overrides via env to MariaDB (TUC stack, port 3307).
+  datasource:
+    url: ${DB_URL:jdbc:h2:mem:tucwms;DB_CLOSE_DELAY=-1;MODE=MySQL}
+    username: ${DB_USER:sa}
+    password: ${DB_PASSWORD:}
+  jpa:
+    hibernate:
+      ddl-auto: ${DDL_AUTO:update}
+    open-in-view: false
+
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${GOOGLE_CLIENT_ID:placeholder-client-id}
+            client-secret: ${GOOGLE_CLIENT_SECRET:placeholder-client-secret}
+            scope:
+              - openid
+              - email
+              - profile
+            # SRS §3.3 — redirect URI registered in the Google Workspace console
+            redirect-uri: ${GOOGLE_REDIRECT_URI:https://wms.techbridge.edu.gh/api/auth/google/callback}
+        provider:
+          google:
+            issuer-uri: https://accounts.google.com
+
+# TUC-WMS auth settings (FR-AUTH-002, 008, 009) — see .env.example
+tucwms:
+  auth:
+    allowed-domain: ${ALLOWED_DOMAIN:@techbridge.edu.gh}   # FR-AUTH-009
+    jwt-secret: ${JWT_SECRET:dev-only-insecure-secret-change-me-min-32-bytes-long!!}
+    jwt-expiry-minutes: ${JWT_EXPIRY_MINUTES:15}
+    jwt-refresh-expiry-days: ${JWT_REFRESH_EXPIRY_DAYS:7}
+    totp-issuer: ${TOTP_ISSUER:TUC-WMS}
+    # Frontend origin for the post-login redirect + CORS (UI delivered separately).
+    frontend-base: ${FRONTEND_BASE:https://wms.techbridge.edu.gh}
+
+logging:
+  level:
+    gh.edu.techbridge.wms: INFO
