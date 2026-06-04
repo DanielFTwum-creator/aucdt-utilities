@@ -21,6 +21,7 @@
     "lucide-react": "^1.16.0",
     "node-fetch": "^3.3.2",
     "react": "19.2.6",
+    "react-day-picker": "^10.0.1",
     "react-dom": "19.2.6",
     "react-router-dom": "^7.15.1",
     "tsx": "^4.22.3"

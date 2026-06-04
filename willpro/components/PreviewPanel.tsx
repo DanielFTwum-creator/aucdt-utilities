@@ -1,5 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FormData } from '../App';
+
+// Visual-only enhancement flag (matches the other enhanced components).
+const ENABLE_ENHANCED_UI = true;
 
 interface PreviewPanelProps {
   formData: FormData;
@@ -9,6 +12,13 @@ const placeholder = (text: string) => text || '[_____________]';
 
 export default function PreviewPanel({ formData }: PreviewPanelProps) {
   const [isOpen, setIsOpen] = useState(false);
+  // One-shot upward bounce on page load (CSS keyframe handles the 600ms delay).
+  const [bounce, setBounce] = useState(ENABLE_ENHANCED_UI);
+  useEffect(() => {
+    if (!bounce) return;
+    const t = setTimeout(() => setBounce(false), 1500); // remove class after the one-shot anim
+    return () => clearTimeout(t);
+  }, [bounce]);
 
   const willText = `
 LAST WILL AND TESTAMENT
@@ -90,7 +100,7 @@ Address: _________________           Address: _________________
     <>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="preview-toggle-btn"
+        className={`preview-toggle-btn${bounce ? ' wp-preview-bounce' : ''}`}
         style={{
           position: 'fixed',
           bottom: '24px',
