@@ -24,11 +24,14 @@ public class TaskController {
     private final TaskRepository tasks;
     private final ProjectRepository projects;
     private final ProjectPermissionService perms;
+    private final ProjectEventService events;
 
-    public TaskController(TaskRepository tasks, ProjectRepository projects, ProjectPermissionService perms) {
+    public TaskController(TaskRepository tasks, ProjectRepository projects, ProjectPermissionService perms,
+                          ProjectEventService events) {
         this.tasks = tasks;
         this.projects = projects;
         this.perms = perms;
+        this.events = events;
     }
 
     public record TaskRequest(@NotBlank String title, String description, Set<Long> assigneeIds,
@@ -55,7 +58,9 @@ public class TaskController {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Sub-tasks are one level deep only");
             t.setParentTaskId(parent.getId());
         }
-        return ResponseEntity.status(HttpStatus.CREATED).body(dto(tasks.save(t)));
+        Map<String, Object> body = dto(tasks.save(t));
+        events.publish(projectId, "task.created", body);   // FR-KB real-time
+        return ResponseEntity.status(HttpStatus.CREATED).body(body);
     }
 
     @GetMapping
@@ -83,7 +88,9 @@ public class TaskController {
         Task t = task(projectId, taskId);
         if (req.title() != null) t.setTitle(req.title());
         apply(t, req, p);
-        return dto(tasks.save(t));
+        Map<String, Object> body = dto(tasks.save(t));
+        events.publish(projectId, "task.updated", body);   // incl. status change (drag-drop) — FR-KB
+        return body;
     }
 
     /** Duplicate a task within the same project (FR-TASK-008). */
@@ -103,7 +110,9 @@ public class TaskController {
         copy.setStatus(src.getStatus());
         copy.setTags(new HashSet<>(src.getTags()));
         copy.setParentTaskId(src.getParentTaskId());
-        return ResponseEntity.status(HttpStatus.CREATED).body(dto(tasks.save(copy)));
+        Map<String, Object> body = dto(tasks.save(copy));
+        events.publish(projectId, "task.created", body);
+        return ResponseEntity.status(HttpStatus.CREATED).body(body);
     }
 
     @DeleteMapping("/{taskId}")
@@ -116,6 +125,7 @@ public class TaskController {
         Task t = task(projectId, taskId);
         tasks.findByParentTaskId(t.getId()).forEach(tasks::delete);   // cascade sub-tasks
         tasks.delete(t);
+        events.publish(projectId, "task.deleted", Map.of("id", taskId));
         return ResponseEntity.noContent().build();
     }
 

@@ -4,7 +4,9 @@ import jakarta.persistence.*;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * A project (FR-PROJ-001..007): name, description, department, dates,
@@ -48,6 +50,13 @@ public class Project {
     @Column(name = "stage_name")
     private List<String> stages = new ArrayList<>();
 
+    /** Per-column WIP limits (FR-KB-005): stage name -> max in-progress tasks. Absent = no limit. */
+    @ElementCollection
+    @CollectionTable(name = "wms_project_wip_limits", joinColumns = @JoinColumn(name = "project_id"))
+    @MapKeyColumn(name = "stage_name")
+    @Column(name = "wip_limit")
+    private Map<String, Integer> wipLimits = new HashMap<>();
+
     @Column(nullable = false, updatable = false)
     private Instant createdAt = Instant.now();
 
@@ -84,5 +93,7 @@ public class Project {
     public Instant getArchivedAt() { return archivedAt; }
     public List<String> getStages() { return stages; }
     public void setStages(List<String> stages) { this.stages = stages; }
+    public Map<String, Integer> getWipLimits() { return wipLimits; }
+    public void setWipLimits(Map<String, Integer> wipLimits) { this.wipLimits = wipLimits; }
     public Instant getCreatedAt() { return createdAt; }
 }
