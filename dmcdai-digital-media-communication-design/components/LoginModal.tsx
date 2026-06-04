@@ -12,8 +12,7 @@ const TUC_LOGO = 'https://techbridge.edu.gh/static/TUC_LOGO_1.png';
 
 export const LoginModal: React.FC<LoginModalProps> = ({ onClose, hideCancel = false }) => {
   const { setSession } = useAuth();
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
+  const [handle, setHandle] = useState('');
   const [resolvedEmail, setResolvedEmail] = useState('');
   const [loading, setLoading] = useState(false);
   const [linkSent, setLinkSent] = useState(false);
@@ -46,7 +45,10 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onClose, hideCancel = fa
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const email = `${firstName.trim().toLowerCase()}.${lastName.trim().toLowerCase()}@techbridge.edu.gh`;
+    // Accept "daniel.twum", "danieltwum", or a full email. Append the TUC
+    // domain only when the user typed just the handle (no @).
+    const entry = handle.trim().toLowerCase();
+    const email = entry.includes('@') ? entry : `${entry}@techbridge.edu.gh`;
     setLoading(true);
     try {
       const res = await fetch('/dmcdai/api/auth/login', {
@@ -55,7 +57,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onClose, hideCancel = fa
         body: JSON.stringify({ email }),
       });
       const data = await res.json();
-      if (!res.ok) { setLinkError(data.message || 'Name not found — check your spelling'); setLoading(false); return; }
+      if (!res.ok) { setLinkError(data.message || 'Username not found — check your spelling'); setLoading(false); return; }
       setResolvedEmail(email);
       setLinkSent(true);
     } catch {
@@ -65,7 +67,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onClose, hideCancel = fa
     }
   };
 
-  const reset = () => { setLinkSent(false); setLinkError(''); setFirstName(''); setLastName(''); setResolvedEmail(''); };
+  const reset = () => { setLinkSent(false); setLinkError(''); setHandle(''); setResolvedEmail(''); };
 
   const cardStyle: React.CSSProperties = {
     background: 'var(--color-background-card)',
@@ -151,14 +153,14 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onClose, hideCancel = fa
           </a>
           <br />
           <button onClick={reset} style={{ marginTop: 12, background: 'none', border: 'none', color: '#6b0020', fontSize: 12, cursor: 'pointer', textDecoration: 'underline' }}>
-            Use a different name
+            Use a different username
           </button>
         </div>
       </div>
     );
   }
 
-  // First Name + Last Name form
+  // TUC username form (appends @techbridge.edu.gh)
   return (
     <div
       style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(4px)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 50 }}
@@ -168,19 +170,16 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onClose, hideCancel = fa
         <img src={TUC_LOGO} alt="TUC" width={64} style={{ borderRadius: '50%', marginBottom: 12, border: '3px solid #f5a800' }} />
         <div style={{ fontSize: 10, color: '#f5a800', fontWeight: 700, letterSpacing: 3, textTransform: 'uppercase', marginBottom: 4 }}>Techbridge University College</div>
         <h2 id="login-title" style={{ fontSize: 17, fontWeight: 800, color: 'var(--color-foreground)', marginBottom: 4, marginTop: 0 }}>Digital Media & Communication Design</h2>
-        <div style={{ fontSize: 12, color: 'var(--color-foreground-muted)', marginBottom: 28 }}>Enter your name to receive a sign-in link</div>
+        <div style={{ fontSize: 12, color: 'var(--color-foreground-muted)', marginBottom: 28 }}>Enter your TUC username to receive a sign-in link</div>
 
         <form onSubmit={handleSubmit}>
-          <div style={{ display: 'flex', gap: 10, marginBottom: 4 }}>
-            <div style={{ flex: 1, textAlign: 'left' }}>
-              <label style={{ fontSize: 11, fontWeight: 600, color: 'var(--color-foreground-muted)', display: 'block', marginBottom: 4 }}>First Name</label>
-              <input style={inputStyle} type="text" placeholder="Daniel" value={firstName}
-                onChange={e => setFirstName(e.target.value)} autoFocus required />
-            </div>
-            <div style={{ flex: 1, textAlign: 'left' }}>
-              <label style={{ fontSize: 11, fontWeight: 600, color: 'var(--color-foreground-muted)', display: 'block', marginBottom: 4 }}>Last Name</label>
-              <input style={inputStyle} type="text" placeholder="Twum" value={lastName}
-                onChange={e => setLastName(e.target.value)} required />
+          <div style={{ textAlign: 'left' }}>
+            <label style={{ fontSize: 11, fontWeight: 600, color: 'var(--color-foreground-muted)', display: 'block', marginBottom: 4 }}>TUC Username</label>
+            <input style={inputStyle} type="text" placeholder="daniel.twum" value={handle}
+              onChange={e => setHandle(e.target.value)} autoFocus required
+              autoCapitalize="none" autoCorrect="off" spellCheck={false} />
+            <div style={{ fontSize: 11, color: 'var(--color-foreground-muted)', marginTop: 6 }}>
+              We'll add <strong>@techbridge.edu.gh</strong> for you. You can also type your full email.
             </div>
           </div>
 
