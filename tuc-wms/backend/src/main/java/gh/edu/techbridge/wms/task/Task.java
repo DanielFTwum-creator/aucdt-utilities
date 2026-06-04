@@ -40,7 +40,14 @@ public class Task {
     @Column(name = "user_id")
     private Set<Long> assigneeIds = new HashSet<>();
 
+    /** Start date — used to position/length the Timeline bar (FR-TL-001/002). */
+    private LocalDate startDate;
+
     private LocalDate dueDate;
+
+    /** Milestone marker on the timeline (FR-TL-007) — rendered as a diamond, no duration bar. */
+    @Column(nullable = false)
+    private boolean milestone = false;
 
     @Enumerated(EnumType.STRING)
     @Column(length = 16)
@@ -88,8 +95,12 @@ public class Task {
     public void setDescription(String description) { this.description = description; }
     public Set<Long> getAssigneeIds() { return assigneeIds; }
     public void setAssigneeIds(Set<Long> v) { this.assigneeIds = v; }
+    public LocalDate getStartDate() { return startDate; }
+    public void setStartDate(LocalDate v) { this.startDate = v; }
     public LocalDate getDueDate() { return dueDate; }
     public void setDueDate(LocalDate v) { this.dueDate = v; }
+    public boolean isMilestone() { return milestone; }
+    public void setMilestone(boolean v) { this.milestone = v; }
     public TaskPriority getPriority() { return priority; }
     public void setPriority(TaskPriority v) { this.priority = v; }
     public String getStatus() { return status; }

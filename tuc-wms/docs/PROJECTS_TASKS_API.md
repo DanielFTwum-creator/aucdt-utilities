@@ -61,6 +61,20 @@ location ~ ^/api/projects/[0-9]+/stream$ {
 ```
 (place before the general `location /api/` block).
 
+## Timeline / Gantt (FR-TL) — Phase 4
+
+Tasks gained `startDate` (LocalDate) and `milestone` (boolean), settable on create/update and returned in DTOs.
+
+| Method/Path | Permission | Notes |
+|---|---|---|
+| `GET /api/projects/{id}/timeline` | view | `{projectId, bars:[{id,title,startDate,dueDate,milestone,status,assigneeIds,blockedByTaskIds}], dependencyConflicts:[{taskId,blockedByTaskId,message}]}`. Optional `?groupBy=assignee\|stage` adds `groups`. |
+
+- Bars positioned by `startDate`→`dueDate` (FR-TL-001/002); `milestone:true` = diamond marker (FR-TL-007).
+- Dependency links = `blockedByTaskIds` (FR-TL-003).
+- **Conflict detection** (FR-TL-005): flags a task whose start is on/before its blocker's `dueDate` → `dependencyConflicts`.
+- Reschedule (drag bar) = `PUT …/tasks/{taskId}` with new `startDate`/`dueDate`; persists + emits `task.updated` SSE.
+- Zoom (Day/Week/Month/Quarter) is UI. Baseline (FR-TL-008) is Could-Have/post-MVP — not implemented.
+
 ## Deferred to a later phase (not yet implemented)
 Task comments + @mentions (FR-TASK-005), per-task activity log (FR-TASK-006), file
 attachments (FR-TASK-007), global task search (FR-TASK-009), bulk operations (FR-TASK-010),
