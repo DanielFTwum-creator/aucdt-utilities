@@ -951,6 +951,20 @@
           border: 1.5px dashed #D9D3C8; border-radius: 10px; padding: 32px; text-align: center;
         }
         .wp-enhanced .wp-empty-state p { color: #9C8B72; font-size: 13px; margin-top: 8px; }
+
+        /* --- Review step: document format buttons (PDF / DOCX / TXT) --- */
+        .wp-enhanced .wp-generate-block { margin-top: 24px; text-align: center; }
+        .wp-enhanced .wp-generate-label { font-size: 13px; color: #7A6E63; margin-bottom: 10px; }
+        .wp-enhanced .wp-format-buttons { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+        .wp-enhanced .wp-format-btn {
+          display: inline-flex; align-items: center; gap: 8px; min-width: 110px; justify-content: center;
+          padding: 12px 20px; border-radius: 8px; border: none; cursor: pointer;
+          background: #B8840A; color: #fff; font-weight: 700; font-size: 14px;
+          transition: transform .15s ease, box-shadow .15s ease, opacity .15s ease;
+        }
+        .wp-enhanced .wp-format-btn:hover:not(:disabled) { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(184,132,10,0.35); }
+        .wp-enhanced .wp-format-btn:disabled { opacity: 0.6; cursor: default; }
+        .wp-enhanced .wp-generate-status { margin-top: 10px; font-size: 13px; color: #B8840A; }
     </style>
 
 
