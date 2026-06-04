@@ -127,7 +127,7 @@ export default function AIAssistant() {
                   id="dfs-audience"
                   value={audience}
                   onChange={(e) => setAudience(e.target.value as Audience)}
-                  className="text-xs rounded-full border px-2 py-1 flex-1 bg-white"
+                  className="text-xs rounded-full border px-2 py-1 flex-1 bg-white text-slate-900"
                 >
                   {AUDIENCES.map((a) => (
                     <option key={a} value={a}>
@@ -188,7 +188,7 @@ export default function AIAssistant() {
                     onChange={(e) => setInput(e.target.value)}
                     onKeyDown={(e) => e.key === "Enter" && handleSend()}
                     disabled={loading}
-                    className="rounded-full"
+                    className="rounded-full bg-white text-slate-900 placeholder:text-slate-400"
                   />
                   <Button
                     size="icon"
