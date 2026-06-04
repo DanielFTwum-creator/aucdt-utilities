@@ -32,7 +32,35 @@ const AUDIENCES: Audience[] = [
 // inside the themed message bubble. Strip style/class on HTML elements so the
 // answer inherits the app's readable typography — but PRESERVE them on SVG nodes,
 // where colours are needed for the diagrams.
+// Belt-and-braces: the model is instructed to emit pure HTML, but occasionally
+// slips Markdown (**bold**, ## heading, - bullet). Convert the common residue to
+// HTML so the answer never shows raw `**`/`##`. Conservative — only touches
+// well-known Markdown tokens; leaves existing HTML/SVG intact.
+function mdResidueToHtml(s: string): string {
+  let t = s;
+  // ``` fenced blocks -> <pre><code>
+  t = t.replace(/```[a-z]*\n?([\s\S]*?)```/gi, (_m, code) => `<pre><code>${code.replace(/</g, "&lt;")}</code></pre>`);
+  // `inline code`
+  t = t.replace(/`([^`\n]+)`/g, "<code>$1</code>");
+  // ## / ### headings at line start -> <h4>/<h3>
+  t = t.replace(/^###\s+(.+)$/gm, "<h4>$1</h4>");
+  t = t.replace(/^##\s+(.+)$/gm, "<h3>$1</h3>");
+  t = t.replace(/^#\s+(.+)$/gm, "<h3>$1</h3>");
+  // **bold** and *italic* (bold first to avoid overlap)
+  t = t.replace(/\*\*([^*\n]+)\*\*/g, "<strong>$1</strong>");
+  t = t.replace(/(^|[^*])\*([^*\n]+)\*(?!\*)/g, "$1<em>$2</em>");
+  // [text](url) -> anchor
+  t = t.replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, '<a href="$2">$1</a>');
+  // - or * bullet lines -> wrap consecutive items in <ul>
+  t = t.replace(/(?:^[ \t]*[-*]\s+.+(?:\n|$))+/gm, (block) => {
+    const items = block.trim().split(/\n/).map((l) => l.replace(/^[ \t]*[-*]\s+/, "").trim());
+    return `<ul>${items.map((i) => `<li>${i}</li>`).join("")}</ul>`;
+  });
+  return t;
+}
+
 function renderHtml(raw: string): string {
+  raw = mdResidueToHtml(raw);
   DOMPurify.addHook("uponSanitizeElement", (node: any) => {
     if (node.nodeType === 1 && typeof node.tagName === "string") {
       const tag = node.tagName.toLowerCase();
