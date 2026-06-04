@@ -1,0 +1,6 @@
+# Workspace boundary: makes tuc-rms/frontend a standalone pnpm project so
+# `pnpm install` here resolves the frontend's own deps (vite, react, …) and
+# does NOT walk up to tuc-rms/ (packages: []) or the monorepo root.
+packages: []
+allowBuilds:
+  core-js: true
