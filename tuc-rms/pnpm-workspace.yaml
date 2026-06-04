@@ -1,0 +1,4 @@
+# Workspace boundary: stops pnpm from walking up to the monorepo root.
+# tuc-rms top-level is a standalone Playwright E2E harness; frontend and
+# backend are each independent projects with their own lockfiles.
+packages: []
