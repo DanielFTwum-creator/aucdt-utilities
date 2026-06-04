@@ -49,18 +49,29 @@ export default function Login() {
     // domain only when the user typed just the handle (no @).
     const handle = emailHandle.trim().toLowerCase()
     const resolvedEmail = handle.includes('@') ? handle : `${handle}@techbridge.edu.gh`
+    const loginUrl = `${API}/auth/login`
+    console.info('[RMS login] POST', loginUrl, '| API base =', API, '| email =', resolvedEmail)
     try {
-      const response = await fetch(`${API}/auth/login`, {
+      const response = await fetch(loginUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: resolvedEmail }),
       })
-      const data = await response.json()
-      if (!response.ok) { toast.error(data.message || 'Name not found — check your spelling'); return }
+      console.info('[RMS login] response', response.status, response.statusText, '| url =', response.url, '| content-type =', response.headers.get('content-type'))
+      // Read as text first so an HTML error page (proxy/404) doesn't throw on .json()
+      const rawText = await response.text()
+      let data: any = {}
+      try { data = JSON.parse(rawText) } catch { console.error('[RMS login] non-JSON response body (first 300 chars):', rawText.slice(0, 300)) }
+      if (!response.ok) {
+        console.error('[RMS login] request failed', response.status, data)
+        toast.error(data.message || `Sign-in service error (${response.status})`)
+        return
+      }
       setEmail(resolvedEmail)
       setLinkSent(true)
-    } catch {
-      toast.error('Network error')
+    } catch (err) {
+      console.error('[RMS login] fetch threw:', err, '| attempted URL:', loginUrl)
+      toast.error(`Could not reach the sign-in service. (${err instanceof Error ? err.message : 'network error'})`)
     } finally {
       setLoading(false)
     }
