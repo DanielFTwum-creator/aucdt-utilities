@@ -235,19 +235,45 @@ async function startServer() {
       throw new Error("EMPTY_RESPONSE");
     }
 
-    // Generate path: Imagen 4 Ultra text-to-image.
-    const response = await imageAi.models.generateImages({
-      model: 'imagen-4.0-ultra-generate-001',
-      prompt,
-      config: { numberOfImages: 1 },
-    });
-    const generatedImage = response.generatedImages?.[0];
-    if (generatedImage?.image?.imageBytes) {
-      return res.json({ result: `data:image/png;base64,${generatedImage.image.imageBytes}` });
+    // Generate path: text-to-image. Try models in order of quality, falling
+    // back to higher-quota models on 429 RESOURCE_EXHAUSTED (imagen-4-ultra has
+    // very low quota and was 429-ing every request).
+    // Models verified available to the shared key (2026-06-04):
+    //   imagen-4.0-fast-generate-001 -> OK (highest quota)
+    //   imagen-4.0-ultra-generate-001 -> 429 (quota exhausted) — last resort
+    //   imagen-3.0-* / 4.0-generate-001 -> 404/503
+    // Lead with the fast model; fall through to the next on quota/transient errors.
+    const GENERATE_MODELS = [
+      'imagen-4.0-fast-generate-001',
+      'imagen-4.0-ultra-generate-001',
+    ];
+    let lastErr;
+    for (const model of GENERATE_MODELS) {
+      try {
+        const response = await imageAi.models.generateImages({
+          model,
+          prompt,
+          config: { numberOfImages: 1 },
+        });
+        const generatedImage = response.generatedImages?.[0];
+        if (generatedImage?.image?.imageBytes) {
+          return res.json({ result: `data:image/png;base64,${generatedImage.image.imageBytes}` });
+        }
+        lastErr = new Error('EMPTY_RESPONSE');
+      } catch (err) {
+        lastErr = err;
+        // Fall through to the next model only on quota (429) or transient (503).
+        if (err?.status !== 429 && err?.status !== 503) break;
+        console.warn(`[DMCDAI] ${model} returned ${err?.status} — trying next model`);
+      }
     }
-    throw new Error("EMPTY_RESPONSE");
+    throw lastErr || new Error('EMPTY_RESPONSE');
     } catch (error) {
       console.error('[DMCDAI] Image gen error:', error);
+      // Surface quota exhaustion clearly instead of a generic 500.
+      if (error?.status === 429) {
+        return res.status(429).json({ error: 'IMAGE_QUOTA_EXHAUSTED', message: 'The image service is over its quota right now. Please try again in a few minutes.' });
+      }
       res.status(500).json({ error: error.message });
     }
   });
