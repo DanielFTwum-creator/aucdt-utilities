@@ -60,10 +60,11 @@ public class SecurityConfig {
                 .requestMatchers("/api/admin/**").hasRole("SYSTEM_ADMIN")
                 .anyRequest().authenticated()
             )
-            // Google OAuth2 login. authorizationEndpoint base path gives us
-            // GET /api/auth/google (per SRS §3.2 step 2) as the initiation URL.
+            // Google OAuth2 login. Spring appends the registrationId ("google") to
+            // the authorization base URI, so base "/api/auth" yields the SRS §3.2
+            // initiation URL GET /api/auth/google exactly.
             .oauth2Login(o -> o
-                .authorizationEndpoint(a -> a.baseUri("/api/auth/google"))
+                .authorizationEndpoint(a -> a.baseUri("/api/auth"))
                 .redirectionEndpoint(r -> r.baseUri("/api/auth/google/callback"))
                 .successHandler(successHandler)
                 .failureHandler((req, res, ex) ->
