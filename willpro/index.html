@@ -890,6 +890,67 @@
 
         /* --- Floating preview button bounce (one-shot on load) --- */
         .wp-preview-bounce { animation: wpPreviewBounce 800ms ease 600ms 1; }
+
+        /* ============================================================
+           ENHANCED ASSETS STEP (Step 5) — scoped under .wp-enhanced.
+           Brand: bg #F0EDE6, gold #B8840A, text #1C1612, muted #7A6E63,
+           border #D9D3C8, danger #C0392B.
+           ============================================================ */
+        @keyframes propertyEnter {
+          from { opacity: 0; transform: translateY(-8px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Page background + stepper band (consistent across steps when enhanced). */
+        body.wp-enhanced-page { background: #F0EDE6 !important; }
+        .wp-enhanced.progress-container {
+          background: transparent !important;
+          backdrop-filter: none !important;
+          border-bottom: none !important;
+          padding-top: 32px;
+          padding-bottom: 24px;
+        }
+
+        /* Section divider inside the card. */
+        .wp-enhanced .wp-section-divider { border: none; border-top: 1px solid rgba(28,22,18,0.08); margin: 24px 0; }
+
+        /* Outlined "+ Add Property" button (full width, below the form). */
+        .wp-enhanced .wp-add-btn {
+          width: 100%; border: 1.5px solid #B8840A; color: #B8840A; background: transparent;
+          border-radius: 8px; padding: 10px 20px; font-weight: 700; cursor: pointer;
+          transition: background .15s ease, transform .15s ease;
+        }
+        .wp-enhanced .wp-add-btn:hover { background: rgba(184,132,10,0.06); transform: translateY(-1px); }
+
+        /* Listed Properties header + count badge. */
+        .wp-enhanced .wp-list-header { display: flex; align-items: center; font-size: 15px; font-weight: 700; color: #1C1612; margin: 0 0 12px; }
+        .wp-enhanced .wp-count-badge {
+          margin-left: 8px; background: #B8840A; color: #fff; border-radius: 999px;
+          padding: 2px 8px; font-size: 11px; font-weight: 600;
+        }
+
+        /* Property rows. */
+        .wp-enhanced .wp-prop-row {
+          display: flex; align-items: center; padding: 14px 16px; border-radius: 10px;
+          animation: propertyEnter 200ms ease-out forwards;
+        }
+        .wp-enhanced .wp-prop-row:nth-child(odd)  { background: #FAFAF8; }
+        .wp-enhanced .wp-prop-row:nth-child(even) { background: #FFFFFF; }
+        .wp-enhanced .wp-prop-row:hover { background: #FDF6EC; }
+        .wp-enhanced .wp-prop-icon { color: #B8840A; margin-right: 12px; flex-shrink: 0; }
+        .wp-enhanced .wp-prop-name { font-weight: 600; font-size: 15px; color: #1C1612; }
+        .wp-enhanced .wp-prop-loc { font-size: 12px; color: #7A6E63; margin-top: 2px; }
+        .wp-enhanced .wp-prop-remove {
+          margin-left: auto; border: none; background: none; cursor: pointer; color: #9C8B72;
+          display: inline-flex; align-items: center; padding: 6px; border-radius: 6px; transition: color .15s ease;
+        }
+        .wp-enhanced .wp-prop-remove:hover { color: #C0392B; }
+
+        /* Empty state. */
+        .wp-enhanced .wp-empty-state {
+          border: 1.5px dashed #D9D3C8; border-radius: 10px; padding: 32px; text-align: center;
+        }
+        .wp-enhanced .wp-empty-state p { color: #9C8B72; font-size: 13px; margin-top: 8px; }
     </style>
 
 
