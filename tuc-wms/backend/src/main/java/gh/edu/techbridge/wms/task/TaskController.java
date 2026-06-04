@@ -35,8 +35,8 @@ public class TaskController {
     }
 
     public record TaskRequest(@NotBlank String title, String description, Set<Long> assigneeIds,
-                              LocalDate dueDate, TaskPriority priority, String status,
-                              Set<String> tags, Long parentTaskId, Set<Long> blockedByTaskIds) { }
+                              LocalDate startDate, LocalDate dueDate, Boolean milestone, TaskPriority priority,
+                              String status, Set<String> tags, Long parentTaskId, Set<Long> blockedByTaskIds) { }
 
     @PostMapping
     @Transactional
@@ -133,7 +133,9 @@ public class TaskController {
     private void apply(Task t, TaskRequest req, Project project) {
         if (req.description() != null) t.setDescription(req.description());
         if (req.assigneeIds() != null) t.setAssigneeIds(new HashSet<>(req.assigneeIds()));
+        if (req.startDate() != null) t.setStartDate(req.startDate());
         if (req.dueDate() != null) t.setDueDate(req.dueDate());
+        if (req.milestone() != null) t.setMilestone(req.milestone());
         if (req.priority() != null) t.setPriority(req.priority());
         if (req.tags() != null) t.setTags(new HashSet<>(req.tags()));
         if (req.blockedByTaskIds() != null) t.setBlockedByTaskIds(new HashSet<>(req.blockedByTaskIds()));
@@ -168,7 +170,9 @@ public class TaskController {
         m.put("title", t.getTitle());
         m.put("description", t.getDescription());
         m.put("assigneeIds", t.getAssigneeIds());
+        m.put("startDate", t.getStartDate());
         m.put("dueDate", t.getDueDate());
+        m.put("milestone", t.isMilestone());
         m.put("priority", t.getPriority() == null ? null : t.getPriority().name());
         m.put("status", t.getStatus());
         m.put("tags", t.getTags());
