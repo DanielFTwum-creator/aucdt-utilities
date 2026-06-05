@@ -49,8 +49,8 @@ public class SecurityConfig {
             .authorizeHttpRequests(reg -> reg
                 // Public auth endpoints (the OAuth dance + SPA token exchange/refresh).
                 .requestMatchers(
-                        "/oauth2/**",            // Spring OAuth2 authorization start (/oauth2/authorization/google)
-                        "/api/auth/google",      // public SRS §3.2 entry → redirects to /oauth2/authorization/google
+                        "/api/oauth2/**",        // OAuth2 authorization start (/api/oauth2/authorization/google)
+                        "/api/auth/google",      // public SRS §3.2 entry → redirects to /api/oauth2/authorization/google
                         "/api/auth/google/**",   // Google callback (/api/auth/google/callback)
                         "/api/auth/exchange",
                         "/api/auth/mfa/**",
@@ -62,19 +62,23 @@ public class SecurityConfig {
                 .requestMatchers("/api/admin/**").hasRole("SYSTEM_ADMIN")
                 .anyRequest().authenticated()
             )
-            // Google OAuth2 login on Spring's DEFAULT, dedicated namespace:
-            //   authorization start : GET /oauth2/authorization/google
-            //   Google callback     : GET /api/auth/google/callback  (registered in Google console)
+            // Google OAuth2 login. Authorization base is under /api/ so the EXISTING
+            // Plesk nginx `/api/` proxy reaches the backend (nginx does NOT proxy a bare
+            // /oauth2/ prefix → it would fall through to the static SPA and loop to /login):
+            //   authorization start : GET /api/oauth2/authorization/google  → 302 Google
+            //   Google callback     : GET /api/auth/google/callback         (registered in Google console)
             //
             // The public SRS §3.2 entry URL GET /api/auth/google is preserved by a thin
-            // redirect (OAuthEntryController) → /oauth2/authorization/google.
+            // redirect (OAuthEntryController) → /api/oauth2/authorization/google.
             //
             // Why not baseUri("/api/auth"): OAuth2AuthorizationRequestRedirectFilter matches
             // {base}/{registrationId}, so a base of /api/auth made it claim the whole prefix —
             // POST /api/auth/exchange was parsed as registrationId="exchange" and rejected with
             // InvalidClientRegistrationIdException BEFORE reaching AuthController (silent 401).
-            // Keeping authorization on /oauth2/** removes that collision entirely.
+            // /api/oauth2/authorization is under /api/ (nginx-proxied) yet does NOT sit on the
+            // /api/auth/{registrationId} path, so neither problem occurs.
             .oauth2Login(o -> o
+                .authorizationEndpoint(a -> a.baseUri("/api/oauth2/authorization"))
                 .redirectionEndpoint(r -> r.baseUri("/api/auth/google/callback"))
                 .successHandler(successHandler)
                 .failureHandler((req, res, ex) ->
