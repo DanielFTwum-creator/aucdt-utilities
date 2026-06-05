@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { flushSync } from 'react-dom';
 import { useNavigate } from 'react-router-dom';
 import { rawPost } from '../api';
 import { useAuth, WmsUser } from './AuthContext';
@@ -50,12 +51,14 @@ export default function CallbackPage() {
       CB('code present — calling /api/auth/exchange');
       rawPost<{ access_token: string; user: WmsUser }>('/api/auth/exchange', { code })
         .then(({ access_token, user }) => {
-          CB('exchange ✅ — session set, hard redirect to /', {
-            token: access_token.slice(0, 20) + '…',
-            user,
-          });
-          setSession(access_token, user);
-          window.location.replace('/');
+          CB('exchange ✅', { token: access_token.slice(0, 20) + '…', user });
+          // flushSync forces React to commit setUser synchronously before
+          // navigate() fires — ProtectedRoute then sees the user immediately.
+          // This replaces the old window.location.replace('/') hard reload,
+          // keeping console logs alive and avoiding the 502-on-root issue.
+          flushSync(() => setSession(access_token, user));
+          CB('session flushed — navigating to /');
+          navigate('/', { replace: true });
         })
         .catch((e) => {
           CBE('exchange ❌', { message: e.message, code: code.slice(0, 20) + '…' });
