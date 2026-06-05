@@ -38,6 +38,25 @@ Confirmed both server-side (`127.0.0.1:8081`) and through the public URL
 (`https://wms.techbridge.edu.gh`, i.e. through nginx/WAF). Service `active`.
 Rollback artifacts retained: `app.jar.predeploy`, `app.jar.bak.20260605-215648`.
 
+### Frontend follow-up — login loop (same session)
+
+After the backend fix, the exchange 401 was gone but login **looped back to `/login`**.
+Cause: the **deployed frontend bundle was stale** (`index-CXLzvBwS.js`) — it predated the
+AuthContext startup-refresh-race fix, so after a successful exchange the startup
+`/api/auth/refresh` failure still called `clear()` and wiped the just-set session.
+
+- **Fix already in source** (main `35110925`): AuthContext startup catch no longer `clear()`s —
+  it only `setAccessToken(null)`, leaving a session the CallbackPage exchange may have set.
+- **Action:** pushed main to origin, ran `tuc-wms/frontend/deploy.ps1 -Build` (server-side
+  git clone of main → pnpm build → rsync → perms → SPA .htaccess).
+- **Result:** new bundle `index-BFceEegR.js` deployed; health checks `/`, `/login`,
+  `/auth/callback` → 200, `/api/auth/google` → 302. AuthContext code path confirmed present
+  in the bundle (`/api/auth/refresh`, `/api/me`, `/api/auth/logout` strings; `setOnAuthLost`
+  is minified/renamed so the literal won't grep — expected).
+- **Lesson:** a backend-only deploy is not enough — the SPA bundle must be rebuilt from the
+  same commit. Always check the deployed bundle hash vs. the intended build, and hard-refresh
+  (Ctrl+Shift+R) to bust the old hashed bundle when re-testing.
+
 ### Known follow-up (not blocking)
 - `DEPLOYMENT.md` line 106 expects `curl /actuator/health → 200`, but **actuator is not a
   dependency** — `/actuator/health` is not a real endpoint. Either add
