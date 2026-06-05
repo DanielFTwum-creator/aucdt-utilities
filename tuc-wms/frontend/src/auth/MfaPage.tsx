@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useLocation, useNavigate, Navigate } from 'react-router-dom';
-import { post } from '../api';
+import { rawPost } from '../api';
 import { useAuth, WmsUser } from './AuthContext';
 
 /**
@@ -23,7 +23,10 @@ export default function MfaPage() {
     e.preventDefault();
     setBusy(true); setError(null);
     try {
-      const res = await post<{ access_token: string; user: WmsUser }>('/api/auth/mfa/verify', { mfa_ticket: ticket, code });
+      // rawPost bypasses 401-retry — a 401 here means wrong TOTP, not lost session.
+      const res = await rawPost<{ access_token: string; user: WmsUser }>('/api/auth/mfa/verify', { mfa_ticket: ticket, code });
+      // Backend re-issues a fresh ticket when TOTP code is wrong; update state for retry.
+      if ((res as any).mfa_ticket) { setTicket((res as any).mfa_ticket); throw new Error((res as any).error || 'Invalid code'); }
       setSession(res.access_token, res.user);
       navigate('/', { replace: true });
     } catch (err: any) {

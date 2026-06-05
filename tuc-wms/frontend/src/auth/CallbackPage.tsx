@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { post } from '../api';
+import { rawPost } from '../api';
 import { useAuth, WmsUser } from './AuthContext';
 
 /**
@@ -32,7 +32,9 @@ export default function CallbackPage() {
     }
 
     if (code) {
-      post<{ access_token: string; user: WmsUser }>('/api/auth/exchange', { code })
+      // rawPost bypasses the 401-retry/onAuthLost loop — a 401 here means
+      // "invalid or expired handoff code", not a lost session.
+      rawPost<{ access_token: string; user: WmsUser }>('/api/auth/exchange', { code })
         .then(({ access_token, user }) => {
           setSession(access_token, user);
           navigate('/', { replace: true });

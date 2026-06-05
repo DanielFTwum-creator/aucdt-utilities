@@ -40,6 +40,30 @@ export async function api<T = any>(path: string, init: RequestInit = {}, retry =
   return res.json();
 }
 
-/** POST helper. */
+/** POST helper — goes through the 401-retry/onAuthLost cycle. Use for authenticated endpoints. */
 export const post = <T = any>(path: string, body?: unknown) =>
   api<T>(path, { method: 'POST', body: body ? JSON.stringify(body) : undefined });
+
+/**
+ * Raw POST — NO 401-retry, NO onAuthLost. Use for public auth endpoints
+ * (exchange, mfa/verify) where a 401 means "bad handoff token", not
+ * "session expired".
+ */
+export async function rawPost<T = any>(path: string, body?: unknown): Promise<T> {
+  const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+  if (accessToken) headers['Authorization'] = `Bearer ${accessToken}`;
+  const res = await fetch(path, {
+    method: 'POST',
+    headers,
+    credentials: 'include',
+    body: body ? JSON.stringify(body) : undefined,
+  });
+  if (res.status === 204) return undefined as T;
+  const text = await res.text();
+  if (!res.ok) {
+    let msg = text;
+    try { msg = JSON.parse(text).error || JSON.parse(text).message || text; } catch { /* keep text */ }
+    throw new Error(msg || `Request failed (${res.status})`);
+  }
+  return JSON.parse(text);
+}
