@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useEffect, useState, useCallback } from 'react';
-import { api, rawPost, setAccessToken, setOnAuthLost } from '../api';
+import { api, post, rawPost, setAccessToken, setOnAuthLost } from '../api';
 
 export interface WmsUser {
   email: string;
@@ -51,7 +51,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         const me = await api<WmsUser & { mfaEnrolled?: boolean }>('/api/me');
         setUser({ email: me.email, name: me.name, role: me.role, photoUrl: me.photoUrl });
       } catch {
-        clear();
+        // Startup refresh failed (expected on /auth/callback — no cookie yet).
+        // Do NOT call clear() here: the CallbackPage exchange may have already
+        // called setSession() concurrently, and clear() would wipe it.
+        setAccessToken(null);
       } finally {
         setLoading(false);
         // Only arm the mid-flight session-loss handler AFTER startup completes.
