@@ -27,6 +27,8 @@
 | 15 | Java One-Class-Per-File | Backend / Java |
 | 16 | Dev Profile Zero-Dependency Contract | Backend / Java |
 | 17 | CONSTRAINTS.md per Project | Project Setup |
+| 18 | rawPost for Auth Handoff Endpoints | Frontend / Auth |
+| 19 | Frontend Debug Logger | Frontend / Debugging |
 
 ---
 
@@ -440,6 +442,100 @@ spring:
 **Session Start Protocol:** Claude reads `CONSTRAINTS.md` at step 2 of every session. It overrides all defaults including OS assumptions, service availability, and SQL dialect choices.
 
 **Template:** `tuc-netscan/CONSTRAINTS.md`
+
+---
+
+## PATTERN 18 — rawPost for Auth Handoff Endpoints
+
+**Context:** Any SPA using an `api()` / `fetch` wrapper that has a 401-retry-and-refresh loop (e.g. tuc-wms `api.ts`).
+
+**Problem:** Public auth handoff endpoints (`/api/auth/exchange`, `/api/auth/mfa/verify`, `/api/auth/refresh` on startup) legitimately return 401 — not because the user's session is lost, but because no valid session exists yet. Routing these calls through the authenticated `api()` wrapper triggers the retry loop:
+1. Handoff call → 401
+2. Retry fires another `POST /api/auth/refresh` → 401
+3. `onAuthLost()` fires → clears user state
+4. Throws `"Session expired"` — masking the real server error
+
+**Rule:** Maintain two distinct fetch helpers:
+
+| Helper | Use for | 401 behaviour |
+|--------|---------|---------------|
+| `api()` / `post()` | Authenticated endpoints | Retry → refresh → onAuthLost |
+| `rawPost()` | Public auth handoff endpoints | Throw immediately with server message |
+
+**Implementation (TypeScript):**
+```typescript
+// No retry, no onAuthLost — 401 surfaces the real server error message.
+export async function rawPost<T = any>(path: string, body?: unknown): Promise<T> {
+  const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+  if (accessToken) headers['Authorization'] = `Bearer ${accessToken}`;
+  const res = await fetch(path, {
+    method: 'POST',
+    headers,
+    credentials: 'include',
+    body: body ? JSON.stringify(body) : undefined,
+  });
+  if (res.status === 204) return undefined as T;
+  const text = await res.text();
+  if (!res.ok) {
+    let msg = text;
+    try { msg = JSON.parse(text).error || JSON.parse(text).message || text; } catch { }
+    throw new Error(msg || `Request failed (${res.status})`);
+  }
+  return JSON.parse(text);
+}
+```
+
+**Endpoints that MUST use rawPost:**
+- `POST /api/auth/exchange` — handoff code → JWT pair
+- `POST /api/auth/mfa/verify` — TOTP → JWT pair
+- `POST /api/auth/refresh` in `AuthContext` startup — expected 401 when no cookie present
+
+**onAuthLost arming rule:** Register `setOnAuthLost(clear)` in the `finally` block of the startup refresh, not before it. The startup refresh failing is *expected* on pages with no session (e.g. `/auth/callback`). Arming `onAuthLost` before the startup attempt means the expected 401 triggers `clear()` and wipes any in-flight state.
+
+**Hard-redirect after exchange:** After a successful `/api/auth/exchange`, use `window.location.replace('/')` instead of React Router's `navigate('/')`. `setSession()` schedules a React state update (`setUser`) which is async. If `navigate` fires before React flushes the update, `ProtectedRoute` sees `user=null` and bounces back to `/login`. A hard redirect remounts the app fresh; the `wms_refresh` cookie set by `/exchange` lets the startup refresh succeed.
+
+**First documented in:** tuc-wms auth debugging, June 2026.
+
+---
+
+## PATTERN 19 — Frontend Debug Logger
+
+**Context:** Debugging a deployed SPA where server logs are not easily accessible and the failure point is unknown.
+
+**Problem:** Without instrumentation, browser console shows only HTTP status codes. The exact URL received, which branch ran, and what the server returned are all invisible.
+
+**Solution:** Add a scoped, coloured logger at the top of the critical module before deploying a debug build:
+
+```typescript
+// ─── Debug logger (remove before final production cut) ───────────────────────
+const TAG = '[WMS-CB]';
+const L  = (msg: string, data?: unknown) =>
+  console.log(`%c${TAG} ${msg}`, 'color:#6366f1;font-weight:bold',
+    ...(data !== undefined ? [data] : []));
+const LE = (msg: string, data?: unknown) =>
+  console.error(`%c${TAG} ${msg}`, 'color:#ef4444;font-weight:bold',
+    ...(data !== undefined ? [data] : []));
+```
+
+**Instrument every decision point:**
+```typescript
+L('▶ mounted', { href: window.location.href });
+L('params', { code: code?.slice(0,20) + '…', mfaTicket: !!mfaTicket, err });
+L('calling /api/auth/exchange');
+// on success:
+L('exchange ✅', { token: token.slice(0,20)+'…', user });
+// on failure:
+LE('exchange ❌', { message: e.message });
+```
+
+**Rules:**
+- Use a unique `TAG` prefix per module so log lines are filterable in the console (`[WMS-CB]`, `[WMS-AUTH]`, etc.).
+- Never log full tokens or passwords — truncate to 20 chars.
+- Colour: indigo (`#6366f1`) for info, red (`#ef4444`) for errors.
+- Deploy the debug build to production if local reproduction is not possible; strip the logger once the bug is identified.
+- The `%c` trick makes logs visually distinct and collapsible in DevTools.
+
+**First documented in:** tuc-wms auth debugging, June 2026.
 
 ---
 
