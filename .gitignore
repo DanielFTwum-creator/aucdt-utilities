@@ -41,3 +41,14 @@ lerna-debug.log*
 
 # Claude Code agent worktrees (ephemeral, contain their own git state)
 .claude/worktrees/
+
+# Claude Code local machine state (never commit)
+.claude/settings.local.json
+.claude/scheduled_tasks.lock
+
+# Cygwin / Git-Bash crash dumps
+*.stackdump
+
+# Build logs
+*build*.log
+*.log
