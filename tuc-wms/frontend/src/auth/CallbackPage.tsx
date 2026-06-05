@@ -36,8 +36,17 @@ export default function CallbackPage() {
       // "invalid or expired handoff code", not a lost session.
       rawPost<{ access_token: string; user: WmsUser }>('/api/auth/exchange', { code })
         .then(({ access_token, user }) => {
+          // Store the access token in memory for any immediate in-flight requests,
+          // but use a hard redirect to '/' rather than react-router navigate().
+          //
+          // WHY: setSession() schedules a React state update (setUser) which is
+          // asynchronous. If we call navigate('/') immediately after, ProtectedRoute
+          // renders before React flushes that update, sees user=null, and bounces
+          // the user back to /login. A hard redirect remounts the whole app fresh;
+          // AuthContext's startup refresh then succeeds using the wms_refresh cookie
+          // that the /exchange response already set on the browser.
           setSession(access_token, user);
-          navigate('/', { replace: true });
+          window.location.replace('/');
         })
         .catch((e) => setError(e.message || 'Sign-in failed'));
       return;
