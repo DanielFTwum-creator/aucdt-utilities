@@ -44,6 +44,14 @@ export async function api<T = any>(path: string, init: RequestInit = {}, retry =
 export const post = <T = any>(path: string, body?: unknown) =>
   api<T>(path, { method: 'POST', body: body ? JSON.stringify(body) : undefined });
 
+/** PUT helper (partial updates) — same 401-retry/onAuthLost cycle as post. */
+export const put = <T = any>(path: string, body?: unknown) =>
+  api<T>(path, { method: 'PUT', body: body ? JSON.stringify(body) : undefined });
+
+/** DELETE helper — same 401-retry/onAuthLost cycle. */
+export const del = <T = any>(path: string) =>
+  api<T>(path, { method: 'DELETE' });
+
 /**
  * Raw POST — NO 401-retry, NO onAuthLost. Use for public auth endpoints
  * (exchange, mfa/verify) where a 401 means "bad handoff token", not
