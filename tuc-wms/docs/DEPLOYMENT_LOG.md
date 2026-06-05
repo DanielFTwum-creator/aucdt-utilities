@@ -57,7 +57,31 @@ AuthContext startup-refresh-race fix, so after a successful exchange the startup
   same commit. Always check the deployed bundle hash vs. the intended build, and hard-refresh
   (Ctrl+Shift+R) to bust the old hashed bundle when re-testing.
 
+### Third issue (same session) — loop BEFORE Google, nginx didn't proxy /oauth2/
+
+After the frontend redeploy, login still looped — and the user **never reached Google's
+account picker**. Cause: the first backend fix put OAuth login on a bare `/oauth2/**`
+namespace, but the Plesk nginx vhost only proxies **`/api/`** to the backend.
+`/oauth2/authorization/google` fell through to the static SPA (200 index.html → router
+rendered `/login`) → loop before consent.
+
+- **Fix** (commit `af96cf37`): `authorizationEndpoint.baseUri("/api/oauth2/authorization")`
+  + `OAuthEntryController` redirects there; permitAll updated. Under `/api/` (nginx-proxied)
+  yet off the `/api/auth/{registrationId}` path → avoids both the SPA fall-through and the
+  original registration-id collision. Google console redirect URI unchanged.
+- **Deploy note:** prod cold-start is ~37–40s (not ~5s local). First deploy verify failed on a
+  70s timeout that was actually just too tight (curl returned `000` = connection refused during
+  boot); re-deployed with a 120s wait keyed on the `Started TucWmsApplication` journal line.
+- **Verified in prod (public URL, through nginx):**
+  `GET /api/auth/google` → 302 `/api/oauth2/authorization/google` → 302 `accounts.google.com`
+  (`redirect_uri=.../api/auth/google/callback`).
+- **✅ END-TO-END CONFIRMED:** live Google sign-in completed — landed in the app as
+  "Daniel Twum · STUDENT" (auto-provisioned, FR-AUTH-010), Projects page rendered. Loop gone.
+
 ### Known follow-up (not blocking)
 - `DEPLOYMENT.md` line 106 expects `curl /actuator/health → 200`, but **actuator is not a
   dependency** — `/actuator/health` is not a real endpoint. Either add
   `spring-boot-starter-actuator` (and permit `/actuator/health`) or drop that check from the guide.
+- WMS `.htaccess` (written by `frontend/deploy.ps1`) has **no `mod_expires`/`Cache-Control`
+  block for `index.html`**, so stale SPA entry points can be cached — the reason hard refreshes
+  were needed mid-debug. Add a `no-cache` header for `index.html` to make plain reloads reliable.
