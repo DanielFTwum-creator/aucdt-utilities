@@ -58,25 +58,27 @@ public class OAuthSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
                 // FR-AUTH-008 — do NOT issue a JWT yet; hand the SPA an MFA ticket.
                 String ticket = pending.issueMfaTicket(user.getId());
                 audit.record(AuditEvent.MFA_CHALLENGED, user.getEmail(), "role=" + user.getRole(), ip);
-                redirect(res, frontendBase + "/auth/callback?mfa_ticket=" + enc(ticket));
+                redirect(req, res, frontendBase + "/auth/callback?mfa_ticket=" + enc(ticket));
                 return;
             }
 
             // Fully authenticated → single-use code the SPA exchanges for the JWT.
             String code = pending.issueAuthCode(user.getId());
-            redirect(res, frontendBase + "/auth/callback?code=" + enc(code));
+            redirect(req, res, frontendBase + "/auth/callback?code=" + enc(code));
 
         } catch (GoogleOAuthService.DomainRejectedException e) {
             // FR-AUTH-009 — redirect with an error marker (the 403 semantics + audit
             // are enforced server-side; a browser redirect can't carry a 403 body).
-            redirect(res, frontendBase + "/auth/callback?error=domain");
+            redirect(req, res, frontendBase + "/auth/callback?error=domain");
         } catch (GoogleOAuthService.AccountDeactivatedException e) {
-            redirect(res, frontendBase + "/auth/callback?error=deactivated");
+            redirect(req, res, frontendBase + "/auth/callback?error=deactivated");
         }
     }
 
-    private void redirect(HttpServletResponse res, String url) throws IOException {
-        getRedirectStrategy().sendRedirect(null, res, url);
+    private void redirect(HttpServletRequest req, HttpServletResponse res, String url) throws IOException {
+        // Pass the real request — DefaultRedirectStrategy reads request.getContextPath();
+        // a null request NPEs here even on a successful callback.
+        getRedirectStrategy().sendRedirect(req, res, url);
     }
 
     private static String enc(String v) { return URLEncoder.encode(v, StandardCharsets.UTF_8); }
