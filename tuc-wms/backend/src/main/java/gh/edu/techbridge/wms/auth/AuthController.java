@@ -28,24 +28,22 @@ public class AuthController {
     private final UserRepository users;
     private final JwtService jwt;
     private final TotpService totp;
-    private final PendingAuthService pending;
     private final AuditService audit;
     private final AuthProperties props;
 
     public AuthController(UserRepository users, JwtService jwt, TotpService totp,
-                          PendingAuthService pending, AuditService audit, AuthProperties props) {
+                          AuditService audit, AuthProperties props) {
         this.users = users;
         this.jwt = jwt;
         this.totp = totp;
-        this.pending = pending;
         this.audit = audit;
         this.props = props;
     }
 
-    /** Exchange a one-time auth code (from the OAuth redirect) for a JWT + refresh cookie. */
+    /** Exchange a short-lived signed auth code (from the OAuth redirect) for a JWT + refresh cookie. */
     @PostMapping("/exchange")
     public ResponseEntity<?> exchange(@RequestBody Map<String, String> body, HttpServletRequest req) {
-        Optional<Long> uid = pending.consumeAuthCode(body.get("code"));
+        Optional<Long> uid = jwt.verifyHandoffToken(body.get("code"), "code");
         if (uid.isEmpty()) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(err("Invalid or expired code"));
         User user = users.findById(uid.get()).orElse(null);
         if (user == null || !user.isActive()) return ResponseEntity.status(HttpStatus.FORBIDDEN).body(err("Account unavailable"));
@@ -57,7 +55,7 @@ public class AuthController {
     public ResponseEntity<?> verifyMfa(@RequestBody Map<String, String> body, HttpServletRequest req) {
         String ticket = body.get("mfa_ticket");
         String code = body.get("code");
-        Optional<Long> uid = pending.consumeMfaTicket(ticket);
+        Optional<Long> uid = jwt.verifyHandoffToken(ticket, "mfa");
         if (uid.isEmpty()) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(err("Invalid or expired MFA session"));
         User user = users.findById(uid.get()).orElse(null);
         if (user == null || !user.isActive()) return ResponseEntity.status(HttpStatus.FORBIDDEN).body(err("Account unavailable"));
@@ -66,7 +64,7 @@ public class AuthController {
             audit.record(AuditEvent.MFA_FAILED, user.getEmail(), null, ip(req));
             // Re-issue a fresh ticket so the user can retry without restarting OAuth.
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(Map.of("error", "Invalid code", "mfa_ticket", pending.issueMfaTicket(user.getId())));
+                    .body(Map.of("error", "Invalid code", "mfa_ticket", jwt.issueHandoffToken(user.getId(), "mfa", jwt.mfaTtl())));
         }
         audit.record(AuditEvent.MFA_VERIFIED, user.getEmail(), null, ip(req));
         return issueSession(user, ip(req));

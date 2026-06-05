@@ -61,6 +61,42 @@ public class JwtService {
                 .compact();
     }
 
+    /**
+     * Short-lived, self-contained handoff token bridging the server-side OAuth
+     * callback to the separately-delivered SPA. Replaces the former in-memory
+     * PendingAuthService map so the handoff survives a backend restart and works
+     * across instances (no shared store, no Redis — honours the dev zero-dependency
+     * contract). The narrow TTL is the single-use bound:
+     *   - "code" (60s): exchanged once at POST /api/auth/exchange for the JWT pair.
+     *   - "mfa"  (5m) : presented with the TOTP code at POST /api/auth/mfa/verify.
+     */
+    public String issueHandoffToken(Long userId, String type, Duration ttl) {
+        Instant now = Instant.now();
+        return Jwts.builder()
+                .claim("uid", userId)
+                .claim("typ", type)
+                .issuedAt(Date.from(now))
+                .expiration(Date.from(now.plus(ttl)))
+                .signWith(key)
+                .compact();
+    }
+
+    /** Verify a handoff token of the given type and return its userId, or empty if invalid/expired/wrong-type. */
+    public java.util.Optional<Long> verifyHandoffToken(String token, String type) {
+        if (token == null) return java.util.Optional.empty();
+        try {
+            Claims c = parse(token);
+            if (!type.equals(c.get("typ", String.class))) return java.util.Optional.empty();
+            Number uid = c.get("uid", Number.class);
+            return uid == null ? java.util.Optional.empty() : java.util.Optional.of(uid.longValue());
+        } catch (Exception e) {
+            return java.util.Optional.empty();
+        }
+    }
+
+    public Duration codeTtl() { return Duration.ofSeconds(60); }
+    public Duration mfaTtl()  { return Duration.ofMinutes(5); }
+
     public Claims parse(String token) {
         return Jwts.parser().verifyWith(key).build().parseSignedClaims(token).getPayload();
     }

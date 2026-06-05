@@ -11,7 +11,7 @@
 Before generating any output on an existing project:
 
 1. **Identify scope** — Which project in `aucdt-utilities/` are we working on? If unclear, ask.
-2. **Read project root** — Check for a local `CLAUDE.md` or `README.md` in the project directory. Local files override global defaults.
+2. **Read project root** — Check for a local `CLAUDE.md`, `README.md`, and **`CONSTRAINTS.md`** in the project directory. Local files override global defaults. `CONSTRAINTS.md` is the environment spec — it overrides all assumptions about OS, services, and tooling.
 3. **Check file tree** — Run a top-level `ls` or `tree -L 2` to orient. Never assume the structure.
 4. **Confirm the task** — Restate the goal in one sentence and list any assumptions. Invite correction before writing any code.
 5. **Check for active SRS** — If a `/docs` directory exists, note the latest SRS document ID.
@@ -91,33 +91,23 @@ When spawning subagents, use the cheapest model that can handle the task:
 
 ## 2. MODEL ALLOCATION PROTOCOL
 
-> **Model IDs:** Opus 4.8 `claude-opus-4-8` · Sonnet 4.6 `claude-sonnet-4-6` · Haiku 4.5 `claude-haiku-4-5`
-> Default to the latest, most capable model for the tier.
+### Claude Sonnet — HIGH-VALUE ONLY
 
-### Claude Opus 4.8 — STRATEGIC & ARCHITECTURAL (flagship)
-
+- IEEE SRS drafting, review, and final sign-off
 - System & database architecture decisions
 - Security design, audit logic, auth flows
 - Complex debugging and root cause analysis
-- Ambiguous requirements where trade-offs must be mapped before coding
-- High-stakes, hard-to-reverse decisions
-- Final architectural sign-off
-- Any task requiring deep cross-domain reasoning
-
-### Claude Sonnet — HIGH-VALUE EXECUTION
-
-- IEEE SRS drafting, review, and final sign-off
-- Scoped research, code exploration, summarisation, synthesis across sources
 - SVG architecture and database diagrams
 - CLAUDE.md, deployment guides, admin guides
 - Final QA review of all Haiku-generated output
+- Any task requiring cross-domain reasoning
 
 ### Claude Haiku — DELEGATE EVERYTHING REPETITIVE
 
 - React / Angular / TypeScript component boilerplate
 - CRUD endpoints (Spring Boot / Express / FastAPI)
 - SQL schema files and migration scripts
-- Puppeteer test suite generation
+- Playwright test suite generation
 - Dockerfile and docker-compose files
 - Repetitive utility functions and helpers
 - CSS / Tailwind styling of pre-designed components
@@ -158,7 +148,7 @@ Confirm each item with ✅ before proceeding. Stop and report if any item fails.
 
 ☐ 3. TESTING
    - Integrate self-testing capabilities                 [Sonnet design → Haiku scaffold]
-   - Create Puppeteer test suite                         [Haiku]
+   - Create Playwright test suite                        [Haiku]
    - Add interactive test tab with screenshot capture    [Haiku]
 
 ☐ 4. DOCUMENTATION
@@ -215,6 +205,108 @@ Confirm each item with ✅ before proceeding. Stop and report if any item fails.
 
 ---
 
+## 5a. JAVA CODE STANDARDS (NON-NEGOTIABLE)
+
+These rules apply to every Spring Boot project in `aucdt-utilities/`. Violations cause build failures on the developer's machine. No exceptions.
+
+### File Structure
+
+- **One public class, interface, record, or enum per `.java` file — always, no exceptions.**
+  Java's compiler enforces this. Multiple public types in one file = compile failure.
+- File name must exactly match the public type name: `JwtService.java` contains `public class JwtService`.
+- Entity naming: suffix with `Entity` when the class name conflicts with a common JDK or Spring type.
+
+  | ❌ Avoid | ✅ Use instead | Reason |
+  |---|---|---|
+  | `NetworkInterface` | `NetworkInterfaceEntity` | Shadows `java.net.NetworkInterface` |
+  | `Alert` (if ambiguous) | `AlertEntity` | Consistent with above |
+
+### Visibility Rules
+
+- Any class referenced from outside its own package must be declared `public`.
+- Package-private (`class Foo`) is only valid if the class is used exclusively within the same package.
+- **Common trap:** Config classes (e.g. `JwtService` in `config/`) referenced by controllers in `api/controller/` must be `public`.
+
+### Maven Plugin Rule
+
+The `spring-boot-maven-plugin` must always declare an explicit `<version>` tag. Without it, `mvn spring-boot:run` fails on Windows Git Bash with `NoPluginFoundForPrefixException`.
+
+```xml
+<plugin>
+  <groupId>org.springframework.boot</groupId>
+  <artifactId>spring-boot-maven-plugin</artifactId>
+  <version>${project.parent.version}</version>
+  <configuration>
+    <mainClass>edu.techbridge.YourApplication</mainClass>
+  </configuration>
+  <executions>
+    <execution>
+      <goals><goal>repackage</goal></goals>
+    </execution>
+  </executions>
+</plugin>
+```
+
+### Dev Profile Zero-Dependency Contract
+
+Every Spring Boot project must have an `application-dev.yml` that satisfies all of the following:
+
+| Requirement | Rule |
+|---|---|
+| Datasource | H2 in-memory: `jdbc:h2:mem:db;MODE=MySQL;NON_KEYWORDS=USER` |
+| Flyway | `flyway-core` only — **never `flyway-mysql`** in dev dependencies |
+| Redis | Excluded via `spring.autoconfigure.exclude` |
+| Cache | `spring.cache.type: simple` |
+| External services | None — dev must start with zero running external dependencies |
+
+**Test:** `SPRING_PROFILES_ACTIVE=dev mvn spring-boot:run` must succeed on a fresh Windows machine with only Java 21 + Maven installed. If it requires any running service (MariaDB, Redis, RabbitMQ), the dev profile is broken.
+
+Dev profile Redis exclusion block (copy exactly):
+```yaml
+spring:
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration
+      - org.springframework.boot.autoconfigure.data.redis.RedisRepositoriesAutoConfiguration
+  cache:
+    type: simple
+```
+
+### H2 SQL Compatibility
+
+Flyway migrations must be H2-compatible when the dev profile uses H2:
+
+| ❌ Not supported in H2 | ✅ H2-compatible alternative |
+|---|---|
+| `ON UPDATE CURRENT_TIMESTAMP` | Omit — handle in `@PreUpdate` |
+| `TEXT` column type | `VARCHAR(2048)` or `VARCHAR(4096)` |
+| `ENGINE=InnoDB` | Omit entirely |
+| `flyway-mysql` dialect checks | Use `flyway-core` only in dev |
+
+### Pre-Delivery Verification Gate
+
+Before packaging or delivering any Java backend code, confirm every item:
+
+```
+☐ One public type per .java file
+☐ File name matches public type name exactly
+☐ All cross-package references use public visibility
+☐ spring-boot-maven-plugin has explicit <version> and <mainClass>
+☐ Dev profile excludes Redis autoconfigure
+☐ Dev profile datasource is H2 (not MariaDB)
+☐ flyway-mysql absent from dev-only dependency path
+☐ Flyway migrations use H2-compatible SQL only
+☐ mvn compile -q confirmed (or explicitly noted as unverifiable in sandbox)
+```
+
+### CONSTRAINTS.md Requirement
+
+Every Spring Boot project in `aucdt-utilities/` must have a `CONSTRAINTS.md` at its project root. This file records the developer's actual environment. Claude reads it at Session Start Protocol step 2, before writing any backend code. It overrides all defaults.
+
+Template: copy from `tuc-wms/CONSTRAINTS.md` (the reference example in this monorepo).
+
+---
+
 ## 6. DOCUMENTATION STANDARDS
 
 - **Standard:** IEEE 830 / IEEE 29148 SRS format
@@ -236,6 +328,7 @@ All projects in `aucdt-utilities/` monorepo.
 | LyriaStream (AI Music Generation) | FastAPI · Spring Boot · React · MusicGen | Active |
 | BioChemAI | React · Spring Boot | Active |
 | ThesisAI | React · Spring Boot | Active |
+| TUC NetScan | React · Spring Boot · MariaDB · Redis | Active |
 | BionicSkins™ Website | Next.js 14 · TypeScript | Consulting |
 | ROOT Drumming Systems | React | Active |
 | TUC Institutional Websites | Plesk · PHP · WordPress | Maintained |
@@ -258,14 +351,16 @@ All projects in `aucdt-utilities/` monorepo.
 
 1. **Read this file first** on every session before generating any output.
 2. **Follow the Session Start Protocol** — orient before acting.
-3. **Plan before coding** — confirm the approach in one message, then execute.
-4. **Never generate placeholders** — all code must be production-ready.
-5. **One project at a time** — context switching burns tokens.
-6. **Confirm checklist items** with ✅ before moving to the next.
-7. **Stop and report** if any checklist item fails — do not skip.
-8. **Use artifacts for long outputs** to keep context window lean.
-9. **Batch related decisions** into single messages — never one-liners to Sonnet.
-10. **Specify project scope** — always name the project when working in the monorepo.
+3. **Read CONSTRAINTS.md** if present in the project root — it overrides all defaults.
+4. **Plan before coding** — confirm the approach in one message, then execute.
+5. **Never generate placeholders** — all code must be production-ready.
+6. **One project at a time** — context switching burns tokens.
+7. **Confirm checklist items** with ✅ before moving to the next.
+8. **Stop and report** if any checklist item fails — do not skip.
+9. **Use artifacts for long outputs** to keep context window lean.
+10. **Batch related decisions** into single messages — never one-liners to Sonnet.
+11. **Specify project scope** — always name the project when working in the monorepo.
+12. **Run the Java pre-delivery gate** before packaging any Spring Boot code.
 
 ---
 
@@ -296,16 +391,19 @@ Say it:
 
 ## 11. ANTI-PATTERNS (DON'T DO THIS)
 
-❌ Assume requirements — ask instead  
-❌ Add features not in scope — scope creep kills projects  
-❌ Over-engineer or create generic frameworks — concrete beats abstract  
-❌ Hide trade-offs or decisions — make them visible  
-❌ Refactor code you didn't write (unless it blocks your task)  
-❌ Leave cleanup mess — clean only your own  
-❌ Hand off without testing — verify success criteria first  
-❌ Use past context to fill gaps — ask current questions  
+❌ Assume requirements — ask instead
+❌ Add features not in scope — scope creep kills projects
+❌ Over-engineer or create generic frameworks — concrete beats abstract
+❌ Hide trade-offs or decisions — make them visible
+❌ Refactor code you didn't write (unless it blocks your task)
+❌ Leave cleanup mess — clean only your own
+❌ Hand off without testing — verify success criteria first
+❌ Use past context to fill gaps — ask current questions
+❌ Put multiple public Java classes in one file — one file, one public type
+❌ Write a dev profile that requires MariaDB or Redis to be running locally
+❌ Deliver Java backend code without running the pre-delivery verification gate
 
 ---
 
-*Last updated: May 2026 — Daniel Frempong Twum / TUC ICT*  
-*Pattern library (User Journey, Capacitor, Gemini, Glucose) → see PATTERNS.md*
+*Last updated: June 2026 — Daniel Frempong Twum / TUC ICT*
+*Pattern library (User Journey, Capacitor, Gemini, Glucose, Java Standards) → see PATTERNS.md*

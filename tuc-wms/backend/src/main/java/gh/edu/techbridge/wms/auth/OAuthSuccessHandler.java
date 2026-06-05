@@ -30,14 +30,14 @@ import java.nio.charset.StandardCharsets;
 public class OAuthSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
     private final GoogleOAuthService oauth;
-    private final PendingAuthService pending;
+    private final JwtService jwt;
     private final AuditService audit;
     private final String frontendBase;
 
-    public OAuthSuccessHandler(GoogleOAuthService oauth, PendingAuthService pending,
+    public OAuthSuccessHandler(GoogleOAuthService oauth, JwtService jwt,
                                AuditService audit, AuthProperties props) {
         this.oauth = oauth;
-        this.pending = pending;
+        this.jwt = jwt;
         this.audit = audit;
         this.frontendBase = props.getFrontendBase();
     }
@@ -56,14 +56,14 @@ public class OAuthSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
             if (user.getRole().requiresMfa()) {
                 // FR-AUTH-008 — do NOT issue a JWT yet; hand the SPA an MFA ticket.
-                String ticket = pending.issueMfaTicket(user.getId());
+                String ticket = jwt.issueHandoffToken(user.getId(), "mfa", jwt.mfaTtl());
                 audit.record(AuditEvent.MFA_CHALLENGED, user.getEmail(), "role=" + user.getRole(), ip);
                 redirect(req, res, frontendBase + "/auth/callback?mfa_ticket=" + enc(ticket));
                 return;
             }
 
-            // Fully authenticated → single-use code the SPA exchanges for the JWT.
-            String code = pending.issueAuthCode(user.getId());
+            // Fully authenticated → short-lived signed code the SPA exchanges for the JWT.
+            String code = jwt.issueHandoffToken(user.getId(), "code", jwt.codeTtl());
             redirect(req, res, frontendBase + "/auth/callback?code=" + enc(code));
 
         } catch (GoogleOAuthService.DomainRejectedException e) {

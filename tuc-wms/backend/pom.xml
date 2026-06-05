@@ -108,6 +108,15 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>${project.parent.version}</version>
+                <configuration>
+                    <mainClass>gh.edu.techbridge.wms.TucWmsApplication</mainClass>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals><goal>repackage</goal></goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
