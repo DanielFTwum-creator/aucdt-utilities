@@ -28,7 +28,9 @@ export default function MfaPage() {
       // Backend re-issues a fresh ticket when TOTP code is wrong; update state for retry.
       if ((res as any).mfa_ticket) { setTicket((res as any).mfa_ticket); throw new Error((res as any).error || 'Invalid code'); }
       setSession(res.access_token, res.user);
-      navigate('/', { replace: true });
+      // Hard redirect — same reason as CallbackPage: avoids the navigate() race
+      // where ProtectedRoute sees user=null before React flushes setSession's state.
+      window.location.replace('/');
     } catch (err: any) {
       // The backend re-issues a fresh ticket on a wrong code; surface a retry.
       setError(err.message || 'Invalid code');

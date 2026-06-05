@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useEffect, useState, useCallback } from 'react';
-import { api, post, setAccessToken, setOnAuthLost } from '../api';
+import { api, rawPost, setAccessToken, setOnAuthLost } from '../api';
 
 export interface WmsUser {
   email: string;
@@ -36,15 +36,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   // On load, attempt a silent refresh (HttpOnly cookie) to restore the session
   // without forcing a re-login.
   //
-  // IMPORTANT: onAuthLost is registered AFTER the startup refresh resolves so
-  // the "session lost mid-flight" handler never fires on the expected
-  // "no cookie yet" 401 that occurs on the /auth/callback page.
+  // Use rawPost (not post) so the expected 401 when there is no cookie does
+  // NOT trigger the api() 401-retry loop, which would fire a second refresh
+  // request and show two red errors in the console.
+  //
+  // onAuthLost is armed AFTER the startup attempt completes so it never fires
+  // on the expected no-cookie 401 that occurs on the /auth/callback page.
   useEffect(() => {
     (async () => {
       try {
-        const data = await post<{ access_token: string; user: WmsUser }>('/api/auth/refresh');
+        const data = await rawPost<{ access_token: string; user: WmsUser }>('/api/auth/refresh');
         setAccessToken(data.access_token);
-        // confirm the user via /api/me (authoritative role/profile)
+        // Confirm the user via /api/me (authoritative role/profile).
         const me = await api<WmsUser & { mfaEnrolled?: boolean }>('/api/me');
         setUser({ email: me.email, name: me.name, role: me.role, photoUrl: me.photoUrl });
       } catch {
