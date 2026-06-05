@@ -81,7 +81,14 @@ public class OAuthSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
         getRedirectStrategy().sendRedirect(req, res, url);
     }
 
-    private static String enc(String v) { return URLEncoder.encode(v, StandardCharsets.UTF_8); }
+    private static String enc(String v) {
+        // URLEncoder leaves dots unencoded ("safe" chars), but the Plesk/nginx
+        // proxy chain interprets dots in query-param values as path separators —
+        // stripping the JWT header + payload and leaving only the 43-char
+        // signature. Force-encode dots as %2E; URLSearchParams.get('code') on
+        // the SPA side decodes %2E → '.' automatically, restoring the full JWT.
+        return URLEncoder.encode(v, StandardCharsets.UTF_8).replace(".", "%2E");
+    }
 
     private static String clientIp(HttpServletRequest req) {
         String xff = req.getHeader("X-Forwarded-For");
