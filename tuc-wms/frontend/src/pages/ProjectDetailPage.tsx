@@ -4,6 +4,7 @@ import { api, post } from '../api';
 import { ProjectDetail } from '../types';
 import MembersTab from './MembersTab';
 import ProjectSettingsTab from './ProjectSettingsTab';
+import TasksTab from './TasksTab';
 
 type Tab = 'board' | 'timeline' | 'members' | 'settings';
 const TABS: { key: Tab; label: string }[] = [
@@ -74,7 +75,7 @@ export default function ProjectDetailPage() {
       </nav>
 
       <div style={{ marginTop: 18 }}>
-        {tab === 'board' && <Placeholder label="Kanban board" note="Coming in the next slice." />}
+        {tab === 'board' && <TasksTab projectId={projectId} stages={project.stages} archived={project.archived} />}
         {tab === 'timeline' && <Placeholder label="Timeline / Gantt" note="Coming in a later slice." />}
         {tab === 'members' && <MembersTab projectId={projectId} archived={project.archived} />}
         {tab === 'settings' && <ProjectSettingsTab project={project} onChanged={load} />}
