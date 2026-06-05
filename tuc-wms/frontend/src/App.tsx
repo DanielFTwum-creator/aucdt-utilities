@@ -7,6 +7,7 @@ import CallbackPage from './auth/CallbackPage';
 import MfaPage from './auth/MfaPage';
 import AppLayout from './components/AppLayout';
 import ProjectsPage from './pages/ProjectsPage';
+import ProjectDetailPage from './pages/ProjectDetailPage';
 
 export default function App() {
   return (
@@ -21,6 +22,14 @@ export default function App() {
             element={
               <ProtectedRoute>
                 <AppLayout><ProjectsPage /></AppLayout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/projects/:id"
+            element={
+              <ProtectedRoute>
+                <AppLayout><ProjectDetailPage /></AppLayout>
               </ProtectedRoute>
             }
           />
