@@ -49,7 +49,9 @@ public class SecurityConfig {
             .authorizeHttpRequests(reg -> reg
                 // Public auth endpoints (the OAuth dance + SPA token exchange/refresh).
                 .requestMatchers(
-                        "/api/auth/google/**",
+                        "/oauth2/**",            // Spring OAuth2 authorization start (/oauth2/authorization/google)
+                        "/api/auth/google",      // public SRS §3.2 entry → redirects to /oauth2/authorization/google
+                        "/api/auth/google/**",   // Google callback (/api/auth/google/callback)
                         "/api/auth/exchange",
                         "/api/auth/mfa/**",
                         "/api/auth/refresh",
@@ -60,11 +62,19 @@ public class SecurityConfig {
                 .requestMatchers("/api/admin/**").hasRole("SYSTEM_ADMIN")
                 .anyRequest().authenticated()
             )
-            // Google OAuth2 login. Spring appends the registrationId ("google") to
-            // the authorization base URI, so base "/api/auth" yields the SRS §3.2
-            // initiation URL GET /api/auth/google exactly.
+            // Google OAuth2 login on Spring's DEFAULT, dedicated namespace:
+            //   authorization start : GET /oauth2/authorization/google
+            //   Google callback     : GET /api/auth/google/callback  (registered in Google console)
+            //
+            // The public SRS §3.2 entry URL GET /api/auth/google is preserved by a thin
+            // redirect (OAuthEntryController) → /oauth2/authorization/google.
+            //
+            // Why not baseUri("/api/auth"): OAuth2AuthorizationRequestRedirectFilter matches
+            // {base}/{registrationId}, so a base of /api/auth made it claim the whole prefix —
+            // POST /api/auth/exchange was parsed as registrationId="exchange" and rejected with
+            // InvalidClientRegistrationIdException BEFORE reaching AuthController (silent 401).
+            // Keeping authorization on /oauth2/** removes that collision entirely.
             .oauth2Login(o -> o
-                .authorizationEndpoint(a -> a.baseUri("/api/auth"))
                 .redirectionEndpoint(r -> r.baseUri("/api/auth/google/callback"))
                 .successHandler(successHandler)
                 .failureHandler((req, res, ex) ->

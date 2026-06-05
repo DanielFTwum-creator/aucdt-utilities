@@ -67,7 +67,7 @@ public class JwtService {
      * PendingAuthService map so the handoff survives a backend restart and works
      * across instances (no shared store, no Redis — honours the dev zero-dependency
      * contract). The narrow TTL is the single-use bound:
-     *   - "code" (60s): exchanged once at POST /api/auth/exchange for the JWT pair.
+     *   - "code" (5m) : exchanged once at POST /api/auth/exchange for the JWT pair.
      *   - "mfa"  (5m) : presented with the TOTP code at POST /api/auth/mfa/verify.
      */
     public String issueHandoffToken(Long userId, String type, Duration ttl) {
@@ -94,7 +94,7 @@ public class JwtService {
         }
     }
 
-    public Duration codeTtl() { return Duration.ofSeconds(60); }
+    public Duration codeTtl() { return Duration.ofMinutes(5); }  // AUTH_API.md: "expires in 5 minutes"
     public Duration mfaTtl()  { return Duration.ofMinutes(5); }
 
     public Claims parse(String token) {
