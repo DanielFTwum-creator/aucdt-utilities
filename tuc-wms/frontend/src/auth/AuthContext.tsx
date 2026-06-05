@@ -35,8 +35,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   // On load, attempt a silent refresh (HttpOnly cookie) to restore the session
   // without forcing a re-login.
+  //
+  // IMPORTANT: onAuthLost is registered AFTER the startup refresh resolves so
+  // the "session lost mid-flight" handler never fires on the expected
+  // "no cookie yet" 401 that occurs on the /auth/callback page.
   useEffect(() => {
-    setOnAuthLost(clear);
     (async () => {
       try {
         const data = await post<{ access_token: string; user: WmsUser }>('/api/auth/refresh');
@@ -48,6 +51,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         clear();
       } finally {
         setLoading(false);
+        // Only arm the mid-flight session-loss handler AFTER startup completes.
+        setOnAuthLost(clear);
       }
     })();
   }, [clear]);
