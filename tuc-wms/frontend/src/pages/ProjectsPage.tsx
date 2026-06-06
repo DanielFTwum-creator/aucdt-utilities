@@ -5,6 +5,7 @@ import { useAuth } from '../auth/AuthContext';
 import {
   ProjectSummary, CreateProjectBody, Visibility, VISIBILITIES, CAN_CREATE_PROJECT,
 } from '../types';
+import KanbanLoader from '../components/KanbanLoader';
 
 export default function ProjectsPage() {
   const { user } = useAuth();
@@ -46,7 +47,7 @@ export default function ProjectsPage() {
 
       {error && <div style={errBox}>{error}</div>}
 
-      {loading ? <p style={{ color: 'var(--muted)' }}>Loading projects…</p>
+      {loading ? <KanbanLoader label="Loading projects…" />
         : projects.length === 0 ? <EmptyState canCreate={canCreate} />
         : (
           <div style={grid}>

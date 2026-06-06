@@ -2,6 +2,7 @@ import React, { useEffect, useState, useCallback, useMemo } from 'react';
 import { api } from '../api';
 import { Timeline, TimelineBar, ProjectMember, TaskDto } from '../types';
 import TaskModal from '../components/TaskModal';
+import KanbanLoader from '../components/KanbanLoader';
 
 type Zoom = 'day' | 'week' | 'month';
 const DAY_PX: Record<Zoom, number> = { day: 36, week: 14, month: 5 };
@@ -37,7 +38,7 @@ export default function TimelineTab({ projectId, stages, archived }: {
   // Compute the date window across all bars.
   const { minDate, dayCount } = useMemo(() => computeWindow(tl?.bars ?? []), [tl]);
 
-  if (loading) return <p style={{ color: 'var(--muted)' }}>Loading timeline…</p>;
+  if (loading) return <KanbanLoader label="Loading timeline…" />;
   if (!tl) return <div style={errBox}>{error || 'Could not load timeline.'}</div>;
 
   const datedBars = tl.bars.filter(b => b.startDate || b.dueDate);
