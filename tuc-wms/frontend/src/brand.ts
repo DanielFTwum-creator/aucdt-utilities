@@ -1,6 +1,6 @@
 // TUC brand assets — single source of truth.
-// Official Techbridge University College crest (maroon/gold, "Design and Build a Nation").
-export const TUC_LOGO = 'https://techbridge.edu.gh/static/TUC_LOGO_1.png';
+// Self-hosted 120px crest (17KB) scaled from the official 5334px original — fast everywhere.
+export const TUC_LOGO = '/tuc-crest.png';
 
 // All WMS accounts are @techbridge.edu.gh (FR-AUTH-009), so users enter only the
 // username part and the domain is appended automatically — fewer typos.
