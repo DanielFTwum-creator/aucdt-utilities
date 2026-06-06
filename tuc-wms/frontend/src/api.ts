@@ -9,8 +9,14 @@ export function setAccessToken(token: string | null) { accessToken = token; }
 export function getAccessToken() { return accessToken; }
 export function setOnAuthLost(cb: (() => void) | null) { onAuthLost = cb; }
 
+// Fail fast on a stalled network/proxy so the UI never hangs forever.
+const TIMEOUT_MS = 12000;
+function timeoutSignal(): AbortSignal | undefined {
+  try { return AbortSignal.timeout(TIMEOUT_MS); } catch { return undefined; }
+}
+
 async function refresh(): Promise<boolean> {
-  const res = await fetch('/api/auth/refresh', { method: 'POST', credentials: 'include' });
+  const res = await fetch('/api/auth/refresh', { method: 'POST', credentials: 'include', signal: timeoutSignal() });
   if (!res.ok) return false;
   const data = await res.json();
   accessToken = data.access_token;
@@ -22,7 +28,7 @@ export async function api<T = any>(path: string, init: RequestInit = {}, retry =
   if (accessToken) headers.set('Authorization', `Bearer ${accessToken}`);
   if (init.body && !headers.has('Content-Type')) headers.set('Content-Type', 'application/json');
 
-  const res = await fetch(path, { ...init, headers, credentials: 'include' });
+  const res = await fetch(path, { ...init, headers, credentials: 'include', signal: init.signal ?? timeoutSignal() });
 
   if (res.status === 401 && retry) {
     if (await refresh()) return api<T>(path, init, false);
@@ -64,6 +70,7 @@ export async function rawPost<T = any>(path: string, body?: unknown): Promise<T>
     method: 'POST',
     headers,
     credentials: 'include',
+    signal: timeoutSignal(),
     body: body ? JSON.stringify(body) : undefined,
   });
   if (res.status === 204) return undefined as T;

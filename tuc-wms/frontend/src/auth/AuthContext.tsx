@@ -43,6 +43,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   // onAuthLost is armed AFTER the startup attempt completes so it never fires
   // on the expected no-cookie 401 that occurs on the /auth/callback page.
   useEffect(() => {
+    let settled = false;
+    const finish = () => {
+      if (settled) return;
+      settled = true;
+      setLoading(false);
+      // Only arm the mid-flight session-loss handler AFTER startup completes.
+      setOnAuthLost(clear);
+    };
+    // Safety net: never let the splash hang. If the startup auth calls stall
+    // (network/proxy), give up after 10s and fall through to the login screen.
+    const timer = setTimeout(() => { setAccessToken(null); finish(); }, 10000);
     (async () => {
       try {
         const data = await rawPost<{ access_token: string; user: WmsUser }>('/api/auth/refresh');
@@ -56,11 +67,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         // called setSession() concurrently, and clear() would wipe it.
         setAccessToken(null);
       } finally {
-        setLoading(false);
-        // Only arm the mid-flight session-loss handler AFTER startup completes.
-        setOnAuthLost(clear);
+        clearTimeout(timer);
+        finish();
       }
     })();
+    return () => clearTimeout(timer);
   }, [clear]);
 
   return (

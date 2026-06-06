@@ -33,6 +33,8 @@ export default function AdminUsersPage() {
   const [newRole, setNewRole] = useState('STUDENT');
   const [creating, setCreating] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
+  const [editingId, setEditingId] = useState<number | null>(null);
+  const [editName, setEditName] = useState('');
 
   const load = useCallback(() => {
     setLoading(true);
@@ -61,6 +63,16 @@ export default function AdminUsersPage() {
     if (isSelf(u)) { setError('You cannot deactivate your own account.'); return; }
     setBusyId(u.id); setError(null);
     try { await put(`/api/admin/users/${u.id}/active`, { active: !u.active }); await load(); }
+    catch (e: any) { setError(e.message); }
+    finally { setBusyId(null); }
+  };
+
+  const saveName = async (u: AdminUser, name: string) => {
+    const trimmed = name.trim();
+    setEditingId(null);
+    if (!trimmed || trimmed === u.name) return;
+    setBusyId(u.id); setError(null);
+    try { await put(`/api/admin/users/${u.id}/name`, { name: trimmed }); await load(); }
     catch (e: any) { setError(e.message); }
     finally { setBusyId(null); }
   };
@@ -121,7 +133,23 @@ export default function AdminUsersPage() {
             {users.map(u => (
               <tr key={u.id} style={{ borderTop: '1px solid var(--border)', opacity: u.active ? 1 : 0.55 }}>
                 <td style={td}>
-                  <div style={{ fontWeight: 600 }}>{u.name || u.email}{isSelf(u) && <span style={youBadge}>you</span>}</div>
+                  {editingId === u.id ? (
+                    <input value={editName} autoFocus
+                      onChange={(e) => setEditName(e.target.value)}
+                      onBlur={() => saveName(u, editName)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') saveName(u, editName);
+                        if (e.key === 'Escape') setEditingId(null);
+                      }}
+                      style={{ ...sel, fontWeight: 600, width: 220 }} />
+                  ) : (
+                    <div style={{ fontWeight: 600, display: 'flex', alignItems: 'center', gap: 6 }}>
+                      {u.name || u.email}
+                      {isSelf(u) && <span style={youBadge}>you</span>}
+                      <button onClick={() => { setEditingId(u.id); setEditName(u.name || ''); }}
+                        title="Edit name" disabled={busyId === u.id} style={editBtn}>✎</button>
+                    </div>
+                  )}
                   <div style={{ fontSize: 12, color: 'var(--muted)' }}>{u.email}</div>
                 </td>
                 <td style={td}>
@@ -154,6 +182,7 @@ const table: React.CSSProperties = { width: '100%', borderCollapse: 'collapse', 
 const th: React.CSSProperties = { textAlign: 'left', padding: '10px 14px', fontSize: 11, color: 'var(--muted)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.5 };
 const td: React.CSSProperties = { padding: '12px 14px', fontSize: 14, verticalAlign: 'middle' };
 const sel: React.CSSProperties = { padding: '7px 10px', border: '1px solid var(--border)', borderRadius: 8, fontSize: 13, background: 'var(--card)', color: 'var(--text)' };
+const editBtn: React.CSSProperties = { background: 'none', border: 'none', cursor: 'pointer', color: 'var(--muted)', fontSize: 13, padding: 0, lineHeight: 1 };
 const youBadge: React.CSSProperties = { marginLeft: 8, fontSize: 10, fontWeight: 700, color: 'var(--tuc-maroon)', background: 'rgba(107,0,32,0.08)', borderRadius: 999, padding: '1px 7px' };
 const activeBadge: React.CSSProperties = { fontSize: 11, fontWeight: 600, color: '#1c7c3f', background: 'rgba(28,124,63,0.1)', borderRadius: 999, padding: '2px 10px' };
 const inactiveBadge: React.CSSProperties = { fontSize: 11, fontWeight: 600, color: 'var(--danger)', background: 'rgba(192,57,43,0.1)', borderRadius: 999, padding: '2px 10px' };
