@@ -4,7 +4,9 @@ import gh.edu.techbridge.wms.project.Project;
 import gh.edu.techbridge.wms.project.ProjectRepository;
 import gh.edu.techbridge.wms.project.ProjectPermissionService;
 import gh.edu.techbridge.wms.project.ProjectRole;
+import gh.edu.techbridge.wms.notify.TaskMailService;
 import gh.edu.techbridge.wms.user.User;
+import gh.edu.techbridge.wms.user.UserRepository;
 import jakarta.validation.constraints.NotBlank;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,13 +27,25 @@ public class TaskController {
     private final ProjectRepository projects;
     private final ProjectPermissionService perms;
     private final ProjectEventService events;
+    private final UserRepository users;
+    private final TaskMailService taskMail;
 
     public TaskController(TaskRepository tasks, ProjectRepository projects, ProjectPermissionService perms,
-                          ProjectEventService events) {
+                          ProjectEventService events, UserRepository users, TaskMailService taskMail) {
         this.tasks = tasks;
         this.projects = projects;
         this.perms = perms;
         this.events = events;
+        this.users = users;
+        this.taskMail = taskMail;
+    }
+
+    /** Email each given assignee (except the actor) that they were assigned this task. */
+    private void notifyAssignees(java.util.Collection<Long> assigneeIds, Task t, Project p, User actor) {
+        for (Long uid : assigneeIds) {
+            if (uid == null || uid.equals(actor.getId())) continue;   // no self-notification
+            users.findById(uid).ifPresent(recipient -> taskMail.notifyAssigned(recipient, t, p, actor));
+        }
     }
 
     public record TaskRequest(@NotBlank String title, String description, Set<Long> assigneeIds,
@@ -58,8 +72,10 @@ public class TaskController {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Sub-tasks are one level deep only");
             t.setParentTaskId(parent.getId());
         }
-        Map<String, Object> body = dto(tasks.save(t));
+        Task saved = tasks.save(t);
+        Map<String, Object> body = dto(saved);
         events.publish(projectId, "task.created", body);   // FR-KB real-time
+        notifyAssignees(saved.getAssigneeIds(), saved, p, user);   // FR-NOTIF: email new assignees
         return ResponseEntity.status(HttpStatus.CREATED).body(body);
     }
 
@@ -88,10 +104,16 @@ public class TaskController {
         perms.require(user, p, ProjectRole.EDITOR);
         perms.requireWritable(p);
         Task t = task(projectId, taskId);
+        Set<Long> before = new HashSet<>(t.getAssigneeIds());   // capture before apply() overwrites
         if (req.title() != null) t.setTitle(req.title());
         apply(t, req, p);
-        Map<String, Object> body = dto(tasks.save(t));
+        Task saved = tasks.save(t);
+        Map<String, Object> body = dto(saved);
         events.publish(projectId, "task.updated", body);   // incl. status change (drag-drop) — FR-KB
+        // FR-NOTIF: email only assignees newly added by this update (no spam on unrelated edits).
+        Set<Long> added = new HashSet<>(saved.getAssigneeIds());
+        added.removeAll(before);
+        notifyAssignees(added, saved, p, user);
         return body;
     }
 

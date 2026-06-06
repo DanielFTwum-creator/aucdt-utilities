@@ -44,6 +44,11 @@ tucwms:
     totp-issuer: ${TOTP_ISSUER:TUC-WMS}
     # Frontend origin for the post-login redirect + CORS (UI delivered separately).
     frontend-base: ${FRONTEND_BASE:https://wms.techbridge.edu.gh}
+  # Notification email via the TUC hosted gateway (same as RMS/dmcdai). Blank gateway-url
+  # = disabled (dev default): TaskMailService logs and no-ops. Set MAIL_GATEWAY_URL in prod.
+  mail:
+    gateway-url: ${MAIL_GATEWAY_URL:}
+    sender: ${MAIL_SENDER:noreply@techbridge.edu.gh}
 
 logging:
   level:
