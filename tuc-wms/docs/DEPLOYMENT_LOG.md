@@ -25,6 +25,22 @@ backup → swap → verify (302 to Google + exchange reaches controller) → aut
 `wms_users` (stop service → H2 Shell `UPDATE … WHERE LOWER(email)=LOWER('…')` → restart).
 Table is `wms_users` (not `users`). `enrolled=FALSE` so first login triggers the MFA wizard.
 
+## 2026-06-06 (cont.) — MFA enrol bugfix, lazy-init fix, Admin UI
+
+- **otpauth QR / audit ENUM:** `7bc3d1cf` fixed otpauth label encoding; the "rejected MFA code"
+  was actually an H2 native-ENUM `WMS_AUDIT_LOG.EVENT` rejecting the new `MFA_ENROLLED` value
+  (rolled back enrolment). Fixed by `ALTER … VARCHAR(32)` on prod + `columnDefinition="varchar(32)"`
+  in `AuditLog` (`07a26207`). **MFA login now works end-to-end (user confirmed).**
+- **Lazy-init fix (`f572c57a`):** clicking a project failed — `GET /projects/{id}`, board, timeline,
+  and task list/get serialized lazy `@ElementCollection`s (`stages`, task assignees/tags/blockedBy)
+  after the session closed (`open-in-view=false`) → `LazyInitializationException`. Added
+  `@Transactional(readOnly=true)` to the four reads; made Kanban `setWipLimits` `@Transactional`.
+- **Admin UI (`ad5d707c`):** `AdminUsersPage` at `/admin/users` (SYSTEM_ADMIN only) — list users,
+  change role, activate/deactivate; self-lockout guards; admin-only nav link. **No more DB surgery
+  to grant roles** (FR-AUTH-004 fully usable).
+- **Deploy hardening:** deploy script now verifies the uploaded jar's SHA-256 and polls the real
+  endpoint for 302 (≤150s) instead of racing the ~8s cold start (a good jar was once false-rolled-back).
+
 ### ⚠️ Outstanding deploy gate — SSE nginx buffering (NOT yet applied)
 Kanban live updates need `proxy_buffering off` on the `/stream` location in the Plesk nginx
 vhost (see `PROJECTS_TASKS_API.md` §SSE). Until applied, the board still works (drag reloads it)
