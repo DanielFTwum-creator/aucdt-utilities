@@ -6,6 +6,7 @@ import {
 import { api, put, post } from '../api';
 import { Board, BoardCard, BoardColumn, Priority, ProjectMember, TaskDto } from '../types';
 import TaskModal from '../components/TaskModal';
+import KanbanLoader from '../components/KanbanLoader';
 import { getAccessToken } from '../api';
 
 /**
@@ -88,7 +89,7 @@ export default function BoardTab({ projectId, stages, archived, canEditWip }: {
   const memberName = (id: number) => members.find(m => m.userId === id)?.name
     || members.find(m => m.userId === id)?.email || `#${id}`;
 
-  if (loading) return <p style={{ color: 'var(--muted)' }}>Loading board…</p>;
+  if (loading) return <KanbanLoader label="Loading board…" />;
   if (!board) return <div style={errBox}>{error || 'Could not load board.'}</div>;
 
   return (

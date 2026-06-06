@@ -7,6 +7,7 @@ import ProjectSettingsTab from './ProjectSettingsTab';
 import BoardTab from './BoardTab';
 import TimelineTab from './TimelineTab';
 import { useAuth } from '../auth/AuthContext';
+import KanbanLoader from '../components/KanbanLoader';
 
 type Tab = 'board' | 'timeline' | 'members' | 'settings';
 const TABS: { key: Tab; label: string }[] = [
@@ -43,7 +44,7 @@ export default function ProjectDetailPage() {
     } catch (e: any) { setError(e.message); }
   };
 
-  if (loading) return <p style={{ color: 'var(--muted)' }}>Loading project…</p>;
+  if (loading) return <KanbanLoader label="Loading project…" />;
   if (error) return <div style={errBox}>{error} <button onClick={() => navigate('/')} style={linkBtn}>← Back</button></div>;
   if (!project) return null;
 
