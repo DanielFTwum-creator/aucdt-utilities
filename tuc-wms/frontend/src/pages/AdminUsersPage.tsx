@@ -1,0 +1,116 @@
+import React, { useEffect, useState, useCallback } from 'react';
+import { Navigate } from 'react-router-dom';
+import { api, put } from '../api';
+import { useAuth } from '../auth/AuthContext';
+
+/**
+ * SystemAdmin user management (FR-AUTH-004). Backend AdminUserController is gated to
+ * ROLE_SYSTEM_ADMIN. List users, change role, activate/deactivate. Guards against the
+ * signed-in admin demoting or deactivating their own account (lockout protection).
+ */
+interface AdminUser {
+  id: number;
+  email: string;
+  name: string;
+  role: string;
+  active: boolean;
+}
+
+const ROLES = ['STUDENT', 'LECTURER', 'ADMIN_STAFF', 'HOD', 'SYSTEM_ADMIN'];
+const MFA_ROLES = ['HOD', 'SYSTEM_ADMIN'];
+
+export default function AdminUsersPage() {
+  const { user } = useAuth();
+  const [users, setUsers] = useState<AdminUser[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [busyId, setBusyId] = useState<number | null>(null);
+
+  const load = useCallback(() => {
+    setLoading(true);
+    api<AdminUser[]>('/api/admin/users')
+      .then(setUsers).catch((e) => setError(e.message)).finally(() => setLoading(false));
+  }, []);
+  useEffect(() => { if (user?.role === 'SYSTEM_ADMIN') load(); }, [load, user]);
+
+  // Defence in depth — the API is the real gate, but don't render admin UI to non-admins.
+  if (user && user.role !== 'SYSTEM_ADMIN') return <Navigate to="/" replace />;
+
+  const isSelf = (u: AdminUser) => u.email.toLowerCase() === user?.email.toLowerCase();
+
+  const changeRole = async (u: AdminUser, role: string) => {
+    if (role === u.role) return;
+    if (isSelf(u) && u.role === 'SYSTEM_ADMIN' && role !== 'SYSTEM_ADMIN') {
+      setError('You cannot remove your own SystemAdmin role.'); return;
+    }
+    setBusyId(u.id); setError(null);
+    try { await put(`/api/admin/users/${u.id}/role`, { role }); await load(); }
+    catch (e: any) { setError(e.message); }
+    finally { setBusyId(null); }
+  };
+
+  const toggleActive = async (u: AdminUser) => {
+    if (isSelf(u)) { setError('You cannot deactivate your own account.'); return; }
+    setBusyId(u.id); setError(null);
+    try { await put(`/api/admin/users/${u.id}/active`, { active: !u.active }); await load(); }
+    catch (e: any) { setError(e.message); }
+    finally { setBusyId(null); }
+  };
+
+  return (
+    <div>
+      <h1 style={{ fontSize: 22, fontWeight: 800, color: 'var(--text)', margin: '0 0 6px' }}>User Management</h1>
+      <p style={{ color: 'var(--muted)', fontSize: 13, marginTop: 0 }}>
+        Assign roles and control access (FR-AUTH-004). HOD and SystemAdmin require MFA enrolment at next login.
+      </p>
+
+      {error && <div style={errBox}>{error}</div>}
+
+      {loading ? <p style={{ color: 'var(--muted)' }}>Loading users…</p> : (
+        <table style={table}>
+          <thead>
+            <tr><th style={th}>User</th><th style={th}>Role</th><th style={th}>Status</th><th style={th}></th></tr>
+          </thead>
+          <tbody>
+            {users.map(u => (
+              <tr key={u.id} style={{ borderTop: '1px solid var(--border)', opacity: u.active ? 1 : 0.55 }}>
+                <td style={td}>
+                  <div style={{ fontWeight: 600 }}>{u.name || u.email}{isSelf(u) && <span style={youBadge}>you</span>}</div>
+                  <div style={{ fontSize: 12, color: 'var(--muted)' }}>{u.email}</div>
+                </td>
+                <td style={td}>
+                  <select value={u.role} disabled={busyId === u.id} onChange={(e) => changeRole(u, e.target.value)} style={sel}>
+                    {ROLES.map(r => <option key={r} value={r}>{labelRole(r)}{MFA_ROLES.includes(r) ? ' (MFA)' : ''}</option>)}
+                  </select>
+                </td>
+                <td style={td}>
+                  <span style={u.active ? activeBadge : inactiveBadge}>{u.active ? 'Active' : 'Deactivated'}</span>
+                </td>
+                <td style={{ ...td, textAlign: 'right' }}>
+                  <button onClick={() => toggleActive(u)} disabled={busyId === u.id || isSelf(u)}
+                    title={isSelf(u) ? 'You cannot deactivate yourself' : ''}
+                    style={u.active ? deactivateBtn : reactivateBtn}>
+                    {u.active ? 'Deactivate' : 'Reactivate'}
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
+    </div>
+  );
+}
+
+const labelRole = (r: string) => r.split('_').map(w => w.charAt(0) + w.slice(1).toLowerCase()).join(' ');
+
+const table: React.CSSProperties = { width: '100%', borderCollapse: 'collapse', background: 'var(--card)', border: '1px solid var(--border)', borderRadius: 12, overflow: 'hidden' };
+const th: React.CSSProperties = { textAlign: 'left', padding: '10px 14px', fontSize: 11, color: 'var(--muted)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.5 };
+const td: React.CSSProperties = { padding: '12px 14px', fontSize: 14, verticalAlign: 'middle' };
+const sel: React.CSSProperties = { padding: '7px 10px', border: '1px solid var(--border)', borderRadius: 8, fontSize: 13, background: 'var(--card)', color: 'var(--text)' };
+const youBadge: React.CSSProperties = { marginLeft: 8, fontSize: 10, fontWeight: 700, color: 'var(--tuc-maroon)', background: 'rgba(107,0,32,0.08)', borderRadius: 999, padding: '1px 7px' };
+const activeBadge: React.CSSProperties = { fontSize: 11, fontWeight: 600, color: '#1c7c3f', background: 'rgba(28,124,63,0.1)', borderRadius: 999, padding: '2px 10px' };
+const inactiveBadge: React.CSSProperties = { fontSize: 11, fontWeight: 600, color: 'var(--danger)', background: 'rgba(192,57,43,0.1)', borderRadius: 999, padding: '2px 10px' };
+const deactivateBtn: React.CSSProperties = { background: 'none', border: '1px solid var(--border)', color: 'var(--danger)', borderRadius: 8, padding: '6px 12px', fontSize: 12, cursor: 'pointer' };
+const reactivateBtn: React.CSSProperties = { background: 'none', border: '1px solid var(--border)', color: '#1c7c3f', borderRadius: 8, padding: '6px 12px', fontSize: 12, cursor: 'pointer' };
+const errBox: React.CSSProperties = { background: 'rgba(192,57,43,0.08)', color: 'var(--danger)', borderRadius: 8, padding: '10px 12px', fontSize: 13, marginBottom: 16 };

@@ -8,6 +8,7 @@ import MfaPage from './auth/MfaPage';
 import AppLayout from './components/AppLayout';
 import ProjectsPage from './pages/ProjectsPage';
 import ProjectDetailPage from './pages/ProjectDetailPage';
+import AdminUsersPage from './pages/AdminUsersPage';
 
 export default function App() {
   return (
@@ -30,6 +31,14 @@ export default function App() {
             element={
               <ProtectedRoute>
                 <AppLayout><ProjectDetailPage /></AppLayout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/users"
+            element={
+              <ProtectedRoute>
+                <AppLayout><AdminUsersPage /></AppLayout>
               </ProtectedRoute>
             }
           />
