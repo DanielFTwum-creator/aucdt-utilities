@@ -64,6 +64,7 @@ public class ProjectController {
     }
 
     @GetMapping("/{id}")
+    @Transactional(readOnly = true)   // keep the session open: detail() reads the lazy `stages` collection
     public Map<String, Object> get(@PathVariable Long id, Authentication auth) {
         User user = perms.currentUser(auth);
         Project p = load(id);

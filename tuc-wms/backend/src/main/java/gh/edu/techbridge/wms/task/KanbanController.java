@@ -7,6 +7,7 @@ import gh.edu.techbridge.wms.project.ProjectRole;
 import gh.edu.techbridge.wms.user.User;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -35,6 +36,7 @@ public class KanbanController {
     }
 
     @GetMapping
+    @Transactional(readOnly = true)   // reads lazy project.stages + task collections while session is open
     public Map<String, Object> board(@PathVariable Long projectId,
                                      @RequestParam(required = false) Long assignee,
                                      @RequestParam(required = false) TaskPriority priority,
@@ -88,6 +90,7 @@ public class KanbanController {
 
     /** Set per-column WIP limits (FR-KB-005) — owner only. Body: { "In Progress": 5, ... }. null/absent clears. */
     @PutMapping("/wip-limits")
+    @Transactional   // reads lazy stages + persists wipLimits
     public Map<String, Integer> setWipLimits(@PathVariable Long projectId,
                                              @RequestBody Map<String, Integer> limits, Authentication auth) {
         User user = perms.currentUser(auth);
