@@ -178,7 +178,10 @@ public class ProjectController {
         m.put("description", p.getDescription());
         m.put("department", p.getDepartment());
         m.put("startDate", p.getStartDate());
-        m.put("stages", p.getStages());
+        // Materialise the lazy @ElementCollection into a concrete list NOW, inside the
+        // transaction. Putting p.getStages() directly stores a lazy proxy that Jackson
+        // would serialize AFTER the session closed (open-in-view=false) → LazyInitException.
+        m.put("stages", new ArrayList<>(p.getStages()));
         return m;
     }
 }

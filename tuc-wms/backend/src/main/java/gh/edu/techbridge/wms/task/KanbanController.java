@@ -83,7 +83,7 @@ public class KanbanController {
 
         Map<String, Object> board = new LinkedHashMap<>();
         board.put("projectId", projectId);
-        board.put("stages", p.getStages());
+        board.put("stages", new ArrayList<>(p.getStages()));   // materialise lazy collection
         board.put("columns", columns);
         return board;
     }
@@ -110,7 +110,7 @@ public class KanbanController {
         Map<String, Object> c = new LinkedHashMap<>();
         c.put("id", t.getId());
         c.put("title", t.getTitle());
-        c.put("assigneeIds", t.getAssigneeIds());
+        c.put("assigneeIds", new ArrayList<>(t.getAssigneeIds()));   // materialise lazy collection
         c.put("dueDate", t.getDueDate());
         c.put("priority", t.getPriority() == null ? null : t.getPriority().name());
         c.put("subtaskCount", subtaskCounts.getOrDefault(t.getId(), 0L));

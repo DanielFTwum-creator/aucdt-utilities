@@ -171,15 +171,15 @@ public class TaskController {
         m.put("projectId", t.getProjectId());
         m.put("title", t.getTitle());
         m.put("description", t.getDescription());
-        m.put("assigneeIds", t.getAssigneeIds());
+        m.put("assigneeIds", new ArrayList<>(t.getAssigneeIds()));   // materialise lazy collections
         m.put("startDate", t.getStartDate());
         m.put("dueDate", t.getDueDate());
         m.put("milestone", t.isMilestone());
         m.put("priority", t.getPriority() == null ? null : t.getPriority().name());
         m.put("status", t.getStatus());
-        m.put("tags", t.getTags());
+        m.put("tags", new ArrayList<>(t.getTags()));
         m.put("parentTaskId", t.getParentTaskId());
-        m.put("blockedByTaskIds", t.getBlockedByTaskIds());
+        m.put("blockedByTaskIds", new ArrayList<>(t.getBlockedByTaskIds()));
         m.put("createdByUserId", t.getCreatedByUserId());
         m.put("createdAt", t.getCreatedAt());
         m.put("updatedAt", t.getUpdatedAt());
