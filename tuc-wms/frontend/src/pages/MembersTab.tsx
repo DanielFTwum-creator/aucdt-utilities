@@ -1,40 +1,48 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { api, post, del } from '../api'; // api: load members; post/del: add/remove
+import { Link } from 'react-router-dom';
+import { api, post, del } from '../api'; // api: load members/directory; post/del: add/remove
 import { ProjectMember, ProjectRole, PROJECT_ROLES } from '../types';
-import { toTucEmail } from '../brand';
-import UsernameInput from '../components/UsernameInput';
+
+interface DirectoryUser { userId: number; email: string; name: string; }
 
 /** FR-PROJ-006 — project members + per-project roles. OWNER may add/remove. */
 export default function MembersTab({ projectId, archived }: { projectId: number; archived: boolean }) {
   const [members, setMembers] = useState<ProjectMember[]>([]);
+  const [directory, setDirectory] = useState<DirectoryUser[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [username, setUsername] = useState('');
+  const [selectedEmail, setSelectedEmail] = useState('');
   const [role, setRole] = useState<ProjectRole>('EDITOR');
   const [busy, setBusy] = useState(false);
 
   const load = useCallback(() => {
     setLoading(true);
-    api<ProjectMember[]>(`/api/projects/${projectId}/members`)
-      .then(setMembers)
+    Promise.all([
+      api<ProjectMember[]>(`/api/projects/${projectId}/members`),
+      api<DirectoryUser[]>('/api/users').catch(() => [] as DirectoryUser[]),
+    ])
+      .then(([m, dir]) => { setMembers(m); setDirectory(dir); })
       .catch((e) => setError(e.message))
       .finally(() => setLoading(false));
   }, [projectId]);
   useEffect(load, [load]);
 
+  // Users who can still be added = directory minus current members.
+  const memberIds = new Set(members.map(m => m.userId));
+  const addable = directory
+    .filter(u => !memberIds.has(u.userId))
+    .sort((a, b) => (a.name || a.email).localeCompare(b.name || b.email));
+
   const add = async (e: React.FormEvent) => {
     e.preventDefault();
-    const email = toTucEmail(username);
-    if (!email) return;
+    if (!selectedEmail) return;
     setBusy(true); setError(null);
     try {
-      await post(`/api/projects/${projectId}/members`, { email, projectRole: role });
-      setUsername(''); load();
+      await post(`/api/projects/${projectId}/members`, { email: selectedEmail, projectRole: role });
+      setSelectedEmail(''); load();
     } catch (err: any) {
       const msg = String(err?.message || '');
-      if (/no tuc-wms user|no wms account|not found/i.test(msg)) {
-        setError(`No WMS account for "${email}". Create them first on the Users page (Add a person), then add them here.`);
-      } else if (/session expired|unauthor/i.test(msg)) {
+      if (/session expired|unauthor/i.test(msg)) {
         setError('Your session expired. Please reload the page and sign in again, then retry.');
       } else {
         setError(msg || 'Could not add member.');
@@ -55,12 +63,23 @@ export default function MembersTab({ projectId, archived }: { projectId: number;
     <div>
       {!archived && (
         <form onSubmit={add} style={addRow}>
-          <UsernameInput value={username} onChange={setUsername} placeholder="username" style={{ flex: 1 }} />
+          <select value={selectedEmail} onChange={(e) => setSelectedEmail(e.target.value)} style={{ ...input, flex: 1 }}>
+            <option value="">Select a person to add…</option>
+            {addable.map(u => (
+              <option key={u.userId} value={u.email}>{u.name ? `${u.name} — ${u.email}` : u.email}</option>
+            ))}
+          </select>
           <select value={role} onChange={(e) => setRole(e.target.value as ProjectRole)} style={input}>
             {PROJECT_ROLES.map(r => <option key={r} value={r}>{cap(r)}</option>)}
           </select>
-          <button type="submit" disabled={busy || !username.trim()} style={primaryBtn}>Add</button>
+          <button type="submit" disabled={busy || !selectedEmail} style={primaryBtn}>Add</button>
         </form>
+      )}
+      {!archived && !loading && addable.length === 0 && (
+        <div style={{ fontSize: 12, color: 'var(--muted)', marginBottom: 16 }}>
+          Everyone in the directory is already a member. To add someone new, create them on the{' '}
+          <Link to="/admin/users" style={{ color: 'var(--tuc-maroon)' }}>Users</Link> page first.
+        </div>
       )}
 
       {error && <div style={errBox}>{error}</div>}
