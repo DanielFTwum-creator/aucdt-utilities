@@ -76,6 +76,22 @@ public class AdminUserController {
         }).orElseGet(() -> ResponseEntity.status(404).body(Map.of("error", "User not found")));
     }
 
+    /**
+     * Edit a user's display name. Useful for pre-provisioned accounts (created with no name).
+     * Note: once the user signs in with Google, their name is refreshed from Google on each login.
+     */
+    @PutMapping("/{id}/name")
+    public ResponseEntity<?> setName(@PathVariable Long id, @RequestBody Map<String, String> body, Authentication actor) {
+        String name = body.getOrDefault("name", "").trim();
+        if (name.isEmpty()) return ResponseEntity.badRequest().body(Map.of("error", "Name cannot be empty"));
+        return users.findById(id).<ResponseEntity<?>>map(u -> {
+            u.setFullName(name);
+            users.save(u);
+            audit.record(AuditEvent.USER_PROVISIONED, u.getEmail(), "name set by " + actor.getName(), null);
+            return ResponseEntity.ok(Map.of("id", u.getId(), "name", u.getFullName()));
+        }).orElseGet(() -> ResponseEntity.status(404).body(Map.of("error", "User not found")));
+    }
+
     /** Deactivate / reactivate (FR-AUTH-004). */
     @PutMapping("/{id}/active")
     public ResponseEntity<?> setActive(@PathVariable Long id, @RequestBody Map<String, Boolean> body, Authentication actor) {
