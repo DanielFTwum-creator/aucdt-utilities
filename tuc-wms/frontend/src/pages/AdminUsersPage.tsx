@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { Navigate } from 'react-router-dom';
-import { api, put } from '../api';
+import { api, put, post } from '../api';
 import { useAuth } from '../auth/AuthContext';
 
 /**
@@ -25,6 +25,12 @@ export default function AdminUsersPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [busyId, setBusyId] = useState<number | null>(null);
+  // Pre-provision (create user before first login)
+  const [newEmail, setNewEmail] = useState('');
+  const [newName, setNewName] = useState('');
+  const [newRole, setNewRole] = useState('STUDENT');
+  const [creating, setCreating] = useState(false);
+  const [notice, setNotice] = useState<string | null>(null);
 
   const load = useCallback(() => {
     setLoading(true);
@@ -57,6 +63,22 @@ export default function AdminUsersPage() {
     finally { setBusyId(null); }
   };
 
+  const createUser = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newEmail.trim()) return;
+    setCreating(true); setError(null); setNotice(null);
+    try {
+      const created = await post<AdminUser>('/api/admin/users', {
+        email: newEmail.trim(), name: newName.trim(), role: newRole,
+      });
+      setNewEmail(''); setNewName(''); setNewRole('STUDENT');
+      const mfaNote = MFA_ROLES.includes(created.role) ? ' They will enrol MFA on first login.' : '';
+      setNotice(`Created ${created.email} as ${labelRole(created.role)}. They can be added to projects now; the account activates fully when they first sign in with Google.${mfaNote}`);
+      await load();
+    } catch (e: any) { setError(e.message); }
+    finally { setCreating(false); }
+  };
+
   return (
     <div>
       <h1 style={{ fontSize: 22, fontWeight: 800, color: 'var(--text)', margin: '0 0 6px' }}>User Management</h1>
@@ -64,6 +86,27 @@ export default function AdminUsersPage() {
         Assign roles and control access (FR-AUTH-004). HOD and SystemAdmin require MFA enrolment at next login.
       </p>
 
+      <form onSubmit={createUser} style={createCard}>
+        <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--text)' }}>Add a person</div>
+        <div style={{ fontSize: 12, color: 'var(--muted)', marginTop: -4 }}>
+          Pre-provision a colleague before they log in, so you can assign them to projects right away.
+          Their account completes when they first sign in with Google.
+        </div>
+        <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+          <input value={newEmail} onChange={(e) => setNewEmail(e.target.value)} type="email"
+            placeholder="name@techbridge.edu.gh" style={{ ...inp, flex: 2, minWidth: 220 }} />
+          <input value={newName} onChange={(e) => setNewName(e.target.value)}
+            placeholder="Full name (optional)" style={{ ...inp, flex: 1, minWidth: 140 }} />
+          <select value={newRole} onChange={(e) => setNewRole(e.target.value)} style={inp}>
+            {ROLES.map(r => <option key={r} value={r}>{labelRole(r)}{MFA_ROLES.includes(r) ? ' (MFA)' : ''}</option>)}
+          </select>
+          <button type="submit" disabled={creating || !newEmail.trim()} style={addBtn}>
+            {creating ? 'Adding…' : 'Add user'}
+          </button>
+        </div>
+      </form>
+
+      {notice && <div style={noticeBox}>{notice}</div>}
       {error && <div style={errBox}>{error}</div>}
 
       {loading ? <p style={{ color: 'var(--muted)' }}>Loading users…</p> : (
@@ -114,3 +157,7 @@ const inactiveBadge: React.CSSProperties = { fontSize: 11, fontWeight: 600, colo
 const deactivateBtn: React.CSSProperties = { background: 'none', border: '1px solid var(--border)', color: 'var(--danger)', borderRadius: 8, padding: '6px 12px', fontSize: 12, cursor: 'pointer' };
 const reactivateBtn: React.CSSProperties = { background: 'none', border: '1px solid var(--border)', color: '#1c7c3f', borderRadius: 8, padding: '6px 12px', fontSize: 12, cursor: 'pointer' };
 const errBox: React.CSSProperties = { background: 'rgba(192,57,43,0.08)', color: 'var(--danger)', borderRadius: 8, padding: '10px 12px', fontSize: 13, marginBottom: 16 };
+const noticeBox: React.CSSProperties = { background: 'rgba(28,124,63,0.08)', color: '#1c7c3f', borderRadius: 8, padding: '10px 12px', fontSize: 13, marginBottom: 16 };
+const createCard: React.CSSProperties = { background: 'var(--card)', border: '1px solid var(--border)', borderRadius: 12, padding: 16, marginBottom: 16, display: 'flex', flexDirection: 'column', gap: 10 };
+const inp: React.CSSProperties = { padding: '9px 12px', border: '1px solid var(--border)', borderRadius: 8, fontSize: 14, fontFamily: 'inherit', color: 'var(--text)', background: 'var(--card)' };
+const addBtn: React.CSSProperties = { background: 'var(--tuc-maroon)', color: '#fff', border: 'none', borderRadius: 8, padding: '9px 18px', fontSize: 13, fontWeight: 600, cursor: 'pointer' };

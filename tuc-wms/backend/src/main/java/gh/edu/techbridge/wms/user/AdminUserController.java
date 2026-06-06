@@ -2,6 +2,8 @@ package gh.edu.techbridge.wms.user;
 
 import gh.edu.techbridge.wms.audit.AuditEvent;
 import gh.edu.techbridge.wms.audit.AuditService;
+import gh.edu.techbridge.wms.config.AuthProperties;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -20,10 +22,12 @@ public class AdminUserController {
 
     private final UserRepository users;
     private final AuditService audit;
+    private final String allowedDomain;
 
-    public AdminUserController(UserRepository users, AuditService audit) {
+    public AdminUserController(UserRepository users, AuditService audit, AuthProperties props) {
         this.users = users;
         this.audit = audit;
+        this.allowedDomain = props.getAllowedDomain().toLowerCase();
     }
 
     @GetMapping
@@ -31,6 +35,31 @@ public class AdminUserController {
         return users.findAll().stream().map(u -> Map.<String, Object>of(
                 "id", u.getId(), "email", u.getEmail(), "name", u.getFullName(),
                 "role", u.getRole().name(), "active", u.isActive())).toList();
+    }
+
+    /**
+     * Pre-provision a user before their first login so admins can build teams and assign
+     * work ahead of time. The user is created with no TOTP secret; when they later sign in
+     * via Google, the OAuth flow matches this existing record (by email) instead of
+     * creating a new STUDENT. Domain-restricted to @techbridge.edu.gh (FR-AUTH-009).
+     */
+    @PostMapping
+    public ResponseEntity<?> create(@RequestBody Map<String, String> body, Authentication actor) {
+        String email = body.getOrDefault("email", "").trim().toLowerCase();
+        String name = body.getOrDefault("name", "").trim();
+        if (email.isEmpty() || !email.endsWith(allowedDomain))
+            return ResponseEntity.badRequest().body(Map.of("error", "Email must be a " + allowedDomain + " address"));
+        if (users.findByEmail(email).isPresent())
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of("error", "A user with that email already exists"));
+        Role role;
+        try { role = body.get("role") == null ? Role.STUDENT : Role.valueOf(body.get("role")); }
+        catch (Exception e) { return ResponseEntity.badRequest().body(Map.of("error", "Invalid role")); }
+
+        User u = users.save(new User(email, name.isEmpty() ? email : name, null, role));
+        audit.record(AuditEvent.USER_PROVISIONED, email, "pre-provisioned as " + role + " by " + actor.getName(), null);
+        return ResponseEntity.status(HttpStatus.CREATED).body(Map.of(
+                "id", u.getId(), "email", u.getEmail(), "name", u.getFullName(),
+                "role", u.getRole().name(), "active", u.isActive()));
     }
 
     /** Reassign a user's role (FR-AUTH-003/010 — HOD/SystemAdmin elevated only here, never auto-assigned). */
