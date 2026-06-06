@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import { api, post } from '../api';
 import { ProjectDetail } from '../types';
 import MembersTab from './MembersTab';
@@ -22,6 +22,9 @@ export default function ProjectDetailPage() {
   const projectId = Number(id);
   const navigate = useNavigate();
   const { user } = useAuth();
+  const [searchParams] = useSearchParams();
+  // Email deep-link: /projects/:id?task=:taskId opens that task on the Board.
+  const focusTaskId = searchParams.get('task') ? Number(searchParams.get('task')) : null;
   const [project, setProject] = useState<ProjectDetail | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -81,7 +84,8 @@ export default function ProjectDetailPage() {
       <div style={{ marginTop: 18 }}>
         {tab === 'board' && (
           <BoardTab projectId={projectId} stages={project.stages} archived={project.archived}
-            canEditWip={user?.role === 'SYSTEM_ADMIN' || user?.role === 'HOD'} />
+            canEditWip={user?.role === 'SYSTEM_ADMIN' || user?.role === 'HOD'}
+            focusTaskId={focusTaskId} />
         )}
         {tab === 'timeline' && <TimelineTab projectId={projectId} stages={project.stages} archived={project.archived} />}
         {tab === 'members' && <MembersTab projectId={projectId} archived={project.archived} />}

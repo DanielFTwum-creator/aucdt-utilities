@@ -8,17 +8,22 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.time.Year;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Builds and sends the rich "you've been assigned a task" email (FR-NOTIF / FR-TASK-005),
- * styled to match the TUC RMS / dmcdai emails (maroon #6b0020 / gold #f5a800, TUC crest,
- * table-based layout for email-client safety). Sent async via the hosted gateway so task
- * assignment never waits on email I/O.
+ * styled to match the institutional TUC email standard (rotating campus-video header frame +
+ * maroon #6b0020 / gold #f5a800 overlay + TUC crest, table-based for email-client safety).
+ * Sent async via the hosted gateway so task assignment never waits on email I/O.
  */
 @Service
 public class TaskMailService {
 
     private static final String LOGO = "https://techbridge.edu.gh/static/TUC_LOGO_1.png";
+    // 12 frames extracted from the campus tour video — the signature TUC rotating header.
+    private static final String CAMPUS_BASE = "https://techbridge.edu.gh/static/campus_frame_";
+    private static final int CAMPUS_FRAME_COUNT = 12;
+    private static final AtomicInteger frameCounter = new AtomicInteger(0);
 
     private final MailGatewayClient gateway;
     private final String frontendBase;
@@ -28,16 +33,23 @@ public class TaskMailService {
         this.frontendBase = authProps.getFrontendBase();
     }
 
+    private static String nextCampusFrame() {
+        int n = Math.floorMod(frameCounter.getAndIncrement(), CAMPUS_FRAME_COUNT) + 1;
+        return CAMPUS_BASE + n + ".jpg";
+    }
+
     @Async
     public void notifyAssigned(User recipient, Task task, Project project, User assigner) {
         if (recipient == null || !recipient.isActive()) return;
         String subject = "You've been assigned: " + task.getTitle();
-        String link = frontendBase + "/projects/" + project.getId();
+        // Deep-link to the task on its project board (CallbackPage/ProjectDetail opens ?task=).
+        String link = frontendBase + "/projects/" + project.getId() + "?task=" + task.getId();
         gateway.send(recipient.getEmail(), recipient.getFullName(), subject,
                 html(recipient, task, project, assigner, link));
     }
 
     private String html(User to, Task task, Project project, User assigner, String link) {
+        String campusImg = nextCampusFrame();
         String priority = task.getPriority() == null ? "—" : cap(task.getPriority().name());
         String due = task.getDueDate() == null ? "No due date" : task.getDueDate().toString();
         String assignerName = assigner == null ? "A project owner" : esc(assigner.getFullName());
@@ -48,11 +60,15 @@ public class TaskMailService {
             + "<body style=\"margin:0;padding:0;background:#f4f4f4;font-family:Arial,sans-serif;\">"
             + "<table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" style=\"background:#f4f4f4;padding:32px 0;\"><tr><td align=\"center\">"
             + "<table width=\"560\" cellpadding=\"0\" cellspacing=\"0\" style=\"background:#ffffff;border-radius:8px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.08);\">"
-            // Header
-            + "<tr><td style=\"background:#6b0020;padding:28px 32px;text-align:center;\">"
+            // Header — rotating campus-video frame behind a maroon overlay (institutional TUC look)
+            + "<tr><td style=\"padding:0;background:#3d0010;background-image:url('" + campusImg + "');background-size:cover;background-position:center;text-align:center;height:200px;\" background=\"" + campusImg + "\">"
+            + "<!--[if gte mso 9]><v:rect xmlns:v=\"urn:schemas-microsoft-com:vml\" fill=\"true\" stroke=\"false\" style=\"width:560px;height:200px;\"><v:fill type=\"frame\" src=\"" + campusImg + "\" color=\"#3d0010\"/><v:textbox inset=\"0,0,0,0\"><![endif]-->"
+            + "<table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" style=\"background:rgba(63,0,16,0.68);\"><tr><td style=\"padding:28px 32px;text-align:center;height:200px;vertical-align:middle;\">"
             + "<img src=\"" + LOGO + "\" alt=\"Techbridge University College\" width=\"60\" height=\"60\" style=\"display:block;margin:0 auto 10px;border-radius:50%;background:#fff;padding:4px;\" />"
             + "<div style=\"color:#f5a800;font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;margin-bottom:5px;\">Techbridge University College</div>"
             + "<div style=\"color:#ffffff;font-size:18px;font-weight:700;letter-spacing:1px;\">Work Management System</div>"
+            + "</td></tr></table>"
+            + "<!--[if gte mso 9]></v:textbox></v:rect><![endif]-->"
             + "</td></tr>"
             // Body
             + "<tr><td style=\"padding:40px 32px;\">"
