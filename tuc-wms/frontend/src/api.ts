@@ -11,11 +11,9 @@ export function setOnAuthLost(cb: (() => void) | null) { onAuthLost = cb; }
 
 async function refresh(): Promise<boolean> {
   const res = await fetch('/api/auth/refresh', { method: 'POST', credentials: 'include' });
-  console.log(`%c[WMS-AUTH] refresh -> ${res.status}`, 'color:#6b0020;font-weight:bold');
   if (!res.ok) return false;
   const data = await res.json();
   accessToken = data.access_token;
-  console.log('%c[WMS-AUTH] refresh OK, new token set', 'color:#1c7c3f;font-weight:bold');
   return true;
 }
 
@@ -27,15 +25,10 @@ export async function api<T = any>(path: string, init: RequestInit = {}, retry =
   const res = await fetch(path, { ...init, headers, credentials: 'include' });
 
   if (res.status === 401 && retry) {
-    console.log(`%c[WMS-AUTH] 401 on ${init.method || 'GET'} ${path} — hadToken=${!!accessToken}, attempting refresh`, 'color:#d98324;font-weight:bold');
     if (await refresh()) return api<T>(path, init, false);
-    console.log('%c[WMS-AUTH] refresh failed — onAuthLost firing (session lost)', 'color:#c0392b;font-weight:bold');
     accessToken = null;
     onAuthLost?.();
     throw new Error('Session expired');
-  }
-  if (res.status === 401 && !retry) {
-    console.log(`%c[WMS-AUTH] 401 AFTER refresh on ${init.method || 'GET'} ${path} — token rejected (had fresh token)`, 'color:#c0392b;font-weight:bold');
   }
   if (!res.ok) {
     const text = await res.text();

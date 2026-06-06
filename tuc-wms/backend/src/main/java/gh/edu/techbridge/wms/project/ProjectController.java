@@ -135,7 +135,8 @@ public class ProjectController {
         try { role = ProjectRole.valueOf(req.projectRole()); }
         catch (Exception e) { throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid projectRole"); }
         User target = users.findByEmail(req.email().trim().toLowerCase())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "No TUC-WMS user with that email"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                        "No WMS account for that email — create them on the Users page first, then add them."));
         ProjectMember m = members.findByProjectIdAndUserId(id, target.getId())
                 .orElseGet(() -> new ProjectMember(id, target.getId(), role));
         m.setProjectRole(role);

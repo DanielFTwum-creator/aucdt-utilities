@@ -2,6 +2,8 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { Navigate } from 'react-router-dom';
 import { api, put, post } from '../api';
 import { useAuth } from '../auth/AuthContext';
+import { toTucEmail } from '../brand';
+import UsernameInput from '../components/UsernameInput';
 
 /**
  * SystemAdmin user management (FR-AUTH-004). Backend AdminUserController is gated to
@@ -25,8 +27,8 @@ export default function AdminUsersPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [busyId, setBusyId] = useState<number | null>(null);
-  // Pre-provision (create user before first login)
-  const [newEmail, setNewEmail] = useState('');
+  // Pre-provision (create user before first login) — username only; domain auto-appended.
+  const [newUsername, setNewUsername] = useState('');
   const [newName, setNewName] = useState('');
   const [newRole, setNewRole] = useState('STUDENT');
   const [creating, setCreating] = useState(false);
@@ -65,13 +67,14 @@ export default function AdminUsersPage() {
 
   const createUser = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!newEmail.trim()) return;
+    const email = toTucEmail(newUsername);
+    if (!email) return;
     setCreating(true); setError(null); setNotice(null);
     try {
       const created = await post<AdminUser>('/api/admin/users', {
-        email: newEmail.trim(), name: newName.trim(), role: newRole,
+        email, name: newName.trim(), role: newRole,
       });
-      setNewEmail(''); setNewName(''); setNewRole('STUDENT');
+      setNewUsername(''); setNewName(''); setNewRole('STUDENT');
       const mfaNote = MFA_ROLES.includes(created.role) ? ' They will enrol MFA on first login.' : '';
       setNotice(`Created ${created.email} as ${labelRole(created.role)}. They can be added to projects now; the account activates fully when they first sign in with Google.${mfaNote}`);
       await load();
@@ -93,14 +96,14 @@ export default function AdminUsersPage() {
           Their account completes when they first sign in with Google.
         </div>
         <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-          <input value={newEmail} onChange={(e) => setNewEmail(e.target.value)} type="email"
-            placeholder="name@techbridge.edu.gh" style={{ ...inp, flex: 2, minWidth: 220 }} />
+          <UsernameInput value={newUsername} onChange={setNewUsername}
+            placeholder="username" style={{ flex: 2, minWidth: 220 }} />
           <input value={newName} onChange={(e) => setNewName(e.target.value)}
             placeholder="Full name (optional)" style={{ ...inp, flex: 1, minWidth: 140 }} />
           <select value={newRole} onChange={(e) => setNewRole(e.target.value)} style={inp}>
             {ROLES.map(r => <option key={r} value={r}>{labelRole(r)}{MFA_ROLES.includes(r) ? ' (MFA)' : ''}</option>)}
           </select>
-          <button type="submit" disabled={creating || !newEmail.trim()} style={addBtn}>
+          <button type="submit" disabled={creating || !newUsername.trim()} style={addBtn}>
             {creating ? 'Adding…' : 'Add user'}
           </button>
         </div>

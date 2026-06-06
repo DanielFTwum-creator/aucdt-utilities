@@ -6,8 +6,6 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -23,8 +21,6 @@ import java.util.List;
  */
 public class JwtAuthFilter extends OncePerRequestFilter {
 
-    private static final Logger log = LoggerFactory.getLogger(JwtAuthFilter.class);
-
     private final JwtService jwt;
 
     public JwtAuthFilter(JwtService jwt) {
@@ -35,7 +31,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest req, HttpServletResponse res, FilterChain chain)
             throws ServletException, IOException {
         String token = bearerToken(req);
-        boolean debug = req.getRequestURI().contains("/members");   // TEMP: only log the failing path
         if (token != null) {
             try {
                 Claims claims = jwt.parse(token);
@@ -45,19 +40,10 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                             claims.getSubject(), null,
                             List.of(new SimpleGrantedAuthority(role.authority())));
                     SecurityContextHolder.getContext().setAuthentication(auth);
-                    if (debug) log.warn("[AUTH-DEBUG] {} {} authenticated as sub={} role={}",
-                            req.getMethod(), req.getRequestURI(), claims.getSubject(), role);
-                } else if (debug) {
-                    log.warn("[AUTH-DEBUG] {} {} token is a REFRESH token (typ), not accepted for API",
-                            req.getMethod(), req.getRequestURI());
                 }
-            } catch (Exception e) {
-                if (debug) log.warn("[AUTH-DEBUG] {} {} token REJECTED: {} — {}",
-                        req.getMethod(), req.getRequestURI(), e.getClass().getSimpleName(), e.getMessage());
+            } catch (Exception ignored) {
+                // Invalid/expired token -> leave unauthenticated; protected routes will 401.
             }
-        } else if (debug) {
-            log.warn("[AUTH-DEBUG] {} {} NO bearer token on request (Authorization header={})",
-                    req.getMethod(), req.getRequestURI(), req.getHeader("Authorization") == null ? "absent" : "present-but-unparsed");
         }
         chain.doFilter(req, res);
     }
