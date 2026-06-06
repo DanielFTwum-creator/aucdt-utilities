@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../auth/AuthContext';
+import { TUC_LOGO } from '../brand';
 
 /** Authenticated shell: TUC header, nav, user badge, sign-out. */
 export default function AppLayout({ children }: { children: React.ReactNode }) {
@@ -9,8 +10,9 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
     <div>
       <header style={header}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 18 }}>
-          <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: 12, textDecoration: 'none' }}>
-            <span style={{ color: 'var(--tuc-gold)', fontWeight: 800, fontSize: 11, letterSpacing: 2 }}>TUC</span>
+          <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none' }}>
+            <img src={TUC_LOGO} alt="Techbridge University College" width={34} height={34}
+              style={{ borderRadius: '50%', display: 'block' }} />
             <strong style={{ color: 'var(--tuc-maroon)' }}>Work Management System</strong>
           </Link>
           <nav style={{ display: 'flex', gap: 14 }}>

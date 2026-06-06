@@ -1,6 +1,5 @@
 import React from 'react';
-
-const TUC_LOGO = 'https://techbridge.edu.gh/static/TUC_LOGO_1.png';
+import { TUC_LOGO } from '../brand';
 
 /**
  * Single "Continue with Google" affordance (SRS §3.4 — no email/password,
