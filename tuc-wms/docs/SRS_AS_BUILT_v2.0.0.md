@@ -111,7 +111,8 @@ FR-TASK-003), **dependencies** blockedByTaskIds (FR-TASK-004), milestone.
 FR-KB-004/006), `PUT /api/projects/{id}/board/wip-limits` (Owner; over-limit flag — FR-KB-005),
 `GET /api/projects/{id}/stream` (**SSE**; task.created/updated/deleted — FR-KB-007 ≤5s).
 Frontend: @dnd-kit drag-drop (move = `PUT …/tasks` status), quick-add, EventSource live refresh.
-**Ops gap:** nginx `proxy_buffering off` on `/stream` not yet applied (instant cross-client).
+nginx `proxy_buffering off` on `/stream` **is applied** (verified in the wms vhost, precedes `/api/`),
+so cross-client updates are live. ✅
 
 ### 3.4 Timeline / Gantt — [BUILT] (`TimelineController`)
 `GET /api/projects/{id}/timeline` → bars (start→due), milestones, dependency links + conflict
