@@ -5,6 +5,33 @@ systemd unit `tuc-wms`, port **8081**, JDK 21 at `/opt/jdk/jdk-21`.
 
 ---
 
+## 2026-06-06 — Frontend feature build (Projects → Tasks → MFA → Kanban → Timeline)
+
+Built the missing SPA on top of the existing backend APIs, deployed slice-by-slice
+(`frontend/deploy.ps1 -Build` = server-side pnpm build from `main`). Backend redeploys used
+backup → swap → verify (302 to Google + exchange reaches controller) → auto-rollback, 120s wait.
+
+| Slice | Commit | What | FR |
+|---|---|---|---|
+| 1 Projects | `0ae41cba` | create form, detail tabs, members, settings/stages | FR-PROJ-001/002/004/005/006/007 |
+| 2 Tasks | `8807ada2` | Tiptap modal, task fields, sub-tasks, deps, duplicate/delete | FR-TASK-001..004/008 |
+| 2.5 MFA enrol | `0ee68ddd` | enroll/begin+confirm endpoints, MfaPage QR wizard (qrcode) | FR-AUTH-008 |
+| — otpauth fix | `7bc3d1cf` | correct otpauth label encoding (was %40/%3A) so QR scans | FR-AUTH-008 |
+| 3 Kanban | `9e36d326` | @dnd-kit board, WIP, filters, SSE (+JwtAuthFilter ?access_token for stream) | FR-KB-001..008 |
+| 4 Timeline | `7cbe077b` | Gantt bars, milestones, dependency conflicts, zoom, groupBy | FR-TL-001..007 |
+
+**First SYSTEM_ADMIN bootstrap (2026-06-06):** elevated exactly
+`daniel.twum@techbridge.edu.gh` (id=1) STUDENT→SYSTEM_ADMIN via one-row H2 UPDATE on
+`wms_users` (stop service → H2 Shell `UPDATE … WHERE LOWER(email)=LOWER('…')` → restart).
+Table is `wms_users` (not `users`). `enrolled=FALSE` so first login triggers the MFA wizard.
+
+### ⚠️ Outstanding deploy gate — SSE nginx buffering (NOT yet applied)
+Kanban live updates need `proxy_buffering off` on the `/stream` location in the Plesk nginx
+vhost (see `PROJECTS_TASKS_API.md` §SSE). Until applied, the board still works (drag reloads it)
+but cross-client updates may lag. Requires Plesk → Additional nginx directives.
+
+---
+
 ## 2026-06-05 — OAuth login 401 fix (oauth2Login base-URI collision)
 
 - **Commit:** `01e5de69` on `fix/tuc-wms-oauth-base-collision`
