@@ -27,7 +27,16 @@ export default function MembersTab({ projectId, archived }: { projectId: number;
     try {
       await post(`/api/projects/${projectId}/members`, { email: email.trim(), projectRole: role });
       setEmail(''); load();
-    } catch (err: any) { setError(err.message); }
+    } catch (err: any) {
+      const msg = String(err?.message || '');
+      if (/no tuc-wms user|not found/i.test(msg)) {
+        setError(`No WMS account for "${email.trim()}". Create them first on the Users page (Add a person), then add them here.`);
+      } else if (/session expired|unauthor/i.test(msg)) {
+        setError('Your session expired. Please reload the page and sign in again, then retry.');
+      } else {
+        setError(msg || 'Could not add member.');
+      }
+    }
     finally { setBusy(false); }
   };
 
