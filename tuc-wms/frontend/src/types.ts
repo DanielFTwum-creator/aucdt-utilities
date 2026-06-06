@@ -56,6 +56,31 @@ export interface CreateProjectBody {
   stages?: string[];
 }
 
+/** Kanban board (FR-KB) — GET /api/projects/{id}/board. */
+export interface BoardCard {
+  id: number;
+  title: string;
+  assigneeIds: number[];
+  dueDate: string | null;
+  priority: Priority;
+  subtaskCount: number;
+  status: string;
+}
+
+export interface BoardColumn {
+  stage: string;
+  count: number;
+  wipLimit: number | null;
+  overWip: boolean;
+  cards: BoardCard[];
+}
+
+export interface Board {
+  projectId: number;
+  stages: string[];
+  columns: BoardColumn[];
+}
+
 export interface TaskDto {
   id: number;
   projectId: number;
