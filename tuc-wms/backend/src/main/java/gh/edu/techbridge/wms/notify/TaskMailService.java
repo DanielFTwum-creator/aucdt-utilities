@@ -19,7 +19,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Service
 public class TaskMailService {
 
-    private static final String LOGO = "https://techbridge.edu.gh/static/TUC_LOGO_1.png";
+    // Shared institutional crest, 120px/17KB (scaled from the 5334px/1.1MB original) —
+    // Gmail's image proxy renders it reliably; usable by all TUC apps.
+    private static final String LOGO = "https://techbridge.edu.gh/static/TUC_LOGO_small.png";
     // 12 frames extracted from the campus tour video — the signature TUC rotating header.
     private static final String CAMPUS_BASE = "https://techbridge.edu.gh/static/campus_frame_";
     private static final int CAMPUS_FRAME_COUNT = 12;
