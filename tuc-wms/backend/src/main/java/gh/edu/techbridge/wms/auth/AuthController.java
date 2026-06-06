@@ -70,6 +70,54 @@ public class AuthController {
         return issueSession(user, ip(req));
     }
 
+    /**
+     * FR-AUTH-008 — begin first-time TOTP enrolment. Accepts the same short-lived
+     * {@code mfa_ticket} the OAuth callback hands an MFA-required user, so a not-yet-enrolled
+     * user can set up their authenticator BEFORE any JWT is issued (no chicken-and-egg).
+     * Returns a fresh secret + otpauth URI; the secret is NOT persisted until confirm.
+     */
+    @PostMapping("/mfa/enroll/begin")
+    public ResponseEntity<?> beginMfaEnrollment(@RequestBody Map<String, String> body) {
+        String ticket = body.get("mfa_ticket");
+        Optional<Long> uid = jwt.verifyHandoffToken(ticket, "mfa");
+        if (uid.isEmpty()) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(err("Invalid or expired MFA session"));
+        User user = users.findById(uid.get()).orElse(null);
+        if (user == null || !user.isActive()) return ResponseEntity.status(HttpStatus.FORBIDDEN).body(err("Account unavailable"));
+        try {
+            String secret = totp.generateSecret();
+            String otpauthUri = totp.provisioningUri(user.getEmail(), secret);
+            return ResponseEntity.ok(Map.of("secret", secret, "otpauthUri", otpauthUri));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(err("Could not start enrolment"));
+        }
+    }
+
+    /**
+     * FR-AUTH-008 — confirm enrolment: verify the first TOTP code against the pending secret,
+     * persist it (the user is now enrolled), and issue the session — same handoff as /mfa/verify.
+     */
+    @PostMapping("/mfa/enroll/confirm")
+    public ResponseEntity<?> confirmMfaEnrollment(@RequestBody Map<String, String> body, HttpServletRequest req) {
+        String ticket = body.get("mfa_ticket");
+        String secret = body.get("secret");
+        String code = body.get("code");
+        Optional<Long> uid = jwt.verifyHandoffToken(ticket, "mfa");
+        if (uid.isEmpty()) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(err("Invalid or expired MFA session"));
+        User user = users.findById(uid.get()).orElse(null);
+        if (user == null || !user.isActive()) return ResponseEntity.status(HttpStatus.FORBIDDEN).body(err("Account unavailable"));
+
+        if (secret == null || secret.isBlank() || !totp.verify(secret, code == null ? "" : code)) {
+            audit.record(AuditEvent.MFA_FAILED, user.getEmail(), "enrolment", ip(req));
+            // Re-issue a fresh ticket so the user can retry without restarting OAuth.
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("error", "Invalid code", "mfa_ticket", jwt.issueHandoffToken(user.getId(), "mfa", jwt.mfaTtl())));
+        }
+        user.setTotpSecret(secret);
+        users.save(user);
+        audit.record(AuditEvent.MFA_ENROLLED, user.getEmail(), "role=" + user.getRole(), ip(req));
+        return issueSession(user, ip(req));
+    }
+
     /** Silent re-auth: mint a new access token from the HttpOnly refresh cookie (FR-AUTH-002). */
     @PostMapping("/refresh")
     public ResponseEntity<?> refresh(@CookieValue(name = "wms_refresh", required = false) String refresh,

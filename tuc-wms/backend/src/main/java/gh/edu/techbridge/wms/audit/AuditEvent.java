@@ -9,6 +9,7 @@ public enum AuditEvent {
     JWT_ISSUED,
     JWT_REFRESHED,
     MFA_CHALLENGED,
+    MFA_ENROLLED,            // FR-AUTH-008 — first-time TOTP enrolment completed
     MFA_VERIFIED,
     MFA_FAILED,
     LOGOUT
