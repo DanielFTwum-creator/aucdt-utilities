@@ -1,10 +1,11 @@
 # techbridge-ai-blueprint — Deploy Script
-# URL: https://ai-tools.techbridge.edu.gh/techbridge-ai-blueprint/
+# URL: https://ai-tools.techbridge.edu.gh/blueprint/  (backend server.ts on PORT 3005, pm2 name tb-ai-blueprint)
 # Usage: .\deploy.ps1 -Build
 
 param(
     [string]$RemoteHost = "root@techbridge.edu.gh",
-    [string]$RemotePath = "/var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/techbridge-ai-blueprint/",
+    # Live URL is /blueprint/ (matches nginx OAuth proxy for /blueprint/callback -> :3005 and the app .env).
+    [string]$RemotePath = "/var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/blueprint/",
     [switch]$Build = $false
 )
 
@@ -79,11 +80,11 @@ Log "INFO" "Step 4: Writing .htaccess..." Yellow
 @"
 <IfModule mod_rewrite.c>
   RewriteEngine On
-  RewriteBase /techbridge-ai-blueprint/
+  RewriteBase /blueprint/
   RewriteCond %{REQUEST_FILENAME} -f [OR]
   RewriteCond %{REQUEST_FILENAME} -d
   RewriteRule ^ - [L]
-  RewriteRule ^ /techbridge-ai-blueprint/index.html [QSA,L]
+  RewriteRule ^ /blueprint/index.html [QSA,L]
 </IfModule>
 <IfModule mod_expires.c>
   ExpiresActive On
@@ -131,6 +132,6 @@ $elapsed = [math]::Round(((Get-Date) - $__deployStart).TotalSeconds, 1)
 $timeStr = if ($elapsed -ge 60) { "$([math]::Floor($elapsed/60))m $([math]::Round($elapsed%60,1))s" } else { "${elapsed}s" }
 Log "SUCCESS" "========================================" Green
 Log "SUCCESS" "DEPLOYMENT COMPLETE" Green
-Log "SUCCESS" "URL  : https://ai-tools.techbridge.edu.gh/techbridge-ai-blueprint/" Green
+Log "SUCCESS" "URL  : https://ai-tools.techbridge.edu.gh/blueprint/" Green
 Log "SUCCESS" "Time : $timeStr total" Green
 Log "SUCCESS" "========================================" Green
