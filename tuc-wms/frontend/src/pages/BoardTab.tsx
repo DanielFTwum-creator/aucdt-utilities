@@ -13,8 +13,8 @@ import { getAccessToken } from '../api';
  * Kanban board (FR-KB-001..008): columns by stage, drag-drop to change status,
  * per-column WIP limits (owner-editable), quick-add, filters, and SSE live updates.
  */
-export default function BoardTab({ projectId, stages, archived, canEditWip }: {
-  projectId: number; stages: string[]; archived: boolean; canEditWip: boolean;
+export default function BoardTab({ projectId, stages, archived, canEditWip, focusTaskId }: {
+  projectId: number; stages: string[]; archived: boolean; canEditWip: boolean; focusTaskId?: number | null;
 }) {
   const [board, setBoard] = useState<Board | null>(null);
   const [members, setMembers] = useState<ProjectMember[]>([]);
@@ -50,6 +50,14 @@ export default function BoardTab({ projectId, stages, archived, canEditWip }: {
   }, [projectId]);
 
   useEffect(() => { setLoading(true); loadBoard(); loadRefs(); }, [loadBoard, loadRefs]);
+
+  // Email deep-link: once tasks are loaded, open the focused task (?task=) once.
+  const focusedRef = useRef(false);
+  useEffect(() => {
+    if (focusedRef.current || !focusTaskId || tasks.length === 0) return;
+    const t = tasks.find(x => x.id === focusTaskId);
+    if (t) { focusedRef.current = true; setModal({ open: true, task: t }); }
+  }, [focusTaskId, tasks]);
 
   // SSE live updates (FR-KB-007). EventSource can't set Authorization headers, so the
   // token rides as a query param; the backend stream endpoint accepts it.
