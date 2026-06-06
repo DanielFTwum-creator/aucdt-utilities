@@ -30,10 +30,10 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest req, HttpServletResponse res, FilterChain chain)
             throws ServletException, IOException {
-        String header = req.getHeader("Authorization");
-        if (header != null && header.startsWith("Bearer ")) {
+        String token = bearerToken(req);
+        if (token != null) {
             try {
-                Claims claims = jwt.parse(header.substring(7));
+                Claims claims = jwt.parse(token);
                 if (!jwt.isRefresh(claims)) {  // refresh tokens are not valid for API access
                     Role role = jwt.roleOf(claims);
                     var auth = new UsernamePasswordAuthenticationToken(
@@ -46,5 +46,20 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             }
         }
         chain.doFilter(req, res);
+    }
+
+    /**
+     * Access token from the Authorization: Bearer header, OR — for the SSE stream only —
+     * from an ?access_token= query param. Browsers' EventSource cannot set headers, so the
+     * stream endpoint accepts the token in the query string (it is never logged; HTTPS-only).
+     */
+    private static String bearerToken(HttpServletRequest req) {
+        String header = req.getHeader("Authorization");
+        if (header != null && header.startsWith("Bearer ")) return header.substring(7);
+        if (req.getRequestURI().endsWith("/stream")) {
+            String q = req.getParameter("access_token");
+            if (q != null && !q.isBlank()) return q;
+        }
+        return null;
     }
 }

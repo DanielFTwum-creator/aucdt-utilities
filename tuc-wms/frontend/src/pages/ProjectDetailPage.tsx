@@ -4,7 +4,8 @@ import { api, post } from '../api';
 import { ProjectDetail } from '../types';
 import MembersTab from './MembersTab';
 import ProjectSettingsTab from './ProjectSettingsTab';
-import TasksTab from './TasksTab';
+import BoardTab from './BoardTab';
+import { useAuth } from '../auth/AuthContext';
 
 type Tab = 'board' | 'timeline' | 'members' | 'settings';
 const TABS: { key: Tab; label: string }[] = [
@@ -18,6 +19,7 @@ export default function ProjectDetailPage() {
   const { id } = useParams<{ id: string }>();
   const projectId = Number(id);
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [project, setProject] = useState<ProjectDetail | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -75,7 +77,10 @@ export default function ProjectDetailPage() {
       </nav>
 
       <div style={{ marginTop: 18 }}>
-        {tab === 'board' && <TasksTab projectId={projectId} stages={project.stages} archived={project.archived} />}
+        {tab === 'board' && (
+          <BoardTab projectId={projectId} stages={project.stages} archived={project.archived}
+            canEditWip={user?.role === 'SYSTEM_ADMIN' || user?.role === 'HOD'} />
+        )}
         {tab === 'timeline' && <Placeholder label="Timeline / Gantt" note="Coming in a later slice." />}
         {tab === 'members' && <MembersTab projectId={projectId} archived={project.archived} />}
         {tab === 'settings' && <ProjectSettingsTab project={project} onChanged={load} />}
