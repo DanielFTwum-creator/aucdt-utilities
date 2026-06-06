@@ -37,14 +37,30 @@ public class TotpService {
         return Base64.getEncoder().encodeToString(kg.generateKey().getEncoded());
     }
 
-    /** otpauth:// URI for QR enrolment in an authenticator app. */
+    /**
+     * otpauth:// URI for QR enrolment in an authenticator app, per the Key URI Format spec.
+     *
+     * The label is the path segment "Issuer:account". Issuer and account are encoded
+     * INDIVIDUALLY as path segments (spaces → %20, not '+'), but the ':' separator is left
+     * literal so apps parse the issuer/account split correctly. Query params use standard
+     * form-encoding. Encoding the whole label with URLEncoder (form-encoding) was wrong: it
+     * turned ':' into %3A and spaces into '+', which some authenticators reject or mis-display.
+     */
     public String provisioningUri(String accountEmail, String base64Secret) {
         String secretB32 = base32(Base64.getDecoder().decode(base64Secret));
-        String label = URLEncoder.encode(issuer + ":" + accountEmail, StandardCharsets.UTF_8);
+        String label = pathEncode(issuer) + ":" + pathEncode(accountEmail);
         return "otpauth://totp/" + label
                 + "?secret=" + secretB32
                 + "&issuer=" + URLEncoder.encode(issuer, StandardCharsets.UTF_8)
                 + "&algorithm=SHA1&digits=6&period=30";
+    }
+
+    /** Percent-encode for a URI path segment: form-encode, then fix the '+'→space and '@' cases. */
+    private static String pathEncode(String s) {
+        // URLEncoder gives form-encoding; for a path segment, '+' must be %20 and '@' is allowed literal.
+        return URLEncoder.encode(s, StandardCharsets.UTF_8)
+                .replace("+", "%20")
+                .replace("%40", "@");
     }
 
     /** Verify a 6-digit code against the stored secret, allowing +/-1 time step. */
