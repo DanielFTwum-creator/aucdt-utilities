@@ -6,6 +6,7 @@ import gh.edu.techbridge.wms.project.ProjectRepository;
 import gh.edu.techbridge.wms.user.User;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -34,6 +35,7 @@ public class TimelineController {
     }
 
     @GetMapping
+    @Transactional(readOnly = true)   // reads lazy task collections (blockedBy/assignees) during serialization
     public Map<String, Object> timeline(@PathVariable Long projectId,
                                         @RequestParam(required = false) String groupBy, // "assignee" | "stage"
                                         Authentication auth) {

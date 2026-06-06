@@ -64,6 +64,7 @@ public class TaskController {
     }
 
     @GetMapping
+    @Transactional(readOnly = true)   // dto() reads lazy task collections (assignees/tags/blockedBy)
     public List<Map<String, Object>> list(@PathVariable Long projectId, Authentication auth) {
         User user = perms.currentUser(auth);
         perms.requireView(user, project(projectId));
@@ -71,6 +72,7 @@ public class TaskController {
     }
 
     @GetMapping("/{taskId}")
+    @Transactional(readOnly = true)
     public Map<String, Object> get(@PathVariable Long projectId, @PathVariable Long taskId, Authentication auth) {
         User user = perms.currentUser(auth);
         perms.requireView(user, project(projectId));
