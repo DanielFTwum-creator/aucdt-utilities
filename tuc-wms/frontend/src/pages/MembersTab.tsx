@@ -1,13 +1,15 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { api, post, del } from '../api'; // api: load members; post/del: add/remove
 import { ProjectMember, ProjectRole, PROJECT_ROLES } from '../types';
+import { toTucEmail } from '../brand';
+import UsernameInput from '../components/UsernameInput';
 
 /** FR-PROJ-006 — project members + per-project roles. OWNER may add/remove. */
 export default function MembersTab({ projectId, archived }: { projectId: number; archived: boolean }) {
   const [members, setMembers] = useState<ProjectMember[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
   const [role, setRole] = useState<ProjectRole>('EDITOR');
   const [busy, setBusy] = useState(false);
 
@@ -22,15 +24,16 @@ export default function MembersTab({ projectId, archived }: { projectId: number;
 
   const add = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email.trim()) return;
+    const email = toTucEmail(username);
+    if (!email) return;
     setBusy(true); setError(null);
     try {
-      await post(`/api/projects/${projectId}/members`, { email: email.trim(), projectRole: role });
-      setEmail(''); load();
+      await post(`/api/projects/${projectId}/members`, { email, projectRole: role });
+      setUsername(''); load();
     } catch (err: any) {
       const msg = String(err?.message || '');
-      if (/no tuc-wms user|not found/i.test(msg)) {
-        setError(`No WMS account for "${email.trim()}". Create them first on the Users page (Add a person), then add them here.`);
+      if (/no tuc-wms user|no wms account|not found/i.test(msg)) {
+        setError(`No WMS account for "${email}". Create them first on the Users page (Add a person), then add them here.`);
       } else if (/session expired|unauthor/i.test(msg)) {
         setError('Your session expired. Please reload the page and sign in again, then retry.');
       } else {
@@ -52,12 +55,11 @@ export default function MembersTab({ projectId, archived }: { projectId: number;
     <div>
       {!archived && (
         <form onSubmit={add} style={addRow}>
-          <input value={email} onChange={(e) => setEmail(e.target.value)} type="email"
-            placeholder="member@techbridge.edu.gh" style={{ ...input, flex: 1 }} />
+          <UsernameInput value={username} onChange={setUsername} placeholder="username" style={{ flex: 1 }} />
           <select value={role} onChange={(e) => setRole(e.target.value as ProjectRole)} style={input}>
             {PROJECT_ROLES.map(r => <option key={r} value={r}>{cap(r)}</option>)}
           </select>
-          <button type="submit" disabled={busy || !email.trim()} style={primaryBtn}>Add</button>
+          <button type="submit" disabled={busy || !username.trim()} style={primaryBtn}>Add</button>
         </form>
       )}
 
