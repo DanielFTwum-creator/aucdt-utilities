@@ -5,6 +5,7 @@ import { ProjectDetail } from '../types';
 import MembersTab from './MembersTab';
 import ProjectSettingsTab from './ProjectSettingsTab';
 import BoardTab from './BoardTab';
+import TimelineTab from './TimelineTab';
 import { useAuth } from '../auth/AuthContext';
 
 type Tab = 'board' | 'timeline' | 'members' | 'settings';
@@ -81,19 +82,10 @@ export default function ProjectDetailPage() {
           <BoardTab projectId={projectId} stages={project.stages} archived={project.archived}
             canEditWip={user?.role === 'SYSTEM_ADMIN' || user?.role === 'HOD'} />
         )}
-        {tab === 'timeline' && <Placeholder label="Timeline / Gantt" note="Coming in a later slice." />}
+        {tab === 'timeline' && <TimelineTab projectId={projectId} stages={project.stages} archived={project.archived} />}
         {tab === 'members' && <MembersTab projectId={projectId} archived={project.archived} />}
         {tab === 'settings' && <ProjectSettingsTab project={project} onChanged={load} />}
       </div>
-    </div>
-  );
-}
-
-function Placeholder({ label, note }: { label: string; note: string }) {
-  return (
-    <div style={{ border: '1.5px dashed var(--border)', borderRadius: 12, padding: 40, textAlign: 'center', color: 'var(--muted)' }}>
-      <p style={{ margin: 0, fontWeight: 600 }}>{label}</p>
-      <p style={{ fontSize: 13, marginTop: 6 }}>{note}</p>
     </div>
   );
 }
