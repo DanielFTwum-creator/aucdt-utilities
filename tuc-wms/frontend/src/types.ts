@@ -81,6 +81,31 @@ export interface Board {
   columns: BoardColumn[];
 }
 
+/** Timeline / Gantt (FR-TL) — GET /api/projects/{id}/timeline. */
+export interface TimelineBar {
+  id: number;
+  title: string;
+  startDate: string | null;
+  dueDate: string | null;
+  milestone: boolean;
+  status: string;
+  assigneeIds: number[];
+  blockedByTaskIds: number[];
+}
+
+export interface DependencyConflict {
+  taskId: number;
+  blockedByTaskId: number;
+  message: string;
+}
+
+export interface Timeline {
+  projectId: number;
+  bars: TimelineBar[];
+  dependencyConflicts: DependencyConflict[];
+  groups?: { key: string; label: string; barIds: number[] }[];
+}
+
 export interface TaskDto {
   id: number;
   projectId: number;
