@@ -18,8 +18,12 @@ public class AuditLog {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    // Force a plain VARCHAR, not a DB-native ENUM. Under H2 MODE=MySQL the column would
+    // otherwise be created as ENUM(<values at creation>), and ddl-auto=update will NOT add
+    // newly-introduced AuditEvent constants to that list — inserting a new value then fails
+    // with "Value not permitted". The Java enum is the source of truth for valid values.
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 32)
+    @Column(nullable = false, length = 32, columnDefinition = "varchar(32)")
     private AuditEvent event;
 
     /** Email/subject involved (may be a rejected non-domain account). */
