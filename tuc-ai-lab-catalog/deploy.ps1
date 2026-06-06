@@ -1,14 +1,14 @@
 # ============================================================
 # TUC AI Lab Catalog — Deploy Script
 # Remote : root@techbridge.edu.gh
-# Path   : /var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/tuc-ai-lab-catalog/
+# Path   : /var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/ai-lab/
 # Port   : 3003  |  PM2 app: tuc-ai-lab
 # Usage  : .\deploy.ps1 [-Build]
 # ============================================================
 
 param(
     [string]$RemoteHost = 'root@techbridge.edu.gh',
-    [string]$RemotePath = '/var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/tuc-ai-lab-catalog/',
+    [string]$RemotePath = '/var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/ai-lab/',
     [switch]$Build = $false
 )
 
@@ -16,7 +16,7 @@ $ErrorActionPreference = 'Stop'
 
 $PORT        = 3003
 $PM2_APP     = 'tuc-ai-lab'
-$HEALTH_URL  = 'https://ai-tools.techbridge.edu.gh/tuc-ai-lab-catalog'
+$HEALTH_URL  = 'https://ai-tools.techbridge.edu.gh/ai-lab'
 $GITHUB_REPO = 'https://github.com/DanielFTwum-creator/aucdt-utilities'
 $SUBFOLDER   = 'tuc-ai-lab-catalog'
 $SSH_OPTS    = @('-o', 'StrictHostKeyChecking=no', '-o', 'BatchMode=yes')
@@ -143,11 +143,11 @@ Log -Level 'INFO' -Msg 'Step 4: Writing .htaccess...' -Color Yellow
 $htaccessContent = @'
 <IfModule mod_rewrite.c>
   RewriteEngine On
-  RewriteBase /tuc-ai-lab-catalog/
+  RewriteBase /ai-lab/
   RewriteCond %{REQUEST_FILENAME} -f [OR]
   RewriteCond %{REQUEST_FILENAME} -d
   RewriteRule ^ - [L]
-  RewriteRule ^ /tuc-ai-lab-catalog/index.html [QSA,L]
+  RewriteRule ^ /ai-lab/index.html [QSA,L]
 </IfModule>
 <IfModule mod_expires.c>
   ExpiresActive On
