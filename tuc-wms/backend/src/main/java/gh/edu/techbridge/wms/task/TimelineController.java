@@ -88,8 +88,8 @@ public class TimelineController {
         b.put("dueDate", t.getDueDate());
         b.put("milestone", t.isMilestone());
         b.put("status", t.getStatus());
-        b.put("assigneeIds", t.getAssigneeIds());
-        b.put("blockedByTaskIds", t.getBlockedByTaskIds());   // FR-TL-003 dependency links
+        b.put("assigneeIds", new ArrayList<>(t.getAssigneeIds()));   // materialise lazy collections
+        b.put("blockedByTaskIds", new ArrayList<>(t.getBlockedByTaskIds()));   // FR-TL-003 dependency links
         return b;
     }
 
