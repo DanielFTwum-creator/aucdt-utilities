@@ -78,7 +78,8 @@
             <version>${java-otp.version}</version>
         </dependency>
 
-        <!-- MariaDB (TUC stack: MySQL/MariaDB on port 3307) -->
+        <!-- MariaDB/MySQL JDBC driver. Prod target: the shared instance on port 3306 (where
+             tuc-rms lives), NOT 3307 (that instance is the LMS DB). Dev runs H2 by default. -->
         <dependency>
             <groupId>org.mariadb.jdbc</groupId>
             <artifactId>mariadb-java-client</artifactId>
