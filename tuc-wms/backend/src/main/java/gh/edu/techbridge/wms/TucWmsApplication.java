@@ -1,6 +1,7 @@
 package gh.edu.techbridge.wms;
 
 import gh.edu.techbridge.wms.config.MailProperties;
+import gh.edu.techbridge.wms.gemini.GeminiProperties;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -12,7 +13,7 @@ import org.springframework.scheduling.annotation.EnableAsync;
  */
 @SpringBootApplication
 @EnableAsync                                       // async notification email (TaskMailService)
-@EnableConfigurationProperties(MailProperties.class)
+@EnableConfigurationProperties({MailProperties.class, GeminiProperties.class})
 public class TucWmsApplication {
     public static void main(String[] args) {
         SpringApplication.run(TucWmsApplication.class, args);
