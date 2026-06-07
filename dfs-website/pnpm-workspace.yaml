@@ -1,6 +1,14 @@
+# pnpm v11 (fleet runs bleeding edge: `pnpm up --latest`) gates dependency build
+# scripts via this allowBuilds map. Set each explicitly so installs are
+# non-interactive (an unset entry makes pnpm prompt / block the script).
+#   esbuild     — needed: vite build invokes its native binary
+#   protobufjs  — needed: build step
+#   msw         — false: postinstall is broken on Windows, test-only, no build needed
+#   cypress     — false: large binary, installed on demand for e2e, not at build
+#   sharp       — false: not required by the build
 allowBuilds:
   esbuild: true
-  msw: true
   protobufjs: true
-  sharp: false
+  msw: false
   cypress: false
+  sharp: false
