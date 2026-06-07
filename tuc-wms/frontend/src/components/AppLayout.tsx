@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../auth/AuthContext';
 import { TUC_LOGO } from '../brand';
+import NotificationBell from './NotificationBell';
 
 /** Authenticated shell: TUC header, nav, user badge, sign-out. */
 export default function AppLayout({ children }: { children: React.ReactNode }) {
@@ -21,6 +22,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           </nav>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+          <NotificationBell />
           {user && (
             <span style={{ fontSize: 13, color: 'var(--muted)' }}>
               {user.name} · <span style={roleBadge}>{user.role}</span>

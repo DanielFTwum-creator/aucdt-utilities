@@ -9,6 +9,7 @@ import AppLayout from './components/AppLayout';
 import ProjectsPage from './pages/ProjectsPage';
 import ProjectDetailPage from './pages/ProjectDetailPage';
 import AdminUsersPage from './pages/AdminUsersPage';
+import InboxPage from './pages/InboxPage';
 
 export default function App() {
   return (
@@ -39,6 +40,14 @@ export default function App() {
             element={
               <ProtectedRoute>
                 <AppLayout><AdminUsersPage /></AppLayout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/inbox"
+            element={
+              <ProtectedRoute>
+                <AppLayout><InboxPage /></AppLayout>
               </ProtectedRoute>
             }
           />
