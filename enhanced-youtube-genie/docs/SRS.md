@@ -1,11 +1,12 @@
 ﻿# Software Requirements Specification
 
 **Project:** Youtube Description Genie
-**Version:** 3.0.0
+**Version:** 3.1.0
 **Status:** As-Built
 **Institution:** Techbridge University College (TUC)
-**Date:** 2026-03-08
+**Date:** 2026-06-07
 **Standard:** IEEE 29148-2018
+**Change note (v3.1.0):** Gemini access migrated to the central TUC WMS Gemini key proxy — the application no longer holds or bundles a Gemini API key. Deployment changed from static SPA to a Node/Express service under PM2 (port 3018) which serves the SPA and relays AI requests. React/react-dom pinned to latest stable 19.2.7.
 
 ---
 
@@ -17,7 +18,9 @@ This Software Requirements Specification (SRS) documents the requirements for **
 
 ### 1.2 Scope
 
-**Youtube Description Genie** is a TypeScript-based React 19 single-page application (SPA) built with Vite and deployed via Docker/Nginx. It operates within the TUC monorepo (`aucdt-utilities`) and conforms to the Techbridge University College Shared Standards.
+**Youtube Description Genie** is a TypeScript-based React 19 single-page application (SPA) built with Vite. It is served by a Node/Express server (`server.ts`, PM2 process `youtube-genie`, port 3018) which also exposes the AI relay endpoint. Gemini requests are forwarded server-side to the central TUC **WMS Gemini key proxy** (`https://wms.techbridge.edu.gh/api/gemini/generate`) using the `X-Gemini-Proxy-Key` service credential — **no Gemini API key exists in the client bundle or this app's repo**. (Docker remains for local testing only; it is not the deployment path.) It operates within the TUC monorepo (`aucdt-utilities`) and conforms to the Techbridge University College Shared Standards.
+
+**AI data flow:** Browser → `POST /youtube-genie/api/generate` (nginx → Node :3018) → `server.ts` relay → WMS Gemini proxy (`X-Gemini-Proxy-Key`) → Google Gemini → response. The two service modules (`geminiService.ts`, `geminiServiceEnhanced.ts`) call the local relay via `services/geminiProxy.ts`; neither imports `@google/genai`.
 
 **In scope:**
 - All functional UI components and user flows
@@ -85,7 +88,7 @@ Section 2 describes the overall product context. Section 3 lists system features
 
 ### 2.5 Design and Implementation Constraints
 
-- **React version:** Exactly 19.2.5 â€” locked, no exceptions
+- **React version:** Latest stable (currently 19.2.7), per TUC policy — kept current, react and react-dom matched
 - **Build tool:** Vite 7.3.1
 - **Package manager:** pnpm (preferred), npm (fallback)
 - **Styling:** Tailwind CSS 4.x with TUC design tokens
@@ -199,7 +202,7 @@ Section 2 describes the overall product context. Section 3 lists system features
 
 | Requirement | Status |
 |---|---|
-| React 19.2.5 exact version | âœ… Compliant |
+| React latest stable (19.2.7) | âœ… Compliant |
 | TUC branding applied | âœ… Compliant |
 | ARIA 100% coverage | âŒ Non-compliant |
 | Docker service configured | âœ… Compliant |
@@ -213,7 +216,7 @@ Section 2 describes the overall product context. Section 3 lists system features
 ## 7. Appendix â€” Tech Stack Reference
 
 ```
-Stack: React 19.2.5 + TypeScript, Vite 7.3.1
+Stack: React 19.2.7 + TypeScript, Vite 7.3.1, Node/Express (server.ts) on PM2
 Build output: dist/
 Docker: nginx:alpine
 Network: aucdt-network (172.20.0.0/16)
