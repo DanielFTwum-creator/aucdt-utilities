@@ -2,7 +2,7 @@
 # Playgrow — Deploy Script
 # Remote : root@techbridge.edu.gh
 # Path   : /var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/playgrow
-# Port   : 3015  |  PM2 app: playgrow
+# Port   : 3019  |  PM2 app: playgrow   (3015 was a collision with willpro)
 # Usage  : .\deploy.ps1
 # ============================================================
 
@@ -11,7 +11,7 @@ param([switch]$Build)
 $ErrorActionPreference = 'Stop'
 $REMOTE      = 'root@techbridge.edu.gh'
 $DEPLOY_PATH = '/var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/playgrow'
-$PORT        = 3015
+$PORT        = 3019
 $PM2_APP     = 'playgrow'
 $HEALTH_URL  = 'https://ai-tools.techbridge.edu.gh/playgrow'
 $GITHUB_REPO = 'https://github.com/DanielFTwum-creator/aucdt-utilities'
@@ -73,8 +73,8 @@ Remove-Item $ls -Force -EA SilentlyContinue; & $SSH @SSH_OPTS $REMOTE "rm -f /tm
 if ($bx -ne 0) { Log -Level 'ERROR' -Msg "Build failed ($bx)" -Color Red; exit 1 }
 Log -Level 'SUCCESS' -Msg 'Build complete' -Color Green
 
-Log -Level 'INFO' -Msg 'Step 4: Server environment...' -Color Yellow
-& $SSH @SSH_OPTS $REMOTE "cp /tmp/.env.${PM2_APP} ${DEPLOY_PATH}/.env; chown -R techbridge.edu.gh_md:psaserv ${DEPLOY_PATH} 2>/dev/null||true; find ${DEPLOY_PATH} -type d -exec chmod 755 {} \; 2>/dev/null||true; find ${DEPLOY_PATH} -type f -exec chmod 644 {} \; 2>/dev/null||true"
+Log -Level 'INFO' -Msg 'Step 4: Server environment (incl. Gemini proxy key)...' -Color Yellow
+& $SSH @SSH_OPTS $REMOTE "cp /tmp/.env.${PM2_APP} ${DEPLOY_PATH}/.env; grep -q '^PORT=' ${DEPLOY_PATH}/.env || echo 'PORT=${PORT}' >> ${DEPLOY_PATH}/.env; if ! grep -q '^GEMINI_PROXY_KEY=' ${DEPLOY_PATH}/.env; then K=`$(grep '^GEMINI_PROXY_KEY=' /opt/tuc-wms/.env | cut -d= -f2-); [ -n \"`$K\" ] && printf 'GEMINI_PROXY_KEY=%s\n' \"`$K\" >> ${DEPLOY_PATH}/.env; fi; chmod 600 ${DEPLOY_PATH}/.env; chown -R techbridge.edu.gh_md:psaserv ${DEPLOY_PATH} 2>/dev/null||true; find ${DEPLOY_PATH} -type d -exec chmod 755 {} \; 2>/dev/null||true; find ${DEPLOY_PATH} -type f -exec chmod 644 {} \; 2>/dev/null||true; chmod 600 ${DEPLOY_PATH}/.env"
 
 Log -Level 'INFO' -Msg 'Step 5: Restarting backend...' -Color Yellow
 $r=& $SSH @SSH_OPTS $REMOTE "if pm2 describe ${PM2_APP}>\/dev\/null 2>&1; then pm2 reload ${PM2_APP}; echo 'pm2: reloaded'; else cd ${DEPLOY_PATH}; PORT=${PORT} pm2 start server.ts --name ${PM2_APP} --interpreter npx --interpreter-args tsx; echo 'pm2: started'; fi"
