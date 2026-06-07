@@ -1,19 +1,16 @@
-
-import { GoogleGenAI, Type } from "@google/genai";
 import type { FormData } from '../types';
 import { DESCRIPTION_TEMPLATE } from '../constants';
 
-if (!process.env.API_KEY) {
-  throw new Error("API_KEY environment variable is not set.");
-}
+// Gemini is called via this app's own server-side relay (/api/generate), which
+// forwards to the central WMS Gemini proxy. The API key is NOT in this bundle —
+// it lives only on the WMS server. No @google/genai client here.
 
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
-
+// Gemini REST equivalent of the former responseSchema (Type.OBJECT { description }).
 const responseSchema = {
-  type: Type.OBJECT,
+  type: 'OBJECT',
   properties: {
     description: {
-      type: Type.STRING,
+      type: 'STRING',
       description: "The full, formatted YouTube description text, including intro, vibe, key moments, credits, hashtags, and lyrics."
     }
   },
@@ -39,29 +36,45 @@ export const generateDescription = async (formData: FormData): Promise<string> =
     ${DESCRIPTION_TEMPLATE}
   `;
 
+  // Raw Gemini generateContent body — the WMS proxy forwards this verbatim.
+  const requestBody = {
+    contents: [{ role: 'user', parts: [{ text: prompt }] }],
+    generationConfig: {
+      responseMimeType: 'application/json',
+      responseSchema,
+      temperature: 0.8,
+    },
+  };
+
   try {
-    const response = await ai.models.generateContent({
-      model: "gemini-2.5-flash",
-      contents: prompt,
-      config: {
-        responseMimeType: "application/json",
-        responseSchema: responseSchema,
-        temperature: 0.8,
-      },
+    const res = await fetch('/api/generate?model=gemini-2.5-flash', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(requestBody),
     });
 
-    const jsonText = response.text.trim();
-    const parsed = JSON.parse(jsonText);
-    
-    if (parsed && typeof parsed.description === 'string') {
-        return parsed.description;
-    } else {
-        throw new Error("Invalid response format from AI.");
+    if (!res.ok) {
+      const errText = await res.text();
+      throw new Error(`Proxy returned ${res.status}: ${errText}`);
     }
+
+    // Gemini generateContent response shape: candidates[0].content.parts[0].text
+    const data = await res.json();
+    const jsonText: string | undefined =
+      data?.candidates?.[0]?.content?.parts?.[0]?.text;
+    if (!jsonText) {
+      throw new Error('Invalid response format from AI.');
+    }
+
+    const parsed = JSON.parse(jsonText.trim());
+    if (parsed && typeof parsed.description === 'string') {
+      return parsed.description;
+    }
+    throw new Error('Invalid response format from AI.');
   } catch (error) {
     console.error("Error calling Gemini API:", error);
     if (error instanceof Error) {
-        throw new Error(`Failed to generate description: ${error.message}`);
+      throw new Error(`Failed to generate description: ${error.message}`);
     }
     throw new Error("An unknown error occurred while communicating with the AI.");
   }

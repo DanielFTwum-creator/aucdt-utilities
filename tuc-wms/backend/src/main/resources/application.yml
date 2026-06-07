@@ -49,6 +49,16 @@ tucwms:
   mail:
     gateway-url: ${MAIL_GATEWAY_URL:}
     sender: ${MAIL_SENDER:noreply@techbridge.edu.gh}
+  # Central Gemini key proxy (Phase 2: PM2→WMS). The API key lives ONLY here, never in
+  # any client bundle. Blank api-key = disabled (dev default): /api/gemini/generate returns
+  # 503 so local runs need no key or network. Set GEMINI_API_KEY in prod.
+  gemini:
+    api-key: ${GEMINI_API_KEY:}
+    # Service credential for server-side fleet-app relays (X-Gemini-Proxy-Key header).
+    # Blank = only logged-in WMS users may call /generate. Set GEMINI_PROXY_KEY in prod.
+    proxy-key: ${GEMINI_PROXY_KEY:}
+    default-model: ${GEMINI_DEFAULT_MODEL:gemini-2.5-flash}
+    base-url: ${GEMINI_BASE_URL:https://generativelanguage.googleapis.com}
 
 logging:
   level:
