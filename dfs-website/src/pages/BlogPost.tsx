@@ -97,7 +97,7 @@ export default function BlogPost() {
       </div>
 
       <div className="container mx-auto px-4 -mt-12 relative z-10">
-        <div className="max-w-3xl mx-auto bg-white rounded-[40px] p-8 md:p-16 shadow-2xl space-y-12">
+        <div className="max-w-3xl mx-auto bg-card text-card-foreground rounded-[40px] p-8 md:p-16 shadow-2xl space-y-12">
           <div className="flex flex-wrap items-center justify-between gap-6 pb-8 border-b">
             <div className="flex items-center gap-4">
               <div className="w-12 h-12 rounded-full bg-accent flex items-center justify-center">

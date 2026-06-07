@@ -111,7 +111,7 @@ export default function Home() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.1 }}
-                className={cn("p-8 rounded-[24px] bg-white border-2 hover:shadow-xl transition-all group", item.border)}
+                className={cn("p-8 rounded-[24px] bg-card text-card-foreground border-2 hover:shadow-xl transition-all group", item.border)}
               >
                 <div className={cn("w-16 h-16 rounded-2xl flex items-center justify-center mb-6 transition-transform group-hover:scale-110", item.bg)}>
                   <item.icon className={cn("w-8 h-8", item.iconColor)} />
@@ -127,13 +127,13 @@ export default function Home() {
       </section>
 
       {/* Vermont Roots */}
-      <section className="py-24" style={{background: "linear-gradient(135deg, #e8f5ee 0%, #dff0e8 50%, #e8ede0 100%)"}}>
+      <section className="py-24 bg-muted dark:bg-muted/30">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             <div className="space-y-8">
               <div className="space-y-3">
                 <span className="text-xs font-bold uppercase tracking-widest text-primary">Homegrown. Not Franchised.</span>
-                <h2 className="text-4xl md:text-5xl font-serif leading-tight">Built in Vermont.<br />Over 45 Years.</h2>
+                <h2 className="text-4xl md:text-5xl font-serif leading-tight text-foreground">Built in Vermont.<br />Over 45 Years.</h2>
               </div>
               <p className="text-foreground/70 leading-relaxed text-lg">
                 Steve Ferraris has lived and worked in Vermont since 1980. Root Drumming Systems wasn't developed in a conference room — it was cultivated school by school, district by district, across the Green Mountain State over four decades.
@@ -164,7 +164,7 @@ export default function Home() {
                 <img src={`${import.meta.env.BASE_URL}photos/outdoor.jpg`} alt="Drumming for SEL — outdoor classroom, Vermont" className="w-full h-full object-cover" />
               </div>
               {/* Quote overlay card */}
-              <div className="absolute -bottom-6 -left-6 bg-white p-6 rounded-[20px] shadow-xl max-w-xs hidden lg:block border-l-4" style={{borderColor: "#c8921a"}}>
+              <div className="absolute -bottom-6 -left-6 bg-card text-card-foreground p-6 rounded-[20px] shadow-xl max-w-xs hidden lg:block border-l-4" style={{borderColor: "#c8921a"}}>
                 <p className="font-serif italic text-sm leading-snug text-foreground/80">"Learners are engaged and enthusiastic, and look forward to sharing their new skills with others."</p>
                 <p className="text-xs font-bold uppercase tracking-widest mt-3" style={{color: "#2d6a4f"}}>— Laura Boudreaux, Asst. Supt. · SVSU 2024</p>
               </div>
@@ -215,7 +215,7 @@ export default function Home() {
                 border: "border-accent/20",
               },
             ].map((format) => (
-              <div key={format.title} className={`group cursor-pointer bg-white rounded-[24px] border-2 ${format.border} p-8 hover:shadow-xl transition-all space-y-4`}>
+              <div key={format.title} className={`group cursor-pointer bg-card text-card-foreground rounded-[24px] border-2 ${format.border} p-8 hover:shadow-xl transition-all space-y-4`}>
                 <span className={`inline-block px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide ${format.tagColor}`}>
                   {format.tag}
                 </span>
@@ -243,7 +243,7 @@ export default function Home() {
       </section>
 
       {/* Testimonials */}
-      <section className="py-24 bg-white">
+      <section className="py-24 bg-background">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto text-center">
             <motion.div
@@ -257,12 +257,12 @@ export default function Home() {
                   <Heart key={s} className="w-6 h-6 text-primary fill-primary" />
                 ))}
               </div>
-              <blockquote className="text-2xl md:text-3xl font-serif italic leading-relaxed">
+              <blockquote className="text-2xl md:text-3xl font-serif italic leading-relaxed text-foreground">
                 "Drumming for Success has become part of the tools that we use in our district to support our learners in whole and small group settings linked to trauma informed practices. Professional staff have enjoyed Steve's facilitation of drumming strategies as part of professional learning. Learners are engaged and enthusiastic, and look forward to sharing their new skills with others."
               </blockquote>
               <cite className="block not-italic space-y-1">
-                <span className="font-bold text-lg">Laura Boudreaux</span>
-                <span className="block text-muted-foreground">Assistant Superintendent, SVSU — Bennington, Vermont · 2024</span>
+                <span className="font-bold text-lg text-foreground">Laura Boudreaux</span>
+                <span className="block text-foreground/70">Assistant Superintendent, SVSU — Bennington, Vermont · 2024</span>
               </cite>
             </motion.div>
           </div>
