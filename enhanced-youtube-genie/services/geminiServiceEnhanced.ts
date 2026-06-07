@@ -1,6 +1,9 @@
-import { GoogleGenAI, Type } from "@google/genai";
 import type { FormData } from '../types';
 import { DESCRIPTION_TEMPLATE } from '../constants';
+import { generateViaProxy } from './geminiProxy';
+
+// Gemini is called via this app's server-side relay (/api/generate) -> WMS proxy.
+// No @google/genai client and no API key in this bundle.
 
 // Enhanced error types for better error handling
 export class APIError extends Error {
@@ -24,33 +27,11 @@ export class RateLimitError extends Error {
   }
 }
 
-// Check for API key availability
-const getAPIKey = (): string => {
-  const apiKey = process.env.API_KEY;
-  if (!apiKey || apiKey === 'PLACEHOLDER_API_KEY') {
-    throw new APIError(
-      'API key is not configured. Please set up your Gemini API key in the environment variables.',
-      'MISSING_API_KEY'
-    );
-  }
-  return apiKey;
-};
-
-// Initialize AI client with error handling
-const initializeAI = () => {
-  try {
-    const apiKey = getAPIKey();
-    return new GoogleGenAI({ apiKey });
-  } catch (error) {
-    throw error;
-  }
-};
-
 const responseSchema = {
-  type: Type.OBJECT,
+  type: 'OBJECT',
   properties: {
     description: {
-      type: Type.STRING,
+      type: 'STRING',
       description: "The full, formatted YouTube description text, including intro, vibe, key moments, credits, hashtags, and lyrics."
     }
   },
@@ -133,9 +114,6 @@ export const generateDescription = async (formData: FormData): Promise<string> =
     // Validate input first
     validateInput(formData);
 
-    // Initialize AI client
-    const ai = initializeAI();
-
     // Create enhanced prompt with better structure
     const prompt = `
       You are an expert music marketer who creates compelling YouTube video descriptions.
@@ -155,25 +133,16 @@ export const generateDescription = async (formData: FormData): Promise<string> =
       ${DESCRIPTION_TEMPLATE}
     `;
 
-    // Make API call with enhanced error handling
-    const response = await ai.models.generateContent({
-      model: "gemini-2.0-flash-exp",
-      contents: prompt,
-      config: {
-        responseMimeType: "application/json",
-        responseSchema: responseSchema,
-        temperature: 0.8,
-        maxOutputTokens: 2048,
-      },
+    // Make API call (via server-side relay -> WMS proxy) with enhanced error handling
+    const text = await generateViaProxy(prompt, "gemini-2.0-flash-exp", {
+      responseMimeType: "application/json",
+      responseSchema: responseSchema,
+      temperature: 0.8,
+      maxOutputTokens: 2048,
     });
 
-    // Validate response
-    if (!response || !response.text) {
-      throw new APIError('Empty response from AI service');
-    }
+    const jsonText = text.trim();
 
-    const jsonText = response.text.trim();
-    
     let parsed;
     try {
       parsed = JSON.parse(jsonText);
@@ -196,19 +165,11 @@ export const generateDescription = async (formData: FormData): Promise<string> =
   }
 };
 
-// Utility function to check API availability
+// Utility function to check API availability (via the relay/proxy)
 export const checkAPIAvailability = async (): Promise<boolean> => {
   try {
-    const ai = initializeAI();
-    // Make a minimal test request
-    const response = await ai.models.generateContent({
-      model: "gemini-2.0-flash-exp",
-      contents: "Test",
-      config: {
-        maxOutputTokens: 10,
-      },
-    });
-    return !!response;
+    const text = await generateViaProxy("Test", "gemini-2.0-flash-exp", { maxOutputTokens: 10 });
+    return !!text;
   } catch (error) {
     return false;
   }
