@@ -1,10 +1,14 @@
-# enhanced-youtube-genie — Deploy Script
-# URL: https://ai-tools.techbridge.edu.gh/youtube-genie/
+# enhanced-youtube-genie — Deploy Script (Node/PM2, mirrors dfs-website)
+# URL  : https://ai-tools.techbridge.edu.gh/youtube-genie/
+# Port : 3018  |  PM2 app: youtube-genie
 # Usage: .\deploy.ps1 -Build
+#
+# Server-side build, then runs server.ts under PM2 (Gemini relay -> WMS proxy).
+# The SPA is served by the Node server; nginx must proxy /youtube-genie/api/ -> :3018.
 
 param(
     [string]$RemoteHost = "root@techbridge.edu.gh",
-    [string]$RemotePath = "/var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/youtube-genie/",
+    [string]$RemotePath = "/var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/youtube-genie",
     [switch]$Build = $false
 )
 
@@ -21,101 +25,120 @@ function Log {
     Write-Host "[$ts][$Level] $Msg" -ForegroundColor $Color
 }
 
+function Write-LfFile($path, $content) {
+    $content = $content -replace "`r`n", "`n"
+    [System.IO.File]::WriteAllText($path, $content, (New-Object System.Text.UTF8Encoding $false))
+}
+
 Log "INFO" "========================================" Cyan
-Log "INFO" "enhanced-youtube-genie DEPLOYMENT" Cyan
+Log "INFO" "enhanced-youtube-genie DEPLOYMENT (Node/PM2)" Cyan
 Log "INFO" "========================================" Cyan
 Log "INFO" "Remote : $RemoteHost"
 Log "INFO" "Path   : $RemotePath"
+Log "INFO" "Port   : $PORT  PM2: $PM2_APP"
 Log "INFO" ""
 
 Log "INFO" "Step 1: Pre-flight checks..." Yellow
 if (-not (Test-Path ".env.local")) { Log "ERROR" ".env.local not found" Red; exit 1 }
 $envContent = Get-Content ".env.local" -Raw
 if ($envContent -notmatch "VITE_GOOGLE_CLIENT_ID") { Log "ERROR" "VITE_GOOGLE_CLIENT_ID missing in .env.local" Red; exit 1 }
-if ($envContent -notmatch "GOOGLE_CLIENT_SECRET") { Log "ERROR" "GOOGLE_CLIENT_SECRET missing in .env.local" Red; exit 1 }
+if ($envContent -notmatch "GOOGLE_CLIENT_SECRET")  { Log "ERROR" "GOOGLE_CLIENT_SECRET missing in .env.local" Red; exit 1 }
 Log "SUCCESS" "Pre-flight OK (OAuth credentials verified)" Green
 
 Log "INFO" "Step 2: Verifying git state..." Yellow
 $commit = (git rev-parse --short HEAD 2>$null).Trim()
 $branch = (git rev-parse --abbrev-ref HEAD 2>$null).Trim()
 Log "INFO" "Commit : $commit on $branch"
-try { git push origin $branch 2>&1 | Out-Null } catch { Log "WARN" "git push failed (non-fatal)" Yellow }
+try { git push origin $branch 2>&1 | Out-Null; Log "INFO" "Pushed $branch to GitHub" } catch { Log "WARN" "git push failed (non-fatal)" Yellow }
 
-if ($Build) {
-    Log "INFO" "Step 3: Server-side build (git clone + pnpm build)..." Yellow
-    $buildDir = "/tmp/enhanced-youtube-genie_deploy_$commit"
-    $serverScript = @"
+if (-not $Build) { Log "ERROR" "Run with -Build (server-side build + PM2 run)." Red; exit 1 }
+
+# Upload the build .env (Vite needs the public OAuth vars at build time).
+Log "INFO" "Uploading .env to server for build..." DarkGray
+scp -o StrictHostKeyChecking=no .env.local "${RemoteHost}:/tmp/.env.youtube-genie" 2>&1 | Out-Null
+if ($LASTEXITCODE -ne 0) { Log "ERROR" "Failed to upload .env.local" Red; exit 1 }
+Log "SUCCESS" ".env uploaded" Green
+
+Log "INFO" "Step 3: Server-side build + PM2 run..." Yellow
+$remoteScript = @"
+#!/usr/bin/env bash
 set -e
+TMPDIR=/tmp/${SUBFOLDER}_deploy_${commit}
+DEPLOY=${RemotePath}
+REPO=${GITHUB_REPO}
+PORT=${PORT}
+PM2_APP=${PM2_APP}
+trap 'rm -rf "`$TMPDIR"' EXIT
 log() { echo "[`$(date '+%Y-%m-%d %H:%M:%S')][SERVER] `$1"; }
-if ! command -v pnpm >/dev/null 2>&1; then
-  corepack enable >/dev/null 2>&1 || npm install -g pnpm --silent
-  export PATH="`$HOME/.local/share/pnpm:`$PATH"
-fi
-log "pnpm `$(pnpm --version)"
-log '[1/5] Cleaning previous temp build...'
-rm -rf $buildDir
-log '[2/5] Cloning enhanced-youtube-genie (sparse, depth 1)...'
-git clone --depth 1 --filter=blob:none --sparse '$GITHUB_REPO' $buildDir
-cd $buildDir
-git sparse-checkout set enhanced-youtube-genie
-cd enhanced-youtube-genie
-log '[3/5] Installing dependencies...'
-pnpm install --no-frozen-lockfile --silent 2>/dev/null || npm install --silent
-log '[4/5] Building...'
+
+log "pnpm `$(pnpm --version 2>/dev/null || echo missing)"
+
+log '[1/7] Clone (sparse, depth 1)...'
+rm -rf "`$TMPDIR"
+git clone --filter=blob:none --sparse --depth 1 "`$REPO" "`$TMPDIR"
+cd "`$TMPDIR"
+git sparse-checkout set ${SUBFOLDER}
+cd ${SUBFOLDER}
+
+log '[2/7] Inject .env.local for Vite build...'
+cp /tmp/.env.youtube-genie .env.local
+
+log '[3/7] Install (full) + build...'
+pnpm install --no-frozen-lockfile --silent
 pnpm build
-log '[5/5] Deploying dist/ to web root...'
-mkdir -p $RemotePath
-rsync -a --delete dist/. $RemotePath
-log 'Build and deploy complete.'
+
+log '[4/7] Sync built SPA to deploy path (keep backend files + .env)...'
+mkdir -p "`$DEPLOY"
+rsync -a --delete \
+  --exclude 'server.ts' --exclude 'package.json' --exclude 'pnpm-lock.yaml' \
+  --exclude 'pnpm-workspace.yaml' --exclude 'node_modules' --exclude '.env' \
+  dist/ "`$DEPLOY/dist/"
+
+log '[5/7] Copy backend files + install prod deps...'
+cp server.ts package.json pnpm-lock.yaml "`$DEPLOY/" 2>/dev/null || true
+[ -f pnpm-workspace.yaml ] && cp pnpm-workspace.yaml "`$DEPLOY/" || true
+cd "`$DEPLOY"
+pnpm install --prod --no-frozen-lockfile --silent
+
+log '[6/7] Ensure GEMINI_PROXY_KEY present in deploy .env (copied from WMS if missing)...'
+touch "`$DEPLOY/.env"
+if ! grep -q '^GEMINI_PROXY_KEY=' "`$DEPLOY/.env"; then
+  K=`$(grep '^GEMINI_PROXY_KEY=' /opt/tuc-wms/.env | cut -d= -f2-)
+  [ -n "`$K" ] && printf 'GEMINI_PROXY_KEY=%s\n' "`$K" >> "`$DEPLOY/.env" && echo 'added GEMINI_PROXY_KEY' || echo 'WARN: WMS proxy key not found'
+fi
+grep -q '^PORT=' "`$DEPLOY/.env" || echo "PORT=`$PORT" >> "`$DEPLOY/.env"
+chmod 600 "`$DEPLOY/.env"
+
+log '[7/7] (Re)start PM2 process from server.ts...'
+cd "`$DEPLOY"
+pm2 describe "`$PM2_APP" >/dev/null 2>&1 \
+  && pm2 reload "`$PM2_APP" --update-env \
+  || pm2 start server.ts --name "`$PM2_APP" --interpreter `$(command -v tsx || echo node)
+pm2 save >/dev/null 2>&1 || true
+sleep 3
+pm2 describe "`$PM2_APP" | grep -E 'status|restart' | head -2
+log 'Build + PM2 deploy complete.'
 "@
-    $b64 = [Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes($serverScript.Replace("`r", "")))
-    ssh -o StrictHostKeyChecking=no $RemoteHost "echo $b64 | base64 -d | bash"
-    if ($LASTEXITCODE -eq 0) { Log "SUCCESS" "Server-side build and file sync complete" Green }
-    else { Log "WARN" "Server build returned $LASTEXITCODE" Yellow }
-    ssh -o StrictHostKeyChecking=no $RemoteHost "rm -rf $buildDir" 2>$null | Out-Null
-} else {
-    Log "INFO" "Step 3: Copying local dist/ to server..." Yellow
-    if (-not (Test-Path "dist")) { Log "ERROR" "dist/ not found. Run with -Build flag." Red; exit 1 }
-    ssh -o StrictHostKeyChecking=no $RemoteHost "mkdir -p $RemotePath && rm -rf ${RemotePath}*"
-    scp -r -o StrictHostKeyChecking=no dist/* "${RemoteHost}:${RemotePath}"
-    Log "SUCCESS" "dist/* copied to server" Green
-}
 
-Log "INFO" "Step 4: Writing .htaccess..." Yellow
-@"
-<IfModule mod_rewrite.c>
-  RewriteEngine On
-  RewriteBase /youtube-genie/
-  RewriteCond %{REQUEST_FILENAME} -f [OR]
-  RewriteCond %{REQUEST_FILENAME} -d
-  RewriteRule ^ - [L]
-  RewriteRule ^ /youtube-genie/index.html [QSA,L]
-</IfModule>
-<IfModule mod_expires.c>
-  ExpiresActive On
-  <FilesMatch '\.(js|css|png|jpg|jpeg|gif|svg|woff2|woff|ttf|eot|ico)$'>
-    ExpiresDefault 'max-age=31536000'
-    Header set Cache-Control 'public, immutable'
-  </FilesMatch>
-  <FilesMatch '\.(html|json)$'>
-    ExpiresDefault 'max-age=0'
-    Header set Cache-Control 'no-cache, no-store, must-revalidate'
-    Header set Pragma 'no-cache'
-    Header set Expires '0'
-  </FilesMatch>
-</IfModule>
-"@ | ssh -o StrictHostKeyChecking=no $RemoteHost "cat > ${RemotePath}.htaccess" 2>$null
+$localScript = [System.IO.Path]::Combine([System.IO.Path]::GetTempPath(), "ytg_build_$([Guid]::NewGuid().ToString('N')).sh")
+Write-LfFile -path $localScript -content $remoteScript
+scp -o StrictHostKeyChecking=no $localScript "${RemoteHost}:/tmp/ytg_build.sh" 2>&1 | Out-Null
+if ($LASTEXITCODE -ne 0) { Log "ERROR" "Failed to upload remote build script" Red; Remove-Item $localScript -Force -EA SilentlyContinue; exit 1 }
+ssh -o StrictHostKeyChecking=no $RemoteHost "bash /tmp/ytg_build.sh"
+$buildRc = $LASTEXITCODE
+Remove-Item $localScript -Force -EA SilentlyContinue
+if ($buildRc -ne 0) { Log "ERROR" "Server build/PM2 returned $buildRc" Red; exit 1 }
+Log "SUCCESS" "Server-side build + PM2 run complete" Green
 
-Log "INFO" "Step 5: Setting permissions..." Yellow
-ssh -o StrictHostKeyChecking=no $RemoteHost "chown -R techbridge.edu.gh_md:psaserv $RemotePath && chmod -R 755 $RemotePath && chmod 644 ${RemotePath}.htaccess 2>/dev/null; true" | Out-Null
-
-Log "INFO" "Health check..." Yellow
-ssh -o StrictHostKeyChecking=no $RemoteHost "test -f ${RemotePath}index.html && echo 'OK index.html present' || echo 'MISSING index.html'"
+Log "INFO" "Step 4: Health checks..." Yellow
+$portUp = ssh -o StrictHostKeyChecking=no $RemoteHost "ss -tlnp 2>/dev/null | grep -q ':$PORT ' && echo yes || echo no"
+Log ($(if ($portUp -eq 'yes') {'SUCCESS'} else {'WARN'})) "port $PORT listening: $portUp" ($(if ($portUp -eq 'yes') {'Green'} else {'Yellow'}))
+$code = ssh -o StrictHostKeyChecking=no $RemoteHost "curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1:$PORT/api/health"
+Log ($(if ($code -eq '200') {'SUCCESS'} else {'WARN'})) "backend /api/health -> $code" ($(if ($code -eq '200') {'Green'} else {'Yellow'}))
 
 $elapsed = [math]::Round(((Get-Date) - $__deployStart).TotalSeconds, 1)
-$timeStr = if ($elapsed -ge 60) { "$([math]::Floor($elapsed/60))m $([math]::Round($elapsed%60,1))s" } else { "${elapsed}s" }
 Log "SUCCESS" "========================================" Green
-Log "SUCCESS" "DEPLOYMENT COMPLETE" Green
-Log "SUCCESS" "URL  : https://ai-tools.techbridge.edu.gh/youtube-genie/" Green
-Log "SUCCESS" "Time : $timeStr total" Green
+Log "SUCCESS" "DEPLOYMENT COMPLETE in ${elapsed}s" Green
+Log "SUCCESS" "URL : https://ai-tools.techbridge.edu.gh/youtube-genie/" Green
+Log "SUCCESS" "NOTE: ensure nginx proxies /youtube-genie/api/ -> http://localhost:$PORT (Plesk Additional nginx directives)" DarkGray
 Log "SUCCESS" "========================================" Green

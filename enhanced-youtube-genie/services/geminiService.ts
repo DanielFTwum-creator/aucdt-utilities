@@ -1,19 +1,15 @@
-
-import { GoogleGenAI, Type } from "@google/genai";
 import type { FormData } from '../types';
 import { DESCRIPTION_TEMPLATE } from '../constants';
+import { generateViaProxy } from './geminiProxy';
 
-if (!process.env.API_KEY) {
-  throw new Error("API_KEY environment variable is not set.");
-}
-
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+// Gemini is called via this app's server-side relay (/api/generate) -> WMS proxy.
+// No @google/genai client and no API key in this bundle.
 
 const responseSchema = {
-  type: Type.OBJECT,
+  type: 'OBJECT',
   properties: {
     description: {
-      type: Type.STRING,
+      type: 'STRING',
       description: "The full, formatted YouTube description text, including intro, vibe, key moments, credits, hashtags, and lyrics."
     }
   },
@@ -40,28 +36,21 @@ export const generateDescription = async (formData: FormData): Promise<string> =
   `;
 
   try {
-    const response = await ai.models.generateContent({
-      model: "gemini-2.5-flash",
-      contents: prompt,
-      config: {
-        responseMimeType: "application/json",
-        responseSchema: responseSchema,
-        temperature: 0.8,
-      },
-    });
+    const jsonText = (await generateViaProxy(prompt, "gemini-2.5-flash", {
+      responseMimeType: "application/json",
+      responseSchema,
+      temperature: 0.8,
+    })).trim();
 
-    const jsonText = response.text.trim();
     const parsed = JSON.parse(jsonText);
-    
     if (parsed && typeof parsed.description === 'string') {
-        return parsed.description;
-    } else {
-        throw new Error("Invalid response format from AI.");
+      return parsed.description;
     }
+    throw new Error("Invalid response format from AI.");
   } catch (error) {
     console.error("Error calling Gemini API:", error);
     if (error instanceof Error) {
-        throw new Error(`Failed to generate description: ${error.message}`);
+      throw new Error(`Failed to generate description: ${error.message}`);
     }
     throw new Error("An unknown error occurred while communicating with the AI.");
   }

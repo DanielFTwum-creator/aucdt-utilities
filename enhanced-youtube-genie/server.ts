@@ -12,6 +12,10 @@ const PORT = Number(process.env.PORT) || 3018;
 const GOOGLE_CLIENT_ID     = process.env.VITE_GOOGLE_CLIENT_ID     || '';
 const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET       || '';
 const REDIRECT_URI         = process.env.VITE_GOOGLE_REDIRECT_URI   || 'https://ai-tools.techbridge.edu.gh/youtube-genie/callback';
+// Gemini via the central WMS proxy — this app holds NO Gemini key. The relay
+// presents the X-Gemini-Proxy-Key service credential (server env only).
+const WMS_GEMINI_URL = process.env.WMS_GEMINI_URL || 'https://wms.techbridge.edu.gh/api/gemini/generate';
+const GEMINI_PROXY_KEY = process.env.GEMINI_PROXY_KEY || '';
 
 function decodeJWT(token: string): Record<string, string> {
   const parts = token.split('.');
@@ -44,6 +48,25 @@ app.get(['/callback', '/youtube-genie/callback'], async (req, res) => {
 });
 
 app.get(['/api/health', '/youtube-genie/api/health'], (_req, res) => { res.json({ ok: true, service: 'youtube-genie', port: PORT }); });
+
+// Gemini relay — forwards the raw generateContent body to the WMS proxy. Keeps
+// the key server-side; the browser calls /api/generate, never Gemini directly.
+app.post(['/api/generate', '/youtube-genie/api/generate'], async (req, res) => {
+  if (!GEMINI_PROXY_KEY) return res.status(503).json({ error: 'GEMINI_PROXY_KEY not configured on the server.' });
+  try {
+    const model = typeof req.query.model === 'string' ? req.query.model : '';
+    const upstream = await fetch(`${WMS_GEMINI_URL}${model ? `?model=${encodeURIComponent(model)}` : ''}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-Gemini-Proxy-Key': GEMINI_PROXY_KEY },
+      body: JSON.stringify(req.body),
+    });
+    const text = await upstream.text();
+    res.status(upstream.status).type('application/json').send(text);
+  } catch (err) {
+    console.error('[youtube-genie] relay to WMS failed:', err);
+    res.status(502).json({ error: 'Upstream Gemini proxy call failed.' });
+  }
+});
 
 const distDir = path.join(__dirname, 'dist');
 app.use('/youtube-genie', express.static(distDir, { maxAge: '1y', immutable: true, index: false }));
