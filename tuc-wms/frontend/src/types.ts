@@ -56,6 +56,18 @@ export interface CreateProjectBody {
   stages?: string[];
 }
 
+/** In-app notification (FR-NOTIF). */
+export interface WmsNotification {
+  id: number;
+  type: string;            // e.g. TASK_ASSIGNED
+  title: string;
+  body: string | null;
+  projectId: number | null;
+  taskId: number | null;
+  read: boolean;
+  createdAt: string;
+}
+
 /** Kanban board (FR-KB) — GET /api/projects/{id}/board. */
 export interface BoardCard {
   id: number;

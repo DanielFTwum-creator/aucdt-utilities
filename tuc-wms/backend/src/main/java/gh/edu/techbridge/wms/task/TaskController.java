@@ -4,6 +4,7 @@ import gh.edu.techbridge.wms.project.Project;
 import gh.edu.techbridge.wms.project.ProjectRepository;
 import gh.edu.techbridge.wms.project.ProjectPermissionService;
 import gh.edu.techbridge.wms.project.ProjectRole;
+import gh.edu.techbridge.wms.notify.NotificationService;
 import gh.edu.techbridge.wms.notify.TaskMailService;
 import gh.edu.techbridge.wms.user.User;
 import gh.edu.techbridge.wms.user.UserRepository;
@@ -29,22 +30,28 @@ public class TaskController {
     private final ProjectEventService events;
     private final UserRepository users;
     private final TaskMailService taskMail;
+    private final NotificationService notifications;
 
     public TaskController(TaskRepository tasks, ProjectRepository projects, ProjectPermissionService perms,
-                          ProjectEventService events, UserRepository users, TaskMailService taskMail) {
+                          ProjectEventService events, UserRepository users, TaskMailService taskMail,
+                          NotificationService notifications) {
         this.tasks = tasks;
         this.projects = projects;
         this.perms = perms;
         this.events = events;
         this.users = users;
         this.taskMail = taskMail;
+        this.notifications = notifications;
     }
 
-    /** Email each given assignee (except the actor) that they were assigned this task. */
+    /** Notify each given assignee (except the actor): in-app notification + email. */
     private void notifyAssignees(java.util.Collection<Long> assigneeIds, Task t, Project p, User actor) {
         for (Long uid : assigneeIds) {
             if (uid == null || uid.equals(actor.getId())) continue;   // no self-notification
-            users.findById(uid).ifPresent(recipient -> taskMail.notifyAssigned(recipient, t, p, actor));
+            users.findById(uid).ifPresent(recipient -> {
+                notifications.notifyTaskAssigned(recipient, t, p, actor);   // FR-NOTIF in-app
+                taskMail.notifyAssigned(recipient, t, p, actor);            // FR-NOTIF-004 email
+            });
         }
     }
 
