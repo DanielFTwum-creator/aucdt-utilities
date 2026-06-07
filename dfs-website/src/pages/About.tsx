@@ -137,7 +137,7 @@ export default function About() {
               { emoji: "🥁", title: "We Bring Everything", desc: "Instruments, curriculum, facilitation guides, and ongoing support. Your staff just needs to show up ready to learn." },
               { emoji: "🏔️", title: "Built for the Northeast", desc: "From the Green Mountains to the Northeast Kingdom — our PD is designed for the schools and communities we know." },
             ].map((item) => (
-              <div key={item.title} className="space-y-4 p-8 rounded-[24px] bg-white shadow-sm">
+              <div key={item.title} className="space-y-4 p-8 rounded-[24px] bg-card text-card-foreground shadow-sm">
                 <span className="text-4xl">{item.emoji}</span>
                 <h3 className="text-xl font-serif font-bold">{item.title}</h3>
                 <p className="text-sm text-foreground/60 leading-relaxed">{item.desc}</p>

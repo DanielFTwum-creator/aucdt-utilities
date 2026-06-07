@@ -3,8 +3,9 @@
 
 **Project:** Drumming for SEL Success
 **Company:** Root Drumming Systems, LLC
-**Version:** 1.1
-**Date:** April 09, 2026
+**Version:** 1.2
+**Date:** 07 June 2026
+**Change note (v1.2):** AI assistant Gemini access migrated to the central TUC WMS Gemini key proxy — the application no longer holds a Gemini API key. React/react-dom pinned to latest stable 19.2.7.
 
 ### 1. Introduction
 #### 1.1 Purpose
@@ -66,13 +67,22 @@ The website is a standalone platform built with React 19.2.4, Vite, and Tailwind
 - No specific hardware requirements beyond a standard computing device with internet access.
 
 #### 4.3 Software Interfaces
-- **React**: Frontend framework (v19.2.4).
+- **React**: Frontend framework (v19.2.7, latest stable per TUC policy).
 - **Vite**: Build tool and development server.
 - **Tailwind CSS**: Styling framework.
 - **Lucide React**: Icon library.
+- **Express (server.ts)**: Node server serving the SPA and the AI relay endpoint.
+- **TUC WMS Gemini Proxy**: The DfS Best-Practices assistant obtains Gemini
+  responses via the central WMS proxy (`POST https://wms.techbridge.edu.gh/api/gemini/generate`).
+  This application holds **no Gemini API key**; the server-side relay authenticates to
+  WMS with the `X-Gemini-Proxy-Key` service credential (held only in the server `.env`).
 
 #### 4.4 Communications Interfaces
 - **HTTPS**: All communications between the client and server must be encrypted.
+- **AI assistant data flow**: Browser → `POST /dfs/api/gemini/best-practices`
+  (nginx proxies `/dfs/api/` → Node on port 3012) → `server.ts` relay →
+  WMS Gemini proxy (`X-Gemini-Proxy-Key`) → Google Gemini → response returned as
+  `{ text }`. No Gemini key or prompt secret is ever present in the client bundle.
 
 ### 5. System Architecture
 *(SVG Diagrams to be generated in Phase 4)*
@@ -80,7 +90,7 @@ The website is a standalone platform built with React 19.2.4, Vite, and Tailwind
 ### 6. Gap Analysis (Current vs. Target)
 | ID | Feature | Status | Implementation Detail |
 | :--- | :--- | :--- | :--- |
-| 1.1 | React Version | ✅ COMPLETE | Pinned to 19.2.4 in package.json. |
+| 1.1 | React Version | ✅ COMPLETE | Pinned to latest stable 19.2.7 in package.json (was 19.2.4). |
 | 1.2 | Navigation | ✅ COMPLETE | Layout component with responsive nav. |
 | 1.3 | Home Page | ✅ COMPLETE | Hero, value prop, and CTA sections. |
 | 1.4 | About Page | ✅ COMPLETE | Founder bio and program history. |
@@ -95,6 +105,7 @@ The website is a standalone platform built with React 19.2.4, Vite, and Tailwind
 | 3.2 | Broken Links | ✅ COMPLETE | All links (including buttons) verified. |
 | 4.1 | UI Components | ✅ COMPLETE | Shadcn components and utils.ts restored. |
 | 4.2 | AI Assistant | ✅ COMPLETE | Primary AI agent component implemented. |
+| 4.3 | AI Key Security | ✅ COMPLETE | Gemini access via central WMS proxy; no API key in app/bundle. server.ts relays with X-Gemini-Proxy-Key. Verified live end-to-end (2026-06-07). |
 | 5.1 | Admin Security | ✅ COMPLETE | Password-protected routes with audit logging. |
 | 5.2 | Diagnostics | ✅ COMPLETE | System health and security overview in admin. |
 | 5.3 | Accessibility | ✅ COMPLETE | ARIA labels, semantic HTML, and high-contrast support. |
