@@ -52,6 +52,9 @@ set -e
 log() { echo "[`$(date '+%H:%M:%S')][SERVER] `$1"; }
 TMP=/tmp/tuc-wms-fe_`$`$
 DEPLOY=$DEPLOY_PATH
+# Always remove the temp build tree (incl. node_modules) on ANY exit — success,
+# failure, or interrupt — so failed deploys never leave node_modules on the server.
+trap 'rm -rf "`$TMP"' EXIT
 
 command -v pnpm >/dev/null 2>&1 || { corepack enable >/dev/null 2>&1 || npm i -g pnpm --silent; }
 log "pnpm `$(pnpm --version)"

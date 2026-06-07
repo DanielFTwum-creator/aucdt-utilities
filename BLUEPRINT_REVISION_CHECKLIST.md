@@ -491,6 +491,28 @@ After making revisions:
 
 ---
 
+## 16. REACT VERSION POLICY — REVISED (2026-06-07)
+
+### Why this changed
+Apps hard-pinned **exact** React versions (e.g. `react`/`react-dom` `19.2.5`). When a package is republished under the same version, the `pnpm-lock.yaml` integrity hash goes stale and installs fail fleet-wide with `ERR_PNPM_TARBALL_INTEGRITY`. Discovered 2026-06-07 during the Gemini-proxy migration of `youtube-description-genie` — react-dom `19.2.5` would not install; latest stable was `19.2.7`.
+
+### New policy (MANTRA)
+- **Pin the latest STABLE React + react-dom on every app**, kept matching (both same version). As of 2026-06-07 that is **19.2.7**.
+- **pnpm throughout** — never npm or yarn, and remove any `|| npm install` / `|| npm run build` fallback lines (e.g. in Dockerfiles).
+- On any app you touch: bump react/react-dom to current latest stable (`pnpm view "react-dom@^19.0.0" version`), refresh the lockfile via `pnpm install --no-frozen-lockfile`. If integrity error: `pnpm store prune` then reinstall.
+
+### Validation
+```
+☐ react and react-dom are equal and at the latest stable
+☐ pnpm install --no-frozen-lockfile succeeds clean (no ERR_PNPM_TARBALL_INTEGRITY)
+☐ pnpm build succeeds
+☐ no npm/yarn fallbacks remain in scripts or Dockerfile
+```
+
+### Status: APPLIED to youtube-description-genie (2026-06-07). To propagate to the other ~94 apps — delegate to Haiku (mechanical bump + reinstall + build verify).
+
+---
+
 ## Next Session: Blueprint Revision
 **Estimated effort:** 3–4 hours  
 **Owner:** Claude (Sonnet for security/design decisions, Haiku for implementation)  

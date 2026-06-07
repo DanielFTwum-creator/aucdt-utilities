@@ -1,9 +1,8 @@
 import path from 'path';
 import tailwindcss from '@tailwindcss/vite';
-import { defineConfig, loadEnv } from 'vite';
+import { defineConfig } from 'vite';
 
-export default defineConfig(({ mode }) => {
-    const env = loadEnv(mode, '.', '');
+export default defineConfig(() => {
     return {
   build: {
     chunkSizeWarningLimit: 1000,
@@ -15,10 +14,10 @@ export default defineConfig(({ mode }) => {
       }
     }
   },
-      define: {
-        'process.env.API_KEY': JSON.stringify(env.GEMINI_API_KEY),
-        'process.env.GEMINI_API_KEY': JSON.stringify(env.GEMINI_API_KEY)
-      },
+      // SECURITY: the Gemini key is NEVER injected into the client bundle. Gemini
+      // calls go through this app's server.ts relay -> WMS /api/gemini/generate.
+      // (Removed the former define: process.env.API_KEY / GEMINI_API_KEY that baked
+      // the secret into the public bundle — exposed keys get auto-revoked.)
       resolve: {
         alias: {
           '@': path.resolve(__dirname, '.'),
