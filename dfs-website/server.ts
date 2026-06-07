@@ -7,18 +7,18 @@ import { fileURLToPath } from "url";
 import { exec } from "child_process";
 import fs from "fs";
 import nodemailer from "nodemailer";
-import { GoogleGenerativeAI } from "@google/generative-ai";
 import dotenv from "dotenv";
 dotenv.config();
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Gemini client is server-side only — the key must NEVER reach the browser bundle.
-// Standard TUC SDK is @google/generative-ai (see PATTERNS.md Pattern 4).
-const GEMINI_API_KEY = process.env.GEMINI_API_KEY || process.env.API_KEY || "";
+// Gemini now goes through the CENTRAL WMS key proxy — this app no longer holds
+// the Gemini API key. We relay server-side with the X-Gemini-Proxy-Key service
+// credential (server env only; never in the browser). See WMS /api/gemini/generate.
 const GEMINI_MODEL = "gemini-2.5-flash";
-const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
+const WMS_GEMINI_URL = process.env.WMS_GEMINI_URL || "https://wms.techbridge.edu.gh/api/gemini/generate";
+const GEMINI_PROXY_KEY = process.env.GEMINI_PROXY_KEY || "";
 
 // Email transporter — uses Gmail app password from .env
 const transporter = nodemailer.createTransport({
@@ -87,19 +87,30 @@ async function startServer() {
   // Mirrors biochemai's /api/gemini/bio-chem: the AI-for-GOOD system instruction
   // is built client-side and posted in the body. Returns rich HTML (with inline SVG).
   app.post(["/api/gemini/best-practices", "/dfs/api/gemini/best-practices"], async (req, res) => {
-    if (!GEMINI_API_KEY) {
-      return res.status(503).json({ error: "GEMINI_API_KEY not configured on the server." });
+    if (!GEMINI_PROXY_KEY) {
+      return res.status(503).json({ error: "GEMINI_PROXY_KEY not configured on the server." });
     }
     const { prompt, systemInstruction } = req.body ?? {};
     if (!prompt || !systemInstruction) {
       return res.status(400).json({ error: "Missing prompt or systemInstruction" });
     }
     try {
-      const model = genAI.getGenerativeModel({ model: GEMINI_MODEL, systemInstruction });
-      const result = await model.generateContent({
-        contents: [{ role: "user", parts: [{ text: prompt }] }],
+      // Relay to the central WMS Gemini proxy. systemInstruction maps to the
+      // Gemini REST system_instruction; prompt is the user turn.
+      const upstream = await fetch(`${WMS_GEMINI_URL}?model=${encodeURIComponent(GEMINI_MODEL)}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "X-Gemini-Proxy-Key": GEMINI_PROXY_KEY },
+        body: JSON.stringify({
+          system_instruction: { parts: [{ text: systemInstruction }] },
+          contents: [{ role: "user", parts: [{ text: prompt }] }],
+        }),
       });
-      const text = (await result.response).text();
+      if (!upstream.ok) {
+        console.error("[DfS] proxy returned", upstream.status, await upstream.text());
+        return res.status(502).json({ error: "DfS assistant is currently unable to process this request." });
+      }
+      const data: any = await upstream.json();
+      const text = data?.candidates?.[0]?.content?.parts?.[0]?.text ?? "";
       res.json({ text });
     } catch (err: any) {
       console.error("[DfS] best-practices error:", err?.message);
