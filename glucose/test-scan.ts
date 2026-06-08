@@ -1,5 +1,8 @@
 import { GoogleGenAI, Type } from "@google/genai";
 import * as fs from "fs";
+import dotenv from "dotenv";
+
+dotenv.config({ path: ".env.local" });
 
 async function test() {
   const apiKey = process.env.GEMINI_API_KEY;
@@ -10,11 +13,12 @@ async function test() {
 
   const ai = new GoogleGenAI({ apiKey });
   try {
-    // Use a minimal 1x1 pixel PNG
+    const imageBuffer = fs.readFileSync("rophe-glucose-sheet.jpg");
+    const base64Image = imageBuffer.toString("base64");
     const filePart = { 
       inlineData: { 
-        data: 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==', 
-        mimeType: 'image/png' 
+        data: base64Image, 
+        mimeType: 'image/jpeg' 
       } 
     };
     

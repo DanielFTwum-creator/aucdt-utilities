@@ -1,543 +1,531 @@
-# PATTERNS.md — Daniel Frempong Twum / Techbridge University College (TUC)
+# PATTERNS.md — TUC Reusable Engineering Patterns
 
-> Reusable pattern library for the TUC AI Lab agentic workflow.
-> Core session directives → see CLAUDE.md
-> Version: 2.1 FINAL — June 2026
+> Pattern library for Daniel Frempong Twum / Techbridge University College (TUC).
+> Reference this file when implementing the patterns below — do not read it every session.
+> Core directives → see CLAUDE.md
 
 ---
 
 ## PATTERN INDEX
 
-| # | Pattern | Domain |
+| # | Pattern | Projects |
 |---|---|---|
-| 1 | User Journey Mapping | UX / Product |
-| 2 | Capacitor Mobile Deployment | Frontend / Mobile |
-| 3 | Gemini CLI Execution Layer | Agentic Workflow |
-| 4 | Glucose / Health Data Handling | Domain-Specific |
-| 5 | IEEE SRS First | Architecture |
-| 6 | Triad Workflow | Agentic Workflow |
-| 7 | Task Budget Integration | Agentic Workflow |
-| 8 | Parallel Agent Deployment | Agentic Workflow |
-| 9 | Bulletproof Directive | Prompt Engineering |
-| 10 | Screenshot-to-SRS Pipeline | Documentation |
-| 11 | VET Toolkit | Quality Assurance |
-| 12 | PLCRP Release Pipeline | Music / Creative |
-| 13 | Vinyl Visualiser Contract | Music / Creative |
-| 14 | 6R Methodology Application | Meta / Process |
-| 15 | Java One-Class-Per-File | Backend / Java |
-| 16 | Dev Profile Zero-Dependency Contract | Backend / Java |
-| 17 | CONSTRAINTS.md per Project | Project Setup |
-| 18 | rawPost for Auth Handoff Endpoints | Frontend / Auth |
-| 19 | Frontend Debug Logger | Frontend / Debugging |
+| 1 | Standard User Journey (BioChemAI) | All TUC React apps |
+| 2 | Frontend HTML Standards | All index.html files |
+| 3 | Capacitor Mobile Deployment | LearnAI, BioChemAI, ThesisAI, LuxThumb |
+| 4 | Google Gemini API Integration | Glucose, any vision/OCR task |
+| 5 | Dual-Auth Logout | Any app with OAuth + local session |
+| 6 | Glucose Project Learnings | General React + IndexedDB apps |
 
 ---
 
-## PATTERN 1 — User Journey Mapping
+## PATTERN 1: STANDARD USER JOURNEY (BioChemAI Template)
 
-**Context:** Designing or auditing any user-facing application.
+Every TUC application must capture a complete, convincing user flow from entry to exit.
+The **BioChemAI pattern** is the reference implementation.
 
-**Problem:** Features get built without a clear picture of how users actually move through the system, leading to broken flows and missing states.
+### Architecture
 
-**Solution:** Before writing any UI code, map the full user journey:
-1. Entry point (how does the user arrive?)
-2. Happy path (step-by-step, no errors)
-3. Error states (what breaks, what do they see?)
-4. Exit point (where does the flow end?)
+State machine with progressive disclosure and smooth transitions.
 
-Document as a numbered list or flowchart in the SRS before implementation. Every screen must appear in at least one journey.
-
-**Checklist trigger:** Any task involving a new user-facing feature or flow redesign.
-
----
-
-## PATTERN 2 — Capacitor Mobile Deployment
-
-**Context:** Deploying a React/Vite web app to iOS App Store or Google Play.
-
-**Standard setup:**
-```bash
-pnpm add @capacitor/core@8.3.3 @capacitor/cli@8.3.3
-pnpm add @capacitor/ios@8.3.3 @capacitor/android@8.3.3
-npx cap init [AppName] [com.techbridge.appname] --web-dir dist
-npx cap add ios
-npx cap add android
+```
+Entry → Auth Check → Mode Selection → Workflow State → Results / Exit
 ```
 
-**capacitor.config.ts minimum:**
+### Mode System (AppMode Enum)
+
+- `Chat` — Conversational AI interaction (default entry point)
+- `Quiz` — Structured assessment with generation + progression
+- `Test` — Self-testing with animated results
+- `Docs` — Reference material
+- `Admin` — Password-gated admin panel
+- `Voice` — Voice input variant
+
+### State Machine Pattern (Per Mode)
+
 ```typescript
-import { CapacitorConfig } from '@capacitor/cli';
-const config: CapacitorConfig = {
-  appId: 'com.techbridge.appname',
-  appName: 'App Name',
-  webDir: 'dist',
-  server: { androidScheme: 'https' }
+type QuizState = 'setup' | 'loading' | 'active' | 'results' | 'error';
+```
+
+- **Setup** — User configures (topic, difficulty, question count)
+- **Loading** — Visual spinner with contextual message ("Generating 10 questions...")
+- **Active** — Interactive progression (user answers, immediate feedback)
+- **Results** — Summary with score, breakdown, restart option
+- **Error** — Graceful recovery with actionable message
+
+### Persistence Pattern
+
+```typescript
+const LOCAL_STORAGE_KEYS = {
+  messages: 'biochemai_messages',
+  level: 'biochemai_level',
+  theme: 'biochemai_theme',
 };
-export default config;
+
+useEffect(() => {
+  localStorage.setItem(LOCAL_STORAGE_KEYS.messages, JSON.stringify(messages));
+}, [messages]);
 ```
 
-**Deployment checklist:**
-- `package.json` version bumped to `1.0.0`
-- `APP_STORE_GUIDE.md` written (Sonnet)
-- `MOBILE_BUILD_GUIDE.md` written (Sonnet)
-- `APP_ICONS_GUIDE.md` written (Haiku)
-- `privacy.html` GDPR/CCPA/GDPA compliant (Sonnet)
-- `APPSTORE_READY.md` summary (Haiku)
-- npm scripts: `cap:build`, `cap:ios`, `cap:android`
+### Beautiful Loading States
 
----
+- **Animated dots** — Three-dot pulse for "thinking" states
+- **Contextual copy** — "BioChemAI is preparing 10 questions for you" (not "Loading...")
+- **Visual containment** — Spinner inside rounded card with theme colours
+- **No jarring transitions** — Use `opacity + transform`, not `scale/bounce`
 
-## PATTERN 3 — Gemini CLI Execution Layer
+### Error Handling (User-Facing)
 
-**Context:** The TUC AI Lab Triad Workflow — Claude thinks, Gemini executes.
-
-**Role split:**
-- **Claude (Sonnet):** Architecture, SRS, security design, complex decisions, review
-- **Gemini Flash:** Code execution, file generation, boilerplate, bulk transformations
-- **Daniel:** Human judgement layer — approves, redirects, escalates
-
-**Handoff format:**
-When passing a task to Gemini, Claude produces a structured directive:
 ```
-TASK: [One sentence description]
-INPUT: [Files, context, or data Gemini receives]
-OUTPUT: [Exact files or artefacts expected]
-CONSTRAINTS: [Tech stack, naming conventions, do-not-touch rules]
-SUCCESS CRITERIA: [How to verify the output is correct]
+Catch → Display error message → Offer "Try Again" button → Reset state to 'setup'
 ```
 
-**Escalation rule:** If Gemini produces output that fails the success criteria after two attempts, Claude takes over and implements directly.
+Show what went wrong, not technical details. One clear recovery action. Return to last safe state.
 
----
+### How to Apply to a New Project
 
-## PATTERN 4 — Glucose / Health Data Handling
-
-**Context:** Any application processing health metrics (glucose readings, biometric data, clinical values).
-
-**Rules:**
-- Never display raw sensor values without unit labels (mmol/L or mg/dL — specify which).
-- Always validate range: glucose 0–33.3 mmol/L (0–600 mg/dL). Flag out-of-range as sensor error, not clinical value.
-- Timestamps must include timezone. Health data without timezone is ambiguous and dangerous.
-- No health data stored in localStorage or sessionStorage — server-side only.
-- Any alert threshold (high/low) must be configurable by the clinician, not hardcoded.
-- Display trend arrows (↑ ↓ →) alongside values where time-series data is available.
-
----
-
-## PATTERN 5 — IEEE SRS First
-
-**Context:** Any new project or major feature addition in `aucdt-utilities/`.
-
-**Rule:** No production code is written until an IEEE 29148-2018 SRS exists for the project.
-
-**SRS minimum sections:**
-1. Introduction (purpose, scope, definitions)
-2. Overall Description (context, users, constraints, assumptions)
-3. System Features (functional requirements with IDs: `FR-XXX-NNN`)
-4. External Interface Requirements (UI, API, hardware, software)
-5. Non-Functional Requirements (performance, security, reliability)
-6. Architecture & Best Practices
-7. Data Requirements (entities, retention, privacy)
-8. Verification & Acceptance Criteria
-
-**Document ID format:** `TUC-ICT-SRS-YYYY-NNN`
-
-**Why:** A solid SRS means Haiku gets precise specs, fewer rewrites, and the final product matches the institutional requirement.
-
----
-
-## PATTERN 6 — Triad Workflow
-
-**Context:** The TUC AI Lab standard operating model for all software development.
-
-**Three layers:**
+**Step 1: Define modes** — What are the primary user interactions?
 ```
-Layer 1 — THINK    : Claude Sonnet   (architecture, decisions, review)
-Layer 2 — EXECUTE  : Gemini Flash    (implementation, generation, transformation)
-Layer 3 — JUDGE    : Daniel Twum     (approval, redirection, escalation)
+ai-exam-generator: Setup → Building → ExamActive → Grading → Results
+brainiac-challenge: Browse → AttemptChallenge → Scoring → LeaderboardView
 ```
 
-**Session flow:**
-1. Daniel states the goal.
-2. Claude confirms scope, reads CLAUDE.md + CONSTRAINTS.md, states assumptions.
-3. Claude produces SRS or architecture plan.
-4. Gemini executes against the spec.
-5. Claude reviews Gemini output for gaps and security issues.
-6. Daniel approves or escalates.
-
-**Token efficiency rule:** Never bring Sonnet in for a task Haiku can handle. Never bring Gemini in for a task that requires judgement.
-
----
-
-## PATTERN 7 — Task Budget Integration
-
-**Context:** Managing token spend and context window across long agentic sessions.
-
-**Budget tiers:**
-
-| Tier | Tokens | Use for |
-|---|---|---|
-| Micro | < 500 | Single file edits, naming decisions, quick lookups |
-| Small | 500–2K | Component generation, single endpoint, config file |
-| Medium | 2K–8K | Feature scaffold, SRS section, multi-file refactor |
-| Large | 8K–32K | Full SRS document, project scaffold, architecture review |
-| XL | 32K+ | Full prototype, multi-project synthesis — use sparingly |
-
-**Rules:**
-- State the budget tier at task start.
-- If a task grows beyond its tier mid-session, stop and renegotiate scope.
-- Haiku tasks never exceed Medium. Escalate to Sonnet if they do.
-- XL tasks produce an artifact (file or ZIP), not inline output.
-
----
-
-## PATTERN 8 — Parallel Agent Deployment
-
-**Context:** Tasks that can be decomposed into independent workstreams.
-
-**When to parallelise:**
-- Generating multiple unrelated components (e.g. 5 dashboard panels with no shared state)
-- Running the same transformation across multiple files
-- Producing documentation for multiple modules simultaneously
-
-**When NOT to parallelise:**
-- Tasks with shared state or ordering dependencies
-- Security-sensitive tasks (auth flows, audit logs) — always sequential and reviewed
-- Tasks where one output feeds the next
-
-**Format for parallel dispatch:**
-```
-PARALLEL TASKS — spawn simultaneously:
-  [A] Task description, deliverable, success criteria
-  [B] Task description, deliverable, success criteria
-  [C] Task description, deliverable, success criteria
-MERGE POINT: [When all three complete, describe how outputs combine]
-```
-
----
-
-## PATTERN 9 — Bulletproof Directive (v14)
-
-**Context:** Writing Claude Code session directives for long agentic runs.
-
-**Structure:**
-```
-SCOPE: [One sentence — what project, what task]
-READ FIRST: [Files to read before acting — CLAUDE.md, CONSTRAINTS.md, local README]
-TASK: [Numbered steps, each atomic and verifiable]
-CONSTRAINTS: [What must not change — ports, naming, file locations]
-SUCCESS CRITERIA: [Exact verifiable outcomes]
-ESCALATE IF: [Conditions that require human input before proceeding]
-```
-
-**v14 additions:**
-- Always include `READ FIRST` before any action step.
-- `ESCALATE IF` is mandatory — never let an agent proceed blindly past an ambiguity.
-- Success criteria must be machine-verifiable where possible (file exists, test passes, HTTP 200).
-
----
-
-## PATTERN 10 — Screenshot-to-IEEE-SRS Pipeline
-
-**Context:** Converting a screen recording, mockup, or set of screenshots into an IEEE SRS document.
-
-**Steps:**
-1. Claude analyses each screenshot and produces a feature inventory (screen name, elements, actions, data displayed).
-2. Feature inventory mapped to SRS sections (FR-XXX-NNN IDs assigned).
-3. Non-functional requirements inferred from context (mobile → responsiveness, dashboard → performance, health data → security).
-4. SRS drafted in IEEE 29148-2018 format.
-5. Architecture diagram (SVG) generated to accompany the SRS.
-
-**Output:** `.docx` SRS file with embedded SVG diagrams, document ID `TUC-ICT-SRS-YYYY-NNN`.
-
----
-
-## PATTERN 11 — VET Toolkit
-
-**Context:** Quality assurance for any AI-generated output before delivery.
-
-**VET = Verify · Evaluate · Test**
-
-| Stage | Action |
-|---|---|
-| **Verify** | Does the output match the spec? Check every FR/NFR against the implementation. |
-| **Evaluate** | Are there gaps, security risks, or scope creep? |
-| **Test** | Does it run? Happy path confirmed? Edge cases covered? |
-
-**VET report format:**
-```
-VERIFIED: [List of requirements confirmed present]
-GAPS:     [Requirements not yet implemented]
-RISKS:    [Security, performance, or reliability concerns]
-TEST:     [What was run, what passed, what failed]
-VERDICT:  PASS / CONDITIONAL PASS (resolve gaps X, Y) / FAIL
-```
-
----
-
-## PATTERN 12 — PLCRP Release Pipeline
-
-**Context:** Music releases under DJ KoFAi, DJ CyStorm, or DJ Genie via Hologram AI Records.
-
-**PLCRP = Patois-Lyricist Curated Release Pipeline**
-
-**Stages:**
-1. **Concept** — Theme, alias, genre, target platform (Spotify, YouTube, TikTok)
-2. **Production** — Suno.ai generation, stems, mix
-3. **Metadata** — YAML export: title, ISRC, UPC, artist, featuring, genre, release date, distributor (DistroKid)
-4. **Registration** — GHAMRO + ASCAP registration (use verified metadata only — never hallucinated references)
-5. **Artwork** — THUMB-AGENT-001 thumbnail workflow; Afrofuturist/Pan-African aesthetic
-6. **Distribution** — DistroKid upload, platform-specific asset prep
-7. **Promotion** — YouTube/@KudjoTwum, TikTok, scheduling
-
-**Metadata rule:** All reference data (co-writers, samples, publishing) must be verified before GHAMRO/ASCAP submission. Never generate fictional credits.
-
----
-
-## PATTERN 13 — Vinyl Visualiser Contract
-
-**Context:** Any music visualiser widget featuring vinyl records (DJ KoFAi releases, GrooveRx, LyriaStream).
-
-**Non-negotiable rules:**
-- **The vinyl SVG must always spin.** CSS `animation: spin linear infinite` on the vinyl element. This is not optional.
-- The canvas light show overlay (stage-light simulation) stays **fixed** — it does not rotate with the vinyl.
-- Rotation speed: `4s` for normal playback, `8s` for slow/ambient, `2s` for hype tracks.
-- The vinyl stops spinning only on explicit pause. It resumes immediately on play.
-- Colour palette: deep black vinyl (#111), gold label (#C8920A), subtle groove rings.
-
-**Why:** The spinning vinyl is a deliberate aesthetic and brand choice for all Hologram AI Records visualisers. Disabling it breaks the brand contract.
-
----
-
-## PATTERN 14 — 6R Methodology Application
-
-**Context:** Applying Daniel's 6R Methodology across software, design, music, and institutional assets.
-
-**The 6Rs:**
-
-| R | Name | Question |
-|---|---|---|
-| 1 | **Reason** | Why does this exist? What problem does it solve? |
-| 2 | **Relationships** | How does it connect to other systems, people, or assets? |
-| 3 | **Rhythm** | What is the cadence? (release cycle, update frequency, interaction pattern) |
-| 4 | **Relevance** | Is this still serving its purpose? Is it aligned with current institutional goals? |
-| 5 | **Refinement** | What needs to be improved, simplified, or removed? |
-| 6 | **Reflection / Resilience** | What did we learn? How do we make it more durable? |
-
-**Application trigger:** Use the 6R review at the start of any audit, refresh, or retrospective session. Document the answers for each R before making changes.
-
----
-
-## PATTERN 15 — Java One-Class-Per-File
-
-**Context:** Generating Java backend code (Spring Boot, entities, services, config).
-
-**Problem:** Grouping multiple classes in one `.java` file causes `error: class X is public, should be declared in a file named X.java` at compile time. This is a hard Java compiler rule with no workaround.
-
-**Rule:** Every public class, interface, record, or enum lives in its own `.java` file. File name = type name exactly (case-sensitive).
-
-**Package-private exception:** A package-private (no modifier) type may share a file with its primary public type *only if* it has no external references. If in doubt, split it.
-
-**Entity naming trap — avoid shadowing JDK/Spring types:**
-
-| ❌ Shadows | ✅ Use instead |
-|---|---|
-| `NetworkInterface` | `NetworkInterfaceEntity` — shadows `java.net.NetworkInterface` |
-| `Thread` | `TaskThreadEntity` — shadows `java.lang.Thread` |
-| `Timer` | `ScheduledTimerEntity` — shadows `java.util.Timer` |
-
-**Checklist trigger:** Any time a generated file contains more than one top-level type definition — split before delivering.
-
----
-
-## PATTERN 16 — Dev Profile Zero-Dependency Contract
-
-**Context:** Spring Boot project `application-dev.yml` on a developer's local Windows machine.
-
-**Problem:** Dev profiles that assume MariaDB or Redis are running locally fail immediately on machines where those services aren't installed — the most common being a Windows dev machine without Docker running.
-
-**Contract:** The dev profile must start successfully with only Java 21 + Maven installed. Zero external services required.
-
-**Implementation:**
-
-```yaml
-# application-dev.yml — paste this block exactly
-spring:
-  datasource:
-    url: jdbc:h2:mem:appname;DB_CLOSE_DELAY=-1;MODE=MySQL;NON_KEYWORDS=USER
-    driver-class-name: org.h2.Driver
-    username: sa
-    password:
-  jpa:
-    hibernate:
-      ddl-auto: validate
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.H2Dialect
-  flyway:
-    enabled: true
-    locations: classpath:db/migration
-    baseline-on-migrate: true
-  autoconfigure:
-    exclude:
-      - org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration
-      - org.springframework.boot.autoconfigure.data.redis.RedisRepositoriesAutoConfiguration
-  cache:
-    type: simple
-```
-
-**pom.xml rule:** `flyway-core` is always present. `flyway-mysql` is added only in prod dependencies or behind a Maven profile — never in the base `<dependencies>` block if dev uses H2.
-
-**H2 SQL compatibility — Flyway migrations:**
-
-| ❌ MariaDB-only | ✅ H2-compatible |
-|---|---|
-| `ON UPDATE CURRENT_TIMESTAMP` | Handle via `@PreUpdate` in JPA entity |
-| `TEXT` | `VARCHAR(2048)` |
-| `MEDIUMTEXT` | `VARCHAR(4096)` |
-| `ENGINE=InnoDB` | Omit entirely |
-| `CREATE INDEX idx ON t(col)` (no IF NOT EXISTS) | `CREATE INDEX IF NOT EXISTS idx ON t(col)` |
-
-**Verification:** `SPRING_PROFILES_ACTIVE=dev mvn spring-boot:run` must produce a running server within 30 seconds on a machine with no running services.
-
----
-
-## PATTERN 17 — CONSTRAINTS.md per Project
-
-**Context:** Any project in `aucdt-utilities/` with a backend, build system, or environment-specific configuration.
-
-**Problem:** Claude makes environment assumptions (Linux, services running, tool availability) that don't match the developer's actual machine, producing code that fails to compile or run without modifications.
-
-**Solution:** Every project has a `CONSTRAINTS.md` at its root, created on day one before any code is written.
-
-**Contents:**
-```markdown
-# [project-name] — Build Constraints
-
-## Developer Environment
-- OS: [e.g. Windows 11, Git Bash (MINGW64)]
-- Java: [e.g. 21 LTS]
-- Maven: [e.g. 3.9.x]
-- Node: [e.g. 22.x]
-- Package manager: [pnpm / npm / yarn]
-
-## Database
-- Dev: [e.g. H2 in-memory — flyway-core only]
-- Prod: [e.g. MariaDB on port 3307]
-- SQL notes: [any dialect restrictions]
-
-## Services Available Locally
-- Redis: [YES / NO — if NO, must exclude in dev profile]
-- MariaDB: [YES / NO]
-- [other services]
-
-## Tool Availability
-- nmap: [YES / NO]
-- arp-scan: [YES / NO]
-- Docker: [YES / NO]
-
-## Special Rules
-- [Any project-specific constraints not covered above]
-```
-
-**Session Start Protocol:** Claude reads `CONSTRAINTS.md` at step 2 of every session. It overrides all defaults including OS assumptions, service availability, and SQL dialect choices.
-
-**Template:** `tuc-netscan/CONSTRAINTS.md`
-
----
-
-## PATTERN 18 — rawPost for Auth Handoff Endpoints
-
-**Context:** Any SPA using an `api()` / `fetch` wrapper that has a 401-retry-and-refresh loop (e.g. tuc-wms `api.ts`).
-
-**Problem:** Public auth handoff endpoints (`/api/auth/exchange`, `/api/auth/mfa/verify`, `/api/auth/refresh` on startup) legitimately return 401 — not because the user's session is lost, but because no valid session exists yet. Routing these calls through the authenticated `api()` wrapper triggers the retry loop:
-1. Handoff call → 401
-2. Retry fires another `POST /api/auth/refresh` → 401
-3. `onAuthLost()` fires → clears user state
-4. Throws `"Session expired"` — masking the real server error
-
-**Rule:** Maintain two distinct fetch helpers:
-
-| Helper | Use for | 401 behaviour |
-|--------|---------|---------------|
-| `api()` / `post()` | Authenticated endpoints | Retry → refresh → onAuthLost |
-| `rawPost()` | Public auth handoff endpoints | Throw immediately with server message |
-
-**Implementation (TypeScript):**
+**Step 2: Implement the state machine**
 ```typescript
-// No retry, no onAuthLost — 401 surfaces the real server error message.
-export async function rawPost<T = any>(path: string, body?: unknown): Promise<T> {
-  const headers: Record<string, string> = { 'Content-Type': 'application/json' };
-  if (accessToken) headers['Authorization'] = `Bearer ${accessToken}`;
-  const res = await fetch(path, {
-    method: 'POST',
-    headers,
-    credentials: 'include',
-    body: body ? JSON.stringify(body) : undefined,
-  });
-  if (res.status === 204) return undefined as T;
-  const text = await res.text();
-  if (!res.ok) {
-    let msg = text;
-    try { msg = JSON.parse(text).error || JSON.parse(text).message || text; } catch { }
-    throw new Error(msg || `Request failed (${res.status})`);
-  }
-  return JSON.parse(text);
+type AppState = 'setup' | 'loading' | 'active' | 'results';
+const [state, setState] = useState<AppState>('setup');
+```
+
+**Step 3: Add localStorage persistence**
+```typescript
+useEffect(() => {
+  localStorage.setItem('my_app_state', JSON.stringify({ state, data }));
+}, [state, data]);
+```
+
+**Step 4: Build loading states** — Animated spinner + contextual message + rounded card
+
+**Step 5: Results visualisation** — Score, breakdown, real-time test results, restart button
+
+**Step 6: Test the full flow**
+```
+Welcome → Configure → Loading → Active → Results → Restart → Welcome
+Verify: localStorage persists across refresh · Theme switches in all states · Error recovery works
+```
+
+### Visual Checklist (The "Beautiful" Test)
+
+When clicking the Test button:
+- ✅ Spinner animates smoothly (no jank)
+- ✅ Each test result slides in with transition
+- ✅ Status badges (RUNNING / PASS / FAIL) appear in real-time
+- ✅ Screenshot visualisation shows what the test verified
+- ✅ No layout shift — cards maintain consistent width
+- ✅ Loading message matches test name
+- ✅ Results flow down naturally, like a waterfall
+
+### Project Status
+
+| Project | Status |
+|---|---|
+| biochemai | ✅ Reference implementation |
+| brainiac-challenge | 🟡 Needs state machine |
+| ai-exam-generator | 🟡 Needs loading + results states |
+| agenticai-masterclass | 🟡 Needs checkpoint persistence |
+| academic-integrity-detector | 🟡 Needs upload → analysis → report flow |
+
+---
+
+## PATTERN 2: FRONTEND HTML STANDARDS (index.html)
+
+Apply to all React/frontend `index.html` files for consistency.
+
+### Meta Tags Block
+
+```html
+<!-- TUC Standard Meta -->
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+<!-- SEO -->
+<meta name="description" content="..." />
+<meta name="keywords" content="..." />
+<meta name="author" content="Techbridge University College" />
+<meta name="publisher" content="TUC ICT Department" />
+<link rel="canonical" href="https://..." />
+<meta name="robots" content="index, follow" />
+
+<!-- Geographic (Accra) -->
+<meta name="geo.region" content="GH-AA" />
+<meta name="geo.placename" content="Accra, Ghana" />
+<meta name="geo.position" content="5.6037;-0.1870" />
+
+<!-- Open Graph -->
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://..." />
+<meta property="og:title" content="..." />
+<meta property="og:description" content="..." />
+<meta property="og:image" content="..." />
+<meta property="og:locale" content="en_GH" />
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:site" content="@TUCGhana" />
+<meta name="twitter:creator" content="@KudjoTwum" />
+<meta name="twitter:title" content="..." />
+<meta name="twitter:description" content="..." />
+<meta name="twitter:image" content="..." />
+
+<!-- Branding -->
+<meta name="theme-color" content="#..." />
+<meta name="msapplication-TileColor" content="#..." />
+```
+
+### Google Analytics
+
+```html
+<!-- Before styles in <head> -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-FKXTELQ71R"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-FKXTELQ71R');
+</script>
+```
+
+### Font Loading (Before Styles)
+
+```html
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+```
+
+### CSS Variables & Theming
+
+```css
+:root,
+[data-theme='dark'] {
+  --color-background-main: #0f1117;
+  --color-foreground: #e2e8f0;
+  --color-primary: #6c63ff;
+}
+
+[data-theme='light'] {
+  --color-background-main: #ffffff;
+  --color-foreground: #1a202c;
+  --color-primary: #5a52d5;
+}
+
+[data-theme='high-contrast'] {
+  --color-background-main: #000000;
+  --color-foreground: #ffffff;
+  --color-primary: #ffff00;
+}
+
+body {
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 ```
 
-**Endpoints that MUST use rawPost:**
-- `POST /api/auth/exchange` — handoff code → JWT pair
-- `POST /api/auth/mfa/verify` — TOTP → JWT pair
-- `POST /api/auth/refresh` in `AuthContext` startup — expected 401 when no cookie present
+### Font Family System
 
-**onAuthLost arming rule:** Register `setOnAuthLost(clear)` in the `finally` block of the startup refresh, not before it. The startup refresh failing is *expected* on pages with no session (e.g. `/auth/callback`). Arming `onAuthLost` before the startup attempt means the expected 401 triggers `clear()` and wipes any in-flight state.
+```css
+.font-playfair { font-family: 'Playfair Display', serif; }   /* h1, h2, h3 */
+.font-outfit { font-family: 'Outfit', sans-serif; }           /* secondary headings */
+.font-space-grotesk { font-family: 'Space Grotesk', monospace; } /* technical/mono */
+/* Default body: Inter */
+```
 
-**Hard-redirect after exchange:** After a successful `/api/auth/exchange`, use `window.location.replace('/')` instead of React Router's `navigate('/')`. `setSession()` schedules a React state update (`setUser`) which is async. If `navigate` fires before React flushes the update, `ProtectedRoute` sees `user=null` and bounces back to `/login`. A hard redirect remounts the app fresh; the `wms_refresh` cookie set by `/exchange` lets the startup refresh succeed.
+### Theme Persistence (Inline Script, Before DOM Renders)
 
-**First documented in:** tuc-wms auth debugging, June 2026.
+```html
+<script>
+  (function() {
+    const theme = localStorage.getItem('{project}-theme') || 'dark';
+    document.documentElement.setAttribute('data-theme', theme);
+  })();
+</script>
+```
+
+### Animations
+
+```css
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateX(-12px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+.animate-fade-in { animation: fadeIn 0.3s ease forwards; }
+.animate-slide-in { animation: slideIn 0.3s ease forwards; }
+```
 
 ---
 
-## PATTERN 19 — Frontend Debug Logger
+## PATTERN 3: CAPACITOR MOBILE DEPLOYMENT
 
-**Context:** Debugging a deployed SPA where server logs are not easily accessible and the failure point is unknown.
+For any React web app targeting iOS App Store / Google Play.
 
-**Problem:** Without instrumentation, browser console shows only HTTP status codes. The exact URL received, which branch ran, and what the server returned are all invisible.
+### Quick Setup (30 min)
 
-**Solution:** Add a scoped, coloured logger at the top of the critical module before deploying a debug build:
-
-```typescript
-// ─── Debug logger (remove before final production cut) ───────────────────────
-const TAG = '[WMS-CB]';
-const L  = (msg: string, data?: unknown) =>
-  console.log(`%c${TAG} ${msg}`, 'color:#6366f1;font-weight:bold',
-    ...(data !== undefined ? [data] : []));
-const LE = (msg: string, data?: unknown) =>
-  console.error(`%c${TAG} ${msg}`, 'color:#ef4444;font-weight:bold',
-    ...(data !== undefined ? [data] : []));
+```bash
+pnpm install @capacitor/core @capacitor/cli @capacitor/ios @capacitor/android
+npx capacitor init --appName "App Name" --appId com.techbridge.appname --webDir dist
+npx capacitor add ios
+npx capacitor add android
+pnpm build
+npx capacitor sync
 ```
 
-**Instrument every decision point:**
-```typescript
-L('▶ mounted', { href: window.location.href });
-L('params', { code: code?.slice(0,20) + '…', mfaTicket: !!mfaTicket, err });
-L('calling /api/auth/exchange');
-// on success:
-L('exchange ✅', { token: token.slice(0,20)+'…', user });
-// on failure:
-LE('exchange ❌', { message: e.message });
+### package.json Scripts
+
+```json
+{
+  "scripts": {
+    "build": "vite build",
+    "build:web": "vite build && capacitor copy ios && capacitor copy android",
+    "build:ios": "pnpm build:web && npx capacitor build ios",
+    "build:android": "pnpm build:web && npx capacitor build android",
+    "ios:open": "open ios/App/App.xcworkspace",
+    "android:open": "open android",
+    "mobile:sync": "capacitor sync"
+  }
+}
 ```
 
-**Rules:**
-- Use a unique `TAG` prefix per module so log lines are filterable in the console (`[WMS-CB]`, `[WMS-AUTH]`, etc.).
-- Never log full tokens or passwords — truncate to 20 chars.
-- Colour: indigo (`#6366f1`) for info, red (`#ef4444`) for errors.
-- Deploy the debug build to production if local reproduction is not possible; strip the logger once the bug is identified.
-- The `%c` trick makes logs visually distinct and collapsible in DevTools.
+### Critical Paths
 
-**First documented in:** tuc-wms auth debugging, June 2026.
+- **iOS:** `ios/App/App.xcodeproj/` + `.plist` configuration
+- **Android:** `android/app/build.gradle` + `AndroidManifest.xml`
+- **Config:** `capacitor.config.ts` (app ID, version, web directory)
+- **Privacy:** Must be public URL (e.g., `https://domain.com/privacy.html`)
+
+### Required Docs (Create in `/docs/`)
+
+1. `APP_STORE_GUIDE.md` — Complete iOS + Google Play submission steps  [Sonnet]
+2. `MOBILE_BUILD_GUIDE.md` — Build workflow, debugging, CI/CD examples [Sonnet]
+3. `APP_ICONS_GUIDE.md` — 1024px → all sizes, placement for both platforms [Haiku]
+4. `APPSTORE_READY.md` — Pre-submission checklist ✅/❌ [Haiku]
+5. `public/privacy.html` — GDPR/CCPA/GDPA compliant [Sonnet]
+
+### Timeline
+
+| Phase | Duration |
+|---|---|
+| Setup Capacitor + platforms | 30 min |
+| Create docs (3 guides) | 2 hours |
+| Create icons (external design) | 1–2 hours |
+| Test on devices | 1 hour |
+| Submit to stores | 1 hour |
+| iOS approval | 3–5 days |
+| Android approval | 1–2 hours |
+
+### Note
+
+Process is identical across TUC apps. Once written for one project, copy `APP_STORE_GUIDE.md` and adapt app ID + name only.
 
 ---
 
-*Last updated: June 2026 — Daniel Frempong Twum / TUC ICT*
+## PATTERN 4: GOOGLE GEMINI API INTEGRATION
+
+For AI vision tasks: document scanning, OCR, handwriting extraction.
+
+### Model Selection
+
+✅ Use: `gemini-3.1-pro-preview` — stable, supports streaming + JSON schema validation  
+❌ Avoid: `gemini-1.5-flash` — throws 404 on free tier  
+❌ Avoid: `gemini-2.0-flash-exp` — experimental, not available for structured responses  
+
+### Implementation Pattern
+
+```typescript
+import { GoogleGenAI, Type } from '@google/genai';
+
+const client = new GoogleGenAI({ apiKey: process.env.VITE_GEMINI_API_KEY });
+
+const responseStream = await client.models.generateContentStream({
+  model: 'gemini-3.1-pro-preview',
+  contents: {
+    parts: [
+      { text: 'Your instruction prompt...' },
+      {
+        inlineData: {
+          data: base64ImageData,
+          mimeType: 'image/png',
+        },
+      },
+    ],
+  },
+  config: {
+    temperature: 0,                           // Deterministic for data extraction
+    responseMimeType: 'application/json',
+    responseSchema: {
+      type: Type.ARRAY,
+      items: {
+        type: Type.OBJECT,
+        properties: {
+          field1: { type: Type.STRING },
+          field2: { type: Type.STRING },
+        },
+        required: ['field1'],
+      },
+    },
+  },
+});
+
+// Collect streamed response
+let text = '';
+for await (const chunk of responseStream) {
+  if (chunk.text) text += chunk.text;
+}
+const results = JSON.parse(text);
+```
+
+### Key Points
+
+- Must use `generateContentStream` (not `generateContent`) for structured responses
+- Schema defined via `Type` enum, not TypeScript interfaces
+- Response arrives as valid JSON — no markdown stripping needed
+- `temperature: 0` ensures deterministic, reproducible extraction
+
+### Proven In Production
+
+Glucose project (deployed 2026-05-16): extracts 20+ handwritten glucose readings from a single photo page.
+
+---
+
+## PATTERN 5: DUAL-AUTH LOGOUT (OAuth + Local Session)
+
+### The Problem
+
+Apps with two-layer auth:
+1. **OAuth Layer** — Google Sign-In, stored in `localStorage`
+2. **Admin Layer** — Local password, stored in `sessionStorage`
+
+If only the admin logout is called, the OAuth session persists → user remains authenticated → admin auto-grants on next visit → cycles back instead of exiting.
+
+### The Solution
+
+```typescript
+import { useAuth } from './contexts/AuthContext';    // OAuth logout
+import { useAdmin } from './contexts/AdminContext';  // Local admin logout
+
+function AppContent() {
+  const { logout } = useAuth();
+  const { adminLogout } = useAdmin();
+
+  const handleLogout = () => {
+    adminLogout();  // Clear local session + sessionStorage
+    logout();       // Clear OAuth + localStorage
+  };
+
+  return <button onClick={handleLogout}>Sign Out</button>;
+}
+```
+
+### State Transitions
+
+```
+[Authenticated + Admin]
+    ↓ logout clicked
+[adminLogout() clears sessionStorage]
+    ↓ AND
+[logout() clears localStorage]
+    ↓
+[LoginView — fresh OAuth flow required]
+```
+
+**Origin:** Glucose project, 2026-05-16 — logout was cycling users to password screen because OAuth session persisted.
+
+---
+
+## PATTERN 6: GLUCOSE PROJECT LEARNINGS (React + IndexedDB)
+
+### Security: Login Screen Privacy
+
+- ❌ Never pre-populate email/username from stored state
+- ❌ Never show personalised greetings on the login screen (shoulder-surfing risk)
+- ✅ Keep login screen generic: "Welcome Back" — no names, no hints about returning users
+- ✅ Personalised greeting goes post-auth only: dashboard header ("Good to see you, [name]")
+- ✅ Safe middle ground: avatar initial + dismissible "Not you?" prompt (no plaintext email)
+
+### IndexedDB + React State Sync
+
+- Always log state transitions to debug mismatches between UI count and DB count
+- Use prefixed log labels: `[DB]`, `[APP]`, `[SCAN]`, `[MANUAL]`
+- Track: before-save count → after-upsert → after-fetch → after-state-update
+- Common issue: stale `rows` state lagging behind DB due to async `setState`
+
+### Total Count Bug Pattern
+
+```typescript
+// ❌ Wrong — filtered data doesn't reflect total
+const total = filteredRows.length;
+
+// ✅ Correct — always count from unfiltered source
+const total = rows.length;
+```
+
+The month selector filters the grid, but stats must always reflect the complete dataset.
+
+### Duplicate Handling on Rescan
+
+```typescript
+const existingRow = rows.find(r => r.date === formattedDate);
+if (existingRow) {
+  // Update: merge with new data, preserve createdAt, update updatedAt
+} else {
+  // Create: assign new ID, set createdAt = now
+}
+// Log updates vs new creations separately
+```
+
+### Month Auto-Selection After Scan
+
+- ✅ Auto-select the scanned month on **first import** (user sees new data immediately)
+- ❌ Do NOT auto-select on **manual entry** for a different month (preserves user context)
+- Different UX patterns for different flows — be explicit about intent
+
+### Read-Only Auto-Populated Fields
+
+```typescript
+// If Patient Name auto-populates from OAuth user.fullName:
+<input
+  value={patientName}
+  readOnly
+  className="cursor-default"
+/>
+```
+
+Prevents accidental edits to identity-tied fields.
+
+### Default Values in Admin Panel
+
+```typescript
+// Preserve defaults across reload
+setDoctorName(profile.doctorName || 'Dr Yacoba Atiase');
+```
+
+### Console Logging Strategy
+
+```
+[SCAN] Starting extraction...
+[DB]   Fetching existing rows (before: 12)
+[DB]   Upserted 3 new, updated 1 existing
+[APP]  State updated (after: 15)
+[APP]  Rendering grid with 15 rows
+```
+
+Always log: before state → action → after state.
+
+---
+
+*Last updated: May 2026 — Daniel Frempong Twum / TUC ICT*  
 *Core session directives → see CLAUDE.md*
