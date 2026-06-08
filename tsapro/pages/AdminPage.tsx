@@ -7,8 +7,7 @@ import Input from '../components/common/Input';
 import SalaryCalculationDetails from '../components/common/SalaryCalculationDetails';
 import Toggle from '../components/common/Toggle';
 import RefreshStatus from '../components/RefreshStatus';
-import { MIN_PASSWORD_LENGTH } from '../constants';
-import { useAuth } from '../contexts/AuthContext';
+import { useAuth } from '../auth/AuthContext';
 import { useStepCodes } from '../contexts/StepCodesContext';
 import { addLog, clearLogs, getLogs } from '../services/auditLogService';
 import { parseSalaryScalePdf } from '../services/geminiService';
@@ -63,35 +62,43 @@ const SearchIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
 
 // --- Components ---
 
-const SecurityHealthCheck: React.FC = () => {
-    // Basic health check logic
-    const { isAuthenticated, user } = useAuth();
-    const token = localStorage.getItem('tsapro_token');
-    const hasSecureToken = !!token;
+const SsoSessionPanel: React.FC = () => {
+    // SSO session info (TUC-ICT-SDD-2026-001). Identity, role and MFA are owned by the
+    // Techbridge WMS auth backend; there is no app-managed password to display or change.
+    const { user } = useAuth();
     const logCount = getLogs().length;
 
     return (
         <Card className="border-l-4 border-blue-500 bg-blue-50/10 mb-8">
             <div className="flex items-start gap-4">
-                <div className={`p-2 rounded-full ${isDefault ? 'bg-amber-100 text-amber-600' : 'bg-green-100 text-green-600'}`}>
-                    {isDefault ? <AlertCircleIcon className="w-6 h-6" /> : <ShieldCheckIcon className="w-6 h-6" />}
+                <div className="p-2 rounded-full bg-green-100 text-green-600">
+                    <ShieldCheckIcon className="w-6 h-6" />
                 </div>
                 <div className="flex-1">
-                    <h3 className="font-bold text-lg">System Security Status</h3>
+                    <h3 className="font-bold text-lg">Sign-in &amp; Security</h3>
                     <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div className="flex flex-col">
-                            <span className="text-xs uppercase tracking-wider text-slate-500 font-bold">Admin Session</span>
-                            <span className={!hasSecureToken ? 'text-amber-600 font-bold' : 'text-green-600 font-bold'}>
-                                {!hasSecureToken ? '⚠️ Warning: Unsecured Session' : `✅ Secure JWT Session: ${user?.username || 'Admin'}`}
-                            </span>
+                            <span className="text-xs uppercase tracking-wider text-slate-500 font-bold">Signed in as</span>
+                            <span className="font-bold">{user?.name || user?.email || '—'}</span>
+                            <span className="text-sm opacity-70">{user?.email}</span>
                         </div>
                         <div className="flex flex-col">
-                            <span className="text-xs uppercase tracking-wider text-slate-500 font-bold">Audit Reliability</span>
-                            <span className="text-slate-700 dark:text-slate-300 font-bold">
-                                ✅ Integrity Check Passed ({logCount} records)
-                            </span>
+                            <span className="text-xs uppercase tracking-wider text-slate-500 font-bold">Role &middot; MFA</span>
+                            <span className="font-bold">{user?.role || '—'} &middot; {user?.mfaEnrolled ? '✅ TOTP enrolled' : '⚠️ MFA not enrolled'}</span>
+                        </div>
+                        <div className="flex flex-col">
+                            <span className="text-xs uppercase tracking-wider text-slate-500 font-bold">Identity provider</span>
+                            <span className="font-bold">Google SSO (Techbridge WMS)</span>
+                        </div>
+                        <div className="flex flex-col">
+                            <span className="text-xs uppercase tracking-wider text-slate-500 font-bold">Audit records</span>
+                            <span className="font-bold">{logCount} records</span>
                         </div>
                     </div>
+                    <p className="mt-3 text-sm opacity-80">
+                        Access &amp; roles are managed centrally in{' '}
+                        <a href="https://wms.techbridge.edu.gh" target="_blank" rel="noopener noreferrer" className="underline font-bold">Techbridge WMS</a>.
+                    </p>
                 </div>
             </div>
         </Card>
@@ -540,112 +547,6 @@ const ManageGrades: React.FC = () => {
     );
 };
 
-const ChangePasswordForm: React.FC = () => {
-    const { changePassword } = useAuth();
-    const [currentPassword, setCurrentPassword] = useState('');
-    const [newPassword, setNewPassword] = useState('');
-    const [confirmPassword, setConfirmPassword] = useState('');
-    const [message, setMessage] = useState('');
-    const [isError, setIsError] = useState(false);
-    
-    // Password strength logic
-    const calculateStrength = (pwd: string) => {
-        if (!pwd) return 0;
-        let score = 0;
-        if (pwd.length >= 8) score += 1;
-        if (pwd.length >= 12) score += 1;
-        if (/[A-Z]/.test(pwd)) score += 1;
-        if (/[0-9]/.test(pwd)) score += 1;
-        if (/[^A-Za-z0-9]/.test(pwd)) score += 1;
-        return Math.min(score, 5);
-    };
-
-    const strength = calculateStrength(newPassword);
-    
-    const strengthColor = () => {
-        if (strength <= 2) return 'bg-red-500';
-        if (strength <= 3) return 'bg-yellow-500';
-        return 'bg-green-500';
-    };
-
-    const strengthLabel = () => {
-        if (strength === 0) return 'None';
-        if (strength <= 2) return 'Weak';
-        if (strength <= 3) return 'Medium';
-        if (strength === 4) return 'Strong';
-        return 'Very Strong';
-    };
-
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        setMessage('');
-        setIsError(false);
-
-        if (newPassword !== confirmPassword) {
-            setMessage('New passwords do not match.');
-            setIsError(true);
-            addLog(AuditLogEvent.PASSWORD_CHANGE_FAILURE, 'Password confirmation mismatch.');
-            return;
-        }
-
-        const result = changePassword(currentPassword, newPassword);
-        setMessage(result.message);
-        setIsError(!result.success);
-        if (result.success) {
-            setCurrentPassword('');
-            setNewPassword('');
-            setConfirmPassword('');
-        }
-    };
-
-    return (
-        <Card as="section" ariaLabelledby="change-password-heading">
-            <h2 id="change-password-heading" className="text-xl font-bold mb-4">Security Management</h2>
-            <form onSubmit={handleSubmit} className="space-y-4 max-w-lg">
-                <Input id="current-password" label="Current Administrator Password" type="password" value={currentPassword} onChange={e => setCurrentPassword(e.target.value)} required />
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                        <Input 
-                            id="new-password" 
-                            label="New Password" 
-                            type="password" 
-                            value={newPassword} 
-                            onChange={e => setNewPassword(e.target.value)} 
-                            required 
-                            minLength={MIN_PASSWORD_LENGTH} 
-                        />
-                        {/* Password Strength Meter */}
-                        {newPassword && (
-                            <div className="flex flex-col gap-1 mt-1">
-                                <div className="h-1.5 w-full bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
-                                    <div 
-                                        className={`h-full transition-all duration-300 ${strengthColor()}`} 
-                                        style={{ width: `${(strength / 5) * 100}%` }}
-                                    ></div>
-                                </div>
-                                <div className="flex justify-between text-xs text-slate-500 font-medium">
-                                    <span>Strength: {strengthLabel()}</span>
-                                </div>
-                            </div>
-                        )}
-                    </div>
-                    <Input id="confirm-password" label="Confirm New Password" type="password" value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} required />
-                </div>
-                {message && (
-                    <div 
-                        role="alert" 
-                        aria-live="polite" 
-                        className={`p-3 rounded-lg text-sm font-bold animate-in fade-in slide-in-from-top-2 ${isError ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800'}`}
-                    >
-                        {message}
-                    </div>
-                )}
-                <Button type="submit" variant="primary" className="w-full sm:w-auto">Update Security Credentials</Button>
-            </form>
-        </Card>
-    );
-}
-
 const AuditLogViewer: React.FC = () => {
     const [logs, setLogs] = useState<AuditLogEntry[]>([]);
     useEffect(() => { setLogs(getLogs()); }, []);
@@ -704,11 +605,10 @@ const AdminPage: React.FC = () => {
     return (
         <div className="max-w-7xl mx-auto space-y-8">
             <h1 className="text-3xl font-extrabold" data-component="title">Administrator Panel</h1>
-            <SecurityHealthCheck />
+            <SsoSessionPanel />
             <SalaryScaleIngestion />
             <AddGradeForm />
             <ManageGrades />
-            <ChangePasswordForm />
             <AuditLogViewer />
         </div>
     );

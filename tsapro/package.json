@@ -18,10 +18,12 @@
     "react": "19.2.5",
     "react-dom": "19.2.5",
     "react-router-dom": "^7.9.5",
-    "lucide-react": "^0.400.0"
+    "lucide-react": "^0.400.0",
+    "qrcode": "^1.5.4"
   },
   "devDependencies": {
     "@types/node": "^22.14.0",
+    "@types/qrcode": "^1.5.5",
     "@vitejs/plugin-react": "^5.0.0",
     "serve": "14.2.5",
     "typescript": "~5.8.2",

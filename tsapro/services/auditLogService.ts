@@ -1,4 +1,5 @@
 
+import { getItem, setItem, removeItem } from '../lib/persistentStore';
 import { AuditLogEntry, AuditLogEvent } from '../types';
 
 const LOG_KEY = 'tuc-salary-audit-log';
@@ -13,8 +14,7 @@ export const addLog = (event: AuditLogEvent, details?: string): void => {
       details,
     };
     // Prepend new log to have the most recent first
-    const updatedLogs = [newLog, ...logs];
-    localStorage.setItem(LOG_KEY, JSON.stringify(updatedLogs));
+    setItem(LOG_KEY, [newLog, ...logs]);
   } catch (error) {
     console.error("Failed to add audit log:", error);
   }
@@ -22,8 +22,7 @@ export const addLog = (event: AuditLogEvent, details?: string): void => {
 
 export const getLogs = (): AuditLogEntry[] => {
   try {
-    const logsJson = localStorage.getItem(LOG_KEY);
-    return logsJson ? JSON.parse(logsJson) : [];
+    return getItem<AuditLogEntry[]>(LOG_KEY, []);
   } catch (error) {
     console.error("Failed to retrieve audit logs:", error);
     return [];
@@ -32,7 +31,7 @@ export const getLogs = (): AuditLogEntry[] => {
 
 export const clearLogs = (): void => {
   try {
-    localStorage.removeItem(LOG_KEY);
+    removeItem(LOG_KEY);
     // Immediately log the clearing action to maintain trail continuity
     addLog(AuditLogEvent.AUDIT_LOG_CLEARED, "All previous logs deleted manually by administrator.");
   } catch (error) {

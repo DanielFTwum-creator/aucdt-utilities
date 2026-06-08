@@ -4,6 +4,7 @@ import { STUDENT_LOAN_RATE } from "../constants";
 import { AuditLogEvent, SalaryCalculationLogDetails, StepCodeData } from "../types";
 import { calculateSsnit, performFullSalaryCalculation } from "../utils/salaryCalculations";
 import { getLogs } from "./auditLogService";
+import { getItem } from "../lib/persistentStore";
 
 /**
  * Parses a PDF file (as a base64 string) to extract salary scale data.
@@ -210,8 +211,7 @@ export class ClaudeService {
                     } else if (call.name === "getStepCodes") {
                          const args = call.args as any;
                          try {
-                             const stepsRaw = localStorage.getItem('tuc-salary-step-codes');
-                             const steps = stepsRaw ? JSON.parse(stepsRaw) : [];
+                             const steps = getItem<any[]>('tuc-salary-step-codes', []);
                              const query = (args.query || '').toLowerCase();
                              
                              const filtered = steps.filter((s: any) => 
