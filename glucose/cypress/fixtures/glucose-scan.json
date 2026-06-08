@@ -1,0 +1,22 @@
+{
+  "readings": [
+    {
+      "date": "2026-06-01",
+      "fasting": "5.8",
+      "post_breakfast": "7.6",
+      "pre_lunch": "6.1",
+      "post_lunch": "8.3",
+      "pre_dinner": "5.9",
+      "post_dinner": "7.4"
+    },
+    {
+      "date": "2026-06-02",
+      "fasting": "6.2",
+      "post_breakfast": "8.5",
+      "pre_lunch": "6.4",
+      "post_lunch": "9.2",
+      "pre_dinner": "6.0",
+      "post_dinner": "8.0"
+    }
+  ]
+}
