@@ -15,6 +15,10 @@ build/
 target/
 *.tsbuildinfo
 
+# Cypress generated artifacts (videos/screenshots are run output, not source)
+**/cypress/videos/
+**/cypress/screenshots/
+
 # Security incident reports — local only, never push to the public mirror
 docs/SECURITY-INCIDENT-*
 
