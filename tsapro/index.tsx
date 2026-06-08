@@ -18,4 +18,9 @@ initStore().finally(() => {
       <App />
     </React.StrictMode>
   );
+  // Remove the boot splash styles. They set body{display:flex; align-items/justify:center;
+  // overflow:hidden} to centre the loading splash — left in place they constrain the whole
+  // app to a centred, non-scrolling column. Drop them once the app has rendered so the UI
+  // fills the viewport responsively.
+  requestAnimationFrame(() => document.getElementById('tuc-splash-styles')?.remove());
 });
