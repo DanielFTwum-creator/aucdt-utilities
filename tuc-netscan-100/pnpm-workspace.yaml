@@ -1,0 +1,8 @@
+# Local pnpm root for TUC NetScan.
+# Declaring this file makes the app a self-contained pnpm project so it no
+# longer resolves dependencies from the parent aucdt-utilities workspace.
+# It is also the correct home (pnpm 10+) for build-script approvals.
+onlyBuiltDependencies:
+  - esbuild
+  - '@google/genai'
+  - protobufjs
