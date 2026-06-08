@@ -68,6 +68,17 @@ try {
 if ($Build) {
     Log -Level 'INFO' -Msg 'Step 3: Server-side build (git clone + pnpm build)...' -Color Yellow
 
+    # Upload .env.local for the BUILD (Vite loadEnv needs VITE_GOOGLE_CLIENT_ID at
+    # build time to inline it; without this the bundle ships an empty client id and
+    # Google login silently fails).
+    if (Test-Path '.env.local') {
+        & $SCP @SSH_OPTS '.env.local' "${RemoteHost}:/tmp/.env.${PM2_APP}.build" 2>$null | Out-Null
+        if ($LASTEXITCODE -eq 0) { Log -Level 'SUCCESS' -Msg 'build .env.local uploaded' -Color Green }
+        else { Log -Level 'ERROR' -Msg 'Failed to upload build .env.local' -Color Red; exit 1 }
+    } else {
+        Log -Level 'WARN' -Msg 'No .env.local — build will lack VITE_ vars (login may break)' -Color Yellow
+    }
+
     $buildDir = "/tmp/${SUBFOLDER}_deploy_${commit}"
     $remoteBuildScript = @"
 #!/usr/bin/env bash
@@ -98,6 +109,14 @@ cd ${SUBFOLDER}
 
 log '[3/5] Installing dependencies...'
 pnpm install --no-frozen-lockfile --silent 2>/dev/null || npm install --silent
+
+# Inject build-time env so Vite loadEnv can inline VITE_GOOGLE_CLIENT_ID etc.
+if [ -f /tmp/.env.${PM2_APP}.build ]; then
+  cp /tmp/.env.${PM2_APP}.build .env.local
+  log 'injected build .env.local (VITE_ vars available to Vite)'
+else
+  log 'WARN: no build .env.local — VITE_ vars will be empty in bundle'
+fi
 
 log '[4/5] Building...'
 pnpm build
