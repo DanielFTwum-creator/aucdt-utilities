@@ -1,8 +1,7 @@
-
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
-import { AuthGate } from './AuthGate';
+import { initStore } from './lib/persistentStore';
 
 const rootElement = document.getElementById('root');
 if (!rootElement) {
@@ -10,8 +9,13 @@ if (!rootElement) {
 }
 
 const root = ReactDOM.createRoot(rootElement);
-root.render(
-  <React.StrictMode>
-    <AuthGate><App /></AuthGate>
-  </React.StrictMode>
-);
+
+// Hydrate the IndexedDB-backed store (and run the one-time localStorage migration)
+// before first render, so synchronous reads (step codes, audit log, theme) see data.
+initStore().finally(() => {
+  root.render(
+    <React.StrictMode>
+      <App />
+    </React.StrictMode>
+  );
+});
