@@ -42,7 +42,15 @@ a grown-up nearby. Keep language simple and joyful. No external materials beyond
 common household items. Absolutely nothing unsafe. Respond as JSON matching the schema.
 `.trim();
 
-  const res = await fetch('/api/generate?model=gemini-2.5-flash', {
+  // Mount-aware API base: the app is served under /playgrow/, so the relay must
+  // be called at /playgrow/api/generate (a root-absolute /api/generate 404s).
+  const apiBase = (() => {
+    if (typeof window === 'undefined') return '';
+    const seg = window.location.pathname.split('/').filter(Boolean)[0];
+    return seg ? `/${seg}` : '';
+  })();
+
+  const res = await fetch(`${apiBase}/api/generate?model=gemini-2.5-flash`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
