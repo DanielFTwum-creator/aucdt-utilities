@@ -1,8 +1,11 @@
 package gh.edu.techbridge.wms.auth;
 
+import gh.edu.techbridge.wms.config.AuthProperties;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
@@ -26,8 +29,24 @@ import java.io.IOException;
 @RequestMapping("/api/auth")
 public class OAuthEntryController {
 
+    private final AuthProperties props;
+
+    public OAuthEntryController(AuthProperties props) {
+        this.props = props;
+    }
+
+    /**
+     * SSO pass-through (TUC-ICT-SDD-2026-001): an optional {@code app} query param names the
+     * originating SPA. When it matches the {@code tucwms.auth.app-bases} allowlist, a short-lived
+     * {@code sso_app} cookie is set so OAuthSuccessHandler can redirect back to that app's
+     * frontend. Absent/unknown app → no cookie → standard WMS behaviour (default redirect).
+     */
     @GetMapping("/google")
-    public void startGoogleLogin(HttpServletResponse res) throws IOException {
+    public void startGoogleLogin(@RequestParam(name = "app", required = false) String app,
+                                 HttpServletResponse res) throws IOException {
+        if (app != null && props.getAppBases().containsKey(app)) {
+            res.addHeader(HttpHeaders.SET_COOKIE, SsoAppCookie.write(app, props.getCookieDomain()).toString());
+        }
         res.sendRedirect("/api/oauth2/authorization/google");
     }
 }

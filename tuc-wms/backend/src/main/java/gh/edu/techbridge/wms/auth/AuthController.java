@@ -152,8 +152,14 @@ public class AuthController {
     }
 
     private ResponseCookie refreshCookie(String value, long maxAgeSeconds) {
-        return ResponseCookie.from("wms_refresh", value)
-                .httpOnly(true).secure(true).sameSite("Lax").path("/api/auth").maxAge(maxAgeSeconds).build();
+        // SSO pass-through (TUC-ICT-SDD-2026-001): when cookie-domain is set (e.g. .techbridge.edu.gh)
+        // the refresh cookie is shared across same-site subdomains so SSO clients can silently refresh.
+        // Empty (default) = host-only, i.e. unchanged single-tenant WMS behaviour.
+        ResponseCookie.ResponseCookieBuilder b = ResponseCookie.from("wms_refresh", value)
+                .httpOnly(true).secure(true).sameSite("Lax").path("/api/auth").maxAge(maxAgeSeconds);
+        String domain = props.getCookieDomain();
+        if (domain != null && !domain.isBlank()) b.domain(domain);
+        return b.build();
     }
 
     private Map<String, Object> profile(User u) {

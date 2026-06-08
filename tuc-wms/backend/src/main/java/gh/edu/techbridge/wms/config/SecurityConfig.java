@@ -84,7 +84,8 @@ public class SecurityConfig {
                 .redirectionEndpoint(r -> r.baseUri("/api/auth/google/callback"))
                 .successHandler(successHandler)
                 .failureHandler((req, res, ex) ->
-                        res.sendRedirect(props.getFrontendBase() + "/auth/callback?error=oauth"))
+                        // SSO pass-through: send failures back to the originating app (allow-listed; WMS default).
+                        res.sendRedirect(gh.edu.techbridge.wms.auth.SsoAppCookie.resolveBase(req, props) + "/auth/callback?error=oauth"))
             )
             // JWT bearer auth for stateless API access.
             .addFilterBefore(new JwtAuthFilter(jwtService), UsernamePasswordAuthenticationFilter.class)
@@ -100,7 +101,11 @@ public class SecurityConfig {
 
     private CorsConfigurationSource corsSource() {
         CorsConfiguration c = new CorsConfiguration();
-        c.setAllowedOrigins(List.of(props.getFrontendBase()));
+        // SSO pass-through: allow the configured origins (WMS + adopting apps); fall back to WMS only.
+        List<String> origins = props.getAllowedOrigins().isEmpty()
+                ? List.of(props.getFrontendBase())
+                : props.getAllowedOrigins();
+        c.setAllowedOrigins(origins);
         c.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         c.setAllowedHeaders(List.of("Authorization", "Content-Type"));
         c.setAllowCredentials(true);   // refresh-token HttpOnly cookie
