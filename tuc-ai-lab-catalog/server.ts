@@ -21,7 +21,14 @@ interface GoogleTokenResponse {
 }
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const isBuilt = __dirname.endsWith('dist') || !fs.existsSync(path.join(__dirname, 'server.ts'));
+// Production detection. NODE_ENV=production is the authoritative signal (set by the
+// deploy/PM2). The directory heuristics are fallbacks: in production the deploy may
+// place server.ts at the web root ALONGSIDE the built assets (not inside a 'dist'
+// folder), so relying only on those heuristics wrongly enters dev mode and crashes
+// trying to import the (pruned) 'vite' devDependency. NODE_ENV avoids that.
+const isBuilt = process.env.NODE_ENV === 'production'
+  || __dirname.endsWith('dist')
+  || !fs.existsSync(path.join(__dirname, 'server.ts'));
 const baseDir = __dirname;
 
 function decodeJWT(token: string) {
