@@ -37,6 +37,14 @@ public class User {
     @Column(length = 512)
     private String totpSecret;
 
+    /**
+     * Per-user MFA override. Forces TOTP even for roles that do not otherwise require it,
+     * decoupling MFA from elevated WMS authority — e.g. an ADMIN_STAFF user who signs in to
+     * an SSO pass-through client (TSAPro) must complete MFA without being granted WMS admin.
+     */
+    @Column(nullable = false)
+    private boolean mfaRequired = false;
+
     @Column(nullable = false, updatable = false)
     private Instant createdAt = Instant.now();
 
@@ -63,9 +71,14 @@ public class User {
     public void setActive(boolean active) { this.active = active; }
     public String getTotpSecret() { return totpSecret; }
     public void setTotpSecret(String totpSecret) { this.totpSecret = totpSecret; }
+    public boolean isMfaRequired() { return mfaRequired; }
+    public void setMfaRequired(boolean mfaRequired) { this.mfaRequired = mfaRequired; }
     public Instant getCreatedAt() { return createdAt; }
     public Instant getLastLoginAt() { return lastLoginAt; }
     public void setLastLoginAt(Instant lastLoginAt) { this.lastLoginAt = lastLoginAt; }
 
     public boolean isMfaEnrolled() { return totpSecret != null && !totpSecret.isBlank(); }
+
+    /** MFA gate: the role demands it (HOD/SystemAdmin) OR a per-user override is set. */
+    public boolean requiresMfa() { return role.requiresMfa() || mfaRequired; }
 }

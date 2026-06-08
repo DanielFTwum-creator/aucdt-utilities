@@ -32,14 +32,14 @@ public class OAuthSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
     private final GoogleOAuthService oauth;
     private final JwtService jwt;
     private final AuditService audit;
-    private final String frontendBase;
+    private final AuthProperties props;
 
     public OAuthSuccessHandler(GoogleOAuthService oauth, JwtService jwt,
                                AuditService audit, AuthProperties props) {
         this.oauth = oauth;
         this.jwt = jwt;
         this.audit = audit;
-        this.frontendBase = props.getFrontendBase();
+        this.props = props;
     }
 
     @Override
@@ -51,27 +51,32 @@ public class OAuthSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
         String picture = principal.getAttribute("picture");
         String ip = clientIp(req);
 
+        // SSO pass-through (TUC-ICT-SDD-2026-001): resolve the originating app's frontend from the
+        // sso_app cookie (allow-listed; defaults to WMS), and clear the handoff cookie on the way out.
+        String base = SsoAppCookie.resolveBase(req, props);
+        res.addHeader("Set-Cookie", SsoAppCookie.clear(props.getCookieDomain()).toString());
+
         try {
             User user = oauth.resolveOrProvision(email, name, picture, ip);
 
-            if (user.getRole().requiresMfa()) {
+            if (user.requiresMfa()) {
                 // FR-AUTH-008 — do NOT issue a JWT yet; hand the SPA an MFA ticket.
                 String ticket = jwt.issueHandoffToken(user.getId(), "mfa", jwt.mfaTtl());
                 audit.record(AuditEvent.MFA_CHALLENGED, user.getEmail(), "role=" + user.getRole(), ip);
-                redirect(req, res, frontendBase + "/auth/callback?mfa_ticket=" + enc(ticket));
+                redirect(req, res, base + "/auth/callback?mfa_ticket=" + enc(ticket));
                 return;
             }
 
             // Fully authenticated → short-lived signed code the SPA exchanges for the JWT.
             String code = jwt.issueHandoffToken(user.getId(), "code", jwt.codeTtl());
-            redirect(req, res, frontendBase + "/auth/callback?code=" + enc(code));
+            redirect(req, res, base + "/auth/callback?code=" + enc(code));
 
         } catch (GoogleOAuthService.DomainRejectedException e) {
             // FR-AUTH-009 — redirect with an error marker (the 403 semantics + audit
             // are enforced server-side; a browser redirect can't carry a 403 body).
-            redirect(req, res, frontendBase + "/auth/callback?error=domain");
+            redirect(req, res, base + "/auth/callback?error=domain");
         } catch (GoogleOAuthService.AccountDeactivatedException e) {
-            redirect(req, res, frontendBase + "/auth/callback?error=deactivated");
+            redirect(req, res, base + "/auth/callback?error=deactivated");
         }
     }
 

@@ -34,7 +34,8 @@ public class AdminUserController {
     public List<Map<String, Object>> list() {
         return users.findAll().stream().map(u -> Map.<String, Object>of(
                 "id", u.getId(), "email", u.getEmail(), "name", u.getFullName(),
-                "role", u.getRole().name(), "active", u.isActive())).toList();
+                "role", u.getRole().name(), "active", u.isActive(),
+                "mfaRequired", u.isMfaRequired())).toList();
     }
 
     /**
@@ -55,11 +56,28 @@ public class AdminUserController {
         try { role = body.get("role") == null ? Role.STUDENT : Role.valueOf(body.get("role")); }
         catch (Exception e) { return ResponseEntity.badRequest().body(Map.of("error", "Invalid role")); }
 
-        User u = users.save(new User(email, name.isEmpty() ? email : name, null, role));
-        audit.record(AuditEvent.USER_PROVISIONED, email, "pre-provisioned as " + role + " by " + actor.getName(), null);
+        User u = new User(email, name.isEmpty() ? email : name, null, role);
+        // Per-user MFA override (decouples MFA from elevated WMS role; see SSO pass-through design).
+        u.setMfaRequired(Boolean.parseBoolean(body.getOrDefault("mfaRequired", "false")));
+        u = users.save(u);
+        audit.record(AuditEvent.USER_PROVISIONED, email,
+                "pre-provisioned as " + role + (u.isMfaRequired() ? " (mfaRequired)" : "") + " by " + actor.getName(), null);
         return ResponseEntity.status(HttpStatus.CREATED).body(Map.of(
                 "id", u.getId(), "email", u.getEmail(), "name", u.getFullName(),
-                "role", u.getRole().name(), "active", u.isActive()));
+                "role", u.getRole().name(), "active", u.isActive(), "mfaRequired", u.isMfaRequired()));
+    }
+
+    /** Toggle the per-user MFA override (force TOTP without granting an MFA-bearing role). */
+    @PutMapping("/{id}/mfa-required")
+    public ResponseEntity<?> setMfaRequired(@PathVariable Long id, @RequestBody Map<String, Boolean> body, Authentication actor) {
+        boolean required = Boolean.TRUE.equals(body.get("mfaRequired"));
+        return users.findById(id).<ResponseEntity<?>>map(u -> {
+            u.setMfaRequired(required);
+            users.save(u);
+            audit.record(AuditEvent.USER_PROVISIONED, u.getEmail(),
+                    "mfaRequired=" + required + " by " + actor.getName(), null);
+            return ResponseEntity.ok(Map.of("id", u.getId(), "mfaRequired", required));
+        }).orElseGet(() -> ResponseEntity.status(404).body(Map.of("error", "User not found")));
     }
 
     /** Reassign a user's role (FR-AUTH-003/010 — HOD/SystemAdmin elevated only here, never auto-assigned). */
