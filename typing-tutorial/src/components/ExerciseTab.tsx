@@ -11,6 +11,7 @@ interface ExerciseTabProps {
 
 export default function ExerciseTab({ lesson, progress, onFinish, onBack }: ExerciseTabProps) {
   const [currentPracticeIdx, setCurrentPracticeIdx] = useState(0);
+  const [usedPracticeIndices, setUsedPracticeIndices] = useState<number[]>([]);
   const targetText = lesson.practices[currentPracticeIdx];
 
   const [inputVal, setInputVal] = useState("");
@@ -28,12 +29,13 @@ export default function ExerciseTab({ lesson, progress, onFinish, onBack }: Exer
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
   // TUC Academic 6R Methodology controls
-  const [metronomeBpm, setMetronomeBpm] = useState<number>(0); 
+  const [metronomeBpm, setMetronomeBpm] = useState<number>(0);
   const [metronomeTick, setMetronomeTick] = useState<boolean>(false);
   const [audioMode, setAudioMode] = useState<"synth-tick" | "mechanical-clack" | "none">("synth-tick");
   const [combo, setCombo] = useState<number>(0);
   const [maxCombo, setMaxCombo] = useState<number>(0);
   const [wrongKeys, setWrongKeys] = useState<string[]>([]);
+  const audioCtxRef = useRef<AudioContext | null>(null);
   
   // R6 Calibration Mode
   const [isCalibrationMode, setIsCalibrationMode] = useState<boolean>(false);
@@ -51,7 +53,7 @@ export default function ExerciseTab({ lesson, progress, onFinish, onBack }: Exer
     if ("yhnujm67".includes(c)) return { hand: "Right Hand", finger: "Index", anchor: "J", path: "Anchor Right Index on J" + (c !== "j" ? ` and reach diagonal/left to grasp ${c.toUpperCase()}` : " tactile anchor key with bump") };
     if ("ik,8".includes(c)) return { hand: "Right Hand", finger: "Middle", anchor: "K", path: "Anchor Right Middle on K" + (c !== "k" ? ` and reach upward to register ${c.toUpperCase()}` : " tactile home key") };
     if ("ol.9".includes(c)) return { hand: "Right Hand", finger: "Ring", anchor: "L", path: "Anchor Right Ring on L" + (c !== "l" ? ` and displace upward to strike ${c.toUpperCase()}` : " tactile home key") };
-    if ("p;0".includes(c)) return { hand: "Right Hand", finger: "Pinky", anchor: ";", path: "Anchor Right Pinky on ;" + (c !== ";" ? ` and pitch outward to record ${c.toUpperCase()}` : " tactile home key") };
+    if ("p;/".includes(c)) return { hand: "Right Hand", finger: "Pinky", anchor: ";", path: "Anchor Right Pinky on ;" + (c !== ";" ? ` and pitch outward to record ${c.toUpperCase()}` : " tactile home key") };
     return { hand: "Fingers", finger: "Finger", anchor: "Home", path: `Stroke ${char.toUpperCase()} returning swiftly to standard home row resting rows.` };
   };
 
@@ -59,7 +61,10 @@ export default function ExerciseTab({ lesson, progress, onFinish, onBack }: Exer
   const playFeedTone = (frequency: number, type: OscillatorType, duration: number) => {
     if (audioMode === "none" || muteAudio) return;
     try {
-      const audioCtx = new (window.AudioContext || (window as any).webkitAudioContext)();
+      if (!audioCtxRef.current) {
+        audioCtxRef.current = new (window.AudioContext || (window as any).webkitAudioContext)();
+      }
+      const audioCtx = audioCtxRef.current;
       const osc = audioCtx.createOscillator();
       const gainNode = audioCtx.createGain();
       osc.type = type;
@@ -72,6 +77,7 @@ export default function ExerciseTab({ lesson, progress, onFinish, onBack }: Exer
       osc.stop(audioCtx.currentTime + duration);
     } catch (e) {
       // Audio engine deactivated or suspended by browser agent
+      audioCtxRef.current = null; // reset so we recreate next time
     }
   };
 
@@ -126,6 +132,14 @@ export default function ExerciseTab({ lesson, progress, onFinish, onBack }: Exer
   useEffect(() => {
     inputRef.current?.focus();
   }, []);
+
+  // Reset practice tracking when lesson changes
+  useEffect(() => {
+    setUsedPracticeIndices([]);
+    // Select a random practice to start with
+    const randomIndex = Math.floor(Math.random() * lesson.practices.length);
+    setCurrentPracticeIdx(randomIndex);
+  }, [lesson]);
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -212,17 +226,35 @@ export default function ExerciseTab({ lesson, progress, onFinish, onBack }: Exer
           const streakMultiplier = Math.min(250, maxCombo * 5);
           const pointsEarned = Math.round(currentAcc * 10 + calculatedWpm * 2) + streakMultiplier;
 
-          if (currentPracticeIdx < lesson.practices.length - 1) {
-            setCurrentPracticeIdx((prev) => prev + 1);
-            setWrongKeys([]);
-            setCombo(0);
-            setMaxCombo(0);
-            setIsCalibrationMode(false);
-            setCalibrationText("");
+          // Mark current practice as used
+          setUsedPracticeIndices((prev) => [...prev, currentPracticeIdx]);
+
+          // Calculate available practice indices
+          const allIndices = Array.from({ length: lesson.practices.length }, (_, i) => i);
+          const availableIndices = allIndices.filter(i => !usedPracticeIndices.includes(i));
+
+          let nextIndex: number;
+          if (availableIndices.length > 0) {
+            // Select a random available index to avoid patterns
+            nextIndex = availableIndices[Math.floor(Math.random() * availableIndices.length)];
           } else {
-            // Unlocked tier callback
-            onFinish(currentAcc, calculatedWpm, pointsEarned);
+            // All practices used - reset but try to avoid immediate repeat of last used
+            const resetIndices = allIndices.filter(i => i !== currentPracticeIdx);
+            if (resetIndices.length > 0) {
+              nextIndex = resetIndices[Math.floor(Math.random() * resetIndices.length)];
+            } else {
+              // Only one practice available, have to repeat
+              nextIndex = 0;
+            }
+            setUsedPracticeIndices([]); // Reset tracking for next round
           }
+
+          setCurrentPracticeIdx(nextIndex);
+          setWrongKeys([]);
+          setCombo(0);
+          setMaxCombo(0);
+          setIsCalibrationMode(false);
+          setCalibrationText("");
         }, 600);
       }
     }
