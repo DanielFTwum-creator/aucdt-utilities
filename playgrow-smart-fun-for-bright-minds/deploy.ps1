@@ -61,7 +61,16 @@ log '[3/7] Injecting .env.local...'; cp /tmp/.env.${PM2_APP} .env.local
 log '[4/7] Installing...'; pnpm install --frozen-lockfile --silent 2>/dev/null || pnpm install --no-frozen-lockfile --silent
 log '[5/7] Building...'; pnpm build
 log '[6/7] Deploying...'; mkdir -p "`$DEPLOY_PATH" && rsync -a --delete dist/ "`$DEPLOY_PATH/dist/"; cp index.html "`$DEPLOY_PATH/dist/index.html" 2>/dev/null || true
-log '[7/7] Backend deps...'; cp server.ts package.json pnpm-lock.yaml "`$DEPLOY_PATH/" 2>/dev/null || true; cd "`$DEPLOY_PATH" && pnpm install --prod --silent 2>/dev/null || npm install --omit=dev --silent
+log '[7/8] Backend deps...'; cp server.ts package.json pnpm-lock.yaml "`$DEPLOY_PATH/" 2>/dev/null || true; cd "`$DEPLOY_PATH" && pnpm install --prod --silent 2>/dev/null || npm install --omit=dev --silent
+log '[8/8] Provisioning .env (PORT + Gemini proxy key)...'
+ENVF="`$DEPLOY_PATH/.env"
+cp /tmp/.env.${PM2_APP} "`$ENVF" 2>/dev/null || touch "`$ENVF"
+grep -q '^PORT=' "`$ENVF" || echo 'PORT=${PORT}' >> "`$ENVF"
+if ! grep -q '^GEMINI_PROXY_KEY=' "`$ENVF"; then
+  K=`$(grep '^GEMINI_PROXY_KEY=' /opt/tuc-wms/.env | cut -d= -f2-)
+  if [ -n "`$K" ]; then echo "GEMINI_PROXY_KEY=`$K" >> "`$ENVF"; log 'GEMINI_PROXY_KEY added from WMS'; else log 'WARN: WMS proxy key not found'; fi
+fi
+chmod 600 "`$ENVF"
 log 'Done.'
 "@
 
@@ -73,8 +82,10 @@ Remove-Item $ls -Force -EA SilentlyContinue; & $SSH @SSH_OPTS $REMOTE "rm -f /tm
 if ($bx -ne 0) { Log -Level 'ERROR' -Msg "Build failed ($bx)" -Color Red; exit 1 }
 Log -Level 'SUCCESS' -Msg 'Build complete' -Color Green
 
-Log -Level 'INFO' -Msg 'Step 4: Server environment (incl. Gemini proxy key)...' -Color Yellow
-& $SSH @SSH_OPTS $REMOTE "cp /tmp/.env.${PM2_APP} ${DEPLOY_PATH}/.env; grep -q '^PORT=' ${DEPLOY_PATH}/.env || echo 'PORT=${PORT}' >> ${DEPLOY_PATH}/.env; if ! grep -q '^GEMINI_PROXY_KEY=' ${DEPLOY_PATH}/.env; then K=`$(grep '^GEMINI_PROXY_KEY=' /opt/tuc-wms/.env | cut -d= -f2-); [ -n \"`$K\" ] && printf 'GEMINI_PROXY_KEY=%s\n' \"`$K\" >> ${DEPLOY_PATH}/.env; fi; chmod 600 ${DEPLOY_PATH}/.env; chown -R techbridge.edu.gh_md:psaserv ${DEPLOY_PATH} 2>/dev/null||true; find ${DEPLOY_PATH} -type d -exec chmod 755 {} \; 2>/dev/null||true; find ${DEPLOY_PATH} -type f -exec chmod 644 {} \; 2>/dev/null||true; chmod 600 ${DEPLOY_PATH}/.env"
+Log -Level 'INFO' -Msg 'Step 4: Permissions (.env provisioned in build script step 8)...' -Color Yellow
+# Perms on web assets only; the .env (with PORT + GEMINI_PROXY_KEY) is written and
+# locked to 600 inside the server-side build script (step 8) — do NOT chmod it 644 here.
+& $SSH @SSH_OPTS $REMOTE "chown -R techbridge.edu.gh_md:psaserv ${DEPLOY_PATH}/dist 2>/dev/null||true; find ${DEPLOY_PATH}/dist -type d -exec chmod 755 {} \; 2>/dev/null||true; find ${DEPLOY_PATH}/dist -type f -exec chmod 644 {} \; 2>/dev/null||true; chmod 600 ${DEPLOY_PATH}/.env 2>/dev/null||true"
 
 Log -Level 'INFO' -Msg 'Step 5: Restarting backend...' -Color Yellow
 $r=& $SSH @SSH_OPTS $REMOTE "if pm2 describe ${PM2_APP}>\/dev\/null 2>&1; then pm2 reload ${PM2_APP}; echo 'pm2: reloaded'; else cd ${DEPLOY_PATH}; PORT=${PORT} pm2 start server.ts --name ${PM2_APP} --interpreter npx --interpreter-args tsx; echo 'pm2: started'; fi"

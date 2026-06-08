@@ -1,0 +1,125 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="900" viewBox="0 0 1280 900" font-family="Inter, system-ui, sans-serif">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#475569"/>
+    </marker>
+    <marker id="arrowKey" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#b45309"/>
+    </marker>
+    <style>
+      .title{font-size:26px;font-weight:700;fill:#0f172a}
+      .sub{font-size:13px;fill:#64748b}
+      .zone{font-size:12px;font-weight:700;letter-spacing:.08em;fill:#94a3b8}
+      .box{rx:12;stroke-width:1.5}
+      .lbl{font-size:14px;font-weight:600;fill:#0f172a}
+      .meta{font-size:11px;fill:#64748b}
+      .edge{stroke:#475569;stroke-width:1.5;fill:none}
+      .edgeKey{stroke:#b45309;stroke-width:2;fill:none;stroke-dasharray:5 3}
+      .note{font-size:11px;fill:#475569}
+      .ok{font-size:11px;font-weight:700;fill:#15803d}
+    </style>
+  </defs>
+
+  <rect width="1280" height="900" fill="#f8fafc"/>
+  <text x="40" y="48" class="title">TUC AI Ecosystem — Gemini Key Proxy Architecture</text>
+  <text x="40" y="70" class="sub">aucdt-utilities · ai-tools.techbridge.edu.gh + wms.techbridge.edu.gh · server 66.226.72.199 (Ubuntu/Plesk) · as-built 2026-06</text>
+
+  <!-- ============ BROWSER ZONE ============ -->
+  <rect x="40" y="100" width="1200" height="170" fill="#eff6ff" stroke="#bfdbfe" rx="14"/>
+  <text x="60" y="126" class="zone">CLIENT (BROWSER) — NO GEMINI KEY EVER</text>
+
+  <!-- consumer apps -->
+  <rect x="60" y="140" width="180" height="64" fill="#ffffff" stroke="#3b82f6" rx="12"/>
+  <text x="72" y="166" class="lbl">playgrow</text>
+  <text x="72" y="184" class="meta">activity generator (kids)</text>
+  <text x="72" y="198" class="ok">✓ live · key-free</text>
+
+  <rect x="260" y="140" width="180" height="64" fill="#ffffff" stroke="#3b82f6" rx="12"/>
+  <text x="272" y="166" class="lbl">dfs-website</text>
+  <text x="272" y="184" class="meta">SEL assistant</text>
+  <text x="272" y="198" class="ok">✓ live · key-free</text>
+
+  <rect x="460" y="140" width="200" height="64" fill="#ffffff" stroke="#3b82f6" rx="12"/>
+  <text x="472" y="166" class="lbl">enhanced-youtube-genie</text>
+  <text x="472" y="184" class="meta">description generator</text>
+  <text x="472" y="198" class="ok">✓ live · key-free</text>
+
+  <rect x="680" y="140" width="270" height="64" fill="#ffffff" stroke="#3b82f6" rx="12"/>
+  <text x="692" y="166" class="lbl">biochemai · omniextract · glucose</text>
+  <text x="692" y="184" class="meta">own server.ts proxy (verified key-free)</text>
+  <text x="692" y="198" class="ok">✓ secure (own key, not yet on WMS)</text>
+
+  <rect x="970" y="140" width="250" height="64" fill="#fffbeb" stroke="#f59e0b" rx="12"/>
+  <text x="982" y="166" class="lbl">markai (MVP)</text>
+  <text x="982" y="184" class="meta">Gemini LIVE API (WebSocket audio)</text>
+  <text x="982" y="198" style="font-size:11px;font-weight:700;fill:#b45309">⏸ deferred — needs ephemeral tokens</text>
+
+  <!-- ============ SERVER / RELAY ZONE ============ -->
+  <rect x="40" y="330" width="1200" height="210" fill="#f0fdf4" stroke="#bbf7d0" rx="14"/>
+  <text x="60" y="356" class="zone">SERVER-SIDE (66.226.72.199) — KEY STAYS HERE</text>
+
+  <!-- per-app relays -->
+  <rect x="60" y="372" width="600" height="80" fill="#ffffff" stroke="#16a34a" rx="12"/>
+  <text x="72" y="398" class="lbl">Per-app Node relays  (server.ts under PM2)</text>
+  <text x="72" y="418" class="meta">POST /&lt;app&gt;/api/generate  →  forwards to WMS with header X-Gemini-Proxy-Key</text>
+  <text x="72" y="436" class="meta">playgrow:3019 · dfs:3012 · youtube-genie:3018  (nginx /app/api/ → port)</text>
+
+  <!-- WMS proxy -->
+  <rect x="690" y="372" width="530" height="146" fill="#ffffff" stroke="#16a34a" stroke-width="2" rx="12"/>
+  <text x="704" y="398" class="lbl">WMS — Central Gemini Key Proxy  (Spring Boot 3 / Java 21)</text>
+  <text x="704" y="418" class="meta">systemd tuc-wms.service · /opt/tuc-wms/app.jar · wms.techbridge.edu.gh</text>
+  <text x="704" y="440" class="meta">gh.edu.techbridge.wms.gemini:</text>
+  <text x="716" y="458" class="meta">POST /api/gemini/generate  — auth: WMS JWT  OR  X-Gemini-Proxy-Key</text>
+  <text x="716" y="474" class="meta">GET  /api/gemini/health   — public boolean readiness</text>
+  <text x="704" y="498" style="font-size:11px;font-weight:700;fill:#15803d">GEMINI_API_KEY + GEMINI_PROXY_KEY live ONLY in /opt/tuc-wms/.env</text>
+
+  <!-- ============ EXTERNAL ============ -->
+  <rect x="690" y="600" width="530" height="80" fill="#fef2f2" stroke="#fecaca" rx="14"/>
+  <text x="710" y="626" class="zone" style="fill:#b91c1c">EXTERNAL</text>
+  <rect x="710" y="636" width="200" height="34" fill="#ffffff" stroke="#ef4444" rx="10"/>
+  <text x="722" y="658" class="lbl">Google Gemini API</text>
+  <text x="940" y="650" class="meta">generateContent (REST)</text>
+  <text x="940" y="666" class="meta">+ Live API (WebSocket, markai future)</text>
+
+  <!-- ============ EDGES ============ -->
+  <!-- consumer apps -> their relays (browser to own server) -->
+  <path class="edge" d="M150,204 L150,372" marker-end="url(#arrow)"/>
+  <path class="edge" d="M350,204 L300,372" marker-end="url(#arrow)"/>
+  <path class="edge" d="M560,204 L420,372" marker-end="url(#arrow)"/>
+  <text x="160" y="300" class="note">browser → /app/api/generate</text>
+
+  <!-- biochemai/omniextract/glucose own proxy (self-contained) -->
+  <path class="edge" d="M815,204 L815,372" marker-end="url(#arrow)" stroke-dasharray="3 3"/>
+  <text x="825" y="300" class="note">own server.ts proxy (parallel pattern)</text>
+
+  <!-- relays -> WMS proxy (with proxy key) -->
+  <path class="edgeKey" d="M660,412 L690,430" marker-end="url(#arrowKey)"/>
+  <text x="600" y="356" class="note" style="fill:#b45309">X-Gemini-Proxy-Key →</text>
+
+  <!-- WMS -> Gemini -->
+  <path class="edgeKey" d="M850,518 L850,636" marker-end="url(#arrowKey)"/>
+  <text x="700" y="585" class="note" style="fill:#b45309">key attached server-side →</text>
+
+  <!-- markai future dashed to Gemini Live -->
+  <path d="M1095,204 C1180,360 1180,520 1010,636" fill="none" stroke="#f59e0b" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#arrow)"/>
+  <text x="1120" y="420" class="note" style="fill:#b45309" transform="rotate(78 1120 420)">Live API (future, ephemeral token)</text>
+
+  <!-- ============ SIDE: NetScan standalone ============ -->
+  <rect x="40" y="730" width="600" height="130" fill="#faf5ff" stroke="#e9d5ff" rx="14"/>
+  <text x="60" y="756" class="zone" style="fill:#7c3aed">STANDALONE — NOT on WMS</text>
+  <rect x="60" y="770" width="560" height="74" fill="#ffffff" stroke="#a855f7" rx="12"/>
+  <text x="72" y="794" class="lbl">TUC NetScan  (Spring Boot, on the network server)</text>
+  <text x="72" y="813" class="meta">OS-level I/O: ping/arp subprocess, raw TCP scan, ARP cache, reverse DNS</text>
+  <text x="72" y="830" class="meta">stays standalone; only its Gemini key proxy belongs on WMS (Phase 2)</text>
+
+  <!-- legend -->
+  <rect x="690" y="730" width="530" height="130" fill="#ffffff" stroke="#e2e8f0" rx="14"/>
+  <text x="710" y="754" class="lbl">Legend</text>
+  <line x1="710" y1="772" x2="745" y2="772" class="edge" marker-end="url(#arrow)"/>
+  <text x="755" y="776" class="note">request flow (no secret)</text>
+  <line x1="710" y1="796" x2="745" y2="796" class="edgeKey" marker-end="url(#arrowKey)"/>
+  <text x="755" y="800" class="note">carries the Gemini key / proxy credential (server-side only)</text>
+  <rect x="710" y="814" width="16" height="12" fill="#fffbeb" stroke="#f59e0b"/>
+  <text x="734" y="824" class="note">deferred / MVP</text>
+  <text x="900" y="824" class="ok">✓ = live & verified end-to-end (2026-06)</text>
+</svg>
