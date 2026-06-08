@@ -11,6 +11,13 @@ coverage/
 dist/
 build/
 
+# Maven / TS build artifacts (generated output, never commit)
+target/
+*.tsbuildinfo
+
+# Security incident reports — local only, never push to the public mirror
+docs/SECURITY-INCIDENT-*
+
 # Local env files
 .env
 .env.local
