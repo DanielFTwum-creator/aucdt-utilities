@@ -1,0 +1,16 @@
+[
+  {
+    "questionText": "Which molecule is known as the energy currency of the cell?",
+    "options": ["Glucose", "ATP", "NADH", "DNA"],
+    "correctAnswerIndex": 1,
+    "explanation": "ATP (adenosine triphosphate) stores energy in its high-energy phosphate bonds and releases it when needed for cellular processes.",
+    "imageSuggestion": "Molecular structure of ATP showing three phosphate groups."
+  },
+  {
+    "questionText": "What is the primary site of cellular respiration in eukaryotes?",
+    "options": ["Chloroplast", "Nucleus", "Mitochondria", "Lysosome"],
+    "correctAnswerIndex": 2,
+    "explanation": "Mitochondria are the powerhouse of the cell, where citric acid cycle and oxidative phosphorylation occur.",
+    "imageSuggestion": "Diagram of a mitochondrion with inner membrane folding highlighted."
+  }
+]
