@@ -1,0 +1,6 @@
+{
+  "name": "TUC NetScan",
+  "description": "Campus network scanner and monitor dashboard for Techbridge University College, providing real-time visibility, congestion diagnostics, and device traffic control.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

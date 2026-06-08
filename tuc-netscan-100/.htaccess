@@ -1,0 +1,31 @@
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /tuc-netscan-100/
+
+  # Force trailing slash for subpath directory
+  RewriteCond %{REQUEST_URI} ^/tuc-netscan-100$
+  RewriteRule ^(.*)$ /tuc-netscan-100/ [R=301,L]
+
+  # Proxy API requests to Node backend on Port 3017
+  RewriteRule ^api/(.*)$ http://localhost:3017/api/$1 [P,L]
+
+  # SPA Routing Fallback
+  RewriteCond %{REQUEST_FILENAME} -f [OR]
+  RewriteCond %{REQUEST_FILENAME} -d
+  RewriteRule ^ - [L]
+  RewriteRule ^ /tuc-netscan-100/index.html [QSA,L]
+</IfModule>
+
+<IfModule mod_expires.c>
+  ExpiresActive On
+  <FilesMatch '\.(js|css|png|jpg|jpeg|gif|svg|woff2|woff|ttf|eot|ico)$'>
+    ExpiresDefault 'max-age=31536000'
+    Header set Cache-Control 'public, immutable'
+  </FilesMatch>
+  <FilesMatch '\.(html|json)$'>
+    ExpiresDefault 'max-age=0'
+    Header set Cache-Control 'no-cache, no-store, must-revalidate'
+    Header set Pragma 'no-cache'
+    Header set Expires '0'
+  </FilesMatch>
+</IfModule>

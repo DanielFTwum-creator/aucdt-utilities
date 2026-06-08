@@ -1,0 +1,59 @@
+version: '3.8'
+
+services:
+  # TUC NetScan Full-Stack Web App, Core Monitor & REST API
+  netscan-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: netscan-app
+    # Using host network mode is critical on Ubuntu to allow the container direct raw socket
+    # access to the local campus LAN subnets for ARP scans and ICMP ping probes.
+    network_mode: "host"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+      - NETSCAN_API_KEY=${NETSCAN_API_KEY:-tuc-ict-secure-token-2026}
+      - DB_HOST=127.0.0.1
+      - DB_PORT=3307
+      - DB_NAME=tuc_netscan
+      - DB_USER=netscan_admin
+      - DB_PASSWORD=${DB_PASSWORD:-TechbridgeSecure2026!}
+      - REDIS_HOST=127.0.0.1
+      - REDIS_PORT=6379
+    restart: on-failure
+    depends_on:
+      - mariadb
+      - redis
+
+  # Institutional Standard Database Node (Port 3307)
+  mariadb:
+    image: mariadb:10.11
+    container_name: netscan-mariadb
+    ports:
+      - "3307:3306" # Maps standard 3306 inside image to our strict 3307 institutional port
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-TechbridgeRootSecure2026!}
+      MYSQL_DATABASE: tuc_netscan
+      MYSQL_USER: netscan_admin
+      MYSQL_PASSWORD: ${DB_PASSWORD:-TechbridgeSecure2026!}
+    volumes:
+      - mariadb_data:/var/lib/mysql
+    restart: always
+
+  # Hot Cache Layer (Port 6379)
+  redis:
+    image: redis:7-alpine
+    container_name: netscan-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    restart: always
+
+volumes:
+  mariadb_data:
+    driver: local
+  redis_data:
+    driver: local

@@ -1,0 +1,37 @@
+@import "tailwindcss";
+
+/*
+  TUC NetScan — global styles
+  Provides the custom utilities referenced in App.tsx that are not part of
+  Tailwind's default set (fade-in entrance + thin scrollbars for log panes).
+*/
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.25s ease-out both;
+}
+
+/* Thin scrollbars for terminal / log panels */
+.scrollbar-thin {
+  scrollbar-width: thin;
+}
+
+.scrollbar-thin::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.scrollbar-thumb-slate-800::-webkit-scrollbar-thumb {
+  background-color: #1e293b;
+  border-radius: 9999px;
+}
