@@ -2,6 +2,7 @@ import express from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { createNetScanApi } from './src/server/api.ts';
+import { requireWmsAuth } from './src/server/wmsAuthMiddleware.ts';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -9,8 +10,9 @@ const __dirname = path.dirname(__filename);
 const app = express();
 app.use(express.json());
 
-// Main TUC NetScan REST API v1 prefix
-app.use('/api/v1', createNetScanApi());
+// Main TUC NetScan REST API v1 prefix — gated by WMS SSO (TUC-ICT-SRS-2026-013).
+// Every API call requires a valid @techbridge.edu.gh WMS session; closes the open-API exposure.
+app.use('/api/v1', requireWmsAuth, createNetScanApi());
 
 // Serve static compiled UI files in production (after npm run build)
 const distPath = path.join(__dirname, 'dist');
