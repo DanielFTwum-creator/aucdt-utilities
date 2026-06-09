@@ -533,6 +533,7 @@ async function performRealScan(targetSubnet?: string): Promise<{ discovered: num
 
     let candidates: string[] = [];
     let scopeLabel = '';
+    let scope: ReturnType<typeof getLocalSubnets> = []; // local subnets, used for self-injection + ARP filtering
 
     if (customCidrs.length > 0) {
       const wantAll = !targetSubnet || targetSubnet === 'ALL SUBNETS';
@@ -541,6 +542,7 @@ async function performRealScan(targetSubnet?: string): Promise<{ discovered: num
       const cidrScope = activeScope.length > 0 ? activeScope : customCidrs;
       for (const cidr of cidrScope) candidates.push(...cidrToHostList(cidr));
       scopeLabel = cidrScope.join(', ');
+      scope = getLocalSubnets(); // for self-interface injection + base filtering in custom-CIDR mode
     }
 
     if (candidates.length === 0) {
@@ -552,7 +554,7 @@ async function performRealScan(targetSubnet?: string): Promise<{ discovered: num
       }
       const wantAll = !targetSubnet || targetSubnet === 'ALL SUBNETS';
       const active = subnets.filter((s) => wantAll || targetSubnet!.startsWith(s.base));
-      const scope = active.length ? active : subnets;
+      scope = active.length ? active : subnets;
       for (const sn of scope) { for (let h = 1; h <= 254; h++) candidates.push(`${sn.base}.${h}`); }
       scopeLabel = scope.map((s) => `${s.base}.0/24`).join(', ');
       settings.configured_cidrs = subnets.map((s) => `${s.base}.0/24`).join(', ');
