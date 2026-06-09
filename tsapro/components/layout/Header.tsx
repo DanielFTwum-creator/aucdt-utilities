@@ -36,7 +36,7 @@ const Header: React.FC = () => {
               <div className="ml-3 flex items-center">
                 <span data-component="header-title-brand" className="text-lg sm:text-xl font-black tracking-wider uppercase">TECHBRIDGE</span>
                 <span className="mx-2 h-6 w-[2px] bg-white/20 hidden sm:block"></span>
-                <span data-component="header-title-app" className="text-base sm:text-lg font-medium opacity-90 tracking-tight">TSAP</span>
+                <span data-component="header-title-app" className="text-base sm:text-lg font-medium opacity-90 tracking-tight">TSAPro</span>
               </div>
             </Link>
             <div className="hidden lg:block">
