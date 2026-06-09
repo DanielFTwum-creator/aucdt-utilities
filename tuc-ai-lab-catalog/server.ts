@@ -42,7 +42,7 @@ async function startServer() {
   const app = express();
   const PORT = Number(process.env.PORT) || 3003;
 
-  app.use(express.json());
+  app.use(express.json({ limit: "25mb" })); // audio base64 for dictation exceeds the 100kb default
   app.use(cookieParser());
 
   const GOOGLE_CLIENT_ID = process.env.VITE_GOOGLE_CLIENT_ID;
@@ -224,6 +224,50 @@ async function startServer() {
 
   // Serve pre-generated screenshots
   app.get(["/api/health", "/ai-lab/api/health"], (_req, res) => res.json({ ok: true }));
+
+  // Dictation transcription + polish. Calls Gemini server-side (GEMINI_API_KEY never
+  // reaches the client) and returns { rawTranscription, polishedNote }. Restores the
+  // dictation-app processing path (previously a phantom 404 endpoint).
+  app.post(["/api/dictation/process", "/ai-lab/api/dictation/process"], async (req, res) => {
+    const { mimeType, base64Audio } = (req.body || {}) as { mimeType?: string; base64Audio?: string };
+    if (!base64Audio) return res.status(400).json({ error: "Missing audio" });
+    const KEY = process.env.GEMINI_API_KEY;
+    if (!KEY) return res.status(503).json({ error: "Transcription is not configured." });
+
+    const model = "gemini-2.5-flash";
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${KEY}`;
+    const callGemini = async (parts: any[]): Promise<string> => {
+      const r = await fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ contents: [{ parts }] }),
+      });
+      if (!r.ok) throw new Error(`Gemini ${r.status}: ${await r.text()}`);
+      const data: any = await r.json();
+      return (data?.candidates?.[0]?.content?.parts || []).map((p: any) => p.text || "").join("").trim();
+    };
+
+    try {
+      const rawTranscription = await callGemini([
+        { text: "Transcribe this audio verbatim in clean UK English. Output only the transcript text, with no preamble or commentary." },
+        { inline_data: { mime_type: mimeType || "audio/webm", data: base64Audio } },
+      ]);
+      if (!rawTranscription) return res.json({ rawTranscription: "", polishedNote: "" });
+
+      let polishedNote = rawTranscription;
+      try {
+        polishedNote = (await callGemini([
+          { text: `Polish the following dictation into clean, well-structured Markdown notes (use headings and bullet points where helpful). Fix grammar and punctuation, preserve meaning, UK English. Output only Markdown.\n\n${rawTranscription}` },
+        ])) || rawTranscription;
+      } catch (e) {
+        console.error("[dictation] polish failed:", (e as Error).message);
+      }
+      res.json({ rawTranscription, polishedNote });
+    } catch (e) {
+      console.error("[dictation] process failed:", (e as Error).message);
+      res.status(502).json({ error: "Failed to process audio." });
+    }
+  });
 
   app.get(["/api/screenshot", "/ai-lab/api/screenshot"], (req, res) => {
     const slug = req.query.slug as string;
