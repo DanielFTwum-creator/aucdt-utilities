@@ -1,7 +1,5 @@
 import React from 'react';
-import { useTheme } from '../../contexts/ThemeContext';
-import { Button } from './Button';
-import { LogOut, Sun, Moon, Radio } from 'lucide-react';
+import { LogOut } from 'lucide-react';
 
 interface HeaderProps {
   title: string;
@@ -12,8 +10,6 @@ interface HeaderProps {
 }
 
 export function Header({ title, subtitle, icon, onLogout, actions }: HeaderProps) {
-  const { theme, toggleTheme } = useTheme();
-
   return (
     <header className="app-header">
       {/* Left: Brand */}
@@ -25,8 +21,8 @@ export function Header({ title, subtitle, icon, onLogout, actions }: HeaderProps
         {icon && (
           <div className="flex-shrink-0 w-9 h-9 rounded-lg flex items-center justify-center"
             style={{
-              background: 'rgba(0,212,255,0.08)',
-              border: '1px solid rgba(0,212,255,0.18)',
+              background: 'rgba(var(--accent-rgb),0.08)',
+              border: '1px solid rgba(var(--accent-rgb),0.18)',
               color: 'var(--cyan)',
             }}
           >
@@ -47,8 +43,8 @@ export function Header({ title, subtitle, icon, onLogout, actions }: HeaderProps
             <span
               className="hidden sm:inline-flex text-[9px] font-mono font-bold tracking-widest uppercase px-1.5 py-0.5 rounded"
               style={{
-                background: 'rgba(0,212,255,0.08)',
-                border: '1px solid rgba(0,212,255,0.15)',
+                background: 'rgba(var(--accent-rgb),0.08)',
+                border: '1px solid rgba(var(--accent-rgb),0.15)',
                 color: 'var(--text-secondary)',
               }}
             >
@@ -67,31 +63,6 @@ export function Header({ title, subtitle, icon, onLogout, actions }: HeaderProps
       <div className="flex items-center gap-2 flex-shrink-0">
         {actions}
 
-        {/* Theme Toggle */}
-        <button
-          onClick={toggleTheme}
-          title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
-          aria-label="Toggle theme"
-          className="w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-200"
-          style={{
-            background: 'rgba(0,212,255,0.05)',
-            border: '1px solid rgba(0,212,255,0.1)',
-            color: 'var(--text-secondary)',
-          }}
-          onMouseEnter={e => {
-            (e.currentTarget as HTMLButtonElement).style.borderColor = 'rgba(0,212,255,0.3)';
-            (e.currentTarget as HTMLButtonElement).style.color = 'var(--cyan)';
-          }}
-          onMouseLeave={e => {
-            (e.currentTarget as HTMLButtonElement).style.borderColor = 'rgba(0,212,255,0.1)';
-            (e.currentTarget as HTMLButtonElement).style.color = 'var(--text-secondary)';
-          }}
-        >
-          {theme === 'dark'
-            ? <Sun className="w-3.5 h-3.5" />
-            : <Moon className="w-3.5 h-3.5" />}
-        </button>
-
         {/* Logout */}
         {onLogout && (
           <button
@@ -100,16 +71,16 @@ export function Header({ title, subtitle, icon, onLogout, actions }: HeaderProps
             aria-label="Sign out"
             className="w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-200"
             style={{
-              background: 'rgba(0,212,255,0.05)',
-              border: '1px solid rgba(0,212,255,0.1)',
+              background: 'rgba(var(--accent-rgb),0.05)',
+              border: '1px solid rgba(var(--accent-rgb),0.1)',
               color: 'var(--text-secondary)',
             }}
             onMouseEnter={e => {
-              (e.currentTarget as HTMLButtonElement).style.borderColor = 'rgba(255,45,85,0.3)';
+              (e.currentTarget as HTMLButtonElement).style.borderColor = 'rgba(var(--primary-rgb),0.3)';
               (e.currentTarget as HTMLButtonElement).style.color = 'var(--rec-red)';
             }}
             onMouseLeave={e => {
-              (e.currentTarget as HTMLButtonElement).style.borderColor = 'rgba(0,212,255,0.1)';
+              (e.currentTarget as HTMLButtonElement).style.borderColor = 'rgba(var(--accent-rgb),0.1)';
               (e.currentTarget as HTMLButtonElement).style.color = 'var(--text-secondary)';
             }}
           >

@@ -37,13 +37,15 @@ export function Button({
   const baseStyles = `
     inline-flex items-center justify-center
     font-medium rounded-lg transition-all
-    focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500
+    focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[var(--ds-accent)]
+    dark:focus:ring-offset-slate-900
     disabled:opacity-60 disabled:cursor-not-allowed
     ${fullWidth ? 'w-full' : ''}
   `;
 
   return (
     <button
+      data-variant={variant}
       className={`
         ${baseStyles}
         ${variantStyles[variant]}

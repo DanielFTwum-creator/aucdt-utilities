@@ -1,0 +1,172 @@
+:root {
+  --ds-primary: #6B0000;         /* TUC Maroon */
+  --ds-primary-hover: #8B1A1A;   /* Hover state */
+  --ds-accent: #B8860B;          /* TUC Gold */
+  --ds-accent-light: #F0C84A;    /* Gold highlight */
+  --ds-surface: #111827;         /* Card bg */
+  --ds-surface-2: #1A2332;       /* Input bg */
+  --ds-border: rgba(184, 134, 11, 0.25); /* Gold-tinted border */
+  --ds-border-focus: rgba(184, 134, 11, 0.75);
+  --ds-text: #F9F6F0;            /* Warm white */
+  --ds-text-muted: #A0968A;      /* Muted label */
+  --ds-error: #F87171;           /* Red error state */
+
+  /* RGB channels for opacity formatting */
+  --primary-rgb: 107, 0, 0;
+  --accent-rgb: 184, 134, 11;
+  --surface-rgb: 17, 24, 39;
+  --surface-2-rgb: 26, 35, 50;
+}
+
+/* Override lib defaults in auth layout scope */
+.auth-layout button[data-variant="primary"] {
+  background: var(--ds-primary) !important;
+  color: var(--ds-text) !important;
+}
+.auth-layout *:focus-visible {
+  outline: 2px solid var(--ds-accent) !important;
+  outline-offset: 2px;
+}
+
+/* ── Floating Inputs Styling ── */
+.float-input {
+  position: relative;
+  margin-bottom: 1.25rem;
+  width: 100%;
+}
+
+.float-input input {
+  width: 100%;
+  padding: 22px 12px 8px 40px;
+  background: var(--ds-surface-2);
+  color: var(--ds-text);
+  border: 1px solid var(--ds-border);
+  border-radius: 8px;
+  font-size: 15px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  outline: none;
+}
+
+.float-input input.pr-12 {
+  padding-right: 48px;
+}
+
+.float-input.focused input {
+  border-color: var(--ds-border-focus) !important;
+  box-shadow: 0 0 0 2px rgba(184, 134, 11, 0.15);
+}
+
+.float-input .float-icon {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--ds-text-muted);
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+  transition: color 0.2s;
+}
+
+.float-input.focused .float-icon {
+  color: var(--ds-accent);
+}
+
+.float-input label {
+  position: absolute;
+  left: 40px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 14px;
+  color: var(--ds-text-muted);
+  pointer-events: none;
+  transition: all 0.2s ease;
+  z-index: 1;
+}
+
+.float-input.lifted label {
+  top: 6px;
+  transform: none;
+  font-size: 10px;
+  color: var(--ds-accent-light);
+  font-weight: 500;
+}
+
+/* ── Card Mount Animation ── */
+.auth-card-mount {
+  animation: authCardMount 380ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes authCardMount {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ── Interactive Button Press Effects ── */
+.auth-btn-press {
+  transition: transform 120ms ease, background-color 120ms ease, box-shadow 0.2s ease !important;
+}
+
+.auth-btn-press:active {
+  transform: scale(0.97) !important;
+  background-color: #540000 !important; /* Maroon darken 10% */
+}
+
+/* ── Input Error Shake Animation ── */
+.error-shake {
+  animation: errorShake 300ms ease-in-out;
+}
+
+.float-input.error-shake input {
+  border-color: var(--ds-error) !important;
+  box-shadow: 0 0 0 2px rgba(248, 113, 113, 0.2);
+}
+
+@keyframes errorShake {
+  0%, 100% { transform: translateX(0); }
+  16%, 50%, 83% { transform: translateX(-4px); }
+  33%, 66% { transform: translateX(4px); }
+}
+
+/* ── Waveform Background ── */
+.waveform-bg {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  padding: 0 5%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.wave-bar {
+  flex: 1;
+  border-radius: 2px;
+  opacity: 0.08;
+  background: linear-gradient(to top, var(--ds-primary), var(--ds-accent));
+  animation: wavePulse 1.2s ease-in-out infinite alternate;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wave-bar {
+    animation: none !important;
+  }
+}
+
+@keyframes wavePulse {
+  from {
+    transform: scaleY(0.4);
+  }
+  to {
+    transform: scaleY(1);
+  }
+}

@@ -445,3 +445,42 @@ export default function LoginPage() {
 **Owner:** Daniel Frempong Twum  
 **Status:** Awaiting feedback  
 **Estimated Total Time:** 23 hours
+
+---
+
+## 6R Enhancement Pass — 9 June 2026 (dark-only studio)
+
+A focused 6R pass run against the *current* build (the studio dark UI shipped since the
+May-31 audit), triggered by a bug report: **the header theme toggle left the screen
+unreadable**.
+
+**Review.** Two stacked theme systems. Studio surfaces (`--surface-rgb`, `--studio-black`,
+`--text-primary`, body bg) are hardcoded dark-only in `index.css` + `dictation-tokens.css`
+with **no light override**. The 7 shared components (`Tabs`, `Alert`, `Input`, `Modal`,
+`Badge`, `Button`, `Card`) use Tailwind class-based `dark:` variants keyed off the `.dark`
+body class that `ThemeContext` removed on toggle. "Light" therefore flipped component text
+to dark-on-dark over the still-dark panel → unreadable. A real light theme was never built.
+
+**Decision — dark-only.** The broadcast-studio identity (gold/maroon glow, glassmorphic
+dark panels, grid overlay, REC mode) has no light surfaces by design. Rather than author a
+full light token set, the theme is **pinned to dark** and the toggle removed. Do not
+re-introduce a theme switcher without first authoring light values for every studio surface.
+
+**Changes.**
+
+- `src/contexts/ThemeContext.tsx` — pinned to dark; always sets `data-theme="dark"` +
+  `.dark` on body. Dropped `toggleTheme`/`setTheme`/localStorage/system-pref. With `.dark`
+  permanent, the components' `dark:` variants stay active and correct (no rewrites).
+- `src/components/shared/Header.tsx` — removed the Sun/Moon toggle button + dead imports.
+- `index.css` — added a global `.app-container :focus-visible` ring (WCAG 2.4.7; the studio
+  icon buttons previously had hover-only styling) and lifted `--text-muted` `#65738E → #8A97AE`
+  so small mono labels clear AA (4.5:1) on dark panels.
+- `App.tsx` — de-duplicated the title (`stripLeadingHeading` strips the polished note's
+  leading `<h1>`, which repeated the title field) and removed the redundant in-panel
+  `OPERATOR:` line (already shown in the header).
+
+**Already-satisfied Rs.** Icon system is lucide-only (Font Awesome fully removed).
+Typography hierarchy already consistent: Fraunces display / Inter body / JetBrains Mono labels.
+
+**Verified.** `pnpm build` clean; dev server HTTP 200; built CSS contains the focus ring +
+`#8A97AE`; toggle strings absent from the bundle.
