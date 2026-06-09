@@ -115,7 +115,27 @@ const store = new RecordingStore();
 // (each segment stays well under Gemini's inline-audio limit) and autosave is frequent.
 const API_BASE = (import.meta as any).env?.VITE_API_URL || 'https://ai-tools.techbridge.edu.gh';
 const DICTATION_URL = `${API_BASE}/ai-lab/api/dictation/process`;
+const TRANSCODE_URL = `${API_BASE}/ai-lab/api/dictation/transcode`;
 const SEGMENT_MS = 60000;
+
+// Trigger a browser download for a blob.
+function downloadBlob(blob: Blob, filename: string) {
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+// Strip the polished note's HTML to plain text for .txt / .pdf export.
+function htmlToPlainText(html: string): string {
+  const el = document.createElement('div');
+  el.innerHTML = html;
+  return (el.textContent || el.innerText || '').replace(/\n{3,}/g, '\n\n').trim();
+}
 
 // The AI-polished note usually opens with its own title heading, which then duplicates
 // the title field shown directly above it. Drop a single leading <h1>/<h2> so the title
@@ -150,6 +170,8 @@ export default function App() {
     setShowTutorial(false);
   };
   const [activeTab, setActiveTab] = useState<'polished' | 'raw'>('polished');
+  const [exportOpen, setExportOpen] = useState(false);
+  const [exportingMp3, setExportingMp3] = useState(false);
   const [currentNote, setCurrentNote] = useState<Note>({
     id: 'new',
     title: '',
@@ -435,21 +457,72 @@ export default function App() {
     }
   };
 
-  // Download the captured recording. The native format is webm/opus (Chrome) or mp4 (Safari);
-  // a true cross-browser MP3/MP4 transcode would need ffmpeg.wasm (heavy) — flagged as a follow-up.
-  const exportRecording = () => {
+  // Export the note + recording. Filenames derive from the note title.
+  const safeName = () => (currentNote.title?.trim() || 'dictation').replace(/[^\w.-]+/g, '_');
+
+  // The note as the current view: polished note (HTML → plain text) or raw transcript.
+  const noteAsText = () => {
+    const body = activeTab === 'polished' && currentNote.polishedNote
+      ? htmlToPlainText(currentNote.polishedNote)
+      : currentNote.rawTranscription;
+    const title = currentNote.title?.trim();
+    return (title ? `${title}\n\n` : '') + (body || '');
+  };
+
+  const exportText = () => {
+    setExportOpen(false);
+    downloadBlob(new Blob([noteAsText()], { type: 'text/plain;charset=utf-8' }), `${safeName()}.txt`);
+  };
+
+  // PDF via jsPDF, lazy-loaded so it stays out of the main bundle.
+  const exportPdf = async () => {
+    setExportOpen(false);
+    try {
+      const { jsPDF } = await import('jspdf');
+      const doc = new jsPDF({ unit: 'pt', format: 'a4' });
+      const margin = 56;
+      const width = doc.internal.pageSize.getWidth() - margin * 2;
+      let y = margin;
+      const title = currentNote.title?.trim();
+      if (title) {
+        doc.setFont('times', 'bold'); doc.setFontSize(20);
+        for (const line of doc.splitTextToSize(title, width)) { doc.text(line, margin, y); y += 26; }
+        y += 8;
+      }
+      doc.setFont('helvetica', 'normal'); doc.setFontSize(12);
+      const body = activeTab === 'polished' && currentNote.polishedNote
+        ? htmlToPlainText(currentNote.polishedNote) : currentNote.rawTranscription;
+      const pageH = doc.internal.pageSize.getHeight();
+      for (const line of doc.splitTextToSize(body || '', width)) {
+        if (y > pageH - margin) { doc.addPage(); y = margin; }
+        doc.text(line, margin, y); y += 17;
+      }
+      doc.save(`${safeName()}.pdf`);
+    } catch (e) {
+      setStatus(`PDF export failed: ${(e as Error).message}`);
+    }
+  };
+
+  // MP3: browsers can't encode MP3, so transcode the native webm/mp4 server-side via ffmpeg.
+  const exportMp3 = async () => {
+    setExportOpen(false);
     if (!recordedBlob) return;
-    const isMp4 = recordedBlob.type.includes('mp4');
-    const ext = isMp4 ? 'mp4' : 'webm';
-    const name = (currentNote.title?.trim() || 'dictation').replace(/[^\w.-]+/g, '_');
-    const url = URL.createObjectURL(recordedBlob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `${name}.${ext}`;
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    setTimeout(() => URL.revokeObjectURL(url), 1000);
+    setExportingMp3(true);
+    setStatus('Transcoding to MP3…');
+    try {
+      const base64Audio = await blobToBase64(recordedBlob);
+      const r = await fetch(TRANSCODE_URL, {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ base64Audio, mimeType: recordedBlob.type }),
+      });
+      if (!r.ok) throw new Error(`Server ${r.status}`);
+      downloadBlob(await r.blob(), `${safeName()}.mp3`);
+      setStatus('Complete');
+    } catch (e) {
+      setStatus(`MP3 export failed: ${(e as Error).message}`);
+    } finally {
+      setExportingMp3(false);
+    }
   };
 
   const handleNewNote = () => {
@@ -499,22 +572,59 @@ export default function App() {
                   <Mic className="w-5 h-5" />
                 </button>
               )}
-              {/* Export recording (audio download) — appears after a recording */}
-              {recordedBlob && (
-                <button
-                  type="button"
-                  onClick={exportRecording}
-                  title="Download recording"
-                  aria-label="Download recording"
-                  className="w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-200"
-                  style={{
-                    background: 'rgba(var(--accent-rgb),0.05)',
-                    border: '1px solid rgba(var(--accent-rgb),0.1)',
-                    color: 'var(--text-secondary)',
-                  }}
-                >
-                  <Download className="w-3.5 h-3.5" />
-                </button>
+              {/* Export menu — note as TXT/PDF, audio as MP3 (server transcode) */}
+              {(currentNote.polishedNote || currentNote.rawTranscription || recordedBlob) && (
+                <div className="relative">
+                  <button
+                    type="button"
+                    onClick={() => setExportOpen(o => !o)}
+                    title="Export"
+                    aria-label="Export"
+                    aria-haspopup="menu"
+                    aria-expanded={exportOpen}
+                    className="w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-200"
+                    style={{
+                      background: 'rgba(var(--accent-rgb),0.05)',
+                      border: '1px solid rgba(var(--accent-rgb),0.1)',
+                      color: 'var(--text-secondary)',
+                    }}
+                  >
+                    <Download className="w-3.5 h-3.5" />
+                  </button>
+                  {exportOpen && (
+                    <>
+                      <div className="fixed inset-0 z-40" onClick={() => setExportOpen(false)} aria-hidden />
+                      <div
+                        role="menu"
+                        className="absolute right-0 mt-2 z-50 w-48 rounded-lg overflow-hidden py-1"
+                        style={{
+                          background: 'rgba(var(--surface-rgb),0.97)',
+                          border: '1px solid rgba(var(--accent-rgb),0.15)',
+                          boxShadow: '0 12px 32px rgba(0,0,0,0.5)',
+                          backdropFilter: 'blur(12px)',
+                        }}
+                      >
+                        <button type="button" role="menuitem" onClick={exportText}
+                          className="w-full text-left px-3 py-2 text-sm transition-colors hover:bg-white/5"
+                          style={{ color: 'var(--text-primary)' }}>
+                          Note — text (.txt)
+                        </button>
+                        <button type="button" role="menuitem" onClick={exportPdf}
+                          className="w-full text-left px-3 py-2 text-sm transition-colors hover:bg-white/5"
+                          style={{ color: 'var(--text-primary)' }}>
+                          Note — PDF (.pdf)
+                        </button>
+                        {recordedBlob && (
+                          <button type="button" role="menuitem" onClick={exportMp3} disabled={exportingMp3}
+                            className="w-full text-left px-3 py-2 text-sm transition-colors hover:bg-white/5 disabled:opacity-50"
+                            style={{ color: 'var(--text-primary)' }}>
+                            {exportingMp3 ? 'Transcoding…' : 'Audio — MP3 (.mp3)'}
+                          </button>
+                        )}
+                      </div>
+                    </>
+                  )}
+                </div>
               )}
               {/* New note */}
               <button
