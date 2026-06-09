@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { api, useAuthStore } from '../../lib/api';
+import { wmsLoginUrl } from '../../lib/wmsAuth';
 import { Wifi, Lock, User, AlertCircle } from 'lucide-react';
 
 export function LoginPage() {
@@ -10,6 +11,7 @@ export function LoginPage() {
   const [loading, setLoading]   = useState(false);
   const login    = useAuthStore(s => s.login);
   const navigate = useNavigate();
+  const reason   = new URLSearchParams(window.location.search).get('reason');
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -43,6 +45,25 @@ export function LoginPage() {
 
         {/* Form card */}
         <div className="noc-card p-6">
+          {/* Primary: WMS Single Sign-On (TUC-ICT-SRS-2026-013) */}
+          {reason && (
+            <div className="flex items-start gap-2 text-xs text-red-400 bg-red-400/10 border border-red-400/20 rounded p-3 mb-4">
+              <AlertCircle size={12} className="mt-0.5 shrink-0" />
+              {reason === 'domain' ? 'Only @techbridge.edu.gh accounts are permitted.'
+                : reason === 'deactivated' ? 'Your account has been deactivated.'
+                : 'Sign-in failed. Please try again.'}
+            </div>
+          )}
+          <button type="button" onClick={() => { window.location.href = wmsLoginUrl(); }}
+            className="w-full flex items-center justify-center gap-2 py-2.5 rounded font-mono-code text-sm tracking-widest transition-all"
+            style={{ background: 'rgba(200,146,10,0.15)', border: '1px solid rgba(200,146,10,0.4)', color: '#C8920A' }}>
+            CONTINUE WITH GOOGLE
+          </button>
+          <div className="relative flex items-center gap-3 my-5">
+            <div className="flex-1 h-px bg-white/10"></div>
+            <span className="text-slate-600 text-[10px] uppercase font-mono-code tracking-widest">break-glass</span>
+            <div className="flex-1 h-px bg-white/10"></div>
+          </div>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label className="block text-xs font-mono-code text-slate-400 mb-1.5 tracking-widest">USERNAME</label>

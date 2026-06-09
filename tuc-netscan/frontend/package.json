@@ -20,12 +20,14 @@
     "lucide-react": "^0.414.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "qrcode": "^1.5.4",
     "react-router-dom": "^6.26.0",
     "recharts": "^2.12.7",
     "zustand": "^4.5.4"
   },
   "devDependencies": {
     "@types/node": "^25.9.1",
+    "@types/qrcode": "^1.5.5",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
     "@vitejs/plugin-react": "^4.3.1",

@@ -10,6 +10,7 @@ import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 @Component
 @Slf4j
@@ -37,6 +38,16 @@ public class JwtService {
     public String extractUsername(String token) {
         return Jwts.parser().verifyWith(key).build()
             .parseSignedClaims(token).getPayload().getSubject();
+    }
+
+    /** Authorities are carried in the self-contained JWT, so the filter needs no user lookup. */
+    public List<String> extractRoles(String token) {
+        Object roles = Jwts.parser().verifyWith(key).build()
+            .parseSignedClaims(token).getPayload().get("roles");
+        if (roles instanceof Collection<?> c) {
+            return c.stream().map(String::valueOf).toList();
+        }
+        return List.of();
     }
 
     public boolean isValid(String token) {
