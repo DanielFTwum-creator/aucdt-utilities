@@ -400,15 +400,18 @@ export default function App() {
           onLogout={logout}
           actions={
             <div className="flex items-center gap-2">
-              {/* Record button */}
-              <button
-                onClick={toggleRecording}
-                title="Start recording"
-                className="record-button"
-                aria-label="Start recording"
-              >
-                <Mic className="w-5 h-5" />
-              </button>
+              {/* Record button — only once a note exists; on standby the hero mic is the sole control */}
+              {currentNote.polishedNote && (
+                <button
+                  type="button"
+                  onClick={toggleRecording}
+                  title="Start recording"
+                  className="record-button"
+                  aria-label="Start recording"
+                >
+                  <Mic className="w-5 h-5" />
+                </button>
+              )}
               {/* New note */}
               <button
                 onClick={handleNewNote}
@@ -560,22 +563,23 @@ export default function App() {
                           ) : (
                             /* ── STANDBY empty state ─── */
                             <div className="flex flex-col items-center justify-center text-center py-16">
-                              {/* Sonar mic button */}
-                              <div className="relative mb-8">
-                                <div className="sonar-ring" />
-                                <div className="sonar-ring" style={{ animationDelay: '1s' }} />
-                                <div className="sonar-ring" style={{ animationDelay: '2s' }} />
-                                <div
-                                  className="relative w-20 h-20 rounded-full flex items-center justify-center"
-                                  style={{
-                                    background: 'rgba(var(--accent-rgb),0.08)',
-                                    border: '1px solid rgba(var(--accent-rgb),0.22)',
-                                    boxShadow: '0 0 32px rgba(var(--accent-rgb),0.08)',
-                                  }}
-                                >
-                                  <Mic className="w-9 h-9" style={{ color: 'var(--cyan)' }} />
-                                </div>
-                              </div>
+                              {/* Single, calm record button (no competing mics, no blinking) */}
+                              <button
+                                type="button"
+                                onClick={toggleRecording}
+                                aria-label="Start recording"
+                                className="relative w-24 h-24 rounded-full flex items-center justify-center mb-8 transition-all duration-200"
+                                style={{
+                                  background: 'rgba(var(--accent-rgb),0.08)',
+                                  border: '1px solid rgba(var(--accent-rgb),0.3)',
+                                  boxShadow: '0 0 32px rgba(var(--accent-rgb),0.1)',
+                                  cursor: 'pointer',
+                                }}
+                                onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.boxShadow = '0 0 44px rgba(var(--accent-rgb),0.24)'; }}
+                                onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.boxShadow = '0 0 32px rgba(var(--accent-rgb),0.1)'; }}
+                              >
+                                <Mic className="w-10 h-10" style={{ color: 'var(--cyan)' }} />
+                              </button>
 
                               <div
                                 className="text-[9px] font-mono font-bold tracking-[0.25em] uppercase mb-3"
@@ -591,21 +595,11 @@ export default function App() {
                                 Ready to capture
                               </h3>
                               <p
-                                className="text-sm max-w-xs leading-relaxed mb-8"
+                                className="text-sm max-w-xs leading-relaxed"
                                 style={{ color: 'var(--text-secondary)' }}
                               >
                                 Tap the microphone to begin your session. AI will transcribe and polish your notes in real time.
                               </p>
-
-                              {/* Inline record CTA */}
-                              <button
-                                onClick={toggleRecording}
-                                className="record-button"
-                                style={{ width: 56, height: 56 }}
-                                aria-label="Start recording"
-                              >
-                                <Mic className="w-5 h-5" />
-                              </button>
                             </div>
                           )}
                         </div>
