@@ -1,9 +1,11 @@
 @import "tailwindcss";
+@import "./src/styles/dictation-tokens.css";
 
 @source "./src";
 
 @theme {
-  --font-dmsans: "DM Sans", sans-serif;
+  --font-display: "Fraunces", serif;   /* display headings (login + app) */
+  --font-sans:    "Inter", sans-serif;  /* body */
   --font-mono: "JetBrains Mono", "Fira Code", ui-monospace, monospace;
 
   --animate-fade-in-down: fadeInDown 0.5s ease-out forwards;
@@ -24,37 +26,37 @@
   }
 }
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Outfit:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
 /* ── Studio Control Room Design Tokens ─────────────────────── */
 :root {
   --font-sans:    'Inter', sans-serif;
-  --font-display: 'Outfit', sans-serif;
+  --font-display: 'Fraunces', serif;
   --font-mono:    'JetBrains Mono', ui-monospace, monospace;
 
-  /* Control Room Palette */
-  --studio-black:    #080C14;
-  --studio-deep:     #0D1520;
-  --studio-panel:    #111927;
-  --studio-surface:  #162035;
-  --studio-border:   rgba(0, 212, 255, 0.10);
-  --studio-border-bright: rgba(0, 212, 255, 0.25);
+  /* Control Room Palette - mapped to TUC Maroon & Gold design system */
+  --studio-black:    #090D16;   /* Dark background */
+  --studio-deep:     #0F1522;   /* Deep area bg */
+  --studio-panel:    var(--ds-surface);   /* Card bg */
+  --studio-surface:  var(--ds-surface-2); /* Input bg */
+  --studio-border:   var(--ds-border);
+  --studio-border-bright: rgba(184, 134, 11, 0.45);
 
-  --cyan:        #00D4FF;
-  --cyan-dim:    rgba(0, 212, 255, 0.15);
-  --cyan-glow:   rgba(0, 212, 255, 0.08);
-  --amber:       #F59E0B;
-  --amber-dim:   rgba(245, 158, 11, 0.15);
-  --rec-red:     #FF2D55;
-  --rec-dim:     rgba(255, 45, 85, 0.15);
-  --rec-glow:    rgba(255, 45, 85, 0.25);
+  --cyan:        var(--ds-accent);      /* Main accent is now TUC Gold */
+  --cyan-dim:    rgba(184, 134, 11, 0.15);
+  --cyan-glow:   rgba(184, 134, 11, 0.08);
+  --amber:       var(--ds-accent-light);
+  --amber-dim:   rgba(240, 200, 74, 0.15);
+  --rec-red:     var(--ds-primary);     /* Record/Action is now TUC Maroon */
+  --rec-dim:     rgba(107, 0, 0, 0.15);
+  --rec-glow:    rgba(107, 0, 0, 0.25);
 
-  --text-primary:   #E8F0FE;
-  --text-secondary: #7B93B8;
-  --text-muted:     #3D5070;
-  --text-inverse:   #080C14;
+  --text-primary:   var(--ds-text);
+  --text-secondary: var(--ds-text-muted);
+  --text-muted:     #65738E;
+  --text-inverse:   #090D16;
 
   /* Semantic aliases */
   --bg-primary:   var(--studio-black);
@@ -63,11 +65,11 @@
   --accent-secondary: var(--amber);
   --accent-danger:    var(--rec-red);
 
-  --glass-bg:        rgba(13, 21, 40, 0.82);
+  --glass-bg:        rgba(var(--surface-rgb), 0.85); /* Dark surface base */
   --glass-border:    var(--studio-border);
-  --glass-highlight: rgba(0, 212, 255, 0.04);
-  --glow-1: rgba(0, 212, 255, 0.04);
-  --glow-2: rgba(245, 158, 11, 0.03);
+  --glass-highlight: rgba(var(--accent-rgb), 0.04);
+  --glow-1: rgba(var(--accent-rgb), 0.05); /* TUC Gold glow */
+  --glow-2: rgba(var(--primary-rgb), 0.04); /* TUC Maroon glow */
 }
 
 body {
@@ -97,8 +99,8 @@ body {
   position: fixed;
   inset: 0;
   background-image:
-    linear-gradient(rgba(0,212,255,0.015) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0,212,255,0.015) 1px, transparent 1px);
+    linear-gradient(rgba(var(--accent-rgb),0.015) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(var(--accent-rgb),0.015) 1px, transparent 1px);
   background-size: 48px 48px;
   pointer-events: none;
   z-index: 0;
@@ -118,7 +120,7 @@ body {
   align-items: center;
   justify-content: space-between;
   padding: 0 1.5rem;
-  box-shadow: 0 1px 0 rgba(0,212,255,0.08), 0 8px 32px rgba(0,0,0,0.4);
+  box-shadow: 0 1px 0 rgba(var(--accent-rgb),0.08), 0 8px 32px rgba(0,0,0,0.4);
 }
 
 /* Cyan left-border accent on header */
@@ -166,7 +168,7 @@ body {
 
 .record-button:hover {
   border-color: var(--cyan);
-  box-shadow: 0 0 16px rgba(0,212,255,0.2), inset 0 1px 0 rgba(0,212,255,0.2);
+  box-shadow: 0 0 16px rgba(var(--accent-rgb),0.2), inset 0 1px 0 rgba(var(--accent-rgb),0.2);
   transform: translateY(-1px);
 }
 
@@ -208,7 +210,7 @@ body {
   color: var(--text-primary);
   letter-spacing: 0.06em;
   line-height: 1;
-  text-shadow: 0 0 20px rgba(0,212,255,0.3);
+  text-shadow: 0 0 20px rgba(var(--accent-rgb),0.3);
 }
 
 /* ── REC badge ───────────────────────────────────────────────── */
@@ -259,11 +261,11 @@ body {
 /* ── Scrollbar ───────────────────────────────────────────────── */
 ::-webkit-scrollbar        { width: 5px; height: 5px; }
 ::-webkit-scrollbar-track  { background: var(--studio-deep); }
-::-webkit-scrollbar-thumb  { background: rgba(0,212,255,0.2); border-radius: 9999px; }
-::-webkit-scrollbar-thumb:hover { background: rgba(0,212,255,0.4); }
+::-webkit-scrollbar-thumb  { background: rgba(var(--accent-rgb),0.2); border-radius: 9999px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(var(--accent-rgb),0.4); }
 
 /* ── Selection ───────────────────────────────────────────────── */
-::selection { background: rgba(0,212,255,0.2); color: #fff; }
+::selection { background: rgba(var(--accent-rgb),0.2); color: #fff; }
 
 /* ── Note Editor Prose ───────────────────────────────────────── */
 .note-editor h1, .note-editor h2, .note-editor h3 {
@@ -289,12 +291,12 @@ body {
 }
 .note-editor code {
   font-family: var(--font-mono);
-  background: rgba(0,212,255,0.06);
+  background: rgba(var(--accent-rgb),0.06);
   padding: 0.15em 0.4em;
   border-radius: 4px;
   font-size: 0.875em;
   color: var(--cyan);
-  border: 1px solid rgba(0,212,255,0.12);
+  border: 1px solid rgba(var(--accent-rgb),0.12);
 }
 .note-editor pre {
   background: rgba(0,0,0,0.4);
@@ -310,7 +312,7 @@ body {
 .spinner {
   width: 16px;
   height: 16px;
-  border: 2px solid rgba(0,212,255,0.1);
+  border: 2px solid rgba(var(--accent-rgb),0.1);
   border-top-color: var(--cyan);
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
@@ -337,7 +339,7 @@ body {
   padding: 2.5rem;
   max-width: 420px;
   width: 90%;
-  box-shadow: 0 0 0 1px rgba(0,212,255,0.06), 0 32px 64px rgba(0,0,0,0.6);
+  box-shadow: 0 0 0 1px rgba(var(--accent-rgb),0.06), 0 32px 64px rgba(0,0,0,0.6);
   position: relative;
 }
 
@@ -360,7 +362,7 @@ body {
 }
 .tutorial-step-dot.active {
   background: var(--cyan);
-  box-shadow: 0 0 8px rgba(0,212,255,0.5);
+  box-shadow: 0 0 8px rgba(var(--accent-rgb),0.5);
   border-color: var(--cyan);
 }
 

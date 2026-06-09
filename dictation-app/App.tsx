@@ -45,7 +45,7 @@ function OnboardingTutorial({ onDismiss }: { onDismiss: () => void }) {
           onClick={onDismiss}
           aria-label="Skip tutorial"
           className="absolute top-4 right-4 w-7 h-7 rounded-lg flex items-center justify-center transition-colors"
-          style={{ background: 'rgba(0,212,255,0.06)', border: '1px solid rgba(0,212,255,0.1)', color: 'var(--text-muted)' }}
+          style={{ background: 'rgba(var(--accent-rgb),0.06)', border: '1px solid rgba(var(--accent-rgb),0.1)', color: 'var(--text-muted)' }}
           onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.color = 'var(--text-primary)'; }}
           onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.color = 'var(--text-muted)'; }}
         >
@@ -62,7 +62,7 @@ function OnboardingTutorial({ onDismiss }: { onDismiss: () => void }) {
         {/* Icon */}
         <div
           className="w-14 h-14 rounded-2xl flex items-center justify-center mb-4"
-          style={{ background: 'rgba(0,212,255,0.06)', border: '1px solid rgba(0,212,255,0.1)' }}
+          style={{ background: 'rgba(var(--accent-rgb),0.06)', border: '1px solid rgba(var(--accent-rgb),0.1)' }}
         >
           {current.icon}
         </div>
@@ -84,7 +84,7 @@ function OnboardingTutorial({ onDismiss }: { onDismiss: () => void }) {
             <button
               onClick={back}
               className="flex items-center gap-1.5 text-sm px-3 py-1.5 rounded-lg transition-colors"
-              style={{ color: 'var(--text-secondary)', background: 'rgba(0,212,255,0.05)' }}
+              style={{ color: 'var(--text-secondary)', background: 'rgba(var(--accent-rgb),0.05)' }}
             >
               <ChevronLeft className="w-4 h-4" /> Back
             </button>
@@ -96,10 +96,10 @@ function OnboardingTutorial({ onDismiss }: { onDismiss: () => void }) {
             style={{
               background: 'var(--cyan)',
               color: 'var(--studio-black)',
-              boxShadow: '0 0 16px rgba(0,212,255,0.25)',
+              boxShadow: '0 0 16px rgba(var(--accent-rgb),0.25)',
             }}
-            onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.boxShadow = '0 0 28px rgba(0,212,255,0.45)'; }}
-            onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.boxShadow = '0 0 16px rgba(0,212,255,0.25)'; }}
+            onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.boxShadow = '0 0 28px rgba(var(--accent-rgb),0.45)'; }}
+            onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.boxShadow = '0 0 16px rgba(var(--accent-rgb),0.25)'; }}
           >
             {isLast ? 'Get started' : (<>Next <ChevronRight className="w-4 h-4" /></>)}
           </button>
@@ -205,9 +205,9 @@ export default function App() {
     const spacing = Math.max(0, totalWidth * 0.3);
     
     const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
-    gradient.addColorStop(0, '#f43f5e'); // Rose
-    gradient.addColorStop(0.5, '#D4AF37'); // Gold
-    gradient.addColorStop(1, '#8B1538'); // Burgundy
+    gradient.addColorStop(0, '#F0C84A');   // TUC Gold (light)
+    gradient.addColorStop(0.5, '#B8860B'); // TUC Gold
+    gradient.addColorStop(1, '#6B0000');   // TUC Maroon
     ctx.fillStyle = gradient;
     let x = 0;
     
@@ -416,8 +416,8 @@ export default function App() {
                 aria-label="Create new note"
                 className="w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-200"
                 style={{
-                  background: 'rgba(0,212,255,0.05)',
-                  border: '1px solid rgba(0,212,255,0.1)',
+                  background: 'rgba(var(--accent-rgb),0.05)',
+                  border: '1px solid rgba(var(--accent-rgb),0.1)',
                   color: 'var(--text-secondary)',
                 }}
               >
@@ -471,9 +471,9 @@ export default function App() {
           <div
             className="flex-1 flex flex-col rounded-2xl overflow-hidden"
             style={{
-              background: 'rgba(13,21,40,0.7)',
-              border: '1px solid rgba(0,212,255,0.1)',
-              boxShadow: '0 0 0 1px rgba(0,212,255,0.04), 0 24px 48px rgba(0,0,0,0.5)',
+              background: 'rgba(var(--surface-rgb),0.7)',
+              border: '1px solid rgba(var(--accent-rgb),0.1)',
+              boxShadow: '0 0 0 1px rgba(var(--accent-rgb),0.04), 0 24px 48px rgba(0,0,0,0.5)',
               backdropFilter: 'blur(12px)',
             }}
           >
@@ -481,8 +481,8 @@ export default function App() {
             <div
               className="flex items-center justify-between px-5 py-3 flex-shrink-0"
               style={{
-                borderBottom: '1px solid rgba(0,212,255,0.08)',
-                background: 'rgba(8,12,20,0.5)',
+                borderBottom: '1px solid rgba(var(--accent-rgb),0.08)',
+                background: 'rgba(var(--surface-rgb),0.5)',
               }}
             >
               <div className="flex items-center gap-2">
@@ -503,8 +503,8 @@ export default function App() {
                 <div
                   className="flex items-center gap-2 text-[10px] font-mono px-2.5 py-1 rounded-full"
                   style={{
-                    background: 'rgba(0,212,255,0.06)',
-                    border: '1px solid rgba(0,212,255,0.15)',
+                    background: 'rgba(var(--accent-rgb),0.06)',
+                    border: '1px solid rgba(var(--accent-rgb),0.15)',
                     color: 'var(--cyan)',
                   }}
                 >
@@ -523,7 +523,7 @@ export default function App() {
                 style={{
                   fontSize: 'clamp(1.5rem, 3vw, 2.25rem)',
                   color: 'var(--text-primary)',
-                  borderBottom: '1px solid rgba(0,212,255,0.12)',
+                  borderBottom: '1px solid rgba(var(--accent-rgb),0.12)',
                   caretColor: 'var(--cyan)',
                 }}
                 placeholder="Untitled Session"
@@ -531,8 +531,8 @@ export default function App() {
                 onChange={e => setCurrentNote({ ...currentNote, title: e.target.value })}
                 disabled={isRecording}
                 aria-label="Note title"
-                onFocus={e => { (e.target as HTMLInputElement).style.borderBottomColor = 'rgba(0,212,255,0.4)'; }}
-                onBlur={e => { (e.target as HTMLInputElement).style.borderBottomColor = 'rgba(0,212,255,0.12)'; }}
+                onFocus={e => { (e.target as HTMLInputElement).style.borderBottomColor = 'rgba(var(--accent-rgb),0.4)'; }}
+                onBlur={e => { (e.target as HTMLInputElement).style.borderBottomColor = 'rgba(var(--accent-rgb),0.12)'; }}
               />
 
               {/* Owner */}
@@ -568,9 +568,9 @@ export default function App() {
                                 <div
                                   className="relative w-20 h-20 rounded-full flex items-center justify-center"
                                   style={{
-                                    background: 'rgba(0,212,255,0.08)',
-                                    border: '1px solid rgba(0,212,255,0.22)',
-                                    boxShadow: '0 0 32px rgba(0,212,255,0.08)',
+                                    background: 'rgba(var(--accent-rgb),0.08)',
+                                    border: '1px solid rgba(var(--accent-rgb),0.22)',
+                                    boxShadow: '0 0 32px rgba(var(--accent-rgb),0.08)',
                                   }}
                                 >
                                   <Mic className="w-9 h-9" style={{ color: 'var(--cyan)' }} />
