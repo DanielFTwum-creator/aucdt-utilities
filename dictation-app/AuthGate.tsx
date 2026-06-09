@@ -115,15 +115,15 @@ export const AuthGate: React.FC<{ children: React.ReactNode }> = ({ children }) 
       <FormLoginView
         appName="Dictation Studio"
         appSubtitle="AI-powered voice transcription & polish"
-        primaryColor="text-[#00D4FF]"
-        primaryColorHex="#00D4FF"
-        borderColorClass="border border-[rgba(0,212,255,0.18)]"
-        inputBorderClass="border border-[rgba(0,212,255,0.15)] bg-[rgba(13,21,40,0.6)]"
-        inputFocusRingClass="focus:ring-4 focus:ring-[rgba(0,212,255,0.2)]"
-        inputFocusBorderClass="focus:border-[#00D4FF]"
-        buttonHoverClass="hover:shadow-[0_0_24px_rgba(0,212,255,0.35)] hover:-translate-y-0.5"
-        backgroundClass="bg-[#080C14]"
-        cardBgClass="bg-[rgba(13,21,40,0.82)] backdrop-blur-[20px]"
+        primaryColor="text-[var(--ds-accent)]"
+        primaryColorHex="var(--ds-accent)"
+        borderColorClass="border border-[var(--ds-border)]"
+        inputBorderClass="border border-[var(--ds-border)] bg-[var(--ds-surface-2)]"
+        inputFocusRingClass="focus:ring-4 focus:ring-[rgba(var(--accent-rgb),0.2)]"
+        inputFocusBorderClass="focus:border-[var(--ds-accent)]"
+        buttonHoverClass="hover:shadow-[0_0_24px_rgba(var(--accent-rgb),0.35)] hover:-translate-y-0.5"
+        backgroundClass="bg-[var(--studio-black)]"
+        cardBgClass="bg-[var(--ds-surface)] backdrop-blur-[20px]"
         onGoogleLogin={handleGoogleLogin}
         onLocalLogin={async (id, pwd) => {
           const res = await login(id, pwd);

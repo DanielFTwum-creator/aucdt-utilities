@@ -1,55 +1,28 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useEffect } from 'react';
 
-type Theme = 'light' | 'dark';
+// The dictation app is a dark "broadcast studio" UI. The studio surfaces are dark-only
+// (no light token set was ever authored), so the theme is pinned to dark — a togglable
+// "light" mode left those surfaces dark while flipping component text to dark-on-dark,
+// rendering the screen unreadable. See DESIGN_AUDIT_6R.md (6R enhancement, dark-only).
+type Theme = 'dark';
 
 interface ThemeContextType {
   theme: Theme;
-  toggleTheme: () => void;
-  setTheme: (theme: Theme) => void;
 }
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [theme, setThemeState] = useState<Theme>(() => {
-    // Check localStorage
-    const stored = localStorage.getItem('theme') as Theme | null;
-    if (stored) return stored;
-
-    // Check system preference
-    if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-      return 'dark';
-    }
-
-    return 'light';
-  });
+  const theme: Theme = 'dark';
 
   useEffect(() => {
-    // Update DOM
-    const root = document.documentElement;
-    root.setAttribute('data-theme', theme);
-
-    // Set class on body for Tailwind/Cypress tests
-    if (theme === 'dark') {
-      document.body.classList.add('dark');
-    } else {
-      document.body.classList.remove('dark');
-    }
-
-    // Save preference
-    localStorage.setItem('theme', theme);
-  }, [theme]);
-
-  const toggleTheme = () => {
-    setThemeState(prev => (prev === 'light' ? 'dark' : 'light'));
-  };
-
-  const setTheme = (newTheme: Theme) => {
-    setThemeState(newTheme);
-  };
+    document.documentElement.setAttribute('data-theme', 'dark');
+    // `.dark` on body keeps the shared components' Tailwind dark: variants active.
+    document.body.classList.add('dark');
+  }, []);
 
   return (
-    <ThemeContext.Provider value={{ theme, toggleTheme, setTheme }}>
+    <ThemeContext.Provider value={{ theme }}>
       {children}
     </ThemeContext.Provider>
   );

@@ -117,6 +117,13 @@ const API_BASE = (import.meta as any).env?.VITE_API_URL || 'https://ai-tools.tec
 const DICTATION_URL = `${API_BASE}/ai-lab/api/dictation/process`;
 const SEGMENT_MS = 60000;
 
+// The AI-polished note usually opens with its own title heading, which then duplicates
+// the title field shown directly above it. Drop a single leading <h1>/<h2> so the title
+// lives in one place only.
+function stripLeadingHeading(html: string): string {
+  return html.replace(/^\s*<h[12][^>]*>[\s\S]*?<\/h[12]>\s*/i, '');
+}
+
 function blobToBase64(blob: Blob): Promise<string> {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -619,7 +626,7 @@ export default function App() {
               {/* Title input */}
               <input
                 type="text"
-                className="w-full outline-none bg-transparent font-display font-bold pb-3 mb-1 transition-colors"
+                className="w-full outline-none bg-transparent font-display font-bold pb-3 mb-6 transition-colors"
                 style={{
                   fontSize: 'clamp(1.5rem, 3vw, 2.25rem)',
                   color: 'var(--text-primary)',
@@ -635,17 +642,6 @@ export default function App() {
                 onBlur={e => { (e.target as HTMLInputElement).style.borderBottomColor = 'rgba(var(--accent-rgb),0.12)'; }}
               />
 
-              {/* Owner */}
-              <p
-                className="text-[11px] font-mono mb-6"
-                style={{ color: 'var(--text-muted)' }}
-              >
-                OPERATOR:{' '}
-                <span style={{ color: 'var(--text-secondary)' }}>
-                  {user?.username?.toUpperCase() || 'UNKNOWN'}
-                </span>
-              </p>
-
               {/* Tabs */}
               <div className="flex-1 flex flex-col">
                 <Tabs
@@ -656,7 +652,7 @@ export default function App() {
                       content: (
                         <div className="note-editor">
                           {currentNote.polishedNote ? (
-                            <div dangerouslySetInnerHTML={{ __html: currentNote.polishedNote }} />
+                            <div dangerouslySetInnerHTML={{ __html: stripLeadingHeading(currentNote.polishedNote) }} />
                           ) : (
                             /* ── STANDBY empty state ─── */
                             <div className="flex flex-col items-center justify-center text-center py-16">
