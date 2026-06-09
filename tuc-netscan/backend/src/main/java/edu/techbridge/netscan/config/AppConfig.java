@@ -14,7 +14,9 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.*;
+import java.util.stream.Collectors;
 import org.springframework.security.crypto.bcrypt.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.*;
@@ -106,7 +108,6 @@ class SecurityConfig {
 class JwtFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
-    private final UserDetailsService userDetailsService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest req, HttpServletResponse res,
@@ -116,8 +117,14 @@ class JwtFilter extends OncePerRequestFilter {
             String token = header.substring(7);
             if (jwtService.isValid(token)) {
                 String username = jwtService.extractUsername(token);
-                UserDetails user = userDetailsService.loadUserByUsername(username);
-                var auth = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
+                // Authorities come from the self-contained JWT's roles claim — works for both
+                // password-login tokens and SSO-exchange tokens (whose users are not in any local
+                // store; identity + role are authoritative from the WMS IdP). See TUC-ICT-SRS-2026-013.
+                var authorities = jwtService.extractRoles(token).stream()
+                    .map(SimpleGrantedAuthority::new)
+                    .collect(Collectors.toList());
+                var principal = new User(username, "", authorities);
+                var auth = new UsernamePasswordAuthenticationToken(principal, null, authorities);
                 SecurityContextHolder.getContext().setAuthentication(auth);
             }
         }
