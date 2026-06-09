@@ -1,5 +1,8 @@
 import { fileURLToPath } from "url";
 import path from "path";
+import os from "os";
+import crypto from "crypto";
+import { spawn } from "child_process";
 import express from "express";
 // NOTE: vite is a devDependency and is imported dynamically inside the
 // dev-only branch below. A static top-level import crashes the production
@@ -282,6 +285,41 @@ async function startServer() {
     } catch (e) {
       console.error("[dictation] process failed:", (e as Error).message);
       res.status(502).json({ error: "Failed to process audio." });
+    }
+  });
+
+  // Transcode a recording (webm/opus or mp4) to MP3 server-side via ffmpeg.
+  // Browsers can't encode MP3 from MediaRecorder, so the dictation app uploads its
+  // native capture here and gets a real .mp3 back. Temp files (not pipes) so both
+  // webm and mp4 — the latter needs a seekable moov atom — transcode reliably.
+  app.post(["/api/dictation/transcode", "/ai-lab/api/dictation/transcode"], async (req, res) => {
+    const { base64Audio, mimeType } = (req.body || {}) as { base64Audio?: string; mimeType?: string };
+    if (!base64Audio) return res.status(400).json({ error: "Missing audio" });
+
+    const inExt = (mimeType || "").includes("mp4") ? "mp4" : "webm";
+    const id = crypto.randomBytes(8).toString("hex");
+    const inPath = path.join(os.tmpdir(), `dictation_${id}.${inExt}`);
+    const outPath = path.join(os.tmpdir(), `dictation_${id}.mp3`);
+
+    try {
+      fs.writeFileSync(inPath, Buffer.from(base64Audio, "base64"));
+      await new Promise<void>((resolve, reject) => {
+        const ff = spawn("ffmpeg", ["-y", "-i", inPath, "-vn", "-codec:a", "libmp3lame", "-b:a", "192k", outPath]);
+        let err = "";
+        ff.stderr.on("data", (d) => { err += d.toString(); });
+        ff.on("error", reject); // ffmpeg binary missing
+        ff.on("close", (code) => (code === 0 ? resolve() : reject(new Error(`ffmpeg ${code}: ${err.slice(-400)}`))));
+      });
+      const mp3 = fs.readFileSync(outPath);
+      res.set("Content-Type", "audio/mpeg");
+      res.set("Content-Disposition", 'attachment; filename="dictation.mp3"');
+      res.send(mp3);
+    } catch (e) {
+      console.error("[dictation] transcode failed:", (e as Error).message);
+      res.status(502).json({ error: "Failed to transcode audio." });
+    } finally {
+      try { fs.unlinkSync(inPath); } catch { /* ignore */ }
+      try { fs.unlinkSync(outPath); } catch { /* ignore */ }
     }
   });
 
