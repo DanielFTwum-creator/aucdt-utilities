@@ -30,19 +30,22 @@ export class RecordingStore {
     });
   }
 
-  async save(chunks: Blob[], mimeType: string, startedAt: number): Promise<void> {
+  async save(chunks: Blob[], mimeType: string, startedAt: number,
+             extra?: { accumulatedTranscript?: string; title?: string }): Promise<void> {
     if (!this.db) return;
     return new Promise((resolve, reject) => {
       const tx = this.db!.transaction(this.STORE_NAME, 'readwrite');
       tx.objectStore(this.STORE_NAME).put({
-        id: 'current', chunks, mimeType, startedAt, chunkCount: chunks.length
+        id: 'current', chunks, mimeType, startedAt, chunkCount: chunks.length,
+        accumulatedTranscript: extra?.accumulatedTranscript ?? '',
+        title: extra?.title ?? '',
       });
       tx.oncomplete = () => resolve();
       tx.onerror = () => reject(tx.error);
     });
   }
 
-  async load(): Promise<{ chunks: Blob[]; mimeType: string; startedAt: number } | null> {
+  async load(): Promise<{ chunks: Blob[]; mimeType: string; startedAt: number; accumulatedTranscript?: string; title?: string } | null> {
     if (!this.db) return null;
     return new Promise((resolve, reject) => {
       const tx = this.db!.transaction(this.STORE_NAME, 'readonly');

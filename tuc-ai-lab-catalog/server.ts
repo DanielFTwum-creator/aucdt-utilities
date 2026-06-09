@@ -229,8 +229,13 @@ async function startServer() {
   // reaches the client) and returns { rawTranscription, polishedNote }. Restores the
   // dictation-app processing path (previously a phantom 404 endpoint).
   app.post(["/api/dictation/process", "/ai-lab/api/dictation/process"], async (req, res) => {
-    const { mimeType, base64Audio } = (req.body || {}) as { mimeType?: string; base64Audio?: string };
-    if (!base64Audio) return res.status(400).json({ error: "Missing audio" });
+    // Three modes (chunked dictation, TUC-ICT):
+    //   { base64Audio, polish:false } -> transcribe one segment only (fast, no polish)
+    //   { base64Audio }               -> transcribe + polish a whole short recording
+    //   { text }                      -> polish-only: stitch segment transcripts into a final note
+    const { mimeType, base64Audio, text, polish } = (req.body || {}) as
+      { mimeType?: string; base64Audio?: string; text?: string; polish?: boolean };
+
     const KEY = process.env.GEMINI_API_KEY;
     if (!KEY) return res.status(503).json({ error: "Transcription is not configured." });
 
@@ -246,19 +251,30 @@ async function startServer() {
       const data: any = await r.json();
       return (data?.candidates?.[0]?.content?.parts || []).map((p: any) => p.text || "").join("").trim();
     };
+    const polishPrompt = (t: string) =>
+      `Polish the following dictation into clean, well-structured Markdown notes (use headings and bullet points where helpful). Fix grammar and punctuation, preserve meaning, UK English. Output only Markdown.\n\n${t}`;
 
     try {
+      // Polish-only mode (final stitch of segment transcripts).
+      if (typeof text === "string" && text.trim()) {
+        const polishedNote = (await callGemini([{ text: polishPrompt(text) }])) || text;
+        return res.json({ rawTranscription: text.trim(), polishedNote });
+      }
+
+      if (!base64Audio) return res.status(400).json({ error: "Missing audio" });
+
       const rawTranscription = await callGemini([
         { text: "Transcribe this audio verbatim in clean UK English. Output only the transcript text, with no preamble or commentary." },
         { inline_data: { mime_type: mimeType || "audio/webm", data: base64Audio } },
       ]);
       if (!rawTranscription) return res.json({ rawTranscription: "", polishedNote: "" });
 
+      // Segment mode: transcript only (polish happens once at the end).
+      if (polish === false) return res.json({ rawTranscription, polishedNote: "" });
+
       let polishedNote = rawTranscription;
       try {
-        polishedNote = (await callGemini([
-          { text: `Polish the following dictation into clean, well-structured Markdown notes (use headings and bullet points where helpful). Fix grammar and punctuation, preserve meaning, UK English. Output only Markdown.\n\n${rawTranscription}` },
-        ])) || rawTranscription;
+        polishedNote = (await callGemini([{ text: polishPrompt(rawTranscription) }])) || rawTranscription;
       } catch (e) {
         console.error("[dictation] polish failed:", (e as Error).message);
       }
