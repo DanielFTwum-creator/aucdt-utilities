@@ -15,11 +15,19 @@ every onboarded app silently adopts the session via `/api/auth/refresh` (`JWT_RE
 no second login. The apps already share one Google OAuth *client*; this makes them share the
 *session*.
 
-## Decision needed before fleet rollout
-**WMS domain-gates `@techbridge.edu.gh`.** Some AI-Lab apps have a username/password + register
-fallback (e.g. the catalog), implying possible student/external users. Those would be **rejected**
-by WMS SSO. Decide per app: staff-only → onboard directly; mixed audience → needs a policy
-(separate guest path, or relax the gate for specific apps) before onboarding.
+## Audience policy (DECIDED 2026-06-09)
+WMS SSO domain-gates `@techbridge.edu.gh`, so it only fits **staff/internal** apps.
+**Public-facing apps keep their own existing Google login** (which already handles
+student/external/public users) — they are NOT onboarded to WMS SSO. So the first step of
+the rollout is **classification**, not migration:
+
+| App audience | Auth |
+|---|---|
+| Staff / internal (Workspace accounts) | → onboard to WMS SSO (this playbook) |
+| Public-facing (students / external / anonymous) | → leave as-is (own per-app Google login) |
+
+Only the staff-only subset gets the "log in once across the fleet" experience; that's the
+intended scope.
 
 ## Two app archetypes
 **A. react-router SPA** (tsapro ✅, tuc-ai-lab-catalog) — drop in the WMS client components
