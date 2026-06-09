@@ -6,7 +6,7 @@ import { useTheme } from './src/contexts/ThemeContext';
 import { Header } from './src/components/shared/Header';
 import { Button } from './src/components/shared/Button';
 import { Tabs } from './src/components/shared/Tabs';
-import { Mic, Plus, X, ChevronRight, ChevronLeft, Mic2, FileText, Sparkles } from 'lucide-react';
+import { Mic, Plus, X, ChevronRight, ChevronLeft, Mic2, FileText, Sparkles, Download } from 'lucide-react';
 
 // ── Dismissible Onboarding Tutorial ─────────────────────────────
 const TUTORIAL_KEY = 'dictation_tutorial_dismissed_v1';
@@ -109,8 +109,22 @@ function OnboardingTutorial({ onDismiss }: { onDismiss: () => void }) {
   );
 }
 
-const MODEL_NAME = 'gemini-2.5-flash';
 const store = new RecordingStore();
+
+// Chunked transcription (TUC-ICT): record in ~1-minute segments so total length is unbounded
+// (each segment stays well under Gemini's inline-audio limit) and autosave is frequent.
+const API_BASE = (import.meta as any).env?.VITE_API_URL || 'https://ai-tools.techbridge.edu.gh';
+const DICTATION_URL = `${API_BASE}/ai-lab/api/dictation/process`;
+const SEGMENT_MS = 60000;
+
+function blobToBase64(blob: Blob): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onloadend = () => resolve((reader.result as string).split(',')[1]);
+    reader.onerror = reject;
+    reader.readAsDataURL(blob);
+  });
+}
 
 export default function App() {
   const { user, logout } = useAuth();
@@ -150,20 +164,49 @@ export default function App() {
   const timerIntervalRef = useRef<number | null>(null);
   const persistIntervalRef = useRef<number | null>(null);
 
+  // Chunked transcription (rolling segments) + a continuous full-recording capture for export/recovery.
+  const fullRecorderRef = useRef<MediaRecorder | null>(null);
+  const fullChunksRef = useRef<Blob[]>([]);
+  const segmentTimerRef = useRef<number | null>(null);
+  const rawSegmentsRef = useRef<string[]>([]);
+  const segIndexRef = useRef(0);
+  const pendingRef = useRef(0);
+  const finalizingRef = useRef(false);
+  const curSegChunksRef = useRef<Blob[]>([]);
+  const mimeRef = useRef('audio/webm');
+  const titleRef = useRef('');
+  const [recordedBlob, setRecordedBlob] = useState<Blob | null>(null);
+  useEffect(() => { titleRef.current = currentNote.title; }, [currentNote.title]);
+
   // Initialize DB and recovery
   useEffect(() => {
     const initDb = async () => {
       await store.open();
       const saved = await store.load();
-      if (saved && saved.chunks.length > 0) {
-        // Recovery UI logic
-        if (confirm(`A recording from ${Math.round((Date.now() - saved.startedAt)/60000)} mins ago was not processed. Recover?`)) {
-          const blob = new Blob(saved.chunks, { type: saved.mimeType });
-          processAudio(blob);
-          await store.clear();
-        } else {
-          await store.clear();
+      if (saved && (saved.accumulatedTranscript || saved.chunks.length > 0)) {
+        const mins = Math.round((Date.now() - saved.startedAt) / 60000);
+        if (confirm(`A recording from ${mins} min ago wasn't finalised. Recover your transcript?`)) {
+          if (saved.chunks.length > 0) {
+            setRecordedBlob(new Blob(saved.chunks, { type: saved.mimeType }));
+          }
+          const combined = (saved.accumulatedTranscript || '').trim();
+          if (combined) {
+            setStatus('Restoring…');
+            try {
+              const r = await fetch(DICTATION_URL, {
+                method: 'POST', headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ text: combined }),
+              });
+              const data = r.ok ? await r.json() : null;
+              const html = await marked.parse((data?.polishedNote) || combined);
+              setCurrentNote(prev => ({ ...prev, title: saved.title || prev.title, rawTranscription: combined, polishedNote: html }));
+              setStatus('Recovered');
+            } catch {
+              setCurrentNote(prev => ({ ...prev, rawTranscription: combined }));
+            }
+          }
         }
+        await store.clear();
       }
     };
     initDb();
@@ -176,7 +219,9 @@ export default function App() {
   const stopRecordingCleanup = () => {
     if (timerIntervalRef.current) clearInterval(timerIntervalRef.current);
     if (persistIntervalRef.current) clearInterval(persistIntervalRef.current);
+    if (segmentTimerRef.current) clearInterval(segmentTimerRef.current);
     if (reqFrameRef.current) cancelAnimationFrame(reqFrameRef.current);
+    try { if (fullRecorderRef.current && fullRecorderRef.current.state !== 'inactive') fullRecorderRef.current.stop(); } catch { /* ignore */ }
     if (streamRef.current) streamRef.current.getTracks().forEach(t => t.stop());
     if (audioContextRef.current && audioContextRef.current.state !== 'closed') {
       audioContextRef.current.close().catch(console.warn);
@@ -241,28 +286,106 @@ export default function App() {
     drawWaveform();
   }, [isRecording, drawWaveform]);
 
+  // Once recording has stopped and every segment transcription has returned, polish the
+  // stitched transcript into the final note.
+  const maybeFinalize = async () => {
+    if (!finalizingRef.current || pendingRef.current > 0) return;
+    finalizingRef.current = false;
+    const combined = rawSegmentsRef.current.filter(Boolean).join(' ').trim();
+    if (!combined) { setStatus('No audio captured.'); return; }
+    setStatus('Polishing notes…');
+    try {
+      const r = await fetch(DICTATION_URL, {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text: combined }),
+      });
+      const data = r.ok ? await r.json() : null;
+      const html = await marked.parse((data?.polishedNote) || combined);
+      setCurrentNote(prev => {
+        const next = { ...prev, rawTranscription: combined, polishedNote: html };
+        store.saveNote(next);
+        return next;
+      });
+      setStatus('Complete');
+      await store.clear();
+    } catch (e) {
+      setStatus(`Error: ${(e as Error).message}`);
+    }
+  };
+
+  // Transcribe one finished segment and append its text live (index preserves order).
+  const transcribeSegment = async (blob: Blob, mime: string, idx: number) => {
+    pendingRef.current++;
+    try {
+      const base64Audio = await blobToBase64(blob);
+      const r = await fetch(DICTATION_URL, {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ mimeType: mime, base64Audio, polish: false }),
+      });
+      if (r.ok) {
+        const { rawTranscription } = await r.json();
+        rawSegmentsRef.current[idx] = (rawTranscription || '').trim();
+        const combined = rawSegmentsRef.current.filter(Boolean).join(' ').trim();
+        setCurrentNote(prev => ({ ...prev, rawTranscription: combined }));
+      }
+    } catch (e) {
+      console.error('[segment] transcribe failed', e);
+    } finally {
+      pendingRef.current--;
+      void maybeFinalize();
+    }
+  };
+
+  // Start one rolling segment recorder on the live stream.
+  const startSegment = () => {
+    if (!streamRef.current) return;
+    let recorder: MediaRecorder;
+    try { recorder = new MediaRecorder(streamRef.current, { mimeType: 'audio/webm' }); }
+    catch { recorder = new MediaRecorder(streamRef.current); }
+    mimeRef.current = recorder.mimeType || 'audio/webm';
+    const chunks: Blob[] = [];
+    curSegChunksRef.current = chunks;
+    const idx = segIndexRef.current++;
+    rawSegmentsRef.current[idx] = rawSegmentsRef.current[idx] ?? '';
+    recorder.ondataavailable = e => { if (e.data && e.data.size > 0) chunks.push(e.data); };
+    recorder.onstop = () => {
+      const blob = new Blob(chunks, { type: mimeRef.current });
+      if (blob.size > 0) void transcribeSegment(blob, mimeRef.current, idx);
+      else void maybeFinalize();
+    };
+    recorder.start(250);
+    mediaRecorderRef.current = recorder;
+  };
+
   const toggleRecording = async () => {
     if (isRecording) {
-      if (mediaRecorderRef.current) {
-        mediaRecorderRef.current.stop();
-      }
+      // Stop all timers; the last segment transcribes, then maybeFinalize polishes.
+      if (segmentTimerRef.current) { clearInterval(segmentTimerRef.current); segmentTimerRef.current = null; }
+      if (timerIntervalRef.current) { clearInterval(timerIntervalRef.current); timerIntervalRef.current = null; }
+      if (persistIntervalRef.current) { clearInterval(persistIntervalRef.current); persistIntervalRef.current = null; }
+      if (reqFrameRef.current) cancelAnimationFrame(reqFrameRef.current);
+      finalizingRef.current = true;
       setIsRecording(false);
-      setStatus('Processing audio...');
-      stopRecordingCleanup();
+      setStatus('Transcribing…');
+      const seg = mediaRecorderRef.current;
+      if (seg && seg.state !== 'inactive') seg.stop(); else void maybeFinalize();
+      const full = fullRecorderRef.current;
+      if (full && full.state !== 'inactive') full.stop(); // → sets recordedBlob for export
+      if (streamRef.current) streamRef.current.getTracks().forEach(t => t.stop());
+      if (audioContextRef.current && audioContextRef.current.state !== 'closed') audioContextRef.current.close().catch(() => {});
     } else {
       try {
-        setStatus('Requesting microphone access...');
+        setStatus('Requesting microphone access…');
         let stream: MediaStream;
-        try {
-          stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-        } catch {
-          stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: false } });
-        }
-        
+        try { stream = await navigator.mediaDevices.getUserMedia({ audio: true }); }
+        catch { stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: false } }); }
         streamRef.current = stream;
-        audioChunksRef.current = [];
-        
-        // Setup Audio visualizer
+
+        // Reset segment + capture state for a fresh session.
+        rawSegmentsRef.current = []; segIndexRef.current = 0; pendingRef.current = 0; finalizingRef.current = false;
+        fullChunksRef.current = []; setRecordedBlob(null);
+
+        // Visualizer (canvas sizing + draw loop run from a useEffect keyed on isRecording).
         const audioCtx = new (window.AudioContext || (window as any).webkitAudioContext)();
         audioContextRef.current = audioCtx;
         const source = audioCtx.createMediaStreamSource(stream);
@@ -270,44 +393,34 @@ export default function App() {
         analyser.fftSize = 256;
         source.connect(analyser);
         analyserRef.current = analyser;
-        
-        // Canvas sizing + waveform start happen in a useEffect keyed on isRecording,
-        // once the canvas has actually mounted (it only renders while recording).
 
-        // Setup Media Recorder
-        let recorder: MediaRecorder;
-        try {
-          recorder = new MediaRecorder(stream, { mimeType: 'audio/webm' });
-        } catch {
-          recorder = new MediaRecorder(stream);
-        }
-        
-        recorder.ondataavailable = e => {
-          if (e.data && e.data.size > 0) audioChunksRef.current.push(e.data);
-        };
-        
-        recorder.onstop = () => {
-          const mimeType = recorder.mimeType || 'audio/webm';
-          const blob = new Blob(audioChunksRef.current, { type: mimeType });
-          if (blob.size > 0) processAudio(blob, mimeType);
-          else setStatus('No audio captured.');
-        };
-        
-        mediaRecorderRef.current = recorder;
-        recorder.start(100);
+        // Continuous full-recording capture — one valid file for export + crash recovery.
+        let full: MediaRecorder;
+        try { full = new MediaRecorder(stream, { mimeType: 'audio/webm' }); }
+        catch { full = new MediaRecorder(stream); }
+        full.ondataavailable = e => { if (e.data && e.data.size > 0) fullChunksRef.current.push(e.data); };
+        full.onstop = () => setRecordedBlob(new Blob(fullChunksRef.current, { type: full.mimeType || 'audio/webm' }));
+        full.start(1000);
+        fullRecorderRef.current = full;
+
+        // First transcription segment + a rollover every SEGMENT_MS (unbounded total length).
+        startSegment();
         setIsRecording(true);
         setStatus('Recording live');
-        
         startTimeRef.current = Date.now();
-        timerIntervalRef.current = window.setInterval(() => {
-          setRecordingTimeMs(Date.now() - startTimeRef.current);
-        }, 50);
-        
-        await store.save([], recorder.mimeType, startTimeRef.current);
+        timerIntervalRef.current = window.setInterval(() => setRecordingTimeMs(Date.now() - startTimeRef.current), 50);
+        segmentTimerRef.current = window.setInterval(() => {
+          const cur = mediaRecorderRef.current;
+          if (cur && cur.state === 'recording') cur.stop(); // finalises that segment → transcribe
+          startSegment();
+        }, SEGMENT_MS);
+
+        // Autosave every 5s: completed-segment transcript + the full audio captured so far.
+        await store.save([], mimeRef.current, startTimeRef.current);
         persistIntervalRef.current = window.setInterval(() => {
-          store.save([...audioChunksRef.current], recorder.mimeType || 'audio/webm', startTimeRef.current);
-        }, 30000);
-        
+          const combined = rawSegmentsRef.current.filter(Boolean).join(' ').trim();
+          store.save([...fullChunksRef.current], mimeRef.current, startTimeRef.current, { accumulatedTranscript: combined, title: titleRef.current });
+        }, 5000);
       } catch (err) {
         setStatus(`Error: ${(err as Error).message}`);
         setIsRecording(false);
@@ -315,54 +428,21 @@ export default function App() {
     }
   };
 
-  const processAudio = async (blob: Blob, mimeType: string = 'audio/webm') => {
-    try {
-      setStatus('Converting audio...');
-      const reader = new FileReader();
-      const base64Audio = await new Promise<string>((resolve, reject) => {
-        reader.onloadend = () => {
-          const res = reader.result as string;
-          resolve(res.split(',')[1]);
-        };
-        reader.onerror = reject;
-        reader.readAsDataURL(blob);
-      });
-      
-      setStatus('Processing dictation...');
-      const API_BASE = (import.meta as any).env?.VITE_API_URL || 'https://ai-tools.techbridge.edu.gh';
-      const response = await fetch(`${API_BASE}/ai-lab/api/dictation/process`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ mimeType, base64Audio })
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to process audio');
-      }
-
-      const { rawTranscription, polishedNote } = await response.json();
-
-      if (!rawTranscription) {
-        setStatus('Transcription returned empty.');
-        return;
-      }
-      
-      const htmlContent = await marked.parse(polishedNote);
-      
-      setCurrentNote(prev => {
-        const next = { ...prev, rawTranscription, polishedNote: htmlContent };
-        store.saveNote(next);
-        return next;
-      });
-      
-      setStatus('Complete');
-      await store.clear();
-      
-    } catch (err) {
-      console.error(err);
-      setStatus(`Error: ${(err as Error).message}`);
-    }
+  // Download the captured recording. The native format is webm/opus (Chrome) or mp4 (Safari);
+  // a true cross-browser MP3/MP4 transcode would need ffmpeg.wasm (heavy) — flagged as a follow-up.
+  const exportRecording = () => {
+    if (!recordedBlob) return;
+    const isMp4 = recordedBlob.type.includes('mp4');
+    const ext = isMp4 ? 'mp4' : 'webm';
+    const name = (currentNote.title?.trim() || 'dictation').replace(/[^\w.-]+/g, '_');
+    const url = URL.createObjectURL(recordedBlob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${name}.${ext}`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
   };
 
   const handleNewNote = () => {
@@ -410,6 +490,23 @@ export default function App() {
                   aria-label="Start recording"
                 >
                   <Mic className="w-5 h-5" />
+                </button>
+              )}
+              {/* Export recording (audio download) — appears after a recording */}
+              {recordedBlob && (
+                <button
+                  type="button"
+                  onClick={exportRecording}
+                  title="Download recording"
+                  aria-label="Download recording"
+                  className="w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-200"
+                  style={{
+                    background: 'rgba(var(--accent-rgb),0.05)',
+                    border: '1px solid rgba(var(--accent-rgb),0.1)',
+                    color: 'var(--text-secondary)',
+                  }}
+                >
+                  <Download className="w-3.5 h-3.5" />
                 </button>
               )}
               {/* New note */}
