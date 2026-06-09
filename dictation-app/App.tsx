@@ -570,7 +570,7 @@ export default function App() {
       {/* ── Main Canvas ────────────────────────────────────────── */}
       <main
         className="flex-1 flex flex-col items-center relative z-10"
-        style={{ padding: '1.5rem 1rem' }}
+        style={{ padding: '2.75rem 1rem' }}
       >
         <div className="w-full max-w-4xl flex-1 flex flex-col gap-0">
 
@@ -622,11 +622,11 @@ export default function App() {
             </div>
 
             {/* Content area */}
-            <div className="flex-1 flex flex-col p-6 sm:p-8">
+            <div className="flex-1 flex flex-col p-8 sm:p-12">
               {/* Title input */}
               <input
                 type="text"
-                className="w-full outline-none bg-transparent font-display font-bold pb-3 mb-6 transition-colors"
+                className="w-full outline-none bg-transparent font-display font-bold pb-4 mb-8 transition-colors"
                 style={{
                   fontSize: 'clamp(1.5rem, 3vw, 2.25rem)',
                   color: 'var(--text-primary)',

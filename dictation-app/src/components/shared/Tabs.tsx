@@ -115,7 +115,7 @@ export function Tabs({
           id={`panel-${activeTab}`}
           role="tabpanel"
           aria-labelledby={`tab-${activeTab}`}
-          className="mt-6 animate-fade-in"
+          className="mt-8 animate-fade-in"
         >
           {activeTabData.content}
         </div>
