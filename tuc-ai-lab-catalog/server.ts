@@ -323,6 +323,89 @@ async function startServer() {
     }
   });
 
+  // ── Self-serve API docs (OpenAPI 3 + Swagger UI from CDN) ───────────────────
+  // Public on purpose: these are proxy/utility endpoints with no secrets in the
+  // contract. The WMS auth backend's docs are gated separately. Served at
+  // /ai-lab/api/docs (UI) and /ai-lab/api/docs.json (spec).
+  const OPENAPI_SPEC = {
+    openapi: "3.0.3",
+    info: {
+      title: "TUC AI-Lab Backend API",
+      version: "1.0.0",
+      description:
+        "Shared backend for the AI-Lab fleet (PM2 app `tuc-ai-lab`, port 3003). Hosts the " +
+        "secure-proxy endpoints so individual apps never bundle API keys. Add new shared " +
+        "endpoints here, not per-app.",
+    },
+    servers: [{ url: "/ai-lab" }],
+    paths: {
+      "/api/health": {
+        get: {
+          summary: "Health check",
+          responses: { "200": { description: "OK", content: { "application/json": { schema: { type: "object", properties: { ok: { type: "boolean" } } } } } } },
+        },
+      },
+      "/api/dictation/process": {
+        post: {
+          summary: "Transcribe and/or polish dictation audio (Gemini)",
+          description: "Three modes: `{base64Audio, polish:false}` transcribe one segment; `{base64Audio}` transcribe + polish; `{text}` polish-only.",
+          requestBody: { required: true, content: { "application/json": { schema: {
+            type: "object",
+            properties: {
+              base64Audio: { type: "string", description: "Base64 of webm/opus or mp4 audio" },
+              mimeType: { type: "string", example: "audio/webm" },
+              text: { type: "string", description: "Polish-only: stitched transcript" },
+              polish: { type: "boolean", description: "false = transcript only" },
+            },
+          } } } },
+          responses: {
+            "200": { description: "Transcript + polished Markdown", content: { "application/json": { schema: { type: "object", properties: { rawTranscription: { type: "string" }, polishedNote: { type: "string" } } } } } },
+            "400": { description: "Missing audio" },
+            "503": { description: "GEMINI_API_KEY not configured" },
+          },
+        },
+      },
+      "/api/dictation/transcode": {
+        post: {
+          summary: "Transcode a recording to MP3 (server-side ffmpeg)",
+          description: "Browsers can't MediaRecorder-encode MP3; upload the native webm/mp4 capture and get back audio/mpeg.",
+          requestBody: { required: true, content: { "application/json": { schema: { type: "object", required: ["base64Audio"], properties: { base64Audio: { type: "string" }, mimeType: { type: "string", example: "audio/webm" } } } } } },
+          responses: {
+            "200": { description: "MP3 file", content: { "audio/mpeg": { schema: { type: "string", format: "binary" } } } },
+            "400": { description: "Missing audio" },
+            "502": { description: "ffmpeg transcode failed" },
+          },
+        },
+      },
+      "/api/auth/google/token": {
+        post: {
+          summary: "Exchange a Google OAuth authorization code for tokens",
+          requestBody: { required: true, content: { "application/json": { schema: { type: "object", required: ["code"], properties: { code: { type: "string" } } } } } },
+          responses: { "200": { description: "Tokens / user" }, "400": { description: "Missing/invalid code" }, "500": { description: "OAuth not configured" } },
+        },
+      },
+      "/api/screenshot": {
+        get: {
+          summary: "App screenshot by slug (catalog tiles)",
+          parameters: [{ name: "slug", in: "query", required: true, schema: { type: "string" } }],
+          responses: { "200": { description: "Image" }, "400": { description: "Missing slug" }, "404": { description: "Not found" } },
+        },
+      },
+    },
+  };
+
+  const SWAGGER_HTML = `<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>TUC AI-Lab API</title>
+<link rel="stylesheet" href="https://unpkg.com/swagger-ui-dist@5/swagger-ui.css"/>
+</head><body><div id="swagger-ui"></div>
+<script src="https://unpkg.com/swagger-ui-dist@5/swagger-ui-bundle.js" crossorigin></script>
+<script>window.onload=function(){SwaggerUIBundle({url:'docs.json',dom_id:'#swagger-ui'});};</script>
+</body></html>`;
+
+  app.get(["/api/docs.json", "/ai-lab/api/docs.json"], (_req, res) => res.json(OPENAPI_SPEC));
+  app.get(["/api/docs", "/ai-lab/api/docs"], (_req, res) => res.type("html").send(SWAGGER_HTML));
+
   app.get(["/api/screenshot", "/ai-lab/api/screenshot"], (req, res) => {
     const slug = req.query.slug as string;
 

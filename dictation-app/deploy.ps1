@@ -82,9 +82,13 @@ log 'Build and deploy complete.'
 "@
 
     $b64 = [Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes($serverScript.Replace("`r", "")))
-    ssh -o StrictHostKeyChecking=no $RemoteHost "echo $b64 | base64 -d | bash"
+    # Cap the server-side build so a stalled pnpm install/build can't hang forever (GNU timeout → exit 124).
+    $BuildTimeoutSec = 600
+    ssh -o StrictHostKeyChecking=no $RemoteHost "echo $b64 | base64 -d | timeout $BuildTimeoutSec bash"
     if ($LASTEXITCODE -eq 0) {
         Log "SUCCESS" "Server-side build and file sync complete" Green
+    } elseif ($LASTEXITCODE -eq 124) {
+        Log "ERROR" "Server build exceeded ${BuildTimeoutSec}s and was aborted — check the slow box / retry" Red
     } else {
         Log "WARN" "Server build returned $LASTEXITCODE — check output above" Yellow
     }

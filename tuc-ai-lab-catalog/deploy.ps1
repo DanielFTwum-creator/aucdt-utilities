@@ -136,8 +136,11 @@ log 'Build and deploy complete.'
         Remove-Item -Path $localBuildScript -Force -ErrorAction SilentlyContinue
         exit 1
     }
-    & $SSH @SSH_OPTS $RemoteHost 'bash /tmp/tuc-ai-lab_build.sh'
+    # Cap the server-side build so a stalled pnpm install/build can't hang forever (GNU timeout → exit 124).
+    $BuildTimeoutSec = 600
+    & $SSH @SSH_OPTS $RemoteHost "timeout $BuildTimeoutSec bash /tmp/tuc-ai-lab_build.sh"
     $buildExit = $LASTEXITCODE
+    if ($buildExit -eq 124) { Log -Level 'ERROR' -Msg "Server build exceeded ${BuildTimeoutSec}s and was aborted — slow box / retry" -Color Red }
     Remove-Item -Path $localBuildScript -Force -ErrorAction SilentlyContinue
     & $SSH @SSH_OPTS $RemoteHost 'rm -f /tmp/tuc-ai-lab_build.sh' 2>$null
 
