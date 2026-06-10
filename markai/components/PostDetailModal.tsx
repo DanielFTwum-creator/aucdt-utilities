@@ -112,9 +112,9 @@ const PostDetailModal: React.FC<PostDetailModalProps> = ({ post, onClose, onDele
         
         <div className="space-y-6 mt-6">
           {post.platform === 'Email' && post.variants && post.variants.length > 0 && (
-            <div className="bg-blue-500/10 border border-blue-500/20 rounded-lg p-4">
-              <h4 className="font-semibold text-sm text-blue-800 dark:text-blue-300 mb-2">Suggested Subject Lines (A/B Test)</h4>
-              <ul className="list-disc list-inside space-y-1 text-blue-700 dark:text-blue-400 text-sm">
+            <div className="bg-[var(--bg-elevated)] border border-[var(--border-subtle)] rounded-xl p-4">
+              <h4 className="font-semibold text-sm mb-2" style={{ color: 'var(--text-primary)' }}>Suggested Subject Lines (A/B Test)</h4>
+              <ul className="list-disc list-inside space-y-1 text-sm" style={{ color: 'var(--text-secondary)' }}>
                 {post.variants.map((variant, i) => <li key={i}>{variant}</li>)}
               </ul>
             </div>

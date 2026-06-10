@@ -260,7 +260,7 @@ const GeneratorForm: React.FC<GeneratorFormProps> = React.memo(({ prompt, brandV
     
     <fieldset>
       <legend className="block text-sm font-semibold text-primary mb-3">Select Platforms</legend>
-      <div className="space-y-3">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         {PLATFORM_DETAILS.map((p) => {
           const isSelected = selectedPlatforms.has(p.id);
           return (
@@ -269,11 +269,11 @@ const GeneratorForm: React.FC<GeneratorFormProps> = React.memo(({ prompt, brandV
               aria-checked={isSelected}
               tabIndex={0}
               onKeyDown={(e) => { if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); dispatch({ type: 'TOGGLE_PLATFORM', payload: p.id }); } }}
-              className={`flex items-center p-3 border rounded-lg cursor-pointer transition-all duration-200 ${isSelected ? 'bg-accent-primary/10 border-accent-primary ring-2 ring-accent-primary' : 'bg-primary border-default hover:border-gray-400'}`}>
-              <p.icon className={`h-6 w-6 mr-3 ${isSelected ? 'text-accent-primary' : 'text-secondary'}`} />
+              className={`flex items-start p-3 border rounded-xl cursor-pointer transition-all duration-200 ${isSelected ? 'bg-accent-primary/10 border-accent-primary ring-2 ring-accent-primary' : 'bg-primary border-default hover:border-gray-400'}`}>
+              <p.icon className={`h-5 w-5 mr-2.5 shrink-0 mt-0.5 ${isSelected ? 'text-accent-primary' : 'text-secondary'}`} />
               <div>
-                <p className="font-semibold text-primary">{p.name}</p>
-                <p className="text-xs text-secondary">{p.description}</p>
+                <p className="font-semibold text-sm text-primary leading-tight">{p.name}</p>
+                <p className="text-[11px] text-secondary mt-0.5 leading-normal">{p.description}</p>
               </div>
             </div>
           )

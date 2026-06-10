@@ -112,12 +112,17 @@ const HomeView: React.FC<HomeViewProps> = ({ onNavigate, onStartDemo }) => {
               <button
                 onClick={() => onNavigate(AppView.GENERATOR)}
                 className="group flex items-center gap-2.5 px-8 py-4 rounded-xl font-semibold text-base text-white transition-all duration-300 hover:-translate-y-0.5 active:translate-y-0"
-                style={{
+                style={isHC ? {
+                  background: '#ffef00',
+                  color: '#000',
+                  border: '2px solid #ffef00',
+                  boxShadow: 'none',
+                } : {
                   background: 'linear-gradient(135deg, hsl(var(--brand-500)), hsl(var(--brand-700)))',
                   boxShadow: '0 8px 32px -6px hsl(var(--brand-500) / 0.6)',
                 }}
-                onMouseEnter={e => (e.currentTarget.style.boxShadow = '0 14px 40px -6px hsl(var(--brand-500) / 0.8)')}
-                onMouseLeave={e => (e.currentTarget.style.boxShadow = '0 8px 32px -6px hsl(var(--brand-500) / 0.6)')}
+                onMouseEnter={e => { if (!isHC) e.currentTarget.style.boxShadow = '0 14px 40px -6px hsl(var(--brand-500) / 0.8)'; }}
+                onMouseLeave={e => { if (!isHC) e.currentTarget.style.boxShadow = '0 8px 32px -6px hsl(var(--brand-500) / 0.6)'; }}
               >
                 Get Started
                 <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />

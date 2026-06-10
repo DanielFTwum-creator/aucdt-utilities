@@ -88,7 +88,7 @@ const Header: React.FC<HeaderProps> = ({ activeView, setActiveView, onAdminNavig
         </button>
 
         {/* Desktop nav */}
-        <nav className="hidden md:flex items-center gap-0.5 flex-1 overflow-hidden" aria-label="Main navigation">
+        <nav className="hidden md:flex items-center gap-2.5 flex-1 overflow-hidden" aria-label="Main navigation">
           {visibleNav.map(({ view, icon: Icon, label, testId }) => (
             <button
               key={view}

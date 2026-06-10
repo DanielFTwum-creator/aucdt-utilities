@@ -68,9 +68,9 @@ const GeneratedContentCard: React.FC<GeneratedContentCardProps> = ({ content, in
         <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
           <div className="md:col-span-7">
             {content.platform === 'Email' && content.variants && content.variants.length > 0 && (
-                <div className="mb-5 bg-blue-500/10 border border-blue-500/20 rounded-lg p-4">
-                    <h4 className="font-semibold text-sm text-blue-800 dark:text-blue-300 mb-2">Suggested Subject Lines (A/B Test)</h4>
-                    <ul className="list-disc list-inside space-y-1 text-blue-700 dark:text-blue-400 text-sm">
+                <div className="mb-5 p-4 rounded-xl border" style={{ background: 'var(--bg-elevated)', borderColor: 'var(--border-subtle)' }}>
+                    <h4 className="font-semibold text-sm mb-2" style={{ color: 'var(--text-primary)' }}>Suggested Subject Lines (A/B Test)</h4>
+                    <ul className="list-disc list-inside space-y-1 text-sm" style={{ color: 'var(--text-secondary)' }}>
                         {content.variants.map((variant, i) => <li key={i}>{variant}</li>)}
                     </ul>
                 </div>

@@ -25,6 +25,7 @@ const SLUG_TO_PATH: Record<string, string> = {
   "orbit-walk-reminder": "/orbit-walk-reminder/",
   "groove-streamer": "/groove-streamer/",
   "youtube-genie": "/youtube-genie/",
+  "markai": "/markai/",
 };
 
 const getAppUrl = (slug: string) => {
