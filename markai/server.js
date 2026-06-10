@@ -341,7 +341,7 @@ app.get(["/callback", "/callback/"], (req, res) => {
 });
 
 // Fallback to index.html for SPA routing
-app.get("(.*)", (req, res) => {
+app.get("/:splat*", (req, res) => {
   res.sendFile(path.join(__dirname, "dist", "index.html"));
 });
 
