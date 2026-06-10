@@ -6,6 +6,51 @@ Keep this current as shared capability is added. (Companion: `tuc-wms/docs/SSO_O
 
 ---
 
+## 0. What is this ecosystem? (read this first)
+
+**TUC AI-Lab** is Techbridge University College's fleet of AI-powered web apps — dozens of focused
+tools (dictation studio, BioChemAI, WillPro, Glucose, MarkAI, Blueprint, NetScan, …) that all live
+in the **`aucdt-utilities` monorepo** and are published under one domain,
+**`ai-tools.techbridge.edu.gh`**, each at its own path (`/dictation/`, `/markai/`, …). A public
+**catalog** (`/ai-lab/`) is the launcher that lists and links them.
+
+**Why it exists:** the fleet is the working embodiment of *The AGENT* — Daniel Frempong Twum's
+book chronicling the build of **256 applications** through human + AI co-development, orchestrated
+by an AI conductor ("the Sentinel," with a 256th app watching its own evolution). The idea is
+older than the tooling: it's a job the author was effectively doing by hand back in 1995 — when
+the orchestrating "LLM" was a human brain. These apps are that thesis made real. See
+`archive/reports/THE_AGENT_ROADMAP.md` and `AGENT_ultimate_blueprint.md`.
+
+They are not isolated apps — they share infrastructure:
+
+```text
+                       ai-tools.techbridge.edu.gh  (one Plesk box, 66.226.72.199)
+                                     │
+        ┌───────────────┬────────────┴───────────────┬─────────────────────┐
+   AI-Lab catalog     per-app SPAs              shared backend          WMS (auth backbone)
+   /ai-lab/  (the     React + Vite, static     tuc-ai-lab :3003        tuc-wms, Spring Boot
+   launcher tiles)    (Apache/nginx), one      catalog + SECURE-PROXY  Google SSO + TOTP, one
+                      path per app             API: Gemini, OAuth      login across STAFF apps
+                                               exchange, transcode      (public apps keep their
+                                               (keys live here, never   own Google login)
+                                               in any app bundle)
+```
+
+- **Frontends:** React + Vite SPAs, built with **pnpm**, static-served by Apache/nginx, deployed
+  per-app via `deploy.ps1`. No secrets in the bundles.
+- **Shared backend** (`tuc-ai-lab`, §1): the catalog + a secure-proxy API so apps call shared
+  endpoints (AI, OAuth) instead of holding API keys.
+- **Auth** (§ companion playbook): staff/internal apps use **WMS SSO** (one Workspace login + TOTP
+  across the fleet); public-facing apps keep their own Google login.
+- **Some apps have their own backend** (e.g. RMS = student records, Node/Express).
+- **Host & history:** all on one Plesk server; the institution rebranded **aucdt.edu.gh →
+  techbridge.edu.gh** (the old aucdt WordPress is retired/redirected).
+
+If you're new: launch from `/ai-lab/`, read §1 (shared backend) + §3 (deploy), and the
+`SSO_ONBOARDING_PLAYBOOK.md` for auth.
+
+---
+
 ## 1. Shared backend — the fleet's secure-proxy API
 
 `tuc-ai-lab-catalog/server.ts` runs as **PM2 app `tuc-ai-lab`** (port 3003) and is the **shared
