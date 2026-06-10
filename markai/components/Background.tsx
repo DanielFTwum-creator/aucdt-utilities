@@ -80,7 +80,7 @@ export const Background: React.FC = () => {
             loop
             muted
             playsInline
-            className="absolute inset-0 w-full h-full object-cover"
+            className="absolute inset-0 min-w-full min-h-full w-full h-full object-cover scale-[1.45] blur-[1.5px] pointer-events-none"
             style={{ opacity: isDark ? 0.45 : 0.15 }}
           />
           {/* Overlay: dark mode deep tint, light mode white wash */}

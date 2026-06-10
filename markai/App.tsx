@@ -6,6 +6,7 @@ import Header from './components/Header';
 import HomeView from './components/HomeView';
 import FeatureDisabledView from './components/FeatureDisabledView';
 import Spinner from './components/Spinner';
+import { Background } from './components/Background';
 
 // Lazy-loaded views (split into separate chunks)
 const ContentGenerator  = lazy(() => import('./components/ContentGenerator'));
@@ -87,9 +88,10 @@ const AppContent: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-primary text-primary font-sans transition-colors duration-300">
+    <div className="min-h-screen bg-primary text-primary font-sans transition-colors duration-300 relative">
+      <Background />
       <Header activeView={activeView} setActiveView={setActiveView} onAdminNavigate={handleAdminNavigate} />
-      <main id="main-content">
+      <main id="main-content" className="relative z-10">
         <Suspense fallback={<ViewLoader />}>
           {renderView()}
         </Suspense>

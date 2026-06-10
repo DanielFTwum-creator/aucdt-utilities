@@ -3,7 +3,6 @@ import { motion } from 'framer-motion';
 import { PlayCircle, Users, Zap, Clock, ArrowRight } from 'lucide-react';
 import { AppView, Theme } from '../types';
 import { useTheme } from '../contexts/ThemeContext';
-import { Background } from './Background';
 import { Constellation } from './Constellation';
 
 interface HomeViewProps {
@@ -29,7 +28,6 @@ const HomeView: React.FC<HomeViewProps> = ({ onNavigate, onStartDemo }) => {
 
   return (
     <div id="main-content" className="relative min-h-[calc(100vh-4rem)]">
-      <Background />
 
       <div className="relative z-10 max-w-7xl mx-auto px-8 lg:px-12">
 
