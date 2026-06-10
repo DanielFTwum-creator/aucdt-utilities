@@ -37,6 +37,9 @@ try { git push origin $branch 2>&1 | Out-Null } catch { Log "WARN" "git push fai
 
 if ($Build) {
     Log "INFO" "Step 3: Server-side build (git clone + pnpm build)..." Yellow
+    if (Test-Path ".env.local") {
+        scp -o StrictHostKeyChecking=no ".env.local" "${RemoteHost}:/tmp/.env.markai.build" 2>$null | Out-Null
+    }
     $buildDir = "/tmp/markai_deploy_$commit"
     $serverScript = @"
 set -e
@@ -53,6 +56,10 @@ git clone --depth 1 --filter=blob:none --sparse '$GITHUB_REPO' $buildDir
 cd $buildDir
 git sparse-checkout set markai
 cd markai
+if [ -f /tmp/.env.markai.build ]; then
+  cp /tmp/.env.markai.build .env.local
+  log 'injected build .env.local'
+fi
 log '[3/5] Installing dependencies...'
 pnpm install --no-frozen-lockfile --silent 2>/dev/null || npm install --silent
 log '[4/5] Building...'
@@ -66,7 +73,7 @@ log 'Build and deploy complete.'
     ssh -o StrictHostKeyChecking=no $RemoteHost "echo $b64 | base64 -d | bash"
     if ($LASTEXITCODE -eq 0) { Log "SUCCESS" "Server-side build and file sync complete" Green }
     else { Log "WARN" "Server build returned $LASTEXITCODE" Yellow }
-    ssh -o StrictHostKeyChecking=no $RemoteHost "rm -rf $buildDir" 2>$null | Out-Null
+    ssh -o StrictHostKeyChecking=no $RemoteHost "rm -rf $buildDir; rm -f /tmp/.env.markai.build" 2>$null | Out-Null
 } else {
     Log "INFO" "Step 3: Copying local dist/ to server..." Yellow
     if (-not (Test-Path "dist")) { Log "ERROR" "dist/ not found. Run with -Build flag." Red; exit 1 }
