@@ -97,7 +97,7 @@ const LoginView: React.FC = () => {
       return;
     }
     const redirectUri = import.meta.env.VITE_GOOGLE_REDIRECT_URI
-      || `${window.location.origin}/auth/google/callback`;
+      || `${window.location.origin}/callback`;
     const params = new URLSearchParams({
       client_id: clientId,
       redirect_uri: redirectUri,
