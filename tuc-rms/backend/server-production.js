@@ -159,6 +159,56 @@ try {
 }
 
 // ============================================================================
+// SELF-SERVE API DOCS (OpenAPI 3 + Swagger UI) — GATED, off by default
+// ============================================================================
+// Only registered when SWAGGER_ENABLED=true, so this never exposes the auth-gated
+// student-records API in production. Devs: run with SWAGGER_ENABLED=true, then open
+// /api/docs (UI) / /api/docs.json (spec). Scaffold — extend per route module.
+if (process.env.SWAGGER_ENABLED === 'true') {
+  const OPENAPI_SPEC = {
+    openapi: '3.0.3',
+    info: {
+      title: 'TUC RMS API',
+      version: '1.0.0',
+      description:
+        'Records Management System backend (PM2 app `tuc-rms-api`, port 5000). ' +
+        'Public: health probes + auth login. Authenticated (Bearer JWT) route groups: ' +
+        '`/api/users`, `/api/students`, `/api/courses`, `/api/results`, `/api/reports`, ' +
+        '`/api/dashboard` — see `backend/routes/*.js` for the full operation set. This spec ' +
+        'documents the verified public endpoints + the API map; extend it per route module.',
+    },
+    tags: [
+      { name: 'health' }, { name: 'auth' }, { name: 'users' }, { name: 'students' },
+      { name: 'courses' }, { name: 'results' }, { name: 'reports' }, { name: 'dashboard' },
+    ],
+    components: {
+      securitySchemes: { 'bearer-jwt': { type: 'http', scheme: 'bearer', bearerFormat: 'JWT' } },
+    },
+    paths: {
+      '/api/health': { get: { tags: ['health'], summary: 'Liveness probe', responses: { 200: { description: 'OK' } } } },
+      '/api/health/full': { get: { tags: ['health'], summary: 'Full health (incl. DB)', responses: { 200: { description: 'OK' }, 503: { description: 'Degraded' } } } },
+      '/api/auth/login': {
+        post: {
+          tags: ['auth'], summary: 'Login (rate-limited)',
+          requestBody: { required: true, content: { 'application/json': { schema: { type: 'object', properties: { email: { type: 'string' }, password: { type: 'string' } } } } } },
+          responses: { 200: { description: 'Authenticated (token issued)' }, 401: { description: 'Invalid credentials' }, 429: { description: 'Too many attempts' } },
+        },
+      },
+    },
+  };
+  const SWAGGER_HTML = `<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/><title>TUC RMS API</title>
+<link rel="stylesheet" href="https://unpkg.com/swagger-ui-dist@5/swagger-ui.css"/></head>
+<body><div id="swagger-ui"></div>
+<script src="https://unpkg.com/swagger-ui-dist@5/swagger-ui-bundle.js" crossorigin></script>
+<script>window.onload=function(){SwaggerUIBundle({url:'docs.json',dom_id:'#swagger-ui'});};</script>
+</body></html>`;
+  app.get('/api/docs.json', (req, res) => res.json(OPENAPI_SPEC));
+  app.get('/api/docs', (req, res) => res.type('html').send(SWAGGER_HTML));
+  console.log('[✓] API docs enabled at /api/docs (SWAGGER_ENABLED=true)');
+}
+
+// ============================================================================
 // MIDDLEWARE: 404 HANDLER
 // ============================================================================
 
