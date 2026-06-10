@@ -40,6 +40,24 @@ const getAppUrl = (slug: string) => {
   return `${BASE_URL}${path}`;
 };
 
+// Slugs verified live (link audit 2026-06-10) — others render as "Coming Soon"
+const DEPLOYED_SLUGS = new Set<string>([
+  "ai-email-drafter", "brand-guideline-checker", "biochemai", "dictation-app",
+  "youtube-genie", "ghana-news-aggregator", "luxthumb-agent", "markai",
+  "midjourney-prompt-helper", "omniextract", "smartscale-ai-presentation-platform",
+  "ai-techbridge", "aucdt-msee-aptitude-test", "ckt-utas-modern-website", "dmcdai",
+  "playgrow", "techbridge-lead-generation-infographic", "techbridge-technical-quiz-platform",
+  "bridge-radio", "groove-streamer", "techbridge-university-college-banner",
+  "techbridge-ai-blueprint", "glucose", "orbit-walk-reminder", "techbridge-strategy-dashboard",
+  "willpro", "techbridge-media-club-platform", "techbridge-student-population-register",
+  "tsapro", "typing-and-mathematics-tutorial", "typing-tutorial",
+  "ai-stand-up-workshop-prep", "techbridge-ai-workshop-flyer", "techbridge-poster-studio",
+  "tuc-2026-enrollment-command-centre", "patois-lyricist", "impact-ventures-dashboard",
+  "techbridge-assessment-platform", "bionicskins",
+]);
+
+const isDeployed = (slug: string) => DEPLOYED_SLUGS.has(slug);
+
 const CATEGORIES = {
   "AI & ML": { badge: "badge-ai-ml", icon: Cpu, color: "#2563eb", accentColor: "#3b82f6" },
   "Academic": { badge: "badge-academic", icon: BookOpen, color: "#14b8a6", accentColor: "#06d6a0" },
@@ -518,10 +536,17 @@ function FeaturedCard({ tool, onOpen }: { tool: Tool, onOpen: () => void }) {
       <div style={{ flex:1, minWidth:0, paddingRight:'60px' }}>
         <div style={{ fontSize:'15px', fontWeight:600, color:'#1a1f3c', marginBottom:'6px', lineHeight:1.3 }}>{tool.title}</div>
         <div style={{ fontSize:'13px', color:'#6b7280', lineHeight:1.5, marginBottom:'12px' }}>{tool.desc}</div>
-        <button title={`Launch ${tool.title}`} onClick={(e) => { e.stopPropagation(); window.open(getAppUrl(tool.slug), '_blank'); }}
-          style={{ fontSize:'11px', fontWeight:600, background:CRIMSON, color:'#fff', border:'none', borderRadius:'6px', padding:'6px 14px', cursor:'pointer', fontFamily:"'Barlow Condensed','Arial Narrow',sans-serif", letterSpacing:'0.04em', textTransform:'uppercase' }}>
-          Launch
-        </button>
+        {isDeployed(tool.slug) ? (
+          <button title={`Launch ${tool.title}`} onClick={(e) => { e.stopPropagation(); window.open(getAppUrl(tool.slug), '_blank'); }}
+            style={{ fontSize:'11px', fontWeight:600, background:CRIMSON, color:'#fff', border:'none', borderRadius:'6px', padding:'6px 14px', cursor:'pointer', fontFamily:"'Barlow Condensed','Arial Narrow',sans-serif", letterSpacing:'0.04em', textTransform:'uppercase' }}>
+            Launch
+          </button>
+        ) : (
+          <button title={`${tool.title} — coming soon`} disabled onClick={(e) => e.stopPropagation()}
+            style={{ fontSize:'11px', fontWeight:600, background:'#e2e8f0', color:'#64748b', border:'none', borderRadius:'6px', padding:'6px 14px', cursor:'default', fontFamily:"'Barlow Condensed','Arial Narrow',sans-serif", letterSpacing:'0.04em', textTransform:'uppercase' }}>
+            Coming Soon
+          </button>
+        )}
       </div>
     </div>
   );
@@ -572,10 +597,17 @@ function ToolCard({ tool, index, viewMode, onOpen }: { tool: Tool, index: number
       <div style={{ fontSize:'12px', color:'#6b7280', lineHeight:1.5, marginBottom:'12px' }}>{tool.desc}</div>
 
       {/* Launch Button */}
-      <button title={`Launch ${tool.title}`} onClick={(e) => { e.stopPropagation(); window.open(getAppUrl(tool.slug), '_blank'); }}
-        style={{ fontSize:'11px', fontWeight:600, background:CRIMSON, color:'#fff', border:'none', borderRadius:'6px', padding:'6px 14px', cursor:'pointer', fontFamily:"'Barlow Condensed','Arial Narrow',sans-serif", letterSpacing:'0.04em', textTransform:'uppercase', width:'100%' }}>
-        Launch
-      </button>
+      {isDeployed(tool.slug) ? (
+        <button title={`Launch ${tool.title}`} onClick={(e) => { e.stopPropagation(); window.open(getAppUrl(tool.slug), '_blank'); }}
+          style={{ fontSize:'11px', fontWeight:600, background:CRIMSON, color:'#fff', border:'none', borderRadius:'6px', padding:'6px 14px', cursor:'pointer', fontFamily:"'Barlow Condensed','Arial Narrow',sans-serif", letterSpacing:'0.04em', textTransform:'uppercase', width:'100%' }}>
+          Launch
+        </button>
+      ) : (
+        <button title={`${tool.title} — coming soon`} disabled onClick={(e) => e.stopPropagation()}
+          style={{ fontSize:'11px', fontWeight:600, background:'#e2e8f0', color:'#64748b', border:'none', borderRadius:'6px', padding:'6px 14px', cursor:'default', fontFamily:"'Barlow Condensed','Arial Narrow',sans-serif", letterSpacing:'0.04em', textTransform:'uppercase', width:'100%' }}>
+          Coming Soon
+        </button>
+      )}
     </div>
   );
 }
@@ -612,15 +644,21 @@ function DetailModal({ tool, onClose }: { tool: Tool, onClose: () => void }) {
             </div>
             
             <div className="mt-auto pt-12 space-y-4 w-full">
+              {isDeployed(tool.slug) ? (
               <a
                 href={getAppUrl(tool.slug)}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="btn-launch flex items-center justify-center gap-2 w-full py-3 text-sm"
               >
-                Launch Demo <ExternalLink className="w-4 h-4" />
+                Launch App <ExternalLink className="w-4 h-4" />
               </a>
-              <button 
+              ) : (
+              <span className="flex items-center justify-center gap-2 w-full py-3 text-sm bg-slate-200 text-slate-500 rounded-xl font-bold cursor-default select-none">
+                Coming Soon
+              </span>
+              )}
+              <button
                 onClick={onClose}
                 className="flex items-center justify-center gap-2 w-full py-3 bg-white border border-slate-200 text-slate-600 rounded-xl font-bold text-sm hover:bg-slate-50 transition-colors"
               >
