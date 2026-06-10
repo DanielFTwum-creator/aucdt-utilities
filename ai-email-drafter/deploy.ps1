@@ -1,89 +1,173 @@
+# ============================================================
 # ai-email-drafter — Deploy Script
-# URL: https://ai-tools.techbridge.edu.gh/ai-email-drafter/
-# Usage: .\deploy.ps1 -Build
+# Remote : root@techbridge.edu.gh
+# Path   : /var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/ai-email-drafter/
+# Port   : 3007  |  PM2 app: ai-email-drafter
+# Usage  : .\deploy.ps1 [-Build]
+# ============================================================
 
 param(
-    [string]$RemoteHost = "root@techbridge.edu.gh",
-    [string]$RemotePath = "/var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/ai-email-drafter/",
+    [string]$RemoteHost = 'root@techbridge.edu.gh',
+    [string]$RemotePath = '/var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/ai-email-drafter/',
     [switch]$Build = $false
 )
 
-$ErrorActionPreference = "Stop"
-$__deployStart = Get-Date
-$GITHUB_REPO   = "https://github.com/DanielFTwum-creator/aucdt-utilities.git"
-$SUBFOLDER     = "ai-email-drafter"
+$ErrorActionPreference = 'Stop'
+
+$PORT        = 3007
+$PM2_APP     = 'ai-email-drafter'
+$HEALTH_URL  = 'https://ai-tools.techbridge.edu.gh/ai-email-drafter/'
+$GITHUB_REPO = 'https://github.com/DanielFTwum-creator/aucdt-utilities'
+$SUBFOLDER   = 'ai-email-drafter'
+$SSH_OPTS    = @('-o', 'StrictHostKeyChecking=no', '-o', 'BatchMode=yes')
+$SSH         = 'ssh'
+$SCP         = 'scp'
+$START_TIME  = Get-Date
 
 function Log {
-    param([string]$Level = "INFO", [string]$Msg, [ConsoleColor]$Color = "White")
-    $ts = (Get-Date).ToString("yyyy-MM-dd HH:mm:ss")
+    param([string]$Level = 'INFO', [string]$Msg, [ConsoleColor]$Color = 'White')
+    $ts = (Get-Date).ToString('yyyy-MM-dd HH:mm:ss')
     Write-Host "[$ts][$Level] $Msg" -ForegroundColor $Color
 }
 
-Log "INFO" "========================================" Cyan
-Log "INFO" "ai-email-drafter DEPLOYMENT" Cyan
-Log "INFO" "========================================" Cyan
-Log "INFO" "Remote : $RemoteHost"
-Log "INFO" "Path   : $RemotePath"
-Log "INFO" ""
+function Write-LfFile($path, $content) {
+    $content = $content -replace "`r`n", "`n"
+    [System.IO.File]::WriteAllText($path, $content, (New-Object System.Text.UTF8Encoding $false))
+}
 
-Log "INFO" "Step 0: Approval gate..." Yellow
+Log -Level 'INFO' -Msg '========================================' -Color Cyan
+Log -Level 'INFO' -Msg 'AI-EMAIL-DRAFTER DEPLOYMENT'            -Color Cyan
+Log -Level 'INFO' -Msg '========================================' -Color Cyan
+Log -Level 'INFO' -Msg "Remote : $RemoteHost"
+Log -Level 'INFO' -Msg "Path   : $RemotePath"
+Log -Level 'INFO' -Msg ''
+
+# Step 0: Approval gate
+Log -Level 'INFO' -Msg 'Step 0: Approval gate...' -Color Yellow
 $gate = Join-Path $PSScriptRoot '..\Approve-App.ps1'
 if (Test-Path $gate) {
     & $gate -Path $PSScriptRoot -PreBuild
-    if ($LASTEXITCODE -ne 0) { Log "ERROR" "Approval gate REJECTED — fix issues above before deploying." Red; exit 1 }
-} else { Log "WARN" "Approve-App.ps1 not found — skipping gate" Yellow }
+    if ($LASTEXITCODE -ne 0) { Log -Level 'ERROR' -Msg 'Approval gate REJECTED — fix issues above before deploying.' -Color Red; exit 1 }
+} else { Log -Level 'WARN' -Msg 'Approve-App.ps1 not found — skipping gate' -Color Yellow }
 
-Log "INFO" "Step 1: Pre-flight checks..." Yellow
-Log "SUCCESS" "Pre-flight OK" Green
-
-Log "INFO" "Step 2: Verifying git state..." Yellow
-$commit = (git rev-parse --short HEAD 2>$null).Trim()
-$branch = (git rev-parse --abbrev-ref HEAD 2>$null).Trim()
-Log "INFO" "Commit : $commit on $branch"
-try { git push origin $branch 2>&1 | Out-Null } catch { Log "WARN" "git push failed (non-fatal)" Yellow }
-
-if ($Build) {
-    Log "INFO" "Step 3: Server-side build (git clone + pnpm build)..." Yellow
-    $buildDir = "/tmp/ai-email-drafter_deploy_$commit"
-    $serverScript = @"
-set -e
-log() { echo "[`$(date '+%Y-%m-%d %H:%M:%S')][SERVER] `$1"; }
-if ! command -v pnpm >/dev/null 2>&1; then
-  corepack enable >/dev/null 2>&1 || npm install -g pnpm --silent
-  export PATH="`$HOME/.local/share/pnpm:`$PATH"
-fi
-log "pnpm `$(pnpm --version)"
-log '[1/5] Cleaning previous temp build...'
-rm -rf $buildDir
-find /tmp -maxdepth 1 -name '*_deploy_*' -type d -mmin +30 -exec rm -rf {} + 2>/dev/null || true
-log '[2/5] Cloning ai-email-drafter (sparse, depth 1)...'
-git clone --depth 1 --filter=blob:none --sparse '$GITHUB_REPO' $buildDir
-cd $buildDir
-git sparse-checkout set ai-email-drafter
-cd ai-email-drafter
-log '[3/5] Installing dependencies...'
-pnpm install --no-frozen-lockfile --silent 2>/dev/null || npm install --silent
-log '[4/5] Building...'
-pnpm build
-log '[5/5] Deploying dist/ to web root...'
-mkdir -p $RemotePath
-rsync -a --delete dist/. $RemotePath
-log 'Build and deploy complete.'
-"@
-    $b64 = [Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes($serverScript.Replace("`r", "")))
-    ssh -o StrictHostKeyChecking=no $RemoteHost "echo $b64 | base64 -d | bash"
-    if ($LASTEXITCODE -eq 0) { Log "SUCCESS" "Server-side build and file sync complete" Green }
-    else { Log "WARN" "Server build returned $LASTEXITCODE" Yellow }
-    ssh -o StrictHostKeyChecking=no $RemoteHost "rm -rf $buildDir" 2>$null | Out-Null
+# Step 1: Pre-flight
+Log -Level 'INFO' -Msg 'Step 1: Pre-flight checks...' -Color Yellow
+if ((-not (Test-Path '.env.local')) -and (-not $Build)) {
+    Log -Level 'WARN' -Msg 'No .env.local found - continuing (static deploy)' -Color Yellow
+} elseif (Test-Path '.env.local') {
+    Log -Level 'SUCCESS' -Msg 'Pre-flight OK (.env.local found)' -Color Green
 } else {
-    Log "INFO" "Step 3: Copying local dist/ to server..." Yellow
-    if (-not (Test-Path "dist")) { Log "ERROR" "dist/ not found. Run with -Build flag." Red; exit 1 }
-    ssh -o StrictHostKeyChecking=no $RemoteHost "mkdir -p $RemotePath && rm -rf ${RemotePath}*"
-    scp -r -o StrictHostKeyChecking=no dist/* "${RemoteHost}:${RemotePath}"
-    Log "SUCCESS" "dist/* copied to server" Green
+    Log -Level 'SUCCESS' -Msg 'Pre-flight OK' -Color Green
 }
 
-Log "INFO" "Step 4: Writing .htaccess..." Yellow
+# Step 2: Git state
+Log -Level 'INFO' -Msg 'Step 2: Verifying git state...' -Color Yellow
+$commit = (git rev-parse --short HEAD 2>$null).Trim()
+$branch = (git rev-parse --abbrev-ref HEAD 2>$null).Trim()
+Log -Level 'INFO' -Msg "Commit : $commit on $branch"
+try {
+    git push origin $branch 2>&1 | Out-Null
+    Log -Level 'INFO' -Msg "Pushed $branch to GitHub" -Color DarkGray
+} catch {
+    Log -Level 'WARN' -Msg 'git push failed (non-fatal) - server will clone existing HEAD' -Color Yellow
+}
+
+# Step 3: Build or copy
+if ($Build) {
+    Log -Level 'INFO' -Msg 'Step 3: Server-side build (git clone + pnpm build)...' -Color Yellow
+
+    # Upload .env.local for the BUILD
+    if (Test-Path '.env.local') {
+        & $SCP @SSH_OPTS '.env.local' "${RemoteHost}:/tmp/.env.${PM2_APP}.build" 2>$null | Out-Null
+        if ($LASTEXITCODE -eq 0) { Log -Level 'SUCCESS' -Msg 'build .env.local uploaded' -Color Green }
+        else { Log -Level 'ERROR' -Msg 'Failed to upload build .env.local' -Color Red; exit 1 }
+    } else {
+        Log -Level 'WARN' -Msg 'No .env.local - build will lack VITE_ vars (login may break)' -Color Yellow
+    }
+
+    $buildDir = "/tmp/${SUBFOLDER}_deploy_${commit}"
+    $remoteBuildScript = @"
+#!/usr/bin/env bash
+set -e
+TMPDIR=${buildDir}
+DEPLOY_PATH=${RemotePath}
+REPO=${GITHUB_REPO}
+
+log() {
+  NOW=\`$(date '+%Y-%m-%d %H:%M:%S')
+  echo "[\`$NOW][SERVER] \`$1"
+}
+
+if ! command -v pnpm >/dev/null 2>&1; then
+  corepack enable >/dev/null 2>&1 || npm install -g pnpm --silent
+  export PATH="\`$HOME/.local/share/pnpm:\`$PATH"
+fi
+log "pnpm \`$(pnpm --version)"
+
+log '[1/5] Cleaning previous temp build...'
+rm -rf "\`$TMPDIR"
+find /tmp -maxdepth 1 -name '*_deploy_*' -type d -mmin +30 -exec rm -rf {} + 2>/dev/null || true
+
+log '[2/5] Cloning ${SUBFOLDER} (sparse, depth 1)...'
+git clone --depth 1 --filter=blob:none --sparse "\`$REPO" "\`$TMPDIR"
+cd "\`$TMPDIR"
+git sparse-checkout set ${SUBFOLDER}
+cd ${SUBFOLDER}
+
+log '[3/5] Installing dependencies...'
+pnpm install --no-frozen-lockfile --silent 2>/dev/null || npm install --silent
+
+# Inject build-time env
+if [ -f /tmp/.env.${PM2_APP}.build ]; then
+  cp /tmp/.env.${PM2_APP}.build .env.local
+  log 'injected build .env.local (VITE_ vars available to Vite)'
+else
+  log 'WARN: no build .env.local - VITE_ vars will be empty in bundle'
+fi
+
+log '[4/5] Building...'
+pnpm build
+
+log '[5/5] Deploying dist/ to web root...'
+mkdir -p "\`$DEPLOY_PATH"
+rsync -a --delete dist/. "\`$DEPLOY_PATH"
+
+log 'Build and deploy complete.'
+"@
+
+    $localBuildScript = [System.IO.Path]::Combine([System.IO.Path]::GetTempPath(), "email-drafter_build_$([Guid]::NewGuid().ToString('N')).sh")
+    Write-LfFile -path $localBuildScript -content $remoteBuildScript
+    & $SCP @SSH_OPTS $localBuildScript "${RemoteHost}:/tmp/email-drafter_build.sh"
+    if ($LASTEXITCODE -ne 0) {
+        Log -Level 'ERROR' -Msg 'Failed to upload remote build script' -Color Red
+        Remove-Item -Path $localBuildScript -Force -ErrorAction SilentlyContinue
+        exit 1
+    }
+    $BuildTimeoutSec = 600
+    & $SSH @SSH_OPTS $RemoteHost "timeout $BuildTimeoutSec bash /tmp/email-drafter_build.sh"
+    $buildExit = $LASTEXITCODE
+    if ($buildExit -eq 124) { Log -Level 'ERROR' -Msg "Server build exceeded ${BuildTimeoutSec}s and was aborted" -Color Red }
+    Remove-Item -Path $localBuildScript -Force -ErrorAction SilentlyContinue
+    & $SSH @SSH_OPTS $RemoteHost 'rm -f /tmp/email-drafter_build.sh' 2>$null
+
+    if ($buildExit -ne 0) {
+        Log -Level 'ERROR' -Msg "Remote build failed with exit code $buildExit" -Color Red
+        exit 1
+    }
+    Log -Level 'SUCCESS' -Msg 'Server-side build and file sync complete' -Color Green
+} else {
+    Log -Level 'INFO' -Msg 'Step 3: Copying local dist/ to server...' -Color Yellow
+    if (-not (Test-Path 'dist')) {
+        Log -Level 'ERROR' -Msg 'dist/ not found - run with -Build flag.' -Color Red
+        exit 1
+    }
+    & $SSH @SSH_OPTS $RemoteHost "mkdir -p $RemotePath && rm -rf ${RemotePath}*"
+    & $SCP @SSH_OPTS -r dist/* "${RemoteHost}:${RemotePath}"
+    Log -Level 'SUCCESS' -Msg 'dist/* copied to server' -Color Green
+}
+
+# Step 4: .htaccess
+Log -Level 'INFO' -Msg 'Step 4: Writing .htaccess...' -Color Yellow
 $htaccessContent = @'
 <IfModule mod_rewrite.c>
   RewriteEngine On
@@ -108,41 +192,44 @@ $htaccessContent = @'
 </IfModule>
 '@
 $localHtaccess = [System.IO.Path]::Combine([System.IO.Path]::GetTempPath(), "email-drafter_htaccess_$([Guid]::NewGuid().ToString('N')).txt")
-[System.IO.File]::WriteAllText($localHtaccess, $htaccessContent)
-& scp -o StrictHostKeyChecking=no $localHtaccess "${RemoteHost}:${RemotePath}.htaccess" 2>$null
+Write-LfFile -path $localHtaccess -content $htaccessContent
+& $SCP @SSH_OPTS $localHtaccess "${RemoteHost}:${RemotePath}.htaccess"
+if ($LASTEXITCODE -ne 0) {
+    Log -Level 'ERROR' -Msg 'Failed to upload .htaccess' -Color Red
+    Remove-Item -Path $localHtaccess -Force -ErrorAction SilentlyContinue
+    exit 1
+}
 Remove-Item -Path $localHtaccess -Force -ErrorAction SilentlyContinue
 
-Log "INFO" "Step 5: Setting permissions..." Yellow
-ssh -o StrictHostKeyChecking=no $RemoteHost "chown -R techbridge.edu.gh_md:psaserv $RemotePath && chmod -R 755 $RemotePath && chmod 644 ${RemotePath}.htaccess 2>/dev/null; true" | Out-Null
+# Step 5: Setting permissions
+Log -Level 'INFO' -Msg 'Step 5: Setting permissions...' -Color Yellow
+& $SSH @SSH_OPTS $RemoteHost "chown -R techbridge.edu.gh_md:psaserv $RemotePath && chmod -R 755 $RemotePath && chmod 644 ${RemotePath}.htaccess 2>/dev/null; true" | Out-Null
 
-Log "INFO" "Step 6: Deploying backend files..." Yellow
-scp -o StrictHostKeyChecking=no server.ts package.json pnpm-lock.yaml pnpm-workspace.yaml "${RemoteHost}:${RemotePath}" 2>$null | Out-Null
-if (Test-Path ".env.local") { scp -o StrictHostKeyChecking=no ".env.local" "${RemoteHost}:${RemotePath}.env" 2>$null | Out-Null }
-ssh -o StrictHostKeyChecking=no $RemoteHost "cd $RemotePath && pnpm install --prod --silent"
+# Step 6: Deploying backend files
+Log -Level 'INFO' -Msg 'Step 6: Deploying backend files...' -Color Yellow
+& $SCP @SSH_OPTS server.ts package.json pnpm-lock.yaml "${RemoteHost}:${RemotePath}" 2>$null | Out-Null
+if (Test-Path '.env.local') {
+    & $SCP @SSH_OPTS '.env.local' "${RemoteHost}:${RemotePath}.env" 2>$null | Out-Null
+}
+& $SSH @SSH_OPTS $RemoteHost "cd $RemotePath && pnpm install --prod --silent 2>/dev/null || npm install --omit=dev --silent"
 
-Log "INFO" "Step 7: Restarting backend (PM2)..." Yellow
-$restartCmd = @"
-if command -v pm2 &>/dev/null; then
-  if pm2 describe ai-email-drafter &>/dev/null; then
-    pm2 reload ai-email-drafter --update-env && echo 'pm2: reloaded ai-email-drafter'
-  else
-    cd $RemotePath && NODE_ENV=production PORT=3007 pm2 start server.ts --name ai-email-drafter --interpreter npx --interpreter-args tsx
-    echo 'pm2: started ai-email-drafter'
-  fi
-  pm2 save --force &>/dev/null
-fi
-"@
-$b64r = [Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes($restartCmd.Replace("`r", "")))
-ssh -o StrictHostKeyChecking=no $RemoteHost "echo $b64r | base64 -d | bash"
+# Step 7: Restarting backend
+Log -Level 'INFO' -Msg 'Step 7: Restarting backend (PM2)...' -Color Yellow
+$pm2Result = & $SSH @SSH_OPTS $RemoteHost "if pm2 describe ${PM2_APP} > /dev/null 2>&1; then pm2 reload ${PM2_APP} --update-env; echo 'pm2: reloaded ${PM2_APP}'; else cd ${RemotePath} && NODE_ENV=production PORT=${PORT} pm2 start server.ts --name ${PM2_APP} --interpreter npx --interpreter-args tsx; echo 'pm2: started ${PM2_APP}'; fi; pm2 save --force > /dev/null 2>&1 || true"
+Write-Host $pm2Result -ForegroundColor DarkGray
 
-Log "INFO" "Health check..." Yellow
-ssh -o StrictHostKeyChecking=no $RemoteHost "test -f ${RemotePath}index.html && echo 'OK index.html present' || echo 'MISSING index.html'"
-ssh -o StrictHostKeyChecking=no $RemoteHost "ss -tlnp | grep -q ':3007' && echo 'OK port 3007 listening' || echo 'WARN port 3007 not found'"
+# Health check
+Log -Level 'INFO' -Msg 'Health check...' -Color Yellow
+Start-Sleep -Seconds 5
+$indexCheck = & $SSH @SSH_OPTS $RemoteHost "test -f ${RemotePath}index.html && echo 'OK index.html present' || echo 'MISSING index.html'"
+Write-Host $indexCheck -ForegroundColor $(if ($indexCheck -match '^OK') { 'Green' } else { 'Red' })
+$portCheck = & $SSH @SSH_OPTS $RemoteHost "ss -tlnp | grep -q ':${PORT}' && echo 'OK port ${PORT} listening' || echo 'WARN port ${PORT} not found'"
+Write-Host $portCheck -ForegroundColor $(if ($portCheck -match '^OK') { 'Green' } else { 'Yellow' })
 
-$elapsed = [math]::Round(((Get-Date) - $__deployStart).TotalSeconds, 1)
-$timeStr = if ($elapsed -ge 60) { "$([math]::Floor($elapsed/60))m $([math]::Round($elapsed%60,1))s" } else { "${elapsed}s" }
-Log "SUCCESS" "========================================" Green
-Log "SUCCESS" "DEPLOYMENT COMPLETE" Green
-Log "SUCCESS" "URL  : https://ai-tools.techbridge.edu.gh/ai-email-drafter/" Green
-Log "SUCCESS" "Time : $timeStr total" Green
-Log "SUCCESS" "========================================" Green
+$DURATION = [math]::Round(((Get-Date) - $START_TIME).TotalSeconds, 1)
+$timeStr  = if ($DURATION -ge 60) { "$([math]::Floor($DURATION/60))m $([math]::Round($DURATION%60,1))s" } else { "${DURATION}s" }
+Log -Level 'SUCCESS' -Msg '========================================' -Color Green
+Log -Level 'SUCCESS' -Msg 'DEPLOYMENT COMPLETE'                     -Color Green
+Log -Level 'SUCCESS' -Msg "URL  : $HEALTH_URL"                      -Color Green
+Log -Level 'SUCCESS' -Msg "Time : $timeStr total"                   -Color Green
+Log -Level 'SUCCESS' -Msg '========================================' -Color Green
