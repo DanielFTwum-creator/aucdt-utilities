@@ -112,7 +112,10 @@ ssh -o StrictHostKeyChecking=no $RemoteHost "chown -R techbridge.edu.gh_md:psase
 
 Log "INFO" "Step 6: Deploying backend files..." Yellow
 scp -o StrictHostKeyChecking=no server.js package.json pnpm-lock.yaml "${RemoteHost}:${RemotePath}" 2>$null | Out-Null
-if (Test-Path ".env.local") { scp -o StrictHostKeyChecking=no ".env.local" "${RemoteHost}:${RemotePath}.env" 2>$null | Out-Null }
+if (Test-Path ".env.local") { 
+    scp -o StrictHostKeyChecking=no ".env.local" "${RemoteHost}:${RemotePath}.env" 2>$null | Out-Null 
+    scp -o StrictHostKeyChecking=no ".env.local" "${RemoteHost}:${RemotePath}.env.local" 2>$null | Out-Null 
+}
 ssh -o StrictHostKeyChecking=no $RemoteHost "cd $RemotePath && pnpm install --prod --silent 2>/dev/null || npm install --omit=dev --silent"
 
 Log "INFO" "Step 7: Restarting backend (PM2)..." Yellow

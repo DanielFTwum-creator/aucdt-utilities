@@ -3,8 +3,12 @@ const dotenv = require("dotenv");
 const cors = require("cors");
 const { GoogleGenAI, Type, Modality } = require("@google/genai");
 
-// Note: Ensure you have a .env.local file with your API_KEY
-dotenv.config({ path: ".env.local" });
+const fs = require("fs");
+if (fs.existsSync(".env.local")) {
+  dotenv.config({ path: ".env.local" });
+} else {
+  dotenv.config();
+}
 
 const app = express();
 const port = process.env.PORT || 3000;

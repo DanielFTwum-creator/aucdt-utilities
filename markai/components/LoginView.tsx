@@ -26,9 +26,52 @@ const LoginView: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  useEffect(() => {
+  const processOAuthToken = async (access_token: string) => {
     const OAUTH_TIMEOUT_MS = 5000;
+    try {
+      setIsLoading(true);
+      setError(null);
+      console.log('[OAuth] Processing token, fetching user info...');
 
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), OAUTH_TIMEOUT_MS);
+
+      const res = await fetch('https://www.googleapis.com/oauth2/v2/userinfo', {
+        headers: { Authorization: `Bearer ${access_token}` },
+        signal: controller.signal
+      });
+
+      clearTimeout(timeoutId);
+
+      if (!res.ok) {
+        const errorText = await res.text();
+        console.error('[OAuth] User info fetch failed:', res.status, errorText);
+        throw new Error(`Google API error: ${res.status} ${res.statusText}`);
+      }
+
+      const userInfo = await res.json();
+      console.log('[OAuth] User info received, logging in...');
+      login({
+        id: userInfo.id,
+        name: userInfo.name,
+        email: userInfo.email,
+        picture: userInfo.picture,
+        tier: 'free',
+      });
+    } catch (err) {
+      if (err instanceof Error && err.name === 'AbortError') {
+        console.error('[OAuth] Request timeout');
+        setError('Google login took too long. Please try again.');
+      } else {
+        const errorMsg = err instanceof Error ? err.message : String(err);
+        console.error('[OAuth] Token processing failed:', errorMsg);
+        setError(`Google login failed: ${errorMsg}`);
+      }
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
     const handleMessage = async (event: MessageEvent) => {
       // Validate origin matches current location
       if (event.origin !== window.location.origin) {
@@ -37,51 +80,10 @@ const LoginView: React.FC = () => {
       }
 
       if (event.data?.type === 'OAUTH_TOKEN_SUCCESS') {
-        const { access_token } = event.data;
-        try {
-          setIsLoading(true);
-          console.log('[OAuth] Processing token, fetching user info...');
-
-          const controller = new AbortController();
-          const timeoutId = setTimeout(() => controller.abort(), OAUTH_TIMEOUT_MS);
-
-          const res = await fetch('https://www.googleapis.com/oauth2/v2/userinfo', {
-            headers: { Authorization: `Bearer ${access_token}` },
-            signal: controller.signal
-          });
-
-          clearTimeout(timeoutId);
-
-          if (!res.ok) {
-            const errorText = await res.text();
-            console.error('[OAuth] User info fetch failed:', res.status, errorText);
-            throw new Error(`Google API error: ${res.status} ${res.statusText}`);
-          }
-
-          const userInfo = await res.json();
-          console.log('[OAuth] User info received, logging in...');
-          login({
-            id: userInfo.id,
-            name: userInfo.name,
-            email: userInfo.email,
-            picture: userInfo.picture,
-            tier: 'free',
-          });
-        } catch (err) {
-          if (err instanceof Error && err.name === 'AbortError') {
-            console.error('[OAuth] Request timeout');
-            setError('Google login took too long. Please try again.');
-          } else {
-            const errorMsg = err instanceof Error ? err.message : String(err);
-            console.error('[OAuth] Token processing failed:', errorMsg);
-            setError(`Google login failed: ${errorMsg}`);
-          }
-          setIsLoading(false);
-        }
+        processOAuthToken(event.data.access_token);
       } else if (event.data?.type === 'OAUTH_TOKEN_ERROR') {
         console.error('[OAuth] Error from callback:', event.data);
         setError(`OAuth error: ${event.data.error}${event.data.error_description ? ' - ' + event.data.error_description : ''}`);
-        setIsLoading(false);
       }
     };
 
@@ -89,6 +91,20 @@ const LoginView: React.FC = () => {
     window.addEventListener('message', handleMessage);
     return () => window.removeEventListener('message', handleMessage);
   }, [login]);
+
+  useEffect(() => {
+    // Check if we have a temporary token from the redirect flow
+    const tempToken = localStorage.getItem('oauth_token_temp');
+    if (tempToken) {
+      localStorage.removeItem('oauth_token_temp');
+      processOAuthToken(tempToken);
+    }
+    const tempError = localStorage.getItem('oauth_error_temp');
+    if (tempError) {
+      localStorage.removeItem('oauth_error_temp');
+      setError(`OAuth error: ${tempError}`);
+    }
+  }, []);
 
   const handleGoogleLogin = () => {
     const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
@@ -104,12 +120,9 @@ const LoginView: React.FC = () => {
       response_type: 'token',
       scope: 'openid email profile',
     });
-    const authWindow = window.open(
-      `https://accounts.google.com/o/oauth2/v2/auth?${params}`,
-      'oauth_popup',
-      'width=600,height=700'
-    );
-    if (!authWindow) setError('Popup blocked. Please allow popups for this site.');
+    
+    // Redirect current window instead of opening popup
+    window.location.href = `https://accounts.google.com/o/oauth2/v2/auth?${params}`;
   };
 
   const getVerifiedLocation = (): Promise<GeolocationCoordinates> => {
