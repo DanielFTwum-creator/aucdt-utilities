@@ -26,22 +26,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         // Initialize IndexedDB session service
         await initSessionService();
 
-        // 1. Check for user data in URL (from OAuth callback)
-        const urlUser = params.get('user');
-        if (urlUser) {
-          try {
-            const userData = JSON.parse(atob(urlUser)) as AuthUser;
-            setIsAuthenticated(true);
-            setUser(userData);
-            localStorage.setItem('biochemai_user', JSON.stringify(userData));
-            await createSession(userData.email, userData.username);
-            // Hard redirect to reload without URL params
-            window.location.href = '/biochemai/';
-            return;
-          } catch (e) {
-            console.error('Failed to parse user from URL:', e);
-          }
-        }
+
 
         // 2. Check for server-set cookie from OAuth callback (one-shot)
         const cookieValue = document.cookie
