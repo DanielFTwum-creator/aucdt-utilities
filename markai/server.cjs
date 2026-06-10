@@ -273,32 +273,49 @@ app.post("/api/generate-image", checkApiKey, async (req, res) => {
   }
 
   try {
-    const modelName = 'imagen-4.0-generate-001'; // Upgraded model for higher quality
+    // Models tried in order of quality, falling back on 429 RESOURCE_EXHAUSTED /
+    // 503. Chain verified against the shared key in dmcdai (2026-06-04):
+    //   imagen-4.0-fast-generate-001  -> OK (highest quota)
+    //   imagen-4.0-ultra-generate-001 -> low quota, last resort
+    //   imagen-4.0-generate-001       -> 404/503 on this key (do not use)
+    const GENERATE_MODELS = ['imagen-4.0-fast-generate-001', 'imagen-4.0-ultra-generate-001'];
     const outputMimeType = 'image/jpeg';
-    console.log(`🎨 Using high-quality model: ${modelName} for image generation`);
+    let lastErr;
 
-    const response = await req.ai.models.generateImages({
-      model: modelName,
-      prompt: prompt,
-      config: {
-        numberOfImages: 1,
-        outputMimeType: outputMimeType,
-        aspectRatio: '16:9', // Better for social media posts
-      },
-    });
-    
-    const base64ImageBytes = response.generatedImages[0]?.image?.imageBytes;
+    for (const modelName of GENERATE_MODELS) {
+      try {
+        console.log(`🎨 Using model: ${modelName} for image generation`);
+        const response = await req.ai.models.generateImages({
+          model: modelName,
+          prompt: prompt,
+          config: {
+            numberOfImages: 1,
+            outputMimeType: outputMimeType,
+            aspectRatio: '16:9', // Better for social media posts
+          },
+        });
 
-    if (base64ImageBytes) {
-      const imageUrl = `data:${outputMimeType};base64,${base64ImageBytes}`;
-      console.log("✅ Successfully generated high-quality image with Imagen API");
-      return res.json({ imageUrl });
+        const base64ImageBytes = response.generatedImages[0]?.image?.imageBytes;
+        if (base64ImageBytes) {
+          const imageUrl = `data:${outputMimeType};base64,${base64ImageBytes}`;
+          console.log(`✅ Successfully generated image with ${modelName}`);
+          return res.json({ imageUrl });
+        }
+        lastErr = new Error("No image data found in Imagen API response.");
+      } catch (err) {
+        lastErr = err;
+        // Fall through to the next model only on quota (429) or transient (503).
+        if (err?.status !== 429 && err?.status !== 503) break;
+        console.warn(`⚠️ ${modelName} returned ${err?.status} — trying next model`);
+      }
     }
-    
-    throw new Error("No image data found in Imagen API response.");
+    throw lastErr || new Error("No image data found in Imagen API response.");
 
   } catch (error) {
     console.error("❌ Error calling Imagen API for image generation:", error);
+    if (error?.status === 429) {
+      return res.status(429).json({ error: 'IMAGE_QUOTA_EXHAUSTED', message: 'The image service is over its quota right now. Please try again in a few minutes.' });
+    }
     res.status(500).json({ error: "Something went wrong while generating the image.", details: error.message });
   }
 });
