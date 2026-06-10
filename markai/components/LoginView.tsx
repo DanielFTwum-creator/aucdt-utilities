@@ -312,8 +312,8 @@ const LoginView: React.FC = () => {
             <Logo size="lg" />
         </div>
         <div className="bg-secondary/80 backdrop-blur-sm rounded-xl shadow-2xl border border-default overflow-hidden">
-            <form onSubmit={handleSubmit} className="p-8">
-                <div className="min-h-[380px]">
+            <form onSubmit={handleSubmit} className="p-6 sm:p-8">
+                <div>
                     <div key={mode} className="animate-fade-in">
                         {renderHeader()}
                         
