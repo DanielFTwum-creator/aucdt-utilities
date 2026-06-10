@@ -207,7 +207,7 @@ Log -Level 'INFO' -Msg 'Step 5: Setting permissions...' -Color Yellow
 
 # Step 6: Deploying backend files
 Log -Level 'INFO' -Msg 'Step 6: Deploying backend files...' -Color Yellow
-& $SCP @SSH_OPTS server.ts package.json pnpm-lock.yaml "${RemoteHost}:${RemotePath}" 2>$null | Out-Null
+& $SCP @SSH_OPTS server.ts package.json pnpm-lock.yaml pnpm-workspace.yaml "${RemoteHost}:${RemotePath}" 2>$null | Out-Null
 if (Test-Path '.env.local') {
     & $SCP @SSH_OPTS '.env.local' "${RemoteHost}:${RemotePath}.env" 2>$null | Out-Null
 }
