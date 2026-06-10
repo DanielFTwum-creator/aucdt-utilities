@@ -60,6 +60,16 @@ tucwms:
     default-model: ${GEMINI_DEFAULT_MODEL:gemini-2.5-flash}
     base-url: ${GEMINI_BASE_URL:https://generativelanguage.googleapis.com}
 
+# OpenAPI/Swagger — OFF by default so the production auth API is never exposed.
+# Devs self-serve by running with SWAGGER_ENABLED=true (dev/staging), then visiting
+# /swagger-ui.html. Security permits the doc paths only; nothing is served when disabled.
+springdoc:
+  api-docs:
+    enabled: ${SWAGGER_ENABLED:false}
+  swagger-ui:
+    enabled: ${SWAGGER_ENABLED:false}
+    path: /swagger-ui.html
+
 logging:
   level:
     gh.edu.techbridge.wms: INFO

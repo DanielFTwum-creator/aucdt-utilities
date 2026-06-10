@@ -58,7 +58,10 @@ public class SecurityConfig {
                         "/api/auth/logout",
                         "/actuator/health",
                         "/api/gemini/health",    // public readiness probe — boolean only, no key/config exposed
-                        "/api/gemini/generate"   // controller enforces its own auth: WMS JWT OR X-Gemini-Proxy-Key (service relays have no JWT)
+                        "/api/gemini/generate",  // controller enforces its own auth: WMS JWT OR X-Gemini-Proxy-Key (service relays have no JWT)
+                        // OpenAPI/Swagger docs — only actually served when springdoc is enabled
+                        // (SWAGGER_ENABLED=true; OFF in prod). Permitted so dev/staging can view them.
+                        "/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**"
                 ).permitAll()
                 // Admin-only user management (FR-AUTH-004).
                 .requestMatchers("/api/admin/**").hasRole("SYSTEM_ADMIN")
