@@ -307,6 +307,11 @@ app.get('/health', (req, res) => {
 const path = require("path");
 app.use(express.static(path.join(__dirname, "dist")));
 
+// Serve static callback file directly for Google OAuth redirect URI
+app.get(["/callback", "/callback/"], (req, res) => {
+  res.sendFile(path.join(__dirname, "dist", "callback", "index.html"));
+});
+
 // Fallback to index.html for SPA routing
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "dist", "index.html"));
