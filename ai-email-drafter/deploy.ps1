@@ -84,7 +84,7 @@ log 'Build and deploy complete.'
 }
 
 Log "INFO" "Step 4: Writing .htaccess..." Yellow
-@"
+$htaccessContent = @'
 <IfModule mod_rewrite.c>
   RewriteEngine On
   RewriteBase /ai-email-drafter/
@@ -106,7 +106,11 @@ Log "INFO" "Step 4: Writing .htaccess..." Yellow
     Header set Expires '0'
   </FilesMatch>
 </IfModule>
-"@ | ssh -o StrictHostKeyChecking=no $RemoteHost "cat > ${RemotePath}.htaccess" 2>$null
+'@
+$localHtaccess = [System.IO.Path]::Combine([System.IO.Path]::GetTempPath(), "email-drafter_htaccess_$([Guid]::NewGuid().ToString('N')).txt")
+[System.IO.File]::WriteAllText($localHtaccess, $htaccessContent)
+& scp -o StrictHostKeyChecking=no $localHtaccess "${RemoteHost}:${RemotePath}.htaccess" 2>$null
+Remove-Item -Path $localHtaccess -Force -ErrorAction SilentlyContinue
 
 Log "INFO" "Step 5: Setting permissions..." Yellow
 ssh -o StrictHostKeyChecking=no $RemoteHost "chown -R techbridge.edu.gh_md:psaserv $RemotePath && chmod -R 755 $RemotePath && chmod 644 ${RemotePath}.htaccess 2>/dev/null; true" | Out-Null
