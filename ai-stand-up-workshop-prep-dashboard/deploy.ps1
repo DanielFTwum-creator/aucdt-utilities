@@ -52,6 +52,7 @@ REPO=${GITHUB_REPO}
 log() { NOW=`$(date '+%Y-%m-%d %H:%M:%S'); echo "[`$NOW][SERVER] `$1"; }
 pnpm_ver=`$(pnpm --version 2>/dev/null || echo 'not found'); log "pnpm `$pnpm_ver"
 log '[1/7] Cleaning...'; rm -rf "`$TMPDIR"
+find /tmp -maxdepth 1 -name '*_deploy_*' -type d -mmin +30 -exec rm -rf {} + 2>/dev/null || true
 log '[2/7] Cloning ${SUBFOLDER}...'
 git clone --filter=blob:none --sparse --depth 1 "`$REPO" "`$TMPDIR"
 cd "`$TMPDIR" && git sparse-checkout set ${SUBFOLDER} && cd ${SUBFOLDER}

@@ -100,6 +100,7 @@ log "pnpm `$(pnpm --version)"
 
 log '[1/5] Cleaning previous temp build...'
 rm -rf "`$TMPDIR"
+find /tmp -maxdepth 1 -name '*_deploy_*' -type d -mmin +30 -exec rm -rf {} + 2>/dev/null || true
 
 log '[2/5] Cloning ${SUBFOLDER} (sparse, depth 1)...'
 git clone --depth 1 --filter=blob:none --sparse "`$REPO" "`$TMPDIR"
