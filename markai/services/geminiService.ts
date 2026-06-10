@@ -3,7 +3,9 @@
 // Fix: Import types from App.tsx where they are now defined.
 import { GeneratedContent, Platform, GeminiModel } from '../types';
 
-const API_BASE_URL = 'http://localhost:3000/api';
+const API_BASE_URL = window.location.origin.includes('localhost') 
+  ? 'http://localhost:3000/api' 
+  : `${window.location.origin}/markai/api`;
 
 // This function centralizes error handling for API calls to our backend server.
 const handleApiError = async (response: Response, context: string): Promise<Error> => {

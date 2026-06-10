@@ -303,6 +303,34 @@ app.post("/api/generate-image", checkApiKey, async (req, res) => {
   }
 });
 
+app.get("/api/gemini/key", async (req, res) => {
+  const proxyKey = process.env.GEMINI_PROXY_KEY;
+  if (proxyKey) {
+    try {
+      const response = await fetch("https://wms.techbridge.edu.gh/api/gemini/key", {
+        headers: { "X-Gemini-Proxy-Key": proxyKey }
+      });
+      if (!response.ok) {
+        const errText = await response.text();
+        throw new Error(`WMS error: ${response.status} - ${errText}`);
+      }
+      const data = await response.json();
+      return res.json({ apiKey: data.apiKey });
+    } catch (error) {
+      console.error("❌ Failed to fetch Gemini API key from WMS:", error);
+      return res.status(500).json({ error: "Failed to fetch key from WMS", details: error.message });
+    }
+  } else {
+    // Local dev fallback
+    const localKey = process.env.API_KEY;
+    if (localKey) {
+      return res.json({ apiKey: localKey });
+    } else {
+      return res.status(500).json({ error: "Neither GEMINI_PROXY_KEY nor API_KEY is set in environment." });
+    }
+  }
+});
+
 app.get('/health', (req, res) => {
   res.status(200).send('healthy');
 });

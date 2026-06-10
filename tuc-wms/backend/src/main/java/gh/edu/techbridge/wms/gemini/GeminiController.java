@@ -52,6 +52,23 @@ public class GeminiController {
     }
 
     /**
+     * Expose the shared GEMINI_API_KEY to authorised fleet applications.
+     * Requires either a WMS user JWT or a valid X-Gemini-Proxy-Key service header.
+     */
+    @GetMapping("/key")
+    public ResponseEntity<Map<String, String>> getKey(@RequestHeader(value = "X-Gemini-Proxy-Key", required = false) String proxyKey) {
+        if (!isAuthorised(proxyKey)) {
+            return ResponseEntity.status(401)
+                    .body(Map.of("error", "Unauthorised: present a WMS bearer token or a valid X-Gemini-Proxy-Key."));
+        }
+        if (!props.isEnabled()) {
+            return ResponseEntity.status(503)
+                    .body(Map.of("error", "GEMINI_API_KEY not configured on the WMS server."));
+        }
+        return ResponseEntity.ok(Map.of("apiKey", props.getApiKey()));
+    }
+
+    /**
      * Proxy a Gemini generateContent call. Body is the raw Gemini request JSON
      * (contents/generationConfig/...); ?model= overrides the server default.
      */

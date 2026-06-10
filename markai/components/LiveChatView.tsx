@@ -84,8 +84,18 @@ const LiveChatView: React.FC = () => {
             const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
             microphoneStreamRef.current = stream;
 
-            const apiKey = process.env.API_KEY;
-            if (!apiKey) throw new Error("API_KEY environment variable not set.");
+            const apiBase = window.location.origin.includes('localhost') 
+                ? 'http://localhost:3000/api' 
+                : `${window.location.origin}/markai/api`;
+            
+            const keyRes = await fetch(`${apiBase}/gemini/key`);
+            if (!keyRes.ok) {
+                const errText = await keyRes.text().catch(() => '');
+                throw new Error(`Failed to fetch API key from server (HTTP ${keyRes.status}: ${errText})`);
+            }
+            const keyData = await keyRes.json();
+            const apiKey = keyData.apiKey;
+            if (!apiKey) throw new Error("API key was not returned by the server.");
             const ai = new GoogleGenAI({ apiKey });
             
             inputAudioContextRef.current = new (window.AudioContext)({ sampleRate: 16000 });
