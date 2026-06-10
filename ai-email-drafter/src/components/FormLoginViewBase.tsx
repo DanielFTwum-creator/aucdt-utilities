@@ -118,7 +118,7 @@ export const FormLoginView: React.FC<FormLoginViewProps> = ({
         <div className="absolute inset-0 bg-black/40" style={{ zIndex: 1 }}></div>
       )}
       {watermarkSvg && <div className="fixed inset-0 pointer-events-none" style={{ zIndex: 2 }}>{watermarkSvg}</div>}
-      <div className="w-full max-w-sm relative z-10">
+      <div className="w-full max-w-2xl relative z-10">
         <div className="text-center mb-8">
           <h1 className={`text-3xl font-bold ${primaryColor} mb-1`}>{appName}</h1>
           <p className="text-slate-600 text-sm">{appSubtitle}</p>

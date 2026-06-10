@@ -131,7 +131,7 @@ export const LoginView: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-amber-950 to-slate-950 flex flex-col items-center justify-center p-6">
-      <div className="w-full max-w-sm">
+      <div className="w-full max-w-2xl">
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-amber-100 mb-1 font-playfair">Prestige Edition</h1>
           <p className="text-amber-700/80 text-sm font-bebas tracking-widest">THE AI REVOLUTION</p>

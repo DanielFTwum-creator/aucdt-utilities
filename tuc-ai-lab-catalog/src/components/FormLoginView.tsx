@@ -125,7 +125,7 @@ export const FormLoginView: React.FC<FormLoginViewProps> = ({
 
       {watermarkSvg && <div className="fixed inset-0 pointer-events-none" style={{ zIndex: 2 }}>{watermarkSvg}</div>}
       
-      <div className="w-full max-w-md relative z-10 flex flex-col items-center">
+      <div className="w-full max-w-2xl relative z-10 flex flex-col items-center">
         {/* Header */}
         <div className="text-center mb-8 animate-fade-in-down flex flex-col items-center">
           <img src="https://techbridge.edu.gh/static/TUC_LOGO_1.png" alt="TUC Logo" className="w-14 h-auto mb-4" />
