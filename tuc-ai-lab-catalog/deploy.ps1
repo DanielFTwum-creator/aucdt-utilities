@@ -1,5 +1,5 @@
 # ============================================================
-# TUC AI Lab Catalog — Deploy Script
+# TUC AI Lab Catalog - Deploy Script
 # Remote : root@techbridge.edu.gh
 # Path   : /var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/ai-lab/
 # Port   : 3003  |  PM2 app: tuc-ai-lab
@@ -45,7 +45,7 @@ Log -Level 'INFO' -Msg ''
 # Step 1: Pre-flight
 Log -Level 'INFO' -Msg 'Step 1: Pre-flight checks...' -Color Yellow
 if ((-not (Test-Path '.env.local')) -and (-not $Build)) {
-    Log -Level 'WARN' -Msg 'No .env.local found — continuing (static deploy)' -Color Yellow
+    Log -Level 'WARN' -Msg 'No .env.local found - continuing (static deploy)' -Color Yellow
 } elseif (Test-Path '.env.local') {
     Log -Level 'SUCCESS' -Msg 'Pre-flight OK (.env.local found)' -Color Green
 } else {
@@ -61,7 +61,7 @@ try {
     git push origin $branch 2>&1 | Out-Null
     Log -Level 'INFO' -Msg "Pushed $branch to GitHub" -Color DarkGray
 } catch {
-    Log -Level 'WARN' -Msg 'git push failed (non-fatal) — server will clone existing HEAD' -Color Yellow
+    Log -Level 'WARN' -Msg 'git push failed (non-fatal) - server will clone existing HEAD' -Color Yellow
 }
 
 # Step 3: Build or copy
@@ -76,7 +76,7 @@ if ($Build) {
         if ($LASTEXITCODE -eq 0) { Log -Level 'SUCCESS' -Msg 'build .env.local uploaded' -Color Green }
         else { Log -Level 'ERROR' -Msg 'Failed to upload build .env.local' -Color Red; exit 1 }
     } else {
-        Log -Level 'WARN' -Msg 'No .env.local — build will lack VITE_ vars (login may break)' -Color Yellow
+        Log -Level 'WARN' -Msg 'No .env.local - build will lack VITE_ vars (login may break)' -Color Yellow
     }
 
     $buildDir = "/tmp/${SUBFOLDER}_deploy_${commit}"
@@ -115,7 +115,7 @@ if [ -f /tmp/.env.${PM2_APP}.build ]; then
   cp /tmp/.env.${PM2_APP}.build .env.local
   log 'injected build .env.local (VITE_ vars available to Vite)'
 else
-  log 'WARN: no build .env.local — VITE_ vars will be empty in bundle'
+  log 'WARN: no build .env.local - VITE_ vars will be empty in bundle'
 fi
 
 log '[4/5] Building...'
@@ -136,11 +136,11 @@ log 'Build and deploy complete.'
         Remove-Item -Path $localBuildScript -Force -ErrorAction SilentlyContinue
         exit 1
     }
-    # Cap the server-side build so a stalled pnpm install/build can't hang forever (GNU timeout → exit 124).
+    # Cap the server-side build so a stalled pnpm install/build can't hang forever (GNU timeout -> exit 124).
     $BuildTimeoutSec = 600
     & $SSH @SSH_OPTS $RemoteHost "timeout $BuildTimeoutSec bash /tmp/tuc-ai-lab_build.sh"
     $buildExit = $LASTEXITCODE
-    if ($buildExit -eq 124) { Log -Level 'ERROR' -Msg "Server build exceeded ${BuildTimeoutSec}s and was aborted — slow box / retry" -Color Red }
+    if ($buildExit -eq 124) { Log -Level 'ERROR' -Msg "Server build exceeded ${BuildTimeoutSec}s and was aborted - slow box / retry" -Color Red }
     Remove-Item -Path $localBuildScript -Force -ErrorAction SilentlyContinue
     & $SSH @SSH_OPTS $RemoteHost 'rm -f /tmp/tuc-ai-lab_build.sh' 2>$null
 
@@ -152,7 +152,7 @@ log 'Build and deploy complete.'
 } else {
     Log -Level 'INFO' -Msg 'Step 3: Copying local dist/ to server...' -Color Yellow
     if (-not (Test-Path 'dist')) {
-        Log -Level 'ERROR' -Msg 'dist/ not found — run with -Build flag.' -Color Red
+        Log -Level 'ERROR' -Msg 'dist/ not found - run with -Build flag.' -Color Red
         exit 1
     }
     & $SSH @SSH_OPTS $RemoteHost "mkdir -p $RemotePath && rm -rf ${RemotePath}*"
@@ -162,29 +162,29 @@ log 'Build and deploy complete.'
 
 # Step 4: .htaccess
 Log -Level 'INFO' -Msg 'Step 4: Writing .htaccess...' -Color Yellow
-$htaccessContent = @'
-<IfModule mod_rewrite.c>
-  RewriteEngine On
-  RewriteBase /ai-lab/
-  RewriteCond %{REQUEST_FILENAME} -f [OR]
-  RewriteCond %{REQUEST_FILENAME} -d
-  RewriteRule ^ - [L]
-  RewriteRule ^ /ai-lab/index.html [QSA,L]
-</IfModule>
-<IfModule mod_expires.c>
-  ExpiresActive On
-  <FilesMatch '\.(js|css|png|jpg|jpeg|gif|svg|woff2|woff|ttf|eot|ico)$'>
-    ExpiresDefault 'max-age=31536000'
-    Header set Cache-Control 'public, immutable'
-  </FilesMatch>
-  <FilesMatch '\.(html|json)$'>
-    ExpiresDefault 'max-age=0'
-    Header set Cache-Control 'no-cache, no-store, must-revalidate'
-    Header set Pragma 'no-cache'
-    Header set Expires '0'
-  </FilesMatch>
-</IfModule>
-'@
+$htaccessContent = @(
+  "<IfModule mod_rewrite.c>",
+  "  RewriteEngine On",
+  "  RewriteBase /ai-lab/",
+  "  RewriteCond %{REQUEST_FILENAME} -f [OR]",
+  "  RewriteCond %{REQUEST_FILENAME} -d",
+  "  RewriteRule ^ - [L]",
+  "  RewriteRule ^ /ai-lab/index.html [QSA,L]",
+  "</IfModule>",
+  "<IfModule mod_expires.c>",
+  "  ExpiresActive On",
+  "  <FilesMatch '\.(js|css|png|jpg|jpeg|gif|svg|woff2|woff|ttf|eot|ico)`$'>",
+  "    ExpiresDefault 'max-age=31536000'",
+  "    Header set Cache-Control 'public, immutable'",
+  "  </FilesMatch>",
+  "  <FilesMatch '\.(html|json)`$'>",
+  "    ExpiresDefault 'max-age=0'",
+  "    Header set Cache-Control 'no-cache, no-store, must-revalidate'",
+  "    Header set Pragma 'no-cache'",
+  "    Header set Expires '0'",
+  "  </FilesMatch>",
+  "</IfModule>"
+) -join "`n"
 $localHtaccess = [System.IO.Path]::Combine([System.IO.Path]::GetTempPath(), "tuc-ai-lab_htaccess_$([Guid]::NewGuid().ToString('N')).txt")
 Write-LfFile -path $localHtaccess -content $htaccessContent
 & $SCP @SSH_OPTS $localHtaccess "${RemoteHost}:${RemotePath}.htaccess"
