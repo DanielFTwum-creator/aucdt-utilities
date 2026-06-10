@@ -112,7 +112,7 @@ Log "INFO" "Step 5: Setting permissions..." Yellow
 ssh -o StrictHostKeyChecking=no $RemoteHost "chown -R techbridge.edu.gh_md:psaserv $RemotePath && chmod -R 755 $RemotePath && chmod 644 ${RemotePath}.htaccess 2>/dev/null; true" | Out-Null
 
 Log "INFO" "Step 6: Deploying backend files..." Yellow
-scp -o StrictHostKeyChecking=no server.js server.cjs package.json pnpm-lock.yaml "${RemoteHost}:${RemotePath}" 2>$null | Out-Null
+scp -o StrictHostKeyChecking=no server.cjs package.json pnpm-lock.yaml "${RemoteHost}:${RemotePath}" 2>$null | Out-Null
 if (Test-Path ".env.local") { 
     scp -o StrictHostKeyChecking=no ".env.local" "${RemoteHost}:${RemotePath}.env" 2>$null | Out-Null 
     scp -o StrictHostKeyChecking=no ".env.local" "${RemoteHost}:${RemotePath}.env.local" 2>$null | Out-Null 
