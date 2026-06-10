@@ -91,23 +91,23 @@ DEPLOY_PATH=${RemotePath}
 REPO=${GITHUB_REPO}
 
 log() {
-  NOW=\`$(date '+%Y-%m-%d %H:%M:%S')
-  echo "[\`$NOW][SERVER] \`$1"
+  NOW=`$(date '+%Y-%m-%d %H:%M:%S')
+  echo "[`$NOW][SERVER] `$1"
 }
 
 if ! command -v pnpm >/dev/null 2>&1; then
   corepack enable >/dev/null 2>&1 || npm install -g pnpm --silent
-  export PATH="\`$HOME/.local/share/pnpm:\`$PATH"
+  export PATH="`$HOME/.local/share/pnpm:`$PATH"
 fi
-log "pnpm \`$(pnpm --version)"
+log "pnpm `$(pnpm --version)"
 
 log '[1/5] Cleaning previous temp build...'
-rm -rf "\`$TMPDIR"
+rm -rf "`$TMPDIR"
 find /tmp -maxdepth 1 -name '*_deploy_*' -type d -mmin +30 -exec rm -rf {} + 2>/dev/null || true
 
 log '[2/5] Cloning ${SUBFOLDER} (sparse, depth 1)...'
-git clone --depth 1 --filter=blob:none --sparse "\`$REPO" "\`$TMPDIR"
-cd "\`$TMPDIR"
+git clone --depth 1 --filter=blob:none --sparse "`$REPO" "`$TMPDIR"
+cd "`$TMPDIR"
 git sparse-checkout set ${SUBFOLDER}
 cd ${SUBFOLDER}
 
@@ -126,8 +126,8 @@ log '[4/5] Building...'
 pnpm build
 
 log '[5/5] Deploying dist/ to web root...'
-mkdir -p "\`$DEPLOY_PATH"
-rsync -a --delete dist/. "\`$DEPLOY_PATH"
+mkdir -p "`$DEPLOY_PATH"
+rsync -a --delete dist/. "`$DEPLOY_PATH"
 
 log 'Build and deploy complete.'
 "@

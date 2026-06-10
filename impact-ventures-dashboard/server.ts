@@ -72,6 +72,7 @@ async function startServer() {
     app.use(express.static(distPath));
     app.get(/.*/, (req, res) => {
       if (!req.path.startsWith('/api/')) {
+        res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
         res.sendFile(path.join(distPath, 'index.html'));
       } else {
         res.status(404).send('Not found');
