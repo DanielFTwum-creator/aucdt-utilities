@@ -124,7 +124,14 @@ pnpm build
 
 log '[5/5] Deploying dist/ to web root...'
 mkdir -p "`$DEPLOY_PATH"
-rsync -a --delete dist/. "`$DEPLOY_PATH"
+# --delete prunes stale frontend assets, but the webroot is SHARED with the
+# live backend (.env / server.ts / node_modules / package files / .htaccess).
+# The excludes protect those from both overwrite and deletion - without them an
+# interrupted run leaves the backend gutted (2026-06-10 fleet-wide 502 incident).
+rsync -a --delete \
+  --exclude='.env' --exclude='node_modules/' --exclude='server.ts' \
+  --exclude='package.json' --exclude='pnpm-lock.yaml' --exclude='.htaccess' \
+  dist/. "`$DEPLOY_PATH"
 
 log 'Build and deploy complete.'
 "@
@@ -156,9 +163,16 @@ log 'Build and deploy complete.'
         Log -Level 'ERROR' -Msg 'dist/ not found - run with -Build flag.' -Color Red
         exit 1
     }
-    & $SSH @SSH_OPTS $RemoteHost "mkdir -p $RemotePath && rm -rf ${RemotePath}*"
-    & $SCP @SSH_OPTS -r dist/* "${RemoteHost}:${RemotePath}"
-    Log -Level 'SUCCESS' -Msg 'dist/* copied to server' -Color Green
+    # Never `rm -rf ${RemotePath}*` - the webroot is shared with the live backend
+    # (.env / server.ts / node_modules / package files). Stage dist/ in /tmp and
+    # server-side rsync with the same protective excludes as the -Build path.
+    $stageDir = "/tmp/${PM2_APP}_dist_${commit}"
+    & $SSH @SSH_OPTS $RemoteHost "rm -rf $stageDir && mkdir -p $RemotePath"
+    & $SCP @SSH_OPTS -r dist "${RemoteHost}:${stageDir}"
+    if ($LASTEXITCODE -ne 0) { Log -Level 'ERROR' -Msg 'Failed to stage dist/ on server' -Color Red; exit 1 }
+    & $SSH @SSH_OPTS $RemoteHost "rsync -a --delete --exclude='.env' --exclude='node_modules/' --exclude='server.ts' --exclude='package.json' --exclude='pnpm-lock.yaml' --exclude='.htaccess' $stageDir/ $RemotePath && rm -rf $stageDir"
+    if ($LASTEXITCODE -ne 0) { Log -Level 'ERROR' -Msg 'Server-side rsync failed' -Color Red; exit 1 }
+    Log -Level 'SUCCESS' -Msg 'dist/* synced to server (backend files protected)' -Color Green
 }
 
 # Step 4: .htaccess
