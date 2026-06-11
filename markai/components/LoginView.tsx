@@ -1,15 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import * as authService from '../services/authService';
 import { User } from '../types';
 import { useAuth } from '../contexts/AuthContext';
+import { wmsAuthBase } from '../services/wmsAuthService';
 import Logo from './Logo';
 import Spinner from './Spinner';
-import { AtSign, Lock, Phone, User as UserIcon, Eye, EyeOff } from 'lucide-react';
+import { Lock, Phone, User as UserIcon, Eye, EyeOff } from 'lucide-react';
 import ForgotPasswordModal from './ForgotPasswordModal';
 import ThemeSwitcher from './ThemeSwitcher';
+import WmsMfaModal from './WmsMfaModal';
 
 const LoginView: React.FC = () => {
-  const { login } = useAuth();
+  const { login, wmsError, wmsMfaTicket } = useAuth();
   const [mode, setMode] = useState<'login' | 'register'>('login');
   
   // States for form fields
@@ -26,104 +28,18 @@ const LoginView: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  const processOAuthToken = async (access_token: string) => {
-    const OAUTH_TIMEOUT_MS = 5000;
-    try {
-      setIsLoading(true);
-      setError(null);
-      console.log('[OAuth] Processing token, fetching user info...');
-
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), OAUTH_TIMEOUT_MS);
-
-      const res = await fetch('https://www.googleapis.com/oauth2/v2/userinfo', {
-        headers: { Authorization: `Bearer ${access_token}` },
-        signal: controller.signal
-      });
-
-      clearTimeout(timeoutId);
-
-      if (!res.ok) {
-        const errorText = await res.text();
-        console.error('[OAuth] User info fetch failed:', res.status, errorText);
-        throw new Error(`Google API error: ${res.status} ${res.statusText}`);
-      }
-
-      const userInfo = await res.json();
-      console.log('[OAuth] User info received, logging in...');
-      login({
-        id: userInfo.id,
-        name: userInfo.name,
-        email: userInfo.email,
-        picture: userInfo.picture,
-        tier: 'free',
-      });
-    } catch (err) {
-      if (err instanceof Error && err.name === 'AbortError') {
-        console.error('[OAuth] Request timeout');
-        setError('Google login took too long. Please try again.');
-      } else {
-        const errorMsg = err instanceof Error ? err.message : String(err);
-        console.error('[OAuth] Token processing failed:', errorMsg);
-        setError(`Google login failed: ${errorMsg}`);
-      }
-      setIsLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    const handleMessage = async (event: MessageEvent) => {
-      // Validate origin matches current location
-      if (event.origin !== window.location.origin) {
-        console.warn('[OAuth] Message from different origin, ignoring:', event.origin);
-        return;
-      }
-
-      if (event.data?.type === 'OAUTH_TOKEN_SUCCESS') {
-        processOAuthToken(event.data.access_token);
-      } else if (event.data?.type === 'OAUTH_TOKEN_ERROR') {
-        console.error('[OAuth] Error from callback:', event.data);
-        setError(`OAuth error: ${event.data.error}${event.data.error_description ? ' - ' + event.data.error_description : ''}`);
-      }
-    };
-
-    console.log('[OAuth] Setting up message listener');
-    window.addEventListener('message', handleMessage);
-    return () => window.removeEventListener('message', handleMessage);
-  }, [login]);
-
-  useEffect(() => {
-    // Check if we have a temporary token from the redirect flow
-    const tempToken = localStorage.getItem('oauth_token_temp');
-    if (tempToken) {
-      localStorage.removeItem('oauth_token_temp');
-      processOAuthToken(tempToken);
-    }
-    const tempError = localStorage.getItem('oauth_error_temp');
-    if (tempError) {
-      localStorage.removeItem('oauth_error_temp');
-      setError(`OAuth error: ${tempError}`);
-    }
-  }, []);
-
+  // Staff Google sign-in is delegated to the WMS SSO backend (domain-gated
+  // @techbridge.edu.gh + TOTP). The callback lands back on /markai/auth/callback
+  // and is handled in AuthContext; WMS errors/MFA surface via useAuth().
   const handleGoogleLogin = () => {
-    const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
-    if (!clientId) {
-      setError('Google login is not configured.');
-      return;
-    }
-    const redirectUri = import.meta.env.VITE_GOOGLE_REDIRECT_URI
-      || `${window.location.origin}/callback`;
-    const params = new URLSearchParams({
-      client_id: clientId,
-      redirect_uri: redirectUri,
-      response_type: 'token',
-      scope: 'openid email profile',
-    });
-    
-    // Redirect current window instead of opening popup
-    window.location.href = `https://accounts.google.com/o/oauth2/v2/auth?${params}`;
+    window.location.href = `${wmsAuthBase}/api/auth/google?app=markai`;
   };
+
+  const wmsErrorMessage =
+    wmsError === 'domain' ? 'Only @techbridge.edu.gh accounts can use Google sign-in.'
+    : wmsError === 'deactivated' ? 'Your staff account has been deactivated.'
+    : wmsError ? 'Google sign-in failed. Please try again.'
+    : null;
 
   const getVerifiedLocation = (): Promise<GeolocationCoordinates> => {
     return new Promise((resolve, reject) => {
@@ -344,6 +260,9 @@ const LoginView: React.FC = () => {
                           </svg>
                           Continue with Google
                         </button>
+                        {wmsErrorMessage && !error && (
+                          <p className="text-red-500 text-sm text-center -mt-4 mb-4 animate-fade-in">{wmsErrorMessage}</p>
+                        )}
 
                         <div className="relative flex items-center gap-3 mb-6">
                             <div className="flex-1 h-px bg-default"></div>
@@ -378,6 +297,7 @@ const LoginView: React.FC = () => {
             </form>
         </div>
       </div>
+      {wmsMfaTicket && <WmsMfaModal />}
        {showForgotPassword && (
         <ForgotPasswordModal
             onClose={() => setShowForgotPassword(false)}
