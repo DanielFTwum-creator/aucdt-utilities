@@ -250,6 +250,7 @@ export default function App() {
 
   const filteredTools = useMemo(() => {
     return TOOLS.filter((tool) => {
+      if (!isDeployed(tool.slug)) return false;   // hide "Coming Soon" apps entirely
       const matchesSearch = tool.title.toLowerCase().includes(search.toLowerCase()) ||
                             tool.desc.toLowerCase().includes(search.toLowerCase()) ||
                             tool.slug.toLowerCase().includes(search.toLowerCase());
@@ -259,8 +260,9 @@ export default function App() {
   }, [search, activeCategory]);
 
   const countsByCat = useMemo(() => {
-    const counts: Record<string, number> = { All: TOOLS.length };
-    TOOLS.forEach(t => {
+    const deployed = TOOLS.filter(t => isDeployed(t.slug));
+    const counts: Record<string, number> = { All: deployed.length };
+    deployed.forEach(t => {
       counts[t.cat] = (counts[t.cat] || 0) + 1;
     });
     return counts;
