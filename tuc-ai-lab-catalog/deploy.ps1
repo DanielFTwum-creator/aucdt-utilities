@@ -229,13 +229,17 @@ Write-Host $pm2Result -ForegroundColor DarkGray
 
 # Health checks
 Log -Level 'INFO' -Msg 'Health checks...' -Color Yellow
-Start-Sleep -Seconds 5
 
 $indexCheck = & $SSH @SSH_OPTS $RemoteHost "test -f ${RemotePath}index.html && echo 'OK index.html present' || echo 'MISSING index.html'"
 Write-Host $indexCheck -ForegroundColor $(if ($indexCheck -match '^OK') { 'Green' } else { 'Red' })
 
-$portCheck = & $SSH @SSH_OPTS $RemoteHost "ss -tlnp | grep -q ':${PORT}' && echo 'OK port ${PORT} listening' || echo 'WARN port ${PORT} not found'"
-Write-Host $portCheck -ForegroundColor $(if ($portCheck -match '^OK') { 'Green' } else { 'Yellow' })
+$backendCheck = & $SSH @SSH_OPTS $RemoteHost "test -f ${RemotePath}.env && test -f ${RemotePath}server.ts && echo 'OK backend files present' || echo 'MISSING backend files (.env / server.ts)'"
+Write-Host $backendCheck -ForegroundColor $(if ($backendCheck -match '^OK') { 'Green' } else { 'Red' })
+
+# tsx reload can take >5s on the loaded box - poll up to 60s instead of one fixed sleep.
+$portCheck = & $SSH @SSH_OPTS $RemoteHost "for i in `$(seq 1 12); do ss -tlnp | grep -q ':${PORT}' && { echo 'OK port ${PORT} listening'; exit 0; }; sleep 5; done; echo 'FAIL port ${PORT} not listening after 60s'"
+Write-Host $portCheck -ForegroundColor $(if ($portCheck -match '^OK') { 'Green' } else { 'Red' })
+if ($portCheck -notmatch '^OK') { exit 1 }
 
 $DURATION = [math]::Round(((Get-Date) - $START_TIME).TotalSeconds, 1)
 $timeStr  = if ($DURATION -ge 60) { "$([math]::Floor($DURATION/60))m $([math]::Round($DURATION%60,1))s" } else { "${DURATION}s" }
