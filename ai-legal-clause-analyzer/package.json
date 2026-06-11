@@ -1,5 +1,6 @@
 {
-  "name": "ai-legal-clause-analyzer",`n  "packageManager": "pnpm@10.30.1",
+  "name": "ai-legal-clause-analyzer",
+  "packageManager": "pnpm@10.30.1",
   "version": "2.0.0",
   "private": true,
   "description": "Autonomous operations and management - App ID 218",

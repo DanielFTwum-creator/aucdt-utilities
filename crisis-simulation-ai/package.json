@@ -1,5 +1,6 @@
 {
-  "name": "crisis-simulation-ai",`n  "packageManager": "pnpm@10.30.1",
+  "name": "crisis-simulation-ai",
+  "packageManager": "pnpm@10.30.1",
   "version": "2.0.0",
   "private": true,
   "description": "Autonomous operations and management - App ID 206",

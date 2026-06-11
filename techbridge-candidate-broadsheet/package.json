@@ -1,5 +1,6 @@
 {
-  "name": "techbridge-candidate-broadsheet",`n  "packageManager": "pnpm@10.30.1",
+  "name": "techbridge-candidate-broadsheet",
+  "packageManager": "pnpm@10.30.1",
   "version": "1.0.0",
   "private": true,
   "scripts": {

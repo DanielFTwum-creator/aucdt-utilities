@@ -1,5 +1,6 @@
 {
-  "name": "medical-claims-validator",`n  "packageManager": "pnpm@10.30.1",
+  "name": "medical-claims-validator",
+  "packageManager": "pnpm@10.30.1",
   "version": "2.0.0",
   "private": true,
   "description": "Healthcare and medical technology - App ID 132",

@@ -1,5 +1,6 @@
 {
-  "name": "drone-fleet-intelligence-manager",`n  "packageManager": "pnpm@10.30.1",
+  "name": "drone-fleet-intelligence-manager",
+  "packageManager": "pnpm@10.30.1",
   "version": "2.0.0",
   "private": true,
   "description": "Robotics and autonomous systems - App ID 198",

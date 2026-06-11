@@ -1,5 +1,6 @@
 {
-  "name": "aucdt-msee-aptitude-test",`n  "packageManager": "pnpm@10.30.1",
+  "name": "aucdt-msee-aptitude-test",
+  "packageManager": "pnpm@10.30.1",
   "version": "1.0.0",
   "main": "src/index.js",
   "scripts": {

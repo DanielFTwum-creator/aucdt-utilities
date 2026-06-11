@@ -1,5 +1,6 @@
 {
-  "name": "treasury-forecasting-ai",`n  "packageManager": "pnpm@10.30.1",
+  "name": "treasury-forecasting-ai",
+  "packageManager": "pnpm@10.30.1",
   "version": "2.0.0",
   "private": true,
   "description": "Financial technology and services - App ID 140",

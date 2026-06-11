@@ -1,5 +1,6 @@
 {
-  "name": "digital-identity-verifier",`n  "packageManager": "pnpm@10.30.1",
+  "name": "digital-identity-verifier",
+  "packageManager": "pnpm@10.30.1",
   "version": "2.0.0",
   "private": true,
   "description": "Government services and public sector - App ID 158",

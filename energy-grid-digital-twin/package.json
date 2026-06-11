@@ -1,5 +1,6 @@
 {
-  "name": "energy-grid-digital-twin",`n  "packageManager": "pnpm@10.30.1",
+  "name": "energy-grid-digital-twin",
+  "packageManager": "pnpm@10.30.1",
   "version": "2.0.0",
   "private": true,
   "description": "Digital twin and simulation systems - App ID 186",

@@ -1,5 +1,6 @@
 {
-  "name": "knowledge-graph-builder",`n  "packageManager": "pnpm@10.30.1",
+  "name": "knowledge-graph-builder",
+  "packageManager": "pnpm@10.30.1",
   "version": "2.0.0",
   "private": true,
   "description": "Platform infrastructure and capabilities - App ID 177",

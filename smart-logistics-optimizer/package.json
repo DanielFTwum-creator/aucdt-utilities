@@ -1,5 +1,6 @@
 {
-  "name": "smart-logistics-optimizer",`n  "packageManager": "pnpm@10.30.1",
+  "name": "smart-logistics-optimizer",
+  "packageManager": "pnpm@10.30.1",
   "version": "2.0.0",
   "private": true,
   "description": "Logistics and supply chain management - App ID 153",

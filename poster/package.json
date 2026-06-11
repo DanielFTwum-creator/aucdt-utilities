@@ -1,5 +1,6 @@
 {
-  "name": "poster",`n  "packageManager": "pnpm@10.30.1",
+  "name": "poster",
+  "packageManager": "pnpm@10.30.1",
   "version": "1.0.0",
   "private": true,
   "scripts": {
