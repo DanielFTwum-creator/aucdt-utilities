@@ -1,8 +1,19 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
+import istanbul from 'vite-plugin-istanbul';
 
 export default defineConfig({
-  plugins: [react()],
+  plugins: [
+    react(),
+    // Coverage instrumentation — only active for the Cypress e2e coverage build
+    istanbul({
+      include: ['components/**', 'contexts/**', 'services/**', 'App.tsx', 'index.tsx'],
+      exclude: ['node_modules', 'cypress', 'tests', 'dist', 'src/__tests__'],
+      extension: ['.ts', '.tsx'],
+      requireEnv: true,
+      forceBuildInstrument: process.env.VITE_COVERAGE === 'true',
+    }),
+  ],
   base: './',
   build: {
     rollupOptions: {

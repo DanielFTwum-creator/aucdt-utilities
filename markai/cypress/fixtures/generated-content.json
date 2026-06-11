@@ -1,0 +1,28 @@
+[
+  {
+    "platform": "Instagram",
+    "content": "🚀 Big news! Our 20% off sale starts today — every product, no exceptions. Tag a friend who needs this. #TUCSale #MarkAI",
+    "imagePrompt": "A vibrant flat-lay of colourful products with a bold 20% OFF banner, studio lighting, festive confetti",
+    "variants": [
+      "Sale alert 🚨 20% off everything starts now!",
+      "Treat yourself — 20% off storewide, today only."
+    ]
+  },
+  {
+    "platform": "LinkedIn",
+    "content": "We're pleased to announce a limited-time 20% reduction across our entire catalogue. An excellent opportunity for teams planning their next procurement cycle.",
+    "imagePrompt": "Professional product showcase on a clean desk, soft corporate lighting, subtle brand colours",
+    "variants": [
+      "A 20% storewide reduction — built for teams that plan ahead."
+    ]
+  },
+  {
+    "platform": "Email",
+    "content": "Subject: Your 20% off starts now\n\nHi there,\n\nFor a limited time, everything in our store is 20% off. No codes, no exclusions — the discount is applied automatically at checkout.\n\nWarm regards,\nThe Team",
+    "imagePrompt": "An elegant email hero image with a 20% OFF ribbon over a curated product grid",
+    "variants": [
+      "Subject: 20% off everything — automatically applied",
+      "Subject: The sale you asked for is live"
+    ]
+  }
+]

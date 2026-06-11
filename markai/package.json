@@ -13,7 +13,22 @@
     "test": "vitest",
     "test:ui": "vitest --ui",
     "test:coverage": "vitest run --coverage",
-    "test:e2e": "pnpm exec playwright test --config playwright.config.ts"
+    "test:e2e": "pnpm exec playwright test --config playwright.config.ts",
+    "e2e:build": "cross-env VITE_COVERAGE=true vite build",
+    "e2e:cypress": "cypress run",
+    "e2e:open": "cypress open",
+    "e2e:coverage-report": "nyc report --reporter=text-summary --reporter=html --report-dir=coverage-e2e"
+  },
+  "nyc": {
+    "report-dir": "coverage-e2e",
+    "temp-dir": ".nyc_output",
+    "include": [
+      "components/**",
+      "contexts/**",
+      "services/**",
+      "App.tsx",
+      "index.tsx"
+    ]
   },
   "dependencies": {
     "@google/genai": "^2.3.0",
@@ -27,6 +42,7 @@
     "react-dom": "19.2.6"
   },
   "devDependencies": {
+    "@cypress/code-coverage": "^4.0.3",
     "@playwright/browser-chromium": "^1.60.0",
     "@playwright/browser-firefox": "^1.60.0",
     "@playwright/browser-webkit": "^1.60.0",
@@ -41,11 +57,15 @@
     "@vitest/ui": "^4.1.6",
     "autoprefixer": "^10.5.0",
     "baseline-browser-mapping": "^2.10.30",
+    "cross-env": "^10.1.0",
+    "cypress": "^15.17.0",
     "jsdom": "^29.1.1",
+    "nyc": "^18.0.0",
     "postcss": "^8.5.14",
     "tailwindcss": "^4.3.0",
     "typescript": "~6.0.3",
     "vite": "^8.0.13",
+    "vite-plugin-istanbul": "^9.0.1",
     "vitest": "^4.1.6"
   }
 }
