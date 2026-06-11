@@ -1,6 +1,7 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
+import { api, post } from "./auth/api.js";
 
 const STATIC_ITEMS = [
   {id:1,p:"gen",rec:"Reformat all documents to GTEC standard using UMaT BSc EEE as template",dec:"rej",act:"TUC GTEC-approved template (BA JDT, BA Product Design) is more current than UMaT Appendix E. TUC template is the formatting baseline — not UMaT's.",auth:true},
@@ -67,13 +68,14 @@ const PROG_CONFIG = {
 };
 
 const LS_KEY = "umat-tracker-v1";
+const TRACKED_FIELDS = ["owner", "status", "dueDate", "notes"];
 
-function loadTracking() {
+/** Pre-migration localStorage store — only used to offer the one-time import. */
+function loadLocalStore() {
   try { return JSON.parse(localStorage.getItem(LS_KEY)) || {}; } catch { return {}; }
 }
 
-function initItems() {
-  const saved = loadTracking();
+function mergeItems(store) {
   return STATIC_ITEMS.map(item => ({
     ...item,
     owner: "",
@@ -81,7 +83,7 @@ function initItems() {
     dueDate: "",
     notes: "",
     changelog: [],
-    ...(saved[item.id] || {}),
+    ...(store[item.id] || {}),
   }));
 }
 
@@ -126,6 +128,7 @@ function ChangelogEntry({ entry }) {
       <strong style={{ color: "#222" }}>{entry.field}</strong>
       {entry.oldValue && <span style={{ color: "#9a9a9a" }}> · was <em>{entry.oldValue || "—"}</em></span>}
       <span style={{ color: "#555" }}> → <strong>{entry.newValue || "—"}</strong></span>
+      {entry.actor && <span style={{ color: "#9a9a9a" }}> · by {entry.actor}</span>}
     </div>
   );
 }
@@ -180,7 +183,7 @@ function WorkloadCard({ owner, items }) {
 }
 
 export default function App() {
-  const [items, setItems] = useState(initItems);
+  const [items, setItems] = useState(() => mergeItems({}));
   const [progFilter, setProgFilter] = useState("all");
   const [statusFilter, setStatusFilter] = useState("all");
   const [expandedId, setExpandedId] = useState(null);
@@ -189,25 +192,85 @@ export default function App() {
   const [dateTo, setDateTo] = useState("");
   const [changelogProg, setChangelogProg] = useState("all");
   const [lastSaved, setLastSaved] = useState(null);
+  const [loadError, setLoadError] = useState(null);
+  const [canImport, setCanImport] = useState(false);
+  const [importing, setImporting] = useState(false);
+  // Per-(item,field) value at last server commit — debounced typing only syncs
+  // (and creates one audit entry) when the value actually changed since then.
+  const baselineRef = useRef({});
+  const timersRef = useRef({});
+
+  function setBaseline(store) {
+    const b = {};
+    STATIC_ITEMS.forEach(it => {
+      const s = store[it.id] || {};
+      TRACKED_FIELDS.forEach(f => { b[`${it.id}:${f}`] = String(s[f] || (f === "status" ? "not_started" : "")); });
+    });
+    baselineRef.current = b;
+  }
+
+  async function refresh() {
+    const store = await api("/api/umat/tracking");
+    setBaseline(store);
+    setItems(mergeItems(store));
+    return store;
+  }
 
   useEffect(() => {
-    const tracking = {};
-    items.forEach(item => {
-      tracking[item.id] = { owner: item.owner, status: item.status, dueDate: item.dueDate, notes: item.notes, changelog: item.changelog };
-    });
-    localStorage.setItem(LS_KEY, JSON.stringify(tracking));
-    setLastSaved(new Date());
-  }, [items]);
+    (async () => {
+      try {
+        const store = await refresh();
+        if (Object.keys(store).length === 0 && Object.keys(loadLocalStore()).length > 0) setCanImport(true);
+        setLoadError(null);
+      } catch (e) {
+        setLoadError(e.message || "Could not load tracker data");
+      }
+    })();
+    const timers = timersRef.current;
+    return () => Object.values(timers).forEach(clearTimeout);
+  }, []);
 
-  function updateItem(id, field, value) {
-    setItems(prev => prev.map(item => {
-      if (item.id !== id) return item;
-      const oldValue = String(item[field] || "");
-      const newValue = String(value || "");
-      if (oldValue === newValue) return item;
-      const entry = { timestamp: new Date().toISOString(), field, oldValue, newValue };
-      return { ...item, [field]: value, changelog: [...item.changelog, entry] };
-    }));
+  async function importLocal() {
+    setImporting(true);
+    try {
+      await post("/api/umat/import", loadLocalStore());
+      localStorage.setItem(LS_KEY + "-migrated", localStorage.getItem(LS_KEY) || "{}");
+      localStorage.removeItem(LS_KEY);
+      setCanImport(false);
+      await refresh();
+      setLastSaved(new Date());
+    } catch (e) {
+      alert("Import failed: " + (e.message || "unknown error"));
+    } finally {
+      setImporting(false);
+    }
+  }
+
+  /** Local-only field edit; server sync follows after a 1.5 s pause (or blur). */
+  function editItem(id, field, value) {
+    setItems(prev => prev.map(it => (it.id === id ? { ...it, [field]: value } : it)));
+    const key = `${id}:${field}`;
+    clearTimeout(timersRef.current[key]);
+    timersRef.current[key] = setTimeout(() => commitItem(id, field, value), 1500);
+  }
+
+  /** Sync one field to the server; the returned audit entry (with actor) is appended. */
+  function commitItem(id, field, value) {
+    const key = `${id}:${field}`;
+    clearTimeout(timersRef.current[key]);
+    const newValue = String(value ?? "");
+    if ((baselineRef.current[key] ?? "") === newValue) return;
+    baselineRef.current[key] = newValue;
+    setItems(prev => prev.map(it => (it.id === id ? { ...it, [field]: newValue } : it)));
+    api(`/api/umat/items/${id}`, { method: "PUT", body: JSON.stringify({ field, value: newValue }) })
+      .then(entry => {
+        setItems(prev => prev.map(it => (it.id === id ? { ...it, changelog: [...it.changelog, entry] } : it)));
+        setLastSaved(new Date());
+      })
+      .catch(e => {
+        alert(`Save failed: ${e.message || "unknown error"}. Reloading server data.`);
+        refresh().catch(() => {});
+      });
   }
 
   const counts = useMemo(() => ({
@@ -436,6 +499,21 @@ export default function App() {
         </div>
       </div>
 
+      {loadError && (
+        <div style={{ margin: "12px 24px 0", padding: "10px 14px", borderRadius: 8, background: "#fde8e8", color: "#9b2828", fontSize: 13 }}>
+          Could not load server data: {loadError}. Changes will not be saved — reload the page to retry.
+        </div>
+      )}
+      {canImport && (
+        <div style={{ margin: "12px 24px 0", padding: "10px 14px", borderRadius: 8, background: "#fef3e2", color: "#8a5200", fontSize: 13, display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
+          <span>The server store is empty, but this browser holds saved tracker data. Import it once to make it the shared record.</span>
+          <button onClick={importLocal} disabled={importing}
+            style={{ padding: "6px 14px", borderRadius: 8, border: "none", background: "#8a5200", color: "#fff", fontSize: 12, fontWeight: 600, cursor: "pointer", fontFamily: "inherit" }}>
+            {importing ? "Importing…" : "Import this browser's data"}
+          </button>
+        </div>
+      )}
+
       {/* SECTION 1 — PROGRESS TABLE */}
       <div style={styles.section} id="s1">
         <div style={styles.sectionHead}>Implementation progress</div>
@@ -512,15 +590,15 @@ export default function App() {
                           style={styles.input}
                           placeholder="Assign…"
                           value={item.owner}
-                          onChange={e => updateItem(item.id, "owner", e.target.value)}
-                          onBlur={e => updateItem(item.id, "owner", e.target.value.trim())}
+                          onChange={e => editItem(item.id, "owner", e.target.value)}
+                          onBlur={e => commitItem(item.id, "owner", e.target.value.trim())}
                         />
                       </td>
                       <td style={styles.td} onClick={e => e.stopPropagation()}>
                         <select
                           style={{ ...styles.select, background: STATUS_CONFIG[item.status].bg, color: STATUS_CONFIG[item.status].color }}
                           value={item.status}
-                          onChange={e => updateItem(item.id, "status", e.target.value)}
+                          onChange={e => commitItem(item.id, "status", e.target.value)}
                         >
                           {Object.entries(STATUS_CONFIG).map(([k, v]) => <option key={k} value={k}>{v.label}</option>)}
                         </select>
@@ -530,7 +608,7 @@ export default function App() {
                           type="date"
                           style={styles.input}
                           value={item.dueDate}
-                          onChange={e => updateItem(item.id, "dueDate", e.target.value)}
+                          onChange={e => commitItem(item.id, "dueDate", e.target.value)}
                         />
                       </td>
                       <td style={{ ...styles.td, textAlign: "center", color: isExpanded ? "#1a6bb5" : "#bbb", fontSize: 14 }}>
@@ -552,7 +630,8 @@ export default function App() {
                                 style={{ ...styles.input, resize: "vertical", minHeight: 72, lineHeight: 1.5 }}
                                 placeholder="Add implementation notes…"
                                 value={item.notes}
-                                onChange={e => updateItem(item.id, "notes", e.target.value)}
+                                onChange={e => editItem(item.id, "notes", e.target.value)}
+                                onBlur={e => commitItem(item.id, "notes", e.target.value)}
                               />
                             </div>
                             <div>
