@@ -116,7 +116,7 @@ pnpm build
 
 log '[6/7] Deploying dist/ to web root...'
 mkdir -p "`$DEPLOY_PATH"
-rsync -a --delete dist/. "`$DEPLOY_PATH/"
+rsync -a --delete --exclude='.env' --exclude='node_modules/' --exclude='server.ts' --exclude='server.cjs' --exclude='server.js' --exclude='package.json' --exclude='pnpm-lock.yaml' --exclude='pnpm-workspace.yaml' --exclude='ecosystem.config.js' --exclude='.htaccess' dist/. "`$DEPLOY_PATH/"
 
 log '[7/7] Installing backend deps...'
 cp server.ts package.json pnpm-lock.yaml pnpm-workspace.yaml "`$DEPLOY_PATH/" 2>/dev/null || true

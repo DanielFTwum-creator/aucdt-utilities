@@ -123,7 +123,7 @@ pnpm build
 
 log '[5/5] Deploying dist/ to web root...'
 mkdir -p "`$DEPLOY_PATH"
-rsync -a --delete dist/. "`$DEPLOY_PATH"
+rsync -a --delete --exclude='.env' --exclude='node_modules/' --exclude='server.ts' --exclude='server.cjs' --exclude='server.js' --exclude='package.json' --exclude='pnpm-lock.yaml' --exclude='pnpm-workspace.yaml' --exclude='ecosystem.config.js' --exclude='.htaccess' dist/. "`$DEPLOY_PATH"
 
 log 'Build and deploy complete.'
 "@
@@ -152,7 +152,7 @@ log 'Build and deploy complete.'
         Log -Level 'ERROR' -Msg 'dist/ not found — run with -Build flag.' -Color Red
         exit 1
     }
-    & $SSH @SSH_OPTS $RemoteHost "mkdir -p $RemotePath && rm -rf ${RemotePath}*"
+    & $SSH @SSH_OPTS $RemoteHost "mkdir -p $RemotePath && rm -rf ${RemotePath}assets"
     & $SCP @SSH_OPTS -r dist/* "${RemoteHost}:${RemotePath}"
     Log -Level 'SUCCESS' -Msg 'dist/* copied to server' -Color Green
 }
