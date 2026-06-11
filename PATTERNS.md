@@ -14,8 +14,9 @@
 | 2 | Frontend HTML Standards | All index.html files |
 | 3 | Capacitor Mobile Deployment | LearnAI, BioChemAI, ThesisAI, LuxThumb |
 | 4 | Google Gemini API Integration | Glucose, any vision/OCR task |
-| 5 | Dual-Auth Logout | Any app with OAuth + local session |
+| 5 | Dual-Auth Logout | Public-facing apps with own OAuth + local session |
 | 6 | Glucose Project Learnings | General React + IndexedDB apps |
+| — | WMS SSO + TOTP onboarding (staff apps) | → `tuc-wms/docs/SSO_ONBOARDING_PLAYBOOK.md` |
 
 ---
 
@@ -343,12 +344,30 @@ For AI vision tasks: document scanning, OCR, handwriting extraction.
 ❌ Avoid: `gemini-1.5-flash` — throws 404 on free tier  
 ❌ Avoid: `gemini-2.0-flash-exp` — experimental, not available for structured responses  
 
-### Implementation Pattern
+### Security: Backend Proxy Only (Non-Negotiable)
+
+**Never instantiate the Gemini SDK or place a Gemini key in frontend code.** A
+`VITE_`-prefixed env var is baked into the served bundle at build time; Google
+scans public bundles and auto-revokes leaked keys within hours (June 2026
+repo-wide key-leak audit). Frontends call a backend that holds the key — the
+preferred consolidation point is the WMS Gemini proxy:
+
+```typescript
+// Frontend: no SDK, no key — POST to the WMS proxy with the user's WMS JWT
+// (service-to-service relays use the X-Gemini-Proxy-Key header instead).
+const res = await fetch('https://wms.techbridge.edu.gh/api/gemini/generate', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${jwt}` },
+  body: JSON.stringify({ model: 'gemini-3.1-pro-preview', contents, config }),
+});
+```
+
+### Implementation Pattern (server-side, where the key lives)
 
 ```typescript
 import { GoogleGenAI, Type } from '@google/genai';
 
-const client = new GoogleGenAI({ apiKey: process.env.VITE_GEMINI_API_KEY });
+const client = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });  // server env only — never VITE_*
 
 const responseStream = await client.models.generateContentStream({
   model: 'gemini-3.1-pro-preview',
@@ -394,6 +413,8 @@ const results = JSON.parse(text);
 - Schema defined via `Type` enum, not TypeScript interfaces
 - Response arrives as valid JSON — no markdown stripping needed
 - `temperature: 0` ensures deterministic, reproducible extraction
+- SDK mismatch trap: the same key can return `API_KEY_INVALID` on `@google/genai`
+  while working on `@google/generative-ai` — verify the SDK before blaming the key
 
 ### Proven In Production
 
@@ -402,6 +423,11 @@ Glucose project (deployed 2026-05-16): extracts 20+ handwritten glucose readings
 ---
 
 ## PATTERN 5: DUAL-AUTH LOGOUT (OAuth + Local Session)
+
+> **Scope note (June 2026):** the adopted auth standard for staff/internal apps is
+> **WMS SSO + TOTP MFA** — see `tuc-wms/docs/SSO_ONBOARDING_PLAYBOOK.md` (tsapro and
+> umat are live reference clients). This pattern still applies to public-facing apps
+> that keep their own Google login + local admin session.
 
 ### The Problem
 

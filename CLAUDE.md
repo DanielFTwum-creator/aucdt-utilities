@@ -186,7 +186,7 @@ Confirm each item with ✅ before proceeding. Stop and report if any item fails.
 
 - **Frontend:** React · Angular · TypeScript · JavaScript · Tailwind CSS
 - **Backend:** Java (Spring Boot) · Node.js (Express) · Python (FastAPI)
-- **Database:** MySQL · MariaDB (port 3307)
+- **Database:** MariaDB — two instances on the shared server: 10.3 on port 3306 (daemon `mysqld`; hosts `tuc_wms_db`/WMS) · 11.4 on port 3307 (daemon `mariadbd`; the lms.techbridge.edu.gh LMS database). Grants are localhost-only — query from the server itself.
 - **Infrastructure:** Ubuntu · Docker · Plesk · Nginx · Apache
 - **AI Tools:** Claude (Sonnet + Haiku) · Gemini CLI · Suno.ai
 
@@ -406,4 +406,4 @@ Say it:
 ---
 
 *Last updated: June 2026 — Daniel Frempong Twum / TUC ICT*
-*Pattern library (User Journey, Capacitor, Gemini, Glucose, Java Standards) → see PATTERNS.md*
+*Pattern library (User Journey, HTML Standards, Capacitor, Gemini proxy, Dual-Auth Logout, Glucose) → see PATTERNS.md; Java standards → §5a above; staff-app SSO → tuc-wms/docs/SSO_ONBOARDING_PLAYBOOK.md*

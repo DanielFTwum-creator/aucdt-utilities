@@ -4,7 +4,7 @@ Techbridge University College (TUC) · ICT Division
 Scope: applies to all projects under aucdt-utilities/
 Global identity + working style → see C:\Development\.claude\CLAUDE.md
 Last updated: June 2026 — Daniel Frempong Twum / TUC ICT
-Pattern library (User Journey, Capacitor, Gemini, Glucose, Java Standards) → see PATTERNS.md
+Pattern library (User Journey, HTML Standards, Capacitor, Gemini proxy, Dual-Auth Logout, Glucose) → see PATTERNS.md; Java standards → JAVA CODE STANDARDS section here; staff-app SSO → tuc-wms/docs/SSO_ONBOARDING_PLAYBOOK.md
 
 Monorepo tooling: the root package.json only lists cypress + typescript. The actual build/serve/screenshot suite lives in root-level scripts — build-all.sh / build-all.ps1, build-batch.sh, capture-*.js / capture-*.ts, and verify-all-builds.sh. Use pnpm (not npm/yarn). Inspect these scripts before assuming how a project builds or how the suite runs.
 
@@ -145,7 +145,7 @@ TECHNOLOGY STACK
 Languages & Frameworks
 Frontend: React · Angular · TypeScript · JavaScript · Tailwind CSS
 Backend: Java (Spring Boot 3, Java 21) · Node.js (Express) · Python (FastAPI)
-Database: MySQL · MariaDB (port 3307)
+Database: MariaDB — two instances: 10.3 on port 3306 (daemon `mysqld`; hosts `tuc_wms_db`/WMS) · 11.4 on port 3307 (daemon `mariadbd`; the lms.techbridge.edu.gh LMS database); grants are localhost-only, query from the server itself
 Infrastructure: Ubuntu · Plesk · Nginx · Apache · PM2 (being phased out)
 AI Tools: Claude (Sonnet + Haiku) · Gemini API · Suno.ai
 Server: 66.226.72.199 / mail.aucdt.edu.gh · 8GB RAM · Ubuntu 22
