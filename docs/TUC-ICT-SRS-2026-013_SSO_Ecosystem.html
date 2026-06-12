@@ -1,0 +1,574 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="description" content="TUC-ICT-SRS-2026-013 v1.1.0 — Software Requirements Specification for the Techbridge Unified SSO Ecosystem" />
+<meta name="author" content="Daniel Frempong Twum / TUC ICT" />
+<title>TUC-ICT-SRS-2026-013 · Techbridge Unified SSO Ecosystem · v1.1.0</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700&family=Spectral:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" />
+<style>
+  :root{
+    --navy:#1a1f3c; --navy-2:#252b52; --navy-ink:#10142b;
+    --crimson:#8b1a1a; --crimson-soft:#fdf3f3;
+    --gold:#f5c518; --gold-deep:#b8930f; --gold-wash:#fdf8e3;
+    --paper:#f7f5f0; --card:#ffffff; --line:#e2e0d8; --line-soft:#edebe4;
+    --ink:#23263a; --ink-soft:#5a5d78; --ink-faint:#9396a8;
+    --live:#1e6e2e; --live-bg:#e6f4ea;
+    --serif:'Spectral',Georgia,serif;
+    --disp:'Barlow Condensed','Arial Narrow',sans-serif;
+    --mono:'IBM Plex Mono',Consolas,monospace;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:var(--serif); color:var(--ink); background:var(--paper);
+    font-size:16.5px; line-height:1.68;
+    background-image:
+      radial-gradient(1100px 500px at 85% -120px, rgba(245,197,24,.07), transparent 60%),
+      radial-gradient(900px 420px at -120px 280px, rgba(139,26,26,.05), transparent 55%);
+  }
+  /* paper grain */
+  body::before{
+    content:""; position:fixed; inset:0; pointer-events:none; z-index:1; opacity:.5; mix-blend-mode:multiply;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.035'/%3E%3C/svg%3E");
+  }
+  ::selection{background:var(--gold); color:var(--navy)}
+  code{font-family:var(--mono); font-size:.82em; background:var(--gold-wash); border:1px solid #efe3b0;
+       padding:.08em .42em; border-radius:4px; color:var(--navy-ink); white-space:nowrap}
+  a{color:var(--crimson); text-decoration:none; border-bottom:1px solid rgba(139,26,26,.3)}
+  a:hover{border-bottom-color:var(--crimson)}
+  strong{font-weight:600; color:var(--navy-ink)}
+
+  /* ============ MASTHEAD ============ */
+  .mast{background:var(--navy); color:#fff; position:relative; overflow:hidden}
+  .mast::after{ /* faint circuit arcs */
+    content:""; position:absolute; right:-140px; top:-140px; width:560px; height:560px; border-radius:50%;
+    border:1.5px solid rgba(245,197,24,.16); box-shadow:0 0 0 70px rgba(245,197,24,.05), 0 0 0 150px rgba(245,197,24,.03);
+  }
+  .mast-inner{max-width:1180px; margin:0 auto; padding:54px 32px 46px; position:relative; z-index:2;
+    display:flex; gap:30px; align-items:flex-start; flex-wrap:wrap}
+  .seal{width:84px; height:84px; border-radius:50%; background:var(--gold); flex-shrink:0;
+    display:flex; align-items:center; justify-content:center; box-shadow:0 0 0 7px rgba(245,197,24,.18);
+    animation:rise .7s .05s cubic-bezier(.2,.7,.2,1) both}
+  .seal svg{width:42px; height:42px}
+  .mast h1{font-family:var(--disp); font-weight:700; text-transform:uppercase; letter-spacing:.02em;
+    font-size:clamp(34px,5vw,58px); line-height:.98; animation:rise .7s .12s cubic-bezier(.2,.7,.2,1) both}
+  .mast h1 .gold{color:var(--gold)}
+  .kicker{font-family:var(--disp); font-weight:600; letter-spacing:.34em; text-transform:uppercase;
+    font-size:12.5px; color:#8b90b8; margin-bottom:14px; animation:rise .7s .08s both}
+  .mast .sub{margin-top:14px; color:#b9bdd9; font-size:16px; max-width:680px; font-style:italic;
+    animation:rise .7s .2s both}
+  .ribbon{background:var(--crimson); border-bottom:3px solid var(--gold)}
+  .ribbon-inner{max-width:1180px; margin:0 auto; padding:9px 32px; display:flex; gap:14px; align-items:center;
+    flex-wrap:wrap; font-family:var(--disp); text-transform:uppercase; letter-spacing:.1em; font-size:13px; color:#f3d9d9}
+  .ribbon .pill{background:var(--gold); color:var(--navy); font-weight:700; padding:3px 12px; border-radius:99px; letter-spacing:.06em}
+  .ribbon .sep{opacity:.4}
+  @keyframes rise{from{opacity:0; transform:translateY(14px)} to{opacity:1; transform:none}}
+
+  /* ============ FRAME ============ */
+  .frame{max-width:1180px; margin:0 auto; padding:40px 32px 90px; position:relative; z-index:2;
+    display:grid; grid-template-columns:228px minmax(0,1fr); gap:42px}
+  @media (max-width:920px){ .frame{grid-template-columns:1fr} .toc{position:static; max-height:none} }
+
+  /* ---- TOC ---- */
+  .toc{position:sticky; top:22px; align-self:start; font-family:var(--disp)}
+  .toc h3{font-size:13px; letter-spacing:.3em; text-transform:uppercase; color:var(--ink-faint); margin-bottom:12px}
+  .toc ol{list-style:none; border-left:2px solid var(--line)}
+  .toc a{display:block; padding:6.5px 14px; font-size:15.5px; letter-spacing:.04em; color:var(--ink-soft);
+    border-bottom:none; border-left:2px solid transparent; margin-left:-2px; text-transform:uppercase; font-weight:500}
+  .toc a:hover{color:var(--crimson); border-left-color:var(--gold)}
+  .toc .vchip{display:inline-block; margin-top:18px; font-family:var(--mono); font-size:11.5px; color:var(--ink-faint);
+    border:1px dashed var(--line); padding:6px 10px; border-radius:6px; letter-spacing:.04em}
+
+  /* ---- META PLATE ---- */
+  .plate{background:var(--card); border:1px solid var(--line); border-top:4px solid var(--gold);
+    box-shadow:0 8px 28px rgba(26,31,60,.06); margin-bottom:46px; animation:rise .6s .25s both}
+  .plate table{width:100%; border-collapse:collapse; font-size:14.5px}
+  .plate th{font-family:var(--disp); text-transform:uppercase; letter-spacing:.12em; font-weight:600;
+    color:var(--ink-faint); text-align:left; width:170px; padding:11px 18px; border-bottom:1px solid var(--line-soft);
+    vertical-align:top; font-size:12.5px}
+  .plate td{padding:11px 18px 11px 0; border-bottom:1px solid var(--line-soft); color:var(--ink)}
+  .plate tr:last-child th,.plate tr:last-child td{border-bottom:none}
+  .badge-v{font-family:var(--disp); background:var(--navy); color:var(--gold); font-weight:700;
+    padding:2px 10px; border-radius:4px; letter-spacing:.06em; font-size:13px}
+
+  /* ---- SECTIONS ---- */
+  section{margin-bottom:54px}
+  .shead{display:flex; align-items:baseline; gap:18px; margin-bottom:20px; border-bottom:2px solid var(--navy); padding-bottom:8px}
+  .snum{font-family:var(--disp); font-weight:700; font-size:54px; line-height:.8; color:var(--gold);
+    text-shadow:1px 1px 0 var(--gold-deep)}
+  .shead h2{font-family:var(--disp); font-weight:700; text-transform:uppercase; letter-spacing:.05em;
+    font-size:clamp(24px,3vw,32px); color:var(--navy)}
+  h3{font-family:var(--disp); text-transform:uppercase; letter-spacing:.08em; font-size:18.5px;
+    color:var(--crimson); margin:26px 0 8px}
+  p{margin-bottom:14px; max-width:76ch}
+  ul.plain{margin:0 0 14px 0; padding-left:0; list-style:none}
+  ul.plain li{padding:7px 0 7px 26px; position:relative; max-width:78ch}
+  ul.plain li::before{content:"◆"; position:absolute; left:2px; top:8px; color:var(--gold-deep); font-size:11px}
+
+  /* ---- FR PLATES ---- */
+  .fr{background:var(--card); border:1px solid var(--line); border-left:5px solid var(--navy);
+    padding:16px 20px 14px; margin-bottom:12px; box-shadow:0 2px 10px rgba(26,31,60,.04);
+    transition:transform .18s ease, box-shadow .18s ease}
+  .fr:hover{transform:translateX(4px); box-shadow:0 6px 18px rgba(26,31,60,.09)}
+  .fr.new{border-left-color:var(--gold)}
+  .fr-head{display:flex; align-items:center; gap:10px; margin-bottom:6px; flex-wrap:wrap}
+  .fr-id{font-family:var(--mono); font-size:12px; font-weight:500; background:var(--navy); color:#fff;
+    padding:3px 9px; border-radius:4px; letter-spacing:.04em}
+  .fr.new .fr-id{background:var(--gold); color:var(--navy); font-weight:600}
+  .fr-title{font-family:var(--disp); text-transform:uppercase; letter-spacing:.06em; font-weight:700;
+    font-size:17px; color:var(--navy)}
+  .tag-new{font-family:var(--disp); font-size:11.5px; font-weight:700; letter-spacing:.14em; text-transform:uppercase;
+    color:var(--crimson); border:1px solid var(--crimson); padding:1px 8px; border-radius:99px}
+  .fr p{margin:0; font-size:15.5px}
+
+  /* ---- TABLES ---- */
+  .twrap{overflow-x:auto; background:var(--card); border:1px solid var(--line); box-shadow:0 4px 16px rgba(26,31,60,.05)}
+  table.doc{width:100%; border-collapse:collapse; font-size:14.8px; min-width:640px}
+  table.doc thead th{font-family:var(--disp); text-transform:uppercase; letter-spacing:.1em; font-size:13px;
+    background:var(--navy); color:var(--gold); padding:11px 16px; text-align:left; font-weight:600}
+  table.doc td{padding:13px 16px; border-bottom:1px solid var(--line-soft); vertical-align:top}
+  table.doc tr:last-child td{border-bottom:none}
+  .cls{font-family:var(--disp); font-weight:700; text-transform:uppercase; letter-spacing:.05em; white-space:nowrap}
+  .cls.staff{color:var(--navy)} .cls.hybrid{color:var(--gold-deep)} .cls.public{color:var(--ink-soft)}
+  .live{display:inline-block; font-family:var(--disp); font-size:11px; font-weight:700; letter-spacing:.1em;
+    background:var(--live-bg); color:var(--live); padding:1px 8px; border-radius:99px; text-transform:uppercase;
+    vertical-align:1px}
+
+  /* ---- ARCHETYPE CARDS ---- */
+  .arch{display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:16px; margin:18px 0}
+  .acard{background:var(--card); border:1px solid var(--line); border-top:5px solid var(--crimson);
+    padding:18px 20px; box-shadow:0 4px 16px rgba(26,31,60,.05)}
+  .acard:nth-child(2){border-top-color:var(--gold)}
+  .acard:nth-child(3){border-top-color:var(--navy)}
+  .acard .a-letter{font-family:var(--disp); font-weight:700; font-size:42px; line-height:1; color:var(--line);
+    float:right; margin:-6px -4px 0 10px}
+  .acard h4{font-family:var(--disp); text-transform:uppercase; letter-spacing:.07em; font-size:17px; color:var(--navy); margin-bottom:8px}
+  .acard dl{font-size:14px}
+  .acard dt{font-family:var(--disp); text-transform:uppercase; letter-spacing:.12em; font-size:11.5px;
+    color:var(--ink-faint); margin-top:10px}
+  .acard dd{margin:2px 0 0; color:var(--ink)}
+
+  /* ---- NUMBERED RULES ---- */
+  .rules{counter-reset:rule; list-style:none; margin:14px 0}
+  .rules li{counter-increment:rule; background:var(--card); border:1px solid var(--line);
+    margin-bottom:11px; padding:15px 18px 13px 70px; position:relative; box-shadow:0 2px 10px rgba(26,31,60,.04); max-width:none}
+  .rules li::before{content:counter(rule,decimal-leading-zero); position:absolute; left:16px; top:11px;
+    font-family:var(--disp); font-weight:700; font-size:30px; color:var(--gold); text-shadow:1px 1px 0 var(--gold-deep)}
+  .rules li b,.rules li strong{display:block; font-family:var(--disp); text-transform:uppercase; letter-spacing:.06em;
+    font-size:15.5px; color:var(--crimson); margin-bottom:3px}
+  .rules li{font-size:15px}
+
+  /* ---- FLOW (handoff diagram) ---- */
+  .flow{display:flex; flex-wrap:wrap; gap:8px; align-items:center; font-family:var(--disp);
+    background:var(--navy); padding:16px 18px; margin:16px 0 22px; box-shadow:0 8px 24px rgba(26,31,60,.18)}
+  .fstep{background:var(--navy-2); color:#dde0f2; border:1px solid #3a4170; padding:7px 13px;
+    font-size:14px; letter-spacing:.05em; text-transform:uppercase; border-radius:6px}
+  .fstep em{color:var(--gold); font-style:normal; font-family:var(--mono); font-size:12px; text-transform:none; letter-spacing:0}
+  .farrow{color:var(--gold); font-size:18px}
+
+  /* ---- callout ---- */
+  .callout{background:var(--gold-wash); border:1px solid #efe3b0; border-left:5px solid var(--gold);
+    padding:13px 18px; margin:16px 0; font-size:15.3px; max-width:none}
+  .callout.crimson{background:var(--crimson-soft); border-color:#eccccc; border-left-color:var(--crimson)}
+
+  /* ---- roadmap ---- */
+  .road{border-left:3px solid var(--gold); margin:10px 0 0 8px; padding-left:24px}
+  .road .stop{position:relative; padding-bottom:20px}
+  .road .stop::before{content:""; position:absolute; left:-31px; top:7px; width:11px; height:11px; border-radius:50%;
+    background:var(--gold); box-shadow:0 0 0 4px var(--gold-wash), 0 0 0 5px var(--gold-deep)}
+  .road .stop.open::before{background:var(--paper); box-shadow:0 0 0 4px var(--paper), 0 0 0 5px var(--ink-faint)}
+  .road h4{font-family:var(--disp); text-transform:uppercase; letter-spacing:.08em; font-size:16.5px; color:var(--navy)}
+
+  /* ---- footer ---- */
+  footer{background:var(--navy); color:#8b90b8; margin-top:40px}
+  .foot-inner{max-width:1180px; margin:0 auto; padding:26px 32px; display:flex; justify-content:space-between;
+    gap:14px; flex-wrap:wrap; font-family:var(--disp); letter-spacing:.08em; font-size:13.5px; text-transform:uppercase}
+  .foot-inner .gold{color:var(--gold)}
+
+  /* ---- print ---- */
+  @media print{
+    body{background:#fff; font-size:11.5pt}
+    body::before,.toc{display:none}
+    .frame{display:block; padding:0 0 30px; max-width:none}
+    .mast::after{display:none}
+    .fr,.acard,.rules li,.twrap,.plate{box-shadow:none; break-inside:avoid}
+    section{break-inside:auto}
+    a{color:inherit; border-bottom:none}
+  }
+</style>
+</head>
+<body>
+
+<header class="mast">
+  <div class="mast-inner">
+    <div class="seal" aria-hidden="true">
+      <!-- shield -->
+      <svg viewBox="0 0 24 24" fill="none"><path d="M12 2.5 4.5 5.4v6.1c0 4.6 3.2 8.4 7.5 9.9 4.3-1.5 7.5-5.3 7.5-9.9V5.4L12 2.5Z" fill="#1a1f3c"/><path d="m8.6 11.8 2.3 2.4 4.6-4.9" stroke="#f5c518" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+    <div>
+      <div class="kicker">Techbridge University College · ICT Division</div>
+      <h1>Unified SSO <span class="gold">Ecosystem</span><br/>Requirements Specification</h1>
+      <p class="sub">One Workspace sign-in, every staff application — the authoritative, living architecture
+      reference for identity, pass-through sessions and service-key custody across the AI-Lab fleet.</p>
+    </div>
+  </div>
+  <div class="ribbon">
+    <div class="ribbon-inner">
+      <span class="pill">TUC-ICT-SRS-2026-013</span>
+      <span>Version 1.1.0</span><span class="sep">·</span>
+      <span>2026-06-12</span><span class="sep">·</span>
+      <span>IEEE 29148</span><span class="sep">·</span>
+      <span>Baselined — living document</span>
+    </div>
+  </div>
+</header>
+
+<div class="frame">
+
+  <nav class="toc" aria-label="Contents">
+    <h3>Contents</h3>
+    <ol>
+      <li><a href="#s1">1 · Introduction</a></li>
+      <li><a href="#s2">2 · Overall Description</a></li>
+      <li><a href="#s3">3 · Functional Requirements</a></li>
+      <li><a href="#s4">4 · Classification</a></li>
+      <li><a href="#s5">5 · Client Archetypes</a></li>
+      <li><a href="#s6">6 · Deployment</a></li>
+      <li><a href="#s7">7 · Security</a></li>
+      <li><a href="#s8">8 · State &amp; Roadmap</a></li>
+      <li><a href="#s9">9 · Revision History</a></li>
+    </ol>
+    <span class="vchip">v1.1.0 · 4 live clients</span>
+  </nav>
+
+  <main>
+
+    <div class="plate">
+      <table>
+        <tr><th>Document ID</th><td>TUC-ICT-SRS-2026-013</td></tr>
+        <tr><th>Version</th><td><span class="badge-v">1.1.0</span></td></tr>
+        <tr><th>Date</th><td>2026-06-12</td></tr>
+        <tr><th>Author</th><td>Daniel Frempong Twum / TUC ICT</td></tr>
+        <tr><th>Status</th><td>Baselined (living document — update as apps onboard)</td></tr>
+        <tr><th>Standard</th><td>IEEE 29148</td></tr>
+        <tr><th>Related</th><td>TUC-ICT-SDD-2026-001 (SSO pass-through design) · <code>tuc-wms/docs/SSO_ONBOARDING_PLAYBOOK.md</code> · TUC-ICT-SRS-2026-004 (TUC-WMS)</td></tr>
+      </table>
+    </div>
+
+    <section id="s1">
+      <div class="shead"><span class="snum">1</span><h2>Introduction</h2></div>
+      <h3>1.1 Purpose</h3>
+      <p>Specify the requirements and architecture for a <strong>single sign-on (SSO) ecosystem</strong> across
+      the Techbridge AI-Lab application fleet, so that a member of staff who authenticates once with their
+      <code>@techbridge.edu.gh</code> Google Workspace account is automatically signed in to every
+      <strong>internal/staff</strong> application — without re-authenticating per app. This document is the
+      authoritative, evolving architecture reference for the ecosystem; it consolidates the design
+      (SDD-2026-001) and onboarding playbook into a single requirements baseline.</p>
+      <h3>1.2 Scope</h3>
+      <p><strong>In scope:</strong> the identity provider (TUC-WMS), the multi-tenant SSO mechanism, client-app
+      integration patterns (&ldquo;archetypes&rdquo;), the staff-vs-public application classification and policy,
+      deployment topology, and the rollout roadmap. <strong>Out of scope:</strong> the internal feature
+      requirements of each individual application (covered by their own SRSs), and the auth of
+      <strong>public-facing</strong> apps, which deliberately retain their own login.</p>
+      <h3>1.3 Definitions</h3>
+      <ul class="plain">
+        <li><strong>IdP (Identity Provider):</strong> TUC-WMS — owns identity, MFA, roles and audit; issues sessions.</li>
+        <li><strong>SSO client:</strong> a staff app that delegates authentication to the IdP.</li>
+        <li><strong>Pass-through:</strong> after one login, other clients silently adopt the session (no re-login).</li>
+        <li><strong>Archetype:</strong> a class of client app with a common integration shape (A/B/C — §5).</li>
+        <li><strong>Workspace account:</strong> a <code>@techbridge.edu.gh</code> Google Workspace identity.</li>
+      </ul>
+      <h3>1.4 References</h3>
+      <p>TUC-ICT-SDD-2026-001 (design); TUC-ICT-SRS-2026-004 (TUC-WMS); TUC-ICT-SRS-2026-012 (TUC-NetScan);
+      <code>SSO_ONBOARDING_PLAYBOOK.md</code>; memory: <code>project_ai_tools_sso_passthrough</code>,
+      <code>backlog_ai_lab_sso_onboarding</code>.</p>
+    </section>
+
+    <section id="s2">
+      <div class="shead"><span class="snum">2</span><h2>Overall Description</h2></div>
+      <h3>2.1 Ecosystem context</h3>
+      <p>The fleet (~60 apps in <code>aucdt-utilities/</code>) spans internal staff tools and public-facing
+      apps, on several subdomains of the common registrable domain <strong><code>techbridge.edu.gh</code></strong>:
+      <code>wms.techbridge.edu.gh</code> (IdP), <code>techbridge.edu.gh/&lt;app&gt;</code>,
+      <code>ai-tools.techbridge.edu.gh/&lt;app&gt;</code>, <code>netscan.techbridge.edu.gh</code>.
+      Because all share the registrable domain, an IdP session cookie scoped to
+      <code>.techbridge.edu.gh</code> is transmitted to every subdomain — the foundation of pass-through SSO.</p>
+      <h3>2.2 Identity provider — TUC-WMS</h3>
+      <p>TUC-WMS (Spring Boot 3, Java 21; SRS-2026-004) provides: Google OAuth2 (authorization-code), domain
+      gate (<code>@techbridge.edu.gh</code>), per-role + per-user TOTP MFA, first-login provisioning, RBAC,
+      and an append-only audit trail. It is <strong>multi-tenant</strong> (SDD-2026-001): it can hand
+      authenticated users back to any allow-listed client app, not just the WMS UI.</p>
+      <h3>2.3 The &ldquo;log in once&rdquo; goal</h3>
+      <p>Authenticate once (Google, + TOTP where required) at any onboarded staff app → every other onboarded
+      staff app silently adopts the session via the shared refresh cookie. Verified in production: a user
+      already signed into WMS entered TSAPro with no second login (<code>JWT_REFRESHED</code>).</p>
+      <div class="flow" role="img" aria-label="SSO handoff flow">
+        <span class="fstep">App <em>?app=&lt;id&gt;</em></span><span class="farrow">→</span>
+        <span class="fstep">IdP <em>sso_app cookie</em></span><span class="farrow">→</span>
+        <span class="fstep">Google <em>+ TOTP</em></span><span class="farrow">→</span>
+        <span class="fstep">Callback <em>?code</em></span><span class="farrow">→</span>
+        <span class="fstep">Exchange <em>JWT + refresh</em></span><span class="farrow">→</span>
+        <span class="fstep">Fleet <em>silent adoption</em></span>
+      </div>
+    </section>
+
+    <section id="s3">
+      <div class="shead"><span class="snum">3</span><h2>Functional Requirements <span style="font-size:.55em;color:var(--ink-faint)">(FR-SSO)</span></h2></div>
+
+      <div class="fr"><div class="fr-head"><span class="fr-id">FR-SSO-001</span><span class="fr-title">Domain gate</span></div>
+        <p>Only <code>@techbridge.edu.gh</code> accounts may obtain an SSO session (enforced by the IdP;
+        non-domain accounts are rejected, audited).</p></div>
+
+      <div class="fr"><div class="fr-head"><span class="fr-id">FR-SSO-002</span><span class="fr-title">App allowlist</span></div>
+        <p>A client app participates only if registered server-side in the IdP
+        <code>tucwms.auth.app-bases</code> (id → frontend base) and <code>allowed-origins</code>. Unknown apps
+        fall back to IdP default behaviour. Redirect targets are never taken from a request value
+        (open-redirect safe).</p></div>
+
+      <div class="fr"><div class="fr-head"><span class="fr-id">FR-SSO-003</span><span class="fr-title">App handoff</span></div>
+        <p><code>GET {IdP}/api/auth/google?app=&lt;id&gt;</code> carries the originating app via a short-lived
+        <code>sso_app</code> cookie; after Google auth the IdP redirects to
+        <code>&lt;app-base&gt;/auth/callback</code> with a one-time <code>code</code>
+        (or <code>mfa_ticket</code>, or <code>error</code>).</p></div>
+
+      <div class="fr"><div class="fr-head"><span class="fr-id">FR-SSO-004</span><span class="fr-title">Token exchange</span></div>
+        <p>The client exchanges the <code>code</code> at <code>{IdP}/api/auth/exchange</code> for a short-lived
+        access token + an HttpOnly refresh cookie (<code>Domain=.techbridge.edu.gh</code>).</p></div>
+
+      <div class="fr"><div class="fr-head"><span class="fr-id">FR-SSO-005</span><span class="fr-title">Silent adoption</span></div>
+        <p>On load, a client attempts <code>{IdP}/api/auth/refresh</code>; success → signed in with no user
+        interaction (the pass-through behaviour).</p></div>
+
+      <div class="fr"><div class="fr-head"><span class="fr-id">FR-SSO-006</span><span class="fr-title">MFA</span></div>
+        <p>Where the user&rsquo;s role or per-user <code>mfaRequired</code> flag demands it, the IdP issues an
+        <code>mfa_ticket</code>; the client collects/enrols TOTP (<code>/api/auth/mfa/**</code>) before a
+        token is issued.</p></div>
+
+      <div class="fr"><div class="fr-head"><span class="fr-id">FR-SSO-007</span><span class="fr-title">Logout</span></div>
+        <p>Client logout clears local token and calls <code>{IdP}/api/auth/logout</code>.</p></div>
+
+      <div class="fr"><div class="fr-head"><span class="fr-id">FR-SSO-008</span><span class="fr-title">Roles</span></div>
+        <p>Client roles derive from the IdP identity/role (clients do not maintain a separate password
+        identity). Mapping is per-client (e.g. WMS <code>SYSTEM_ADMIN/HOD</code> → NetScan <code>ADMIN</code>).</p></div>
+
+      <div class="fr"><div class="fr-head"><span class="fr-id">FR-SSO-009</span><span class="fr-title">Audience policy</span></div>
+        <p>Only <strong>staff/internal</strong> apps onboard. <strong>Public-facing</strong> apps retain their
+        own login (Google/username-password/registration) — they are explicitly NOT domain-gated.</p></div>
+
+      <div class="fr new"><div class="fr-head"><span class="fr-id">FR-SSO-010</span><span class="fr-title">Hybrid clients</span><span class="tag-new">New · 1.1.0</span></div>
+        <p>A public app MAY additionally offer a staff entry point by routing only its &ldquo;Continue with
+        Google&rdquo; affordance through the IdP, while keeping its local accounts for external users
+        (<strong>markai</strong> is the reference). The hybrid replaces any client-side Google flow — no app
+        may run an unrestricted browser-side Google login (markai&rsquo;s old implicit flow accepted ANY
+        Google account; removed 2026-06-11).</p></div>
+
+      <div class="fr new"><div class="fr-head"><span class="fr-id">FR-SSO-011</span><span class="fr-title">Service-key custody (Gemini relay)</span><span class="tag-new">New · 1.1.0</span></div>
+        <p>Fleet apps must not store the shared Gemini API key. A server-side relay fetches it from the IdP
+        (<code>GET {IdP}/api/gemini/key</code>, authenticated by the <code>X-Gemini-Proxy-Key</code> service
+        header; constant-time compare), caches it in memory with a TTL, and invalidates the cache when Google
+        rejects the key — rotation then happens at the IdP only and self-heals fleet-wide. No endpoint may
+        ever return the raw key to a browser. markai is the first client (2026-06-12); dmcdai/omniextract to
+        follow.</p></div>
+    </section>
+
+    <section id="s4">
+      <div class="shead"><span class="snum">4</span><h2>Application Classification <span style="font-size:.55em;color:var(--ink-faint)">(NFR / policy)</span></h2></div>
+      <p>The ecosystem is split by audience (decided 2026-06-09). Onboarding scope = the
+      <strong>staff</strong> subset only.</p>
+      <div class="twrap">
+        <table class="doc">
+          <thead><tr><th style="width:200px">Class</th><th style="width:230px">Auth</th><th>Apps</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><span class="cls staff">Staff → SSO</span></td>
+              <td>WMS SSO + MFA</td>
+              <td>TSAPro <span class="live">live</span>, <strong>UMAT tracker</strong> <span class="live">live 06-11</span>,
+              tuc-netscan-100 <span class="live">live</span>, analytics dashboards (Impact Ventures, Strategy, …),
+              tuc-2026-enrollment-command-centre, techbridge-student-population-register</td>
+            </tr>
+            <tr>
+              <td><span class="cls hybrid">Hybrid</span><br/><span style="font-size:12.5px;color:var(--ink-faint)">SSO for staff + own login for external</span></td>
+              <td>&ldquo;Continue with Google&rdquo; → WMS SSO; local username/password kept</td>
+              <td><strong>markai</strong> <span class="live">live 06-11</span> — FR-SSO-010 reference</td>
+            </tr>
+            <tr>
+              <td><span class="cls public">Public → own login</span></td>
+              <td>own Google / username-password / registration</td>
+              <td>glucose, rophe-care-rpms, biochemai, bionicskins, willpro, omniextract, dictation-app,
+              ai-email-drafter, techbridge-ai-blueprint, tuc-ai-lab-catalog (hub),
+              techbridge-ai-application-portal, all Google-gated creative/utility tools (poster-studio,
+              luxthumb, groove-streamer, youtube-genie, midjourney-helper, brand-checker, elephant-on-parade,
+              orbit-walk, clipai, ai-techbridge, smartscale, deliberate-magic, patois-lyricist, deep-dub,
+              brainiac), assessments/tutorials (Group C), consumer apps</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="callout"><strong>Rule of thumb:</strong> any app that allows self-registration or serves
+      students/external/anonymous users is public. &ldquo;Google-gated&rdquo; alone does <strong>not</strong>
+      imply staff-only.</div>
+    </section>
+
+    <section id="s5">
+      <div class="shead"><span class="snum">5</span><h2>Client Integration Archetypes</h2></div>
+      <div class="arch">
+        <div class="acard"><span class="a-letter">A</span>
+          <h4>Router SPA</h4>
+          <dl>
+            <dt>Example</dt><dd><strong>TSAPro</strong> <span class="live">live</span></dd>
+            <dt>Frontend</dt><dd>Drop in WMS <code>auth/*</code> components; add <code>/auth/callback</code> route; BrowserRouter basename = subpath</dd>
+            <dt>Backend</dt><dd>none (static SPA)</dd>
+            <dt>Callback serving</dt><dd>nginx <code>try_files</code> / <code>.htaccess</code> SPA fallback</dd>
+          </dl>
+        </div>
+        <div class="acard"><span class="a-letter">B</span>
+          <h4>No-router SPA</h4>
+          <dl>
+            <dt>Examples</dt><dd><strong>UMAT</strong> <span class="live">live</span> (plain JSX) · <strong>markai</strong> <span class="live">live</span> (TSX hybrid)</dd>
+            <dt>Frontend</dt><dd>Adapt <code>AuthContext</code>: on-mount read <code>?code</code>/<code>?mfa_ticket</code>/<code>?error</code> + silent refresh; MFA modal</dd>
+            <dt>Backend</dt><dd>none (static SPA)</dd>
+            <dt>Callback serving</dt><dd>same SPA fallback</dd>
+          </dl>
+        </div>
+        <div class="acard"><span class="a-letter">C</span>
+          <h4>App with own backend</h4>
+          <dl>
+            <dt>Examples</dt><dd><strong>tuc-netscan-100</strong> <span class="live">live</span> (Express relay) · tuc-netscan (Spring design, undeployed)</dd>
+            <dt>Frontend</dt><dd>Same as A (it is a router SPA)</dd>
+            <dt>Backend</dt><dd><strong>becomes a resource server</strong>: validates IdP identity, issues its own session for its API</dd>
+            <dt>Callback serving</dt><dd>same SPA fallback</dd>
+          </dl>
+        </div>
+      </div>
+
+      <h3>5.1 Archetype C detail (tuc-netscan)</h3>
+      <p>NetScan keeps its own HS256 JWT + RBAC; SSO <strong>bootstraps</strong> that session instead of a password:</p>
+      <ul class="plain">
+        <li>Frontend runs the WMS SSO flow (archetype A) → obtains a WMS access token.</li>
+        <li>Frontend calls <strong><code>POST /api/v1/auth/sso-exchange</code></strong> (NetScan backend) with the WMS token.</li>
+        <li>NetScan backend relays it to <strong><code>{IdP}/api/me</code></strong> (server-to-server) →
+        <code>{email, role}</code>; on success it maps the WMS role → NetScan role and issues its
+        <strong>own</strong> NetScan JWT (subject = email, <code>roles</code> claim).
+        <em>No shared JWT secret</em> — trust is established by the <code>/api/me</code> relay.</li>
+        <li>NetScan&rsquo;s <code>JwtFilter</code> derives authorities from the token&rsquo;s
+        <code>roles</code> claim (self-contained JWT), so no local user record is required. The legacy
+        <code>/api/v1/auth/login</code> remains as break-glass.</li>
+      </ul>
+      <p>Role map (NetScan): WMS <code>SYSTEM_ADMIN</code>/<code>HOD</code> → <code>ADMIN</code>; otherwise → <code>ENGINEER</code>.</p>
+    </section>
+
+    <section id="s6">
+      <div class="shead"><span class="snum">6</span><h2>Deployment Architecture</h2></div>
+      <ul class="plain">
+        <li><strong>Cookie:</strong> IdP refresh cookie <code>wms_refresh</code>, <code>HttpOnly</code>,
+        <code>Secure</code>, <code>SameSite=Lax</code>, <code>Domain=.techbridge.edu.gh</code>,
+        <code>path=/api/auth</code>. Same-site across all subdomains.</li>
+        <li><strong>IdP config (<code>/opt/tuc-wms/application.yml</code>, external, additive):</strong>
+        <code>cookie-domain</code>, <code>allowed-origins</code> (each client origin), <code>app-bases</code>
+        (each client base). Restart <code>tuc-wms</code> to apply; batch multiple apps per restart.
+        Rollback = prior <code>.bak</code> jar.</li>
+        <li><strong>Google console:</strong> OAuth callback is fixed on the IdP host
+        (<code>/api/auth/google/callback</code>) — <strong>no new redirect URI per client</strong>. A client
+        origin needs to be a Google <strong>JS origin</strong> only if it runs Google JS client-side (the
+        pass-through does not — it full-page-redirects to the IdP).</li>
+        <li><strong>Client deploy:</strong> static SPAs → build, <code>scp dist/</code> to the Plesk docroot,
+        <code>chown &lt;vhost-user&gt;:psacln</code>, 755/644 (root:root ⇒ 403); SPA fallback serves
+        <code>/&lt;app&gt;/auth/callback</code>. Backend clients (NetScan) → rebuild jar + restart their own
+        service.</li>
+      </ul>
+
+      <h3>6.1 Implementation rules (hard-won, 2026-06-11/12)</h3>
+      <ol class="rules">
+        <li><strong>IdP permitAll for controller-self-auth endpoints.</strong> Any IdP endpoint that enforces
+        its own auth in the controller (e.g. <code>X-Gemini-Proxy-Key</code> checks on
+        <code>/api/gemini/key</code> and <code>/generate</code>) MUST be in Spring Security&rsquo;s permitAll
+        list — otherwise Spring 401s relays before the controller runs.</li>
+        <li><strong>Env files are LF-only.</strong> A CRLF-written value smuggles <code>\r</code> into secrets
+        and breaks constant-time comparison at the IdP. On Windows write with
+        <code>[IO.File]::WriteAllText</code> (LF), never <code>Set-Content</code> defaults.</li>
+        <li><strong>HTML must be no-cache at the layer that actually serves it.</strong> Plesk nginx can serve
+        static html directly, bypassing <code>.htaccess</code> headers — add
+        <code>Cache-Control: no-cache</code> in the vhost nginx block (umat precedent) or users keep stale
+        bundles through deploys.</li>
+        <li><strong>Body limits for image-bearing relays.</strong> Base64-in-JSON inflates uploads ~33%: set
+        BOTH nginx <code>client_max_body_size</code> and the app body-parser limit to ≥ 2× the advertised
+        file cap.</li>
+        <li><strong>One env file per deployment.</strong> dotenv loading <code>.env.local</code> before
+        <code>.env</code> with both present makes fixes silently no-op; ship exactly one env file to the
+        webroot.</li>
+        <li><strong>Allowlist entries are policy.</strong> An app&rsquo;s <code>app-bases</code> entry
+        reflects its classification — record removals in this document (the markai entry was deliberately
+        removed post-classification, then reinstated for the hybrid; both moves looked like drift until
+        documented).</li>
+      </ol>
+    </section>
+
+    <section id="s7">
+      <div class="shead"><span class="snum">7</span><h2>Security Requirements</h2></div>
+      <ul class="plain">
+        <li>Open-redirect safe (server-side allowlist only); explicit CORS origins + credentials (no wildcard).</li>
+        <li>Access token in memory only (never localStorage); refresh token HttpOnly.</li>
+        <li>All IdP config additive + defaulted → an unconfigured IdP is byte-identical to single-tenant.</li>
+        <li>Per-user MFA decoupled from privilege (<code>mfaRequired</code>) so MFA can be required without granting admin.</li>
+        <li>Audit retained at the IdP (provisioning, MFA, JWT issue/refresh, domain rejects).</li>
+      </ul>
+    </section>
+
+    <section id="s8">
+      <div class="shead"><span class="snum">8</span><h2>Current State &amp; Roadmap</h2></div>
+      <div class="road">
+        <div class="stop">
+          <h4>Live SSO clients (4)</h4>
+          <p><strong>TSAPro</strong> (A) · <strong>UMAT tracker</strong> (B, staff-only; also persists to the
+          IdP database via <code>/api/umat/**</code> — first non-auth WMS module consumed by a fleet app) ·
+          <strong>markai</strong> (B, hybrid per FR-SSO-010; browser-confirmed 2026-06-12) ·
+          <strong>tuc-netscan-100</strong> (C, Express <code>requireWmsAuth</code> relay to
+          <code>{IdP}/api/me</code>). Cross-app silent adoption verified in production.</p>
+        </div>
+        <div class="stop">
+          <h4>Live service relay</h4>
+          <p>markai on IdP Gemini key custody (FR-SSO-011) — first of the fleet.</p>
+        </div>
+        <div class="stop open">
+          <h4>Open</h4>
+          <p>Reconcile the two netscans (-100 live vs Spring mock undeployed); onboard remaining staff apps
+          (analytics dashboards, enrollment command centre, student population register); migrate
+          dmcdai/omniextract to FR-SSO-011 key custody. Public apps: no action.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="s9">
+      <div class="shead"><span class="snum">9</span><h2>Revision History</h2></div>
+      <div class="twrap">
+        <table class="doc">
+          <thead><tr><th style="width:110px">Version</th><th style="width:130px">Date</th><th>Change</th></tr></thead>
+          <tbody>
+            <tr><td><span class="badge-v" style="background:var(--ink-faint);color:#fff">1.0.0</span></td><td>2026-06-09</td>
+              <td>Initial baseline: ecosystem architecture, FR-SSO, classification, archetypes A/B/C, NetScan
+              integration design, deployment, roadmap.</td></tr>
+            <tr><td><span class="badge-v">1.1.0</span></td><td>2026-06-12</td>
+              <td>UMAT (B) + markai (B hybrid) + netscan-100 (C) live; new FR-SSO-010 (hybrid clients) +
+              FR-SSO-011 (Gemini key custody relay); hybrid class added to §4; §6.1 implementation rules;
+              roadmap refreshed (stale-markai cleanup superseded by hybrid).</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<footer>
+  <div class="foot-inner">
+    <span>Techbridge <span class="gold">University College</span> · ICT Division</span>
+    <span>TUC-ICT-SRS-2026-013 · v1.1.0 · UK English · IEEE 29148</span>
+  </div>
+</footer>
+
+</body>
+</html>
