@@ -64,3 +64,117 @@
   }
 }
 
+/* Instructions Card */
+.instructions-card {
+  background-color: var(--bg-color);
+  border: 1px solid var(--border-color);
+  border-radius: 0.75rem;
+  padding: 2.5rem;
+  margin-top: -1.5rem;
+  box-shadow: var(--shadow-lg);
+  border-top: 4px solid var(--accent-color);
+  animation: fadeIn 0.4s ease-out;
+  transition: all 0.3s ease;
+}
+
+.instructions-card h2 {
+  font-size: 1.75rem;
+  color: var(--primary-color);
+  margin-bottom: 1.5rem;
+  font-weight: 700;
+  border-bottom: 2px solid var(--border-color);
+  padding-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.instructions-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 2.25rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.instructions-list li {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  position: relative;
+  padding-left: 2rem;
+  color: var(--text-color);
+}
+
+.instructions-list li::before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  top: 0.1rem;
+  color: var(--accent-color);
+  font-weight: bold;
+  font-size: 1.25rem;
+  line-height: 1.4;
+}
+
+.proceed-button {
+  display: block;
+  width: 100%;
+  max-width: 320px;
+  margin: 0 auto;
+  background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+  color: white;
+  border: 2px solid transparent;
+  padding: 1rem 2rem;
+  font-size: 1.15rem;
+  font-weight: bold;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  box-shadow: var(--shadow);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  text-align: center;
+}
+
+.proceed-button:hover {
+  background: linear-gradient(135deg, var(--primary-dark), var(--primary-color));
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(99, 15, 18, 0.25);
+  border-color: var(--accent-color);
+}
+
+.proceed-button:focus {
+  outline: none;
+  box-shadow: 0 0 0 4px rgba(200, 168, 75, 0.4);
+}
+
+.proceed-button:active {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(99, 15, 18, 0.2);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 768px) {
+  .instructions-card {
+    padding: 1.5rem;
+  }
+
+  .instructions-card h2 {
+    font-size: 1.5rem;
+  }
+
+  .instructions-list li {
+    font-size: 1rem;
+  }
+}
+
+

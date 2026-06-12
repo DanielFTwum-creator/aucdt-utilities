@@ -49,6 +49,8 @@ describe('LEMS — student journey', () => {
     cy.wait('@me');
     cy.contains('h1', 'Lecturer Assessment & Evaluation Portal').should('be.visible');
     cy.contains('Please provide your honest feedback').should('be.visible');
+    cy.contains('Before you begin').should('be.visible');
+    cy.contains('button', 'Proceed to Evaluation').should('be.visible');
   });
 
   it('submits an evaluation and confirms success', () => {
@@ -58,6 +60,7 @@ describe('LEMS — student journey', () => {
     }).as('submit');
 
     cy.visit('/');
+    cy.contains('button', 'Proceed to Evaluation').click();
     cy.wait('@programmes');
     cy.get('select#programme').select('1');
     cy.get('select#course').select('1');
@@ -85,6 +88,7 @@ describe('LEMS — student journey', () => {
     }).as('submitDup');
 
     cy.visit('/');
+    cy.contains('button', 'Proceed to Evaluation').click();
     cy.wait('@programmes');
     cy.get('select#programme').select('1');
     cy.get('select#course').select('1');
