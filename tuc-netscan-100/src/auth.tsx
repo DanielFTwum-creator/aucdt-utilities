@@ -49,6 +49,9 @@ export function AuthGate({ children }: { children: React.ReactNode }) {
   const [reason, setReason] = useState('');
 
   useEffect(() => {
+    // Personal/LAN mode (VITE_NETSCAN_LOCAL_MODE=1): skip the SSO gate entirely —
+    // pairs with the server's NETSCAN_LOCAL_MODE bypass for home-network scans.
+    if ((import.meta as any).env?.VITE_NETSCAN_LOCAL_MODE === '1') { setStatus('authed'); return; }
     const p = new URLSearchParams(window.location.search);
     const code = p.get('code'), ticket = p.get('mfa_ticket'), err = p.get('error');
     (async () => {

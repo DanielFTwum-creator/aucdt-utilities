@@ -15,6 +15,15 @@ const CACHE_TTL_MS = 60_000;
 const cache = new Map<string, { email: string; exp: number }>();
 
 export async function requireWmsAuth(req: Request, res: Response, next: NextFunction): Promise<void> {
+  // Personal/LAN mode: scan your own network from your own machine without WMS
+  // (NETSCAN_LOCAL_MODE=1). NEVER set this on a server — the API becomes
+  // unauthenticated. Pair with VITE_NETSCAN_LOCAL_MODE=1 for the frontend gate.
+  if (process.env.NETSCAN_LOCAL_MODE === '1') {
+    (req as any).wmsEmail = 'local-mode@localhost';
+    next();
+    return;
+  }
+
   const header = req.headers['authorization'];
   const token = typeof header === 'string' && header.startsWith('Bearer ') ? header.slice(7) : null;
   if (!token) {
