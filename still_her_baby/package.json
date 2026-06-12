@@ -1,5 +1,5 @@
 {
-  "packageManager": "pnpm@10.30.1",
+  "packageManager": "pnpm@11.5.3",
   "name": "still-her-baby-video-dashboard",
   "version": "1.0.0",
   "description": "AI Video Generation Prompt Management Dashboard for 'Still Her Baby' music video",

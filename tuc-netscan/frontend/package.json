@@ -4,7 +4,7 @@
   "private": true,
   "description": "TUC NetScan Frontend — TUC-ICT-SRS-2026-012",
   "type": "module",
-  "packageManager": "pnpm@9.1.0",
+  "packageManager": "pnpm@11.5.3",
   "scripts": {
     "preinstall": "npx only-allow pnpm",
     "dev": "vite",

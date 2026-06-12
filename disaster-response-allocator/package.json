@@ -1,6 +1,6 @@
 {
   "name": "disaster-response-allocator",
-  "packageManager": "pnpm@10.30.1",
+  "packageManager": "pnpm@11.5.3",
   "version": "2.0.0",
   "private": true,
   "description": "Autonomous operations and management - App ID 212",
