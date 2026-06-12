@@ -1,0 +1,66 @@
+<svg width="800" height="400" viewBox="0 0 800 400" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif" font-size="14">
+  <style>
+    .tier-box { fill: #f0f4f8; stroke: #60a5fa; stroke-width: 2; rx: 10; }
+    .tier-title { font-size: 18px; font-weight: bold; fill: #1e3a8a; }
+    .component-box { fill: #ffffff; stroke: #93c5fd; stroke-width: 1.5; rx: 5; }
+    .component-title { font-weight: bold; fill: #1d4ed8; }
+    .component-tech { fill: #4b5563; }
+    .arrow { marker-end: url(#arrowhead); stroke: #6b7280; stroke-width: 2; }
+    .arrow-label { fill: #374151; font-size: 12px; font-style: italic; }
+  </style>
+  
+  <defs>
+    <marker id="arrowhead" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#6b7280" />
+    </marker>
+  </defs>
+
+  <!-- Background -->
+  <rect width="100%" height="100%" fill="#f9fafb"/>
+
+  <!-- Titles -->
+  <text x="400" y="40" text-anchor="middle" font-size="24" font-weight="bold" fill="#111827">Target System Architecture</text>
+  <text x="400" y="65" text-anchor="middle" font-size="16" fill="#4b5563">Three-Tier Application Model</text>
+
+  <!-- Tiers -->
+  <rect x="50" y="100" width="200" height="250" class="tier-box"/>
+  <text x="150" y="130" text-anchor="middle" class="tier-title">Presentation Tier</text>
+  
+  <rect x="300" y="100" width="200" height="250" class="tier-box"/>
+  <text x="400" y="130" text-anchor="middle" class="tier-title">Logic Tier</text>
+  
+  <rect x="550" y="100" width="200" height="250" class="tier-box"/>
+  <text x="650" y="130" text-anchor="middle" class="tier-title">Data Tier</text>
+  
+  <!-- Components -->
+  <!-- Presentation Tier -->
+  <rect x="75" y="160" width="150" height="100" class="component-box"/>
+  <text x="150" y="185" text-anchor="middle" class="component-title">React SPA</text>
+  <text x="150" y="210" text-anchor="middle" class="component-tech">React / TypeScript</text>
+  <text x="150" y="230" text-anchor="middle" class="component-tech">Tailwind CSS</text>
+  <text x="150" y="250" text-anchor="middle" class="component-tech">(User's Browser)</text>
+  
+  <!-- Logic Tier -->
+  <rect x="325" y="160" width="150" height="130" class="component-box"/>
+  <text x="400" y="185" text-anchor="middle" class="component-title">Backend Server</text>
+  <text x="400" y="210" text-anchor="middle" class="component-tech">Java Spring Boot</text>
+  <text x="400" y="235" text-anchor="middle" class="component-tech">Business Logic</text>
+  <text x="400" y="255" text-anchor="middle" class="component-tech">REST API</text>
+  <text x="400" y="275" text-anchor="middle" class="component-tech">Gemini API Integration</text>
+  
+  <!-- Data Tier -->
+  <rect x="575" y="160" width="150" height="100" class="component-box"/>
+  <text x="650" y="185" text-anchor="middle" class="component-title">Database</text>
+  <text x="650" y="210" text-anchor="middle" class="component-tech">MySQL</text>
+  <text x="650" y="235" text-anchor="middle" class="component-tech">Persistent Storage</text>
+  <text x="650" y="255" text-anchor="middle" class="component-tech">Normalized Data</text>
+  
+  <!-- Arrows -->
+  <line x1="250" y1="225" x2="300" y2="225" class="arrow"/>
+  <text x="275" y="215" text-anchor="middle" class="arrow-label">HTTP/S</text>
+  <text x="275" y="245" text-anchor="middle" class="arrow-label">(API Calls)</text>
+  
+  <line x1="500" y1="225" x2="550" y2="225" class="arrow"/>
+  <text x="525" y="215" text-anchor="middle" class="arrow-label">JDBC</text>
+  <text x="525" y="245" text-anchor="middle" class="arrow-label">(DB Queries)</text>
+</svg>
