@@ -16,7 +16,6 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.util.HexFormat;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Student evaluation submission (any authenticated TUC account) and admin
@@ -44,8 +43,10 @@ public class LemsEvaluationController {
         this.audit = audit;
     }
 
+    public record RatingItem(Integer criteriaNumber, String criteriaName, String section, Integer rating) { }
+
     public record SubmissionRequest(Long lecturerId, Long courseId, String studentFeedback,
-                                    Map<Integer, Integer> ratings) { }
+                                    List<RatingItem> ratings) { }
 
     @PostMapping("/submit")
     @Transactional
@@ -70,11 +71,13 @@ public class LemsEvaluationController {
         LemsEvaluation saved = evaluations.save(e);
 
         if (req.ratings() != null) {
-            for (Map.Entry<Integer, Integer> entry : req.ratings().entrySet()) {
+            for (RatingItem item : req.ratings()) {
                 LemsEvaluationRating r = new LemsEvaluationRating();
                 r.setEvaluation(saved);
-                r.setCriteriaNumber(entry.getKey());
-                r.setRating(entry.getValue());
+                r.setCriteriaNumber(item.criteriaNumber());
+                r.setCriteriaName(item.criteriaName());
+                r.setSection(item.section());
+                r.setRating(item.rating());
                 saved.getRatings().add(r);
             }
             saved = evaluations.save(saved);

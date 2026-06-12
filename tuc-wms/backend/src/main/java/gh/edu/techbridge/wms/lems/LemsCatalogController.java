@@ -57,6 +57,7 @@ public class LemsCatalogController {
         LemsProgramme p = programmes.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Programme not found"));
         applyProgramme(p, req);
+        audit.save(new LemsAuditEntry("PROGRAMME_UPDATED", "Programme updated: " + req.name(), "SUCCESS", "by " + auth.getName()));
         return programmes.save(p);
     }
 
@@ -94,6 +95,7 @@ public class LemsCatalogController {
         LemsLecturer l = lecturers.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Lecturer not found"));
         applyLecturer(l, req);
+        audit.save(new LemsAuditEntry("LECTURER_UPDATED", "Lecturer updated: " + l.getFullName(), "SUCCESS", "by " + auth.getName()));
         return lecturers.save(l);
     }
 
@@ -133,6 +135,7 @@ public class LemsCatalogController {
         LemsCourse c = courses.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Course not found"));
         applyCourse(c, req);
+        audit.save(new LemsAuditEntry("COURSE_UPDATED", "Course updated: " + req.name(), "SUCCESS", "by " + auth.getName()));
         return courses.save(c);
     }
 
