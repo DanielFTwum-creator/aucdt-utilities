@@ -8,7 +8,10 @@ import { exchange, silentSession, setAccessToken, wmsLogout, isAdminRole } from 
 
 // Served at wms.techbridge.edu.gh/lems/ — the WMS SSO callback lands on
 // /lems/auth/callback?code|mfa_ticket|error (SPA fallback), handled on boot.
-const APP_PATH = '/lems/';
+// Outside /lems (vite preview, e2e) the app runs at the root.
+const UNDER_LEMS = typeof window !== 'undefined' && window.location.pathname.startsWith('/lems');
+const APP_PATH = UNDER_LEMS ? '/lems/' : '/';
+const BASENAME = UNDER_LEMS ? '/lems' : '/';
 
 function App() {
   const [user, setUser] = useState(null);          // {email, name, role}
@@ -95,7 +98,7 @@ function App() {
   const admin = isAdminRole(user.role);
 
   return (
-    <Router basename="/lems">
+    <Router basename={BASENAME}>
       <div className="app" data-theme={theme}>
         <Routes>
           <Route path="/"
@@ -117,7 +120,7 @@ function NotAdmin({ email, onLogout }) {
       <div>
         <h2>Administrators only</h2>
         <p>{email} does not have LEMS admin access.<br />
-          The evaluation form is on the <a href="/lems/">home page</a>.</p>
+          The evaluation form is on the <a href={APP_PATH}>home page</a>.</p>
         <button type="button" onClick={onLogout}
           style={{ marginTop: 12, padding: '8px 18px', cursor: 'pointer' }}>Sign out</button>
       </div>
