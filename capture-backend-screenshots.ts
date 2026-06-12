@@ -19,8 +19,6 @@ const BACKEND_APIS = [
   'expense-tracking-system',
   'feedback-analysis-system',
   'health-wellness-portal',
-  'lecture-assessment-system',
-  'lecturer-assessment-portal',
   'library-management',
   'media-club-platform',
   'mentorship-program',

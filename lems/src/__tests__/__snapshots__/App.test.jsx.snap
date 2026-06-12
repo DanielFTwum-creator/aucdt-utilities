@@ -1,0 +1,15 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`App > matches snapshot 1`] = `
+<div>
+  <div
+    class="app"
+    data-theme="light"
+    style="min-height: 100vh; display: grid; place-items: center;"
+  >
+    <p>
+      Signing you in…
+    </p>
+  </div>
+</div>
+`;

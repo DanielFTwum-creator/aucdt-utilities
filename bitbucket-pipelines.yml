@@ -132,10 +132,10 @@ pipelines:
 
         - step:
             <<: *build-and-deploy-war
-            name: Build and Deploy Lecturer Assessment System
+            name: Build and Deploy LEMS
             script:
-              - export PROJECT_DIR=lecturer-assessment-system
-              - export WAR_NAME=lecturer-assessment
+              - export PROJECT_DIR=lems
+              - export WAR_NAME=lems
               - cd $PROJECT_DIR
               - corepack enable
               - corepack prepare pnpm@latest --activate
@@ -149,7 +149,7 @@ pipelines:
               - scp ${WAR_NAME}.war root@66.226.72.199:/opt/tomcat/webapps/${WAR_NAME}.war
             changesets:
               includePaths:
-                - 'lecturer-assessment-system/**'
+                - 'lems/**'
 
         # High Priority Static Builds
         - step:
@@ -291,7 +291,7 @@ pipelines:
                 for dir in */; do
                   # Skip projects already listed above
                   case "$dir" in
-                    "fees-comparison-dashboard/"|"aucdt-analytics-dashboard/"|"kanban-app/"|"applicant-dashboard/"|"lecturer-assessment-system/") continue ;;
+                    "fees-comparison-dashboard/"|"aucdt-analytics-dashboard/"|"kanban-app/"|"applicant-dashboard/"|"lems/") continue ;;
                     "analytics-refactor/"|"aucdt-website-react/"|"techbridge-product-design-6r-design-portal/"|"techbridge-scholarship-portal/") continue ;;
                     "mannequin-ai/"|"directive-workflow/"|"dns-copy-utility/"|"techbridge-promo/"|"whatsapp-parody/") continue ;;
                     "node_modules/"|"docker/"|"dist/"|"src/") continue ;;

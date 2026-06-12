@@ -2093,18 +2093,20 @@ services:
       timeout: 10s
       retries: 3
 
-  lecturer-assessment-system:
+  lems:
     build:
-      context: ./lecturer-assessment-system
-      dockerfile: ../Dockerfile.vite
-    container_name: lecturer-assessment-system
+      context: ./lems
+      dockerfile: Dockerfile
+    container_name: lems
+    ports:
+      - "4055:4173"
     environment:
       NODE_ENV: production
     networks:
       - tuc-network
     restart: unless-stopped
     healthcheck:
-      test: ["CMD","wget","--quiet","--tries=1","--spider","http://localhost/health"]
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:4173/health"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -4399,21 +4401,7 @@ services:
       timeout: 10s
       retries: 3
 
-  lecturer-assessment-portal-db-v2:
-    build:
-      context: ./lecturer-assessment-portal-db-v2-27102025-1602
-      dockerfile: ../Dockerfile.vite
-    container_name: lecturer-assessment-portal-db-v2
-    environment:
-      NODE_ENV: production
-    networks:
-      - tuc-network
-    restart: unless-stopped
-    healthcheck:
-      test: ["CMD","wget","--quiet","--tries=1","--spider","http://localhost/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
+
 
   modern-product-development-lifecycle:
     build:
@@ -4785,17 +4773,6 @@ services:
       - tuc-network
     restart: unless-stopped
 
-  lems:
-    build:
-      context: ./lems
-      dockerfile: Dockerfile
-    container_name: lems
-    ports:
-      - "4055:4173"
-    networks:
-      - tuc-network
-    restart: unless-stopped
-
   aurelia-v4:
     build:
       context: ./aurelia-v4---working-with-aurelia
@@ -4847,17 +4824,6 @@ services:
     container_name: krpots
     ports:
       - "4060:4173"
-    networks:
-      - tuc-network
-    restart: unless-stopped
-
-  lecturer-assessment-portal-v2:
-    build:
-      context: ./lecturer-assessment-portal-db-v2-27102025-1602
-      dockerfile: Dockerfile
-    container_name: lecturer-assessment-portal-v2
-    ports:
-      - "4061:4173"
     networks:
       - tuc-network
     restart: unless-stopped

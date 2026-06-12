@@ -135,8 +135,7 @@
 | kanban-app |  | ❌ No screenshot |
 | kente-fusion-fashion-workshop |  | ❌ No screenshot |
 | knowledge-compression-engine | AI managing AI and meta-level systems - App ID 243 | ❌ No screenshot |
-| lecturer-assessment-portal |  | ❌ No screenshot |
-| lecturer-assessment-system |  | ❌ No screenshot |
+| lems | Lecturer Assessment & Evaluation Portal - React Frontend | ✅ Screenshot exists |
 | library-management |  | ❌ No screenshot |
 | logistics-fleet-autopilot | Autonomous operations and management - App ID 217 | ❌ No screenshot |
 | lumina-concert-video-wall |  | ❌ No screenshot |
