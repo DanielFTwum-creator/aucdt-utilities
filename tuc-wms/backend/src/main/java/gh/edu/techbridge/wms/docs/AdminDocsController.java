@@ -15,9 +15,9 @@ import java.io.IOException;
 /**
  * Internal documentation served to SYSTEM_ADMIN only. Lives under /api/admin/**,
  * which SecurityConfig already gates with hasRole(SYSTEM_ADMIN) — no extra wiring.
- * The documents ship inside the jar (src/main/resources/docs) so the served copy
- * always matches the deployed build; the markdown in /docs remains the source of
- * truth and the HTML rendering is refreshed alongside it.
+ * The HTML rendering is bundled into the jar at build time straight from the
+ * monorepo /docs directory (see the maven-resources-plugin execution in pom.xml),
+ * so every deploy serves the current document automatically.
  */
 @RestController
 @RequestMapping("/api/admin/docs")
@@ -27,7 +27,7 @@ public class AdminDocsController {
     @GetMapping(value = "/sso-handbook", produces = MediaType.TEXT_HTML_VALUE)
     public ResponseEntity<byte[]> ssoHandbook() {
         try {
-            byte[] html = new ClassPathResource("docs/sso-handbook.html").getInputStream().readAllBytes();
+            byte[] html = new ClassPathResource("docs/TUC-ICT-SRS-2026-013_SSO_Ecosystem.html").getInputStream().readAllBytes();
             return ResponseEntity.ok()
                     .contentType(MediaType.TEXT_HTML)
                     .cacheControl(CacheControl.noCache())

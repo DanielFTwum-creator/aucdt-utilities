@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<meta name="description" content="TUC-ICT-SRS-2026-013 v1.1.0 — Software Requirements Specification for the Techbridge Unified SSO Ecosystem" />
+<meta name="description" content="TUC-ICT-SRS-2026-013 v1.1.1 — Software Requirements Specification for the Techbridge Unified SSO Ecosystem" />
 <meta name="author" content="Daniel Frempong Twum / TUC ICT" />
-<title>TUC-ICT-SRS-2026-013 · Techbridge Unified SSO Ecosystem · v1.1.0</title>
+<title>TUC-ICT-SRS-2026-013 · Techbridge Unified SSO Ecosystem · v1.1.1</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700&family=Spectral:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" />
@@ -219,7 +219,7 @@
   <div class="ribbon">
     <div class="ribbon-inner">
       <span class="pill">TUC-ICT-SRS-2026-013</span>
-      <span>Version 1.1.0</span><span class="sep">·</span>
+      <span>Version 1.1.1</span><span class="sep">·</span>
       <span>2026-06-12</span><span class="sep">·</span>
       <span>IEEE 29148</span><span class="sep">·</span>
       <span>Baselined — living document</span>
@@ -242,7 +242,7 @@
       <li><a href="#s8">8 · State &amp; Roadmap</a></li>
       <li><a href="#s9">9 · Revision History</a></li>
     </ol>
-    <span class="vchip">v1.1.0 · 4 live clients</span>
+    <span class="vchip">v1.1.1 · 4 live clients</span>
   </nav>
 
   <main>
@@ -250,7 +250,7 @@
     <div class="plate">
       <table>
         <tr><th>Document ID</th><td>TUC-ICT-SRS-2026-013</td></tr>
-        <tr><th>Version</th><td><span class="badge-v">1.1.0</span></td></tr>
+        <tr><th>Version</th><td><span class="badge-v">1.1.1</span></td></tr>
         <tr><th>Date</th><td>2026-06-12</td></tr>
         <tr><th>Author</th><td>Daniel Frempong Twum / TUC ICT</td></tr>
         <tr><th>Status</th><td>Baselined (living document — update as apps onboard)</td></tr>
@@ -438,7 +438,7 @@
         <div class="acard"><span class="a-letter">C</span>
           <h4>App with own backend</h4>
           <dl>
-            <dt>Examples</dt><dd><strong>tuc-netscan-100</strong> <span class="live">live</span> (Express relay) · tuc-netscan (Spring design, undeployed)</dd>
+            <dt>Examples</dt><dd><strong>tuc-netscan-100</strong> <span class="live">live</span> (Express relay)</dd>
             <dt>Frontend</dt><dd>Same as A (it is a router SPA)</dd>
             <dt>Backend</dt><dd><strong>becomes a resource server</strong>: validates IdP identity, issues its own session for its API</dd>
             <dt>Callback serving</dt><dd>same SPA fallback</dd>
@@ -534,11 +534,19 @@
           <h4>Live service relay</h4>
           <p>markai on IdP Gemini key custody (FR-SSO-011) — first of the fleet.</p>
         </div>
+        <div class="stop">
+          <h4>Retired (2026-06-12)</h4>
+          <p>The Spring Boot mock-data NetScan (<code>tuc-netscan-backend</code>, mock.enabled, ~105&nbsp;MB JVM) —
+          <code>netscan.techbridge.edu.gh</code> now 301-redirects to the real scanner at
+          <code>ai-tools.techbridge.edu.gh/tuc-netscan-100/</code>; the <code>netscan</code> app-bases entry is
+          removed (§6.1 rule 6 — recorded here); jar + start script archived to
+          <code>/root/backups/tuc-netscan-mock-retired-20260612/</code>; the <code>tuc_netscan</code> MariaDB
+          database is retained, not dropped.</p>
+        </div>
         <div class="stop open">
           <h4>Open</h4>
-          <p>Reconcile the two netscans (-100 live vs Spring mock undeployed); onboard remaining staff apps
-          (analytics dashboards, enrollment command centre, student population register); migrate
-          dmcdai/omniextract to FR-SSO-011 key custody. Public apps: no action.</p>
+          <p>Onboard remaining staff apps (analytics dashboards, enrollment command centre, student
+          population register); migrate dmcdai/omniextract to FR-SSO-011 key custody. Public apps: no action.</p>
         </div>
       </div>
     </section>
@@ -556,6 +564,10 @@
               <td>UMAT (B) + markai (B hybrid) + netscan-100 (C) live; new FR-SSO-010 (hybrid clients) +
               FR-SSO-011 (Gemini key custody relay); hybrid class added to §4; §6.1 implementation rules;
               roadmap refreshed (stale-markai cleanup superseded by hybrid).</td></tr>
+            <tr><td><span class="badge-v">1.1.1</span></td><td>2026-06-12</td>
+              <td>NetScan reconciliation: Spring mock retired (301 → tuc-netscan-100; <code>netscan</code>
+              allowlist entry removed per §6.1 rule 6; artefacts archived; DB retained); published URL added
+              to front matter.</td></tr>
           </tbody>
         </table>
       </div>
@@ -567,7 +579,7 @@
 <footer>
   <div class="foot-inner">
     <span>Techbridge <span class="gold">University College</span> · ICT Division</span>
-    <span>TUC-ICT-SRS-2026-013 · v1.1.0 · IEEE 29148 · <span class="gold">wms.techbridge.edu.gh/docs/sso-handbook.html</span></span>
+    <span>TUC-ICT-SRS-2026-013 · v1.1.1 · IEEE 29148 · <span class="gold">wms.techbridge.edu.gh/docs/sso-handbook.html</span></span>
   </div>
 </footer>
 

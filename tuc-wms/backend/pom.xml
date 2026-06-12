@@ -114,6 +114,30 @@
 
     <build>
         <plugins>
+            <!-- Bundle the canonical SSO handbook rendering (monorepo /docs) into the jar so
+                 every build serves the CURRENT document — no manual resource copy to forget. -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>bundle-sso-handbook</id>
+                        <phase>generate-resources</phase>
+                        <goals><goal>copy-resources</goal></goals>
+                        <configuration>
+                            <outputDirectory>${project.build.outputDirectory}/docs</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>${project.basedir}/../../docs</directory>
+                                    <includes>
+                                        <include>TUC-ICT-SRS-2026-013_SSO_Ecosystem.html</include>
+                                    </includes>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>

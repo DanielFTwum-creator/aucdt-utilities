@@ -3,7 +3,7 @@
 | Field | Value |
 |---|---|
 | **Document ID** | TUC-ICT-SRS-2026-013 |
-| **Version** | 1.1.0 |
+| **Version** | 1.1.1 |
 | **Date** | 2026-06-12 |
 | **Author** | Daniel Frempong Twum / TUC ICT |
 | **Status** | Baselined (living document — update as apps onboard) |
@@ -111,7 +111,7 @@ is public. "Google-gated" alone does **not** imply staff-only.
 
 | | Archetype A — router SPA | Archetype B — no-router SPA | Archetype C — app with own backend |
 |---|---|---|---|
-| Example | **TSAPro** (live) | **UMAT** (live, plain JSX) · **markai** (live, TSX hybrid) | **tuc-netscan-100** (live, Express relay) · tuc-netscan (Spring design, undeployed) |
+| Example | **TSAPro** (live) | **UMAT** (live, plain JSX) · **markai** (live, TSX hybrid) | **tuc-netscan-100** (live, Express relay) |
 | Frontend | Drop in WMS `auth/*` components; add `/auth/callback` route; BrowserRouter basename = subpath | Adapt `AuthContext`: on-mount read `?code`/`?mfa_ticket`/`?error` + silent refresh; MFA modal | Same as A (it is a router SPA) |
 | Backend | none (static SPA) | none (static SPA) | **becomes a resource server**: validates IdP identity, issues its own session for its API |
 | Callback serving | nginx `try_files` / `.htaccess` SPA fallback | same | same |
@@ -173,12 +173,17 @@ Role map (NetScan): WMS `SYSTEM_ADMIN`/`HOD` → `ADMIN`; otherwise → `ENGINEE
   (B, hybrid per FR-SSO-010; browser-confirmed 2026-06-12) · **tuc-netscan-100** (C, Express
   `requireWmsAuth` relay to `{IdP}/api/me`). Cross-app silent adoption verified in production.
 - **Live service relay:** markai on IdP Gemini key custody (FR-SSO-011) — first of the fleet.
-- **Open:** reconcile the two netscans (-100 live vs Spring mock undeployed); onboard remaining staff
-  apps (analytics dashboards, enrollment command centre, student population register); migrate
-  dmcdai/omniextract to FR-SSO-011 key custody. Public apps: no action.
+- **Retired (2026-06-12):** the Spring Boot mock-data NetScan (`tuc-netscan-backend`, mock.enabled,
+  ~105 MB JVM) — `netscan.techbridge.edu.gh` now 301-redirects to the real scanner at
+  `ai-tools.techbridge.edu.gh/tuc-netscan-100/`; the `netscan` app-bases entry is removed (§6.1
+  rule 6 — recorded here); jar + start script archived to `/root/backups/tuc-netscan-mock-retired-20260612/`;
+  the `tuc_netscan` MariaDB database is retained, not dropped.
+- **Open:** onboard remaining staff apps (analytics dashboards, enrollment command centre, student
+  population register); migrate dmcdai/omniextract to FR-SSO-011 key custody. Public apps: no action.
 
 ## 9. Revision History
 | Version | Date | Change |
 |---|---|---|
 | 1.0.0 | 2026-06-09 | Initial baseline: ecosystem architecture, FR-SSO, classification, archetypes A/B/C, NetScan integration design, deployment, roadmap. |
 | 1.1.0 | 2026-06-12 | UMAT (B) + markai (B hybrid) + netscan-100 (C) live; new FR-SSO-010 (hybrid clients) + FR-SSO-011 (Gemini key custody relay); hybrid class added to §4; §6.1 implementation rules; roadmap refreshed (stale-markai cleanup superseded by hybrid). |
+| 1.1.1 | 2026-06-12 | NetScan reconciliation: Spring mock retired (301 → tuc-netscan-100; `netscan` allowlist entry removed per §6.1 rule 6; artefacts archived; DB retained); published URL added to front matter. |
