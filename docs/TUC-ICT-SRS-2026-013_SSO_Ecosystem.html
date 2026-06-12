@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<meta name="description" content="TUC-ICT-SRS-2026-013 v1.1.1 — Software Requirements Specification for the Techbridge Unified SSO Ecosystem" />
+<meta name="description" content="TUC-ICT-SRS-2026-013 v1.1.2 — Software Requirements Specification for the Techbridge Unified SSO Ecosystem" />
 <meta name="author" content="Daniel Frempong Twum / TUC ICT" />
-<title>TUC-ICT-SRS-2026-013 · Techbridge Unified SSO Ecosystem · v1.1.1</title>
+<title>TUC-ICT-SRS-2026-013 · Techbridge Unified SSO Ecosystem · v1.1.2</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700&family=Spectral:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" />
@@ -219,7 +219,7 @@
   <div class="ribbon">
     <div class="ribbon-inner">
       <span class="pill">TUC-ICT-SRS-2026-013</span>
-      <span>Version 1.1.1</span><span class="sep">·</span>
+      <span>Version 1.1.2</span><span class="sep">·</span>
       <span>2026-06-12</span><span class="sep">·</span>
       <span>IEEE 29148</span><span class="sep">·</span>
       <span>Baselined — living document</span>
@@ -242,7 +242,7 @@
       <li><a href="#s8">8 · State &amp; Roadmap</a></li>
       <li><a href="#s9">9 · Revision History</a></li>
     </ol>
-    <span class="vchip">v1.1.1 · 4 live clients</span>
+    <span class="vchip">v1.1.2 · 4 live clients</span>
   </nav>
 
   <main>
@@ -250,7 +250,7 @@
     <div class="plate">
       <table>
         <tr><th>Document ID</th><td>TUC-ICT-SRS-2026-013</td></tr>
-        <tr><th>Version</th><td><span class="badge-v">1.1.1</span></td></tr>
+        <tr><th>Version</th><td><span class="badge-v">1.1.2</span></td></tr>
         <tr><th>Date</th><td>2026-06-12</td></tr>
         <tr><th>Author</th><td>Daniel Frempong Twum / TUC ICT</td></tr>
         <tr><th>Status</th><td>Baselined (living document — update as apps onboard)</td></tr>
@@ -523,12 +523,14 @@
       <div class="shead"><span class="snum">8</span><h2>Current State &amp; Roadmap</h2></div>
       <div class="road">
         <div class="stop">
-          <h4>Live SSO clients (4)</h4>
-          <p><strong>TSAPro</strong> (A) · <strong>UMAT tracker</strong> (B, staff-only; also persists to the
-          IdP database via <code>/api/umat/**</code> — first non-auth WMS module consumed by a fleet app) ·
-          <strong>markai</strong> (B, hybrid per FR-SSO-010; browser-confirmed 2026-06-12) ·
-          <strong>tuc-netscan-100</strong> (C, Express <code>requireWmsAuth</code> relay to
-          <code>{IdP}/api/me</code>). Cross-app silent adoption verified in production.</p>
+          <h4>Live SSO clients (5)</h4>
+          <p><strong>TSAPro</strong> (A) · <strong>UMAT tracker</strong> (B, staff-only; persists to the IdP
+          database via <code>/api/umat/**</code>) · <strong>markai</strong> (B, hybrid per FR-SSO-010) ·
+          <strong>tuc-netscan-100</strong> (C) · <strong>LEMS</strong> (hosted-in-WMS module, 2026-06-12:
+          <code>/api/lems/**</code> + SPA at <code>{IdP}/lems/</code>; all-TUC audience — students AND staff
+          sign in via SSO; submissions stored anonymously with a salted one-per-student dedupe hash;
+          admin = SYSTEM_ADMIN/HOD/ADMIN_STAFF; 7/7 Cypress e2e). Cross-app silent adoption verified
+          in production.</p>
         </div>
         <div class="stop">
           <h4>Live service relays (3)</h4>
@@ -569,6 +571,10 @@
               <td>NetScan reconciliation: Spring mock retired (301 → tuc-netscan-100; <code>netscan</code>
               allowlist entry removed per §6.1 rule 6; artefacts archived; DB retained); published URL added
               to front matter.</td></tr>
+            <tr><td><span class="badge-v">1.1.2</span></td><td>2026-06-12</td>
+              <td>LEMS live as the first hosted-in-WMS application module (<code>/api/lems/**</code> + SPA at
+              <code>{IdP}/lems/</code>; all-TUC SSO incl. students; anonymous deduped evaluations); Gemini
+              key custody complete fleet-wide (markai/dmcdai/omniextract).</td></tr>
           </tbody>
         </table>
       </div>
@@ -580,7 +586,7 @@
 <footer>
   <div class="foot-inner">
     <span>Techbridge <span class="gold">University College</span> · ICT Division</span>
-    <span>TUC-ICT-SRS-2026-013 · v1.1.1 · IEEE 29148 · <span class="gold">wms.techbridge.edu.gh/docs/sso-handbook.html</span></span>
+    <span>TUC-ICT-SRS-2026-013 · v1.1.2 · IEEE 29148 · <span class="gold">wms.techbridge.edu.gh/docs/sso-handbook.html</span></span>
   </div>
 </footer>
 

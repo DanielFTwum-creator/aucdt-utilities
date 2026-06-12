@@ -168,10 +168,12 @@ Role map (NetScan): WMS `SYSTEM_ADMIN`/`HOD` → `ADMIN`; otherwise → `ENGINEE
 - Audit retained at the IdP (provisioning, MFA, JWT issue/refresh, domain rejects).
 
 ## 8. Current State & Roadmap
-- **Live SSO clients (4):** **TSAPro** (A) · **UMAT tracker** (B, staff-only; also persists to the
-  IdP database via `/api/umat/**` — first non-auth WMS module consumed by a fleet app) · **markai**
-  (B, hybrid per FR-SSO-010; browser-confirmed 2026-06-12) · **tuc-netscan-100** (C, Express
-  `requireWmsAuth` relay to `{IdP}/api/me`). Cross-app silent adoption verified in production.
+- **Live SSO clients (5):** **TSAPro** (A) · **UMAT tracker** (B, staff-only; persists to the IdP
+  database via `/api/umat/**`) · **markai** (B, hybrid per FR-SSO-010) · **tuc-netscan-100** (C) ·
+  **LEMS** (hosted-in-WMS module, 2026-06-12: `/api/lems/**` + SPA at `{IdP}/lems/`; all-TUC
+  audience — students AND staff sign in via SSO; submissions stored anonymously with a salted
+  one-per-student dedupe hash, `LEMS_DEDUPE_SALT`; admin = SYSTEM_ADMIN/HOD/ADMIN_STAFF; 7/7
+  Cypress e2e). Cross-app silent adoption verified in production.
 - **Live service relays (3):** markai, dmcdai and omniextract all on IdP Gemini key custody
   (FR-SSO-011, completed 2026-06-12) — no fleet app stores a raw Gemini key.
 - **Retired (2026-06-12):** the Spring Boot mock-data NetScan (`tuc-netscan-backend`, mock.enabled,
@@ -188,3 +190,4 @@ Role map (NetScan): WMS `SYSTEM_ADMIN`/`HOD` → `ADMIN`; otherwise → `ENGINEE
 | 1.0.0 | 2026-06-09 | Initial baseline: ecosystem architecture, FR-SSO, classification, archetypes A/B/C, NetScan integration design, deployment, roadmap. |
 | 1.1.0 | 2026-06-12 | UMAT (B) + markai (B hybrid) + netscan-100 (C) live; new FR-SSO-010 (hybrid clients) + FR-SSO-011 (Gemini key custody relay); hybrid class added to §4; §6.1 implementation rules; roadmap refreshed (stale-markai cleanup superseded by hybrid). |
 | 1.1.1 | 2026-06-12 | NetScan reconciliation: Spring mock retired (301 → tuc-netscan-100; `netscan` allowlist entry removed per §6.1 rule 6; artefacts archived; DB retained); published URL added to front matter. |
+| 1.1.2 | 2026-06-12 | LEMS live as the first hosted-in-WMS application module (`/api/lems/**` + SPA at `{IdP}/lems/`; all-TUC SSO incl. students; anonymous deduped evaluations); Gemini key custody complete fleet-wide (markai/dmcdai/omniextract). |
