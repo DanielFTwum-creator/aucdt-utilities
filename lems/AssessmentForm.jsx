@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { apiService } from '../services/api';
-import '../styles/AssessmentForm.css';
+import { apiService } from './api';
+import './AssessmentForm.css';
 
 function AssessmentForm() {
   const [programmes, setProgrammes] = useState([]);

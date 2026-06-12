@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { apiService } from '../../services/api';
-import '../../styles/tabs/ProgrammesTab.css';
+import { apiService } from './api';
+import './ProgrammesTab.css';
 
 function ProgrammesTab() {
   const [programmes, setProgrammes] = useState([]);

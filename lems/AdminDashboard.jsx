@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Header from '../components/Header';
-import OverviewTab from '../components/tabs/OverviewTab';
-import ResultsTab from '../components/tabs/ResultsTab';
-import LecturersTab from '../components/tabs/LecturersTab';
-import ProgrammesTab from '../components/tabs/ProgrammesTab';
-import AnalyticsTab from '../components/tabs/AnalyticsTab';
-import AdminPanelTab from '../components/tabs/AdminPanelTab';
-import GuidesTab from '../components/tabs/GuidesTab';
-import SelfTestTab from '../components/tabs/SelfTestTab';
-import '../styles/AdminDashboard.css';
+import Header from './Header';
+import OverviewTab from './OverviewTab';
+import ResultsTab from './ResultsTab';
+import LecturersTab from './LecturersTab';
+import ProgrammesTab from './ProgrammesTab';
+import AnalyticsTab from './AnalyticsTab';
+import AdminPanelTab from './AdminPanelTab';
+import GuidesTab from './GuidesTab';
+import SelfTestTab from './SelfTestTab';
+import './AdminDashboard.css';
 
 function AdminDashboard({ theme, onThemeChange, onLogout }) {
   const [activeTab, setActiveTab] = useState('overview');

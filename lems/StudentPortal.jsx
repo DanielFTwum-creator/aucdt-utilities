@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import AssessmentForm from '../components/AssessmentForm';
-import Header from '../components/Header';
-import '../styles/StudentPortal.css';
+import AssessmentForm from './AssessmentForm';
+import Header from './Header';
+import './StudentPortal.css';
 
 function StudentPortal({ theme, onThemeChange }) {
   const navigate = useNavigate();

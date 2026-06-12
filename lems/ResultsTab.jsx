@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { apiService } from '../../services/api';
-import '../../styles/tabs/ResultsTab.css';
+import { apiService } from './api';
+import './ResultsTab.css';
 
 function ResultsTab() {
   const [evaluations, setEvaluations] = useState([]);
@@ -37,10 +37,10 @@ function ResultsTab() {
 
     const query = searchQuery.toLowerCase();
     const filtered = evaluations.filter(
-      (eval) =>
-        eval.lecturer?.firstName?.toLowerCase().includes(query) ||
-        eval.lecturer?.lastName?.toLowerCase().includes(query) ||
-        eval.course?.name?.toLowerCase().includes(query)
+      (ev) =>
+        ev.lecturer?.firstName?.toLowerCase().includes(query) ||
+        ev.lecturer?.lastName?.toLowerCase().includes(query) ||
+        ev.course?.name?.toLowerCase().includes(query)
     );
     setFilteredEvaluations(filtered);
   };

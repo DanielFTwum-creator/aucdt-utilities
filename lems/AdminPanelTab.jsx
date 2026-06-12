@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { apiService } from '../../services/api';
-import '../../styles/tabs/AdminPanelTab.css';
+import { apiService } from './api';
+import './AdminPanelTab.css';
 
 function AdminPanelTab() {
   const [auditLogs, setAuditLogs] = useState([]);

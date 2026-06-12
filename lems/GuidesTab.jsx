@@ -1,5 +1,5 @@
 import React from 'react';
-import '../../styles/tabs/GuidesTab.css';
+import './GuidesTab.css';
 
 function GuidesTab() {
   return (

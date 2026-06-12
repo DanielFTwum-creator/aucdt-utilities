@@ -1,46 +1,73 @@
 import axios from 'axios';
+import { getAccessToken, refreshToken } from './wmsAuth';
 
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8080/api';
+// LEMS API is the WMS-hosted module (/api/lems/**). Auth = WMS JWT (in memory).
+const API_BASE_URL = import.meta.env?.VITE_API_URL || 'https://wms.techbridge.edu.gh/api/lems';
 
 const api = axios.create({
   baseURL: API_BASE_URL,
-  headers: {
-    'Content-Type': 'application/json',
-  },
+  headers: { 'Content-Type': 'application/json' },
+  withCredentials: true, // refresh cookie rides along for the 401-retry
 });
 
-// Add token to requests if available
 api.interceptors.request.use((config) => {
-  const token = localStorage.getItem('adminToken');
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
+  const token = getAccessToken();
+  if (token) config.headers.Authorization = `Bearer ${token}`;
   return config;
 });
 
-// API Service Functions
+api.interceptors.response.use(
+  // The legacy backend wrapped everything as {success, message, data}; the WMS
+  // module returns raw JSON. Re-wrap here so the components stay untouched.
+  (res) => {
+    res.data = { success: true, message: '', data: res.data };
+    return res;
+  },
+  async (error) => {
+    const original = error.config || {};
+    if (error.response?.status === 401 && !original._retried) {
+      original._retried = true;
+      const token = await refreshToken();
+      if (token) {
+        original.headers = { ...original.headers, Authorization: `Bearer ${token}` };
+        return api(original);
+      }
+    }
+    return Promise.reject(error);
+  }
+);
+
+// API Service Functions (legacy surface preserved; unsupported calls fail loudly)
 export const apiService = {
   // Programmes
   getProgrammes: () => api.get('/programmes'),
-  getProgrammeById: (id) => api.get(`/programmes/${id}`),
   createProgramme: (data) => api.post('/programmes', data),
   updateProgramme: (id, data) => api.put(`/programmes/${id}`, data),
   deleteProgramme: (id) => api.delete(`/programmes/${id}`),
 
   // Courses
   getCourses: () => api.get('/courses'),
-  getCourseById: (id) => api.get(`/courses/${id}`),
-  getCoursesByProgramme: (programmeId) => api.get(`/courses/programme/${programmeId}`),
-  getCoursesByProgrammeAndSemester: (programmeId, semester) => 
-    api.get(`/courses/programme/${programmeId}/semester/${semester}`),
+  getCourseById: async (id) => {
+    const res = await api.get('/courses');
+    const found = (res.data.data || []).find((c) => c.id === Number(id));
+    res.data = { success: !!found, message: found ? '' : 'Course not found', data: found };
+    return res;
+  },
+  getCoursesByProgramme: async (programmeId) => {
+    const res = await api.get('/courses');
+    res.data = {
+      success: true,
+      message: '',
+      data: (res.data.data || []).filter((c) => c.programme?.id === Number(programmeId)),
+    };
+    return res;
+  },
   createCourse: (data) => api.post('/courses', data),
   updateCourse: (id, data) => api.put(`/courses/${id}`, data),
   deleteCourse: (id) => api.delete(`/courses/${id}`),
 
   // Lecturers
   getLecturers: () => api.get('/lecturers'),
-  getLecturerById: (id) => api.get(`/lecturers/${id}`),
-  searchLecturers: (query) => api.get(`/lecturers/search?query=${query}`),
   createLecturer: (data) => api.post('/lecturers', data),
   updateLecturer: (id, data) => api.put(`/lecturers/${id}`, data),
   deleteLecturer: (id) => api.delete(`/lecturers/${id}`),
@@ -52,27 +79,14 @@ export const apiService = {
   getAllEvaluations: () => api.get('/evaluations/all'),
 
   // Audit Logs
-  getAuditLogs: () => api.get('/audit-logs'),
-  getAuditLogsByEventType: (eventType) => api.get(`/audit-logs/event-type/${eventType}`),
+  getAuditLogs: () => api.get('/audit'),
 
-  // Authentication
-  login: (password) => api.post('/auth/login', { password }),
-  verify: () => api.post('/auth/verify'),
+  // PDF Extraction — not yet available in the WMS-hosted module.
+  extractPdf: () =>
+    Promise.reject(new Error('PDF extraction is not yet available in the WMS-hosted LEMS.')),
 
-  // PDF Extraction
-  extractPdf: (file) => {
-    const formData = new FormData();
-    formData.append('file', file);
-    return api.post('/pdf/extract', formData, {
-      headers: { 'Content-Type': 'multipart/form-data' },
-    });
-  },
-  processCurriculum: (extractedText) => 
-    api.post('/pdf/process-curriculum', { extractedText }),
-
-  // Health Check
-  health: () => api.get('/health'),
+  // Health (module rides on the WMS service)
+  health: () => api.get('/programmes'),
 };
 
 export default api;
-

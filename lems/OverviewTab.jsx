@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { apiService } from '../../services/api';
-import '../../styles/tabs/OverviewTab.css';
+import { apiService } from './api';
+import './OverviewTab.css';
 
 function OverviewTab() {
   const [stats, setStats] = useState({

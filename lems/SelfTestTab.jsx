@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import '../../styles/tabs/SelfTestTab.css';
+import './SelfTestTab.css';
 
 function SelfTestTab() {
   const [testRunning, setTestRunning] = useState(false);

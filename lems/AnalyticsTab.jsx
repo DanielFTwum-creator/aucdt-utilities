@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { apiService } from '../../services/api';
-import '../../styles/tabs/AnalyticsTab.css';
+import { apiService } from './api';
+import './AnalyticsTab.css';
 
 function AnalyticsTab() {
   const [evaluations, setEvaluations] = useState([]);
