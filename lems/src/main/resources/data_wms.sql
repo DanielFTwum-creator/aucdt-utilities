@@ -46,7 +46,8 @@ INSERT INTO wms_lems_lecturers (id, first_name, last_name, email, department) VA
 (20, 'Ms.', 'Vivian Yeboah', 'vivian_yeboah@techbridge.edu.gh', 'Design & Technology'),
 (21, 'Mr.', 'Owusu', 'owusu@techbridge.edu.gh', 'Design & Technology'),
 (22, 'Mrs.', 'Elsie Mills', 'mills@techbridge.edu.gh', 'Design & Technology'),
-(23, 'Ms.', 'Doris Boakyewaa', 'boakyewaa@techbridge.edu.gh', 'Design & Technology');
+(23, 'Ms.', 'Doris Boakyewaa', 'boakyewaa@techbridge.edu.gh', 'Design & Technology'),
+(24, 'Mr.', 'Obeng', 'obeng@techbridge.edu.gh', 'Design & Technology');
 
 -- Insert wms_lems_courses
 INSERT INTO wms_lems_courses (id, name, code, description, semester, programme_id) VALUES
@@ -267,14 +268,14 @@ INSERT INTO wms_lems_course_lecturers (course_id, lecturer_id) VALUES
 (33, 6),
 (34, 4),
 (35, 5),
-(36, 16),
+(36, 24),
 (37, 1),
 (38, 14),
 (39, 1),
-(41, 16),
-(42, 16),
+(41, 24),
+(42, 24),
 (43, 4),
-(44, 16),
+(44, 24),
 (45, 5),
 (46, 7),
 (47, 14),
@@ -410,6 +411,5 @@ INSERT INTO wms_lems_course_lecturers (course_id, lecturer_id) VALUES
 (177, 13),
 (178, 4),
 (179, 16);
-
 
 
