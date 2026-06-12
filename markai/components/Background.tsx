@@ -80,6 +80,7 @@ export const Background: React.FC = () => {
             loop
             muted
             playsInline
+            onLoadedData={(e) => { e.currentTarget.playbackRate = 0.5; }}
             className="absolute inset-0 min-w-full min-h-full w-full h-full object-cover scale-[1.45] blur-[1.5px] pointer-events-none"
             style={{ opacity: isDark ? 0.45 : 0.15 }}
           />
