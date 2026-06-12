@@ -10,9 +10,44 @@ import { GoogleGenAI } from '@google/genai';
 
 dotenv.config();
 
-// Imagen 4 and the gemini-*-image models require v1beta.
-const API_KEY = process.env.VITE_GEMINI_API_KEY || process.env.GEMINI_API_KEY;
-const imageAi = new GoogleGenAI({ apiKey: API_KEY, httpOptions: { apiVersion: 'v1beta' } });
+// --- Gemini key custody: fetched from the WMS proxy, never stored here (FR-SSO-011) ---
+// WMS is the single rotation point. Cached in memory with a TTL; invalidateGeminiKey()
+// forces a refetch after Google rejects it, so rotation self-heals within one request.
+const WMS_KEY_URL = 'https://wms.techbridge.edu.gh/api/gemini/key';
+const KEY_TTL_MS = 6 * 60 * 60 * 1000;
+let cachedGeminiKey = null;
+let keyFetchedAt = 0;
+
+function invalidateGeminiKey() { cachedGeminiKey = null; keyFetchedAt = 0; }
+
+async function getGeminiKey() {
+  if (cachedGeminiKey && Date.now() - keyFetchedAt < KEY_TTL_MS) return cachedGeminiKey;
+  const proxyKey = process.env.GEMINI_PROXY_KEY;
+  if (!proxyKey) {
+    // Local dev fallback only — production must use the WMS relay.
+    const local = process.env.VITE_GEMINI_API_KEY || process.env.GEMINI_API_KEY;
+    if (local) return local;
+    throw new Error('GEMINI_PROXY_KEY is not set (and no local key fallback).');
+  }
+  const r = await fetch(WMS_KEY_URL, { headers: { 'X-Gemini-Proxy-Key': proxyKey } });
+  if (!r.ok) throw new Error(`WMS key fetch failed: ${r.status} ${await r.text()}`);
+  cachedGeminiKey = (await r.json()).apiKey;
+  keyFetchedAt = Date.now();
+  return cachedGeminiKey;
+}
+
+/** Imagen 4 and the gemini-*-image models require v1beta. */
+async function getImageAi() {
+  return new GoogleGenAI({ apiKey: await getGeminiKey(), httpOptions: { apiVersion: 'v1beta' } });
+}
+
+/** Drop the cached key when Google says it is invalid/expired so the next request refetches. */
+const handleStaleKey = (error) => {
+  if (String(error?.message || '').includes('API_KEY_INVALID') || String(error?.message || '').includes('API key expired')) {
+    console.warn('[DMCDAI] Gemini rejected the key — invalidating cache to refetch from WMS.');
+    invalidateGeminiKey();
+  }
+};
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -218,7 +253,7 @@ async function startServer() {
       if (base64Image && mimeType) {
       // Edit path: use gemini-2.0-flash-preview-image-generation which supports
       // image-in, image-out editing via generateContent.
-      const response = await imageAi.models.generateContent({
+      const response = await (await getImageAi()).models.generateContent({
         model: 'gemini-2.0-flash-preview-image-generation',
         contents: [
           { inlineData: { data: base64Image, mimeType } },
@@ -250,7 +285,7 @@ async function startServer() {
     let lastErr;
     for (const model of GENERATE_MODELS) {
       try {
-        const response = await imageAi.models.generateImages({
+        const response = await (await getImageAi()).models.generateImages({
           model,
           prompt,
           config: { numberOfImages: 1 },
@@ -270,6 +305,7 @@ async function startServer() {
     throw lastErr || new Error('EMPTY_RESPONSE');
     } catch (error) {
       console.error('[DMCDAI] Image gen error:', error);
+      handleStaleKey(error);
       // Surface quota exhaustion clearly instead of a generic 500.
       if (error?.status === 429) {
         return res.status(429).json({ error: 'IMAGE_QUOTA_EXHAUSTED', message: 'The image service is over its quota right now. Please try again in a few minutes.' });

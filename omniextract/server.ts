@@ -14,10 +14,45 @@ const PORT = Number(process.env.PORT) || 3009;
 const GOOGLE_CLIENT_ID     = process.env.VITE_GOOGLE_CLIENT_ID     || '';
 const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET       || '';
 const REDIRECT_URI         = process.env.VITE_GOOGLE_REDIRECT_URI   || 'https://ai-tools.techbridge.edu.gh/omniextract/callback';
-const GEMINI_API_KEY       = process.env.GEMINI_API_KEY            || process.env.API_KEY || '';
+// --- Gemini key custody: fetched from the WMS proxy, never stored here (FR-SSO-011) ---
+// WMS is the single rotation point. Cached in memory with a TTL; invalidateGeminiKey()
+// forces a refetch after Google rejects it, so rotation self-heals within one request.
+// The key remains server-side only — it must NEVER reach the browser bundle.
+const WMS_KEY_URL = 'https://wms.techbridge.edu.gh/api/gemini/key';
+const KEY_TTL_MS = 6 * 60 * 60 * 1000;
+let cachedGeminiKey: string | null = null;
+let keyFetchedAt = 0;
 
-// Gemini client is server-side only — the key must NEVER reach the browser bundle.
-const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
+function invalidateGeminiKey() { cachedGeminiKey = null; keyFetchedAt = 0; }
+
+async function getGeminiKey(): Promise<string> {
+  if (cachedGeminiKey && Date.now() - keyFetchedAt < KEY_TTL_MS) return cachedGeminiKey;
+  const proxyKey = process.env.GEMINI_PROXY_KEY;
+  if (!proxyKey) {
+    // Local dev fallback only — production must use the WMS relay.
+    const local = process.env.GEMINI_API_KEY || process.env.API_KEY;
+    if (local) return local;
+    throw new Error('GEMINI_PROXY_KEY is not set (and no local key fallback).');
+  }
+  const r = await fetch(WMS_KEY_URL, { headers: { 'X-Gemini-Proxy-Key': proxyKey } });
+  if (!r.ok) throw new Error(`WMS key fetch failed: ${r.status} ${await r.text()}`);
+  cachedGeminiKey = (await r.json() as { apiKey: string }).apiKey;
+  keyFetchedAt = Date.now();
+  return cachedGeminiKey;
+}
+
+async function getGenAI(): Promise<GoogleGenerativeAI> {
+  return new GoogleGenerativeAI(await getGeminiKey());
+}
+
+/** Drop the cached key when Google says it is invalid/expired so the next request refetches. */
+const handleStaleKey = (error: unknown) => {
+  const msg = String((error as Error)?.message || '');
+  if (msg.includes('API_KEY_INVALID') || msg.includes('API key expired')) {
+    console.warn('[OmniExtract] Gemini rejected the key — invalidating cache to refetch from WMS.');
+    invalidateGeminiKey();
+  }
+};
 
 // JSON schema for the invoice/receipt extraction (moved server-side from the
 // former client-side invoiceExtractor.ts).
@@ -145,9 +180,6 @@ app.get(['/api/health', '/omniextract/api/health'], (_req, res) => {
 // the browser, then posts them here for AI analysis. Accepts either
 // { text } (text-based PDFs) or { imagePart: { inlineData } } (scanned pages).
 app.post(['/api/extract', '/omniextract/api/extract'], async (req, res) => {
-  if (!GEMINI_API_KEY) {
-    return res.status(503).json({ error: 'GEMINI_API_KEY not configured on the server.' });
-  }
   try {
     const { text, imagePart } = req.body as {
       text?: string;
@@ -162,7 +194,7 @@ app.post(['/api/extract', '/omniextract/api/extract'], async (req, res) => {
       ? [{ text: `${SYSTEM_PROMPT} Extract data for the single invoice in the provided image.` }, imagePart]
       : [{ text: `${SYSTEM_PROMPT} Text from PDF: ${text ?? ''}` }];
 
-    const model = genAI.getGenerativeModel({
+    const model = (await getGenAI()).getGenerativeModel({
       model: 'gemini-2.5-flash',
       generationConfig: { responseMimeType: 'application/json', responseSchema: invoiceSchema as ResponseSchema },
     });
@@ -172,6 +204,7 @@ app.post(['/api/extract', '/omniextract/api/extract'], async (req, res) => {
     return res.json({ result: parsed });
   } catch (err) {
     console.error('[OmniExtract] extract error:', err);
+    handleStaleKey(err);
     return res.status(500).json({ error: 'AI extraction failed.' });
   }
 });
