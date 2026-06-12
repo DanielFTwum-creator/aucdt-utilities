@@ -172,14 +172,15 @@ Role map (NetScan): WMS `SYSTEM_ADMIN`/`HOD` → `ADMIN`; otherwise → `ENGINEE
   IdP database via `/api/umat/**` — first non-auth WMS module consumed by a fleet app) · **markai**
   (B, hybrid per FR-SSO-010; browser-confirmed 2026-06-12) · **tuc-netscan-100** (C, Express
   `requireWmsAuth` relay to `{IdP}/api/me`). Cross-app silent adoption verified in production.
-- **Live service relay:** markai on IdP Gemini key custody (FR-SSO-011) — first of the fleet.
+- **Live service relays (3):** markai, dmcdai and omniextract all on IdP Gemini key custody
+  (FR-SSO-011, completed 2026-06-12) — no fleet app stores a raw Gemini key.
 - **Retired (2026-06-12):** the Spring Boot mock-data NetScan (`tuc-netscan-backend`, mock.enabled,
   ~105 MB JVM) — `netscan.techbridge.edu.gh` now 301-redirects to the real scanner at
   `ai-tools.techbridge.edu.gh/tuc-netscan-100/`; the `netscan` app-bases entry is removed (§6.1
   rule 6 — recorded here); jar + start script archived to `/root/backups/tuc-netscan-mock-retired-20260612/`;
   the `tuc_netscan` MariaDB database is retained, not dropped.
 - **Open:** onboard remaining staff apps (analytics dashboards, enrollment command centre, student
-  population register); migrate dmcdai/omniextract to FR-SSO-011 key custody. Public apps: no action.
+  population register). Public apps: no action.
 
 ## 9. Revision History
 | Version | Date | Change |
