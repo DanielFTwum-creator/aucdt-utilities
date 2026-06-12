@@ -144,6 +144,17 @@ function AssessmentForm() {
     return section.items.every((item) => ratings[item.id] !== undefined);
   };
 
+  const getSectionProgress = (sectionIndex) => {
+    const section = evaluationCriteria[sectionIndex];
+    const completedCount = section.items.filter((item) => ratings[item.id] !== undefined).length;
+    const totalCount = section.items.length;
+    return {
+      completed: completedCount,
+      total: totalCount,
+      percentage: (completedCount / totalCount) * 100,
+    };
+  };
+
   const canExpandSection = (sectionIndex) => {
     if (sectionIndex === 0) return true;
     return isSectionComplete(sectionIndex - 1);
@@ -306,50 +317,77 @@ function AssessmentForm() {
 
         {/* Accordion Sections */}
         <div className="accordion">
-          {evaluationCriteria.map((section, sectionIndex) => (
-            <div key={sectionIndex} className="accordion-item">
-              <button
-                type="button"
-                className={`accordion-header ${expandedSection === sectionIndex ? 'active' : ''}`}
-                onClick={() => {
-                  if (canExpandSection(sectionIndex)) {
-                    setExpandedSection(expandedSection === sectionIndex ? -1 : sectionIndex);
-                  }
-                }}
-                disabled={!canExpandSection(sectionIndex)}
-              >
-                <span className="section-title">{section.section}</span>
-                <span className="section-status">
-                  {isSectionComplete(sectionIndex) ? '✓' : '○'}
-                </span>
-              </button>
+          {evaluationCriteria.map((section, sectionIndex) => {
+            const { completed, total, percentage } = getSectionProgress(sectionIndex);
+            const isComplete = completed === total;
+            const isActive = expandedSection === sectionIndex;
 
-              {expandedSection === sectionIndex && (
-                <div className="accordion-content">
-                  {section.items.map((item) => (
-                    <div key={item.id} className="rating-item">
-                      <label>{item.name}</label>
-                      <div className="rating-options">
-                        {[1, 2, 3, 4, 5].map((value) => (
-                          <label key={value} className="radio-label" title={SCALE_LABELS[value]}>
-                            <input
-                              type="radio"
-                              name={`criteria-${item.id}`}
-                              value={value}
-                              checked={ratings[item.id] === value}
-                              onChange={() => handleRatingChange(item.id, value)}
-                              aria-label={`${SCALE_LABELS[value]} (${value})`}
-                            />
-                            <span className="radio-text">{value}</span>
-                          </label>
-                        ))}
+            return (
+              <div key={sectionIndex} className={`accordion-item ${isComplete ? 'completed' : ''} ${isActive ? 'open' : ''}`}>
+                <button
+                  type="button"
+                  className={`accordion-header ${isActive ? 'active' : ''}`}
+                  onClick={() => {
+                    if (canExpandSection(sectionIndex)) {
+                      setExpandedSection(isActive ? -1 : sectionIndex);
+                    }
+                  }}
+                  disabled={!canExpandSection(sectionIndex)}
+                >
+                  <div className="accordion-header-left">
+                    <span className="section-title">{section.section}</span>
+                    <span className="section-progress-text">
+                      {completed} of {total} completed
+                    </span>
+                  </div>
+                  <span className="section-status">
+                    {isComplete ? '✓' : '○'}
+                  </span>
+                  <div className="header-progress-bar-container">
+                    <div 
+                      className={`header-progress-bar ${isComplete ? 'complete' : ''}`} 
+                      style={{ width: `${percentage}%` }}
+                    />
+                  </div>
+                </button>
+
+                {isActive && (
+                  <div className="accordion-content">
+                    {section.items.map((item) => (
+                      <div key={item.id} className="rating-item">
+                        <label className="rating-question">{item.name}</label>
+                        <div className="rating-options">
+                          {[1, 2, 3, 4, 5].map((value) => {
+                            const isSelected = ratings[item.id] === value;
+                            return (
+                              <label 
+                                key={value} 
+                                className={`rating-card ${isSelected ? 'selected' : ''} rating-val-${value}`}
+                                title={SCALE_LABELS[value]}
+                              >
+                                <input
+                                  type="radio"
+                                  name={`criteria-${item.id}`}
+                                  value={value}
+                                  checked={isSelected}
+                                  onChange={() => handleRatingChange(item.id, value)}
+                                  aria-label={`${SCALE_LABELS[value]} (${value})`}
+                                />
+                                <div className="rating-card-content">
+                                  <span className="rating-number">{value}</span>
+                                  <span className="rating-label-text">{SCALE_LABELS[value]}</span>
+                                </div>
+                              </label>
+                            );
+                          })}
+                        </div>
                       </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          ))}
+                    ))}
+                  </div>
+                )}
+              </div>
+            );
+          })}
         </div>
 
         {/* Recommendation */}
