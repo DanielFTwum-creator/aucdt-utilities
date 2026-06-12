@@ -14,7 +14,7 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 app.use(cors());
-app.use(express.json({ limit: '10mb' })); // Increased limit for image uploads
+app.use(express.json({ limit: '20mb' })); // UI allows 10MB images; base64-in-JSON inflates ~33% (+ prompt)
 
 // --- Gemini key custody: fetched from the WMS proxy, never stored here ---
 // WMS is the single rotation point (TUC central key custody). The key is cached
