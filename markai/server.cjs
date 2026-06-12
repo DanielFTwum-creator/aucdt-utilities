@@ -16,18 +16,50 @@ const port = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json({ limit: '10mb' })); // Increased limit for image uploads
 
-// Centralized error handler for API key
-const checkApiKey = (req, res, next) => {
-  const apiKey = process.env.API_KEY;
-  if (!apiKey) {
-    console.error("❌ API Key not found in environment variables.");
-    return res.status(500).json({ 
-      error: "Server configuration error: API key is missing. Please set the API_KEY environment variable." 
-    });
+// --- Gemini key custody: fetched from the WMS proxy, never stored here ---
+// WMS is the single rotation point (TUC central key custody). The key is cached
+// in memory with a TTL; invalidateGeminiKey() forces a refetch after Google
+// rejects it (expired/rotated), so rotation self-heals within one request.
+const WMS_KEY_URL = "https://wms.techbridge.edu.gh/api/gemini/key";
+const KEY_TTL_MS = 6 * 60 * 60 * 1000;
+let cachedGeminiKey = null;
+let keyFetchedAt = 0;
+
+function invalidateGeminiKey() { cachedGeminiKey = null; keyFetchedAt = 0; }
+
+async function getGeminiKey() {
+  if (cachedGeminiKey && Date.now() - keyFetchedAt < KEY_TTL_MS) return cachedGeminiKey;
+  const proxyKey = process.env.GEMINI_PROXY_KEY;
+  if (!proxyKey) {
+    // Local dev fallback only — production must use the WMS relay.
+    if (process.env.API_KEY) return process.env.API_KEY;
+    throw new Error("GEMINI_PROXY_KEY is not set (and no local API_KEY fallback).");
   }
-  // Attach AI instance to request for later use
-  req.ai = new GoogleGenAI({ apiKey });
-  next();
+  const res = await fetch(WMS_KEY_URL, { headers: { "X-Gemini-Proxy-Key": proxyKey } });
+  if (!res.ok) throw new Error(`WMS key fetch failed: ${res.status} ${await res.text()}`);
+  cachedGeminiKey = (await res.json()).apiKey;
+  keyFetchedAt = Date.now();
+  return cachedGeminiKey;
+}
+
+// Centralized error handler for API key
+const checkApiKey = async (req, res, next) => {
+  try {
+    const apiKey = await getGeminiKey();
+    req.ai = new GoogleGenAI({ apiKey });
+    next();
+  } catch (error) {
+    console.error("❌ Could not obtain Gemini key from WMS:", error.message);
+    res.status(503).json({ error: "AI service key unavailable. Please try again shortly.", details: error.message });
+  }
+};
+
+/** Drop the cached key when Google says it is invalid/expired so the next request refetches. */
+const handleStaleKey = (error) => {
+  if (String(error?.message || "").includes("API_KEY_INVALID") || String(error?.message || "").includes("API key expired")) {
+    console.warn("⚠️ Gemini rejected the key — invalidating cache to refetch from WMS.");
+    invalidateGeminiKey();
+  }
 };
 
 // ==========================================
@@ -220,6 +252,7 @@ app.post("/api/generate", checkApiKey, async (req, res) => {
 
   } catch (error) {
     console.error("❌ Error calling Gemini API for content generation:", error);
+    handleStaleKey(error);
     res.status(500).json({ error: "Something went wrong while generating content.", details: error.message });
   }
 });
@@ -260,6 +293,7 @@ app.post("/api/edit-image", checkApiKey, async (req, res) => {
 
   } catch (error) {
     console.error("❌ Error calling Gemini API for image editing:", error);
+    handleStaleKey(error);
     res.status(500).json({ error: "Something went wrong while editing the image.", details: error.message });
   }
 });
@@ -313,6 +347,7 @@ app.post("/api/generate-image", checkApiKey, async (req, res) => {
 
   } catch (error) {
     console.error("❌ Error calling Imagen API for image generation:", error);
+    handleStaleKey(error);
     if (error?.status === 429) {
       return res.status(429).json({ error: 'IMAGE_QUOTA_EXHAUSTED', message: 'The image service is over its quota right now. Please try again in a few minutes.' });
     }
@@ -320,33 +355,9 @@ app.post("/api/generate-image", checkApiKey, async (req, res) => {
   }
 });
 
-app.get("/api/gemini/key", async (req, res) => {
-  const proxyKey = process.env.GEMINI_PROXY_KEY;
-  if (proxyKey) {
-    try {
-      const response = await fetch("https://wms.techbridge.edu.gh/api/gemini/key", {
-        headers: { "X-Gemini-Proxy-Key": proxyKey }
-      });
-      if (!response.ok) {
-        const errText = await response.text();
-        throw new Error(`WMS error: ${response.status} - ${errText}`);
-      }
-      const data = await response.json();
-      return res.json({ apiKey: data.apiKey });
-    } catch (error) {
-      console.error("❌ Failed to fetch Gemini API key from WMS:", error);
-      return res.status(500).json({ error: "Failed to fetch key from WMS", details: error.message });
-    }
-  } else {
-    // Local dev fallback
-    const localKey = process.env.API_KEY;
-    if (localKey) {
-      return res.json({ apiKey: localKey });
-    } else {
-      return res.status(500).json({ error: "Neither GEMINI_PROXY_KEY nor API_KEY is set in environment." });
-    }
-  }
-});
+// NOTE: the former GET /api/gemini/key endpoint is intentionally gone — it handed
+// the raw Gemini key to any unauthenticated caller. The key now stays server-side
+// (fetched from WMS in getGeminiKey above); no client ever receives it.
 
 app.get('/health', (req, res) => {
   res.status(200).send('healthy');
