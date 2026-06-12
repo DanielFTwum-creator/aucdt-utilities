@@ -8,6 +8,7 @@
 | **Author** | Daniel Frempong Twum / TUC ICT |
 | **Status** | Baselined (living document — update as apps onboard) |
 | **Standard** | IEEE 29148 |
+| **Published** | https://wms.techbridge.edu.gh/docs/sso-handbook.html (SYSTEM_ADMIN only) |
 | **Related** | TUC-ICT-SDD-2026-001 (SSO pass-through design) · `tuc-wms/docs/SSO_ONBOARDING_PLAYBOOK.md` · TUC-ICT-SRS-2026-004 (TUC-WMS) |
 
 ---
