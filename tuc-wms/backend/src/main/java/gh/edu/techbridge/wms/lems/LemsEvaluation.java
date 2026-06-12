@@ -43,6 +43,13 @@ public class LemsEvaluation {
     @Column(length = 4096)
     private String studentFeedback;
 
+    /** Which semester the course was taken in (part of the per-semester dedupe scope). */
+    private Integer semester;
+
+    /** RECOMMEND / NEUTRAL / NOT_RECOMMEND — stored as varchar (H2 has no extensible ENUM). */
+    @Column(length = 16)
+    private String recommend;
+
     @Column(nullable = false, updatable = false)
     private Instant createdAt = Instant.now();
 
@@ -62,6 +69,10 @@ public class LemsEvaluation {
     public void setCourse(LemsCourse v) { this.course = v; }
     public String getStudentFeedback() { return studentFeedback; }
     public void setStudentFeedback(String v) { this.studentFeedback = v; }
+    public Integer getSemester() { return semester; }
+    public void setSemester(Integer v) { this.semester = v; }
+    public String getRecommend() { return recommend; }
+    public void setRecommend(String v) { this.recommend = v; }
     public Instant getCreatedAt() { return createdAt; }
     public String getDedupeHash() { return dedupeHash; }
     public void setDedupeHash(String v) { this.dedupeHash = v; }

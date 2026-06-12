@@ -61,13 +61,20 @@ describe('LEMS — student journey', () => {
     cy.wait('@programmes');
     cy.get('select#programme').select('1');
     cy.get('select#course').select('1');
-    cy.get('select#lecturer').select('1');
+    // Single-lecturer course → the lecturer is auto-selected (LEAP FR1.4).
+    cy.get('select#lecturer').should('have.value', '1');
+    cy.get('select#semester').select('1');
     fillAllRatings();
+    cy.get('select#recommend').select('RECOMMEND');
     cy.get('#feedback').type('Great teaching, very clear explanations.');
     cy.get('button[type="submit"]').should('not.be.disabled').click();
     cy.wait('@submit').its('request.body').should((body) => {
       expect(body.lecturerId).to.eq(1);
       expect(body.courseId).to.eq(1);
+      expect(body.semester).to.eq(1);
+      expect(body.recommend).to.eq('RECOMMEND');
+      expect(body.ratings).to.have.length(20);
+      expect(body.ratings[0]).to.include.keys('criteriaNumber', 'criteriaName', 'section', 'rating');
     });
   });
 
@@ -81,8 +88,9 @@ describe('LEMS — student journey', () => {
     cy.wait('@programmes');
     cy.get('select#programme').select('1');
     cy.get('select#course').select('1');
-    cy.get('select#lecturer').select('1');
+    cy.get('select#semester').select('1');
     fillAllRatings();
+    cy.get('select#recommend').select('NEUTRAL');
     cy.get('button[type="submit"]').should('not.be.disabled').click();
     cy.wait('@submitDup');
     cy.contains(/already submitted|failed/i).should('be.visible');

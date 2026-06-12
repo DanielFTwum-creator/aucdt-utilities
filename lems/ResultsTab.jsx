@@ -101,7 +101,10 @@ function ResultsTab() {
                   {new Date(evaluation.createdAt).toLocaleDateString()}
                 </span>
               </div>
-              <p className="course-name">{evaluation.course?.name}</p>
+              <p className="course-name">
+                {evaluation.course?.name}
+                {evaluation.semester ? ` · Semester ${evaluation.semester}` : ''}
+              </p>
               {evaluation.studentFeedback && (
                 <p className="feedback">{evaluation.studentFeedback}</p>
               )}
@@ -109,6 +112,13 @@ function ResultsTab() {
                 <span className="rating-count">
                   {evaluation.ratings?.length || 0} criteria rated
                 </span>
+                {evaluation.recommend && (
+                  <span className={`recommend-badge ${evaluation.recommend.toLowerCase()}`}>
+                    {evaluation.recommend === 'RECOMMEND' && 'Recommends'}
+                    {evaluation.recommend === 'NEUTRAL' && 'Neutral'}
+                    {evaluation.recommend === 'NOT_RECOMMEND' && 'Does not recommend'}
+                  </span>
+                )}
               </div>
             </div>
           ))}

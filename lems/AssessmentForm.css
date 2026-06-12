@@ -105,6 +105,16 @@
   border-top: 1px solid var(--border-color);
 }
 
+.scale-legend {
+  margin: 1rem 0;
+  padding: 0.5rem 1rem;
+  font-size: 0.85rem;
+  color: var(--secondary-color);
+  background-color: rgba(200, 168, 75, 0.12);
+  border-left: 3px solid var(--accent-color);
+  border-radius: 0.25rem;
+}
+
 .rating-item {
   margin-bottom: 1.5rem;
   padding-bottom: 1rem;

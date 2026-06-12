@@ -14,6 +14,8 @@ function AdminPanelTab() {
   const [applying, setApplying] = useState(false);
   const [uploadMessage, setUploadMessage] = useState('');
   const [showConfirmation, setShowConfirmation] = useState(false);
+  const [auditQuery, setAuditQuery] = useState('');
+  const [auditSort, setAuditSort] = useState({ field: 'createdAt', dir: 'desc' });
 
   useEffect(() => {
     loadAuditLogs();
@@ -106,6 +108,38 @@ function AdminPanelTab() {
       setApplying(false);
     }
   };
+
+  const toggleAuditSort = (field) => {
+    setAuditSort((cur) =>
+      cur.field === field
+        ? { field, dir: cur.dir === 'asc' ? 'desc' : 'asc' }
+        : { field, dir: 'asc' }
+    );
+  };
+
+  const sortArrow = (field) =>
+    auditSort.field === field ? (auditSort.dir === 'asc' ? ' ▲' : ' ▼') : '';
+
+  const visibleAuditLogs = auditLogs
+    .filter((log) => {
+      if (!auditQuery) return true;
+      const q = auditQuery.toLowerCase();
+      return (
+        log.eventType?.toLowerCase().includes(q) ||
+        log.description?.toLowerCase().includes(q) ||
+        log.details?.toLowerCase().includes(q)
+      );
+    })
+    .sort((a, b) => {
+      const { field, dir } = auditSort;
+      const av = a[field] ?? '';
+      const bv = b[field] ?? '';
+      const cmp =
+        field === 'createdAt'
+          ? new Date(av) - new Date(bv)
+          : String(av).localeCompare(String(bv));
+      return dir === 'asc' ? cmp : -cmp;
+    });
 
   return (
     <div className="admin-panel-tab">
@@ -234,23 +268,39 @@ function AdminPanelTab() {
           <h3>📋 Audit Logs</h3>
           <p>System events and activities</p>
 
+          <div className="audit-search">
+            <input
+              type="text"
+              placeholder="Search by event, description or details..."
+              value={auditQuery}
+              onChange={(e) => setAuditQuery(e.target.value)}
+              aria-label="Search audit logs"
+            />
+          </div>
+
           {loading ? (
             <div className="loading">Loading audit logs...</div>
-          ) : auditLogs.length === 0 ? (
+          ) : visibleAuditLogs.length === 0 ? (
             <div className="no-data">No audit logs found</div>
           ) : (
             <div className="audit-logs-table">
               <table>
                 <thead>
                   <tr>
-                    <th>Event Type</th>
-                    <th>Description</th>
+                    <th className="sortable" onClick={() => toggleAuditSort('eventType')}>
+                      Event Type{sortArrow('eventType')}
+                    </th>
+                    <th className="sortable" onClick={() => toggleAuditSort('description')}>
+                      Description{sortArrow('description')}
+                    </th>
                     <th>Status</th>
-                    <th>Timestamp</th>
+                    <th className="sortable" onClick={() => toggleAuditSort('createdAt')}>
+                      Timestamp{sortArrow('createdAt')}
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
-                  {auditLogs.map((log) => (
+                  {visibleAuditLogs.map((log) => (
                     <tr key={log.id}>
                       <td>
                         <span className="event-type">{log.eventType}</span>

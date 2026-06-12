@@ -11,6 +11,7 @@ function AssessmentForm() {
   const [selectedSemester, setSelectedSemester] = useState('');
   const [selectedCourse, setSelectedCourse] = useState('');
   const [selectedLecturer, setSelectedLecturer] = useState('');
+  const [recommendation, setRecommendation] = useState('');
   
   const [expandedSection, setExpandedSection] = useState(0);
   const [ratings, setRatings] = useState({});
@@ -19,48 +20,58 @@ function AssessmentForm() {
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
 
+  // Merged instrument (LEAP statement wording, LEMS 20-item depth):
+  // each item is a statement rated 1 (Strongly Disagree) to 5 (Strongly Agree).
   const evaluationCriteria = [
     {
-      section: 'Teaching Quality',
+      section: "Lecturer's Delivery & Knowledge",
       items: [
-        { id: 1, name: 'Clear explanation of concepts' },
-        { id: 2, name: 'Organized course content' },
-        { id: 3, name: 'Effective use of teaching materials' },
-        { id: 4, name: 'Engagement with students' },
-        { id: 5, name: 'Clarity in course objectives' },
+        { id: 1, name: 'The lecturer was knowledgeable in the field of study represented by this course.' },
+        { id: 2, name: 'The course content was delivered in a well-organised and structured manner.' },
+        { id: 3, name: 'The lecturer made effective use of teaching and learning materials.' },
+        { id: 4, name: "The lecturer's teaching style was enthusiastic and stimulating." },
+        { id: 5, name: 'Course objectives, content and assessment methods were clearly communicated to students.' },
       ],
     },
     {
-      section: 'Communication',
+      section: 'Communication & Engagement',
       items: [
-        { id: 6, name: 'Responsiveness to student questions' },
-        { id: 7, name: 'Clear communication of expectations' },
-        { id: 8, name: 'Availability for consultation' },
-        { id: 9, name: 'Constructive feedback on assignments' },
-        { id: 10, name: 'Professional communication' },
+        { id: 6, name: 'The lecturer always responded to specific questions confidently and promptly.' },
+        { id: 7, name: 'Expectations for the course were communicated clearly.' },
+        { id: 8, name: 'The lecturer was available for consultation outside class hours.' },
+        { id: 9, name: 'The lecturer provided constructive feedback on assignments.' },
+        { id: 10, name: 'The lecturer communicated professionally at all times.' },
       ],
     },
     {
       section: 'Assessment & Feedback',
       items: [
-        { id: 11, name: 'Fair and transparent grading' },
-        { id: 12, name: 'Timely feedback on work' },
-        { id: 13, name: 'Clear assessment criteria' },
-        { id: 14, name: 'Appropriate difficulty level' },
-        { id: 15, name: 'Alignment with learning objectives' },
+        { id: 11, name: 'Assessment methods were fair and appropriate.' },
+        { id: 12, name: 'Feedback on my work was provided in good time.' },
+        { id: 13, name: 'Assessment criteria were clear and transparent.' },
+        { id: 14, name: 'The difficulty level of assessments was appropriate for the course.' },
+        { id: 15, name: 'Assessments aligned with the stated learning objectives.' },
       ],
     },
     {
       section: 'Course Management',
       items: [
-        { id: 16, name: 'Adherence to course schedule' },
-        { id: 17, name: 'Well-organized course materials' },
-        { id: 18, name: 'Effective use of learning platforms' },
-        { id: 19, name: 'Accommodation of diverse learning styles' },
-        { id: 20, name: 'Overall course quality' },
+        { id: 16, name: 'The lecturer was always regular and punctual in class.' },
+        { id: 17, name: 'Course materials were well organised and accessible.' },
+        { id: 18, name: 'The lecturer made effective use of the learning platforms.' },
+        { id: 19, name: 'The lecturer accommodated diverse learning styles.' },
+        { id: 20, name: 'Overall, the quality of this course was high.' },
       ],
     },
   ];
+
+  const SCALE_LABELS = {
+    1: 'Strongly Disagree',
+    2: 'Disagree',
+    3: 'Neutral',
+    4: 'Agree',
+    5: 'Strongly Agree',
+  };
 
   useEffect(() => {
     loadProgrammes();
@@ -108,7 +119,12 @@ function AssessmentForm() {
         const response = await apiService.getCourseById(courseId);
         if (response.data.success) {
           const course = response.data.data;
-          setLecturers(course.lecturers || []);
+          const courseLecturers = course.lecturers || [];
+          setLecturers(courseLecturers);
+          // Single-lecturer course: pre-select for the student (LEAP FR1.4).
+          if (courseLecturers.length === 1) {
+            setSelectedLecturer(String(courseLecturers[0].id));
+          }
         }
       } catch (err) {
         console.error('Error loading lecturers:', err);
@@ -144,6 +160,16 @@ function AssessmentForm() {
       return;
     }
 
+    if (!selectedSemester) {
+      setError('Please select a semester');
+      return;
+    }
+
+    if (!recommendation) {
+      setError('Please indicate whether you would recommend this lecturer');
+      return;
+    }
+
     if (!isSectionComplete(evaluationCriteria.length - 1)) {
       setError('Please complete all evaluation criteria');
       return;
@@ -172,6 +198,8 @@ function AssessmentForm() {
         lecturerId: parseInt(selectedLecturer),
         courseId: parseInt(selectedCourse),
         studentFeedback: feedback,
+        semester: parseInt(selectedSemester),
+        recommend: recommendation,
         ratings: ratingDetails,
       };
 
@@ -181,8 +209,10 @@ function AssessmentForm() {
         setMessage('Thank you! Your evaluation has been submitted successfully.');
         // Reset form
         setSelectedProgramme('');
+        setSelectedSemester('');
         setSelectedCourse('');
         setSelectedLecturer('');
+        setRecommendation('');
         setRatings({});
         setFeedback('');
         setExpandedSection(0);
@@ -253,6 +283,25 @@ function AssessmentForm() {
               ))}
             </select>
           </div>
+
+          <div className="form-group">
+            <label htmlFor="semester">Semester *</label>
+            <select
+              id="semester"
+              value={selectedSemester}
+              onChange={(e) => setSelectedSemester(e.target.value)}
+              required
+            >
+              <option value="">Select a semester</option>
+              <option value="1">Semester 1</option>
+              <option value="2">Semester 2</option>
+            </select>
+          </div>
+        </div>
+
+        {/* Rating scale legend */}
+        <div className="scale-legend" aria-hidden="true">
+          1 = Strongly Disagree · 2 = Disagree · 3 = Neutral · 4 = Agree · 5 = Strongly Agree
         </div>
 
         {/* Accordion Sections */}
@@ -282,13 +331,14 @@ function AssessmentForm() {
                       <label>{item.name}</label>
                       <div className="rating-options">
                         {[1, 2, 3, 4, 5].map((value) => (
-                          <label key={value} className="radio-label">
+                          <label key={value} className="radio-label" title={SCALE_LABELS[value]}>
                             <input
                               type="radio"
                               name={`criteria-${item.id}`}
                               value={value}
                               checked={ratings[item.id] === value}
                               onChange={() => handleRatingChange(item.id, value)}
+                              aria-label={`${SCALE_LABELS[value]} (${value})`}
                             />
                             <span className="radio-text">{value}</span>
                           </label>
@@ -300,6 +350,24 @@ function AssessmentForm() {
               )}
             </div>
           ))}
+        </div>
+
+        {/* Recommendation */}
+        <div className="form-section">
+          <div className="form-group">
+            <label htmlFor="recommend">Would you recommend this lecturer? *</label>
+            <select
+              id="recommend"
+              value={recommendation}
+              onChange={(e) => setRecommendation(e.target.value)}
+              required
+            >
+              <option value="">Select an option</option>
+              <option value="RECOMMEND">Recommend</option>
+              <option value="NEUTRAL">Neutral</option>
+              <option value="NOT_RECOMMEND">Not Recommend</option>
+            </select>
+          </div>
         </div>
 
         {/* Feedback Section */}

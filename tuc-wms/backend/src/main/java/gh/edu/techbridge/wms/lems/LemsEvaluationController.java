@@ -46,7 +46,9 @@ public class LemsEvaluationController {
     public record RatingItem(Integer criteriaNumber, String criteriaName, String section, Integer rating) { }
 
     public record SubmissionRequest(Long lecturerId, Long courseId, String studentFeedback,
-                                    List<RatingItem> ratings) { }
+                                    Integer semester, String recommend, List<RatingItem> ratings) { }
+
+    private static final List<String> RECOMMEND_VALUES = List.of("RECOMMEND", "NEUTRAL", "NOT_RECOMMEND");
 
     @PostMapping("/submit")
     @Transactional
@@ -55,18 +57,29 @@ public class LemsEvaluationController {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Lecturer not found"));
         LemsCourse course = courses.findById(req.courseId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Course not found"));
+        if (req.semester() == null || req.semester() < 1 || req.semester() > 2) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Semester (1 or 2) is required");
+        }
+        if (req.recommend() == null || !RECOMMEND_VALUES.contains(req.recommend())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "Recommendation is required (RECOMMEND, NEUTRAL or NOT_RECOMMEND)");
+        }
 
+        // One submission per student per lecturer+course+SEMESTER — students may
+        // evaluate the same pairing again in a later semester.
         String hash = sha256(auth.getName().toLowerCase().trim()
-                + "|" + req.lecturerId() + "|" + req.courseId() + "|" + dedupeSalt);
+                + "|" + req.lecturerId() + "|" + req.courseId() + "|" + req.semester() + "|" + dedupeSalt);
         if (evaluations.existsByDedupeHash(hash)) {
             throw new ResponseStatusException(HttpStatus.CONFLICT,
-                    "You have already submitted an evaluation for this lecturer and course.");
+                    "You have already submitted an evaluation for this lecturer and course this semester.");
         }
 
         LemsEvaluation e = new LemsEvaluation();
         e.setLecturer(lecturer);
         e.setCourse(course);
         e.setStudentFeedback(req.studentFeedback());
+        e.setSemester(req.semester());
+        e.setRecommend(req.recommend());
         e.setDedupeHash(hash);
         LemsEvaluation saved = evaluations.save(e);
 
