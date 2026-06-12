@@ -4,8 +4,8 @@
 |---|---|
 | **Companion to** | `SSO_PASSTHROUGH_DESIGN.md` (TUC-ICT-SDD-2026-001) |
 | **Goal** | One Techbridge Google Workspace login covers every AI-Lab app — no per-app re-login |
-| **Status** | tsapro = LIVE · markai = allowlisted (frontend pending) · rest = not started |
-| **Date** | 2026-06-09 |
+| **Status** | LIVE: tsapro (A) · umat (B, staff-only) · markai (B, hybrid) · tuc-netscan-100 (C) — rest per SRS-2026-013 §8 |
+| **Date** | 2026-06-12 |
 
 ## Why this works
 Once an app is a WMS-SSO client, the user's `wms_refresh` cookie (scoped to `.techbridge.edu.gh`)
@@ -34,7 +34,9 @@ intended scope.
 (`auth/api.ts`, `AuthContext`, `LoginPage`, `CallbackPage`, `MfaPage`, `ProtectedRoute`), add a
 `/auth/callback` route, BrowserRouter basename = the app subpath.
 
-**B. no-router state SPA** (markai) — no routes; auth is gated by `if (!currentUser) <LoginView/>`.
+**B. no-router state SPA** (umat ✅, markai ✅) — no routes; auth is gated by `if (!currentUser) <LoginView/>`.
+Reference implementations: `umat/auth/` (plain JSX, staff-only) and `markai/services/wmsAuthService.ts` +
+`markai/contexts/AuthContext.tsx` + `markai/components/WmsMfaModal.tsx` (TSX, hybrid — local accounts kept).
 Adapt instead of copy:
 - Rewrite the app's `AuthContext` to, on mount: (1) read `?code` / `?mfa_ticket` / `?error` from
   the URL (the WMS callback lands here), handle them, then clean the URL; (2) otherwise do a silent
@@ -75,15 +77,11 @@ origin — `ai-tools.techbridge.edu.gh` and `techbridge.edu.gh` already are. No 
 ☐ Tested: fresh login + silent adoption from another fleet app
 ```
 
-## Suggested rollout order
-1. **markai** — pilot (server-side ready; frontend pending) → proves archetype B end-to-end.
-2. **tuc-ai-lab-catalog** — the hub (archetype A); biggest UX win (login at the launcher).
-3. High-traffic apps (biochemai, willpro, glucose, dictation-app), then the long tail.
-4. Static/no-auth apps (flyers, sites) need nothing.
-
-## markai pilot — current state
-- ✅ `app-bases.markai = https://ai-tools.techbridge.edu.gh/markai`; `ai-tools.techbridge.edu.gh`
-  in `allowed-origins`; WMS restarted; handoff verified.
-- ⬜ Frontend swap (archetype B): rewrite `markai/contexts/AuthContext.tsx`, `LoginView`, add an MFA
-  modal, remove `server.cjs` OAuth. Static-served via `.htaccess` → scp `dist/` to
-  `/var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/markai/`.
+## Rollout (per the final classification in SRS-2026-013 §4)
+1. ✅ **markai** — pilot complete 2026-06-11, browser-confirmed 2026-06-12 (hybrid: staff → SSO,
+   external users keep local accounts; the old unrestricted client-side Google flow is removed).
+2. ✅ **umat** — staff-only archetype B (2026-06-11), incl. WMS-side persistence (`/api/umat/**`).
+3. Remaining staff set: reconcile the two netscans, analytics dashboards (Impact Ventures, Strategy),
+   tuc-2026-enrollment-command-centre, techbridge-student-population-register.
+4. Public apps (incl. tuc-ai-lab-catalog hub, biochemai, willpro, glucose, dictation-app) keep their
+   own login — no action. Static/no-auth apps need nothing.

@@ -3,8 +3,8 @@
 | Field | Value |
 |---|---|
 | **Document ID** | TUC-ICT-SRS-2026-013 |
-| **Version** | 1.0.0 |
-| **Date** | 2026-06-09 |
+| **Version** | 1.1.0 |
+| **Date** | 2026-06-12 |
 | **Author** | Daniel Frempong Twum / TUC ICT |
 | **Status** | Baselined (living document — update as apps onboard) |
 | **Standard** | IEEE 29148 |
@@ -81,6 +81,17 @@ already signed into WMS entered TSAPro with no second login (`JWT_REFRESHED`).
   separate password identity). Mapping is per-client (e.g. WMS `SYSTEM_ADMIN/HOD` → NetScan `ADMIN`).
 - **FR-SSO-009 Audience policy.** Only **staff/internal** apps onboard. **Public-facing** apps retain
   their own login (Google/username-password/registration) — they are explicitly NOT domain-gated.
+- **FR-SSO-010 Hybrid clients.** A public app MAY additionally offer a staff entry point by routing
+  only its "Continue with Google" affordance through the IdP, while keeping its local accounts for
+  external users (markai is the reference). The hybrid replaces any client-side Google flow — no app
+  may run an unrestricted browser-side Google login (markai's old implicit flow accepted ANY Google
+  account; removed 2026-06-11).
+- **FR-SSO-011 Service-key custody (Gemini relay).** Fleet apps must not store the shared Gemini API
+  key. A server-side relay fetches it from the IdP (`GET {IdP}/api/gemini/key`, authenticated by the
+  `X-Gemini-Proxy-Key` service header; constant-time compare), caches it in memory with a TTL, and
+  invalidates the cache when Google rejects the key — rotation then happens at the IdP only and
+  self-heals fleet-wide. No endpoint may ever return the raw key to a browser. markai is the first
+  client (2026-06-12); dmcdai/omniextract to follow.
 
 ## 4. Application Classification (NFR/policy)
 
@@ -88,8 +99,9 @@ The ecosystem is split by audience (decided 2026-06-09). Onboarding scope = the 
 
 | Class | Auth | Apps |
 |---|---|---|
-| **Staff → SSO** | WMS SSO + MFA | TSAPro (live), **tuc-netscan** (pilot), analytics dashboards (Impact Ventures, Strategy, …), tuc-2026-enrollment-command-centre, techbridge-student-population-register |
-| **Public → own login** | own Google / username-password / registration | markai, glucose, rophe-care-rpms, biochemai, bionicskins, willpro, omniextract, dictation-app, ai-email-drafter, techbridge-ai-blueprint, tuc-ai-lab-catalog (hub), techbridge-ai-application-portal, all Google-gated creative/utility tools (poster-studio, luxthumb, groove-streamer, youtube-genie, midjourney-helper, brand-checker, elephant-on-parade, orbit-walk, clipai, ai-techbridge, smartscale, deliberate-magic, patois-lyricist, deep-dub, brainiac), assessments/tutorials (Group C), consumer apps |
+| **Staff → SSO** | WMS SSO + MFA | TSAPro (live), **UMAT tracker (live 2026-06-11)**, tuc-netscan-100 (live), analytics dashboards (Impact Ventures, Strategy, …), tuc-2026-enrollment-command-centre, techbridge-student-population-register |
+| **Hybrid → SSO for staff + own login for external** | "Continue with Google" → WMS SSO; local username/password kept | **markai (live 2026-06-11)** — FR-SSO-010 reference |
+| **Public → own login** | own Google / username-password / registration | glucose, rophe-care-rpms, biochemai, bionicskins, willpro, omniextract, dictation-app, ai-email-drafter, techbridge-ai-blueprint, tuc-ai-lab-catalog (hub), techbridge-ai-application-portal, all Google-gated creative/utility tools (poster-studio, luxthumb, groove-streamer, youtube-genie, midjourney-helper, brand-checker, elephant-on-parade, orbit-walk, clipai, ai-techbridge, smartscale, deliberate-magic, patois-lyricist, deep-dub, brainiac), assessments/tutorials (Group C), consumer apps |
 
 **Rule of thumb:** any app that allows self-registration or serves students/external/anonymous users
 is public. "Google-gated" alone does **not** imply staff-only.
@@ -98,7 +110,7 @@ is public. "Google-gated" alone does **not** imply staff-only.
 
 | | Archetype A — router SPA | Archetype B — no-router SPA | Archetype C — app with own backend |
 |---|---|---|---|
-| Example | **TSAPro** (live), catalog | **markai**-shape (state-gated) | **tuc-netscan** (Spring Boot + JWT) |
+| Example | **TSAPro** (live) | **UMAT** (live, plain JSX) · **markai** (live, TSX hybrid) | **tuc-netscan-100** (live, Express relay) · tuc-netscan (Spring design, undeployed) |
 | Frontend | Drop in WMS `auth/*` components; add `/auth/callback` route; BrowserRouter basename = subpath | Adapt `AuthContext`: on-mount read `?code`/`?mfa_ticket`/`?error` + silent refresh; MFA modal | Same as A (it is a router SPA) |
 | Backend | none (static SPA) | none (static SPA) | **becomes a resource server**: validates IdP identity, issues its own session for its API |
 | Callback serving | nginx `try_files` / `.htaccess` SPA fallback | same | same |
@@ -129,6 +141,24 @@ Role map (NetScan): WMS `SYSTEM_ADMIN`/`HOD` → `ADMIN`; otherwise → `ENGINEE
   755/644 (root:root ⇒ 403); SPA fallback serves `/<app>/auth/callback`. Backend clients (NetScan) →
   rebuild jar + restart their own service.
 
+### 6.1 Implementation rules (hard-won, 2026-06-11/12)
+1. **IdP permitAll for controller-self-auth endpoints.** Any IdP endpoint that enforces its own auth
+   in the controller (e.g. `X-Gemini-Proxy-Key` checks on `/api/gemini/key` and `/generate`) MUST be
+   in Spring Security's permitAll list — otherwise Spring 401s relays before the controller runs.
+2. **Env files are LF-only.** A CRLF-written value smuggles `\r` into secrets and breaks
+   constant-time comparison at the IdP. On Windows write with `[IO.File]::WriteAllText` (LF), never
+   `Set-Content` defaults.
+3. **HTML must be no-cache at the layer that actually serves it.** Plesk nginx can serve static html
+   directly, bypassing `.htaccess` headers — add `Cache-Control: no-cache` in the vhost nginx block
+   (umat precedent) or users keep stale bundles through deploys.
+4. **Body limits for image-bearing relays.** Base64-in-JSON inflates uploads ~33%: set BOTH nginx
+   `client_max_body_size` and the app body-parser limit to ≥ 2× the advertised file cap.
+5. **One env file per deployment.** dotenv loading `.env.local` before `.env` with both present makes
+   fixes silently no-op; ship exactly one env file to the webroot.
+6. **Allowlist entries are policy.** An app's `app-bases` entry reflects its classification — record
+   removals in this document (the markai entry was deliberately removed post-classification, then
+   reinstated for the hybrid; both moves looked like drift until documented).
+
 ## 7. Security Requirements
 - Open-redirect safe (server-side allowlist only); explicit CORS origins + credentials (no wildcard).
 - Access token in memory only (never localStorage); refresh token HttpOnly.
@@ -137,15 +167,17 @@ Role map (NetScan): WMS `SYSTEM_ADMIN`/`HOD` → `ADMIN`; otherwise → `ENGINEE
 - Audit retained at the IdP (provisioning, MFA, JWT issue/refresh, domain rejects).
 
 ## 8. Current State & Roadmap
-- **Live:** TUC-WMS multi-tenant IdP; **TSAPro** (archetype A) fully migrated + deployed; 3 users
-  provisioned; cross-app silent adoption verified.
-- **In progress:** **tuc-netscan** pilot (archetype C) — design baselined here; backend
-  `sso-exchange` + `JwtFilter` change + frontend swap + deploy pending.
-- **Backlog:** onboard remaining staff apps (analytics dashboards, enrollment command centre, student
-  population register). Public apps: no action. Cleanup: remove stale `markai` allowlist entry at next
-  IdP restart.
+- **Live SSO clients (4):** **TSAPro** (A) · **UMAT tracker** (B, staff-only; also persists to the
+  IdP database via `/api/umat/**` — first non-auth WMS module consumed by a fleet app) · **markai**
+  (B, hybrid per FR-SSO-010; browser-confirmed 2026-06-12) · **tuc-netscan-100** (C, Express
+  `requireWmsAuth` relay to `{IdP}/api/me`). Cross-app silent adoption verified in production.
+- **Live service relay:** markai on IdP Gemini key custody (FR-SSO-011) — first of the fleet.
+- **Open:** reconcile the two netscans (-100 live vs Spring mock undeployed); onboard remaining staff
+  apps (analytics dashboards, enrollment command centre, student population register); migrate
+  dmcdai/omniextract to FR-SSO-011 key custody. Public apps: no action.
 
 ## 9. Revision History
 | Version | Date | Change |
 |---|---|---|
 | 1.0.0 | 2026-06-09 | Initial baseline: ecosystem architecture, FR-SSO, classification, archetypes A/B/C, NetScan integration design, deployment, roadmap. |
+| 1.1.0 | 2026-06-12 | UMAT (B) + markai (B hybrid) + netscan-100 (C) live; new FR-SSO-010 (hybrid clients) + FR-SSO-011 (Gemini key custody relay); hybrid class added to §4; §6.1 implementation rules; roadmap refreshed (stale-markai cleanup superseded by hybrid). |
