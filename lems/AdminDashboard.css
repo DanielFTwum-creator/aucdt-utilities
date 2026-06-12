@@ -67,7 +67,7 @@
 
 .tab-button:hover {
   color: var(--primary-color);
-  background-color: rgba(37, 99, 235, 0.05);
+  background-color: rgba(99, 15, 18, 0.05);
 }
 
 .tab-button.active {

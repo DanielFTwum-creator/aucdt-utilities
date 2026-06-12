@@ -11,7 +11,7 @@
 }
 
 .stat-card {
-  background: linear-gradient(135deg, var(--primary-color), #1e40af);
+  background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
   color: white;
   padding: 1.5rem;
   border-radius: 0.5rem;

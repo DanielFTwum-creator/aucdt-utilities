@@ -1,35 +1,41 @@
-/* Root Theme Variables */
+/* Root Theme Variables — TUC brand: maroon #630f12, gold #C8A84B, paper background */
 :root {
-  --primary-color: #2563eb;
-  --secondary-color: #64748b;
+  --primary-color: #630f12;
+  --primary-dark: #4a0b0e;
+  --secondary-color: #7d7264;
+  --accent-color: #c8a84b;
   --success-color: #10b981;
   --error-color: #ef4444;
   --warning-color: #f59e0b;
-  --bg-color: #ffffff;
-  --text-color: #1f2937;
-  --border-color: #e5e7eb;
-  --shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+  --bg-color: #f7f5f0;
+  --text-color: #2a2118;
+  --border-color: #e2ddd2;
+  --shadow: 0 1px 3px rgba(42, 33, 24, 0.1);
+  --shadow-lg: 0 10px 15px rgba(42, 33, 24, 0.1);
 }
 
 /* Dark Theme */
 [data-theme='dark'] {
-  --primary-color: #3b82f6;
-  --secondary-color: #cbd5e1;
+  --primary-color: #8a1a1f;
+  --primary-dark: #630f12;
+  --secondary-color: #b8ab97;
+  --accent-color: #c8a84b;
   --success-color: #34d399;
   --error-color: #f87171;
   --warning-color: #fbbf24;
-  --bg-color: #1f2937;
-  --text-color: #f3f4f6;
-  --border-color: #374151;
+  --bg-color: #1a1412;
+  --text-color: #f3efe7;
+  --border-color: #3a322c;
   --shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
   --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.3);
 }
 
 /* High Contrast Theme */
 [data-theme='high-contrast'] {
-  --primary-color: #0000ff;
+  --primary-color: #5c0000;
+  --primary-dark: #3d0000;
   --secondary-color: #000000;
+  --accent-color: #806000;
   --success-color: #008000;
   --error-color: #ff0000;
   --warning-color: #ff8800;
@@ -129,7 +135,7 @@ button:disabled {
 }
 
 .primary-button:hover:not(:disabled) {
-  background-color: #1d4ed8;
+  background-color: var(--primary-dark);
 }
 
 .secondary-button {
@@ -160,7 +166,7 @@ select:focus,
 textarea:focus {
   outline: none;
   border-color: var(--primary-color);
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+  box-shadow: 0 0 0 3px rgba(99, 15, 18, 0.12);
 }
 
 input:disabled,

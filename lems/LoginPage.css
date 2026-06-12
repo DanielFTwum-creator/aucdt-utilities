@@ -3,7 +3,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, var(--primary-color), #1e40af);
+  background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
   padding: 1rem;
 }
 
@@ -60,7 +60,7 @@
 .form-group input:focus {
   outline: none;
   border-color: var(--primary-color);
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+  box-shadow: 0 0 0 3px rgba(99, 15, 18, 0.12);
 }
 
 .login-button {
@@ -76,7 +76,7 @@
 }
 
 .login-button:hover:not(:disabled) {
-  background-color: #1d4ed8;
+  background-color: var(--primary-dark);
   transform: translateY(-2px);
   box-shadow: var(--shadow-lg);
 }

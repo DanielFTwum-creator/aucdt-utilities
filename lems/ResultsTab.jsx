@@ -7,6 +7,8 @@ function ResultsTab() {
   const [filteredEvaluations, setFilteredEvaluations] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
+  const [fromDate, setFromDate] = useState('');
+  const [toDate, setToDate] = useState('');
 
   useEffect(() => {
     loadEvaluations();
@@ -14,7 +16,7 @@ function ResultsTab() {
 
   useEffect(() => {
     filterEvaluations();
-  }, [searchQuery, evaluations]);
+  }, [searchQuery, fromDate, toDate, evaluations]);
 
   const loadEvaluations = async () => {
     try {
@@ -30,18 +32,23 @@ function ResultsTab() {
   };
 
   const filterEvaluations = () => {
-    if (!searchQuery) {
-      setFilteredEvaluations(evaluations);
-      return;
-    }
-
     const query = searchQuery.toLowerCase();
-    const filtered = evaluations.filter(
-      (ev) =>
-        ev.lecturer?.firstName?.toLowerCase().includes(query) ||
-        ev.lecturer?.lastName?.toLowerCase().includes(query) ||
-        ev.course?.name?.toLowerCase().includes(query)
-    );
+    const from = fromDate ? new Date(fromDate) : null;
+    // End of the selected "to" day, so the range is inclusive.
+    const to = toDate ? new Date(new Date(toDate).getTime() + 24 * 60 * 60 * 1000) : null;
+
+    const filtered = evaluations.filter((ev) => {
+      if (query &&
+          !ev.lecturer?.firstName?.toLowerCase().includes(query) &&
+          !ev.lecturer?.lastName?.toLowerCase().includes(query) &&
+          !ev.course?.name?.toLowerCase().includes(query)) {
+        return false;
+      }
+      const created = new Date(ev.createdAt);
+      if (from && created < from) return false;
+      if (to && created >= to) return false;
+      return true;
+    });
     setFilteredEvaluations(filtered);
   };
 
@@ -56,6 +63,26 @@ function ResultsTab() {
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
         />
+        <div className="date-filter">
+          <label>
+            From
+            <input
+              type="date"
+              value={fromDate}
+              onChange={(e) => setFromDate(e.target.value)}
+              aria-label="Filter from date"
+            />
+          </label>
+          <label>
+            To
+            <input
+              type="date"
+              value={toDate}
+              onChange={(e) => setToDate(e.target.value)}
+              aria-label="Filter to date"
+            />
+          </label>
+        </div>
       </div>
 
       {loading ? (

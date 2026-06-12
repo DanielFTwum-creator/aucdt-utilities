@@ -1,17 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import { apiService } from './api';
+import { extractCurriculum, readPdfText } from './gemini';
 import './AdminPanelTab.css';
 
 function AdminPanelTab() {
   const [auditLogs, setAuditLogs] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [programmes, setProgrammes] = useState([]);
+  const [selectedProgramme, setSelectedProgramme] = useState('');
   const [pdfFile, setPdfFile] = useState(null);
-  const [uploading, setUploading] = useState(false);
+  const [extracting, setExtracting] = useState(false);
+  const [extracted, setExtracted] = useState(null);
+  const [applying, setApplying] = useState(false);
   const [uploadMessage, setUploadMessage] = useState('');
   const [showConfirmation, setShowConfirmation] = useState(false);
 
   useEffect(() => {
     loadAuditLogs();
+    loadProgrammes();
   }, []);
 
   const loadAuditLogs = async () => {
@@ -27,10 +33,22 @@ function AdminPanelTab() {
     }
   };
 
+  const loadProgrammes = async () => {
+    try {
+      const response = await apiService.getProgrammes();
+      if (response.data.success) {
+        setProgrammes(response.data.data || []);
+      }
+    } catch (err) {
+      console.error('Error loading programmes:', err);
+    }
+  };
+
   const handleFileSelect = (e) => {
     const file = e.target.files[0];
     if (file && file.type === 'application/pdf') {
       setPdfFile(file);
+      setExtracted(null);
       setUploadMessage('');
     } else {
       setUploadMessage('Please select a valid PDF file');
@@ -38,24 +56,54 @@ function AdminPanelTab() {
     }
   };
 
-  const handleUploadConfirm = async () => {
-    if (!pdfFile) return;
-
-    setUploading(true);
+  const handleExtract = async () => {
+    if (!pdfFile || !selectedProgramme) {
+      setUploadMessage('Please select a programme and a PDF file');
+      return;
+    }
+    setExtracting(true);
+    setUploadMessage('');
+    setExtracted(null);
     try {
-      const response = await apiService.extractPdf(pdfFile);
-      if (response.data.success) {
-        setUploadMessage('PDF processed successfully! Curriculum data has been updated.');
-        setPdfFile(null);
-        setShowConfirmation(false);
-        loadAuditLogs();
-      } else {
-        setUploadMessage('Failed to process PDF: ' + response.data.message);
+      const text = await readPdfText(pdfFile);
+      const programmeName =
+        programmes.find((p) => p.id === Number(selectedProgramme))?.name || '';
+      const data = await extractCurriculum(text, programmeName);
+      setExtracted(data);
+      if (!data.lecturers.length && !data.courses.length) {
+        setUploadMessage('No lecturers or courses were found in this document.');
       }
     } catch (err) {
-      setUploadMessage('Error uploading PDF: ' + (err.response?.data?.message || err.message));
+      setUploadMessage('Extraction failed: ' + err.message);
     } finally {
-      setUploading(false);
+      setExtracting(false);
+    }
+  };
+
+  const handleApplyConfirm = async () => {
+    if (!extracted) return;
+    setApplying(true);
+    try {
+      const response = await apiService.importCurriculum({
+        programmeId: Number(selectedProgramme),
+        lecturers: extracted.lecturers,
+        courses: extracted.courses,
+      });
+      const s = response.data.data;
+      setUploadMessage(
+        `Curriculum imported successfully — lecturers added: ${s.lecturersAdded}, ` +
+          `courses added: ${s.coursesAdded}, courses updated: ${s.coursesUpdated}.`
+      );
+      setPdfFile(null);
+      setExtracted(null);
+      setShowConfirmation(false);
+      loadAuditLogs();
+    } catch (err) {
+      setUploadMessage(
+        'Import failed: ' + (err.response?.data?.message || err.message)
+      );
+    } finally {
+      setApplying(false);
     }
   };
 
@@ -64,12 +112,30 @@ function AdminPanelTab() {
       <h2>Admin Panel</h2>
 
       <div className="admin-sections">
-        {/* PDF Upload Section */}
+        {/* Curriculum PDF Extraction */}
         <div className="admin-section">
           <h3>📄 Upload Curriculum PDF</h3>
-          <p>Upload a timetable PDF to extract and update curriculum data.</p>
+          <p>
+            Upload a programme document to extract lecturers and courses with AI,
+            review the result, then apply it to the catalogue. Existing data is
+            updated, never deleted — evaluations are untouched.
+          </p>
 
           <div className="pdf-upload-area">
+            <select
+              id="import-programme"
+              value={selectedProgramme}
+              onChange={(e) => setSelectedProgramme(e.target.value)}
+              aria-label="Programme to update"
+            >
+              <option value="">Select a programme</option>
+              {programmes.map((prog) => (
+                <option key={prog.id} value={prog.id}>
+                  {prog.name}
+                </option>
+              ))}
+            </select>
+
             <input
               type="file"
               accept=".pdf"
@@ -81,39 +147,75 @@ function AdminPanelTab() {
               {pdfFile ? `Selected: ${pdfFile.name}` : 'Click to select PDF file'}
             </label>
 
-            {pdfFile && (
+            {pdfFile && !extracted && (
               <button
                 className="upload-button"
-                onClick={() => setShowConfirmation(true)}
-                disabled={uploading}
+                onClick={handleExtract}
+                disabled={extracting || !selectedProgramme}
               >
-                {uploading ? 'Processing...' : 'Upload & Process'}
+                {extracting ? 'Extracting…' : 'Extract with AI'}
               </button>
             )}
           </div>
 
+          {extracted && (
+            <div className="extraction-preview">
+              <h4>Extraction preview</h4>
+              <div className="preview-columns">
+                <div>
+                  <strong>Lecturers ({extracted.lecturers.length})</strong>
+                  <ul>
+                    {extracted.lecturers.map((l, i) => (
+                      <li key={i}>{l.name}</li>
+                    ))}
+                  </ul>
+                </div>
+                <div>
+                  <strong>Courses ({extracted.courses.length})</strong>
+                  <ul>
+                    {extracted.courses.map((c, i) => (
+                      <li key={i}>
+                        {c.name}
+                        {c.year ? ` — Year ${c.year}` : ''}
+                        {c.semester ? `, Semester ${c.semester}` : ''}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+              <button
+                className="upload-button"
+                onClick={() => setShowConfirmation(true)}
+                disabled={applying}
+              >
+                Apply to Catalogue
+              </button>
+            </div>
+          )}
+
           {showConfirmation && (
             <div className="confirmation-modal">
               <div className="modal-content">
-                <h4>⚠️ Warning</h4>
+                <h4>Confirm import</h4>
                 <p>
-                  Uploading this PDF will delete all existing evaluation data and replace it with
-                  new curriculum data. This action cannot be undone.
+                  This adds the extracted lecturers and adds/updates the courses for
+                  the selected programme. Nothing is deleted and evaluations are not
+                  affected. The import is recorded in the audit log.
                 </p>
                 <div className="modal-actions">
                   <button
                     className="btn-cancel"
                     onClick={() => setShowConfirmation(false)}
-                    disabled={uploading}
+                    disabled={applying}
                   >
                     Cancel
                   </button>
                   <button
                     className="btn-confirm"
-                    onClick={handleUploadConfirm}
-                    disabled={uploading}
+                    onClick={handleApplyConfirm}
+                    disabled={applying}
                   >
-                    {uploading ? 'Processing...' : 'Proceed'}
+                    {applying ? 'Importing…' : 'Proceed'}
                   </button>
                 </div>
               </div>
@@ -173,4 +275,3 @@ function AdminPanelTab() {
 }
 
 export default AdminPanelTab;
-

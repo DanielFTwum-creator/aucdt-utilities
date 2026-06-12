@@ -13,6 +13,7 @@ function Header({ theme, onThemeChange }) {
       <div className="header-content">
         <div className="logo">
           <h2>LEMS</h2>
+          <span className="logo-subtitle">Techbridge University College</span>
         </div>
 
         <div className="theme-switcher">

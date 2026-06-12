@@ -29,7 +29,7 @@
 .sort-select:focus {
   outline: none;
   border-color: var(--primary-color);
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+  box-shadow: 0 0 0 3px rgba(99, 15, 18, 0.1);
 }
 
 .lecturers-table-container {
@@ -43,7 +43,7 @@
 }
 
 .lecturers-table thead {
-  background-color: rgba(37, 99, 235, 0.1);
+  background-color: rgba(99, 15, 18, 0.1);
 }
 
 .lecturers-table th {

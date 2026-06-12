@@ -3,6 +3,7 @@
   color: white;
   padding: 1rem 2rem;
   box-shadow: var(--shadow-lg);
+  border-bottom: 3px solid var(--accent-color);
   position: sticky;
   top: 0;
   z-index: 100;
@@ -20,6 +21,16 @@
   margin: 0;
   font-size: 1.5rem;
   font-weight: 700;
+  color: var(--accent-color);
+  letter-spacing: 0.08em;
+}
+
+.logo-subtitle {
+  display: block;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  opacity: 0.85;
 }
 
 .theme-switcher {

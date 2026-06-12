@@ -14,6 +14,9 @@ export default defineConfig({
       output: {
         manualChunks(id) {
           if (id.includes('node_modules')) {
+            // pdf.js is only used by the admin curriculum import — keep it out
+            // of the eager vendor chunk so it loads on demand (dynamic import).
+            if (id.includes('pdfjs-dist')) return 'vendor-pdfjs';
             if (id.includes('react-dom')) return 'vendor-react-dom';
             if (id.includes('react-router')) return 'vendor-router';
             if (id.includes('react')) return 'vendor-react';

@@ -109,4 +109,39 @@ describe('LEMS — admin journey', () => {
     cy.contains(/Results/i).should('be.visible');
     cy.contains(/Analytics/i).should('be.visible');
   });
+
+  it('extracts a curriculum PDF via the Gemini relay and applies it', () => {
+    cy.intercept('POST', `${WMS}/api/gemini/generate*`, {
+      statusCode: 200,
+      body: {
+        candidates: [{ content: { parts: [{ text: JSON.stringify({
+          lecturers: [{ name: 'Kofi Annan' }],
+          courses: [{ name: 'Data Structures', year: 2, semester: 1 }],
+        }) }] } }],
+      },
+    }).as('gemini');
+    cy.intercept('POST', `${WMS}/api/lems/curriculum/import`, {
+      statusCode: 200,
+      body: { lecturersAdded: 1, coursesAdded: 1, coursesUpdated: 0 },
+    }).as('import');
+
+    cy.visit('/admin');
+    cy.contains('button', 'Admin Panel').click();
+    cy.get('#import-programme').select('1');
+    cy.get('#pdf-input').selectFile('cypress/fixtures/curriculum.pdf', { force: true });
+    // pdf.js parses the fixture in-browser before the relay call fires.
+    cy.contains('button', 'Extract with AI').click();
+    cy.wait('@gemini', { timeout: 20000 });
+    cy.contains('Extraction preview').should('be.visible');
+    cy.contains('Kofi Annan').should('be.visible');
+    cy.contains('Data Structures').should('be.visible');
+    cy.contains('button', 'Apply to Catalogue').click();
+    cy.contains('button', 'Proceed').click();
+    cy.wait('@import').its('request.body').should((body) => {
+      expect(body.programmeId).to.eq(1);
+      expect(body.lecturers[0].name).to.eq('Kofi Annan');
+      expect(body.courses[0].name).to.eq('Data Structures');
+    });
+    cy.contains('Curriculum imported successfully').should('be.visible');
+  });
 });

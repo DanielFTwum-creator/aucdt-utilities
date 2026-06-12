@@ -21,7 +21,27 @@
 .search-box input:focus {
   outline: none;
   border-color: var(--primary-color);
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+  box-shadow: 0 0 0 3px rgba(99, 15, 18, 0.1);
+}
+
+.date-filter {
+  display: flex;
+  gap: 1rem;
+  margin-top: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.date-filter label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  color: var(--secondary-color);
+}
+
+.date-filter input {
+  width: auto;
+  padding: 0.5rem;
 }
 
 .evaluations-list {

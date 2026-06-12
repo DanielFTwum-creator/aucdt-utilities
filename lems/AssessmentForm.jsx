@@ -152,11 +152,27 @@ function AssessmentForm() {
     setLoading(true);
 
     try {
+      // Persist each criterion with its name and section (not just the number),
+      // so results and the audit trail stay meaningful as criteria evolve.
+      const ratingDetails = [];
+      evaluationCriteria.forEach((section) => {
+        section.items.forEach((item) => {
+          if (ratings[item.id] !== undefined) {
+            ratingDetails.push({
+              criteriaNumber: item.id,
+              criteriaName: item.name,
+              section: section.section,
+              rating: ratings[item.id],
+            });
+          }
+        });
+      });
+
       const submissionData = {
         lecturerId: parseInt(selectedLecturer),
         courseId: parseInt(selectedCourse),
         studentFeedback: feedback,
-        ratings: ratings,
+        ratings: ratingDetails,
       };
 
       const response = await apiService.submitEvaluation(submissionData);

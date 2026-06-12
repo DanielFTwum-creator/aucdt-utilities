@@ -81,9 +81,8 @@ export const apiService = {
   // Audit Logs
   getAuditLogs: () => api.get('/audit'),
 
-  // PDF Extraction — not yet available in the WMS-hosted module.
-  extractPdf: () =>
-    Promise.reject(new Error('PDF extraction is not yet available in the WMS-hosted LEMS.')),
+  // Curriculum import — applies SPA-side PDF extraction results (additive upsert).
+  importCurriculum: (data) => api.post('/curriculum/import', data),
 
   // Health (module rides on the WMS service)
   health: () => api.get('/programmes'),
