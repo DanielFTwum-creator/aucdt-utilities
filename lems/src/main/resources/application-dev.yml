@@ -1,0 +1,20 @@
+# Dev profile — zero-dependency contract (CLAUDE.md Java standards):
+# `SPRING_PROFILES_ACTIVE=dev mvn spring-boot:run` must start on a fresh
+# machine with only Java 21 + Maven. No MariaDB, no external services.
+spring:
+  datasource:
+    url: jdbc:h2:mem:db;MODE=MySQL;NON_KEYWORDS=USER
+    username: sa
+    password: ""
+    driver-class-name: org.h2.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+  sql:
+    init:
+      mode: never
+  cache:
+    type: simple
+
+lems:
+  dedupe-salt: dev-salt

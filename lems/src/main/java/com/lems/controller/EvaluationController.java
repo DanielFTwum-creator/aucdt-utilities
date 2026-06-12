@@ -3,7 +3,10 @@ package com.lems.controller;
 import com.lems.model.LecturerEvaluation;
 import com.lems.model.dto.ApiResponse;
 import com.lems.model.dto.EvaluationSubmissionDTO;
+import com.lems.security.WmsAuthFilter;
+import com.lems.security.WmsIdentity;
 import com.lems.service.EvaluationService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,9 +22,12 @@ public class EvaluationController {
 
     @PostMapping("/submit")
     public ResponseEntity<ApiResponse<LecturerEvaluation>> submitEvaluation(
-            @RequestBody EvaluationSubmissionDTO dto) {
+            @RequestBody EvaluationSubmissionDTO dto, HttpServletRequest request) {
         try {
-            LecturerEvaluation evaluation = evaluationService.submitEvaluation(dto);
+            // WmsAuthFilter guarantees an authenticated identity on this route; the email
+            // is used only for the anonymous dedupe hash and never stored.
+            WmsIdentity identity = (WmsIdentity) request.getAttribute(WmsAuthFilter.IDENTITY_ATTR);
+            LecturerEvaluation evaluation = evaluationService.submitEvaluation(dto, identity.email());
             return ResponseEntity.ok(ApiResponse.success(evaluation, "Evaluation submitted successfully"));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)

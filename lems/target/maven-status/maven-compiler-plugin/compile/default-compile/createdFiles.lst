@@ -1,9 +1,12 @@
 com\lems\model\Programme.class
 com\lems\model\dto\ApiResponse.class
 com\lems\repository\ProgrammeRepository.class
+com\lems\security\WmsAuthFilter.class
 com\lems\repository\LecturerEvaluationRepository.class
+com\lems\security\WmsAuthService.class
 com\lems\controller\AuthController.class
 com\lems\controller\PdfExtractionController.class
+com\lems\security\WmsAuthService$Cached.class
 com\lems\LemsApplication.class
 com\lems\model\Lecturer.class
 com\lems\model\LecturerEvaluation.class
@@ -24,6 +27,7 @@ com\lems\model\dto\AuthRequest.class
 com\lems\controller\CourseController.class
 com\lems\repository\AuditLogRepository.class
 com\lems\repository\CourseRepository.class
+com\lems\security\WmsIdentity.class
 com\lems\model\AuditLog.class
 com\lems\LemsApplication$1.class
 com\lems\controller\LecturerController.class

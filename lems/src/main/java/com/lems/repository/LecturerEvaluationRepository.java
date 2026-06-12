@@ -11,5 +11,6 @@ public interface LecturerEvaluationRepository extends JpaRepository<LecturerEval
     List<LecturerEvaluation> findByLecturerId(Long lecturerId);
     List<LecturerEvaluation> findByCourseId(Long courseId);
     List<LecturerEvaluation> findByLecturerIdAndCourseId(Long lecturerId, Long courseId);
+    boolean existsByDedupeHash(String dedupeHash);
 }
 

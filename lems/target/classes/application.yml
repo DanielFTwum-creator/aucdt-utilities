@@ -2,47 +2,36 @@ spring:
   application:
     name: lems-backend
   datasource:
-    url: jdbc:mysql://localhost:3306/lems
-    username: root
-    password: root
-    driver-class-name: com.mysql.cj.jdbc.Driver
+    # Prod: MariaDB on the shared box (10.3 on 3306, localhost-only grants).
+    # Credentials come from the environment — never committed.
+    url: ${DB_URL:jdbc:mariadb://127.0.0.1:3306/lems}
+    username: ${DB_USER:}
+    password: ${DB_PASSWORD:}
+    driver-class-name: org.mariadb.jdbc.Driver
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: ${DDL_AUTO:update}
     show-sql: false
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.MySQL8Dialect
         format_sql: true
-  mail:
-    host: smtp.gmail.com
-    port: 587
-    username: ${MAIL_USERNAME:your-email@gmail.com}
-    password: ${MAIL_PASSWORD:your-app-password}
-    properties:
-      mail:
-        smtp:
-          auth: true
-          starttls:
-            enable: true
-            required: true
+  sql:
+    init:
+      mode: never
 
 server:
-  port: 8080
+  port: ${PORT:8086}
   servlet:
     context-path: /api
 
-# Google Gemini API Configuration
-gemini:
-  api-key: ${GEMINI_API_KEY:}
-  model: gemini-1.5-flash
-
-# Admin Configuration
-admin:
-  password: admin123
+lems:
+  # IdP base for the WMS SSO /api/me relay (TUC-ICT-SRS-2026-013 archetype C).
+  wms:
+    base: ${WMS_BASE:https://wms.techbridge.edu.gh}
+  # Salt for the anonymising one-submission-per-student dedupe hash.
+  dedupe-salt: ${LEMS_DEDUPE_SALT:change-me-in-prod}
 
 logging:
   level:
     root: INFO
-    com.lems: DEBUG
-
+    com.lems: INFO

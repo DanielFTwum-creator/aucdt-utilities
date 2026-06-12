@@ -31,6 +31,15 @@ public class LecturerEvaluation {
     @Column(name = "created_at")
     private LocalDateTime createdAt = LocalDateTime.now();
 
+    /**
+     * Salted SHA-256 of (submitter email | lecturer | course) — proves
+     * one-submission-per-student WITHOUT storing who submitted. Never
+     * serialised; reversing it would require knowing the server-side salt.
+     */
+    @com.fasterxml.jackson.annotation.JsonIgnore
+    @Column(name = "dedupe_hash", length = 64, unique = true)
+    private String dedupeHash;
+
     @OneToMany(mappedBy = "evaluation", cascade = CascadeType.ALL)
     private List<EvaluationRating> ratings;
 

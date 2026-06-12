@@ -1,41 +1,34 @@
 package com.lems.controller;
 
 import com.lems.model.dto.ApiResponse;
-import com.lems.model.dto.AuthRequest;
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import com.lems.security.WmsAuthFilter;
+import com.lems.security.WmsIdentity;
+import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Authentication is delegated to TUC-WMS (SSO ecosystem archetype C,
+ * TUC-ICT-SRS-2026-013) — the former hard-coded admin password is gone.
+ * WmsAuthFilter validates the bearer token via the IdP relay before this
+ * controller runs; /auth/me simply reflects the verified identity so the
+ * frontend can bootstrap its session and decide admin vs student views.
+ */
 @RestController
 @RequestMapping("/auth")
-@RequiredArgsConstructor
 public class AuthController {
-    @Value("${admin.password}")
-    private String adminPassword;
 
-    @PostMapping("/login")
-    public ResponseEntity<ApiResponse<Map<String, Object>>> login(@RequestBody AuthRequest request) {
-        if (adminPassword.equals(request.getPassword())) {
-            Map<String, Object> response = new HashMap<>();
-            response.put("token", "admin-token-" + System.currentTimeMillis());
-            response.put("authenticated", true);
-            return ResponseEntity.ok(ApiResponse.success(response, "Login successful"));
-        } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(ApiResponse.error("Invalid password", "Authentication failed"));
-        }
-    }
-
-    @PostMapping("/verify")
-    public ResponseEntity<ApiResponse<Map<String, Boolean>>> verify(@RequestHeader(value = "Authorization", required = false) String token) {
-        Map<String, Boolean> response = new HashMap<>();
-        response.put("authenticated", token != null && token.startsWith("admin-token-"));
-        return ResponseEntity.ok(ApiResponse.success(response, "Verification complete"));
+    @GetMapping("/me")
+    public ApiResponse<Map<String, Object>> me(HttpServletRequest request) {
+        WmsIdentity identity = (WmsIdentity) request.getAttribute(WmsAuthFilter.IDENTITY_ATTR);
+        return ApiResponse.success(Map.of(
+                "email", identity.email(),
+                "name", identity.name(),
+                "role", identity.role(),
+                "admin", identity.isAdmin()
+        ), "Authenticated");
     }
 }
-
