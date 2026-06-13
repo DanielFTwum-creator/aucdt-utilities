@@ -1,4 +1,6 @@
--- Create LEMS Database
+-- LEMS production schema — applied manually to the lems database on the server.
+-- Dev profile uses ddl-auto:update (H2) and never runs this file.
+
 CREATE DATABASE IF NOT EXISTS lems;
 USE lems;
 
@@ -45,6 +47,9 @@ CREATE TABLE IF NOT EXISTS lecturer_evaluations (
     lecturer_id BIGINT NOT NULL,
     course_id BIGINT NOT NULL,
     student_feedback TEXT,
+    semester INT,
+    recommend VARCHAR(20),
+    dedupe_hash VARCHAR(64) UNIQUE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (lecturer_id) REFERENCES lecturers(id) ON DELETE CASCADE,
     FOREIGN KEY (course_id) REFERENCES courses(id) ON DELETE CASCADE
@@ -71,11 +76,10 @@ CREATE TABLE IF NOT EXISTS audit_logs (
     details TEXT
 );
 
--- Create Indexes for Performance
-CREATE INDEX idx_course_programme ON courses(programme_id);
-CREATE INDEX idx_evaluation_lecturer ON lecturer_evaluations(lecturer_id);
-CREATE INDEX idx_evaluation_course ON lecturer_evaluations(course_id);
-CREATE INDEX idx_rating_evaluation ON evaluation_ratings(evaluation_id);
-CREATE INDEX idx_audit_event_type ON audit_logs(event_type);
-CREATE INDEX idx_audit_created_at ON audit_logs(created_at);
-
+-- Indexes
+CREATE INDEX IF NOT EXISTS idx_course_programme ON courses(programme_id);
+CREATE INDEX IF NOT EXISTS idx_evaluation_lecturer ON lecturer_evaluations(lecturer_id);
+CREATE INDEX IF NOT EXISTS idx_evaluation_course ON lecturer_evaluations(course_id);
+CREATE INDEX IF NOT EXISTS idx_rating_evaluation ON evaluation_ratings(evaluation_id);
+CREATE INDEX IF NOT EXISTS idx_audit_event_type ON audit_logs(event_type);
+CREATE INDEX IF NOT EXISTS idx_audit_created_at ON audit_logs(created_at);

@@ -9,13 +9,16 @@ export const FIXTURES = {
   courses: [{
     id: 1, name: 'Computer Networks', code: 'NET101', semester: 1,
     programme: { id: 1, name: 'BSc ICT', code: 'ICT' },
+    // Single lecturer — AssessmentForm auto-selects it (FR1.4).
     lecturers: [{ id: 1, firstName: 'Ama', lastName: 'Mensah', email: 'ama.mensah@techbridge.edu.gh', department: 'ICT' }],
   }],
 };
 
 /**
- * cy.stubWms('STUDENT' | 'SYSTEM_ADMIN' | null)
- * null = signed out (refresh 401). Otherwise a signed-in session with the role.
+ * cy.stubWms(role)
+ *
+ * role = 'STUDENT' | 'SYSTEM_ADMIN' | 'HOD' | 'ADMIN_STAFF' | null
+ * null = signed out (POST /api/auth/refresh → 401).
  */
 Cypress.Commands.add('stubWms', (role) => {
   if (!role) {
@@ -30,7 +33,13 @@ Cypress.Commands.add('stubWms', (role) => {
   cy.intercept('POST', `${WMS}/api/auth/logout`, { statusCode: 204, body: '' }).as('logout');
 });
 
-/** Reference-data stubs for the evaluation form and admin tabs. */
+/**
+ * cy.stubLemsData()
+ *
+ * Stubs all reference-data endpoints used by both the evaluation form and
+ * the admin dashboard tabs. Individual tests may override specific intercepts
+ * before calling this, or after, to inject error states or richer fixtures.
+ */
 Cypress.Commands.add('stubLemsData', () => {
   cy.intercept('GET', `${WMS}/api/lems/programmes`, { statusCode: 200, body: FIXTURES.programmes }).as('programmes');
   cy.intercept('GET', `${WMS}/api/lems/courses`, { statusCode: 200, body: FIXTURES.courses }).as('courses');

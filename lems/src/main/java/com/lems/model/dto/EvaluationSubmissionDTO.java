@@ -5,7 +5,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
-import java.util.Map;
 
 @Data
 @NoArgsConstructor
@@ -14,6 +13,17 @@ public class EvaluationSubmissionDTO {
     private Long lecturerId;
     private Long courseId;
     private String studentFeedback;
-    private Map<Integer, Integer> ratings; // criteriaNumber -> rating
-}
+    private Integer semester;
+    private String recommend;
+    private List<RatingDTO> ratings;
 
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class RatingDTO {
+        private Integer criteriaNumber;
+        private String criteriaName;
+        private String section;
+        private Integer rating;
+    }
+}

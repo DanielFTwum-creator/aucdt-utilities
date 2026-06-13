@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -28,8 +29,14 @@ public class LecturerEvaluation {
     @Column
     private String studentFeedback;
 
+    @Column
+    private Integer semester;
+
+    @Column(length = 20)
+    private String recommend;
+
     @Column(name = "created_at")
-    private LocalDateTime createdAt = LocalDateTime.now();
+    private LocalDateTime createdAt;
 
     /**
      * Salted SHA-256 of (submitter email | lecturer | course) — proves
@@ -40,12 +47,11 @@ public class LecturerEvaluation {
     @Column(name = "dedupe_hash", length = 64, unique = true)
     private String dedupeHash;
 
-    @OneToMany(mappedBy = "evaluation", cascade = CascadeType.ALL)
-    private List<EvaluationRating> ratings;
+    @OneToMany(mappedBy = "evaluation", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<EvaluationRating> ratings = new ArrayList<>();
 
     @PrePersist
     protected void onCreate() {
         createdAt = LocalDateTime.now();
     }
 }
-

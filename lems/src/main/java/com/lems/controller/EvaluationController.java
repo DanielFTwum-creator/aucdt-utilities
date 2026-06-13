@@ -24,13 +24,14 @@ public class EvaluationController {
     public ResponseEntity<ApiResponse<LecturerEvaluation>> submitEvaluation(
             @RequestBody EvaluationSubmissionDTO dto, HttpServletRequest request) {
         try {
-            // WmsAuthFilter guarantees an authenticated identity on this route; the email
-            // is used only for the anonymous dedupe hash and never stored.
             WmsIdentity identity = (WmsIdentity) request.getAttribute(WmsAuthFilter.IDENTITY_ATTR);
             LecturerEvaluation evaluation = evaluationService.submitEvaluation(dto, identity.email());
             return ResponseEntity.ok(ApiResponse.success(evaluation, "Evaluation submitted successfully"));
+        } catch (EvaluationService.DuplicateEvaluationException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body(ApiResponse.error(e.getMessage(), "Duplicate submission"));
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(ApiResponse.error(e.getMessage(), "Failed to submit evaluation"));
         }
     }
@@ -55,4 +56,3 @@ public class EvaluationController {
         return ResponseEntity.ok(ApiResponse.success(evaluations, "All evaluations retrieved"));
     }
 }
-
