@@ -4,8 +4,8 @@
 |---|---|
 | **Companion to** | `SSO_PASSTHROUGH_DESIGN.md` (TUC-ICT-SDD-2026-001) |
 | **Goal** | One Techbridge Google Workspace login covers every AI-Lab app — no per-app re-login |
-| **Status** | LIVE: tsapro (A) · umat (B, staff-only) · markai (B, hybrid) · tuc-netscan-100 (C) — rest per SRS-2026-013 §8 |
-| **Date** | 2026-06-12 |
+| **Status** | LIVE: tsapro (A) · umat (B, staff-only) · markai (B, hybrid) · tuc-netscan-100 (C) · **lems (B, staff+student)** |
+| **Date** | 2026-06-13 |
 
 ## Why this works
 Once an app is a WMS-SSO client, the user's `wms_refresh` cookie (scoped to `.techbridge.edu.gh`)
@@ -81,7 +81,13 @@ origin — `ai-tools.techbridge.edu.gh` and `techbridge.edu.gh` already are. No 
 1. ✅ **markai** — pilot complete 2026-06-11, browser-confirmed 2026-06-12 (hybrid: staff → SSO,
    external users keep local accounts; the old unrestricted client-side Google flow is removed).
 2. ✅ **umat** — staff-only archetype B (2026-06-11), incl. WMS-side persistence (`/api/umat/**`).
-3. Remaining staff set: reconcile the two netscans, analytics dashboards (Impact Ventures, Strategy),
+3. ✅ **lems** — live 2026-06-13 (`lems.techbridge.edu.gh`). Archetype B-style: auth gated at App
+   level before the Router mounts; authenticated state uses react-router for student vs admin
+   routing. Audience: all `@techbridge.edu.gh` accounts (students + staff). Notes:
+   - LEMS is itself SRS-2026-013; it runs as a module inside WMS (`/api/lems`), not a separate service.
+   - Domain-rejected sign-ins served via static `auth-error.html` (bypasses SPA + stale SW).
+   - Service worker unregistration included in the error page to clear stale caches on next visit.
+4. Remaining staff set: reconcile the two netscans, analytics dashboards (Impact Ventures, Strategy),
    tuc-2026-enrollment-command-centre, techbridge-student-population-register.
-4. Public apps (incl. tuc-ai-lab-catalog hub, biochemai, willpro, glucose, dictation-app) keep their
+5. Public apps (incl. tuc-ai-lab-catalog hub, biochemai, willpro, glucose, dictation-app) keep their
    own login — no action. Static/no-auth apps need nothing.
