@@ -9,7 +9,7 @@ interface FileUploadProps {
 
 const FileUpload: React.FC<FileUploadProps> = ({ onFileSelect, fileInfo }) => {
     return (
-        <div className="text-center border-2 border-dashed border-gray-600 rounded-xl p-8 hover:border-blue-400 transition-colors duration-300">
+        <div className="text-center border-2 border-dashed border-gray-600 rounded-xl p-5 sm:p-8 hover:border-blue-400 transition-colors duration-300">
             <div className="flex flex-col items-center">
                  <input
                     type="file"
