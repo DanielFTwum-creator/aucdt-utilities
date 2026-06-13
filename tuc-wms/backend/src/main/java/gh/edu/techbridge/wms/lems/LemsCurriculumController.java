@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -36,7 +37,7 @@ public class LemsCurriculumController {
     }
 
     public record LecturerImport(String name) { }
-    public record CourseImport(String name, Integer year, Integer semester) { }
+    public record CourseImport(String name, Integer year, Integer semester, List<String> lecturerNames) { }
     public record ImportRequest(Long programmeId, List<LecturerImport> lecturers, List<CourseImport> courses) { }
     public record ImportSummary(int lecturersAdded, int coursesAdded, int coursesUpdated) { }
 
@@ -75,8 +76,10 @@ public class LemsCurriculumController {
             LemsCourse existing = programmeCourses.stream()
                     .filter(c -> c.getName().equalsIgnoreCase(finalName))
                     .findFirst().orElse(null);
+            List<LemsLecturer> assignedLecturers = resolveLecturers(ci.lecturerNames(), allLecturers);
             if (existing != null) {
                 if (ci.semester() != null) existing.setSemester(ci.semester());
+                if (!assignedLecturers.isEmpty()) existing.setLecturers(assignedLecturers);
                 courses.save(existing);
                 coursesUpdated++;
             } else {
@@ -85,6 +88,7 @@ public class LemsCurriculumController {
                 c.setProgramme(programme);
                 c.setSemester(ci.semester());
                 if (ci.year() != null) c.setDescription("Year " + ci.year());
+                c.setLecturers(assignedLecturers);
                 courses.save(c);
                 coursesAdded++;
             }
@@ -95,5 +99,19 @@ public class LemsCurriculumController {
                 "by " + auth.getName() + " — lecturers added: " + lecturersAdded
                         + ", courses added: " + coursesAdded + ", courses updated: " + coursesUpdated));
         return new ImportSummary(lecturersAdded, coursesAdded, coursesUpdated);
+    }
+
+    private List<LemsLecturer> resolveLecturers(List<String> names, List<LemsLecturer> pool) {
+        if (names == null || names.isEmpty()) return new ArrayList<>();
+        List<LemsLecturer> result = new ArrayList<>();
+        for (String name : names) {
+            if (name == null || name.isBlank()) continue;
+            String trimmed = name.trim();
+            pool.stream()
+                .filter(l -> l.getFullName().equalsIgnoreCase(trimmed))
+                .findFirst()
+                .ifPresent(result::add);
+        }
+        return result;
     }
 }

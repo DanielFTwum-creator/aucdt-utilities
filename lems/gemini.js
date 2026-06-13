@@ -28,6 +28,11 @@ const extractSchema = {
           name: { type: 'STRING', description: 'The full name of the course or subject.' },
           year: { type: 'INTEGER', description: 'The academic year the course is taught in (e.g., 1, 2, 3).' },
           semester: { type: 'INTEGER', description: 'The semester the course is taught in (e.g., 1 or 2).' },
+          lecturerNames: {
+            type: 'ARRAY',
+            description: 'Full names of lecturers assigned to teach this course. Leave empty if not specified.',
+            items: { type: 'STRING' },
+          },
         },
       },
     },
@@ -65,7 +70,8 @@ export async function extractCurriculum(text, programmeName) {
     1. Extract the full names of all lecturers.
     2. Extract the full names of all courses/subjects.
     3. For each course, identify the academic year and semester it belongs to. If not specified, make a reasonable guess.
-    4. Return the data in the specified JSON format.
+    4. For each course, list the full names of the lecturer(s) assigned to teach it in the "lecturerNames" field. Use exact names from the lecturers list. Leave the array empty only if the document gives no indication.
+    5. Return the data in the specified JSON format.
 
     Document Text:
     ---
