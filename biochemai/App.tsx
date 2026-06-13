@@ -359,7 +359,7 @@ function AppContent() {
   }
 
   return (
-    <div className={`text-[var(--color-text-primary)] ${mode === AppMode.Chat || mode === AppMode.Voice ? 'h-screen flex flex-col' : 'min-h-screen'}`}>
+    <div className={`text-[var(--color-text-primary)] ${mode === AppMode.Chat || mode === AppMode.Voice ? 'h-dvh flex flex-col' : 'min-h-screen'}`}>
       <Header
         mode={mode}
         setMode={handleSetMode}
@@ -374,14 +374,14 @@ function AppContent() {
       />
       {/* Chat layout: left stat nav + scrollable main content */}
       {mode === AppMode.Chat ? (
-        <div className="flex flex-1 overflow-hidden w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 gap-6">
+        <div className="flex flex-col md:flex-row flex-1 overflow-hidden w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 gap-6">
           <HeroStats />
           <main className="flex-1 overflow-y-auto custom-scrollbar">
             {renderCurrentMode()}
           </main>
         </div>
       ) : (
-        <main className={`w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 ${mode === AppMode.Voice ? 'flex-1 overflow-y-auto custom-scrollbar' : ''}`}>
+        <main className={`w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-4 md:py-8 ${mode === AppMode.Voice ? 'flex-1 overflow-y-auto custom-scrollbar' : ''}`}>
           {renderCurrentMode()}
         </main>
       )}

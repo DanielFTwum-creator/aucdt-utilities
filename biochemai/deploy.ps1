@@ -102,10 +102,10 @@ log '[3/7] Injecting .env.local for Vite build...'
 cp /tmp/.env.biochemai .env.local
 
 log '[4/7] Installing dependencies...'
-pnpm install --frozen-lockfile --silent 2>/dev/null || pnpm install --no-frozen-lockfile --silent
+pnpm install --no-frozen-lockfile || true
 
 log '[5/7] Building...'
-pnpm build
+./node_modules/.bin/vite build
 
 log '[6/7] Deploying dist/ to web root...'
 mkdir -p "`$DEPLOY_PATH"
