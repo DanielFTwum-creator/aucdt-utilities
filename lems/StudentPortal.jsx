@@ -47,27 +47,28 @@ function StudentPortal({ theme, onThemeChange }) {
             <h2 className={ENABLE_ENHANCED_UI ? 'instructions-heading-enhanced' : ''}>Before you begin</h2>
             <ul className="instructions-list">
               <li>
-                <strong>Your responses are anonymous.</strong> Your identity is never
-                stored with your answers — it is only used to prevent duplicate
-                submissions.
+                <strong>Takes about five minutes</strong> to complete.
+              </li>
+              <li>
+                <strong>Your responses are completely anonymous.</strong> Your identity
+                is only used to prevent duplicate submissions — it is never stored with
+                your answers.
               </li>
               <li>
                 You may submit <strong>one evaluation per lecturer per course each
                 semester</strong>.
               </li>
               <li>
-                Rate each statement on a scale of <strong>1 (Strongly Disagree)</strong>{' '}
-                to <strong>5 (Strongly Agree)</strong>.
+                <strong>Rate each statement 1–5:</strong> 1 = Strongly Disagree,
+                5 = Strongly Agree.
               </li>
               <li>
-                Complete the sections in order — each section unlocks once the previous
-                one is fully rated.
+                <strong>Complete the sections in order</strong> — each section unlocks
+                after the previous one is fully rated.
               </li>
               <li>
-                Please be honest and constructive. Written comments are optional but
-                especially valuable to your lecturers.
+                Written comments are optional but valuable to your lecturers.
               </li>
-              <li>The evaluation takes about five minutes.</li>
             </ul>
             <button
               className="proceed-button"
