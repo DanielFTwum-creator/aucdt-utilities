@@ -1,0 +1,6 @@
+onlyBuiltDependencies:
+  - "@google/genai"
+  - core-js
+  - cypress
+  - esbuild
+  - protobufjs
