@@ -679,8 +679,7 @@ export default function App() {
 
       {/* ── Main Canvas ────────────────────────────────────────── */}
       <main
-        className="flex-1 flex flex-col items-center relative z-10"
-        style={{ padding: '2.75rem 1rem' }}
+        className="dictation-main flex-1 flex flex-col items-center relative z-10"
       >
         <div className="w-full max-w-4xl flex-1 flex flex-col gap-0">
 

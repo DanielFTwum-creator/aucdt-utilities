@@ -213,7 +213,7 @@ body {
 /* ── Live Timer ──────────────────────────────────────────────── */
 .live-timer {
   font-family: var(--font-mono);
-  font-size: 3.5rem;
+  font-size: clamp(2rem, 10vw, 3.5rem);
   font-weight: 400;
   color: var(--text-primary);
   letter-spacing: 0.06em;
@@ -386,4 +386,22 @@ body {
     radial-gradient(ellipse 60% 40% at 10% 60%, var(--glow-1), transparent),
     radial-gradient(ellipse 50% 35% at 90% 20%, var(--glow-2), transparent);
   padding: 1rem;
+}
+
+/* ── Main canvas padding ─────────────────────────────────────── */
+.dictation-main {
+  padding: 2.75rem 1rem;
+}
+
+/* ── Mobile overrides (≤480px) ───────────────────────────────── */
+@media (max-width: 480px) {
+  .app-header.recording {
+    height: auto;
+    min-height: 180px;
+    padding: 1rem 0;
+  }
+
+  .dictation-main {
+    padding: 1.25rem 1rem;
+  }
 }
