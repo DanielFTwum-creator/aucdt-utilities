@@ -32,7 +32,7 @@ function StudentPortal({ theme, onThemeChange }) {
               alt="TUC"
               className="portal-logo"
             />
-            <h1>Lecturer Assessment &amp; Evaluation Portal</h1>
+            <h1>Lecturer Evaluation &amp; Management System</h1>
             <p>Please provide your honest feedback about your lecturer and course experience</p>
           </div>
         )}

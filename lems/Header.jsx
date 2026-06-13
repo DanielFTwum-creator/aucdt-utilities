@@ -49,7 +49,7 @@ function Header({ theme, onThemeChange, onAdminClick, showAdmin = false }) {
 
         {/* Centre: portal title */}
         <div className="header-centre">
-          <h2 className="header-title">Lecturer Assessment &amp; Evaluation Portal</h2>
+          <h2 className="header-title">Lecturer Evaluation &amp; Management System</h2>
           {!ENABLE_ENHANCED_UI && (
             <p className="header-subtitle">Please provide your honest feedback about your lecturer and course experience</p>
           )}
