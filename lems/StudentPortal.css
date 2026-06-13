@@ -104,6 +104,10 @@
   transition: all 0.3s ease;
 }
 
+.instructions-card-enhanced {
+  margin-top: 1rem;
+}
+
 .instructions-card h2 {
   font-size: 1.75rem;
   color: var(--primary-color);
@@ -114,6 +118,22 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
+}
+
+/* Enhanced step label + heading */
+.step-label {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #B8860B;
+  margin-bottom: 0.4rem;
+}
+
+.instructions-heading-enhanced {
+  border-bottom: 3px solid #B8860B !important;
+  border-bottom-color: #B8860B !important;
 }
 
 .instructions-list {

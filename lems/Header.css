@@ -116,7 +116,7 @@
 }
 
 .logo-wordmark {
-  font-size: 1.5rem;
+  font-size: 1.75rem;
   font-weight: 700;
   color: var(--accent-color);
   letter-spacing: 0.08em;
@@ -128,15 +128,15 @@
 }
 
 .header-title {
-  margin: 0 0 0.3rem;
-  font-size: 1.15rem;
-  font-weight: 700;
+  margin: 0;
+  font-size: 1.125rem;
+  font-weight: 500;
   color: white;
   line-height: 1.3;
 }
 
 .header-subtitle {
-  margin: 0;
+  margin: 0.25rem 0 0;
   font-size: 0.8rem;
   color: rgba(255, 255, 255, 0.75);
   line-height: 1.4;

@@ -40,8 +40,11 @@ function StudentPortal({ theme, onThemeChange }) {
         {instructionsRead ? (
           <AssessmentForm />
         ) : (
-          <div className="instructions-card">
-            <h2>Before you begin</h2>
+          <div className={`instructions-card${ENABLE_ENHANCED_UI ? ' instructions-card-enhanced' : ''}`}>
+            {ENABLE_ENHANCED_UI && (
+              <span className="step-label">Step 1 of 2</span>
+            )}
+            <h2 className={ENABLE_ENHANCED_UI ? 'instructions-heading-enhanced' : ''}>Before you begin</h2>
             <ul className="instructions-list">
               <li>
                 <strong>Your responses are anonymous.</strong> Your identity is never
