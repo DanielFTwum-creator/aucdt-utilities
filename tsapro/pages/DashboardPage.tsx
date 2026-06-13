@@ -749,7 +749,7 @@ const DashboardPage: React.FC = () => {
 
     return (
         <div className="max-w-7xl mx-auto">
-            <h1 className="text-3xl font-extrabold mb-8" data-component="title">New Recruit Salary Portal</h1>
+            <h1 className="text-[clamp(1.5rem,5vw,1.875rem)] font-extrabold mb-8" data-component="title">New Recruit Salary Portal</h1>
             <div className="flex flex-col lg:flex-row gap-8">
                 <div className="flex-1 flex flex-col gap-8">
                     <GradeSelector 
