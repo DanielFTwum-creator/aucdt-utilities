@@ -708,7 +708,7 @@ function AppContent() {
 
           <button 
             onClick={() => setIsHighContrast(!isHighContrast)} 
-            className={`p-2.5 rounded-lg transition-colors focus:ring-2 focus:ring-blue-300 h-10 ${isHighContrast ? 'bg-gray-800 hover:bg-gray-700 text-yellow-300' : 'text-slate-400 hover:text-[#1F3864] hover:bg-slate-200'}`} 
+            className={`p-2.5 rounded-lg transition-colors focus:ring-2 focus:ring-blue-300 min-h-[44px] ${isHighContrast ? 'bg-gray-800 hover:bg-gray-700 text-yellow-300' : 'text-slate-400 hover:text-[#1F3864] hover:bg-slate-200'}`} 
             title="Toggle High Contrast"
             aria-pressed={isHighContrast}
           >
@@ -717,14 +717,14 @@ function AppContent() {
 
           <button
             onClick={handleExportData}
-            className={`p-2.5 rounded-lg transition-colors focus:ring-2 focus:ring-blue-300 h-10 ${isHighContrast ? 'text-gray-400 hover:text-white hover:bg-gray-800' : 'text-slate-400 hover:text-[#1F3864] hover:bg-slate-200'}`}
+            className={`p-2.5 rounded-lg transition-colors focus:ring-2 focus:ring-blue-300 min-h-[44px] ${isHighContrast ? 'text-gray-400 hover:text-white hover:bg-gray-800' : 'text-slate-400 hover:text-[#1F3864] hover:bg-slate-200'}`}
             title="Export data to JSON"
           >
             <Download className="w-5 h-5" />
           </button>
 
           <label
-            className={`p-2.5 rounded-lg transition-colors focus:ring-2 focus:ring-blue-300 h-10 flex items-center cursor-pointer ${isHighContrast ? 'text-gray-400 hover:text-white hover:bg-gray-800' : 'text-slate-400 hover:text-[#1F3864] hover:bg-slate-200'}`}
+            className={`p-2.5 rounded-lg transition-colors focus:ring-2 focus:ring-blue-300 min-h-[44px] flex items-center cursor-pointer ${isHighContrast ? 'text-gray-400 hover:text-white hover:bg-gray-800' : 'text-slate-400 hover:text-[#1F3864] hover:bg-slate-200'}`}
             title="Import backup"
           >
             <input
@@ -739,18 +739,18 @@ function AppContent() {
 
           <button
             onClick={() => setIsHelpOpen(true)}
-            className={`p-2.5 rounded-lg transition-colors focus:ring-2 focus:ring-blue-300 h-10 ${isHighContrast ? 'text-gray-400 hover:text-white hover:bg-gray-800' : 'text-slate-400 hover:text-[#1F3864] hover:bg-slate-200'}`}
+            className={`p-2.5 rounded-lg transition-colors focus:ring-2 focus:ring-blue-300 min-h-[44px] ${isHighContrast ? 'text-gray-400 hover:text-white hover:bg-gray-800' : 'text-slate-400 hover:text-[#1F3864] hover:bg-slate-200'}`}
             title="View user guide"
           >
             <HelpCircle className="w-5 h-5" />
           </button>
 
-          <button onClick={() => { adminLogout(); logout(); }} className={`p-2.5 rounded-lg transition-colors focus:ring-2 focus:ring-blue-300 h-10 ${isHighContrast ? 'text-gray-400 hover:text-white hover:bg-gray-800' : 'text-slate-400 hover:text-[#1F3864] hover:bg-slate-200'}`} title="Sign out">
+          <button onClick={() => { adminLogout(); logout(); }} className={`p-2.5 rounded-lg transition-colors focus:ring-2 focus:ring-blue-300 min-h-[44px] ${isHighContrast ? 'text-gray-400 hover:text-white hover:bg-gray-800' : 'text-slate-400 hover:text-[#1F3864] hover:bg-slate-200'}`} title="Sign out">
             <LogOut className="w-5 h-5" />
           </button>
 
           <div className={`border rounded-lg flex items-center shadow-sm h-10 ${isHighContrast ? 'bg-gray-900 border-gray-700' : 'bg-white border-slate-200'}`}>
-            <span className="text-[11px] font-bold text-slate-400 pl-3 pr-2 hidden sm:inline tracking-wider">PERIOD</span>
+            <span className="text-[11px] font-bold text-slate-400 pl-3 pr-2 tracking-wider">PERIOD</span>
 
             {/* View Mode Toggle */}
             <div className={`flex border-r ${isHighContrast ? 'border-gray-700' : 'border-slate-200'}`}>
@@ -873,7 +873,7 @@ function AppContent() {
       <div className="flex flex-col gap-6 flex-grow print:block">
         
         {/* Stats Row */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 print:flex print:flex-wrap">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-5 print:flex print:flex-wrap">
           {/* Average Fasting */}
           <div className={`${isHighContrast ? 'bg-black border-gray-600' : 'bg-white border-slate-200'} border rounded-2xl p-6 shadow-sm flex flex-col justify-center print:border-slate-300 print:shadow-none`}>
             <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest mb-3">Average Fasting ({unit})</p>
