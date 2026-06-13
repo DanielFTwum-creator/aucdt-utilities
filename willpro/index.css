@@ -1,2 +1,21 @@
 @import "tailwindcss";
 
+/* ── WillPro Mobile Responsive ──────────────────────────────── */
+
+/* Minimum 44px touch targets for header buttons */
+.wp-btn-primary {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+}
+
+.user-profile-trigger {
+  min-height: 44px;
+}
+
+/* Hide name/filename text on narrow phones — avatar alone is enough */
+@media (max-width: 380px) {
+  .wp-profile-text { display: none !important; }
+  .wp-btn-primary { padding: 8px 12px !important; font-size: 12px !important; }
+}
+

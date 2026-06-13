@@ -393,7 +393,7 @@ const App = () => {
                             }}>
                                 {user ? (user.name ? user.name.substring(0, 2).toUpperCase() : user.email.substring(0, 2).toUpperCase()) : 'G'}
                             </div>
-                            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', lineHeight: '1.2' }}>
+                            <div className="wp-profile-text" style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', lineHeight: '1.2' }}>
                                 <span style={{ fontSize: '12px', fontWeight: 700, color: 'var(--wp-color-text-main)' }}>
                                     {user ? (user.name || user.email.split('@')[0]) : 'Guest'}
                                 </span>
@@ -415,11 +415,12 @@ const App = () => {
                         {isDropdownOpen && (
                             <div 
                                 className="profile-dropdown" 
-                                style={{ 
-                                    position: 'absolute', 
-                                    right: 0, 
+                                style={{
+                                    position: 'absolute',
+                                    right: 0,
                                     top: 'calc(100% + 8px)',
-                                    width: '220px', 
+                                    width: '220px',
+                                    maxWidth: 'calc(100vw - 32px)',
                                     backgroundColor: '#FFFFFF', 
                                     border: '1px solid rgba(181, 138, 61, 0.2)', 
                                     borderRadius: '8px', 
