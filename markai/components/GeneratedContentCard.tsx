@@ -75,7 +75,7 @@ const GeneratedContentCard: React.FC<GeneratedContentCardProps> = ({ content, in
                     </ul>
                 </div>
             )}
-            <p className="text-secondary whitespace-pre-wrap leading-relaxed">{content.content}</p>
+            <p className="text-secondary whitespace-pre-wrap leading-relaxed max-w-prose">{content.content}</p>
           </div>
           <div className="md:col-span-5 space-y-3">
             <div className="aspect-w-16 aspect-h-9 relative">
