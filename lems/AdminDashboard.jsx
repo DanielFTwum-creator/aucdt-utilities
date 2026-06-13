@@ -34,7 +34,7 @@ function AdminDashboard({ theme, onThemeChange, onLogout }) {
   const renderTabContent = () => {
     switch (activeTab) {
       case 'overview':
-        return <OverviewTab />;
+        return <OverviewTab onNavigate={setActiveTab} />;
       case 'programmes':
         return <ProgrammesTab />;
       case 'results':

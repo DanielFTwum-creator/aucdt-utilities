@@ -22,8 +22,26 @@
   transition: transform 0.3s ease;
 }
 
-.stat-card:hover {
+.stat-card-interactive {
+  cursor: pointer;
+  border: none;
+  text-align: left;
+  width: 100%;
+}
+
+.stat-card-interactive:hover {
   transform: translateY(-5px);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.28);
+  filter: brightness(1.08);
+}
+
+.stat-card-interactive:focus-visible {
+  outline: 3px solid var(--accent-color);
+  outline-offset: 3px;
+}
+
+.stat-card-interactive:active {
+  transform: translateY(-2px);
 }
 
 .stat-icon {

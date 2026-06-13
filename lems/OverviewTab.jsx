@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { apiService } from './api';
 import './OverviewTab.css';
 
-function OverviewTab() {
+function OverviewTab({ onNavigate }) {
   const [stats, setStats] = useState({
     totalEvaluations: 0,
     totalLecturers: 0,
@@ -45,37 +45,25 @@ function OverviewTab() {
         <div className="loading">Loading statistics...</div>
       ) : (
         <div className="stats-grid">
-          <div className="stat-card">
-            <div className="stat-icon">📋</div>
-            <div className="stat-content">
-              <h3>Total Evaluations</h3>
-              <p className="stat-value">{stats.totalEvaluations}</p>
-            </div>
-          </div>
-
-          <div className="stat-card">
-            <div className="stat-icon">👨‍🏫</div>
-            <div className="stat-content">
-              <h3>Total Lecturers</h3>
-              <p className="stat-value">{stats.totalLecturers}</p>
-            </div>
-          </div>
-
-          <div className="stat-card">
-            <div className="stat-icon">📚</div>
-            <div className="stat-content">
-              <h3>Total Courses</h3>
-              <p className="stat-value">{stats.totalCourses}</p>
-            </div>
-          </div>
-
-          <div className="stat-card">
-            <div className="stat-icon">🎓</div>
-            <div className="stat-content">
-              <h3>Total Programmes</h3>
-              <p className="stat-value">{stats.totalProgrammes}</p>
-            </div>
-          </div>
+          {[
+            { icon: '📋', label: 'Total Evaluations', value: stats.totalEvaluations, tab: 'results'    },
+            { icon: '👨‍🏫', label: 'Total Lecturers',   value: stats.totalLecturers,   tab: 'lecturers' },
+            { icon: '📚', label: 'Total Courses',     value: stats.totalCourses,     tab: 'programmes' },
+            { icon: '🎓', label: 'Total Programmes',  value: stats.totalProgrammes,  tab: 'programmes' },
+          ].map(({ icon, label, value, tab }) => (
+            <button
+              key={label}
+              className="stat-card stat-card-interactive"
+              onClick={() => onNavigate?.(tab)}
+              aria-label={`${label}: ${value} — go to ${tab}`}
+            >
+              <div className="stat-icon">{icon}</div>
+              <div className="stat-content">
+                <h3>{label}</h3>
+                <p className="stat-value">{value}</p>
+              </div>
+            </button>
+          ))}
         </div>
       )}
 
