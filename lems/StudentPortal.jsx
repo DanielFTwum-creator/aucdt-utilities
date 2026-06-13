@@ -19,13 +19,13 @@ function StudentPortal({ theme, onThemeChange }) {
       
       <div className="portal-container">
         <div className="portal-header">
-          <h1>Lecturer Assessment & Evaluation Portal</h1>
-          <p>Please provide your honest feedback about your lecturer and course experience</p>
           {showAdminButton && (
-            <button className="admin-button" onClick={handleAdminClick}>
-              Admin Panel
+            <button className="admin-link" onClick={handleAdminClick} aria-label="Admin">
+              Admin
             </button>
           )}
+          <h1>Lecturer Assessment & Evaluation Portal</h1>
+          <p>Please provide your honest feedback about your lecturer and course experience</p>
         </div>
 
         {instructionsRead ? (
