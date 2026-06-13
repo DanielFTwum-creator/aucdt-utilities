@@ -1,0 +1,81 @@
+/* AppCatalog — mobile-first responsive styles */
+
+/* ── Filter panel ── */
+.catalog-filter-panel {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+}
+
+/* ── Search input ── */
+.catalog-search {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  background: white;
+  color: #0f172a;
+  min-height: 44px;
+  outline: none;
+  margin-bottom: 1.25rem;
+  transition: border-color 0.15s;
+}
+.catalog-search:focus { border-color: #1e3a8a; }
+
+/* ── Filter pill row — horizontal scroll on mobile ── */
+.catalog-filter-pills {
+  display: flex;
+  gap: 0.5rem;
+  overflow-x: auto;
+  padding-bottom: 4px;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.catalog-filter-pills::-webkit-scrollbar { display: none; }
+
+/* ── Touch-target sizing for all filter buttons ── */
+.filter-button {
+  min-height: 44px !important;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* ── Category select touch target ── */
+.filter-select {
+  min-height: 44px !important;
+}
+
+/* ── Result count bar ── */
+.catalog-result-count {
+  margin-top: 0.75rem;
+  font-size: 0.8rem;
+  color: #64748b;
+}
+.catalog-result-count strong { color: #1e3a8a; }
+
+.catalog-clear-btn {
+  margin-left: 0.75rem;
+  color: #dc2626;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 0;
+}
+.catalog-clear-btn:hover { text-decoration: underline; }
+
+/* ── App card action links — larger touch targets on mobile ── */
+.app-card-link {
+  min-height: 44px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+}
+
+/* ── Outer page padding ── */
+.catalog-page { padding: 1rem; }
+@media (min-width: 768px) { .catalog-page { padding: 2rem; } }
+
+/* ── Responsive header title ── */
+.tuc-catalog-header h1 { font-size: clamp(1.6rem, 5vw, 2.5rem) !important; }

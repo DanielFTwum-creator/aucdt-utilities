@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { appCatalog, getCompletenessScore, getCatalogSummary } from '../data/appCatalog';
 import type { CatalogApp } from '../data/appCatalog';
+import './AppCatalog.css';
 
 const categoryColors: Record<CatalogApp['category'], string> = {
   education: 'bg-blue-50 text-blue-900 border-blue-200',
@@ -26,17 +27,22 @@ const statusBadge: Record<CatalogApp['status'], string> = {
 export default function AppCatalog() {
   const [filterStatus, setFilterStatus] = useState<CatalogApp['status'] | 'all'>('all');
   const [filterCategory, setFilterCategory] = useState<CatalogApp['category'] | 'all'>('all');
+  const [search, setSearch] = useState('');
 
   const summary = getCatalogSummary();
 
   const filteredApps = appCatalog.filter((app) => {
     if (filterStatus !== 'all' && app.status !== filterStatus) return false;
     if (filterCategory !== 'all' && app.category !== filterCategory) return false;
+    if (search.trim()) {
+      const q = search.toLowerCase();
+      if (!app.name.toLowerCase().includes(q) && !app.description.toLowerCase().includes(q) && !app.category.toLowerCase().includes(q)) return false;
+    }
     return true;
   });
 
   return (
-    <div className="min-h-screen bg-slate-50 p-8" style={{ backgroundColor: '#f8fafc' }}>
+    <div className="catalog-page min-h-screen bg-slate-50" style={{ backgroundColor: '#f8fafc' }}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700&display=swap');
         .tuc-catalog-header {
@@ -45,7 +51,7 @@ export default function AppCatalog() {
         }
         .tuc-catalog-header h1 {
           font-family: 'Barlow Condensed', sans-serif !important;
-          font-size: 2.5rem !important;
+          font-size: clamp(1.6rem, 5vw, 2.5rem) !important;
           font-weight: 700 !important;
           letter-spacing: -0.01em !important;
         }
@@ -150,14 +156,22 @@ export default function AppCatalog() {
             border-color: #1e3a8a !important;
           }
         `}</style>
-        <div className="filter-section mb-8">
+        <div className="filter-section catalog-filter-panel mb-8">
+          <input
+            type="search"
+            placeholder="Search apps…"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="catalog-search"
+          />
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label className="filter-label">🔎 Filter by Status</label>
-              <div className="flex flex-wrap gap-2">
+              <label className="filter-label">Filter by Status</label>
+              <div className="catalog-filter-pills">
                 {['all', 'standardised', 'in-progress', 'not-started'].map((status) => (
                   <button
                     key={status}
+                    type="button"
                     onClick={() => setFilterStatus(status as any)}
                     className={`filter-button ${filterStatus === status ? 'active' : ''}`}
                   >
@@ -167,7 +181,7 @@ export default function AppCatalog() {
               </div>
             </div>
             <div>
-              <label className="filter-label">🏷️ Filter by Category</label>
+              <label className="filter-label">Filter by Category</label>
               <select
                 value={filterCategory}
                 onChange={(e) => setFilterCategory(e.target.value as any)}
@@ -182,6 +196,18 @@ export default function AppCatalog() {
               </select>
             </div>
           </div>
+          <p className="catalog-result-count">
+            Showing <strong>{filteredApps.length}</strong> of {appCatalog.length} apps
+            {(filterStatus !== 'all' || filterCategory !== 'all' || search.trim()) && (
+              <button
+                type="button"
+                className="catalog-clear-btn"
+                onClick={() => { setFilterStatus('all'); setFilterCategory('all'); setSearch(''); }}
+              >
+                Clear filters ✕
+              </button>
+            )}
+          </p>
         </div>
 
         {/* App Grid */}
