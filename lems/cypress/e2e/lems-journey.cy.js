@@ -3,7 +3,7 @@
 //         cascade selects · API error handling · admin tabs · audit log ·
 //         theme persistence · logout.
 
-const WMS = 'https://wms.techbridge.edu.gh';
+const WMS = () => Cypress.env('wmsBase') || 'https://wms.techbridge.edu.gh';
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -72,7 +72,7 @@ describe('LEMS — SSO gate', () => {
   });
 
   it('shows the sign-in page when WMS refresh returns 500', () => {
-    cy.intercept('POST', `${WMS}/api/auth/refresh`, { statusCode: 500, body: {} }).as('refresh500');
+    cy.intercept('POST', `${WMS()}/api/auth/refresh`, { statusCode: 500, body: {} }).as('refresh500');
     cy.visit('/');
     cy.wait('@refresh500');
     cy.contains('button', 'Continue with Google').should('be.visible');
@@ -132,7 +132,7 @@ describe('LEMS — student journey', () => {
   });
 
   it('requires manual lecturer selection when a course has multiple lecturers', () => {
-    cy.intercept('GET', `${WMS}/api/lems/courses`, {
+    cy.intercept('GET', `${WMS()}/api/lems/courses`, {
       statusCode: 200,
       body: [{
         id: 2, name: 'Software Engineering', code: 'SE201', semester: 1,
@@ -225,7 +225,7 @@ describe('LEMS — student journey', () => {
   });
 
   it('submits a valid evaluation and verifies the full request body', () => {
-    cy.intercept('POST', `${WMS}/api/lems/evaluations/submit`, {
+    cy.intercept('POST', `${WMS()}/api/lems/evaluations/submit`, {
       statusCode: 200,
       body: { id: 1, studentFeedback: 'Great teaching', ratings: [] },
     }).as('submit');
@@ -259,7 +259,7 @@ describe('LEMS — student journey', () => {
   });
 
   it('resets the form to initial state after a successful submission', () => {
-    cy.intercept('POST', `${WMS}/api/lems/evaluations/submit`, {
+    cy.intercept('POST', `${WMS()}/api/lems/evaluations/submit`, {
       statusCode: 200,
       body: { id: 1, studentFeedback: '', ratings: [] },
     }).as('submit');
@@ -280,7 +280,7 @@ describe('LEMS — student journey', () => {
   });
 
   it('shows the duplicate-submission guard on a 409 response', () => {
-    cy.intercept('POST', `${WMS}/api/lems/evaluations/submit`, {
+    cy.intercept('POST', `${WMS()}/api/lems/evaluations/submit`, {
       statusCode: 409,
       body: { message: 'You have already submitted an evaluation for this lecturer and course.' },
     }).as('submitDup');
@@ -300,7 +300,7 @@ describe('LEMS — student journey', () => {
   });
 
   it('shows an error message and re-enables submit on a 500 failure', () => {
-    cy.intercept('POST', `${WMS}/api/lems/evaluations/submit`, {
+    cy.intercept('POST', `${WMS()}/api/lems/evaluations/submit`, {
       statusCode: 500,
       body: { message: 'Internal server error' },
     }).as('submit500');
@@ -383,7 +383,7 @@ describe('LEMS — admin journey (SYSTEM_ADMIN)', () => {
 
   it('renders the Results tab with data rows when evaluations exist', () => {
     // ResultsTab reads evaluation.lecturer.firstName/lastName and evaluation.course.name
-    cy.intercept('GET', `${WMS}/api/lems/evaluations/all`, {
+    cy.intercept('GET', `${WMS()}/api/lems/evaluations/all`, {
       statusCode: 200,
       body: [{
         id: 1,
@@ -421,7 +421,7 @@ describe('LEMS — admin journey (SYSTEM_ADMIN)', () => {
   });
 
   it('renders the audit log table with rows when entries exist', () => {
-    cy.intercept('GET', `${WMS}/api/lems/audit`, {
+    cy.intercept('GET', `${WMS()}/api/lems/audit`, {
       statusCode: 200,
       body: [{
         id: 1,
@@ -455,7 +455,7 @@ describe('LEMS — admin journey (SYSTEM_ADMIN)', () => {
   });
 
   it('shows the confirmation modal and allows cancellation before import', () => {
-    cy.intercept('POST', `${WMS}/api/gemini/generate*`, {
+    cy.intercept('POST', `${WMS()}/api/gemini/generate*`, {
       statusCode: 200,
       body: {
         candidates: [{
@@ -487,7 +487,7 @@ describe('LEMS — admin journey (SYSTEM_ADMIN)', () => {
   });
 
   it('extracts a curriculum PDF via the Gemini relay and applies it', () => {
-    cy.intercept('POST', `${WMS}/api/gemini/generate*`, {
+    cy.intercept('POST', `${WMS()}/api/gemini/generate*`, {
       statusCode: 200,
       body: {
         candidates: [{
@@ -502,7 +502,7 @@ describe('LEMS — admin journey (SYSTEM_ADMIN)', () => {
         }],
       },
     }).as('gemini');
-    cy.intercept('POST', `${WMS}/api/lems/curriculum/import`, {
+    cy.intercept('POST', `${WMS()}/api/lems/curriculum/import`, {
       statusCode: 200,
       body: { lecturersAdded: 1, coursesAdded: 1, coursesUpdated: 0 },
     }).as('import');
@@ -530,7 +530,7 @@ describe('LEMS — admin journey (SYSTEM_ADMIN)', () => {
   });
 
   it('shows an error when the Gemini relay fails', () => {
-    cy.intercept('POST', `${WMS}/api/gemini/generate*`, {
+    cy.intercept('POST', `${WMS()}/api/gemini/generate*`, {
       statusCode: 500,
       body: { message: 'Gemini relay error' },
     }).as('geminiFail');
@@ -583,6 +583,39 @@ describe('LEMS — role boundaries', () => {
     cy.wait('@me');
     cy.contains('Administrators only').should('be.visible');
     cy.contains('cy.user@techbridge.edu.gh').should('be.visible');
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Login page structure
+// ---------------------------------------------------------------------------
+
+describe('LEMS — login page structure', () => {
+  beforeEach(() => cy.stubWms(null));
+
+  it('mounts the campus video background element with the correct src', () => {
+    cy.visit('/');
+    cy.get('video.login-bg-video')
+      .should('exist')
+      .and('have.attr', 'src')
+      .and('include', 'campus_tour.mp4');
+    cy.get('video.login-bg-video').should('have.attr', 'autoplay');
+    cy.get('video.login-bg-video').should('have.attr', 'muted');
+    cy.get('video.login-bg-video').should('have.attr', 'loop');
+  });
+
+  it('login card is fully usable on a mobile viewport', () => {
+    cy.viewport('iphone-14');
+    cy.visit('/');
+    cy.get('.login-box').should('be.visible');
+    cy.contains('button', 'Continue with Google').should('be.visible').and('not.be.disabled');
+  });
+
+  it('error card is fully usable on a mobile viewport', () => {
+    cy.viewport('iphone-14');
+    cy.visit('/?error=domain');
+    cy.get('.auth-error-card').should('be.visible');
+    cy.contains('button', 'Try a different account').should('be.visible').and('not.be.disabled');
   });
 });
 
