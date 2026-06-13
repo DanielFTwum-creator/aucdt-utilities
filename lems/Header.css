@@ -110,6 +110,10 @@
   gap: 0.6rem;
 }
 
+.logo .theme-cycle-btn {
+  margin-left: 0.5rem;
+}
+
 .logo-text {
   display: flex;
   flex-direction: column;

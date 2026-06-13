@@ -57,7 +57,7 @@ function Header({ theme, onThemeChange, onAdminClick, showAdmin = false }) {
   return (
     <header className="header header-expanded">
       <div className="header-content header-content-expanded">
-        {/* Left: crest + wordmark */}
+        {/* Left: crest + wordmark + theme icon */}
         <div className="logo">
           <img
             src="https://techbridge.edu.gh/static/TUC_LOGO_small.png"
@@ -68,6 +68,7 @@ function Header({ theme, onThemeChange, onAdminClick, showAdmin = false }) {
             <span className="logo-wordmark">LEMS</span>
             <span className="logo-subtitle">TECHBRIDGE UNIVERSITY COLLEGE</span>
           </div>
+          <ThemeCycleButton theme={theme} onThemeChange={onThemeChange} />
         </div>
 
         {/* Centre: portal title */}
@@ -75,7 +76,7 @@ function Header({ theme, onThemeChange, onAdminClick, showAdmin = false }) {
           <h2 className="header-title">Lecturer Evaluation &amp; Management System</h2>
         </div>
 
-        {/* Right: Admin + Theme icon */}
+        {/* Right: Admin only */}
         <div className="header-actions">
           {showAdmin && (
             <button className="admin-btn" onClick={onAdminClick} aria-label="Admin panel">
@@ -83,7 +84,6 @@ function Header({ theme, onThemeChange, onAdminClick, showAdmin = false }) {
               Admin
             </button>
           )}
-          <ThemeCycleButton theme={theme} onThemeChange={onThemeChange} />
         </div>
       </div>
     </header>
