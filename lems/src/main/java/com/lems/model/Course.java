@@ -28,6 +28,12 @@ public class Course {
     @Column
     private Integer semester;
 
+    @Column
+    private Integer credits;
+
+    @Column
+    private String type;
+
     @ManyToOne
     @JoinColumn(name = "programme_id", nullable = false)
     private Programme programme;

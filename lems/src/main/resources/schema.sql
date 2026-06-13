@@ -9,7 +9,10 @@ CREATE TABLE IF NOT EXISTS programmes (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) NOT NULL UNIQUE,
     code VARCHAR(50),
-    description TEXT
+    description TEXT,
+    level VARCHAR(20),
+    total_credits INT,
+    mentor_institution VARCHAR(255)
 );
 
 -- Lecturers Table
@@ -18,7 +21,8 @@ CREATE TABLE IF NOT EXISTS lecturers (
     first_name VARCHAR(100) NOT NULL,
     last_name VARCHAR(100) NOT NULL,
     email VARCHAR(255) UNIQUE,
-    department VARCHAR(100)
+    department VARCHAR(100),
+    qualification VARCHAR(20)
 );
 
 -- Courses Table
@@ -28,6 +32,8 @@ CREATE TABLE IF NOT EXISTS courses (
     code VARCHAR(50) UNIQUE,
     description TEXT,
     semester INT,
+    credits INT,
+    type VARCHAR(20),
     programme_id BIGINT NOT NULL,
     FOREIGN KEY (programme_id) REFERENCES programmes(id) ON DELETE CASCADE
 );

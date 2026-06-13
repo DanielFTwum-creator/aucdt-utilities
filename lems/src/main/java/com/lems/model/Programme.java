@@ -25,6 +25,15 @@ public class Programme {
     @Column
     private String description;
 
+    @Column
+    private String level;
+
+    @Column(name = "total_credits")
+    private Integer totalCredits;
+
+    @Column(name = "mentor_institution")
+    private String mentorInstitution;
+
     @OneToMany(mappedBy = "programme", cascade = CascadeType.ALL)
     private List<Course> courses;
 }

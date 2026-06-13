@@ -28,6 +28,9 @@ public class Lecturer {
     @Column
     private String department;
 
+    @Column
+    private String qualification;
+
     @ManyToMany(mappedBy = "lecturers")
     private List<Course> courses;
 
