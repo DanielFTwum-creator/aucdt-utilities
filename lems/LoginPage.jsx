@@ -14,14 +14,8 @@ function LoginPage({ wmsError, mfaTicket, onMfaTicket, onSession }) {
     window.location.href = `${wmsBase}/api/auth/google?app=lems`;
   };
 
-  const errorMessage =
-    wmsError === 'domain' ? 'Only @techbridge.edu.gh accounts can sign in.'
-      : wmsError === 'deactivated' ? 'Your account has been deactivated.'
-      : wmsError ? 'Sign-in failed. Please try again.'
-      : null;
-
-  return (
-    <div className="login-page">
+  const videoBg = (
+    <>
       <video
         className="login-bg-video"
         src="https://techbridge.edu.gh/static/campus_tour.mp4"
@@ -32,6 +26,58 @@ function LoginPage({ wmsError, mfaTicket, onMfaTicket, onSession }) {
         preload="auto"
       />
       <div className="login-bg-overlay" />
+    </>
+  );
+
+  if (wmsError) {
+    const isDomain     = wmsError === 'oauth' || wmsError === 'domain';
+    const isDeactivated = wmsError === 'deactivated';
+
+    return (
+      <div className="login-page login-page--error">
+        {videoBg}
+        <div className="auth-error-card">
+          <img
+            src="https://techbridge.edu.gh/static/TUC_LOGO_small.png"
+            alt="TUC"
+            className="auth-error-logo"
+            onError={(e) => { e.target.style.display = 'none'; }}
+          />
+          <div className="auth-error-icon">{isDeactivated ? '🔒' : '⛔'}</div>
+          <h2 className="auth-error-title">
+            {isDomain      ? 'Wrong Google Account'
+             : isDeactivated ? 'Account Deactivated'
+             :                 'Sign-in Failed'}
+          </h2>
+          <p className="auth-error-body">
+            {isDomain
+              ? <>LEMS is only accessible to <strong>@techbridge.edu.gh</strong> institutional accounts.
+                  Personal Gmail addresses are not permitted.</>
+             : isDeactivated
+              ? <>Your TUC account has been deactivated. Contact the ICT Division to restore access.</>
+              : <>An error occurred during sign-in. Please try again or contact ICT if the problem persists.</>
+            }
+          </p>
+          {isDomain && (
+            <p className="auth-error-hint">
+              Make sure you select your <strong>TUC Workspace</strong> account in the Google sign-in
+              window, not a personal account.
+            </p>
+          )}
+          <button type="button" className="auth-error-retry" onClick={continueWithGoogle}>
+            Try a different account
+          </button>
+          <a href="mailto:ict@techbridge.edu.gh" className="auth-error-contact">
+            Contact ICT Support
+          </a>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="login-page">
+      {videoBg}
       <div className="login-container">
         <div className="login-box">
           <img
@@ -47,8 +93,6 @@ function LoginPage({ wmsError, mfaTicket, onMfaTicket, onSession }) {
             <br />
             <small>Sign in with your TUC Workspace account.</small>
           </p>
-
-          {errorMessage && <div className="error-message">{errorMessage}</div>}
 
           <button type="button" className="login-button" onClick={continueWithGoogle}>
             Continue with Google
