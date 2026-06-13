@@ -18,6 +18,24 @@
   color: white;
   border-radius: 0.5rem;
   box-shadow: var(--shadow-lg);
+  overflow: hidden;
+}
+
+.portal-header::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: url('https://techbridge.edu.gh/static/TUC_LOGO_small.png') center / 340px no-repeat;
+  opacity: 0.06;
+  pointer-events: none;
+}
+
+.portal-logo {
+  display: block;
+  width: 64px;
+  height: 64px;
+  object-fit: contain;
+  margin: 0 auto 0.75rem;
 }
 
 .portal-header h1 {

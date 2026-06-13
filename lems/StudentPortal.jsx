@@ -24,6 +24,11 @@ function StudentPortal({ theme, onThemeChange }) {
               Admin
             </button>
           )}
+          <img
+            src="https://techbridge.edu.gh/static/TUC_LOGO_small.png"
+            alt="TUC"
+            className="portal-logo"
+          />
           <h1>Lecturer Assessment & Evaluation Portal</h1>
           <p>Please provide your honest feedback about your lecturer and course experience</p>
         </div>
