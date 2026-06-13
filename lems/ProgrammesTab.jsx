@@ -46,9 +46,9 @@ function ProgrammesTab() {
               {programmes.map((programme) => (
                 <tr key={programme.id}>
                   <td>{programme.name}</td>
-                  <td>{programme.code || 'N/A'}</td>
-                  <td>{programme.description || 'N/A'}</td>
-                  <td>{programme.courses?.length || 0}</td>
+                  <td>{programme.code || '—'}</td>
+                  <td>{programme.description || '—'}</td>
+                  <td>{programme.courseCount ?? programme.courses?.length ?? 0}</td>
                 </tr>
               ))}
             </tbody>
