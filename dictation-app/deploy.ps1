@@ -71,10 +71,10 @@ git sparse-checkout set dictation-app
 cd dictation-app
 
 log '[3/5] Installing dependencies...'
-npm install --silent
+pnpm install --no-frozen-lockfile || true
 
 log '[4/5] Building...'
-npm run build
+./node_modules/.bin/vite build
 
 log '[5/5] Deploying dist/ to web root...'
 mkdir -p $RemotePath
