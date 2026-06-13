@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Student User Guide — LEMS | Techbridge University College</title>
+<style>
+  :root {
+    --tuc-maroon: #6b1020;
+    --tuc-gold: #c9a84c;
+    --tuc-dark: #1a1a2e;
+    --tuc-light: #f8f5f0;
+    --tuc-mid: #f0ebe3;
+    --text: #2d2d2d;
+    --muted: #6b7280;
+    --border: #e2d9cc;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--tuc-light); color: var(--text); line-height: 1.7; }
+
+  .doc-header { background: var(--tuc-maroon); color: #fff; padding: 48px 40px 40px; position: relative; overflow: hidden; }
+  .doc-header::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 4px; background: linear-gradient(90deg, var(--tuc-gold), transparent); }
+  .breadcrumb { font-size: 12px; opacity: .6; margin-bottom: 12px; }
+  .breadcrumb a { color: var(--tuc-gold); text-decoration: none; }
+  .breadcrumb a:hover { text-decoration: underline; }
+  .header-badge { display: inline-block; background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.2); border-radius: 20px; padding: 4px 14px; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; margin-bottom: 16px; color: var(--tuc-gold); }
+  .doc-header h1 { font-size: 2.2rem; font-weight: 700; letter-spacing: -.02em; }
+  .doc-header h1 span { color: var(--tuc-gold); }
+  .doc-header p { margin-top: 12px; opacity: .8; font-size: 1rem; max-width: 600px; }
+
+  .doc-body { display: flex; max-width: 1100px; margin: 0 auto; padding: 40px 20px; gap: 40px; }
+
+  .sidebar { width: 220px; flex-shrink: 0; position: sticky; top: 20px; align-self: flex-start; }
+  .sidebar nav { background: #fff; border: 1px solid var(--border); border-radius: 10px; padding: 20px; }
+  .sidebar nav h4 { font-size: 11px; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); margin-bottom: 12px; }
+  .sidebar nav a { display: block; padding: 6px 10px; border-radius: 6px; color: var(--text); text-decoration: none; font-size: 13.5px; }
+  .sidebar nav a:hover { background: var(--tuc-mid); color: var(--tuc-maroon); }
+
+  .main { flex: 1; min-width: 0; }
+  section { margin-bottom: 52px; }
+  .section-label { display: inline-flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--tuc-maroon); margin-bottom: 8px; }
+  .section-label::before { content: ''; display: inline-block; width: 3px; height: 14px; background: var(--tuc-gold); border-radius: 2px; }
+  h2 { font-size: 1.65rem; font-weight: 700; color: var(--tuc-dark); margin-bottom: 14px; }
+  h3 { font-size: 1.1rem; font-weight: 600; color: var(--tuc-dark); margin: 28px 0 10px; }
+  p { margin-bottom: 14px; }
+  ul, ol { padding-left: 22px; margin-bottom: 14px; }
+  li { margin-bottom: 7px; }
+  code { background: #e8e3dc; color: var(--tuc-maroon); padding: 2px 6px; border-radius: 4px; font-size: .85em; font-family: monospace; }
+
+  .step-list { counter-reset: steps; list-style: none; padding: 0; margin: 20px 0; }
+  .step-list li { counter-increment: steps; display: flex; gap: 18px; align-items: flex-start; margin-bottom: 20px; }
+  .step-list li::before { content: counter(steps); display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: 50%; background: var(--tuc-maroon); color: #fff; font-weight: 700; font-size: .95rem; flex-shrink: 0; margin-top: 2px; }
+  .step-content { flex: 1; }
+  .step-content strong { display: block; font-size: 1rem; color: var(--tuc-dark); margin-bottom: 4px; }
+  .step-content p { margin: 0; font-size: .93rem; color: var(--muted); }
+
+  .callout { border-radius: 8px; padding: 16px 20px; margin: 16px 0; border-left: 4px solid; font-size: .93rem; }
+  .callout-info { background: #eff6ff; border-color: #3b82f6; color: #1e3a5f; }
+  .callout-warn { background: #fffbeb; border-color: #f59e0b; color: #4a2c0a; }
+  .callout-success { background: #f0fdf4; border-color: #22c55e; color: #14532d; }
+  .callout-tip { background: #fdf4ff; border-color: #a855f7; color: #3b0764; }
+  .callout strong { display: block; margin-bottom: 4px; font-size: .8rem; text-transform: uppercase; letter-spacing: .06em; }
+
+  .rating-scale { display: flex; gap: 10px; flex-wrap: wrap; margin: 16px 0; }
+  .rating-pill { display: flex; flex-direction: column; align-items: center; background: #fff; border: 2px solid var(--border); border-radius: 10px; padding: 12px 16px; min-width: 80px; text-align: center; }
+  .rating-pill .num { font-size: 1.6rem; font-weight: 800; color: var(--tuc-maroon); }
+  .rating-pill .lbl { font-size: .72rem; color: var(--muted); margin-top: 4px; }
+  .rating-pill:nth-child(5) { border-color: var(--tuc-gold); }
+  .rating-pill:nth-child(5) .num { color: var(--tuc-gold); }
+
+  .criteria-table { width: 100%; border-collapse: collapse; font-size: .9rem; background: #fff; border-radius: 8px; overflow: hidden; border: 1px solid var(--border); margin: 16px 0; }
+  .criteria-table thead { background: var(--tuc-maroon); color: #fff; }
+  .criteria-table th { padding: 12px 16px; text-align: left; font-weight: 600; font-size: .82rem; }
+  .criteria-table td { padding: 10px 16px; border-bottom: 1px solid var(--border); }
+  .criteria-table tr:last-child td { border-bottom: none; }
+  .criteria-table tr:hover td { background: var(--tuc-mid); }
+
+  .faq-item { background: #fff; border: 1px solid var(--border); border-radius: 10px; padding: 20px; margin-bottom: 14px; }
+  .faq-item h4 { color: var(--tuc-maroon); font-size: .98rem; margin-bottom: 8px; }
+  .faq-item p { margin: 0; font-size: .93rem; color: var(--muted); }
+
+  .screen-mock { background: #fff; border: 1px solid var(--border); border-radius: 10px; padding: 20px; margin: 16px 0; font-size: .88rem; }
+  .screen-mock .mock-label { font-size: .75rem; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); margin-bottom: 12px; }
+  .mock-field { background: var(--tuc-mid); border-radius: 6px; padding: 10px 14px; margin-bottom: 10px; color: var(--muted); font-size: .9rem; }
+  .mock-field label { display: block; font-size: .78rem; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+  .mock-btn { display: inline-block; background: var(--tuc-maroon); color: #fff; padding: 10px 24px; border-radius: 6px; font-weight: 600; font-size: .9rem; margin-top: 8px; }
+
+  .doc-footer { border-top: 1px solid var(--border); margin-top: 60px; padding: 28px 40px; font-size: .85rem; color: var(--muted); background: #fff; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
+  .doc-footer strong { color: var(--tuc-maroon); }
+  .doc-footer a { color: var(--tuc-maroon); text-decoration: none; }
+  .doc-footer a:hover { text-decoration: underline; }
+
+  @media (max-width: 700px) { .doc-body { flex-direction: column; } .sidebar { width: 100%; position: static; } .rating-scale { justify-content: center; } }
+  @media print { .sidebar { display: none; } .doc-body { display: block; } }
+</style>
+</head>
+<body>
+
+<header class="doc-header">
+  <div class="breadcrumb"><a href="/docs/">LEMS Docs</a> › Student User Guide</div>
+  <div class="header-badge">Student Guide</div>
+  <h1>How to Submit a <span>Lecturer Evaluation</span></h1>
+  <p>A step-by-step guide for Techbridge University College students completing their semester lecturer evaluations through LEMS.</p>
+</header>
+
+<div class="doc-body">
+  <aside class="sidebar">
+    <nav>
+      <h4>Contents</h4>
+      <a href="#before">Before You Begin</a>
+      <a href="#login">1. Logging In</a>
+      <a href="#select">2. Selecting a Course</a>
+      <a href="#rating">3. Rating Your Lecturer</a>
+      <a href="#submit">4. Submitting</a>
+      <a href="#after">After Submission</a>
+      <a href="#faq">FAQ</a>
+    </nav>
+  </aside>
+
+  <main class="main">
+
+    <section id="before">
+      <div class="section-label">Getting Started</div>
+      <h2>Before You Begin</h2>
+
+      <div class="callout callout-info">
+        <strong>What LEMS is</strong>
+        LEMS (Lecturer Evaluation &amp; Management System) is the TUC platform for collecting confidential student feedback on teaching quality. Your evaluations help the college maintain and improve academic standards in line with GTEC requirements.
+      </div>
+
+      <p>Before opening the evaluation form, make sure you have the following ready:</p>
+      <ul>
+        <li>Your <strong>TUC institutional email</strong> (<code>@techbridge.edu.gh</code>) and WMS password</li>
+        <li>The <strong>name of the course</strong> you are evaluating (check your timetable or course registration)</li>
+        <li>The <strong>name of the lecturer</strong> who taught that course</li>
+        <li>Approximately <strong>5–10 minutes</strong> — the form cannot be saved mid-way</li>
+      </ul>
+
+      <div class="callout callout-warn">
+        <strong>One submission only</strong>
+        You may submit <em>once per lecturer + course combination</em>. Once submitted, your evaluation cannot be changed. Take your time and be honest before clicking Submit.
+      </div>
+    </section>
+
+    <section id="login">
+      <div class="section-label">Step 1</div>
+      <h2>Logging In</h2>
+
+      <ol class="step-list">
+        <li>
+          <div class="step-content">
+            <strong>Open the LEMS portal</strong>
+            <p>Visit <code>lems.techbridge.edu.gh</code> in your browser. You will see the LEMS login page.</p>
+          </div>
+        </li>
+        <li>
+          <div class="step-content">
+            <strong>Enter your TUC email and password</strong>
+            <p>Use your <code>@techbridge.edu.gh</code> institutional email. This is the same login you use for WMS and other TUC platforms.</p>
+          </div>
+        </li>
+        <li>
+          <div class="step-content">
+            <strong>Click "Sign In"</strong>
+            <p>You will be redirected to the Student Evaluation form. If you see the Admin Dashboard instead, you have admin access — use the student portal link to submit an evaluation.</p>
+          </div>
+        </li>
+      </ol>
+
+      <div class="callout callout-tip">
+        <strong>Tip</strong>
+        If you have previously logged into WMS in the same browser session, LEMS may log you in automatically without asking for your password again.
+      </div>
+    </section>
+
+    <section id="select">
+      <div class="section-label">Step 2</div>
+      <h2>Selecting Your Programme &amp; Course</h2>
+
+      <ol class="step-list">
+        <li>
+          <div class="step-content">
+            <strong>Select your Programme</strong>
+            <p>Choose your programme from the dropdown (e.g. "B.Tech Fashion Design Technology"). Only programmes offered at TUC are listed.</p>
+          </div>
+        </li>
+        <li>
+          <div class="step-content">
+            <strong>Select the Course</strong>
+            <p>The course list updates to show only courses belonging to your chosen programme. Select the course you are evaluating.</p>
+          </div>
+        </li>
+        <li>
+          <div class="step-content">
+            <strong>Confirm the Lecturer</strong>
+            <p>The lecturer(s) assigned to that course are shown. Confirm you are evaluating the correct person before proceeding.</p>
+          </div>
+        </li>
+      </ol>
+
+      <div class="screen-mock">
+        <div class="mock-label">Example — course selection</div>
+        <div class="mock-field"><label>Programme</label>B.Tech Fashion Design Technology</div>
+        <div class="mock-field"><label>Course</label>FDT 234 — Garment Technology I</div>
+        <div class="mock-field"><label>Lecturer</label>Ms. Oduro</div>
+      </div>
+
+      <div class="callout callout-warn">
+        <strong>Course not in the list?</strong>
+        If your course does not appear, contact the ICT office at <code>ict@techbridge.edu.gh</code>. Do not evaluate a different course as a substitute.
+      </div>
+    </section>
+
+    <section id="rating">
+      <div class="section-label">Step 3</div>
+      <h2>Rating Your Lecturer</h2>
+
+      <p>You will rate the lecturer on <strong>10 criteria</strong>. Each criterion is scored on a scale of <strong>1 to 5</strong>.</p>
+
+      <div class="rating-scale">
+        <div class="rating-pill"><span class="num">1</span><span class="lbl">Strongly<br>Disagree</span></div>
+        <div class="rating-pill"><span class="num">2</span><span class="lbl">Disagree</span></div>
+        <div class="rating-pill"><span class="num">3</span><span class="lbl">Neutral</span></div>
+        <div class="rating-pill"><span class="num">4</span><span class="lbl">Agree</span></div>
+        <div class="rating-pill"><span class="num">5</span><span class="lbl">Strongly<br>Agree</span></div>
+      </div>
+
+      <table class="criteria-table">
+        <thead><tr><th>#</th><th>Criterion</th><th>Section</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td>The lecturer presented course material clearly and effectively</td><td>Teaching Quality</td></tr>
+          <tr><td>2</td><td>The lecturer demonstrated subject matter expertise</td><td>Teaching Quality</td></tr>
+          <tr><td>3</td><td>The lecturer was well prepared for each class</td><td>Teaching Quality</td></tr>
+          <tr><td>4</td><td>The lecturer encouraged student participation and questions</td><td>Engagement</td></tr>
+          <tr><td>5</td><td>The lecturer used effective teaching methods and examples</td><td>Engagement</td></tr>
+          <tr><td>6</td><td>The lecturer was accessible and responsive outside class hours</td><td>Accessibility</td></tr>
+          <tr><td>7</td><td>The lecturer provided constructive and timely feedback on work</td><td>Feedback</td></tr>
+          <tr><td>8</td><td>The course content was relevant to the programme of study</td><td>Content</td></tr>
+          <tr><td>9</td><td>The assessment methods fairly reflected the course content</td><td>Assessment</td></tr>
+          <tr><td>10</td><td>Overall, I am satisfied with this lecturer's teaching</td><td>Overall</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Recommendation Question</h3>
+      <p>After the 10 criteria you will answer one additional question:</p>
+      <blockquote style="background:#fff;border-left:4px solid var(--tuc-gold);padding:14px 20px;border-radius:0 8px 8px 0;margin:14px 0;font-style:italic;color:var(--tuc-dark);">
+        "Would you recommend this lecturer to other students?"
+      </blockquote>
+      <p>Select <strong>Yes</strong>, <strong>Neutral</strong>, or <strong>No</strong>.</p>
+
+      <h3>Written Comment (Optional)</h3>
+      <p>A free-text comment box lets you elaborate on your ratings. This is optional but encouraged — specific, constructive comments are more useful to the lecturer and management than ratings alone.</p>
+
+      <div class="callout callout-tip">
+        <strong>Writing a helpful comment</strong>
+        Be specific. Instead of "Good lecturer," try "The lecturer always provided real-world examples that made the theoretical content easier to understand." Instead of "Bad," try "I would have appreciated more timely feedback on assignments."
+      </div>
+    </section>
+
+    <section id="submit">
+      <div class="section-label">Step 4</div>
+      <h2>Submitting Your Evaluation</h2>
+
+      <ol class="step-list">
+        <li>
+          <div class="step-content">
+            <strong>Review your ratings</strong>
+            <p>Scroll through the form and check that every criterion has a rating selected. The form will not submit with missing ratings.</p>
+          </div>
+        </li>
+        <li>
+          <div class="step-content">
+            <strong>Click "Submit Evaluation"</strong>
+            <p>The button is at the bottom of the form. Once clicked, the submission is final.</p>
+          </div>
+        </li>
+        <li>
+          <div class="step-content">
+            <strong>Confirmation screen</strong>
+            <p>A confirmation message will appear thanking you for your submission. This confirms that your evaluation was received.</p>
+          </div>
+        </li>
+      </ol>
+
+      <div class="callout callout-success">
+        <strong>Your identity is never stored</strong>
+        LEMS records a one-way cryptographic hash of your submission to prevent duplicates — not your name, student ID or email address. No-one at TUC can identify who submitted which evaluation.
+      </div>
+    </section>
+
+    <section id="after">
+      <div class="section-label">After Submission</div>
+      <h2>What Happens Next</h2>
+      <p>Your ratings are aggregated with those of other students and reviewed by the Head of Department and relevant academic staff at the end of each evaluation period. Aggregate (not individual) results inform:</p>
+      <ul>
+        <li>Staff professional development plans</li>
+        <li>Course content and delivery reviews</li>
+        <li>GTEC accreditation reports</li>
+        <li>Academic board quality assurance discussions</li>
+      </ul>
+      <p>Individual submissions are never shared with lecturers. Only anonymous aggregated scores and unattributed comments are made available.</p>
+    </section>
+
+    <section id="faq">
+      <div class="section-label">FAQ</div>
+      <h2>Frequently Asked Questions</h2>
+
+      <div class="faq-item">
+        <h4>I already submitted for this lecturer. Can I change my response?</h4>
+        <p>No. Once submitted, evaluations cannot be edited or deleted. The system records a one-way hash that prevents duplicate submissions from the same student for the same lecturer+course pairing.</p>
+      </div>
+
+      <div class="faq-item">
+        <h4>My course is not listed. What should I do?</h4>
+        <p>Contact the ICT office at <code>ict@techbridge.edu.gh</code> with your programme name, course code, and lecturer name. Do not evaluate a different course as a substitute.</p>
+      </div>
+
+      <div class="faq-item">
+        <h4>Can my lecturer see my individual ratings?</h4>
+        <p>No. Lecturers only see aggregated scores and unattributed comments. Your identity is never recorded — not your name, student ID, or email address.</p>
+      </div>
+
+      <div class="faq-item">
+        <h4>I submitted but did not see a confirmation. Was it recorded?</h4>
+        <p>If the page did not show a confirmation, try submitting again. If you receive a "duplicate submission" error (409), your first submission was already recorded successfully.</p>
+      </div>
+
+      <div class="faq-item">
+        <h4>Can I evaluate more than one course?</h4>
+        <p>Yes. After confirming one submission, return to the form and select a different course (and lecturer) to submit another evaluation. Each course+lecturer combination is treated independently.</p>
+      </div>
+
+      <div class="faq-item">
+        <h4>I cannot log in. What should I do?</h4>
+        <p>LEMS uses the same login as the WMS platform. If you cannot log in, reset your password through WMS or contact the ICT help desk.</p>
+      </div>
+
+      <div class="faq-item">
+        <h4>Is filling in the comment box compulsory?</h4>
+        <p>No. The written comment is optional. You may submit with only the 10 rated criteria and the recommendation question answered.</p>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<footer class="doc-footer">
+  <div>
+    <strong>LEMS Student User Guide</strong> — Techbridge University College · ICT Division<br>
+    For help: <a href="mailto:ict@techbridge.edu.gh">ict@techbridge.edu.gh</a>
+  </div>
+  <div style="text-align:right;">
+    <a href="/docs/">← Back to Docs Home</a><br>
+    <a href="/docs/admin-guide/">Admin Guide →</a>
+  </div>
+</footer>
+
+</body>
+</html>

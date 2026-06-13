@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Administrator Guide — LEMS | Techbridge University College</title>
+<style>
+  :root {
+    --tuc-maroon: #6b1020;
+    --tuc-gold: #c9a84c;
+    --tuc-dark: #1a1a2e;
+    --tuc-light: #f8f5f0;
+    --tuc-mid: #f0ebe3;
+    --text: #2d2d2d;
+    --muted: #6b7280;
+    --border: #e2d9cc;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--tuc-light); color: var(--text); line-height: 1.7; }
+
+  .doc-header { background: var(--tuc-dark); color: #fff; padding: 48px 40px 40px; position: relative; overflow: hidden; }
+  .doc-header::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: var(--tuc-maroon); }
+  .doc-header::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 4px; background: linear-gradient(90deg, var(--tuc-gold), transparent); }
+  .breadcrumb { font-size: 12px; opacity: .6; margin-bottom: 12px; }
+  .breadcrumb a { color: var(--tuc-gold); text-decoration: none; }
+  .breadcrumb a:hover { text-decoration: underline; }
+  .header-badge { display: inline-block; background: rgba(201,168,76,.15); border: 1px solid rgba(201,168,76,.4); border-radius: 20px; padding: 4px 14px; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; margin-bottom: 16px; color: var(--tuc-gold); }
+  .doc-header h1 { font-size: 2.2rem; font-weight: 700; letter-spacing: -.02em; }
+  .doc-header h1 span { color: var(--tuc-gold); }
+  .doc-header p { margin-top: 12px; opacity: .75; font-size: 1rem; max-width: 600px; }
+  .header-roles { margin-top: 24px; display: flex; gap: 10px; flex-wrap: wrap; }
+  .role-pill { background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.15); border-radius: 20px; padding: 4px 14px; font-size: .8rem; color: rgba(255,255,255,.7); }
+
+  .doc-body { display: flex; max-width: 1100px; margin: 0 auto; padding: 40px 20px; gap: 40px; }
+
+  .sidebar { width: 220px; flex-shrink: 0; position: sticky; top: 20px; align-self: flex-start; max-height: calc(100vh - 40px); overflow-y: auto; }
+  .sidebar nav { background: #fff; border: 1px solid var(--border); border-radius: 10px; padding: 20px; }
+  .sidebar nav h4 { font-size: 11px; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); margin-bottom: 12px; }
+  .sidebar nav a { display: block; padding: 6px 10px; border-radius: 6px; color: var(--text); text-decoration: none; font-size: 13.5px; }
+  .sidebar nav a:hover { background: var(--tuc-mid); color: var(--tuc-maroon); }
+  .sidebar nav a.sub { padding-left: 20px; font-size: 13px; color: var(--muted); }
+
+  .main { flex: 1; min-width: 0; }
+  section { margin-bottom: 52px; }
+  .section-label { display: inline-flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--tuc-maroon); margin-bottom: 8px; }
+  .section-label::before { content: ''; display: inline-block; width: 3px; height: 14px; background: var(--tuc-gold); border-radius: 2px; }
+  h2 { font-size: 1.65rem; font-weight: 700; color: var(--tuc-dark); margin-bottom: 14px; }
+  h3 { font-size: 1.1rem; font-weight: 600; color: var(--tuc-dark); margin: 28px 0 10px; }
+  h4 { font-size: .95rem; font-weight: 600; color: var(--tuc-maroon); margin: 18px 0 8px; }
+  p { margin-bottom: 14px; }
+  ul, ol { padding-left: 22px; margin-bottom: 14px; }
+  li { margin-bottom: 7px; }
+  code { background: #e8e3dc; color: var(--tuc-maroon); padding: 2px 6px; border-radius: 4px; font-size: .85em; font-family: monospace; }
+  pre { background: #1e293b; color: #e2e8f0; border-radius: 8px; padding: 18px 20px; overflow-x: auto; font-family: monospace; font-size: .83rem; line-height: 1.6; margin: 14px 0; }
+  pre code { background: none; color: inherit; padding: 0; }
+
+  .callout { border-radius: 8px; padding: 16px 20px; margin: 16px 0; border-left: 4px solid; font-size: .93rem; }
+  .callout-info { background: #eff6ff; border-color: #3b82f6; color: #1e3a5f; }
+  .callout-warn { background: #fffbeb; border-color: #f59e0b; color: #4a2c0a; }
+  .callout-danger { background: #fef2f2; border-color: #ef4444; color: #7f1d1d; }
+  .callout-success { background: #f0fdf4; border-color: #22c55e; color: #14532d; }
+  .callout strong { display: block; margin-bottom: 4px; font-size: .8rem; text-transform: uppercase; letter-spacing: .06em; }
+
+  .tab-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 14px; margin: 20px 0; }
+  .tab-card { background: #fff; border: 1px solid var(--border); border-radius: 10px; padding: 18px; }
+  .tab-card .icon { font-size: 1.6rem; margin-bottom: 8px; }
+  .tab-card h4 { margin: 0 0 6px; color: var(--tuc-dark); font-size: .95rem; }
+  .tab-card p { margin: 0; font-size: .87rem; color: var(--muted); line-height: 1.5; }
+
+  .table-wrap { overflow-x: auto; margin: 14px 0; }
+  table { width: 100%; border-collapse: collapse; font-size: .9rem; background: #fff; border-radius: 8px; overflow: hidden; border: 1px solid var(--border); }
+  thead { background: var(--tuc-maroon); color: #fff; }
+  th { padding: 11px 16px; text-align: left; font-weight: 600; font-size: .82rem; }
+  td { padding: 10px 16px; border-bottom: 1px solid var(--border); }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: var(--tuc-mid); }
+
+  .step-list { counter-reset: steps; list-style: none; padding: 0; margin: 20px 0; }
+  .step-list li { counter-increment: steps; display: flex; gap: 16px; margin-bottom: 18px; }
+  .step-list li::before { content: counter(steps); display: flex; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 50%; background: var(--tuc-maroon); color: #fff; font-weight: 700; font-size: .88rem; flex-shrink: 0; margin-top: 3px; }
+  .step-content strong { display: block; color: var(--tuc-dark); margin-bottom: 3px; }
+  .step-content p { margin: 0; font-size: .92rem; color: var(--muted); }
+
+  .action-row { display: flex; gap: 10px; flex-wrap: wrap; margin: 14px 0; }
+  .action-btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 6px; font-size: .85rem; font-weight: 600; }
+  .btn-add { background: #dcfce7; color: #166534; }
+  .btn-edit { background: #dbeafe; color: #1e40af; }
+  .btn-delete { background: #fee2e2; color: #991b1b; }
+  .btn-import { background: #ede9fe; color: #4c1d95; }
+
+  .doc-footer { border-top: 1px solid var(--border); margin-top: 60px; padding: 28px 40px; font-size: .85rem; color: var(--muted); background: #fff; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
+  .doc-footer strong { color: var(--tuc-maroon); }
+  .doc-footer a { color: var(--tuc-maroon); text-decoration: none; }
+  .doc-footer a:hover { text-decoration: underline; }
+
+  @media (max-width: 700px) { .doc-body { flex-direction: column; } .sidebar { width: 100%; position: static; } }
+  @media print { .sidebar { display: none; } .doc-body { display: block; } }
+</style>
+</head>
+<body>
+
+<header class="doc-header">
+  <div class="breadcrumb"><a href="/docs/">LEMS Docs</a> › Administrator Guide</div>
+  <div class="header-badge">Admin Guide</div>
+  <h1><span>Admin</span> Dashboard Guide</h1>
+  <p>Complete reference for LEMS administrators — managing programmes, lecturers, courses, reviewing evaluation results, and maintaining the system.</p>
+  <div class="header-roles">
+    <span class="role-pill">SYSTEM_ADMIN</span>
+    <span class="role-pill">HOD</span>
+    <span class="role-pill">ADMIN_STAFF</span>
+  </div>
+</header>
+
+<div class="doc-body">
+  <aside class="sidebar">
+    <nav>
+      <h4>Contents</h4>
+      <a href="#access">Accessing the Dashboard</a>
+      <a href="#overview-tab">Overview Tab</a>
+      <a href="#programmes-tab">Programmes Tab</a>
+      <a href="#lecturers-tab">Lecturers Tab</a>
+      <a href="#results-tab">Results Tab</a>
+      <a href="#analytics-tab">Analytics Tab</a>
+      <a href="#admin-panel">Admin Panel Tab</a>
+      <a class="sub" href="#curriculum-import">↳ Curriculum Import</a>
+      <a class="sub" href="#audit-log">↳ Audit Log</a>
+      <a href="#selftest-tab">Self Test Tab</a>
+      <a href="#roles">Roles &amp; Permissions</a>
+      <a href="#faq-admin">FAQ</a>
+    </nav>
+  </aside>
+
+  <main class="main">
+
+    <!-- ACCESS -->
+    <section id="access">
+      <div class="section-label">Getting Started</div>
+      <h2>Accessing the Admin Dashboard</h2>
+      <ol class="step-list">
+        <li>
+          <div class="step-content">
+            <strong>Navigate to the admin login page</strong>
+            <p>Open <code>lems.techbridge.edu.gh/admin/login</code> in your browser.</p>
+          </div>
+        </li>
+        <li>
+          <div class="step-content">
+            <strong>Sign in with your TUC credentials</strong>
+            <p>Use your <code>@techbridge.edu.gh</code> email and WMS password. Only accounts with the <code>SYSTEM_ADMIN</code>, <code>HOD</code>, or <code>ADMIN_STAFF</code> WMS role can access the admin dashboard.</p>
+          </div>
+        </li>
+        <li>
+          <div class="step-content">
+            <strong>The dashboard opens on the Overview tab</strong>
+            <p>All eight tabs are visible in the navigation bar at the top of the page.</p>
+          </div>
+        </li>
+      </ol>
+      <div class="callout callout-info">
+        <strong>Session timeout</strong>
+        Your access token expires after 15 minutes of inactivity. The system will automatically refresh it silently using a browser cookie for up to 7 days. After 7 days you will need to log in again.
+      </div>
+    </section>
+
+    <!-- OVERVIEW -->
+    <section id="overview-tab">
+      <div class="section-label">Tab 1</div>
+      <h2>Overview Tab</h2>
+      <p>The Overview tab displays a summary of the current evaluation period at a glance:</p>
+      <ul>
+        <li><strong>Total Evaluations</strong> — number of submissions received so far</li>
+        <li><strong>Average Rating</strong> — mean score across all criteria and all submissions</li>
+        <li><strong>Lecturers Evaluated</strong> — count of distinct lecturers who have received at least one evaluation</li>
+        <li><strong>Courses Evaluated</strong> — count of distinct courses with at least one evaluation</li>
+      </ul>
+      <p>Clicking a stat card navigates directly to the relevant tab (e.g. clicking Lecturers Evaluated opens the Lecturers tab).</p>
+    </section>
+
+    <!-- PROGRAMMES -->
+    <section id="programmes-tab">
+      <div class="section-label">Tab 2</div>
+      <h2>Programmes Tab</h2>
+      <p>The Programmes tab shows the full catalogue of academic programmes offered at TUC, together with their GTEC programme code, description, and the number of courses registered under each.</p>
+
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Column</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td>Programme Name</td><td>Full official GTEC programme title</td></tr>
+            <tr><td>Code</td><td>Short GTEC code (e.g. DMCD, FDT, JDT)</td></tr>
+            <tr><td>Description</td><td>One-sentence description of the programme</td></tr>
+            <tr><td>Courses</td><td>Number of courses registered under this programme</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Adding a Programme</h3>
+      <ol class="step-list">
+        <li><div class="step-content"><strong>Click "Add Programme"</strong><p>The add form appears below the table.</p></div></li>
+        <li><div class="step-content"><strong>Fill in the fields</strong><p>Enter the full programme name, the GTEC code, and a short description.</p></div></li>
+        <li><div class="step-content"><strong>Click "Save"</strong><p>The new programme appears in the table immediately. The action is recorded in the Audit Log.</p></div></li>
+      </ol>
+
+      <h3>Editing or Deleting a Programme</h3>
+      <p>Click the programme name to expand its edit form. Change any field and click <strong>Save</strong> to update, or click <strong>Delete</strong> to remove the programme.</p>
+
+      <div class="callout callout-danger">
+        <strong>Deleting a programme is permanent</strong>
+        Deleting a programme also deletes all courses registered under it (cascade delete). Evaluations for those courses remain in the database but will show a broken course reference. Only delete programmes that have no evaluations, or that are being retired permanently.
+      </div>
+    </section>
+
+    <!-- LECTURERS -->
+    <section id="lecturers-tab">
+      <div class="section-label">Tab 3 (shown as Tab 4 in navigation)</div>
+      <h2>Lecturers Tab</h2>
+      <p>The Lecturers tab lists all 24 registered lecturers with their department, qualification, and assigned courses.</p>
+
+      <h3>Adding a Lecturer</h3>
+      <ol class="step-list">
+        <li><div class="step-content"><strong>Click "Add Lecturer"</strong><p>The add form appears.</p></div></li>
+        <li><div class="step-content"><strong>Fill in the fields</strong><p>First name (or title + surname, e.g. "Dr."), last name, TUC email, department, and qualification.</p></div></li>
+        <li><div class="step-content"><strong>Click "Save"</strong><p>The lecturer appears in the table. Assign them to courses from the Courses section in the Admin Panel.</p></div></li>
+      </ol>
+
+      <h3>Editing or Deleting a Lecturer</h3>
+      <p>Click the lecturer's name to expand the edit form. Changing the name or email updates all references. Deleting a lecturer removes them from all course assignments — their evaluation records are retained with a broken lecturer reference.</p>
+
+      <div class="callout callout-warn">
+        <strong>Before deleting a lecturer</strong>
+        Check whether they have evaluation results in the Results tab. Deleting a lecturer with evaluations will orphan those records. Where possible, retire lecturers by removing course assignments rather than deleting the lecturer record.
+      </div>
+    </section>
+
+    <!-- RESULTS -->
+    <section id="results-tab">
+      <div class="section-label">Tab 3</div>
+      <h2>Results Tab</h2>
+      <p>The Results tab displays all evaluation submissions with full detail — criteria ratings, recommendation, and written comments. Use the filter controls to narrow results.</p>
+
+      <h3>Filter Controls</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Filter</th><th>What it does</th></tr></thead>
+          <tbody>
+            <tr><td>Programme</td><td>Show only evaluations for courses in a specific programme</td></tr>
+            <tr><td>Lecturer</td><td>Show only evaluations for a specific lecturer</td></tr>
+            <tr><td>Semester</td><td>Filter by academic semester (1–8)</td></tr>
+            <tr><td>Date range</td><td>Filter by the date the evaluation was submitted</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Exporting Results</h3>
+      <p>Click <strong>Export CSV</strong> to download a spreadsheet of all currently filtered results. The CSV includes: submission date, programme, course, lecturer, each of the 10 criterion scores, recommendation, and the written comment.</p>
+
+      <div class="callout callout-info">
+        <strong>No personally identifiable information in exports</strong>
+        CSV exports contain no student identifiers. The deduplication hash is not included. Exports are safe to share with academic staff and the academic board.
+      </div>
+    </section>
+
+    <!-- ANALYTICS -->
+    <section id="analytics-tab">
+      <div class="section-label">Tab 5</div>
+      <h2>Analytics Tab</h2>
+      <p>The Analytics tab presents visualised summaries of evaluation data:</p>
+      <ul>
+        <li><strong>Rating distribution</strong> — bar chart of how often each score (1–5) was given across all criteria</li>
+        <li><strong>Per-criterion averages</strong> — horizontal bar chart comparing average scores for each of the 10 criteria</li>
+        <li><strong>Programme comparison</strong> — side-by-side average scores by programme</li>
+        <li><strong>Recommendation breakdown</strong> — pie chart of Yes / Neutral / No responses</li>
+        <li><strong>Trend over time</strong> — line chart of average rating by submission date</li>
+      </ul>
+      <p>All charts respect the same filter controls as the Results tab (programme, lecturer, date range).</p>
+    </section>
+
+    <!-- ADMIN PANEL -->
+    <section id="admin-panel">
+      <div class="section-label">Tab 7</div>
+      <h2>Admin Panel Tab</h2>
+      <p>The Admin Panel provides advanced management tools: curriculum import, audit log, and system health status.</p>
+
+      <h3 id="curriculum-import">Curriculum Import</h3>
+      <p>The curriculum import workflow allows you to update the course and lecturer catalogue directly from a GTEC programme document (PDF) without manually entering each course.</p>
+
+      <ol class="step-list">
+        <li>
+          <div class="step-content">
+            <strong>Select the target Programme</strong>
+            <p>Choose the programme whose curriculum you are updating from the dropdown.</p>
+          </div>
+        </li>
+        <li>
+          <div class="step-content">
+            <strong>Upload the curriculum PDF</strong>
+            <p>Click "Upload PDF" and select the GTEC programme document. The system sends the text to the AI extraction service.</p>
+          </div>
+        </li>
+        <li>
+          <div class="step-content">
+            <strong>Review the extracted data</strong>
+            <p>The AI returns a list of extracted courses and lecturer names. Review each item — remove any that were incorrectly extracted before confirming.</p>
+          </div>
+        </li>
+        <li>
+          <div class="step-content">
+            <strong>Click "Confirm Import"</strong>
+            <p>The system performs an additive upsert: new lecturers are created, existing ones matched by name. New courses are added; existing courses (matched by name within the programme) have their semester and lecturer assignments updated. Nothing is ever deleted.</p>
+          </div>
+        </li>
+      </ol>
+
+      <div class="callout callout-success">
+        <strong>Import is safe and additive</strong>
+        Existing evaluation data is never touched by an import. You can safely re-import an updated curriculum document — the import only adds or updates catalogue records, never removes them.
+      </div>
+
+      <h3 id="audit-log">Audit Log</h3>
+      <p>Every admin action in LEMS is permanently recorded in the audit log. The log is read-only and cannot be cleared from the admin interface.</p>
+
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Event Type</th><th>Triggered by</th></tr></thead>
+          <tbody>
+            <tr><td><code>PROGRAMME_CREATED</code></td><td>Adding a new programme</td></tr>
+            <tr><td><code>PROGRAMME_UPDATED</code></td><td>Editing a programme's name, code or description</td></tr>
+            <tr><td><code>PROGRAMME_DELETED</code></td><td>Deleting a programme</td></tr>
+            <tr><td><code>LECTURER_CREATED</code></td><td>Adding a new lecturer</td></tr>
+            <tr><td><code>LECTURER_UPDATED</code></td><td>Editing a lecturer</td></tr>
+            <tr><td><code>LECTURER_DELETED</code></td><td>Deleting a lecturer</td></tr>
+            <tr><td><code>COURSE_CREATED</code></td><td>Adding a new course</td></tr>
+            <tr><td><code>COURSE_UPDATED</code></td><td>Editing a course</td></tr>
+            <tr><td><code>COURSE_DELETED</code></td><td>Deleting a course</td></tr>
+            <tr><td><code>CURRICULUM_IMPORTED</code></td><td>Completing a PDF curriculum import</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p>Each audit entry records: the event type, a description, the outcome (SUCCESS / FAILURE), a timestamp, and the WMS username of the acting administrator.</p>
+    </section>
+
+    <!-- SELF TEST -->
+    <section id="selftest-tab">
+      <div class="section-label">Tab 8</div>
+      <h2>Self Test Tab</h2>
+      <p>The Self Test tab runs automated connectivity checks against all LEMS API endpoints. Use it to verify the system is fully operational before opening an evaluation period to students.</p>
+      <p>The test suite checks:</p>
+      <ul>
+        <li>API reachability — all endpoints return expected HTTP status codes</li>
+        <li>Database connectivity — the WMS database is accessible</li>
+        <li>Programme count — at least one programme exists in the catalogue</li>
+        <li>Course count — at least one course exists in the catalogue</li>
+        <li>Lecturer count — at least one lecturer exists in the catalogue</li>
+        <li>Auth check — JWT validation is functioning correctly</li>
+      </ul>
+      <p>A green tick against each item confirms the system is ready. Any failure should be investigated before the evaluation period opens.</p>
+    </section>
+
+    <!-- ROLES -->
+    <section id="roles">
+      <div class="section-label">Reference</div>
+      <h2>Roles &amp; Permissions</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Action</th><th>SYSTEM_ADMIN</th><th>HOD</th><th>ADMIN_STAFF</th><th>Student</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>View Overview / Analytics</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td></tr>
+            <tr><td>View Results</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td></tr>
+            <tr><td>Export CSV</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td></tr>
+            <tr><td>Add / Edit / Delete Programmes</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td></tr>
+            <tr><td>Add / Edit / Delete Lecturers</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td></tr>
+            <tr><td>Add / Edit / Delete Courses</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td></tr>
+            <tr><td>Curriculum Import</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td></tr>
+            <tr><td>View Audit Log</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td></tr>
+            <tr><td>Run Self Test</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td></tr>
+            <tr><td>Submit Evaluation</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>Roles are managed in the WMS admin console, not in LEMS. To add or remove admin access for a staff member, update their WMS role.</p>
+    </section>
+
+    <!-- FAQ -->
+    <section id="faq-admin">
+      <div class="section-label">FAQ</div>
+      <h2>Frequently Asked Questions</h2>
+
+      <h4>A lecturer's name changed (marriage, etc.). How do I update it?</h4>
+      <p>Edit the lecturer record in the Lecturers tab. All course assignments and existing evaluation records automatically reference the updated name. There is no need to re-import curricula.</p>
+
+      <h4>A student says they cannot find their course. What should I check?</h4>
+      <p>In the Programmes tab, click the relevant programme and verify the course exists. If not, add it manually in the Admin Panel or run a curriculum import for that programme. Ensure the course also has at least one lecturer assigned — courses without a lecturer cannot be evaluated.</p>
+
+      <h4>How do I open and close evaluation periods?</h4>
+      <p>LEMS does not have a formal "open/close" switch in the current version. Evaluation is always open to authenticated TUC users. To effectively close a period, communicate to students that the deadline has passed and note the date in your records. A formal period control feature is planned for a future release.</p>
+
+      <h4>Can I delete all evaluations and start fresh for a new semester?</h4>
+      <p>There is no bulk-delete feature in the admin UI. Evaluation records are permanent by design (GTEC audit requirement). If you need to reset for testing purposes only, contact the ICT office who can run a manual SQL truncation on the test environment.</p>
+
+      <h4>The curriculum import extracted incorrect course names from the PDF. What do I do?</h4>
+      <p>On the review screen (Step 3 of the import), deselect or remove any incorrectly extracted items before clicking Confirm. The import only proceeds with the items you confirm. You can also add courses manually in the Admin Panel after the import if any were missed.</p>
+
+      <h4>I cannot log in to the admin dashboard. What should I do?</h4>
+      <p>Confirm your WMS account has one of the required roles: <code>SYSTEM_ADMIN</code>, <code>HOD</code>, or <code>ADMIN_STAFF</code>. Log into WMS directly to verify your role, or contact the system administrator to update your permissions.</p>
+
+      <h4>Where are the evaluation exports stored?</h4>
+      <p>CSV exports are downloaded directly to your browser's downloads folder. LEMS does not store exports server-side. Download and store exports in the appropriate institutional folder immediately after generating them.</p>
+    </section>
+
+  </main>
+</div>
+
+<footer class="doc-footer">
+  <div>
+    <strong>LEMS Administrator Guide</strong> — Techbridge University College · ICT Division<br>
+    Technical issues: <a href="mailto:ict@techbridge.edu.gh">ict@techbridge.edu.gh</a>
+  </div>
+  <div style="text-align:right;">
+    <a href="/docs/">← Back to Docs Home</a><br>
+    <a href="/docs/user-guide/">Student User Guide →</a>
+  </div>
+</footer>
+
+</body>
+</html>
