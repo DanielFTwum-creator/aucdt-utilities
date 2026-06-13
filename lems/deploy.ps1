@@ -74,9 +74,14 @@ log '[6/6] SPA .htaccess...'
 cat > "`$DEPLOY/.htaccess" <<'HT'
 <IfModule mod_rewrite.c>
   RewriteEngine On
+  # Serve real files and directories as-is
   RewriteCond %{REQUEST_FILENAME} -f [OR]
   RewriteCond %{REQUEST_FILENAME} -d
   RewriteRule ^ - [L]
+  # Auth callback errors → static page (bypasses SPA + stale service workers)
+  RewriteCond %{QUERY_STRING} error=
+  RewriteRule ^ /auth-error.html [L]
+  # Everything else → SPA
   RewriteRule ^ /index.html [QSA,L]
 </IfModule>
 HT
