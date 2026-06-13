@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { CheckCircle, CheckCircle2, Lock } from 'lucide-react';
+import { CheckCircle, CheckCircle2, Lock, HelpCircle } from 'lucide-react';
 import { apiService } from './api';
 import './AssessmentForm.css';
 
@@ -48,36 +48,58 @@ function SegmentedControl({ itemId, value, onChange }) {
 }
 
 // ---------------------------------------------------------------------------
-// GlobalProgressBar — X of 20 questions answered
+// ProgressWithHelp — progress bar + HelpCircle popover for rating legend
 // ---------------------------------------------------------------------------
-function GlobalProgressBar({ answered, total }) {
+function ProgressWithHelp({ answered, total }) {
+  const [open, setOpen] = useState(false);
+  const popRef = useRef(null);
   const pct = Math.round((answered / total) * 100);
+
+  useEffect(() => {
+    if (!open) return;
+    const close = (e) => {
+      if (popRef.current && !popRef.current.contains(e.target)) setOpen(false);
+    };
+    document.addEventListener('mousedown', close);
+    return () => document.removeEventListener('mousedown', close);
+  }, [open]);
+
   return (
-    <div className="global-progress" aria-label={`${answered} of ${total} questions answered`}>
+    <div className="progress-help-row" aria-label={`${answered} of ${total} questions answered`}>
       <div className="global-progress-label">
         <span>{answered} of {total} questions answered</span>
         <span>{pct}%</span>
       </div>
-      <div className="global-progress-track">
-        <motion.div
-          className="global-progress-fill"
-          initial={false}
-          animate={{ width: `${pct}%` }}
-          transition={{ duration: 0.35, ease: 'easeOut' }}
-        />
+      <div className="progress-track-wrap">
+        <div className="global-progress-track">
+          <motion.div
+            className="global-progress-fill"
+            initial={false}
+            animate={{ width: `${pct}%` }}
+            transition={{ duration: 0.35, ease: 'easeOut' }}
+          />
+        </div>
+        <div className="help-anchor" ref={popRef}>
+          <button
+            type="button"
+            className="help-btn"
+            aria-label="Rating scale guide"
+            aria-expanded={open}
+            onClick={() => setOpen((v) => !v)}
+          >
+            <HelpCircle size={18} />
+          </button>
+          {open && (
+            <div className="legend-popover" role="tooltip">
+              <div className="legend-row"><strong>1</strong> Strongly Disagree</div>
+              <div className="legend-row"><strong>2</strong> Disagree</div>
+              <div className="legend-row"><strong>3</strong> Neutral</div>
+              <div className="legend-row"><strong>4</strong> Agree</div>
+              <div className="legend-row"><strong>5</strong> Strongly Agree</div>
+            </div>
+          )}
+        </div>
       </div>
-    </div>
-  );
-}
-
-// ---------------------------------------------------------------------------
-// StickyLegend — rating scale bar, sticks below the LEMS nav
-// ---------------------------------------------------------------------------
-function StickyLegend() {
-  return (
-    <div className="sticky-legend" aria-hidden="true">
-      1 = Strongly Disagree &nbsp;·&nbsp; 2 = Disagree &nbsp;·&nbsp; 3 = Neutral
-      &nbsp;·&nbsp; 4 = Agree &nbsp;·&nbsp; 5 = Strongly Agree
     </div>
   );
 }
@@ -401,11 +423,12 @@ function AssessmentForm() {
   // ---------------------------------------------------------------------------
   return (
     <div className="assessment-form">
-      <StickyLegend />
-
       <form onSubmit={handleSubmit}>
-        {/* Selection */}
-        <div className="form-section selection-section">
+        {/* Progress bar + legend help — sits above selectors */}
+        <ProgressWithHelp answered={answeredItems} total={totalItems} />
+
+        {/* Selection grid — warm background */}
+        <div className="form-section selection-section enh-selector-bg">
           <div className="form-group">
             <label htmlFor="programme">Programme *</label>
             <select id="programme" value={selectedProgramme} onChange={handleProgrammeChange} required>
@@ -436,9 +459,6 @@ function AssessmentForm() {
             </select>
           </div>
         </div>
-
-        {/* Global progress bar */}
-        <GlobalProgressBar answered={answeredItems} total={totalItems} />
 
         {/* Accordion */}
         <div className="accordion">

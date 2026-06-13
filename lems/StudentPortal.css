@@ -9,6 +9,12 @@
   padding: 2rem;
 }
 
+.portal-container-enhanced {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 2rem 2rem;
+}
+
 .portal-header {
   position: relative;
   text-align: center;

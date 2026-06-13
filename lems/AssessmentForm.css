@@ -464,25 +464,9 @@
    Enhanced UI (ENABLE_ENHANCED_UI = true)
    ========================================================================= */
 
-/* Sticky rating legend bar */
-.sticky-legend {
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  background-color: #6B0000;
-  color: #B8860B;
-  font-size: 0.8rem;
-  font-weight: 600;
-  letter-spacing: 0.03em;
-  padding: 0.5rem 1.5rem;
-  text-align: center;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
-}
-
-/* Global progress bar */
-.global-progress {
-  margin: 1.5rem 0 0.5rem;
-  padding: 0.75rem 0;
+/* Progress bar + HelpCircle row (replaces sticky legend) */
+.progress-help-row {
+  padding: 0.9rem 0 0.6rem;
 }
 
 .global-progress-label {
@@ -494,7 +478,14 @@
   margin-bottom: 0.4rem;
 }
 
+.progress-track-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
 .global-progress-track {
+  flex: 1;
   height: 8px;
   border-radius: 4px;
   background-color: rgba(100, 116, 139, 0.18);
@@ -505,6 +496,66 @@
   height: 100%;
   border-radius: 4px;
   background-color: #B8860B;
+}
+
+/* HelpCircle button + popover */
+.help-anchor {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.help-btn {
+  display: flex;
+  align-items: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #B8860B;
+  padding: 0;
+  line-height: 1;
+  transition: opacity 0.15s;
+}
+
+.help-btn:hover {
+  opacity: 0.75;
+}
+
+.legend-popover {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 6px);
+  z-index: 200;
+  background-color: #B8860B;
+  color: #6B0000;
+  border-radius: 0.4rem;
+  padding: 0.65rem 1rem;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.22);
+  white-space: nowrap;
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+.legend-row {
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.15rem 0;
+}
+
+/* Warm off-white selector background */
+.enh-selector-bg {
+  background-color: #F0EDE6;
+  border-radius: 0.5rem;
+  padding: 1.25rem;
+  margin-bottom: 1.5rem;
+}
+
+[data-theme='dark'] .enh-selector-bg {
+  background-color: rgba(240, 237, 230, 0.06);
+}
+
+[data-theme='high-contrast'] .enh-selector-bg {
+  background-color: #fff;
+  border: 2px solid #000;
 }
 
 /* Locked section state */
@@ -654,9 +705,9 @@
   .seg-check {
     display: none;
   }
-  .sticky-legend {
-    font-size: 0.7rem;
-    padding: 0.4rem 0.75rem;
+  .legend-popover {
+    right: auto;
+    left: 0;
   }
 }
 

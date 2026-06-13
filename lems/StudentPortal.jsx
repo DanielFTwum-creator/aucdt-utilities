@@ -1,37 +1,41 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import AssessmentForm from './AssessmentForm';
 import Header from './Header';
 import './StudentPortal.css';
 
+const ENABLE_ENHANCED_UI = true;
+
 function StudentPortal({ theme, onThemeChange }) {
   const navigate = useNavigate();
-  const [showAdminButton, setShowAdminButton] = useState(true);
   const [instructionsRead, setInstructionsRead] = useState(false);
 
-  const handleAdminClick = () => {
-    navigate('/admin/login');
-  };
+  const handleAdminClick = () => navigate('/admin/login');
 
   return (
     <div className="student-portal">
-      <Header theme={theme} onThemeChange={onThemeChange} />
-      
-      <div className="portal-container">
-        <div className="portal-header">
-          {showAdminButton && (
+      <Header
+        theme={theme}
+        onThemeChange={onThemeChange}
+        onAdminClick={handleAdminClick}
+        showAdmin={true}
+      />
+
+      <div className={`portal-container${ENABLE_ENHANCED_UI ? ' portal-container-enhanced' : ''}`}>
+        {!ENABLE_ENHANCED_UI && (
+          <div className="portal-header">
             <button className="admin-link" onClick={handleAdminClick} aria-label="Admin">
               Admin
             </button>
-          )}
-          <img
-            src="https://techbridge.edu.gh/static/TUC_LOGO_small.png"
-            alt="TUC"
-            className="portal-logo"
-          />
-          <h1>Lecturer Assessment & Evaluation Portal</h1>
-          <p>Please provide your honest feedback about your lecturer and course experience</p>
-        </div>
+            <img
+              src="https://techbridge.edu.gh/static/TUC_LOGO_small.png"
+              alt="TUC"
+              className="portal-logo"
+            />
+            <h1>Lecturer Assessment &amp; Evaluation Portal</h1>
+            <p>Please provide your honest feedback about your lecturer and course experience</p>
+          </div>
+        )}
 
         {instructionsRead ? (
           <AssessmentForm />
@@ -76,4 +80,3 @@ function StudentPortal({ theme, onThemeChange }) {
 }
 
 export default StudentPortal;
-
