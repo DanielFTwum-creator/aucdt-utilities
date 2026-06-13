@@ -1,18 +1,101 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { CheckCircle, CheckCircle2, Lock } from 'lucide-react';
 import { apiService } from './api';
 import './AssessmentForm.css';
 
+// Set to false to revert to the original card-grid UI.
+const ENABLE_ENHANCED_UI = true;
+
+const SCALE_LABELS = {
+  1: 'Strongly Disagree',
+  2: 'Disagree',
+  3: 'Neutral',
+  4: 'Agree',
+  5: 'Strongly Agree',
+};
+
+// ---------------------------------------------------------------------------
+// SegmentedControl — one horizontal bar, 5 equal segments
+// ---------------------------------------------------------------------------
+function SegmentedControl({ itemId, value, onChange }) {
+  return (
+    <div className="seg-control" role="radiogroup">
+      {[1, 2, 3, 4, 5].map((v) => {
+        const selected = value === v;
+        return (
+          <motion.button
+            key={v}
+            type="button"
+            role="radio"
+            aria-checked={selected}
+            aria-label={`${v} — ${SCALE_LABELS[v]}`}
+            className={`seg-segment${selected ? ' seg-selected' : ''}`}
+            onClick={() => onChange(itemId, v)}
+            whileTap={{ scale: 0.94 }}
+            transition={{ duration: 0.15 }}
+          >
+            {selected && (
+              <CheckCircle size={13} className="seg-check" aria-hidden="true" />
+            )}
+            <span className="seg-num">{v}</span>
+            <span className="seg-label">{SCALE_LABELS[v]}</span>
+          </motion.button>
+        );
+      })}
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// GlobalProgressBar — X of 20 questions answered
+// ---------------------------------------------------------------------------
+function GlobalProgressBar({ answered, total }) {
+  const pct = Math.round((answered / total) * 100);
+  return (
+    <div className="global-progress" aria-label={`${answered} of ${total} questions answered`}>
+      <div className="global-progress-label">
+        <span>{answered} of {total} questions answered</span>
+        <span>{pct}%</span>
+      </div>
+      <div className="global-progress-track">
+        <motion.div
+          className="global-progress-fill"
+          initial={false}
+          animate={{ width: `${pct}%` }}
+          transition={{ duration: 0.35, ease: 'easeOut' }}
+        />
+      </div>
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// StickyLegend — rating scale bar, sticks below the LEMS nav
+// ---------------------------------------------------------------------------
+function StickyLegend() {
+  return (
+    <div className="sticky-legend" aria-hidden="true">
+      1 = Strongly Disagree &nbsp;·&nbsp; 2 = Disagree &nbsp;·&nbsp; 3 = Neutral
+      &nbsp;·&nbsp; 4 = Agree &nbsp;·&nbsp; 5 = Strongly Agree
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// AssessmentForm
+// ---------------------------------------------------------------------------
 function AssessmentForm() {
   const [programmes, setProgrammes] = useState([]);
   const [courses, setCourses] = useState([]);
   const [lecturers, setLecturers] = useState([]);
-  
+
   const [selectedProgramme, setSelectedProgramme] = useState('');
   const [selectedSemester, setSelectedSemester] = useState('');
   const [selectedCourse, setSelectedCourse] = useState('');
   const [selectedLecturer, setSelectedLecturer] = useState('');
   const [recommendation, setRecommendation] = useState('');
-  
+
   const [expandedSection, setExpandedSection] = useState(0);
   const [ratings, setRatings] = useState({});
   const [feedback, setFeedback] = useState('');
@@ -20,8 +103,8 @@ function AssessmentForm() {
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
 
-  // Merged instrument (LEAP statement wording, LEMS 20-item depth):
-  // each item is a statement rated 1 (Strongly Disagree) to 5 (Strongly Agree).
+  const sectionRefs = useRef([]);
+
   const evaluationCriteria = [
     {
       section: "Lecturer's Delivery & Knowledge",
@@ -65,99 +148,82 @@ function AssessmentForm() {
     },
   ];
 
-  const SCALE_LABELS = {
-    1: 'Strongly Disagree',
-    2: 'Disagree',
-    3: 'Neutral',
-    4: 'Agree',
-    5: 'Strongly Agree',
-  };
+  const totalItems = evaluationCriteria.reduce((s, sec) => s + sec.items.length, 0);
+  const answeredItems = Object.keys(ratings).length;
 
-  useEffect(() => {
-    loadProgrammes();
-  }, []);
+  useEffect(() => { loadProgrammes(); }, []);
 
   const loadProgrammes = async () => {
     try {
-      const response = await apiService.getProgrammes();
-      if (response.data.success) {
-        setProgrammes(response.data.data);
-      }
-    } catch (err) {
-      console.error('Error loading programmes:', err);
-    }
+      const res = await apiService.getProgrammes();
+      if (res.data.success) setProgrammes(res.data.data);
+    } catch (err) { console.error('Error loading programmes:', err); }
   };
 
   const handleProgrammeChange = async (e) => {
-    const programmeId = e.target.value;
-    setSelectedProgramme(programmeId);
+    const id = e.target.value;
+    setSelectedProgramme(id);
     setSelectedCourse('');
     setSelectedLecturer('');
     setCourses([]);
     setLecturers([]);
-
-    if (programmeId) {
+    if (id) {
       try {
-        const response = await apiService.getCoursesByProgramme(programmeId);
-        if (response.data.success) {
-          setCourses(response.data.data);
-        }
-      } catch (err) {
-        console.error('Error loading courses:', err);
-      }
+        const res = await apiService.getCoursesByProgramme(id);
+        if (res.data.success) setCourses(res.data.data);
+      } catch (err) { console.error('Error loading courses:', err); }
     }
   };
 
   const handleCourseChange = async (e) => {
-    const courseId = e.target.value;
-    setSelectedCourse(courseId);
+    const id = e.target.value;
+    setSelectedCourse(id);
     setSelectedLecturer('');
     setLecturers([]);
-
-    if (courseId) {
+    if (id) {
       try {
-        const response = await apiService.getCourseById(courseId);
-        if (response.data.success) {
-          const course = response.data.data;
-          const courseLecturers = course.lecturers || [];
-          setLecturers(courseLecturers);
-          // Single-lecturer course: pre-select for the student (LEAP FR1.4).
-          if (courseLecturers.length === 1) {
-            setSelectedLecturer(String(courseLecturers[0].id));
-          }
+        const res = await apiService.getCourseById(id);
+        if (res.data.success) {
+          const lecs = res.data.data?.lecturers || [];
+          setLecturers(lecs);
+          if (lecs.length === 1) setSelectedLecturer(String(lecs[0].id));
         }
-      } catch (err) {
-        console.error('Error loading lecturers:', err);
-      }
+      } catch (err) { console.error('Error loading lecturers:', err); }
     }
   };
 
+  const isSectionComplete = (idx) =>
+    evaluationCriteria[idx].items.every((item) => ratings[item.id] !== undefined);
+
+  const canExpandSection = (idx) => idx === 0 || isSectionComplete(idx - 1);
+
+  const getSectionProgress = (idx) => {
+    const items = evaluationCriteria[idx].items;
+    const done = items.filter((i) => ratings[i.id] !== undefined).length;
+    return { completed: done, total: items.length, percentage: (done / items.length) * 100 };
+  };
+
   const handleRatingChange = (criteriaId, value) => {
-    setRatings({
-      ...ratings,
-      [criteriaId]: parseInt(value),
-    });
-  };
+    const next = { ...ratings, [criteriaId]: value };
+    setRatings(next);
 
-  const isSectionComplete = (sectionIndex) => {
-    const section = evaluationCriteria[sectionIndex];
-    return section.items.every((item) => ratings[item.id] !== undefined);
-  };
+    if (!ENABLE_ENHANCED_UI) return;
 
-  const getSectionProgress = (sectionIndex) => {
-    const section = evaluationCriteria[sectionIndex];
-    const completedCount = section.items.filter((item) => ratings[item.id] !== undefined).length;
-    const totalCount = section.items.length;
-    return {
-      completed: completedCount,
-      total: totalCount,
-      percentage: (completedCount / totalCount) * 100,
-    };
-  };
-
-  const canExpandSection = (sectionIndex) => {
-    if (sectionIndex === 0) return true;
-    return isSectionComplete(sectionIndex - 1);
+    // Auto-advance: when this section is now complete, move to the next
+    const currentSec = evaluationCriteria.findIndex((sec) =>
+      sec.items.some((i) => i.id === criteriaId)
+    );
+    if (currentSec === -1) return;
+    const secComplete = evaluationCriteria[currentSec].items.every(
+      (i) => (i.id === criteriaId ? value : next[i.id]) !== undefined
+    );
+    if (secComplete && currentSec < evaluationCriteria.length - 1) {
+      const nextSec = currentSec + 1;
+      setTimeout(() => {
+        setExpandedSection(nextSec);
+        sectionRefs.current[nextSec]?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 320); // let the Framer exit animation finish
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -165,70 +231,45 @@ function AssessmentForm() {
     setError('');
     setMessage('');
 
-    // Validation
-    if (!selectedLecturer) {
-      setError('Please select a lecturer');
-      return;
-    }
-
-    if (!selectedSemester) {
-      setError('Please select a semester');
-      return;
-    }
-
-    if (!recommendation) {
-      setError('Please indicate whether you would recommend this lecturer');
-      return;
-    }
-
+    if (!selectedLecturer) { setError('Please select a lecturer'); return; }
+    if (!selectedSemester) { setError('Please select a semester'); return; }
+    if (!recommendation) { setError('Please indicate whether you would recommend this lecturer'); return; }
     if (!isSectionComplete(evaluationCriteria.length - 1)) {
-      setError('Please complete all evaluation criteria');
-      return;
+      setError('Please complete all evaluation criteria'); return;
     }
 
     setLoading(true);
-
     try {
-      // Persist each criterion with its name and section (not just the number),
-      // so results and the audit trail stay meaningful as criteria evolve.
       const ratingDetails = [];
-      evaluationCriteria.forEach((section) => {
-        section.items.forEach((item) => {
+      evaluationCriteria.forEach((sec) => {
+        sec.items.forEach((item) => {
           if (ratings[item.id] !== undefined) {
             ratingDetails.push({
               criteriaNumber: item.id,
               criteriaName: item.name,
-              section: section.section,
+              section: sec.section,
               rating: ratings[item.id],
             });
           }
         });
       });
 
-      const submissionData = {
+      const res = await apiService.submitEvaluation({
         lecturerId: parseInt(selectedLecturer),
         courseId: parseInt(selectedCourse),
         studentFeedback: feedback,
         semester: parseInt(selectedSemester),
         recommend: recommendation,
         ratings: ratingDetails,
-      };
+      });
 
-      const response = await apiService.submitEvaluation(submissionData);
-
-      if (response.data.success) {
+      if (res.data.success) {
         setMessage('Thank you! Your evaluation has been submitted successfully.');
-        // Reset form
-        setSelectedProgramme('');
-        setSelectedSemester('');
-        setSelectedCourse('');
-        setSelectedLecturer('');
-        setRecommendation('');
-        setRatings({});
-        setFeedback('');
+        setSelectedProgramme(''); setSelectedSemester(''); setSelectedCourse('');
+        setSelectedLecturer(''); setRecommendation(''); setRatings({}); setFeedback('');
         setExpandedSection(0);
       } else {
-        setError(response.data.message || 'Failed to submit evaluation');
+        setError(res.data.message || 'Failed to submit evaluation');
       }
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to submit evaluation. Please try again.');
@@ -237,72 +278,158 @@ function AssessmentForm() {
     }
   };
 
+  // ---------------------------------------------------------------------------
+  // Render — original path when feature flag is off
+  // ---------------------------------------------------------------------------
+  if (!ENABLE_ENHANCED_UI) {
+    return (
+      <div className="assessment-form">
+        <form onSubmit={handleSubmit}>
+          <div className="form-section selection-section">
+            <div className="form-group">
+              <label htmlFor="programme">Programme *</label>
+              <select id="programme" value={selectedProgramme} onChange={handleProgrammeChange} required>
+                <option value="">Select a programme</option>
+                {programmes.map((p) => <option key={p.id} value={p.id}>{p.name}</option>)}
+              </select>
+            </div>
+            <div className="form-group">
+              <label htmlFor="course">Course *</label>
+              <select id="course" value={selectedCourse} onChange={handleCourseChange} disabled={!selectedProgramme} required>
+                <option value="">Select a course</option>
+                {courses.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
+              </select>
+            </div>
+            <div className="form-group">
+              <label htmlFor="lecturer">Lecturer *</label>
+              <select id="lecturer" value={selectedLecturer} onChange={(e) => setSelectedLecturer(e.target.value)} disabled={!selectedCourse} required>
+                <option value="">Select a lecturer</option>
+                {lecturers.map((l) => <option key={l.id} value={l.id}>{l.firstName} {l.lastName}</option>)}
+              </select>
+            </div>
+            <div className="form-group">
+              <label htmlFor="semester">Semester *</label>
+              <select id="semester" value={selectedSemester} onChange={(e) => setSelectedSemester(e.target.value)} required>
+                <option value="">Select a semester</option>
+                <option value="1">Semester 1</option>
+                <option value="2">Semester 2</option>
+              </select>
+            </div>
+          </div>
+          <div className="scale-legend" aria-hidden="true">
+            1 = Strongly Disagree · 2 = Disagree · 3 = Neutral · 4 = Agree · 5 = Strongly Agree
+          </div>
+          <div className="accordion">
+            {evaluationCriteria.map((section, si) => {
+              const { completed, total, percentage } = getSectionProgress(si);
+              const isComplete = completed === total;
+              const isActive = expandedSection === si;
+              return (
+                <div key={si} className={`accordion-item ${isComplete ? 'completed' : ''} ${isActive ? 'open' : ''}`}>
+                  <button type="button" className={`accordion-header ${isActive ? 'active' : ''}`}
+                    onClick={() => { if (canExpandSection(si)) setExpandedSection(isActive ? -1 : si); }}
+                    disabled={!canExpandSection(si)}>
+                    <div className="accordion-header-left">
+                      <span className="section-title">{section.section}</span>
+                      <span className="section-progress-text">{completed} of {total} completed</span>
+                    </div>
+                    <span className="section-status">{isComplete ? '✓' : '○'}</span>
+                    <div className="header-progress-bar-container">
+                      <div className={`header-progress-bar ${isComplete ? 'complete' : ''}`} style={{ width: `${percentage}%` }} />
+                    </div>
+                  </button>
+                  {isActive && (
+                    <div className="accordion-content">
+                      {section.items.map((item) => (
+                        <div key={item.id} className="rating-item">
+                          <label className="rating-question">{item.name}</label>
+                          <div className="rating-options">
+                            {[1, 2, 3, 4, 5].map((v) => {
+                              const sel = ratings[item.id] === v;
+                              return (
+                                <label key={v} className={`rating-card ${sel ? 'selected' : ''} rating-val-${v}`} title={SCALE_LABELS[v]}>
+                                  <input type="radio" name={`criteria-${item.id}`} value={v} checked={sel}
+                                    onChange={() => handleRatingChange(item.id, v)} aria-label={`${SCALE_LABELS[v]} (${v})`} />
+                                  <div className="rating-card-content">
+                                    <span className="rating-number">{v}</span>
+                                    <span className="rating-label-text">{SCALE_LABELS[v]}</span>
+                                  </div>
+                                </label>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+          <div className="form-section">
+            <div className="form-group">
+              <label htmlFor="recommend">Would you recommend this lecturer? *</label>
+              <select id="recommend" value={recommendation} onChange={(e) => setRecommendation(e.target.value)} required>
+                <option value="">Select an option</option>
+                <option value="RECOMMEND">Recommend</option>
+                <option value="NEUTRAL">Neutral</option>
+                <option value="NOT_RECOMMEND">Not Recommend</option>
+              </select>
+            </div>
+          </div>
+          <div className="form-section">
+            <div className="form-group">
+              <label htmlFor="feedback">Additional Feedback (Optional)</label>
+              <textarea id="feedback" value={feedback} onChange={(e) => setFeedback(e.target.value)}
+                placeholder="Please provide any additional comments or suggestions..." rows="4" />
+            </div>
+          </div>
+          {error && <div className="error-message">{error}</div>}
+          {message && <div className="success-message">{message}</div>}
+          <div className="form-actions">
+            <button type="submit" disabled={loading || !isSectionComplete(evaluationCriteria.length - 1)} className="submit-button">
+              {loading ? 'Submitting...' : 'Submit Evaluation'}
+            </button>
+          </div>
+        </form>
+      </div>
+    );
+  }
+
+  // ---------------------------------------------------------------------------
+  // Render — enhanced UI (ENABLE_ENHANCED_UI = true)
+  // ---------------------------------------------------------------------------
   return (
     <div className="assessment-form">
+      <StickyLegend />
+
       <form onSubmit={handleSubmit}>
-        {/* Programme and Course Selection */}
+        {/* Selection */}
         <div className="form-section selection-section">
           <div className="form-group">
             <label htmlFor="programme">Programme *</label>
-            <select
-              id="programme"
-              value={selectedProgramme}
-              onChange={handleProgrammeChange}
-              required
-            >
+            <select id="programme" value={selectedProgramme} onChange={handleProgrammeChange} required>
               <option value="">Select a programme</option>
-              {programmes.map((prog) => (
-                <option key={prog.id} value={prog.id}>
-                  {prog.name}
-                </option>
-              ))}
+              {programmes.map((p) => <option key={p.id} value={p.id}>{p.name}</option>)}
             </select>
           </div>
-
           <div className="form-group">
             <label htmlFor="course">Course *</label>
-            <select
-              id="course"
-              value={selectedCourse}
-              onChange={handleCourseChange}
-              disabled={!selectedProgramme}
-              required
-            >
+            <select id="course" value={selectedCourse} onChange={handleCourseChange} disabled={!selectedProgramme} required>
               <option value="">Select a course</option>
-              {courses.map((course) => (
-                <option key={course.id} value={course.id}>
-                  {course.name}
-                </option>
-              ))}
+              {courses.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
             </select>
           </div>
-
           <div className="form-group">
             <label htmlFor="lecturer">Lecturer *</label>
-            <select
-              id="lecturer"
-              value={selectedLecturer}
-              onChange={(e) => setSelectedLecturer(e.target.value)}
-              disabled={!selectedCourse}
-              required
-            >
+            <select id="lecturer" value={selectedLecturer} onChange={(e) => setSelectedLecturer(e.target.value)} disabled={!selectedCourse} required>
               <option value="">Select a lecturer</option>
-              {lecturers.map((lecturer) => (
-                <option key={lecturer.id} value={lecturer.id}>
-                  {lecturer.firstName} {lecturer.lastName}
-                </option>
-              ))}
+              {lecturers.map((l) => <option key={l.id} value={l.id}>{l.firstName} {l.lastName}</option>)}
             </select>
           </div>
-
           <div className="form-group">
             <label htmlFor="semester">Semester *</label>
-            <select
-              id="semester"
-              value={selectedSemester}
-              onChange={(e) => setSelectedSemester(e.target.value)}
-              required
-            >
+            <select id="semester" value={selectedSemester} onChange={(e) => setSelectedSemester(e.target.value)} required>
               <option value="">Select a semester</option>
               <option value="1">Semester 1</option>
               <option value="2">Semester 2</option>
@@ -310,81 +437,68 @@ function AssessmentForm() {
           </div>
         </div>
 
-        {/* Rating scale legend */}
-        <div className="scale-legend" aria-hidden="true">
-          1 = Strongly Disagree · 2 = Disagree · 3 = Neutral · 4 = Agree · 5 = Strongly Agree
-        </div>
+        {/* Global progress bar */}
+        <GlobalProgressBar answered={answeredItems} total={totalItems} />
 
-        {/* Accordion Sections */}
+        {/* Accordion */}
         <div className="accordion">
-          {evaluationCriteria.map((section, sectionIndex) => {
-            const { completed, total, percentage } = getSectionProgress(sectionIndex);
+          {evaluationCriteria.map((section, si) => {
+            const { completed, total, percentage } = getSectionProgress(si);
             const isComplete = completed === total;
-            const isActive = expandedSection === sectionIndex;
+            const isActive = expandedSection === si;
+            const isLocked = !canExpandSection(si);
 
             return (
-              <div key={sectionIndex} className={`accordion-item ${isComplete ? 'completed' : ''} ${isActive ? 'open' : ''}`}>
+              <div
+                key={si}
+                ref={(el) => { sectionRefs.current[si] = el; }}
+                className={`accordion-item${isComplete ? ' completed' : ''}${isActive ? ' open' : ''}${isLocked ? ' locked' : ''}`}
+              >
                 <button
                   type="button"
-                  className={`accordion-header ${isActive ? 'active' : ''}`}
-                  onClick={() => {
-                    if (canExpandSection(sectionIndex)) {
-                      setExpandedSection(isActive ? -1 : sectionIndex);
-                    }
-                  }}
-                  disabled={!canExpandSection(sectionIndex)}
+                  className={`accordion-header${isActive ? ' active' : ''}${isComplete && !isActive ? ' enh-complete' : ''}${isLocked ? ' enh-locked' : ''}`}
+                  onClick={() => { if (!isLocked) setExpandedSection(isActive ? -1 : si); }}
+                  disabled={isLocked}
                 >
                   <div className="accordion-header-left">
-                    <span className="section-title">{section.section}</span>
-                    <span className="section-progress-text">
-                      {completed} of {total} completed
+                    <span className="section-title">
+                      {isLocked && <Lock size={15} className="sec-icon sec-lock" aria-hidden="true" />}
+                      {isComplete && !isActive && <CheckCircle2 size={15} className="sec-icon sec-done" aria-hidden="true" />}
+                      {section.section}
                     </span>
+                    <span className="section-progress-text">{completed} of {total} completed</span>
                   </div>
-                  <span className="section-status">
-                    {isComplete ? '✓' : '○'}
-                  </span>
+                  <span className="section-status">{isComplete ? '✓' : '○'}</span>
                   <div className="header-progress-bar-container">
-                    <div 
-                      className={`header-progress-bar ${isComplete ? 'complete' : ''}`} 
-                      style={{ width: `${percentage}%` }}
-                    />
+                    <div className={`header-progress-bar${isComplete ? ' complete' : ''}`} style={{ width: `${percentage}%` }} />
                   </div>
                 </button>
 
-                {isActive && (
-                  <div className="accordion-content">
-                    {section.items.map((item) => (
-                      <div key={item.id} className="rating-item">
-                        <label className="rating-question">{item.name}</label>
-                        <div className="rating-options">
-                          {[1, 2, 3, 4, 5].map((value) => {
-                            const isSelected = ratings[item.id] === value;
-                            return (
-                              <label 
-                                key={value} 
-                                className={`rating-card ${isSelected ? 'selected' : ''} rating-val-${value}`}
-                                title={SCALE_LABELS[value]}
-                              >
-                                <input
-                                  type="radio"
-                                  name={`criteria-${item.id}`}
-                                  value={value}
-                                  checked={isSelected}
-                                  onChange={() => handleRatingChange(item.id, value)}
-                                  aria-label={`${SCALE_LABELS[value]} (${value})`}
-                                />
-                                <div className="rating-card-content">
-                                  <span className="rating-number">{value}</span>
-                                  <span className="rating-label-text">{SCALE_LABELS[value]}</span>
-                                </div>
-                              </label>
-                            );
-                          })}
-                        </div>
+                <AnimatePresence initial={false}>
+                  {isActive && (
+                    <motion.div
+                      key="content"
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: 'auto', opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.3, ease: 'easeInOut' }}
+                      style={{ overflow: 'hidden' }}
+                    >
+                      <div className="accordion-content">
+                        {section.items.map((item) => (
+                          <div key={item.id} className="rating-item">
+                            <label className="rating-question">{item.name}</label>
+                            <SegmentedControl
+                              itemId={item.id}
+                              value={ratings[item.id]}
+                              onChange={handleRatingChange}
+                            />
+                          </div>
+                        ))}
                       </div>
-                    ))}
-                  </div>
-                )}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
             );
           })}
@@ -394,12 +508,7 @@ function AssessmentForm() {
         <div className="form-section">
           <div className="form-group">
             <label htmlFor="recommend">Would you recommend this lecturer? *</label>
-            <select
-              id="recommend"
-              value={recommendation}
-              onChange={(e) => setRecommendation(e.target.value)}
-              required
-            >
+            <select id="recommend" value={recommendation} onChange={(e) => setRecommendation(e.target.value)} required>
               <option value="">Select an option</option>
               <option value="RECOMMEND">Recommend</option>
               <option value="NEUTRAL">Neutral</option>
@@ -408,25 +517,18 @@ function AssessmentForm() {
           </div>
         </div>
 
-        {/* Feedback Section */}
+        {/* Feedback */}
         <div className="form-section">
           <div className="form-group">
             <label htmlFor="feedback">Additional Feedback (Optional)</label>
-            <textarea
-              id="feedback"
-              value={feedback}
-              onChange={(e) => setFeedback(e.target.value)}
-              placeholder="Please provide any additional comments or suggestions..."
-              rows="4"
-            />
+            <textarea id="feedback" value={feedback} onChange={(e) => setFeedback(e.target.value)}
+              placeholder="Please provide any additional comments or suggestions..." rows="4" />
           </div>
         </div>
 
-        {/* Messages */}
         {error && <div className="error-message">{error}</div>}
         {message && <div className="success-message">{message}</div>}
 
-        {/* Submit Button */}
         <div className="form-actions">
           <button
             type="submit"
@@ -442,4 +544,3 @@ function AssessmentForm() {
 }
 
 export default AssessmentForm;
-
