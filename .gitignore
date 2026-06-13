@@ -65,3 +65,30 @@ lerna-debug.log*
 # Build logs
 *build*.log
 *.log
+
+# Large binary / media files — use external storage (S3, Drive, etc.)
+*.pbtxt
+*.heic
+*.HEIC
+*.webm
+*.mp4
+*.pptx
+*.pdf
+*.db-wal
+*.xlsx
+
+# Playwright / test artefacts
+**/.cache/ms-playwright/
+**/playwright-browsers/
+**/playwright-report/data/
+**/test-results/
+**/tests/results/
+**/tests/accessibility-report/
+**/.antigravity/
+
+# Catalogue screenshots (generated, not source)
+catalogue/project-screenshots/
+catalogue/*/screenshot.png
+
+# Prompt history exports
+**/migrated_prompt_history/
