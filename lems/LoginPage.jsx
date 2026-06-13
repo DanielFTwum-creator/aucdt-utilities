@@ -22,6 +22,16 @@ function LoginPage({ wmsError, mfaTicket, onMfaTicket, onSession }) {
 
   return (
     <div className="login-page">
+      <video
+        className="login-bg-video"
+        src="https://techbridge.edu.gh/static/campus_tour.mp4"
+        autoPlay
+        muted
+        loop
+        playsInline
+        preload="auto"
+      />
+      <div className="login-bg-overlay" />
       <div className="login-container">
         <div className="login-box">
           <img
