@@ -71,10 +71,10 @@ git sparse-checkout set dictation-app
 cd dictation-app
 
 log '[3/5] Installing dependencies...'
-pnpm install --no-frozen-lockfile --silent 2>/dev/null || npm install --silent
+npm install --silent
 
 log '[4/5] Building...'
-pnpm build
+npm run build
 
 log '[5/5] Deploying dist/ to web root...'
 mkdir -p $RemotePath
