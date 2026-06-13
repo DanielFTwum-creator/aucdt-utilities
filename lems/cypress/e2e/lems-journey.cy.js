@@ -171,7 +171,14 @@ describe('LEMS — student journey', () => {
     cy.get('button[type="submit"]').should('be.disabled');
   });
 
-  it('shows an error when recommend is missing on submit', () => {
+  it('requires the recommend field (has required attribute, blocks native form submission)', () => {
+    cy.visit('/');
+    cy.contains('button', 'Proceed to Evaluation').click();
+    cy.wait('@programmes');
+    cy.get('#recommend').should('have.attr', 'required');
+  });
+
+  it('shows an inline error when recommend is missing and native validation is bypassed', () => {
     cy.visit('/');
     cy.contains('button', 'Proceed to Evaluation').click();
     cy.wait('@programmes');
@@ -180,12 +187,20 @@ describe('LEMS — student journey', () => {
     cy.get('#course').select('1');
     cy.get('#semester').select('1');
     fillAllRatings();
-    // No recommend selected — submit shows inline error
+    // Remove required so React's handleSubmit runs and shows its own error message
+    cy.get('#recommend').invoke('removeAttr', 'required');
     cy.get('button[type="submit"]').should('not.be.disabled').click();
     cy.contains('Please indicate whether you would recommend this lecturer').should('be.visible');
   });
 
-  it('shows an error when semester is missing on submit', () => {
+  it('requires the semester field (has required attribute, blocks native form submission)', () => {
+    cy.visit('/');
+    cy.contains('button', 'Proceed to Evaluation').click();
+    cy.wait('@programmes');
+    cy.get('#semester').should('have.attr', 'required');
+  });
+
+  it('shows an inline error when semester is missing and native validation is bypassed', () => {
     cy.visit('/');
     cy.contains('button', 'Proceed to Evaluation').click();
     cy.wait('@programmes');
@@ -194,7 +209,7 @@ describe('LEMS — student journey', () => {
     cy.get('#course').select('1');
     fillAllRatings();
     cy.get('#recommend').select('NEUTRAL');
-    // No semester selected
+    cy.get('#semester').invoke('removeAttr', 'required');
     cy.get('button[type="submit"]').should('not.be.disabled').click();
     cy.contains('Please select a semester').should('be.visible');
   });
@@ -291,7 +306,8 @@ describe('LEMS — student journey', () => {
     cy.get('#recommend').select('NEUTRAL');
     cy.get('button[type="submit"]').click();
     cy.wait('@submit500');
-    cy.contains('Failed to submit evaluation. Please try again.').should('be.visible');
+    // api.js shows err.response.data.message when present; stub returns 'Internal server error'
+    cy.contains('Internal server error').should('be.visible');
     cy.get('button[type="submit"]').should('not.be.disabled');
   });
 
@@ -352,20 +368,21 @@ describe('LEMS — admin journey (SYSTEM_ADMIN)', () => {
     cy.wait('@me');
     cy.contains('.tab-button', 'Results').click();
     cy.wait('@evaluationsAll');
-    cy.contains(/No evaluations|No results|no data/i).should('be.visible');
+    cy.contains('No evaluations found').should('be.visible');
   });
 
   it('renders the Results tab with data rows when evaluations exist', () => {
+    // ResultsTab reads evaluation.lecturer.firstName/lastName and evaluation.course.name
     cy.intercept('GET', `${WMS}/api/lems/evaluations/all`, {
       statusCode: 200,
       body: [{
         id: 1,
-        lecturerName: 'Ama Mensah',
-        courseName: 'Computer Networks',
+        lecturer: { id: 1, firstName: 'Ama', lastName: 'Mensah' },
+        course: { id: 1, name: 'Computer Networks' },
         semester: 1,
         recommend: 'RECOMMEND',
-        averageRating: 4.8,
-        submittedAt: '2026-06-01T10:00:00Z',
+        createdAt: '2026-06-01T10:00:00Z',
+        ratings: [],
       }],
     }).as('evaluationsWithData');
 
