@@ -49,16 +49,26 @@ describe('LEMS — SSO gate', () => {
     cy.contains('Evaluations are submitted anonymously.').should('be.visible');
   });
 
-  it('shows the domain-gate error for non-TUC accounts', () => {
+  it('shows the domain-gate error card for non-TUC accounts', () => {
     cy.stubWms(null);
     cy.visit('/?error=domain');
-    cy.contains('Only @techbridge.edu.gh accounts can sign in.').should('be.visible');
+    cy.contains('Wrong Google Account').should('be.visible');
+    cy.contains('@techbridge.edu.gh').should('be.visible');
+    cy.contains('button', 'Try a different account').should('be.visible');
   });
 
-  it('shows a generic error for non-domain IdP errors', () => {
+  it('shows the domain-gate error card for oauth errors (non-TUC email)', () => {
     cy.stubWms(null);
     cy.visit('/?error=oauth');
-    cy.contains('Sign-in failed. Please try again.').should('be.visible');
+    cy.contains('Wrong Google Account').should('be.visible');
+    cy.contains('button', 'Try a different account').should('be.visible');
+  });
+
+  it('shows a generic error card for unknown IdP errors', () => {
+    cy.stubWms(null);
+    cy.visit('/?error=unknown');
+    cy.contains('Sign-in Failed').should('be.visible');
+    cy.contains('button', 'Try a different account').should('be.visible');
   });
 
   it('shows the sign-in page when WMS refresh returns 500', () => {
