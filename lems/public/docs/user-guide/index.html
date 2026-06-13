@@ -20,6 +20,10 @@
 
   .doc-header { background: var(--tuc-maroon); color: #fff; padding: 48px 40px 40px; position: relative; overflow: hidden; }
   .doc-header::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 4px; background: linear-gradient(90deg, var(--tuc-gold), transparent); }
+  .header-logo-row { display: flex; align-items: center; gap: 14px; margin-bottom: 20px; }
+  .header-crest { height: 52px; width: auto; flex-shrink: 0; }
+  .pull-quote { background: #fff; border-left: 4px solid var(--tuc-gold); padding: 14px 20px; border-radius: 0 8px 8px 0; margin: 14px 0; font-style: italic; color: var(--tuc-dark); }
+  .footer-links { text-align: right; }
   .breadcrumb { font-size: 12px; opacity: .6; margin-bottom: 12px; }
   .breadcrumb a { color: var(--tuc-gold); text-decoration: none; }
   .breadcrumb a:hover { text-decoration: underline; }
@@ -97,6 +101,10 @@
 <body>
 
 <header class="doc-header">
+  <div class="header-logo-row">
+    <img src="https://techbridge.edu.gh/static/TUC_LOGO_small.png" alt="Techbridge University College" class="header-crest" onerror="this.style.display='none'">
+    <div class="header-badge">TUC — ICT Division</div>
+  </div>
   <div class="breadcrumb"><a href="/docs/">LEMS Docs</a> › Student User Guide</div>
   <div class="header-badge">Student Guide</div>
   <h1>How to Submit a <span>Lecturer Evaluation</span></h1>
@@ -243,7 +251,7 @@
 
       <h3>Recommendation Question</h3>
       <p>After the 10 criteria you will answer one additional question:</p>
-      <blockquote style="background:#fff;border-left:4px solid var(--tuc-gold);padding:14px 20px;border-radius:0 8px 8px 0;margin:14px 0;font-style:italic;color:var(--tuc-dark);">
+      <blockquote class="pull-quote">
         "Would you recommend this lecturer to other students?"
       </blockquote>
       <p>Select <strong>Yes</strong>, <strong>Neutral</strong>, or <strong>No</strong>.</p>
@@ -349,7 +357,7 @@
     <strong>LEMS Student User Guide</strong> — Techbridge University College · ICT Division<br>
     For help: <a href="mailto:ict@techbridge.edu.gh">ict@techbridge.edu.gh</a>
   </div>
-  <div style="text-align:right;">
+  <div class="footer-links">
     <a href="/docs/">← Back to Docs Home</a><br>
     <a href="/docs/admin-guide/">Admin Guide →</a>
   </div>
