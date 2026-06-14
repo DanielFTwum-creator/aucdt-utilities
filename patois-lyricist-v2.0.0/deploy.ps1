@@ -55,9 +55,15 @@ cd $buildDir
 git sparse-checkout set patois-lyricist-v2.0.0
 cd patois-lyricist-v2.0.0
 log '[3/5] Installing dependencies...'
-pnpm install --no-frozen-lockfile --silent 2>/dev/null || npm install --silent
+pnpm install --no-frozen-lockfile 2>&1 | tail -5 || true
 log '[4/5] Building...'
-pnpm build
+# Carry API key from the live web root into the temp build dir so Vite can embed it
+if [ -f $RemotePath.env.local ]; then
+  cp $RemotePath.env.local .env.local
+elif [ -f $RemotePath.env ]; then
+  cp $RemotePath.env .env.local
+fi
+./node_modules/.bin/vite build
 log '[5/5] Deploying dist/ to web root...'
 mkdir -p $RemotePath
 rsync -a --delete dist/. $RemotePath
