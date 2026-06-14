@@ -82,15 +82,15 @@ export const LoginView: React.FC = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-[var(--color-bg-primary)]">
-      <div className="w-full max-w-md p-8 bg-white rounded-lg shadow-lg">
-        <h1 className="text-3xl font-bold mb-6 text-[var(--color-accent-primary)]">
+      <div className="w-full max-w-md mx-4 p-8 bg-white rounded-lg shadow-lg">
+        <h1 className="text-3xl font-bold mb-6 text-[#164975]">
           Welcome
         </h1>
         {error && <p className="mb-4 text-sm text-red-600">{error}</p>}
 
         <button
           onClick={handleOAuthClick}
-          className="w-full mb-6 px-4 py-3 bg-[var(--color-accent-primary)] text-white rounded-lg font-semibold hover:opacity-90 transition"
+          className="w-full mb-6 px-4 py-3 bg-[#164975] text-white rounded-lg font-semibold hover:opacity-90 transition"
         >
           Continue with Google
         </button>
@@ -110,7 +110,7 @@ export const LoginView: React.FC = () => {
             placeholder="Email address"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="w-full mb-4 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--color-accent-primary)]"
+            className="w-full mb-4 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#164975]"
           />
           <button
             type="submit"
