@@ -279,7 +279,7 @@ export default function ExerciseTab({ lesson, progress, onFinish, onBack }: Exer
         <button
           id="backToLessonsBtn"
           onClick={onBack}
-          className="inline-flex items-center space-x-2 text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white text-sm font-semibold cursor-pointer border border-zinc-200 dark:border-zinc-800 px-3 py-1.5 rounded-lg bg-zinc-50 dark:bg-zinc-900 transition-all shadow-sm"
+          className="inline-flex w-full sm:w-auto justify-center items-center space-x-2 text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white text-sm font-semibold cursor-pointer border border-zinc-200 dark:border-zinc-800 px-3 py-1.5 min-h-[44px] rounded-lg bg-zinc-50 dark:bg-zinc-900 transition-all shadow-sm"
         >
           <ArrowLeft size={16} />
           <span>Exit to Map</span>
@@ -290,7 +290,7 @@ export default function ExerciseTab({ lesson, progress, onFinish, onBack }: Exer
           <button
             id="muteAudioBtn"
             onClick={() => setMuteAudio(!muteAudio)}
-            className="p-2 border border-zinc-200 dark:border-zinc-800 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-all text-zinc-600 dark:text-zinc-300 cursor-pointer"
+            className="p-2.5 min-h-[44px] border border-zinc-200 dark:border-zinc-800 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-all text-zinc-600 dark:text-zinc-300 cursor-pointer flex items-center justify-center"
             title={muteAudio ? "Unmute Audio" : "Mute Audio"}
           >
             {muteAudio ? <VolumeX size={16} /> : <Volume2 size={16} />}
@@ -299,7 +299,7 @@ export default function ExerciseTab({ lesson, progress, onFinish, onBack }: Exer
           <button
             id="restartExerciseBtn"
             onClick={handleReset}
-            className="inline-flex items-center space-x-2 px-3 py-2 bg-zinc-900 dark:bg-zinc-800 hover:bg-zinc-850 dark:hover:bg-zinc-700 text-white rounded-lg text-xs font-bold transition-all cursor-pointer border dark:border-white/5"
+            className="inline-flex items-center space-x-2 px-3 py-2 min-h-[44px] bg-zinc-900 dark:bg-zinc-800 hover:bg-zinc-850 dark:hover:bg-zinc-700 text-white rounded-lg text-xs font-bold transition-all cursor-pointer border dark:border-white/5"
           >
             <RefreshCw size={12} />
             <span>Restart Exercise</span>
@@ -332,11 +332,11 @@ export default function ExerciseTab({ lesson, progress, onFinish, onBack }: Exer
                 className="bg-transparent text-xs font-mono font-bold text-cyan-400 focus:outline-none cursor-pointer"
               >
                 <option value="0" className="bg-slate-950 text-white">OFF</option>
-                <option value="40" className="bg-slate-950 text-white">40 BPM</option>
-                <option value="60" className="bg-slate-950 text-white">60 BPM</option>
-                <option value="80" className="bg-slate-950 text-white">80 BPM</option>
-                <option value="100" className="bg-slate-950 text-white">100 BPM</option>
-                <option value="120" className="bg-slate-950 text-white">120 BPM</option>
+                <option value="40" className="bg-slate-950 text-white">40 BPM — Slow</option>
+                <option value="60" className="bg-slate-950 text-white">60 BPM — Steady</option>
+                <option value="80" className="bg-slate-950 text-white">80 BPM — Brisk</option>
+                <option value="100" className="bg-slate-950 text-white">100 BPM — Fast</option>
+                <option value="120" className="bg-slate-950 text-white">120 BPM — Sprint</option>
               </select>
               {metronomeBpm > 0 && (
                 <span className={`w-2 h-2 rounded-full transition-all duration-75 ${metronomeTick ? 'bg-cyan-400 scale-125 shadow-[0_0_10px_#22d3ee]' : 'bg-slate-800'}`}></span>
@@ -397,9 +397,9 @@ export default function ExerciseTab({ lesson, progress, onFinish, onBack }: Exer
           </div>
 
           {/* R5 Reward */}
-          <div className={`p-2.5 rounded-lg border flex flex-col justify-between transition-all duration-350 ${combo > 0 ? 'bg-cyan-500/10 border-cyan-500/35 shadow-[0_0_15px_rgba(6,182,212,0.1)]' : 'bg-white/5 border-white/5'}`}>
+          <div className={`p-2.5 rounded-lg border flex flex-col justify-between transition-all duration-150 ${combo > 0 ? 'bg-cyan-500/10 border-cyan-500/35 shadow-[0_0_15px_rgba(6,182,212,0.1)]' : 'bg-white/5 border-white/5'}`}>
             <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wide block">🔥 R5 STREAK</span>
-            <span className={`text-[10px] font-black font-mono mt-1 transition-all ${combo >= 15 ? 'text-amber-400 animate-pulse text-xs' : combo >= 5 ? 'text-cyan-400 font-bold' : 'text-slate-400'}`}>
+            <span className={`text-xs font-black font-mono mt-1 transition-all ${combo >= 15 ? 'text-amber-400 animate-pulse text-sm' : combo >= 5 ? 'text-cyan-400 font-bold' : 'text-slate-400'}`}>
               {combo}x (Max: {maxCombo}x)
             </span>
           </div>
@@ -441,7 +441,10 @@ export default function ExerciseTab({ lesson, progress, onFinish, onBack }: Exer
                 R6 Cognitive Calibration Alignment Active
               </h5>
               <p className="text-xs text-zinc-650 dark:text-slate-400 leading-relaxed">
-                Inputs conflicted on keys: <span className="font-mono bg-amber-500/20 dark:bg-amber-500/30 text-amber-500 dark:text-amber-400 px-1.5 py-0.5 rounded border border-amber-500/30 uppercase font-black">{wrongKeys.map(k => k === " " ? "space" : k).join(", ")}</span>.
+                Inputs conflicted on keys:{' '}
+                {wrongKeys.map((k, i) => (
+                  <span key={i} className="inline-block font-mono bg-amber-500/20 dark:bg-amber-500/30 text-amber-500 dark:text-amber-400 px-1.5 py-0.5 rounded border border-amber-500/30 uppercase font-black mr-1">{k === " " ? "space" : k}</span>
+                ))}.
                 Complete this custom corrective set with 100% typing accuracy to calibrate muscle rows before advancement.
               </p>
             </div>
@@ -473,7 +476,7 @@ export default function ExerciseTab({ lesson, progress, onFinish, onBack }: Exer
         {/* Progress bar towards completion of practice set */}
         <div className="h-1 w-full bg-zinc-100 dark:bg-slate-950/40 rounded-full overflow-hidden mb-6">
           <div
-            className={`h-full transition-all duration-350 ${isCalibrationMode ? 'bg-amber-500 shadow-[0_0_10px_#f59e0b]' : 'bg-sky-600 dark:bg-cyan-400 shadow-[0_0_10px_#22d3ee]'}`}
+            className={`h-full transition-all duration-150 ${isCalibrationMode ? 'bg-amber-500 shadow-[0_0_10px_#f59e0b]' : 'bg-sky-600 dark:bg-cyan-400 shadow-[0_0_10px_#22d3ee]'}`}
             style={{ width: `${(inputVal.length / currentSentence.length) * 100}%` }}
           ></div>
         </div>
@@ -550,7 +553,7 @@ export default function ExerciseTab({ lesson, progress, onFinish, onBack }: Exer
                 return (
                   <div
                     key={key}
-                    className={`w-11 h-11 flex items-center justify-center rounded-lg text-xs font-bold border transition-all ${
+                    className={`w-7 h-7 sm:w-10 sm:h-10 flex items-center justify-center rounded-lg text-[10px] sm:text-xs font-bold border transition-all ${
                       isActive
                         ? "bg-sky-500 border-sky-600 text-white scale-110 shadow-lg animate-pulse dark:bg-cyan-500/30 dark:border-cyan-400/50 dark:shadow-[0_0_20px_rgba(34,211,238,0.3)] dark:text-white"
                         : "bg-white dark:bg-slate-900/40 border-zinc-200 dark:border-white/5 text-zinc-800 dark:text-slate-400"
@@ -566,7 +569,7 @@ export default function ExerciseTab({ lesson, progress, onFinish, onBack }: Exer
           {/* Spacebar row */}
           <div className="flex justify-center mt-2.5">
             <div
-              className={`h-11 w-52 flex items-center justify-center rounded-lg text-xs font-bold border transition-all ${
+              className={`h-8 sm:h-11 w-36 sm:w-52 flex items-center justify-center rounded-lg text-[10px] sm:text-xs font-bold border transition-all ${
                 nextTargetChar === " "
                   ? "bg-sky-500 border-sky-600 text-white scale-105 shadow-lg animate-pulse dark:bg-cyan-500/30 dark:border-cyan-400/50 dark:shadow-[0_0_20px_rgba(34,211,238,0.3)] dark:text-white"
                   : "bg-white dark:bg-slate-900/40 border-zinc-200 dark:border-white/5 text-zinc-500 dark:text-slate-550"

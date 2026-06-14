@@ -82,7 +82,7 @@ export default function LessonsTab({ progress, onSelectLesson }: LessonsTabProps
                 id={`lesson-card-${lesson.id}`}
                 className={`flex flex-col justify-between p-5 rounded-xl border transition-all duration-300 relative overflow-hidden ${
                   isCompleted
-                    ? "bg-emerald-50/20 dark:bg-emerald-950/10 border-emerald-200 dark:border-emerald-500/30 shadow-[0_0_15px_rgba(16,185,129,0.05)]"
+                    ? "bg-emerald-50/20 dark:bg-emerald-950/10 border-emerald-200 dark:border-emerald-500/30 shadow-[0_0_25px_rgba(16,185,129,0.2)]"
                     : isUnlocked
                     ? "bg-white dark:bg-[#0c0d12]/50 border-zinc-200 dark:border-white/5 hover:border-cyan-500/40 shadow-sm hover:shadow-[0_0_15px_rgba(6,182,212,0.1)] hover:bg-[#10121a]/60"
                     : "bg-zinc-100 dark:bg-[#030406]/30 border-zinc-200 dark:border-white/5 opacity-50 pointer-events-none"
@@ -132,7 +132,7 @@ export default function LessonsTab({ progress, onSelectLesson }: LessonsTabProps
                     <button
                       id={`start-lesson-btn-${lesson.id}`}
                       onClick={() => onSelectLesson(lesson)}
-                      className="w-full py-2 bg-zinc-900 hover:bg-zinc-800 dark:bg-cyan-500/10 dark:hover:bg-cyan-500/25 dark:text-cyan-400 dark:border dark:border-cyan-500/35 rounded-lg text-xs font-bold transition-all flex items-center justify-center space-x-1.5 cursor-pointer shadow-[0_0_10px_rgba(6,182,212,0.05)] hover:shadow-[0_0_15px_rgba(6,182,212,0.15)]"
+                      className="w-full py-2 min-h-[44px] bg-zinc-900 hover:bg-zinc-800 dark:bg-cyan-500/10 dark:hover:bg-cyan-500/25 dark:text-cyan-400 dark:border dark:border-cyan-500/35 rounded-lg text-xs font-bold transition-all flex items-center justify-center space-x-1.5 cursor-pointer shadow-[0_0_10px_rgba(6,182,212,0.05)] hover:shadow-[0_0_15px_rgba(6,182,212,0.15)]"
                     >
                       <Play size={12} fill="currentColor" />
                       <span>{isCompleted ? "Re-calibrate Index" : "Initiate Typing Run"}</span>
@@ -140,7 +140,7 @@ export default function LessonsTab({ progress, onSelectLesson }: LessonsTabProps
                   ) : (
                     <div className="py-2 text-center text-[10px] font-bold text-zinc-400 dark:text-slate-600 flex items-center justify-center space-x-1.5 uppercase font-mono tracking-wider">
                       <Lock size={10} />
-                      <span>Locked — Pass previous tier</span>
+                      <span>Complete Tier 0{idx} first</span>
                     </div>
                   )}
                 </div>

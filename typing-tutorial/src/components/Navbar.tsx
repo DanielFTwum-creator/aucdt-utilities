@@ -120,7 +120,7 @@ export default function Navbar({ progress, theme, onThemeChange, onNavigate, act
           <button
             id="navLessonsTabButton"
             onClick={() => onNavigate("lessons")}
-            className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all ${
+            className={`px-4 py-2 min-h-[44px] rounded-lg text-sm font-semibold transition-all ${
               activeTab === "lessons"
                 ? "bg-sky-600 text-white shadow-sm dark:bg-cyan-500/20 dark:text-cyan-400 dark:border dark:border-cyan-400/40 dark:shadow-[0_0_15px_rgba(6,182,212,0.25)]"
                 : "text-zinc-600 dark:text-slate-400 hover:bg-zinc-100 dark:hover:bg-white/5"
@@ -131,7 +131,7 @@ export default function Navbar({ progress, theme, onThemeChange, onNavigate, act
           <button
             id="navSpeedtestTabButton"
             onClick={() => onNavigate("speedtest")}
-            className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all ${
+            className={`px-4 py-2 min-h-[44px] rounded-lg text-sm font-semibold transition-all ${
               activeTab === "speedtest"
                 ? "bg-sky-600 text-white shadow-sm dark:bg-cyan-500/20 dark:text-cyan-400 dark:border dark:border-cyan-400/40 dark:shadow-[0_0_15px_rgba(6,182,212,0.25)]"
                 : "text-zinc-600 dark:text-slate-400 hover:bg-zinc-100 dark:hover:bg-white/5"
@@ -142,7 +142,7 @@ export default function Navbar({ progress, theme, onThemeChange, onNavigate, act
           <button
             id="navGameTabButton"
             onClick={() => onNavigate("game")}
-            className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all ${
+            className={`px-4 py-2 min-h-[44px] rounded-lg text-sm font-semibold transition-all ${
               activeTab === "game"
                 ? "bg-sky-600 text-white shadow-sm dark:bg-cyan-500/20 dark:text-cyan-400 dark:border dark:border-cyan-400/40 dark:shadow-[0_0_15px_rgba(6,182,212,0.25)]"
                 : "text-zinc-600 dark:text-slate-400 hover:bg-zinc-100 dark:hover:bg-white/5"
@@ -153,7 +153,7 @@ export default function Navbar({ progress, theme, onThemeChange, onNavigate, act
           <button
             id="navAdminTabButton"
             onClick={() => onNavigate("admin")}
-            className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all ${
+            className={`px-4 py-2 min-h-[44px] rounded-lg text-sm font-semibold transition-all ${
               activeTab === "admin"
                 ? "bg-sky-600 text-white shadow-sm dark:bg-cyan-500/20 dark:text-cyan-400 dark:border dark:border-cyan-400/40 dark:shadow-[0_0_15px_rgba(6,182,212,0.25)]"
                 : "text-zinc-600 dark:text-slate-400 hover:bg-zinc-100 dark:hover:bg-white/5"
@@ -164,7 +164,7 @@ export default function Navbar({ progress, theme, onThemeChange, onNavigate, act
           <button
             id="navDocsTabButton"
             onClick={() => onNavigate("docs")}
-            className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all ${
+            className={`px-4 py-2 min-h-[44px] rounded-lg text-sm font-semibold transition-all ${
               activeTab === "docs"
                 ? "bg-sky-600 text-white shadow-sm dark:bg-cyan-500/20 dark:text-cyan-400 dark:border dark:border-cyan-400/40 dark:shadow-[0_0_15px_rgba(6,182,212,0.25)]"
                 : "text-zinc-600 dark:text-slate-400 hover:bg-zinc-100 dark:hover:bg-white/5"
