@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import {
   Activity, AlertTriangle, CheckCircle, Clock, ShieldAlert, Terminal, Settings as SettingsIcon,
   FileText, SlidersHorizontal, Search, Database, Cpu, Layers, Wifi, Globe, RefreshCw,
-  Copy, Check, Plus, Trash2, Eye, Sparkles, X, ChevronRight, Play, AlertCircle, Shield, Bookmark
+  Copy, Check, Plus, Trash2, Eye, Sparkles, X, ChevronRight, Play, AlertCircle, Shield, Bookmark, Menu
 } from 'lucide-react';
 import {
   ResponsiveContainer, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, BarChart, Bar, Cell
@@ -15,7 +15,7 @@ type ActiveTab = 'overview' | 'devices' | 'bandwidth' | 'ports' | 'alerts' | 'co
 export default function App() {
   // Navigation & UI States
   const [activeTab, setActiveTab] = useState<ActiveTab>('overview');
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [sidebarOpen, setSidebarOpen] = useState(() => window.innerWidth >= 768);
   const [selectedDevice, setSelectedDevice] = useState<Device | null>(null);
   const [showConfirmBlock, setShowConfirmBlock] = useState<string | null>(null); // MAC Address
   const [blockReason, setBlockReason] = useState('');
@@ -459,6 +459,14 @@ export default function App() {
       {/* PERSISTENT WEB HEADER */}
       <header id="main-header" className="bg-[#1B3A6B] text-white border-b-2 border-[#C8920A] px-6 py-4 flex flex-wrap items-center justify-between gap-4 shadow-md z-30">
         <div id="header-brand-box" className="flex items-center gap-3">
+          <button
+            id="mobile-nav-toggle"
+            className="md:hidden p-2 min-h-[44px] flex items-center justify-center rounded hover:bg-white/10 text-white -ml-1"
+            onClick={() => setSidebarOpen(!sidebarOpen)}
+            aria-label="Open navigation"
+          >
+            <Menu className="w-5 h-5" />
+          </button>
           <div id="brand-logo" className="w-10 h-10 rounded bg-[#C8920A] flex items-center justify-center shadow-inner">
             <Activity className="w-6 h-6 text-[#1B3A6B]" />
           </div>
@@ -514,7 +522,7 @@ export default function App() {
                 setAckNote('Swift resolution compiled via core administrator ticker interface.');
               }
             }}
-            className="flex-shrink-0 bg-red-600 hover:bg-red-700 text-white font-semibold px-3 py-1 rounded transition-colors"
+            className="flex-shrink-0 bg-red-600 hover:bg-red-700 text-white font-semibold px-3 py-1 min-h-[44px] rounded transition-colors"
           >
             Acknowledge Now
           </button>
@@ -524,14 +532,20 @@ export default function App() {
       {/* SYSTEM OPERATIONS WORKSPACE */}
       <div id="workspace-container" className="flex-1 flex flex-col md:flex-row relative">
 
+        {/* Mobile backdrop — dismiss sidebar on tap-outside */}
+        {sidebarOpen && (
+          <div className="fixed inset-0 bg-black/60 z-30 md:hidden" onClick={() => setSidebarOpen(false)} />
+        )}
+
         {/* SIDEBAR NAVIGATION LAYER */}
-        <aside id="left-sidebar" className={`bg-[#1B3A6B] text-slate-100 flex-shrink-0 transition-all duration-300 border-r border-[#C8920A]/20 ${sidebarOpen ? 'w-64' : 'w-16'}`}>
+        <aside id="left-sidebar" className={`bg-[#1B3A6B] text-slate-100 flex-shrink-0 transition-all duration-300 border-r border-[#C8920A]/20 ${sidebarOpen ? 'w-64 fixed md:relative inset-y-0 left-0 h-full md:h-auto z-40 md:z-auto shadow-xl md:shadow-none' : 'w-0 overflow-hidden md:w-16'}`}>
           <div className="p-4 border-b border-white/10 flex items-center justify-between">
             {sidebarOpen && <span id="nav-header" className="text-xs uppercase tracking-widest font-bold text-[#C8920A]">OPERATIONS DIRECTORY</span>}
-            <button 
+            <button
               id="sidebar-toggle-btn"
+              type="button"
               onClick={() => setSidebarOpen(!sidebarOpen)}
-              className="p-1 rounded hover:bg-white/10 text-[#C8920A] mx-auto"
+              className="p-2 min-h-[44px] flex items-center justify-center rounded hover:bg-white/10 text-[#C8920A] mx-auto"
               title="Toggle sidebar size"
             >
               <SlidersHorizontal className="w-5 h-5" />
@@ -560,7 +574,7 @@ export default function App() {
                     setActiveTab(item.id as ActiveTab);
                     setAiAnalysisResult(null); // Reset AI panel
                   }}
-                  className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-150 ${
+                  className={`w-full flex items-center gap-3 px-3 py-2.5 min-h-[44px] rounded-lg text-sm font-medium transition-all duration-150 ${
                     isSelected 
                       ? 'bg-[#C8920A] text-[#1B3A6B] font-bold shadow' 
                       : 'text-slate-200 hover:bg-white/5 hover:text-[#C8920A]'
@@ -588,7 +602,7 @@ export default function App() {
         </aside>
 
         {/* PRIMARY MAIN LAYOUT DOCK */}
-        <main id="main-content-area" className="flex-1 p-6 overflow-y-auto space-y-6">
+        <main id="main-content-area" className="flex-1 p-4 md:p-6 overflow-y-auto space-y-6">
 
           {/* ACTIVE TAB ACTION CONTAINER */}
           {activeTab === 'overview' && (
@@ -605,7 +619,7 @@ export default function App() {
                     id="trigger-btn-scan-all"
                     onClick={() => handleTriggerScan()}
                     disabled={isScanning}
-                    className="bg-[#1B3A6B] hover:bg-[#1B3A6B]/90 text-white font-bold text-xs px-4 py-2.5 rounded-lg inline-flex items-center gap-2 shadow transition-all duration-150 disabled:opacity-55"
+                    className="bg-[#1B3A6B] hover:bg-[#1B3A6B]/90 text-white font-bold text-xs px-4 py-2.5 min-h-[44px] rounded-lg inline-flex items-center gap-2 shadow transition-all duration-150 disabled:opacity-55"
                   >
                     <RefreshCw className={`w-3.5 h-3.5 ${isScanning ? 'animate-spin' : ''}`} />
                     {isScanning ? 'Scanning Subnets...' : 'Trigger Active Scan'}
@@ -613,7 +627,7 @@ export default function App() {
                   <button 
                     id="trigger-btn-ai-overall"
                     onClick={() => handleGetAICopilotReport('overall_network', {})}
-                    className="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-4 py-2.5 rounded-lg inline-flex items-center gap-1.5 shadow"
+                    className="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-4 py-2.5 min-h-[44px] rounded-lg inline-flex items-center gap-1.5 shadow"
                   >
                     <Sparkles className="w-3.5 h-3.5" />
                     Simulate AI Assessment
@@ -721,14 +735,14 @@ export default function App() {
                                 setShowConfirmBlock(rog.mac_address);
                                 setBlockReason('Rogue student access point causing local gateway routing loops.');
                               }}
-                              className="bg-red-700 hover:bg-red-800 text-white font-bold px-2.5 py-1 rounded text-[10px]"
+                              className="bg-red-700 hover:bg-red-800 text-white font-bold px-2.5 py-1 min-h-[44px] rounded text-[10px]"
                             >
                               Block Node
                             </button>
                             <button
                               id={`quick-auth-${rog.id}`}
                               onClick={() => handleWhitelistDevice(rog.mac_address, 'Authorized Classroom Client')}
-                              className="bg-emerald-700 hover:bg-emerald-800 text-white font-semibold px-2.5 py-1 rounded text-[10px]"
+                              className="bg-emerald-700 hover:bg-emerald-800 text-white font-semibold px-2.5 py-1 min-h-[44px] rounded text-[10px]"
                             >
                               Authorise Device
                             </button>
@@ -877,7 +891,7 @@ export default function App() {
                                 <button
                                   id={`action-detail-btn-${device.id}`}
                                   onClick={() => setSelectedDevice(device)}
-                                  className="p-1 text-[#1B3A6B] hover:bg-[#1B3A6B]/10 rounded"
+                                  className="p-2 min-h-[44px] flex items-center justify-center text-[#1B3A6B] hover:bg-[#1B3A6B]/10 rounded"
                                   title="View detailed statistics"
                                 >
                                   <Eye className="w-4 h-4" />
@@ -886,7 +900,7 @@ export default function App() {
                                   <button
                                     id={`action-unblock-btn-${device.id}`}
                                     onClick={() => handleRemoveBlock(device.mac_address)}
-                                    className="p-1 text-emerald-600 hover:bg-emerald-50 rounded"
+                                    className="p-2 min-h-[44px] flex items-center justify-center text-emerald-600 hover:bg-emerald-50 rounded"
                                     title="Unblock device"
                                   >
                                     <CheckCircle className="w-4 h-4" />
@@ -898,7 +912,7 @@ export default function App() {
                                       setShowConfirmBlock(device.mac_address);
                                       setBlockReason('Administrative control lockdown.');
                                     }}
-                                    className="p-1 text-red-600 hover:bg-red-50 rounded"
+                                    className="p-2 min-h-[44px] flex items-center justify-center text-red-600 hover:bg-red-50 rounded"
                                     title="Initiate drop rules"
                                   >
                                     <ShieldAlert className="w-4 h-4" />
