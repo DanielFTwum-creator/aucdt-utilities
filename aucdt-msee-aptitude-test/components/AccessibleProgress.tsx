@@ -66,7 +66,7 @@ export const AccessibleProgress: React.FC<AccessibleProgressProps> = ({ current,
           <button
             key={q.id}
             onClick={() => navigateToQuestion(index)}
-            className={`p-2 rounded-lg text-sm font-medium transition-colors duration-200 ease-in-out shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2`}
+            className={`p-2 min-h-[44px] rounded-lg text-sm font-medium transition-colors duration-200 ease-in-out shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2`}
             style={getButtonStyles(index, q.id)}
             aria-label={`Go to question ${index + 1}${answers[q.id] !== undefined ? ' (answered)' : ''}${index === current ? ' (current)' : ''}`}
             aria-current={index === current ? 'step' : undefined}

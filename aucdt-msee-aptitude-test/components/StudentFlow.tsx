@@ -495,7 +495,7 @@ export const StudentFlow: React.FC<StudentFlowProps> = ({ user, handleSignOut })
                             </div>
                         )}
                     </div>
-                    <div className="flex items-center space-x-3 flex-shrink-0">
+                    <div className="flex items-center flex-wrap gap-2">
                         <button onClick={() => setIsPaused(!isPaused)} className="py-2.5 px-5 rounded-lg font-bold inline-flex items-center space-x-2 bg-blue-500 text-white hover:bg-blue-600 transition-colors shadow-md">
                             {isPaused ? <Play size={18} /> : <Pause size={18} />}
                             <span>{isPaused ? 'Resume' : 'Pause'}</span>
