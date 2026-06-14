@@ -262,7 +262,7 @@ export default function App() {
       />
 
       {/* Primary viewport content */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 animate-fade-in">
+      <main className="w-full px-4 sm:px-6 lg:px-8 py-8 animate-fade-in">
         
         {/* If a lessons row practice has been chosen, lock view strictly to the exercise canvas bounds */}
         {selectedLesson ? (
@@ -314,7 +314,7 @@ export default function App() {
 
       </main>
 
-      <footer className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 mt-12 border-t border-zinc-200 dark:border-zinc-850 text-center text-xs text-zinc-500 font-mono">
+      <footer className="w-full px-4 sm:px-6 lg:px-8 py-8 mt-12 border-t border-zinc-200 dark:border-zinc-850 text-center text-xs text-zinc-500 font-mono">
         <p>&copy; 2026 Techbridge University College, Oyibi, Ghana. Department of ICT.</p>
         <p className="mt-1 text-[10px] text-zinc-400">Document Mapping Standard: TUC-INC-2026-001 | Host: Plesk Nginx Reversed Node CLI</p>
       </footer>

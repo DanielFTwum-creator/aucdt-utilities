@@ -34,7 +34,7 @@ export default function Navbar({ progress, theme, onThemeChange, onNavigate, act
 
   return (
     <header className="border-b border-zinc-200 dark:border-white/5 bg-white dark:bg-[#050608]/90 backdrop-blur-xl transition-colors duration-300">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5">
+      <div className="w-full px-4 sm:px-6 lg:px-8 py-5">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-5">
           
           {/* Logo / Title */}
