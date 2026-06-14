@@ -92,10 +92,44 @@ export default function Header() {
             Contact Us
           </Link>
           
-          <button className="md:hidden" onClick={() => setIsOpen(!isOpen)}>
+          <button
+            className="md:hidden min-h-[44px] w-11 flex items-center justify-center"
+            onClick={() => setIsOpen(!isOpen)}
+            aria-label="Toggle navigation menu"
+          >
             {isOpen ? <X className="text-navy" /> : <Menu className="text-navy" />}
           </button>
         </div>
+
+        {/* Mobile Nav Panel */}
+        <AnimatePresence>
+          {isOpen && (
+            <motion.nav
+              key="mobile-nav"
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.2 }}
+              className="md:hidden overflow-hidden border-t border-gray-100"
+            >
+              <div className="flex flex-col px-6 py-4 space-y-1 font-sans text-[#2A5171]">
+                <p className="text-xs font-bold uppercase tracking-wider text-gray-400 pb-1">About</p>
+                <Link to="/about" className="py-3 min-h-[44px] flex items-center hover:text-prof-blue transition-colors border-b border-gray-50" onClick={() => setIsOpen(false)}>About Bionic Skins™</Link>
+                <Link to="/technology" className="py-3 min-h-[44px] flex items-center hover:text-prof-blue transition-colors border-b border-gray-50" onClick={() => setIsOpen(false)}>Our Technology</Link>
+                <Link to="/our-blog" className="py-3 min-h-[44px] flex items-center hover:text-prof-blue transition-colors" onClick={() => setIsOpen(false)}>Our Blog</Link>
+                <p className="text-xs font-bold uppercase tracking-wider text-gray-400 pt-3 pb-1">Patients</p>
+                <Link to="/become-a-patient" className="py-3 min-h-[44px] flex items-center hover:text-prof-blue transition-colors border-b border-gray-50" onClick={() => setIsOpen(false)}>Become A Patient</Link>
+                <Link to="/amputee-resources" className="py-3 min-h-[44px] flex items-center hover:text-prof-blue transition-colors" onClick={() => setIsOpen(false)}>Resource Center</Link>
+                <p className="text-xs font-bold uppercase tracking-wider text-gray-400 pt-3 pb-1">Physicians</p>
+                <Link to="/refer-a-patient" className="py-3 min-h-[44px] flex items-center hover:text-prof-blue transition-colors border-b border-gray-50" onClick={() => setIsOpen(false)}>Refer A Patient</Link>
+                <Link to="/clinical-trials" className="py-3 min-h-[44px] flex items-center hover:text-prof-blue transition-colors" onClick={() => setIsOpen(false)}>Clinical Trials</Link>
+                <div className="pt-4 pb-2">
+                  <Link to="/contact-us" className="block w-full bg-navy text-white px-6 py-3 min-h-[44px] rounded-[4px] font-bold text-center hover:opacity-90 transition-all" onClick={() => setIsOpen(false)}>Contact Us</Link>
+                </div>
+              </div>
+            </motion.nav>
+          )}
+        </AnimatePresence>
       </motion.header>
     </>
   );

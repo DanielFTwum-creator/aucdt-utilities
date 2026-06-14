@@ -1,10 +1,10 @@
 # bionicskins™ — Deploy Script
-# URL: https://ai-tools.techbridge.edu.gh/bionicskins/
+# URL: https://ai-tools.techbridge.edu.gh/skins/
 # Usage: .\deploy.ps1 -Build
 
 param(
     [string]$RemoteHost = "root@techbridge.edu.gh",
-    [string]$RemotePath = "/var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/bionicskins/",
+    [string]$RemotePath = "/var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/skins/",
     [switch]$Build = $false
 )
 
@@ -55,9 +55,9 @@ cd $buildDir
 git sparse-checkout set bionicskins™
 cd bionicskins™
 log '[3/5] Installing dependencies...'
-pnpm install --no-frozen-lockfile --silent 2>/dev/null || npm install --silent
+pnpm install --no-frozen-lockfile 2>&1 | tail -5 || true
 log '[4/5] Building...'
-pnpm build
+./node_modules/.bin/vite build
 log '[5/5] Deploying dist/ to web root...'
 mkdir -p $RemotePath
 rsync -a --delete dist/. $RemotePath
@@ -80,11 +80,11 @@ Log "INFO" "Step 4: Writing .htaccess..." Yellow
 @"
 <IfModule mod_rewrite.c>
   RewriteEngine On
-  RewriteBase /bionicskins/
+  RewriteBase /skins/
   RewriteCond %{REQUEST_FILENAME} -f [OR]
   RewriteCond %{REQUEST_FILENAME} -d
   RewriteRule ^ - [L]
-  RewriteRule ^ /bionicskins/index.html [QSA,L]
+  RewriteRule ^ /skins/index.html [QSA,L]
 </IfModule>
 <IfModule mod_expires.c>
   ExpiresActive On
@@ -111,6 +111,6 @@ $elapsed = [math]::Round(((Get-Date) - $__deployStart).TotalSeconds, 1)
 $timeStr = if ($elapsed -ge 60) { "$([math]::Floor($elapsed/60))m $([math]::Round($elapsed%60,1))s" } else { "${elapsed}s" }
 Log "SUCCESS" "========================================" Green
 Log "SUCCESS" "DEPLOYMENT COMPLETE" Green
-Log "SUCCESS" "URL  : https://ai-tools.techbridge.edu.gh/bionicskins/" Green
+Log "SUCCESS" "URL  : https://ai-tools.techbridge.edu.gh/skins/" Green
 Log "SUCCESS" "Time : $timeStr total" Green
 Log "SUCCESS" "========================================" Green

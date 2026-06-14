@@ -55,9 +55,9 @@ export default function Footer() {
                 placeholder="Email Address" 
                 className="px-4 py-2 border border-gray-200 rounded-[4px] focus:outline-none focus:border-navy"
               />
-              <button 
-                type="submit" 
-                className="bg-accent text-white px-6 py-2 rounded-[4px] font-bold hover:opacity-90 transition-opacity"
+              <button
+                type="submit"
+                className="bg-accent text-white px-6 py-2 min-h-[44px] rounded-[4px] font-bold hover:opacity-90 transition-opacity"
               >
                 Sign Up
               </button>
