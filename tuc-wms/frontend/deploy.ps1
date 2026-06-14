@@ -77,12 +77,18 @@ mkdir -p "`$DEPLOY"
 # Keep .htaccess / .php-* dotfiles; replace app files.
 rsync -a --delete --exclude='.htaccess' --exclude='.php-*' dist/. "`$DEPLOY/"
 
-log '[5/6] Permissions (fix 403)...'
+log '[5/6] Docs files (loader pages that live outside the SPA dist)...'
+mkdir -p "`$DEPLOY/docs"
+cd "`$TMP" && git sparse-checkout add 'tuc-wms/docs' && cd 'tuc-wms/docs'
+cp sso-handbook-loader.html "`$DEPLOY/docs/sso-handbook.html"
+cd "`$TMP/$SUBFOLDER"
+
+log '[6/7] Permissions (fix 403)...'
 chown -R $OWNER "`$DEPLOY"
 find "`$DEPLOY" -type d -exec chmod 755 {} \;
 find "`$DEPLOY" -type f -exec chmod 644 {} \;
 
-log '[6/6] SPA .htaccess...'
+log '[7/7] SPA .htaccess...'
 cat > "`$DEPLOY/.htaccess" <<'HT'
 <IfModule mod_rewrite.c>
   RewriteEngine On

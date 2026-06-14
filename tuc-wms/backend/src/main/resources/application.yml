@@ -12,6 +12,11 @@ spring:
     url: ${DB_URL:jdbc:h2:mem:tucwms;DB_CLOSE_DELAY=-1;MODE=MySQL}
     username: ${DB_USER:sa}
     password: ${DB_PASSWORD:}
+    hikari:
+      max-lifetime: 120000         # 2 min — well under MariaDB wait_timeout (300s)
+      keepalive-time: 60000        # 1 min — proactively ping idle connections
+      connection-test-query: SELECT 1
+      connection-timeout: 30000    # fail fast rather than queue indefinitely
   jpa:
     hibernate:
       ddl-auto: ${DDL_AUTO:update}
