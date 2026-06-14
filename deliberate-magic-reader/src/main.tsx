@@ -1,6 +1,6 @@
 import {StrictMode} from 'react';
 import {createRoot} from 'react-dom/client';
-import { AuthGate } from './src/AuthGate';
+import { AuthGate } from './AuthGate';
 import App from './App.tsx';
 import './index.css';
 
