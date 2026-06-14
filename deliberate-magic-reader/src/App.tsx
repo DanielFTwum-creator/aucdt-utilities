@@ -85,7 +85,7 @@ export default function App() {
       <Header />
 
       {/* Main Container Wrapper */}
-      <main className="max-w-6xl w-full mx-auto px-6 py-6 flex-1 flex flex-col space-y-6">
+      <main className="max-w-6xl w-full mx-auto px-4 sm:px-6 py-6 flex-1 flex flex-col space-y-6">
         {/* Navigation Tabs and Style Toggles */}
         <div className="flex flex-wrap justify-between items-center gap-3.5 border-b border-black/10 pb-3 dark:border-white/10">
           <div className="flex flex-wrap gap-1 bg-[#F2EEE9] dark:bg-[#222120] p-1 rounded border border-black/10 dark:border-white/10">
@@ -95,7 +95,7 @@ export default function App() {
                 setActiveTab("archives");
                 setSelectedEssay(null);
               }}
-              className={`px-4 py-2 rounded font-serif font-bold text-xs uppercase tracking-wider flex items-center space-x-2 transition-all cursor-pointer ${
+              className={`px-4 py-2 min-h-[44px] rounded font-serif font-bold text-xs uppercase tracking-wider flex items-center space-x-2 transition-all cursor-pointer ${
                 activeTab === "archives" && !selectedEssay
                   ? "bg-[#FCFAF7] border border-black/15 text-black shadow-xs dark:bg-[#1E1D1C] dark:border-white/15 dark:text-white"
                   : "text-zinc-650 hover:text-black dark:text-zinc-450 dark:hover:text-white"
@@ -108,7 +108,7 @@ export default function App() {
             {/* Tab 2 */}
             <button
               onClick={() => setActiveTab("draft")}
-              className={`px-4 py-2 rounded font-serif font-bold text-xs uppercase tracking-wider flex items-center space-x-2 transition-all cursor-pointer ${
+              className={`px-4 py-2 min-h-[44px] rounded font-serif font-bold text-xs uppercase tracking-wider flex items-center space-x-2 transition-all cursor-pointer ${
                 activeTab === "draft"
                   ? "bg-[#FCFAF7] border border-black/15 text-black shadow-xs dark:bg-[#1E1D1C] dark:border-white/15 dark:text-white"
                   : "text-zinc-650 hover:text-black dark:text-zinc-450 dark:hover:text-white"
@@ -121,7 +121,7 @@ export default function App() {
             {/* Tab 3 */}
             <button
               onClick={() => setActiveTab("telemetry")}
-              className={`px-4 py-2 rounded font-serif font-bold text-xs uppercase tracking-wider flex items-center space-x-2 transition-all cursor-pointer ${
+              className={`px-4 py-2 min-h-[44px] rounded font-serif font-bold text-xs uppercase tracking-wider flex items-center space-x-2 transition-all cursor-pointer ${
                 activeTab === "telemetry"
                   ? "bg-[#FCFAF7] border border-black/15 text-black shadow-xs dark:bg-[#1E1D1C] dark:border-white/15 dark:text-white"
                   : "text-zinc-650 hover:text-black dark:text-zinc-450 dark:hover:text-white"
@@ -137,7 +137,7 @@ export default function App() {
                 setActiveTab("glossary");
                 setSelectedEssay(null);
               }}
-              className={`px-4 py-2 rounded font-serif font-bold text-xs uppercase tracking-wider flex items-center space-x-2 transition-all cursor-pointer ${
+              className={`px-4 py-2 min-h-[44px] rounded font-serif font-bold text-xs uppercase tracking-wider flex items-center space-x-2 transition-all cursor-pointer ${
                 activeTab === "glossary"
                   ? "bg-[#FCFAF7] border border-black/15 text-black shadow-xs dark:bg-[#1E1D1C] dark:border-white/15 dark:text-white"
                   : "text-zinc-650 hover:text-black dark:text-zinc-450 dark:hover:text-white"
@@ -153,7 +153,7 @@ export default function App() {
             {/* Theme mode button */}
             <button
               onClick={() => setThemeMode(themeMode === "light" ? "dark" : "light")}
-              className="p-1.5 rounded hover:bg-black/5 dark:hover:bg-white/5 text-zinc-550 dark:text-zinc-450 transition-all cursor-pointer"
+              className="p-2 min-h-[44px] flex items-center justify-center rounded hover:bg-black/5 dark:hover:bg-white/5 text-zinc-550 dark:text-zinc-450 transition-all cursor-pointer"
               title="Toggle editorial light/dark canvas theme"
               id="theme-toggle-btn"
             >
@@ -216,13 +216,13 @@ export default function App() {
                       <div className="flex flex-col sm:flex-row gap-3 z-10 w-full sm:w-auto">
                         <button
                           onClick={() => navigateToEssay(essays[0])}
-                          className="px-4 py-2 cursor-pointer border border-zinc-300 hover:bg-zinc-50 dark:border-zinc-800 dark:hover:bg-zinc-900 rounded font-display text-xs font-bold uppercase tracking-wider transition-all text-center"
+                          className="px-4 py-2 min-h-[44px] cursor-pointer border border-zinc-300 hover:bg-zinc-50 dark:border-zinc-800 dark:hover:bg-zinc-900 rounded font-display text-xs font-bold uppercase tracking-wider transition-all text-center"
                         >
                           Start at Part 1
                         </button>
                         <button
                           onClick={() => setActiveTab("draft")}
-                          className="px-4 py-2 cursor-pointer bg-amber-600 hover:bg-amber-500 text-zinc-950 rounded font-display text-xs font-bold uppercase tracking-wider transition-all hover:scale-[1.01] text-center"
+                          className="px-4 py-2 min-h-[44px] cursor-pointer bg-amber-600 hover:bg-amber-500 text-zinc-950 rounded font-display text-xs font-bold uppercase tracking-wider transition-all hover:scale-[1.01] text-center"
                         >
                           Co-write Part 6
                         </button>
@@ -286,7 +286,7 @@ export default function App() {
                           </p>
                           <button
                             onClick={() => setActiveTab("telemetry")}
-                            className="mt-3.5 w-full bg-zinc-800 hover:bg-zinc-700 text-zinc-100 border border-zinc-700 py-1.5 rounded font-mono text-[10px] uppercase font-bold tracking-wider text-center cursor-pointer transition-colors"
+                            className="mt-3.5 w-full bg-zinc-800 hover:bg-zinc-700 text-zinc-100 border border-zinc-700 py-1.5 min-h-[44px] flex items-center justify-center rounded font-mono text-[10px] uppercase font-bold tracking-wider text-center cursor-pointer transition-colors"
                           >
                             Launch Console
                           </button>

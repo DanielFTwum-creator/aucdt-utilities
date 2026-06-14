@@ -525,7 +525,7 @@ export default function EssayReader({ essay, onBack, onNext, onPrev, allEssays, 
       <div className="flex flex-wrap items-center justify-between gap-3 border-b border-black/10 pb-3.5 dark:border-white/10">
         <button
           onClick={onBack}
-          className="text-xs font-mono text-zinc-550 hover:text-black dark:text-zinc-400 dark:hover:text-[#F5F2EF] flex items-center gap-1 transition-colors cursor-pointer"
+          className="text-xs font-mono text-zinc-550 hover:text-black dark:text-zinc-400 dark:hover:text-[#F5F2EF] flex items-center gap-1 transition-colors cursor-pointer py-2 min-h-[44px]"
         >
           <ChevronLeft className="w-4 h-4" /> Back to list
         </button>
@@ -534,7 +534,7 @@ export default function EssayReader({ essay, onBack, onNext, onPrev, allEssays, 
           {/* Font Type Toggle */}
           <button
             onClick={() => setIsSerif(!isSerif)}
-            className={`p-1.5 border hover:bg-black/5 rounded text-xs px-2.5 font-mono flex items-center gap-1 dark:border-white/10 dark:hover:bg-white/5 cursor-pointer ${
+            className={`p-1.5 min-h-[44px] border hover:bg-black/5 rounded text-xs px-2.5 font-mono flex items-center gap-1 dark:border-white/10 dark:hover:bg-white/5 cursor-pointer ${
               isSerif ? "bg-amber-100/40 border-amber-300/60 text-amber-950 dark:bg-amber-950/20 dark:text-amber-400 dark:border-amber-900" : "bg-[#FCFAF7] text-zinc-650 dark:bg-[#1E1D1C]"
             }`}
             title="Toggle Serif/Sans font style"
@@ -549,7 +549,7 @@ export default function EssayReader({ essay, onBack, onNext, onPrev, allEssays, 
               <button
                 key={sz}
                 onClick={() => setFontSize(sz)}
-                className={`px-2 py-0.5 rounded text-[10px] font-mono cursor-pointer ${
+                className={`px-2 py-0.5 min-h-[44px] rounded text-[10px] font-mono cursor-pointer flex items-center ${
                   fontSize === sz
                     ? "bg-zinc-900 text-white dark:bg-zinc-50 dark:text-zinc-950"
                     : "text-zinc-500 hover:bg-black/5 dark:hover:bg-white/5"
@@ -563,7 +563,7 @@ export default function EssayReader({ essay, onBack, onNext, onPrev, allEssays, 
           {/* Toggle Full Reader Focus Mode */}
           <button
             onClick={() => setIsReaderMode(!isReaderMode)}
-            className={`p-1.5 border hover:bg-black/5 rounded text-xs dark:border-white/10 dark:hover:bg-white/5 cursor-pointer ${
+            className={`p-1.5 min-h-[44px] flex items-center justify-center border hover:bg-black/5 rounded text-xs dark:border-white/10 dark:hover:bg-white/5 cursor-pointer ${
               isReaderMode ? "bg-zinc-900 text-white border-zinc-800" : "bg-[#FCFAF7] text-zinc-650 dark:bg-[#1E1D1C]"
             }`}
             title="Toggle Reader focus display"
@@ -574,7 +574,7 @@ export default function EssayReader({ essay, onBack, onNext, onPrev, allEssays, 
           {/* Copy to Clipboard */}
           <button
             onClick={handleCopyToClipboard}
-            className={`p-1.5 border rounded text-xs px-2.5 font-mono flex items-center gap-1.5 transition-all duration-200 cursor-pointer ${
+            className={`p-1.5 min-h-[44px] border rounded text-xs px-2.5 font-mono flex items-center gap-1.5 transition-all duration-200 cursor-pointer ${
               copied
                 ? "bg-emerald-100/50 border-emerald-300 text-emerald-800 dark:bg-emerald-950/30 dark:border-emerald-900 dark:text-emerald-400 font-bold"
                 : "bg-[#FCFAF7] border-black/10 text-zinc-650 hover:bg-black/5 dark:bg-[#1E1D1C] dark:border-white/10 dark:hover:bg-white/5"
@@ -744,7 +744,7 @@ export default function EssayReader({ essay, onBack, onNext, onPrev, allEssays, 
           {onPrev ? (
             <button
               onClick={onPrev}
-              className="px-3.5 py-2 border border-zinc-200 hover:bg-zinc-50 dark:border-zinc-800 dark:hover:bg-zinc-900 rounded text-xs font-mono text-zinc-600 dark:text-zinc-400 flex items-center gap-1 transition-all cursor-pointer"
+              className="px-3.5 py-2 min-h-[44px] border border-zinc-200 hover:bg-zinc-50 dark:border-zinc-800 dark:hover:bg-zinc-900 rounded text-xs font-mono text-zinc-600 dark:text-zinc-400 flex items-center gap-1 transition-all cursor-pointer"
             >
               <ChevronLeft className="w-4 h-4" /> Previous Chapter
             </button>
@@ -757,7 +757,7 @@ export default function EssayReader({ essay, onBack, onNext, onPrev, allEssays, 
           {onNext ? (
             <button
               onClick={onNext}
-              className="px-3.5 py-2 border border-zinc-250 hover:bg-zinc-50 dark:border-zinc-800 dark:hover:bg-zinc-900 rounded text-xs font-mono text-zinc-600 dark:text-zinc-400 flex items-center gap-1 transition-all cursor-pointer"
+              className="px-3.5 py-2 min-h-[44px] border border-zinc-250 hover:bg-zinc-50 dark:border-zinc-800 dark:hover:bg-zinc-900 rounded text-xs font-mono text-zinc-600 dark:text-zinc-400 flex items-center gap-1 transition-all cursor-pointer"
             >
               Next Chapter <ArrowRight className="w-4 h-4" />
             </button>

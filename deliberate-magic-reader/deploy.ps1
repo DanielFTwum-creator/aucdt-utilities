@@ -55,9 +55,9 @@ cd $buildDir
 git sparse-checkout set deliberate-magic-reader
 cd deliberate-magic-reader
 log '[3/5] Installing dependencies...'
-pnpm install --no-frozen-lockfile --silent 2>/dev/null || npm install --silent
+pnpm install --no-frozen-lockfile 2>&1 | tail -5 || true
 log '[4/5] Building...'
-pnpm build
+./node_modules/.bin/vite build
 log '[5/5] Deploying dist/ to web root...'
 mkdir -p $RemotePath
 rsync -a --delete --exclude='.env' --exclude='node_modules/' --exclude='server.ts' --exclude='server.cjs' --exclude='server.js' --exclude='package.json' --exclude='pnpm-lock.yaml' --exclude='pnpm-workspace.yaml' --exclude='ecosystem.config.js' --exclude='.htaccess' dist/. $RemotePath

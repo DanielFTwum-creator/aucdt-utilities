@@ -59,7 +59,7 @@ export default function Header() {
 
   return (
     <header className="border-b border-black/15 bg-[#F9F7F4]/90 sticky top-0 z-50 transition-colors duration-300 dark:border-white/15 dark:bg-[#121110]/95 backdrop-blur-xs">
-      <div className="max-w-6xl mx-auto px-6 py-5">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-5">
         {/* Editorial Metadata Bar */}
         <div className="flex flex-wrap justify-between items-center text-[10px] tracking-[0.2em] font-mono font-bold uppercase text-gray-500 border-b border-black/10 pb-3 mb-4 dark:border-white/10 dark:text-zinc-400">
           <div className="flex items-center space-x-4">
@@ -104,7 +104,7 @@ export default function Header() {
                   return "default";
                 });
               }}
-              className={`flex items-center gap-1.5 text-xs font-mono px-3 py-1.5 rounded border transition-all cursor-pointer ${
+              className={`flex items-center gap-1.5 text-xs font-mono px-3 py-1.5 min-h-[44px] rounded border transition-all cursor-pointer ${
                 accessibilityMode === "amber-highlight"
                   ? "bg-amber-100 dark:bg-amber-950/40 text-amber-900 dark:text-amber-400 border-amber-500/50"
                   : accessibilityMode === "high-contrast-blue"
@@ -136,7 +136,7 @@ export default function Header() {
             <div className="relative inline-block text-left" id="font-theme-dropdown-container">
               <button
                 onClick={() => setDropdownOpen(!dropdownOpen)}
-                className={`flex items-center gap-1.5 text-xs font-mono px-3 py-1.5 rounded border transition-all cursor-pointer ${
+                className={`flex items-center gap-1.5 text-xs font-mono px-3 py-1.5 min-h-[44px] rounded border transition-all cursor-pointer ${
                   dropdownOpen
                     ? "bg-amber-100 dark:bg-amber-950/40 text-amber-900 dark:text-amber-400 border-amber-500/50"
                     : "bg-black/5 dark:bg-white/5 text-zinc-650 dark:text-zinc-400 border-black/10 dark:border-white/10 hover:bg-black/10 dark:hover:bg-white/10"
@@ -167,7 +167,7 @@ export default function Header() {
                         setFontTheme("serif");
                         setDropdownOpen(false);
                       }}
-                      className={`w-full text-left px-4 py-2 text-xs font-serif hover:bg-black/5 dark:hover:bg-white/5 cursor-pointer flex items-center justify-between ${
+                      className={`w-full text-left px-4 py-2 min-h-[44px] text-xs font-serif hover:bg-black/5 dark:hover:bg-white/5 cursor-pointer flex items-center justify-between ${
                         fontTheme === "serif" ? "text-amber-600 font-bold" : "text-zinc-805 dark:text-zinc-205"
                       }`}
                       id="font-theme-option-serif"
@@ -181,7 +181,7 @@ export default function Header() {
                         setFontTheme("sans");
                         setDropdownOpen(false);
                       }}
-                      className={`w-full text-left px-4 py-2 text-xs font-sans hover:bg-black/5 dark:hover:bg-white/5 cursor-pointer flex items-center justify-between ${
+                      className={`w-full text-left px-4 py-2 min-h-[44px] text-xs font-sans hover:bg-black/5 dark:hover:bg-white/5 cursor-pointer flex items-center justify-between ${
                         fontTheme === "sans" ? "text-amber-600 font-bold" : "text-zinc-805 dark:text-zinc-205"
                       }`}
                       id="font-theme-option-sans"
@@ -195,7 +195,7 @@ export default function Header() {
                         setFontTheme("mono");
                         setDropdownOpen(false);
                       }}
-                      className={`w-full text-left px-4 py-2 text-xs font-mono hover:bg-black/5 dark:hover:bg-white/5 cursor-pointer flex items-center justify-between ${
+                      className={`w-full text-left px-4 py-2 min-h-[44px] text-xs font-mono hover:bg-black/5 dark:hover:bg-white/5 cursor-pointer flex items-center justify-between ${
                         fontTheme === "mono" ? "text-amber-600 font-bold" : "text-zinc-805 dark:text-zinc-205"
                       }`}
                       id="font-theme-option-mono"
