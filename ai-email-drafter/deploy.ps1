@@ -115,7 +115,7 @@ git sparse-checkout set ${SUBFOLDER}
 cd ${SUBFOLDER}
 
 log '[3/5] Installing dependencies...'
-pnpm install --no-frozen-lockfile --silent 2>/dev/null || npm install --silent
+pnpm install --no-frozen-lockfile 2>&1 | tail -5 || true
 
 # Inject build-time env
 if [ -f /tmp/.env.${PM2_APP}.build ]; then
@@ -126,7 +126,7 @@ else
 fi
 
 log '[4/5] Building...'
-pnpm build
+./node_modules/.bin/vite build
 
 log '[5/5] Deploying dist/ to web root...'
 mkdir -p "`$DEPLOY_PATH"

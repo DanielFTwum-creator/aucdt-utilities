@@ -40,8 +40,8 @@ const AdminLoginModal: React.FC<{ onClose: () => void; onSuccess: () => void }> 
             {error && <p id="admin-err" role="alert" className="mt-1 text-xs text-red-500">{error}</p>}
           </div>
           <div className="flex gap-3 pt-2">
-            <button type="submit" className="flex-1 bg-blue-600 text-white py-2 rounded-md text-sm font-semibold hover:bg-blue-700 transition-colors">Authenticate</button>
-            <button type="button" onClick={onClose} className="px-4 border border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-400 py-2 rounded-md text-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">Cancel</button>
+            <button type="submit" className="flex-1 bg-blue-600 text-white py-2 min-h-[44px] rounded-md text-sm font-semibold hover:bg-blue-700 transition-colors">Authenticate</button>
+            <button type="button" onClick={onClose} className="px-4 border border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-400 py-2 min-h-[44px] rounded-md text-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">Cancel</button>
           </div>
         </form>
       </div>
@@ -70,12 +70,12 @@ const AdminDashboard: React.FC<{ onClose: () => void }> = ({ onClose }) => {
       <div className="max-w-4xl mx-auto p-8 space-y-6">
         <div className="flex items-center justify-between border-b border-gray-200 dark:border-gray-700 pb-6">
           <h1 className="text-xl font-bold text-gray-900 dark:text-white">Admin Dashboard — AI Email Drafter</h1>
-          <button onClick={handleLogout} aria-label="Logout from admin" className="px-4 py-2 bg-red-100 text-red-700 rounded-md text-sm font-medium hover:bg-red-200 transition-colors">Logout</button>
+          <button onClick={handleLogout} aria-label="Logout from admin" className="px-4 py-2 min-h-[44px] bg-red-100 text-red-700 rounded-md text-sm font-medium hover:bg-red-200 transition-colors">Logout</button>
         </div>
         <div role="tablist" aria-label="Admin sections" className="flex gap-2">
           {(['logs', 'diagnostics'] as const).map(t => (
             <button key={t} role="tab" aria-selected={tab === t} onClick={() => setTab(t)}
-              className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${tab === t ? 'bg-blue-600 text-white' : 'bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'}`}>
+              className={`px-4 py-2 min-h-[44px] rounded-md text-sm font-medium transition-colors ${tab === t ? 'bg-blue-600 text-white' : 'bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'}`}>
               {t === 'logs' ? 'Audit Log' : 'Diagnostics'}
             </button>
           ))}
@@ -105,7 +105,7 @@ const AdminDashboard: React.FC<{ onClose: () => void }> = ({ onClose }) => {
               <div><p className="text-sm font-medium text-gray-900 dark:text-white">LocalStorage Access</p><p className="text-xs text-gray-500">Verifies browser storage read/write</p></div>
               <div className="flex items-center gap-3">
                 {storageTest !== 'idle' && <span role="status" className={`text-xs font-bold px-2 py-1 rounded ${storageTest === 'pass' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>{storageTest.toUpperCase()}</span>}
-                <button onClick={runStorageTest} className="px-3 py-1.5 bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-700 text-blue-600 dark:text-blue-400 rounded text-xs font-medium hover:bg-blue-100 transition-colors">Run Test</button>
+                <button onClick={runStorageTest} className="px-3 py-1.5 min-h-[44px] bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-700 text-blue-600 dark:text-blue-400 rounded text-xs font-medium hover:bg-blue-100 transition-colors">Run Test</button>
               </div>
             </div>
             <div className="flex items-center justify-between p-4 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg">
@@ -244,7 +244,7 @@ const App: React.FC = () => {
     <div className="min-h-screen bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100 p-4 sm:p-6 lg:p-8">
       <div className="max-w-4xl mx-auto">
         <header className="mb-6" role="banner">
-          <h1 className="text-3xl font-bold text-gray-800 dark:text-white flex items-center gap-3">
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 dark:text-white flex items-center gap-3">
             <SparklesIcon className="w-8 h-8 text-blue-500" />
             <span>AI Email Drafter</span>
           </h1>
@@ -254,7 +254,7 @@ const App: React.FC = () => {
         </header>
 
         <div className="mb-6 border-b border-gray-200 dark:border-gray-700">
-          <nav className="-mb-px flex space-x-8" aria-label="Tabs">
+          <nav className="-mb-px flex space-x-4 sm:space-x-8 overflow-x-auto" aria-label="Tabs">
             <button
               onClick={() => setActiveTab('composer')}
               className={`whitespace-nowrap flex py-4 px-1 border-b-2 font-medium text-sm focus:outline-none ${
@@ -291,8 +291,8 @@ const App: React.FC = () => {
                             {showBcc && <RecipientInput recipients={emailData.bcc} setRecipients={handleRecipientsChange('bcc')} placeholder="Bcc" />}
                         </div>
                         <div className="flex-shrink-0 ml-4 space-x-2">
-                            <button onClick={() => setShowCc(!showCc)} className={`px-2 py-1 rounded ${showCc ? 'font-semibold' : ''}`}>Cc</button>
-                            <button onClick={() => setShowBcc(!showBcc)} className={`px-2 py-1 rounded ${showBcc ? 'font-semibold' : ''}`}>Bcc</button>
+                            <button onClick={() => setShowCc(!showCc)} className={`px-2 py-1 min-h-[44px] rounded ${showCc ? 'font-semibold' : ''}`}>Cc</button>
+                            <button onClick={() => setShowBcc(!showBcc)} className={`px-2 py-1 min-h-[44px] rounded ${showBcc ? 'font-semibold' : ''}`}>Bcc</button>
                         </div>
                     </div>
 
@@ -327,7 +327,7 @@ const App: React.FC = () => {
                 <div className="bg-gray-50 dark:bg-gray-800/50 p-4 sm:p-6 flex flex-col sm:flex-row justify-between items-center gap-4 border-t border-gray-200 dark:border-gray-700">
                     <button
                     onClick={() => fileInputRef.current?.click()}
-                    className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                    className="flex items-center gap-2 px-4 py-2 min-h-[44px] text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                     >
                     <PaperclipIcon className="w-5 h-5" />
                     Attach Image
@@ -383,7 +383,7 @@ const App: React.FC = () => {
                                 <div className="mt-4 text-right">
                                     <button
                                         onClick={handleCopyDraft}
-                                        className="px-4 py-2 text-sm font-medium text-white bg-green-600 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+                                        className="px-4 py-2 min-h-[44px] text-sm font-medium text-white bg-green-600 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
                                     >
                                         Copy Draft
                                     </button>
