@@ -114,7 +114,7 @@ const TestPanel: React.FC = () => {
                 const ai = new GoogleGenAI({ apiKey: process.env.API_KEY as string });
                 // Set budget to 1024 to satisfy models that require non-zero budget
                 await ai.models.generateContent({ 
-                    model: "gemini-3-flash-preview", 
+                    model: "gemini-2.5-flash",
                     contents: 'Health check: return "OK"',
                     config: { thinkingConfig: { thinkingBudget: 1024 } }
                 });

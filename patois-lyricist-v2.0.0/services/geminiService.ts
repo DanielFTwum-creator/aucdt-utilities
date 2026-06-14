@@ -236,7 +236,7 @@ ${SELF_AUDIT}
   for (let i = 0; i < MAX_RETRIES; i++) {
     try {
       const response = await ai.models.generateContent({
-        model: "gemini-3.1-pro-preview",
+        model: "gemini-2.5-pro",
         contents: prompt,
         config: {
           systemInstruction: SYSTEM_INSTRUCTION,
