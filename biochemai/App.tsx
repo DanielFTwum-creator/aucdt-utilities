@@ -374,14 +374,14 @@ function AppContent() {
       />
       {/* Chat layout: left stat nav + scrollable main content */}
       {mode === AppMode.Chat ? (
-        <div className="flex flex-col md:flex-row flex-1 overflow-hidden w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 gap-6">
+        <div className="flex flex-col md:flex-row flex-1 overflow-hidden w-full px-4 sm:px-6 lg:px-8 py-6 gap-6">
           <HeroStats />
           <main className="flex-1 overflow-y-auto custom-scrollbar">
             {renderCurrentMode()}
           </main>
         </div>
       ) : (
-        <main className={`w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-4 md:py-8 ${mode === AppMode.Voice ? 'flex-1 overflow-y-auto custom-scrollbar' : ''}`}>
+        <main className={`w-full px-4 sm:px-6 lg:px-8 py-4 md:py-8 ${mode === AppMode.Voice ? 'flex-1 overflow-y-auto custom-scrollbar' : ''}`}>
           {renderCurrentMode()}
         </main>
       )}

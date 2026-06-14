@@ -14,12 +14,18 @@
         background: radial-gradient(circle at 50% 50%, #fafafa 0%, #f4f4f5 100%) !important;
         margin: 0;
         padding: 0;
+        font-family: 'Inter', sans-serif;
+        overflow: hidden;
+      }
+      #root {
+        width: 100%;
+        min-height: 100vh;
+      }
+      .orbit-splash-container {
         display: flex;
         align-items: center;
         justify-content: center;
         min-height: 100vh;
-        font-family: 'Inter', sans-serif;
-        overflow: hidden;
       }
       .orbit-splash {
         text-align: center;
@@ -91,10 +97,12 @@
   </head>
   <body>
     <div id="root">
-      <div class="orbit-splash">
-        <span class="orbit-logo">Orbit <span>Walk</span></span>
-        <div class="orbit-status">Wellness Reminder</div>
-        <div class="orbit-loading"></div>
+      <div class="orbit-splash-container">
+        <div class="orbit-splash">
+          <span class="orbit-logo">Orbit <span>Walk</span></span>
+          <div class="orbit-status">Wellness Reminder</div>
+          <div class="orbit-loading"></div>
+        </div>
       </div>
     </div>
     <script type="module" src="/src/main.tsx"></script>
