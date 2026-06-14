@@ -33,17 +33,32 @@
 (async () => {
   const msg = document.getElementById('msg');
   const fail = (html) => { msg.classList.remove('dots'); msg.classList.add('err'); msg.innerHTML = html; };
+
+  const fetchWithTimeout = (url, opts, ms = 10000) => {
+    const ctrl = new AbortController();
+    const t = setTimeout(() => ctrl.abort(), ms);
+    return fetch(url, { ...opts, signal: ctrl.signal }).finally(() => clearTimeout(t));
+  };
+
   try {
-    const r = await fetch('/api/auth/refresh', { method: 'POST', credentials: 'include' });
-    if (!r.ok) { fail('You are not signed in. <a href="/">Sign in to WMS</a>, then reopen this page.'); return; }
+    const r = await fetchWithTimeout('/api/auth/refresh', { method: 'POST', credentials: 'include' });
+    if (r.status === 401 || r.status === 403) {
+      fail('You are not signed in. <a href="/">Sign in to WMS</a>, then reopen this page.');
+      return;
+    }
+    if (!r.ok) { fail('WMS backend error (HTTP ' + r.status + '). Try again shortly.'); return; }
     const { access_token } = await r.json();
-    const doc = await fetch('/api/admin/docs/sso-handbook', { headers: { Authorization: 'Bearer ' + access_token } });
+    const doc = await fetchWithTimeout('/api/admin/docs/sso-handbook', { headers: { Authorization: 'Bearer ' + access_token } });
     if (doc.status === 403) { fail('This document is restricted to System Administrators.'); return; }
     if (!doc.ok) { fail('Could not load the handbook (HTTP ' + doc.status + '). Try again shortly.'); return; }
     const html = await doc.text();
     document.open(); document.write(html); document.close();
   } catch (e) {
-    fail('Network error — is WMS reachable? Try again shortly.');
+    if (e.name === 'AbortError') {
+      fail('WMS backend timed out. The service may be down — check <code>systemctl status tuc-wms</code> on the server.');
+    } else {
+      fail('Network error — is WMS reachable? Try again shortly.');
+    }
   }
 })();
 </script>
