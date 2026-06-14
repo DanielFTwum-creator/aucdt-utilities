@@ -96,4 +96,14 @@ export class RecordingStore {
       req.onerror = () => resolve([]);
     });
   }
+
+  async deleteNote(id: string): Promise<void> {
+    if (!this.db) return;
+    return new Promise((resolve) => {
+      const tx = this.db!.transaction(this.HISTORY_STORE, 'readwrite');
+      tx.objectStore(this.HISTORY_STORE).delete(id);
+      tx.oncomplete = () => resolve();
+      tx.onerror = () => resolve();
+    });
+  }
 }

@@ -6,7 +6,7 @@ import { useTheme } from './src/contexts/ThemeContext';
 import { Header } from './src/components/shared/Header';
 import { Button } from './src/components/shared/Button';
 import { Tabs } from './src/components/shared/Tabs';
-import { Mic, Plus, X, ChevronRight, ChevronLeft, Mic2, FileText, Sparkles, Download } from 'lucide-react';
+import { Mic, Plus, X, ChevronRight, ChevronLeft, Mic2, FileText, Sparkles, Download, Clock, Trash2 } from 'lucide-react';
 
 // ── Dismissible Onboarding Tutorial ─────────────────────────────
 const TUTORIAL_KEY = 'dictation_tutorial_dismissed_v1';
@@ -172,6 +172,8 @@ export default function App() {
   const [activeTab, setActiveTab] = useState<'polished' | 'raw'>('polished');
   const [exportOpen, setExportOpen] = useState(false);
   const [exportingMp3, setExportingMp3] = useState(false);
+  const [showHistory, setShowHistory] = useState(false);
+  const [historyNotes, setHistoryNotes] = useState<Note[]>([]);
   const [currentNote, setCurrentNote] = useState<Note>({
     id: 'new',
     title: '',
@@ -538,6 +540,25 @@ export default function App() {
     setRecordingTimeMs(0);
   };
 
+  const openHistory = async () => {
+    const notes = await store.loadHistory();
+    setHistoryNotes(notes);
+    setShowHistory(true);
+  };
+
+  const loadFromHistory = (note: Note) => {
+    setCurrentNote(note);
+    setStatus('Complete');
+    setRecordedBlob(null);
+    setShowHistory(false);
+  };
+
+  const deleteFromHistory = async (id: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    await store.deleteNote(id);
+    setHistoryNotes(prev => prev.filter(n => n.id !== id));
+  };
+
   const formatTime = (ms: number) => {
     const totalSeconds = Math.floor(ms / 1000);
     const mins = Math.floor(totalSeconds / 60).toString().padStart(2, '0');
@@ -626,6 +647,22 @@ export default function App() {
                   )}
                 </div>
               )}
+              {/* History */}
+              <button
+                type="button"
+                onClick={openHistory}
+                title="Session history"
+                aria-label="Session history"
+                className="w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-200"
+                style={{
+                  background: 'rgba(var(--accent-rgb),0.05)',
+                  border: '1px solid rgba(var(--accent-rgb),0.1)',
+                  color: 'var(--text-secondary)',
+                }}
+              >
+                <Clock className="w-3.5 h-3.5" />
+              </button>
+
               {/* New note */}
               <button
                 onClick={handleNewNote}
@@ -835,6 +872,97 @@ export default function App() {
           </div>
         </div>
       </main>
+
+      {/* ── Session History Panel ─────────────────────────────── */}
+      {showHistory && (
+        <>
+          <div
+            className="fixed inset-0 z-50"
+            style={{ background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(4px)' }}
+            onClick={() => setShowHistory(false)}
+            aria-hidden
+          />
+          <div
+            role="dialog"
+            aria-label="Session History"
+            className="fixed right-0 top-0 h-full z-50 flex flex-col w-full max-w-sm"
+            style={{
+              background: 'var(--ds-surface)',
+              borderLeft: '1px solid rgba(var(--accent-rgb),0.15)',
+              boxShadow: '-12px 0 48px rgba(0,0,0,0.6)',
+            }}
+          >
+            {/* Panel header */}
+            <div
+              className="flex items-center justify-between px-5 py-4 flex-shrink-0"
+              style={{ borderBottom: '1px solid rgba(var(--accent-rgb),0.1)' }}
+            >
+              <div className="flex items-center gap-2">
+                <Clock className="w-4 h-4" style={{ color: 'var(--cyan)' }} />
+                <span className="font-mono text-sm font-semibold tracking-wide" style={{ color: 'var(--text-primary)' }}>
+                  Session History
+                </span>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowHistory(false)}
+                aria-label="Close history panel"
+                className="w-7 h-7 rounded-lg flex items-center justify-center transition-colors"
+                style={{ background: 'rgba(var(--accent-rgb),0.06)', color: 'var(--text-muted)' }}
+              >
+                <X className="w-3.5 h-3.5" />
+              </button>
+            </div>
+
+            {/* Notes list */}
+            <div className="flex-1 overflow-y-auto">
+              {historyNotes.length === 0 ? (
+                <div className="flex flex-col items-center justify-center h-full text-center px-8 gap-3">
+                  <FileText className="w-8 h-8" style={{ color: 'var(--text-muted)' }} />
+                  <p className="text-sm leading-relaxed" style={{ color: 'var(--text-muted)' }}>
+                    No past sessions yet.<br />Completed recordings appear here.
+                  </p>
+                </div>
+              ) : (
+                historyNotes.map(note => (
+                  <button
+                    key={note.id}
+                    type="button"
+                    onClick={() => loadFromHistory(note)}
+                    className="group w-full text-left px-5 py-4 flex flex-col gap-1.5 transition-colors hover:bg-white/5"
+                    style={{ borderBottom: '1px solid rgba(var(--accent-rgb),0.06)' }}
+                  >
+                    <div className="flex items-start justify-between gap-2">
+                      <span className="text-sm font-semibold leading-snug flex-1" style={{ color: 'var(--text-primary)' }}>
+                        {note.title || 'Untitled Session'}
+                      </span>
+                      <button
+                        type="button"
+                        onClick={(e) => deleteFromHistory(note.id, e)}
+                        aria-label="Delete this note"
+                        className="w-6 h-6 rounded flex items-center justify-center flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity"
+                        style={{ color: 'var(--text-muted)' }}
+                        onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.color = '#F87171'; }}
+                        onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.color = 'var(--text-muted)'; }}
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+                    <span className="text-[10px] font-mono" style={{ color: 'var(--text-muted)' }}>
+                      {new Date(note.timestamp).toLocaleString()}
+                    </span>
+                    {(note.polishedNote || note.rawTranscription) && (
+                      <p className="text-xs leading-relaxed line-clamp-2 mt-0.5" style={{ color: 'var(--text-secondary)' }}>
+                        {htmlToPlainText(note.polishedNote || '').slice(0, 150) || note.rawTranscription.slice(0, 150)}
+                      </p>
+                    )}
+                  </button>
+                ))
+              )}
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 }
