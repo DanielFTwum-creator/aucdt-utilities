@@ -55,16 +55,22 @@
 
     <!-- Splash Screen Styles -->
     <style id="tutor-splash-styles">
-      body { 
-        background: radial-gradient(circle at 50% 50%, #fafafa 0%, #f4f4f5 100%) !important; 
-        margin: 0; 
-        padding: 0; 
-        display: flex; 
-        align-items: center; 
-        justify-content: center; 
-        min-height: 100vh; 
-        font-family: 'Inter', sans-serif; 
-        overflow: hidden; 
+      body {
+        background: radial-gradient(circle at 50% 50%, #fafafa 0%, #f4f4f5 100%) !important;
+        margin: 0;
+        padding: 0;
+        font-family: 'Inter', sans-serif;
+        overflow: hidden;
+      }
+      #root {
+        width: 100%;
+        min-height: 100vh;
+      }
+      .tutor-splash-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
       }
       .tutor-splash { 
         text-align: center; 
@@ -140,10 +146,12 @@
     <a href="#main-content" class="skip-to-main">Skip to main content</a>
     
     <div id="root">
-      <div class="tutor-splash">
-        <span class="tutor-logo">Typing <span>Tutor</span></span>
-        <div class="tutor-status">Touch Typing Speed Academy</div>
-        <div class="tutor-loading"></div>
+      <div class="tutor-splash-container">
+        <div class="tutor-splash">
+          <span class="tutor-logo">Typing <span>Tutor</span></span>
+          <div class="tutor-status">Touch Typing Speed Academy</div>
+          <div class="tutor-loading"></div>
+        </div>
       </div>
     </div>
 

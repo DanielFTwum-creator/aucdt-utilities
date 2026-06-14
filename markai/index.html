@@ -249,12 +249,17 @@
         background: radial-gradient(circle at 50% 50%, #fafafa 0%, #f4f4f5 100%) !important;
         margin: 0;
         padding: 0;
+        font-family: 'Inter', sans-serif;
+        overflow: hidden;
+      }
+      #root {
+        width: 100%;
+      }
+      .markai-splash-container {
         display: flex;
         align-items: center;
         justify-content: center;
         min-height: 100vh;
-        font-family: 'Inter', sans-serif;
-        overflow: hidden;
       }
       .markai-splash {
         text-align: center;
@@ -327,10 +332,12 @@
   <body>
     <a href="#main-content" class="skip-link">Skip to main content</a>
     <div id="root">
-      <div class="markai-splash">
-        <span class="markai-logo">Mark <span>AI</span></span>
-        <div class="markai-status">Marketing Platform</div>
-        <div class="markai-loading"></div>
+      <div class="markai-splash-container">
+        <div class="markai-splash">
+          <span class="markai-logo">Mark <span>AI</span></span>
+          <div class="markai-status">Marketing Platform</div>
+          <div class="markai-loading"></div>
+        </div>
       </div>
     </div>
     <script type="module" src="./index.tsx"></script>
