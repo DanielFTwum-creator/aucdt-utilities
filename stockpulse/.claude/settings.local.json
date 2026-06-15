@@ -1,9 +1,0 @@
-{
-  "permissions": {
-    "allow": [
-      "Read(//c/Development/aucdt-utilities/node_modules/.bin/**)",
-      "Bash(npx tsc *)",
-      "Bash(cmd *)"
-    ]
-  }
-}
