@@ -262,10 +262,11 @@ export default function App() {
         onThemeChange={handleThemeChange}
         onNavigate={handleNavigate}
         activeTab={selectedLesson ? "lessons" : activeTab}
+        minimal={!!selectedLesson}
       />
 
       {/* Primary viewport content */}
-      <main className="w-full px-4 sm:px-6 lg:px-8 py-8 animate-fade-in">
+      <main className={`w-full px-4 sm:px-6 lg:px-8 animate-fade-in ${selectedLesson ? "py-3" : "py-8"}`}>
         
         {/* If a lessons row practice has been chosen, lock view strictly to the exercise canvas bounds */}
         {selectedLesson ? (

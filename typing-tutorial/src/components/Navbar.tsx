@@ -7,9 +7,12 @@ interface NavbarProps {
   onThemeChange: (theme: ThemeMode) => void;
   onNavigate: (tab: string) => void;
   activeTab: string;
+  /** Slim header during an active exercise — hides stats/tabs so the
+   *  typing keyboard & hand diagram are visible without scrolling. */
+  minimal?: boolean;
 }
 
-export default function Navbar({ progress, theme, onThemeChange, onNavigate, activeTab }: NavbarProps) {
+export default function Navbar({ progress, theme, onThemeChange, onNavigate, activeTab, minimal = false }: NavbarProps) {
   const getThemeIcon = (mode: ThemeMode) => {
     switch (mode) {
       case "light":
@@ -34,30 +37,33 @@ export default function Navbar({ progress, theme, onThemeChange, onNavigate, act
 
   return (
     <header className="border-b border-zinc-200 dark:border-white/5 bg-white dark:bg-[#050608]/90 backdrop-blur-xl transition-colors duration-300">
-      <div className="w-full px-4 sm:px-6 lg:px-8 py-5">
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-5">
-          
+      <div className={`w-full px-4 sm:px-6 lg:px-8 ${minimal ? "py-2" : "py-5"}`}>
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 md:gap-5">
+
           {/* Logo / Title */}
           <div className="flex items-center space-x-3.5">
-            <div className="w-10 h-10 rounded-xl bg-sky-600/10 dark:bg-cyan-500/20 flex items-center justify-center border border-sky-600/30 dark:border-cyan-500/40 shadow-sm dark:shadow-[0_0_15px_rgba(6,182,212,0.3)]">
-              <div className="w-4 h-4 bg-sky-600 dark:bg-cyan-400 rounded-sm"></div>
+            <div className={`rounded-xl bg-sky-600/10 dark:bg-cyan-500/20 flex items-center justify-center border border-sky-600/30 dark:border-cyan-500/40 shadow-sm dark:shadow-[0_0_15px_rgba(6,182,212,0.3)] ${minimal ? "w-7 h-7" : "w-10 h-10"}`}>
+              <div className={`bg-sky-600 dark:bg-cyan-400 rounded-sm ${minimal ? "w-3 h-3" : "w-4 h-4"}`}></div>
             </div>
             <div>
-              <div className="flex items-center space-x-2">
-                <span className="text-[10px] font-bold uppercase tracking-widest text-sky-600 dark:text-cyan-400">
-                  Techbridge University College
-                </span>
-                <span className="px-1.5 py-0.5 text-[9px] bg-sky-100 dark:bg-cyan-950/40 text-sky-800 dark:text-cyan-300 rounded font-mono font-bold tracking-wider border border-transparent dark:border-cyan-500/20">
-                  OYIBI, GHANA
-                </span>
-              </div>
-              <h1 id="appHeaderTitle" className="text-xl sm:text-2xl font-black tracking-tight text-zinc-900 dark:text-white uppercase">
-                Vortex Type / <span className="text-sky-600 dark:text-cyan-400 font-mono text-lg font-light tracking-wide lowercase">typing protocol</span>
+              {!minimal && (
+                <div className="flex items-center space-x-2">
+                  <span className="text-[10px] font-bold uppercase tracking-widest text-sky-600 dark:text-cyan-400">
+                    Techbridge University College
+                  </span>
+                  <span className="px-1.5 py-0.5 text-[9px] bg-sky-100 dark:bg-cyan-950/40 text-sky-800 dark:text-cyan-300 rounded font-mono font-bold tracking-wider border border-transparent dark:border-cyan-500/20">
+                    OYIBI, GHANA
+                  </span>
+                </div>
+              )}
+              <h1 id="appHeaderTitle" className={`font-black tracking-tight text-zinc-900 dark:text-white uppercase ${minimal ? "text-sm" : "text-xl sm:text-2xl"}`}>
+                Vortex Type / <span className={`text-sky-600 dark:text-cyan-400 font-mono font-light tracking-wide lowercase ${minimal ? "text-xs" : "text-lg"}`}>typing protocol</span>
               </h1>
             </div>
           </div>
 
           {/* Quick Stats Summary */}
+          {!minimal && (
           <div className="flex flex-wrap items-center gap-3 sm:gap-4 text-xs">
             {/* Level */}
             <div className="flex items-center space-x-2 px-3.5 py-1.5 bg-zinc-100 dark:bg-slate-900/40 rounded-lg border border-zinc-200 dark:border-white/5 hover:border-cyan-500/20 transition-all">
@@ -112,10 +118,31 @@ export default function Navbar({ progress, theme, onThemeChange, onNavigate, act
               </div>
             </div>
           </div>
+          )}
+
+          {/* Compact theme toggle shown in minimal (in-exercise) mode */}
+          {minimal && (
+            <div className="relative inline-flex items-center">
+              <select
+                id="themeSelectDropdown"
+                value={theme}
+                onChange={(e) => onThemeChange(e.target.value as ThemeMode)}
+                className="pl-7 pr-2.5 py-1 bg-zinc-100 dark:bg-slate-900/40 border border-zinc-300 dark:border-white/10 text-zinc-800 dark:text-zinc-200 rounded-lg text-[11px] font-semibold focus:outline-none focus:ring-1 focus:ring-cyan-500 appearance-none cursor-pointer hover:border-cyan-500/40 transition-all"
+              >
+                <option value="light" className="dark:bg-[#050608]">☀️ Light Mode</option>
+                <option value="dark" className="dark:bg-[#050608]">🌙 Dark Mode</option>
+                <option value="high-contrast" className="dark:bg-[#050608]">👁️ High Contrast</option>
+              </select>
+              <div className="absolute left-2 pointer-events-none">
+                {getThemeIcon(theme)}
+              </div>
+            </div>
+          )}
 
         </div>
 
         {/* Global Tab Navigation */}
+        {!minimal && (
         <div className="mt-5 flex flex-wrap border-t border-zinc-100 dark:border-white/5 pt-3.5 gap-1.5">
           <button
             id="navLessonsTabButton"
@@ -173,6 +200,7 @@ export default function Navbar({ progress, theme, onThemeChange, onNavigate, act
             📄 Specifications & Docs
           </button>
         </div>
+        )}
 
       </div>
     </header>
