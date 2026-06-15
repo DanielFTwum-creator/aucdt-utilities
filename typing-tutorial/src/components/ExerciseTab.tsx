@@ -616,17 +616,17 @@ export default function ExerciseTab({ lesson, progress, onFinish, onBack }: Exer
           />
         </div>
 
-        <div className="space-y-2.5 max-w-3xl mx-auto font-mono">
+        <div className="space-y-3 max-w-4xl mx-auto font-mono">
           {keyboardRows.map((row, rIdx) => (
-            <div key={rIdx} className="flex justify-center space-x-2.5">
+            <div key={rIdx} className="flex justify-center space-x-3">
               {row.map((key) => {
                 const isActive = nextTargetChar === key;
                 return (
                   <div
                     key={key}
-                    className={`w-12 h-12 sm:w-16 sm:h-16 flex items-center justify-center rounded-lg text-sm sm:text-lg font-bold border transition-all ${
+                    className={`w-14 h-14 sm:w-20 sm:h-20 flex items-center justify-center rounded-lg text-base sm:text-2xl font-bold border-2 transition-all ${
                       isActive
-                        ? "bg-sky-500 border-sky-600 text-white scale-110 shadow-lg animate-pulse dark:bg-cyan-500/30 dark:border-cyan-400/50 dark:shadow-[0_0_20px_rgba(34,211,238,0.3)] dark:text-white"
+                        ? "bg-sky-500 border-sky-300 text-white scale-110 shadow-lg ring-4 ring-sky-300/60 animate-pulse dark:bg-cyan-400 dark:border-cyan-200 dark:text-slate-950 dark:ring-cyan-300/50 dark:shadow-[0_0_30px_rgba(34,211,238,0.7)]"
                         : "bg-white dark:bg-slate-900/40 border-zinc-200 dark:border-white/5 text-zinc-800 dark:text-slate-400"
                     }`}
                   >
@@ -640,13 +640,13 @@ export default function ExerciseTab({ lesson, progress, onFinish, onBack }: Exer
           {/* Spacebar row */}
           <div className="flex justify-center mt-3">
             <div
-              className={`h-12 sm:h-16 w-56 sm:w-80 flex items-center justify-center rounded-lg text-xs sm:text-sm font-bold border transition-all ${
+              className={`h-14 sm:h-20 w-64 sm:w-96 flex items-center justify-center rounded-lg text-sm sm:text-base font-bold border-2 transition-all ${
                 nextTargetChar === " "
-                  ? "bg-sky-500 border-sky-600 text-white scale-105 shadow-lg animate-pulse dark:bg-cyan-500/30 dark:border-cyan-400/50 dark:shadow-[0_0_20px_rgba(34,211,238,0.3)] dark:text-white"
+                  ? "bg-sky-500 border-sky-300 text-white scale-105 shadow-lg ring-4 ring-sky-300/60 animate-pulse dark:bg-cyan-400 dark:border-cyan-200 dark:text-slate-950 dark:ring-cyan-300/50 dark:shadow-[0_0_30px_rgba(34,211,238,0.7)]"
                   : "bg-white dark:bg-slate-900/40 border-zinc-200 dark:border-white/5 text-zinc-500 dark:text-slate-500"
               }`}
             >
-              <span className="tracking-widest font-mono text-center text-xs sm:text-sm">SPACEBAR</span>
+              <span className="tracking-widest font-mono text-center text-sm sm:text-base">SPACEBAR</span>
             </div>
           </div>
         </div>
