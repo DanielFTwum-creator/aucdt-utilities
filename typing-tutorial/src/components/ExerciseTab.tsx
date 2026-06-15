@@ -2,77 +2,77 @@ import { useState, useEffect, useRef, ChangeEvent } from "react";
 import { Lesson, UserProgress } from "../types";
 import { ArrowLeft, Play, RefreshCw, Volume2, VolumeX, Keyboard } from "lucide-react";
 
-// R1/R3 Hand diagram: shows which finger to use for the next target character
+// R1/R3 Hand diagram: realistic palm + finger illustration showing which finger
+// to use for the next target character, in resting position over the home row.
 function HandDiagram({ activeHand, activeFinger, isIdle }: { activeHand: string; activeFinger: string; isIdle: boolean }) {
+  const isSpace = activeHand === "Hands";
+  const homeKeys = ["Pinky", "Ring", "Middle", "Index"];
+
   const leftFingers = [
-    { name: "Pinky",  key: "A", h: "h-10 sm:h-14" },
-    { name: "Ring",   key: "S", h: "h-12 sm:h-16" },
-    { name: "Middle", key: "D", h: "h-14 sm:h-20" },
-    { name: "Index",  key: "F", h: "h-12 sm:h-16" },
+    { name: "Pinky",  key: "A", x: 26,  w: 34, h: 58 },
+    { name: "Ring",   key: "S", x: 68,  w: 36, h: 76 },
+    { name: "Middle", key: "D", x: 112, w: 38, h: 94 },
+    { name: "Index",  key: "F", x: 158, w: 36, h: 80 },
   ];
   const rightFingers = [
-    { name: "Index",  key: "J", h: "h-12 sm:h-16" },
-    { name: "Middle", key: "K", h: "h-14 sm:h-20" },
-    { name: "Ring",   key: "L", h: "h-12 sm:h-16" },
-    { name: "Pinky",  key: ";", h: "h-10 sm:h-14" },
+    { name: "Index",  key: "J", x: 406, w: 36, h: 80 },
+    { name: "Middle", key: "K", x: 450, w: 38, h: 94 },
+    { name: "Ring",   key: "L", x: 496, w: 36, h: 76 },
+    { name: "Pinky",  key: ";", x: 540, w: 34, h: 58 },
   ];
-  const homeKeys = ["Pinky", "Ring", "Middle", "Index"];
-  const isSpaceBar = activeHand === "Hands";
 
-  const fingerCls = (hand: string, name: string) => {
-    const active = activeHand.includes(hand) && activeFinger === name;
-    const resting = isIdle && homeKeys.includes(name);
-    if (active) return "bg-cyan-500/30 border-cyan-400 shadow-[0_0_14px_rgba(34,211,238,0.5)] text-cyan-300";
-    if (resting) return "bg-slate-700/60 border-slate-500 text-slate-400";
-    return "bg-slate-900/40 border-white/10 text-slate-600";
+  const ACTIVE = "fill-cyan-400 drop-shadow-[0_0_8px_rgba(34,211,238,0.85)]";
+  const RESTING = "fill-slate-400 dark:fill-slate-500";
+  const IDLE_OFF = "fill-slate-300 dark:fill-slate-700";
+
+  const fingerClass = (hand: "Left" | "Right", name: string) => {
+    if (!isSpace && activeHand.startsWith(hand) && activeFinger === name) return ACTIVE;
+    if (isIdle && homeKeys.includes(name)) return RESTING;
+    return IDLE_OFF;
   };
 
-  const thumbCls = isSpaceBar
-    ? "bg-cyan-500/30 border-cyan-400 shadow-[0_0_14px_rgba(34,211,238,0.5)] text-cyan-300"
-    : isIdle ? "bg-slate-700/60 border-slate-500 text-slate-400"
-    : "bg-slate-900/40 border-white/10 text-slate-600";
+  const thumbClass = isSpace ? ACTIVE : isIdle ? RESTING : IDLE_OFF;
+  const palmClass = "fill-slate-200 dark:fill-slate-800";
+  const palmTop = 128;
 
   return (
-    <div className="flex justify-center items-end gap-6 py-3">
-      {/* Left hand */}
-      <div className="flex items-end gap-1">
-        {leftFingers.map(f => (
-          <div key={f.name} className="flex flex-col items-center gap-0.5">
-            <div className={`w-6 sm:w-8 ${f.h} rounded-t-2xl border-2 flex items-end justify-center pb-1 transition-all duration-100 ${fingerCls("Left", f.name)}`}>
-              <span className="text-[8px] font-mono font-bold leading-none">{f.name[0]}</span>
-            </div>
-            <span className="text-[7px] font-mono text-slate-600 uppercase">{f.key}</span>
-          </div>
-        ))}
-        <div className="flex flex-col items-center gap-0.5 ml-1">
-          <div className={`w-6 sm:w-8 h-7 sm:h-9 rounded-2xl border-2 flex items-center justify-center transition-all duration-100 ${thumbCls}`}>
-            <span className="text-[8px] font-mono font-bold">T</span>
-          </div>
-        </div>
-      </div>
+    <svg viewBox="0 0 600 220" className="w-full max-w-2xl mx-auto" aria-hidden="true">
+      {/* Left hand fingers */}
+      {leftFingers.map((f) => (
+        <rect key={f.name} x={f.x} y={palmTop - f.h} width={f.w} height={f.h + 24} rx={f.w / 2}
+          className={`transition-all duration-100 ${fingerClass("Left", f.name)}`} />
+      ))}
+      {/* Left palm */}
+      <path d="M14,140 Q14,210 40,212 H220 Q246,210 246,140 V128 Q246,118 236,118 H24 Q14,118 14,128 Z"
+        className={`transition-all duration-100 ${palmClass}`} />
+      {/* Left thumb */}
+      <rect x="210" y="165" width="60" height="32" rx="16" transform="rotate(18 210 181)"
+        className={`transition-all duration-100 ${thumbClass}`} />
 
-      {/* Spacebar indicator */}
-      <div className={`w-20 sm:w-28 h-5 sm:h-6 rounded-lg border-2 flex items-center justify-center transition-all duration-100 ${thumbCls}`}>
-        <span className="text-[7px] font-mono tracking-widest text-current">SPACE</span>
-      </div>
+      {/* Right hand fingers */}
+      {rightFingers.map((f) => (
+        <rect key={f.name} x={f.x} y={palmTop - f.h} width={f.w} height={f.h + 24} rx={f.w / 2}
+          className={`transition-all duration-100 ${fingerClass("Right", f.name)}`} />
+      ))}
+      {/* Right palm */}
+      <path d="M354,140 Q354,210 380,212 H560 Q586,210 586,140 V128 Q586,118 576,118 H364 Q354,118 354,128 Z"
+        className={`transition-all duration-100 ${palmClass}`} />
+      {/* Right thumb */}
+      <rect x="330" y="165" width="60" height="32" rx="16" transform="rotate(-18 390 181)"
+        className={`transition-all duration-100 ${thumbClass}`} />
 
-      {/* Right hand */}
-      <div className="flex items-end gap-1">
-        <div className="flex flex-col items-center gap-0.5 mr-1">
-          <div className={`w-6 sm:w-8 h-7 sm:h-9 rounded-2xl border-2 flex items-center justify-center transition-all duration-100 ${thumbCls}`}>
-            <span className="text-[8px] font-mono font-bold">T</span>
-          </div>
-        </div>
-        {rightFingers.map(f => (
-          <div key={f.name} className="flex flex-col items-center gap-0.5">
-            <div className={`w-6 sm:w-8 ${f.h} rounded-t-2xl border-2 flex items-end justify-center pb-1 transition-all duration-100 ${fingerCls("Right", f.name)}`}>
-              <span className="text-[8px] font-mono font-bold leading-none">{f.name[0]}</span>
-            </div>
-            <span className="text-[7px] font-mono text-slate-600 uppercase">{f.key}</span>
-          </div>
-        ))}
-      </div>
-    </div>
+      {/* Spacebar */}
+      <rect x="220" y="200" width="160" height="14" rx="7"
+        className={`transition-all duration-100 ${isSpace ? ACTIVE : "fill-slate-300 dark:fill-slate-700"}`} />
+
+      {/* Home-row key labels at fingertips */}
+      {[...leftFingers, ...rightFingers].map((f) => (
+        <text key={`${f.name}-lbl`} x={f.x + f.w / 2} y={palmTop - f.h + 16} textAnchor="middle"
+          className="fill-slate-500 dark:fill-slate-400 text-[11px] font-mono font-bold uppercase">
+          {f.key}
+        </text>
+      ))}
+    </svg>
   );
 }
 
@@ -405,23 +405,20 @@ export default function ExerciseTab({ lesson, progress, onFinish, onBack }: Exer
       </div>
 
       {/* 6R Keyboarding Protocol Hub — Cognitive UX Overlay */}
-      <div className="bg-slate-950 text-white rounded-2xl p-5 border border-cyan-500/25 shadow-[0_0_15px_rgba(6,182,212,0.12)] relative overflow-hidden transition-all duration-300">
+      <div className="bg-slate-950 text-white rounded-2xl p-3 border border-cyan-500/25 shadow-[0_0_15px_rgba(6,182,212,0.12)] relative overflow-hidden transition-all duration-300">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_90%_10%,_rgba(6,182,212,0.08),transparent_40%)] pointer-events-none"></div>
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-white/5 relative z-10">
-          <div className="space-y-1">
-            <span className="text-[10px] font-mono tracking-widest text-cyan-400 font-bold uppercase flex items-center gap-1.5">
-              <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse"></span>
-              TUC Academic Keyboarding Protocol
-            </span>
-            <h4 className="text-md font-black tracking-wider uppercase text-zinc-100 flex items-center gap-2 font-mono">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-2 pb-2 border-b border-white/5 relative z-10">
+          <div className="flex items-center gap-2">
+            <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse"></span>
+            <h4 className="text-xs font-black tracking-wider uppercase text-zinc-100 font-mono">
               6R Cognitive Training System
             </h4>
           </div>
-          
-          <div className="flex flex-wrap items-center gap-3">
+
+          <div className="flex flex-wrap items-center gap-2">
             {/* R2 Metronome Controls */}
-            <div className="flex items-center space-x-2 bg-slate-900/60 border border-white/5 rounded-lg px-2.5 py-1.5">
-              <span className="text-[9px] font-mono font-bold uppercase text-slate-400">⏱️ R2 Metronome:</span>
+            <div className="flex items-center space-x-2 bg-slate-900/60 border border-white/5 rounded-lg px-2 py-1">
+              <span className="text-[9px] font-mono font-bold uppercase text-slate-400">⏱️ R2:</span>
               <select
                 id="metronomeBpmSelect"
                 value={metronomeBpm}
@@ -438,8 +435,8 @@ export default function ExerciseTab({ lesson, progress, onFinish, onBack }: Exer
             </div>
 
             {/* R4 Tone Selector */}
-            <div className="flex items-center space-x-2 bg-slate-900/60 border border-white/5 rounded-lg px-2.5 py-1.5">
-              <span className="text-[9px] font-mono font-bold uppercase text-slate-400">🔊 R4 Tone:</span>
+            <div className="flex items-center space-x-2 bg-slate-900/60 border border-white/5 rounded-lg px-2 py-1">
+              <span className="text-[9px] font-mono font-bold uppercase text-slate-400">🔊 R4:</span>
               <select
                 id="audioModeSelect"
                 value={audioMode}
@@ -454,63 +451,17 @@ export default function ExerciseTab({ lesson, progress, onFinish, onBack }: Exer
           </div>
         </div>
 
-        {/* 6R Quick Grid of active indicators */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2.5 mt-4 relative z-10 text-xs">
-          {/* R1 Resting */}
-          <div className="p-2.5 rounded-lg bg-white/5 border border-white/5 flex flex-col justify-between">
-            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">🏠 R1 RESTING</span>
-            <span className="text-[10px] text-cyan-400 font-mono mt-1 font-bold">ASDF / JKL;</span>
-          </div>
-
-          {/* R2 Rhythm */}
-          <div className="p-2.5 rounded-lg bg-white/5 border border-white/5 flex flex-col justify-between">
-            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">⏱️ R2 RHYTHM</span>
-            <span className="text-[10px] text-cyan-400 font-mono mt-1 font-bold">
-              {metronomeBpm > 0 ? `${metronomeBpm} BPM Sync` : "Not Synced"}
-            </span>
-          </div>
-
-          {/* R3 Transition */}
-          <div className="p-2.5 rounded-lg bg-white/5 border border-white/5 flex flex-col justify-between col-span-2">
-            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">👉 R3 TRANSITION</span>
-            <div className="text-[10px] text-cyan-400 font-mono mt-1 truncate font-semibold" title={getFingerGuidance(nextTargetChar || "")?.path || "Calculating Trajectory..."}>
-              {getFingerGuidance(nextTargetChar || "") ? (
-                <span>
-                  {getFingerGuidance(nextTargetChar || "")?.finger} ({getFingerGuidance(nextTargetChar || "")?.anchor})
-                </span>
-              ) : (
-                "Compute reach..."
-              )}
-            </div>
-          </div>
-
-          {/* R4 Response */}
-          <div className="p-2.5 rounded-lg bg-white/5 border border-white/5 flex flex-col justify-between">
-            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">📡 R4 RESPONSE</span>
-            <span className="text-[10px] text-emerald-400 font-mono mt-1 font-bold">Audio Clack</span>
-          </div>
-
-          {/* R5 Reward */}
-          <div className={`p-2.5 rounded-lg border flex flex-col justify-between transition-all duration-150 ${combo > 0 ? 'bg-cyan-500/10 border-cyan-500/35 shadow-[0_0_15px_rgba(6,182,212,0.1)]' : 'bg-white/5 border-white/5'}`}>
-            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wide block">🔥 R5 STREAK</span>
-            <span className={`text-xs font-black font-mono mt-1 transition-all ${combo >= 15 ? 'text-amber-400 animate-pulse text-sm' : combo >= 5 ? 'text-cyan-400 font-bold' : 'text-slate-400'}`}>
-              {combo}x
-            </span>
-            <span className="text-[9px] font-mono text-slate-500 mt-0.5">
-              Best: {sessionMaxCombo}x {progress.bestCombo > 0 && <span className="text-amber-500/70">(All: {progress.bestCombo}x)</span>}
-            </span>
-          </div>
-        </div>
-
-        {/* Dynamic description helper for R3 Relative Reaches */}
-        <div className="mt-3 p-2.5 bg-slate-900/60 rounded-lg flex items-center justify-between border border-white/5 text-[11px] font-mono text-zinc-400">
-          <p className="flex items-center gap-1.5 leading-relaxed">
-            <span className="text-cyan-400 text-xs font-bold shrink-0">🎯</span>
-            <span className="hidden sm:inline">{getFingerGuidance(nextTargetChar || "")?.path || "Anchor your hands cleanly and strike a key to register alignment tracking."}</span>
-            <span className="sm:hidden font-bold text-cyan-400">{getFingerGuidance(nextTargetChar || "")?.finger ?? "—"} ({getFingerGuidance(nextTargetChar || "")?.anchor ?? "—"})</span>
-          </p>
-          <span className="text-[9px] font-bold text-cyan-500 bg-cyan-500/10 border border-cyan-500/25 px-1.5 py-0.5 rounded tracking-widest uppercase shrink-0 hidden sm:block">
-            Relative Reach
+        {/* 6R Quick Strip of active indicators — compact single line */}
+        <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5 mt-2 relative z-10 text-[10px] font-mono">
+          <span className="text-slate-400 font-bold uppercase">🏠 R1 <span className="text-cyan-400">ASDF/JKL;</span></span>
+          <span className="text-slate-400 font-bold uppercase">⏱️ R2 <span className="text-cyan-400">{metronomeBpm > 0 ? `${metronomeBpm} BPM` : "Not Synced"}</span></span>
+          <span className="text-slate-400 font-bold uppercase truncate max-w-[200px]" title={getFingerGuidance(nextTargetChar || "")?.path || "Calculating Trajectory..."}>
+            👉 R3 <span className="text-cyan-400">{getFingerGuidance(nextTargetChar || "") ? `${getFingerGuidance(nextTargetChar || "")?.finger} (${getFingerGuidance(nextTargetChar || "")?.anchor})` : "Compute reach..."}</span>
+          </span>
+          <span className="text-slate-400 font-bold uppercase">📡 R4 <span className="text-emerald-400">Audio Clack</span></span>
+          <span className={`font-bold uppercase transition-all ${combo > 0 ? 'text-cyan-300' : 'text-slate-400'}`}>
+            🔥 R5 <span className={`${combo >= 15 ? 'text-amber-400 animate-pulse' : combo >= 5 ? 'text-cyan-400' : 'text-cyan-300'}`}>{combo}x</span>
+            <span className="text-slate-500"> (Best {sessionMaxCombo}x{progress.bestCombo > 0 ? `, All ${progress.bestCombo}x` : ""})</span>
           </span>
         </div>
       </div>
@@ -653,15 +604,27 @@ export default function ExerciseTab({ lesson, progress, onFinish, onBack }: Exer
           <span>Tactile Guide: Strike the Highlighted Target Key</span>
         </div>
 
-        <div className="space-y-1.5 max-w-xl mx-auto font-mono">
+        {/* R1/R3 Hand diagram — shows active finger, home row on idle */}
+        <div className="mb-2 max-w-3xl mx-auto">
+          <div className="text-[9px] font-mono font-bold text-zinc-500 dark:text-slate-500 uppercase tracking-widest text-center mb-1">
+            🏠 R1 Home Row Posture — Active Finger
+          </div>
+          <HandDiagram
+            activeHand={getFingerGuidance(nextTargetChar || "")?.hand ?? ""}
+            activeFinger={getFingerGuidance(nextTargetChar || "")?.finger ?? ""}
+            isIdle={!isStarted}
+          />
+        </div>
+
+        <div className="space-y-2.5 max-w-3xl mx-auto font-mono">
           {keyboardRows.map((row, rIdx) => (
-            <div key={rIdx} className="flex justify-center space-x-1.5">
+            <div key={rIdx} className="flex justify-center space-x-2.5">
               {row.map((key) => {
                 const isActive = nextTargetChar === key;
                 return (
                   <div
                     key={key}
-                    className={`w-7 h-7 sm:w-10 sm:h-10 flex items-center justify-center rounded-lg text-[10px] sm:text-xs font-bold border transition-all ${
+                    className={`w-12 h-12 sm:w-16 sm:h-16 flex items-center justify-center rounded-lg text-sm sm:text-lg font-bold border transition-all ${
                       isActive
                         ? "bg-sky-500 border-sky-600 text-white scale-110 shadow-lg animate-pulse dark:bg-cyan-500/30 dark:border-cyan-400/50 dark:shadow-[0_0_20px_rgba(34,211,238,0.3)] dark:text-white"
                         : "bg-white dark:bg-slate-900/40 border-zinc-200 dark:border-white/5 text-zinc-800 dark:text-slate-400"
@@ -675,29 +638,17 @@ export default function ExerciseTab({ lesson, progress, onFinish, onBack }: Exer
           ))}
 
           {/* Spacebar row */}
-          <div className="flex justify-center mt-2.5">
+          <div className="flex justify-center mt-3">
             <div
-              className={`h-8 sm:h-11 w-36 sm:w-52 flex items-center justify-center rounded-lg text-[10px] sm:text-xs font-bold border transition-all ${
+              className={`h-12 sm:h-16 w-56 sm:w-80 flex items-center justify-center rounded-lg text-xs sm:text-sm font-bold border transition-all ${
                 nextTargetChar === " "
                   ? "bg-sky-500 border-sky-600 text-white scale-105 shadow-lg animate-pulse dark:bg-cyan-500/30 dark:border-cyan-400/50 dark:shadow-[0_0_20px_rgba(34,211,238,0.3)] dark:text-white"
                   : "bg-white dark:bg-slate-900/40 border-zinc-200 dark:border-white/5 text-zinc-500 dark:text-slate-500"
               }`}
             >
-              <span className="tracking-widest font-mono text-center text-[10px]">SPACEBAR</span>
+              <span className="tracking-widest font-mono text-center text-xs sm:text-sm">SPACEBAR</span>
             </div>
           </div>
-        </div>
-
-        {/* R1/R3 Hand diagram — shows active finger, home row on idle */}
-        <div className="mt-4 border-t border-white/5 pt-4">
-          <div className="text-[9px] font-mono font-bold text-slate-500 uppercase tracking-widest text-center mb-1">
-            🏠 R1 Home Row Posture — Active Finger
-          </div>
-          <HandDiagram
-            activeHand={getFingerGuidance(nextTargetChar || "")?.hand ?? ""}
-            activeFinger={getFingerGuidance(nextTargetChar || "")?.finger ?? ""}
-            isIdle={!isStarted}
-          />
         </div>
       </div>
 
