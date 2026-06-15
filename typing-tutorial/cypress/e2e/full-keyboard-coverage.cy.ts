@@ -1,11 +1,11 @@
-// Full keyboard coverage journey: works through every unlocked lesson (Tiers 1-10),
+// Full keyboard coverage journey: works through every unlocked lesson (Tiers 1-11),
 // typing each practice drill verbatim so every QWERTY key — letters, number row,
 // punctuation (, . ;) and the spacebar — gets exercised at least once, including the
 // "next key is Space" hand-diagram/keyboard-highlight path (regression for the
 // ExerciseTab crash on keys immediately followed by a space, e.g. "dad ").
 //
-// Note: this app has no numpad lesson or numpad UI (only the standard top number
-// row, lessons 6 & 7), so numpad coverage is out of scope.
+// Tier 11 (Numeric Keypad - Fast Data Entry) exercises the dedicated numpad guide:
+// digits 0-9, "." and "-" via the ghost-hand/NumpadGuide component.
 
 describe('VortexType: Full keyboard coverage across all lessons', () => {
   beforeEach(() => {
@@ -17,8 +17,8 @@ describe('VortexType: Full keyboard coverage across all lessons', () => {
     cy.wait(300);
   });
 
-  it('completes every lesson tier, exercising every key, the results screen, and the spacebar-highlight path', () => {
-    const LESSON_COUNT = 10;
+  it('completes every lesson tier, exercising every key (QWERTY + numpad), the results screen, and the spacebar-highlight path', () => {
+    const LESSON_COUNT = 11;
 
     for (let id = 1; id <= LESSON_COUNT; id++) {
       // Lessons unlock progressively: completing lesson N unlocks lesson N+1.
@@ -67,8 +67,40 @@ describe('VortexType: Full keyboard coverage across all lessons', () => {
       cy.contains('h3', 'Lessons Roadmap').should('be.visible');
     }
 
-    // All 10 tiers unlocked.
-    cy.contains('10 / 10 Tier Unlocked').should('be.visible');
+    // All 11 tiers unlocked.
+    cy.contains('11 / 11 Tier Unlocked').should('be.visible');
+  });
+
+  it('shows the numpad ghost-hand guide for the Numeric Keypad lesson', () => {
+    // Unlock Tier 11 by marking the first 10 lessons complete.
+    cy.window().then((win) => {
+      win.localStorage.setItem('tuc_user_progress', JSON.stringify({
+        level: 6, points: 0, accuracy: 0, wpm: 0,
+        bestAccuracy: 0, bestSpeed: 0, bestCombo: 0,
+        lessonsCompleted: 10, unlockedCards: []
+      }));
+    });
+    cy.reload();
+    cy.wait(300);
+
+    cy.get('#start-lesson-btn-11').should('be.visible').click();
+
+    // Live coaching strip shows numpad finger guidance (Index/Middle/Ring/Pinky on the Right Hand).
+    cy.contains('Next:').should('be.visible');
+    cy.contains(/finger/).should('be.visible');
+
+    // The numpad grid (digits, "." and "-") renders instead of the QWERTY keyboard guide.
+    cy.contains('Numeric Keypad').should('be.visible');
+    for (const key of ['7', '8', '9', '4', '5', '6', '1', '2', '3', '0', '.', '-']) {
+      cy.contains('div', key, { timeout: 5000 }).should('exist');
+    }
+
+    // Type the first drill and confirm the app stays responsive throughout.
+    cy.get('.dark\\:text-zinc-200').first().invoke('text').then((rawText) => {
+      const targetText = rawText.replace(/␣/g, ' ');
+      cy.get('#typingActiveInputElement').type(targetText, { delay: 0 });
+      cy.get('#typingActiveInputElement').should('be.visible');
+    });
   });
 
   it('shows the per-finger color-coded hand diagram and keyboard highlight without errors', () => {

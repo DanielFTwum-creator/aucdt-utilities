@@ -130,6 +130,20 @@ export const LESSONS: Lesson[] = [
       "All the world is a stage and all people play parts.",
       "Typing smoothly minimizes mistakes and maximizes speed."
     ]
+  },
+  {
+    id: 11,
+    title: "Numeric Keypad - Fast Data Entry (AI Era)",
+    description: "Master the dedicated numeric keypad with the right hand for rapid IDs, prices, and dates - essential for fast data entry into AI tools and spreadsheets.",
+    keys: "0123456789.-",
+    icon: "🖩",
+    inputMode: "numpad",
+    practices: [
+      "456 789 123 0.0",
+      "2026-06-15 2025-12-31",
+      "199.99 45.50 1000.00",
+      "10293-84756 30219-58473"
+    ]
   }
 ];
 

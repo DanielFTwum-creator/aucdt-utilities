@@ -10,6 +10,8 @@ export interface Lesson {
   keys: string;
   icon: string;
   practices: string[];
+  /** "numpad" renders the dedicated numeric-keypad guide instead of the QWERTY hand/keyboard view. Defaults to "qwerty". */
+  inputMode?: "qwerty" | "numpad";
 }
 
 export interface UserProgress {

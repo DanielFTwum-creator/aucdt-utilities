@@ -135,6 +135,89 @@ function HandDiagram({ activeHand, activeFinger }: { activeHand: string; activeF
   );
 }
 
+// Numeric keypad layout (Right Hand only): 3 columns x 4 rows, mirroring the
+// standard touch-typing numpad fingering with 5 as the home-row anchor for the
+// Middle finger, 4/6 for Index/Ring either side, and the bottom row stretching
+// to Middle (0), Ring (.), and Pinky (-).
+const NUMPAD_ROWS: { key: string; finger: string }[][] = [
+  [{ key: "7", finger: "Index" }, { key: "8", finger: "Middle" }, { key: "9", finger: "Ring" }],
+  [{ key: "4", finger: "Index" }, { key: "5", finger: "Middle" }, { key: "6", finger: "Ring" }],
+  [{ key: "1", finger: "Index" }, { key: "2", finger: "Middle" }, { key: "3", finger: "Ring" }],
+  [{ key: "0", finger: "Middle" }, { key: ".", finger: "Ring" }, { key: "-", finger: "Pinky" }],
+];
+
+const NUMPAD_ANCHORS: Record<string, string> = { Index: "4", Middle: "5", Ring: "6", Pinky: "-" };
+
+// R3 numpad reach calculator (Right Hand only) — numpad counterpart to getFingerGuidance.
+// Characters with no numpad key (e.g. spaces between groups in a drill) return null.
+function getNumpadFingerGuidance(char: string | undefined) {
+  if (!char) return null;
+  for (const row of NUMPAD_ROWS) {
+    const cell = row.find((c) => c.key === char);
+    if (cell) {
+      const anchor = NUMPAD_ANCHORS[cell.finger];
+      return {
+        hand: "Right Hand",
+        finger: cell.finger,
+        anchor,
+        path: char === anchor
+          ? `Anchor Right ${cell.finger} on ${anchor} tactile home key`
+          : `Anchor Right ${cell.finger} on ${anchor} and reach to ${char}`,
+      };
+    }
+  }
+  return null;
+}
+
+// R1/R3 Numpad guide: numeric keypad grid plus a translucent "ghost hand" overlay
+// that highlights which finger reaches for the active key, using the same
+// FINGER_ACCENTS colour tokens as the QWERTY hand diagram.
+function NumpadGuide({ activeKey }: { activeKey?: string }) {
+  const guidance = getNumpadFingerGuidance(activeKey);
+
+  return (
+    <div className="relative mx-auto w-fit pt-10">
+      {/* Ghost hand overlay */}
+      <div className="absolute inset-x-0 top-0 flex items-end justify-center gap-1.5 px-2 pointer-events-none">
+        <svg viewBox="0 0 168 64" className="w-40 sm:w-48 opacity-80">
+          {["Index", "Middle", "Ring", "Pinky"].map((finger, i) => {
+            const active = guidance?.finger === finger;
+            const accents = FINGER_ACCENTS[finger];
+            return (
+              <rect
+                key={finger}
+                x={6 + i * 41}
+                y={active ? 4 : 22}
+                width="32"
+                height={active ? 60 : 38}
+                rx="14"
+                className={`transition-all duration-300 ${active ? accents.handActive : accents.handIdle}`}
+              />
+            );
+          })}
+        </svg>
+      </div>
+
+      {/* Numpad key grid */}
+      <div className="relative grid grid-cols-3 gap-1.5 sm:gap-2 font-mono">
+        {NUMPAD_ROWS.flat().map(({ key, finger }) => {
+          const active = activeKey === key;
+          return (
+            <div
+              key={key}
+              className={`w-14 h-14 sm:w-16 sm:h-16 flex items-center justify-center rounded-lg text-lg sm:text-xl font-bold border-2 transition-all ${
+                active ? FINGER_ACCENTS[finger].key : "bg-white dark:bg-slate-900/40 border-zinc-200 dark:border-white/5 text-zinc-800 dark:text-slate-400"
+              }`}
+            >
+              {key}
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
 interface ExerciseTabProps {
   lesson: Lesson;
   progress: UserProgress;
@@ -424,6 +507,11 @@ export default function ExerciseTab({ lesson, progress, onFinish, onBack }: Exer
   const currentSentence = isCalibrationMode ? calibrationText : targetText;
   const nextTargetChar = currentSentence[inputVal.length]?.toLowerCase();
 
+  // Numpad lessons use the dedicated numeric-keypad finger guidance/diagram
+  // instead of the QWERTY hand diagram and keyboard guide.
+  const isNumpad = lesson.inputMode === "numpad";
+  const fingerGuidance = isNumpad ? getNumpadFingerGuidance(nextTargetChar) : getFingerGuidance(nextTargetChar || "");
+
   const keyboardRows = [
     ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"],
     ["q", "w", "e", "r", "t", "y", "u", "i", "o", "p"],
@@ -563,10 +651,10 @@ export default function ExerciseTab({ lesson, progress, onFinish, onBack }: Exer
         <div className="flex items-center justify-between gap-2 relative z-10 text-xs font-mono">
           <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
             {/* Live finger guidance */}
-            <span className="text-slate-400" title={getFingerGuidance(nextTargetChar || "")?.path || ""}>
-              Next: {getFingerGuidance(nextTargetChar || "") ? (
-                <span className={`font-bold ${FINGER_ACCENTS[getFingerGuidance(nextTargetChar || "")!.finger]?.text ?? "text-cyan-400"}`}>
-                  {getFingerGuidance(nextTargetChar || "")?.finger} finger
+            <span className="text-slate-400" title={fingerGuidance?.path || ""}>
+              Next: {fingerGuidance ? (
+                <span className={`font-bold ${FINGER_ACCENTS[fingerGuidance.finger]?.text ?? "text-cyan-400"}`}>
+                  {fingerGuidance.finger} finger
                 </span>
               ) : (
                 <span className="font-bold text-cyan-400">—</span>
@@ -770,57 +858,67 @@ export default function ExerciseTab({ lesson, progress, onFinish, onBack }: Exer
           <span>Tactile Guide: Strike the Highlighted Target Key</span>
         </div>
 
-        {/* Hands + keyboard side-by-side on wide screens to avoid stacking height */}
-        <div className="flex flex-col lg:flex-row lg:items-center gap-2 lg:gap-4 max-w-6xl mx-auto">
-
-          {/* R1/R3 Hand diagram — shows active finger, home row on idle */}
-          <div className="lg:w-[28%] lg:shrink-0">
+        {isNumpad ? (
+          /* Numeric keypad guide: ghost-hand overlay + numpad grid (Right Hand only) */
+          <div className="flex flex-col items-center gap-2 max-w-md mx-auto">
             <div className="text-[9px] font-mono font-bold text-zinc-500 dark:text-slate-500 uppercase tracking-widest text-center mb-1">
-              🏠 R1 Home Row Posture — Active Finger
+              🖩 Numeric Keypad — Right Hand Home Row (4 5 6)
             </div>
-            <HandDiagram
-              activeHand={getFingerGuidance(nextTargetChar || "")?.hand ?? ""}
-              activeFinger={getFingerGuidance(nextTargetChar || "")?.finger ?? ""}
-              isIdle={!isStarted}
-            />
+            <NumpadGuide activeKey={nextTargetChar} />
           </div>
+        ) : (
+          /* Hands + keyboard side-by-side on wide screens to avoid stacking height */
+          <div className="flex flex-col lg:flex-row lg:items-center gap-2 lg:gap-4 max-w-6xl mx-auto">
 
-          <div className="space-y-2 lg:space-y-1.5 mx-auto lg:flex-1 font-mono">
-            {keyboardRows.map((row, rIdx) => (
-              <div key={rIdx} className="flex justify-center space-x-2 lg:space-x-1.5 xl:space-x-2">
-                {row.map((key) => {
-                  const isActive = nextTargetChar === key;
-                  const activeFinger = isActive ? getFingerGuidance(key)?.finger : undefined;
-                  return (
-                    <div
-                      key={key}
-                      className={`w-14 h-14 sm:w-20 sm:h-20 lg:w-10 lg:h-10 xl:w-12 xl:h-12 2xl:w-16 2xl:h-16 flex items-center justify-center rounded-lg text-base sm:text-2xl lg:text-sm xl:text-lg 2xl:text-2xl font-bold border-2 transition-all ${
-                        isActive
-                          ? (activeFinger && FINGER_ACCENTS[activeFinger]?.key) || FINGER_ACCENTS.Index.key
-                          : "bg-white dark:bg-slate-900/40 border-zinc-200 dark:border-white/5 text-zinc-800 dark:text-slate-400"
-                      }`}
-                    >
-                      <span className="uppercase">{key}</span>
-                    </div>
-                  );
-                })}
+            {/* R1/R3 Hand diagram — shows active finger, home row on idle */}
+            <div className="lg:w-[28%] lg:shrink-0">
+              <div className="text-[9px] font-mono font-bold text-zinc-500 dark:text-slate-500 uppercase tracking-widest text-center mb-1">
+                🏠 R1 Home Row Posture — Active Finger
               </div>
-            ))}
+              <HandDiagram
+                activeHand={fingerGuidance?.hand ?? ""}
+                activeFinger={fingerGuidance?.finger ?? ""}
+                isIdle={!isStarted}
+              />
+            </div>
 
-            {/* Spacebar row */}
-            <div className="flex justify-center mt-2 lg:mt-1.5">
-              <div
-                className={`h-14 sm:h-20 lg:h-10 xl:h-12 2xl:h-16 w-64 sm:w-96 lg:w-48 xl:w-64 2xl:w-80 flex items-center justify-center rounded-lg text-sm sm:text-base font-bold border-2 transition-all ${
-                  nextTargetChar === " "
-                    ? FINGER_ACCENTS.Thumbs.keySpace
-                    : "bg-white dark:bg-slate-900/40 border-zinc-200 dark:border-white/5 text-zinc-500 dark:text-slate-500"
-                }`}
-              >
-                <span className="tracking-widest font-mono text-center text-sm sm:text-base">SPACEBAR</span>
+            <div className="space-y-2 lg:space-y-1.5 mx-auto lg:flex-1 font-mono">
+              {keyboardRows.map((row, rIdx) => (
+                <div key={rIdx} className="flex justify-center space-x-2 lg:space-x-1.5 xl:space-x-2">
+                  {row.map((key) => {
+                    const isActive = nextTargetChar === key;
+                    const activeFinger = isActive ? getFingerGuidance(key)?.finger : undefined;
+                    return (
+                      <div
+                        key={key}
+                        className={`w-14 h-14 sm:w-20 sm:h-20 lg:w-10 lg:h-10 xl:w-12 xl:h-12 2xl:w-16 2xl:h-16 flex items-center justify-center rounded-lg text-base sm:text-2xl lg:text-sm xl:text-lg 2xl:text-2xl font-bold border-2 transition-all ${
+                          isActive
+                            ? (activeFinger && FINGER_ACCENTS[activeFinger]?.key) || FINGER_ACCENTS.Index.key
+                            : "bg-white dark:bg-slate-900/40 border-zinc-200 dark:border-white/5 text-zinc-800 dark:text-slate-400"
+                        }`}
+                      >
+                        <span className="uppercase">{key}</span>
+                      </div>
+                    );
+                  })}
+                </div>
+              ))}
+
+              {/* Spacebar row */}
+              <div className="flex justify-center mt-2 lg:mt-1.5">
+                <div
+                  className={`h-14 sm:h-20 lg:h-10 xl:h-12 2xl:h-16 w-64 sm:w-96 lg:w-48 xl:w-64 2xl:w-80 flex items-center justify-center rounded-lg text-sm sm:text-base font-bold border-2 transition-all ${
+                    nextTargetChar === " "
+                      ? FINGER_ACCENTS.Thumbs.keySpace
+                      : "bg-white dark:bg-slate-900/40 border-zinc-200 dark:border-white/5 text-zinc-500 dark:text-slate-500"
+                  }`}
+                >
+                  <span className="tracking-widest font-mono text-center text-sm sm:text-base">SPACEBAR</span>
+                </div>
               </div>
             </div>
           </div>
-        </div>
+        )}
       </div>
 
     </div>
