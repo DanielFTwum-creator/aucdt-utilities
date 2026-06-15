@@ -10,6 +10,7 @@ param(
 )
 
 $ErrorActionPreference = "Stop"
+Set-Location $PSScriptRoot
 $__deployStart = Get-Date
 $GITHUB_REPO   = "https://github.com/DanielFTwum-creator/aucdt-utilities.git"
 $SUBFOLDER     = "techbridge-ai-blueprint"
