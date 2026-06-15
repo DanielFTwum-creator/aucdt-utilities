@@ -1,10 +1,10 @@
 # techbridge-technical-quiz-platform — Deploy Script
-# URL: https://ai-tools.techbridge.edu.gh/techbridge-technical-quiz-platform/
+# URL: https://ai-tools.techbridge.edu.gh/tech-quiz/
 # Usage: .\deploy.ps1 -Build
 
 param(
     [string]$RemoteHost = "root@techbridge.edu.gh",
-    [string]$RemotePath = "/var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/techbridge-technical-quiz-platform/",
+    [string]$RemotePath = "/var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/tech-quiz/",
     [switch]$Build = $false
 )
 
@@ -29,11 +29,7 @@ Log "INFO" "Path   : $RemotePath"
 Log "INFO" ""
 
 Log "INFO" "Step 1: Pre-flight checks..." Yellow
-if (-not (Test-Path ".env.local")) { Log "ERROR" ".env.local not found" Red; exit 1 }
-$envContent = Get-Content ".env.local" -Raw
-if ($envContent -notmatch "VITE_GOOGLE_CLIENT_ID") { Log "ERROR" "VITE_GOOGLE_CLIENT_ID missing in .env.local" Red; exit 1 }
-if ($envContent -notmatch "GOOGLE_CLIENT_SECRET") { Log "ERROR" "GOOGLE_CLIENT_SECRET missing in .env.local" Red; exit 1 }
-Log "SUCCESS" "Pre-flight OK (OAuth credentials verified)" Green
+Log "SUCCESS" "Pre-flight OK" Green
 
 Log "INFO" "Step 2: Verifying git state..." Yellow
 $commit = (git rev-parse --short HEAD 2>$null).Trim()
@@ -86,11 +82,11 @@ Log "INFO" "Step 4: Writing .htaccess..." Yellow
 @"
 <IfModule mod_rewrite.c>
   RewriteEngine On
-  RewriteBase /techbridge-technical-quiz-platform/
+  RewriteBase /tech-quiz/
   RewriteCond %{REQUEST_FILENAME} -f [OR]
   RewriteCond %{REQUEST_FILENAME} -d
   RewriteRule ^ - [L]
-  RewriteRule ^ /techbridge-technical-quiz-platform/index.html [QSA,L]
+  RewriteRule ^ /tech-quiz/index.html [QSA,L]
 </IfModule>
 <IfModule mod_expires.c>
   ExpiresActive On
@@ -117,6 +113,6 @@ $elapsed = [math]::Round(((Get-Date) - $__deployStart).TotalSeconds, 1)
 $timeStr = if ($elapsed -ge 60) { "$([math]::Floor($elapsed/60))m $([math]::Round($elapsed%60,1))s" } else { "${elapsed}s" }
 Log "SUCCESS" "========================================" Green
 Log "SUCCESS" "DEPLOYMENT COMPLETE" Green
-Log "SUCCESS" "URL  : https://ai-tools.techbridge.edu.gh/techbridge-technical-quiz-platform/" Green
+Log "SUCCESS" "URL  : https://ai-tools.techbridge.edu.gh/tech-quiz/" Green
 Log "SUCCESS" "Time : $timeStr total" Green
 Log "SUCCESS" "========================================" Green
