@@ -475,15 +475,17 @@ export default function ExerciseTab({ lesson, progress, onFinish, onBack }: Exer
       {/* Exercise core dashboard */}
       <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl p-3 sm:p-4 shadow-sm">
 
-        {/* Lesson Badge */}
-        <div className="flex items-center space-x-2 text-[10px] font-mono font-bold tracking-widest text-sky-600 dark:text-cyan-400 uppercase">
-          <span>{isCalibrationMode ? "R6 SYSTEM HEALING MODE" : "Current Target Tiers"}</span>
-          <span className={`w-1.5 h-1.5 rounded-full animate-bounce ${isCalibrationMode ? 'bg-amber-500' : 'bg-cyan-400'}`}></span>
-          <span>Set {currentPracticeIdx + 1} of {lesson.practices.length}</span>
+        {/* Lesson Badge + Title — consolidated into a single horizontal row */}
+        <div className="flex flex-wrap items-center gap-x-3 gap-y-0.5">
+          <h3 className="text-sm font-bold text-zinc-900 dark:text-white uppercase tracking-tight font-mono">
+            {lesson.title} {isCalibrationMode && "— Calibration Refinement"}
+          </h3>
+          <div className="flex items-center space-x-2 text-[10px] font-mono font-bold tracking-widest text-sky-600 dark:text-cyan-400 uppercase">
+            <span>{isCalibrationMode ? "R6 SYSTEM HEALING MODE" : "Current Target Tiers"}</span>
+            <span className={`w-1.5 h-1.5 rounded-full animate-bounce ${isCalibrationMode ? 'bg-amber-500' : 'bg-cyan-400'}`}></span>
+            <span>Set {currentPracticeIdx + 1} of {lesson.practices.length}</span>
+          </div>
         </div>
-        <h3 className="text-sm font-bold text-zinc-900 dark:text-white mt-0.5 uppercase tracking-tight font-mono">
-          {lesson.title} {isCalibrationMode && "— Calibration Refinement"}
-        </h3>
 
         {/* Live Calibration Alert banner */}
         {isCalibrationMode && (
