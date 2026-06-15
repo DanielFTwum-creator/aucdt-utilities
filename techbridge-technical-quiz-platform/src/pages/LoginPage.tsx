@@ -42,7 +42,7 @@ export default function LoginPage() {
             <input
               id="username" type="text" value={username} required
               onChange={(e) => setUsername(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#630f12]"
+              className="w-full px-4 py-3 min-h-[44px] border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#630f12]"
               placeholder="Enter your username"
               aria-label="Username"
             />
@@ -52,7 +52,7 @@ export default function LoginPage() {
             <input
               id="password" type="password" value={password} required
               onChange={(e) => { setPassword(e.target.value); setError(''); }}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#630f12]"
+              className="w-full px-4 py-3 min-h-[44px] border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#630f12]"
               placeholder="Enter your password"
               aria-label="Password"
             />
@@ -60,7 +60,7 @@ export default function LoginPage() {
           {error && <p role="alert" className="text-sm text-red-600">{error}</p>}
           <button
             type="submit" disabled={loading}
-            className="w-full py-2 px-4 bg-[#630f12] text-white font-semibold rounded-lg hover:bg-[#7a1317] focus:outline-none focus:ring-2 focus:ring-[#630f12] focus:ring-offset-2 disabled:opacity-50 transition-colors"
+            className="w-full py-3 px-4 min-h-[44px] bg-[#630f12] text-white font-semibold rounded-lg hover:bg-[#7a1317] focus:outline-none focus:ring-2 focus:ring-[#630f12] focus:ring-offset-2 disabled:opacity-50 transition-colors"
             aria-label={loading ? 'Signing in' : 'Sign in'}
           >
             {loading ? 'Signing in…' : 'Sign In'}

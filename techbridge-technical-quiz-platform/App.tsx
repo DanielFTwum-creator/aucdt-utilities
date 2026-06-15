@@ -21,7 +21,7 @@ const App: React.FC = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [passcode, setPasscode] = useState('');
   const [theme, setTheme] = useState<ThemeMode>(ThemeMode.LIGHT);
-  const [isSidebarOpen, setSidebarOpen] = useState(true);
+  const [isSidebarOpen, setSidebarOpen] = useState(typeof window !== 'undefined' ? window.innerWidth >= 768 : true);
   const [auditLogs, setAuditLogs] = useState<AuditLog[]>([]);
 
   const logAction = (action: string, details: string) => {
@@ -92,15 +92,18 @@ const App: React.FC = () => {
   ];
 
   return (
-    <div className={`flex h-screen w-full transition-colors duration-300 ${theme === ThemeMode.CONTRAST ? 'theme-contrast' : theme === ThemeMode.DARK ? 'bg-slate-900 text-white' : 'bg-slate-50 text-slate-800'}`}>
-      <aside className={`${isSidebarOpen ? 'w-72' : 'w-24'} h-full transition-all duration-300 border-r ${theme === ThemeMode.CONTRAST ? 'bg-black border-white' : 'bg-brand-maroon border-brand-maroon'} flex flex-col z-20 shadow-2xl`}>
+    <div className={`flex h-dvh w-full transition-colors duration-300 ${theme === ThemeMode.CONTRAST ? 'theme-contrast' : theme === ThemeMode.DARK ? 'bg-slate-900 text-white' : 'bg-slate-50 text-slate-800'}`}>
+      {isSidebarOpen && (
+        <div className="fixed inset-0 z-30 bg-black/60 md:hidden" onClick={() => setSidebarOpen(false)} />
+      )}
+      <aside className={`${isSidebarOpen ? 'translate-x-0 w-72' : '-translate-x-full md:translate-x-0 w-72 md:w-24'} fixed md:relative inset-y-0 left-0 h-full transition-all duration-300 border-r ${theme === ThemeMode.CONTRAST ? 'bg-black border-white' : 'bg-brand-maroon border-brand-maroon'} flex flex-col z-40 shadow-2xl`}>
         <div className="p-6 flex flex-col items-center">
           <div className="flex items-center justify-between w-full mb-8">
             <div className={`w-12 h-12 bg-white rounded-lg flex items-center justify-center p-1 overflow-hidden shadow-inner`}>
               <img src="https://techbridge.edu.gh/static/TUC_LOGO_1.png" alt="Logo" className="object-contain" />
             </div>
             {isSidebarOpen && <span className="font-heading font-black text-xl text-white tracking-tighter uppercase leading-none ml-3">TECHBRIDGE</span>}
-            <button onClick={() => setSidebarOpen(!isSidebarOpen)} className="p-1 hover:bg-white/10 rounded-md text-brand-gold ml-auto">
+            <button onClick={() => setSidebarOpen(!isSidebarOpen)} className="p-2 min-h-[44px] w-11 flex items-center justify-center hover:bg-white/10 rounded-md text-brand-gold ml-auto" aria-label={isSidebarOpen ? 'Collapse sidebar' : 'Expand sidebar'}>
               {isSidebarOpen ? <X size={20} /> : <Menu size={20} />}
             </button>
           </div>
@@ -132,12 +135,17 @@ const App: React.FC = () => {
       </aside>
 
       <main className="flex-1 overflow-auto flex flex-col relative">
-        <header className="sticky top-0 z-10 bg-white dark:bg-slate-900 border-b-4 border-brand-maroon px-10 py-5 flex justify-between items-center shadow-md">
-          <div className="flex flex-col">
-            <h1 className="text-3xl font-black text-brand-maroon uppercase">{currentView.replace('_', ' ')}</h1>
-            <p className="text-[10px] font-bold text-slate-400 tracking-[0.2em] uppercase">TechBridge ICT Infrastructure Dept.</p>
+        <header className="sticky top-0 z-10 bg-white dark:bg-slate-900 border-b-4 border-brand-maroon px-4 sm:px-6 lg:px-10 py-4 sm:py-5 flex justify-between items-center shadow-md">
+          <div className="flex items-center gap-3">
+            <button type="button" onClick={() => setSidebarOpen(true)} className="md:hidden p-2 min-h-[44px] w-11 flex items-center justify-center rounded-lg hover:bg-slate-100" aria-label="Open navigation">
+              <Menu size={20} className="text-brand-maroon" />
+            </button>
+            <div className="flex flex-col">
+              <h1 className="text-xl sm:text-3xl font-black text-brand-maroon uppercase">{currentView.replace('_', ' ')}</h1>
+              <p className="text-[10px] font-bold text-slate-400 tracking-[0.2em] uppercase">TechBridge ICT Infrastructure Dept.</p>
+            </div>
           </div>
-          <div className="flex items-center gap-4 px-5 py-2 border-2 border-brand-maroon/5 rounded-2xl bg-slate-50 dark:bg-slate-800">
+          <div className="hidden sm:flex items-center gap-4 px-5 py-2 border-2 border-brand-maroon/5 rounded-2xl bg-slate-50 dark:bg-slate-800">
             <div className="text-right leading-tight">
               <p className="text-xs font-black text-brand-maroon uppercase">Daniel Twum</p>
               <p className="text-[9px] font-bold opacity-60">HEAD OF ICT</p>
@@ -148,7 +156,7 @@ const App: React.FC = () => {
           </div>
         </header>
 
-        <div className="flex-1 p-10">
+        <div className="flex-1 p-4 sm:p-6 lg:p-10">
           {currentView === 'DASHBOARD' && <Dashboard />}
           {currentView === 'QUESTIONS' && <QuestionBank />}
           {currentView === 'QUIZZES' && <QuizConfig />}
