@@ -58,7 +58,7 @@ log '[2/7] Cloning ${SUBFOLDER}...'
 git clone --filter=blob:none --sparse --depth 1 "`$REPO" "`$TMPDIR"
 cd "`$TMPDIR" && git sparse-checkout set ${SUBFOLDER} && cd ${SUBFOLDER}
 log '[3/7] Injecting .env.local...'; cp /tmp/.env.${PM2_APP} .env.local 2>/dev/null || log 'No .env.local — VITE_ vars undefined'
-log '[4/7] Installing...'; pnpm install --frozen-lockfile --silent 2>/dev/null || pnpm install --no-frozen-lockfile --silent
+log '[4/7] Installing...'; export PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1; pnpm install --frozen-lockfile --silent 2>/dev/null || pnpm install --no-frozen-lockfile --silent
 log '[5/7] Building...'; pnpm build
 log '[6/7] Deploying...'; mkdir -p "`$DEPLOY_PATH" && rsync -a --delete dist/ "`$DEPLOY_PATH/dist/"; cp index.html "`$DEPLOY_PATH/dist/index.html" 2>/dev/null || true
 log '[7/7] Backend deps...'; cp server.js package.json "`$DEPLOY_PATH/" 2>/dev/null || true; cd "`$DEPLOY_PATH" && { pnpm install --prod --silent 2>/dev/null || { echo '[WARN] pnpm install failed — falling back to npm'; npm install --omit=dev --silent; }; } || true

@@ -62,6 +62,7 @@ if [ -f /tmp/.env.markai.build ]; then
   log 'injected build .env.local'
 fi
 log '[3/5] Installing dependencies...'
+export PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1
 pnpm install --no-frozen-lockfile || true
 log '[4/5] Building...'
 ./node_modules/.bin/vite build

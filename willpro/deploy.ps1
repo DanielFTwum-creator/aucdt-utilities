@@ -63,6 +63,7 @@ cd $buildDir
 git sparse-checkout set willpro
 cd willpro
 log '[3/5] Installing dependencies...'
+export PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1
 pnpm install --no-frozen-lockfile --silent 2>/dev/null || npm install --silent
 log '[4/5] Building...'
 cp /tmp/.env.willpro .env.local 2>/dev/null || true
