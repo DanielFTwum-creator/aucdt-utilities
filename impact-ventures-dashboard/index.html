@@ -135,12 +135,17 @@
         background: radial-gradient(circle at 50% 50%, #fafafa 0%, #f4f4f5 100%) !important;
         margin: 0;
         padding: 0;
+        font-family: 'Inter', sans-serif;
+        overflow: hidden;
+      }
+      #root {
+        width: 100%;
+      }
+      .ventures-splash-container {
         display: flex;
         align-items: center;
         justify-content: center;
         min-height: 100vh;
-        font-family: 'Inter', sans-serif;
-        overflow: hidden;
       }
       .ventures-splash {
         text-align: center;
@@ -218,10 +223,12 @@
       })();
     </script>
     <div id="root">
-      <div class="ventures-splash">
-        <span class="ventures-logo">Impact <span>Ventures</span></span>
-        <div class="ventures-status">Venture Intelligence</div>
-        <div class="ventures-loading"></div>
+      <div class="ventures-splash-container">
+        <div class="ventures-splash">
+          <span class="ventures-logo">Impact <span>Ventures</span></span>
+          <div class="ventures-status">Venture Intelligence</div>
+          <div class="ventures-loading"></div>
+        </div>
       </div>
     </div>
     <script type="module" src="/src/main.tsx"></script>

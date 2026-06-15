@@ -187,12 +187,17 @@
         background: radial-gradient(circle at 50% 50%, #fafafa 0%, #f4f4f5 100%) !important;
         margin: 0;
         padding: 0;
+        font-family: 'Inter', sans-serif;
+        overflow: hidden;
+      }
+      #root {
+        width: 100%;
+      }
+      .blueprint-splash-container {
         display: flex;
         align-items: center;
         justify-content: center;
         min-height: 100vh;
-        font-family: 'Inter', sans-serif;
-        overflow: hidden;
       }
       .blueprint-splash {
         text-align: center;
@@ -276,10 +281,12 @@
   </head>
   <body>
     <div id="root">
-      <div class="blueprint-splash">
-        <span class="blueprint-logo">TechBridge <span>Blueprint</span></span>
-        <div class="blueprint-status">Project Tracker</div>
-        <div class="blueprint-loading"></div>
+      <div class="blueprint-splash-container">
+        <div class="blueprint-splash">
+          <span class="blueprint-logo">TechBridge <span>Blueprint</span></span>
+          <div class="blueprint-status">Project Tracker</div>
+          <div class="blueprint-loading"></div>
+        </div>
       </div>
     </div>
     <script type="module" src="/src/main.tsx"></script>
