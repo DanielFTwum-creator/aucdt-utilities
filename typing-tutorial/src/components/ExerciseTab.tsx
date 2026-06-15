@@ -1,12 +1,70 @@
 import { useState, useEffect, useRef, ChangeEvent } from "react";
 import { Lesson, UserProgress } from "../types";
-import { ArrowLeft, Play, RefreshCw, Volume2, VolumeX, Keyboard } from "lucide-react";
+import { ArrowLeft, Play, RefreshCw, Volume2, VolumeX, Keyboard, Settings } from "lucide-react";
+
+// Per-finger colour-coding shared between the hand diagram and the keyboard's
+// active-key highlight, so each finger always maps to the same colour everywhere.
+// "Active": full-strength colour + glow. "Idle": same colour at low opacity.
+export const FINGER_ACCENTS: Record<string, { handActive: string; handIdle: string; label: string; text: string; key: string; keySpace?: string }> = {
+  Pinky: {
+    handActive: "fill-amber-500 drop-shadow-[0_0_8px_rgba(245,158,11,0.85)]",
+    handIdle: "fill-amber-500/30",
+    label: "fill-amber-600 dark:fill-amber-400",
+    text: "text-amber-600 dark:text-amber-400",
+    key: "bg-amber-400 border-amber-600 text-slate-950 scale-110 shadow-lg ring-4 ring-amber-300/70 animate-pulse dark:border-amber-200 dark:ring-amber-300/50 dark:shadow-[0_0_30px_rgba(245,158,11,0.7)]",
+  },
+  Ring: {
+    handActive: "fill-emerald-500 drop-shadow-[0_0_8px_rgba(16,185,129,0.85)]",
+    handIdle: "fill-emerald-500/30",
+    label: "fill-emerald-600 dark:fill-emerald-400",
+    text: "text-emerald-600 dark:text-emerald-400",
+    key: "bg-emerald-400 border-emerald-600 text-slate-950 scale-110 shadow-lg ring-4 ring-emerald-300/70 animate-pulse dark:border-emerald-200 dark:ring-emerald-300/50 dark:shadow-[0_0_30px_rgba(16,185,129,0.7)]",
+  },
+  Middle: {
+    handActive: "fill-violet-500 drop-shadow-[0_0_8px_rgba(139,92,246,0.85)]",
+    handIdle: "fill-violet-500/30",
+    label: "fill-violet-600 dark:fill-violet-400",
+    text: "text-violet-600 dark:text-violet-400",
+    key: "bg-violet-400 border-violet-600 text-slate-950 scale-110 shadow-lg ring-4 ring-violet-300/70 animate-pulse dark:border-violet-200 dark:ring-violet-300/50 dark:shadow-[0_0_30px_rgba(139,92,246,0.7)]",
+  },
+  Index: {
+    handActive: "fill-blue-500 drop-shadow-[0_0_8px_rgba(59,130,246,0.85)]",
+    handIdle: "fill-blue-500/30",
+    label: "fill-blue-600 dark:fill-blue-400",
+    text: "text-blue-600 dark:text-blue-400",
+    key: "bg-blue-400 border-blue-600 text-slate-950 scale-110 shadow-lg ring-4 ring-blue-300/70 animate-pulse dark:border-blue-200 dark:ring-blue-300/50 dark:shadow-[0_0_30px_rgba(59,130,246,0.7)]",
+  },
+  Thumbs: {
+    handActive: "fill-cyan-400 drop-shadow-[0_0_8px_rgba(34,211,238,0.85)]",
+    handIdle: "fill-cyan-400/30",
+    label: "fill-cyan-600 dark:fill-cyan-400",
+    text: "text-cyan-600 dark:text-cyan-400",
+    key: "bg-cyan-400 border-cyan-600 text-slate-950 scale-110 shadow-lg ring-4 ring-cyan-300/70 animate-pulse dark:border-cyan-200 dark:ring-cyan-300/50 dark:shadow-[0_0_30px_rgba(34,211,238,0.7)]",
+    keySpace: "bg-cyan-400 border-cyan-600 text-slate-950 scale-105 shadow-lg ring-4 ring-cyan-300/70 animate-pulse dark:border-cyan-200 dark:ring-cyan-300/50 dark:shadow-[0_0_30px_rgba(34,211,238,0.7)]",
+  },
+};
+
+// Results-screen letter grade thresholds: S=100%acc+40wpm, A=95%+30, B=85%+20, C=pass, F=<70%
+function getGrade(accuracy: number, wpm: number): "S" | "A" | "B" | "C" | "F" {
+  if (accuracy >= 100 && wpm >= 40) return "S";
+  if (accuracy >= 95 && wpm >= 30) return "A";
+  if (accuracy >= 85 && wpm >= 20) return "B";
+  if (accuracy >= 70) return "C";
+  return "F";
+}
+
+const GRADE_STYLES: Record<string, string> = {
+  S: "bg-amber-400/10 border-amber-400 text-amber-500 dark:text-amber-300",
+  A: "bg-emerald-400/10 border-emerald-400 text-emerald-500 dark:text-emerald-300",
+  B: "bg-blue-400/10 border-blue-400 text-blue-500 dark:text-blue-300",
+  C: "bg-violet-400/10 border-violet-400 text-violet-500 dark:text-violet-300",
+  F: "bg-rose-400/10 border-rose-400 text-rose-500 dark:text-rose-300",
+};
 
 // R1/R3 Hand diagram: realistic palm + finger illustration showing which finger
 // to use for the next target character, in resting position over the home row.
-function HandDiagram({ activeHand, activeFinger, isIdle }: { activeHand: string; activeFinger: string; isIdle: boolean }) {
+function HandDiagram({ activeHand, activeFinger }: { activeHand: string; activeFinger: string; isIdle: boolean }) {
   const isSpace = activeHand === "Hands";
-  const homeKeys = ["Pinky", "Ring", "Middle", "Index"];
 
   const leftFingers = [
     { name: "Pinky",  key: "A", x: 26,  w: 34, h: 58 },
@@ -21,17 +79,12 @@ function HandDiagram({ activeHand, activeFinger, isIdle }: { activeHand: string;
     { name: "Pinky",  key: ";", x: 540, w: 34, h: 58 },
   ];
 
-  const ACTIVE = "fill-cyan-400 drop-shadow-[0_0_8px_rgba(34,211,238,0.85)]";
-  const RESTING = "fill-slate-400 dark:fill-slate-500";
-  const IDLE_OFF = "fill-slate-300 dark:fill-slate-700";
-
   const fingerClass = (hand: "Left" | "Right", name: string) => {
-    if (!isSpace && activeHand.startsWith(hand) && activeFinger === name) return ACTIVE;
-    if (isIdle && homeKeys.includes(name)) return RESTING;
-    return IDLE_OFF;
+    if (!isSpace && activeHand.startsWith(hand) && activeFinger === name) return FINGER_ACCENTS[name].handActive;
+    return FINGER_ACCENTS[name].handIdle;
   };
 
-  const thumbClass = isSpace ? ACTIVE : isIdle ? RESTING : IDLE_OFF;
+  const thumbClass = isSpace ? FINGER_ACCENTS.Thumbs.handActive : FINGER_ACCENTS.Thumbs.handIdle;
   const palmClass = "fill-slate-200 dark:fill-slate-800";
   const palmTop = 128;
 
@@ -73,7 +126,7 @@ function HandDiagram({ activeHand, activeFinger, isIdle }: { activeHand: string;
         const isActiveLabel = !isSpace && activeHand.startsWith(f.hand) && activeFinger === f.name;
         return (
           <text key={`${f.name}-lbl`} x={f.x + f.w / 2} y={palmTop - f.h + 16} textAnchor="middle"
-            className={`text-[11px] font-mono font-bold uppercase ${isActiveLabel ? "fill-slate-950" : "fill-slate-500 dark:fill-slate-400"}`}>
+            className={`text-[11px] font-mono font-bold uppercase ${isActiveLabel ? "fill-slate-950" : FINGER_ACCENTS[f.name].label}`}>
             {f.key}
           </text>
         );
@@ -103,6 +156,10 @@ export default function ExerciseTab({ lesson, progress, onFinish, onBack }: Exer
   const [accuracy, setAccuracy] = useState(100);
   const [elapsed, setElapsed] = useState(0);
   const [muteAudio, setMuteAudio] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
+
+  // R5 Regenerate: results shown when the whole lesson's practice set is completed
+  const [results, setResults] = useState<{ accuracy: number; wpm: number; points: number; time: number; combo: number } | null>(null);
 
   // Focus
   const inputRef = useRef<HTMLInputElement>(null);
@@ -345,8 +402,8 @@ export default function ExerciseTab({ lesson, progress, onFinish, onBack }: Exer
           const availableIndices = allIndices.filter(i => !newUsed.includes(i));
 
           if (availableIndices.length === 0) {
-            // All practices in this lesson completed — record progress and return to lesson map
-            onFinish(currentAcc, calculatedWpm, pointsEarned, finalSessionMax);
+            // All practices in this lesson completed — show results screen before returning to map
+            setResults({ accuracy: currentAcc, wpm: calculatedWpm, points: pointsEarned, time: elapsed, combo: finalSessionMax });
             return;
           }
 
@@ -373,6 +430,96 @@ export default function ExerciseTab({ lesson, progress, onFinish, onBack }: Exer
     ["a", "s", "d", "f", "g", "h", "j", "k", "l", ";"],
     ["z", "x", "c", "v", "b", "n", "m", ",", "."]
   ];
+
+  // Results screen: record progress and return to the lesson map
+  const handleContinue = () => {
+    if (!results) return;
+    onFinish(results.accuracy, results.wpm, results.points, results.combo);
+  };
+
+  // Results screen: replay this lesson's practice set from the start
+  const handleRetry = () => {
+    setResults(null);
+    setUsedPracticeIndices([]);
+    usedPracticeIndicesRef.current = [];
+    setWrongKeys([]);
+    setCombo(0);
+    setMaxCombo(0);
+    setIsCalibrationMode(false);
+    setCalibrationText("");
+    const randomIndex = Math.floor(Math.random() * lesson.practices.length);
+    setCurrentPracticeIdx(randomIndex);
+    handleReset();
+  };
+
+  // R5 Regenerate: completion / results screen replaces the exercise once the lesson is finished
+  if (results) {
+    const grade = getGrade(results.accuracy, results.wpm);
+    return (
+      <div className="space-y-3">
+        <div className="flex py-0.5">
+          <button
+            id="backToLessonsBtn"
+            onClick={onBack}
+            className="inline-flex items-center space-x-2 text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white text-sm font-semibold cursor-pointer border border-zinc-200 dark:border-zinc-800 px-3 py-1.5 min-h-[44px] rounded-lg bg-zinc-50 dark:bg-zinc-900 transition-all shadow-sm"
+          >
+            <ArrowLeft size={16} />
+            <span>Exit to Map</span>
+          </button>
+        </div>
+
+        <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl p-6 sm:p-10 text-center space-y-5 shadow-sm animate-fade-in">
+          <div className="text-[10px] font-mono font-bold tracking-widest text-sky-600 dark:text-cyan-400 uppercase">
+            Lesson complete
+          </div>
+          <h3 className="text-lg sm:text-xl font-bold text-zinc-900 dark:text-white uppercase tracking-tight font-mono">
+            {lesson.title}
+          </h3>
+
+          <div className={`mx-auto w-20 h-20 rounded-2xl flex items-center justify-center text-4xl font-black border-4 ${GRADE_STYLES[grade]}`}>
+            {grade}
+          </div>
+
+          <div className="grid grid-cols-3 gap-3 max-w-md mx-auto">
+            <div className="p-3 bg-zinc-50 dark:bg-slate-950/30 border border-zinc-100 dark:border-white/5 rounded-xl">
+              <div className="text-[9px] font-mono font-bold text-zinc-500 dark:text-slate-500 uppercase tracking-widest">WPM</div>
+              <div className="text-2xl font-bold text-emerald-600 dark:text-emerald-400 mt-0.5 font-mono">{results.wpm}</div>
+            </div>
+            <div className="p-3 bg-zinc-50 dark:bg-slate-950/30 border border-zinc-100 dark:border-white/5 rounded-xl">
+              <div className="text-[9px] font-mono font-bold text-zinc-500 dark:text-slate-500 uppercase tracking-widest">Accuracy</div>
+              <div className="text-2xl font-bold text-sky-600 dark:text-cyan-400 mt-0.5 font-mono">{results.accuracy}%</div>
+            </div>
+            <div className="p-3 bg-zinc-50 dark:bg-slate-950/30 border border-zinc-100 dark:border-white/5 rounded-xl">
+              <div className="text-[9px] font-mono font-bold text-zinc-500 dark:text-slate-500 uppercase tracking-widest">Time</div>
+              <div className="text-2xl font-bold text-amber-600 dark:text-amber-400 mt-0.5 font-mono">{results.time}s</div>
+            </div>
+          </div>
+
+          <div className="text-xs text-zinc-500 dark:text-slate-400 font-mono">
+            +{results.points} points · best streak {results.combo}x
+          </div>
+
+          <div className="flex flex-wrap justify-center gap-3 pt-2">
+            <button
+              id="retryLessonBtn"
+              onClick={handleRetry}
+              className="inline-flex items-center space-x-2 px-4 py-2.5 min-h-[44px] border border-zinc-200 dark:border-zinc-800 text-zinc-700 dark:text-zinc-300 rounded-lg text-sm font-bold hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-all cursor-pointer"
+            >
+              <RefreshCw size={14} />
+              <span>Retry</span>
+            </button>
+            <button
+              id="continueToMapBtn"
+              onClick={handleContinue}
+              className="inline-flex items-center space-x-2 px-4 py-2.5 min-h-[44px] bg-sky-600 dark:bg-cyan-500 text-white dark:text-slate-950 rounded-lg text-sm font-bold hover:bg-sky-700 dark:hover:bg-cyan-400 transition-all cursor-pointer shadow-sm"
+            >
+              <span>Next exercise</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-3">
@@ -410,65 +557,76 @@ export default function ExerciseTab({ lesson, progress, onFinish, onBack }: Exer
         </div>
       </div>
 
-      {/* 6R Keyboarding Protocol Hub — Cognitive UX Overlay */}
+      {/* Live coaching strip — finger guidance, streak, and a settings popover for audio/metronome */}
       <div className="bg-slate-950 text-white rounded-2xl p-3 border border-cyan-500/25 shadow-[0_0_15px_rgba(6,182,212,0.12)] relative overflow-hidden transition-all duration-300">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_90%_10%,_rgba(6,182,212,0.08),transparent_40%)] pointer-events-none"></div>
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-2 pb-2 border-b border-white/5 relative z-10">
-          <div className="flex items-center gap-2">
-            <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse"></span>
-            <h4 className="text-xs font-black tracking-wider uppercase text-zinc-100 font-mono">
-              6R Cognitive Training System
-            </h4>
+        <div className="flex items-center justify-between gap-2 relative z-10 text-xs font-mono">
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
+            {/* Live finger guidance */}
+            <span className="text-slate-400" title={getFingerGuidance(nextTargetChar || "")?.path || ""}>
+              Next: {getFingerGuidance(nextTargetChar || "") ? (
+                <span className={`font-bold ${FINGER_ACCENTS[getFingerGuidance(nextTargetChar || "")!.finger]?.text ?? "text-cyan-400"}`}>
+                  {getFingerGuidance(nextTargetChar || "")?.finger} finger
+                </span>
+              ) : (
+                <span className="font-bold text-cyan-400">—</span>
+              )}
+            </span>
+
+            {/* Streak / combo */}
+            <span className="text-slate-400">
+              Streak: <span className={`font-bold ${combo >= 15 ? 'text-amber-400 animate-pulse' : combo >= 5 ? 'text-cyan-400' : combo > 0 ? 'text-cyan-300' : 'text-slate-300'}`}>{combo}</span>
+              {(sessionMaxCombo > 0 || progress.bestCombo > 0) && (
+                <span className="text-slate-500"> (best {Math.max(sessionMaxCombo, progress.bestCombo)})</span>
+              )}
+            </span>
           </div>
 
-          <div className="flex flex-wrap items-center gap-2">
-            {/* R2 Metronome Controls */}
-            <div className="flex items-center space-x-2 bg-slate-900/60 border border-white/5 rounded-lg px-2 py-1">
-              <span className="text-[9px] font-mono font-bold uppercase text-slate-400">⏱️ R2:</span>
-              <select
-                id="metronomeBpmSelect"
-                value={metronomeBpm}
-                onChange={(e) => setMetronomeBpm(Number(e.target.value))}
-                className="bg-transparent text-xs font-mono font-bold text-cyan-400 focus:outline-none cursor-pointer"
-              >
-                <option value="0" className="bg-slate-950 text-white">OFF</option>
-                <option value="40" className="bg-slate-950 text-white">40 BPM — Slow</option>
-                <option value="60" className="bg-slate-950 text-white">60 BPM — Steady</option>
-                <option value="80" className="bg-slate-950 text-white">80 BPM — Brisk</option>
-                <option value="100" className="bg-slate-950 text-white">100 BPM — Fast</option>
-                <option value="120" className="bg-slate-950 text-white">120 BPM — Sprint</option>
-              </select>
-            </div>
+          {/* Settings popover toggle */}
+          <div className="relative">
+            <button
+              id="exerciseSettingsToggle"
+              onClick={() => setShowSettings((s) => !s)}
+              className="p-1.5 rounded-lg bg-slate-900/60 border border-white/5 text-slate-400 hover:text-cyan-400 hover:border-cyan-500/30 transition-all cursor-pointer flex items-center justify-center"
+              title="Audio &amp; metronome settings"
+            >
+              <Settings size={14} />
+            </button>
 
-            {/* R4 Tone Selector */}
-            <div className="flex items-center space-x-2 bg-slate-900/60 border border-white/5 rounded-lg px-2 py-1">
-              <span className="text-[9px] font-mono font-bold uppercase text-slate-400">🔊 R4:</span>
-              <select
-                id="audioModeSelect"
-                value={audioMode}
-                onChange={(e) => setAudioMode(e.target.value as any)}
-                className="bg-transparent text-xs font-mono font-bold text-cyan-400 focus:outline-none cursor-pointer"
-              >
-                <option value="synth-tick" className="bg-slate-950 text-white">Synth Tick</option>
-                <option value="mechanical-clack" className="bg-slate-950 text-white">Mecha-Clack</option>
-                <option value="none" className="bg-slate-950 text-white">Silent</option>
-              </select>
-            </div>
+            {showSettings && (
+              <div className="absolute right-0 mt-2 w-56 bg-slate-900 border border-white/10 rounded-xl p-3 shadow-xl z-20 space-y-3">
+                <div className="space-y-1">
+                  <label htmlFor="metronomeBpmSelect" className="text-[10px] font-mono uppercase tracking-widest text-slate-400">Metronome</label>
+                  <select
+                    id="metronomeBpmSelect"
+                    value={metronomeBpm}
+                    onChange={(e) => setMetronomeBpm(Number(e.target.value))}
+                    className="w-full bg-slate-950 border border-white/5 rounded-lg px-2 py-1.5 text-xs font-mono font-bold text-cyan-400 focus:outline-none cursor-pointer"
+                  >
+                    <option value="0">Off</option>
+                    <option value="40">40 BPM — Slow</option>
+                    <option value="60">60 BPM — Steady</option>
+                    <option value="80">80 BPM — Brisk</option>
+                    <option value="100">100 BPM — Fast</option>
+                    <option value="120">120 BPM — Sprint</option>
+                  </select>
+                </div>
+                <div className="space-y-1">
+                  <label htmlFor="audioModeSelect" className="text-[10px] font-mono uppercase tracking-widest text-slate-400">Key sound</label>
+                  <select
+                    id="audioModeSelect"
+                    value={audioMode}
+                    onChange={(e) => setAudioMode(e.target.value as any)}
+                    className="w-full bg-slate-950 border border-white/5 rounded-lg px-2 py-1.5 text-xs font-mono font-bold text-cyan-400 focus:outline-none cursor-pointer"
+                  >
+                    <option value="synth-tick">Synth tick</option>
+                    <option value="mechanical-clack">Mechanical clack</option>
+                    <option value="none">Silent</option>
+                  </select>
+                </div>
+              </div>
+            )}
           </div>
-        </div>
-
-        {/* 6R Quick Strip of active indicators — compact single line */}
-        <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5 mt-2 relative z-10 text-[10px] font-mono">
-          <span className="text-slate-400 font-bold uppercase">🏠 R1 <span className="text-cyan-400">ASDF/JKL;</span></span>
-          <span className="text-slate-400 font-bold uppercase">⏱️ R2 <span className="text-cyan-400">{metronomeBpm > 0 ? `${metronomeBpm} BPM` : "Not Synced"}</span></span>
-          <span className="text-slate-400 font-bold uppercase truncate max-w-[200px]" title={getFingerGuidance(nextTargetChar || "")?.path || "Calculating Trajectory..."}>
-            👉 R3 <span className="text-cyan-400">{getFingerGuidance(nextTargetChar || "") ? `${getFingerGuidance(nextTargetChar || "")?.finger} (${getFingerGuidance(nextTargetChar || "")?.anchor})` : "Compute reach..."}</span>
-          </span>
-          <span className="text-slate-400 font-bold uppercase">📡 R4 <span className="text-emerald-400">Audio Clack</span></span>
-          <span className={`font-bold uppercase transition-all ${combo > 0 ? 'text-cyan-300' : 'text-slate-400'}`}>
-            🔥 R5 <span className={`${combo >= 15 ? 'text-amber-400 animate-pulse' : combo >= 5 ? 'text-cyan-400' : 'text-cyan-300'}`}>{combo}x</span>
-            <span className="text-slate-500"> (Best {sessionMaxCombo}x{progress.bestCombo > 0 ? `, All ${progress.bestCombo}x` : ""})</span>
-          </span>
         </div>
       </div>
 
@@ -632,12 +790,13 @@ export default function ExerciseTab({ lesson, progress, onFinish, onBack }: Exer
               <div key={rIdx} className="flex justify-center space-x-2 lg:space-x-1.5 xl:space-x-2">
                 {row.map((key) => {
                   const isActive = nextTargetChar === key;
+                  const activeFinger = isActive ? getFingerGuidance(key)?.finger : undefined;
                   return (
                     <div
                       key={key}
                       className={`w-14 h-14 sm:w-20 sm:h-20 lg:w-10 lg:h-10 xl:w-12 xl:h-12 2xl:w-16 2xl:h-16 flex items-center justify-center rounded-lg text-base sm:text-2xl lg:text-sm xl:text-lg 2xl:text-2xl font-bold border-2 transition-all ${
                         isActive
-                          ? "bg-cyan-400 border-cyan-600 text-slate-950 scale-110 shadow-lg ring-4 ring-cyan-300/70 animate-pulse dark:border-cyan-200 dark:ring-cyan-300/50 dark:shadow-[0_0_30px_rgba(34,211,238,0.7)]"
+                          ? (activeFinger && FINGER_ACCENTS[activeFinger]?.key) || FINGER_ACCENTS.Index.key
                           : "bg-white dark:bg-slate-900/40 border-zinc-200 dark:border-white/5 text-zinc-800 dark:text-slate-400"
                       }`}
                     >
@@ -653,7 +812,7 @@ export default function ExerciseTab({ lesson, progress, onFinish, onBack }: Exer
               <div
                 className={`h-14 sm:h-20 lg:h-10 xl:h-12 2xl:h-16 w-64 sm:w-96 lg:w-48 xl:w-64 2xl:w-80 flex items-center justify-center rounded-lg text-sm sm:text-base font-bold border-2 transition-all ${
                   nextTargetChar === " "
-                    ? "bg-cyan-400 border-cyan-600 text-slate-950 scale-105 shadow-lg ring-4 ring-cyan-300/70 animate-pulse dark:border-cyan-200 dark:ring-cyan-300/50 dark:shadow-[0_0_30px_rgba(34,211,238,0.7)]"
+                    ? FINGER_ACCENTS.Thumbs.keySpace
                     : "bg-white dark:bg-slate-900/40 border-zinc-200 dark:border-white/5 text-zinc-500 dark:text-slate-500"
                 }`}
               >
