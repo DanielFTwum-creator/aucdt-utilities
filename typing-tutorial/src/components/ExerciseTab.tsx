@@ -36,7 +36,7 @@ function HandDiagram({ activeHand, activeFinger, isIdle }: { activeHand: string;
   const palmTop = 128;
 
   return (
-    <svg viewBox="0 0 600 220" className="w-full max-w-2xl mx-auto" aria-hidden="true">
+    <svg viewBox="0 0 600 220" className="w-full max-w-md mx-auto lg:max-w-none" aria-hidden="true">
       {/* Left hand fingers */}
       {leftFingers.map((f) => (
         <rect key={f.name} x={f.x} y={palmTop - f.h} width={f.w} height={f.h + 24} rx={f.w / 2}
@@ -538,7 +538,7 @@ export default function ExerciseTab({ lesson, progress, onFinish, onBack }: Exer
           <div className="text-zinc-800 dark:text-zinc-200 break-words flex flex-wrap justify-center mt-2">
             {currentSentence.split("").map((char, index) => {
               const isCurrent = index === inputVal.length;
-              let charStyle = "text-zinc-400 dark:text-slate-600"; // default unentered
+              let charStyle = "text-zinc-500 dark:text-slate-400"; // default unentered
               if (index < inputVal.length) {
                 charStyle = inputVal[index] === char
                   ? "text-zinc-900 dark:text-zinc-300"
@@ -604,49 +604,53 @@ export default function ExerciseTab({ lesson, progress, onFinish, onBack }: Exer
           <span>Tactile Guide: Strike the Highlighted Target Key</span>
         </div>
 
-        {/* R1/R3 Hand diagram — shows active finger, home row on idle */}
-        <div className="mb-2 max-w-3xl mx-auto">
-          <div className="text-[9px] font-mono font-bold text-zinc-500 dark:text-slate-500 uppercase tracking-widest text-center mb-1">
-            🏠 R1 Home Row Posture — Active Finger
-          </div>
-          <HandDiagram
-            activeHand={getFingerGuidance(nextTargetChar || "")?.hand ?? ""}
-            activeFinger={getFingerGuidance(nextTargetChar || "")?.finger ?? ""}
-            isIdle={!isStarted}
-          />
-        </div>
+        {/* Hands + keyboard side-by-side on wide screens to avoid stacking height */}
+        <div className="flex flex-col lg:flex-row lg:items-center gap-2 lg:gap-4 max-w-6xl mx-auto">
 
-        <div className="space-y-3 max-w-4xl mx-auto font-mono">
-          {keyboardRows.map((row, rIdx) => (
-            <div key={rIdx} className="flex justify-center space-x-3">
-              {row.map((key) => {
-                const isActive = nextTargetChar === key;
-                return (
-                  <div
-                    key={key}
-                    className={`w-14 h-14 sm:w-20 sm:h-20 flex items-center justify-center rounded-lg text-base sm:text-2xl font-bold border-2 transition-all ${
-                      isActive
-                        ? "bg-cyan-400 border-cyan-600 text-slate-950 scale-110 shadow-lg ring-4 ring-cyan-300/70 animate-pulse dark:border-cyan-200 dark:ring-cyan-300/50 dark:shadow-[0_0_30px_rgba(34,211,238,0.7)]"
-                        : "bg-white dark:bg-slate-900/40 border-zinc-200 dark:border-white/5 text-zinc-800 dark:text-slate-400"
-                    }`}
-                  >
-                    <span className="uppercase">{key}</span>
-                  </div>
-                );
-              })}
+          {/* R1/R3 Hand diagram — shows active finger, home row on idle */}
+          <div className="lg:w-[40%] lg:shrink-0">
+            <div className="text-[9px] font-mono font-bold text-zinc-500 dark:text-slate-500 uppercase tracking-widest text-center mb-1">
+              🏠 R1 Home Row Posture — Active Finger
             </div>
-          ))}
+            <HandDiagram
+              activeHand={getFingerGuidance(nextTargetChar || "")?.hand ?? ""}
+              activeFinger={getFingerGuidance(nextTargetChar || "")?.finger ?? ""}
+              isIdle={!isStarted}
+            />
+          </div>
 
-          {/* Spacebar row */}
-          <div className="flex justify-center mt-3">
-            <div
-              className={`h-14 sm:h-20 w-64 sm:w-96 flex items-center justify-center rounded-lg text-sm sm:text-base font-bold border-2 transition-all ${
-                nextTargetChar === " "
-                  ? "bg-cyan-400 border-cyan-600 text-slate-950 scale-105 shadow-lg ring-4 ring-cyan-300/70 animate-pulse dark:border-cyan-200 dark:ring-cyan-300/50 dark:shadow-[0_0_30px_rgba(34,211,238,0.7)]"
-                  : "bg-white dark:bg-slate-900/40 border-zinc-200 dark:border-white/5 text-zinc-500 dark:text-slate-500"
-              }`}
-            >
-              <span className="tracking-widest font-mono text-center text-sm sm:text-base">SPACEBAR</span>
+          <div className="space-y-2 lg:space-y-1.5 mx-auto lg:flex-1 font-mono">
+            {keyboardRows.map((row, rIdx) => (
+              <div key={rIdx} className="flex justify-center space-x-2 lg:space-x-1.5 xl:space-x-2">
+                {row.map((key) => {
+                  const isActive = nextTargetChar === key;
+                  return (
+                    <div
+                      key={key}
+                      className={`w-14 h-14 sm:w-20 sm:h-20 lg:w-10 lg:h-10 xl:w-12 xl:h-12 2xl:w-16 2xl:h-16 flex items-center justify-center rounded-lg text-base sm:text-2xl lg:text-sm xl:text-lg 2xl:text-2xl font-bold border-2 transition-all ${
+                        isActive
+                          ? "bg-cyan-400 border-cyan-600 text-slate-950 scale-110 shadow-lg ring-4 ring-cyan-300/70 animate-pulse dark:border-cyan-200 dark:ring-cyan-300/50 dark:shadow-[0_0_30px_rgba(34,211,238,0.7)]"
+                          : "bg-white dark:bg-slate-900/40 border-zinc-200 dark:border-white/5 text-zinc-800 dark:text-slate-400"
+                      }`}
+                    >
+                      <span className="uppercase">{key}</span>
+                    </div>
+                  );
+                })}
+              </div>
+            ))}
+
+            {/* Spacebar row */}
+            <div className="flex justify-center mt-2 lg:mt-1.5">
+              <div
+                className={`h-14 sm:h-20 lg:h-10 xl:h-12 2xl:h-16 w-64 sm:w-96 lg:w-56 xl:w-72 2xl:w-96 flex items-center justify-center rounded-lg text-sm sm:text-base font-bold border-2 transition-all ${
+                  nextTargetChar === " "
+                    ? "bg-cyan-400 border-cyan-600 text-slate-950 scale-105 shadow-lg ring-4 ring-cyan-300/70 animate-pulse dark:border-cyan-200 dark:ring-cyan-300/50 dark:shadow-[0_0_30px_rgba(34,211,238,0.7)]"
+                    : "bg-white dark:bg-slate-900/40 border-zinc-200 dark:border-white/5 text-zinc-500 dark:text-slate-500"
+                }`}
+              >
+                <span className="tracking-widest font-mono text-center text-sm sm:text-base">SPACEBAR</span>
+              </div>
             </div>
           </div>
         </div>
