@@ -125,6 +125,30 @@ describe('VortexType: Full keyboard coverage across all lessons', () => {
     });
   });
 
+  it('plays a round of Shark Attack mode in the Arcade tab', () => {
+    cy.get('#navGameTabButton').click();
+
+    // Switch to Shark Attack mode and start on Easy (slowest rising words).
+    cy.get('#select-mode-shark-btn').click();
+    cy.get('#start-easy-game-btn').click();
+
+    // Lives indicator and shark tank render.
+    cy.contains('LIVES:').should('be.visible');
+    cy.get('#sharkTankArea').should('be.visible');
+
+    // Type the active target word correctly before the shark reaches it.
+    cy.get('#arcadeTypingInputElement').should('be.visible').then(($input) => {
+      // The word is rendered letter-by-letter as spans inside the rising bubble.
+      cy.get('#sharkTankArea span').then(($spans) => {
+        const word = [...$spans].map((el) => el.textContent).join('');
+        cy.wrap($input).type(word, { delay: 0 });
+      });
+    });
+
+    // Score should increase and a new word should surface.
+    cy.contains('SAVED: 1').should('be.visible');
+  });
+
   it('retry button restarts the lesson from scratch', () => {
     cy.get('#start-lesson-btn-1').click();
 
