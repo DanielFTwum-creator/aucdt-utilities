@@ -102,10 +102,19 @@ export default function ExerciseTab({ lesson, progress, onFinish, onBack }: Exer
   const inputRef = useRef<HTMLInputElement>(null);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
-  // TUC Academic 6R Methodology controls
-  const [metronomeBpm, setMetronomeBpm] = useState<number>(0);
+  // Ref mirror of usedPracticeIndices to avoid stale closures in the completion setTimeout
+  const usedPracticeIndicesRef = useRef<number[]>([]);
+
+  // TUC Academic 6R Methodology controls (R2: BPM & tone persisted across sessions)
+  const [metronomeBpm, setMetronomeBpm] = useState<number>(() => {
+    const cached = localStorage.getItem("tuc_metronome_bpm");
+    return cached ? Number(cached) : 0;
+  });
   const [metronomeTick, setMetronomeTick] = useState<boolean>(false);
-  const [audioMode, setAudioMode] = useState<"synth-tick" | "mechanical-clack" | "none">("none");
+  const [audioMode, setAudioMode] = useState<"synth-tick" | "mechanical-clack" | "none">(() => {
+    const cached = localStorage.getItem("tuc_audio_mode");
+    return (cached as "synth-tick" | "mechanical-clack" | "none") || "none";
+  });
   const [combo, setCombo] = useState<number>(0);
   const [maxCombo, setMaxCombo] = useState<number>(0);
   const [sessionMaxCombo, setSessionMaxCombo] = useState<number>(0);
@@ -166,6 +175,15 @@ export default function ExerciseTab({ lesson, progress, onFinish, onBack }: Exer
     playFeedTone(130, "triangle", 0.22, true);
   };
 
+  // R2: persist metronome BPM and audio tone selections
+  useEffect(() => {
+    localStorage.setItem("tuc_metronome_bpm", String(metronomeBpm));
+  }, [metronomeBpm]);
+
+  useEffect(() => {
+    localStorage.setItem("tuc_audio_mode", audioMode);
+  }, [audioMode]);
+
   // Active metronome synchronization thread (R2 Rhythm Metronome)
   useEffect(() => {
     let metronomeInterval: NodeJS.Timeout | null = null;
@@ -212,6 +230,7 @@ export default function ExerciseTab({ lesson, progress, onFinish, onBack }: Exer
   // Reset practice tracking when lesson changes
   useEffect(() => {
     setUsedPracticeIndices([]);
+    usedPracticeIndicesRef.current = [];
     // Select a random practice to start with
     const randomIndex = Math.floor(Math.random() * lesson.practices.length);
     setCurrentPracticeIdx(randomIndex);
@@ -286,10 +305,13 @@ export default function ExerciseTab({ lesson, progress, onFinish, onBack }: Exer
         
         setTimeout(() => {
           setIsCalibrationMode(true);
-          // Auto compile remedial drills repeating hard characters to sync muscles
-          const repeats = wrongKeys.map(k => `${k}${k}${k}`).join(" ");
-          const comboSet = wrongKeys.join("") + " " + wrongKeys.slice().reverse().join("");
-          const remediationString = `${repeats} ${comboSet} ${wrongKeys.join("")}`;
+          // Auto compile remedial drills repeating hard characters to sync muscles.
+          // Cap to the 5 most recent wrong keys so the drill stays a short, focused fix-up
+          // even when a long passage produced many distinct misses.
+          const capKeys = wrongKeys.slice(-5);
+          const repeats = capKeys.map(k => `${k}${k}${k}`).join(" ");
+          const comboSet = capKeys.join("") + " " + capKeys.slice().reverse().join("");
+          const remediationString = `${repeats} ${comboSet} ${capKeys.join("")}`;
           setCalibrationText(remediationString);
           setInputVal("");
           setIsStarted(false);
@@ -306,8 +328,10 @@ export default function ExerciseTab({ lesson, progress, onFinish, onBack }: Exer
           const pointsEarned = Math.round(currentAcc * 10 + calculatedWpm * 2) + streakMultiplier;
           const finalSessionMax = Math.max(sessionMaxCombo, maxCombo);
 
-          // Mark current practice as used
-          const newUsed = [...usedPracticeIndices, currentPracticeIdx];
+          // Mark current practice as used (read from ref to avoid stale closure
+          // if a drill completes faster than this 600ms timeout)
+          const newUsed = [...usedPracticeIndicesRef.current, currentPracticeIdx];
+          usedPracticeIndicesRef.current = newUsed;
           setUsedPracticeIndices(newUsed);
 
           // Calculate available practice indices
@@ -411,9 +435,6 @@ export default function ExerciseTab({ lesson, progress, onFinish, onBack }: Exer
                 <option value="100" className="bg-slate-950 text-white">100 BPM — Fast</option>
                 <option value="120" className="bg-slate-950 text-white">120 BPM — Sprint</option>
               </select>
-              {metronomeBpm > 0 && (
-                <span className={`w-2 h-2 rounded-full transition-all duration-75 ${metronomeTick ? 'bg-cyan-400 scale-125 shadow-[0_0_10px_#22d3ee]' : 'bg-slate-800'}`}></span>
-              )}
             </div>
 
             {/* R4 Tone Selector */}
@@ -609,6 +630,16 @@ export default function ExerciseTab({ lesson, progress, onFinish, onBack }: Exer
             <div className="text-center text-xs text-zinc-500 dark:text-slate-500 flex items-center justify-center space-x-1 uppercase tracking-wider font-mono animate-pulse">
               <Play size={10} fill="currentColor" />
               <span>Strike any key to begin countdown</span>
+            </div>
+          )}
+
+          {/* R2: live metronome beat indicator, positioned at the typing field for visibility */}
+          {metronomeBpm > 0 && (
+            <div className="text-center flex items-center justify-center space-x-2">
+              <span className={`w-2.5 h-2.5 rounded-full transition-all duration-75 ${metronomeTick ? 'bg-cyan-400 scale-125 shadow-[0_0_10px_#22d3ee]' : 'bg-zinc-300 dark:bg-slate-800'}`}></span>
+              <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-zinc-500 dark:text-slate-500">
+                {metronomeBpm} BPM Beat
+              </span>
             </div>
           )}
         </div>
