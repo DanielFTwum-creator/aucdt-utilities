@@ -27,6 +27,7 @@ export default function App() {
       wpm: 0,
       bestAccuracy: 0,
       bestSpeed: 0,
+      bestCombo: 0,
       lessonsCompleted: 0,
       unlockedCards: []
     };
@@ -148,7 +149,7 @@ export default function App() {
   };
 
   // Complete a row-exercise lesson
-  const handleCompleteLessonExercise = (accuracy: number, wpm: number, pointsEarned: number) => {
+  const handleCompleteLessonExercise = (accuracy: number, wpm: number, pointsEarned: number, sessionMaxCombo: number) => {
     if (!selectedLesson) return;
 
     const currentLessonIdx = LESSONS.findIndex((l) => l.id === selectedLesson.id);
@@ -159,6 +160,7 @@ export default function App() {
       const updatedLevel = Math.min(10, Math.floor(updatedCompleted / 2) + 1);
       const isRecordSpeed = wpm > prev.bestSpeed;
       const isRecordAcc = accuracy > prev.bestAccuracy;
+      const isRecordCombo = sessionMaxCombo > (prev.bestCombo ?? 0);
 
       return {
         ...prev,
@@ -168,7 +170,8 @@ export default function App() {
         lessonsCompleted: updatedCompleted,
         level: updatedLevel,
         bestSpeed: isRecordSpeed ? wpm : prev.bestSpeed,
-        bestAccuracy: isRecordAcc ? accuracy : prev.bestAccuracy
+        bestAccuracy: isRecordAcc ? accuracy : prev.bestAccuracy,
+        bestCombo: isRecordCombo ? sessionMaxCombo : (prev.bestCombo ?? 0)
       };
     });
 

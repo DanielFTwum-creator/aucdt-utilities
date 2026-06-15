@@ -33,7 +33,7 @@ export const InputFooter: React.FC<InputFooterProps> = ({
 
   return (
     <div className="shrink-0 px-4 sm:px-6 lg:px-8 pt-2 pb-6">
-        <div className="max-w-4xl mx-auto">
+        <div className="w-full">
             <div className="bg-[var(--color-bg-secondary)] rounded-lg p-4 sm:p-6 shadow-lg border border-[var(--color-border-primary)] hover:border-[var(--color-border-focus)] transition-colors duration-200">
                 <form onSubmit={(e) => { e.preventDefault(); handleSubmit(); }}>
                     <div className="mb-4">

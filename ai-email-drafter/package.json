@@ -21,6 +21,7 @@
     "node-fetch": "^3.3.2",
     "react": "19.2.5",
     "react-dom": "19.2.5",
+    "lucide-react": "^0.471.0",
     "tsx": "^4.22.3"
   },
   "devDependencies": {

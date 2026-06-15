@@ -123,7 +123,7 @@ export const Header: React.FC<HeaderProps> = ({ mode, setMode, onExportChat, onE
 
   return (
     <header className="bg-[var(--color-bg-contrast)]/95 border-b border-[var(--color-border-primary)] sticky top-0 z-50 backdrop-blur-sm">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="w-full px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center space-x-3">
             <div className="bg-[var(--color-accent-primary)] p-2 rounded-lg">

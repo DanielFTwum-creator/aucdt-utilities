@@ -19,6 +19,7 @@ export interface UserProgress {
   wpm: number;
   bestAccuracy: number;
   bestSpeed: number;
+  bestCombo: number;
   lessonsCompleted: number;
   unlockedCards: string[];
 }
