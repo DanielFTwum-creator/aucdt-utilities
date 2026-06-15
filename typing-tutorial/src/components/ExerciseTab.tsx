@@ -66,12 +66,18 @@ function HandDiagram({ activeHand, activeFinger, isIdle }: { activeHand: string;
         className={`transition-all duration-100 ${isSpace ? ACTIVE : "fill-slate-300 dark:fill-slate-700"}`} />
 
       {/* Home-row key labels at fingertips */}
-      {[...leftFingers, ...rightFingers].map((f) => (
-        <text key={`${f.name}-lbl`} x={f.x + f.w / 2} y={palmTop - f.h + 16} textAnchor="middle"
-          className="fill-slate-500 dark:fill-slate-400 text-[11px] font-mono font-bold uppercase">
-          {f.key}
-        </text>
-      ))}
+      {[
+        ...leftFingers.map((f) => ({ ...f, hand: "Left" as const })),
+        ...rightFingers.map((f) => ({ ...f, hand: "Right" as const })),
+      ].map((f) => {
+        const isActiveLabel = !isSpace && activeHand.startsWith(f.hand) && activeFinger === f.name;
+        return (
+          <text key={`${f.name}-lbl`} x={f.x + f.w / 2} y={palmTop - f.h + 16} textAnchor="middle"
+            className={`text-[11px] font-mono font-bold uppercase ${isActiveLabel ? "fill-slate-950" : "fill-slate-500 dark:fill-slate-400"}`}>
+            {f.key}
+          </text>
+        );
+      })}
     </svg>
   );
 }
