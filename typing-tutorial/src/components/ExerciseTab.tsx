@@ -616,7 +616,7 @@ export default function ExerciseTab({ lesson, progress, onFinish, onBack }: Exer
         <div className="flex flex-col lg:flex-row lg:items-center gap-2 lg:gap-4 max-w-6xl mx-auto">
 
           {/* R1/R3 Hand diagram — shows active finger, home row on idle */}
-          <div className="lg:w-[40%] lg:shrink-0">
+          <div className="lg:w-[28%] lg:shrink-0">
             <div className="text-[9px] font-mono font-bold text-zinc-500 dark:text-slate-500 uppercase tracking-widest text-center mb-1">
               🏠 R1 Home Row Posture — Active Finger
             </div>
@@ -651,7 +651,7 @@ export default function ExerciseTab({ lesson, progress, onFinish, onBack }: Exer
             {/* Spacebar row */}
             <div className="flex justify-center mt-2 lg:mt-1.5">
               <div
-                className={`h-14 sm:h-20 lg:h-10 xl:h-12 2xl:h-16 w-64 sm:w-96 lg:w-56 xl:w-72 2xl:w-96 flex items-center justify-center rounded-lg text-sm sm:text-base font-bold border-2 transition-all ${
+                className={`h-14 sm:h-20 lg:h-10 xl:h-12 2xl:h-16 w-64 sm:w-96 lg:w-48 xl:w-64 2xl:w-80 flex items-center justify-center rounded-lg text-sm sm:text-base font-bold border-2 transition-all ${
                   nextTargetChar === " "
                     ? "bg-cyan-400 border-cyan-600 text-slate-950 scale-105 shadow-lg ring-4 ring-cyan-300/70 animate-pulse dark:border-cyan-200 dark:ring-cyan-300/50 dark:shadow-[0_0_30px_rgba(34,211,238,0.7)]"
                     : "bg-white dark:bg-slate-900/40 border-zinc-200 dark:border-white/5 text-zinc-500 dark:text-slate-500"
