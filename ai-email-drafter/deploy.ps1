@@ -13,6 +13,7 @@ param(
 )
 
 $ErrorActionPreference = 'Stop'
+Set-Location $PSScriptRoot
 
 $PORT        = 3007
 $PM2_APP     = 'ai-email-drafter'
