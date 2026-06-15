@@ -116,7 +116,7 @@ function HandDiagram({ activeHand, activeFinger }: { activeHand: string; activeF
 
       {/* Spacebar */}
       <rect x="220" y="200" width="160" height="14" rx="7"
-        className={`transition-all duration-100 ${isSpace ? ACTIVE : "fill-slate-300 dark:fill-slate-700"}`} />
+        className={`transition-all duration-100 ${isSpace ? FINGER_ACCENTS.Thumbs.handActive : "fill-slate-300 dark:fill-slate-700"}`} />
 
       {/* Home-row key labels at fingertips */}
       {[
