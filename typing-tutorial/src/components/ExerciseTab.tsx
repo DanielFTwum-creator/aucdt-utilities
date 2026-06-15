@@ -369,10 +369,10 @@ export default function ExerciseTab({ lesson, progress, onFinish, onBack }: Exer
   ];
 
   return (
-    <div className="space-y-6">
-      
+    <div className="space-y-3">
+
       {/* Header and Control row */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 py-1">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 py-0.5">
         <button
           id="backToLessonsBtn"
           onClick={onBack}
@@ -467,21 +467,21 @@ export default function ExerciseTab({ lesson, progress, onFinish, onBack }: Exer
       </div>
 
       {/* Exercise core dashboard */}
-      <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl p-6 sm:p-8 shadow-sm">
-        
+      <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl p-3 sm:p-4 shadow-sm">
+
         {/* Lesson Badge */}
         <div className="flex items-center space-x-2 text-[10px] font-mono font-bold tracking-widest text-sky-600 dark:text-cyan-400 uppercase">
           <span>{isCalibrationMode ? "R6 SYSTEM HEALING MODE" : "Current Target Tiers"}</span>
           <span className={`w-1.5 h-1.5 rounded-full animate-bounce ${isCalibrationMode ? 'bg-amber-500' : 'bg-cyan-400'}`}></span>
           <span>Set {currentPracticeIdx + 1} of {lesson.practices.length}</span>
         </div>
-        <h3 className="text-xl font-bold text-zinc-900 dark:text-white mt-1 uppercase tracking-tight font-mono">
+        <h3 className="text-sm font-bold text-zinc-900 dark:text-white mt-0.5 uppercase tracking-tight font-mono">
           {lesson.title} {isCalibrationMode && "— Calibration Refinement"}
         </h3>
 
         {/* Live Calibration Alert banner */}
         {isCalibrationMode && (
-          <div className="bg-amber-500/10 border border-amber-500/30 text-amber-500 rounded-xl p-4.5 mb-5 mt-4 flex items-start gap-3 shadow-[0_0_15px_rgba(245,158,11,0.05)]">
+          <div className="bg-amber-500/10 border border-amber-500/30 text-amber-500 rounded-xl p-3 mb-2 mt-2 flex items-start gap-3 shadow-[0_0_15px_rgba(245,158,11,0.05)]">
             <div className="w-10 h-10 bg-amber-500/10 border border-amber-500/20 rounded-lg flex items-center justify-center text-lg shrink-0">
               ⚠️
             </div>
@@ -501,29 +501,29 @@ export default function ExerciseTab({ lesson, progress, onFinish, onBack }: Exer
         )}
 
         {/* Live Status indicator charts */}
-        <div className="grid grid-cols-3 gap-3 my-5 text-center">
-          <div className="p-3 bg-zinc-50 dark:bg-slate-950/30 border border-zinc-100 dark:border-white/5 rounded-xl">
-            <div className="text-[10px] font-mono font-bold text-zinc-500 dark:text-slate-500 uppercase tracking-widest">Accuracy</div>
-            <div className={`text-xl font-bold mt-0.5 ${accuracy < 80 ? "text-rose-600 dark:text-rose-400" : "text-sky-600 dark:text-cyan-400"}`}>
+        <div className="grid grid-cols-3 gap-2 my-2 text-center">
+          <div className="p-1.5 bg-zinc-50 dark:bg-slate-950/30 border border-zinc-100 dark:border-white/5 rounded-xl">
+            <div className="text-[9px] font-mono font-bold text-zinc-500 dark:text-slate-500 uppercase tracking-widest">Accuracy</div>
+            <div className={`text-base font-bold mt-0.5 ${accuracy < 80 ? "text-rose-600 dark:text-rose-400" : "text-sky-600 dark:text-cyan-400"}`}>
               {accuracy}%
             </div>
           </div>
-          <div className="p-3 bg-zinc-50 dark:bg-slate-950/30 border border-zinc-100 dark:border-white/5 rounded-xl">
-            <div className="text-[10px] font-mono font-bold text-zinc-500 dark:text-slate-500 uppercase tracking-widest">WPM Speed</div>
-            <div className="text-xl font-bold text-emerald-600 dark:text-emerald-400 mt-0.5 font-mono">
+          <div className="p-1.5 bg-zinc-50 dark:bg-slate-950/30 border border-zinc-100 dark:border-white/5 rounded-xl">
+            <div className="text-[9px] font-mono font-bold text-zinc-500 dark:text-slate-500 uppercase tracking-widest">WPM Speed</div>
+            <div className="text-base font-bold text-emerald-600 dark:text-emerald-400 mt-0.5 font-mono">
               {wpm}
             </div>
           </div>
-          <div className="p-3 bg-zinc-50 dark:bg-slate-950/30 border border-zinc-100 dark:border-white/5 rounded-xl">
-            <div className="text-[10px] font-mono font-bold text-zinc-500 dark:text-slate-500 uppercase tracking-widest">Elapsed Time</div>
-            <div className="text-xl font-bold text-amber-600 dark:text-amber-400 mt-0.5 font-mono">
+          <div className="p-1.5 bg-zinc-50 dark:bg-slate-950/30 border border-zinc-100 dark:border-white/5 rounded-xl">
+            <div className="text-[9px] font-mono font-bold text-zinc-500 dark:text-slate-500 uppercase tracking-widest">Elapsed Time</div>
+            <div className="text-base font-bold text-amber-600 dark:text-amber-400 mt-0.5 font-mono">
               {elapsed}s
             </div>
           </div>
         </div>
 
         {/* Progress bar towards completion of practice set */}
-        <div className="h-1 w-full bg-zinc-100 dark:bg-slate-950/40 rounded-full overflow-hidden mb-6">
+        <div className="h-1 w-full bg-zinc-100 dark:bg-slate-950/40 rounded-full overflow-hidden mb-2">
           <div
             className={`h-full transition-all duration-150 ${isCalibrationMode ? 'bg-amber-500 shadow-[0_0_10px_#f59e0b]' : 'bg-sky-600 dark:bg-cyan-400 shadow-[0_0_10px_#22d3ee]'}`}
             style={{ width: `${Math.round((inputVal.length / currentSentence.length) * 100)}%` }}
@@ -531,8 +531,8 @@ export default function ExerciseTab({ lesson, progress, onFinish, onBack }: Exer
         </div>
 
         {/* Dynamic Highlight Text Box */}
-        <div className="relative border border-zinc-300 dark:border-white/5 bg-zinc-50 dark:bg-slate-950/40 p-6 sm:p-10 rounded-xl font-mono text-xl sm:text-2xl font-medium tracking-wide leading-relaxed text-center select-none block min-h-[110px] shadow-inner mb-6">
-          <div className="absolute top-3 left-4 text-[9px] font-mono text-zinc-400 dark:text-slate-500 tracking-widest uppercase font-bold">
+        <div className="relative border border-zinc-300 dark:border-white/5 bg-zinc-50 dark:bg-slate-950/40 p-4 sm:p-6 rounded-xl font-mono text-lg sm:text-xl font-medium tracking-wide leading-relaxed text-center select-none block min-h-[70px] shadow-inner mb-2">
+          <div className="absolute top-2 left-3 text-[9px] font-mono text-zinc-400 dark:text-slate-500 tracking-widest uppercase font-bold">
             Interactive Field / Input Protocol {isCalibrationMode && "— Calibration Sandbox"}
           </div>
           <div className="text-zinc-800 dark:text-zinc-200 break-words flex flex-wrap justify-center mt-2">
@@ -564,7 +564,7 @@ export default function ExerciseTab({ lesson, progress, onFinish, onBack }: Exer
         </div>
 
         {/* Focused Native Input container */}
-        <div className="mt-5 space-y-2">
+        <div className="mt-2 space-y-1.5">
           <input
             ref={inputRef}
             id="typingActiveInputElement"
@@ -572,7 +572,7 @@ export default function ExerciseTab({ lesson, progress, onFinish, onBack }: Exer
             value={inputVal}
             onChange={handleInputChange}
             placeholder={isStarted ? "" : "Click here and start practicing..."}
-            className={`w-full text-center py-3.5 bg-zinc-50 dark:bg-slate-950/40 border-2 rounded-lg text-lg font-mono focus:outline-none focus:bg-white dark:focus:bg-[#050608] text-zinc-900 dark:text-white shadow-inner transition-all duration-200 ${metronomeTick && metronomeBpm > 0 ? 'border-cyan-400 dark:border-cyan-400 shadow-[0_0_12px_rgba(34,211,238,0.35)]' : 'border-zinc-200 dark:border-white/5 focus:border-sky-500 dark:focus:border-cyan-500/40'}`}
+            className={`w-full text-center py-2.5 bg-zinc-50 dark:bg-slate-950/40 border-2 rounded-lg text-lg font-mono focus:outline-none focus:bg-white dark:focus:bg-[#050608] text-zinc-900 dark:text-white shadow-inner transition-all duration-200 ${metronomeTick && metronomeBpm > 0 ? 'border-cyan-400 dark:border-cyan-400 shadow-[0_0_12px_rgba(34,211,238,0.35)]' : 'border-zinc-200 dark:border-white/5 focus:border-sky-500 dark:focus:border-cyan-500/40'}`}
             autoComplete="off"
             spellCheck="false"
             disabled={inputVal.length >= currentSentence.length}
@@ -598,8 +598,8 @@ export default function ExerciseTab({ lesson, progress, onFinish, onBack }: Exer
       </div>
 
       {/* Interactive Visual Keyboard Guide */}
-      <div className="bg-zinc-100 dark:bg-[#0a0d14]/40 border border-zinc-200 dark:border-white/5 rounded-2xl p-5 shadow-sm">
-        <div className="flex items-center space-x-2 text-zinc-600 dark:text-slate-400 text-xs font-bold uppercase tracking-widest mb-4">
+      <div className="bg-zinc-100 dark:bg-[#0a0d14]/40 border border-zinc-200 dark:border-white/5 rounded-2xl p-3 sm:p-4 shadow-sm">
+        <div className="flex items-center space-x-2 text-zinc-600 dark:text-slate-400 text-xs font-bold uppercase tracking-widest mb-2">
           <Keyboard size={14} />
           <span>Tactile Guide: Strike the Highlighted Target Key</span>
         </div>
