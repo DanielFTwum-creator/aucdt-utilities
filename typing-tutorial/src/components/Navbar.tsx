@@ -42,8 +42,14 @@ export default function Navbar({ progress, theme, onThemeChange, onNavigate, act
 
           {/* Logo / Title */}
           <div className="flex items-center space-x-3.5">
-            <div className={`rounded-xl bg-sky-600/10 dark:bg-cyan-500/20 flex items-center justify-center border border-sky-600/30 dark:border-cyan-500/40 shadow-sm dark:shadow-[0_0_15px_rgba(6,182,212,0.3)] ${minimal ? "w-7 h-7" : "w-10 h-10"}`}>
+            <div className={`relative rounded-xl bg-sky-600/10 dark:bg-cyan-500/20 flex items-center justify-center border border-sky-600/30 dark:border-cyan-500/40 shadow-sm dark:shadow-[0_0_15px_rgba(6,182,212,0.3)] ${minimal ? "w-7 h-7" : "w-10 h-10"}`}>
               <div className={`bg-sky-600 dark:bg-cyan-400 rounded-sm ${minimal ? "w-3 h-3" : "w-4 h-4"}`}></div>
+              {/* Pan-African / Ghana flag accent */}
+              <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 flex h-[3px] w-3/4 overflow-hidden rounded-full" aria-hidden="true" title="Made in Ghana">
+                <span className="flex-1 bg-[#CE1126]"></span>
+                <span className="flex-1 bg-[#FCD116]"></span>
+                <span className="flex-1 bg-[#006B3F]"></span>
+              </div>
             </div>
             <div>
               {!minimal && (

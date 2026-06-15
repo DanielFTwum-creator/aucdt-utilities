@@ -626,7 +626,7 @@ export default function ExerciseTab({ lesson, progress, onFinish, onBack }: Exer
                     key={key}
                     className={`w-14 h-14 sm:w-20 sm:h-20 flex items-center justify-center rounded-lg text-base sm:text-2xl font-bold border-2 transition-all ${
                       isActive
-                        ? "bg-sky-500 border-sky-300 text-white scale-110 shadow-lg ring-4 ring-sky-300/60 animate-pulse dark:bg-cyan-400 dark:border-cyan-200 dark:text-slate-950 dark:ring-cyan-300/50 dark:shadow-[0_0_30px_rgba(34,211,238,0.7)]"
+                        ? "bg-cyan-400 border-cyan-600 text-slate-950 scale-110 shadow-lg ring-4 ring-cyan-300/70 animate-pulse dark:border-cyan-200 dark:ring-cyan-300/50 dark:shadow-[0_0_30px_rgba(34,211,238,0.7)]"
                         : "bg-white dark:bg-slate-900/40 border-zinc-200 dark:border-white/5 text-zinc-800 dark:text-slate-400"
                     }`}
                   >
@@ -642,7 +642,7 @@ export default function ExerciseTab({ lesson, progress, onFinish, onBack }: Exer
             <div
               className={`h-14 sm:h-20 w-64 sm:w-96 flex items-center justify-center rounded-lg text-sm sm:text-base font-bold border-2 transition-all ${
                 nextTargetChar === " "
-                  ? "bg-sky-500 border-sky-300 text-white scale-105 shadow-lg ring-4 ring-sky-300/60 animate-pulse dark:bg-cyan-400 dark:border-cyan-200 dark:text-slate-950 dark:ring-cyan-300/50 dark:shadow-[0_0_30px_rgba(34,211,238,0.7)]"
+                  ? "bg-cyan-400 border-cyan-600 text-slate-950 scale-105 shadow-lg ring-4 ring-cyan-300/70 animate-pulse dark:border-cyan-200 dark:ring-cyan-300/50 dark:shadow-[0_0_30px_rgba(34,211,238,0.7)]"
                   : "bg-white dark:bg-slate-900/40 border-zinc-200 dark:border-white/5 text-zinc-500 dark:text-slate-500"
               }`}
             >
