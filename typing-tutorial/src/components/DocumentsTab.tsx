@@ -172,7 +172,7 @@ export default function DocumentsTab() {
             onClick={() => setActiveDoc("architecture")}
             className={`w-full text-left px-4 py-3 rounded-lg text-xs font-bold transition-all flex items-center space-x-2 ${
               activeDoc === "architecture"
-                ? "bg-sky-600 text-white shadow-sm font-black"
+                ? "bg-emerald-600 text-white shadow-sm font-black"
                 : "text-zinc-700 dark:text-zinc-450 hover:bg-zinc-100 dark:hover:bg-zinc-850"
             }`}
           >
@@ -185,7 +185,7 @@ export default function DocumentsTab() {
             onClick={() => setActiveDoc("erd")}
             className={`w-full text-left px-4 py-3 rounded-lg text-xs font-bold transition-all flex items-center space-x-2 ${
               activeDoc === "erd"
-                ? "bg-sky-600 text-white shadow-sm font-black"
+                ? "bg-emerald-600 text-white shadow-sm font-black"
                 : "text-zinc-700 dark:text-zinc-450 hover:bg-zinc-100 dark:hover:bg-zinc-850"
             }`}
           >
@@ -198,7 +198,7 @@ export default function DocumentsTab() {
             onClick={() => setActiveDoc("srs")}
             className={`w-full text-left px-4 py-3 rounded-lg text-xs font-bold transition-all flex items-center space-x-2 ${
               activeDoc === "srs"
-                ? "bg-sky-600 text-white shadow-sm font-black"
+                ? "bg-emerald-600 text-white shadow-sm font-black"
                 : "text-zinc-700 dark:text-zinc-450 hover:bg-zinc-100 dark:hover:bg-zinc-850"
             }`}
           >
@@ -211,7 +211,7 @@ export default function DocumentsTab() {
             onClick={() => setActiveDoc("reset")}
             className={`w-full text-left px-4 py-3 rounded-lg text-xs font-bold transition-all flex items-center space-x-2 ${
               activeDoc === "reset"
-                ? "bg-sky-600 text-white shadow-sm font-black"
+                ? "bg-emerald-600 text-white shadow-sm font-black"
                 : "text-zinc-700 dark:text-zinc-450 hover:bg-zinc-100 dark:hover:bg-zinc-850"
             }`}
           >
@@ -224,7 +224,7 @@ export default function DocumentsTab() {
             onClick={() => setActiveDoc("appstore")}
             className={`w-full text-left px-4 py-3 rounded-lg text-xs font-bold transition-all flex items-center space-x-2 ${
               activeDoc === "appstore"
-                ? "bg-sky-600 text-white shadow-sm font-black"
+                ? "bg-emerald-600 text-white shadow-sm font-black"
                 : "text-zinc-700 dark:text-zinc-450 hover:bg-zinc-100 dark:hover:bg-zinc-850"
             }`}
           >
@@ -237,7 +237,7 @@ export default function DocumentsTab() {
             onClick={() => setActiveDoc("mobile")}
             className={`w-full text-left px-4 py-3 rounded-lg text-xs font-bold transition-all flex items-center space-x-2 ${
               activeDoc === "mobile"
-                ? "bg-sky-600 text-white shadow-sm font-black"
+                ? "bg-emerald-600 text-white shadow-sm font-black"
                 : "text-zinc-700 dark:text-zinc-450 hover:bg-zinc-100 dark:hover:bg-zinc-850"
             }`}
           >
@@ -250,7 +250,7 @@ export default function DocumentsTab() {
             onClick={() => setActiveDoc("icons")}
             className={`w-full text-left px-4 py-3 rounded-lg text-xs font-bold transition-all flex items-center space-x-2 ${
               activeDoc === "icons"
-                ? "bg-sky-600 text-white shadow-sm font-black"
+                ? "bg-emerald-600 text-white shadow-sm font-black"
                 : "text-zinc-700 dark:text-zinc-450 hover:bg-zinc-100 dark:hover:bg-zinc-850"
             }`}
           >
@@ -263,7 +263,7 @@ export default function DocumentsTab() {
             onClick={() => setActiveDoc("privacy")}
             className={`w-full text-left px-4 py-3 rounded-lg text-xs font-bold transition-all flex items-center space-x-2 ${
               activeDoc === "privacy"
-                ? "bg-sky-600 text-white shadow-sm font-black"
+                ? "bg-emerald-600 text-white shadow-sm font-black"
                 : "text-zinc-700 dark:text-zinc-450 hover:bg-zinc-100 dark:hover:bg-zinc-850"
             }`}
           >
@@ -316,17 +316,35 @@ export default function DocumentsTab() {
             <div className="space-y-4 font-mono text-xs leading-relaxed max-h-[500px] overflow-y-auto pr-2">
               <div className="border-b border-zinc-150 dark:border-zinc-800 pb-3">
                 <h3 className="text-base font-bold text-zinc-900 dark:text-white font-mono uppercase">
-                  IEEE 830 / 29148 Spec (TUC-ICT-SRS-2026-001)
+                  IEEE 830 / 29148 Spec (TUC-ICT-SRS-2026-001 · Rev 3)
                 </h3>
-                <p className="text-xs text-zinc-500">Full specification sheet compiled for Daniel Twum, Head of ICT.</p>
+                <p className="text-xs text-zinc-500">Full specification sheet — Daniel Twum, Head of ICT, Techbridge University College. Revised June 2026.</p>
               </div>
-              <div className="bg-zinc-55 dark:bg-zinc-950 p-4 rounded border border-zinc-200 dark:border-zinc-800 whitespace-pre-wrap font-sans text-xs text-zinc-700 dark:text-zinc-300 space-y-4">
-                <h4 className="font-bold text-sm text-zinc-950 dark:text-white">1.0 Scope Matrix</h4>
-                <p>Techbridge AI Typing Master targets first-year computer literacy student tracks at TUC, Ghana. The system delivers 10 distinct level matrices guiding hand row pivots and records performance metrics cleanly inside cached arrays.</p>
-                <h4 className="font-bold text-sm text-zinc-950 dark:text-white">2.0 Institutional Alignment</h4>
-                <p>Host: Techbridge University College, Oyibi, Ghana. Operating models align strictly under secure educational networks, routing through Plesk Obsidian reverse portals, and containerised deployments.</p>
-                <h4 className="font-bold text-sm text-zinc-950 dark:text-white">3.0 Operational Integrity</h4>
-                <p>Audit logging is mandated for diagnostic evaluations. Head of ICT uses password-gated access filters to review logs and verify compilation states.</p>
+              <div className="bg-zinc-50 dark:bg-zinc-950 p-4 rounded border border-zinc-200 dark:border-zinc-800 font-sans text-xs text-zinc-700 dark:text-zinc-300 space-y-4">
+                <h4 className="font-bold text-sm text-zinc-950 dark:text-white">1.0 Scope</h4>
+                <p>Vortex Type targets first-year computer literacy students at TUC, Ghana. The system delivers 11 progressive keyboard lessons (home row → top row → number row → bottom row → numeric keypad), a timed WPM speed test, two arcade game modes, and an admin audit panel — all deployed at <span className="font-mono">ai-tools.techbridge.edu.gh/typing-tutor/</span>.</p>
+
+                <h4 className="font-bold text-sm text-zinc-950 dark:text-white">2.0 Functional Requirements</h4>
+                <p><strong>FR-01 Lesson Engine:</strong> 11 lessons unlock progressively at ≥80% accuracy. Each lesson contains 4 randomised practice drills. Lessons 1–10 use the QWERTY hand diagram + per-finger colour coding. Lesson 11 activates the dedicated NumpadGuide ghost-hand overlay for the right-hand numeric keypad.</p>
+                <p><strong>FR-02 Live Coaching:</strong> A finger-guidance coaching strip displays the next target key's finger assignment and home-row anchor in real time. A metronome BPM control (40–120 BPM) assists rhythmic pacing.</p>
+                <p><strong>FR-03 WPM Speed Test:</strong> 60-second timed assessment with gross/net WPM, accuracy percentage, and points calculation. Results persist to LocalStorage.</p>
+                <p><strong>FR-04 Arcade Mode — Arcade Race:</strong> 60/45/30-second word sprint (easy/medium/hard). Players type randomly selected words from a 1,050-word bank covering 24 thematic categories. Score multiplied by difficulty factor.</p>
+                <p><strong>FR-05 Arcade Mode — Shark Attack:</strong> Words rise from the ocean floor toward a shark; the player must type the word before it is consumed. Three lives; word timer scales with difficulty (7 000 / 5 000 / 3 500 ms). Saved-word counter tracked per session.</p>
+                <p><strong>FR-06 Admin Panel:</strong> Password-gated audit log panel displaying timestamped actions (lesson completions, speed tests, arcade sessions, theme changes). System health monitor for Nginx, Node, MariaDB, and Plesk services. Embedded Cypress E2E test launcher.</p>
+                <p><strong>FR-07 Accessibility:</strong> Three themes — Light, Dark, High Contrast — persist to LocalStorage. All interactive controls meet a 44 px minimum touch target. Colour accents pass WCAG AA contrast at all theme levels.</p>
+
+                <h4 className="font-bold text-sm text-zinc-950 dark:text-white">3.0 Design System</h4>
+                <p>Visual identity: clean white / neutral-50 backgrounds, emerald-600 primary accent, emerald-50 tip strip backgrounds. Typography: system sans-serif, sentence case, no excessive all-caps. Navbar uses underline-style tab navigation. Lesson grid: 1 col (mobile) → 2 col (md) → 3 col (lg+), targeting ≤1 000 px total page height at 1 080 px viewport.</p>
+
+                <h4 className="font-bold text-sm text-zinc-950 dark:text-white">4.0 Test Coverage</h4>
+                <p><strong>full-keyboard-coverage.cy.ts:</strong> Exercises all 11 lesson tiers end-to-end (every QWERTY key, numpad digits/dot/dash, spacebar-highlight regression), the numpad ghost-hand guide, the per-finger colour-coded hand diagram, and a full Shark Attack arcade round.</p>
+                <p><strong>ai-for-good.cy.ts:</strong> Verifies app load, theme accessibility toggle (Light/Dark/High Contrast), lesson initiation and exit flow, settings popover, and correct h2 headings on all five tab panels.</p>
+
+                <h4 className="font-bold text-sm text-zinc-950 dark:text-white">5.0 Institutional Alignment</h4>
+                <p>Host: Techbridge University College, Oyibi, Greater Accra, Ghana. Deployment: Plesk Obsidian → Nginx reverse proxy (port 3000) → Node.js container. Data: LocalStorage only; no student identifiers sent to external services. Complies with Ghana Data Protection Act 2012 (Act 843).</p>
+
+                <h4 className="font-bold text-sm text-zinc-950 dark:text-white">6.0 Operational Integrity</h4>
+                <p>Audit logging captures all lesson completions, speed tests, arcade sessions, theme changes, and admin actions with ISO 8601 timestamps. The Head of ICT accesses logs via a password-gated admin panel. Log data persists to LocalStorage and can be flushed via the Admin panel.</p>
               </div>
             </div>
           )}

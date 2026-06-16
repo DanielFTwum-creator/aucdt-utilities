@@ -68,7 +68,7 @@ describe('VortexType: Full keyboard coverage across all lessons', () => {
     }
 
     // All 11 tiers unlocked.
-    cy.contains('11 / 11 Tier Unlocked').should('be.visible');
+    cy.contains('11 / 11 Unlocked').should('be.visible');
   });
 
   it('shows the numpad ghost-hand guide for the Numeric Keypad lesson', () => {
