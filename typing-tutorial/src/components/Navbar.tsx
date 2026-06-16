@@ -20,7 +20,7 @@ export default function Navbar({ progress, theme, onThemeChange, onNavigate, act
   };
 
   return (
-    <header className="bg-white dark:bg-neutral-950 border-b border-neutral-200 dark:border-white/8 transition-colors">
+    <header className="bg-[#1E1A17] dark:bg-[#1E1A17] border-b border-white/8 transition-colors">
       <div className={`w-full px-4 sm:px-6 lg:px-8 ${minimal ? "py-2" : "py-3"}`}>
         <div className="flex items-center justify-between gap-4">
 
@@ -31,13 +31,13 @@ export default function Navbar({ progress, theme, onThemeChange, onNavigate, act
             </div>
             <div>
               {!minimal && (
-                <p className="text-[9px] font-semibold text-neutral-400 dark:text-neutral-500 uppercase tracking-widest leading-none mb-0.5">
+                <p className="text-[9px] font-semibold text-stone-400 uppercase tracking-widest leading-none mb-0.5">
                   Techbridge University College
                 </p>
               )}
-              <h1 id="appHeaderTitle" className={`font-bold text-neutral-900 dark:text-white leading-none ${minimal ? "text-sm" : "text-base"}`}>
+              <h1 id="appHeaderTitle" className={`font-bold text-white leading-none ${minimal ? "text-sm" : "text-base"}`}>
                 Vortex Type
-                <span className="text-emerald-600 dark:text-emerald-400 font-normal ml-1 text-sm">typing tutor</span>
+                <span className="text-emerald-400 font-normal ml-1 text-sm">typing tutor</span>
               </h1>
             </div>
           </div>
@@ -51,10 +51,10 @@ export default function Navbar({ progress, theme, onThemeChange, onNavigate, act
                 { icon: <Zap size={13} className="text-sky-500" />, label: "Best WPM", value: progress.bestSpeed },
                 { icon: <Crosshair size={13} className="text-rose-500" />, label: "Accuracy", value: `${progress.bestAccuracy}%` },
               ].map(({ icon, label, value }) => (
-                <div key={label} className="hidden sm:flex items-center gap-1.5 px-2.5 py-1.5 bg-neutral-50 dark:bg-neutral-900 rounded-lg border border-neutral-200 dark:border-white/6 text-xs">
+                <div key={label} className="hidden sm:flex items-center gap-1.5 px-2.5 py-1.5 bg-white/8 rounded-lg border border-white/12 text-xs">
                   {icon}
-                  <span className="text-neutral-500 dark:text-neutral-400">{label}:</span>
-                  <span className="font-bold text-neutral-800 dark:text-neutral-200">{value}</span>
+                  <span className="text-stone-400">{label}:</span>
+                  <span className="font-bold text-stone-100">{value}</span>
                 </div>
               ))}
 
@@ -63,7 +63,7 @@ export default function Navbar({ progress, theme, onThemeChange, onNavigate, act
                   id="themeSelectDropdown"
                   value={theme}
                   onChange={(e) => onThemeChange(e.target.value as ThemeMode)}
-                  className="pl-7 pr-3 py-1.5 bg-neutral-50 dark:bg-neutral-900 border border-neutral-200 dark:border-white/6 text-neutral-700 dark:text-neutral-300 rounded-lg text-xs font-medium focus:outline-none focus:ring-2 focus:ring-emerald-500/40 appearance-none cursor-pointer"
+                  className="pl-7 pr-3 py-1.5 bg-white/8 border border-white/15 text-stone-200 rounded-lg text-xs font-medium focus:outline-none focus:ring-2 focus:ring-emerald-400/40 appearance-none cursor-pointer"
                 >
                   <option value="light">Light</option>
                   <option value="dark">Dark</option>
@@ -82,7 +82,7 @@ export default function Navbar({ progress, theme, onThemeChange, onNavigate, act
                 id="themeSelectDropdown"
                 value={theme}
                 onChange={(e) => onThemeChange(e.target.value as ThemeMode)}
-                className="pl-6 pr-2.5 py-1 bg-neutral-50 dark:bg-neutral-900 border border-neutral-200 dark:border-white/6 text-neutral-700 dark:text-neutral-300 rounded-lg text-xs font-medium focus:outline-none appearance-none cursor-pointer"
+                className="pl-6 pr-2.5 py-1 bg-white/8 border border-white/15 text-stone-200 rounded-lg text-xs font-medium focus:outline-none appearance-none cursor-pointer"
               >
                 <option value="light">Light</option>
                 <option value="dark">Dark</option>
@@ -97,7 +97,7 @@ export default function Navbar({ progress, theme, onThemeChange, onNavigate, act
 
         {/* Tab navigation — underline style */}
         {!minimal && (
-          <nav className="mt-3 flex gap-0 border-t border-neutral-100 dark:border-white/5 pt-0 -mb-px">
+          <nav className="mt-3 flex gap-0 border-t border-white/10 pt-0 -mb-px">
             {[
               { id: "navLessonsTabButton",   tab: "lessons",   label: "📚 Lessons" },
               { id: "navSpeedtestTabButton", tab: "speedtest", label: "⚡ Speed Test" },
@@ -111,8 +111,8 @@ export default function Navbar({ progress, theme, onThemeChange, onNavigate, act
                 onClick={() => onNavigate(tab)}
                 className={`px-4 py-2.5 text-sm font-semibold border-b-2 transition-colors ${
                   activeTab === tab
-                    ? "border-emerald-600 text-emerald-700 dark:text-emerald-400 dark:border-emerald-400"
-                    : "border-transparent text-neutral-500 dark:text-neutral-400 hover:text-neutral-800 dark:hover:text-neutral-200 hover:border-neutral-300 dark:hover:border-neutral-600"
+                    ? "border-emerald-400 text-white"
+                    : "border-transparent text-stone-400 hover:text-stone-100 hover:border-stone-500"
                 }`}
               >
                 {label}

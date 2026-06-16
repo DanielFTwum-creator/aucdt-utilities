@@ -44,11 +44,11 @@ export default function LessonsTab({ progress, onSelectLesson }: LessonsTabProps
           { icon: "🙈", label: "Don't look down", tip: "Use the F and J tactile bumps." },
           { icon: "🐢", label: "Accuracy first", tip: "Speed naturally follows clean form." },
         ].map(({ icon, label, tip }) => (
-          <div key={label} className="flex-1 flex items-center gap-2 bg-emerald-50 dark:bg-emerald-950/20 border-l-2 border-emerald-500 px-3 py-2 rounded-r-lg">
+          <div key={label} className="flex-1 flex items-center gap-2 bg-amber-50 dark:bg-amber-950/20 border-l-2 border-amber-500 px-3 py-2 rounded-r-lg">
             <span className="text-sm shrink-0">{icon}</span>
             <div className="min-w-0">
-              <span className="text-xs font-semibold text-emerald-800 dark:text-emerald-300">{label} — </span>
-              <span className="text-xs text-emerald-700/70 dark:text-emerald-400/60 hidden sm:inline">{tip}</span>
+              <span className="text-xs font-semibold text-amber-800 dark:text-amber-300">{label} — </span>
+              <span className="text-xs text-amber-700/70 dark:text-amber-400/60 hidden sm:inline">{tip}</span>
             </div>
           </div>
         ))}
@@ -75,8 +75,8 @@ export default function LessonsTab({ progress, onSelectLesson }: LessonsTabProps
                 isCompleted
                   ? "bg-emerald-50 dark:bg-emerald-950/20 border-emerald-200 dark:border-emerald-800/50"
                   : isUnlocked
-                  ? "bg-white dark:bg-neutral-900/60 border-neutral-200 dark:border-white/6 hover:border-emerald-300 dark:hover:border-emerald-700/50 hover:shadow-sm"
-                  : "bg-neutral-50 dark:bg-neutral-900/30 border-neutral-100 dark:border-white/4 opacity-40 pointer-events-none"
+                  ? "bg-[#FCFBF8] dark:bg-neutral-900/60 border-[#E5DED4] dark:border-white/6 hover:border-amber-300 dark:hover:border-amber-700/50 hover:shadow-sm"
+                  : "bg-[#F5F3EE] dark:bg-neutral-900/30 border-[#EDE8DF] dark:border-white/4 opacity-40 pointer-events-none"
               }`}
             >
               {/* Top row: icon + title + status */}
@@ -87,7 +87,7 @@ export default function LessonsTab({ progress, onSelectLesson }: LessonsTabProps
                   {lesson.icon}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-[9px] font-bold text-neutral-400 dark:text-neutral-500 uppercase tracking-widest font-mono">
+                  <p className="text-[9px] font-bold text-amber-600 dark:text-amber-500 uppercase tracking-widest font-mono">
                     Lesson {idx + 1}
                   </p>
                   <h4 className="text-xs font-bold text-neutral-900 dark:text-white leading-snug truncate">
@@ -112,7 +112,7 @@ export default function LessonsTab({ progress, onSelectLesson }: LessonsTabProps
                   {keyChars.slice(0, 7).map((k, kIdx) => (
                     <span
                       key={kIdx}
-                      className="px-1.5 py-0.5 text-[9px] font-mono font-bold bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-300 rounded border border-neutral-200 dark:border-white/6"
+                      className="px-1.5 py-0.5 text-[9px] font-mono font-bold bg-stone-100 dark:bg-neutral-800 text-stone-600 dark:text-neutral-300 rounded border border-stone-200 dark:border-white/6"
                     >
                       {k === " " ? "⎵" : k}
                     </span>

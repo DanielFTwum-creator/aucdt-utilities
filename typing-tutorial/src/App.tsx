@@ -124,7 +124,7 @@ export default function App() {
       root.style.backgroundColor = "#000000";
     } else {
       root.classList.add("light");
-      root.style.backgroundColor = "#fdfdfd";
+      root.style.backgroundColor = "#F7F5F0";
     }
     localStorage.setItem("tuc_theme", theme);
   }, [theme]);
@@ -253,7 +253,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-neutral-50 dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100 transition-colors duration-300 antialiased font-sans">
+    <div className="min-h-screen bg-[#F7F5F0] dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100 transition-colors duration-300 antialiased font-sans">
       
       {/* Universal header section */}
       <Navbar
@@ -318,7 +318,7 @@ export default function App() {
 
       </main>
 
-      <footer className="w-full px-4 sm:px-6 lg:px-8 py-8 mt-12 border-t border-zinc-200 dark:border-zinc-850 text-center text-xs text-zinc-500 font-mono">
+      <footer className="w-full px-4 sm:px-6 lg:px-8 py-8 mt-12 border-t border-[#E5DED4] dark:border-neutral-800 text-center text-xs text-stone-500 font-mono">
         <p>&copy; 2026 Techbridge University College, Oyibi, Ghana. Department of ICT.</p>
         <p className="mt-1 text-[10px] text-zinc-400">Document Mapping Standard: TUC-INC-2026-001 | Host: Plesk Nginx Reversed Node CLI</p>
         <p className="mt-2 text-[10px] text-zinc-400 flex items-center justify-center gap-1.5">
