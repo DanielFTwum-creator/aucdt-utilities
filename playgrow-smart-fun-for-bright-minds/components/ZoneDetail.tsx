@@ -7,14 +7,20 @@ import { generateActivity, Activity } from '../services/activityService';
 import { PatternPath } from './games/PatternPath';
 import { FindMatch } from './games/FindMatch';
 import { PuzzleBuilder } from './games/PuzzleBuilder';
+import { PaintWorld } from './games/PaintWorld';
+import { BuildItBlocks } from './games/BuildItBlocks';
+import { StoryMaker } from './games/StoryMaker';
 
 // Games with real interactive implementations — bypasses the AI text modal.
 // Add new entries here as more games are built.
 type GameComponent = React.FC<{ zone: Zone; onClose: () => void }>;
 const GAME_COMPONENTS: Record<string, GameComponent> = {
-  puzzle:  (props) => <PuzzleBuilder onClose={props.onClose} />,
+  puzzle:  (props) => <PuzzleBuilder   onClose={props.onClose} />,
   pattern: PatternPath,
-  match:   (props) => <FindMatch onClose={props.onClose} />,
+  match:   (props) => <FindMatch       onClose={props.onClose} />,
+  paint:   (props) => <PaintWorld      onClose={props.onClose} />,
+  build:   (props) => <BuildItBlocks   onClose={props.onClose} />,
+  story:   (props) => <StoryMaker      onClose={props.onClose} />,
 };
 
 interface ZoneDetailProps {
@@ -68,7 +74,7 @@ const ActivityModal: React.FC<{
     >
       <div className="flex items-center justify-between mb-4">
         <h2 className={`text-2xl font-extrabold ${zone.color} dark:text-gray-100 hc-accent`}>{game.title}</h2>
-        <button onClick={onClose} aria-label="Close activity"
+        <button type="button" onClick={onClose} aria-label="Close activity"
           className="rounded-full p-2 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 focus:outline-none focus:ring-4 focus:ring-blue-400 hc-bg-primary hc-border text-gray-700 dark:text-gray-200">✕</button>
       </div>
 
@@ -82,7 +88,7 @@ const ActivityModal: React.FC<{
       {error && !loading && (
         <div className="py-8 text-center" aria-live="assertive">
           <p className="text-red-600 dark:text-red-400 mb-4">Oops! We couldn't make an activity right now.</p>
-          <button onClick={onRetry}
+          <button type="button" onClick={onRetry}
             className="px-5 py-2 rounded-full bg-blue-500 text-white font-bold hover:bg-blue-600 focus:outline-none focus:ring-4 focus:ring-blue-400">Try again</button>
         </div>
       )}
@@ -148,6 +154,7 @@ const ZoneDetail: React.FC<ZoneDetailProps> = ({ zone, onBack, theme, setTheme }
     <div className={`w-full h-full flex flex-col ${zone.bgColor} dark:bg-gray-900 transition-colors duration-500 hc-bg-primary`}>
       <header className="relative p-6 bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm hc-bg-secondary hc-border">
         <button
+            type="button"
             onClick={onBack}
             className="absolute top-1/2 left-6 -translate-y-1/2 bg-white dark:bg-gray-700 rounded-full p-2 shadow-md hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors focus:outline-none focus:ring-4 focus:ring-blue-400 hc-bg-primary hc-border"
             aria-label="Back to World Map"
