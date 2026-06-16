@@ -59,7 +59,7 @@ log '[2/7] Cloning ${SUBFOLDER}...'
 git clone --filter=blob:none --sparse --depth 1 "`$REPO" "`$TMPDIR"
 cd "`$TMPDIR" && git sparse-checkout set ${SUBFOLDER} && cd ${SUBFOLDER}
 log '[3/7] Injecting .env.local...'; cp /tmp/.env.${PM2_APP} .env.local
-log '[4/7] Installing...'; pnpm install --no-frozen-lockfile --ignore-scripts --silent
+log '[4/7] Installing...'; pnpm install --no-frozen-lockfile --silent
 log '[5/7] Building...'; pnpm build 2>&1
 log '[6/7] Deploying...'; mkdir -p "`$DEPLOY_PATH"
 # Apache serves the vhost docroot (top level), so the built SPA must live there,
@@ -67,7 +67,7 @@ log '[6/7] Deploying...'; mkdir -p "`$DEPLOY_PATH"
 # DO NOT copy the source index.html over Vite's built one (it lacks the hashed
 # <script> bundle tag and breaks the app).
 rsync -a --delete --exclude=server.ts --exclude=package.json --exclude=pnpm-lock.yaml --exclude=pnpm-workspace.yaml --exclude=node_modules --exclude=.env --exclude=.htaccess dist/ "`$DEPLOY_PATH/"
-log '[7/8] Backend deps...'; cp server.ts package.json pnpm-lock.yaml "`$DEPLOY_PATH/" 2>/dev/null || true; cd "`$DEPLOY_PATH" && pnpm install --prod --ignore-scripts --silent 2>/dev/null || npm install --omit=dev --ignore-scripts --silent
+log '[7/8] Backend deps...'; cp server.ts package.json pnpm-lock.yaml "`$DEPLOY_PATH/" 2>/dev/null || true; cd "`$DEPLOY_PATH" && rm -rf node_modules && pnpm install --prod --silent 2>&1
 log '[8/8] Provisioning .env (PORT + Gemini proxy key)...'
 ENVF="`$DEPLOY_PATH/.env"
 cp /tmp/.env.${PM2_APP} "`$ENVF" 2>/dev/null || touch "`$ENVF"
