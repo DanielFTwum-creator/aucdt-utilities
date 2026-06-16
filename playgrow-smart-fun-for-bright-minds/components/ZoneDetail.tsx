@@ -6,11 +6,13 @@ import ThemeSwitcher from './ThemeSwitcher';
 import { generateActivity, Activity } from '../services/activityService';
 import { PatternPath } from './games/PatternPath';
 import { FindMatch } from './games/FindMatch';
+import { PuzzleBuilder } from './games/PuzzleBuilder';
 
 // Games with real interactive implementations — bypasses the AI text modal.
 // Add new entries here as more games are built.
 type GameComponent = React.FC<{ zone: Zone; onClose: () => void }>;
 const GAME_COMPONENTS: Record<string, GameComponent> = {
+  puzzle:  (props) => <PuzzleBuilder onClose={props.onClose} />,
   pattern: PatternPath,
   match:   (props) => <FindMatch onClose={props.onClose} />,
 };
