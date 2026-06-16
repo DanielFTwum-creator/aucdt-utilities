@@ -28,14 +28,35 @@ interface CardData {
   fact: string;
 }
 
-const PAIRS: CardData[] = [
-  { pairId: 'plant',   emoji: '🌱', label: 'AI Farming',   fact: 'AI helps farmers spot sick plants before they spread! 🌱' },
-  { pairId: 'recycle', emoji: '♻️', label: 'AI Sorting',   fact: 'AI sorts recycling 100× faster than humans! ♻️' },
-  { pairId: 'health',  emoji: '🏥', label: 'AI Health',    fact: 'AI helps doctors find diseases earlier than ever before! 🏥' },
-  { pairId: 'weather', emoji: '🌤️', label: 'AI Weather',   fact: 'AI predicts storms days ahead to keep people safe! ⛈️' },
-  { pairId: 'ocean',   emoji: '🌊', label: 'AI Oceans',    fact: 'AI tracks ocean plastic to protect dolphins and whales! 🐬' },
-  { pairId: 'space',   emoji: '🚀', label: 'AI Space',     fact: 'AI helps scientists discover new planets light-years away! 🔭' },
+// Large pool — 6 are randomly selected each game for endless variety
+const PAIR_POOL: CardData[] = [
+  { pairId: 'plant',    emoji: '🌱', label: 'AI Farming',    fact: 'AI helps farmers spot sick plants before they spread! 🌱' },
+  { pairId: 'recycle',  emoji: '♻️', label: 'AI Sorting',    fact: 'AI sorts recycling 100× faster than humans! ♻️' },
+  { pairId: 'health',   emoji: '🏥', label: 'AI Health',     fact: 'AI helps doctors find diseases earlier than ever! 🏥' },
+  { pairId: 'weather',  emoji: '🌤️', label: 'AI Weather',    fact: 'AI predicts storms days ahead to keep people safe! ⛈️' },
+  { pairId: 'ocean',    emoji: '🌊', label: 'AI Oceans',     fact: 'AI tracks ocean plastic to protect dolphins and whales! 🐬' },
+  { pairId: 'space',    emoji: '🚀', label: 'AI Space',      fact: 'AI helps scientists discover new planets light-years away! 🔭' },
+  { pairId: 'robot',    emoji: '🤖', label: 'AI Robots',     fact: 'Robots with AI help build cars and deliver medicines! 🤖' },
+  { pairId: 'eye',      emoji: '👁️', label: 'AI Vision',     fact: 'AI can spot a single sick cell in thousands of photos! 👁️' },
+  { pairId: 'brain',    emoji: '🧠', label: 'AI Learning',   fact: 'AI learns from millions of examples, just like you do! 🧠' },
+  { pairId: 'fire',     emoji: '🔥', label: 'AI Wildfires',  fact: 'AI watches satellites to spot forest fires within minutes! 🔥' },
+  { pairId: 'fish',     emoji: '🐟', label: 'AI Fishing',    fact: 'AI helps stop illegal fishing to protect ocean life! 🐟' },
+  { pairId: 'water',    emoji: '💧', label: 'AI Water',      fact: 'AI detects dirty water so villages get safe drinking water! 💧' },
+  { pairId: 'music',    emoji: '🎵', label: 'AI Music',      fact: 'AI can compose music and help deaf people feel sound! 🎵' },
+  { pairId: 'road',     emoji: '🚗', label: 'AI Driving',    fact: 'Self-driving AI reduces road accidents that hurt millions! 🚗' },
+  { pairId: 'school',   emoji: '📚', label: 'AI Teaching',   fact: 'AI tutors adapt lessons so every child can learn at their pace! 📚' },
+  { pairId: 'bee',      emoji: '🐝', label: 'AI Bees',       fact: 'AI tracks bee health to protect the pollinators that feed us! 🐝' },
+  { pairId: 'sun',      emoji: '☀️', label: 'AI Energy',     fact: 'AI optimises solar panels to produce more clean energy! ☀️' },
+  { pairId: 'heart',    emoji: '❤️', label: 'AI Heart',      fact: 'AI listens to your heartbeat and can spot problems early! ❤️' },
+  { pairId: 'trash',    emoji: '🗑️', label: 'AI Waste',      fact: 'AI sorts rubbish to extract recyclable materials for reuse! 🗑️' },
+  { pairId: 'satellite',emoji: '🛰️', label: 'AI Satellites', fact: 'AI analyses satellite images to track floods and help rescue teams! 🛰️' },
+  { pairId: 'tree',     emoji: '🌳', label: 'AI Forests',    fact: 'AI counts trees from the sky to monitor deforestation! 🌳' },
+  { pairId: 'dna',      emoji: '🧬', label: 'AI Medicine',   fact: 'AI decodes DNA to create medicines for rare diseases! 🧬' },
+  { pairId: 'translate',emoji: '🌐', label: 'AI Language',   fact: 'AI translates 100+ languages so everyone can communicate! 🌐' },
+  { pairId: 'food',     emoji: '🍎', label: 'AI Food',       fact: 'AI inspects fruit and vegetables to cut food waste in half! 🍎' },
 ];
+
+const PAIRS_PER_GAME = 6;
 
 interface CardState {
   id: number;         // unique instance id (0–11)
@@ -49,19 +70,23 @@ interface CardState {
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
+function shuffle<T>(arr: T[]): T[] {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
 function buildDeck(): CardState[] {
-  const doubled = [...PAIRS, ...PAIRS].map((p, i) => ({
+  const chosen = shuffle(PAIR_POOL).slice(0, PAIRS_PER_GAME);
+  return shuffle([...chosen, ...chosen]).map((p, i) => ({
     id: i,
     ...p,
     flipped: false,
     matched: false,
   }));
-  // Fisher-Yates shuffle
-  for (let i = doubled.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [doubled[i], doubled[j]] = [doubled[j], doubled[i]];
-  }
-  return doubled;
 }
 
 // ── Component ─────────────────────────────────────────────────────────────────
@@ -77,7 +102,7 @@ export const FindMatch: React.FC<FindMatchProps> = ({ onClose }) => {
   const [lastFact, setLastFact] = useState<string | null>(null);
   const [gameOver, setGameOver] = useState(false);
 
-  const totalPairs = PAIRS.length; // 6
+  const totalPairs = PAIRS_PER_GAME;
 
   // ── Star rating ──────────────────────────────────────────────────────────────
   const calcStars = (m: number) => m <= 8 ? 3 : m <= 14 ? 2 : 1;
