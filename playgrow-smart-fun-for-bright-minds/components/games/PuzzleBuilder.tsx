@@ -329,6 +329,11 @@ export const PuzzleBuilder: React.FC<PuzzleBuilderProps> = ({ onClose }) => {
     resetPuzzle(0);
   };
 
+  const handleNew = () => {
+    const next = (puzzleIdx + 1 + Math.floor(Math.random() * (PUZZLES.length - 1))) % PUZZLES.length;
+    resetPuzzle(next);
+  };
+
   // ── Render ───────────────────────────────────────────────────────────────────
 
   return (
@@ -349,9 +354,13 @@ export const PuzzleBuilder: React.FC<PuzzleBuilderProps> = ({ onClose }) => {
             {puzzle.name} · {puzzleIdx + 1} / {PUZZLES.length}
           </p>
         </div>
-        <div className="text-sm font-bold text-yellow-500 min-w-[40px] text-right">
-          {'⭐'.repeat(Math.min(stars, 12))}
-        </div>
+        <button
+          type="button"
+          onClick={handleNew}
+          className="text-sm font-bold text-violet-600 dark:text-violet-400 border border-violet-300 dark:border-violet-700 rounded-lg px-3 py-1.5 hover:bg-violet-100 dark:hover:bg-violet-900/30 hover:scale-105 active:scale-95 transition-all focus:outline-none"
+        >
+          🔄 New
+        </button>
       </div>
 
       {/* Main */}

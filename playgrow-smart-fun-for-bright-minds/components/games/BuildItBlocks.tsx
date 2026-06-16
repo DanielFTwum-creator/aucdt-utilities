@@ -102,8 +102,9 @@ export const BuildItBlocks: React.FC<BuildItBlocksProps> = ({ onClose }) => {
   const [colorHex, setColorHex]         = useState<string>(COLORS[0].hex);
   const [dragging, setDragging]         = useState<{ stampId: string; color: string } | null>(null);
   const [overCanvas, setOverCanvas]     = useState(false);
-  const [challenge]                     = useState(() => CHALLENGES[Math.floor(Math.random() * CHALLENGES.length)]);
-  const [airiMsg, setAiriMsg]           = useState(`${challenge.hint} 💡`);
+  const [challengeIdx, setChallengeIdx] = useState(() => Math.floor(Math.random() * CHALLENGES.length));
+  const challenge                       = CHALLENGES[challengeIdx];
+  const [airiMsg, setAiriMsg]           = useState(`${CHALLENGES[challengeIdx].hint} 💡`);
   const [airiMood, setAiriMood]         = useState<AiriMood>('encouraging');
   const [isDone, setIsDone]             = useState(false);
 
@@ -171,6 +172,14 @@ export const BuildItBlocks: React.FC<BuildItBlocksProps> = ({ onClose }) => {
   const handleUndo  = () => setPlaced(prev => prev.slice(0, -1));
   const handleClear = () => { setPlaced([]); setAiriMsg(`${challenge.hint} 💡`); setAiriMood('encouraging'); setIsDone(false); };
   const handleDone  = () => { setIsDone(true); setAiriMsg("Wonderful creation! AI learns spatial reasoning from examples exactly like yours! 🤖🏆"); setAiriMood('celebrating'); };
+  const handleNew   = () => {
+    const next = (challengeIdx + 1 + Math.floor(Math.random() * (CHALLENGES.length - 1))) % CHALLENGES.length;
+    setChallengeIdx(next);
+    setPlaced([]);
+    setIsDone(false);
+    setAiriMsg(`${CHALLENGES[next].hint} 💡`);
+    setAiriMood('encouraging');
+  };
 
   const dragStamp = dragging ? STAMPS.find(s => s.id === dragging.stampId) : null;
 
@@ -197,6 +206,10 @@ export const BuildItBlocks: React.FC<BuildItBlocksProps> = ({ onClose }) => {
           <button type="button" onClick={handleClear}
             className="text-sm font-bold text-orange-600 dark:text-orange-400 border border-orange-300 dark:border-orange-700 rounded-lg px-3 py-1.5 hover:bg-orange-100 dark:hover:bg-orange-900/30 hover:scale-105 active:scale-95 transition-all focus:outline-none flex items-center gap-1">
             🗑️ <span className="hidden sm:inline">Clear</span>
+          </button>
+          <button type="button" onClick={handleNew}
+            className="text-sm font-bold text-orange-600 dark:text-orange-400 border border-orange-300 dark:border-orange-700 rounded-lg px-3 py-1.5 hover:bg-orange-100 dark:hover:bg-orange-900/30 hover:scale-105 active:scale-95 transition-all focus:outline-none flex items-center gap-1">
+            🔄 <span className="hidden sm:inline">New</span>
           </button>
         </div>
       </div>

@@ -198,7 +198,7 @@ export const PatternPath: React.FC<PatternPathProps> = ({ onClose }) => {
       <div className="flex items-center justify-between px-5 py-3 bg-white/60 dark:bg-gray-800/60 backdrop-blur-sm border-b border-blue-100 dark:border-blue-900">
         <button
           onClick={onClose}
-          className="flex items-center gap-1.5 text-sm font-bold text-blue-600 dark:text-blue-300 hover:underline focus:outline-none focus:ring-2 focus:ring-blue-400 rounded-lg px-2 py-1"
+          className="flex items-center gap-1.5 text-sm font-bold text-blue-600 dark:text-blue-300 hover:underline hover:scale-105 active:scale-95 transition-all focus:outline-none focus:ring-2 focus:ring-blue-400 rounded-lg px-2 py-1"
         >
           ← Back
         </button>
@@ -208,12 +208,13 @@ export const PatternPath: React.FC<PatternPathProps> = ({ onClose }) => {
           <p className="text-xs text-blue-500 dark:text-blue-400 font-semibold">Level {level} / {MAX_LEVEL}</p>
         </div>
 
-        {/* Lives */}
-        <div className="flex gap-1 text-xl" aria-label={`${lives} lives remaining`}>
-          {Array.from({ length: MAX_LIVES }).map((_, i) => (
-            <span key={i}>{i < lives ? '❤️' : '🖤'}</span>
-          ))}
-        </div>
+        <button
+          type="button"
+          onClick={handleRestart}
+          className="text-sm font-bold text-blue-600 dark:text-blue-400 border border-blue-300 dark:border-blue-700 rounded-lg px-3 py-1.5 hover:bg-blue-100 dark:hover:bg-blue-900/30 hover:scale-105 active:scale-95 transition-all focus:outline-none"
+        >
+          🔄 New
+        </button>
       </div>
 
       {/* Sequence indicator — dots matching sequence length */}

@@ -118,6 +118,33 @@ const WHERE: Card[] = [
 function pickRandom<T>(arr: T[], n: number): T[] {
   return [...arr].sort(() => Math.random() - 0.5).slice(0, n);
 }
+function rand<T>(arr: T[]): T { return arr[Math.floor(Math.random() * arr.length)]; }
+
+const OPENERS = [
+  "Once upon a time,",
+  "Long ago in a distant land,",
+  "Nobody expected it when",
+  "The legend tells of how",
+  "History was changed forever when",
+  "Everyone was astonished the day",
+  "A great tale is told of how",
+  "On an otherwise ordinary day,",
+  "In the age of wonders,",
+  "The bards still sing of how",
+];
+
+const CLOSERS = [
+  "And the world was never quite the same again.",
+  "Even the stars paused to watch.",
+  "This story is still told to this day.",
+  "AI remembers it — it read every book!",
+  "The end... or was it just the beginning?",
+  "Children still whisper about it at bedtime.",
+  "And that is why we love stories!",
+  "No one could believe it had really happened.",
+  "Every storyteller since has borrowed a little of this tale.",
+  "Airi says: AI learned this story from ten million books! 📚",
+];
 
 const AI_FACTS = [
   "AI builds stories like this — learning which words go together from millions of books! 📚🤖",
@@ -162,16 +189,34 @@ const StoryCard: React.FC<StoryCardProps> = ({ emoji, label, selected, onSelect 
 
 // ── Component ─────────────────────────────────────────────────────────────────
 
-export const StoryMaker: React.FC<StoryMakerProps> = ({ onClose }) => {
-  const whoCards   = useMemo(() => pickRandom(WHO,   4), []);
-  const didCards   = useMemo(() => pickRandom(DID,   4), []);
-  const whereCards = useMemo(() => pickRandom(WHERE, 4), []);
+// Seed a fresh deck: 4 cards per column + auto-pick one from each
+function freshDeal() {
+  const wc = pickRandom(WHO,   4);
+  const dc = pickRandom(DID,   4);
+  const pc = pickRandom(WHERE, 4);
+  return {
+    whoCards: wc, didCards: dc, whereCards: pc,
+    who:   rand(wc).id,
+    did:   rand(dc).id,
+    where: rand(pc).id,
+    opener: rand(OPENERS),
+    closer: rand(CLOSERS),
+  };
+}
 
-  const [who,      setWho]      = useState<string | null>(null);
-  const [did,      setDid]      = useState<string | null>(null);
-  const [where,    setWhere]    = useState<string | null>(null);
-  const [revealed, setRevealed] = useState(false);
-  const [factIdx,  setFactIdx]  = useState(() => Math.floor(Math.random() * AI_FACTS.length));
+export const StoryMaker: React.FC<StoryMakerProps> = ({ onClose }) => {
+  const initial = useMemo(freshDeal, []);
+
+  const [whoCards,   setWhoCards]   = useState(initial.whoCards);
+  const [didCards,   setDidCards]   = useState(initial.didCards);
+  const [whereCards, setWhereCards] = useState(initial.whereCards);
+  const [who,        setWho]        = useState<string | null>(initial.who);
+  const [did,        setDid]        = useState<string | null>(initial.did);
+  const [where,      setWhere]      = useState<string | null>(initial.where);
+  const [opener,     setOpener]     = useState(initial.opener);
+  const [closer,     setCloser]     = useState(initial.closer);
+  const [revealed,   setRevealed]   = useState(true);   // auto-reveal first story
+  const [factIdx,    setFactIdx]    = useState(() => Math.floor(Math.random() * AI_FACTS.length));
 
   const whoCard   = whoCards.find(c => c.id === who);
   const didCard   = didCards.find(c => c.id === did);
@@ -204,8 +249,22 @@ export const StoryMaker: React.FC<StoryMakerProps> = ({ onClose }) => {
     : stage !== 'idle'  ? 'encouraging'
     : 'idle';
 
+  // "New" — deal fresh cards, auto-pick, auto-reveal a brand new story
+  const handleNew = () => {
+    const deal = freshDeal();
+    setWhoCards(deal.whoCards);
+    setDidCards(deal.didCards);
+    setWhereCards(deal.whereCards);
+    setWho(deal.who);
+    setDid(deal.did);
+    setWhere(deal.where);
+    setOpener(deal.opener);
+    setCloser(deal.closer);
+    setRevealed(true);
+    setFactIdx(Math.floor(Math.random() * AI_FACTS.length));
+  };
+
   const handleReveal = () => { setRevealed(true); setFactIdx(Math.floor(Math.random() * AI_FACTS.length)); };
-  const handleReset  = () => { setWho(null); setDid(null); setWhere(null); setRevealed(false); };
   const pickWho      = (id: string) => { setWho(id);   setRevealed(false); };
   const pickDid      = (id: string) => { setDid(id);   setRevealed(false); };
   const pickWhere    = (id: string) => { setWhere(id); setRevealed(false); };
@@ -220,20 +279,22 @@ export const StoryMaker: React.FC<StoryMakerProps> = ({ onClose }) => {
           ← Back
         </button>
         <h2 className="text-base sm:text-lg font-extrabold text-[var(--pg-text)]">Story Maker 📖</h2>
-        <button type="button" onClick={handleReset}
+        <button type="button" onClick={handleNew}
           className="text-sm font-bold text-[var(--pg-accent-2)] border-2 border-[var(--pg-accent-2)] rounded-lg px-3 py-1.5 hover:bg-[var(--pg-accent-2)] hover:text-white hover:scale-105 active:scale-95 transition-all focus:outline-none">
           🔄 New
         </button>
       </div>
 
-      {/* Revealed story sentence */}
+      {/* Revealed story */}
       {revealed && whoCard && didCard && whereCard && (
         <div className="pg-bubble-in mx-auto w-full max-w-2xl mt-3 px-4 shrink-0">
-          <div className="p-4 bg-white rounded-2xl shadow-lg border-[3px] border-[var(--pg-accent-3)] text-center">
-            <p className="text-3xl mb-1">{whoCard.emoji} {didCard.emoji} {whereCard.emoji}</p>
+          <div className="p-4 bg-white rounded-2xl shadow-lg border-[3px] border-[var(--pg-accent-3)] text-center space-y-1">
+            <p className="text-3xl">{whoCard.emoji} {didCard.emoji} {whereCard.emoji}</p>
+            <p className="text-xs font-semibold text-[var(--pg-text-muted)] italic">{opener}</p>
             <p className="text-base font-extrabold text-[var(--pg-text)] leading-snug">
               {whoCard.label} {didCard.label} {whereCard.label}!
             </p>
+            <p className="text-xs font-semibold text-[var(--pg-text-muted)] italic">{closer}</p>
           </div>
         </div>
       )}

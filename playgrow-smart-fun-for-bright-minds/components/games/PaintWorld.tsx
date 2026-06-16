@@ -40,6 +40,17 @@ const BRUSHES = [
 
 const CANVAS_PX = 600;
 
+const CHALLENGES = [
+  { prompt: 'Paint a sunny beach 🏖️',      tip: 'Blue for the sea, yellow for the sand!' },
+  { prompt: 'Draw a robot face 🤖',         tip: 'Squares for the eyes, a line for the mouth!' },
+  { prompt: 'Colour the night sky 🌙',      tip: 'Dark blue background, white dots for stars!' },
+  { prompt: 'Paint a rainbow 🌈',           tip: 'Red, orange, yellow, green, blue — arching curves!' },
+  { prompt: 'Draw a rocket in space 🚀',    tip: 'A tall shape for the body, fire at the bottom!' },
+  { prompt: 'Paint a jungle 🌿',            tip: 'Lots of green shapes — big leaves, tall trees!' },
+  { prompt: 'Draw your favourite animal 🐘',tip: 'Start with a big shape for the body!' },
+  { prompt: 'Paint a stormy ocean 🌊',      tip: 'Dark blue waves with white foam tips!' },
+];
+
 const AIRI_MESSAGES: [string, AiriMood][] = [
   ["Pick a colour and start painting! I'm learning by watching! 🎨", 'happy'],
   ["AI studies millions of paintings to learn colours — just like you're doing now! 🤖", 'thinking'],
@@ -54,11 +65,12 @@ export const PaintWorld: React.FC<PaintWorldProps> = ({ onClose }) => {
   const isPainting       = useRef(false);
   const lastPt           = useRef<[number, number] | null>(null);
 
-  const [paletteIdx, setPaletteIdx] = useState(5);   // blue
-  const [brushIdx, setBrushIdx]     = useState(1);   // medium
-  const [eraser, setEraser]         = useState(false);
-  const [msgIdx, setMsgIdx]         = useState(0);
-  const [hasPainted, setHasPainted] = useState(false);
+  const [paletteIdx, setPaletteIdx]       = useState(5);   // blue
+  const [brushIdx, setBrushIdx]           = useState(1);   // medium
+  const [eraser, setEraser]               = useState(false);
+  const [msgIdx, setMsgIdx]               = useState(0);
+  const [hasPainted, setHasPainted]       = useState(false);
+  const [challengeIdx, setChallengeIdx]   = useState(() => Math.floor(Math.random() * CHALLENGES.length));
 
   // Fill canvas white on mount
   useEffect(() => {
@@ -137,6 +149,12 @@ export const PaintWorld: React.FC<PaintWorldProps> = ({ onClose }) => {
     setHasPainted(false);
   };
 
+  const handleNew = () => {
+    handleClear();
+    const next = (challengeIdx + 1 + Math.floor(Math.random() * (CHALLENGES.length - 1))) % CHALLENGES.length;
+    setChallengeIdx(next);
+  };
+
   const selectPalette = (i: number) => { setPaletteIdx(i); setEraser(false); };
   const selectBrush   = (i: number) => { setBrushIdx(i);   setEraser(false); };
 
@@ -155,17 +173,36 @@ export const PaintWorld: React.FC<PaintWorldProps> = ({ onClose }) => {
           ← Back
         </button>
         <h2 className="text-base sm:text-lg font-extrabold text-pink-700 dark:text-pink-300">Paint World 🎨</h2>
-        <button
-          type="button"
-          onClick={handleClear}
-          className="text-sm font-bold text-pink-600 dark:text-pink-400 border border-pink-300 dark:border-pink-700 rounded-lg px-3 py-1.5 hover:bg-pink-100 dark:hover:bg-pink-900/30 hover:scale-105 active:scale-95 transition-all focus:outline-none"
-        >
-          🗑️ Clear
-        </button>
+        <div className="flex gap-2">
+          <button
+            type="button"
+            onClick={handleClear}
+            className="text-sm font-bold text-pink-600 dark:text-pink-400 border border-pink-300 dark:border-pink-700 rounded-lg px-3 py-1.5 hover:bg-pink-100 dark:hover:bg-pink-900/30 hover:scale-105 active:scale-95 transition-all focus:outline-none"
+          >
+            🗑️ <span className="hidden sm:inline">Clear</span>
+          </button>
+          <button
+            type="button"
+            onClick={handleNew}
+            className="text-sm font-bold text-pink-600 dark:text-pink-400 border border-pink-300 dark:border-pink-700 rounded-lg px-3 py-1.5 hover:bg-pink-100 dark:hover:bg-pink-900/30 hover:scale-105 active:scale-95 transition-all focus:outline-none"
+          >
+            🔄 <span className="hidden sm:inline">New</span>
+          </button>
+        </div>
       </div>
 
       {/* Main */}
       <div className="flex-1 flex flex-col items-center justify-center gap-3 px-2 pb-24 overflow-hidden">
+
+        {/* Challenge prompt */}
+        <div className="flex flex-col items-center gap-0.5 shrink-0">
+          <span className="text-base sm:text-lg font-extrabold text-pink-700 dark:text-pink-300">
+            {CHALLENGES[challengeIdx].prompt}
+          </span>
+          <span className="text-xs text-pink-400 dark:text-pink-500 font-medium italic">
+            {CHALLENGES[challengeIdx].tip}
+          </span>
+        </div>
 
         {/* Canvas */}
         <div className="rounded-2xl overflow-hidden shadow-2xl border-4 border-pink-200 dark:border-pink-800 bg-white shrink-0">

@@ -197,6 +197,7 @@ export const FindMatch: React.FC<FindMatchProps> = ({ onClose }) => {
       {/* Header */}
       <div className="flex items-center justify-between px-5 py-3 bg-white/60 dark:bg-gray-800/60 backdrop-blur-sm border-b border-emerald-100 dark:border-teal-900">
         <button
+          type="button"
           onClick={onClose}
           className="text-sm font-bold text-emerald-700 dark:text-emerald-300 hover:underline hover:scale-105 active:scale-95 transition-all focus:outline-none focus:ring-2 focus:ring-emerald-400 rounded-lg px-2 py-1"
         >
@@ -208,11 +209,13 @@ export const FindMatch: React.FC<FindMatchProps> = ({ onClose }) => {
             {matchedCount} / {totalPairs} pairs · {moves} moves
           </p>
         </div>
-        <div className="text-xl">
-          {matchedCount === totalPairs
-            ? `${'⭐'.repeat(stars)}${'🖤'.repeat(3 - stars)}`
-            : `🃏 ${cards.filter((c) => !c.matched).length / 2} left`}
-        </div>
+        <button
+          type="button"
+          onClick={handleRestart}
+          className="text-sm font-bold text-emerald-700 dark:text-emerald-400 border border-emerald-300 dark:border-emerald-700 rounded-lg px-3 py-1.5 hover:bg-emerald-100 dark:hover:bg-emerald-900/30 hover:scale-105 active:scale-95 transition-all focus:outline-none"
+        >
+          🔄 New
+        </button>
       </div>
 
       {/* Game area */}
@@ -229,6 +232,7 @@ export const FindMatch: React.FC<FindMatchProps> = ({ onClose }) => {
               Just like you, AI sorts millions of items every second to make the world cleaner and healthier! 🌍
             </p>
             <button
+              type="button"
               onClick={handleRestart}
               className="mt-5 px-8 py-3 bg-emerald-500 hover:bg-emerald-600 hover:scale-105 text-white font-extrabold text-lg rounded-2xl shadow-lg active:scale-95 transition-all"
             >
@@ -239,6 +243,7 @@ export const FindMatch: React.FC<FindMatchProps> = ({ onClose }) => {
           <div className="grid grid-cols-4 gap-2 sm:gap-3 max-w-lg w-full mx-auto">
             {cards.map((card) => (
               <button
+                type="button"
                 key={card.id}
                 onClick={() => handleFlip(card.id)}
                 disabled={card.matched || card.flipped || locked}
