@@ -1,2 +1,52 @@
 @import "tailwindcss";
 
+/* ── PlayGrow scoped design tokens ────────────────────────────────────────────
+   Applied ONLY inside .playgrow-shell — WillPro / LEMS / Dictation Studio
+   keep their existing dark themes untouched.
+   ─────────────────────────────────────────────────────────────────────────── */
+.playgrow-shell {
+  --pg-bg:            #EAF6FF;
+  --pg-card:          #FFFFFF;
+  --pg-card-select:   #FFF4D6;
+  --pg-accent:        #FF6F59;
+  --pg-accent-2:      #4DB6AC;
+  --pg-accent-3:      #FFC93C;
+  --pg-border:        #D8ECFB;
+  --pg-border-select: #FF6F59;
+  --pg-text:          #1F2A44;
+  --pg-text-muted:    #5C6B8A;
+
+  background: var(--pg-bg);
+  color: var(--pg-text);
+}
+
+/* Story card animations */
+@keyframes pg-pop {
+  from { transform: scale(0); opacity: 0; }
+  to   { transform: scale(1); opacity: 1; }
+}
+@keyframes pg-bubble-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+/* Utility animation classes — used by StoryMaker to avoid inline styles */
+.pg-pop        { animation: pg-pop       0.25s ease-out; }
+.pg-bubble-in  { animation: pg-bubble-in 0.40s ease-out; }
+
+/* High-Contrast Theme Styles (existing — keep unchanged) */
+.high-contrast {
+  --bg-primary:    #000000;
+  --bg-secondary:  #000000;
+  --text-primary:  #ffffff;
+  --text-secondary:#dddddd;
+  --accent:        #ffff00;
+  --border-color:  #ffff00;
+}
+.high-contrast .hc-bg-primary    { background-color: var(--bg-primary); }
+.high-contrast .hc-bg-secondary  { background-color: var(--bg-secondary); }
+.high-contrast .hc-text-primary  { color: var(--text-primary); }
+.high-contrast .hc-text-secondary{ color: var(--text-secondary); }
+.high-contrast .hc-accent        { color: var(--accent); }
+.high-contrast .hc-border        { border: 2px solid var(--border-color); }
+.high-contrast .hc-shadow        { box-shadow: 0 0 0 2px var(--border-color); }
+.high-contrast .hc-stroke        { stroke: var(--accent); }
