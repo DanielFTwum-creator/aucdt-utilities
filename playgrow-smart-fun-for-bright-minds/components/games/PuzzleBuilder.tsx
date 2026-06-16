@@ -1,58 +1,50 @@
 /**
  * PuzzleBuilder — "Help AI see the world"
  *
- * Airi can't recognise objects yet. Kids assemble 4-piece picture puzzles so
- * she can "learn" what things look like — mirroring how labelled training data
- * teaches a real computer vision model.
+ * Airi can't recognise objects yet. Kids drag 4-piece picture puzzles into
+ * the correct slots so she can "learn" what things look like.
  *
- * Game flow:
- *   pick piece from pile → place in correct grid slot → all 4 correct →
- *   Airi celebrates → next puzzle   (3 puzzles total)
- *
- * Piece placement: piece N belongs in slot N (0=TL,1=TR,2=BL,3=BR).
- * Each piece is rendered by clipping the full SVG to its quadrant via viewBox.
+ * Interaction: pointer-event drag-and-drop (works on mouse + touch/tablet).
+ * Piece N belongs in slot N (0=TL, 1=TR, 2=BL, 3=BR).
+ * Each piece clips the full 200×200 SVG to its 100×100 quadrant via viewBox.
  */
 
-import React, { useState, useCallback } from 'react';
+import React, { useState, useRef, useCallback } from 'react';
 import { Airi, AiriMood } from '../Airi';
 
 interface PuzzleBuilderProps {
   onClose: () => void;
 }
 
-// ── Quadrant viewBoxes ────────────────────────────────────────────────────────
-// Full image: 200 × 200 px.  Each quadrant: 100 × 100 px.
+// ── Quadrant viewBoxes (full image: 200 × 200) ───────────────────────────────
 const QUAD_VB = [
-  '0 0 100 100',    // 0 = TL
-  '100 0 100 100',  // 1 = TR
-  '0 100 100 100',  // 2 = BL
-  '100 100 100 100' // 3 = BR
+  '0 0 100 100',      // 0 = TL
+  '100 0 100 100',    // 1 = TR
+  '0 100 100 100',    // 2 = BL
+  '100 100 100 100',  // 3 = BR
 ] as const;
 
 const QUAD_ARROWS = ['↖', '↗', '↙', '↘'];
 
-// ── Picture definitions ───────────────────────────────────────────────────────
+// ── SVG Pictures ─────────────────────────────────────────────────────────────
 
 function SunnyDay() {
   const rays = [0, 45, 90, 135, 180, 225, 270, 315];
   return (
     <g>
-      {/* Sky */}
       <rect x="0" y="0" width="200" height="115" fill="#7dd3fc" />
       {/* Cloud — TL */}
-      <ellipse cx="52" cy="36" rx="32" ry="19" fill="white" opacity="0.95" />
-      <ellipse cx="30" cy="44" rx="22" ry="14" fill="white" opacity="0.95" />
-      <ellipse cx="76" cy="44" rx="20" ry="13" fill="white" opacity="0.95" />
-      {/* Sun — TR */}
+      <ellipse cx="50" cy="36" rx="32" ry="19" fill="white" opacity="0.95" />
+      <ellipse cx="28" cy="44" rx="22" ry="14" fill="white" opacity="0.95" />
+      <ellipse cx="74" cy="44" rx="20" ry="13" fill="white" opacity="0.95" />
+      {/* Sun rays — TR */}
       {rays.map((deg) => {
         const r = (deg * Math.PI) / 180;
         return (
-          <line
-            key={deg}
+          <line key={deg}
             x1={155 + 25 * Math.cos(r)} y1={48 + 25 * Math.sin(r)}
-            x2={155 + 37 * Math.cos(r)} y2={48 + 37 * Math.sin(r)}
-            stroke="#fbbf24" strokeWidth="5" strokeLinecap="round"
-          />
+            x2={155 + 38 * Math.cos(r)} y2={48 + 38 * Math.sin(r)}
+            stroke="#fbbf24" strokeWidth="5" strokeLinecap="round" />
         );
       })}
       <circle cx="155" cy="48" r="23" fill="#fde047" />
@@ -70,10 +62,8 @@ function SunnyDay() {
         const cx = 151 + 14 * Math.cos(r);
         const cy = 148 + 14 * Math.sin(r);
         return (
-          <ellipse
-            key={deg} cx={cx} cy={cy} rx="9" ry="12" fill="#f9a8d4"
-            transform={`rotate(${deg + 90} ${cx} ${cy})`}
-          />
+          <ellipse key={deg} cx={cx} cy={cy} rx="9" ry="12" fill="#f9a8d4"
+            transform={`rotate(${deg + 90} ${cx} ${cy})`} />
         );
       })}
       <circle cx="151" cy="148" r="10" fill="#fde047" />
@@ -85,29 +75,21 @@ function AirisFace() {
   return (
     <g>
       <rect x="0" y="0" width="200" height="200" fill="#dbeafe" />
-      {/* Antenna */}
       <rect x="97" y="5" width="6" height="25" rx="3" fill="#94a3b8" />
       <circle cx="100" cy="4" r="9" fill="#60a5fa" />
-      {/* Head */}
       <rect x="28" y="28" width="144" height="100" rx="22" fill="#1e293b" />
       <rect x="36" y="33" width="128" height="12" rx="6" fill="white" opacity="0.08" />
-      {/* Left eye */}
       <rect x="40" y="52" width="48" height="32" rx="10" fill="#60a5fa" />
       <circle cx="64" cy="68" r="10" fill="white" opacity="0.9" />
       <circle cx="64" cy="68" r="5" fill="#1e40af" />
-      {/* Right eye */}
       <rect x="112" y="52" width="48" height="32" rx="10" fill="#60a5fa" />
       <circle cx="136" cy="68" r="10" fill="white" opacity="0.9" />
       <circle cx="136" cy="68" r="5" fill="#1e40af" />
-      {/* Smile */}
       <path d="M 60 103 Q 100 118 140 103" stroke="#60a5fa" strokeWidth="6" fill="none" strokeLinecap="round" />
-      {/* Neck */}
       <rect x="88" y="128" width="24" height="18" rx="5" fill="#1e293b" />
-      {/* Body */}
       <rect x="22" y="146" width="156" height="52" rx="18" fill="#1e293b" />
       <rect x="68" y="156" width="64" height="28" rx="8" fill="#60a5fa" opacity="0.3" />
       <circle cx="100" cy="170" r="10" fill="#60a5fa" opacity="0.7" />
-      {/* Arms */}
       <rect x="0"   y="148" width="24" height="22" rx="8" fill="#334155" />
       <rect x="176" y="148" width="24" height="22" rx="8" fill="#334155" />
     </g>
@@ -132,7 +114,7 @@ function NightSky() {
       <circle cx="155" cy="42" r="32" fill="#fef08a" />
       <circle cx="170" cy="35" r="28" fill="#0f172a" />
       {/* Rocket — BL */}
-      <path d="M 38 130 Q 49 105 60 130 Z" fill="#ef4444" />
+      <path d="M 37 130 Q 49 105 61 130 Z" fill="#ef4444" />
       <rect x="37" y="130" width="24" height="44" rx="8" fill="#f1f5f9" />
       <circle cx="49" cy="148" r="8" fill="#93c5fd" stroke="#64748b" strokeWidth="2" />
       <path d="M 37 162 L 23 178 L 37 175 Z" fill="#ef4444" />
@@ -153,7 +135,7 @@ function NightSky() {
 const PUZZLES = [
   {
     name: 'Sunny Day ☀️',
-    intro: "I've never seen a sunny day! Assemble the picture to teach me! 🌞",
+    intro: "I've never seen a sunny day! Drag the pieces to teach me! 🌞",
     learned: 'Now I know what a sunny day looks like! ☀️ Thank you!',
     Pic: SunnyDay,
   },
@@ -173,7 +155,7 @@ const PUZZLES = [
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
-const shuffled = (n: number) => {
+const makeShuffled = (n: number): number[] => {
   const a = Array.from({ length: n }, (_, i) => i);
   for (let i = n - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -187,69 +169,112 @@ const shuffled = (n: number) => {
 export const PuzzleBuilder: React.FC<PuzzleBuilderProps> = ({ onClose }) => {
   const [puzzleIdx, setPuzzleIdx] = useState(0);
   const [slots, setSlots]         = useState<(number | null)[]>([null, null, null, null]);
-  const [pile, setPile]           = useState<number[]>(() => shuffled(4));
-  const [selected, setSelected]   = useState<number | null>(null);
+  const [pile, setPile]           = useState<number[]>(() => makeShuffled(4));
   const [wrongSlot, setWrongSlot] = useState<number | null>(null);
   const [phase, setPhase]         = useState<'playing' | 'complete' | 'done'>('playing');
   const [airiMsg, setAiriMsg]     = useState(PUZZLES[0].intro);
   const [airiMood, setAiriMood]   = useState<AiriMood>('thinking');
   const [stars, setStars]         = useState(0);
 
+  // Drag state — piece ID drives React re-render; position is DOM-only (no re-render per move)
+  const [draggingPiece, setDraggingPiece] = useState<number | null>(null);
+  const [hoverSlot, setHoverSlot]         = useState<number | null>(null);
+  const ghostRef                          = useRef<HTMLDivElement>(null);
+  const slotRefs                          = useRef<(HTMLDivElement | null)[]>([null, null, null, null]);
+
   const puzzle = PUZZLES[puzzleIdx];
   const Pic    = puzzle.Pic;
+
+  // ── Puzzle reset ─────────────────────────────────────────────────────────────
 
   const resetPuzzle = useCallback((idx: number) => {
     setPuzzleIdx(idx);
     setSlots([null, null, null, null]);
-    setPile(shuffled(4));
-    setSelected(null);
+    setPile(makeShuffled(4));
     setPhase('playing');
     setAiriMsg(PUZZLES[idx].intro);
     setAiriMood('thinking');
+    setDraggingPiece(null);
+    setHoverSlot(null);
   }, []);
 
-  const handlePickPiece = (pieceId: number) => {
-    if (phase !== 'playing') return;
-    setSelected(prev => (prev === pieceId ? null : pieceId));
-    setAiriMsg(selected === pieceId
-      ? 'No problem — pick another piece!'
-      : 'Good pick! Now tap the matching slot in the frame above! 👆');
-    setAiriMood('watching');
-  };
+  // ── Drop logic ───────────────────────────────────────────────────────────────
 
-  const handleSlotClick = (slotIdx: number) => {
-    if (phase !== 'playing' || selected === null || slots[slotIdx] !== null) return;
+  const tryDrop = useCallback((slotIdx: number, pieceId: number, currentSlots: (number|null)[], currentPile: number[], currentPuzzleIdx: number) => {
+    if (currentSlots[slotIdx] !== null) return;
 
-    if (selected === slotIdx) {
-      // ── Correct placement ──
-      const newSlots = [...slots];
-      newSlots[slotIdx] = selected;
-      const newPile = pile.filter(p => p !== selected);
+    if (pieceId === slotIdx) {
+      const newSlots = [...currentSlots];
+      newSlots[slotIdx] = pieceId;
+      const newPile  = currentPile.filter(p => p !== pieceId);
       setSlots(newSlots);
       setPile(newPile);
-      setSelected(null);
       setStars(s => s + 1);
 
       if (newPile.length === 0) {
         setPhase('complete');
-        setAiriMsg(puzzle.learned);
+        setAiriMsg(PUZZLES[currentPuzzleIdx].learned);
         setAiriMood('celebrating');
       } else {
         setAiriMsg('Perfect fit! 🌟 Keep going!');
         setAiriMood('happy');
         setTimeout(() => {
-          setAiriMsg('Pick another piece! 🎯');
+          setAiriMsg('Drag another piece into place! 🎯');
           setAiriMood('encouraging');
         }, 1400);
       }
     } else {
-      // ── Wrong slot ──
       setWrongSlot(slotIdx);
       setAiriMsg('Hmm, not quite — try a different spot! 🤔');
       setAiriMood('encouraging');
       setTimeout(() => setWrongSlot(null), 500);
     }
+  }, []);
+
+  // ── Pointer event handlers (attached to each piece button) ───────────────────
+
+  const findHoveredSlot = (clientX: number, clientY: number): number => {
+    return slotRefs.current.findIndex(ref => {
+      if (!ref) return false;
+      const r = ref.getBoundingClientRect();
+      return clientX >= r.left && clientX <= r.right && clientY >= r.top && clientY <= r.bottom;
+    });
   };
+
+  const moveGhost = (x: number, y: number) => {
+    if (ghostRef.current) {
+      ghostRef.current.style.transform = `translate(${x - 58}px, ${y - 58}px) rotate(4deg) scale(1.1)`;
+    }
+  };
+
+  const handlePiecePointerDown = (e: React.PointerEvent<HTMLButtonElement>, pieceId: number) => {
+    if (phase !== 'playing') return;
+    e.preventDefault();
+    e.currentTarget.setPointerCapture(e.pointerId);
+    setDraggingPiece(pieceId);
+    moveGhost(e.clientX, e.clientY);
+    setAiriMsg('Drop it on the right spot! 🎯');
+    setAiriMood('watching');
+  };
+
+  const handlePiecePointerMove = (e: React.PointerEvent<HTMLButtonElement>) => {
+    if (draggingPiece === null) return;
+    moveGhost(e.clientX, e.clientY);
+    const slot = findHoveredSlot(e.clientX, e.clientY);
+    setHoverSlot(slot >= 0 ? slot : null);
+  };
+
+  const handlePiecePointerUp = (e: React.PointerEvent<HTMLButtonElement>) => {
+    if (draggingPiece === null) return;
+    const slot = findHoveredSlot(e.clientX, e.clientY);
+    if (slot >= 0) {
+      tryDrop(slot, draggingPiece, slots, pile, puzzleIdx);
+    }
+    setDraggingPiece(null);
+    setHoverSlot(null);
+  };
+
+  // ── Navigation ───────────────────────────────────────────────────────────────
 
   const handleNext = () => {
     if (puzzleIdx + 1 >= PUZZLES.length) {
@@ -266,10 +291,12 @@ export const PuzzleBuilder: React.FC<PuzzleBuilderProps> = ({ onClose }) => {
     resetPuzzle(0);
   };
 
-  return (
-    <div className="flex flex-col h-full bg-gradient-to-b from-violet-50 to-indigo-100 dark:from-gray-900 dark:to-indigo-950 overflow-hidden">
+  // ── Render ───────────────────────────────────────────────────────────────────
 
-      {/* ── Header ── */}
+  return (
+    <div className="flex flex-col h-full w-full bg-gradient-to-b from-violet-50 to-indigo-100 dark:from-gray-900 dark:to-indigo-950 overflow-hidden">
+
+      {/* Header */}
       <div className="flex items-center justify-between px-5 py-3 bg-white/60 dark:bg-gray-800/60 backdrop-blur-sm border-b border-violet-100 dark:border-violet-900 shrink-0">
         <button
           type="button"
@@ -289,42 +316,39 @@ export const PuzzleBuilder: React.FC<PuzzleBuilderProps> = ({ onClose }) => {
         </div>
       </div>
 
-      {/* ── Main area ── */}
-      <div className="flex-1 flex flex-col items-center justify-start gap-4 px-4 pt-4 pb-28 overflow-y-auto">
+      {/* Main */}
+      <div className="flex-1 flex flex-col items-center justify-center gap-5 px-4 pb-24 overflow-hidden">
 
-        {/* Puzzle frame — 2 × 2 grid */}
-        <div
-          className="grid grid-cols-2 gap-1 rounded-2xl overflow-hidden shadow-2xl border-4 border-violet-300 dark:border-violet-700 shrink-0 w-[268px] h-[268px]"
-        >
-          {[0, 1, 2, 3].map(slotIdx => {
-            const placed  = slots[slotIdx];
-            const isWrong = wrongSlot === slotIdx;
-            const isEmpty = placed === null;
-            const canPlace = isEmpty && selected !== null && phase === 'playing';
+        {/* 2 × 2 puzzle frame */}
+        <div className="grid grid-cols-2 gap-1.5 rounded-2xl overflow-hidden shadow-2xl border-4 border-violet-300 dark:border-violet-700 shrink-0 w-[268px] h-[268px]">
+          {([0, 1, 2, 3] as const).map(slotIdx => {
+            const placed   = slots[slotIdx];
+            const isWrong  = wrongSlot === slotIdx;
+            const isHover  = hoverSlot === slotIdx && dragging !== null && slots[slotIdx] === null;
+            const isEmpty  = placed === null;
 
             return (
               <div
                 key={slotIdx}
-                onClick={() => handleSlotClick(slotIdx)}
+                ref={el => { slotRefs.current[slotIdx] = el; }}
                 className={[
-                  'relative w-[130px] h-[130px] flex items-center justify-center transition-all duration-200',
-                  'border-2',
+                  'relative w-[130px] h-[130px] flex items-center justify-center transition-all duration-200 border-2',
                   placed !== null
-                    ? 'border-emerald-400 bg-white dark:bg-gray-900 cursor-default'
-                    : canPlace
-                      ? 'border-violet-400 border-dashed bg-violet-50 dark:bg-violet-900/30 cursor-pointer hover:bg-violet-100 dark:hover:bg-violet-900/50'
-                      : 'border-dashed border-gray-300 dark:border-gray-600 bg-white/40 dark:bg-gray-800/30 cursor-default',
-                  isWrong ? 'bg-red-100 dark:bg-red-900/40 border-red-400 border-solid' : '',
+                    ? 'border-emerald-400 bg-white dark:bg-gray-900'
+                    : isHover
+                      ? 'border-violet-500 border-solid bg-violet-100 dark:bg-violet-900/40 scale-[1.02]'
+                      : isWrong
+                        ? 'border-red-400 border-solid bg-red-50 dark:bg-red-900/30'
+                        : 'border-dashed border-gray-300 dark:border-gray-600 bg-white/40 dark:bg-gray-800/30',
                 ].join(' ')}
-                role="button"
-                aria-label={placed !== null ? `Slot ${slotIdx + 1}: filled` : `Slot ${slotIdx + 1}: empty`}
+                aria-label={isEmpty ? `Drop zone ${slotIdx + 1}` : `Slot ${slotIdx + 1} filled`}
               >
                 {placed !== null ? (
                   <>
                     <svg width={130} height={130} viewBox={QUAD_VB[placed]}>
                       <Pic />
                     </svg>
-                    <span className="absolute top-1 right-1 w-5 h-5 rounded-full bg-emerald-500 flex items-center justify-center text-white text-[10px] font-extrabold leading-none">
+                    <span className="absolute top-1 right-1 w-5 h-5 rounded-full bg-emerald-500 flex items-center justify-center text-white text-[10px] font-extrabold leading-none pointer-events-none">
                       ✓
                     </span>
                   </>
@@ -338,7 +362,7 @@ export const PuzzleBuilder: React.FC<PuzzleBuilderProps> = ({ onClose }) => {
           })}
         </div>
 
-        {/* ── Complete overlay ── */}
+        {/* Complete banner */}
         {phase === 'complete' && (
           <div className="text-center animate-bounce">
             <p className="text-4xl">🎉🤖🎉</p>
@@ -353,7 +377,7 @@ export const PuzzleBuilder: React.FC<PuzzleBuilderProps> = ({ onClose }) => {
           </div>
         )}
 
-        {/* ── Done overlay ── */}
+        {/* Done banner */}
         {phase === 'done' && (
           <div className="text-center">
             <div className="text-6xl mb-3">🌍🤖🌟</div>
@@ -371,37 +395,35 @@ export const PuzzleBuilder: React.FC<PuzzleBuilderProps> = ({ onClose }) => {
           </div>
         )}
 
-        {/* ── Piece pile ── */}
+        {/* Piece pile */}
         {phase === 'playing' && (
-          <div className="flex flex-col items-center gap-3 w-full">
-            <p className="text-sm font-bold text-violet-600 dark:text-violet-300 text-center">
-              {selected !== null
-                ? 'Now tap the matching slot in the frame above! 👆'
-                : 'Tap a piece to pick it up, then tap where it goes! 🎯'}
+          <div className="flex flex-col items-center gap-3">
+            <p className="text-sm font-bold text-violet-600 dark:text-violet-300 text-center select-none">
+              {draggingPiece !== null
+                ? 'Drop it on the right spot! 🎯'
+                : 'Drag a piece into the frame above! 👆'}
             </p>
-
             <div className="flex flex-wrap justify-center gap-3">
               {pile.map(pieceId => (
                 <button
                   key={pieceId}
                   type="button"
-                  onClick={() => handlePickPiece(pieceId)}
+                  onPointerDown={e => handlePiecePointerDown(e, pieceId)}
+                  onPointerMove={handlePiecePointerMove}
+                  onPointerUp={handlePiecePointerUp}
                   className={[
-                    'relative rounded-xl overflow-hidden transition-all duration-200 active:scale-95 focus:outline-none',
-                    selected === pieceId
-                      ? 'ring-4 ring-violet-500 shadow-[0_0_20px_rgba(139,92,246,0.55)] scale-105'
-                      : 'ring-2 ring-violet-200 dark:ring-violet-700 hover:ring-violet-400 hover:scale-105',
+                    'relative rounded-xl overflow-hidden transition-all duration-150',
+                    'ring-2 ring-violet-200 dark:ring-violet-700',
+                    'touch-none select-none focus:outline-none',
+                    draggingPiece === pieceId
+                      ? 'opacity-30 scale-90 cursor-grabbing'
+                      : 'hover:ring-violet-400 hover:scale-105 cursor-grab active:cursor-grabbing',
                   ].join(' ')}
-                  aria-label={`Puzzle piece ${pieceId + 1}${selected === pieceId ? ' (selected)' : ''}`}
+                  aria-label={`Puzzle piece ${pieceId + 1}`}
                 >
                   <svg width={108} height={108} viewBox={QUAD_VB[pieceId]}>
                     <Pic />
                   </svg>
-                  {selected === pieceId && (
-                    <div className="absolute inset-0 bg-violet-500/20 flex items-center justify-center pointer-events-none">
-                      <span className="text-violet-700 dark:text-violet-200 text-2xl font-extrabold drop-shadow">✔</span>
-                    </div>
-                  )}
                 </button>
               ))}
             </div>
@@ -409,7 +431,18 @@ export const PuzzleBuilder: React.FC<PuzzleBuilderProps> = ({ onClose }) => {
         )}
       </div>
 
-      {/* ── Airi companion ── */}
+      {/* Floating drag ghost — position updated imperatively via ref (no inline style in JSX) */}
+      {draggingPiece !== null && (
+        <div ref={ghostRef} className="fixed top-0 left-0 pointer-events-none z-50 will-change-transform">
+          <div className="rounded-xl overflow-hidden ring-4 ring-violet-500 shadow-2xl opacity-90">
+            <svg width={108} height={108} viewBox={QUAD_VB[draggingPiece]}>
+              <Pic />
+            </svg>
+          </div>
+        </div>
+      )}
+
+      {/* Airi */}
       <Airi message={airiMsg} mood={airiMood} />
     </div>
   );
