@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Zone, ZoneID } from '../types';
 import { Theme } from '../App';
 import ThemeSwitcher from './ThemeSwitcher';
 import { LockIcon } from './icons';
+import { MagicReveal } from './MagicReveal';
 
 interface WorldMapProps {
   zones: Zone[];
@@ -129,6 +130,7 @@ const ZoneButton: React.FC<{ zone: Zone; onClick: () => void }> = ({ zone, onCli
 // ── World Map ───────────────────────────────────────────────────────────────
 const WorldMap: React.FC<WorldMapProps> = ({ zones, onSelectZone, onAdminClick, theme, setTheme }) => {
   const isDark = theme === 'dark';
+  const [showMagic, setShowMagic] = useState(false);
 
   return (
     <main
@@ -145,13 +147,25 @@ const WorldMap: React.FC<WorldMapProps> = ({ zones, onSelectZone, onAdminClick, 
       <div className="absolute top-4 right-4 z-20">
         <ThemeSwitcher theme={theme} setTheme={setTheme} />
       </div>
-      <button
-        onClick={onAdminClick}
-        className="absolute top-4 left-4 z-20 p-2 bg-white/30 dark:bg-white/10 rounded-full shadow-md hover:bg-white/60 dark:hover:bg-white/20 backdrop-blur-sm transition-colors focus:outline-none focus:ring-4 focus:ring-blue-400"
-        aria-label="Open Admin Panel"
-      >
-        <LockIcon className="w-5 h-5 text-white dark:text-gray-300" />
-      </button>
+      <div className="absolute top-4 left-4 z-20 flex items-center gap-2">
+        <button
+          onClick={onAdminClick}
+          className="p-2 bg-white/30 dark:bg-white/10 rounded-full shadow-md hover:bg-white/60 dark:hover:bg-white/20 backdrop-blur-sm transition-colors focus:outline-none focus:ring-4 focus:ring-blue-400"
+          aria-label="Open Admin Panel"
+        >
+          <LockIcon className="w-5 h-5 text-white dark:text-gray-300" />
+        </button>
+        <button
+          onClick={() => setShowMagic(true)}
+          className="p-2 bg-white/30 dark:bg-white/10 rounded-full shadow-md hover:bg-white/60 dark:hover:bg-white/20 backdrop-blur-sm transition-all hover:scale-110 focus:outline-none focus:ring-4 focus:ring-yellow-300"
+          aria-label="Behind the magic"
+          title="How was this made?"
+        >
+          <span className="text-lg leading-none select-none">✨</span>
+        </button>
+      </div>
+
+      {showMagic && <MagicReveal onClose={() => setShowMagic(false)} />}
 
       {/* Background decorations */}
       {isDark ? (
