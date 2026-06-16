@@ -38,7 +38,7 @@ const BRUSHES = [
   { dot: 'w-7 h-7',  size: 22 },
 ] as const;
 
-const CANVAS_PX = 380;
+const CANVAS_PX = 600;
 
 const AIRI_MESSAGES: [string, AiriMood][] = [
   ["Pick a colour and start painting! I'm learning by watching! 🎨", 'happy'],
@@ -173,7 +173,7 @@ export const PaintWorld: React.FC<PaintWorldProps> = ({ onClose }) => {
             ref={canvasRef}
             width={CANVAS_PX}
             height={CANVAS_PX}
-            className="w-[300px] h-[300px] sm:w-[360px] sm:h-[360px] touch-none select-none block"
+            className="w-[300px] h-[300px] sm:w-[360px] sm:h-[360px] lg:w-[480px] lg:h-[480px] touch-none select-none block"
             onPointerDown={handlePointerDown}
             onPointerMove={handlePointerMove}
             onPointerUp={handlePointerUp}

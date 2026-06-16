@@ -202,13 +202,13 @@ export const BuildItBlocks: React.FC<BuildItBlocksProps> = ({ onClose }) => {
       </div>
 
       {/* Main */}
-      <div className="flex-1 flex flex-col items-center gap-2 px-3 pt-3 pb-24 overflow-hidden">
+      <div className="flex-1 flex flex-col items-center gap-2 px-3 pt-3 pb-24 overflow-hidden w-full">
 
         {/* Build canvas — drop target */}
         <div
           ref={canvasRef}
           className={[
-            'relative rounded-2xl overflow-hidden shadow-xl border-4 shrink-0 w-full max-w-md h-[50vh] min-h-[220px]',
+            'relative rounded-2xl overflow-hidden shadow-xl border-4 shrink-0 w-full max-w-3xl h-[55vh] min-h-[240px]',
             overCanvas
               ? 'border-orange-400 bg-orange-50 dark:bg-orange-900/20'
               : 'border-orange-200 dark:border-orange-800 bg-sky-50 dark:bg-gray-800',
@@ -243,7 +243,7 @@ export const BuildItBlocks: React.FC<BuildItBlocksProps> = ({ onClose }) => {
         </div>
 
         {/* Controls */}
-        <div className="flex flex-col items-center gap-2 shrink-0 w-full max-w-md">
+        <div className="flex flex-col items-center gap-2 shrink-0 w-full max-w-3xl">
 
           {/* Shape picker — each is draggable */}
           <p className="text-xs font-bold text-orange-500 dark:text-orange-400">

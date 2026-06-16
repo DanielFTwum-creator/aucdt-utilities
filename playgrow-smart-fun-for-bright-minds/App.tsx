@@ -80,7 +80,7 @@ const App: React.FC = () => {
 
   return (
     <div className={`w-screen h-screen bg-sky-100 dark:bg-gray-900 overflow-hidden font-sans antialiased hc-bg-primary hc-text-primary`}>
-      <div className="transition-opacity duration-500 ease-in-out h-full">
+      <div className="transition-opacity duration-500 ease-in-out h-full w-full">
         {renderContent()}
       </div>
     </div>

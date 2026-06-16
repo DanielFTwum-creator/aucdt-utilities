@@ -112,7 +112,7 @@ export const StoryMaker: React.FC<StoryMakerProps> = ({ onClose }) => {
 
       {/* Story sentence (revealed) */}
       {revealed && whoCard && didCard && whereCard && (
-        <div className="mx-4 mt-3 p-4 bg-white dark:bg-gray-800 rounded-2xl shadow-lg border-2 border-blue-200 dark:border-blue-700 text-center shrink-0 animate-[fadeIn_0.4s_ease]">
+        <div className="mx-4 sm:mx-auto sm:w-full sm:max-w-2xl mt-3 p-4 bg-white dark:bg-gray-800 rounded-2xl shadow-lg border-2 border-blue-200 dark:border-blue-700 text-center shrink-0 animate-[fadeIn_0.4s_ease]">
           <p className="text-2xl mb-1">
             {whoCard.emoji} {didCard.emoji} {whereCard.emoji}
           </p>
@@ -123,12 +123,12 @@ export const StoryMaker: React.FC<StoryMakerProps> = ({ onClose }) => {
       )}
 
       {/* Card columns */}
-      <div className="flex-1 overflow-y-auto px-3 py-3 pb-28">
-        <div className="grid grid-cols-3 gap-2 max-w-md mx-auto">
+      <div className="flex-1 overflow-y-auto w-full px-4 sm:px-8 py-4 pb-28">
+        <div className="grid grid-cols-3 gap-3 sm:gap-6 w-full max-w-2xl mx-auto">
 
           {/* Column headers */}
           {(['Who?', 'Did what?', 'Where?'] as const).map(h => (
-            <div key={h} className="text-center text-xs font-extrabold text-blue-600 dark:text-blue-400 uppercase tracking-wider pb-1">
+            <div key={h} className="text-center text-xs sm:text-sm font-extrabold text-blue-600 dark:text-blue-400 uppercase tracking-wider pb-1">
               {h}
             </div>
           ))}
@@ -138,13 +138,13 @@ export const StoryMaker: React.FC<StoryMakerProps> = ({ onClose }) => {
             {whoCards.map(c => (
               <button key={c.id} type="button" onClick={() => { setWho(c.id); setRevealed(false); }}
                 className={[
-                  'flex flex-col items-center gap-0.5 py-2 px-1 rounded-xl border-2 text-center transition-all active:scale-95',
+                  'flex flex-col items-center gap-1 py-3 px-2 rounded-xl border-2 text-center transition-all active:scale-95',
                   who === c.id
                     ? 'border-blue-500 bg-blue-100 dark:bg-blue-900/50 shadow-md scale-105'
                     : 'border-gray-200 dark:border-gray-700 bg-white/70 dark:bg-gray-800/70 hover:border-blue-300 hover:scale-102',
                 ].join(' ')}>
-                <span className="text-2xl leading-none">{c.emoji}</span>
-                <span className="text-[9px] font-bold text-gray-600 dark:text-gray-300 leading-tight">{c.label}</span>
+                <span className="text-2xl sm:text-3xl leading-none">{c.emoji}</span>
+                <span className="text-[10px] sm:text-xs font-bold text-gray-600 dark:text-gray-300 leading-tight">{c.label}</span>
               </button>
             ))}
           </div>
@@ -154,13 +154,13 @@ export const StoryMaker: React.FC<StoryMakerProps> = ({ onClose }) => {
             {didCards.map(c => (
               <button key={c.id} type="button" onClick={() => { setDid(c.id); setRevealed(false); }}
                 className={[
-                  'flex flex-col items-center gap-0.5 py-2 px-1 rounded-xl border-2 text-center transition-all active:scale-95',
+                  'flex flex-col items-center gap-1 py-3 px-2 rounded-xl border-2 text-center transition-all active:scale-95',
                   did === c.id
                     ? 'border-blue-500 bg-blue-100 dark:bg-blue-900/50 shadow-md scale-105'
                     : 'border-gray-200 dark:border-gray-700 bg-white/70 dark:bg-gray-800/70 hover:border-blue-300',
                 ].join(' ')}>
-                <span className="text-2xl leading-none">{c.emoji}</span>
-                <span className="text-[9px] font-bold text-gray-600 dark:text-gray-300 leading-tight">{c.label}</span>
+                <span className="text-2xl sm:text-3xl leading-none">{c.emoji}</span>
+                <span className="text-[10px] sm:text-xs font-bold text-gray-600 dark:text-gray-300 leading-tight">{c.label}</span>
               </button>
             ))}
           </div>
@@ -170,13 +170,13 @@ export const StoryMaker: React.FC<StoryMakerProps> = ({ onClose }) => {
             {whereCards.map(c => (
               <button key={c.id} type="button" onClick={() => { setWhere(c.id); setRevealed(false); }}
                 className={[
-                  'flex flex-col items-center gap-0.5 py-2 px-1 rounded-xl border-2 text-center transition-all active:scale-95',
+                  'flex flex-col items-center gap-1 py-3 px-2 rounded-xl border-2 text-center transition-all active:scale-95',
                   where === c.id
                     ? 'border-blue-500 bg-blue-100 dark:bg-blue-900/50 shadow-md scale-105'
                     : 'border-gray-200 dark:border-gray-700 bg-white/70 dark:bg-gray-800/70 hover:border-blue-300',
                 ].join(' ')}>
-                <span className="text-2xl leading-none">{c.emoji}</span>
-                <span className="text-[9px] font-bold text-gray-600 dark:text-gray-300 leading-tight">{c.label}</span>
+                <span className="text-2xl sm:text-3xl leading-none">{c.emoji}</span>
+                <span className="text-[10px] sm:text-xs font-bold text-gray-600 dark:text-gray-300 leading-tight">{c.label}</span>
               </button>
             ))}
           </div>
