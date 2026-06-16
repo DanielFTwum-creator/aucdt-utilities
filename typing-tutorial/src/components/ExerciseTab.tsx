@@ -88,17 +88,28 @@ function HandDiagram({ activeHand, activeFinger, isIdle }: { activeHand: string;
     return FINGER_ACCENTS[name].handIdle;
   };
 
+  // Mavis Beacon lift: active finger displaces upward to show it's reaching for a key.
+  // Resting and space bar use no lift — all fingers stay at home row.
+  const liftY = (hand: "Left" | "Right", name: string): number => {
+    if (isIdle || isSpace) return 0;
+    return activeHand.startsWith(hand) && activeFinger === name ? -26 : 0;
+  };
+
   const thumbClass = isSpace ? FINGER_ACCENTS.Thumbs.handActive : FINGER_ACCENTS.Thumbs.handIdle;
   const palmClass = "fill-slate-200 dark:fill-slate-800";
   const palmTop = 128;
 
   return (
     <svg viewBox="0 0 600 220" className="w-full max-w-md mx-auto lg:max-w-none" aria-hidden="true">
-      {/* Left hand fingers */}
-      {leftFingers.map((f) => (
-        <rect key={f.name} x={f.x} y={palmTop - f.h} width={f.w} height={f.h + 24} rx={f.w / 2}
-          className={`transition-all duration-100 ${fingerClass("Left", f.name)}`} />
-      ))}
+      {/* Left hand fingers — lift active finger upward to show it reaching for a key */}
+      {leftFingers.map((f) => {
+        const lift = liftY("Left", f.name);
+        return (
+          <rect key={f.name} x={f.x} y={palmTop - f.h} width={f.w} height={f.h + 24} rx={f.w / 2}
+            className={fingerClass("Left", f.name)}
+            style={{ transform: `translateY(${lift}px)`, transition: "transform 130ms ease, fill 100ms ease" }} />
+        );
+      })}
       {/* Left palm */}
       <path d="M14,140 Q14,210 40,212 H220 Q246,210 246,140 V128 Q246,118 236,118 H24 Q14,118 14,128 Z"
         className={`transition-all duration-100 ${palmClass}`} />
@@ -107,10 +118,14 @@ function HandDiagram({ activeHand, activeFinger, isIdle }: { activeHand: string;
         className={`transition-all duration-100 ${thumbClass}`} />
 
       {/* Right hand fingers */}
-      {rightFingers.map((f) => (
-        <rect key={f.name} x={f.x} y={palmTop - f.h} width={f.w} height={f.h + 24} rx={f.w / 2}
-          className={`transition-all duration-100 ${fingerClass("Right", f.name)}`} />
-      ))}
+      {rightFingers.map((f) => {
+        const lift = liftY("Right", f.name);
+        return (
+          <rect key={f.name} x={f.x} y={palmTop - f.h} width={f.w} height={f.h + 24} rx={f.w / 2}
+            className={fingerClass("Right", f.name)}
+            style={{ transform: `translateY(${lift}px)`, transition: "transform 130ms ease, fill 100ms ease" }} />
+        );
+      })}
       {/* Right palm */}
       <path d="M354,140 Q354,210 380,212 H560 Q586,210 586,140 V128 Q586,118 576,118 H364 Q354,118 354,128 Z"
         className={`transition-all duration-100 ${palmClass}`} />
@@ -122,15 +137,17 @@ function HandDiagram({ activeHand, activeFinger, isIdle }: { activeHand: string;
       <rect x="220" y="200" width="160" height="14" rx="7"
         className={`transition-all duration-100 ${isSpace ? FINGER_ACCENTS.Thumbs.handActive : "fill-slate-300 dark:fill-slate-700"}`} />
 
-      {/* Home-row key labels at fingertips */}
+      {/* Home-row key labels — travel with the finger they sit on */}
       {[
         ...leftFingers.map((f) => ({ ...f, hand: "Left" as const })),
         ...rightFingers.map((f) => ({ ...f, hand: "Right" as const })),
       ].map((f) => {
         const isActiveLabel = !isSpace && activeHand.startsWith(f.hand) && activeFinger === f.name;
+        const lift = liftY(f.hand, f.name);
         return (
           <text key={`${f.name}-lbl`} x={f.x + f.w / 2} y={palmTop - f.h + 16} textAnchor="middle"
-            className={`text-[11px] font-mono font-bold uppercase ${isActiveLabel ? "fill-slate-950" : FINGER_ACCENTS[f.name].label}`}>
+            className={`text-[11px] font-mono font-bold uppercase ${isActiveLabel ? "fill-slate-950" : FINGER_ACCENTS[f.name].label}`}
+            style={{ transform: `translateY(${lift}px)`, transition: "transform 130ms ease" }}>
             {f.key}
           </text>
         );
@@ -654,11 +671,15 @@ export default function ExerciseTab({ lesson, progress, onFinish, onBack }: Exer
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_90%_10%,_rgba(6,182,212,0.08),transparent_40%)] pointer-events-none"></div>
         <div className="flex items-center justify-between gap-2 relative z-10 text-xs font-mono">
           <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
-            {/* Live finger guidance */}
-            <span className="text-slate-400" title={fingerGuidance?.path || ""}>
-              Next: {fingerGuidance ? (
-                <span className={`font-bold ${FINGER_ACCENTS[fingerGuidance.finger]?.text ?? "text-cyan-400"}`}>
-                  {fingerGuidance.finger} finger
+            {/* Live finger guidance — show target key in its finger colour, not prose */}
+            <span className="text-slate-400">
+              Next:{" "}
+              {fingerGuidance && nextTargetChar ? (
+                <span
+                  className={`font-bold text-base tracking-widest uppercase ${FINGER_ACCENTS[fingerGuidance.finger]?.text ?? "text-cyan-400"}`}
+                  title={fingerGuidance.path}
+                >
+                  {nextTargetChar === " " ? "⎵" : nextTargetChar}
                 </span>
               ) : (
                 <span className="font-bold text-cyan-400">—</span>
