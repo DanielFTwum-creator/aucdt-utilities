@@ -12,7 +12,7 @@
  *  - Airi celebrates each match with an AI fact
  */
 
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { Airi, AiriMood } from '../Airi';
 
 interface FindMatchProps {

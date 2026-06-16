@@ -184,7 +184,7 @@ const ZoneDetail: React.FC<ZoneDetailProps> = ({ zone, onBack, theme, setTheme }
           error={error}
           activity={activity}
           onClose={() => setActiveGame(null)}
-          onRetry={() => handlePlay(activeGame)}
+          onRetry={() => activeGame && handlePlay(activeGame)}
         />
       )}
     </div>
