@@ -7,139 +7,105 @@ interface NavbarProps {
   onThemeChange: (theme: ThemeMode) => void;
   onNavigate: (tab: string) => void;
   activeTab: string;
-  /** Slim header during an active exercise — hides stats/tabs so the
-   *  typing keyboard & hand diagram are visible without scrolling. */
   minimal?: boolean;
 }
 
 export default function Navbar({ progress, theme, onThemeChange, onNavigate, activeTab, minimal = false }: NavbarProps) {
   const getThemeIcon = (mode: ThemeMode) => {
     switch (mode) {
-      case "light":
-        return <Sun size={18} className="text-amber-500" />;
-      case "dark":
-        return <Moon size={18} className="text-slate-300" />;
-      case "high-contrast":
-        return <Eye size={18} className="text-lime-400" />;
-    }
-  };
-
-  const getThemeLabel = (mode: ThemeMode) => {
-    switch (mode) {
-      case "light":
-        return "Light";
-      case "dark":
-        return "Dark";
-      case "high-contrast":
-        return "High Contrast";
+      case "light":        return <Sun size={16} className="text-amber-500" />;
+      case "dark":         return <Moon size={16} className="text-violet-400" />;
+      case "high-contrast": return <Eye size={16} className="text-lime-400" />;
     }
   };
 
   return (
-    <header className="border-b border-zinc-200 dark:border-white/5 bg-white dark:bg-[#050608]/90 backdrop-blur-xl transition-colors duration-300">
-      <div className={`w-full px-4 sm:px-6 lg:px-8 ${minimal ? "py-2" : "py-5"}`}>
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 md:gap-5">
+    <header className="border-b border-violet-100 dark:border-white/5 bg-white dark:bg-[#080710]/95 backdrop-blur-xl transition-colors duration-300 shadow-sm dark:shadow-none">
+      <div className={`w-full px-4 sm:px-6 lg:px-8 ${minimal ? "py-2" : "py-4"}`}>
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
 
-          {/* Logo / Title */}
-          <div className="flex items-center space-x-3.5">
-            <div className={`relative rounded-xl bg-sky-600/10 dark:bg-cyan-500/20 flex items-center justify-center border border-sky-600/30 dark:border-cyan-500/40 shadow-sm dark:shadow-[0_0_15px_rgba(6,182,212,0.3)] ${minimal ? "w-7 h-7" : "w-10 h-10"}`}>
-              <div className={`bg-sky-600 dark:bg-cyan-400 rounded-sm ${minimal ? "w-3 h-3" : "w-4 h-4"}`}></div>
-              {/* Pan-African / Ghana flag accent */}
+          {/* Logo */}
+          <div className="flex items-center gap-3">
+            <div className={`relative rounded-xl bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center shadow-md ${minimal ? "w-7 h-7" : "w-9 h-9"}`}>
+              <span className={`font-black text-white ${minimal ? "text-xs" : "text-sm"}`}>VT</span>
+              {/* Ghana flag accent */}
               <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 flex h-[3px] w-3/4 overflow-hidden rounded-full" aria-hidden="true" title="Made in Ghana">
-                <span className="flex-1 bg-[#CE1126]"></span>
-                <span className="flex-1 bg-[#FCD116]"></span>
-                <span className="flex-1 bg-[#006B3F]"></span>
+                <span className="flex-1 bg-[#CE1126]" />
+                <span className="flex-1 bg-[#FCD116]" />
+                <span className="flex-1 bg-[#006B3F]" />
               </div>
             </div>
             <div>
               {!minimal && (
-                <div className="flex items-center space-x-2">
-                  <span className="text-[10px] font-bold uppercase tracking-widest text-sky-600 dark:text-cyan-400">
+                <div className="flex items-center gap-1.5 mb-0.5">
+                  <span className="text-[9px] font-bold uppercase tracking-widest text-violet-600 dark:text-violet-400">
                     Techbridge University College
                   </span>
-                  <span className="px-1.5 py-0.5 text-[9px] bg-sky-100 dark:bg-cyan-950/40 text-sky-800 dark:text-cyan-300 rounded font-mono font-bold tracking-wider border border-transparent dark:border-cyan-500/20">
-                    OYIBI, GHANA
+                  <span className="px-1.5 py-0.5 text-[8px] bg-violet-100 dark:bg-violet-950/50 text-violet-700 dark:text-violet-300 rounded font-mono font-bold border border-violet-200 dark:border-violet-800/50">
+                    OYIBI, GH
                   </span>
                 </div>
               )}
-              <h1 id="appHeaderTitle" className={`font-black tracking-tight text-zinc-900 dark:text-white uppercase ${minimal ? "text-sm" : "text-xl sm:text-2xl"}`}>
-                Vortex Type / <span className={`text-sky-600 dark:text-cyan-400 font-mono font-light tracking-wide lowercase ${minimal ? "text-xs" : "text-lg"}`}>typing protocol</span>
+              <h1 id="appHeaderTitle" className={`font-black tracking-tight text-zinc-900 dark:text-white ${minimal ? "text-sm" : "text-lg sm:text-xl"}`}>
+                Vortex Type
+                <span className={`text-violet-500 dark:text-violet-400 font-light ml-1.5 ${minimal ? "text-xs" : "text-sm"}`}>
+                  typing tutor
+                </span>
               </h1>
             </div>
           </div>
 
-          {/* Quick Stats Summary */}
+          {/* Stats */}
           {!minimal && (
-          <div className="flex flex-wrap items-center gap-3 sm:gap-4 text-xs">
-            {/* Level */}
-            <div className="flex items-center space-x-2 px-3.5 py-1.5 bg-zinc-100 dark:bg-slate-900/40 rounded-lg border border-zinc-200 dark:border-white/5 hover:border-cyan-500/20 transition-all">
-              <Award size={14} className="text-amber-500" />
-              <div className="text-left">
-                <p className="text-[8px] text-zinc-500 dark:text-slate-500 uppercase tracking-widest font-mono font-semibold">LVL</p>
-                <p className="font-bold text-zinc-900 dark:text-white font-mono leading-none mt-0.5">{progress.level}</p>
-              </div>
-            </div>
+            <div className="flex flex-wrap items-center gap-2 text-xs">
+              {[
+                { icon: <Award size={13} className="text-amber-500" />, label: "LVL", value: progress.level },
+                { icon: <Zap size={13} className="text-violet-500" />, label: "PTS", value: progress.points },
+                { icon: <Zap size={13} className="text-emerald-500" />, label: "BEST WPM", value: progress.bestSpeed },
+                { icon: <Crosshair size={13} className="text-rose-500" />, label: "ACC", value: `${progress.bestAccuracy}%` },
+              ].map(({ icon, label, value }) => (
+                <div key={label} className="flex items-center gap-1.5 px-3 py-1.5 bg-zinc-50 dark:bg-slate-900/50 rounded-lg border border-zinc-100 dark:border-white/5 hover:border-violet-200 dark:hover:border-violet-800/50 transition-colors">
+                  {icon}
+                  <div>
+                    <p className="text-[8px] text-zinc-400 dark:text-zinc-500 uppercase tracking-widest font-mono">{label}</p>
+                    <p className="font-bold text-zinc-900 dark:text-white font-mono leading-none text-[11px] mt-0.5">{value}</p>
+                  </div>
+                </div>
+              ))}
 
-            {/* Total Points */}
-            <div className="flex items-center space-x-2 px-3.5 py-1.5 bg-zinc-100 dark:bg-slate-900/40 rounded-lg border border-zinc-200 dark:border-white/5 hover:border-cyan-500/20 transition-all">
-              <Zap size={14} className="text-sky-500 dark:text-cyan-400" />
-              <div className="text-left">
-                <p className="text-[8px] text-zinc-500 dark:text-slate-500 uppercase tracking-widest font-mono font-semibold">PTS</p>
-                <p className="font-bold text-zinc-900 dark:text-white font-mono leading-none mt-0.5">{progress.points}</p>
+              {/* Theme */}
+              <div className="relative inline-flex items-center">
+                <select
+                  id="themeSelectDropdown"
+                  value={theme}
+                  onChange={(e) => onThemeChange(e.target.value as ThemeMode)}
+                  className="pl-7 pr-3 py-1.5 bg-zinc-50 dark:bg-slate-900/50 border border-zinc-100 dark:border-white/5 text-zinc-700 dark:text-zinc-300 rounded-lg text-[11px] font-semibold focus:outline-none focus:ring-1 focus:ring-violet-400 appearance-none cursor-pointer hover:border-violet-200 dark:hover:border-violet-800/50 transition-colors"
+                >
+                  <option value="light">Light Mode</option>
+                  <option value="dark">Dark Mode</option>
+                  <option value="high-contrast">High Contrast</option>
+                </select>
+                <div className="absolute left-2 pointer-events-none">
+                  {getThemeIcon(theme)}
+                </div>
               </div>
             </div>
-
-            {/* Best Speed */}
-            <div className="flex items-center space-x-2 px-3.5 py-1.5 bg-zinc-100 dark:bg-slate-900/40 rounded-lg border border-zinc-200 dark:border-white/5 hover:border-cyan-500/20 transition-all">
-              <Zap size={14} className="text-emerald-500" />
-              <div className="text-left">
-                <p className="text-[8px] text-zinc-500 dark:text-slate-500 uppercase tracking-widest font-mono font-semibold">MAX WPM</p>
-                <p className="font-bold text-zinc-900 dark:text-white font-mono leading-none mt-0.5">{progress.bestSpeed}</p>
-              </div>
-            </div>
-
-            {/* Best Accuracy */}
-            <div className="flex items-center space-x-2 px-3.5 py-1.5 bg-zinc-100 dark:bg-slate-900/40 rounded-lg border border-zinc-200 dark:border-white/5 hover:border-cyan-500/20 transition-all">
-              <Crosshair size={14} className="text-rose-500" />
-              <div className="text-left">
-                <p className="text-[8px] text-zinc-500 dark:text-slate-500 uppercase tracking-widest font-mono font-semibold">ACC</p>
-                <p className="font-bold text-zinc-900 dark:text-white font-mono leading-none mt-0.5">{progress.bestAccuracy}%</p>
-              </div>
-            </div>
-
-            {/* Accessibility Theme Toggler */}
-            <div className="relative inline-flex items-center">
-              <select
-                id="themeSelectDropdown"
-                value={theme}
-                onChange={(e) => onThemeChange(e.target.value as ThemeMode)}
-                className="pl-8 pr-4 py-1.5 bg-zinc-100 dark:bg-slate-900/40 border border-zinc-300 dark:border-white/10 text-zinc-800 dark:text-zinc-200 rounded-lg text-xs font-semibold focus:outline-none focus:ring-1 focus:ring-cyan-500 appearance-none cursor-pointer hover:border-cyan-500/40 transition-all"
-              >
-                <option value="light" className="dark:bg-[#050608]">☀️ Light Mode</option>
-                <option value="dark" className="dark:bg-[#050608]">🌙 Dark Mode</option>
-                <option value="high-contrast" className="dark:bg-[#050608]">👁️ High Contrast</option>
-              </select>
-              <div className="absolute left-2.5 pointer-events-none">
-                {getThemeIcon(theme)}
-              </div>
-            </div>
-          </div>
           )}
 
-          {/* Compact theme toggle shown in minimal (in-exercise) mode */}
+          {/* Minimal theme toggle */}
           {minimal && (
             <div className="relative inline-flex items-center">
               <select
                 id="themeSelectDropdown"
                 value={theme}
                 onChange={(e) => onThemeChange(e.target.value as ThemeMode)}
-                className="pl-7 pr-2.5 py-1 bg-zinc-100 dark:bg-slate-900/40 border border-zinc-300 dark:border-white/10 text-zinc-800 dark:text-zinc-200 rounded-lg text-[11px] font-semibold focus:outline-none focus:ring-1 focus:ring-cyan-500 appearance-none cursor-pointer hover:border-cyan-500/40 transition-all"
+                className="pl-6 pr-2.5 py-1 bg-zinc-50 dark:bg-slate-900/50 border border-zinc-100 dark:border-white/5 text-zinc-700 dark:text-zinc-300 rounded-lg text-[11px] font-semibold focus:outline-none focus:ring-1 focus:ring-violet-400 appearance-none cursor-pointer"
               >
-                <option value="light" className="dark:bg-[#050608]">☀️ Light Mode</option>
-                <option value="dark" className="dark:bg-[#050608]">🌙 Dark Mode</option>
-                <option value="high-contrast" className="dark:bg-[#050608]">👁️ High Contrast</option>
+                <option value="light">Light</option>
+                <option value="dark">Dark</option>
+                <option value="high-contrast">High Contrast</option>
               </select>
-              <div className="absolute left-2 pointer-events-none">
+              <div className="absolute left-1.5 pointer-events-none">
                 {getThemeIcon(theme)}
               </div>
             </div>
@@ -147,65 +113,30 @@ export default function Navbar({ progress, theme, onThemeChange, onNavigate, act
 
         </div>
 
-        {/* Global Tab Navigation */}
+        {/* Tab navigation */}
         {!minimal && (
-        <div className="mt-5 flex flex-wrap border-t border-zinc-100 dark:border-white/5 pt-3.5 gap-1.5">
-          <button
-            id="navLessonsTabButton"
-            onClick={() => onNavigate("lessons")}
-            className={`px-4 py-2 min-h-[44px] rounded-lg text-sm font-semibold transition-all ${
-              activeTab === "lessons"
-                ? "bg-sky-600 text-white shadow-sm dark:bg-cyan-500/20 dark:text-cyan-400 dark:border dark:border-cyan-400/40 dark:shadow-[0_0_15px_rgba(6,182,212,0.25)]"
-                : "text-zinc-600 dark:text-slate-400 hover:bg-zinc-100 dark:hover:bg-white/5"
-            }`}
-          >
-            📚 Lessons Map
-          </button>
-          <button
-            id="navSpeedtestTabButton"
-            onClick={() => onNavigate("speedtest")}
-            className={`px-4 py-2 min-h-[44px] rounded-lg text-sm font-semibold transition-all ${
-              activeTab === "speedtest"
-                ? "bg-sky-600 text-white shadow-sm dark:bg-cyan-500/20 dark:text-cyan-400 dark:border dark:border-cyan-400/40 dark:shadow-[0_0_15px_rgba(6,182,212,0.25)]"
-                : "text-zinc-600 dark:text-slate-400 hover:bg-zinc-100 dark:hover:bg-white/5"
-            }`}
-          >
-            ⚡ WPM Speed Test
-          </button>
-          <button
-            id="navGameTabButton"
-            onClick={() => onNavigate("game")}
-            className={`px-4 py-2 min-h-[44px] rounded-lg text-sm font-semibold transition-all ${
-              activeTab === "game"
-                ? "bg-sky-600 text-white shadow-sm dark:bg-cyan-500/20 dark:text-cyan-400 dark:border dark:border-cyan-400/40 dark:shadow-[0_0_15px_rgba(6,182,212,0.25)]"
-                : "text-zinc-600 dark:text-slate-400 hover:bg-zinc-100 dark:hover:bg-white/5"
-            }`}
-          >
-            🎮 Arcade Race
-          </button>
-          <button
-            id="navAdminTabButton"
-            onClick={() => onNavigate("admin")}
-            className={`px-4 py-2 min-h-[44px] rounded-lg text-sm font-semibold transition-all ${
-              activeTab === "admin"
-                ? "bg-sky-600 text-white shadow-sm dark:bg-cyan-500/20 dark:text-cyan-400 dark:border dark:border-cyan-400/40 dark:shadow-[0_0_15px_rgba(6,182,212,0.25)]"
-                : "text-zinc-600 dark:text-slate-400 hover:bg-zinc-100 dark:hover:bg-white/5"
-            }`}
-          >
-            🛡️ Admin Log Panel
-          </button>
-          <button
-            id="navDocsTabButton"
-            onClick={() => onNavigate("docs")}
-            className={`px-4 py-2 min-h-[44px] rounded-lg text-sm font-semibold transition-all ${
-              activeTab === "docs"
-                ? "bg-sky-600 text-white shadow-sm dark:bg-cyan-500/20 dark:text-cyan-400 dark:border dark:border-cyan-400/40 dark:shadow-[0_0_15px_rgba(6,182,212,0.25)]"
-                : "text-zinc-600 dark:text-slate-400 hover:bg-zinc-100 dark:hover:bg-white/5"
-            }`}
-          >
-            📄 Specifications & Docs
-          </button>
-        </div>
+          <div className="mt-4 flex flex-wrap border-t border-zinc-100 dark:border-white/5 pt-3 gap-1">
+            {[
+              { id: "navLessonsTabButton",   tab: "lessons",   label: "📚 Lessons" },
+              { id: "navSpeedtestTabButton", tab: "speedtest", label: "⚡ Speed Test" },
+              { id: "navGameTabButton",      tab: "game",      label: "🎮 Arcade" },
+              { id: "navAdminTabButton",     tab: "admin",     label: "🛡️ Admin" },
+              { id: "navDocsTabButton",      tab: "docs",      label: "📄 Docs" },
+            ].map(({ id, tab, label }) => (
+              <button
+                key={tab}
+                id={id}
+                onClick={() => onNavigate(tab)}
+                className={`px-3.5 py-1.5 min-h-[36px] rounded-lg text-sm font-semibold transition-all ${
+                  activeTab === tab
+                    ? "bg-violet-600 text-white shadow-sm dark:bg-violet-500/20 dark:text-violet-300 dark:border dark:border-violet-500/40"
+                    : "text-zinc-500 dark:text-zinc-400 hover:bg-violet-50 dark:hover:bg-violet-950/20 hover:text-violet-700 dark:hover:text-violet-300"
+                }`}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
         )}
 
       </div>

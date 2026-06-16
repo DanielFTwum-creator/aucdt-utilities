@@ -891,7 +891,7 @@ export default function ExerciseTab({ lesson, progress, onFinish, onBack }: Exer
                     return (
                       <div
                         key={key}
-                        className={`w-14 h-14 sm:w-20 sm:h-20 lg:w-10 lg:h-10 xl:w-12 xl:h-12 2xl:w-16 2xl:h-16 flex items-center justify-center rounded-lg text-base sm:text-2xl lg:text-sm xl:text-lg 2xl:text-2xl font-bold border-2 transition-all ${
+                        className={`w-10 h-10 sm:w-12 sm:h-12 lg:w-10 lg:h-10 xl:w-12 xl:h-12 2xl:w-14 2xl:h-14 flex items-center justify-center rounded-lg text-sm sm:text-base lg:text-sm xl:text-base 2xl:text-lg font-bold border-2 transition-all ${
                           isActive
                             ? (activeFinger && FINGER_ACCENTS[activeFinger]?.key) || FINGER_ACCENTS.Index.key
                             : "bg-white dark:bg-slate-900/40 border-zinc-200 dark:border-white/5 text-zinc-800 dark:text-slate-400"
@@ -907,7 +907,7 @@ export default function ExerciseTab({ lesson, progress, onFinish, onBack }: Exer
               {/* Spacebar row */}
               <div className="flex justify-center mt-2 lg:mt-1.5">
                 <div
-                  className={`h-14 sm:h-20 lg:h-10 xl:h-12 2xl:h-16 w-64 sm:w-96 lg:w-48 xl:w-64 2xl:w-80 flex items-center justify-center rounded-lg text-sm sm:text-base font-bold border-2 transition-all ${
+                  className={`h-10 sm:h-12 lg:h-10 xl:h-12 2xl:h-14 w-52 sm:w-64 lg:w-44 xl:w-56 2xl:w-72 flex items-center justify-center rounded-lg text-sm font-bold border-2 transition-all ${
                     nextTargetChar === " "
                       ? FINGER_ACCENTS.Thumbs.keySpace
                       : "bg-white dark:bg-slate-900/40 border-zinc-200 dark:border-white/5 text-zinc-500 dark:text-slate-500"

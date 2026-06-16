@@ -1,6 +1,6 @@
 import { Lesson, UserProgress } from "../types";
 import { LESSONS } from "../data";
-import { CheckCircle2, Lock, Play, Sparkles } from "lucide-react";
+import { CheckCircle2, Lock, Play, Star, TrendingUp } from "lucide-react";
 
 interface LessonsTabProps {
   progress: UserProgress;
@@ -8,148 +8,165 @@ interface LessonsTabProps {
 }
 
 export default function LessonsTab({ progress, onSelectLesson }: LessonsTabProps) {
+  const pct = Math.round((progress.lessonsCompleted / LESSONS.length) * 100);
+
   return (
-    <div className="space-y-6">
-      
-      {/* Introduction Banner - Immersive Gradient style */}
-      <div className="bg-gradient-to-br from-slate-950 via-[#0a0d14] to-cyan-950 text-white rounded-2xl p-6 sm:p-8 border border-zinc-200 dark:border-white/5 shadow-md relative overflow-hidden">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_20%,_rgba(6,182,212,0.12),transparent_55%)] pointer-events-none"></div>
-        <div className="max-w-3xl relative z-10">
-          <div className="flex items-center space-x-2 text-sky-600 dark:text-cyan-400 text-xs font-mono tracking-widest uppercase mb-2.5">
-            <Sparkles size={14} className="animate-pulse" />
-            <span>TUC Keyboard Competency Framework / Protocol 0.8</span>
+    <div className="space-y-4">
+
+      {/* Welcome Banner — compact, warm gradient */}
+      <div className="relative rounded-2xl overflow-hidden bg-gradient-to-r from-violet-600 via-purple-600 to-rose-500 p-5 sm:p-6 text-white">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_70%_0%,_rgba(255,255,255,0.18),transparent_60%)] pointer-events-none" />
+        <div className="relative z-10 flex flex-col sm:flex-row sm:items-center gap-4">
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-2 mb-1">
+              <Star size={12} className="text-yellow-300 fill-yellow-300" />
+              <span className="text-[10px] font-bold text-white/75 uppercase tracking-widest">
+                Techbridge University College · Keyboard Competency
+              </span>
+            </div>
+            <h2 className="text-xl sm:text-2xl font-black tracking-tight leading-tight">
+              Learn to Type with Confidence
+            </h2>
+            <p className="mt-1.5 text-white/70 text-xs leading-relaxed max-w-md">
+              Build speed and accuracy — from home row basics to full keyboard mastery.
+            </p>
           </div>
-          <h2 className="text-2xl sm:text-3xl font-black tracking-tight uppercase">
-            Learn Keyboard Literacy & Fluid Accent Typing
-          </h2>
-          <p className="mt-3.5 text-zinc-600 dark:text-slate-400 text-sm leading-relaxed max-w-2xl">
-            This module guides your muscle coordination across standard mechanical rows. Complete each row exercise with a minimum accuracy of 80% to unlock subsequent milestones.
-          </p>
+          <div className="flex items-center gap-3 bg-white/15 rounded-xl px-4 py-3 backdrop-blur-sm shrink-0 self-start sm:self-auto">
+            <TrendingUp size={18} className="text-yellow-300" />
+            <div>
+              <p className="text-[10px] text-white/60 uppercase tracking-wide font-mono">Progress</p>
+              <p className="text-xl font-black leading-none">{progress.lessonsCompleted}<span className="text-sm font-medium text-white/60"> / {LESSONS.length}</span></p>
+            </div>
+          </div>
+        </div>
+        {/* Progress bar */}
+        <div className="relative z-10 mt-4 h-1.5 bg-white/20 rounded-full overflow-hidden">
+          <div
+            className="h-full bg-yellow-300 rounded-full transition-all duration-700"
+            style={{ width: `${pct}%` }}
+          />
         </div>
       </div>
 
-      {/* Educational Tips callout */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 bg-zinc-50 dark:bg-slate-950/40 p-5 rounded-xl border border-zinc-200 dark:border-white/5">
-        <div>
-          <h4 className="font-bold text-sm text-zinc-950 dark:text-white flex items-center gap-1.5 uppercase tracking-wide">
-            <span className="w-2 h-2 rounded-full bg-cyan-400"></span>
-            🏠 Resting Alignment
-          </h4>
-          <p className="text-xs text-zinc-600 dark:text-slate-400 mt-2 leading-relaxed">
-            Gently anchor your fingers on <span className="font-mono bg-zinc-200 dark:bg-cyan-500/10 dark:text-cyan-400 px-1.5 py-0.5 rounded border dark:border-cyan-500/20">A S D F</span> and <span className="font-mono bg-zinc-200 dark:bg-cyan-500/10 dark:text-cyan-400 px-1.5 py-0.5 rounded border dark:border-cyan-500/20">J K L ;</span>. Let your thumbs hover over the Spacebar.
-          </p>
-        </div>
-        <div>
-          <h4 className="font-bold text-sm text-zinc-950 dark:text-white flex items-center gap-1.5 uppercase tracking-wide">
-            <span className="w-2 h-2 rounded-full bg-indigo-400"></span>
-            🙈 Blind Anchoring
-          </h4>
-          <p className="text-xs text-zinc-600 dark:text-slate-400 mt-2 leading-relaxed">
-            Feel the physical tactile bumps on the keys <span className="font-semibold text-zinc-800 dark:text-slate-300">F</span> and <span className="font-semibold text-zinc-800 dark:text-slate-300">J</span>. Try to keep your eyes strictly on the screen.
-          </p>
-        </div>
-        <div>
-          <h4 className="font-bold text-sm text-zinc-950 dark:text-white flex items-center gap-1.5 uppercase tracking-wide">
-            <span className="w-2 h-2 rounded-full bg-emerald-400"></span>
-            🐢 Accuracy First
-          </h4>
-          <p className="text-xs text-zinc-600 dark:text-slate-400 mt-2 leading-relaxed">
-            Go slowly at first to ensure absolute control. Consistent rhythmic keystroke intervals build swift muscle speed over time.
-          </p>
-        </div>
+      {/* Tips strip — horizontal and compact */}
+      <div className="flex flex-col sm:flex-row gap-2">
+        {[
+          { icon: "🏠", label: "Home Row First", tip: "Anchor on A S D F · J K L ; and always return here." },
+          { icon: "🙈", label: "Eyes on Screen", tip: "Feel the F and J bumps — don't look at your hands." },
+          { icon: "🐢", label: "Slow Builds Fast", tip: "Accuracy first. Speed follows from clean muscle memory." },
+        ].map(({ icon, label, tip }) => (
+          <div key={label} className="flex-1 flex items-start gap-2.5 bg-violet-50 dark:bg-violet-950/20 border border-violet-100 dark:border-violet-900/40 rounded-xl p-3">
+            <span className="text-base shrink-0 mt-0.5">{icon}</span>
+            <div>
+              <p className="text-[11px] font-bold text-violet-800 dark:text-violet-300">{label}</p>
+              <p className="text-[10px] text-violet-600/70 dark:text-violet-400/60 mt-0.5 leading-snug">{tip}</p>
+            </div>
+          </div>
+        ))}
       </div>
 
-      <div className="space-y-4">
-        <div className="flex items-center justify-between">
-          <h3 className="text-md font-black uppercase text-zinc-900 dark:text-white tracking-wider flex items-center gap-2">
-            <span className="w-2 h-5 bg-sky-600 dark:bg-cyan-400 rounded-sm"></span>
-            Lessons Roadmap
-          </h3>
-          <span className="text-xs font-bold text-zinc-500 dark:text-slate-500 font-mono tracking-widest uppercase">
-            {progress.lessonsCompleted} / {LESSONS.length} Tier Unlocked
-          </span>
-        </div>
+      {/* Roadmap header */}
+      <div className="flex items-center justify-between">
+        <h3 className="text-sm font-black text-zinc-900 dark:text-white flex items-center gap-2">
+          <span className="inline-block w-1.5 h-4 bg-violet-500 rounded-full" />
+          Lessons Roadmap
+        </h3>
+        <span className="text-xs font-semibold text-zinc-400 dark:text-zinc-500 font-mono">
+          {progress.lessonsCompleted} / {LESSONS.length} Unlocked
+        </span>
+      </div>
 
-        {/* Lessons List Checklist Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {LESSONS.map((lesson, idx) => {
-            const isCompleted = progress.lessonsCompleted > idx;
-            const isUnlocked = progress.lessonsCompleted >= idx;
+      {/* Lesson cards — compact warm design */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+        {LESSONS.map((lesson, idx) => {
+          const isCompleted = progress.lessonsCompleted > idx;
+          const isUnlocked = progress.lessonsCompleted >= idx;
+          const keyChars = Array.from(lesson.keys);
 
-            return (
-              <div
-                key={lesson.id}
-                id={`lesson-card-${lesson.id}`}
-                className={`flex flex-col justify-between p-5 rounded-xl border transition-all duration-300 relative overflow-hidden ${
+          return (
+            <div
+              key={lesson.id}
+              id={`lesson-card-${lesson.id}`}
+              className={`flex flex-col p-4 rounded-2xl border transition-all duration-200 ${
+                isCompleted
+                  ? "bg-emerald-50 dark:bg-emerald-950/20 border-emerald-200 dark:border-emerald-800/50"
+                  : isUnlocked
+                  ? "bg-white dark:bg-slate-900/60 border-violet-100 dark:border-white/5 hover:border-violet-300 dark:hover:border-violet-700/40 shadow-sm hover:shadow-md"
+                  : "bg-zinc-50 dark:bg-zinc-900/30 border-zinc-100 dark:border-zinc-800/40 opacity-45 pointer-events-none"
+              }`}
+            >
+              {/* Top: icon + title + status icon */}
+              <div className="flex items-start gap-3">
+                <div className={`w-9 h-9 flex items-center justify-center rounded-xl text-base shrink-0 ${
                   isCompleted
-                    ? "bg-emerald-50/20 dark:bg-emerald-950/10 border-emerald-200 dark:border-emerald-500/30 shadow-[0_0_25px_rgba(16,185,129,0.2)]"
-                    : isUnlocked
-                    ? "bg-white dark:bg-[#0c0d12]/50 border-zinc-200 dark:border-white/5 hover:border-cyan-500/40 shadow-sm hover:shadow-[0_0_15px_rgba(6,182,212,0.1)] hover:bg-[#10121a]/60"
-                    : "bg-zinc-100 dark:bg-[#030406]/30 border-zinc-200 dark:border-white/5 opacity-50 pointer-events-none"
-                }`}
-              >
-                <div>
-                  <div className="flex items-start justify-between gap-2">
-                    <div className="flex items-center space-x-3">
-                      <div className="w-10 h-10 flex items-center justify-center bg-zinc-100 dark:bg-slate-900/60 rounded-lg text-lg border border-transparent dark:border-white/5 shadow-inner">
-                        {lesson.icon}
-                      </div>
-                      <div>
-                        <span className="text-[9px] font-bold text-sky-600 dark:text-cyan-400 uppercase tracking-widest font-mono">
-                          Tier 0{idx + 1} Protocol
-                        </span>
-                        <h4 className="text-sm font-bold text-zinc-900 dark:text-white mt-0.5">
-                          {lesson.title}
-                        </h4>
-                      </div>
-                    </div>
-
-                    {isCompleted ? (
-                      <CheckCircle2 size={18} className="text-emerald-500 shrink-0 shadow-sm" />
-                    ) : !isUnlocked ? (
-                      <Lock size={16} className="text-zinc-400 dark:text-slate-600 shrink-0" />
-                    ) : null}
-                  </div>
-
-                  <p className="mt-3.5 text-xs text-zinc-600 dark:text-slate-400 leading-relaxed">
+                    ? "bg-emerald-100 dark:bg-emerald-900/40"
+                    : "bg-violet-50 dark:bg-violet-950/40"
+                }`}>
+                  {lesson.icon}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <span className="text-[9px] font-bold text-violet-500 dark:text-violet-400 uppercase tracking-widest font-mono">
+                    Lesson {idx + 1}
+                  </span>
+                  <h4 className="text-sm font-bold text-zinc-900 dark:text-white leading-tight truncate">
+                    {lesson.title}
+                  </h4>
+                  <p className="text-[11px] text-zinc-500 dark:text-zinc-400 mt-0.5 leading-snug line-clamp-2">
                     {lesson.description}
                   </p>
-
-                  <div className="mt-4 flex flex-wrap gap-1.5">
-                    {Array.from(lesson.keys).map((k, kIdx) => (
-                      <span
-                        key={kIdx}
-                        className="px-2 py-0.5 text-[10px] font-bold font-mono bg-zinc-100 dark:bg-slate-900/50 text-zinc-800 dark:text-slate-300 rounded border border-zinc-200 dark:border-white/5 uppercase shadow-inner"
-                      >
-                        {k === " " ? "space" : k}
-                      </span>
-                    ))}
-                  </div>
                 </div>
-
-                <div className="mt-5 pt-3 border-t border-zinc-100 dark:border-white/5">
-                  {isUnlocked ? (
-                    <button
-                      id={`start-lesson-btn-${lesson.id}`}
-                      onClick={() => onSelectLesson(lesson)}
-                      className="w-full py-2 min-h-[44px] bg-zinc-900 hover:bg-zinc-800 dark:bg-cyan-500/10 dark:hover:bg-cyan-500/25 dark:text-cyan-400 dark:border dark:border-cyan-500/35 rounded-lg text-xs font-bold transition-all flex items-center justify-center space-x-1.5 cursor-pointer shadow-[0_0_10px_rgba(6,182,212,0.05)] hover:shadow-[0_0_15px_rgba(6,182,212,0.15)]"
-                    >
-                      <Play size={12} fill="currentColor" />
-                      <span>{isCompleted ? "Re-calibrate Index" : "Initiate Typing Run"}</span>
-                    </button>
-                  ) : (
-                    <div className="py-2 text-center text-[10px] font-bold text-zinc-400 dark:text-slate-600 flex items-center justify-center space-x-1.5 uppercase font-mono tracking-wider">
-                      <Lock size={10} />
-                      <span>Complete Tier 0{idx} first</span>
-                    </div>
-                  )}
+                <div className="shrink-0 mt-0.5">
+                  {isCompleted
+                    ? <CheckCircle2 size={15} className="text-emerald-500" />
+                    : !isUnlocked
+                    ? <Lock size={13} className="text-zinc-300 dark:text-zinc-600" />
+                    : null}
                 </div>
               </div>
-            );
-          })}
-        </div>
+
+              {/* Bottom: keys + CTA */}
+              <div className="mt-3 flex items-center justify-between gap-2">
+                <div className="flex flex-wrap gap-1 min-w-0">
+                  {keyChars.slice(0, 8).map((k, kIdx) => (
+                    <span
+                      key={kIdx}
+                      className="px-1.5 py-0.5 text-[10px] font-bold font-mono bg-zinc-100 dark:bg-slate-800 text-zinc-600 dark:text-slate-300 rounded border border-zinc-200 dark:border-white/5"
+                    >
+                      {k === " " ? "⎵" : k}
+                    </span>
+                  ))}
+                  {keyChars.length > 8 && (
+                    <span className="px-1 py-0.5 text-[10px] text-zinc-400 dark:text-zinc-500">
+                      +{keyChars.length - 8}
+                    </span>
+                  )}
+                </div>
+
+                {isUnlocked ? (
+                  <button
+                    id={`start-lesson-btn-${lesson.id}`}
+                    onClick={() => onSelectLesson(lesson)}
+                    className={`shrink-0 flex items-center gap-1.5 px-3 py-1.5 min-h-[32px] rounded-lg text-xs font-bold transition-all ${
+                      isCompleted
+                        ? "bg-emerald-500 hover:bg-emerald-600 text-white"
+                        : "bg-violet-600 hover:bg-violet-700 text-white shadow-sm"
+                    }`}
+                  >
+                    <Play size={10} fill="currentColor" />
+                    {isCompleted ? "Retry" : "Start"}
+                  </button>
+                ) : (
+                  <div className="shrink-0 flex items-center gap-1 text-[9px] font-bold text-zinc-300 dark:text-zinc-600 uppercase tracking-wider">
+                    <Lock size={9} />
+                    <span>Locked</span>
+                  </div>
+                )}
+              </div>
+            </div>
+          );
+        })}
       </div>
-      
+
     </div>
   );
 }
