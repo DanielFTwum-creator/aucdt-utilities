@@ -63,7 +63,7 @@ const GRADE_STYLES: Record<string, string> = {
 
 // R1/R3 Hand diagram: realistic palm + finger illustration showing which finger
 // to use for the next target character, in resting position over the home row.
-function HandDiagram({ activeHand, activeFinger }: { activeHand: string; activeFinger: string; isIdle: boolean }) {
+function HandDiagram({ activeHand, activeFinger, isIdle }: { activeHand: string; activeFinger: string; isIdle: boolean }) {
   const isSpace = activeHand === "Hands";
 
   const leftFingers = [
@@ -79,7 +79,11 @@ function HandDiagram({ activeHand, activeFinger }: { activeHand: string; activeF
     { name: "Pinky",  key: ";", x: 540, w: 34, h: 58 },
   ];
 
+  // When idle/resting: all 8 home-row fingers glow at full strength (Mavis Beacon
+  // passive posture reinforcement — hands always shown at home row, no dimming).
+  // During active typing: only the target finger is active; the rest go to idle opacity.
   const fingerClass = (hand: "Left" | "Right", name: string) => {
+    if (isIdle) return FINGER_ACCENTS[name].handActive;
     if (!isSpace && activeHand.startsWith(hand) && activeFinger === name) return FINGER_ACCENTS[name].handActive;
     return FINGER_ACCENTS[name].handIdle;
   };
@@ -872,8 +876,17 @@ export default function ExerciseTab({ lesson, progress, onFinish, onBack }: Exer
 
             {/* R1/R3 Hand diagram — shows active finger, home row on idle */}
             <div className="lg:w-[28%] lg:shrink-0">
-              <div className="text-[9px] font-mono font-bold text-zinc-500 dark:text-slate-500 uppercase tracking-widest text-center mb-1">
-                🏠 R1 Home Row Posture — Active Finger
+              {/* Colour-keyed home-row anchor label — passive posture reinforcement */}
+              <div className="flex items-center justify-center gap-1 mb-1.5 font-mono font-bold text-sm select-none">
+                <span className="text-amber-500  dark:text-amber-400">A</span>
+                <span className="text-emerald-500 dark:text-emerald-400">S</span>
+                <span className="text-violet-500  dark:text-violet-400">D</span>
+                <span className="text-blue-500    dark:text-blue-400">F</span>
+                <span className="text-zinc-400 dark:text-slate-600 mx-1">·</span>
+                <span className="text-blue-500    dark:text-blue-400">J</span>
+                <span className="text-violet-500  dark:text-violet-400">K</span>
+                <span className="text-emerald-500 dark:text-emerald-400">L</span>
+                <span className="text-amber-500  dark:text-amber-400">;</span>
               </div>
               <HandDiagram
                 activeHand={fingerGuidance?.hand ?? ""}
