@@ -48,18 +48,18 @@ export default function LessonsTab({ progress, onSelectLesson }: LessonsTabProps
         </div>
       </div>
 
-      {/* Tips strip — horizontal and compact */}
+      {/* Tips strip — single compact row */}
       <div className="flex flex-col sm:flex-row gap-2">
         {[
-          { icon: "🏠", label: "Home Row First", tip: "Anchor on A S D F · J K L ; and always return here." },
-          { icon: "🙈", label: "Eyes on Screen", tip: "Feel the F and J bumps — don't look at your hands." },
-          { icon: "🐢", label: "Slow Builds Fast", tip: "Accuracy first. Speed follows from clean muscle memory." },
+          { icon: "🏠", label: "Home Row First", tip: "Anchor on A S D F · J K L ;" },
+          { icon: "🙈", label: "Eyes on Screen", tip: "Feel the F and J bumps." },
+          { icon: "🐢", label: "Slow Builds Fast", tip: "Accuracy leads to speed." },
         ].map(({ icon, label, tip }) => (
-          <div key={label} className="flex-1 flex items-start gap-2.5 bg-violet-50 dark:bg-violet-950/20 border border-violet-100 dark:border-violet-900/40 rounded-xl p-3">
-            <span className="text-base shrink-0 mt-0.5">{icon}</span>
-            <div>
-              <p className="text-[11px] font-bold text-violet-800 dark:text-violet-300">{label}</p>
-              <p className="text-[10px] text-violet-600/70 dark:text-violet-400/60 mt-0.5 leading-snug">{tip}</p>
+          <div key={label} className="flex-1 flex items-center gap-2 bg-violet-50 dark:bg-violet-950/20 border border-violet-100 dark:border-violet-900/40 rounded-xl px-3 py-2">
+            <span className="text-sm shrink-0">{icon}</span>
+            <div className="min-w-0">
+              <span className="text-[11px] font-bold text-violet-800 dark:text-violet-300">{label}</span>
+              <span className="text-[10px] text-violet-600/60 dark:text-violet-400/50 ml-1.5 hidden sm:inline">{tip}</span>
             </div>
           </div>
         ))}
@@ -77,7 +77,7 @@ export default function LessonsTab({ progress, onSelectLesson }: LessonsTabProps
       </div>
 
       {/* Lesson cards — compact warm design */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
         {LESSONS.map((lesson, idx) => {
           const isCompleted = progress.lessonsCompleted > idx;
           const isUnlocked = progress.lessonsCompleted >= idx;
@@ -87,7 +87,7 @@ export default function LessonsTab({ progress, onSelectLesson }: LessonsTabProps
             <div
               key={lesson.id}
               id={`lesson-card-${lesson.id}`}
-              className={`flex flex-col p-4 rounded-2xl border transition-all duration-200 ${
+              className={`flex flex-col p-3 rounded-2xl border transition-all duration-200 ${
                 isCompleted
                   ? "bg-emerald-50 dark:bg-emerald-950/20 border-emerald-200 dark:border-emerald-800/50"
                   : isUnlocked
@@ -111,7 +111,7 @@ export default function LessonsTab({ progress, onSelectLesson }: LessonsTabProps
                   <h4 className="text-sm font-bold text-zinc-900 dark:text-white leading-tight truncate">
                     {lesson.title}
                   </h4>
-                  <p className="text-[11px] text-zinc-500 dark:text-zinc-400 mt-0.5 leading-snug line-clamp-2">
+                  <p className="text-[11px] text-zinc-500 dark:text-zinc-400 mt-0.5 leading-snug line-clamp-1">
                     {lesson.description}
                   </p>
                 </div>
