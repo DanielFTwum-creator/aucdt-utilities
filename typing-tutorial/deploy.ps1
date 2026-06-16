@@ -55,7 +55,7 @@ cd $buildDir
 git sparse-checkout set typing-tutorial
 cd typing-tutorial
 log '[3/5] Installing dependencies...'
-pnpm install --no-frozen-lockfile --silent 2>/dev/null || npm install --silent
+pnpm install --no-frozen-lockfile --silent
 log '[4/5] Building...'
 pnpm build
 log '[5/5] Deploying dist/ to web root...'
