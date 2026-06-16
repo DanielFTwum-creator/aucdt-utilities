@@ -150,7 +150,7 @@ export const PaintWorld: React.FC<PaintWorldProps> = ({ onClose }) => {
         <button
           type="button"
           onClick={onClose}
-          className="text-sm font-bold text-pink-600 dark:text-pink-300 hover:underline focus:outline-none focus:ring-2 focus:ring-pink-400 rounded-lg px-2 py-1"
+          className="text-sm font-bold text-pink-600 dark:text-pink-300 hover:underline hover:scale-105 active:scale-95 transition-all focus:outline-none focus:ring-2 focus:ring-pink-400 rounded-lg px-2 py-1"
         >
           ← Back
         </button>
@@ -158,7 +158,7 @@ export const PaintWorld: React.FC<PaintWorldProps> = ({ onClose }) => {
         <button
           type="button"
           onClick={handleClear}
-          className="text-xs font-bold text-pink-600 dark:text-pink-400 border border-pink-300 dark:border-pink-700 rounded-lg px-2 py-1 hover:bg-pink-100 dark:hover:bg-pink-900/30 focus:outline-none"
+          className="text-sm font-bold text-pink-600 dark:text-pink-400 border border-pink-300 dark:border-pink-700 rounded-lg px-3 py-1.5 hover:bg-pink-100 dark:hover:bg-pink-900/30 hover:scale-105 active:scale-95 transition-all focus:outline-none"
         >
           🗑️ Clear
         </button>
@@ -216,7 +216,7 @@ export const PaintWorld: React.FC<PaintWorldProps> = ({ onClose }) => {
                   'flex items-center justify-center w-10 h-10 rounded-full border-2 transition-all',
                   !eraser && brushIdx === i
                     ? 'border-pink-500 bg-pink-50 dark:bg-pink-900/30 shadow-md'
-                    : 'border-gray-300 dark:border-gray-600 opacity-50 hover:opacity-80',
+                    : 'border-gray-300 dark:border-gray-600 opacity-50 hover:opacity-90 hover:scale-110 active:scale-95',
                 ].join(' ')}
                 aria-label={`Brush size ${i + 1}`}
               >
@@ -230,7 +230,7 @@ export const PaintWorld: React.FC<PaintWorldProps> = ({ onClose }) => {
                 'px-3 py-1.5 rounded-xl text-sm font-bold border-2 transition-all',
                 eraser
                   ? 'bg-pink-100 dark:bg-pink-900/40 border-pink-500 text-pink-700 dark:text-pink-300 shadow-md'
-                  : 'bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-500 dark:text-gray-400 opacity-60 hover:opacity-90',
+                  : 'bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-500 dark:text-gray-400 opacity-60 hover:opacity-100 hover:scale-105 active:scale-95',
               ].join(' ')}
             >
               ✏️ Eraser

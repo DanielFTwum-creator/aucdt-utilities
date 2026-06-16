@@ -198,7 +198,7 @@ export const FindMatch: React.FC<FindMatchProps> = ({ onClose }) => {
       <div className="flex items-center justify-between px-5 py-3 bg-white/60 dark:bg-gray-800/60 backdrop-blur-sm border-b border-emerald-100 dark:border-teal-900">
         <button
           onClick={onClose}
-          className="text-sm font-bold text-emerald-700 dark:text-emerald-300 hover:underline focus:outline-none focus:ring-2 focus:ring-emerald-400 rounded-lg px-2 py-1"
+          className="text-sm font-bold text-emerald-700 dark:text-emerald-300 hover:underline hover:scale-105 active:scale-95 transition-all focus:outline-none focus:ring-2 focus:ring-emerald-400 rounded-lg px-2 py-1"
         >
           ← Back
         </button>
@@ -230,7 +230,7 @@ export const FindMatch: React.FC<FindMatchProps> = ({ onClose }) => {
             </p>
             <button
               onClick={handleRestart}
-              className="mt-5 px-8 py-3 bg-emerald-500 hover:bg-emerald-600 text-white font-extrabold text-lg rounded-2xl shadow-lg active:scale-95 transition-transform"
+              className="mt-5 px-8 py-3 bg-emerald-500 hover:bg-emerald-600 hover:scale-105 text-white font-extrabold text-lg rounded-2xl shadow-lg active:scale-95 transition-all"
             >
               Play Again 🔄
             </button>

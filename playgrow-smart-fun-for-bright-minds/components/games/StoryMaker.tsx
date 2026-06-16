@@ -100,12 +100,12 @@ export const StoryMaker: React.FC<StoryMakerProps> = ({ onClose }) => {
       {/* Header */}
       <div className="flex items-center justify-between px-5 py-3 bg-white/60 dark:bg-gray-800/60 backdrop-blur-sm border-b border-blue-100 dark:border-blue-900 shrink-0">
         <button type="button" onClick={onClose}
-          className="text-sm font-bold text-blue-600 dark:text-blue-300 hover:underline focus:outline-none focus:ring-2 focus:ring-blue-400 rounded-lg px-2 py-1">
+          className="text-sm font-bold text-blue-600 dark:text-blue-300 hover:underline hover:scale-105 active:scale-95 transition-all focus:outline-none focus:ring-2 focus:ring-blue-400 rounded-lg px-2 py-1">
           ← Back
         </button>
         <h2 className="text-base sm:text-lg font-extrabold text-blue-700 dark:text-blue-300">Story Maker 📖</h2>
         <button type="button" onClick={handleReset}
-          className="text-xs font-bold text-blue-600 dark:text-blue-400 border border-blue-300 dark:border-blue-700 rounded-lg px-2 py-1 hover:bg-blue-100 dark:hover:bg-blue-900/30 focus:outline-none">
+          className="text-sm font-bold text-blue-600 dark:text-blue-400 border border-blue-300 dark:border-blue-700 rounded-lg px-3 py-1.5 hover:bg-blue-100 dark:hover:bg-blue-900/30 hover:scale-105 active:scale-95 transition-all focus:outline-none">
           🔄 New
         </button>
       </div>

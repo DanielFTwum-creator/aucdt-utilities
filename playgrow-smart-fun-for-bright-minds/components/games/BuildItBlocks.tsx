@@ -182,21 +182,21 @@ export const BuildItBlocks: React.FC<BuildItBlocksProps> = ({ onClose }) => {
       {/* Header */}
       <div className="flex items-center justify-between px-4 py-3 bg-white/60 dark:bg-gray-800/60 backdrop-blur-sm border-b border-orange-100 dark:border-orange-900 shrink-0">
         <button type="button" onClick={onClose}
-          className="text-sm font-bold text-orange-600 dark:text-orange-300 hover:underline focus:outline-none focus:ring-2 focus:ring-orange-400 rounded-lg px-2 py-1">
+          className="text-sm font-bold text-orange-600 dark:text-orange-300 hover:underline hover:scale-105 active:scale-95 transition-all focus:outline-none focus:ring-2 focus:ring-orange-400 rounded-lg px-2 py-1">
           ← Back
         </button>
         <div className="text-center">
           <h2 className="text-sm sm:text-base font-extrabold text-orange-700 dark:text-orange-300">Build-It Blocks 🧱</h2>
           <p className="text-xs text-orange-500 dark:text-orange-400 font-semibold">{challenge.title}</p>
         </div>
-        <div className="flex gap-1">
+        <div className="flex gap-2">
           <button type="button" onClick={handleUndo} disabled={placed.length === 0}
-            className="text-xs font-bold text-orange-600 dark:text-orange-400 border border-orange-300 dark:border-orange-700 rounded-lg px-2 py-1 hover:bg-orange-100 dark:hover:bg-orange-900/30 disabled:opacity-30 focus:outline-none">
-            ↩
+            className="text-sm font-bold text-orange-600 dark:text-orange-400 border border-orange-300 dark:border-orange-700 rounded-lg px-3 py-1.5 hover:bg-orange-100 dark:hover:bg-orange-900/30 hover:scale-105 active:scale-95 transition-all disabled:opacity-30 disabled:hover:scale-100 focus:outline-none flex items-center gap-1">
+            ↩ <span className="hidden sm:inline">Undo</span>
           </button>
           <button type="button" onClick={handleClear}
-            className="text-xs font-bold text-orange-600 dark:text-orange-400 border border-orange-300 dark:border-orange-700 rounded-lg px-2 py-1 hover:bg-orange-100 dark:hover:bg-orange-900/30 focus:outline-none">
-            🗑️
+            className="text-sm font-bold text-orange-600 dark:text-orange-400 border border-orange-300 dark:border-orange-700 rounded-lg px-3 py-1.5 hover:bg-orange-100 dark:hover:bg-orange-900/30 hover:scale-105 active:scale-95 transition-all focus:outline-none flex items-center gap-1">
+            🗑️ <span className="hidden sm:inline">Clear</span>
           </button>
         </div>
       </div>
@@ -289,7 +289,7 @@ export const BuildItBlocks: React.FC<BuildItBlocksProps> = ({ onClose }) => {
           {/* Done button */}
           {!isDone && placed.length >= 3 && (
             <button type="button" onClick={handleDone}
-              className="px-8 py-2 bg-orange-500 hover:bg-orange-600 text-white font-extrabold rounded-2xl shadow-lg active:scale-95 transition-transform text-sm">
+              className="px-8 py-2 bg-orange-500 hover:bg-orange-600 hover:scale-105 text-white font-extrabold rounded-2xl shadow-lg active:scale-95 transition-all text-sm">
               ✅ I'm Done!
             </button>
           )}

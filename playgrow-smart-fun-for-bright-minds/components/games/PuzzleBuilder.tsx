@@ -339,7 +339,7 @@ export const PuzzleBuilder: React.FC<PuzzleBuilderProps> = ({ onClose }) => {
         <button
           type="button"
           onClick={onClose}
-          className="text-sm font-bold text-violet-600 dark:text-violet-300 hover:underline focus:outline-none focus:ring-2 focus:ring-violet-400 rounded-lg px-2 py-1"
+          className="text-sm font-bold text-violet-600 dark:text-violet-300 hover:underline hover:scale-105 active:scale-95 transition-all focus:outline-none focus:ring-2 focus:ring-violet-400 rounded-lg px-2 py-1"
         >
           ← Back
         </button>
