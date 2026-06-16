@@ -26,6 +26,44 @@ const QUAD_VB = [
 
 const QUAD_ARROWS = ['↖', '↗', '↙', '↘'];
 
+// ── Jigsaw piece clip paths (piece space 0-100, tabs/notches r=15 at edge midpoints) ─────────
+// Arc rule: TAB (bulge outward) — sweep matches travel direction (S→1, W→0, N→0, E→1)
+//           NOTCH (cave inward) — opposite sweep
+const PIECE_PATHS = [
+  // 0 TL: right TAB (→), bottom TAB (↓)
+  'M 0 0 L 100 0 L 100 35 A 15 15 0 0 1 100 65 L 100 100 L 65 100 A 15 15 0 0 0 35 100 L 0 100 Z',
+  // 1 TR: left NOTCH (←), bottom TAB (↓)
+  'M 0 0 L 100 0 L 100 100 L 65 100 A 15 15 0 0 0 35 100 L 0 100 L 0 65 A 15 15 0 0 0 0 35 L 0 0 Z',
+  // 2 BL: top NOTCH (↑), right TAB (→)
+  'M 0 0 L 35 0 A 15 15 0 0 1 65 0 L 100 0 L 100 35 A 15 15 0 0 1 100 65 L 100 100 L 0 100 Z',
+  // 3 BR: top NOTCH (↑), left NOTCH (←)
+  'M 0 0 L 35 0 A 15 15 0 0 1 65 0 L 100 0 L 100 100 L 0 100 L 0 65 A 15 15 0 0 0 0 35 L 0 0 Z',
+] as const;
+
+// Image translation so the correct quadrant appears in 0-100 piece space
+const IMG_OFFSETS: [number, number][] = [[0, 0], [-100, 0], [0, -100], [-100, -100]];
+
+// Renders a piece with jigsaw clip shape; idPrefix avoids duplicate SVG IDs on the page
+function JigsawSVG({
+  pieceId, Pic, size = 120, idPrefix = 'jig',
+}: { pieceId: number; Pic: () => JSX.Element; size?: number; idPrefix?: string }) {
+  const [tx, ty] = IMG_OFFSETS[pieceId];
+  const clipId = `${idPrefix}-${pieceId}`;
+  return (
+    <svg width={size} height={size} viewBox="-15 -15 130 130">
+      <defs>
+        <clipPath id={clipId}>
+          <path d={PIECE_PATHS[pieceId]} />
+        </clipPath>
+      </defs>
+      <g clipPath={`url(#${clipId})`} transform={`translate(${tx} ${ty})`}>
+        <Pic />
+      </g>
+      <path d={PIECE_PATHS[pieceId]} fill="none" stroke="rgba(255,255,255,0.45)" strokeWidth="2" />
+    </svg>
+  );
+}
+
 // ── SVG Pictures ─────────────────────────────────────────────────────────────
 
 function SunnyDay() {
@@ -320,7 +358,7 @@ export const PuzzleBuilder: React.FC<PuzzleBuilderProps> = ({ onClose }) => {
       <div className="flex-1 flex flex-col items-center justify-center gap-5 px-4 pb-24 overflow-hidden">
 
         {/* 2 × 2 puzzle frame */}
-        <div className="grid grid-cols-2 gap-1.5 rounded-2xl overflow-hidden shadow-2xl border-4 border-violet-300 dark:border-violet-700 shrink-0 w-[268px] h-[268px]">
+        <div className="grid grid-cols-2 gap-0 rounded-xl overflow-hidden shadow-2xl border-2 border-violet-300 dark:border-violet-700 shrink-0 w-[260px] h-[260px]">
           {([0, 1, 2, 3] as const).map(slotIdx => {
             const placed   = slots[slotIdx];
             const isWrong  = wrongSlot === slotIdx;
@@ -332,14 +370,14 @@ export const PuzzleBuilder: React.FC<PuzzleBuilderProps> = ({ onClose }) => {
                 key={slotIdx}
                 ref={el => { slotRefs.current[slotIdx] = el; }}
                 className={[
-                  'relative w-[130px] h-[130px] flex items-center justify-center transition-all duration-200 border-2',
+                  'relative w-[130px] h-[130px] flex items-center justify-center transition-all duration-200',
                   placed !== null
-                    ? 'border-emerald-400 bg-white dark:bg-gray-900'
+                    ? 'bg-white dark:bg-gray-900'
                     : isHover
-                      ? 'border-violet-500 border-solid bg-violet-100 dark:bg-violet-900/40 scale-[1.02]'
+                      ? 'bg-violet-100 dark:bg-violet-900/40'
                       : isWrong
-                        ? 'border-red-400 border-solid bg-red-50 dark:bg-red-900/30'
-                        : 'border-dashed border-gray-300 dark:border-gray-600 bg-white/40 dark:bg-gray-800/30',
+                        ? 'bg-red-50 dark:bg-red-900/30'
+                        : 'bg-white/30 dark:bg-gray-800/20',
                 ].join(' ')}
                 aria-label={isEmpty ? `Drop zone ${slotIdx + 1}` : `Slot ${slotIdx + 1} filled`}
               >
@@ -348,14 +386,26 @@ export const PuzzleBuilder: React.FC<PuzzleBuilderProps> = ({ onClose }) => {
                     <svg width={130} height={130} viewBox={QUAD_VB[placed]}>
                       <Pic />
                     </svg>
-                    <span className="absolute top-1 right-1 w-5 h-5 rounded-full bg-emerald-500 flex items-center justify-center text-white text-[10px] font-extrabold leading-none pointer-events-none">
+                    <span className="absolute top-1 right-1 w-4 h-4 rounded-full bg-emerald-500 flex items-center justify-center text-white text-[9px] font-extrabold leading-none pointer-events-none">
                       ✓
                     </span>
                   </>
                 ) : (
-                  <span className="text-3xl text-gray-300 dark:text-gray-600 select-none pointer-events-none">
-                    {QUAD_ARROWS[slotIdx]}
-                  </span>
+                  /* Empty slot — jigsaw-shaped guide outline */
+                  <svg width={130} height={130} viewBox="-16 -16 132 132">
+                    <path
+                      d={PIECE_PATHS[slotIdx]}
+                      fill={isHover ? 'rgba(139,92,246,0.12)' : 'rgba(148,163,184,0.07)'}
+                      stroke={isWrong ? '#f87171' : isHover ? '#7c3aed' : '#94a3b8'}
+                      strokeWidth="2.5"
+                      strokeDasharray={isHover ? 'none' : '7 4'}
+                      strokeLinejoin="round"
+                    />
+                    <text x="50" y="52" textAnchor="middle" dominantBaseline="middle"
+                      fontSize="22" fill={isWrong ? '#f87171' : isHover ? '#7c3aed' : '#94a3b8'}>
+                      {QUAD_ARROWS[slotIdx]}
+                    </text>
+                  </svg>
                 )}
               </div>
             );
@@ -412,18 +462,15 @@ export const PuzzleBuilder: React.FC<PuzzleBuilderProps> = ({ onClose }) => {
                   onPointerMove={handlePiecePointerMove}
                   onPointerUp={handlePiecePointerUp}
                   className={[
-                    'relative rounded-xl overflow-hidden transition-all duration-150',
-                    'ring-2 ring-violet-200 dark:ring-violet-700',
+                    'relative bg-transparent transition-all duration-150',
                     'touch-none select-none focus:outline-none',
                     draggingPiece === pieceId
                       ? 'opacity-30 scale-90 cursor-grabbing'
-                      : 'hover:ring-violet-400 hover:scale-105 cursor-grab active:cursor-grabbing',
+                      : 'hover:scale-105 cursor-grab active:cursor-grabbing drop-shadow-lg hover:drop-shadow-xl',
                   ].join(' ')}
                   aria-label={`Puzzle piece ${pieceId + 1}`}
                 >
-                  <svg width={108} height={108} viewBox={QUAD_VB[pieceId]}>
-                    <Pic />
-                  </svg>
+                  <JigsawSVG pieceId={pieceId} Pic={Pic} size={112} idPrefix="pile" />
                 </button>
               ))}
             </div>
@@ -433,12 +480,8 @@ export const PuzzleBuilder: React.FC<PuzzleBuilderProps> = ({ onClose }) => {
 
       {/* Floating drag ghost — position updated imperatively via ref (no inline style in JSX) */}
       {draggingPiece !== null && (
-        <div ref={ghostRef} className="fixed top-0 left-0 pointer-events-none z-50 will-change-transform">
-          <div className="rounded-xl overflow-hidden ring-4 ring-violet-500 shadow-2xl opacity-90">
-            <svg width={108} height={108} viewBox={QUAD_VB[draggingPiece]}>
-              <Pic />
-            </svg>
-          </div>
+        <div ref={ghostRef} className="fixed top-0 left-0 pointer-events-none z-50 will-change-transform opacity-90">
+          <JigsawSVG pieceId={draggingPiece} Pic={Pic} size={112} idPrefix="ghost" />
         </div>
       )}
 
