@@ -8,17 +8,56 @@ interface LessonsTabProps {
   onSelectLesson: (lesson: Lesson) => void;
 }
 
+// Matches FINGER_ACCENTS in ExerciseTab — same colours everywhere.
+const KEY_FINGER: Record<string, string> = {
+  // Left Pinky
+  q: "Pinky", a: "Pinky", z: "Pinky", "1": "Pinky",
+  // Left Ring
+  w: "Ring",  s: "Ring",  x: "Ring",  "2": "Ring",
+  // Left Middle
+  e: "Middle", d: "Middle", c: "Middle", "3": "Middle",
+  // Left Index (reaches T G B and 4 5)
+  r: "Index", f: "Index", v: "Index",
+  t: "Index", g: "Index", b: "Index", "4": "Index", "5": "Index",
+  // Right Index (reaches Y H N and 6 7)
+  y: "Index", h: "Index", n: "Index",
+  u: "Index", j: "Index", m: "Index", "6": "Index", "7": "Index",
+  // Right Middle
+  i: "Middle", k: "Middle", ",": "Middle", "8": "Middle",
+  // Right Ring
+  o: "Ring", l: "Ring", ".": "Ring", "9": "Ring",
+  // Right Pinky
+  p: "Pinky", ";": "Pinky", "/": "Pinky",
+  "0": "Pinky", "-": "Pinky", "[": "Pinky", "]": "Pinky",
+  // Thumbs
+  " ": "Thumbs",
+};
+
+// Border-bottom colour per finger — use Tailwind's border-b-{colour} token.
+const FINGER_UNDERLINE: Record<string, string> = {
+  Pinky:  "border-b-amber-400",
+  Ring:   "border-b-emerald-400",
+  Middle: "border-b-violet-400",
+  Index:  "border-b-blue-400",
+  Thumbs: "border-b-cyan-400",
+};
+
+function keyUnderline(key: string): string {
+  const finger = KEY_FINGER[key.toLowerCase()];
+  return finger ? FINGER_UNDERLINE[finger] : "border-b-stone-300";
+}
+
 export default function LessonsTab({ progress, onSelectLesson }: LessonsTabProps) {
   const pct = Math.round((progress.lessonsCompleted / LESSONS.length) * 100);
   const [expandedIdx, setExpandedIdx] = useState<number | null>(null);
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-6">
 
       {/* Page header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <div>
-          <h2 className="text-xl font-bold text-neutral-900 dark:text-white">Lessons</h2>
+          <h2 className="text-2xl font-bold text-neutral-900 dark:text-white">Lessons</h2>
           <p className="text-sm text-neutral-500 dark:text-neutral-400">
             Complete each lesson at 80%+ accuracy to unlock the next.
           </p>
@@ -30,7 +69,7 @@ export default function LessonsTab({ progress, onSelectLesson }: LessonsTabProps
               {progress.lessonsCompleted} / {LESSONS.length} lessons
             </p>
           </div>
-          <div className="w-28 h-2.5 bg-stone-100 dark:bg-neutral-800 rounded-full overflow-hidden">
+          <div className="w-28 h-3 bg-stone-100 dark:bg-neutral-800 rounded-full overflow-hidden">
             <div
               className="h-full bg-emerald-500 rounded-full transition-all duration-500"
               style={{ width: `${pct}%` }}
@@ -46,8 +85,8 @@ export default function LessonsTab({ progress, onSelectLesson }: LessonsTabProps
           { icon: "🙈", label: "Don't look down", tip: "Use the F and J tactile bumps." },
           { icon: "🐢", label: "Accuracy first", tip: "Speed naturally follows clean form." },
         ].map(({ icon, label, tip }) => (
-          <div key={label} className="flex-1 flex items-center gap-2 bg-amber-50 dark:bg-amber-950/20 border-l-2 border-amber-500 px-3 py-2 rounded-r-lg">
-            <span className="text-sm shrink-0">{icon}</span>
+          <div key={label} className="flex-1 flex items-center gap-2 bg-amber-50 dark:bg-amber-950/20 border-l-2 border-amber-500 px-3 py-2.5 rounded-r-lg">
+            <span className="text-base shrink-0">{icon}</span>
             <div className="min-w-0">
               <span className="text-xs font-semibold text-amber-800 dark:text-amber-300">{label} — </span>
               <span className="text-xs text-amber-700/70 dark:text-amber-400/60 hidden sm:inline">{tip}</span>
@@ -62,8 +101,8 @@ export default function LessonsTab({ progress, onSelectLesson }: LessonsTabProps
         <span className="text-xs text-neutral-400 dark:text-neutral-500">{progress.lessonsCompleted} / {LESSONS.length} Unlocked</span>
       </div>
 
-      {/* Lesson cards — 3 columns on large screens */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      {/* Lesson cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
         {LESSONS.map((lesson, idx) => {
           const isCompleted = progress.lessonsCompleted > idx;
           const isUnlocked = progress.lessonsCompleted >= idx;
@@ -75,44 +114,44 @@ export default function LessonsTab({ progress, onSelectLesson }: LessonsTabProps
               key={lesson.id}
               id={`lesson-card-${lesson.id}`}
               onClick={() => isUnlocked && setExpandedIdx(isExpanded ? null : idx)}
-              className={`group flex flex-col p-4 rounded-2xl border transition-all duration-200 select-none ${
+              className={`group flex flex-col p-5 rounded-2xl border-2 transition-all duration-200 select-none ${
                 isCompleted
-                  ? "bg-emerald-50 dark:bg-emerald-950/20 border-emerald-200 dark:border-emerald-800/50 cursor-pointer hover:shadow-md hover:-translate-y-0.5"
+                  ? "bg-emerald-50 dark:bg-emerald-950/20 border-emerald-200 dark:border-emerald-800/50 cursor-pointer hover:shadow-lg hover:-translate-y-0.5"
                   : isUnlocked
-                  ? "bg-[#FCFBF8] dark:bg-neutral-900/60 border-[#E5DED4] dark:border-white/6 cursor-pointer hover:border-amber-300 dark:hover:border-amber-700/50 hover:shadow-md hover:-translate-y-0.5"
+                  ? "bg-[#FCFBF8] dark:bg-neutral-900/60 border-[#E5DED4] dark:border-white/6 cursor-pointer hover:border-amber-300 dark:hover:border-amber-700/50 hover:shadow-lg hover:-translate-y-0.5"
                   : "bg-[#F5F3EE] dark:bg-neutral-900/30 border-[#EDE8DF] dark:border-white/4 opacity-40 pointer-events-none cursor-default"
               }`}
             >
-              {/* Header row: icon + badge + title + chevron */}
+              {/* Header row: icon + lesson number + title + chevron */}
               <div className="flex items-center gap-3">
-                <div className={`relative w-11 h-11 flex items-center justify-center rounded-xl text-xl shrink-0 ${
+                <div className={`relative w-14 h-14 flex items-center justify-center rounded-2xl text-2xl shrink-0 ${
                   isCompleted ? "bg-emerald-100 dark:bg-emerald-900/40" : "bg-stone-100 dark:bg-neutral-800"
                 }`}>
                   {lesson.icon}
                   {isCompleted && (
-                    <div className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-emerald-500 rounded-full flex items-center justify-center ring-2 ring-white dark:ring-neutral-900">
-                      <CheckCircle2 size={11} className="text-white" />
+                    <div className="absolute -top-1.5 -right-1.5 w-6 h-6 bg-emerald-500 rounded-full flex items-center justify-center ring-2 ring-white dark:ring-neutral-900">
+                      <CheckCircle2 size={13} className="text-white" />
                     </div>
                   )}
                   {!isUnlocked && (
-                    <div className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-stone-400 dark:bg-neutral-600 rounded-full flex items-center justify-center ring-2 ring-white dark:ring-neutral-900">
-                      <Lock size={9} className="text-white" />
+                    <div className="absolute -top-1.5 -right-1.5 w-6 h-6 bg-stone-400 dark:bg-neutral-600 rounded-full flex items-center justify-center ring-2 ring-white dark:ring-neutral-900">
+                      <Lock size={11} className="text-white" />
                     </div>
                   )}
                 </div>
 
                 <div className="flex-1 min-w-0">
-                  <p className="text-[10px] font-bold text-amber-600 dark:text-amber-500 uppercase tracking-widest font-mono leading-none mb-1">
+                  <p className="text-xs font-bold text-amber-600 dark:text-amber-500 uppercase tracking-widest font-mono leading-none mb-1">
                     Lesson {idx + 1}
                   </p>
-                  <h4 className="text-sm font-bold text-neutral-900 dark:text-white leading-snug truncate">
+                  <h4 className="text-base font-bold text-neutral-900 dark:text-white leading-snug line-clamp-2">
                     {lesson.title}
                   </h4>
                 </div>
 
                 {isUnlocked && (
                   <ChevronDown
-                    size={15}
+                    size={18}
                     className={`shrink-0 text-neutral-400 dark:text-neutral-500 transition-transform duration-200 ${
                       isExpanded ? "rotate-180 text-amber-500" : "group-hover:text-neutral-600"
                     }`}
@@ -120,26 +159,26 @@ export default function LessonsTab({ progress, onSelectLesson }: LessonsTabProps
                 )}
               </div>
 
-              {/* Expandable description — shown on click */}
+              {/* Expandable description */}
               {isExpanded && (
-                <p className="mt-3 text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed border-t border-[#E5DED4] dark:border-white/6 pt-3">
+                <p className="mt-4 text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed border-t border-[#E5DED4] dark:border-white/6 pt-3">
                   {lesson.description}
                 </p>
               )}
 
               {/* Keys + action button */}
-              <div className="mt-3.5 flex items-center justify-between gap-2">
-                <div className="flex flex-wrap gap-1 min-w-0">
+              <div className="mt-4 flex items-center justify-between gap-2">
+                <div className="flex flex-wrap gap-1.5 min-w-0">
                   {keyChars.slice(0, 6).map((k, kIdx) => (
                     <span
                       key={kIdx}
-                      className="px-1.5 py-1 text-[10px] font-mono font-bold bg-stone-100 dark:bg-neutral-800 text-stone-600 dark:text-neutral-300 rounded-md border border-stone-200 dark:border-white/6 uppercase"
+                      className={`px-2.5 py-1.5 text-xs font-mono font-bold bg-stone-100 dark:bg-neutral-800 text-stone-700 dark:text-neutral-200 rounded-md border border-stone-200 dark:border-white/6 border-b-2 uppercase ${keyUnderline(k)}`}
                     >
                       {k === " " ? "⎵" : k}
                     </span>
                   ))}
                   {keyChars.length > 6 && (
-                    <span className="px-1.5 py-1 text-[10px] text-neutral-400 font-mono">
+                    <span className="px-2 py-1.5 text-xs text-neutral-400 font-mono">
                       +{keyChars.length - 6}
                     </span>
                   )}
@@ -149,18 +188,18 @@ export default function LessonsTab({ progress, onSelectLesson }: LessonsTabProps
                   <button
                     id={`start-lesson-btn-${lesson.id}`}
                     onClick={(e) => { e.stopPropagation(); onSelectLesson(lesson); }}
-                    className={`shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all active:scale-95 ${
+                    className={`shrink-0 flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold transition-all active:scale-95 ${
                       isCompleted
                         ? "bg-emerald-100 hover:bg-emerald-200 text-emerald-700 dark:bg-emerald-900/40 dark:hover:bg-emerald-800/50 dark:text-emerald-300"
-                        : "bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm hover:shadow"
+                        : "bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm hover:shadow-md"
                     }`}
                   >
-                    <Play size={10} fill="currentColor" />
+                    <Play size={12} fill="currentColor" />
                     {isCompleted ? "Retry" : "Start"}
                   </button>
                 ) : (
-                  <span className="shrink-0 text-[10px] font-semibold text-neutral-300 dark:text-neutral-600 flex items-center gap-1">
-                    <Lock size={9} /> Locked
+                  <span className="shrink-0 text-xs font-semibold text-neutral-300 dark:text-neutral-600 flex items-center gap-1">
+                    <Lock size={11} /> Locked
                   </span>
                 )}
               </div>
