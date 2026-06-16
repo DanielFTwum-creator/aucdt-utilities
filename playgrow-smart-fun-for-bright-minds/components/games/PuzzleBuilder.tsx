@@ -324,7 +324,7 @@ export const PuzzleBuilder: React.FC<PuzzleBuilderProps> = ({ onClose }) => {
           {([0, 1, 2, 3] as const).map(slotIdx => {
             const placed   = slots[slotIdx];
             const isWrong  = wrongSlot === slotIdx;
-            const isHover  = hoverSlot === slotIdx && dragging !== null && slots[slotIdx] === null;
+            const isHover  = hoverSlot === slotIdx && draggingPiece !== null && slots[slotIdx] === null;
             const isEmpty  = placed === null;
 
             return (
