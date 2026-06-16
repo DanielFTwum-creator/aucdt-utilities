@@ -23,9 +23,9 @@ export const ZONES_DATA: Zone[] = [
     bgColor: 'bg-blue-100',
     pathColor: 'stroke-blue-300',
     miniGames: [
-      { id: 'puzzle', title: 'Puzzle Builder', description: 'Drag-and-drop jigsaw puzzles.', Icon: PuzzleIcon },
-      { id: 'pattern', title: 'Pattern Path', description: 'Repeat color or shape patterns.', Icon: PatternIcon },
-      { id: 'match', title: 'Find & Match', description: 'Match pairs of images or numbers.', Icon: MatchIcon },
+      { id: 'puzzle', title: 'Puzzle Builder', description: 'Help AI see the world — drag pieces to teach a robot what things look like!', Icon: PuzzleIcon },
+      { id: 'pattern', title: 'Train the Robot 🤖', description: 'Teach Airi colour patterns like real AI learns from data!', Icon: PatternIcon },
+      { id: 'match', title: 'Sort It Out ♻️', description: 'Help AI sort items to save the planet — flip cards to find matching pairs!', Icon: MatchIcon },
     ],
   },
   {

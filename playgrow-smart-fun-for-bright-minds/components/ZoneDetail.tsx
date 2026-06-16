@@ -4,6 +4,16 @@ import { BackIcon } from './icons';
 import { Theme } from '../App';
 import ThemeSwitcher from './ThemeSwitcher';
 import { generateActivity, Activity } from '../services/activityService';
+import { PatternPath } from './games/PatternPath';
+import { FindMatch } from './games/FindMatch';
+
+// Games with real interactive implementations — bypasses the AI text modal.
+// Add new entries here as more games are built.
+type GameComponent = React.FC<{ zone: Zone; onClose: () => void }>;
+const GAME_COMPONENTS: Record<string, GameComponent> = {
+  pattern: PatternPath,
+  match:   (props) => <FindMatch onClose={props.onClose} />,
+};
 
 interface ZoneDetailProps {
   zone: Zone;
@@ -93,12 +103,19 @@ const ActivityModal: React.FC<{
 );
 
 const ZoneDetail: React.FC<ZoneDetailProps> = ({ zone, onBack, theme, setTheme }) => {
-  const [activeGame, setActiveGame] = useState<MiniGame | null>(null);
-  const [activity, setActivity] = useState<Activity | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [playingGame, setPlayingGame]   = useState<string | null>(null);
+  const [activeGame, setActiveGame]     = useState<MiniGame | null>(null);
+  const [activity, setActivity]         = useState<Activity | null>(null);
+  const [loading, setLoading]           = useState(false);
+  const [error, setError]               = useState<string | null>(null);
 
-  const loadActivity = async (game: MiniGame) => {
+  const handlePlay = async (game: MiniGame) => {
+    // Route to real interactive game if one exists
+    if (GAME_COMPONENTS[game.id]) {
+      setPlayingGame(game.id);
+      return;
+    }
+    // Fallback: AI-generated text activity modal
     setActiveGame(game);
     setActivity(null);
     setError(null);
@@ -114,6 +131,17 @@ const ZoneDetail: React.FC<ZoneDetailProps> = ({ zone, onBack, theme, setTheme }
     }
   };
 
+  // ── Full-screen interactive game ─────────────────────────────────────────
+  if (playingGame && GAME_COMPONENTS[playingGame]) {
+    const GameComp = GAME_COMPONENTS[playingGame];
+    return (
+      <div className="w-full h-full">
+        <GameComp zone={zone} onClose={() => setPlayingGame(null)} />
+      </div>
+    );
+  }
+
+  // ── Zone game-select screen ───────────────────────────────────────────────
   return (
     <div className={`w-full h-full flex flex-col ${zone.bgColor} dark:bg-gray-900 transition-colors duration-500 hc-bg-primary`}>
       <header className="relative p-6 bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm hc-bg-secondary hc-border">
@@ -135,7 +163,15 @@ const ZoneDetail: React.FC<ZoneDetailProps> = ({ zone, onBack, theme, setTheme }
       <main className="flex-1 overflow-y-auto p-8">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
             {zone.miniGames.map(game => (
-                <MiniGameCard key={game.id} miniGame={game} zone={zone} onPlay={loadActivity} />
+              <div key={game.id} className="relative">
+                <MiniGameCard miniGame={game} zone={zone} onPlay={handlePlay} />
+                {/* "Playable" badge on implemented games */}
+                {GAME_COMPONENTS[game.id] && (
+                  <span className="absolute top-3 right-3 bg-emerald-500 text-white text-[10px] font-extrabold px-2 py-0.5 rounded-full shadow-sm uppercase tracking-wide">
+                    ▶ Play
+                  </span>
+                )}
+              </div>
             ))}
         </div>
       </main>
@@ -148,7 +184,7 @@ const ZoneDetail: React.FC<ZoneDetailProps> = ({ zone, onBack, theme, setTheme }
           error={error}
           activity={activity}
           onClose={() => setActiveGame(null)}
-          onRetry={() => loadActivity(activeGame)}
+          onRetry={() => handlePlay(activeGame)}
         />
       )}
     </div>
