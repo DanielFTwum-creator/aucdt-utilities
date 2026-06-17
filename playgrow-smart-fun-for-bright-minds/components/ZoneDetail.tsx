@@ -10,17 +10,23 @@ import { PuzzleBuilder } from './games/PuzzleBuilder';
 import { PaintWorld } from './games/PaintWorld';
 import { BuildItBlocks } from './games/BuildItBlocks';
 import { StoryMaker } from './games/StoryMaker';
+import { GoodNightStorytime } from './games/GoodNightStorytime';
+import { GratitudeMoments } from './games/GratitudeMoments';
+import { MusicClouds } from './games/MusicClouds';
 
 // Games with real interactive implementations — bypasses the AI text modal.
 // Add new entries here as more games are built.
 type GameComponent = React.FC<{ zone: Zone; onClose: () => void }>;
 const GAME_COMPONENTS: Record<string, GameComponent> = {
-  puzzle:  (props) => <PuzzleBuilder   onClose={props.onClose} />,
-  pattern: PatternPath,
-  match:   (props) => <FindMatch       onClose={props.onClose} />,
-  paint:   (props) => <PaintWorld      onClose={props.onClose} />,
-  build:   (props) => <BuildItBlocks   onClose={props.onClose} />,
-  story:   (props) => <StoryMaker      onClose={props.onClose} />,
+  puzzle:    (props) => <PuzzleBuilder       onClose={props.onClose} />,
+  pattern:   PatternPath,
+  match:     (props) => <FindMatch           onClose={props.onClose} />,
+  paint:     (props) => <PaintWorld          onClose={props.onClose} />,
+  build:     (props) => <BuildItBlocks       onClose={props.onClose} />,
+  story:     (props) => <StoryMaker          onClose={props.onClose} />,
+  storytime: (props) => <GoodNightStorytime  onClose={props.onClose} />,
+  gratitude: (props) => <GratitudeMoments    onClose={props.onClose} />,
+  music:     (props) => <MusicClouds         onClose={props.onClose} />,
 };
 
 interface ZoneDetailProps {

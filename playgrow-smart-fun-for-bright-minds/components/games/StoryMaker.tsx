@@ -209,8 +209,32 @@ export const StoryMaker: React.FC<StoryMakerProps> = ({ onClose }) => {
   const [deal,     setDeal]     = useState(freshDeal);
   const [revealed, setRevealed] = useState(true);
   const [factIdx,  setFactIdx]  = useState(() => Math.floor(Math.random() * AI_FACTS.length));
+  const [copied,   setCopied]   = useState(false);
 
   const { whoCards, didCards, whereCards, who, did, where, opener, closer } = deal;
+
+  const storyText = (whoCard: Card | undefined, didCard: Card | undefined, whereCard: Card | undefined) =>
+    whoCard && didCard && whereCard
+      ? `${opener}\n${whoCard.label} ${didCard.label} ${whereCard.label}!\n${closer}`
+      : '';
+
+  const handleCopy = async (wc: Card | undefined, dc: Card | undefined, pc: Card | undefined) => {
+    const text = storyText(wc, dc, pc);
+    if (!text) return;
+    await navigator.clipboard.writeText(text);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  const handleExport = (wc: Card | undefined, dc: Card | undefined, pc: Card | undefined) => {
+    const text = storyText(wc, dc, pc);
+    if (!text) return;
+    const blob = new Blob([text], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = 'my-playgrow-story.txt'; a.click();
+    URL.revokeObjectURL(url);
+  };
 
   const whoCard   = whoCards.find(c => c.id === who);
   const didCard   = didCards.find(c => c.id === did);
@@ -281,6 +305,16 @@ export const StoryMaker: React.FC<StoryMakerProps> = ({ onClose }) => {
               {whoCard.label} {didCard.label} {whereCard.label}!
             </p>
             <p className="text-xs font-semibold text-[var(--pg-text-muted)] italic">{closer}</p>
+            <div className="flex justify-center gap-2 pt-2">
+              <button type="button" onClick={() => handleCopy(whoCard, didCard, whereCard)}
+                className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-bold bg-[var(--pg-accent-3)]/15 text-[var(--pg-accent-3)] hover:bg-[var(--pg-accent-3)]/25 active:scale-95 transition-all">
+                {copied ? '✅ Copied!' : '📋 Copy'}
+              </button>
+              <button type="button" onClick={() => handleExport(whoCard, didCard, whereCard)}
+                className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-bold bg-[var(--pg-accent-3)]/15 text-[var(--pg-accent-3)] hover:bg-[var(--pg-accent-3)]/25 active:scale-95 transition-all">
+                💾 Save
+              </button>
+            </div>
           </div>
         </div>
       )}
