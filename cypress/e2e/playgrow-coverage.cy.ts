@@ -4,11 +4,11 @@
  * Covers every interactive screen and user action:
  *   World Map → zone navigation → 6 interactive games → admin flow
  *
- * Run:
- *   pnpm exec cypress run --config-file cypress.playgrow.config.js
+ * Run (Cypress 15 — binary at %LOCALAPPDATA%\Cypress\Cache\15.16.0):
+ *   pnpm exec cypress run  --config-file cypress.playgrow.config.js
  *   pnpm exec cypress open --config-file cypress.playgrow.config.js
  *
- * App must be running on http://localhost:5173 (pnpm run dev in the
+ * App must be running on http://localhost:3000 (pnpm run dev in the
  * playgrow-smart-fun-for-bright-minds directory).
  */
 
@@ -188,10 +188,12 @@ describe("Story Maker", () => {
 
   it("auto-reveals a complete story on first load", () => {
     cy.contains("Story Maker").should("be.visible");
-    // Story box with opener + closer is visible immediately
-    cy.get(".rounded-2xl").filter(":contains('!')").should("exist");
-    // Airi shows AI fact (revealed stage)
-    cy.contains("AI").should("be.visible");
+    // All three cards are auto-selected from freshDeal; story box appears immediately
+    cy.get('[aria-label*="— selected"]').should("have.length", 3);
+    // Airi shows an AI fact in 'revealed' stage
+    cy.contains(/AI|language model|training data|patterns/i).should("be.visible");
+    // Story sentence ends with !
+    cy.get(".text-center").contains("!").should("be.visible");
   });
 
   it("shows WHO, DID WHAT, WHERE column headers", () => {
@@ -201,38 +203,30 @@ describe("Story Maker", () => {
   });
 
   it("highlights exactly one card per column as selected on load", () => {
-    // Each column has 4 cards; exactly 1 per column should be selected (scale-105 border)
+    // freshDeal() auto-picks one from each column; 3 total selected
     cy.get('[aria-label*="— selected"]').should("have.length", 3);
   });
 
-  it("generates a fresh story when New is clicked", () => {
-    // Capture current story text
-    cy.get(".border-\\[var\\(--pg-accent-3\\)\\]").invoke("text").as("oldStory");
+  it("New button deals a completely fresh set and reveals a new story", () => {
     cy.contains("button", "New").click();
-    cy.get(".border-\\[var\\(--pg-accent-3\\)\\]").invoke("text").then((newStory) => {
-      // New story may sometimes match by chance; just verify the revealed box exists
-      expect(newStory.length).to.be.greaterThan(0);
-    });
+    // After New: 3 newly auto-selected cards + story revealed
     cy.get('[aria-label*="— selected"]').should("have.length", 3);
+    cy.contains(/AI|language model|training data|patterns/i).should("be.visible");
+    cy.get(".text-center").contains("!").should("be.visible");
   });
 
-  it("lets a child pick a different WHO card manually", () => {
-    cy.get('[aria-label*="— selected"]').first().invoke("attr", "aria-label").as("currentWho");
-    // Click a non-selected card in first column
+  it("un-reveals when a card is manually picked; CTA appears immediately", () => {
+    // allPicked is always true (all 3 auto-selected), so picking any card
+    // sets revealed=false and the CTA appears right away
     cy.get('[aria-label]').not('[aria-label*="— selected"]').first().click();
-    // Story box un-reveals (manual pick clears revealed state)
-    // The CTA button or story box updates
-    cy.get('[aria-label*="— selected"]').should("have.length.at.least", 1);
+    cy.contains("button", "Make my story!").should("be.visible");
   });
 
-  it("shows Make My Story CTA when all three columns are manually picked but not revealed", () => {
-    // Click New to get revealed state, then pick a card to un-reveal
-    cy.contains("button", "New").click();
-    // Pick a non-selected card to trigger un-reveal
-    cy.get('[aria-label]').not('[aria-label*="— selected"]').eq(0).click();
-    // After one manual pick in any column the CTA may appear if other two are still picked
-    // At minimum, the CTA exists in DOM (opacity-0 when not all picked)
-    cy.get("button").contains("Make my story").should("exist");
+  it("Make My Story CTA re-reveals the story", () => {
+    cy.get('[aria-label]').not('[aria-label*="— selected"]').first().click();
+    cy.contains("button", "Make my story!").click();
+    cy.get(".text-center").contains("!").should("be.visible");
+    cy.get('[aria-label*="— selected"]').should("have.length", 3);
   });
 
   it("returns to Art Meadow via Back button", () => {

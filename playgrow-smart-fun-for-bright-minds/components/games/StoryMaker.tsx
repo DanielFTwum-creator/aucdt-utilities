@@ -7,7 +7,7 @@
  * Airi reacts to each pick and explains how AI models construct language.
  */
 
-import React, { useState, useMemo } from 'react';
+import React, { useState } from 'react';
 import { Airi, AiriMood } from '../Airi';
 
 interface StoryMakerProps { onClose: () => void; }
@@ -205,18 +205,12 @@ function freshDeal() {
 }
 
 export const StoryMaker: React.FC<StoryMakerProps> = ({ onClose }) => {
-  const initial = useMemo(freshDeal, []);
+  // Single state object — guarantees selection IDs always match the current card arrays
+  const [deal,     setDeal]     = useState(freshDeal);
+  const [revealed, setRevealed] = useState(true);
+  const [factIdx,  setFactIdx]  = useState(() => Math.floor(Math.random() * AI_FACTS.length));
 
-  const [whoCards,   setWhoCards]   = useState(initial.whoCards);
-  const [didCards,   setDidCards]   = useState(initial.didCards);
-  const [whereCards, setWhereCards] = useState(initial.whereCards);
-  const [who,        setWho]        = useState<string | null>(initial.who);
-  const [did,        setDid]        = useState<string | null>(initial.did);
-  const [where,      setWhere]      = useState<string | null>(initial.where);
-  const [opener,     setOpener]     = useState(initial.opener);
-  const [closer,     setCloser]     = useState(initial.closer);
-  const [revealed,   setRevealed]   = useState(true);   // auto-reveal first story
-  const [factIdx,    setFactIdx]    = useState(() => Math.floor(Math.random() * AI_FACTS.length));
+  const { whoCards, didCards, whereCards, who, did, where, opener, closer } = deal;
 
   const whoCard   = whoCards.find(c => c.id === who);
   const didCard   = didCards.find(c => c.id === did);
@@ -251,23 +245,15 @@ export const StoryMaker: React.FC<StoryMakerProps> = ({ onClose }) => {
 
   // "New" — deal fresh cards, auto-pick, auto-reveal a brand new story
   const handleNew = () => {
-    const deal = freshDeal();
-    setWhoCards(deal.whoCards);
-    setDidCards(deal.didCards);
-    setWhereCards(deal.whereCards);
-    setWho(deal.who);
-    setDid(deal.did);
-    setWhere(deal.where);
-    setOpener(deal.opener);
-    setCloser(deal.closer);
+    setDeal(freshDeal());
     setRevealed(true);
     setFactIdx(Math.floor(Math.random() * AI_FACTS.length));
   };
 
   const handleReveal = () => { setRevealed(true); setFactIdx(Math.floor(Math.random() * AI_FACTS.length)); };
-  const pickWho      = (id: string) => { setWho(id);   setRevealed(false); };
-  const pickDid      = (id: string) => { setDid(id);   setRevealed(false); };
-  const pickWhere    = (id: string) => { setWhere(id); setRevealed(false); };
+  const pickWho   = (id: string) => { setDeal(prev => ({ ...prev, who: id }));   setRevealed(false); };
+  const pickDid   = (id: string) => { setDeal(prev => ({ ...prev, did: id }));   setRevealed(false); };
+  const pickWhere = (id: string) => { setDeal(prev => ({ ...prev, where: id })); setRevealed(false); };
 
   return (
     <div className="flex flex-col h-full w-full bg-[var(--pg-bg)] overflow-hidden">

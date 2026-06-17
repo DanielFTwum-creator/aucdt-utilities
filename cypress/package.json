@@ -13,7 +13,7 @@
   "license": "ISC",
   "type": "module",
   "dependencies": {
-    "cypress": "^15.15.0"
+    "cypress": "^13.17.0"
   },
   "devDependencies": {
     "typescript": "^6.0.3"

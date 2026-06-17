@@ -389,10 +389,29 @@ export default function ExerciseTab({ lesson, progress, onFinish, onBack }: Exer
     };
   }, [currentPracticeIdx, lesson]);
 
-  // Keep focus on workspace element
+  // Keep focus on the typing input at all times.
+  // Initial focus on mount:
   useEffect(() => {
     inputRef.current?.focus();
   }, []);
+
+  // Global keydown rescue: if the user presses a key while focus has drifted
+  // to somewhere else (nav, settings, keyboard guide, etc.), silently redirect
+  // it back to the input so the drill never goes deaf.
+  useEffect(() => {
+    const rescue = (e: KeyboardEvent) => {
+      if (!inputRef.current) return;
+      if (inputVal.length >= currentSentence.length) return; // drill finished
+      const tag = (e.target as HTMLElement)?.tagName;
+      // Don't steal focus from intentional form controls
+      if (tag === "SELECT" || tag === "TEXTAREA" || tag === "BUTTON" || tag === "A") return;
+      if (document.activeElement !== inputRef.current) {
+        inputRef.current.focus();
+      }
+    };
+    document.addEventListener("keydown", rescue, true);
+    return () => document.removeEventListener("keydown", rescue, true);
+  }, [inputVal.length, currentSentence.length]);
 
   // Reset practice tracking when lesson changes
   useEffect(() => {
@@ -568,7 +587,8 @@ export default function ExerciseTab({ lesson, progress, onFinish, onBack }: Exer
       <div className="space-y-3">
         <div className="flex py-0.5">
           <button
-            id="backToLessonsBtn"
+            type="button"
+            id="backToLessonsBtnResults"
             onClick={onBack}
             className="inline-flex items-center space-x-2 text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white text-sm font-semibold cursor-pointer border border-zinc-200 dark:border-zinc-800 px-3 py-1.5 min-h-[44px] rounded-lg bg-zinc-50 dark:bg-zinc-900 transition-all shadow-sm"
           >
@@ -610,6 +630,7 @@ export default function ExerciseTab({ lesson, progress, onFinish, onBack }: Exer
 
           <div className="flex flex-wrap justify-center gap-3 pt-2">
             <button
+              type="button"
               id="retryLessonBtn"
               onClick={handleRetry}
               className="inline-flex items-center space-x-2 px-4 py-2.5 min-h-[44px] border border-zinc-200 dark:border-zinc-800 text-zinc-700 dark:text-zinc-300 rounded-lg text-sm font-bold hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-all cursor-pointer"
@@ -618,6 +639,7 @@ export default function ExerciseTab({ lesson, progress, onFinish, onBack }: Exer
               <span>Retry</span>
             </button>
             <button
+              type="button"
               id="continueToMapBtn"
               onClick={handleContinue}
               className="inline-flex items-center space-x-2 px-4 py-2.5 min-h-[44px] bg-sky-600 dark:bg-cyan-500 text-white dark:text-slate-950 rounded-lg text-sm font-bold hover:bg-sky-700 dark:hover:bg-cyan-400 transition-all cursor-pointer shadow-sm"
@@ -636,6 +658,7 @@ export default function ExerciseTab({ lesson, progress, onFinish, onBack }: Exer
       {/* Header and Control row */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 py-0.5">
         <button
+          type="button"
           id="backToLessonsBtn"
           onClick={onBack}
           className="inline-flex w-full sm:w-auto justify-center items-center space-x-2 text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white text-sm font-semibold cursor-pointer border border-zinc-200 dark:border-zinc-800 px-3 py-1.5 min-h-[44px] rounded-lg bg-zinc-50 dark:bg-zinc-900 transition-all shadow-sm"
@@ -647,6 +670,7 @@ export default function ExerciseTab({ lesson, progress, onFinish, onBack }: Exer
         <div className="flex items-center space-x-3 self-end sm:self-auto">
           {/* Audio volume toggler */}
           <button
+            type="button"
             id="muteAudioBtn"
             onClick={() => setMuteAudio(!muteAudio)}
             className="p-2.5 min-h-[44px] border border-zinc-200 dark:border-zinc-800 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-all text-zinc-600 dark:text-zinc-300 cursor-pointer flex items-center justify-center"
@@ -656,6 +680,7 @@ export default function ExerciseTab({ lesson, progress, onFinish, onBack }: Exer
           </button>
 
           <button
+            type="button"
             id="restartExerciseBtn"
             onClick={handleReset}
             className="inline-flex items-center space-x-2 px-3 py-2 min-h-[44px] bg-zinc-900 dark:bg-zinc-800 hover:bg-zinc-900 dark:hover:bg-zinc-700 text-white rounded-lg text-xs font-bold transition-all cursor-pointer border dark:border-white/5"
@@ -698,6 +723,7 @@ export default function ExerciseTab({ lesson, progress, onFinish, onBack }: Exer
           {/* Settings popover toggle */}
           <div className="relative">
             <button
+              type="button"
               id="exerciseSettingsToggle"
               onClick={() => setShowSettings((s) => !s)}
               className="p-1.5 rounded-lg bg-slate-900/60 border border-white/5 text-slate-400 hover:text-cyan-400 hover:border-cyan-500/30 transition-all cursor-pointer flex items-center justify-center"
@@ -809,8 +835,11 @@ export default function ExerciseTab({ lesson, progress, onFinish, onBack }: Exer
           ></div>
         </div>
 
-        {/* Dynamic Highlight Text Box */}
-        <div className="relative border border-zinc-300 dark:border-white/5 bg-zinc-50 dark:bg-slate-950/40 p-4 sm:p-6 rounded-xl font-mono text-lg sm:text-xl font-medium tracking-wide leading-relaxed text-center select-none block min-h-[70px] shadow-inner mb-2">
+        {/* Dynamic Highlight Text Box — clicking anywhere on it restores keyboard focus */}
+        <div
+          onClick={() => inputRef.current?.focus()}
+          className="relative border border-zinc-300 dark:border-white/5 bg-zinc-50 dark:bg-slate-950/40 p-4 sm:p-6 rounded-xl font-mono text-lg sm:text-xl font-medium tracking-wide leading-relaxed text-center select-none block min-h-[70px] shadow-inner mb-2 cursor-text"
+        >
           <div className="absolute top-2 left-3 text-[9px] font-mono text-zinc-400 dark:text-slate-500 tracking-widest uppercase font-bold">
             Interactive Field / Input Protocol {isCalibrationMode && "— Calibration Sandbox"}
           </div>
