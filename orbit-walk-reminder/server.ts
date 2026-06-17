@@ -19,7 +19,7 @@ function decodeJWT(token: string): Record<string, string> {
 }
 
 const app = express();
-const PORT = 3000;
+const PORT = Number(process.env.PORT) || 3010;
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "tuc-admin-2026";
 const JWT_SECRET = process.env.JWT_SECRET || "tuc-super-secret-key-2026";
 const LOG_FILE = path.join(process.cwd(), "logs", "audit.log");
