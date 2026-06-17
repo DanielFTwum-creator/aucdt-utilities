@@ -20,6 +20,18 @@
   color: var(--pg-text);
 }
 
+/* ── Screen transitions ───────────────────────────────────────────────────── */
+@keyframes pg-view-enter {
+  from { opacity: 0; transform: translateY(10px) scale(0.99); }
+  to   { opacity: 1; transform: translateY(0)    scale(1); }
+}
+@keyframes pg-view-enter-up {
+  from { opacity: 0; transform: translateY(-8px) scale(0.99); }
+  to   { opacity: 1; transform: translateY(0)    scale(1); }
+}
+.pg-view-enter    { animation: pg-view-enter    0.22s ease-out forwards; }
+.pg-view-enter-up { animation: pg-view-enter-up 0.22s ease-out forwards; }
+
 /* Story card animations */
 @keyframes pg-pop {
   from { transform: scale(0); opacity: 0; }
@@ -29,9 +41,18 @@
   from { opacity: 0; transform: translateY(6px); }
   to   { opacity: 1; transform: translateY(0); }
 }
-/* Utility animation classes — used by StoryMaker to avoid inline styles */
+@keyframes pg-shake {
+  0%, 100% { transform: translateX(0); }
+  20%       { transform: translateX(-6px); }
+  40%       { transform: translateX(6px); }
+  60%       { transform: translateX(-4px); }
+  80%       { transform: translateX(4px); }
+}
+
+/* Utility animation classes — used by StoryMaker, AnimalMoves, etc. */
 .pg-pop        { animation: pg-pop       0.25s ease-out; }
 .pg-bubble-in  { animation: pg-bubble-in 0.40s ease-out; }
+.pg-shake      { animation: pg-shake     0.5s ease-in-out; }
 
 /* High-Contrast Theme Styles (existing — keep unchanged) */
 .high-contrast {

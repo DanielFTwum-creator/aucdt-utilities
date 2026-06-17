@@ -13,6 +13,18 @@ import { StoryMaker } from './games/StoryMaker';
 import { GoodNightStorytime } from './games/GoodNightStorytime';
 import { GratitudeMoments } from './games/GratitudeMoments';
 import { MusicClouds } from './games/MusicClouds';
+import { ReadWithMe } from './games/ReadWithMe';
+import { RhymeRace } from './games/RhymeRace';
+import { WordFinder } from './games/WordFinder';
+import { EmotionFaces } from './games/EmotionFaces';
+import { FriendFinder } from './games/FriendFinder';
+import { CalmCorner } from './games/CalmCorner';
+import { NatureQuest } from './games/NatureQuest';
+import { TreasureHunt } from './games/TreasureHunt';
+import { SoundExplorer } from './games/SoundExplorer';
+import { DanceTime } from './games/DanceTime';
+import { AnimalMoves } from './games/AnimalMoves';
+import { CatchBalance } from './games/CatchBalance';
 
 // Games with real interactive implementations — bypasses the AI text modal.
 // Add new entries here as more games are built.
@@ -27,6 +39,18 @@ const GAME_COMPONENTS: Record<string, GameComponent> = {
   storytime: (props) => <GoodNightStorytime  onClose={props.onClose} />,
   gratitude: (props) => <GratitudeMoments    onClose={props.onClose} />,
   music:     (props) => <MusicClouds         onClose={props.onClose} />,
+  read:      (props) => <ReadWithMe          onClose={props.onClose} />,
+  rhyme:     (props) => <RhymeRace           onClose={props.onClose} />,
+  word:      (props) => <WordFinder          onClose={props.onClose} />,
+  emotion:   (props) => <EmotionFaces        onClose={props.onClose} />,
+  friend:    (props) => <FriendFinder        onClose={props.onClose} />,
+  calm:      (props) => <CalmCorner          onClose={props.onClose} />,
+  nature:    (props) => <NatureQuest         onClose={props.onClose} />,
+  treasure:  (props) => <TreasureHunt        onClose={props.onClose} />,
+  sound:     (props) => <SoundExplorer       onClose={props.onClose} />,
+  dance:     (props) => <DanceTime           onClose={props.onClose} />,
+  animal:    (props) => <AnimalMoves         onClose={props.onClose} />,
+  catch:     (props) => <CatchBalance        onClose={props.onClose} />,
 };
 
 interface ZoneDetailProps {
@@ -149,7 +173,7 @@ const ZoneDetail: React.FC<ZoneDetailProps> = ({ zone, onBack, theme, setTheme }
   if (playingGame && GAME_COMPONENTS[playingGame]) {
     const GameComp = GAME_COMPONENTS[playingGame];
     return (
-      <div className="w-full h-full">
+      <div key={playingGame} className="pg-view-enter w-full h-full">
         <GameComp zone={zone} onClose={() => setPlayingGame(null)} />
       </div>
     );
@@ -157,7 +181,7 @@ const ZoneDetail: React.FC<ZoneDetailProps> = ({ zone, onBack, theme, setTheme }
 
   // ── Zone game-select screen ───────────────────────────────────────────────
   return (
-    <div className={`w-full h-full flex flex-col ${zone.bgColor} dark:bg-gray-900 transition-colors duration-500 hc-bg-primary`}>
+    <div key="grid" className={`pg-view-enter w-full h-full flex flex-col ${zone.bgColor} dark:bg-gray-900 transition-colors duration-500 hc-bg-primary`}>
       <header className="relative p-6 bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm hc-bg-secondary hc-border">
         <button
             type="button"
