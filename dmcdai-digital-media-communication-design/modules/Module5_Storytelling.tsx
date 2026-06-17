@@ -72,19 +72,19 @@ const Module5Storytelling: React.FC = () => {
     <div className="w-full h-[75vh] flex flex-col">
       <div 
         ref={chatContainerRef}
-        className="flex-1 bg-[var(--color-background-card)]/50 p-6 rounded-t-lg border border-b-0 border-[var(--color-border-card)] overflow-y-auto space-y-4"
+        className="flex-1 bg-[var(--color-background-card)]/50 p-4 sm:p-6 rounded-t-lg border border-b-0 border-[var(--color-border-card)] overflow-y-auto space-y-4"
         aria-live="polite"
       >
         {history.map((msg, index) => (
           <div key={index} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'} animate-fade-in`}>
-            <div className={`max-w-lg p-3 rounded-lg font-inter ${msg.role === 'user' ? 'bg-[var(--color-primary)] text-[var(--color-foreground-on-primary)] shadow-md' : 'bg-[var(--color-background-card-hover)] text-[var(--color-foreground)] border border-[var(--color-border-card)]'}`}>
+            <div className={`max-w-[85%] sm:max-w-lg p-3 rounded-lg font-inter ${msg.role === 'user' ? 'bg-[var(--color-primary)] text-[var(--color-foreground-on-primary)] shadow-md' : 'bg-[var(--color-background-card-hover)] text-[var(--color-foreground)] border border-[var(--color-border-card)]'}`}>
               <p className="text-sm" style={{ whiteSpace: 'pre-wrap' }}>{msg.text}</p>
             </div>
           </div>
         ))}
         {isLoading && (
             <div className="flex justify-start" aria-label="AI is typing">
-                 <div className="max-w-lg p-3 rounded-lg bg-[var(--color-background-card-hover)] text-[var(--color-foreground)] border border-[var(--color-border-card)]">
+                 <div className="max-w-[85%] sm:max-w-lg p-3 rounded-lg bg-[var(--color-background-card-hover)] text-[var(--color-foreground)] border border-[var(--color-border-card)]">
                     <div className="flex items-center space-x-2">
                         <div className="w-2 h-2 bg-[var(--color-primary)] rounded-full animate-pulse"></div>
                         <div className="w-2 h-2 bg-[var(--color-primary)] rounded-full animate-pulse [animation-delay:0.2s]"></div>

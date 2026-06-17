@@ -163,7 +163,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onClose, hideCancel = fa
   // TUC username form (appends @techbridge.edu.gh)
   return (
     <div
-      style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(4px)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 50 }}
+      style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(4px)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 50, padding: '0 16px' }}
       aria-modal="true" role="dialog" aria-labelledby="login-title"
     >
       <div style={cardStyle}>

@@ -8,7 +8,7 @@ interface DashboardProps {
 
 const ModuleCard: React.FC<{ module: typeof MODULES[0], onClick: () => void }> = ({ module, onClick }) => (
   <button 
-    className="bg-[var(--color-background-card)] rounded-lg p-6 flex flex-col justify-between text-left hover:bg-[var(--color-background-card-hover)] hover:scale-105 transform transition-all duration-300 cursor-pointer border border-[var(--color-border-card)] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-[var(--color-background-main)] focus:ring-[var(--color-primary)]"
+    className="bg-[var(--color-background-card)] rounded-lg p-4 sm:p-6 flex flex-col justify-between text-left hover:bg-[var(--color-background-card-hover)] hover:scale-105 transform transition-all duration-300 cursor-pointer border border-[var(--color-border-card)] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-[var(--color-background-main)] focus:ring-[var(--color-primary)]"
     onClick={onClick}
     aria-label={`Open module: ${module.title}`}
     title={`Enter ${module.title} Module`}
@@ -28,7 +28,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ setActiveModuleId }) => {
   return (
     <div className="animate-fade-in">
       <div className="mb-8">
-        <h2 className="text-4xl font-bold text-[var(--color-foreground)] font-playfair">Explore AI in DMCD</h2>
+        <h2 className="text-2xl sm:text-4xl font-bold text-[var(--color-foreground)] font-playfair">Explore AI in DMCD</h2>
         <p className="text-[var(--color-foreground-muted)] mt-2 font-inter max-w-2xl">Select a module to begin your exploration into the transformative impact of AI on design and communication.</p>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
