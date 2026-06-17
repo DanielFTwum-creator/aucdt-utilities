@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import type { User } from '../types';
 
 const API = '/api';
@@ -105,5 +105,31 @@ export function useAuth() {
     });
   }, [token]);
 
-  return { user, token, loading, error, login, register, logout, upgradeToPremiun, authFetch, clearError: () => setError(null) };
+  // Handle Google OAuth callback — backend redirects to /?sp_token=JWT
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const spToken = params.get('sp_token');
+    const authError = params.get('auth_error');
+
+    if (authError) {
+      setError('Google sign-in failed. Please try again.');
+      window.history.replaceState(null, '', window.location.pathname + window.location.hash);
+      return;
+    }
+
+    if (!spToken) return;
+    window.history.replaceState(null, '', window.location.pathname + window.location.hash);
+    setLoading(true);
+    fetch(`${API}/auth/me`, { headers: { Authorization: `Bearer ${spToken}` } })
+      .then(r => r.ok ? r.json() : Promise.reject())
+      .then((u: User) => saveSession(spToken, u))
+      .catch(() => setError('Google sign-in failed. Please try again.'))
+      .finally(() => setLoading(false));
+  }, [saveSession]);
+
+  const loginWithGoogle = useCallback(() => {
+    window.location.href = '/api/auth/google';
+  }, []);
+
+  return { user, token, loading, error, login, register, logout, upgradeToPremiun, authFetch, loginWithGoogle, clearError: () => setError(null) };
 }

@@ -129,4 +129,8 @@ db.exec(`
   );
 `);
 
+// Migrations — safe to run on existing DBs
+try { db.exec('ALTER TABLE users ADD COLUMN google_id TEXT'); } catch { /* already exists */ }
+db.exec('CREATE UNIQUE INDEX IF NOT EXISTS uq_users_google_id ON users (google_id) WHERE google_id IS NOT NULL');
+
 export default db;

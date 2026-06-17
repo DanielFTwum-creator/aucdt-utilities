@@ -23,7 +23,7 @@ function hashToView(): View {
 }
 
 export default function App() {
-  const { user, token, loading: authLoading, error: authError, login, register, logout, upgradeToPremiun, authFetch, clearError } = useAuth();
+  const { user, token, loading: authLoading, error: authError, login, register, logout, upgradeToPremiun, authFetch, loginWithGoogle, clearError } = useAuth();
   const { theme, toggle: toggleTheme } = useTheme();
 
   const [view, setView] = useState<View>(hashToView);
@@ -133,6 +133,7 @@ export default function App() {
             if (ok) setShowAuth(false);
             return ok;
           }}
+          onGoogleLogin={loginWithGoogle}
           onClose={() => { setShowAuth(false); clearError(); }}
           error={authError}
           loading={authLoading}

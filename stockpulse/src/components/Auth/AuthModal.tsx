@@ -4,12 +4,13 @@ import { X, TrendingUp, Eye, EyeOff, AlertCircle } from 'lucide-react';
 interface AuthModalProps {
   onLogin: (email: string, password: string) => Promise<boolean>;
   onRegister: (email: string, password: string, name: string) => Promise<boolean>;
+  onGoogleLogin: () => void;
   onClose: () => void;
   error: string | null;
   loading: boolean;
 }
 
-export default function AuthModal({ onLogin, onRegister, onClose, error, loading }: AuthModalProps) {
+export default function AuthModal({ onLogin, onRegister, onGoogleLogin, onClose, error, loading }: AuthModalProps) {
   const [mode, setMode] = useState<'login' | 'register'>('login');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -50,6 +51,25 @@ export default function AuthModal({ onLogin, onRegister, onClose, error, loading
             {error}
           </div>
         )}
+
+        <button
+          type="button"
+          onClick={onGoogleLogin}
+          disabled={loading}
+          className="w-full flex items-center justify-center gap-3 border border-gray-200 dark:border-gray-700 rounded-xl py-2.5 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors disabled:opacity-60 mb-5"
+        >
+          <GoogleIcon />
+          Continue with Google
+        </button>
+
+        <div className="relative mb-5">
+          <div className="absolute inset-0 flex items-center">
+            <div className="w-full border-t border-gray-200 dark:border-gray-700" />
+          </div>
+          <div className="relative flex justify-center text-xs text-gray-400 dark:text-gray-500">
+            <span className="bg-white dark:bg-gray-900 px-3">or continue with email</span>
+          </div>
+        </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           {mode === 'register' && (
@@ -124,5 +144,16 @@ export default function AuthModal({ onLogin, onRegister, onClose, error, loading
         )}
       </div>
     </div>
+  );
+}
+
+function GoogleIcon() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 48 48" aria-hidden="true">
+      <path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9 3.6l6.7-6.7C35.6 2.4 30.1 0 24 0 14.6 0 6.4 5.4 2.5 13.3l7.9 6.1C12.2 13.2 17.6 9.5 24 9.5z" />
+      <path fill="#4285F4" d="M46.1 24.6c0-1.6-.1-2.8-.4-4.1H24v7.8h12.4c-.3 2.1-1.6 5.2-4.6 7.3l7.1 5.5c4.2-3.9 6.6-9.6 6.6-16.5z" />
+      <path fill="#FBBC05" d="M10.4 28.6a14.5 14.5 0 0 1 0-9.2l-7.9-6.1a24 24 0 0 0 0 21.4l7.9-6.1z" />
+      <path fill="#34A853" d="M24 48c6.5 0 11.9-2.1 15.9-5.8l-7.1-5.5c-2 1.3-4.6 2.3-8.8 2.3-6.4 0-11.8-3.7-13.6-9.4l-7.9 6.1C6.4 42.6 14.6 48 24 48z" />
+    </svg>
   );
 }

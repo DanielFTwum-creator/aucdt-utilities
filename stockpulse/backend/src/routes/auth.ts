@@ -1,12 +1,18 @@
 import { Router, Request, Response } from 'express';
 import bcrypt from 'bcryptjs';
 import * as jwt from 'jsonwebtoken';
+import crypto from 'crypto';
 import db from '../db/schema';
 import { requireAuth, AuthRequest } from '../middleware/auth';
 
 const router = Router();
 const JWT_SECRET = process.env.JWT_SECRET || 'changeme-in-production';
 const JWT_EXPIRE = process.env.JWT_EXPIRE || '7d';
+const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID || '';
+const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET || '';
+const APP_URL = (process.env.APP_URL || 'http://localhost:3000').replace(/\/$/, '');
+
+const oauthStates = new Set<string>();
 
 function makeToken(user: { id: number; email: string; tier: string }) {
   const options: jwt.SignOptions = { expiresIn: JWT_EXPIRE as jwt.SignOptions['expiresIn'] };
@@ -106,6 +112,88 @@ router.post('/cancel', requireAuth, (req: AuthRequest, res: Response) => {
   logAudit(req.user!.id, 'CANCEL_SUBSCRIPTION', 'Downgraded to free', req.ip || 'unknown');
   const token = makeToken({ id: req.user!.id, email: req.user!.email, tier: 'free' });
   res.json({ message: 'Subscription cancelled', token, tier: 'free' });
+});
+
+router.get('/google', (_req: Request, res: Response) => {
+  if (!GOOGLE_CLIENT_ID) {
+    res.status(503).json({ error: 'Google OAuth not configured' });
+    return;
+  }
+  const state = crypto.randomUUID();
+  oauthStates.add(state);
+  setTimeout(() => oauthStates.delete(state), 10 * 60 * 1000);
+
+  const callbackUrl = `${APP_URL}/api/auth/google/callback`;
+  const params = new URLSearchParams({
+    client_id: GOOGLE_CLIENT_ID,
+    redirect_uri: callbackUrl,
+    response_type: 'code',
+    scope: 'openid email profile',
+    state,
+    access_type: 'online',
+    prompt: 'select_account',
+  });
+  res.redirect(`https://accounts.google.com/o/oauth2/v2/auth?${params}`);
+});
+
+router.get('/google/callback', async (req: Request, res: Response) => {
+  const { code, state, error } = req.query as Record<string, string>;
+  const FRONT = APP_URL;
+
+  if (error || !state || !oauthStates.has(state)) {
+    res.redirect(`${FRONT}?auth_error=oauth`);
+    return;
+  }
+  oauthStates.delete(state);
+
+  try {
+    const callbackUrl = `${APP_URL}/api/auth/google/callback`;
+    const tokenRes = await fetch('https://oauth2.googleapis.com/token', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams({
+        code,
+        client_id: GOOGLE_CLIENT_ID,
+        client_secret: GOOGLE_CLIENT_SECRET,
+        redirect_uri: callbackUrl,
+        grant_type: 'authorization_code',
+      }).toString(),
+    });
+    if (!tokenRes.ok) throw new Error('Token exchange failed');
+    const { access_token } = await tokenRes.json() as { access_token: string };
+
+    const userRes = await fetch('https://www.googleapis.com/oauth2/v2/userinfo', {
+      headers: { Authorization: `Bearer ${access_token}` },
+    });
+    if (!userRes.ok) throw new Error('User info fetch failed');
+    const g = await userRes.json() as { id: string; email: string; name: string };
+
+    let user = db.prepare(
+      'SELECT id, email, name, tier FROM users WHERE google_id = ? OR email = ?'
+    ).get(g.id, g.email) as { id: number; email: string; name: string; tier: string } | undefined;
+
+    if (user) {
+      db.prepare('UPDATE users SET google_id = ?, last_login = datetime(\'now\') WHERE id = ?')
+        .run(g.id, user.id);
+    } else {
+      const r = db.prepare(
+        'INSERT INTO users (email, password_hash, name, tier, google_id) VALUES (?, ?, ?, ?, ?)'
+      ).run(g.email, '', g.name, 'free', g.id);
+      const uid = r.lastInsertRowid as number;
+      db.prepare('INSERT INTO paper_accounts (user_id, cash_balance) VALUES (?, ?)').run(uid, 100000.00);
+      ['SOXL', 'SOXS'].forEach(t =>
+        db.prepare('INSERT OR IGNORE INTO watchlists (user_id, ticker) VALUES (?, ?)').run(uid, t)
+      );
+      user = db.prepare('SELECT id, email, name, tier FROM users WHERE id = ?').get(uid) as any;
+    }
+
+    logAudit(user!.id, 'GOOGLE_LOGIN', 'Google SSO login', req.ip || 'unknown');
+    const token = makeToken({ id: user!.id, email: user!.email, tier: user!.tier });
+    res.redirect(`${FRONT}?sp_token=${encodeURIComponent(token)}`);
+  } catch (e) {
+    console.error('[google-oauth]', e);
+    res.redirect(`${FRONT}?auth_error=oauth`);
+  }
 });
 
 export default router;
