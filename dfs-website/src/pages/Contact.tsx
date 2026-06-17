@@ -59,7 +59,7 @@ export default function Contact() {
 
                 <Card className="rounded-[32px] border-none shadow-2xl overflow-hidden">
                   <div className="grid grid-cols-1 md:grid-cols-3">
-                    <div className="bg-primary p-12 text-primary-foreground space-y-8">
+                    <div className="bg-primary p-6 md:p-12 text-primary-foreground space-y-8">
                       <div className="space-y-4">
                         <h3 className="text-2xl font-serif font-bold">Why SEL Success Training?</h3>
                         <p className="text-primary-foreground/80 text-sm leading-relaxed">
@@ -82,7 +82,7 @@ export default function Contact() {
                       </div>
                     </div>
 
-                    <CardContent className="md:col-span-2 p-12 bg-white">
+                    <CardContent className="md:col-span-2 p-6 md:p-12 bg-white">
                       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                           <div className="space-y-2">

@@ -31,9 +31,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     <div className="min-h-screen flex flex-col">
       <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="container mx-auto px-4 flex h-20 items-center justify-between">
-          <Link to="/" className="flex items-center gap-3">
-            <img src={rdsLogo} alt="Root Drumming Systems" className="h-14 w-auto" />
-            <span className="font-serif text-xl font-bold tracking-tight">
+          <Link to="/" className="flex items-center gap-3 min-w-0">
+            <img src={rdsLogo} alt="Root Drumming Systems" className="h-10 sm:h-14 w-auto shrink-0" />
+            <span className="hidden sm:inline font-serif text-xl font-bold tracking-tight truncate">
               Drumming for <span className="text-primary">SEL Success</span>
             </span>
           </Link>

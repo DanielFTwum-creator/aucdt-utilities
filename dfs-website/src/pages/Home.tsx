@@ -144,7 +144,7 @@ export default function Home() {
               <p className="text-foreground/70 leading-relaxed">
                 That's not a one-day workshop. That's a community relationship. That's what we bring to every school we work with.
               </p>
-              <div className="grid grid-cols-3 gap-6 pt-4">
+              <div className="grid grid-cols-3 gap-3 sm:gap-6 pt-4">
                 {[
                   { stat: "45", label: "Years in Vermont" },
                   { stat: "4", label: "Years in SVSU / Bennington" },

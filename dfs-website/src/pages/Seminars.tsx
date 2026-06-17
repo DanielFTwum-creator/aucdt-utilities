@@ -62,7 +62,7 @@ export default function Seminars() {
               >
                 <Card className="rounded-[32px] overflow-hidden border-none shadow-lg hover:shadow-xl transition-shadow group">
                   <div className="flex flex-col md:flex-row">
-                    <div className="bg-primary p-8 md:w-64 flex flex-col justify-center items-center text-primary-foreground text-center space-y-2">
+                    <div className="bg-primary p-6 md:p-8 md:w-64 flex flex-col justify-center items-center text-primary-foreground text-center space-y-2">
                       <span className="text-xs font-bold uppercase tracking-widest opacity-70">Starting at</span>
                       <span className="text-4xl font-serif font-bold">{seminar.price}</span>
                       <Badge variant="secondary" className="mt-2">{seminar.status}</Badge>
