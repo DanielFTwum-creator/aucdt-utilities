@@ -37,9 +37,9 @@ export const ZONES_DATA: Zone[] = [
     bgColor: 'bg-pink-100',
     pathColor: 'stroke-pink-300',
     miniGames: [
-      { id: 'paint', title: 'Paint World', description: 'Draw freely or color scenes.', Icon: GenericGameIcon },
-      { id: 'build', title: 'Build-It Blocks', description: 'Create objects from shapes.', Icon: GenericGameIcon },
-      { id: 'story', title: 'Story Maker', description: 'Create short animated stories.', Icon: GenericGameIcon },
+      { id: 'paint', title: 'Paint World 🎨', description: 'Draw on a canvas to teach AI about colour — just like the millions of paintings AI studies to learn how to create art!', Icon: GenericGameIcon },
+      { id: 'build', title: 'Build-It Blocks 🧱', description: 'Drag shapes to build scenes and teach Airi spatial reasoning — the same skill AI uses to navigate robots and self-driving cars!', Icon: GenericGameIcon },
+      { id: 'story', title: 'Story Maker 📖', description: 'Mix characters, actions, and places to build wild stories — see exactly how AI language models combine words to write!', Icon: GenericGameIcon },
     ],
   },
   {
@@ -51,9 +51,9 @@ export const ZONES_DATA: Zone[] = [
     bgColor: 'bg-orange-100',
     pathColor: 'stroke-orange-300',
     miniGames: [
-        { id: 'read', title: 'Read-With-Me', description: 'Narrated picture books.', Icon: GenericGameIcon },
-        { id: 'rhyme', title: 'Rhyme Race', description: 'Find rhyming pairs.', Icon: GenericGameIcon },
-        { id: 'word', title: 'Word Finder', description: 'Hidden-object scenes.', Icon: GenericGameIcon },
+        { id: 'read', title: 'Read-With-Me 📖', description: 'Tap along as words are highlighted — just like the Text-to-Speech AI that reads books aloud for blind and dyslexic people!', Icon: GenericGameIcon },
+        { id: 'rhyme', title: 'Rhyme Race ⚡', description: 'Find the rhyming word before the clock runs out — the same phonics patterns AI uses to teach reading in any language!', Icon: GenericGameIcon },
+        { id: 'word', title: 'Word Finder 🔍', description: 'Spot the right object in a busy scene — just like Vision-Language AI that helps blind people understand photos!', Icon: GenericGameIcon },
     ],
   },
   {
@@ -65,9 +65,9 @@ export const ZONES_DATA: Zone[] = [
     bgColor: 'bg-green-100',
     pathColor: 'stroke-green-300',
     miniGames: [
-        { id: 'dance', title: 'Dance Time', description: 'Follow motion cues.', Icon: GenericGameIcon },
-        { id: 'animal', title: 'Animal Moves', description: 'Mimic animal actions.', Icon: GenericGameIcon },
-        { id: 'catch', title: 'Catch & Balance', description: 'Tilt device to catch fruits.', Icon: GenericGameIcon },
+        { id: 'dance', title: 'Dance Time 🕺', description: 'Copy Airi\'s dance move sequences — just like the motion-capture AI that trains physiotherapy robots and coaches athletes!', Icon: GenericGameIcon },
+        { id: 'animal', title: 'Animal Moves 🐘', description: 'Match animals to their unique movements — the same biomechanics AI uses to design prosthetic limbs and terrain robots!', Icon: GenericGameIcon },
+        { id: 'catch', title: 'Catch & Balance 🎯', description: 'Tap falling fruit to test your reaction time — just like the AI that coaches Olympic athletes and helps stroke patients recover!', Icon: GenericGameIcon },
     ],
   },
   {
@@ -79,9 +79,9 @@ export const ZONES_DATA: Zone[] = [
     bgColor: 'bg-red-100',
     pathColor: 'stroke-red-300',
     miniGames: [
-        { id: 'emotion', title: 'Emotion Faces', description: 'Identify cartoon faces.', Icon: GenericGameIcon },
-        { id: 'friend', title: 'Friend Finder', description: 'Match acts of kindness.', Icon: GenericGameIcon },
-        { id: 'calm', title: 'Calm Corner', description: 'Breathing and mindfulness.', Icon: GenericGameIcon },
+        { id: 'emotion', title: 'Emotion Faces 😊', description: 'Match emotions to situations — the same skill AI uses to power empathy tools for children with autism and companion robots!', Icon: GenericGameIcon },
+        { id: 'friend', title: 'Friend Finder 🫶', description: 'Choose the kindest response in tricky situations — helping train the AI that builds kinder, safer online spaces!', Icon: GenericGameIcon },
+        { id: 'calm', title: 'Calm Corner 🧘', description: 'Follow guided breathing exercises — just like the AI in smartwatches that detects stress and helps you feel calm!', Icon: GenericGameIcon },
     ],
   },
   {
@@ -93,9 +93,9 @@ export const ZONES_DATA: Zone[] = [
     bgColor: 'bg-yellow-100',
     pathColor: 'stroke-yellow-300',
     miniGames: [
-        { id: 'nature', title: 'Nature Quest', description: 'Explore virtual nature scenes.', Icon: GenericGameIcon },
-        { id: 'treasure', title: 'Treasure Hunt', description: 'Daily discovery missions.', Icon: GenericGameIcon },
-        { id: 'sound', title: 'Sound Explorer', description: 'Identify natural sounds.', Icon: GenericGameIcon },
+        { id: 'nature', title: 'Nature Quest 🌿', description: 'Identify animals and plants from clues — just like the AI apps that let anyone become a wildlife scientist with a photo!', Icon: GenericGameIcon },
+        { id: 'treasure', title: 'Treasure Hunt 🗺️', description: 'Follow riddle clues to find the treasure — the same puzzle-solving skill AI uses to guide rescue robots and Mars rovers!', Icon: GenericGameIcon },
+        { id: 'sound', title: 'Sound Explorer 🎧', description: "Guess what made each sound — just like the AI that listens to rainforests 24/7 to detect illegal logging and count bird species!", Icon: GenericGameIcon },
     ],
   },
   {
@@ -107,9 +107,9 @@ export const ZONES_DATA: Zone[] = [
     bgColor: 'bg-purple-100',
     pathColor: 'stroke-purple-300',
     miniGames: [
-        { id: 'storytime', title: 'Goodnight Storytime', description: 'Gentle narrated bedtime tales.', Icon: GenericGameIcon },
-        { id: 'gratitude', title: 'Gratitude Moments', description: 'Record what made you happy.', Icon: GenericGameIcon },
-        { id: 'music', title: 'Music Clouds', description: 'Tap clouds to play lullabies.', Icon: GenericGameIcon },
+        { id: 'storytime', title: 'Story Detective 🔍', description: 'Read a bedtime story then help Airi find the clues — just like AI reads millions of books to learn language!', Icon: GenericGameIcon },
+        { id: 'gratitude', title: 'Teach Airi to Feel 🫶', description: "Label emotions in scenarios to fill Airi's emotional vocabulary — the same way AI learns sentiment analysis!", Icon: GenericGameIcon },
+        { id: 'music', title: 'Compose for Airi 🎵', description: 'Build melodies on a sequencer grid — Airi learns your music patterns, just like AI composes therapy soundtracks!', Icon: GenericGameIcon },
     ],
   },
 ];
