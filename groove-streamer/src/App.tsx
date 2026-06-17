@@ -226,11 +226,11 @@ function Home() {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.6 }}
-      className="flex flex-col items-center min-h-screen px-4 py-12 md:py-16 md:px-8"
+      className="flex flex-col items-center min-h-screen px-4 py-6 md:py-16 md:px-8"
     >
 
       {/* ── Header ──────────────────────────────────────────────────────────── */}
-      <header className="w-full max-w-5xl mb-12 text-center">
+      <header className="w-full max-w-5xl mb-6 md:mb-12 text-center">
         <p className="font-mono uppercase tracking-[0.45em] mb-4" style={{ fontSize: '9px', color: '#C89040' }}>
           ◆ &nbsp; Studio Session &nbsp; ◆
         </p>
@@ -540,7 +540,7 @@ function Home() {
       </div>
 
       {/* ── Footer ──────────────────────────────────────────────────────────── */}
-      <footer className="w-full max-w-5xl mt-16 flex flex-col items-center gap-4">
+      <footer className="w-full max-w-5xl mt-8 md:mt-16 flex flex-col items-center gap-4">
         <OrnamentalRule />
         <Link
           to="/admin"
