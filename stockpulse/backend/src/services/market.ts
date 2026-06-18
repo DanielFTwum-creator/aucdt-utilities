@@ -3,12 +3,25 @@ async function yf() {
   if (_yf === null) {
     const mod = await import('yahoo-finance2');
     const YF = (mod as any).default ?? mod;
-    _yf = new YF({ suppressNotices: ['yahooSurvey'] });
+    _yf = new YF({ suppressNotices: ['yahooSurvey', 'ripHistorical'] });
   }
   return _yf;
 }
 
-export async function getQuote(ticker: string) {
+// Simple TTL cache — keeps Yahoo Finance rate-limit pressure low.
+// Quote: 60 s  |  History: 5 min  |  Everything else: 2 min
+const _cache = new Map<string, { data: unknown; expires: number }>();
+function cached<T>(key: string, ttlMs: number, fn: () => Promise<T>): Promise<T> {
+  const hit = _cache.get(key);
+  if (hit && hit.expires > Date.now()) return Promise.resolve(hit.data as T);
+  return fn().then(data => {
+    _cache.set(key, { data, expires: Date.now() + ttlMs });
+    return data;
+  });
+}
+
+export function getQuote(ticker: string) {
+  return cached(`quote:${ticker}`, 60_000, async () => {
   const yahooFinance = await yf();
   const quote = await yahooFinance.quote(ticker);
   return {
@@ -28,9 +41,11 @@ export async function getQuote(ticker: string) {
     pe: quote.trailingPE ?? null,
     marketState: quote.marketState ?? 'CLOSED',
   };
+  });
 }
 
-export async function getHistory(ticker: string, period: string = '1mo', interval: string = '1d') {
+export function getHistory(ticker: string, period: string = '1mo', interval: string = '1d') {
+  return cached(`history:${ticker}:${period}:${interval}`, 5 * 60_000, async () => {
   const yahooFinance = await yf();
   // 5d is a range value, not a chart interval — exclude it
   const validIntervals = ['1m','2m','5m','15m','30m','60m','90m','1h','1d','1wk','1mo','3mo'];
@@ -61,6 +76,7 @@ export async function getHistory(ticker: string, period: string = '1mo', interva
     close: d.close ?? 0,
     volume: d.volume ?? 0,
   }));
+  });
 }
 
 export async function searchTickers(query: string) {
@@ -77,37 +93,41 @@ export async function searchTickers(query: string) {
     }));
 }
 
-export async function getIndices() {
-  const yahooFinance = await yf();
-  const symbols = ['^GSPC', '^IXIC', '^DJI', '^VIX'];
-  const results = await Promise.allSettled(symbols.map(s => yahooFinance.quote(s)));
-  return results.map((r, i) => {
-    if (r.status === 'fulfilled') {
-      const q = r.value;
-      return {
-        symbol: q.symbol,
-        name: q.longName || q.shortName || symbols[i],
-        price: q.regularMarketPrice ?? 0,
-        change: q.regularMarketChange ?? 0,
-        changePercent: q.regularMarketChangePercent ?? 0,
-      };
-    }
-    return { symbol: symbols[i], name: symbols[i], price: 0, change: 0, changePercent: 0 };
+export function getIndices() {
+  return cached('indices', 60_000, async () => {
+    const yahooFinance = await yf();
+    const symbols = ['^GSPC', '^IXIC', '^DJI', '^VIX'];
+    const results = await Promise.allSettled(symbols.map(s => yahooFinance.quote(s)));
+    return results.map((r, i) => {
+      if (r.status === 'fulfilled') {
+        const q = r.value;
+        return {
+          symbol: q.symbol,
+          name: q.longName || q.shortName || symbols[i],
+          price: q.regularMarketPrice ?? 0,
+          change: q.regularMarketChange ?? 0,
+          changePercent: q.regularMarketChangePercent ?? 0,
+        };
+      }
+      return { symbol: symbols[i], name: symbols[i], price: 0, change: 0, changePercent: 0 };
+    });
   });
 }
 
-export async function getNews(ticker: string) {
-  const yahooFinance = await yf();
-  const result = await yahooFinance.search(ticker, { newsCount: 8, quotesCount: 0 });
-  return (result.news || []).map((n: Record<string, unknown>) => ({
-    title: n.title as string,
-    publisher: n.publisher as string,
-    link: n.link as string,
-    publishedAt: n.providerPublishTime
-      ? new Date((n.providerPublishTime as number) * 1000).toISOString()
-      : new Date().toISOString(),
-    thumbnail: (n.thumbnail as { resolutions?: { url: string }[] } | undefined)?.resolutions?.[0]?.url ?? null,
-  }));
+export function getNews(ticker: string) {
+  return cached(`news:${ticker}`, 2 * 60_000, async () => {
+    const yahooFinance = await yf();
+    const result = await yahooFinance.search(ticker, { newsCount: 8, quotesCount: 0 });
+    return (result.news || []).map((n: Record<string, unknown>) => ({
+      title: n.title as string,
+      publisher: n.publisher as string,
+      link: n.link as string,
+      publishedAt: n.providerPublishTime
+        ? new Date((n.providerPublishTime as number) * 1000).toISOString()
+        : new Date().toISOString(),
+      thumbnail: (n.thumbnail as { resolutions?: { url: string }[] } | undefined)?.resolutions?.[0]?.url ?? null,
+    }));
+  });
 }
 
 export async function getQuoteSummary(ticker: string) {
