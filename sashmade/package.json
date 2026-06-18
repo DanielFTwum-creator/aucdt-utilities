@@ -12,7 +12,9 @@
     "lint": "tsc --noEmit",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
-    "test:e2e:report": "playwright show-report tests/playwright-report"
+    "test:e2e:report": "playwright show-report tests/playwright-report",
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "dependencies": {
     "@google/genai": "^1.49.0",
@@ -39,6 +41,8 @@
     "tailwindcss": "^4.2.2",
     "tsx": "^4.21.0",
     "typescript": "~6.0.2",
-    "vite": "^8.0.8"
+    "vite": "^8.0.8",
+    "vitest": "^4.1.0",
+    "jsdom": "^25.0.0"
   }
 }

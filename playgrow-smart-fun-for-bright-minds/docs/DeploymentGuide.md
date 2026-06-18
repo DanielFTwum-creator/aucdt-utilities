@@ -1,6 +1,6 @@
-# PlayGrow - Deployment Guide
+# PlayGrow — Deployment Guide
 
-This guide outlines the steps to build and deploy the PlayGrow static web application to a production environment.
+This guide outlines the steps to build and deploy the PlayGrow static web application to a production environment. PlayGrow is a fully client-side SPA — all 21 games across 7 learning zones run entirely in the browser with no backend, database, or API key required for gameplay. See [DEPLOYMENT.md](DEPLOYMENT.md) for the canonical Docker-based deployment instructions used in the TUC production environment.
 
 ---
 

@@ -40,6 +40,7 @@ This document maps production endpoint names to local monorepo directories. **Al
 | 28 | `/workshop/` | `ai-stand-up-workshop-prep-dashboard/` | ✅ Standardised | Shortened URL name |
 | 29 | `/deep-dub-vibes-player/` | `deep-dub-vibes-player/` | ✅ Standardised | Direct match |
 | 30 | `/lems/` | `lems/` | ✅ Standardised | Direct match |
+| 31 | `/stockpulse/` | `stockpulse/` | ✅ Standardised | Direct match |
 
 ---
 
@@ -60,6 +61,7 @@ Apps that meet the full production-ready standard:
 10. `workshop` ← `ai-stand-up-workshop-prep-dashboard`
 11. `deep-dub-vibes-player` ← `deep-dub-vibes-player`
 12. `lems` ← `lems`
+13. `stockpulse` ← `stockpulse`
 
 **Notes**:
 - `sdwater` is an alias for `daaro-distributor` (same app, two URLs)

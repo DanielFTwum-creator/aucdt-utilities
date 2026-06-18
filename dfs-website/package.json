@@ -13,7 +13,9 @@
     "cy:run": "cypress run --config-file cypress.config.js",
     "cy:run:site": "cypress run --config-file cypress.config.js --spec cypress/e2e/site.cy.ts",
     "cy:run:book": "cypress run --config-file cypress.config.js --spec cypress/e2e/book.cy.ts",
-    "cy:run:admin": "cypress run --config-file cypress.config.js --spec cypress/e2e/admin.cy.ts"
+    "cy:run:admin": "cypress run --config-file cypress.config.js --spec cypress/e2e/admin.cy.ts",
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "dependencies": {
     "@base-ui/react": "^1.3.0",
@@ -53,6 +55,8 @@
     "tailwindcss": "^4.1.14",
     "tsx": "^4.21.0",
     "typescript": "~5.8.2",
-    "vite": "^6.2.0"
+    "vite": "^6.2.0",
+    "vitest": "^4.1.0",
+    "jsdom": "^25.0.0"
   }
 }

@@ -14,7 +14,9 @@
     "test:e2e:screenshots": "tsx scripts/capture-real-screenshots.ts",
     "test:scan": "tsx test-scan.ts",
     "deploy": "powershell -File deploy.ps1 -Build",
-    "deploy:verify": "tsx scripts/verify-deployment.ts"
+    "deploy:verify": "tsx scripts/verify-deployment.ts",
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.96.0",
@@ -43,6 +45,8 @@
     "tailwindcss": "^4.1.14",
     "tsx": "^4.21.0",
     "typescript": "~5.8.2",
-    "vite": "^6.2.3"
+    "vite": "^6.2.3",
+    "vitest": "^4.1.0",
+    "jsdom": "^25.0.0"
   }
 }

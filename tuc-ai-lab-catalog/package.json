@@ -19,7 +19,8 @@
     "test:ui": "pnpm exec playwright test --ui",
     "ios:open": "open ios/App/App.xcworkspace",
     "android:open": "open android",
-    "mobile:sync": "capacitor sync"
+    "mobile:sync": "capacitor sync",
+    "test:watch": "vitest"
   },
   "dependencies": {
     "@capacitor/android": "^8.3.3",
@@ -52,6 +53,8 @@
     "playwright": "^1.59.1",
     "tailwindcss": "^4.3.0",
     "typescript": "~6.0.3",
-    "vite": "^8.0.12"
+    "vite": "^8.0.12",
+    "vitest": "^4.1.0",
+    "jsdom": "^25.0.0"
   }
 }

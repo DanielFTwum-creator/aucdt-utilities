@@ -1,2 +1,7 @@
 packages:
   - '.'
+allowBuilds:
+  '@google/genai': true
+  cypress: true
+  esbuild: true
+  protobufjs: true

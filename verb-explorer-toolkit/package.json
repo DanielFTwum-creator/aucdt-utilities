@@ -17,7 +17,9 @@
     "cap:ios": "npm run cap:sync && npx cap open ios",
     "cap:android": "npm run cap:sync && npx cap open android",
     "docker:build": "docker build -t verb-explorer .",
-    "docker:run": "docker run -p 3000:3000 verb-explorer"
+    "docker:run": "docker run -p 3000:3000 verb-explorer",
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "dependencies": {
     "@capacitor/core": "^8.3.2",
@@ -42,6 +44,8 @@
     "tailwindcss": "^4.1.14",
     "tsx": "^4.21.0",
     "typescript": "~5.8.2",
-    "vite": "^6.2.3"
+    "vite": "^6.2.3",
+    "vitest": "^4.1.0",
+    "jsdom": "^25.0.0"
   }
 }

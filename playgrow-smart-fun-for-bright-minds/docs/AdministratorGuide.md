@@ -1,6 +1,6 @@
-# PlayGrow - Administrator Guide
+# PlayGrow — Administrator Guide
 
-This guide provides instructions for accessing and using the administrative features of the PlayGrow application.
+This guide provides instructions for accessing and using the administrative features of the PlayGrow application. PlayGrow ships with 21 fully implemented games across 7 learning zones — all are fully playable with no backend dependency.
 
 ---
 

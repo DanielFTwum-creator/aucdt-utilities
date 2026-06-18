@@ -66,6 +66,26 @@ HEALTHCHECK --interval=30s --timeout=10s --retries=3 \
 
 ---
 
+## Game Deployment Notes
+
+PlayGrow ships with 21 fully implemented games across 7 learning zones. All games run entirely in the browser — no backend service, database, or API key is required for normal gameplay.
+
+The only optional server-side dependency is the AI activity modal fallback, which is triggered when a game route ID is not found in the `GAME_COMPONENTS` record. That modal requires an AI API key to generate text activities. All 21 current game route IDs are registered and will never trigger this fallback.
+
+| Zone | Games | Backend required? |
+|---|---|---|
+| Brainy Town | PuzzleBuilder, PatternPath, FindMatch | No |
+| Art Meadow | PaintWorld, BuildItBlocks, StoryMaker | No |
+| Talky Treehouse | ReadWithMe, RhymeRace, WordFinder | No |
+| Move Forest | DanceTime, AnimalMoves, CatchBalance | No |
+| Heart Valley | EmotionFaces, FriendFinder, CalmCorner | No |
+| Explore Park | NatureQuest, TreasureHunt, SoundExplorer | No |
+| Dream Garden | GoodNightStorytime, GratitudeMoments, MusicClouds | No |
+
+The MusicClouds game uses the Web Audio API (built into all modern browsers) — no external audio library or CDN dependency.
+
+---
+
 ## Environment Variables
 
 PlayGrow has no required environment variables — it is a fully client-side SPA with no backend API calls.

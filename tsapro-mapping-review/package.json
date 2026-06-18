@@ -8,7 +8,8 @@
     "start": "node src/index.js",
     "dev": "nodemon src/index.js",
     "lint": "eslint src/",
-    "test": "jest"
+    "test": "jest",
+    "test:watch": "vitest"
   },
   "keywords": [
     "timetable",
@@ -24,7 +25,9 @@
   "devDependencies": {
     "nodemon": "^3.0.2",
     "eslint": "^8.54.0",
-    "jest": "^29.7.0"
+    "jest": "^29.7.0",
+    "vitest": "^4.1.0",
+    "jsdom": "^25.0.0"
   },
   "engines": {
     "node": ">=22.0.0"

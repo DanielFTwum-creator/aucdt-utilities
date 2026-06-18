@@ -11,7 +11,9 @@
     "start": "next start",
     "lint": "next lint",
     "export": "next export",
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "dependencies": {
     "react": "^18.2.0",
@@ -30,7 +32,9 @@
     "autoprefixer": "^10.4.16",
     "@tailwindcss/forms": "^0.5.7",
     "eslint": "^8.55.0",
-    "eslint-config-next": "^14.0.0"
+    "eslint-config-next": "^14.0.0",
+    "vitest": "^4.1.0",
+    "jsdom": "^25.0.0"
   },
   "engines": {
     "node": ">=18.0.0",

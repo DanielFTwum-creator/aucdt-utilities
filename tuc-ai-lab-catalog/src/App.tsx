@@ -33,6 +33,7 @@ const SLUG_TO_PATH: Record<string, string> = {
   "groove-streamer": "/groove-streamer/",
   "youtube-genie": "/youtube-genie/",
   "markai": "/markai/",
+  "stockpulse": "/stockpulse/",
 };
 
 const getAppUrl = (slug: string) => {
@@ -53,7 +54,7 @@ const DEPLOYED_SLUGS = new Set<string>([
   "tsapro", "typing-and-mathematics-tutorial", "typing-tutorial",
   "ai-stand-up-workshop-prep", "techbridge-ai-workshop-flyer", "techbridge-poster-studio",
   "tuc-2026-enrollment-command-centre", "patois-lyricist", "impact-ventures-dashboard",
-  "techbridge-assessment-platform", "bionicskins",
+  "techbridge-assessment-platform", "bionicskins", "stockpulse",
 ]);
 
 const isDeployed = (slug: string) => DEPLOYED_SLUGS.has(slug);
@@ -93,6 +94,7 @@ const TOOL_ICONS: Record<string, React.ComponentType<{className?: string}>> = {
   "rophe-specialist-care-rpms": Home,
   "rophe-sugar-logger": Activity,
   "brainiac-challenge": Gamepad2,
+  "stockpulse": BarChart3,
 };
 
 interface Tool {

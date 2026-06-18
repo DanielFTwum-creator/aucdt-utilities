@@ -171,6 +171,21 @@ export const appCatalog: CatalogApp[] = [
     deploy: true,
     lastUpdated: '2026-05-23',
   },
+  {
+    id: 'stockpulse',
+    name: 'StockPulse',
+    description: 'AI stock analysis, portfolio tracking, and paper trading platform',
+    url: '/stockpulse/',
+    localDir: 'stockpulse/',
+    status: 'standardised',
+    category: 'analysis',
+    vite: true,
+    favicon: true,
+    seo: true,
+    splash: true,
+    deploy: true,
+    lastUpdated: '2026-06-17',
+  },
 
   // Not Standardised Apps (18)
   {

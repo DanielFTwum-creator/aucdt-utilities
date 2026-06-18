@@ -6,7 +6,8 @@
   "main": "index.js",
   "scripts": {
     "test": "cypress run",
-    "test:admissions": "cypress run --spec 'cypress/e2e/techbridge/admissions.cy.ts' --browser chrome"
+    "test:admissions": "cypress run --spec 'cypress/e2e/techbridge/admissions.cy.ts' --browser chrome",
+    "test:watch": "vitest"
   },
   "keywords": [],
   "author": "",
@@ -16,6 +17,8 @@
     "cypress": "^13.17.0"
   },
   "devDependencies": {
-    "typescript": "^6.0.3"
+    "typescript": "^6.0.3",
+    "vitest": "^4.1.0",
+    "jsdom": "^25.0.0"
   }
 }

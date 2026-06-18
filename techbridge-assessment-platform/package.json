@@ -9,7 +9,9 @@
     "build": "vite build",
     "lint": "pnpm install && eslint .",
     "preview": "pnpm install && vite preview",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "dependencies": {
     "@google/genai": "^1.15.0",
@@ -30,6 +32,8 @@
     "typescript": "^5.5.3",
     "vite": "7.3.1",
     "@playwright/test": "^1.49.0",
-    "@tailwindcss/vite": "^4.2.2"
+    "@tailwindcss/vite": "^4.2.2",
+    "vitest": "^4.1.0",
+    "jsdom": "^25.0.0"
   }
 }

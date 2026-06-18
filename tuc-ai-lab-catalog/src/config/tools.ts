@@ -37,6 +37,13 @@ export const TOOLS: Tool[] = [
     url: 'https://learnai.techbridge.edu.gh',
     category: 'education',
   },
+  {
+    slug: 'stockpulse',
+    title: 'StockPulse',
+    description: 'AI stock analysis, portfolio tracking, and paper trading platform',
+    url: 'https://ai-tools.techbridge.edu.gh/stockpulse',
+    category: 'analysis',
+  },
   // Add more tools here as they're deployed
   // {
   //   slug: 'future-tool',
