@@ -32,31 +32,29 @@ export async function getQuote(ticker: string) {
 
 export async function getHistory(ticker: string, period: string = '1mo', interval: string = '1d') {
   const yahooFinance = await yf();
-  const validIntervals = ['1m','2m','5m','15m','30m','60m','90m','1h','1d','5d','1wk','1mo','3mo'];
+  // 5d is a range value, not a chart interval — exclude it
+  const validIntervals = ['1m','2m','5m','15m','30m','60m','90m','1h','1d','1wk','1mo','3mo'];
   const normalizedInterval = String(interval || '1d').trim().toLowerCase();
-  // Yahoo Finance has no 10m interval — map to nearest available
   const resolvedInterval = normalizedInterval === '10m' ? '15m' : normalizedInterval;
   const safeInterval = validIntervals.includes(resolvedInterval) ? resolvedInterval : '1d';
 
-  const periodMap: Record<string, Date> = {
-    '1d': new Date(Date.now() - 86400000),
-    '2d': new Date(Date.now() - 2 * 86400000),
-    '5d': new Date(Date.now() - 5 * 86400000),
-    '1mo': new Date(Date.now() - 30 * 86400000),
-    '3mo': new Date(Date.now() - 90 * 86400000),
-    '6mo': new Date(Date.now() - 180 * 86400000),
-    '1y': new Date(Date.now() - 365 * 86400000),
-    '2y': new Date(Date.now() - 730 * 86400000),
+  const periodMap: Record<string, number> = {
+    '1d':  1, '2d':  2, '5d':  5,
+    '1mo': 30, '3mo': 90, '6mo': 180,
+    '1y':  365, '2y': 730,
   };
-  const period1 = periodMap[period] ?? periodMap['1mo'];
+  const daysBack = periodMap[period] ?? 30;
+  // chart() requires period1 as YYYY-MM-DD string, not a Date object
+  const period1 = new Date(Date.now() - daysBack * 86400000)
+    .toISOString().split('T')[0];
 
-  const result = await yahooFinance.historical(ticker, {
+  const result = await yahooFinance.chart(ticker, {
     period1,
-    interval: safeInterval,
+    interval: safeInterval as any,
   });
 
-  return (result as any[]).map((d: any) => ({
-    date: d.date.toISOString(),
+  return ((result as any).quotes ?? []).map((d: any) => ({
+    date: new Date(d.date * 1000).toISOString(),
     open: d.open ?? 0,
     high: d.high ?? 0,
     low: d.low ?? 0,
