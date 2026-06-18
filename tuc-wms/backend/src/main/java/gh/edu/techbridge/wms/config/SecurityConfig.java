@@ -3,6 +3,7 @@ package gh.edu.techbridge.wms.config;
 import gh.edu.techbridge.wms.auth.JwtAuthFilter;
 import gh.edu.techbridge.wms.auth.JwtService;
 import gh.edu.techbridge.wms.auth.OAuthSuccessHandler;
+import gh.edu.techbridge.wms.auth.WorkspaceOAuthRequestResolver;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -33,11 +35,14 @@ public class SecurityConfig {
     private final OAuthSuccessHandler successHandler;
     private final JwtService jwtService;
     private final AuthProperties props;
+    private final ClientRegistrationRepository clientRegistrations;
 
-    public SecurityConfig(OAuthSuccessHandler successHandler, JwtService jwtService, AuthProperties props) {
+    public SecurityConfig(OAuthSuccessHandler successHandler, JwtService jwtService,
+                          AuthProperties props, ClientRegistrationRepository clientRegistrations) {
         this.successHandler = successHandler;
         this.jwtService = jwtService;
         this.props = props;
+        this.clientRegistrations = clientRegistrations;
     }
 
     @Bean
@@ -84,7 +89,10 @@ public class SecurityConfig {
             // /api/oauth2/authorization is under /api/ (nginx-proxied) yet does NOT sit on the
             // /api/auth/{registrationId} path, so neither problem occurs.
             .oauth2Login(o -> o
-                .authorizationEndpoint(a -> a.baseUri("/api/oauth2/authorization"))
+                .authorizationEndpoint(a -> a
+                    .baseUri("/api/oauth2/authorization")
+                    .authorizationRequestResolver(new WorkspaceOAuthRequestResolver(
+                        clientRegistrations, "/api/oauth2/authorization", props)))
                 .redirectionEndpoint(r -> r.baseUri("/api/auth/google/callback"))
                 .successHandler(successHandler)
                 .failureHandler((req, res, ex) ->
