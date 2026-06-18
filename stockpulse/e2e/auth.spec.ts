@@ -147,3 +147,48 @@ test.describe('Auth – logout', () => {
     expect(token).toBeNull();
   });
 });
+
+// ─── Google OAuth callback ────────────────────────────────────────────────────
+
+test.describe('Auth – Google OAuth callback', () => {
+  test('?sp_token= param logs user in and is cleared from URL', async ({ page, request }) => {
+    // Register to get a valid JWT, then simulate the backend ?sp_token= redirect
+    const tu = await registerViaApi(request);
+
+    // Intercept /api/auth/me so the app validates the token from the URL
+    await page.route('/api/auth/me', route =>
+      route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(tu.user) })
+    );
+
+    await page.goto(`/?sp_token=${encodeURIComponent(tu.token)}`);
+
+    // URL should be cleaned — no sp_token param remaining
+    await page.waitForFunction(() => !window.location.search.includes('sp_token'), { timeout: 8_000 });
+    expect(page.url()).not.toContain('sp_token');
+
+    // User should be authenticated
+    const stored = await page.evaluate(() => localStorage.getItem('sp_token'));
+    expect(stored).not.toBeNull();
+  });
+
+  test('?auth_error= param shows error and clears the param', async ({ page }) => {
+    await page.goto('/?auth_error=oauth');
+
+    await expect(page.getByRole('alert').or(page.getByText(/sign-in failed|try again/i))).toBeVisible({ timeout: 8_000 });
+    await page.waitForFunction(() => !window.location.search.includes('auth_error'), { timeout: 5_000 });
+    expect(page.url()).not.toContain('auth_error');
+  });
+
+  test('Google button in auth modal redirects to /api/auth/google', async ({ page }) => {
+    // Intercept the redirect so the test doesn't actually leave the domain
+    await page.route('/api/auth/google', route =>
+      route.fulfill({ status: 200, contentType: 'text/html', body: '<html><body>mock-google-redirect</body></html>' })
+    );
+
+    await page.goto('/');
+    await page.getByRole('button', { name: 'Sign in free' }).first().click();
+    await page.getByRole('button', { name: /continue with google/i }).click();
+
+    await page.waitForURL(/\/api\/auth\/google/, { timeout: 5_000 });
+  });
+});
