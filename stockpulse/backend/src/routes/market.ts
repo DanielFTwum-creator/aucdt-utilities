@@ -36,6 +36,7 @@ router.get('/history/:ticker', quoteLimiter, optionalAuth, async (req: AuthReque
     const data = await getHistory(ticker, period, interval);
     res.json(data);
   } catch (err) {
+    console.error(`[market/history] ${ticker}:`, (err as Error)?.message ?? err);
     res.status(404).json({ error: `Could not fetch history for ${ticker}` });
   }
 });
