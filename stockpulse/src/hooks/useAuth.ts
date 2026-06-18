@@ -128,7 +128,11 @@ export function useAuth() {
   }, [saveSession]);
 
   const loginWithGoogle = useCallback(() => {
-    window.location.href = '/api/auth/google';
+    // Full-page navigations bypass the fetch interceptor in main.tsx, so replicate
+    // the same subpath logic here: /api/auth/google → /stockpulse/api/auth/google
+    const seg = window.location.pathname.split('/').filter(Boolean)[0];
+    const base = seg && seg !== 'api' ? `/${seg}` : '';
+    window.location.href = `${base}/api/auth/google`;
   }, []);
 
   return { user, token, loading, error, login, register, logout, upgradeToPremiun, authFetch, loginWithGoogle, clearError: () => setError(null) };
