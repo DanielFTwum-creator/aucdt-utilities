@@ -3,7 +3,15 @@ async function yf() {
   if (_yf === null) {
     const mod = await import('yahoo-finance2');
     const YF = (mod as any).default ?? mod;
-    _yf = new YF({ suppressNotices: ['yahooSurvey', 'ripHistorical'] });
+    _yf = new YF({
+      suppressNotices: ['yahooSurvey', 'ripHistorical'],
+      fetchOptions: {
+        headers: {
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36',
+          'Accept': 'application/json',
+        },
+      },
+    });
   }
   return _yf;
 }
