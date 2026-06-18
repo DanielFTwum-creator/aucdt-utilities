@@ -64,73 +64,77 @@ export const ClinicalAnalysis: React.FC<ClinicalAnalysisProps> = ({
   const subCol = isHighContrast ? 'text-slate-400' : 'text-slate-500';
 
   return (
-    <div className="flex flex-col gap-5 print:block">
+    <div className="flex flex-col gap-3 print:block">
       <h2 className={`text-[11px] font-bold uppercase tracking-widest ${subCol}`}>Clinical Analysis ({unit})</h2>
 
-      {/* Clinical Insights Alert Section */}
-      {patterns && patterns.length > 0 && (
-        <div className={`${cardBg} border rounded-2xl p-6 shadow-sm border-l-4 border-l-amber-500`}>
-          <div className="flex items-center gap-2 mb-3">
-            <span className="w-2.5 h-2.5 rounded-full bg-amber-500 animate-pulse" />
-            <h3 className={`text-[10px] font-bold uppercase tracking-widest ${subCol}`}>Clinical Insights & Patterns</h3>
-          </div>
-          <ul className="space-y-3">
-            {patterns.map((p, i) => (
-              <li key={i} className="flex flex-col">
-                <span className={`text-[14px] font-bold ${titleCol}`}>{p.type}</span>
-                <span className={`text-[12px] ${subCol}`}>{p.description}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
-
-
-      {/* Metric cards — left accent driven by clinical band */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 print:flex print:flex-wrap">
-        {cards.map((c) => (
-          <div
-            key={c.label}
-            className={`${cardBg} border rounded-2xl p-6 shadow-sm print:border-slate-300 print:shadow-none`}
-            style={{ borderLeftWidth: 4, borderLeftColor: c.b?.color || 'transparent' }}
-          >
-            <p className={`text-[10px] font-bold uppercase tracking-widest mb-3 ${subCol}`}>{c.label}</p>
-            <div className="flex items-end gap-2 mb-1">
-              <div
-                className="text-4xl font-mono font-bold tabular-nums tracking-tighter"
-                style={{ color: c.b?.color || (isHighContrast ? '#ffffff' : '#0f172a') }}
-              >
-                {disp(c.v)}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch">
+        {/* Left Column: Insights and Ranges */}
+        <div className="lg:col-span-7 flex flex-col gap-5 justify-between">
+          {/* Clinical Insights Alert Section */}
+          {patterns && patterns.length > 0 && (
+            <div className={`${cardBg} border rounded-2xl p-6 shadow-sm border-l-4 border-l-amber-500 flex-grow`}>
+              <div className="flex items-center gap-2 mb-3">
+                <span className="w-2.5 h-2.5 rounded-full bg-amber-500 animate-pulse" />
+                <h3 className={`text-[10px] font-bold uppercase tracking-widest ${subCol}`}>Clinical Insights & Patterns</h3>
               </div>
-              {c.b && (
-                <span
-                  className="text-[10px] px-2 py-1 rounded font-bold uppercase tracking-wider mb-1.5"
-                  style={{ backgroundColor: c.b.color + '1A', color: c.b.color }}
-                >
-                  {c.b.label}
-                </span>
-              )}
+              <ul className="space-y-3">
+                {patterns.map((p, i) => (
+                  <li key={i} className="flex flex-col">
+                    <span className={`text-[14px] font-bold ${titleCol}`}>{p.type}</span>
+                    <span className={`text-[12px] ${subCol}`}>{p.description}</span>
+                  </li>
+                ))}
+              </ul>
             </div>
-            <p className={`text-[12px] font-medium mt-1 ${subCol}`}>{c.note}</p>
-          </div>
-        ))}
-      </div>
+          )}
 
-      {/* Clinical range legend */}
-      <div className={`${cardBg} border rounded-2xl p-6 shadow-sm print:border-slate-300 print:shadow-none`}>
-        <p className={`text-[10px] font-bold uppercase tracking-widest mb-4 ${subCol}`}>Clinical Glucose Ranges ({unit})</p>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {ranges.map((r) => (
-            <div key={r.label} className="text-center">
-              <div className="h-1.5 w-full rounded-full mb-2" style={{ backgroundColor: r.color }} />
-              <p className={`text-[13px] font-semibold ${titleCol}`}>{r.label}</p>
-              <p className="text-[15px] font-bold tabular-nums" style={{ color: r.color }}>{r.value}</p>
+          {/* Clinical range legend */}
+          <div className={`${cardBg} border rounded-2xl p-6 shadow-sm print:border-slate-300 print:shadow-none flex-grow`}>
+            <p className={`text-[10px] font-bold uppercase tracking-widest mb-4 ${subCol}`}>Clinical Glucose Ranges ({unit})</p>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              {ranges.map((r) => (
+                <div key={r.label} className="text-center">
+                  <div className="h-1.5 w-full rounded-full mb-2" style={{ backgroundColor: r.color }} />
+                  <p className={`text-[13px] font-semibold ${titleCol}`}>{r.label}</p>
+                  <p className="text-[15px] font-bold tabular-nums" style={{ color: r.color }}>{r.value}</p>
+                </div>
+              ))}
+            </div>
+            <p className={`text-[11px] mt-4 ${subCol}`}>
+              Note: post-meal target &lt; {toMgdl ? '140' : '7.8'} {unit} (2 hrs after a meal). Bands follow standard fasting-glucose clinical thresholds.
+            </p>
+          </div>
+        </div>
+
+        {/* Right Column: Metric Cards */}
+        <div className="lg:col-span-5 flex flex-col gap-5 justify-between">
+          {cards.map((c) => (
+            <div
+              key={c.label}
+              className={`${cardBg} border rounded-2xl p-6 shadow-sm print:border-slate-300 print:shadow-none flex-1 flex flex-col justify-center`}
+              style={{ borderLeftWidth: 4, borderLeftColor: c.b?.color || 'transparent' }}
+            >
+              <p className={`text-[10px] font-bold uppercase tracking-widest mb-3 ${subCol}`}>{c.label}</p>
+              <div className="flex items-end gap-2 mb-1">
+                <div
+                  className="text-4xl font-mono font-bold tabular-nums tracking-tighter"
+                  style={{ color: c.b?.color || (isHighContrast ? '#ffffff' : '#0f172a') }}
+                >
+                  {disp(c.v)}
+                </div>
+                {c.b && (
+                  <span
+                    className="text-[10px] px-2 py-1 rounded font-bold uppercase tracking-wider mb-1.5"
+                    style={{ backgroundColor: c.b.color + '1A', color: c.b.color }}
+                  >
+                    {c.b.label}
+                  </span>
+                )}
+              </div>
+              <p className={`text-[12px] font-medium mt-1 ${subCol}`}>{c.note}</p>
             </div>
           ))}
         </div>
-        <p className={`text-[11px] mt-4 ${subCol}`}>
-          Note: post-meal target &lt; {toMgdl ? '140' : '7.8'} {unit} (2 hrs after a meal). Bands follow standard fasting-glucose clinical thresholds.
-        </p>
       </div>
     </div>
   );
