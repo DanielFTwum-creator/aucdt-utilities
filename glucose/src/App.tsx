@@ -595,6 +595,9 @@ function AppContent() {
   const highestBase = allVals.length ? Math.max(...allVals) : null;
   const fastingBand = band(avgFastingBase);
   const postBand = bandPost(avgPostBase);
+  const highestBand = band(highestBase);
+  const overallBand = band(overallBase);
+  const oa = toCurrentUnit(getAverage(allVals.map(String)), unit);
 
   const hiCls = hi && parseFloat(hi) >= parseFloat(convertTarget(8.9, unit)) ? (isHighContrast ? 'text-[#D00000]' : 'text-red-600') : (isHighContrast ? 'text-[#006400]' : 'text-green-600');
   const afCls = af && parseFloat(af) >= parseFloat(convertTarget(7.0, unit)) ? (isHighContrast ? 'text-[#D00000]' : 'text-red-600') : (isHighContrast ? 'text-[#006400]' : 'text-green-600');
@@ -967,7 +970,7 @@ function AppContent() {
       <div className="flex flex-col gap-6 flex-grow print:block">
         
         {/* Stats Row */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-5 print:flex print:flex-wrap">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-5 print:flex print:flex-wrap">
           {/* Average Fasting */}
           <div className={`${isHighContrast ? 'bg-black border-gray-600' : 'bg-white border-slate-200'} border rounded-2xl p-6 shadow-sm flex flex-col justify-center print:border-slate-300 print:shadow-none`}>
             <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest mb-3">Average Fasting ({unit})</p>
@@ -999,7 +1002,45 @@ function AppContent() {
               <div className={`text-3xl font-mono font-bold tracking-tight ${isHighContrast ? 'text-white' : 'text-slate-900'}`}>{rows.length}</div>
             </div>
           </div>
-          
+
+          {/* Highest Reading */}
+          <div
+            className={`${isHighContrast ? 'bg-black border-gray-600' : 'bg-white border-slate-200'} border rounded-2xl p-6 shadow-sm flex flex-col justify-center print:border-slate-300 print:shadow-none`}
+            style={{ borderLeftWidth: 4, borderLeftColor: highestBand?.color || 'transparent' }}
+          >
+            <p className={`text-[10px] font-bold uppercase tracking-widest mb-3 ${isHighContrast ? 'text-slate-400' : 'text-slate-500'}`}>Highest Reading ({unit})</p>
+            <div className="flex items-end gap-3 mb-1">
+              <div className="text-4xl font-mono font-bold tabular-nums tracking-tighter" style={{ color: highestBand?.color || (isHighContrast ? '#ffffff' : '#0f172a') }}>
+                {hi ?? '—'}
+              </div>
+              {highestBand && (
+                <span className="text-[10px] px-2 py-1 rounded font-bold uppercase tracking-wider mb-1.5" style={{ backgroundColor: highestBand.color + '1A', color: highestBand.color }}>
+                  {highestBand.label}
+                </span>
+              )}
+            </div>
+            <p className={`text-[12px] font-medium mt-1 ${isHighContrast ? 'text-slate-500' : 'text-slate-500'}`}>Peak in the period</p>
+          </div>
+
+          {/* Overall Average */}
+          <div
+            className={`${isHighContrast ? 'bg-black border-gray-600' : 'bg-white border-slate-200'} border rounded-2xl p-6 shadow-sm flex flex-col justify-center print:border-slate-300 print:shadow-none`}
+            style={{ borderLeftWidth: 4, borderLeftColor: overallBand?.color || 'transparent' }}
+          >
+            <p className={`text-[10px] font-bold uppercase tracking-widest mb-3 ${isHighContrast ? 'text-slate-400' : 'text-slate-500'}`}>Overall Average ({unit})</p>
+            <div className="flex items-end gap-3 mb-1">
+              <div className="text-4xl font-mono font-bold tabular-nums tracking-tighter" style={{ color: overallBand?.color || (isHighContrast ? '#ffffff' : '#0f172a') }}>
+                {oa ?? '—'}
+              </div>
+              {overallBand && (
+                <span className="text-[10px] px-2 py-1 rounded font-bold uppercase tracking-wider mb-1.5" style={{ backgroundColor: overallBand.color + '1A', color: overallBand.color }}>
+                  {overallBand.label}
+                </span>
+              )}
+            </div>
+            <p className={`text-[12px] font-medium mt-1 ${isHighContrast ? 'text-slate-500' : 'text-slate-500'}`}>{allReadingsVals.length} readings recorded</p>
+          </div>
+
           {/* Add Reading Button */}
           <div className="flex flex-col gap-3 min-h-[140px] print:hidden">
             <button 
@@ -1026,9 +1067,6 @@ function AppContent() {
 
         {/* Clinical Analysis summary — band-coloured metric cards + range legend */}
         <ClinicalAnalysis
-          highest={highestBase}
-          overall={overallBase}
-          readingCount={allReadingsVals.length}
           unit={unit}
           isHighContrast={isHighContrast}
           patterns={patterns}
