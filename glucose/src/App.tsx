@@ -138,7 +138,9 @@ function AppContent() {
   const [uploadStatus, setUploadStatus] = useState('');
   const [uploadProgress, setUploadProgress] = useState(0);
   const [uploadError, setUploadError] = useState('');
+  const [patterns, setPatterns] = useState<{ type: string; description: string; severity: string }[]>([]);
   const importInputRef = useRef<HTMLInputElement>(null);
+  const importCSVInputRef = useRef<HTMLInputElement>(null);
 
   // Initialize first-time flag
   useEffect(() => {
@@ -317,6 +319,29 @@ function AppContent() {
     });
   }, [isAdmin]);
 
+  // Load clinical patterns from backend when rows or admin mode changes
+  useEffect(() => {
+    if (!isAdmin) {
+      setPatterns([]);
+      return;
+    }
+    const seg = window.location.pathname.split('/').filter(Boolean)[0];
+    const base = seg && seg !== 'api' ? `/${seg}` : '';
+    fetch(`${base}/api/patterns`)
+      .then(res => {
+        if (!res.ok) throw new Error('Failed to fetch patterns');
+        return res.json();
+      })
+      .then(data => {
+        if (Array.isArray(data)) {
+          setPatterns(data);
+        }
+      })
+      .catch(err => {
+        console.error('[APP] Failed to load patterns:', err);
+      });
+  }, [rows, isAdmin]);
+
   // Save profile changes
   useEffect(() => {
     if (!isAdmin || (!patientName && !doctorName)) return;
@@ -491,6 +516,53 @@ function AppContent() {
       setUploadError('Failed to import backup: ' + String(err));
     }
     if (importInputRef.current) importInputRef.current.value = '';
+  };
+
+  const handleExportCSV = () => {
+    const seg = window.location.pathname.split('/').filter(Boolean)[0];
+    const base = seg && seg !== 'api' ? `/${seg}` : '';
+    window.location.href = `${base}/api/export`;
+  };
+
+  const handleImportCSV = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    try {
+      const text = await file.text();
+      setIsUploading(true);
+      setUploadProgress(20);
+      setUploadStatus('Uploading CSV...');
+      setUploadError('');
+
+      const seg = window.location.pathname.split('/').filter(Boolean)[0];
+      const base = seg && seg !== 'api' ? `/${seg}` : '';
+
+      const res = await fetch(`${base}/api/import-csv`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'text/csv',
+        },
+        body: text,
+      });
+
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.error || 'Failed to import CSV');
+      }
+
+      const result = await res.json();
+      setUploadProgress(100);
+      setUploadStatus(`Restored ${result.count} readings successfully from CSV!`);
+      
+      const refreshed = await getAllReadings();
+      setRows(refreshed as Row[]);
+      setTimeout(() => setIsUploading(false), 2000);
+    } catch (err) {
+      setUploadError('Failed to import CSV: ' + String(err));
+      setIsUploading(false);
+    }
+    if (importCSVInputRef.current) importCSVInputRef.current.value = '';
   };
 
   const currentMonthLabel = useMemo(() => {
@@ -738,6 +810,28 @@ function AppContent() {
           </label>
 
           <button
+            onClick={handleExportCSV}
+            className={`p-2.5 rounded-lg transition-colors focus:ring-2 focus:ring-blue-300 min-h-[44px] ${isHighContrast ? 'text-gray-400 hover:text-white hover:bg-gray-800' : 'text-slate-400 hover:text-[#1F3864] hover:bg-slate-200'}`}
+            title="Export data to CSV"
+          >
+            <FileText className="w-5 h-5 text-emerald-600" />
+          </button>
+
+          <label
+            className={`p-2.5 rounded-lg transition-colors focus:ring-2 focus:ring-blue-300 min-h-[44px] flex items-center cursor-pointer ${isHighContrast ? 'text-gray-400 hover:text-white hover:bg-gray-800' : 'text-slate-400 hover:text-[#1F3864] hover:bg-slate-200'}`}
+            title="Import CSV"
+          >
+            <input
+              type="file"
+              accept=".csv"
+              className="sr-only"
+              ref={importCSVInputRef}
+              onChange={handleImportCSV}
+            />
+            <Upload className="w-5 h-5 text-emerald-600" />
+          </label>
+
+          <button
             onClick={() => setIsHelpOpen(true)}
             className={`p-2.5 rounded-lg transition-colors focus:ring-2 focus:ring-blue-300 min-h-[44px] ${isHighContrast ? 'text-gray-400 hover:text-white hover:bg-gray-800' : 'text-slate-400 hover:text-[#1F3864] hover:bg-slate-200'}`}
             title="View user guide"
@@ -937,6 +1031,7 @@ function AppContent() {
           readingCount={allReadingsVals.length}
           unit={unit}
           isHighContrast={isHighContrast}
+          patterns={patterns}
         />
 
         {/* Tab Navigation */}

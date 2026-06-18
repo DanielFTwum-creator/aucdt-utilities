@@ -1,8 +1,3 @@
-import { openDB } from 'idb';
-
-const DB_NAME = 'RopheSugarLogger_DB';
-const DB_VERSION = 2;
-
 export interface AuditLogEntry {
   id: string;
   timestamp: string;
@@ -31,91 +26,91 @@ export interface Profile {
   updatedAt: number;
 }
 
-export const initDB = async () => {
-  return openDB(DB_NAME, DB_VERSION, {
-    upgrade(db) {
-      if (!db.objectStoreNames.contains('adminConfig')) {
-        db.createObjectStore('adminConfig');
-      }
-      if (!db.objectStoreNames.contains('auditLogs')) {
-        db.createObjectStore('auditLogs', { keyPath: 'id', autoIncrement: true });
-      }
-      if (!db.objectStoreNames.contains('readings')) {
-        db.createObjectStore('readings', { keyPath: 'id' });
-      }
-      if (!db.objectStoreNames.contains('profile')) {
-        db.createObjectStore('profile');
-      }
-    },
-  });
-};
-
 export const getAdminConfig = async (key: string) => {
-  const db = await initDB();
-  return db.get('adminConfig', key);
+  const res = await fetch(`/api/config/${key}`);
+  if (!res.ok) return undefined;
+  const data = await res.json();
+  return data.value;
 };
 
 export const setAdminConfig = async (key: string, value: any) => {
-  const db = await initDB();
-  await db.put('adminConfig', value, key);
+  await fetch(`/api/config/${key}`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ value }),
+  });
 };
 
 export const addAuditLog = async (action: string, details?: string) => {
-  const db = await initDB();
-  const entry: AuditLogEntry = {
-    id: `log-${Date.now()}`,
-    timestamp: new Date().toISOString(),
-    action,
-    details: details || '',
-  };
-  await db.add('auditLogs', entry);
+  await fetch('/api/audit-logs', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ action, details }),
+  });
 };
 
 export const getAuditLog = async (): Promise<AuditLogEntry[]> => {
-  const db = await initDB();
-  const allLogs = await db.getAll('auditLogs');
-  return allLogs.reverse();
+  const res = await fetch('/api/audit-logs');
+  if (!res.ok) return [];
+  const logs = await res.json();
+  return logs;
 };
 
 export const getAllReadings = async (): Promise<ReadingRow[]> => {
-  const db = await initDB();
-  const allReadings = await db.getAll('readings');
+  const res = await fetch('/api/readings');
+  if (!res.ok) return [];
+  const allReadings = await res.json();
   console.log('[DB] getAllReadings returned', allReadings.length, 'readings');
   return allReadings;
 };
 
 export const upsertReading = async (row: ReadingRow): Promise<void> => {
-  const db = await initDB();
   console.log('[DB] Upserting reading:', row.id, 'date:', row.date, 'fasting:', row.fasting);
-  await db.put('readings', row);
-  const allAfter = await db.getAll('readings');
-  console.log('[DB] After upsert, DB has', allAfter.length, 'readings');
+  const res = await fetch('/api/readings', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(row),
+  });
+  if (!res.ok) {
+    throw new Error('Failed to upsert reading');
+  }
 };
 
 export const deleteReading = async (id: string): Promise<void> => {
-  const db = await initDB();
-  await db.delete('readings', id);
+  const res = await fetch(`/api/readings/${id}`, {
+    method: 'DELETE',
+  });
+  if (!res.ok) {
+    throw new Error('Failed to delete reading');
+  }
 };
 
 export const batchUpsertReadings = async (rows: ReadingRow[]): Promise<void> => {
-  const db = await initDB();
   console.log('[DB] batchUpsertReadings starting with', rows.length, 'rows');
-  const tx = db.transaction('readings', 'readwrite');
-  for (const row of rows) {
-    console.log('[DB] batch put:', row.id, 'date:', row.date);
-    tx.store.put(row);
+  const res = await fetch('/api/readings/batch', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ readings: rows }),
+  });
+  if (!res.ok) {
+    throw new Error('Failed to batch upsert readings');
   }
-  await tx.done;
-  const allAfter = await db.getAll('readings');
-  console.log('[DB] After batch upsert, DB has', allAfter.length, 'readings');
 };
 
 export const getProfile = async (): Promise<Profile | undefined> => {
-  const db = await initDB();
-  return db.get('profile', 'main');
+  const res = await fetch('/api/profile');
+  if (!res.ok) return undefined;
+  const data = await res.json();
+  return data || undefined;
 };
 
 export const saveProfile = async (data: Omit<Profile, 'updatedAt'>): Promise<void> => {
-  const db = await initDB();
-  await db.put('profile', { ...data, updatedAt: Date.now() }, 'main');
+  const res = await fetch('/api/profile', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data),
+  });
+  if (!res.ok) {
+    throw new Error('Failed to save profile');
+  }
 };

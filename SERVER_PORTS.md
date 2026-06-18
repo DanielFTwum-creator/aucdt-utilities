@@ -4,16 +4,17 @@ Each app's Node.js/Express backend listens on a unique port. Apache mod_rewrite 
 
 | App | URL | Backend Port | Status | Notes |
 |-----|-----|--------------|--------|-------|
-| Glucose | `/glucose/` | 3001 | ✅ Configured | Via `process.env.PORT \|\| 3001` |
+| Glucose | `/glucose/` | 3006 | ✅ Configured | Via `process.env.PORT \|\| 3006` |
 | Peace Vinyl | `/peace/` | 3002 | ✅ Configured | Via `process.env.PORT \|\| 3002` |
 | TUC AI Lab | `/ai-lab/` | 3003 | 🔄 To Update | Currently hardcoded to 3000 |
 | Groove Streamer | `/groove-streamer/` | 3004 | ⏳ To Update | Currently hardcoded to 3000 |
 | BioChemAI | `/biochemai/` | 3005 | ⏳ No backend yet | Frontend-only; needs OAuth backend |
-| WillPro | `/willpro/` | 3006 | ⏳ No backend yet | Frontend-only; needs OAuth backend |
+| WillPro | `/willpro/` | 3011 | ⏳ No backend yet | Frontend-only; needs OAuth backend |
 | Email Drafter | `/email-drafter/` | 3007 | ✅ Configured | Via `process.env.PORT \|\| 3007` |
 | Deliberate Magic Reader | `/magic-reader/` | 3008 | ✅ Configured | Via `process.env.PORT \|\| 3008` |
 | Deep Dub Vibes Player | `/deep-dub-vibes-player/` | 3009 | ✅ Configured | Via `process.env.PORT \|\| 3009` |
 | Drumming for SEL (dfs-website) | `/dfs-website/` | 3010 | ✅ Configured | Via `process.env.PORT \|\| 3010` |
+| StockPulse | `/stockpulse/` | 3020 | ✅ Configured | Via `process.env.PORT \|\| 3020` |
 
 ---
 

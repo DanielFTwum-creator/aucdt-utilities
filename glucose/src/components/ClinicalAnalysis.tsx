@@ -13,6 +13,7 @@ interface ClinicalAnalysisProps {
   readingCount: number;
   unit: string;                // 'mmol/L' | 'mg/dL'
   isHighContrast: boolean;
+  patterns?: { type: string; description: string; severity: string }[];
 }
 
 const RED = '#dc2626';
@@ -38,7 +39,7 @@ export function bandPost(v: number | null) {
 }
 
 export const ClinicalAnalysis: React.FC<ClinicalAnalysisProps> = ({
-  highest, overall, readingCount, unit, isHighContrast,
+  highest, overall, readingCount, unit, isHighContrast, patterns,
 }) => {
   const toMgdl = unit === 'mg/dL';
   const disp = (v: number | null) => v == null ? '—' : (toMgdl ? Math.round(v * 18.0182).toString() : v.toFixed(1));
@@ -65,6 +66,25 @@ export const ClinicalAnalysis: React.FC<ClinicalAnalysisProps> = ({
   return (
     <div className="flex flex-col gap-5 print:block">
       <h2 className={`text-[11px] font-bold uppercase tracking-widest ${subCol}`}>Clinical Analysis ({unit})</h2>
+
+      {/* Clinical Insights Alert Section */}
+      {patterns && patterns.length > 0 && (
+        <div className={`${cardBg} border rounded-2xl p-6 shadow-sm border-l-4 border-l-amber-500`}>
+          <div className="flex items-center gap-2 mb-3">
+            <span className="w-2.5 h-2.5 rounded-full bg-amber-500 animate-pulse" />
+            <h3 className={`text-[10px] font-bold uppercase tracking-widest ${subCol}`}>Clinical Insights & Patterns</h3>
+          </div>
+          <ul className="space-y-3">
+            {patterns.map((p, i) => (
+              <li key={i} className="flex flex-col">
+                <span className={`text-[14px] font-bold ${titleCol}`}>{p.type}</span>
+                <span className={`text-[12px] ${subCol}`}>{p.description}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
 
       {/* Metric cards — left accent driven by clinical band */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 print:flex print:flex-wrap">
