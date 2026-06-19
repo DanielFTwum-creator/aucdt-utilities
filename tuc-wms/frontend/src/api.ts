@@ -26,7 +26,7 @@ async function refresh(): Promise<boolean> {
 export async function api<T = any>(path: string, init: RequestInit = {}, retry = true): Promise<T> {
   const headers = new Headers(init.headers);
   if (accessToken) headers.set('Authorization', `Bearer ${accessToken}`);
-  if (init.body && !headers.has('Content-Type')) headers.set('Content-Type', 'application/json');
+  if (init.body && !(init.body instanceof FormData) && !headers.has('Content-Type')) headers.set('Content-Type', 'application/json');
 
   const res = await fetch(path, { ...init, headers, credentials: 'include', signal: init.signal ?? timeoutSignal() });
 

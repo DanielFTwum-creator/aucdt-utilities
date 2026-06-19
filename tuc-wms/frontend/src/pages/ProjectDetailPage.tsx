@@ -6,15 +6,19 @@ import MembersTab from './MembersTab';
 import ProjectSettingsTab from './ProjectSettingsTab';
 import BoardTab from './BoardTab';
 import TimelineTab from './TimelineTab';
+import AutomationsTab from './AutomationsTab';
+import ReportsTab from './ReportsTab';
 import { useAuth } from '../auth/AuthContext';
 import KanbanLoader from '../components/KanbanLoader';
 
-type Tab = 'board' | 'timeline' | 'members' | 'settings';
+type Tab = 'board' | 'timeline' | 'reports' | 'members' | 'settings' | 'automations';
 const TABS: { key: Tab; label: string }[] = [
   { key: 'board', label: 'Board' },
   { key: 'timeline', label: 'Timeline' },
+  { key: 'reports', label: 'Dashboard' },
   { key: 'members', label: 'Members' },
   { key: 'settings', label: 'Settings' },
+  { key: 'automations', label: 'Automations' },
 ];
 
 export default function ProjectDetailPage() {
@@ -88,8 +92,10 @@ export default function ProjectDetailPage() {
             focusTaskId={focusTaskId} />
         )}
         {tab === 'timeline' && <TimelineTab projectId={projectId} stages={project.stages} archived={project.archived} />}
+        {tab === 'reports' && <ReportsTab projectId={projectId} />}
         {tab === 'members' && <MembersTab projectId={projectId} archived={project.archived} />}
         {tab === 'settings' && <ProjectSettingsTab project={project} onChanged={load} />}
+        {tab === 'automations' && <AutomationsTab projectId={projectId} archived={project.archived} />}
       </div>
     </div>
   );

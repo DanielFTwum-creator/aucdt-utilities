@@ -8,6 +8,7 @@ import gh.edu.techbridge.wms.notify.NotificationService;
 import gh.edu.techbridge.wms.notify.TaskMailService;
 import gh.edu.techbridge.wms.user.User;
 import gh.edu.techbridge.wms.user.UserRepository;
+import gh.edu.techbridge.wms.automation.AutomationService;
 import jakarta.validation.constraints.NotBlank;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,10 +32,16 @@ public class TaskController {
     private final UserRepository users;
     private final TaskMailService taskMail;
     private final NotificationService notifications;
+    private final AutomationService automation;
+    private final TaskActivityRepository activities;
+    private final TaskCommentRepository comments;
+    private final TaskAttachmentRepository attachments;
 
     public TaskController(TaskRepository tasks, ProjectRepository projects, ProjectPermissionService perms,
                           ProjectEventService events, UserRepository users, TaskMailService taskMail,
-                          NotificationService notifications) {
+                          NotificationService notifications, AutomationService automation,
+                          TaskActivityRepository activities, TaskCommentRepository comments,
+                          TaskAttachmentRepository attachments) {
         this.tasks = tasks;
         this.projects = projects;
         this.perms = perms;
@@ -42,6 +49,10 @@ public class TaskController {
         this.users = users;
         this.taskMail = taskMail;
         this.notifications = notifications;
+        this.automation = automation;
+        this.activities = activities;
+        this.comments = comments;
+        this.attachments = attachments;
     }
 
     /** Notify each given assignee (except the actor): in-app notification + email. */
@@ -80,9 +91,11 @@ public class TaskController {
             t.setParentTaskId(parent.getId());
         }
         Task saved = tasks.save(t);
+        activities.save(new TaskActivity(saved.getId(), user.getId(), "CREATED", "Task created by " + user.getFullName()));
         Map<String, Object> body = dto(saved);
         events.publish(projectId, "task.created", body);   // FR-KB real-time
         notifyAssignees(saved.getAssigneeIds(), saved, p, user);   // FR-NOTIF: email new assignees
+        automation.trigger(projectId, "TASK_CREATED", saved, user, null, saved.getStatus());
         return ResponseEntity.status(HttpStatus.CREATED).body(body);
     }
 
@@ -112,15 +125,66 @@ public class TaskController {
         perms.requireWritable(p);
         Task t = task(projectId, taskId);
         Set<Long> before = new HashSet<>(t.getAssigneeIds());   // capture before apply() overwrites
+        String oldTitle = t.getTitle();
+        String oldStatus = t.getStatus();
+        TaskPriority oldPriority = t.getPriority();
+        LocalDate oldStart = t.getStartDate();
+        LocalDate oldDue = t.getDueDate();
+        boolean oldMilestone = t.isMilestone();
+
         if (req.title() != null) t.setTitle(req.title());
         apply(t, req, p);
         Task saved = tasks.save(t);
+        
+        // Compare changes and log activity
+        List<TaskActivity> logs = new ArrayList<>();
+        if (!Objects.equals(oldTitle, saved.getTitle())) {
+            logs.add(new TaskActivity(taskId, user.getId(), "UPDATED", "Renamed task to \"" + saved.getTitle() + "\""));
+        }
+        if (!Objects.equals(oldStatus, saved.getStatus())) {
+            logs.add(new TaskActivity(taskId, user.getId(), "STATUS_CHANGED", "Moved status from \"" + oldStatus + "\" to \"" + saved.getStatus() + "\""));
+        }
+        if (!Objects.equals(oldPriority, saved.getPriority())) {
+            logs.add(new TaskActivity(taskId, user.getId(), "PRIORITY_CHANGED", "Changed priority from " + oldPriority + " to " + saved.getPriority()));
+        }
+        if (!Objects.equals(oldStart, saved.getStartDate())) {
+            logs.add(new TaskActivity(taskId, user.getId(), "DUE_DATE_CHANGED", "Changed start date to " + saved.getStartDate()));
+        }
+        if (!Objects.equals(oldDue, saved.getDueDate())) {
+            logs.add(new TaskActivity(taskId, user.getId(), "DUE_DATE_CHANGED", "Changed due date to " + saved.getDueDate()));
+        }
+        if (oldMilestone != saved.isMilestone()) {
+            logs.add(new TaskActivity(taskId, user.getId(), "UPDATED", saved.isMilestone() ? "Marked as milestone" : "Removed milestone marker"));
+        }
+
+        Set<Long> after = saved.getAssigneeIds();
+        if (!before.equals(after)) {
+            Set<Long> added = new HashSet<>(after);
+            added.removeAll(before);
+            Set<Long> removed = new HashSet<>(before);
+            removed.removeAll(after);
+            for (Long uid : added) {
+                users.findById(uid).ifPresent(u -> logs.add(new TaskActivity(taskId, user.getId(), "ASSIGNEE_CHANGED", "Assigned task to " + u.getFullName())));
+            }
+            for (Long uid : removed) {
+                users.findById(uid).ifPresent(u -> logs.add(new TaskActivity(taskId, user.getId(), "ASSIGNEE_CHANGED", "Removed assignee " + u.getFullName())));
+            }
+        }
+        if (!logs.isEmpty()) {
+            activities.saveAll(logs);
+        }
+
         Map<String, Object> body = dto(saved);
         events.publish(projectId, "task.updated", body);   // incl. status change (drag-drop) — FR-KB
         // FR-NOTIF: email only assignees newly added by this update (no spam on unrelated edits).
         Set<Long> added = new HashSet<>(saved.getAssigneeIds());
         added.removeAll(before);
         notifyAssignees(added, saved, p, user);
+        
+        if (oldStatus != null && !oldStatus.equals(saved.getStatus())) {
+            automation.trigger(projectId, "STATUS_CHANGED", saved, user, oldStatus, saved.getStatus());
+        }
+        
         return body;
     }
 
@@ -141,7 +205,11 @@ public class TaskController {
         copy.setStatus(src.getStatus());
         copy.setTags(new HashSet<>(src.getTags()));
         copy.setParentTaskId(src.getParentTaskId());
-        Map<String, Object> body = dto(tasks.save(copy));
+        Task saved = tasks.save(copy);
+        
+        activities.save(new TaskActivity(saved.getId(), user.getId(), "DUPLICATED", "Task duplicated from \"" + src.getTitle() + "\" by " + user.getFullName()));
+        
+        Map<String, Object> body = dto(saved);
         events.publish(projectId, "task.created", body);
         return ResponseEntity.status(HttpStatus.CREATED).body(body);
     }
@@ -154,10 +222,23 @@ public class TaskController {
         perms.require(user, p, ProjectRole.EDITOR);
         perms.requireWritable(p);
         Task t = task(projectId, taskId);
-        tasks.findByParentTaskId(t.getId()).forEach(tasks::delete);   // cascade sub-tasks
+        
+        tasks.findByParentTaskId(t.getId()).forEach(sub -> {
+            cleanupCollaborationData(sub.getId());
+            tasks.delete(sub);
+        });   // cascade sub-tasks
+        
+        cleanupCollaborationData(t.getId());
         tasks.delete(t);
+        
         events.publish(projectId, "task.deleted", Map.of("id", taskId));
         return ResponseEntity.noContent().build();
+    }
+
+    private void cleanupCollaborationData(Long taskId) {
+        comments.findByTaskIdOrderByCreatedAtAsc(taskId).forEach(comments::delete);
+        activities.findByTaskIdOrderByOccurredAtDesc(taskId).forEach(activities::delete);
+        attachments.findByTaskIdOrderByUploadedAtDesc(taskId).forEach(attachments::delete);
     }
 
     // --- helpers ---
