@@ -1,4 +1,5 @@
 import { WATCHLIST, HISTORY_BARS } from '../fixtures/data';
+import type { WatchlistItem } from '../../src/types';
 
 describe('Watchlist', () => {
   beforeEach(() => {
@@ -63,9 +64,8 @@ describe('Watchlist', () => {
   });
 
   it('shows upgrade prompt when free tier limit is reached', () => {
-    cy.intercept('GET', '/api/watchlist', { body: WATCHLIST.concat(
-      [3, 4, 5].map(i => ({ id: i, ticker: `T${i}`, added_at: '2026-01-01T00:00:00Z' }))
-    ) }).as('fullWatchlist');
+    const fullList: WatchlistItem[] = [...WATCHLIST, ...[3, 4, 5].map(i => ({ id: i, ticker: `T${i}`, added_at: '2026-01-01T00:00:00Z' }))];
+    cy.intercept('GET', '/api/watchlist', { body: fullList }).as('fullWatchlist');
     cy.intercept('POST', '/api/watchlist', {
       statusCode: 403,
       body: { error: 'Limit reached', upgrade: true },

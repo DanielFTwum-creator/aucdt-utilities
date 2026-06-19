@@ -16,6 +16,7 @@ function makePosition(overrides: Partial<PortfolioPosition> = {}): PortfolioPosi
     avgCost: 100,
     currentPrice: 105,
     value: 1050,
+    cost: 1000,
     unrealizedPL: 50,
     unrealizedPLPercent: 5,
     allocation: 100,

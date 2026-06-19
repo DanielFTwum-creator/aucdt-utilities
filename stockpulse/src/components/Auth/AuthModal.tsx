@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { X, TrendingUp, Eye, EyeOff, AlertCircle } from 'lucide-react';
 
 interface AuthModalProps {

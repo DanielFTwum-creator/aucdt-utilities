@@ -333,7 +333,7 @@ export default function Watchlist({ user, authFetch, onUpgrade, onLoginClick }: 
   };
 
   // Summary stats
-  const allQuotes = Object.values(quotes);
+  const allQuotes = Object.values(quotes) as Quote[];
   const bestGainer = allQuotes.reduce<Quote | null>((best, q) =>
     !best || q.changePercent > best.changePercent ? q : best, null);
   const worstLoser = allQuotes.reduce<Quote | null>((worst, q) =>

@@ -1,3 +1,4 @@
+import React from 'react';
 import { TrendingUp, Star, BarChart2, Activity, Bell, Brain, Newspaper, Search, ShieldCheck, Lock, BookOpen } from 'lucide-react';
 import type { View, User } from '../../types';
 

@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Plus, Trash2, Bell, BellOff, Crown } from 'lucide-react';
 import type { Alert, User } from '../types';
 import { TIER_LIMITS } from '../types';

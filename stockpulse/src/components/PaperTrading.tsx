@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { RefreshCw, RotateCcw, TrendingUp, TrendingDown, Activity } from 'lucide-react';
 import type { PaperAccount, PaperPosition, PaperOrder, User } from '../types';
 

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { Newspaper, ExternalLink, RefreshCw } from 'lucide-react';
 import type { NewsItem } from '../types';
 

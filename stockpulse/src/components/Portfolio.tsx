@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Plus, RefreshCw, Download, TrendingUp } from 'lucide-react';
 import type { PortfolioSummary as PortfolioSummaryType, User } from '../types';
 import PortfolioSummaryCards from './Portfolio/PortfolioSummary';

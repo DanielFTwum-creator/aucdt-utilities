@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Brain, TrendingUp, TrendingDown, Minus, RefreshCw, Crown } from 'lucide-react';
 import type { AISignal, User } from '../types';
 
