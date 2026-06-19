@@ -221,17 +221,22 @@ app.post(['/api/readings/batch', '/glucose/api/readings/batch'], (req, res) => {
       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `);
     const now = Date.now();
-    const tx = db.transaction((rows) => {
-      for (const r of rows) {
+    db.exec("BEGIN TRANSACTION");
+    try {
+      for (const r of readings) {
         stmt.run(
           r.id, r.date, r.fasting || '', r.post_breakfast || '', r.pre_lunch || '', r.post_lunch || '', r.pre_dinner || '', r.post_dinner || '',
           r.createdAt || now, r.updatedAt || now
         );
       }
-    });
-    tx(readings);
+      db.exec("COMMIT");
+    } catch (txErr) {
+      db.exec("ROLLBACK");
+      throw txErr;
+    }
     res.json({ success: true, count: readings.length });
   } catch (err: any) {
+    console.error('[BATCH-ERROR] Failed to save batch readings:', err);
     res.status(500).json({ error: err.message });
   }
 });
@@ -390,13 +395,16 @@ app.post(['/api/import-csv', '/glucose/api/import-csv'], express.text({ type: 't
       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `);
 
-    const transaction = db.transaction((readings) => {
-      for (const r of readings) {
+    db.exec("BEGIN TRANSACTION");
+    try {
+      for (const r of parsedReadings) {
         stmt.run(r.id, r.date, r.fasting, r.post_breakfast, r.pre_lunch, r.post_lunch, r.pre_dinner, r.post_dinner, r.createdAt, r.updatedAt);
       }
-    });
-
-    transaction(parsedReadings);
+      db.exec("COMMIT");
+    } catch (txErr) {
+      db.exec("ROLLBACK");
+      throw txErr;
+    }
 
     // Audit log entry
     const logId = `log-${Date.now()}`;
@@ -431,7 +439,7 @@ app.post(['/api/scan-glucose', '/glucose/api/scan-glucose'], async (req, res) =>
     console.log('[SCAN-API] Processing image, size:', imageData.length, 'chars');
 
     const responseStream = await client.models.generateContentStream({
-      model: 'gemini-3.1-pro-preview',
+      model: 'gemini-2.5-flash',
       contents: {
         parts: [
           {

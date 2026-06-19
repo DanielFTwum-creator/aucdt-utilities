@@ -42,7 +42,6 @@ $commit = (git rev-parse --short HEAD 2>$null).Trim()
 $branch = (git rev-parse --abbrev-ref HEAD 2>$null).Trim()
 Log "INFO" "Commit : $commit on $branch"
 
-try { git push origin $branch 2>&1 | Out-Null } catch { Log "WARN" "git push failed (non-fatal)" Yellow }
 
 # ── Step 3: Build & Deploy ───────────────────────────────────
 if ($Build) {

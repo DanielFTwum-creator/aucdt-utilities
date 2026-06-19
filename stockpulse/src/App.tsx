@@ -15,10 +15,11 @@ import NewsPanel from './components/NewsPanel';
 import SubscriptionModal from './components/SubscriptionModal';
 import AdminPanel from './components/Admin/AdminPanel';
 import ErrorBoundary from './components/ErrorBoundary';
+import Guide from './components/Guide';
 
 function hashToView(): View {
   const hash = window.location.hash.replace('#/', '').split('?')[0] as View;
-  const valid: View[] = ['watchlist', 'portfolio', 'paper', 'alerts', 'ai', 'news', 'screener', 'admin'];
+  const valid: View[] = ['watchlist', 'portfolio', 'paper', 'alerts', 'ai', 'news', 'screener', 'admin', 'guide'];
   return valid.includes(hash) ? hash : 'watchlist';
 }
 
@@ -118,6 +119,7 @@ export default function App() {
             </div>
           )}
           {view === 'admin' && <AdminPanel user={user} authFetch={authFetch} onLoginClick={() => setShowAuth(true)} />}
+          {view === 'guide' && <Guide />}
         </main>
       </div>
 

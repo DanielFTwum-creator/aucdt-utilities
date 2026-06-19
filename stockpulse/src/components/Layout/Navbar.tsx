@@ -34,7 +34,7 @@ function getMarketStatus() {
     const beforeClose = h < 16;
     const isOpen = isWeekday && afterOpen && beforeClose;
     const timeStr = etNow.toLocaleTimeString('en-US', {
-      hour: 'numeric', minute: '2-digit', timeZone: 'America/New_York',
+      hour: 'numeric', minute: '2-digit'
     });
     return { isOpen, timeStr };
   } catch {

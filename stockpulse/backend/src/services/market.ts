@@ -1,23 +1,21 @@
-let _yf: any = null;
-async function yf() {
-  if (_yf === null) {
-    const mod = await import('yahoo-finance2');
-    const YF = (mod as any).default ?? mod;
-    _yf = new YF({
-      suppressNotices: ['yahooSurvey', 'ripHistorical'],
-      fetchOptions: {
-        headers: {
-          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36',
-          'Accept': 'application/json',
-        },
-      },
-    });
-  }
-  return _yf;
+import { execFile } from 'child_process';
+import { promisify } from 'util';
+
+const execFileAsync = promisify(execFile);
+
+async function curlFetch(url: string): Promise<any> {
+  const args: string[] = [
+    '-s', '-L', '--max-time', '15',
+    '-A', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36',
+    '-H', 'Accept: application/json, */*',
+    '-H', 'Accept-Language: en-US,en;q=0.9',
+    String(url)
+  ];
+  const curlCmd = process.platform === 'win32' ? 'curl.exe' : 'curl';
+  const { stdout } = await execFileAsync(curlCmd, args, { maxBuffer: 20 * 1024 * 1024 });
+  return JSON.parse(stdout);
 }
 
-// Simple TTL cache — keeps Yahoo Finance rate-limit pressure low.
-// Quote: 60 s  |  History: 5 min  |  Everything else: 2 min
 const _cache = new Map<string, { data: unknown; expires: number }>();
 function cached<T>(key: string, ttlMs: number, fn: () => Promise<T>): Promise<T> {
   const hit = _cache.get(key);
@@ -30,91 +28,84 @@ function cached<T>(key: string, ttlMs: number, fn: () => Promise<T>): Promise<T>
 
 export function getQuote(ticker: string) {
   return cached(`quote:${ticker}`, 60_000, async () => {
-  const yahooFinance = await yf();
-  const quote = await yahooFinance.quote(ticker);
-  return {
-    ticker: quote.symbol,
-    name: quote.longName || quote.shortName || ticker,
-    price: quote.regularMarketPrice ?? 0,
-    previousClose: quote.regularMarketPreviousClose ?? 0,
-    change: quote.regularMarketChange ?? 0,
-    changePercent: quote.regularMarketChangePercent ?? 0,
-    volume: quote.regularMarketVolume ?? 0,
-    marketCap: quote.marketCap ?? 0,
-    dayHigh: quote.regularMarketDayHigh ?? 0,
-    dayLow: quote.regularMarketDayLow ?? 0,
-    fiftyTwoWeekHigh: quote.fiftyTwoWeekHigh ?? 0,
-    fiftyTwoWeekLow: quote.fiftyTwoWeekLow ?? 0,
-    avgVolume: quote.averageDailyVolume3Month ?? 0,
-    pe: quote.trailingPE ?? null,
-    marketState: quote.marketState ?? 'CLOSED',
-  };
+    const data = await curlFetch(`https://query2.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(ticker)}?interval=1d&range=1d`);
+    const meta = data?.chart?.result?.[0]?.meta;
+    if (!meta) throw new Error(`No quote data for ${ticker}`);
+    
+    const price = meta.regularMarketPrice ?? 0;
+    const prev = meta.chartPreviousClose ?? 0;
+    const change = price - prev;
+    const changePercent = prev !== 0 ? (change / prev) * 100 : 0;
+    
+    return {
+      ticker: meta.symbol ?? ticker,
+      name: meta.longName || meta.shortName || ticker,
+      price,
+      previousClose: prev,
+      change,
+      changePercent,
+      volume: meta.regularMarketVolume ?? 0,
+      marketCap: 0,
+      dayHigh: meta.regularMarketDayHigh ?? price,
+      dayLow: meta.regularMarketDayLow ?? price,
+      fiftyTwoWeekHigh: meta.fiftyTwoWeekHigh ?? price,
+      fiftyTwoWeekLow: meta.fiftyTwoWeekLow ?? price,
+      avgVolume: 0,
+      pe: null,
+      marketState: 'REGULAR',
+    };
   });
 }
 
 export function getHistory(ticker: string, period: string = '1mo', interval: string = '1d') {
   return cached(`history:${ticker}:${period}:${interval}`, 5 * 60_000, async () => {
-  const yahooFinance = await yf();
-  // 5d is a range value, not a chart interval — exclude it
-  const validIntervals = ['1m','2m','5m','15m','30m','60m','90m','1h','1d','1wk','1mo','3mo'];
-  const normalizedInterval = String(interval || '1d').trim().toLowerCase();
-  const resolvedInterval = normalizedInterval === '10m' ? '15m' : normalizedInterval;
-  const safeInterval = validIntervals.includes(resolvedInterval) ? resolvedInterval : '1d';
+    // 5d is a range value, not a chart interval — exclude it
+    const validIntervals = ['1m','2m','5m','15m','30m','60m','90m','1h','1d','1wk','1mo','3mo'];
+    const normalizedInterval = String(interval || '1d').trim().toLowerCase();
+    const resolvedInterval = normalizedInterval === '10m' ? '15m' : normalizedInterval;
+    const safeInterval = validIntervals.includes(resolvedInterval) ? resolvedInterval : '1d';
 
-  const periodMap: Record<string, number> = {
-    '1d':  1, '2d':  2, '5d':  5,
-    '1mo': 30, '3mo': 90, '6mo': 180,
-    '1y':  365, '2y': 730,
-  };
-  const daysBack = periodMap[period] ?? 30;
-  // chart() requires period1 as YYYY-MM-DD string, not a Date object
-  const period1 = new Date(Date.now() - daysBack * 86400000)
-    .toISOString().split('T')[0];
-
-  const result = await yahooFinance.chart(ticker, {
-    period1,
-    interval: safeInterval as any,
-  });
-
-  return ((result as any).quotes ?? []).map((d: any) => ({
-    date: new Date(d.date * 1000).toISOString(),
-    open: d.open ?? 0,
-    high: d.high ?? 0,
-    low: d.low ?? 0,
-    close: d.close ?? 0,
-    volume: d.volume ?? 0,
-  }));
+    const data = await curlFetch(`https://query2.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(ticker)}?interval=${safeInterval}&range=${period}`);
+    const result = data?.chart?.result?.[0];
+    if (!result || !result.timestamp) return [];
+    
+    const quote = result.indicators?.quote?.[0] ?? {};
+    return result.timestamp.map((t: number, i: number) => ({
+      date: new Date(t * 1000).toISOString(),
+      open: quote.open?.[i] ?? 0,
+      high: quote.high?.[i] ?? 0,
+      low: quote.low?.[i] ?? 0,
+      close: quote.close?.[i] ?? 0,
+      volume: quote.volume?.[i] ?? 0,
+    })).filter((d: any) => d.close > 0);
   });
 }
 
 export async function searchTickers(query: string) {
-  const yahooFinance = await yf();
-  const result = await yahooFinance.search(query);
-  return (result.quotes || [])
-    .filter((q: Record<string, unknown>) => q.isYahooFinance && q.quoteType === 'EQUITY')
-    .slice(0, 10)
-    .map((q: Record<string, unknown>) => ({
-      ticker: q.symbol as string,
-      name: (q.longname || q.shortname || q.symbol) as string,
-      exchange: q.exchange as string,
-      type: q.quoteType as string,
+  const data = await curlFetch(`https://query2.finance.yahoo.com/v1/finance/search?q=${encodeURIComponent(query)}&quotesCount=10&newsCount=0`);
+  return (data?.quotes || [])
+    .filter((q: any) => q.isYahooFinance && q.quoteType === 'EQUITY')
+    .map((q: any) => ({
+      ticker: q.symbol,
+      name: q.longname || q.shortname || q.symbol,
+      exchange: q.exchange,
+      type: q.quoteType,
     }));
 }
 
 export function getIndices() {
   return cached('indices', 60_000, async () => {
-    const yahooFinance = await yf();
     const symbols = ['^GSPC', '^IXIC', '^DJI', '^VIX'];
-    const results = await Promise.allSettled(symbols.map(s => yahooFinance.quote(s)));
+    const results = await Promise.allSettled(symbols.map(s => getQuote(s)));
     return results.map((r, i) => {
       if (r.status === 'fulfilled') {
         const q = r.value;
         return {
-          symbol: q.symbol,
-          name: q.longName || q.shortName || symbols[i],
-          price: q.regularMarketPrice ?? 0,
-          change: q.regularMarketChange ?? 0,
-          changePercent: q.regularMarketChangePercent ?? 0,
+          symbol: q.ticker,
+          name: q.name,
+          price: q.price,
+          change: q.change,
+          changePercent: q.changePercent,
         };
       }
       return { symbol: symbols[i], name: symbols[i], price: 0, change: 0, changePercent: 0 };
@@ -124,28 +115,19 @@ export function getIndices() {
 
 export function getNews(ticker: string) {
   return cached(`news:${ticker}`, 2 * 60_000, async () => {
-    const yahooFinance = await yf();
-    const result = await yahooFinance.search(ticker, { newsCount: 8, quotesCount: 0 });
-    return (result.news || []).map((n: Record<string, unknown>) => ({
-      title: n.title as string,
-      publisher: n.publisher as string,
-      link: n.link as string,
+    const data = await curlFetch(`https://query2.finance.yahoo.com/v1/finance/search?q=${encodeURIComponent(ticker)}&quotesCount=0&newsCount=8`);
+    return (data?.news || []).map((n: any) => ({
+      title: n.title,
+      publisher: n.publisher,
+      link: n.link,
       publishedAt: n.providerPublishTime
-        ? new Date((n.providerPublishTime as number) * 1000).toISOString()
+        ? new Date(n.providerPublishTime * 1000).toISOString()
         : new Date().toISOString(),
-      thumbnail: (n.thumbnail as { resolutions?: { url: string }[] } | undefined)?.resolutions?.[0]?.url ?? null,
+      thumbnail: n.thumbnail?.resolutions?.[0]?.url ?? null,
     }));
   });
 }
 
 export async function getQuoteSummary(ticker: string) {
-  try {
-    const yahooFinance = await yf();
-    const result = await yahooFinance.quoteSummary(ticker, {
-      modules: ['summaryDetail', 'defaultKeyStatistics', 'financialData'],
-    });
-    return result;
-  } catch {
-    return null;
-  }
+  return null;
 }

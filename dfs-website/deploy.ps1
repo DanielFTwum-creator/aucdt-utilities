@@ -68,12 +68,6 @@ $COMMIT = (git rev-parse --short HEAD 2>$null).Trim()
 $BRANCH = (git rev-parse --abbrev-ref HEAD 2>$null).Trim()
 Log -Level 'INFO' -Msg "Commit : $COMMIT on $BRANCH"
 
-try {
-    git push origin $BRANCH 2>&1 | Out-Null
-    Log -Level 'INFO' -Msg "Pushed $BRANCH to GitHub" -Color DarkGray
-} catch {
-    Log -Level 'WARN' -Msg 'git push failed (non-fatal) — server will clone existing HEAD' -Color Yellow
-}
 
 # Step 3: Server-side build
 Log -Level 'INFO' -Msg 'Step 3: Server-side build (git clone + pnpm build)' -Color Yellow

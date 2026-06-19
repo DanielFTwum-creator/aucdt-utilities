@@ -1,4 +1,4 @@
-import { TrendingUp, Star, BarChart2, Activity, Bell, Brain, Newspaper, Search, ShieldCheck, Lock } from 'lucide-react';
+import { TrendingUp, Star, BarChart2, Activity, Bell, Brain, Newspaper, Search, ShieldCheck, Lock, BookOpen } from 'lucide-react';
 import type { View, User } from '../../types';
 
 interface SidebarProps {
@@ -16,6 +16,7 @@ const NAV_ITEMS: { view: View; label: string; icon: React.ReactNode; premiumOnly
   { view: 'ai', label: 'AI Signals', icon: <Brain size={15} /> },
   { view: 'news', label: 'News', icon: <Newspaper size={15} /> },
   { view: 'screener', label: 'Screener', icon: <Search size={15} />, premiumOnly: true },
+  { view: 'guide', label: 'User Guide', icon: <BookOpen size={15} /> },
 ];
 
 export default function Sidebar({ activeView, onViewChange, user, onLoginClick }: SidebarProps) {

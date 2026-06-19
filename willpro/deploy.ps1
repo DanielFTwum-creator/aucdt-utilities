@@ -41,7 +41,6 @@ Log "INFO" "Step 2: Verifying git state..." Yellow
 $commit = (git rev-parse --short HEAD 2>$null).Trim()
 $branch = (git rev-parse --abbrev-ref HEAD 2>$null).Trim()
 Log "INFO" "Commit : $commit on $branch"
-try { git push origin $branch 2>&1 | Out-Null } catch { Log "WARN" "git push failed (non-fatal)" Yellow }
 
 if ($Build) {
     Log "INFO" "Step 3: Server-side build (git clone + pnpm build)..." Yellow

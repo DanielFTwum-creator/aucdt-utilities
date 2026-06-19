@@ -62,12 +62,6 @@ Log "INFO" "Step 2: Verifying git state..." Yellow
 $commit = (git rev-parse --short HEAD 2>$null).Trim()
 $branch = (git rev-parse --abbrev-ref HEAD 2>$null).Trim()
 Log "INFO" "Commit : $commit on $branch"
-try {
-    git push origin $branch 2>&1 | Out-Null
-    Log "INFO" "Pushed $branch to GitHub" -Color DarkGray
-} catch {
-    Log "WARN" "git push failed (non-fatal) - server will clone existing HEAD" Yellow
-}
 
 # Step 3: Build or copy
 if ($Build) {

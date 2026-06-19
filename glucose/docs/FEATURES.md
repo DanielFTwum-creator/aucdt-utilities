@@ -239,10 +239,12 @@ const handleDelete = async (id: string) => {
 As a patient, I want to see my glucose averages at a glance to understand my control.
 
 **Implementation:**
-- 3 stat cards displayed below header:
-  - **Average Fasting:** mean of all fasting readings (current month or selected year)
-  - **Average Post-Meal:** mean of post-lunch and post-dinner readings
-  - **Total Readings:** count of all readings in dataset
+- 5 stat cards displayed below the patient header in a single row:
+  - **Average Fasting:** mean of all fasting readings
+  - **Avg Post-Meal:** mean of post-lunch and post-dinner readings
+  - **Highest Reading:** maximum glucose value recorded in the period
+  - **Overall Average:** mean of all readings in the period
+  - **Total Readings:** count of all readings in the period
 
 **Calculation Logic:**
 - Filtered by current viewMode (month vs year)
@@ -263,27 +265,30 @@ const avgFasting = filteredRows.length > 0
 
 ---
 
-### Month/Year View Toggle
+### Period Selection Toggle
 
 **User Story:**  
-As a patient, I want to view my glucose data for a specific month OR across a whole year.
+As a patient, I want to filter my glucose data for a specific month OR view all historical data at once.
 
 **Implementation:**
-- Button group: "MONTH | YEAR"
-- **Month mode:** Shows all readings + stats for current month (default)
-- **Year mode:** Shows readings + stats across 12-month rolling window
-- Year selector dropdown (defaults to current year)
-- Data grid and charts update immediately
+- **Period selector:** Native browser `<input type="month">` dropdown
+- **All Time button:** Quickly clears the filter to show the entire dataset
+- Defaults to the current calendar month on load
+- Allows selection of empty months to facilitate adding new readings
+- Grid, AGP chart, and stats recalculate per filter
 
 **State:**
 ```typescript
-const [viewMode, setViewMode] = useState<'month' | 'year'>('month');
-const [selectedMonth, setSelectedMonth] = useState(currentMonth);
-const [selectedYear, setSelectedYear] = useState(currentYear);
+const [viewMode, setViewMode] = useState<'month' | 'year' | 'all'>('month');
+const [selectedMonth, setSelectedMonth] = useState<string>(() => new Date().toISOString().substring(0, 7));
 
-const filteredRows = viewMode === 'month'
-  ? rows.filter(r => r.date.startsWith(`${selectedYear}-${String(selectedMonth).padStart(2, '0')}`))
-  : rows.filter(r => r.date.startsWith(String(selectedYear)));
+const filteredRows = useMemo(() => {
+  if (viewMode === 'month') {
+    if (!selectedMonth) return [];
+    return rows.filter(r => getMonthKey(r.date) === selectedMonth);
+  }
+  return [...rows];
+}, [rows, selectedMonth, viewMode]);
 ```
 
 **UX:**

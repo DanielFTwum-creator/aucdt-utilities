@@ -1,6 +1,6 @@
 export type Tier = 'free' | 'premium';
 export type Theme = 'light' | 'dark';
-export type View = 'watchlist' | 'portfolio' | 'paper' | 'alerts' | 'ai' | 'news' | 'screener' | 'admin';
+export type View = 'watchlist' | 'portfolio' | 'paper' | 'alerts' | 'ai' | 'news' | 'screener' | 'admin' | 'guide';
 
 export interface User {
   id: number;

@@ -93,7 +93,14 @@ export const batchUpsertReadings = async (rows: ReadingRow[]): Promise<void> => 
     body: JSON.stringify({ readings: rows }),
   });
   if (!res.ok) {
-    throw new Error('Failed to batch upsert readings');
+    let errMsg = 'Failed to batch upsert readings';
+    try {
+      const data = await res.json();
+      if (data && data.error) {
+        errMsg = `Batch upsert failed: ${data.error}`;
+      }
+    } catch (e) {}
+    throw new Error(errMsg);
   }
 };
 

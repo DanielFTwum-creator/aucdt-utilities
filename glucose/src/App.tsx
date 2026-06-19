@@ -113,14 +113,18 @@ function AppContent() {
 
   const [rows, setRows] = useState<Row[]>([]);
   const [patientName, setPatientName] = useState('');
+  const [patientPhone, setPatientPhone] = useState('');
+  const [patientCountry, setPatientCountry] = useState('');
+  const [showPatientDetails, setShowPatientDetails] = useState(false);
   const [doctorName, setDoctorName] = useState('Dr Yacoba Atiase');
   const [doctorPhone, setDoctorPhone] = useState('');
   const [doctorCountry, setDoctorCountry] = useState('');
-  const [selectedMonth, setSelectedMonth] = useState<string>('');
+  const [showDoctorDetails, setShowDoctorDetails] = useState(false);
+  const [selectedMonth, setSelectedMonth] = useState<string>(() => new Date().toISOString().substring(0, 7));
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [viewMode, setViewMode] = useState<'month' | 'year' | 'all'>('month');
-  const [selectedYear, setSelectedYear] = useState<string>('');
+  const [selectedYear, setSelectedYear] = useState<string>(() => new Date().toISOString().substring(0, 4));
   const [showTrendlines, setShowTrendlines] = useState(true);
 
   // UI preferences
@@ -138,7 +142,6 @@ function AppContent() {
   const [uploadStatus, setUploadStatus] = useState('');
   const [uploadProgress, setUploadProgress] = useState(0);
   const [uploadError, setUploadError] = useState('');
-  const [patterns, setPatterns] = useState<{ type: string; description: string; severity: string }[]>([]);
   const importInputRef = useRef<HTMLInputElement>(null);
   const importCSVInputRef = useRef<HTMLInputElement>(null);
 
@@ -387,28 +390,6 @@ function AppContent() {
     });
   }, [isAdmin]);
 
-  // Load clinical patterns from backend when rows or admin mode changes
-  useEffect(() => {
-    if (!isAdmin) {
-      setPatterns([]);
-      return;
-    }
-    const seg = window.location.pathname.split('/').filter(Boolean)[0];
-    const base = seg && seg !== 'api' ? `/${seg}` : '';
-    fetch(`${base}/api/patterns`)
-      .then(res => {
-        if (!res.ok) throw new Error('Failed to fetch patterns');
-        return res.json();
-      })
-      .then(data => {
-        if (Array.isArray(data)) {
-          setPatterns(data);
-        }
-      })
-      .catch(err => {
-        console.error('[APP] Failed to load patterns:', err);
-      });
-  }, [rows, isAdmin]);
 
   // Save profile changes
   useEffect(() => {
@@ -438,21 +419,6 @@ function AppContent() {
     return Array.from(years).sort().reverse();
   }, [rows]);
 
-  useEffect(() => {
-    if (viewMode === 'month') {
-      const latestMonth = monthOptions[monthOptions.length - 1];
-      if (latestMonth && (!selectedMonth || !monthOptions.includes(selectedMonth))) {
-        console.log('[APP] Auto-selecting latest month:', latestMonth);
-        setSelectedMonth(latestMonth);
-      }
-    } else {
-      const latestYear = yearOptions[0];
-      if (latestYear && (!selectedYear || !yearOptions.includes(selectedYear))) {
-        console.log('[APP] Auto-selecting latest year:', latestYear);
-        setSelectedYear(latestYear);
-      }
-    }
-  }, [monthOptions, yearOptions, viewMode]);
 
   const filteredRows = useMemo(() => {
     if (viewMode === 'month') {
@@ -543,7 +509,7 @@ function AppContent() {
       version: 1,
       exportedAt: new Date().toISOString(),
       readings: rows,
-      profile: { patientName, doctorName, doctorPhone, doctorCountry },
+      profile: { patientName, patientPhone, patientCountry, doctorName, doctorPhone, doctorCountry },
     };
     const json = JSON.stringify(exportData, null, 2);
     const blob = new Blob([json], { type: 'application/json' });
@@ -571,6 +537,8 @@ function AppContent() {
       await batchUpsertReadings(data.readings);
       if (data.profile) {
         setPatientName(data.profile.patientName || '');
+        setPatientPhone(data.profile.patientPhone || '');
+        setPatientCountry(data.profile.patientCountry || '');
         setDoctorName(data.profile.doctorName || '');
         setDoctorPhone(data.profile.doctorPhone || '');
         setDoctorCountry(data.profile.doctorCountry || '');
@@ -645,6 +613,38 @@ function AppContent() {
       return `Year ${selectedYear}`;
     }
   }, [selectedMonth, selectedYear, viewMode]);
+
+  // Generate clinical patterns locally based on filtered rows
+  const patterns = useMemo(() => {
+    const computedPatterns = [];
+    const highFasting = filteredRows.filter(r => r.fasting && parseFloat(r.fasting) > 7.0);
+    if (highFasting.length > 3) {
+      computedPatterns.push({
+        type: "Dawn Phenomenon",
+        description: `Elevated fasting glucose detected (${highFasting.length} times). Consider reviewing morning insulin or overnight carb intake.`,
+        severity: "high"
+      });
+    }
+
+    const highPreLunch = filteredRows.filter(r => r.pre_lunch && parseFloat(r.pre_lunch) > 7.0);
+    if (highPreLunch.length > 3) {
+      computedPatterns.push({
+        type: "Pre-Lunch Hyperglycemia",
+        description: `Elevated pre-lunch glucose detected (${highPreLunch.length} times). Consider adjusting breakfast insulin or carbs.`,
+        severity: "high"
+      });
+    }
+
+    const highPostLunch = filteredRows.filter(r => r.post_lunch && parseFloat(r.post_lunch) > 8.9);
+    if (highPostLunch.length > 3) {
+      computedPatterns.push({
+        type: "Post-Prandial Spike (Lunch)",
+        description: `Elevated 2hr post-lunch glucose detected (${highPostLunch.length} times). Consider post-meal walks or portion sizes.`,
+        severity: "medium"
+      });
+    }
+    return computedPatterns;
+  }, [filteredRows]);
 
   // Calculations for summary (filtered by current month)
   const fastVals = filteredRows.map(r => r.fasting);
@@ -819,89 +819,59 @@ function AppContent() {
       <div className="w-full max-w-7xl flex flex-col flex-grow">
       
       {/* Header Section */}
-      <header className="flex flex-col md:flex-row items-start md:items-center justify-between mb-8 gap-4 print:hidden">
+      <header className="flex flex-col md:flex-row items-start md:items-center justify-between mb-4 gap-4 print:hidden">
         <div className="flex items-center gap-5">
           <div className="flex flex-col items-center gap-1">
             <img src="./rophe-logo.jpg" alt="ROPHE Logo" className="h-12 object-contain" />
-            <a href="https://wa.me/233201529933" target="_blank" rel="noopener noreferrer" className={`text-xs font-semibold hover:underline ${isHighContrast ? 'text-blue-400 hover:text-blue-300' : 'text-[#2E75B6] hover:text-[#1F3864]'}`}>
+            <a href="https://wa.me/233201529933" target="_blank" rel="noopener noreferrer" className={`text-[10px] font-bold hover:underline tracking-widest ${isHighContrast ? 'text-blue-400 hover:text-blue-300' : 'text-[#2E75B6] hover:text-[#1F3864]'}`}>
               +233 20 152 9933
             </a>
           </div>
           <div>
-            <h1 className={`text-lg font-bold leading-tight ${isHighContrast ? 'text-white' : 'text-slate-900'}`}>Self Monitoring of Blood Glucose</h1>
-            <p className={`text-[11px] uppercase tracking-[0.15em] font-bold mt-0.5 ${isHighContrast ? 'text-blue-300' : 'text-[#2E75B6]'}`}>Specialist Care Portal</p>
+            <h1 className={`text-xl font-bold leading-tight ${isHighContrast ? 'text-white' : 'text-slate-900'}`}>Self Monitoring of Blood Glucose</h1>
+            <p className={`text-xs uppercase tracking-[0.2em] font-bold mt-1 ${isHighContrast ? 'text-blue-300' : 'text-[#2E75B6]'}`}>Specialist Care Portal</p>
           </div>
         </div>
-        <div className="flex flex-wrap items-center gap-3">
-          
-          <div className={`border-2 rounded-lg flex items-center shadow-sm h-10 ${isHighContrast ? 'bg-gray-900 border-gray-600' : 'bg-white border-[#2E75B6]'}`}>
-            <span className={`text-[11px] font-bold px-3 tracking-wider border-r ${isHighContrast ? 'border-gray-600 text-gray-400' : 'border-[#2E75B6] text-[#2E75B6]'}`}>UNIT</span>
+        
+        {/* Global Utilities */}
+        <div className="flex items-center gap-2">
+          <div className={`border-2 rounded-lg flex items-center shadow-sm h-9 ${isHighContrast ? 'bg-gray-900 border-gray-600' : 'bg-white border-[#2E75B6]'}`}>
+            <span className={`text-[10px] font-bold px-2 tracking-wider border-r ${isHighContrast ? 'border-gray-600 text-gray-400' : 'border-[#2E75B6] text-[#2E75B6]'}`}>UNIT</span>
             <button 
               onClick={() => setUnit('mmol/L')}
-              className={`text-[12px] font-bold px-4 py-1.5 transition-colors ${unit === 'mmol/L' ? (isHighContrast ? 'bg-white text-black' : 'bg-[#2E75B6] text-white') : 'text-slate-500 hover:text-slate-700'}`}
-              aria-pressed={unit === 'mmol/L'}
+              className={`text-[11px] font-bold px-3 py-1 transition-colors h-full ${unit === 'mmol/L' ? (isHighContrast ? 'bg-white text-black' : 'bg-[#2E75B6] text-white') : 'text-slate-500 hover:text-slate-700'}`}
             >
               mmol/L
             </button>
             <button 
               onClick={() => setUnit('mg/dL')}
-              className={`text-[12px] font-bold px-4 py-1.5 transition-colors ${unit === 'mg/dL' ? (isHighContrast ? 'bg-white text-black' : 'bg-[#2E75B6] text-white') : 'text-slate-500 hover:text-slate-700'}`}
-              aria-pressed={unit === 'mg/dL'}
+              className={`text-[11px] font-bold px-3 py-1 transition-colors h-full ${unit === 'mg/dL' ? (isHighContrast ? 'bg-white text-black' : 'bg-[#2E75B6] text-white') : 'text-slate-500 hover:text-slate-700'}`}
             >
               mg/dL
             </button>
           </div>
 
-          <div className="flex items-center gap-2 border-r pr-3 border-slate-200">
-            <button 
-              onClick={() => setIsHighContrast(!isHighContrast)} 
-              className={`px-3 py-2 rounded-lg transition-colors flex items-center gap-2 min-h-[40px] text-xs font-semibold ${isHighContrast ? 'bg-gray-800 hover:bg-gray-700 text-yellow-300' : 'text-slate-600 hover:text-[#1F3864] hover:bg-slate-200'}`} 
-            >
-              <Eye className="w-4 h-4" /> <span className="hidden xl:inline">Contrast</span>
+          <div className="flex items-center gap-1 border-l pl-2 ml-2 border-slate-200">
+            <button onClick={() => setIsHighContrast(!isHighContrast)} className={`p-2 rounded-lg transition-colors ${isHighContrast ? 'bg-gray-800 hover:bg-gray-700 text-yellow-300' : 'text-slate-600 hover:bg-slate-100'}`} title="Contrast">
+              <Eye className="w-4 h-4" />
             </button>
-
-            <button
-              onClick={() => setIsHelpOpen(true)}
-              className={`px-3 py-2 rounded-lg transition-colors flex items-center gap-2 min-h-[40px] text-xs font-semibold ${isHighContrast ? 'text-gray-400 hover:text-white hover:bg-gray-800' : 'text-slate-600 hover:text-[#1F3864] hover:bg-slate-200'}`}
-            >
-              <HelpCircle className="w-4 h-4" /> <span className="hidden xl:inline">Help</span>
+            <button onClick={() => setIsHelpOpen(true)} className={`p-2 rounded-lg transition-colors ${isHighContrast ? 'text-gray-400 hover:text-white hover:bg-gray-800' : 'text-slate-600 hover:bg-slate-100'}`} title="Help">
+              <HelpCircle className="w-4 h-4" />
             </button>
-
-            <button onClick={() => { adminLogout(); logout(); }} className={`px-3 py-2 rounded-lg transition-colors flex items-center gap-2 min-h-[40px] text-xs font-semibold ${isHighContrast ? 'text-red-400 hover:text-red-300 hover:bg-gray-800' : 'text-red-600 hover:text-red-700 hover:bg-red-50'}`}>
-              <LogOut className="w-4 h-4" /> <span className="hidden xl:inline">Sign Out</span>
+            <button onClick={() => { adminLogout(); logout(); }} className={`p-2 rounded-lg transition-colors ${isHighContrast ? 'text-red-400 hover:bg-gray-800' : 'text-red-600 hover:bg-red-50'}`} title="Sign Out">
+              <LogOut className="w-4 h-4" />
             </button>
           </div>
+        </div>
+      </header>
 
-          <div className="flex items-center gap-2 border-r pr-3 border-slate-200">
-            <button
-              onClick={handleExportData}
-              className={`px-3 py-2 rounded-lg transition-colors flex items-center gap-2 min-h-[40px] text-xs font-semibold ${isHighContrast ? 'text-gray-400 hover:text-white hover:bg-gray-800' : 'text-slate-600 hover:text-[#1F3864] hover:bg-slate-200'}`}
-            >
-              <Download className="w-4 h-4" /> <span className="hidden xl:inline">Export JSON</span>
-            </button>
-            <label
-              className={`px-3 py-2 rounded-lg transition-colors flex items-center gap-2 cursor-pointer min-h-[40px] text-xs font-semibold ${isHighContrast ? 'text-gray-400 hover:text-white hover:bg-gray-800' : 'text-slate-600 hover:text-[#1F3864] hover:bg-slate-200'}`}
-            >
-              <input type="file" accept=".json" className="sr-only" ref={importInputRef} onChange={handleImportData} />
-              <Upload className="w-4 h-4" /> <span className="hidden xl:inline">Import JSON</span>
-            </label>
-            <button
-              onClick={handleExportCSV}
-              className={`px-3 py-2 rounded-lg transition-colors flex items-center gap-2 min-h-[40px] text-xs font-semibold ${isHighContrast ? 'text-gray-400 hover:text-white hover:bg-gray-800' : 'text-emerald-600 hover:bg-emerald-50'}`}
-            >
-              <FileText className="w-4 h-4" /> <span className="hidden xl:inline">Export CSV</span>
-            </button>
-            <label
-              className={`px-3 py-2 rounded-lg transition-colors flex items-center gap-2 cursor-pointer min-h-[40px] text-xs font-semibold ${isHighContrast ? 'text-gray-400 hover:text-white hover:bg-gray-800' : 'text-emerald-600 hover:bg-emerald-50'}`}
-            >
-              <input type="file" accept=".csv" className="sr-only" ref={importCSVInputRef} onChange={handleImportCSV} />
-              <Upload className="w-4 h-4" /> <span className="hidden xl:inline">Import CSV</span>
-            </label>
-          </div>
-
-          <div className={`border rounded-lg flex items-center shadow-sm h-10 ${isHighContrast ? 'bg-gray-900 border-gray-700' : 'bg-white border-slate-200'} overflow-hidden`}>
+      {/* Action Bar (Filters, Actions, Printing) */}
+      <div className={`flex flex-col lg:flex-row items-center justify-between gap-4 mb-6 p-3 rounded-xl border shadow-sm print:hidden ${isHighContrast ? 'bg-gray-900 border-gray-700' : 'bg-slate-50 border-slate-200'}`}>
+        
+        {/* Left: Period Filter & Export */}
+        <div className="flex flex-wrap items-center gap-3">
+          <div className={`border rounded-lg flex items-center shadow-sm h-10 ${isHighContrast ? 'bg-black border-gray-600' : 'bg-white border-slate-200'} overflow-hidden`}>
             <span className="text-[11px] font-bold text-slate-400 px-3 tracking-wider border-r border-slate-200">PERIOD</span>
-            
             <input 
               type="month" 
               value={selectedMonth || ''}
@@ -911,7 +881,6 @@ function AppContent() {
               }}
               className={`text-sm px-3 py-1 bg-transparent border-none outline-none focus:ring-0 font-bold cursor-pointer ${isHighContrast ? 'text-white' : 'text-[#1F3864]'} [color-scheme:light]`}
             />
-            
             <button 
               onClick={() => { setSelectedMonth(''); setViewMode('all'); }} 
               className={`px-3 py-1 h-full text-xs font-bold uppercase border-l ${isHighContrast ? 'border-gray-700' : 'border-slate-200'} transition-colors ${viewMode === 'all' ? (isHighContrast ? 'bg-blue-900 text-white' : 'bg-blue-100 text-[#1F3864]') : 'text-slate-500 hover:text-slate-700'}`}
@@ -919,32 +888,93 @@ function AppContent() {
               All Time
             </button>
           </div>
-          
+
+          <div className="flex items-center gap-1">
+            <button onClick={handleExportData} className={`px-3 h-10 rounded-lg text-[11px] font-bold uppercase tracking-widest flex items-center gap-2 transition-colors ${isHighContrast ? 'hover:bg-gray-800 text-gray-300' : 'hover:bg-slate-200 text-slate-600'}`} title="Export JSON"><Download className="w-4 h-4" /> <span className="hidden xl:inline">JSON</span></button>
+            <label className={`px-3 h-10 rounded-lg text-[11px] font-bold uppercase tracking-widest flex items-center gap-2 transition-colors cursor-pointer ${isHighContrast ? 'hover:bg-gray-800 text-gray-300' : 'hover:bg-slate-200 text-slate-600'}`} title="Import JSON"><input type="file" accept=".json" className="sr-only" ref={importInputRef} onChange={handleImportData} /><Upload className="w-4 h-4" /> <span className="hidden xl:inline">JSON</span></label>
+            <button onClick={handleExportCSV} className={`px-3 h-10 rounded-lg text-[11px] font-bold uppercase tracking-widest flex items-center gap-2 transition-colors ${isHighContrast ? 'hover:bg-gray-800 text-emerald-400' : 'hover:bg-emerald-100 text-emerald-700'}`} title="Export CSV"><FileText className="w-4 h-4" /> <span className="hidden xl:inline">CSV</span></button>
+            <label className={`px-3 h-10 rounded-lg text-[11px] font-bold uppercase tracking-widest flex items-center gap-2 transition-colors cursor-pointer ${isHighContrast ? 'hover:bg-gray-800 text-emerald-400' : 'hover:bg-emerald-100 text-emerald-700'}`} title="Import CSV"><input type="file" accept=".csv" className="sr-only" ref={importCSVInputRef} onChange={handleImportCSV} /><Upload className="w-4 h-4" /> <span className="hidden xl:inline">CSV</span></label>
+          </div>
+        </div>
+
+        {/* Right: Primary Actions */}
+        <div className="flex flex-wrap items-center gap-3">
           <button 
             onClick={() => window.print()}
-            className={`shrink-0 px-4 h-10 rounded-lg text-sm font-semibold transition-colors flex items-center gap-2 shadow-sm focus:ring-4 focus:ring-blue-100 ${isHighContrast ? 'bg-white text-black hover:bg-gray-200' : 'bg-[#2E75B6] text-white hover:bg-[#1F3864]'}`}
+            className={`shrink-0 px-4 h-10 rounded-lg text-[11px] font-bold uppercase tracking-widest transition-colors flex items-center gap-2 shadow-sm ${isHighContrast ? 'bg-white text-black hover:bg-gray-200' : 'bg-white border border-slate-200 text-slate-700 hover:bg-slate-100'}`}
           >
             <Printer className="w-4 h-4" /> <span className="hidden sm:inline">Print Report</span>
           </button>
+          
+          <div className="w-px h-6 bg-slate-300 mx-1 hidden sm:block"></div>
+
+          <button 
+            onClick={() => setIsModalOpen(true)}
+            className={`h-10 rounded-lg flex items-center justify-center px-4 md:px-5 transition-all duration-200 cursor-pointer shadow-sm text-[12px] font-bold uppercase tracking-widest
+              ${isHighContrast ? 'bg-blue-900 text-white hover:bg-blue-800' : 'bg-[#1F3864] text-white hover:bg-[#2E75B6]'}`}
+          >
+             <Plus className="w-4 h-4 mr-2" strokeWidth={2.5} /> Manual Entry
+          </button>
+          <label
+            data-testid="scan-button"
+            className={`h-10 rounded-lg flex items-center justify-center px-4 md:px-5 transition-all duration-200 cursor-pointer shadow-sm text-[12px] font-bold uppercase tracking-widest border
+              ${isHighContrast ? 'bg-black border-yellow-600 text-yellow-500 hover:bg-gray-900' : 'bg-white border-[#D4A373] text-[#D4A373] hover:bg-orange-50'} ${isUploading ? 'opacity-50 pointer-events-none' : ''}`}
+          >
+             <input type="file" accept="image/*" multiple className="sr-only" onChange={handleImageUpload} />
+             {isUploading ? <Loader2 className="w-4 h-4 mr-2 animate-spin text-[#D4A373]" /> : <Camera className="w-4 h-4 mr-2" strokeWidth={2.5} />}
+             {isUploading ? uploadStatus : 'Scan Photo'}
+          </label>
         </div>
-      </header>
+      </div>
 
       {/* User Meta Strip */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6 print:mb-4">
-        <div className={`border rounded-xl p-4 flex items-center gap-4 shadow-sm transition-shadow focus-within:ring-2 focus-within:ring-[#D6E4F0] ${isHighContrast ? 'bg-black border-gray-600' : 'bg-white border-slate-200'}`}>
-          <div className="w-11 h-11 rounded-full bg-[#D6E4F0] flex items-center justify-center text-[#1F3864] font-bold text-sm uppercase shrink-0 tracking-tight">{patientName ? getInitials(patientName) : 'PT'}</div>
-          <div className="flex-1">
-            <p className={`text-[10px] font-bold uppercase tracking-widest ${isHighContrast ? 'text-gray-400' : 'text-slate-400'}`}>Patient</p>
-            <input
-              value={patientName}
-              readOnly
-              className={`font-semibold text-[15px] outline-none w-full bg-transparent cursor-default ${isHighContrast ? 'text-white placeholder-gray-600' : 'text-slate-900 placeholder-slate-300'}`}
-              placeholder="Enter patient name..."
-            />
+        <div className={`border rounded-xl p-4 flex flex-col shadow-sm transition-shadow focus-within:ring-2 focus-within:ring-[#D6E4F0] ${isHighContrast ? 'bg-black border-gray-600' : 'bg-white border-slate-200'}`}>
+          <div className="flex items-center gap-4">
+            <div className="w-11 h-11 rounded-full bg-[#D6E4F0] flex items-center justify-center text-[#1F3864] font-bold text-sm uppercase shrink-0 tracking-tight">{patientName ? getInitials(patientName) : 'PT'}</div>
+            <div className="flex-1">
+              <p className={`text-[10px] font-bold uppercase tracking-widest ${isHighContrast ? 'text-gray-400' : 'text-slate-400'}`}>Patient</p>
+              <input
+                value={patientName}
+                onChange={e => setPatientName(e.target.value)}
+                className={`font-semibold text-[15px] outline-none w-full bg-transparent ${isHighContrast ? 'text-white placeholder-gray-600' : 'text-slate-900 placeholder-slate-300'}`}
+                placeholder="Enter patient name..."
+              />
+            </div>
           </div>
+          
+          <button 
+            onClick={() => setShowPatientDetails(!showPatientDetails)}
+            className={`mt-3 flex items-center justify-center w-full py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-widest transition-colors ${isHighContrast ? 'bg-gray-800 text-gray-400 hover:text-white' : 'bg-slate-50 text-slate-500 hover:bg-slate-100 hover:text-slate-700'}`}
+          >
+            {showPatientDetails ? '▲ Hide Details' : '▼ Show Country & Phone'}
+          </button>
+
+          {showPatientDetails && (
+            <div className={`flex gap-3 pt-3 mt-2 border-t ${isHighContrast ? 'border-gray-800' : 'border-slate-100'}`}>
+              <div className="flex-1">
+                <p className={`text-[10px] font-bold uppercase tracking-widest mb-1 ${isHighContrast ? 'text-gray-400' : 'text-slate-400'}`}>Country</p>
+                <input
+                  value={patientCountry}
+                  onChange={e => setPatientCountry(e.target.value)}
+                  className={`font-semibold text-[13px] outline-none w-full bg-transparent ${isHighContrast ? 'text-white placeholder-gray-600' : 'text-slate-700 placeholder-slate-300'}`}
+                  placeholder="e.g. GH +233"
+                />
+              </div>
+              <div className="flex-1">
+                <p className={`text-[10px] font-bold uppercase tracking-widest mb-1 ${isHighContrast ? 'text-gray-400' : 'text-slate-400'}`}>Phone</p>
+                <input
+                  value={patientPhone}
+                  onChange={e => setPatientPhone(e.target.value)}
+                  className={`font-semibold text-[13px] outline-none w-full bg-transparent ${isHighContrast ? 'text-white placeholder-gray-600' : 'text-slate-700 placeholder-slate-300'}`}
+                  placeholder="e.g. 20 152 9933"
+                />
+              </div>
+            </div>
+          )}
         </div>
         <div className={`border rounded-xl p-4 flex flex-col shadow-sm transition-shadow focus-within:ring-2 focus-within:ring-[#D6E4F0] ${isHighContrast ? 'bg-black border-gray-600' : 'bg-white border-slate-200'}`}>
-          <div className="flex items-center gap-4 mb-3">
+          <div className="flex items-center gap-4">
             <div className="w-11 h-11 rounded-full bg-indigo-50 flex items-center justify-center text-indigo-600 font-bold text-sm uppercase shrink-0 tracking-tight">{doctorName ? getInitials(doctorName) : 'DR'}</div>
             <div className="flex-1">
               <p className={`text-[10px] font-bold uppercase tracking-widest ${isHighContrast ? 'text-gray-400' : 'text-slate-400'}`}>Physician</p>
@@ -956,26 +986,36 @@ function AppContent() {
               />
             </div>
           </div>
-          <div className={`flex gap-3 pt-3 border-t ${isHighContrast ? 'border-gray-800' : 'border-slate-100'}`}>
-            <div className="flex-1">
-              <p className={`text-[10px] font-bold uppercase tracking-widest mb-1 ${isHighContrast ? 'text-gray-400' : 'text-slate-400'}`}>Country</p>
-              <input
-                value={doctorCountry}
-                onChange={e => setDoctorCountry(e.target.value)}
-                className={`font-semibold text-[13px] outline-none w-full bg-transparent ${isHighContrast ? 'text-white placeholder-gray-600' : 'text-slate-700 placeholder-slate-300'}`}
-                placeholder="e.g. GH +233"
-              />
+          
+          <button 
+            onClick={() => setShowDoctorDetails(!showDoctorDetails)}
+            className={`mt-3 flex items-center justify-center w-full py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-widest transition-colors ${isHighContrast ? 'bg-gray-800 text-gray-400 hover:text-white' : 'bg-slate-50 text-slate-500 hover:bg-slate-100 hover:text-slate-700'}`}
+          >
+            {showDoctorDetails ? '▲ Hide Details' : '▼ Show Country & Phone'}
+          </button>
+
+          {showDoctorDetails && (
+            <div className={`flex gap-3 pt-3 mt-2 border-t ${isHighContrast ? 'border-gray-800' : 'border-slate-100'}`}>
+              <div className="flex-1">
+                <p className={`text-[10px] font-bold uppercase tracking-widest mb-1 ${isHighContrast ? 'text-gray-400' : 'text-slate-400'}`}>Country</p>
+                <input
+                  value={doctorCountry}
+                  onChange={e => setDoctorCountry(e.target.value)}
+                  className={`font-semibold text-[13px] outline-none w-full bg-transparent ${isHighContrast ? 'text-white placeholder-gray-600' : 'text-slate-700 placeholder-slate-300'}`}
+                  placeholder="e.g. GH +233"
+                />
+              </div>
+              <div className="flex-1">
+                <p className={`text-[10px] font-bold uppercase tracking-widest mb-1 ${isHighContrast ? 'text-gray-400' : 'text-slate-400'}`}>Phone</p>
+                <input
+                  value={doctorPhone}
+                  onChange={e => setDoctorPhone(e.target.value)}
+                  className={`font-semibold text-[13px] outline-none w-full bg-transparent ${isHighContrast ? 'text-white placeholder-gray-600' : 'text-slate-700 placeholder-slate-300'}`}
+                  placeholder="e.g. 20 152 9933"
+                />
+              </div>
             </div>
-            <div className="flex-1">
-              <p className={`text-[10px] font-bold uppercase tracking-widest mb-1 ${isHighContrast ? 'text-gray-400' : 'text-slate-400'}`}>Phone</p>
-              <input
-                value={doctorPhone}
-                onChange={e => setDoctorPhone(e.target.value)}
-                className={`font-semibold text-[13px] outline-none w-full bg-transparent ${isHighContrast ? 'text-white placeholder-gray-600' : 'text-slate-700 placeholder-slate-300'}`}
-                placeholder="e.g. 20 152 9933"
-              />
-            </div>
-          </div>
+          )}
         </div>
       </div>
 
@@ -983,21 +1023,21 @@ function AppContent() {
       <div className="flex flex-col gap-6 flex-grow print:block">
         
         {/* Stats Row */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 print:flex print:flex-wrap">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5 print:flex print:flex-wrap">
           {/* Average Fasting */}
-          <div className={`${isHighContrast ? 'bg-black border-gray-600' : 'bg-white border-slate-200'} border rounded-2xl p-6 shadow-sm flex flex-col justify-center print:border-slate-300 print:shadow-none`}>
-            <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest mb-3">Average Fasting ({unit})</p>
+          <div className={`${isHighContrast ? 'bg-black border-gray-600' : 'bg-white border-slate-200'} border rounded-2xl p-6 shadow-sm flex flex-col justify-center print:border-slate-300 print:shadow-none`} style={{ borderLeftWidth: 4, borderLeftColor: fastingBand?.color || 'transparent' }}>
+            <p className={`text-[10px] font-bold uppercase tracking-widest mb-3 ${isHighContrast ? 'text-slate-400' : 'text-slate-500'}`}>Average Fasting ({unit})</p>
             <div className="flex items-end gap-3 mb-1">
               <div className="text-4xl font-mono font-bold tabular-nums tracking-tighter" style={{ color: fastingBand?.color || (isHighContrast ? '#ffffff' : '#0f172a') }}>{af ? af : '—'}</div>
               {fastingBand && (
                 <span className="text-[10px] px-2 py-1 rounded font-bold uppercase tracking-wider mb-1.5" style={{ backgroundColor: fastingBand.color + '1A', color: fastingBand.color }}>{fastingBand.label}</span>
               )}
             </div>
-            <p className="text-[12px] font-medium text-slate-500 mt-1">Target (&lt; {convertTarget(7.0, unit)})</p>
+            <p className={`text-[12px] font-medium mt-1 ${isHighContrast ? 'text-slate-500' : 'text-slate-500'}`}>Target (&lt; {convertTarget(7.0, unit)})</p>
           </div>
 
           {/* Average Post-Meal */}
-          <div className={`${isHighContrast ? 'bg-black border-gray-600' : 'bg-white border-slate-200'} border rounded-2xl p-6 shadow-sm flex flex-col justify-center print:border-slate-300 print:shadow-none relative overflow-hidden`}>
+          <div className={`${isHighContrast ? 'bg-black border-gray-600' : 'bg-white border-slate-200'} border rounded-2xl p-6 shadow-sm flex flex-col justify-center print:border-slate-300 print:shadow-none relative overflow-hidden`} style={{ borderLeftWidth: 4, borderLeftColor: postBand?.color || 'transparent' }}>
             <p className={`text-[10px] font-bold uppercase tracking-widest mb-3 z-10 ${isHighContrast ? 'text-slate-400' : 'text-slate-500'}`}>Avg Post-Meal ({unit})</p>
             <div className="flex items-end gap-3 mb-1 z-10">
               <div className="text-4xl font-mono font-bold tabular-nums tracking-tighter" style={{ color: postBand?.color || (isHighContrast ? '#ffffff' : '#0f172a') }}>{ap ? ap : '—'}</div>
@@ -1008,19 +1048,44 @@ function AppContent() {
             <p className={`text-[12px] font-medium mt-1 z-10 ${isHighContrast ? 'text-slate-500' : 'text-slate-500'}`}>Target (&lt; {convertTarget(8.9, unit)})</p>
           </div>
 
+          {/* Highest Reading */}
+          <div className={`${isHighContrast ? 'bg-black border-gray-600' : 'bg-white border-slate-200'} border rounded-2xl p-6 shadow-sm flex flex-col justify-center print:border-slate-300 print:shadow-none`} style={{ borderLeftWidth: 4, borderLeftColor: highestBand?.color || 'transparent' }}>
+            <p className={`text-[10px] font-bold uppercase tracking-widest mb-3 ${isHighContrast ? 'text-slate-400' : 'text-slate-500'}`}>Highest Reading ({unit})</p>
+            <div className="flex items-end gap-3 mb-1">
+              <div className="text-4xl font-mono font-bold tabular-nums tracking-tighter" style={{ color: highestBand?.color || (isHighContrast ? '#ffffff' : '#0f172a') }}>
+                {highestBase == null ? '—' : (unit === 'mg/dL' ? Math.round(highestBase * 18.0182).toString() : highestBase.toFixed(1))}
+              </div>
+              {highestBand && (
+                <span className="text-[10px] px-2 py-1 rounded font-bold uppercase tracking-wider mb-1.5" style={{ backgroundColor: highestBand.color + '1A', color: highestBand.color }}>{highestBand.label}</span>
+              )}
+            </div>
+            <p className={`text-[12px] font-medium mt-1 ${isHighContrast ? 'text-slate-500' : 'text-slate-500'}`}>Peak in the period</p>
+          </div>
+
+          {/* Overall Average */}
+          <div className={`${isHighContrast ? 'bg-black border-gray-600' : 'bg-white border-slate-200'} border rounded-2xl p-6 shadow-sm flex flex-col justify-center print:border-slate-300 print:shadow-none`} style={{ borderLeftWidth: 4, borderLeftColor: overallBand?.color || 'transparent' }}>
+            <p className={`text-[10px] font-bold uppercase tracking-widest mb-3 ${isHighContrast ? 'text-slate-400' : 'text-slate-500'}`}>Overall Average ({unit})</p>
+            <div className="flex items-end gap-3 mb-1">
+              <div className="text-4xl font-mono font-bold tabular-nums tracking-tighter" style={{ color: overallBand?.color || (isHighContrast ? '#ffffff' : '#0f172a') }}>
+                {overallBase == null ? '—' : (unit === 'mg/dL' ? Math.round(overallBase * 18.0182).toString() : overallBase.toFixed(1))}
+              </div>
+              {overallBand && (
+                <span className="text-[10px] px-2 py-1 rounded font-bold uppercase tracking-wider mb-1.5" style={{ backgroundColor: overallBand.color + '1A', color: overallBand.color }}>{overallBand.label}</span>
+              )}
+            </div>
+            <p className={`text-[12px] font-medium mt-1 ${isHighContrast ? 'text-slate-500' : 'text-slate-500'}`}>{allVals.length} readings recorded</p>
+          </div>
+
           {/* Total Readings */}
           <div className={`${isHighContrast ? 'bg-black border-gray-600' : 'bg-white border-slate-200'} border rounded-2xl p-6 shadow-sm flex flex-col justify-center print:flex-1`}>
-            <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest mb-3">Total Readings</p>
+            <p className={`text-[10px] font-bold uppercase tracking-widest mb-3 ${isHighContrast ? 'text-slate-400' : 'text-slate-500'}`}>Total Readings</p>
             <div className={`text-4xl font-mono font-bold tracking-tight ${isHighContrast ? 'text-white' : 'text-slate-900'}`}>{allVals.length}</div>
-            <p className="text-[12px] font-medium text-slate-500 mt-1">Recorded readings in period</p>
+            <p className={`text-[12px] font-medium mt-1 ${isHighContrast ? 'text-slate-500' : 'text-slate-500'}`}>Recorded readings in period</p>
           </div>
         </div>
 
         {/* Clinical Analysis summary — band-coloured metric cards + range legend */}
         <ClinicalAnalysis
-          highest={highestBase}
-          overall={overallBase}
-          readingCount={allVals.length}
           unit={unit}
           isHighContrast={isHighContrast}
           patterns={patterns}
@@ -1047,24 +1112,6 @@ function AppContent() {
             >
               E2E Test
             </button>
-          </div>
-          <div className="flex items-center gap-3 pb-2">
-            <button 
-              onClick={() => setIsModalOpen(true)}
-              className={`rounded-lg flex items-center justify-center px-4 py-2 transition-all duration-200 cursor-pointer shadow-sm text-[11px] font-bold uppercase tracking-widest focus:outline-none focus:ring-2 focus:ring-[#D6E4F0]
-                ${isHighContrast ? 'bg-gray-800 text-white hover:bg-gray-700' : 'bg-[#1F3864] text-white hover:bg-[#2E75B6]'}`}
-            >
-               <Plus className="w-4 h-4 mr-2" strokeWidth={2.5} /> Manual Entry
-            </button>
-            <label
-              data-testid="scan-button"
-              className={`rounded-lg flex items-center justify-center px-4 py-2 transition-all duration-200 cursor-pointer shadow-sm text-[11px] font-bold uppercase tracking-widest border focus-within:outline-none focus-within:ring-2 focus-within:ring-[#D6E4F0]
-                ${isHighContrast ? 'bg-black border-gray-700 text-white hover:bg-gray-800' : 'bg-white border-[#D4A373] text-[#1F3864] hover:bg-orange-50'} ${isUploading ? 'opacity-50 pointer-events-none' : ''}`}
-            >
-               <input type="file" accept="image/*" multiple className="sr-only" onChange={handleImageUpload} />
-               {isUploading ? <Loader2 className="w-4 h-4 mr-2 animate-spin text-[#D4A373]" /> : <Camera className="w-4 h-4 mr-2 text-[#D4A373]" strokeWidth={2.5} />}
-               {isUploading ? uploadStatus : 'Scan Photo'}
-            </label>
           </div>
         </div>
 

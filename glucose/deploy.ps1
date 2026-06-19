@@ -65,12 +65,6 @@ Log -Level 'INFO' -Msg 'Step 2: Verifying git state...' -Color Yellow
 $commit = (git rev-parse --short HEAD 2>$null).Trim()
 $branch = (git rev-parse --abbrev-ref HEAD 2>$null).Trim()
 Log -Level 'INFO' -Msg "Commit : $commit on $branch"
-try {
-    git push origin $branch 2>&1 | Out-Null
-    Log -Level 'INFO' -Msg "Pushed $branch to GitHub" -Color DarkGray
-} catch {
-    Log -Level 'WARN' -Msg 'git push failed (non-fatal) — server will clone existing HEAD' -Color Yellow
-}
 
 # Step 3: Build or copy
 if ($Build) {
@@ -212,7 +206,7 @@ if (Test-Path '.env.local') {
 
 # Step 7: Restart backend
 Log -Level 'INFO' -Msg 'Step 7: Restarting backend (PM2)...' -Color Yellow
-$pm2Result = & $SSH @SSH_OPTS $RemoteHost "if pm2 describe ${PM2_APP} > /dev/null 2>&1; then pm2 reload ${PM2_APP} --update-env; echo 'pm2: reloaded ${PM2_APP}'; else cd ${RemotePath} && NODE_ENV=production PORT=${PORT} pm2 start server.ts --name ${PM2_APP} --interpreter npx --interpreter-args tsx; echo 'pm2: started ${PM2_APP}'; fi; pm2 save --force > /dev/null 2>&1 || true"
+$pm2Result = & $SSH @SSH_OPTS $RemoteHost "if pm2 describe ${PM2_APP} > /dev/null 2>&1; then pm2 reload ${PM2_APP} --update-env; echo 'pm2: reloaded ${PM2_APP}'; else cd ${RemotePath} && NODE_ENV=production PORT=${PORT} pm2 start server.ts --name ${PM2_APP} --max-memory-restart 1G --interpreter npx --interpreter-args tsx; echo 'pm2: started ${PM2_APP}'; fi; pm2 save --force > /dev/null 2>&1 || true"
 Write-Host $pm2Result -ForegroundColor DarkGray
 
 # Health checks

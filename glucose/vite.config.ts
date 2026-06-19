@@ -5,7 +5,7 @@ import {defineConfig} from 'vite';
 
 export default defineConfig(() => {
   return {
-    base: './',
+    base: '/glucose/',
     plugins: [react(), tailwindcss()],
     // SECURITY: do not inject GEMINI_API_KEY into the bundle — it gets
     // auto-revoked by Google. Gemini must be called from the backend only.
