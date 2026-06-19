@@ -5,12 +5,12 @@
 | Field | Value |
 |---|---|
 | Document ID | TUC-ICT-SRS-2026-004 |
-| Version | **2.4.0 (AS-BUILT baseline)** |
+| Version | **2.5.0 (AS-BUILT baseline)** |
 | Status | Reflects deployed system at `wms.techbridge.edu.gh` |
 | Date | 19 June 2026 |
 | Author | Daniel Frempong Twum — Head of ICT & Special Advisor to the Founder |
 | Standard | IEEE 29148:2018 |
-| Supersedes | v2.3.0 (as-built baseline) / v2.2.0 (as-built baseline) / v2.0.0 (as-built baseline) / v1.1.0 (delta) / v1.0.1 (approved requirements baseline) |
+| Supersedes | v2.4.0 (as-built baseline) / v2.3.0 (as-built baseline) / v2.2.0 (as-built baseline) / v2.0.0 (as-built baseline) / v1.1.0 (delta) / v1.0.1 (approved requirements baseline) |
 | Basis | **Reverse-engineered from the deployed codebase** (`gh.edu.techbridge.wms`) — every requirement below corresponds to shipped code, not intent. |
 
 > **Reading guide:** This document describes TUC-WMS **as it actually exists today**. Sections marked
@@ -101,7 +101,7 @@ incl. stages), `PUT /api/projects/{id}` (visibility FR-PROJ-005, stages FR-PROJ-
 Fields: title, **rich-text description (Tiptap)**, assignees, start/due dates, priority
 (LOW/MED/HIGH/CRIT), status (= a project stage), tags, **sub-task** parentTaskId (one level —
 FR-TASK-003), **dependencies** blockedByTaskIds (FR-TASK-004), milestone.
-**Deferred within §3.2 [NOT BUILT]:** project templates (FR-PROJ-003), global task search (FR-TASK-009), bulk operations (FR-TASK-010). Task Comments & @mentions (FR-TASK-005), Per-Task Activity Logs (FR-TASK-006), and File Attachments (FR-TASK-007) are **[BUILT, COMPLETE]** and integrated.
+**Deferred within §3.2 [NOT BUILT]:** project templates (FR-PROJ-003). Global Task Search (FR-TASK-009), Bulk Task Operations (FR-TASK-010), Task Comments & @mentions (FR-TASK-005), Per-Task Activity Logs (FR-TASK-006), and File Attachments (FR-TASK-007) are **[BUILT, COMPLETE]** and integrated.
 
 ### 3.3 Kanban Board — [BUILT] (`KanbanController`, `ProjectStreamController`)
 `GET /api/projects/{id}/board` (columns by stage; cards; filters assignee/priority/label/due —
@@ -183,6 +183,16 @@ Serves system documentation directly from backend resources (`docs/AdminDocsCont
 |---|---|---|
 | `GET /api/admin/docs/sso-handbook` | SYSTEM_ADMIN | Serves the HTML rendering of the SSO Ecosystem Handbook (`TUC-ICT-SRS-2026-013_SSO_Ecosystem.html`) loaded from classpath resources. |
 
+### 3.12 Global Task Search & Bulk Task Operations — [BUILT] (FR-TASK-009, FR-TASK-010)
+
+Provides a visibility-aware global task search across viewable projects, and bulk management operations on the Kanban Board.
+
+| Endpoint | Access | Behaviour |
+|---|---|---|
+| `GET /api/tasks/search` | authenticated | Searches task titles, descriptions, and tags across projects viewable by the user. |
+| `POST /api/projects/{projectId}/tasks/bulk-update` | Editor | Batch updates the status, priority, milestone, assignee list, and tags of multiple tasks. Logs activity trails and fires automation triggers. |
+| `POST /api/projects/{projectId}/tasks/bulk-delete` | Editor | Batch deletes multiple tasks, cascade-deleting comments, activities, and attachments. |
+
 ---
 
 ## 4. Non-Functional Requirements (as built)
@@ -248,3 +258,4 @@ Task collaboration search/bulk (FR-TASK-009/010) · project templates · Timelin
 | 2.2.0 | 19 June 2026 | Antigravity | Workflow Automation (FR-AUTO) implemented. Documents triggers, conditions, actions, REST controllers, and frontend rule builder tab, updating database schemas. |
 | 2.3.0 | 19 June 2026 | Antigravity | Reporting & Dashboards (FR-RPT) implemented. Documents project-scoped visual reports, metrics calculations, stage distribution charts, workload progress segments, and overdue logs. |
 | 2.4.0 | 19 June 2026 | Antigravity | Task Collaboration (FR-TASK-005 Comments & @mentions, -006 Activity Logs, -007 File Attachments) implemented. Documents comments parsing, user mentions notifications, history activity tables, and LOB database attachments. |
+| 2.5.0 | 19 June 2026 | Antigravity | Global Task Search (FR-TASK-009) and Bulk Task Operations (FR-TASK-010) implemented. Documents debounced global search overlay, bulk selection modes, batch stage/priority/assignee/milestone updates, and bulk delete actions. |

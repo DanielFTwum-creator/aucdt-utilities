@@ -235,6 +235,140 @@ public class TaskController {
         return ResponseEntity.noContent().build();
     }
 
+    public record BulkUpdateRequest(
+        List<Long> taskIds,
+        String status,
+        TaskPriority priority,
+        Set<Long> assigneeIds,
+        Boolean milestone,
+        List<String> tagsToAdd,
+        List<String> tagsToRemove
+    ) { }
+
+    @PostMapping("/bulk-update")
+    @Transactional
+    public ResponseEntity<?> bulkUpdate(@PathVariable Long projectId,
+                                        @RequestBody BulkUpdateRequest req,
+                                        Authentication auth) {
+        User user = perms.currentUser(auth);
+        Project p = project(projectId);
+        perms.require(user, p, ProjectRole.EDITOR);
+        perms.requireWritable(p);
+
+        if (req.taskIds() == null || req.taskIds().isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No task ids provided");
+        }
+
+        List<Task> targetTasks = tasks.findAllById(req.taskIds()).stream()
+                .filter(t -> t.getProjectId().equals(projectId))
+                .toList();
+
+        if (targetTasks.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No matching tasks found in this project");
+        }
+
+        for (Task t : targetTasks) {
+            Set<Long> beforeAssignees = new HashSet<>(t.getAssigneeIds());
+            String oldStatus = t.getStatus();
+            TaskPriority oldPriority = t.getPriority();
+            boolean oldMilestone = t.isMilestone();
+
+            List<TaskActivity> logs = new ArrayList<>();
+
+            if (req.status() != null) {
+                if (!p.getStages().contains(req.status())) {
+                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid stage status");
+                }
+                t.setStatus(req.status());
+                if (!req.status().equals(oldStatus)) {
+                    logs.add(new TaskActivity(t.getId(), user.getId(), "STATUS_CHANGED", "Moved status from \"" + oldStatus + "\" to \"" + req.status() + "\""));
+                }
+            }
+            if (req.priority() != null) {
+                t.setPriority(req.priority());
+                if (!req.priority().equals(oldPriority)) {
+                    logs.add(new TaskActivity(t.getId(), user.getId(), "PRIORITY_CHANGED", "Changed priority from " + oldPriority + " to " + req.priority()));
+                }
+            }
+            if (req.milestone() != null) {
+                t.setMilestone(req.milestone());
+                if (req.milestone() != oldMilestone) {
+                    logs.add(new TaskActivity(t.getId(), user.getId(), "UPDATED", req.milestone() ? "Marked as milestone" : "Removed milestone marker"));
+                }
+            }
+            if (req.assigneeIds() != null) {
+                t.setAssigneeIds(new HashSet<>(req.assigneeIds()));
+                if (!beforeAssignees.equals(req.assigneeIds())) {
+                    Set<Long> added = new HashSet<>(req.assigneeIds());
+                    added.removeAll(beforeAssignees);
+                    Set<Long> removed = new HashSet<>(beforeAssignees);
+                    removed.removeAll(req.assigneeIds());
+                    for (Long uid : added) {
+                        users.findById(uid).ifPresent(u -> logs.add(new TaskActivity(t.getId(), user.getId(), "ASSIGNEE_CHANGED", "Assigned task to " + u.getFullName())));
+                    }
+                    for (Long uid : removed) {
+                        users.findById(uid).ifPresent(u -> logs.add(new TaskActivity(t.getId(), user.getId(), "ASSIGNEE_CHANGED", "Removed assignee " + u.getFullName())));
+                    }
+                    notifyAssignees(added, t, p, user);
+                }
+            }
+            if (req.tagsToAdd() != null && !req.tagsToAdd().isEmpty()) {
+                t.getTags().addAll(req.tagsToAdd());
+                logs.add(new TaskActivity(t.getId(), user.getId(), "UPDATED", "Added tags: " + String.join(", ", req.tagsToAdd())));
+            }
+            if (req.tagsToRemove() != null && !req.tagsToRemove().isEmpty()) {
+                t.getTags().removeAll(req.tagsToRemove());
+                logs.add(new TaskActivity(t.getId(), user.getId(), "UPDATED", "Removed tags: " + String.join(", ", req.tagsToRemove())));
+            }
+
+            Task saved = tasks.save(t);
+            if (!logs.isEmpty()) {
+                activities.saveAll(logs);
+            }
+
+            Map<String, Object> body = dto(saved);
+            events.publish(projectId, "task.updated", body);
+
+            if (oldStatus != null && !oldStatus.equals(saved.getStatus())) {
+                automation.trigger(projectId, "STATUS_CHANGED", saved, user, oldStatus, saved.getStatus());
+            }
+        }
+
+        return ResponseEntity.ok(Map.of("count", targetTasks.size()));
+    }
+
+    @PostMapping("/bulk-delete")
+    @Transactional
+    public ResponseEntity<?> bulkDelete(@PathVariable Long projectId,
+                                        @RequestBody Map<String, List<Long>> req,
+                                        Authentication auth) {
+        User user = perms.currentUser(auth);
+        Project p = project(projectId);
+        perms.require(user, p, ProjectRole.EDITOR);
+        perms.requireWritable(p);
+
+        List<Long> ids = req.get("taskIds");
+        if (ids == null || ids.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No task ids provided");
+        }
+
+        List<Task> targetTasks = tasks.findAllById(ids).stream()
+                .filter(t -> t.getProjectId().equals(projectId))
+                .toList();
+
+        for (Task t : targetTasks) {
+            tasks.findByParentTaskId(t.getId()).forEach(sub -> {
+                cleanupCollaborationData(sub.getId());
+                tasks.delete(sub);
+            });
+            cleanupCollaborationData(t.getId());
+            tasks.delete(t);
+            events.publish(projectId, "task.deleted", Map.of("id", t.getId()));
+        }
+
+        return ResponseEntity.noContent().build();
+    }
+
     private void cleanupCollaborationData(Long taskId) {
         comments.findByTaskIdOrderByCreatedAtAsc(taskId).forEach(comments::delete);
         activities.findByTaskIdOrderByOccurredAtDesc(taskId).forEach(activities::delete);
