@@ -119,7 +119,7 @@ function AppContent() {
   const [selectedMonth, setSelectedMonth] = useState<string>('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
-  const [viewMode, setViewMode] = useState<'month' | 'year'>('month');
+  const [viewMode, setViewMode] = useState<'month' | 'year' | 'all'>('month');
   const [selectedYear, setSelectedYear] = useState<string>('');
   const [showTrendlines, setShowTrendlines] = useState(true);
 
@@ -155,140 +155,208 @@ function AppContent() {
   }, [user?.fullName, patientName]);
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    console.log('[SCAN] File selected:', file?.name, file?.size);
-    if (!file || !isAdmin) return;
+    const files = e.target.files;
+    if (!files || files.length === 0 || !isAdmin) return;
 
     try {
       setIsUploading(true);
-      setUploadProgress(10);
-      setUploadStatus('Processing image...');
+      setUploadProgress(5);
+      setUploadStatus(`Preparing ${files.length} scans...`);
       setUploadError('');
 
-      const fileToBase64 = (f: File): Promise<string> => {
-        return new Promise((resolve) => {
+      const compressImage = (f: File, maxDim = 2000): Promise<string> => {
+        return new Promise((resolve, reject) => {
           const reader = new FileReader();
-          reader.onloadend = () => {
-            const base64 = (reader.result as string).split(',')[1];
-            console.log('[SCAN] Image converted to base64:', base64.length, 'chars');
-            resolve(base64);
-          };
           reader.readAsDataURL(f);
+          reader.onload = (event) => {
+            const img = new Image();
+            img.src = event.target?.result as string;
+            img.onload = () => {
+              const canvas = document.createElement('canvas');
+              let width = img.width;
+              let height = img.height;
+
+              if (width > height) {
+                if (width > maxDim) {
+                  height = Math.round((height * maxDim) / width);
+                  width = maxDim;
+                }
+              } else {
+                if (height > maxDim) {
+                  width = Math.round((width * maxDim) / height);
+                  height = maxDim;
+                }
+              }
+
+              canvas.width = width;
+              canvas.height = height;
+              const ctx = canvas.getContext('2d');
+              if (!ctx) {
+                reject(new Error('Failed to get canvas context'));
+                return;
+              }
+
+              ctx.drawImage(img, 0, 0, width, height);
+              const dataUrl = canvas.toDataURL('image/jpeg', 0.8);
+              const base64 = dataUrl.split(',')[1];
+              resolve(base64);
+            };
+            img.onerror = (err) => reject(err);
+          };
+          reader.onerror = (err) => reject(err);
         });
       };
-
-      const base64Image = await fileToBase64(file);
-      console.log('[SCAN] Calling backend API...');
-
-      setUploadProgress(40);
-      setUploadStatus('Extracting data with AI...');
-
-      console.log('[SCAN] Request URL:', '/glucose/api/scan-glucose');
-      const response = await fetch('/glucose/api/scan-glucose', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          imageData: base64Image,
-          mimeType: file.type,
-        }),
-      });
-
-      console.log('[SCAN] Response status:', response.status);
-      console.log('[SCAN] Response headers:', response.headers.get('content-type'));
-
-      if (!response.ok) {
-        const text = await response.text();
-        console.log('[SCAN] Error response body:', text.substring(0, 500));
-        try {
-          const error = JSON.parse(text);
-          throw new Error(error.error || `API error: ${response.status}`);
-        } catch (e) {
-          throw new Error(`API error ${response.status}: ${text.substring(0, 200)}`);
-        }
-      }
-
-      const result = await response.json();
-      console.log('[SCAN] API response received:', result);
-      const rowsToAdd = result.readings;
-      console.log('[SCAN] API returned', rowsToAdd?.length || 0, 'readings');
-
-      if (!rowsToAdd || rowsToAdd.length === 0) {
-        console.error('[SCAN] No rows returned');
-        setUploadError('No readings found in the image.');
-        setIsUploading(false);
-        return;
-      }
 
       const rowsToSave: ReadingRow[] = [];
       const now = Date.now();
       let successCount = 0;
-      let updateCount = 0;
-      let newCount = 0;
+      let completedCount = 0;
+      const failedFiles: { name: string; reason: string }[] = [];
 
-      for (const row of rowsToAdd) {
-        let formattedDate = row.date;
+      const processFile = async (fileIndex: number) => {
+        const file = files[fileIndex];
+        console.log(`[SCAN] Starting file (${fileIndex + 1}/${files.length}):`, file.name);
+
         try {
-          const d = new Date(row.date);
-          if (!isNaN(d.getTime())) {
-            formattedDate = d.toISOString().split('T')[0];
+          const base64Image = await compressImage(file);
+          const response = await fetch('/glucose/api/scan-glucose', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              imageData: base64Image,
+              mimeType: 'image/jpeg',
+            }),
+          });
+
+          if (!response.ok) {
+            const text = await response.text();
+            throw new Error(`API error ${response.status}: ${text.substring(0, 100)}`);
           }
-        } catch (err) {}
 
-        if (formattedDate.includes('NaN')) continue;
+          const result = await response.json();
+          const rowsToAdd = result.readings;
+          console.log(`[SCAN] File ${file.name} returned`, rowsToAdd?.length || 0, 'readings');
 
-        const existingRow = rows.find(r => r.date === formattedDate);
-        const newRowId = existingRow ? existingRow.id : `row_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
+          if (!rowsToAdd || rowsToAdd.length === 0) {
+            throw new Error('No readings found in the image');
+          }
 
-        if (existingRow) {
-          console.log('[SCAN] Updating existing reading for', formattedDate, '(id:', existingRow.id + ')');
-          updateCount++;
-        } else {
-          console.log('[SCAN] Creating new reading for', formattedDate, '(id:', newRowId + ')');
-          newCount++;
+          for (const row of rowsToAdd) {
+            if (!row || !row.date) continue;
+            let formattedDate = row.date;
+            try {
+              const d = new Date(row.date);
+              if (!isNaN(d.getTime())) {
+                formattedDate = d.toISOString().split('T')[0];
+              }
+            } catch (err) {}
+
+            if (!formattedDate || typeof formattedDate !== 'string' || formattedDate.includes('NaN') || formattedDate.trim() === '') continue;
+
+            const existingRowIndex = rowsToSave.findIndex(r => r.date === formattedDate);
+            let baseRow: ReadingRow;
+
+            if (existingRowIndex >= 0) {
+              baseRow = rowsToSave[existingRowIndex];
+            } else {
+              const dbRow = rows.find(r => r.date === formattedDate);
+              baseRow = {
+                id: dbRow ? dbRow.id : `row_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`,
+                date: formattedDate,
+                fasting: dbRow?.fasting || '',
+                post_breakfast: dbRow?.post_breakfast || '',
+                pre_lunch: dbRow?.pre_lunch || '',
+                post_lunch: dbRow?.post_lunch || '',
+                pre_dinner: dbRow?.pre_dinner || '',
+                post_dinner: dbRow?.post_dinner || '',
+                createdAt: (dbRow as any)?.createdAt ?? now,
+                updatedAt: now,
+              };
+            }
+
+            if (row.fasting) baseRow.fasting = toBaseUnit(row.fasting, unit);
+            if (row.post_breakfast) baseRow.post_breakfast = toBaseUnit(row.post_breakfast, unit);
+            if (row.pre_lunch) baseRow.pre_lunch = toBaseUnit(row.pre_lunch, unit);
+            if (row.post_lunch) baseRow.post_lunch = toBaseUnit(row.post_lunch, unit);
+            if (row.pre_dinner) baseRow.pre_dinner = toBaseUnit(row.pre_dinner, unit);
+            if (row.post_dinner) baseRow.post_dinner = toBaseUnit(row.post_dinner, unit);
+            baseRow.updatedAt = now;
+
+            if (existingRowIndex >= 0) {
+              rowsToSave[existingRowIndex] = baseRow;
+            } else {
+              rowsToSave.push(baseRow);
+            }
+            successCount++;
+          }
+        } catch (fileErr: any) {
+          console.error(`[SCAN] Error processing file ${file.name}:`, fileErr);
+          failedFiles.push({ name: file.name, reason: fileErr.message || String(fileErr) });
+        } finally {
+          completedCount++;
+          const progressVal = Math.floor((completedCount / files.length) * 90) + 5;
+          setUploadProgress(progressVal);
+          setUploadStatus(`Scanning: processed ${completedCount} of ${files.length} scans...`);
         }
+      };
 
-        rowsToSave.push({
-          id: newRowId,
-          date: formattedDate,
-          fasting: row.fasting ? toBaseUnit(row.fasting, unit) : (existingRow?.fasting || ''),
-          post_breakfast: row.post_breakfast ? toBaseUnit(row.post_breakfast, unit) : (existingRow?.post_breakfast || ''),
-          pre_lunch: row.pre_lunch ? toBaseUnit(row.pre_lunch, unit) : (existingRow?.pre_lunch || ''),
-          post_lunch: row.post_lunch ? toBaseUnit(row.post_lunch, unit) : (existingRow?.post_lunch || ''),
-          pre_dinner: row.pre_dinner ? toBaseUnit(row.pre_dinner, unit) : (existingRow?.pre_dinner || ''),
-          post_dinner: row.post_dinner ? toBaseUnit(row.post_dinner, unit) : (existingRow?.post_dinner || ''),
-          createdAt: (existingRow as any)?.createdAt ?? now,
-          updatedAt: now,
+      const queue = Array.from({ length: files.length }, (_, idx) => idx);
+      const activeWorkers: Promise<void>[] = [];
+      const CONCURRENCY = 1;
+
+      for (let w = 0; w < Math.min(CONCURRENCY, files.length); w++) {
+        const runNext = async (): Promise<void> => {
+          if (queue.length === 0) return;
+          const fileIdx = queue.shift()!;
+          await processFile(fileIdx);
+          await runNext();
+        };
+        activeWorkers.push(runNext());
+      }
+
+      await Promise.all(activeWorkers);
+
+      if (rowsToSave.length > 0) {
+        setUploadProgress(95);
+        setUploadStatus(`Saving ${rowsToSave.length} successfully scanned readings...`);
+
+        // Chunk into batches of 20 to avoid 502 server crashes
+        const BATCH_SIZE = 20;
+        for (let i = 0; i < rowsToSave.length; i += BATCH_SIZE) {
+          const chunk = rowsToSave.slice(i, i + BATCH_SIZE);
+          await batchUpsertReadings(chunk);
+        }
+        
+        const refreshed = await getAllReadings();
+        const refreshedTyped = refreshed as Row[];
+        setRows(refreshedTyped);
+
+        const scannedMonths = new Set<string>();
+        rowsToSave.forEach(r => {
+          const m = getMonthKey(r.date);
+          if (m) scannedMonths.add(m);
         });
-        successCount++;
+        const latestScannedMonth = Array.from(scannedMonths).sort().pop();
+        if (latestScannedMonth) {
+          setSelectedMonth(latestScannedMonth);
+        }
       }
 
-      console.log('[SCAN] Summary: extracted', successCount, 'readings (' + newCount + ' new, ' + updateCount + ' updated)');
-      console.log('[SCAN] Saving', rowsToSave.length, 'rows...');
-      await batchUpsertReadings(rowsToSave);
-      const refreshed = await getAllReadings();
-      console.log('[SCAN] DB now has', refreshed.length, 'readings');
-
-      const refreshedTyped = refreshed as Row[];
-      setRows(refreshedTyped);
-
-      const scannedMonths = new Set<string>();
-      rowsToSave.forEach(r => {
-        const m = getMonthKey(r.date);
-        if (m) scannedMonths.add(m);
-      });
-      const latestScannedMonth = Array.from(scannedMonths).sort().pop();
-      console.log('[SCAN] Scanned months:', Array.from(scannedMonths), 'selecting:', latestScannedMonth);
-      if (latestScannedMonth) {
-        setSelectedMonth(latestScannedMonth);
+      if (failedFiles.length > 0) {
+        const failedSummary = failedFiles.map(f => `• ${f.name}: ${f.reason}`).join('\n');
+        if (rowsToSave.length > 0) {
+          setUploadError(`Successfully imported ${rowsToSave.length} dates, but ${failedFiles.length} file(s) failed:\n${failedSummary}`);
+        } else {
+          setUploadError(`All selected files failed to scan:\n${failedSummary}`);
+        }
+      } else {
+        setUploadProgress(100);
+        setUploadStatus(`Successfully processed ${files.length} file(s)! Extracted ${successCount} entries across ${rowsToSave.length} dates.`);
+        setTimeout(() => setIsUploading(false), 3000);
       }
-
-      setUploadProgress(100);
-      setUploadStatus(`Successfully extracted and saved ${successCount} readings!`);
-      setTimeout(() => setIsUploading(false), 2000);
     } catch (err) {
-      console.error('[SCAN] Error:', err);
-      setUploadError('Failed to process image: ' + String(err));
-      setIsUploading(false);
+      console.error('[SCAN] Batch process error:', err);
+      setUploadError(String(err));
     } finally {
       if (e.target) e.target.value = '';
     }
@@ -390,9 +458,11 @@ function AppContent() {
     if (viewMode === 'month') {
       if (!selectedMonth) return [];
       return rows.filter(r => getMonthKey(r.date) === selectedMonth).sort((a, b) => a.date.localeCompare(b.date));
-    } else {
+    } else if (viewMode === 'year') {
       if (!selectedYear) return [];
       return rows.filter(r => r.date.startsWith(selectedYear)).sort((a, b) => a.date.localeCompare(b.date));
+    } else {
+      return [...rows].sort((a, b) => a.date.localeCompare(b.date));
     }
   }, [rows, selectedMonth, selectedYear, viewMode]);
 
@@ -764,140 +834,90 @@ function AppContent() {
         </div>
         <div className="flex flex-wrap items-center gap-3">
           
-          <div className={`border rounded-lg px-2 flex items-center shadow-sm h-10 ${isHighContrast ? 'bg-gray-900 border-gray-700' : 'bg-white border-slate-200'}`}>
+          <div className={`border-2 rounded-lg flex items-center shadow-sm h-10 ${isHighContrast ? 'bg-gray-900 border-gray-600' : 'bg-white border-[#2E75B6]'}`}>
+            <span className={`text-[11px] font-bold px-3 tracking-wider border-r ${isHighContrast ? 'border-gray-600 text-gray-400' : 'border-[#2E75B6] text-[#2E75B6]'}`}>UNIT</span>
             <button 
               onClick={() => setUnit('mmol/L')}
-              className={`text-[11px] font-bold px-3 py-1.5 rounded-md transition-colors ${unit === 'mmol/L' ? (isHighContrast ? 'bg-white text-black' : 'bg-slate-100 text-slate-900') : 'text-slate-400 hover:text-slate-600'}`}
+              className={`text-[12px] font-bold px-4 py-1.5 transition-colors ${unit === 'mmol/L' ? (isHighContrast ? 'bg-white text-black' : 'bg-[#2E75B6] text-white') : 'text-slate-500 hover:text-slate-700'}`}
               aria-pressed={unit === 'mmol/L'}
             >
               mmol/L
             </button>
             <button 
               onClick={() => setUnit('mg/dL')}
-              className={`text-[11px] font-bold px-3 py-1.5 rounded-md transition-colors ${unit === 'mg/dL' ? (isHighContrast ? 'bg-white text-black' : 'bg-slate-100 text-slate-900') : 'text-slate-400 hover:text-slate-600'}`}
+              className={`text-[12px] font-bold px-4 py-1.5 transition-colors ${unit === 'mg/dL' ? (isHighContrast ? 'bg-white text-black' : 'bg-[#2E75B6] text-white') : 'text-slate-500 hover:text-slate-700'}`}
               aria-pressed={unit === 'mg/dL'}
             >
               mg/dL
             </button>
           </div>
 
-          <button 
-            onClick={() => setIsHighContrast(!isHighContrast)} 
-            className={`p-2.5 rounded-lg transition-colors focus:ring-2 focus:ring-blue-300 min-h-[44px] ${isHighContrast ? 'bg-gray-800 hover:bg-gray-700 text-yellow-300' : 'text-slate-400 hover:text-[#1F3864] hover:bg-slate-200'}`} 
-            title="Toggle High Contrast"
-            aria-pressed={isHighContrast}
-          >
-            <Eye className="w-5 h-5" />
-          </button>
+          <div className="flex items-center gap-2 border-r pr-3 border-slate-200">
+            <button 
+              onClick={() => setIsHighContrast(!isHighContrast)} 
+              className={`px-3 py-2 rounded-lg transition-colors flex items-center gap-2 min-h-[40px] text-xs font-semibold ${isHighContrast ? 'bg-gray-800 hover:bg-gray-700 text-yellow-300' : 'text-slate-600 hover:text-[#1F3864] hover:bg-slate-200'}`} 
+            >
+              <Eye className="w-4 h-4" /> <span className="hidden xl:inline">Contrast</span>
+            </button>
 
-          <button
-            onClick={handleExportData}
-            className={`p-2.5 rounded-lg transition-colors focus:ring-2 focus:ring-blue-300 min-h-[44px] ${isHighContrast ? 'text-gray-400 hover:text-white hover:bg-gray-800' : 'text-slate-400 hover:text-[#1F3864] hover:bg-slate-200'}`}
-            title="Export data to JSON"
-          >
-            <Download className="w-5 h-5" />
-          </button>
+            <button
+              onClick={() => setIsHelpOpen(true)}
+              className={`px-3 py-2 rounded-lg transition-colors flex items-center gap-2 min-h-[40px] text-xs font-semibold ${isHighContrast ? 'text-gray-400 hover:text-white hover:bg-gray-800' : 'text-slate-600 hover:text-[#1F3864] hover:bg-slate-200'}`}
+            >
+              <HelpCircle className="w-4 h-4" /> <span className="hidden xl:inline">Help</span>
+            </button>
 
-          <label
-            className={`p-2.5 rounded-lg transition-colors focus:ring-2 focus:ring-blue-300 min-h-[44px] flex items-center cursor-pointer ${isHighContrast ? 'text-gray-400 hover:text-white hover:bg-gray-800' : 'text-slate-400 hover:text-[#1F3864] hover:bg-slate-200'}`}
-            title="Import backup"
-          >
-            <input
-              type="file"
-              accept=".json"
-              className="sr-only"
-              ref={importInputRef}
-              onChange={handleImportData}
+            <button onClick={() => { adminLogout(); logout(); }} className={`px-3 py-2 rounded-lg transition-colors flex items-center gap-2 min-h-[40px] text-xs font-semibold ${isHighContrast ? 'text-red-400 hover:text-red-300 hover:bg-gray-800' : 'text-red-600 hover:text-red-700 hover:bg-red-50'}`}>
+              <LogOut className="w-4 h-4" /> <span className="hidden xl:inline">Sign Out</span>
+            </button>
+          </div>
+
+          <div className="flex items-center gap-2 border-r pr-3 border-slate-200">
+            <button
+              onClick={handleExportData}
+              className={`px-3 py-2 rounded-lg transition-colors flex items-center gap-2 min-h-[40px] text-xs font-semibold ${isHighContrast ? 'text-gray-400 hover:text-white hover:bg-gray-800' : 'text-slate-600 hover:text-[#1F3864] hover:bg-slate-200'}`}
+            >
+              <Download className="w-4 h-4" /> <span className="hidden xl:inline">Export JSON</span>
+            </button>
+            <label
+              className={`px-3 py-2 rounded-lg transition-colors flex items-center gap-2 cursor-pointer min-h-[40px] text-xs font-semibold ${isHighContrast ? 'text-gray-400 hover:text-white hover:bg-gray-800' : 'text-slate-600 hover:text-[#1F3864] hover:bg-slate-200'}`}
+            >
+              <input type="file" accept=".json" className="sr-only" ref={importInputRef} onChange={handleImportData} />
+              <Upload className="w-4 h-4" /> <span className="hidden xl:inline">Import JSON</span>
+            </label>
+            <button
+              onClick={handleExportCSV}
+              className={`px-3 py-2 rounded-lg transition-colors flex items-center gap-2 min-h-[40px] text-xs font-semibold ${isHighContrast ? 'text-gray-400 hover:text-white hover:bg-gray-800' : 'text-emerald-600 hover:bg-emerald-50'}`}
+            >
+              <FileText className="w-4 h-4" /> <span className="hidden xl:inline">Export CSV</span>
+            </button>
+            <label
+              className={`px-3 py-2 rounded-lg transition-colors flex items-center gap-2 cursor-pointer min-h-[40px] text-xs font-semibold ${isHighContrast ? 'text-gray-400 hover:text-white hover:bg-gray-800' : 'text-emerald-600 hover:bg-emerald-50'}`}
+            >
+              <input type="file" accept=".csv" className="sr-only" ref={importCSVInputRef} onChange={handleImportCSV} />
+              <Upload className="w-4 h-4" /> <span className="hidden xl:inline">Import CSV</span>
+            </label>
+          </div>
+
+          <div className={`border rounded-lg flex items-center shadow-sm h-10 ${isHighContrast ? 'bg-gray-900 border-gray-700' : 'bg-white border-slate-200'} overflow-hidden`}>
+            <span className="text-[11px] font-bold text-slate-400 px-3 tracking-wider border-r border-slate-200">PERIOD</span>
+            
+            <input 
+              type="month" 
+              value={selectedMonth || ''}
+              onChange={(e) => {
+                setSelectedMonth(e.target.value);
+                setViewMode('month');
+              }}
+              className={`text-sm px-3 py-1 bg-transparent border-none outline-none focus:ring-0 font-bold cursor-pointer ${isHighContrast ? 'text-white' : 'text-[#1F3864]'} [color-scheme:light]`}
             />
-            <Upload className="w-5 h-5" />
-          </label>
-
-          <button
-            onClick={handleExportCSV}
-            className={`p-2.5 rounded-lg transition-colors focus:ring-2 focus:ring-blue-300 min-h-[44px] ${isHighContrast ? 'text-gray-400 hover:text-white hover:bg-gray-800' : 'text-slate-400 hover:text-[#1F3864] hover:bg-slate-200'}`}
-            title="Export data to CSV"
-          >
-            <FileText className="w-5 h-5 text-emerald-600" />
-          </button>
-
-          <label
-            className={`p-2.5 rounded-lg transition-colors focus:ring-2 focus:ring-blue-300 min-h-[44px] flex items-center cursor-pointer ${isHighContrast ? 'text-gray-400 hover:text-white hover:bg-gray-800' : 'text-slate-400 hover:text-[#1F3864] hover:bg-slate-200'}`}
-            title="Import CSV"
-          >
-            <input
-              type="file"
-              accept=".csv"
-              className="sr-only"
-              ref={importCSVInputRef}
-              onChange={handleImportCSV}
-            />
-            <Upload className="w-5 h-5 text-emerald-600" />
-          </label>
-
-          <button
-            onClick={() => setIsHelpOpen(true)}
-            className={`p-2.5 rounded-lg transition-colors focus:ring-2 focus:ring-blue-300 min-h-[44px] ${isHighContrast ? 'text-gray-400 hover:text-white hover:bg-gray-800' : 'text-slate-400 hover:text-[#1F3864] hover:bg-slate-200'}`}
-            title="View user guide"
-          >
-            <HelpCircle className="w-5 h-5" />
-          </button>
-
-          <button onClick={() => { adminLogout(); logout(); }} className={`p-2.5 rounded-lg transition-colors focus:ring-2 focus:ring-blue-300 min-h-[44px] ${isHighContrast ? 'text-gray-400 hover:text-white hover:bg-gray-800' : 'text-slate-400 hover:text-[#1F3864] hover:bg-slate-200'}`} title="Sign out">
-            <LogOut className="w-5 h-5" />
-          </button>
-
-          <div className={`border rounded-lg flex items-center shadow-sm h-10 ${isHighContrast ? 'bg-gray-900 border-gray-700' : 'bg-white border-slate-200'}`}>
-            <span className="text-[11px] font-bold text-slate-400 pl-3 pr-2 tracking-wider">PERIOD</span>
-
-            {/* View Mode Toggle */}
-            <div className={`flex border-r ${isHighContrast ? 'border-gray-700' : 'border-slate-200'}`}>
-              <button
-                onClick={() => setViewMode('month')}
-                className={`px-3 py-1 text-xs font-bold uppercase transition-colors ${
-                  viewMode === 'month'
-                    ? isHighContrast ? 'bg-blue-900 text-white' : 'bg-blue-100 text-[#1F3864]'
-                    : isHighContrast ? 'text-gray-400 hover:text-white' : 'text-slate-500 hover:text-slate-700'
-                }`}
-                title="View by month"
-              >
-                Month
-              </button>
-              <button
-                onClick={() => setViewMode('year')}
-                className={`px-3 py-1 text-xs font-bold uppercase transition-colors ${
-                  viewMode === 'year'
-                    ? isHighContrast ? 'bg-blue-900 text-white' : 'bg-blue-100 text-[#1F3864]'
-                    : isHighContrast ? 'text-gray-400 hover:text-white' : 'text-slate-500 hover:text-slate-700'
-                }`}
-                title="View by year"
-              >
-                Year
-              </button>
-            </div>
-
-            {/* Selector based on view mode */}
-            {viewMode === 'month' ? (
-              <select
-                value={selectedMonth}
-                onChange={e => setSelectedMonth(e.target.value)}
-                className={`flex-1 text-sm px-3 py-1 bg-transparent border-none outline-none focus:ring-0 font-bold cursor-pointer ${isHighContrast ? 'text-white' : 'text-[#1F3864]'}`}
-              >
-                {monthOptions.map(k => {
-                  const [yr, mo] = k.split('-');
-                  return <option key={k} value={k} className={isHighContrast ? 'bg-gray-900 text-white' : ''}>{MONTH_NAMES[parseInt(mo) - 1]} {yr}</option>;
-                })}
-              </select>
-            ) : (
-              <select
-                value={selectedYear}
-                onChange={e => setSelectedYear(e.target.value)}
-                className={`flex-1 text-sm px-3 py-1 bg-transparent border-none outline-none focus:ring-0 font-bold cursor-pointer ${isHighContrast ? 'text-white' : 'text-[#1F3864]'}`}
-              >
-                {yearOptions.map(yr => (
-                  <option key={yr} value={yr} className={isHighContrast ? 'bg-gray-900 text-white' : ''}>Year {yr}</option>
-                ))}
-              </select>
-            )}
+            
+            <button 
+              onClick={() => { setSelectedMonth(''); setViewMode('all'); }} 
+              className={`px-3 py-1 h-full text-xs font-bold uppercase border-l ${isHighContrast ? 'border-gray-700' : 'border-slate-200'} transition-colors ${viewMode === 'all' ? (isHighContrast ? 'bg-blue-900 text-white' : 'bg-blue-100 text-[#1F3864]') : 'text-slate-500 hover:text-slate-700'}`}
+            >
+              All Time
+            </button>
           </div>
           
           <button 
@@ -923,47 +943,40 @@ function AppContent() {
             />
           </div>
         </div>
-        <div className={`border rounded-xl p-4 flex items-center gap-4 shadow-sm transition-shadow focus-within:ring-2 focus-within:ring-[#D6E4F0] ${isHighContrast ? 'bg-black border-gray-600' : 'bg-white border-slate-200'}`}>
-          <div className="w-11 h-11 rounded-full bg-indigo-50 flex items-center justify-center text-indigo-600 font-bold text-sm uppercase shrink-0 tracking-tight">{doctorName ? getInitials(doctorName) : 'DR'}</div>
-          <div className="flex-1">
-            <p className={`text-[10px] font-bold uppercase tracking-widest ${isHighContrast ? 'text-gray-400' : 'text-slate-400'}`}>Physician</p>
-            <input
-              value={doctorName}
-              onChange={e => setDoctorName(e.target.value)}
-              className={`font-semibold text-[15px] outline-none w-full bg-transparent ${isHighContrast ? 'text-white placeholder-gray-600' : 'text-slate-900 placeholder-slate-300'}`}
-              placeholder="Enter doctor's name..."
-            />
+        <div className={`border rounded-xl p-4 flex flex-col shadow-sm transition-shadow focus-within:ring-2 focus-within:ring-[#D6E4F0] ${isHighContrast ? 'bg-black border-gray-600' : 'bg-white border-slate-200'}`}>
+          <div className="flex items-center gap-4 mb-3">
+            <div className="w-11 h-11 rounded-full bg-indigo-50 flex items-center justify-center text-indigo-600 font-bold text-sm uppercase shrink-0 tracking-tight">{doctorName ? getInitials(doctorName) : 'DR'}</div>
+            <div className="flex-1">
+              <p className={`text-[10px] font-bold uppercase tracking-widest ${isHighContrast ? 'text-gray-400' : 'text-slate-400'}`}>Physician</p>
+              <input
+                value={doctorName}
+                onChange={e => setDoctorName(e.target.value)}
+                className={`font-semibold text-[15px] outline-none w-full bg-transparent ${isHighContrast ? 'text-white placeholder-gray-600' : 'text-slate-900 placeholder-slate-300'}`}
+                placeholder="Enter doctor's name..."
+              />
+            </div>
           </div>
-        </div>
-
-        {showContactFields && (
-          <div className="grid grid-cols-2 gap-3">
-            <div className={`border rounded-xl p-4 shadow-sm transition-shadow focus-within:ring-2 focus-within:ring-[#D6E4F0] ${isHighContrast ? 'bg-black border-gray-600' : 'bg-white border-slate-200'}`}>
-              <p className={`text-[10px] font-bold uppercase tracking-widest mb-2 ${isHighContrast ? 'text-gray-400' : 'text-slate-400'}`}>Country</p>
+          <div className={`flex gap-3 pt-3 border-t ${isHighContrast ? 'border-gray-800' : 'border-slate-100'}`}>
+            <div className="flex-1">
+              <p className={`text-[10px] font-bold uppercase tracking-widest mb-1 ${isHighContrast ? 'text-gray-400' : 'text-slate-400'}`}>Country</p>
               <input
                 value={doctorCountry}
                 onChange={e => setDoctorCountry(e.target.value)}
-                className={`font-semibold text-[15px] outline-none w-full bg-transparent ${isHighContrast ? 'text-white placeholder-gray-600' : 'text-slate-900 placeholder-slate-300'}`}
+                className={`font-semibold text-[13px] outline-none w-full bg-transparent ${isHighContrast ? 'text-white placeholder-gray-600' : 'text-slate-700 placeholder-slate-300'}`}
                 placeholder="e.g. GH +233"
               />
             </div>
-            <div className={`border rounded-xl p-4 shadow-sm transition-shadow focus-within:ring-2 focus-within:ring-[#D6E4F0] ${isHighContrast ? 'bg-black border-gray-600' : 'bg-white border-slate-200'}`}>
-              <p className={`text-[10px] font-bold uppercase tracking-widest mb-2 ${isHighContrast ? 'text-gray-400' : 'text-slate-400'}`}>Phone</p>
+            <div className="flex-1">
+              <p className={`text-[10px] font-bold uppercase tracking-widest mb-1 ${isHighContrast ? 'text-gray-400' : 'text-slate-400'}`}>Phone</p>
               <input
                 value={doctorPhone}
                 onChange={e => setDoctorPhone(e.target.value)}
-                className={`font-semibold text-[15px] outline-none w-full bg-transparent ${isHighContrast ? 'text-white placeholder-gray-600' : 'text-slate-900 placeholder-slate-300'}`}
+                className={`font-semibold text-[13px] outline-none w-full bg-transparent ${isHighContrast ? 'text-white placeholder-gray-600' : 'text-slate-700 placeholder-slate-300'}`}
                 placeholder="e.g. 20 152 9933"
               />
             </div>
           </div>
-        )}
-        <button
-          onClick={() => setShowContactFields(!showContactFields)}
-          className={`text-xs font-semibold uppercase tracking-wider px-3 py-2 rounded-lg transition-colors ${isHighContrast ? 'bg-gray-800 text-blue-400 hover:bg-gray-700' : 'bg-slate-100 text-[#2E75B6] hover:bg-slate-200'}`}
-        >
-          {showContactFields ? '▼ Hide' : '▶ Show'} Country & Phone
-        </button>
+        </div>
       </div>
 
       {/* Main Content Area */}
@@ -996,64 +1009,63 @@ function AppContent() {
           </div>
 
           {/* Total Readings */}
-          <div className={`${isHighContrast ? 'bg-black border-gray-600' : 'bg-white border-slate-200'} border rounded-2xl p-6 shadow-sm flex items-center print:flex-1`}>
-            <div>
-              <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest mb-2">Total Readings</p>
-              <div className={`text-3xl font-mono font-bold tracking-tight ${isHighContrast ? 'text-white' : 'text-slate-900'}`}>{rows.length}</div>
-            </div>
-          </div>
-
-          {/* Add Reading Button */}
-          <div className="flex flex-col gap-3 min-h-[140px] print:hidden">
-            <button 
-              onClick={() => setIsModalOpen(true)}
-              className={`flex-1 rounded-2xl flex items-center justify-center p-3 transition-all duration-200 cursor-pointer shadow-sm focus:outline-none focus:ring-4 focus:ring-[#D6E4F0] border-2 border-transparent
-                ${isHighContrast ? 'bg-gray-800 text-white hover:bg-gray-700' : 'bg-[#1F3864] text-white hover:bg-[#2E75B6]'}`}
-            >
-               <Plus className="w-5 h-5 mr-2" strokeWidth={2.5} />
-               <span className="text-[12px] font-bold uppercase tracking-widest text-center">Manual Entry</span>
-            </button>
-            <label
-              data-testid="scan-button"
-              className={`flex-1 rounded-2xl flex items-center justify-center p-3 transition-all duration-200 cursor-pointer shadow-sm focus-within:outline-none focus-within:ring-4 focus-within:ring-[#D6E4F0] border-2
-                ${isHighContrast ? 'bg-black border-gray-700 text-white hover:bg-gray-800' : 'bg-white border-[#D4A373] text-[#1F3864] hover:bg-orange-50'} ${isUploading ? 'opacity-50 pointer-events-none' : ''}`}
-            >
-               <input type="file" accept="image/*" className="sr-only" onChange={handleImageUpload} />
-               {isUploading ? <Loader2 className="w-5 h-5 mr-2 animate-spin text-[#D4A373]" /> : <Camera className="w-5 h-5 mr-2 text-[#D4A373]" strokeWidth={2.5} />}
-               <span className="text-[12px] font-bold uppercase tracking-widest text-center">
-                 {isUploading ? uploadStatus : 'Scan Photo'}
-               </span>
-            </label>
+          <div className={`${isHighContrast ? 'bg-black border-gray-600' : 'bg-white border-slate-200'} border rounded-2xl p-6 shadow-sm flex flex-col justify-center print:flex-1`}>
+            <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest mb-3">Total Readings</p>
+            <div className={`text-4xl font-mono font-bold tracking-tight ${isHighContrast ? 'text-white' : 'text-slate-900'}`}>{allVals.length}</div>
+            <p className="text-[12px] font-medium text-slate-500 mt-1">Recorded readings in period</p>
           </div>
         </div>
 
         {/* Clinical Analysis summary — band-coloured metric cards + range legend */}
         <ClinicalAnalysis
+          highest={highestBase}
+          overall={overallBase}
+          readingCount={allVals.length}
           unit={unit}
           isHighContrast={isHighContrast}
           patterns={patterns}
         />
 
-        {/* Tab Navigation */}
-        <div className="flex items-center gap-6 border-b border-slate-200 print:hidden mt-4">
-          <button
-            className={`pb-3 text-[15px] font-bold uppercase tracking-widest transition-all ${activeTab === 'log' ? (isHighContrast ? 'text-white border-b-[4px] border-white' : 'text-[#1F3864] border-b-[4px] border-[#D4A373]') : 'text-slate-400 hover:text-slate-600'}`}
-            onClick={() => setActiveTab('log')}
-          >
-            Raw Log Data
-          </button>
-          <button
-            className={`pb-3 text-[15px] font-bold uppercase tracking-widest transition-all ${activeTab === 'agp' ? (isHighContrast ? 'text-white border-b-[4px] border-white' : 'text-[#1F3864] border-b-[4px] border-[#D4A373]') : 'text-slate-400 hover:text-slate-600'}`}
-            onClick={() => setActiveTab('agp')}
-          >
-            Ambulatory Glucose Profile (AGP)
-          </button>
-          <button
-            className={`pb-3 text-[15px] font-bold uppercase tracking-widest transition-all ${activeTab === 'test' ? (isHighContrast ? 'text-white border-b-[4px] border-white' : 'text-[#1F3864] border-b-[4px] border-[#D4A373]') : 'text-slate-400 hover:text-slate-600'}`}
-            onClick={() => setActiveTab('test')}
-          >
-            E2E Test
-          </button>
+        {/* Tab Navigation & Actions */}
+        <div className="flex items-center justify-between border-b border-slate-200 print:hidden mt-4">
+          <div className="flex items-center gap-6">
+            <button
+              className={`pb-3 text-[15px] font-bold uppercase tracking-widest transition-all ${activeTab === 'log' ? (isHighContrast ? 'text-white border-b-[4px] border-white' : 'text-[#1F3864] border-b-[4px] border-[#D4A373]') : 'text-slate-400 hover:text-slate-600'}`}
+              onClick={() => setActiveTab('log')}
+            >
+              Raw Log Data
+            </button>
+            <button
+              className={`pb-3 text-[15px] font-bold uppercase tracking-widest transition-all ${activeTab === 'agp' ? (isHighContrast ? 'text-white border-b-[4px] border-white' : 'text-[#1F3864] border-b-[4px] border-[#D4A373]') : 'text-slate-400 hover:text-slate-600'}`}
+              onClick={() => setActiveTab('agp')}
+            >
+              Ambulatory Glucose Profile (AGP)
+            </button>
+            <button
+              className={`pb-3 text-[15px] font-bold uppercase tracking-widest transition-all ${activeTab === 'test' ? (isHighContrast ? 'text-white border-b-[4px] border-white' : 'text-[#1F3864] border-b-[4px] border-[#D4A373]') : 'text-slate-400 hover:text-slate-600'}`}
+              onClick={() => setActiveTab('test')}
+            >
+              E2E Test
+            </button>
+          </div>
+          <div className="flex items-center gap-3 pb-2">
+            <button 
+              onClick={() => setIsModalOpen(true)}
+              className={`rounded-lg flex items-center justify-center px-4 py-2 transition-all duration-200 cursor-pointer shadow-sm text-[11px] font-bold uppercase tracking-widest focus:outline-none focus:ring-2 focus:ring-[#D6E4F0]
+                ${isHighContrast ? 'bg-gray-800 text-white hover:bg-gray-700' : 'bg-[#1F3864] text-white hover:bg-[#2E75B6]'}`}
+            >
+               <Plus className="w-4 h-4 mr-2" strokeWidth={2.5} /> Manual Entry
+            </button>
+            <label
+              data-testid="scan-button"
+              className={`rounded-lg flex items-center justify-center px-4 py-2 transition-all duration-200 cursor-pointer shadow-sm text-[11px] font-bold uppercase tracking-widest border focus-within:outline-none focus-within:ring-2 focus-within:ring-[#D6E4F0]
+                ${isHighContrast ? 'bg-black border-gray-700 text-white hover:bg-gray-800' : 'bg-white border-[#D4A373] text-[#1F3864] hover:bg-orange-50'} ${isUploading ? 'opacity-50 pointer-events-none' : ''}`}
+            >
+               <input type="file" accept="image/*" multiple className="sr-only" onChange={handleImageUpload} />
+               {isUploading ? <Loader2 className="w-4 h-4 mr-2 animate-spin text-[#D4A373]" /> : <Camera className="w-4 h-4 mr-2 text-[#D4A373]" strokeWidth={2.5} />}
+               {isUploading ? uploadStatus : 'Scan Photo'}
+            </label>
+          </div>
         </div>
 
         {/* Tab Content */}
@@ -1147,10 +1159,10 @@ function AppContent() {
                   <thead className={`text-[10px] font-bold uppercase sticky top-0 z-10 print:static shadow-sm ${isHighContrast ? 'bg-gray-900 text-white border-b-2 border-gray-700' : 'bg-white text-slate-700 border-b border-slate-200'}`}>
                     <tr>
                       <th className="px-5 py-3 w-12 text-left tracking-wider">#</th>
-                      <th className="px-4 py-3 w-28 tracking-wider">Date</th>
-                      {COLS.map(col => (
-                        <th key={col.id} className={`px-4 py-3 text-center whitespace-pre-line leading-tight tracking-wider ${col.id === 'pre_lunch' || col.id === 'pre_dinner' ? (isHighContrast ? 'border-l border-gray-700' : 'border-l border-slate-200') : ''}`}>
-                          {col.label.replace('\n', ' ')}
+                      <th className="px-4 py-3 w-28 text-left tracking-wider">Date</th>
+                      {COLS.map((col) => (
+                        <th key={col.id} className={`px-4 py-3 text-right whitespace-pre-line leading-tight tracking-wider ${col.id === 'pre_lunch' || col.id === 'pre_dinner' ? (isHighContrast ? 'border-l border-gray-700' : 'border-l border-slate-200') : ''}`}>
+                          {col.label}
                         </th>
                       ))}
                     </tr>
@@ -1222,9 +1234,9 @@ function AppContent() {
                             const isLow = !isEmpty && valNum < lowLimit;
                             
                             return (
-                              <td key={col.id} className={`px-4 py-3 text-center ${col.id === 'pre_lunch' || col.id === 'pre_dinner' ? (isHighContrast ? 'border-l border-gray-800' : 'border-l border-slate-100') : ''}`}>
+                              <td key={col.id} className={`px-4 py-3 text-right ${col.id === 'pre_lunch' || col.id === 'pre_dinner' ? (isHighContrast ? 'border-l border-gray-800' : 'border-l border-slate-100') : ''}`}>
                                 {isEmpty ? (
-                                  ''
+                                  <span className={`italic ${isHighContrast ? 'text-gray-600' : 'text-slate-300'}`}>—</span>
                                 ) : (
                                   <span className={`inline-flex items-center justify-center min-w-[3rem] px-1.5 py-0.5 rounded font-mono text-[14.5px] font-semibold tabular-nums ${isHigh ? (isHighContrast ? 'bg-red-900/50 text-[#ff4444]' : 'bg-red-100 text-rose-700 font-bold') : isLow ? (isHighContrast ? 'text-sky-400' : 'text-sky-600') : (isHighContrast ? 'text-[#00ff00]' : 'text-emerald-600')}`}>
                                     {valNum.toFixed(unit === 'mmol/L' ? 1 : 0)}
@@ -1249,18 +1261,49 @@ function AppContent() {
         )}
       </div>
 
-      <footer className={`mt-8 flex flex-wrap items-center gap-6 text-[10.5px] font-bold uppercase tracking-widest print:hidden ${isHighContrast ? 'text-gray-500' : 'text-slate-400'}`}>
-        <div className="flex items-center gap-2">
-          <div className={`w-2.5 h-2.5 rounded-full ${isHighContrast ? 'bg-green-500' : 'bg-emerald-500 shadow-sm shadow-emerald-200'}`} aria-hidden="true"></div> Normal Range
+      <footer className="mt-8 flex flex-col gap-6 print:hidden">
+        <div className={`p-6 border rounded-2xl shadow-sm ${isHighContrast ? 'bg-black border-gray-600' : 'bg-white border-slate-200'}`}>
+          <p className={`text-[10px] font-bold uppercase tracking-widest mb-4 ${isHighContrast ? 'text-gray-400' : 'text-slate-500'}`}>Clinical Glucose Ranges ({unit})</p>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="text-center">
+              <div className="h-1.5 w-full rounded-full mb-2 bg-[#dc2626]" />
+              <p className={`text-[13px] font-semibold ${isHighContrast ? 'text-white' : 'text-slate-900'}`}>Hypoglycaemia</p>
+              <p className="text-[15px] font-bold tabular-nums text-[#dc2626]">&lt; {unit === 'mg/dL' ? '70' : '3.9'}</p>
+            </div>
+            <div className="text-center">
+              <div className="h-1.5 w-full rounded-full mb-2 bg-[#059669]" />
+              <p className={`text-[13px] font-semibold ${isHighContrast ? 'text-white' : 'text-slate-900'}`}>Normal Fasting</p>
+              <p className="text-[15px] font-bold tabular-nums text-[#059669]">{unit === 'mg/dL' ? '70–99' : '3.9–5.5'}</p>
+            </div>
+            <div className="text-center">
+              <div className="h-1.5 w-full rounded-full mb-2 bg-[#d97706]" />
+              <p className={`text-[13px] font-semibold ${isHighContrast ? 'text-white' : 'text-slate-900'}`}>Pre-Diabetes</p>
+              <p className="text-[15px] font-bold tabular-nums text-[#d97706]">{unit === 'mg/dL' ? '100–125' : '5.6–6.9'}</p>
+            </div>
+            <div className="text-center">
+              <div className="h-1.5 w-full rounded-full mb-2 bg-[#ea580c]" />
+              <p className={`text-[13px] font-semibold ${isHighContrast ? 'text-white' : 'text-slate-900'}`}>Diabetes Range</p>
+              <p className="text-[15px] font-bold tabular-nums text-[#ea580c]">≥ {unit === 'mg/dL' ? '126' : '7.0'}</p>
+            </div>
+          </div>
+          <p className={`text-[11px] mt-4 ${isHighContrast ? 'text-gray-400' : 'text-slate-500'}`}>
+            Note: post-meal target &lt; {unit === 'mg/dL' ? '140' : '7.8'} {unit} (2 hrs after a meal). Bands follow standard fasting-glucose clinical thresholds.
+          </p>
         </div>
-        <div className="flex items-center gap-2">
-          <div className={`w-2.5 h-2.5 rounded-full ${isHighContrast ? 'bg-sky-400' : 'bg-sky-500 shadow-sm shadow-sky-200'}`} aria-hidden="true"></div> Low Range (&lt; {convertTarget(4.0, unit)})
-        </div>
-        <div className="flex items-center gap-2">
-          <div className={`w-2.5 h-2.5 rounded-full ${isHighContrast ? 'bg-red-500' : 'bg-rose-500 shadow-sm shadow-rose-200'}`} aria-hidden="true"></div> High Target / Alert
-        </div>
-        <div className={`md:ml-auto italic font-medium tracking-normal ${isHighContrast ? 'text-gray-600' : 'text-slate-300'}`}>
-          ROPHE SPECIALIST CARE SYSTEM &copy; {new Date().getFullYear()}
+
+        <div className={`flex flex-wrap items-center gap-6 text-[10.5px] font-bold uppercase tracking-widest ${isHighContrast ? 'text-gray-500' : 'text-slate-400'}`}>
+          <div className="flex items-center gap-2">
+            <div className={`w-2.5 h-2.5 rounded-full ${isHighContrast ? 'bg-green-500' : 'bg-emerald-500 shadow-sm shadow-emerald-200'}`} aria-hidden="true"></div> Normal Range
+          </div>
+          <div className="flex items-center gap-2">
+            <div className={`w-2.5 h-2.5 rounded-full ${isHighContrast ? 'bg-sky-400' : 'bg-sky-500 shadow-sm shadow-sky-200'}`} aria-hidden="true"></div> Low Range (&lt; {convertTarget(4.0, unit)})
+          </div>
+          <div className="flex items-center gap-2">
+            <div className={`w-2.5 h-2.5 rounded-full ${isHighContrast ? 'bg-[#ea580c]' : 'bg-[#ea580c] shadow-sm shadow-orange-200'}`} aria-hidden="true"></div> High Target / Alert
+          </div>
+          <div className={`md:ml-auto italic font-medium tracking-normal ${isHighContrast ? 'text-gray-600' : 'text-slate-300'}`}>
+            ROPHE SPECIALIST CARE SYSTEM &copy; {new Date().getFullYear()}
+          </div>
         </div>
       </footer>
 

@@ -4,7 +4,7 @@ import { defineConfig } from 'vite'
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
-  base: './',
+  base: '/',
   // The components use JSX inside .js files (flattened CRA heritage).
   esbuild: { loader: 'jsx', include: /\.(js|jsx)$/ },
   optimizeDeps: { esbuildOptions: { loader: { '.js': 'jsx' } } },
