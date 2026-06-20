@@ -14,7 +14,7 @@ param(
 
 $ErrorActionPreference = "Stop"
 $__deployStart = Get-Date
-$GITHUB_REPO   = "https://github.com/DanielFTwum-creator/aucdt-utilities.git"
+$GITHUB_REPO   = "git@github.com:DanielFTwum-creator/aucdt-utilities.git"
 $SUBFOLDER     = "enhanced-youtube-genie"
 $PORT          = 3018
 $PM2_APP       = "youtube-genie"
@@ -62,6 +62,21 @@ Log "INFO" "Step 3: Server-side build + PM2 run..." Yellow
 $remoteScript = @"
 #!/usr/bin/env bash
 set -e
+export NVM_DIR="`$HOME/.nvm"
+[ -s "`$NVM_DIR/nvm.sh" ] && \. "`$NVM_DIR/nvm.sh"
+nvm use --lts >/dev/null 2>&1 || true
+mkdir -p ~/.ssh && chmod 700 ~/.ssh
+if [ -f ~/.ssh/github_deploy ]; then
+  chmod 600 ~/.ssh/github_deploy
+  grep -q 'Host github.com' ~/.ssh/config 2>/dev/null || cat >> ~/.ssh/config << 'SSHCONF'
+Host github.com
+  HostName github.com
+  User git
+  IdentityFile ~/.ssh/github_deploy
+  IdentitiesOnly yes
+  StrictHostKeyChecking no
+SSHCONF
+fi
 TMPDIR=/tmp/${SUBFOLDER}_deploy_${commit}
 DEPLOY=${RemotePath}
 REPO=${GITHUB_REPO}

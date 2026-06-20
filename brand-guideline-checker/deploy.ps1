@@ -15,7 +15,7 @@ $DEPLOY_PATH = '/var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/bra
 $PORT        = 3017
 $PM2_APP     = 'brand-guideline-checker'
 $HEALTH_URL  = 'https://ai-tools.techbridge.edu.gh/brand-guideline-checker'
-$GITHUB_REPO = 'https://github.com/DanielFTwum-creator/aucdt-utilities'
+$GITHUB_REPO = 'git@github.com:DanielFTwum-creator/aucdt-utilities.git'
 $SUBFOLDER   = 'brand-guideline-checker'
 $SSH_OPTS    = @('-o', 'StrictHostKeyChecking=no', '-o', 'BatchMode=yes')
 $SSH         = 'ssh'
@@ -62,6 +62,21 @@ Log -Level 'SUCCESS' -Msg '.env.local uploaded' -Color Green
 $remoteBuildScript = @"
 #!/usr/bin/env bash
 set -e
+export NVM_DIR="`$HOME/.nvm"
+[ -s "`$NVM_DIR/nvm.sh" ] && \. "`$NVM_DIR/nvm.sh"
+nvm use --lts >/dev/null 2>&1 || true
+mkdir -p ~/.ssh && chmod 700 ~/.ssh
+if [ -f ~/.ssh/github_deploy ]; then
+  chmod 600 ~/.ssh/github_deploy
+  grep -q 'Host github.com' ~/.ssh/config 2>/dev/null || cat >> ~/.ssh/config << 'SSHCONF'
+Host github.com
+  HostName github.com
+  User git
+  IdentityFile ~/.ssh/github_deploy
+  IdentitiesOnly yes
+  StrictHostKeyChecking no
+SSHCONF
+fi
 TMPDIR=/tmp/${SUBFOLDER}_deploy_${COMMIT}
 DEPLOY_PATH=${DEPLOY_PATH}
 REPO=${GITHUB_REPO}

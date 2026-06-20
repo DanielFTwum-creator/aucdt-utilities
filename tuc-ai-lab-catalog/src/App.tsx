@@ -34,6 +34,7 @@ const SLUG_TO_PATH: Record<string, string> = {
   "youtube-genie": "/youtube-genie/",
   "markai": "/markai/",
   "stockpulse": "/stockpulse/",
+  "english-safari": "/english-safari/",
 };
 
 const getAppUrl = (slug: string) => {
@@ -55,6 +56,7 @@ const DEPLOYED_SLUGS = new Set<string>([
   "ai-stand-up-workshop-prep", "techbridge-ai-workshop-flyer", "techbridge-poster-studio",
   "tuc-2026-enrollment-command-centre", "patois-lyricist", "impact-ventures-dashboard",
   "techbridge-assessment-platform", "bionicskins", "stockpulse",
+  "english-safari",
 ]);
 
 const isDeployed = (slug: string) => DEPLOYED_SLUGS.has(slug);
@@ -95,6 +97,7 @@ const TOOL_ICONS: Record<string, React.ComponentType<{className?: string}>> = {
   "rophe-sugar-logger": Activity,
   "brainiac-challenge": Gamepad2,
   "stockpulse": BarChart3,
+  "english-safari": Gamepad2,
 };
 
 interface Tool {
@@ -145,6 +148,7 @@ const TOOLS: Tool[] = [
   { slug: "tvet-assessment-progress-dashboard", title: "TVET Progress Dashboard", desc: "Tracks TVET assessment completion with gap analysis", cat: "Academic" },
   { slug: "verb-explorer-toolkit", title: "Verb Explorer Toolkit", desc: "Interactive Class 4 verb discovery and profiling toolkit", cat: "Academic" },
   { slug: "visual-quiz-master", title: "Visual Quiz Master", desc: "Quiz app with SVG diagrams and Chart.js visual questions", cat: "Academic" },
+  { slug: "english-safari", title: "English Safari", desc: "Interactive vocabulary adventure game for kids", cat: "Games" },
 
   // Creative
   { slug: "ai-flyer-generator", title: "AI Flyer Generator", desc: "Generates professional business flyers from design briefs", cat: "Creative" },

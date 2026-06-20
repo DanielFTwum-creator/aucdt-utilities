@@ -24,7 +24,7 @@ $ErrorActionPreference = 'Stop'
 
 $REMOTE      = 'root@66.226.72.199'
 $DEPLOY_PATH = '/var/www/vhosts/techbridge.edu.gh/wms.techbridge.edu.gh'
-$GITHUB_REPO = 'https://github.com/DanielFTwum-creator/aucdt-utilities.git'
+$GITHUB_REPO = 'git@github.com:DanielFTwum-creator/aucdt-utilities.git'
 $SUBFOLDER   = 'tuc-wms/frontend'
 $OWNER       = 'techbridge.edu.gh_md:psacln'
 $SSH_OPTS    = @('-o', 'StrictHostKeyChecking=no')
@@ -48,6 +48,21 @@ if (-not $Build) { Log 'ERROR' 'Run with -Build (server-side build).' Red; exit 
 # ---- Server-side: clone (sparse) -> pnpm build -> rsync -> perms -> .htaccess ----
 $serverScript = @"
 set -e
+export NVM_DIR="`$HOME/.nvm"
+[ -s "`$NVM_DIR/nvm.sh" ] && \. "`$NVM_DIR/nvm.sh"
+nvm use --lts >/dev/null 2>&1 || true
+mkdir -p ~/.ssh && chmod 700 ~/.ssh
+if [ -f ~/.ssh/github_deploy ]; then
+  chmod 600 ~/.ssh/github_deploy
+  grep -q 'Host github.com' ~/.ssh/config 2>/dev/null || cat >> ~/.ssh/config << 'SSHCONF'
+Host github.com
+  HostName github.com
+  User git
+  IdentityFile ~/.ssh/github_deploy
+  IdentitiesOnly yes
+  StrictHostKeyChecking no
+SSHCONF
+fi
 log() { echo "[`$(date '+%H:%M:%S')][SERVER] `$1"; }
 TMP=/tmp/tuc-wms-fe_`$`$
 DEPLOY=$DEPLOY_PATH

@@ -10,7 +10,7 @@ param(
 
 $ErrorActionPreference = "Stop"
 $__deployStart = Get-Date
-$GITHUB_REPO   = "https://github.com/DanielFTwum-creator/aucdt-utilities.git"
+$GITHUB_REPO   = "git@github.com:DanielFTwum-creator/aucdt-utilities.git"
 $SUBFOLDER     = "techbridge-strategy-dashboard"
 $PORT          = 3023
 $PM2_APP       = "techbridge-strategy-dashboard"
@@ -45,6 +45,21 @@ if ($Build) {
     $buildDir = "/tmp/tb-strategy_deploy_$commit"
     $serverScript = @"
 set -e
+export NVM_DIR="`$HOME/.nvm"
+[ -s "`$NVM_DIR/nvm.sh" ] && \. "`$NVM_DIR/nvm.sh"
+nvm use --lts >/dev/null 2>&1 || true
+mkdir -p ~/.ssh && chmod 700 ~/.ssh
+if [ -f ~/.ssh/github_deploy ]; then
+  chmod 600 ~/.ssh/github_deploy
+  grep -q 'Host github.com' ~/.ssh/config 2>/dev/null || cat >> ~/.ssh/config << 'SSHCONF'
+Host github.com
+  HostName github.com
+  User git
+  IdentityFile ~/.ssh/github_deploy
+  IdentitiesOnly yes
+  StrictHostKeyChecking no
+SSHCONF
+fi
 log() { echo "[`$(date '+%Y-%m-%d %H:%M:%S')][SERVER] `$1"; }
 if ! command -v pnpm >/dev/null 2>&1; then
   corepack enable >/dev/null 2>&1 || npm install -g pnpm --silent

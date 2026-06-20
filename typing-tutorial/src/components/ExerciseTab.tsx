@@ -67,16 +67,16 @@ function HandDiagram({ activeHand, activeFinger, isIdle }: { activeHand: string;
   const isSpace = activeHand === "Hands";
 
   const leftFingers = [
-    { name: "Pinky",  key: "A", x: 26,  w: 34, h: 58 },
-    { name: "Ring",   key: "S", x: 68,  w: 36, h: 76 },
-    { name: "Middle", key: "D", x: 112, w: 38, h: 94 },
-    { name: "Index",  key: "F", x: 158, w: 36, h: 80 },
+    { name: "Pinky", key: "A", x: 28, w: 28, h: 58, lean: -5 },
+    { name: "Ring", key: "S", x: 70, w: 31, h: 76, lean: -3 },
+    { name: "Middle", key: "D", x: 116, w: 33, h: 94, lean: 0 },
+    { name: "Index", key: "F", x: 164, w: 31, h: 80, lean: 4 },
   ];
   const rightFingers = [
-    { name: "Index",  key: "J", x: 406, w: 36, h: 80 },
-    { name: "Middle", key: "K", x: 450, w: 38, h: 94 },
-    { name: "Ring",   key: "L", x: 496, w: 36, h: 76 },
-    { name: "Pinky",  key: ";", x: 540, w: 34, h: 58 },
+    { name: "Index", key: "J", x: 405, w: 31, h: 80, lean: -4 },
+    { name: "Middle", key: "K", x: 451, w: 33, h: 94, lean: 0 },
+    { name: "Ring", key: "L", x: 499, w: 31, h: 76, lean: 3 },
+    { name: "Pinky", key: ";", x: 543, w: 28, h: 58, lean: 5 },
   ];
 
   // When idle/resting: all 8 home-row fingers glow at full strength (Mavis Beacon
@@ -96,45 +96,94 @@ function HandDiagram({ activeHand, activeFinger, isIdle }: { activeHand: string;
   };
 
   const thumbClass = isSpace ? FINGER_ACCENTS.Thumbs.handActive : FINGER_ACCENTS.Thumbs.handIdle;
-  const palmClass = "fill-slate-200 dark:fill-slate-800";
+  const skinClass = "fill-[#9a6134] dark:fill-[#8a542b]";
+  const skinShadowClass = "fill-[#72401f] dark:fill-[#5f351b]";
+  const nailClass = "fill-[#f2c7a1] dark:fill-[#c58a62]";
+  const creaseClass = "stroke-[#5f351b]/50 dark:stroke-[#3b2315]/70";
   const palmTop = 128;
 
+  const fingerPath = (x: number, y: number, w: number, h: number, lean: number) => {
+    const tipY = y + 8;
+    const baseY = y + h + 26;
+    const leftBase = x - 1;
+    const rightBase = x + w + 1;
+    const leftTip = x + 4 + lean;
+    const rightTip = x + w - 4 + lean;
+    const mid = x + w / 2 + lean;
+    return [
+      `M ${leftBase} ${baseY}`,
+      `C ${leftBase - 2} ${baseY - 22}, ${leftTip - 3} ${tipY + 28}, ${leftTip} ${tipY}`,
+      `C ${leftTip + 2} ${y - 3}, ${rightTip - 2} ${y - 3}, ${rightTip} ${tipY}`,
+      `C ${rightTip + 3} ${tipY + 30}, ${rightBase + 2} ${baseY - 22}, ${rightBase} ${baseY}`,
+      `C ${rightBase - 10} ${baseY + 6}, ${leftBase + 10} ${baseY + 6}, ${leftBase} ${baseY}`,
+      "Z",
+      `M ${mid - w * 0.23} ${y + h * 0.42} C ${mid - 4} ${y + h * 0.48}, ${mid + 4} ${y + h * 0.48}, ${mid + w * 0.23} ${y + h * 0.42}`,
+      `M ${mid - w * 0.2} ${y + h * 0.7} C ${mid - 3} ${y + h * 0.75}, ${mid + 3} ${y + h * 0.75}, ${mid + w * 0.2} ${y + h * 0.7}`,
+    ].join(" ");
+  };
+
   return (
-    <svg viewBox="0 0 600 220" className="w-full max-w-md mx-auto lg:max-w-none" aria-hidden="true">
+    <svg viewBox="0 0 600 230" className="w-full max-w-md mx-auto lg:max-w-none" aria-hidden="true">
       {/* Left hand fingers — lift active finger upward to show it reaching for a key */}
       {leftFingers.map((f) => {
         const lift = liftY("Left", f.name);
+        const y = palmTop - f.h;
+        const d = fingerPath(f.x, y, f.w, f.h, f.lean);
+        const isActive = isIdle || (activeHand.startsWith("Left") && activeFinger === f.name);
         return (
-          <rect key={f.name} x={f.x} y={palmTop - f.h} width={f.w} height={f.h + 24} rx={f.w / 2}
-            className={fingerClass("Left", f.name)}
-            style={{ transform: `translateY(${lift}px)`, transition: "transform 130ms ease, fill 100ms ease" }} />
+          <g key={f.name} style={{ transform: `translateY(${lift}px)`, transition: "transform 130ms ease" }}>
+            <path d={d} className={`${skinClass} transition-all duration-100`} />
+            <path d={d} className={`${fingerClass("Left", f.name)} transition-all duration-100`} opacity={isActive ? 0.82 : 0.18} />
+            <path d={d} className={`${creaseClass} fill-transparent`} strokeWidth="1.2" strokeLinecap="round" />
+            <ellipse cx={f.x + f.w / 2 + f.lean} cy={y + 14} rx={f.w * 0.27} ry="5.2" className={nailClass} opacity="0.86" />
+          </g>
         );
       })}
       {/* Left palm */}
-      <path d="M14,140 Q14,210 40,212 H220 Q246,210 246,140 V128 Q246,118 236,118 H24 Q14,118 14,128 Z"
-        className={`transition-all duration-100 ${palmClass}`} />
+      <path d="M12,142 C18,122 33,116 62,120 C93,124 117,121 142,119 C178,116 212,120 236,130 C249,141 251,188 238,214 C199,222 63,222 22,214 C12,192 7,164 12,142 Z"
+        className={`transition-all duration-100 ${skinClass}`} />
+      <path d="M22,169 C62,152 107,153 145,159 M45,202 C92,211 172,211 222,201"
+        className={`${creaseClass} fill-transparent`} strokeWidth="1.6" strokeLinecap="round" />
+      <path d="M14,197 C64,222 188,222 240,199 C237,207 235,214 231,219 H30 C23,214 18,207 14,197 Z"
+        className={skinShadowClass} opacity="0.42" />
       {/* Left thumb */}
-      <rect x="210" y="165" width="60" height="32" rx="16" transform="rotate(18 210 181)"
-        className={`transition-all duration-100 ${thumbClass}`} />
+      <path d="M198,166 C219,158 253,166 270,186 C275,194 269,203 258,202 C231,201 205,192 192,180 C188,174 191,169 198,166 Z"
+        className={`transition-all duration-100 ${skinClass}`} />
+      <path d="M198,166 C219,158 253,166 270,186 C275,194 269,203 258,202 C231,201 205,192 192,180 C188,174 191,169 198,166 Z"
+        className={`transition-all duration-100 ${thumbClass}`} opacity={isSpace ? 0.85 : 0.18} />
+      <ellipse cx="255" cy="188" rx="8" ry="5" transform="rotate(20 255 188)" className={nailClass} opacity="0.86" />
 
       {/* Right hand fingers */}
       {rightFingers.map((f) => {
         const lift = liftY("Right", f.name);
+        const y = palmTop - f.h;
+        const d = fingerPath(f.x, y, f.w, f.h, f.lean);
+        const isActive = isIdle || (activeHand.startsWith("Right") && activeFinger === f.name);
         return (
-          <rect key={f.name} x={f.x} y={palmTop - f.h} width={f.w} height={f.h + 24} rx={f.w / 2}
-            className={fingerClass("Right", f.name)}
-            style={{ transform: `translateY(${lift}px)`, transition: "transform 130ms ease, fill 100ms ease" }} />
+          <g key={f.name} style={{ transform: `translateY(${lift}px)`, transition: "transform 130ms ease" }}>
+            <path d={d} className={`${skinClass} transition-all duration-100`} />
+            <path d={d} className={`${fingerClass("Right", f.name)} transition-all duration-100`} opacity={isActive ? 0.82 : 0.18} />
+            <path d={d} className={`${creaseClass} fill-transparent`} strokeWidth="1.2" strokeLinecap="round" />
+            <ellipse cx={f.x + f.w / 2 + f.lean} cy={y + 14} rx={f.w * 0.27} ry="5.2" className={nailClass} opacity="0.86" />
+          </g>
         );
       })}
       {/* Right palm */}
-      <path d="M354,140 Q354,210 380,212 H560 Q586,210 586,140 V128 Q586,118 576,118 H364 Q354,118 354,128 Z"
-        className={`transition-all duration-100 ${palmClass}`} />
+      <path d="M348,130 C372,120 407,116 443,119 C468,121 493,124 524,120 C553,116 568,122 588,142 C593,164 588,192 578,214 C537,222 401,222 362,214 C349,188 351,141 348,130 Z"
+        className={`transition-all duration-100 ${skinClass}`} />
+      <path d="M378,159 C416,153 461,152 502,169 M368,201 C418,211 498,211 545,202"
+        className={`${creaseClass} fill-transparent`} strokeWidth="1.6" strokeLinecap="round" />
+      <path d="M360,199 C412,222 536,222 586,197 C582,207 577,214 570,219 H369 C365,214 362,207 360,199 Z"
+        className={skinShadowClass} opacity="0.42" />
       {/* Right thumb */}
-      <rect x="330" y="165" width="60" height="32" rx="16" transform="rotate(-18 390 181)"
-        className={`transition-all duration-100 ${thumbClass}`} />
+      <path d="M402,166 C381,158 347,166 330,186 C325,194 331,203 342,202 C369,201 395,192 408,180 C412,174 409,169 402,166 Z"
+        className={`transition-all duration-100 ${skinClass}`} />
+      <path d="M402,166 C381,158 347,166 330,186 C325,194 331,203 342,202 C369,201 395,192 408,180 C412,174 409,169 402,166 Z"
+        className={`transition-all duration-100 ${thumbClass}`} opacity={isSpace ? 0.85 : 0.18} />
+      <ellipse cx="345" cy="188" rx="8" ry="5" transform="rotate(-20 345 188)" className={nailClass} opacity="0.86" />
 
       {/* Spacebar */}
-      <rect x="220" y="200" width="160" height="14" rx="7"
+      <rect x="220" y="207" width="160" height="14" rx="7"
         className={`transition-all duration-100 ${isSpace ? FINGER_ACCENTS.Thumbs.handActive : "fill-slate-300 dark:fill-slate-700"}`} />
 
       {/* Home-row key labels — travel with the finger they sit on */}
@@ -145,7 +194,7 @@ function HandDiagram({ activeHand, activeFinger, isIdle }: { activeHand: string;
         const isActiveLabel = !isSpace && activeHand.startsWith(f.hand) && activeFinger === f.name;
         const lift = liftY(f.hand, f.name);
         return (
-          <text key={`${f.name}-lbl`} x={f.x + f.w / 2} y={palmTop - f.h + 16} textAnchor="middle"
+          <text key={`${f.name}-lbl`} x={f.x + f.w / 2 + f.lean} y={palmTop - f.h + 17} textAnchor="middle"
             className={`text-[11px] font-mono font-bold uppercase ${isActiveLabel ? "fill-slate-950" : FINGER_ACCENTS[f.name].label}`}
             style={{ transform: `translateY(${lift}px)`, transition: "transform 130ms ease" }}>
             {f.key}

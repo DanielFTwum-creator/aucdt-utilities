@@ -16,6 +16,7 @@
 | 4 | Google Gemini API Integration | Glucose, any vision/OCR task |
 | 5 | Dual-Auth Logout | Public-facing apps with own OAuth + local session |
 | 6 | Glucose Project Learnings | General React + IndexedDB apps |
+| 7 | Full-Viewport Layout | All TUC React apps with focused-work views |
 | — | WMS SSO + TOTP onboarding (staff apps) | → `tuc-wms/docs/SSO_ONBOARDING_PLAYBOOK.md` |
 
 ---
@@ -553,5 +554,92 @@ Always log: before state → action → after state.
 
 ---
 
-*Last updated: May 2026 — Daniel Frempong Twum / TUC ICT*  
+---
+
+## PATTERN 7: FULL-VIEWPORT LAYOUT (Fleet Standard)
+
+**Origin:** VortexType typing-tutor, June 2026.  
+**Applies to:** Every TUC React app that has a focused-work view (exercise, canvas, editor, player, quiz).
+
+### Context
+
+A shared `<main className="max-w-7xl mx-auto py-8">` wrapper constrains all views to a centred column, wasting horizontal and vertical space on the focused-work screen.
+
+### Implementation
+
+Split the root render into two branches: **browsing** (centred column + footer) and **focused** (full-bleed, no footer).
+
+```tsx
+// App.tsx — top-level layout
+return (
+  <div className="min-h-screen flex flex-col bg-... text-...">
+
+    <Navbar ... />   {/* always shrink-0 */}
+
+    {focusedView ? (
+      /* Full-bleed: no max-w, no footer, fills remaining height */
+      <div className="flex-1 flex flex-col px-4 sm:px-6 lg:px-8 py-4">
+        <FocusedView ... />
+      </div>
+    ) : (
+      <>
+        <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          {/* tab routing */}
+        </main>
+        <footer ...>...</footer>
+      </>
+    )}
+
+  </div>
+);
+```
+
+### Inside the Focused View Component
+
+The root element must be `flex flex-col h-full` (not `space-y-*`). The panel that should expand gets `flex-1 min-h-0`:
+
+```tsx
+// FocusedView.tsx
+return (
+  <div className="flex flex-col h-full gap-3">
+
+    {/* Fixed-height chrome: toolbar, progress bar, status */}
+    <TopChrome />
+
+    {/* Fixed-height input area */}
+    <InputArea />
+
+    {/* Expanding panel — fills all remaining height */}
+    <div className="flex-1 min-h-0 flex flex-col rounded-2xl ...">
+      {/* Content centred inside the expanded space */}
+      <div className="flex-1 flex items-center justify-center">
+        <MainContent />
+      </div>
+    </div>
+
+  </div>
+);
+```
+
+### Rules
+
+| Rule | Why |
+| --- | --- |
+| Root div: `flex flex-col h-full` | Receives height from parent's `flex-1` |
+| Expanding panel: `flex-1 min-h-0` | `min-h-0` prevents flex overflow on short screens |
+| `space-y-*` not allowed on root | Breaks flex height distribution |
+| Footer hidden in focused mode | No distractions during focused work |
+| Navbar always `shrink-0` | Must not compress when content grows |
+
+### Terminology
+
+- **Responsive** — adapts layout to different screen *sizes* (breakpoints)  
+- **Full-viewport / fluid** — fills the available *space* regardless of size  
+- **Full-bleed** — no `max-w` constraint, edge-to-edge width  
+
+These are independent. A full-viewport layout should also be responsive.
+
+---
+
+*Last updated: June 2026 — Daniel Frempong Twum / TUC ICT*  
 *Core session directives → see CLAUDE.md*

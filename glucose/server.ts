@@ -370,9 +370,9 @@ app.post(['/api/import-csv', '/glucose/api/import-csv'], express.text({ type: 't
       const fastingVal = fastingIdx !== -1 ? cols[fastingIdx] : '';
       const postBreakfastVal = postBreakfastIdx !== -1 ? cols[postBreakfastIdx] : '';
       const preLunchVal = preLunchIdx !== -1 ? cols[preLunchIdx] : '';
-      const postLunchVal = postLunchIdx !== -1 ? cols[postLunchVal] : '';
+      const postLunchVal = postLunchIdx !== -1 ? cols[postLunchIdx] : '';
       const preDinnerVal = preDinnerIdx !== -1 ? cols[preDinnerIdx] : '';
-      const postDinnerVal = postDinnerIdx !== -1 ? cols[postDinnerVal] : '';
+      const postDinnerVal = postDinnerIdx !== -1 ? cols[postDinnerIdx] : '';
 
       const id = `read-${dateVal.replace(/[\/\-]/g, '')}`;
 

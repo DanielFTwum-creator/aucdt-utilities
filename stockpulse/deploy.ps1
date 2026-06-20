@@ -171,7 +171,27 @@ $prodEnv | Set-Content $localEnvTmp
 Remove-Item $localEnvTmp -Force
 
 Write-Host "Installing production dependencies on server..."
-& ssh @SSH_OPTS $RemoteHost "cd $RemotePath/backend ; pnpm install --prod --silent"
+$installScript = @"
+export NVM_DIR="`$HOME/.nvm"
+[ -s "`$NVM_DIR/nvm.sh" ] && \. "`$NVM_DIR/nvm.sh"
+nvm use --lts >/dev/null 2>&1 || true
+mkdir -p ~/.ssh && chmod 700 ~/.ssh
+if [ -f ~/.ssh/github_deploy ]; then
+  chmod 600 ~/.ssh/github_deploy
+  grep -q 'Host github.com' ~/.ssh/config 2>/dev/null || cat >> ~/.ssh/config << 'SSHCONF'
+Host github.com
+  HostName github.com
+  User git
+  IdentityFile ~/.ssh/github_deploy
+  IdentitiesOnly yes
+  StrictHostKeyChecking no
+SSHCONF
+fi
+cd $RemotePath/backend
+pnpm install --prod --silent
+"@
+$b64Install = [Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes($installScript.Replace("`r", "")))
+& ssh @SSH_OPTS $RemoteHost "echo $b64Install | base64 -d | bash"
 
 Write-Host "" -ForegroundColor Yellow
 Write-Host "Step 5: Restarting PM2 process..." -ForegroundColor Yellow
@@ -179,6 +199,9 @@ Write-Host "" -ForegroundColor Yellow
 
 $PM2_APP = "stockpulse-backend"
 $pm2Cmd = '
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+nvm use --lts >/dev/null 2>&1 || true
 if pm2 describe {PM2_APP} > /dev/null 2>&1; then
     echo "PM2: Reloading {PM2_APP}..."
     pm2 reload {PM2_APP} --update-env
