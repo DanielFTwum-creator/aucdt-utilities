@@ -144,6 +144,19 @@ export const LESSONS: Lesson[] = [
       "199.99 45.50 1000.00",
       "10293-84756 30219-58473"
     ]
+  },
+  {
+    id: 12,
+    title: "Best Practice - The Ultimate Drill",
+    description: "The final test of everything. Full keyboard, punctuation, numbers, and real-world sentences typed at peak accuracy. This is where speed meets discipline.",
+    keys: "abcdefghijklmnopqrstuvwxyz0123456789.,;:!?-'\"()",
+    icon: "🎓",
+    practices: [
+      "Accuracy: 98%. Speed: 75 WPM. Focus — every keystroke counts.",
+      "The system flagged 3 errors at 14:07; review logs before Friday's deadline.",
+      "Daniel's report (2026) states: 'Typing fluency is a core ICT competency.'",
+      "Node v24.17.0 — pnpm install && pnpm build && rsync dist/ root@server:/var/www/"
+    ]
   }
 ];
 

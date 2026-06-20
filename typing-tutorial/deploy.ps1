@@ -39,6 +39,9 @@ if ($Build) {
     $buildDir = "/tmp/typing-tutor_deploy_$commit"
     $serverScript = @"
 set -e
+export NVM_DIR="`$HOME/.nvm"
+[ -s "`$NVM_DIR/nvm.sh" ] && \. "`$NVM_DIR/nvm.sh"
+nvm use --lts >/dev/null 2>&1 || true
 log() { echo "[`$(date '+%Y-%m-%d %H:%M:%S')][SERVER] `$1"; }
 if ! command -v pnpm >/dev/null 2>&1; then
   corepack enable >/dev/null 2>&1 || npm install -g pnpm --silent
