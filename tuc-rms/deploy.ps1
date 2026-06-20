@@ -69,21 +69,6 @@ cd $buildDir
 git sparse-checkout set tuc-rms
 cd tuc-rms/frontend
 set -e
-export NVM_DIR="`$HOME/.nvm"
-[ -s "`$NVM_DIR/nvm.sh" ] && \. "`$NVM_DIR/nvm.sh"
-nvm use --lts >/dev/null 2>&1 || true
-mkdir -p ~/.ssh && chmod 700 ~/.ssh
-if [ -f ~/.ssh/github_deploy ]; then
-  chmod 600 ~/.ssh/github_deploy
-  grep -q 'Host github.com' ~/.ssh/config 2>/dev/null || cat >> ~/.ssh/config << 'SSHCONF'
-Host github.com
-  HostName github.com
-  User git
-  IdentityFile ~/.ssh/github_deploy
-  IdentitiesOnly yes
-  StrictHostKeyChecking no
-SSHCONF
-fi
 log '[3/5] Installing dependencies...'
 pnpm install --no-frozen-lockfile || { echo '[WARN] pnpm install failed — falling back to npm'; npm install; }
 log '[4/5] Building...'
