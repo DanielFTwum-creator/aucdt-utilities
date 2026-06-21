@@ -1,7 +1,9 @@
 /**
  * English Safari — Backend Gemini Proxy
  * @description Proxies Gemini API calls so the API key never reaches the browser.
- * @pattern  Follows biochemai/dmcdai server-side proxy architecture.
+ * @pattern  Follows the fleet-standard WMS key-proxy pattern (FR-SSO-011).
+ *           The Gemini API key is never stored here — it is fetched at request
+ *           time from wms.techbridge.edu.gh using GEMINI_PROXY_KEY for auth.
  */
 
 import express from "express";
@@ -9,17 +11,39 @@ import dotenv from "dotenv";
 import { GoogleGenAI, Type } from "@google/genai";
 
 dotenv.config({ path: ".env.local" });
+dotenv.config();
 
-const PORT = Number(process.env.PORT) || 3010;
-const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+// --- Gemini key custody: fetched from the WMS proxy, never stored here (FR-SSO-011) ---
+// WMS is the single rotation point. Cached in memory with a 6-hour TTL.
+const WMS_KEY_URL = 'https://wms.techbridge.edu.gh/api/gemini/key';
+const KEY_TTL_MS  = 6 * 60 * 60 * 1000;
+let cachedGeminiKey: string | null = null;
+let keyFetchedAt = 0;
 
-if (!GEMINI_API_KEY) {
-  console.error("[EnglishSafari] FATAL: GEMINI_API_KEY not set in .env.local");
-  process.exit(1);
+function invalidateGeminiKey() { cachedGeminiKey = null; keyFetchedAt = 0; }
+
+async function getGeminiKey(): Promise<string> {
+  if (cachedGeminiKey && Date.now() - keyFetchedAt < KEY_TTL_MS) return cachedGeminiKey;
+  const proxyKey = process.env.GEMINI_PROXY_KEY;
+  if (!proxyKey) {
+    // Local dev fallback only — production must set GEMINI_PROXY_KEY.
+    const local = process.env.GEMINI_API_KEY || process.env.VITE_GEMINI_API_KEY;
+    if (local) return local;
+    throw new Error('GEMINI_PROXY_KEY is not set (and no local key fallback).');
+  }
+  const r = await fetch(WMS_KEY_URL, { headers: { 'X-Gemini-Proxy-Key': proxyKey } });
+  if (!r.ok) throw new Error(`WMS key fetch failed: ${r.status} ${await r.text()}`);
+  cachedGeminiKey = (await r.json()).apiKey;
+  keyFetchedAt = Date.now();
+  return cachedGeminiKey!;
 }
 
-const ai = new GoogleGenAI({ apiKey: GEMINI_API_KEY });
+const PORT = Number(process.env.PORT) || 3010;
 const MODEL = "gemini-2.5-flash";
+
+if (!process.env.GEMINI_PROXY_KEY) {
+  console.warn("[EnglishSafari] WARNING: GEMINI_PROXY_KEY not set — AI routes will use local fallback or fail");
+}
 
 const app = express();
 app.use(express.json({ limit: "1mb" }));
@@ -62,6 +86,13 @@ app.post(["/api/gemini/story", "/english-safari/api/gemini/story"], async (req, 
   `;
 
   try {
+    const geminiKey = await getGeminiKey().catch((err: any) => {
+      console.error('[EnglishSafari] Key fetch failed:', err.message);
+      return null;
+    });
+    if (!geminiKey) return res.status(503).json({ error: 'AI service temporarily unavailable' });
+
+    const ai = new GoogleGenAI({ apiKey: geminiKey });
     const prompt = topic
       ? `Write a short story for Ghanaian children about: ${topic}`
       : `Write a short story for Ghanaian children. Pick a random grammar topic and a fun scenario.`;
@@ -98,6 +129,9 @@ app.post(["/api/gemini/story", "/english-safari/api/gemini/story"], async (req, 
     res.json(parsed);
   } catch (err: any) {
     console.error("[EnglishSafari] story error:", err?.message);
+    if (String(err?.message).includes('API_KEY_INVALID') || String(err?.message).includes('API key expired')) {
+      invalidateGeminiKey();
+    }
     res.status(500).json({ error: "Story generation failed" });
   }
 });

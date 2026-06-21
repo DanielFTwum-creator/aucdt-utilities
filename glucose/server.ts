@@ -8,15 +8,37 @@ import fs from 'fs';
 dotenv.config({ path: '.env.local' });
 dotenv.config();
 
+// --- Gemini key custody: fetched from the WMS proxy, never stored here (FR-SSO-011) ---
+// WMS is the single rotation point. Cached in memory with a 6-hour TTL.
+const WMS_KEY_URL = 'https://wms.techbridge.edu.gh/api/gemini/key';
+const KEY_TTL_MS  = 6 * 60 * 60 * 1000;
+let cachedGeminiKey: string | null = null;
+let keyFetchedAt = 0;
+
+function invalidateGeminiKey() { cachedGeminiKey = null; keyFetchedAt = 0; }
+
+async function getGeminiKey(): Promise<string> {
+  if (cachedGeminiKey && Date.now() - keyFetchedAt < KEY_TTL_MS) return cachedGeminiKey;
+  const proxyKey = process.env.GEMINI_PROXY_KEY;
+  if (!proxyKey) {
+    // Local dev fallback only — production must set GEMINI_PROXY_KEY.
+    const local = process.env.GEMINI_API_KEY || process.env.VITE_GEMINI_API_KEY;
+    if (local) return local;
+    throw new Error('GEMINI_PROXY_KEY is not set (and no local key fallback).');
+  }
+  const r = await fetch(WMS_KEY_URL, { headers: { 'X-Gemini-Proxy-Key': proxyKey } });
+  if (!r.ok) throw new Error(`WMS key fetch failed: ${r.status} ${await r.text()}`);
+  cachedGeminiKey = (await r.json()).apiKey;
+  keyFetchedAt = Date.now();
+  return cachedGeminiKey!;
+}
+
+if (!process.env.GEMINI_PROXY_KEY) {
+  console.warn('[GLUCOSE-API] WARNING: GEMINI_PROXY_KEY not set — AI routes will use local fallback or fail');
+}
+
 const app = express();
 app.use(express.json({ limit: '10mb' }));
-
-const apiKey = process.env.GEMINI_API_KEY || process.env.VITE_GEMINI_API_KEY;
-if (!apiKey) {
-  console.error('[GLUCOSE-API] FATAL: GEMINI_API_KEY not set in environment');
-  process.exit(1);
-}
-const client = new GoogleGenAI({ apiKey });
 
 // -------------------------------------------------------------
 // SQLite Database Setup

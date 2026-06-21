@@ -15,6 +15,7 @@
 | 3011 | aucdt-msee-aptitude-test | |
 | 3012 | dfs-website | |
 | 3013 | deep-dub-vibes-player | was 3009 (conflict with omniextract) — fixed 2026-06-21 |
+| 3027 | tb-student-reg | was 3013 (conflict with deep-dub-vibes-player) — fixed 2026-06-21 |
 | 3015 | willpro | |
 | 3016 | ai-stand-up-workshop-prep-dashboard | |
 | 3017 | tuc-netscan-backend / tuc-netscan-100 | |
@@ -30,7 +31,7 @@
 
 ## Next available
 
-**3027** — increment from here for new apps.
+**3028** — increment from here for new apps.
 
 ## Apps without a backend port
 
@@ -62,3 +63,4 @@ These are pure SPA frontends with no Node backend:
 | 2026-06-21 | omniextract, deep-dub-vibes-player | 3009 | deep-dub moved to 3013 |
 | 2026-06-21 | dfs-website, impact-ventures-dashboard | 3012 | impact-ventures moved to 3025 |
 | 2026-06-21 | tuc-netscan-100, brand-guideline-checker | 3017 | brand-guideline-checker moved to 3026 |
+| 2026-06-21 | deep-dub-vibes-player, tb-student-reg | 3013 | tb-student-reg moved to 3027 (was unregistered) |

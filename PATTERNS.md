@@ -19,6 +19,7 @@
 | 7 | Full-Viewport Layout | All TUC React apps with focused-work views |
 | 8 | Port Assignment & Conflict Prevention | All backend apps in aucdt-utilities |
 | 9 | PM2 cwd + dotenv env-file contract | All backend apps in aucdt-utilities |
+| 10 | pnpm native binary permissions | All apps with esbuild / better-sqlite3 / protobufjs |
 | — | WMS SSO + TOTP onboarding (staff apps) | → `tuc-wms/docs/SSO_ONBOARDING_PLAYBOOK.md` |
 
 ---
@@ -800,6 +801,48 @@ grep 'dotenv\.config' server.ts   # shows which path is used
 - **"env file not renamed"** — fails if scp copies `.env.local` → `.env` (the silent mismatch)
 
 Run `.\test-fleet-deploy.ps1` before any fleet deploy to catch violations.
+
+---
+
+## PATTERN 10: PNPM NATIVE BINARY PERMISSIONS
+
+**Origin:** Fleet incident, June 2026 — `tb-student-reg` crashed with `EACCES: spawn esbuild` after a fresh `pnpm install`. Root cause: pnpm's content-addressable store does not guarantee execute permissions on native binaries after install. A subsequent `chmod` or `pnpm approve-builds` is required.
+
+### The Rule
+
+After any `pnpm install` on the server that involves native packages (esbuild, better-sqlite3, protobufjs, @google/genai, sharp, etc.), run:
+
+```bash
+pnpm approve-builds
+# or, non-interactively after you know which packages need it:
+chmod +x node_modules/.pnpm/esbuild@*/node_modules/esbuild/bin/esbuild 2>/dev/null || true
+find node_modules/.pnpm -name 'esbuild' -path '*/bin/esbuild' -exec chmod +x {} \; 2>/dev/null || true
+```
+
+### Add to deploy scripts
+
+Every deploy.ps1 `Step 6: backend files` section that runs `pnpm install --prod` should follow with a permission fix:
+
+```bash
+cd $RemotePath && pnpm install --prod 2>&1 | tail -5
+# Fix native binary permissions — pnpm store does not guarantee +x
+find node_modules/.pnpm -type f -name 'esbuild' -exec chmod +x {} \; 2>/dev/null || true
+find node_modules/.pnpm -name '*.node' -exec chmod +x {} \; 2>/dev/null || true
+```
+
+### Packages that commonly need this
+
+- `esbuild` (used by Vite, tsx, tsup)
+- `better-sqlite3` (.node binary)
+- `protobufjs` (postinstall script)
+- `@google/genai` (preinstall script)
+- `sharp` (.node binary)
+
+### Why this happens
+
+pnpm uses a global content-addressable store (`~/.local/share/pnpm/store/`). Files in the store are hardlinked into `node_modules/.pnpm`. If the store entry was created without execute bits (e.g. downloaded as a tarball and extracted without preserving permissions), every project that hardlinks from it inherits the broken permissions. `pnpm approve-builds` re-runs the postinstall script which rebuilds the binary with correct permissions.
+
+---
 
 ### Why `--env` flags alone are not enough
 
