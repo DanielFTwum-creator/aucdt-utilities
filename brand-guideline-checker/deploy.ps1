@@ -2,7 +2,7 @@
 # Brand Guideline Checker — Deploy Script
 # Remote : root@techbridge.edu.gh
 # Path   : /var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/brand-guideline-checker
-# Port   : 3017  |  PM2 app: brand-guideline-checker
+# Port   : 3026  |  PM2 app: brand-guideline-checker
 # Usage  : .\deploy.ps1
 # ============================================================
 
@@ -12,7 +12,7 @@ $ErrorActionPreference = 'Stop'
 
 $REMOTE      = 'root@techbridge.edu.gh'
 $DEPLOY_PATH = '/var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/brand-guideline-checker'
-$PORT        = 3017
+$PORT        = 3026
 $PM2_APP     = 'brand-guideline-checker'
 $HEALTH_URL  = 'https://ai-tools.techbridge.edu.gh/brand-guideline-checker'
 $GITHUB_REPO = 'git@github.com:DanielFTwum-creator/aucdt-utilities.git'
