@@ -130,7 +130,7 @@ if command -v pm2 &>/dev/null; then
   if pm2 describe deliberate-magic-reader &>/dev/null; then
     pm2 reload deliberate-magic-reader --update-env && echo 'pm2: reloaded deliberate-magic-reader'
   else
-    cd $RemotePath && PORT=3008 pm2 start server.ts --name deliberate-magic-reader --interpreter npx --interpreter-args tsx
+    cd $RemotePath && PORT=3008 pm2 start server.ts --name deliberate-magic-reader --interpreter npx --interpreter-args tsx --cwd $RemotePath
     echo 'pm2: started deliberate-magic-reader'
   fi
   pm2 save --force &>/dev/null

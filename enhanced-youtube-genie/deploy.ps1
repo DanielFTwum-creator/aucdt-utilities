@@ -127,7 +127,7 @@ log '[7/7] (Re)start PM2 process from server.ts...'
 cd "`$DEPLOY"
 pm2 describe "`$PM2_APP" >/dev/null 2>&1 \
   && pm2 reload "`$PM2_APP" --update-env \
-  || pm2 start server.ts --name "`$PM2_APP" --interpreter `$(command -v tsx || echo node)
+  || pm2 start server.ts --name "`$PM2_APP" --interpreter `$(command -v tsx || echo node) --cwd "`$DEPLOY"
 pm2 save >/dev/null 2>&1 || true
 sleep 3
 pm2 describe "`$PM2_APP" | grep -E 'status|restart' | head -2

@@ -148,7 +148,7 @@ if command -v pm2 &>/dev/null; then
   if pm2 describe dmcdai &>/dev/null; then
     pm2 reload dmcdai --update-env && echo 'pm2: reloaded dmcdai'
   else
-    cd $RemotePath && NODE_ENV=production PORT=3014 pm2 start server.js --name dmcdai --interpreter npx --interpreter-args tsx
+    cd $RemotePath && NODE_ENV=production PORT=3014 pm2 start server.js --name dmcdai --interpreter npx --interpreter-args tsx --cwd $RemotePath
     echo 'pm2: started dmcdai'
   fi
   pm2 save --force &>/dev/null

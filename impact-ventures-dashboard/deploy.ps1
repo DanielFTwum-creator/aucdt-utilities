@@ -91,7 +91,7 @@ Log -Level 'INFO' -Msg 'Step 4: Server environment...' -Color Yellow
 & $SSH @SSH_OPTS $REMOTE "cp /tmp/.env.${PM2_APP} ${DEPLOY_PATH}/.env; chown -R techbridge.edu.gh_md:psaserv ${DEPLOY_PATH} 2>/dev/null||true; find ${DEPLOY_PATH} -type d -exec chmod 755 {} \; 2>/dev/null||true; find ${DEPLOY_PATH} -type f -exec chmod 644 {} \; 2>/dev/null||true"
 
 Log -Level 'INFO' -Msg 'Step 5: Restarting backend...' -Color Yellow
-$r=& $SSH @SSH_OPTS $REMOTE "if pm2 describe ${PM2_APP}>\/dev\/null 2>&1; then pm2 reload ${PM2_APP}; echo 'pm2: reloaded'; else cd ${DEPLOY_PATH}; PORT=${PORT} pm2 start server.js --name ${PM2_APP}; echo 'pm2: started'; fi"
+$r=& $SSH @SSH_OPTS $REMOTE "if pm2 describe ${PM2_APP}>\/dev\/null 2>&1; then pm2 reload ${PM2_APP}; echo 'pm2: reloaded'; else cd ${DEPLOY_PATH}; PORT=${PORT} pm2 start server.js --name ${PM2_APP} --cwd ${DEPLOY_PATH}; echo 'pm2: started'; fi"
 Write-Host $r -ForegroundColor DarkGray
 
 Log -Level 'INFO' -Msg 'Health checks...' -Color Yellow; Start-Sleep -Seconds 8

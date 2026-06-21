@@ -120,7 +120,7 @@ ssh -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax
 
 Log "INFO" "Step 6: Deploying backend files..." Yellow
 scp -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax=3 server.js package.json pnpm-lock.yaml "${RemoteHost}:${RemotePath}" 2>$null | Out-Null
-if (Test-Path ".env.local") { scp -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax=3 ".env.local" "${RemoteHost}:${RemotePath}.env" 2>$null | Out-Null }
+if (Test-Path ".env.local") { scp -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax=3 ".env.local" "${RemoteHost}:${RemotePath}.env.local" 2>$null | Out-Null }
 ssh -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax=3 $RemoteHost "cd $RemotePath && pnpm install --prod --silent 2>/dev/null || npm install --omit=dev --silent"
 
 Log "INFO" "Step 7: Restarting backend (PM2)..." Yellow
@@ -129,7 +129,7 @@ if command -v pm2 &>/dev/null; then
   if pm2 describe peace-vinyl &>/dev/null; then
     pm2 reload peace-vinyl --update-env && echo 'pm2: reloaded peace-vinyl'
   else
-    cd $RemotePath && PORT=3001 pm2 start server.js --name peace-vinyl --interpreter npx --interpreter-args tsx
+    cd $RemotePath && PORT=3001 pm2 start server.js --name peace-vinyl --interpreter npx --interpreter-args tsx --cwd $RemotePath
     echo 'pm2: started peace-vinyl'
   fi
   pm2 save --force &>/dev/null

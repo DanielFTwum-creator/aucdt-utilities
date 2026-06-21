@@ -129,7 +129,7 @@ if command -v pm2 &>/dev/null; then
   if pm2 describe tb-poster-studio &>/dev/null; then
     pm2 reload tb-poster-studio --update-env && echo 'pm2: reloaded tb-poster-studio'
   else
-    cd $RemotePath && PORT=3000 pm2 start server.ts --name tb-poster-studio --interpreter npx --interpreter-args tsx
+    cd $RemotePath && PORT=3000 pm2 start server.ts --name tb-poster-studio --interpreter npx --interpreter-args tsx --cwd $RemotePath
     echo 'pm2: started tb-poster-studio'
   fi
   pm2 save --force &>/dev/null

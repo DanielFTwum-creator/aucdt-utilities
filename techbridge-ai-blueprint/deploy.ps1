@@ -131,7 +131,7 @@ if command -v pm2 &>/dev/null; then
   if pm2 describe tb-ai-blueprint &>/dev/null; then
     pm2 reload tb-ai-blueprint --update-env && echo 'pm2: reloaded tb-ai-blueprint'
   else
-    cd $RemotePath && PORT=3005 pm2 start server.ts --name tb-ai-blueprint --interpreter npx --interpreter-args tsx
+    cd $RemotePath && PORT=3005 pm2 start server.ts --name tb-ai-blueprint --interpreter npx --interpreter-args tsx --cwd $RemotePath
     echo 'pm2: started tb-ai-blueprint'
   fi
   pm2 save --force &>/dev/null

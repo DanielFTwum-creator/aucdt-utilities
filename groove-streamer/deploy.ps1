@@ -147,7 +147,7 @@ if command -v pm2 &>/dev/null; then
   if pm2 describe groove-streamer &>/dev/null; then
     pm2 reload groove-streamer --update-env && echo 'pm2: reloaded groove-streamer'
   else
-    cd $RemotePath && NODE_ENV=production PORT=3004 pm2 start server.ts --name groove-streamer --interpreter npx --interpreter-args tsx
+    cd $RemotePath && NODE_ENV=production PORT=3004 pm2 start server.ts --name groove-streamer --interpreter npx --interpreter-args tsx --cwd $RemotePath
     echo 'pm2: started groove-streamer'
   fi
   pm2 save --force &>/dev/null

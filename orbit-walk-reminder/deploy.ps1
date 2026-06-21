@@ -129,7 +129,7 @@ if command -v pm2 &>/dev/null; then
   if pm2 describe orbit-walk-reminder &>/dev/null; then
     pm2 reload orbit-walk-reminder --update-env && echo 'pm2: reloaded orbit-walk-reminder'
   else
-    cd $RemotePath && PORT=3000 pm2 start server.ts --name orbit-walk-reminder --interpreter npx --interpreter-args tsx
+    cd $RemotePath && PORT=3000 pm2 start server.ts --name orbit-walk-reminder --interpreter npx --interpreter-args tsx --cwd $RemotePath
     echo 'pm2: started orbit-walk-reminder'
   fi
   pm2 save --force &>/dev/null
