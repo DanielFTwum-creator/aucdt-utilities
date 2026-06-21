@@ -17,6 +17,7 @@
 | 5 | Dual-Auth Logout | Public-facing apps with own OAuth + local session |
 | 6 | Glucose Project Learnings | General React + IndexedDB apps |
 | 7 | Full-Viewport Layout | All TUC React apps with focused-work views |
+| 8 | Port Assignment & Conflict Prevention | All backend apps in aucdt-utilities |
 | — | WMS SSO + TOTP onboarding (staff apps) | → `tuc-wms/docs/SSO_ONBOARDING_PLAYBOOK.md` |
 
 ---
@@ -638,6 +639,84 @@ return (
 - **Full-bleed** — no `max-w` constraint, edge-to-edge width  
 
 These are independent. A full-viewport layout should also be responsive.
+
+---
+
+## PATTERN 8: PORT ASSIGNMENT & CONFLICT PREVENTION
+
+**Origin:** Fleet deploy recovery, June 2026 — 3 port conflicts caused PM2 crashes (omniextract/deep-dub on 3009, dfs-website/impact-ventures on 3012, tuc-netscan/brand-guideline-checker on 3017).  
+**Applies to:** Every app in `aucdt-utilities/` with a Node backend server.
+
+### The Single Source of Truth
+
+`aucdt-utilities/PORT-REGISTRY.md` is the authoritative port ledger. Before touching any port, read it. After assigning or changing a port, update it immediately — same commit as the deploy.ps1 change.
+
+### Rules
+
+1. **One port per app, permanently.** No two apps may share a port, even temporarily.
+2. **Check the registry before assigning.** Never pick a port from memory.
+3. **Increment from the next available.** Current next: **3027** (see PORT-REGISTRY.md).
+4. **Update PORT-REGISTRY.md in the same commit** as the deploy.ps1 that introduces the port.
+
+### Workflow: Adding a New App
+
+```
+1. Open PORT-REGISTRY.md — read "Next available" line
+2. Add your app to the Assigned Ports table with that port
+3. Increment "Next available" by 1
+4. Set PORT in deploy.ps1 to match
+5. Commit PORT-REGISTRY.md + deploy.ps1 together
+```
+
+### Workflow: Detecting Existing Conflicts
+
+Run this from `aucdt-utilities/` to find duplicate port assignments across all deploy scripts:
+
+```powershell
+# PowerShell — find duplicate $PORT assignments
+Get-ChildItem -Recurse -Filter deploy.ps1 |
+  Select-String -Pattern '^\$PORT\s*=\s*(\d+)' |
+  ForEach-Object { $_.Matches[0].Groups[1].Value } |
+  Group-Object | Where-Object { $_.Count -gt 1 } |
+  Select-Object Name, Count
+```
+
+```bash
+# Bash equivalent (run on server or in WSL)
+grep -rh '^\$PORT\s*=' */deploy.ps1 2>/dev/null | sort | uniq -d
+```
+
+### Resolving a Conflict
+
+1. Decide which app keeps its port (prefer the one deployed first / with more restarts).
+2. Assign the displaced app the next available port from PORT-REGISTRY.md.
+3. Update the deploy.ps1 (replace_all for the old port number).
+4. Kill the old PM2 process on the server; restart with the new PORT.
+5. Update PORT-REGISTRY.md conflict history table.
+6. Commit all three files together (deploy.ps1 + PORT-REGISTRY.md).
+
+### Server-Side Port Audit
+
+Before any fleet deploy, verify no port is in use by two live processes:
+
+```bash
+ss -tlnp | awk '{print $4}' | grep -oP ':\K\d+' | sort | uniq -d
+```
+
+If this returns anything, stop both processes and restart the displaced one on a new port before running the fleet.
+
+### Integration with test-fleet-deploy.ps1
+
+Port conflict checking is not yet automated in the compliance test. When adding it, the check should:
+- Parse `$PORT = <n>` from every deploy.ps1
+- Assert no value appears more than once
+- Exempt apps in `$EXEMPT` (tuc-wms, which uses systemd not PM2)
+
+Until automated, the manual PowerShell command above is the gate.
+
+### Apps Without a Backend Port
+
+Pure SPA frontends (no server.ts / server.js) do not consume a port. See the "Apps without a backend port" section in PORT-REGISTRY.md for the current list. When in doubt: if the app has a `server.ts` or `server.js` and a PM2 entry, it needs a port in the registry.
 
 ---
 
