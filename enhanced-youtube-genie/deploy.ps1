@@ -54,7 +54,7 @@ if (-not $Build) { Log "ERROR" "Run with -Build (server-side build + PM2 run)." 
 
 # Upload the build .env (Vite needs the public OAuth vars at build time).
 Log "INFO" "Uploading .env to server for build..." DarkGray
-scp -o StrictHostKeyChecking=no .env.local "${RemoteHost}:/tmp/.env.youtube-genie" 2>&1 | Out-Null
+scp -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax=3 .env.local "${RemoteHost}:/tmp/.env.youtube-genie" 2>&1 | Out-Null
 if ($LASTEXITCODE -ne 0) { Log "ERROR" "Failed to upload .env.local" Red; exit 1 }
 Log "SUCCESS" ".env uploaded" Green
 
@@ -136,18 +136,18 @@ log 'Build + PM2 deploy complete.'
 
 $localScript = [System.IO.Path]::Combine([System.IO.Path]::GetTempPath(), "ytg_build_$([Guid]::NewGuid().ToString('N')).sh")
 Write-LfFile -path $localScript -content $remoteScript
-scp -o StrictHostKeyChecking=no $localScript "${RemoteHost}:/tmp/ytg_build.sh" 2>&1 | Out-Null
+scp -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax=3 $localScript "${RemoteHost}:/tmp/ytg_build.sh" 2>&1 | Out-Null
 if ($LASTEXITCODE -ne 0) { Log "ERROR" "Failed to upload remote build script" Red; Remove-Item $localScript -Force -EA SilentlyContinue; exit 1 }
-ssh -o StrictHostKeyChecking=no $RemoteHost "bash /tmp/ytg_build.sh"
+ssh -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax=3 $RemoteHost "bash /tmp/ytg_build.sh"
 $buildRc = $LASTEXITCODE
 Remove-Item $localScript -Force -EA SilentlyContinue
 if ($buildRc -ne 0) { Log "ERROR" "Server build/PM2 returned $buildRc" Red; exit 1 }
 Log "SUCCESS" "Server-side build + PM2 run complete" Green
 
 Log "INFO" "Step 4: Health checks..." Yellow
-$portUp = ssh -o StrictHostKeyChecking=no $RemoteHost "ss -tlnp 2>/dev/null | grep -q ':$PORT ' && echo yes || echo no"
+$portUp = ssh -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax=3 $RemoteHost "ss -tlnp 2>/dev/null | grep -q ':$PORT ' && echo yes || echo no"
 Log ($(if ($portUp -eq 'yes') {'SUCCESS'} else {'WARN'})) "port $PORT listening: $portUp" ($(if ($portUp -eq 'yes') {'Green'} else {'Yellow'}))
-$code = ssh -o StrictHostKeyChecking=no $RemoteHost "curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1:$PORT/api/health"
+$code = ssh -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax=3 $RemoteHost "curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1:$PORT/api/health"
 Log ($(if ($code -eq '200') {'SUCCESS'} else {'WARN'})) "backend /api/health -> $code" ($(if ($code -eq '200') {'Green'} else {'Yellow'}))
 
 $elapsed = [math]::Round(((Get-Date) - $__deployStart).TotalSeconds, 1)

@@ -20,7 +20,7 @@ $PM2_APP     = 'ai-email-drafter'
 $HEALTH_URL  = 'https://ai-tools.techbridge.edu.gh/ai-email-drafter/'
 $GITHUB_REPO = 'git@github.com:DanielFTwum-creator/aucdt-utilities.git'
 $SUBFOLDER   = 'ai-email-drafter'
-$SSH_OPTS    = @('-o', 'StrictHostKeyChecking=no', '-o', 'BatchMode=yes')
+$SSH_OPTS    = @('-o', 'StrictHostKeyChecking=no', '-o', 'BatchMode=yes', '-o', 'ServerAliveInterval=30', '-o', 'ServerAliveCountMax=3')
 $SSH         = 'ssh'
 $SCP         = 'scp'
 $START_TIME  = Get-Date

@@ -15,7 +15,7 @@ $DEPLOY_PATH = '/var/www/vhosts/techbridge.edu.gh/lems-redirect'
 $GITHUB_REPO = 'git@github.com:DanielFTwum-creator/aucdt-utilities.git'
 $SUBFOLDER   = 'lems'
 $OWNER       = 'techbridge.edu.gh_md:psaserv'
-$SSH_OPTS    = @('-o', 'StrictHostKeyChecking=no')
+$SSH_OPTS    = @('-o', 'StrictHostKeyChecking=no', '-o', 'ServerAliveInterval=30', '-o', 'ServerAliveCountMax=3')
 $START       = Get-Date
 
 function Log($lvl, $msg, $color = 'White') {

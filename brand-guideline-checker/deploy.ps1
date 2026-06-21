@@ -17,7 +17,7 @@ $PM2_APP     = 'brand-guideline-checker'
 $HEALTH_URL  = 'https://ai-tools.techbridge.edu.gh/brand-guideline-checker'
 $GITHUB_REPO = 'git@github.com:DanielFTwum-creator/aucdt-utilities.git'
 $SUBFOLDER   = 'brand-guideline-checker'
-$SSH_OPTS    = @('-o', 'StrictHostKeyChecking=no', '-o', 'BatchMode=yes')
+$SSH_OPTS    = @('-o', 'StrictHostKeyChecking=no', '-o', 'BatchMode=yes', '-o', 'ServerAliveInterval=30', '-o', 'ServerAliveCountMax=3')
 $SSH         = 'ssh'
 $SCP         = 'scp'
 $START_TIME  = Get-Date

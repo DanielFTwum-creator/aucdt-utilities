@@ -17,7 +17,7 @@ $START_TIME = Get-Date
 $PM2_APP     = 'tb-ai-portal'
 $GITHUB_REPO = "git@github.com:DanielFTwum-creator/aucdt-utilities.git"
 $SUBFOLDER   = "techbridge-ai-application-portal"
-$SSH_OPTS    = @('-o', 'StrictHostKeyChecking=no', '-o', 'BatchMode=yes')
+$SSH_OPTS    = @('-o', 'StrictHostKeyChecking=no', '-o', 'BatchMode=yes', '-o', 'ServerAliveInterval=30', '-o', 'ServerAliveCountMax=3')
 $SSH         = 'ssh'
 $SCP         = 'scp'
 

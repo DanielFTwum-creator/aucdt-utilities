@@ -17,7 +17,7 @@ $PM2_APP     = 'biochemai'
 $HEALTH_URL  = 'https://ai-tools.techbridge.edu.gh/biochemai'
 $GITHUB_REPO = 'git@github.com:DanielFTwum-creator/aucdt-utilities.git'
 $SUBFOLDER   = 'biochemai'
-$SSH_OPTS    = @('-o', 'StrictHostKeyChecking=no', '-o', 'BatchMode=yes')
+$SSH_OPTS    = @('-o', 'StrictHostKeyChecking=no', '-o', 'BatchMode=yes', '-o', 'ServerAliveInterval=30', '-o', 'ServerAliveCountMax=3')
 $SSH         = 'ssh'
 $SCP         = 'scp'
 $START_TIME  = Get-Date

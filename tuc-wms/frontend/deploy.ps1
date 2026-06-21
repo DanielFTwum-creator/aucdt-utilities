@@ -27,7 +27,7 @@ $DEPLOY_PATH = '/var/www/vhosts/techbridge.edu.gh/wms.techbridge.edu.gh'
 $GITHUB_REPO = 'git@github.com:DanielFTwum-creator/aucdt-utilities.git'
 $SUBFOLDER   = 'tuc-wms/frontend'
 $OWNER       = 'techbridge.edu.gh_md:psacln'
-$SSH_OPTS    = @('-o', 'StrictHostKeyChecking=no')
+$SSH_OPTS    = @('-o', 'StrictHostKeyChecking=no', '-o', 'ServerAliveInterval=30', '-o', 'ServerAliveCountMax=3')
 $START       = Get-Date
 
 function Log($lvl, $msg, $color = 'White') {

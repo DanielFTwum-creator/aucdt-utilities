@@ -25,7 +25,7 @@ $SERVICE    = 'tuc-wms'
 $POM        = Join-Path $PSScriptRoot 'pom.xml'
 $LOCAL_JAR  = Join-Path $PSScriptRoot 'target\tuc-wms-1.0.1.jar'
 $HEALTH_URL = 'https://wms.techbridge.edu.gh/api/gemini/health'
-$SSH_OPTS   = @('-o', 'StrictHostKeyChecking=no')
+$SSH_OPTS   = @('-o', 'StrictHostKeyChecking=no', '-o', 'ServerAliveInterval=30', '-o', 'ServerAliveCountMax=3')
 $START      = Get-Date
 
 function Log($lvl, $msg, $color = 'White') {

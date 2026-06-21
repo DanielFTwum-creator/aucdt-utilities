@@ -16,7 +16,7 @@ $PM2_APP     = 'impact-ventures'
 $HEALTH_URL  = 'https://ai-tools.techbridge.edu.gh/impact-ventures-dashboard'
 $GITHUB_REPO = 'git@github.com:DanielFTwum-creator/aucdt-utilities.git'
 $SUBFOLDER   = 'impact-ventures-dashboard'
-$SSH_OPTS    = @('-o', 'StrictHostKeyChecking=no', '-o', 'BatchMode=yes')
+$SSH_OPTS    = @('-o', 'StrictHostKeyChecking=no', '-o', 'BatchMode=yes', '-o', 'ServerAliveInterval=30', '-o', 'ServerAliveCountMax=3')
 $SSH = 'ssh'; $SCP = 'scp'; $START_TIME = Get-Date
 
 function Log { param([string]$Level='INFO',[string]$Msg,[ConsoleColor]$Color='White'); Write-Host "[$((Get-Date).ToString('yyyy-MM-dd HH:mm:ss'))[$Level] $Msg" -ForegroundColor $Color }

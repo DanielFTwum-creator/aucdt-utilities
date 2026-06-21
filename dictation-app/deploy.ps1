@@ -99,7 +99,7 @@ log 'Build and deploy complete.'
     $b64 = [Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes($serverScript.Replace("`r", "")))
     # Cap the server-side build so a stalled pnpm install/build can't hang forever (GNU timeout → exit 124).
     $BuildTimeoutSec = 600
-    ssh -o StrictHostKeyChecking=no $RemoteHost "echo $b64 | base64 -d | timeout $BuildTimeoutSec bash"
+    ssh -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax=3 $RemoteHost "echo $b64 | base64 -d | timeout $BuildTimeoutSec bash"
     if ($LASTEXITCODE -eq 0) {
         Log "SUCCESS" "Server-side build and file sync complete" Green
     } elseif ($LASTEXITCODE -eq 124) {
@@ -109,7 +109,7 @@ log 'Build and deploy complete.'
     }
 
     # Cleanup temp dir
-    ssh -o StrictHostKeyChecking=no $RemoteHost "rm -rf $buildDir" 2>$null | Out-Null
+    ssh -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax=3 $RemoteHost "rm -rf $buildDir" 2>$null | Out-Null
 
 } else {
     Log "INFO" "Step 3: Copying local dist/ to server..." Yellow
@@ -119,8 +119,8 @@ log 'Build and deploy complete.'
         exit 1
     }
 
-    ssh -o StrictHostKeyChecking=no $RemoteHost "mkdir -p $RemotePath && rm -rf ${RemotePath}*"
-    scp -r -o StrictHostKeyChecking=no dist/* "${RemoteHost}:${RemotePath}"
+    ssh -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax=3 $RemoteHost "mkdir -p $RemotePath && rm -rf ${RemotePath}*"
+    scp -r -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax=3 dist/* "${RemoteHost}:${RemotePath}"
     Log "SUCCESS" "dist/* copied to server" Green
 }
 
@@ -149,6 +149,6 @@ Log "INFO" "Step 4: Writing .htaccess..." Yellow
     Header set Expires '0'
   </FilesMatch>
 </IfModule>
-"@ | ssh -o StrictHostKeyChecking=no $RemoteHost "cat > ${RemotePath}.htaccess" 2>$null
+"@ | ssh -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax=3 $RemoteHost "cat > ${RemotePath}.htaccess" 2>$null
 
 # ── Step 5: Permissi

@@ -19,7 +19,7 @@ $PM2_APP     = 'tuc-netscan-backend'
 $HEALTH_URL  = 'https://ai-tools.techbridge.edu.gh/tuc-netscan-100'
 $GITHUB_REPO = 'git@github.com:DanielFTwum-creator/aucdt-utilities.git'
 $SUBFOLDER   = 'tuc-netscan-100'
-$SSH_OPTS    = @('-o', 'StrictHostKeyChecking=no', '-o', 'BatchMode=yes')
+$SSH_OPTS    = @('-o', 'StrictHostKeyChecking=no', '-o', 'BatchMode=yes', '-o', 'ServerAliveInterval=30', '-o', 'ServerAliveCountMax=3')
 $SSH         = 'ssh'
 $SCP         = 'scp'
 $START_TIME  = Get-Date

@@ -53,7 +53,7 @@ That $10,980 is not money we had earmarked for a CI/CD vendor. It is money that 
 
 The alternative is conceptually simple: if you already have a server running your applications, build on that server.
 
-Our infrastructure runs on a Plesk-managed Ubuntu host at `techbridge.edu.gh`. It is always on. It has Node.js installed. It has `pnpm`. It has `git`. Everything a build needs is already there, already paid for as part of our hosting costs.
+Our infrastructure runs on a Plesk-managed Ubuntu host. It is always on. It has Node.js installed. It has `pnpm`. It has `git`. Everything a build needs is already there, already paid for as part of our hosting costs.
 
 So we wrote a deployment script.
 
@@ -62,11 +62,13 @@ So we wrote a deployment script.
 # Usage: .\deploy.ps1 -Build
 
 param(
-    [string]$RemoteHost = "root@techbridge.edu.gh",
+    [string]$RemoteHost = "deploy@your-server.com",
     [string]$RemotePath = "/var/www/vhosts/.../typing-tutor/",
     [switch]$Build = $false
 )
 ```
+
+> **Security note:** Use a dedicated low-privilege `deploy` user rather than `root`. Grant it write access only to the web root directories it needs. Never expose your root SSH login in shared scripts or version-controlled files.
 
 The script does the following when invoked with the `-Build` flag:
 

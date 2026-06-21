@@ -130,7 +130,7 @@ Write-Host "Step 3: Uploading frontend to remote server..." -ForegroundColor Yel
 Write-Host "" -ForegroundColor Yellow
 
 # Ensure remote directory structure exists
-$SSH_OPTS = @("-o", "StrictHostKeyChecking=no")
+$SSH_OPTS = @("-o", "StrictHostKeyChecking=no", "-o", "ServerAliveInterval=30", "-o", "ServerAliveCountMax=3")
 
 Write-Host "Creating remote folder structure..."
 & ssh @SSH_OPTS $RemoteHost "mkdir -p $RemotePath"

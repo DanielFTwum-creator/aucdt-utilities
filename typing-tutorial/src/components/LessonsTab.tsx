@@ -52,7 +52,7 @@ export default function LessonsTab({ progress, onSelectLesson }: LessonsTabProps
   const [expandedIdx, setExpandedIdx] = useState<number | null>(null);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 pb-16">
 
       {/* Page header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
