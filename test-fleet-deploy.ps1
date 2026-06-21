@@ -78,7 +78,8 @@ function Invoke-StandardTests {
                                         $b = $Content.IndexOf('git clone --')
                                         ($a -gt 0) -and ($b -gt 0) -and ($a -lt $b)
                                     )
-        "No duplicate nvm blocks" = ($Content | Select-String -Pattern 'export NVM_DIR' -AllMatches).Matches.Count -eq 1
+        # Allow 1 (build-only) or 2 (build + Step 6 backend install — separate SSH calls need separate nvm source)
+        "No duplicate nvm blocks" = ($Content | Select-String -Pattern 'export NVM_DIR' -AllMatches).Matches.Count -le 2
         "PowerShell syntax valid" = Test-PSFile $Path
     }
     return $checks
