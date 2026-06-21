@@ -58,6 +58,8 @@ describe('App: Touch Typing Tutor - AI-for-Good Digital Literacy Journey', () =>
     cy.contains('h2', 'Arcade Keyboarding Race').should('be.visible');
     cy.get('#select-mode-arcade-btn').should('be.visible');
     cy.get('#select-mode-shark-btn').should('be.visible');
+    cy.get('#select-mode-listen-btn').should('be.visible');
+    cy.get('#select-mode-bricks-btn').should('be.visible');
 
     // 3. Specs & Docs tab
     cy.get('#navDocsTabButton').click();

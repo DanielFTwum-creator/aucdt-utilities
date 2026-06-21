@@ -629,6 +629,17 @@ export default function ExerciseTab({ lesson, progress, onFinish, onBack }: Exer
     handleReset();
   };
 
+  // Safety guard — prevents a white-screen crash if targetText is undefined
+  // (e.g. a stale practice index during a React re-mount cycle). Without this,
+  // currentSentence.split() throws and the whole tree unmounts.
+  if (!currentSentence && !isCalibrationMode) {
+    return (
+      <div className="flex items-center justify-center p-12 text-zinc-400 font-mono text-sm">
+        Loading exercise…
+      </div>
+    );
+  }
+
   // R5 Regenerate: completion / results screen replaces the exercise once the lesson is finished
   if (results) {
     const grade = getGrade(results.accuracy, results.wpm);

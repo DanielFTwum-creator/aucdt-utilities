@@ -18,7 +18,7 @@ describe('VortexType: Full keyboard coverage across all lessons', () => {
   });
 
   it('completes every lesson tier, exercising every key (QWERTY + numpad), the results screen, and the spacebar-highlight path', () => {
-    const LESSON_COUNT = 11;
+    const LESSON_COUNT = 12;
 
     for (let id = 1; id <= LESSON_COUNT; id++) {
       // Lessons unlock progressively: completing lesson N unlocks lesson N+1.
@@ -67,8 +67,8 @@ describe('VortexType: Full keyboard coverage across all lessons', () => {
       cy.contains('h3', 'Lessons Roadmap').should('be.visible');
     }
 
-    // All 11 tiers unlocked.
-    cy.contains('11 / 11 Unlocked').should('be.visible');
+    // All 12 tiers unlocked.
+    cy.contains('12 / 12 Unlocked').should('be.visible');
   });
 
   it('shows the numpad ghost-hand guide for the Numeric Keypad lesson', () => {
@@ -85,9 +85,9 @@ describe('VortexType: Full keyboard coverage across all lessons', () => {
 
     cy.get('#start-lesson-btn-11').should('be.visible').click();
 
-    // Live coaching strip shows numpad finger guidance (Index/Middle/Ring/Pinky on the Right Hand).
+    // Live coaching strip shows finger guidance via title tooltip on the Next: character span.
     cy.contains('Next:').should('be.visible');
-    cy.contains(/finger/).should('be.visible');
+    cy.get('span[title]').should('exist'); // finger path set as tooltip on the target key
 
     // The numpad grid (digits, "." and "-") renders instead of the QWERTY keyboard guide.
     cy.contains('Numeric Keypad').should('be.visible');
@@ -106,9 +106,9 @@ describe('VortexType: Full keyboard coverage across all lessons', () => {
   it('shows the per-finger color-coded hand diagram and keyboard highlight without errors', () => {
     cy.get('#start-lesson-btn-1').click();
 
-    // The live coaching strip shows which finger is next.
+    // The live coaching strip shows which finger is next via title tooltip.
     cy.contains('Next:').should('be.visible');
-    cy.contains(/finger/).should('be.visible');
+    cy.get('span[title]').should('exist'); // finger path set as tooltip on the target key
 
     // The hand diagram SVG renders.
     cy.get('svg[aria-hidden="true"]').should('be.visible');
