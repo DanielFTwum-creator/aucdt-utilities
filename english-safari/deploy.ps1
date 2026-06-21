@@ -127,11 +127,20 @@ ssh -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax
 
 Log "INFO" "Step 7: Restarting backend (PM2)..." Yellow
 $restartCmd = @"
+export NVM_DIR="`$HOME/.nvm"; [ -s "`$NVM_DIR/nvm.sh" ] && . "`$NVM_DIR/nvm.sh"; nvm use --lts >/dev/null 2>&1 || true
+NPXPATH=`$(which npx)
 if command -v pm2 &>/dev/null; then
   if pm2 describe tb-ai-english-safari &>/dev/null; then
     pm2 reload tb-ai-english-safari --update-env && echo 'pm2: reloaded tb-ai-english-safari'
   else
-    cd $RemotePath && PORT=3005 pm2 start server.ts --name tb-ai-english-safari --interpreter npx --interpreter-args tsx
+    pm2 start $RemotePath/server.ts \
+      --name tb-ai-english-safari \
+      --interpreter "`$NPXPATH" \
+      --interpreter-args tsx \
+      --cwd $RemotePath \
+      --max-memory-restart 1G \
+      --env PORT=3005 \
+      --env NODE_ENV=production
     echo 'pm2: started tb-ai-english-safari'
   fi
   pm2 save --force &>/dev/null

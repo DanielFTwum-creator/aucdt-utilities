@@ -126,11 +126,17 @@ ssh -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax
 
 Log "INFO" "Step 7: Restarting backend (PM2)..." Yellow
 $restartCmd = @"
+export NVM_DIR="`$HOME/.nvm"; [ -s "`$NVM_DIR/nvm.sh" ] && . "`$NVM_DIR/nvm.sh"; nvm use --lts >/dev/null 2>&1 || true
 if command -v pm2 &>/dev/null; then
   if pm2 describe deep-dub-vibes-player &>/dev/null; then
     pm2 reload deep-dub-vibes-player --update-env && echo 'pm2: reloaded deep-dub-vibes-player'
   else
-    cd $RemotePath && PORT=3013 pm2 start server.js --name deep-dub-vibes-player --interpreter npx --interpreter-args tsx
+    pm2 start ${RemotePath}server.js \
+      --name deep-dub-vibes-player \
+      --cwd $RemotePath \
+      --max-memory-restart 1G \
+      --env PORT=3013 \
+      --env NODE_ENV=production
     echo 'pm2: started deep-dub-vibes-player'
   fi
   pm2 save --force &>/dev/null
