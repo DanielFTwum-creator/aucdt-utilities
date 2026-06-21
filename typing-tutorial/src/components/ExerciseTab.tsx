@@ -450,7 +450,7 @@ export default function ExerciseTab({ lesson, progress, onFinish, onBack }: Exer
   useEffect(() => {
     const rescue = (e: KeyboardEvent) => {
       if (!inputRef.current) return;
-      if (inputVal.length >= currentSentence.length) return; // drill finished
+      if (inputVal.length >= (isCalibrationMode ? calibrationText : targetText).length) return; // drill finished
       const tag = (e.target as HTMLElement)?.tagName;
       // Don't steal focus from intentional form controls
       if (tag === "SELECT" || tag === "TEXTAREA" || tag === "BUTTON" || tag === "A") return;
@@ -460,7 +460,7 @@ export default function ExerciseTab({ lesson, progress, onFinish, onBack }: Exer
     };
     document.addEventListener("keydown", rescue, true);
     return () => document.removeEventListener("keydown", rescue, true);
-  }, [inputVal.length, currentSentence.length]);
+  }, [inputVal.length, (isCalibrationMode ? calibrationText : targetText).length]);
 
   // Reset practice tracking when lesson changes
   useEffect(() => {

@@ -51,7 +51,7 @@ export default function Navbar({ progress, theme, onThemeChange, onNavigate, act
                 { icon: <Zap size={13} className="text-sky-500" />, label: "Best WPM", value: progress.bestSpeed },
                 { icon: <Crosshair size={13} className="text-rose-500" />, label: "Accuracy", value: `${progress.bestAccuracy}%` },
               ].map(({ icon, label, value }) => (
-                <div key={label} className="hidden sm:flex items-center gap-1.5 px-2.5 py-1.5 bg-white/8 rounded-lg border border-white/12 text-xs">
+                <div key={label} className="hidden xl:flex items-center gap-1.5 px-2.5 py-1.5 bg-white/8 rounded-lg border border-white/12 text-xs">
                   {icon}
                   <span className="text-stone-400">{label}:</span>
                   <span className="font-bold text-stone-100">{value}</span>
