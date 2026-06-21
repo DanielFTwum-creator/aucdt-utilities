@@ -242,15 +242,16 @@ if ($Parallel -le 1) {
     Write-Host "  Running up to $Parallel deploys concurrently..." -ForegroundColor DarkGray
     Write-Host ""
 
-    $queue   = [System.Collections.Queue]::new($active)
-    $running = @{}   # jobId -> @{Item, Index}
+    $queue         = [System.Collections.Queue]::new($active)
+    $running       = @{}        # jobId -> @{Item, Index, StartTime}
+    $lastHeartbeat = Get-Date
 
     while ($queue.Count -gt 0 -or $running.Count -gt 0) {
         # Fill slots up to $Parallel
         while ($running.Count -lt $Parallel -and $queue.Count -gt 0) {
             $index++
             $item = $queue.Dequeue()
-            $i    = $index   # capture for closure
+            $i    = $index
             $job  = Start-Job -ScriptBlock {
                 param($Dir, $ArgHash, $AppName)
                 Push-Location $Dir
@@ -261,7 +262,17 @@ if ($Parallel -le 1) {
             } -ArgumentList $item.Dir, $item.Args, $item.AppName
 
             $running[$job.Id] = @{ Item=$item; Index=$i; StartTime=(Get-Date) }
-            Write-Host ("  [{0,3}/{1}] {2} — STARTED (job {3})" -f $i, $total, $item.AppName, $job.Id) -ForegroundColor DarkYellow
+            Write-Host ("  ▶ [{0,3}/{1}] {2} — started" -f $i, $total, $item.AppName) -ForegroundColor DarkYellow
+        }
+
+        # Heartbeat every 10 s so terminal never looks frozen
+        if (((Get-Date) - $lastHeartbeat).TotalSeconds -ge 10) {
+            $statusParts = $running.Values | ForEach-Object {
+                $sec = [math]::Round(((Get-Date) - $_.StartTime).TotalSeconds)
+                "$($_.Item.AppName) (${sec}s)"
+            }
+            Write-Host ("  ⏳ {0}" -f ($statusParts -join " · ")) -ForegroundColor DarkGray
+            $lastHeartbeat = Get-Date
         }
 
         # Check for completed jobs
@@ -275,9 +286,9 @@ if ($Parallel -le 1) {
                 "$([math]::Floor($elapsed/60))m $([math]::Round($elapsed % 60, 0))s"
             } else { "${elapsed}s" }
 
-            $data    = Receive-Job -Job $job -ErrorAction SilentlyContinue
-            $code    = if ($data) { $data.ExitCode } else { 1 }
-            $output  = if ($data) { $data.Output  } else { @("Job failed to return data") }
+            $data   = Receive-Job -Job $job -ErrorAction SilentlyContinue
+            $code   = if ($data) { $data.ExitCode } else { 1 }
+            $output = if ($data) { $data.Output  } else { @("Job failed to return data") }
 
             Remove-Job -Job $job -Force
             $running.Remove($jobId)
@@ -302,11 +313,10 @@ if ($Parallel -le 1) {
                     Write-Host "    $_" -ForegroundColor DarkGray
                 }
             }
+            $lastHeartbeat = Get-Date   # reset after completing a job (already active output)
         }
 
-        if ($running.Count -ge $Parallel -or ($queue.Count -eq 0 -and $running.Count -gt 0)) {
-            Start-Sleep -Milliseconds 500
-        }
+        Start-Sleep -Milliseconds 500
     }
 }
 
