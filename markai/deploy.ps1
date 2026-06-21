@@ -44,7 +44,7 @@ if ($Build) {
 set -e
 export NVM_DIR="`$HOME/.nvm"
 [ -s "`$NVM_DIR/nvm.sh" ] && \. "`$NVM_DIR/nvm.sh"
-nvm use --lts >/dev/null 2>&1 || true
+nvm use 26 >/dev/null 2>&1 || true
 mkdir -p ~/.ssh && chmod 700 ~/.ssh
 if [ -f ~/.ssh/github_deploy ]; then
   chmod 600 ~/.ssh/github_deploy
@@ -132,7 +132,8 @@ if (Test-Path ".env.local") {
     scp -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax=3 ".env.local" "${RemoteHost}:${RemotePath}.env" 2>$null | Out-Null 
     scp -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax=3 ".env.local" "${RemoteHost}:${RemotePath}.env.local" 2>$null | Out-Null 
 }
-ssh -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax=3 $RemoteHost "cd $RemotePath && pnpm install --prod --silent 2>/dev/null || npm install --omit=dev --silent"
+$nvmPrefix = 'export NVM_DIR="$HOME/.nvm"; [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"; nvm use 26 >/dev/null 2>&1 || true'
+ssh -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax=3 $RemoteHost "$nvmPrefix; cd $RemotePath && pnpm install --prod --silent 2>/dev/null || npm install --omit=dev --silent"
 
 Log "INFO" "Step 7: Restarting backend (PM2)..." Yellow
 $restartCmd = @"
@@ -149,13 +150,4 @@ $b64r = [Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes($restart
 ssh -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax=3 $RemoteHost "echo $b64r | base64 -d | bash"
 
 Log "INFO" "Health check..." Yellow
-ssh -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax=3 $RemoteHost "test -f ${RemotePath}index.html && echo 'OK index.html present' || echo 'MISSING index.html'"
-ssh -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax=3 $RemoteHost "ss -tlnp | grep -q ':3000' && echo 'OK port 3000 listening' || echo 'WARN port 3000 not found'"
-
-$elapsed = [math]::Round(((Get-Date) - $__deployStart).TotalSeconds, 1)
-$timeStr = if ($elapsed -ge 60) { "$([math]::Floor($elapsed/60))m $([math]::Round($elapsed%60,1))s" } else { "${elapsed}s" }
-Log "SUCCESS" "========================================" Green
-Log "SUCCESS" "DEPLOYMENT COMPLETE" Green
-Log "SUCCESS" "URL  : https://ai-tools.techbridge.edu.gh/markai/" Green
-Log "SUCCESS" "Time : $timeStr total" Green
-Log "SUCCESS" "========================================" Green
+ssh -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax=3 $RemoteHost "test -f ${RemotePath}index.html && echo 'OK index.html present' 

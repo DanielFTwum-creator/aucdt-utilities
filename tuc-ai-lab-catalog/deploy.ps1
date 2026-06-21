@@ -79,7 +79,7 @@ if ($Build) {
 set -e
 export NVM_DIR="`$HOME/.nvm"
 [ -s "`$NVM_DIR/nvm.sh" ] && \. "`$NVM_DIR/nvm.sh"
-nvm use --lts >/dev/null 2>&1 || true
+nvm use 26 >/dev/null 2>&1 || true
 mkdir -p ~/.ssh && chmod 700 ~/.ssh
 if [ -f ~/.ssh/github_deploy ]; then
   chmod 600 ~/.ssh/github_deploy
@@ -229,7 +229,8 @@ Log -Level 'INFO' -Msg 'Step 6: Deploying backend files...' -Color Yellow
 if (Test-Path '.env.local') {
     & $SCP @SSH_OPTS '.env.local' "${RemoteHost}:${RemotePath}.env" 2>$null | Out-Null
 }
-& $SSH @SSH_OPTS $RemoteHost "cd $RemotePath && pnpm install --prod --silent 2>/dev/null || npm install --omit=dev --silent"
+$nvmPrefix = 'export NVM_DIR="$HOME/.nvm"; [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"; nvm use 26 >/dev/null 2>&1 || true'
+& $SSH @SSH_OPTS $RemoteHost "$nvmPrefix; cd $RemotePath && pnpm install --prod --silent 2>/dev/null || npm install --omit=dev --silent"
 
 # Step 7: Restart backend
 Log -Level 'INFO' -Msg 'Step 7: Restarting backend (PM2)...' -Color Yellow

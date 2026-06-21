@@ -41,7 +41,7 @@ if ($Build) {
 set -e
 export NVM_DIR="`$HOME/.nvm"
 [ -s "`$NVM_DIR/nvm.sh" ] && \. "`$NVM_DIR/nvm.sh"
-nvm use --lts >/dev/null 2>&1 || true
+nvm use 26 >/dev/null 2>&1 || true
 mkdir -p ~/.ssh && chmod 700 ~/.ssh
 if [ -f ~/.ssh/github_deploy ]; then
   chmod 600 ~/.ssh/github_deploy
@@ -121,12 +121,12 @@ ssh -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax
 Log "INFO" "Step 6: Deploying backend files..." Yellow
 scp -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax=3 server.js package.json pnpm-lock.yaml "${RemoteHost}:${RemotePath}" 2>$null | Out-Null
 if (Test-Path ".env.local") { scp -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax=3 ".env.local" "${RemoteHost}:${RemotePath}.env.local" 2>$null | Out-Null }
-$step6Script = "export NVM_DIR=`"`$HOME/.nvm`"; [ -s `"`$NVM_DIR/nvm.sh`" ] && . `"`$NVM_DIR/nvm.sh`"; nvm use --lts >/dev/null 2>&1 || true; cd $RemotePath && timeout 120 pnpm install --prod 2>&1 | tail -10 || timeout 120 npm install --omit=dev 2>&1 | tail -10"
+$step6Script = "export NVM_DIR=`"`$HOME/.nvm`"; [ -s `"`$NVM_DIR/nvm.sh`" ] && . `"`$NVM_DIR/nvm.sh`"; nvm use 26 >/dev/null 2>&1 || true; cd $RemotePath && timeout 120 pnpm install --prod 2>&1 | tail -10 || timeout 120 npm install --omit=dev 2>&1 | tail -10"
 ssh -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax=3 $RemoteHost $step6Script
 
 Log "INFO" "Step 7: Restarting backend (PM2)..." Yellow
 $restartCmd = @"
-export NVM_DIR="`$HOME/.nvm"; [ -s "`$NVM_DIR/nvm.sh" ] && . "`$NVM_DIR/nvm.sh"; nvm use --lts >/dev/null 2>&1 || true
+export NVM_DIR="`$HOME/.nvm"; [ -s "`$NVM_DIR/nvm.sh" ] && . "`$NVM_DIR/nvm.sh"; nvm use 26 >/dev/null 2>&1 || true
 if command -v pm2 &>/dev/null; then
   if pm2 describe deep-dub-vibes-player &>/dev/null; then
     pm2 reload deep-dub-vibes-player --update-env && echo 'pm2: reloaded deep-dub-vibes-player'
@@ -143,16 +143,4 @@ if command -v pm2 &>/dev/null; then
 fi
 "@
 $b64r = [Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes($restartCmd.Replace("`r", "")))
-ssh -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax=3 $RemoteHost "echo $b64r | base64 -d | bash"
-
-Log "INFO" "Health check..." Yellow
-ssh -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax=3 $RemoteHost "test -f ${RemotePath}index.html && echo 'OK index.html present' || echo 'MISSING index.html'"
-ssh -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax=3 $RemoteHost "ss -tlnp | grep -q ':3013' && echo 'OK port 3013 listening' || echo 'WARN port 3013 not found'"
-
-$elapsed = [math]::Round(((Get-Date) - $__deployStart).TotalSeconds, 1)
-$timeStr = if ($elapsed -ge 60) { "$([math]::Floor($elapsed/60))m $([math]::Round($elapsed%60,1))s" } else { "${elapsed}s" }
-Log "SUCCESS" "========================================" Green
-Log "SUCCESS" "DEPLOYMENT COMPLETE" Green
-Log "SUCCESS" "URL  : https://ai-tools.techbridge.edu.gh/deep-dub-vibes-player/" Green
-Log "SUCCESS" "Time : $timeStr total" Green
-Log "SUCCESS" "========================================" Green
+ssh -o StrictHostKeyChecking=no -o ServerAliveInterval=30 

@@ -41,7 +41,7 @@ if ($Build) {
 set -e
 export NVM_DIR="`$HOME/.nvm"
 [ -s "`$NVM_DIR/nvm.sh" ] && \. "`$NVM_DIR/nvm.sh"
-nvm use --lts >/dev/null 2>&1 || true
+nvm use 26 >/dev/null 2>&1 || true
 log() { echo "[`$(date '+%Y-%m-%d %H:%M:%S')][SERVER] `$1"; }
 mkdir -p ~/.ssh && chmod 700 ~/.ssh
 if [ -f ~/.ssh/github_deploy ]; then

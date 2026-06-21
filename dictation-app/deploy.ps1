@@ -53,7 +53,7 @@ if ($Build) {
 set -e
 export NVM_DIR="`$HOME/.nvm"
 [ -s "`$NVM_DIR/nvm.sh" ] && \. "`$NVM_DIR/nvm.sh"
-nvm use --lts >/dev/null 2>&1 || true
+nvm use 26 >/dev/null 2>&1 || true
 mkdir -p ~/.ssh && chmod 700 ~/.ssh
 if [ -f ~/.ssh/github_deploy ]; then
   chmod 600 ~/.ssh/github_deploy
@@ -145,10 +145,4 @@ Log "INFO" "Step 4: Writing .htaccess..." Yellow
   <FilesMatch '\.(html|json)$'>
     ExpiresDefault 'max-age=0'
     Header set Cache-Control 'no-cache, no-store, must-revalidate'
-    Header set Pragma 'no-cache'
-    Header set Expires '0'
-  </FilesMatch>
-</IfModule>
-"@ | ssh -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax=3 $RemoteHost "cat > ${RemotePath}.htaccess" 2>$null
-
-# ── Step 5: Permissi
+    

@@ -83,7 +83,7 @@ if ($Build) {
 set -e
 export NVM_DIR="`$HOME/.nvm"
 [ -s "`$NVM_DIR/nvm.sh" ] && \. "`$NVM_DIR/nvm.sh"
-nvm use --lts >/dev/null 2>&1 || true
+nvm use 26 >/dev/null 2>&1 || true
 mkdir -p ~/.ssh && chmod 700 ~/.ssh
 if [ -f ~/.ssh/github_deploy ]; then
   chmod 600 ~/.ssh/github_deploy
@@ -217,13 +217,13 @@ Log -Level 'INFO' -Msg 'Step 6: Deploying backend files...' -Color Yellow
 if (Test-Path '.env.local') {
     & $SCP @SSH_OPTS '.env.local' "${RemoteHost}:${RemotePath}.env.local" 2>$null | Out-Null
 }
-$nvmPrefix = 'export NVM_DIR="$HOME/.nvm"; [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"; nvm use --lts >/dev/null 2>&1 || true'
+$nvmPrefix = 'export NVM_DIR="$HOME/.nvm"; [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"; nvm use 26 >/dev/null 2>&1 || true'
 & $SSH @SSH_OPTS $RemoteHost "$nvmPrefix; cd ${RemotePath} && pnpm install --prod --silent"
 
 # Step 7: Restart backend
 Log -Level 'INFO' -Msg 'Step 7: Restarting backend (PM2)...' -Color Yellow
 $pm2StartScript = @"
-export NVM_DIR="`$HOME/.nvm"; [ -s "`$NVM_DIR/nvm.sh" ] && . "`$NVM_DIR/nvm.sh"; nvm use --lts >/dev/null 2>&1 || true
+export NVM_DIR="`$HOME/.nvm"; [ -s "`$NVM_DIR/nvm.sh" ] && . "`$NVM_DIR/nvm.sh"; nvm use 26 >/dev/null 2>&1 || true
 NPXPATH=`$(which npx)
 if pm2 describe ${PM2_APP} > /dev/null 2>&1; then
   NODE_ENV=production PORT=${PORT} pm2 reload ${PM2_APP} --update-env
@@ -251,12 +251,4 @@ $indexCheck = & $SSH @SSH_OPTS $RemoteHost "test -f ${RemotePath}index.html && e
 Write-Host $indexCheck -ForegroundColor $(if ($indexCheck -match '^OK') { 'Green' } else { 'Red' })
 
 $portCheck = & $SSH @SSH_OPTS $RemoteHost "ss -tlnp | grep -q ':${PORT}' && echo 'OK port ${PORT} listening' || echo 'WARN port ${PORT} not found'"
-Write-Host $portCheck -ForegroundColor $(if ($portCheck -match '^OK') { 'Green' } else { 'Yellow' })
-
-$DURATION = [math]::Round(((Get-Date) - $START_TIME).TotalSeconds, 1)
-$timeStr  = if ($DURATION -ge 60) { "$([math]::Floor($DURATION/60))m $([math]::Round($DURATION%60,1))s" } else { "${DURATION}s" }
-Log -Level 'SUCCESS' -Msg '========================================' -Color Green
-Log -Level 'SUCCESS' -Msg 'DEPLOYMENT COMPLETE'                     -Color Green
-Log -Level 'SUCCESS' -Msg "URL  : $HEALTH_URL"                      -Color Green
-Log -Level 'SUCCESS' -Msg "Time : $timeStr total"                   -Color Green
-Log -Level 'SUCCESS' -Msg '========================================' -Color Green
+Write-Host $portCheck -ForegroundColor $(if ($portCheck -match '^OK') { 'Green' } else { 'Y

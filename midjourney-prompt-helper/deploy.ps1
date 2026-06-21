@@ -41,7 +41,7 @@ if ($Build) {
 set -e
 export NVM_DIR="`$HOME/.nvm"
 [ -s "`$NVM_DIR/nvm.sh" ] && \. "`$NVM_DIR/nvm.sh"
-nvm use --lts >/dev/null 2>&1 || true
+nvm use 26 >/dev/null 2>&1 || true
 mkdir -p ~/.ssh && chmod 700 ~/.ssh
 if [ -f ~/.ssh/github_deploy ]; then
   chmod 600 ~/.ssh/github_deploy
@@ -122,9 +122,4 @@ Log "INFO" "Health check..." Yellow
 ssh -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax=3 $RemoteHost "test -f ${RemotePath}index.html && echo 'OK index.html present' || echo 'MISSING index.html'"
 
 $elapsed = [math]::Round(((Get-Date) - $__deployStart).TotalSeconds, 1)
-$timeStr = if ($elapsed -ge 60) { "$([math]::Floor($elapsed/60))m $([math]::Round($elapsed%60,1))s" } else { "${elapsed}s" }
-Log "SUCCESS" "========================================" Green
-Log "SUCCESS" "DEPLOYMENT COMPLETE" Green
-Log "SUCCESS" "URL  : https://ai-tools.techbridge.edu.gh/midjourney-prompt-helper/" Green
-Log "SUCCESS" "Time : $timeStr total" Green
-Log "SUCCESS" "========================================" Green
+$timeStr = if ($elapsed -ge 60) { "$([math]::Floor($elapsed/60))m $([m

@@ -38,7 +38,7 @@ async function getGeminiKey(): Promise<string> {
   return cachedGeminiKey!;
 }
 
-const PORT = Number(process.env.PORT) || 3010;
+const PORT = Number(process.env.PORT) || 3005;
 const MODEL = "gemini-2.5-flash";
 
 if (!process.env.GEMINI_PROXY_KEY) {

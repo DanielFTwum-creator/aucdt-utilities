@@ -958,15 +958,19 @@ $nvmPrefix = 'export NVM_DIR="$HOME/.nvm"; [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_D
 
 PowerShell double-quoted strings expand `$HOME` and `$NVM_DIR` as PowerShell variables (empty on the local machine). Single-quoting the NVM prefix preserves them as literal bash variables. The outer double-quoted string then expands only `${RemotePath}` (a PowerShell var), which is correct.
 
-### Affected Apps (not yet fixed as of June 2026)
+### Node Version
 
-`english-safari`, `dmcdai`, `biochemai`, `markai`, `groove-streamer`, `deliberate-magic-reader`, `orbit-walk-reminder`, `peace-vinyl`, `techbridge-student-population-register`, `techbridge-ai-blueprint`, `techbridge-poster-studio`, `tuc-ai-lab-catalog`, `tuc-netscan-100`, `aucdt-msee-aptitude-test`, `omniextract`
+Use `nvm use 26` (not `--lts`) to match the server's system default Node v26. All deploy scripts were updated to Node v26 on 2026-06-21.
 
-These apps work currently because node_modules from a prior install are already on the server. Any deploy that adds or changes backend dependencies will fail silently until fixed.
+### Fixed (June 2026)
 
-### Already Correct
+All 13 affected apps now use `$nvmPrefix` with `nvm use 26`:  
+`english-safari`, `dmcdai`, `markai`, `groove-streamer`, `deliberate-magic-reader`, `orbit-walk-reminder`, `peace-vinyl`, `techbridge-student-population-register`, `techbridge-ai-blueprint`, `techbridge-poster-studio`, `tuc-ai-lab-catalog`, `tuc-netscan-100`, `aucdt-msee-aptitude-test`
 
-`glucose` (fixed June 2026), `deep-dub-vibes-player`, `willpro`, `ai-email-drafter` — these use the `$nvmPrefix` pattern or an inline equivalent.
+### Already Correct (use heredoc with NVM at top)
+
+`biochemai`, `omniextract` — their entire build runs in a bash script that sources NVM at the top.  
+`glucose`, `deep-dub-vibes-player`, `willpro`, `ai-email-drafter` — use the `$nvmPrefix` or inline `$step6Script` pattern.
 
 ---
 

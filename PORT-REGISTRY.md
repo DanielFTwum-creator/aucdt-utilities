@@ -9,10 +9,12 @@
 |------|----------------|-------|
 | 3002 | biochemai | |
 | 3003 | tuc-ai-lab | |
+| 3005 | tb-ai-english-safari | registered 2026-06-21 |
 | 3006 | glucose | |
 | 3007 | ai-email-drafter | |
 | 3009 | omniextract | |
 | 3011 | aucdt-msee-aptitude-test | |
+| 3014 | dmcdai | registered 2026-06-21 |
 | 3012 | dfs-website | |
 | 3013 | deep-dub-vibes-player | was 3009 (conflict with omniextract) — fixed 2026-06-21 |
 | 3027 | tb-student-reg | was 3013 (conflict with deep-dub-vibes-player) — fixed 2026-06-21 |

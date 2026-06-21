@@ -64,7 +64,7 @@ $remoteScript = @"
 set -e
 export NVM_DIR="`$HOME/.nvm"
 [ -s "`$NVM_DIR/nvm.sh" ] && \. "`$NVM_DIR/nvm.sh"
-nvm use --lts >/dev/null 2>&1 || true
+nvm use 26 >/dev/null 2>&1 || true
 mkdir -p ~/.ssh && chmod 700 ~/.ssh
 if [ -f ~/.ssh/github_deploy ]; then
   chmod 600 ~/.ssh/github_deploy
@@ -153,6 +153,4 @@ Log ($(if ($code -eq '200') {'SUCCESS'} else {'WARN'})) "backend /api/health -> 
 $elapsed = [math]::Round(((Get-Date) - $__deployStart).TotalSeconds, 1)
 Log "SUCCESS" "========================================" Green
 Log "SUCCESS" "DEPLOYMENT COMPLETE in ${elapsed}s" Green
-Log "SUCCESS" "URL : https://ai-tools.techbridge.edu.gh/youtube-genie/" Green
-Log "SUCCESS" "NOTE: ensure nginx proxies /youtube-genie/api/ -> http://localhost:$PORT (Plesk Additional nginx directives)" DarkGray
-Log "SUCCESS" "========================================" Green
+Log
