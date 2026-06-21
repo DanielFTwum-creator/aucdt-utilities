@@ -221,7 +221,27 @@ if (Test-Path '.env.local') {
 
 # Step 7: Restart backend
 Log -Level 'INFO' -Msg 'Step 7: Restarting backend (PM2)...' -Color Yellow
-$pm2Result = & $SSH @SSH_OPTS $RemoteHost "if pm2 describe ${PM2_APP} > /dev/null 2>&1; then pm2 reload ${PM2_APP} --update-env; echo 'pm2: reloaded ${PM2_APP}'; else cd ${RemotePath} && NODE_ENV=production PORT=${PORT} pm2 start server.ts --name ${PM2_APP} --max-memory-restart 1G --interpreter npx --interpreter-args tsx; echo 'pm2: started ${PM2_APP}'; fi; pm2 save --force > /dev/null 2>&1 || true"
+$pm2StartScript = @"
+export NVM_DIR="`$HOME/.nvm"; [ -s "`$NVM_DIR/nvm.sh" ] && . "`$NVM_DIR/nvm.sh"; nvm use --lts >/dev/null 2>&1 || true
+NPXPATH=`$(which npx)
+if pm2 describe ${PM2_APP} > /dev/null 2>&1; then
+  pm2 reload ${PM2_APP} --update-env
+  echo 'pm2: reloaded ${PM2_APP}'
+else
+  pm2 start ${RemotePath}server.ts \
+    --name ${PM2_APP} \
+    --interpreter "`$NPXPATH" \
+    --interpreter-args tsx \
+    --cwd ${RemotePath} \
+    --max-memory-restart 1G \
+    --env PORT=${PORT} \
+    --env NODE_ENV=production
+  echo 'pm2: started ${PM2_APP}'
+fi
+pm2 save --force > /dev/null 2>&1 || true
+"@
+$b64pm2 = [Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes($pm2StartScript.Replace("`r", "")))
+$pm2Result = & $SSH @SSH_OPTS $RemoteHost "echo $b64pm2 | base64 -d | bash"
 Write-Host $pm2Result -ForegroundColor DarkGray
 
 # Health checks
