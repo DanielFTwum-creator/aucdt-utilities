@@ -80,6 +80,16 @@ function Invoke-StandardTests {
                                     )
         # Allow 1 (build-only) or 2 (build + Step 6 backend install — separate SSH calls need separate nvm source)
         "No duplicate nvm blocks" = ($Content | Select-String -Pattern 'export NVM_DIR' -AllMatches).Matches.Count -le 2
+        # pm2 start must include --cwd so dotenv reads from the app dir, not /root
+        # (incident June 2026: GEMINI_API_KEY not found because cwd was /root)
+        "pm2 start has --cwd"     = $(
+                                        if ($Content -notmatch 'pm2 start') { $true }  # no pm2 start = frontend only, skip
+                                        else { $Content -match '--cwd' }
+                                    )
+        # .env.local must be copied as .env.local — not renamed to .env — or the
+        # server.ts that calls dotenv.config({ path: '.env.local' }) will miss it
+        # (incident June 2026: english-safari, peace-vinyl, deep-dub crashed this way)
+        "env file not renamed"    = $Content -notmatch "scp[^`n]+\.env\.local[^`n]+[`"']?[^`n]*\.env[^.]"
         "PowerShell syntax valid" = Test-PSFile $Path
     }
     return $checks

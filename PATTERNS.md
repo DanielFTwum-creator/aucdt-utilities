@@ -18,6 +18,7 @@
 | 6 | Glucose Project Learnings | General React + IndexedDB apps |
 | 7 | Full-Viewport Layout | All TUC React apps with focused-work views |
 | 8 | Port Assignment & Conflict Prevention | All backend apps in aucdt-utilities |
+| 9 | PM2 cwd + dotenv env-file contract | All backend apps in aucdt-utilities |
 | — | WMS SSO + TOTP onboarding (staff apps) | → `tuc-wms/docs/SSO_ONBOARDING_PLAYBOOK.md` |
 
 ---
@@ -717,6 +718,92 @@ Until automated, the manual PowerShell command above is the gate.
 ### Apps Without a Backend Port
 
 Pure SPA frontends (no server.ts / server.js) do not consume a port. See the "Apps without a backend port" section in PORT-REGISTRY.md for the current list. When in doubt: if the app has a `server.ts` or `server.js` and a PM2 entry, it needs a port in the registry.
+
+---
+
+## PATTERN 9: PM2 CWD + DOTENV ENV-FILE CONTRACT
+
+**Origin:** Fleet incident, June 2026 — glucose, english-safari, peace-vinyl, deep-dub all crashed with `GEMINI_API_KEY not set` or equivalent after an OOM event forced PM2 restarts. Root cause: PM2 started processes from `/root` instead of the app directory, so `dotenv.config()` read `/root/.env` (empty) instead of the app's `.env` or `.env.local`.
+
+### The Rule: Three-Way Contract
+
+Every backend app has a **three-way contract** that must be consistent:
+
+```
+server.ts/js     →  dotenv.config({ path: X })      # what the app reads
+deploy.ps1 scp   →  copies .env.local → server as X  # what gets written
+pm2 start        →  --cwd /path/to/app               # where X is resolved from
+```
+
+All three must agree. Breaking any one leg causes silent env loss on restart.
+
+### Correct pm2 start pattern
+
+```bash
+# Always use --cwd. Never rely on `cd dir && pm2 start` — the cd only
+# affects the shell, not the working directory PM2 records for the process.
+pm2 start /full/path/to/server.ts \
+  --name my-app \
+  --interpreter "$NPXPATH" \
+  --interpreter-args tsx \
+  --cwd /full/path/to/app/ \      # ← required
+  --max-memory-restart 1G
+```
+
+In the PowerShell deploy script, this goes inside the base64 heredoc or inline SSH string — the same place where nvm is sourced. Example from glucose/deploy.ps1:
+
+```powershell
+$pm2StartScript = @"
+export NVM_DIR="`$HOME/.nvm"; [ -s "`$NVM_DIR/nvm.sh" ] && . "`$NVM_DIR/nvm.sh"; nvm use --lts >/dev/null 2>&1 || true
+NPXPATH=`$(which npx)
+if pm2 describe ${PM2_APP} > /dev/null 2>&1; then
+  pm2 reload ${PM2_APP} --update-env
+else
+  pm2 start ${RemotePath}server.ts \
+    --name ${PM2_APP} \
+    --interpreter "`$NPXPATH" \
+    --interpreter-args tsx \
+    --cwd ${RemotePath} \
+    --max-memory-restart 1G \
+    --env PORT=${PORT} \
+    --env NODE_ENV=production
+fi
+pm2 save --force > /dev/null 2>&1 || true
+"@
+```
+
+### Correct env-file copy pattern
+
+Match the deploy's scp destination to what the server reads:
+
+```powershell
+# If server.ts calls dotenv.config()             → copy as .env
+if (Test-Path ".env.local") {
+    scp ... ".env.local" "${RemoteHost}:${RemotePath}.env"
+}
+
+# If server.ts calls dotenv.config({ path: '.env.local' }) → copy as .env.local
+if (Test-Path ".env.local") {
+    scp ... ".env.local" "${RemoteHost}:${RemotePath}.env.local"
+}
+```
+
+Check the server file first:
+```bash
+grep 'dotenv\.config' server.ts   # shows which path is used
+```
+
+### Compliance check
+
+`test-fleet-deploy.ps1` enforces both rules automatically:
+- **"pm2 start has --cwd"** — fails if a deploy.ps1 contains `pm2 start` but no `--cwd`
+- **"env file not renamed"** — fails if scp copies `.env.local` → `.env` (the silent mismatch)
+
+Run `.\test-fleet-deploy.ps1` before any fleet deploy to catch violations.
+
+### Why `--env` flags alone are not enough
+
+PM2's `--env` flag takes a named environment (e.g. `--env production`), not `KEY=VALUE` pairs. Shell-level vars (`PORT=3006 pm2 start ...`) ARE stored in PM2's process descriptor and survive restarts — but only if the process was originally started that way. After a `pm2 delete` + manual `pm2 start` (common during incident recovery), those stored vars are lost unless the operator repeats them. `--cwd` + a correct `.env` file on disk is the resilient pattern because it works even after a full `pm2 resurrect` from dump.
 
 ---
 
