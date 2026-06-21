@@ -20,6 +20,8 @@
 | 8 | Port Assignment & Conflict Prevention | All backend apps in aucdt-utilities |
 | 9 | PM2 cwd + dotenv env-file contract | All backend apps in aucdt-utilities |
 | 10 | pnpm native binary permissions | All apps with esbuild / better-sqlite3 / protobufjs |
+| 11 | WMS Gemini Key Proxy | All fleet apps that call Gemini AI |
+| 12 | NVM sourcing before server-side pnpm install | All deploy.ps1 backend install steps |
 | — | WMS SSO + TOTP onboarding (staff apps) | → `tuc-wms/docs/SSO_ONBOARDING_PLAYBOOK.md` |
 
 ---
@@ -847,6 +849,124 @@ pnpm uses a global content-addressable store (`~/.local/share/pnpm/store/`). Fil
 ### Why `--env` flags alone are not enough
 
 PM2's `--env` flag takes a named environment (e.g. `--env production`), not `KEY=VALUE` pairs. Shell-level vars (`PORT=3006 pm2 start ...`) ARE stored in PM2's process descriptor and survive restarts — but only if the process was originally started that way. After a `pm2 delete` + manual `pm2 start` (common during incident recovery), those stored vars are lost unless the operator repeats them. `--cwd` + a correct `.env` file on disk is the resilient pattern because it works even after a full `pm2 resurrect` from dump.
+
+---
+
+## PATTERN 11: WMS GEMINI KEY PROXY
+
+**Origin:** Fleet architecture decision, June 2026 — Gemini API key custody must live in exactly one place: `wms.techbridge.edu.gh`. Apps must never store or hard-code the key; they fetch it at runtime from the WMS proxy.
+
+**Reference implementation:** `dmcdai-digital-media-communication-design/server.js`
+
+### The Rule
+
+Every fleet app that calls Gemini AI must:
+1. Fetch the key from WMS at runtime (not at startup)
+2. Cache the key in memory with a 6-hour TTL
+3. Invalidate the cache on `API_KEY_INVALID` errors so the next request re-fetches
+4. Fall back to a local `GEMINI_API_KEY` env var for development only
+5. Never call `process.exit(1)` if the key is unavailable — return HTTP 503 instead
+
+### Standard Implementation (TypeScript)
+
+```typescript
+const WMS_KEY_URL = 'https://wms.techbridge.edu.gh/api/gemini/key';
+const KEY_TTL_MS  = 6 * 60 * 60 * 1000; // 6 hours
+let cachedGeminiKey: string | null = null;
+let keyFetchedAt = 0;
+
+function invalidateGeminiKey() { cachedGeminiKey = null; keyFetchedAt = 0; }
+
+async function getGeminiKey(): Promise<string> {
+  if (cachedGeminiKey && Date.now() - keyFetchedAt < KEY_TTL_MS) return cachedGeminiKey;
+  const proxyKey = process.env.GEMINI_PROXY_KEY;
+  if (!proxyKey) {
+    // Local dev fallback only — production must set GEMINI_PROXY_KEY via WMS.
+    const local = process.env.GEMINI_API_KEY || process.env.VITE_GEMINI_API_KEY;
+    if (local) return local;
+    throw new Error('GEMINI_PROXY_KEY is not set (and no local key fallback).');
+  }
+  const r = await fetch(WMS_KEY_URL, { headers: { 'X-Gemini-Proxy-Key': proxyKey } });
+  if (!r.ok) throw new Error(`WMS key fetch failed: ${r.status} ${await r.text()}`);
+  cachedGeminiKey = (await r.json()).apiKey;
+  keyFetchedAt = Date.now();
+  return cachedGeminiKey!;
+}
+
+if (!process.env.GEMINI_PROXY_KEY) {
+  console.warn('[APP] WARNING: GEMINI_PROXY_KEY not set — AI routes will use local fallback or fail');
+}
+```
+
+### In Route Handlers
+
+```typescript
+// Per-request key fetch — never at startup
+const geminiKey = await getGeminiKey().catch((err: any) => {
+  console.error('[APP] Key fetch failed:', err.message);
+  return null;
+});
+if (!geminiKey) return res.status(503).json({ error: 'AI service temporarily unavailable' });
+const ai = new GoogleGenAI({ apiKey: geminiKey });
+// ... use ai ...
+
+// In the catch block:
+if (errorMessage.includes('API_KEY_INVALID') || errorMessage.includes('INVALID_ARGUMENT')) {
+  invalidateGeminiKey();
+}
+```
+
+### Environment Variables
+
+| Var | Where set | Purpose |
+|---|---|---|
+| `GEMINI_PROXY_KEY` | PM2 shell-level var + `.env.local` | Authenticates with WMS proxy |
+| `GEMINI_API_KEY` | `.env.local` (dev only) | Local fallback when WMS unavailable |
+
+### Status (June 2026)
+
+`GEMINI_PROXY_KEY` is not yet activated fleet-wide. Current production apps use the `GEMINI_API_KEY` fallback path. When `GEMINI_PROXY_KEY` is set fleet-wide, the WMS relay activates automatically.
+
+Migrated: `english-safari`, `glucose`  
+Reference: `dmcdai` (JS implementation)  
+Old pattern (do not copy): `biochemai` — direct key, fatal startup check
+
+---
+
+## PATTERN 12: NVM SOURCING BEFORE SERVER-SIDE PNPM INSTALL
+
+**Origin:** Fleet incident, June 2026 — `glucose` deploy failed with `ERR_UNKNOWN_BUILTIN_MODULE: No such built-in module: node:sqlite`. Root cause: pnpm 11.5.3 requires Node.js ≥ v22.13, but the bare SSH `pnpm install` command runs under the system Node (v20) because NVM is not sourced.
+
+### The Rule
+
+Every deploy.ps1 `pnpm install --prod` step that runs on the server via SSH **must** source NVM first.
+
+### Correct Pattern (PowerShell deploy.ps1)
+
+```powershell
+# Step 6: Deploy backend files and install deps
+& $SCP @SSH_OPTS server.ts package.json pnpm-lock.yaml "${RemoteHost}:${RemotePath}" | Out-Null
+if (Test-Path '.env.local') {
+    & $SCP @SSH_OPTS '.env.local' "${RemoteHost}:${RemotePath}.env.local" | Out-Null
+}
+# IMPORTANT: single-quote $nvmPrefix to prevent PowerShell from interpolating $HOME/$NVM_DIR
+$nvmPrefix = 'export NVM_DIR="$HOME/.nvm"; [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"; nvm use --lts >/dev/null 2>&1 || true'
+& $SSH @SSH_OPTS $RemoteHost "$nvmPrefix; cd ${RemotePath} && pnpm install --prod --silent"
+```
+
+### Why Single-Quotes for `$nvmPrefix`
+
+PowerShell double-quoted strings expand `$HOME` and `$NVM_DIR` as PowerShell variables (empty on the local machine). Single-quoting the NVM prefix preserves them as literal bash variables. The outer double-quoted string then expands only `${RemotePath}` (a PowerShell var), which is correct.
+
+### Affected Apps (not yet fixed as of June 2026)
+
+`english-safari`, `dmcdai`, `biochemai`, `markai`, `groove-streamer`, `deliberate-magic-reader`, `orbit-walk-reminder`, `peace-vinyl`, `techbridge-student-population-register`, `techbridge-ai-blueprint`, `techbridge-poster-studio`, `tuc-ai-lab-catalog`, `tuc-netscan-100`, `aucdt-msee-aptitude-test`, `omniextract`
+
+These apps work currently because node_modules from a prior install are already on the server. Any deploy that adds or changes backend dependencies will fail silently until fixed.
+
+### Already Correct
+
+`glucose` (fixed June 2026), `deep-dub-vibes-player`, `willpro`, `ai-email-drafter` — these use the `$nvmPrefix` pattern or an inline equivalent.
 
 ---
 

@@ -217,7 +217,8 @@ Log -Level 'INFO' -Msg 'Step 6: Deploying backend files...' -Color Yellow
 if (Test-Path '.env.local') {
     & $SCP @SSH_OPTS '.env.local' "${RemoteHost}:${RemotePath}.env.local" 2>$null | Out-Null
 }
-& $SSH @SSH_OPTS $RemoteHost "cd $RemotePath && pnpm install --prod --silent"
+$nvmPrefix = 'export NVM_DIR="$HOME/.nvm"; [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"; nvm use --lts >/dev/null 2>&1 || true'
+& $SSH @SSH_OPTS $RemoteHost "$nvmPrefix; cd ${RemotePath} && pnpm install --prod --silent"
 
 # Step 7: Restart backend
 Log -Level 'INFO' -Msg 'Step 7: Restarting backend (PM2)...' -Color Yellow
@@ -225,17 +226,15 @@ $pm2StartScript = @"
 export NVM_DIR="`$HOME/.nvm"; [ -s "`$NVM_DIR/nvm.sh" ] && . "`$NVM_DIR/nvm.sh"; nvm use --lts >/dev/null 2>&1 || true
 NPXPATH=`$(which npx)
 if pm2 describe ${PM2_APP} > /dev/null 2>&1; then
-  pm2 reload ${PM2_APP} --update-env
+  NODE_ENV=production PORT=${PORT} pm2 reload ${PM2_APP} --update-env
   echo 'pm2: reloaded ${PM2_APP}'
 else
-  pm2 start ${RemotePath}server.ts \
+  NODE_ENV=production PORT=${PORT} pm2 start ${RemotePath}server.ts \
     --name ${PM2_APP} \
     --interpreter "`$NPXPATH" \
     --interpreter-args tsx \
     --cwd ${RemotePath} \
-    --max-memory-restart 1G \
-    --env PORT=${PORT} \
-    --env NODE_ENV=production
+    --max-memory-restart 1G
   echo 'pm2: started ${PM2_APP}'
 fi
 pm2 save --force > /dev/null 2>&1 || true

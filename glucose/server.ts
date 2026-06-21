@@ -460,6 +460,13 @@ app.post(['/api/scan-glucose', '/glucose/api/scan-glucose'], async (req, res) =>
 
     console.log('[SCAN-API] Processing image, size:', imageData.length, 'chars');
 
+    const geminiKey = await getGeminiKey().catch((err: any) => {
+      console.error('[SCAN-API] Key fetch failed:', err.message);
+      return null;
+    });
+    if (!geminiKey) return res.status(503).json({ error: 'AI service temporarily unavailable' });
+    const client = new GoogleGenAI({ apiKey: geminiKey });
+
     const responseStream = await client.models.generateContentStream({
       model: 'gemini-2.5-flash',
       contents: {
@@ -535,6 +542,10 @@ Restrictions:
     const errorMessage = error instanceof Error ? error.message : String(error);
     const errorStack = error instanceof Error ? error.stack : '';
     console.error('[SCAN-API] Stack:', errorStack);
+    // Invalidate cached key if Gemini rejects it so next request re-fetches from WMS
+    if (errorMessage.includes('API_KEY_INVALID') || errorMessage.includes('INVALID_ARGUMENT')) {
+      invalidateGeminiKey();
+    }
     res.status(500).json({
       error: 'Failed to process image',
       details: errorMessage,
@@ -553,5 +564,5 @@ app.get(['/api/health', '/glucose/api/health'], (req, res) => {
 const PORT = Number(process.env.PORT) || 3006;
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`[GLUCOSE-API] Server running on http://0.0.0.0:${PORT}`);
-  console.log(`[GLUCOSE-API] Gemini API key configured: ${!!apiKey}`);
+  console.log(`[GLUCOSE-API] Gemini key source: ${process.env.GEMINI_PROXY_KEY ? 'WMS proxy' : 'local fallback'}`);
 });
