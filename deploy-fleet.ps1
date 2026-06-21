@@ -58,11 +58,19 @@ function Get-ArchType {
 
 function Get-DeployArgs {
     param([string]$ArchType)
+    # Return hashtables — used with @splat so named parameters bind correctly.
+    # String arrays like @("-Build") bind to the first POSITIONAL param, not the switch.
     switch ($ArchType) {
-        "standard"   { return @("-Build") }
-        "local-scp"  { return @() }
-        "java-maven" { return @() }
+        "standard"   { return @{ Build = $true } }
+        "local-scp"  { return @{} }
+        "java-maven" { return @{} }
     }
+}
+
+function Format-Args {
+    param([hashtable]$ArgHash)
+    if ($ArgHash.Count -eq 0) { return "(default)" }
+    return ($ArgHash.GetEnumerator() | ForEach-Object { "-$($_.Key)" }) -join " "
 }
 
 # ---- Compliance check ------------------------------------------------------
@@ -135,7 +143,7 @@ Write-Host ("  {0,-40} {1,-12} {2}" -f "App", "Type", "Args") -ForegroundColor D
 Write-Host ("  {0,-40} {1,-12} {2}" -f ("─" * 38), ("─" * 10), ("─" * 10)) -ForegroundColor DarkGray
 
 foreach ($item in $active) {
-    $argStr = if ($item.Args.Count -gt 0) { $item.Args -join " " } else { "(default)" }
+    $argStr = Format-Args $item.Args
     Write-Host ("  {0,-40} {1,-12} {2}" -f $item.AppName, $item.Arch, $argStr)
 }
 
@@ -184,7 +192,8 @@ function Invoke-Deploy {
 
     Push-Location $Item.Dir
     try {
-        $output = & .\deploy.ps1 @($Item.Args) 2>&1
+        $splat  = $Item.Args   # hashtable — splatted so named params bind correctly
+        $output = & .\deploy.ps1 @splat 2>&1
         $code   = $LASTEXITCODE
     } catch {
         $output = $_.Exception.Message
@@ -243,9 +252,9 @@ if ($Parallel -le 1) {
             $item = $queue.Dequeue()
             $i    = $index   # capture for closure
             $job  = Start-Job -ScriptBlock {
-                param($Dir, $Args, $AppName)
+                param($Dir, $ArgHash, $AppName)
                 Push-Location $Dir
-                $out  = & .\deploy.ps1 @Args 2>&1
+                $out  = & .\deploy.ps1 @ArgHash 2>&1
                 $code = $LASTEXITCODE
                 Pop-Location
                 return @{ AppName=$AppName; Output=$out; ExitCode=$code }
