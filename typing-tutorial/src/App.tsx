@@ -318,18 +318,23 @@ export default function App() {
 
       </main>
 
-      <footer className="w-full px-4 sm:px-6 lg:px-8 py-8 mt-12 border-t border-[#E5DED4] dark:border-neutral-800 text-center text-xs text-stone-500 font-mono">
-        <p>&copy; 2026 Techbridge University College, Oyibi, Ghana. Department of ICT.</p>
-        <p className="mt-1 text-[10px] text-zinc-400">Document Mapping Standard: TUC-INC-2026-001 | Host: Plesk Nginx Reversed Node CLI</p>
-        <p className="mt-2 text-[10px] text-zinc-400 flex items-center justify-center gap-1.5">
-          <span className="inline-flex h-2 w-3 overflow-hidden rounded-[1px]" aria-hidden="true">
-            <span className="flex-1 bg-[#CE1126]"></span>
-            <span className="flex-1 bg-[#FCD116]"></span>
-            <span className="flex-1 bg-[#006B3F]"></span>
-          </span>
-          Proudly built in Ghana 🇬🇭
-        </p>
-      </footer>
+      {/* Footer is hidden during active practice — it adds height with no
+          functional value while the user is mid-exercise, and the goal there
+          is to fit the whole drill (keyboard included) within one screen. */}
+      {!selectedLesson && (
+        <footer className="w-full px-4 sm:px-6 lg:px-8 py-8 mt-12 border-t border-[#E5DED4] dark:border-neutral-800 text-center text-xs text-stone-500 font-mono">
+          <p>&copy; 2026 Techbridge University College, Oyibi, Ghana. Department of ICT.</p>
+          <p className="mt-1 text-[10px] text-zinc-400">Document Mapping Standard: TUC-INC-2026-001 | Host: Plesk Nginx Reversed Node CLI</p>
+          <p className="mt-2 text-[10px] text-zinc-400 flex items-center justify-center gap-1.5">
+            <span className="inline-flex h-2 w-3 overflow-hidden rounded-[1px]" aria-hidden="true">
+              <span className="flex-1 bg-[#CE1126]"></span>
+              <span className="flex-1 bg-[#FCD116]"></span>
+              <span className="flex-1 bg-[#006B3F]"></span>
+            </span>
+            Proudly built in Ghana 🇬🇭
+          </p>
+        </footer>
+      )}
 
     </div>
   );
