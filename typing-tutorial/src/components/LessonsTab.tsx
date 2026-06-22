@@ -52,13 +52,13 @@ export default function LessonsTab({ progress, onSelectLesson }: LessonsTabProps
   const [expandedIdx, setExpandedIdx] = useState<number | null>(null);
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-5">
 
       {/* Page header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
         <div>
-          <h2 className="text-lg font-bold text-neutral-900 dark:text-white">Lessons</h2>
-          <p className="text-xs text-neutral-500 dark:text-neutral-400">
+          <h2 className="text-2xl font-bold text-neutral-900 dark:text-white">Lessons</h2>
+          <p className="text-sm text-neutral-500 dark:text-neutral-400">
             Complete each lesson at 80%+ accuracy to unlock the next.
           </p>
         </div>
@@ -79,17 +79,17 @@ export default function LessonsTab({ progress, onSelectLesson }: LessonsTabProps
       </div>
 
       {/* Tips strip */}
-      <div className="flex flex-col sm:flex-row gap-1.5">
+      <div className="flex flex-col sm:flex-row gap-2">
         {[
           { icon: "🏠", label: "Home Row", tip: "Anchor on A S D F · J K L ; always." },
           { icon: "🙈", label: "Don't look down", tip: "Use the F and J tactile bumps." },
           { icon: "🐢", label: "Accuracy first", tip: "Speed naturally follows clean form." },
         ].map(({ icon, label, tip }) => (
-          <div key={label} className="flex-1 flex items-center gap-2 bg-amber-50 dark:bg-amber-950/20 border-l-2 border-amber-500 px-3 py-1.5 rounded-r-lg">
-            <span className="text-sm shrink-0">{icon}</span>
+          <div key={label} className="flex-1 flex items-center gap-2 bg-amber-50 dark:bg-amber-950/20 border-l-2 border-amber-500 px-4 py-3 rounded-r-lg">
+            <span className="text-lg shrink-0">{icon}</span>
             <div className="min-w-0">
-              <span className="text-xs font-semibold text-amber-800 dark:text-amber-300">{label} — </span>
-              <span className="text-xs text-amber-700/70 dark:text-amber-400/60 hidden sm:inline">{tip}</span>
+              <span className="text-sm font-semibold text-amber-800 dark:text-amber-300">{label} — </span>
+              <span className="text-sm text-amber-700/70 dark:text-amber-400/60 hidden sm:inline">{tip}</span>
             </div>
           </div>
         ))}
@@ -97,13 +97,13 @@ export default function LessonsTab({ progress, onSelectLesson }: LessonsTabProps
 
       {/* Roadmap header */}
       <div className="flex items-center justify-between">
-        <h3 className="text-xs font-semibold text-neutral-700 dark:text-neutral-300">Lessons Roadmap</h3>
+        <h3 className="text-sm font-semibold text-neutral-700 dark:text-neutral-300">Lessons Roadmap</h3>
         <span className="text-xs text-neutral-400 dark:text-neutral-500">{progress.lessonsCompleted} / {LESSONS.length} Unlocked</span>
       </div>
 
       {/* Lesson cards — 4 columns on large screens (3 rows for 12 lessons,
           instead of 4) so the whole roadmap fits in one screen with no scroll */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {LESSONS.map((lesson, idx) => {
           const isCompleted = progress.lessonsCompleted > idx;
           const isUnlocked = progress.lessonsCompleted >= idx;
@@ -115,7 +115,7 @@ export default function LessonsTab({ progress, onSelectLesson }: LessonsTabProps
               key={lesson.id}
               id={`lesson-card-${lesson.id}`}
               onClick={() => isUnlocked && setExpandedIdx(isExpanded ? null : idx)}
-              className={`group flex flex-col p-3 rounded-xl border-2 transition-all duration-200 select-none ${
+              className={`group flex flex-col p-4 rounded-2xl border-2 transition-all duration-200 select-none ${
                 isCompleted
                   ? "bg-emerald-50 dark:bg-emerald-950/20 border-emerald-200 dark:border-emerald-800/50 cursor-pointer hover:shadow-lg hover:-translate-y-0.5"
                   : isUnlocked
@@ -124,35 +124,35 @@ export default function LessonsTab({ progress, onSelectLesson }: LessonsTabProps
               }`}
             >
               {/* Header row: icon + lesson number + title + chevron */}
-              <div className="flex items-center gap-2">
-                <div className={`relative w-9 h-9 flex items-center justify-center rounded-xl text-base shrink-0 ${
+              <div className="flex items-center gap-3">
+                <div className={`relative w-12 h-12 flex items-center justify-center rounded-2xl text-xl shrink-0 ${
                   isCompleted ? "bg-emerald-100 dark:bg-emerald-900/40" : "bg-stone-100 dark:bg-neutral-800"
                 }`}>
                   {lesson.icon}
                   {isCompleted && (
-                    <div className="absolute -top-1 -right-1 w-4 h-4 bg-emerald-500 rounded-full flex items-center justify-center ring-2 ring-white dark:ring-neutral-900">
-                      <CheckCircle2 size={9} className="text-white" />
+                    <div className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-emerald-500 rounded-full flex items-center justify-center ring-2 ring-white dark:ring-neutral-900">
+                      <CheckCircle2 size={11} className="text-white" />
                     </div>
                   )}
                   {!isUnlocked && (
-                    <div className="absolute -top-1 -right-1 w-4 h-4 bg-stone-400 dark:bg-neutral-600 rounded-full flex items-center justify-center ring-2 ring-white dark:ring-neutral-900">
-                      <Lock size={8} className="text-white" />
+                    <div className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-stone-400 dark:bg-neutral-600 rounded-full flex items-center justify-center ring-2 ring-white dark:ring-neutral-900">
+                      <Lock size={10} className="text-white" />
                     </div>
                   )}
                 </div>
 
                 <div className="flex-1 min-w-0">
-                  <p className="text-[10px] font-bold text-amber-600 dark:text-amber-500 uppercase tracking-widest font-mono leading-none mb-0.5">
+                  <p className="text-xs font-bold text-amber-600 dark:text-amber-500 uppercase tracking-widest font-mono leading-none mb-1">
                     Lesson {idx + 1}
                   </p>
-                  <h4 className="text-xs font-bold text-neutral-900 dark:text-white leading-snug line-clamp-2">
+                  <h4 className="text-sm font-bold text-neutral-900 dark:text-white leading-snug line-clamp-2">
                     {lesson.title}
                   </h4>
                 </div>
 
                 {isUnlocked && (
                   <ChevronDown
-                    size={14}
+                    size={16}
                     className={`shrink-0 text-neutral-400 dark:text-neutral-500 transition-transform duration-200 ${
                       isExpanded ? "rotate-180 text-amber-500" : "group-hover:text-neutral-600"
                     }`}
@@ -162,25 +162,25 @@ export default function LessonsTab({ progress, onSelectLesson }: LessonsTabProps
 
               {/* Expandable description */}
               {isExpanded && (
-                <p className="mt-2 text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed border-t border-[#E5DED4] dark:border-white/6 pt-2">
+                <p className="mt-3 text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed border-t border-[#E5DED4] dark:border-white/6 pt-2.5">
                   {lesson.description}
                 </p>
               )}
 
               {/* Keys + action button */}
-              <div className="mt-2 flex items-center justify-between gap-2">
-                <div className="flex flex-wrap gap-1 min-w-0">
-                  {keyChars.slice(0, 4).map((k, kIdx) => (
+              <div className="mt-3 flex items-center justify-between gap-2">
+                <div className="flex flex-wrap gap-1.5 min-w-0">
+                  {keyChars.slice(0, 5).map((k, kIdx) => (
                     <span
                       key={kIdx}
-                      className={`px-1.5 py-1 text-[10px] font-mono font-bold bg-stone-100 dark:bg-neutral-800 text-stone-700 dark:text-neutral-200 rounded border border-stone-200 dark:border-white/6 border-b-2 uppercase ${keyUnderline(k)}`}
+                      className={`px-2 py-1.5 text-xs font-mono font-bold bg-stone-100 dark:bg-neutral-800 text-stone-700 dark:text-neutral-200 rounded-md border border-stone-200 dark:border-white/6 border-b-2 uppercase ${keyUnderline(k)}`}
                     >
                       {k === " " ? "⎵" : k}
                     </span>
                   ))}
-                  {keyChars.length > 4 && (
-                    <span className="px-1 py-1 text-[10px] text-neutral-400 font-mono">
-                      +{keyChars.length - 4}
+                  {keyChars.length > 5 && (
+                    <span className="px-1.5 py-1.5 text-xs text-neutral-400 font-mono">
+                      +{keyChars.length - 5}
                     </span>
                   )}
                 </div>
@@ -189,18 +189,18 @@ export default function LessonsTab({ progress, onSelectLesson }: LessonsTabProps
                   <button
                     id={`start-lesson-btn-${lesson.id}`}
                     onClick={(e) => { e.stopPropagation(); onSelectLesson(lesson); }}
-                    className={`shrink-0 flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-bold transition-all active:scale-95 ${
+                    className={`shrink-0 flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-bold transition-all active:scale-95 ${
                       isCompleted
                         ? "bg-emerald-100 hover:bg-emerald-200 text-emerald-700 dark:bg-emerald-900/40 dark:hover:bg-emerald-800/50 dark:text-emerald-300"
                         : "bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm hover:shadow-md"
                     }`}
                   >
-                    <Play size={10} fill="currentColor" />
+                    <Play size={11} fill="currentColor" />
                     {isCompleted ? "Retry" : "Start"}
                   </button>
                 ) : (
-                  <span className="shrink-0 text-[10px] font-semibold text-neutral-300 dark:text-neutral-600 flex items-center gap-1">
-                    <Lock size={9} /> Locked
+                  <span className="shrink-0 text-xs font-semibold text-neutral-300 dark:text-neutral-600 flex items-center gap-1">
+                    <Lock size={10} /> Locked
                   </span>
                 )}
               </div>
