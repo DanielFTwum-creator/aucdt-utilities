@@ -1,6 +1,6 @@
 # PROJECT RESET & RESTORATION CHECKLIST
 ## Document Identifier: TUC-INC-2026-002
-### Techbridge AI Typing Master
+### VortexType (Techbridge University College)
 
 This disaster recovery and environmental synchronization guide provides operational actions to reset the application workspace to a known clean reference state.
 

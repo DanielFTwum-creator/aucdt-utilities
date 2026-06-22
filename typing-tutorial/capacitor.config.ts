@@ -1,6 +1,6 @@
 const config = {
   appId: 'com.techbridge.typingtutor',
-  appName: 'Typing Tutorial',
+  appName: 'VortexType',
   webDir: 'dist',
   server: {
     androidScheme: 'https'

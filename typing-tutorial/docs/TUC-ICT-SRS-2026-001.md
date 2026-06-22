@@ -1,6 +1,6 @@
 # SOFTWARE REQUIREMENTS SPECIFICATION (SRS)
 ## Document Identification: TUC-ICT-SRS-2026-001
-### Project: Techbridge AI Typing Master [TAB]
+### Project: VortexType (Techbridge University College Typing Tutor)
 **Customer:** Daniel Twum, Head of ICT, Techbridge University College (TUC), Oyibi, Ghana  
 **Status:** Approved  
 **Version:** 1.0.0  
@@ -11,7 +11,7 @@
 ## 1. Introduction
 
 ### 1.1 Purpose
-The purpose of this document is to specify the software requirements for the Techbridge Typing Master application, a modern, highly interactive web and mobile typing tutorial. This application serves as the core keyboarding and computer literacy teaching system at Techbridge University College (TUC).
+The purpose of this document is to specify the software requirements for VortexType, a modern, highly interactive web and mobile typing tutorial. This application serves as the core keyboarding and computer literacy teaching system at Techbridge University College (TUC).
 
 ### 1.2 Document Conventions
 All documents use UK English spelling and IEEE 830 standards. Naming conventions conform strictly to:

@@ -205,6 +205,226 @@ function HandDiagram({ activeHand, activeFinger, isIdle }: { activeHand: string;
   );
 }
 
+
+// R1 · R2 · R3 — Unified keyboard-with-hands SVG.
+// West African child hands (semi-transparent skin #9a6134 at 0.52 opacity) overlaid
+// on the QWERTY keyboard so the key labels show through the fingernails.
+// Delivers: R1 resting glow on all home-row fingers when idle, R2 transparent
+// hand overlay, R3 active-finger lift (-22px, 130ms ease).
+function KeyboardWithHands({ activeHand, activeFinger, isIdle, nextTargetChar }: {
+  activeHand: string;
+  activeFinger: string;
+  isIdle: boolean;
+  nextTargetChar?: string;
+}) {
+  const PITCH = 50, KW = 46, KH = 40, KR = 6;
+  const ROW_X = [27, 52, 77, 102];
+  const ROW_Y = [14, 58, 102, 146];
+  const PALM_TOP = 220;
+
+  const NUM_KEYS  = ["1","2","3","4","5","6","7","8","9","0"];
+  const TOP_KEYS  = ["q","w","e","r","t","y","u","i","o","p"];
+  const HOME_KEYS = ["a","s","d","f","g","h","j","k","l",";"];
+  const BOT_KEYS  = ["z","x","c","v","b","n","m",",","."];
+
+  const KEY_FINGER: Record<string, { hand: "L" | "R"; finger: string }> = {
+    "1":{hand:"L",finger:"Pinky"},"q":{hand:"L",finger:"Pinky"},"a":{hand:"L",finger:"Pinky"},"z":{hand:"L",finger:"Pinky"},
+    "2":{hand:"L",finger:"Ring" },"w":{hand:"L",finger:"Ring" },"s":{hand:"L",finger:"Ring" },"x":{hand:"L",finger:"Ring" },
+    "3":{hand:"L",finger:"Middle"},"e":{hand:"L",finger:"Middle"},"d":{hand:"L",finger:"Middle"},"c":{hand:"L",finger:"Middle"},
+    "4":{hand:"L",finger:"Index"},"r":{hand:"L",finger:"Index"},"f":{hand:"L",finger:"Index"},"v":{hand:"L",finger:"Index"},
+    "5":{hand:"L",finger:"Index"},"t":{hand:"L",finger:"Index"},"g":{hand:"L",finger:"Index"},"b":{hand:"L",finger:"Index"},
+    "6":{hand:"R",finger:"Index"},"y":{hand:"R",finger:"Index"},"h":{hand:"R",finger:"Index"},"n":{hand:"R",finger:"Index"},
+    "7":{hand:"R",finger:"Index"},"u":{hand:"R",finger:"Index"},"j":{hand:"R",finger:"Index"},"m":{hand:"R",finger:"Index"},
+    "8":{hand:"R",finger:"Middle"},"i":{hand:"R",finger:"Middle"},"k":{hand:"R",finger:"Middle"},",":{hand:"R",finger:"Middle"},
+    "9":{hand:"R",finger:"Ring"  },"o":{hand:"R",finger:"Ring"  },"l":{hand:"R",finger:"Ring"  },".":{hand:"R",finger:"Ring"  },
+    "0":{hand:"R",finger:"Pinky" },"p":{hand:"R",finger:"Pinky" },";":{hand:"R",finger:"Pinky" },"/":{hand:"R",finger:"Pinky" },
+  };
+
+  const FINGER_HEX: Record<string,string> = {
+    Pinky:"#f59e0b", Ring:"#10b981", Middle:"#8b5cf6", Index:"#3b82f6", Thumbs:"#22d3ee",
+  };
+
+  const skinFill = "#9a6134";
+  const skinOpacity = 0.52;
+  const nailFill = "#b8714a";
+  const creaseSt = "rgba(95,53,27,0.45)";
+  const skinShadow = "#72401f";
+  const isSpace = activeHand === "Hands";
+  const target = (nextTargetChar ?? "").toLowerCase();
+
+  const liftY = (side: "L" | "R", name: string): number => {
+    if (isIdle || isSpace) return 0;
+    const prefix = side === "L" ? "Left" : "Right";
+    return activeHand.startsWith(prefix) && activeFinger === name ? -22 : 0;
+  };
+
+  const fClass = (side: "L" | "R", name: string): string => {
+    const prefix = side === "L" ? "Left" : "Right";
+    if (isIdle) return FINGER_ACCENTS[name].handActive;
+    if (!isSpace && activeHand.startsWith(prefix) && activeFinger === name)
+      return FINGER_ACCENTS[name].handActive;
+    return FINGER_ACCENTS[name].handIdle;
+  };
+
+  const thumbCls = isSpace ? FINGER_ACCENTS.Thumbs.handActive : FINGER_ACCENTS.Thumbs.handIdle;
+
+  const fingerPath = (x: number, y: number, w: number, h: number, lean: number): string => {
+    const tipY = y + 8, baseY = y + h + 26;
+    const lb = x - 1, rb = x + w + 1;
+    const lt = x + 4 + lean, rt = x + w - 4 + lean;
+    const mid = x + w / 2 + lean;
+    return [
+      `M ${lb} ${baseY}`,
+      `C ${lb-2} ${baseY-22},${lt-3} ${tipY+28},${lt} ${tipY}`,
+      `C ${lt+2} ${y-3},${rt-2} ${y-3},${rt} ${tipY}`,
+      `C ${rt+3} ${tipY+30},${rb+2} ${baseY-22},${rb} ${baseY}`,
+      `C ${rb-10} ${baseY+6},${lb+10} ${baseY+6},${lb} ${baseY} Z`,
+      `M ${mid-w*0.23} ${y+h*0.42} C ${mid-4} ${y+h*0.48},${mid+4} ${y+h*0.48},${mid+w*0.23} ${y+h*0.42}`,
+      `M ${mid-w*0.2} ${y+h*0.7} C ${mid-3} ${y+h*0.75},${mid+3} ${y+h*0.75},${mid+w*0.2} ${y+h*0.7}`,
+    ].join(" ");
+  };
+
+  const LEFT_F = [
+    { name:"Pinky", x: 88, w:24, h: 90, lean:-4 },
+    { name:"Ring",  x:137, w:27, h:102, lean:-3 },
+    { name:"Middle",x:186, w:29, h:110, lean: 0 },
+    { name:"Index", x:237, w:27, h:100, lean: 3 },
+  ];
+  const RIGHT_F = [
+    { name:"Index", x:387, w:27, h:100, lean:-3 },
+    { name:"Middle",x:436, w:29, h:110, lean: 0 },
+    { name:"Ring",  x:487, w:27, h:102, lean: 3 },
+    { name:"Pinky", x:538, w:24, h: 90, lean: 4 },
+  ];
+
+  const renderKeys = (keys: string[], rowIdx: number) =>
+    keys.map((k, ki) => {
+      const kx = ROW_X[rowIdx] + ki * PITCH;
+      const ky = ROW_Y[rowIdx];
+      const owner = KEY_FINGER[k];
+      const hex = owner ? FINGER_HEX[owner.finger] : "#6b7280";
+      const isActive = target === k;
+      const isBump = k === "f" || k === "j";
+      return (
+        <g key={k}>
+          <rect x={kx} y={ky} width={KW} height={KH} rx={KR}
+            fill={isActive ? hex : "#1a1f2e"} />
+          {!isActive && (
+            <rect x={kx} y={ky} width={KW} height={KH} rx={KR}
+              fill={hex} fillOpacity={0.13} />
+          )}
+          {isActive && (
+            <rect x={kx-1.5} y={ky-1.5} width={KW+3} height={KH+3} rx={KR+1}
+              fill="none" stroke={hex} strokeWidth={2.5} strokeOpacity={0.9} />
+          )}
+          <text x={kx+KW/2} y={ky+KH/2+5} textAnchor="middle"
+            fontFamily="monospace" fontSize={13} fontWeight="bold"
+            fill="white" fillOpacity={isActive ? 0.95 : 0.72}>{k.toUpperCase()}</text>
+          {isBump && (
+            <rect x={kx+KW/2-5} y={ky+KH-6} width={10} height={3} rx={2}
+              fill="rgba(255,255,255,0.55)" />
+          )}
+        </g>
+      );
+    });
+
+  const renderFingers = (fingers: typeof LEFT_F, side: "L" | "R") =>
+    fingers.map((f) => {
+      const lift = liftY(side, f.name);
+      const y = PALM_TOP - f.h;
+      const d = fingerPath(f.x, y, f.w, f.h, f.lean);
+      const cx = f.x + f.w / 2 + f.lean;
+      const active = isIdle || (() => {
+        const px = side === "L" ? "Left" : "Right";
+        return !isSpace && activeHand.startsWith(px) && activeFinger === f.name;
+      })();
+      return (
+        <g key={`${side}-${f.name}`}
+          style={{ transform: `translateY(${lift}px)`, transition: "transform 130ms ease" }}>
+          <path d={d} fill={skinFill} fillOpacity={skinOpacity} />
+          <path d={d} className={`${fClass(side, f.name)} transition-all duration-100`}
+            opacity={active ? 0.82 : 0.18} />
+          <path d={d} fill="transparent"
+            stroke={creaseSt} strokeWidth={1.2} strokeLinecap="round" />
+          <ellipse cx={cx} cy={y+14} rx={f.w*0.27} ry={5.2}
+            fill={nailFill} fillOpacity={0.86} />
+        </g>
+      );
+    });
+
+  const sx = 195, sy = 192, sw = 208, sh = 34;
+  const isSpaceActive = target === " ";
+
+  return (
+    <div style={{ animation: "kbHandEntry 580ms ease-out both" }}>
+      <style>{`@keyframes kbHandEntry{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}`}</style>
+      <svg viewBox="0 0 598 328" className="w-full max-w-5xl mx-auto" aria-hidden="true">
+
+        {/* Keyboard backdrop */}
+        <rect x="6" y="6" width="586" height="238" rx="14" fill="#0f1420" fillOpacity="0.97" />
+
+        {/* Key rows */}
+        {renderKeys(NUM_KEYS,  0)}
+        {renderKeys(TOP_KEYS,  1)}
+        {renderKeys(HOME_KEYS, 2)}
+        {renderKeys(BOT_KEYS,  3)}
+
+        {/* Spacebar */}
+        <rect x={sx} y={sy} width={sw} height={sh} rx={KR}
+          fill={isSpaceActive ? "#22d3ee" : "#1a1f2e"} />
+        {!isSpaceActive && (
+          <rect x={sx} y={sy} width={sw} height={sh} rx={KR}
+            fill="#22d3ee" fillOpacity={0.13} />
+        )}
+        {isSpaceActive && (
+          <rect x={sx-1.5} y={sy-1.5} width={sw+3} height={sh+3} rx={KR+1}
+            fill="none" stroke="#22d3ee" strokeWidth={2.5} strokeOpacity={0.9} />
+        )}
+        <text x={sx+sw/2} y={sy+sh/2+4} textAnchor="middle"
+          fontFamily="monospace" fontSize={10} fontWeight="bold"
+          fill="white" fillOpacity={0.72}>SPACE</text>
+
+        {/* ── Hand overlay ── */}
+
+        {/* Left palm */}
+        <path d="M12,234 C18,214 33,208 62,212 C93,216 117,213 142,211 C178,208 212,212 236,222 C249,233 251,280 238,306 C199,314 63,314 22,306 C12,284 7,256 12,234 Z"
+          fill={skinFill} fillOpacity={skinOpacity} />
+        <path d="M22,261 C62,244 107,245 145,251 M45,294 C92,303 172,303 222,293"
+          fill="transparent" stroke={creaseSt} strokeWidth={1.6} strokeLinecap="round" />
+        <path d="M14,289 C64,314 188,314 240,291 C237,299 235,306 231,311 H30 C23,306 18,299 14,289 Z"
+          fill={skinShadow} fillOpacity={0.42} />
+        {/* Left thumb */}
+        <path d="M198,258 C219,250 253,258 270,278 C275,286 269,295 258,294 C231,293 205,284 192,272 C188,266 191,261 198,258 Z"
+          fill={skinFill} fillOpacity={skinOpacity} />
+        <path d="M198,258 C219,250 253,258 270,278 C275,286 269,295 258,294 C231,293 205,284 192,272 C188,266 191,261 198,258 Z"
+          className={`transition-all duration-100 ${thumbCls}`} opacity={isSpace ? 0.85 : 0.18} />
+        <ellipse cx="255" cy="280" rx="8" ry="5" transform="rotate(20 255 280)"
+          fill={nailFill} fillOpacity={0.86} />
+        {/* Left fingers */}
+        {renderFingers(LEFT_F, "L")}
+
+        {/* Right palm */}
+        <path d="M348,222 C372,212 407,208 443,211 C468,213 493,216 524,212 C553,208 568,214 588,234 C593,256 588,284 578,306 C537,314 401,314 362,306 C349,280 351,233 348,222 Z"
+          fill={skinFill} fillOpacity={skinOpacity} />
+        <path d="M378,251 C416,245 461,244 502,261 M368,293 C418,303 498,303 545,294"
+          fill="transparent" stroke={creaseSt} strokeWidth={1.6} strokeLinecap="round" />
+        <path d="M360,291 C412,314 536,314 586,289 C582,299 577,306 570,311 H369 C365,306 362,299 360,291 Z"
+          fill={skinShadow} fillOpacity={0.42} />
+        {/* Right thumb */}
+        <path d="M402,258 C381,250 347,258 330,278 C325,286 331,295 342,294 C369,293 395,284 408,272 C412,266 409,261 402,258 Z"
+          fill={skinFill} fillOpacity={skinOpacity} />
+        <path d="M402,258 C381,250 347,258 330,278 C325,286 331,295 342,294 C369,293 395,284 408,272 C412,266 409,261 402,258 Z"
+          className={`transition-all duration-100 ${thumbCls}`} opacity={isSpace ? 0.85 : 0.18} />
+        <ellipse cx="345" cy="280" rx="8" ry="5" transform="rotate(-20 345 280)"
+          fill={nailFill} fillOpacity={0.86} />
+        {/* Right fingers */}
+        {renderFingers(RIGHT_F, "R")}
+
+      </svg>
+    </div>
+  );
+}
+
 // Numeric keypad layout (Right Hand only): 3 columns x 4 rows, mirroring the
 // standard touch-typing numpad fingering with 5 as the home-row anchor for the
 // Middle finger, 4/6 for Index/Ring either side, and the bottom row stretching
@@ -713,7 +933,7 @@ export default function ExerciseTab({ lesson, progress, onFinish, onBack }: Exer
   }
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-2">
 
       {/* Header and Control row */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 py-0.5">
@@ -752,7 +972,7 @@ export default function ExerciseTab({ lesson, progress, onFinish, onBack }: Exer
       </div>
 
       {/* Live coaching strip — finger guidance, streak, and a settings popover for audio/metronome */}
-      <div className="bg-slate-950 text-white rounded-2xl p-3 border border-cyan-500/25 shadow-[0_0_15px_rgba(6,182,212,0.12)] relative overflow-hidden transition-all duration-300">
+      <div className="bg-slate-950 text-white rounded-2xl p-2.5 border border-cyan-500/25 shadow-[0_0_15px_rgba(6,182,212,0.12)] relative overflow-hidden transition-all duration-300">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_90%_10%,_rgba(6,182,212,0.08),transparent_40%)] pointer-events-none"></div>
         <div className="flex items-center justify-between gap-2 relative z-10 text-xs font-mono">
           <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
@@ -830,15 +1050,15 @@ export default function ExerciseTab({ lesson, progress, onFinish, onBack }: Exer
       </div>
 
       {/* Exercise core dashboard */}
-      <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl p-3 sm:p-4 shadow-sm">
+      <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl p-2.5 sm:p-3 shadow-sm">
 
         {/* Lesson Badge + Title — consolidated into a single horizontal row */}
         <div className="flex flex-wrap items-center gap-x-3 gap-y-0.5">
           <h3 className="text-sm font-bold text-zinc-900 dark:text-white uppercase tracking-tight font-mono">
-            {lesson.title} {isCalibrationMode && "— Calibration Refinement"}
+            {lesson.title} {isCalibrationMode && "— fix-up drill"}
           </h3>
           <div className="flex items-center space-x-2 text-[10px] font-mono font-bold tracking-widest text-sky-600 dark:text-cyan-400 uppercase">
-            <span>{isCalibrationMode ? "R6 SYSTEM HEALING MODE" : "Current Target Tiers"}</span>
+            <span>{isCalibrationMode ? "Fix-up mode" : "Current Target Tiers"}</span>
             <span className={`w-1.5 h-1.5 rounded-full animate-bounce ${isCalibrationMode ? 'bg-amber-500' : 'bg-cyan-400'}`}></span>
             <span>Set {currentPracticeIdx + 1} of {lesson.practices.length}</span>
           </div>
@@ -866,7 +1086,7 @@ export default function ExerciseTab({ lesson, progress, onFinish, onBack }: Exer
         )}
 
         {/* Live Status indicator charts */}
-        <div className="grid grid-cols-3 gap-2 my-2 text-center">
+        <div className="grid grid-cols-3 gap-1.5 my-1.5 text-center">
           <div className="p-1.5 bg-zinc-50 dark:bg-slate-950/30 border border-zinc-100 dark:border-white/5 rounded-xl">
             <div className="text-[9px] font-mono font-bold text-zinc-500 dark:text-slate-500 uppercase tracking-widest">Accuracy</div>
             <div className={`text-base font-bold mt-0.5 ${accuracy < 80 ? "text-rose-600 dark:text-rose-400" : "text-sky-600 dark:text-cyan-400"}`}>
@@ -898,10 +1118,10 @@ export default function ExerciseTab({ lesson, progress, onFinish, onBack }: Exer
         {/* Dynamic Highlight Text Box — clicking anywhere on it restores keyboard focus */}
         <div
           onClick={() => inputRef.current?.focus()}
-          className="relative border border-zinc-300 dark:border-white/5 bg-zinc-50 dark:bg-slate-950/40 p-4 sm:p-6 rounded-xl font-mono text-lg sm:text-xl font-medium tracking-wide leading-relaxed text-center select-none block min-h-[70px] shadow-inner mb-2 cursor-text"
+          className="relative border border-zinc-300 dark:border-white/5 bg-zinc-50 dark:bg-slate-950/40 p-3 sm:p-4 rounded-xl font-mono text-base sm:text-lg font-medium tracking-wide leading-relaxed text-center select-none block min-h-[56px] shadow-inner mb-2 cursor-text"
         >
           <div className="absolute top-2 left-3 text-[9px] font-mono text-zinc-400 dark:text-slate-500 tracking-widest uppercase font-bold">
-            Interactive Field / Input Protocol {isCalibrationMode && "— Calibration Sandbox"}
+            Type here {isCalibrationMode && "— fix-up drill"}
           </div>
           <div className="text-zinc-800 dark:text-zinc-200 break-words flex flex-wrap justify-center mt-2">
             {currentSentence.split("").map((char, index) => {
@@ -966,8 +1186,8 @@ export default function ExerciseTab({ lesson, progress, onFinish, onBack }: Exer
       </div>
 
       {/* Interactive Visual Keyboard Guide */}
-      <div className="bg-zinc-100 dark:bg-[#0a0d14]/40 border border-zinc-200 dark:border-white/5 rounded-2xl p-3 sm:p-4 shadow-sm">
-        <div className="flex items-center space-x-2 text-zinc-600 dark:text-slate-400 text-xs font-bold uppercase tracking-widest mb-2">
+      <div className="bg-zinc-100 dark:bg-[#0a0d14]/40 border border-zinc-200 dark:border-white/5 rounded-2xl p-2.5 sm:p-3 shadow-sm">
+        <div className="flex items-center space-x-2 text-zinc-600 dark:text-slate-400 text-xs font-bold uppercase tracking-widest mb-1.5">
           <Keyboard size={14} />
           <span>Tactile Guide: Strike the Highlighted Target Key</span>
         </div>
@@ -981,66 +1201,13 @@ export default function ExerciseTab({ lesson, progress, onFinish, onBack }: Exer
             <NumpadGuide activeKey={nextTargetChar} />
           </div>
         ) : (
-          /* Hands + keyboard side-by-side on wide screens to avoid stacking height */
-          <div className="flex flex-col lg:flex-row lg:items-center gap-2 lg:gap-4 max-w-6xl mx-auto">
-
-            {/* R1/R3 Hand diagram — shows active finger, home row on idle */}
-            <div className="lg:w-[28%] lg:shrink-0">
-              {/* Colour-keyed home-row anchor label — passive posture reinforcement */}
-              <div className="flex items-center justify-center gap-1 mb-1.5 font-mono font-bold text-sm select-none">
-                <span className="text-amber-500  dark:text-amber-400">A</span>
-                <span className="text-emerald-500 dark:text-emerald-400">S</span>
-                <span className="text-violet-500  dark:text-violet-400">D</span>
-                <span className="text-blue-500    dark:text-blue-400">F</span>
-                <span className="text-zinc-400 dark:text-slate-600 mx-1">·</span>
-                <span className="text-blue-500    dark:text-blue-400">J</span>
-                <span className="text-violet-500  dark:text-violet-400">K</span>
-                <span className="text-emerald-500 dark:text-emerald-400">L</span>
-                <span className="text-amber-500  dark:text-amber-400">;</span>
-              </div>
-              <HandDiagram
-                activeHand={fingerGuidance?.hand ?? ""}
-                activeFinger={fingerGuidance?.finger ?? ""}
-                isIdle={!isStarted}
-              />
-            </div>
-
-            <div className="space-y-2 lg:space-y-1.5 mx-auto lg:flex-1 font-mono">
-              {keyboardRows.map((row, rIdx) => (
-                <div key={rIdx} className="flex justify-center space-x-2 lg:space-x-1.5 xl:space-x-2">
-                  {row.map((key) => {
-                    const isActive = nextTargetChar === key;
-                    const activeFinger = isActive ? getFingerGuidance(key)?.finger : undefined;
-                    return (
-                      <div
-                        key={key}
-                        className={`w-10 h-10 sm:w-12 sm:h-12 lg:w-10 lg:h-10 xl:w-12 xl:h-12 2xl:w-14 2xl:h-14 flex items-center justify-center rounded-lg text-sm sm:text-base lg:text-sm xl:text-base 2xl:text-lg font-bold border-2 transition-all ${
-                          isActive
-                            ? (activeFinger && FINGER_ACCENTS[activeFinger]?.key) || FINGER_ACCENTS.Index.key
-                            : "bg-white dark:bg-slate-900/40 border-zinc-200 dark:border-white/5 text-zinc-800 dark:text-slate-400"
-                        }`}
-                      >
-                        <span className="uppercase">{key}</span>
-                      </div>
-                    );
-                  })}
-                </div>
-              ))}
-
-              {/* Spacebar row */}
-              <div className="flex justify-center mt-2 lg:mt-1.5">
-                <div
-                  className={`h-10 sm:h-12 lg:h-10 xl:h-12 2xl:h-14 w-52 sm:w-64 lg:w-44 xl:w-56 2xl:w-72 flex items-center justify-center rounded-lg text-sm font-bold border-2 transition-all ${
-                    nextTargetChar === " "
-                      ? FINGER_ACCENTS.Thumbs.keySpace
-                      : "bg-white dark:bg-slate-900/40 border-zinc-200 dark:border-white/5 text-zinc-500 dark:text-slate-500"
-                  }`}
-                >
-                  <span className="tracking-widest font-mono text-center text-sm sm:text-base">SPACEBAR</span>
-                </div>
-              </div>
-            </div>
-          </div>
+          /* R1 · R2 · R3 — West African hands overlaid on keyboard */
+          <KeyboardWithHands
+            activeHand={fingerGuidance?.hand ?? ""}
+            activeFinger={fingerGuidance?.finger ?? ""}
+            isIdle={!isStarted}
+            nextTargetChar={nextTargetChar}
+          />
         )}
       </div>
 

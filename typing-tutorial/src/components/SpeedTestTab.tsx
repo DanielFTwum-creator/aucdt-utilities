@@ -112,7 +112,7 @@ export default function SpeedTestTab({ onRecordResult }: SpeedTestTabProps) {
 
         <div className="flex items-center space-x-2">
           {/* Passage index switcher */}
-          <div className="flex bg-zinc-100 dark:bg-zinc-850 p-1 rounded-lg border border-zinc-200 dark:border-zinc-800">
+          <div className="flex bg-zinc-100 dark:bg-zinc-800 p-1 rounded-lg border border-zinc-200 dark:border-zinc-800">
             {REFERENCE_SPEEDTEXTS.map((_, idx) => (
               <button
                 key={idx}
@@ -122,7 +122,7 @@ export default function SpeedTestTab({ onRecordResult }: SpeedTestTabProps) {
                 disabled={isTesting}
                 className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
                   passageIndex === idx
-                    ? "bg-white dark:bg-zinc-850 text-sky-600 dark:text-sky-400 shadow-sm"
+                    ? "bg-white dark:bg-zinc-800 text-sky-600 dark:text-sky-400 shadow-sm"
                     : "text-zinc-500 hover:text-zinc-800 dark:hover:text-zinc-200"
                 }`}
               >
@@ -139,13 +139,13 @@ export default function SpeedTestTab({ onRecordResult }: SpeedTestTabProps) {
         <div className="lg:col-span-2 space-y-4">
           
           {/* Target Text passage */}
-          <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-850 rounded-2xl p-6 shadow-sm space-y-4">
+          <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl p-6 shadow-sm space-y-4">
             <h3 className="text-sm font-bold text-zinc-900 dark:text-white flex items-center space-x-1.5 uppercase tracking-wider text-sky-600 dark:text-sky-400">
               <FileText size={16} />
               <span>Target Paragraph Passage</span>
             </h3>
 
-            <div className="text-zinc-800 dark:text-zinc-300 font-sans leading-relaxed text-base tracking-normal text-justify select-none border-b border-zinc-150 dark:border-white/5 pb-4">
+            <div className="text-zinc-800 dark:text-zinc-300 font-sans leading-relaxed text-base tracking-normal text-justify select-none border-b border-zinc-200 dark:border-white/5 pb-4">
               {selectedText.split("").map((char, index) => {
                 const isCurrent = index === inputVal.length && isTesting;
                 let charStyle = "text-zinc-500 dark:text-slate-400";
@@ -200,7 +200,7 @@ export default function SpeedTestTab({ onRecordResult }: SpeedTestTabProps) {
                 <button
                   id="retrySpeedtestBtn"
                   onClick={handleStart}
-                  className="px-4 py-2 bg-zinc-900 dark:bg-zinc-800 hover:bg-zinc-850 dark:hover:bg-slate-800 text-white font-bold rounded-lg text-xs transition-all flex items-center space-x-1 cursor-pointer border dark:border-white/10"
+                  className="px-4 py-2 bg-zinc-900 dark:bg-zinc-800 hover:bg-zinc-800 dark:hover:bg-slate-800 text-white font-bold rounded-lg text-xs transition-all flex items-center space-x-1 cursor-pointer border dark:border-white/10"
                 >
                   <RefreshCw size={10} />
                   <span>Re-run Assessment</span>
@@ -231,8 +231,8 @@ export default function SpeedTestTab({ onRecordResult }: SpeedTestTabProps) {
           
           {/* Live indicators during test */}
           {isTesting && (
-            <div className="p-6 bg-gradient-to-br from-zinc-900 to-zinc-950 text-white border border-zinc-850 rounded-2xl shadow-sm text-center space-y-4">
-              <h4 className="text-xs font-mono font-bold tracking-widest text-sky-450 uppercase">Analysis Engine State</h4>
+            <div className="p-6 bg-gradient-to-br from-zinc-900 to-zinc-950 text-white border border-zinc-800 rounded-2xl shadow-sm text-center space-y-4">
+              <h4 className="text-xs font-mono font-bold tracking-widest text-sky-400 uppercase">Analysis Engine State</h4>
               <div className="space-y-3">
                 <div className="flex justify-between items-center text-sm border-b border-zinc-800 pb-2">
                   <span className="text-zinc-400">Active WPM:</span>
@@ -286,7 +286,7 @@ export default function SpeedTestTab({ onRecordResult }: SpeedTestTabProps) {
 
           {/* Guidelines info card defaults */}
           {!isTesting && !testComplete && (
-            <div className="p-5 bg-zinc-50 dark:bg-zinc-850/50 border border-zinc-200 dark:border-zinc-800 rounded-2xl space-y-3">
+            <div className="p-5 bg-zinc-50 dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-800 rounded-2xl space-y-3">
               <h4 className="font-bold text-sm text-zinc-900 dark:text-white inline-flex items-center space-x-1">
                 <BarChart size={16} />
                 <span>Certification Metrics</span>
@@ -294,7 +294,7 @@ export default function SpeedTestTab({ onRecordResult }: SpeedTestTabProps) {
               <p className="text-xs text-zinc-600 dark:text-zinc-400 leading-relaxed">
                 A student's typing credential is measured strictly upon 60-second intervals. Points weights are allocated proportionally according to the complexity of punctuation structures:
               </p>
-              <ul className="space-y-1 text-[11px] font-mono text-zinc-500 dark:text-zinc-450">
+              <ul className="space-y-1 text-[11px] font-mono text-zinc-500 dark:text-zinc-400">
                 <li>• Level 1 Anchor: ~15 to 25 WPM</li>
                 <li>• Level 2 Intermediate: ~25 to 40 WPM</li>
                 <li>• Level 3 Professional: ~40 to 65 WPM</li>

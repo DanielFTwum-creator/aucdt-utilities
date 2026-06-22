@@ -54,7 +54,7 @@ export default function App() {
         category: "system",
         user: "D. Twum (ICT)",
         status: "success",
-        details: "Techbridge AI Typing Master cluster initialized dynamically."
+        details: "VortexType cluster initialized dynamically."
       },
       {
         id: "log-seed-2",

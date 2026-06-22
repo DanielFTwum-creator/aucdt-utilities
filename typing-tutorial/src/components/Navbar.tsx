@@ -1,5 +1,5 @@
 import { ThemeMode, UserProgress } from "../types";
-import { Sun, Moon, Eye, Award, Zap, Crosshair } from "lucide-react";
+import { Sun, Moon, Eye, Award, Zap, Crosshair, Flame } from "lucide-react";
 
 interface NavbarProps {
   progress: UserProgress;
@@ -36,7 +36,7 @@ export default function Navbar({ progress, theme, onThemeChange, onNavigate, act
                 </p>
               )}
               <h1 id="appHeaderTitle" className={`font-bold text-white leading-none ${minimal ? "text-sm" : "text-base"}`}>
-                Vortex Type
+                VortexType
                 <span className="text-emerald-400 font-normal ml-1 text-sm">typing tutor</span>
               </h1>
             </div>
@@ -50,6 +50,7 @@ export default function Navbar({ progress, theme, onThemeChange, onNavigate, act
                 { icon: <Zap size={13} className="text-emerald-500" />, label: "Points", value: progress.points.toLocaleString() },
                 { icon: <Zap size={13} className="text-sky-500" />, label: "Best WPM", value: progress.bestSpeed },
                 { icon: <Crosshair size={13} className="text-rose-500" />, label: "Accuracy", value: `${progress.bestAccuracy}%` },
+                { icon: <Flame size={13} className="text-violet-500" />, label: "Best Streak", value: `${progress.bestCombo}x` },
               ].map(({ icon, label, value }) => (
                 <div key={label} className="hidden xl:flex items-center gap-1.5 px-2.5 py-1.5 bg-white/8 rounded-lg border border-white/12 text-xs">
                   {icon}

@@ -172,7 +172,7 @@ export default function AdminTab({ logs, onClearLogs, onRunTest, healthServices,
               id="togglePasswordVisibilityBtn"
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3 bottom-3 text-zinc-400 hover:text-zinc-650"
+              className="absolute right-3 bottom-3 text-zinc-400 hover:text-zinc-600"
             >
               {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
             </button>
@@ -188,7 +188,7 @@ export default function AdminTab({ logs, onClearLogs, onRunTest, healthServices,
           <button
             id="submitAdminLoginBtn"
             type="submit"
-            className="w-full py-2.5 bg-zinc-900 hover:bg-zinc-850 dark:bg-cyan-500/10 dark:hover:bg-cyan-500/20 dark:text-cyan-400 dark:border dark:border-cyan-500/35 font-bold text-xs rounded-lg transition-all cursor-pointer shadow-[0_0_10px_rgba(6,182,212,0.05)] hover:shadow-[0_0_15px_rgba(6,182,212,0.15)]"
+            className="w-full py-2.5 bg-zinc-900 hover:bg-zinc-800 dark:bg-cyan-500/10 dark:hover:bg-cyan-500/20 dark:text-cyan-400 dark:border dark:border-cyan-500/35 font-bold text-xs rounded-lg transition-all cursor-pointer shadow-[0_0_10px_rgba(6,182,212,0.05)] hover:shadow-[0_0_15px_rgba(6,182,212,0.15)]"
           >
             Authenticate Control Node
           </button>
@@ -252,7 +252,7 @@ export default function AdminTab({ logs, onClearLogs, onRunTest, healthServices,
               <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase ${getHealthStyle(service.status)}`}>
                 ● {service.status}
               </span>
-              <span className="text-xs font-mono text-zinc-650">{service.latency}</span>
+              <span className="text-xs font-mono text-zinc-500">{service.latency}</span>
             </div>
 
             <div className="text-[10px] text-zinc-400 font-mono uppercase">
@@ -291,10 +291,10 @@ export default function AdminTab({ logs, onClearLogs, onRunTest, healthServices,
             {/* Test list items */}
             <div className="space-y-3">
               {testSuite.map((test) => (
-                <div key={test.id} className="p-3 bg-zinc-50 dark:bg-zinc-850/60 rounded-xl border border-zinc-200 dark:border-zinc-800 space-y-2">
+                <div key={test.id} className="p-3 bg-zinc-50 dark:bg-zinc-800/60 rounded-xl border border-zinc-200 dark:border-zinc-800 space-y-2">
                   <div className="flex items-start justify-between">
                     <div>
-                      <h5 className="text-xs font-bold text-zinc-850 dark:text-zinc-200 leading-tight">
+                      <h5 className="text-xs font-bold text-zinc-900 dark:text-zinc-200 leading-tight">
                         {test.name}
                       </h5>
                       <span className="text-[9px] font-mono uppercase bg-zinc-200 dark:bg-zinc-700 px-1 py-0.5 rounded text-zinc-500">
@@ -313,7 +313,7 @@ export default function AdminTab({ logs, onClearLogs, onRunTest, healthServices,
                     <button
                       id={`run-playwright-test-${test.id}`}
                       onClick={() => executePlaywrightSuite(test.id)}
-                      className="w-full py-1 text-[10px] font-bold bg-zinc-900 hover:bg-zinc-850 text-white rounded font-mono uppercase tracking-wider block text-center"
+                      className="w-full py-1 text-[10px] font-bold bg-zinc-900 hover:bg-zinc-800 text-white rounded font-mono uppercase tracking-wider block text-center"
                     >
                       Trigger assert.test()
                     </button>
@@ -372,7 +372,7 @@ export default function AdminTab({ logs, onClearLogs, onRunTest, healthServices,
               <button
                 id="clearLogsBtn"
                 onClick={onClearLogs}
-                className="self-end sm:self-auto px-2.5 py-1 text-[10px] border border-zinc-300 dark:border-zinc-750 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 rounded font-mono uppercase hover:bg-zinc-50"
+                className="self-end sm:self-auto px-2.5 py-1 text-[10px] border border-zinc-300 dark:border-zinc-800 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 rounded font-mono uppercase hover:bg-zinc-50"
               >
                 Flush logs.db
               </button>
@@ -387,7 +387,7 @@ export default function AdminTab({ logs, onClearLogs, onRunTest, healthServices,
                   placeholder="Query logs..."
                   value={logSearch}
                   onChange={(e) => setLogSearch(e.target.value)}
-                  className="pl-8 pr-3 py-2 bg-zinc-50 dark:bg-zinc-950 rounded-lg text-xs w-full focus:outline-none focus:ring-1 focus:ring-sky-500 text-zinc-900 dark:text-white border border-zinc-300 dark:border-zinc-750 font-mono"
+                  className="pl-8 pr-3 py-2 bg-zinc-50 dark:bg-zinc-950 rounded-lg text-xs w-full focus:outline-none focus:ring-1 focus:ring-sky-500 text-zinc-900 dark:text-white border border-zinc-300 dark:border-zinc-800 font-mono"
                 />
                 <Search size={14} className="text-zinc-400 absolute left-2.5 top-2.5" />
               </div>
@@ -396,7 +396,7 @@ export default function AdminTab({ logs, onClearLogs, onRunTest, healthServices,
                 id="logsCategoryFilterSelect"
                 value={logFilterCategory}
                 onChange={(e) => setLogFilterCategory(e.target.value)}
-                className="pl-2 pr-6 py-2 bg-zinc-50 dark:bg-zinc-950 border border-zinc-303 dark:border-zinc-750 text-xs font-semibold rounded-lg text-zinc-750 dark:text-zinc-300 focus:outline-none focus:ring-1 focus:ring-sky-500 cursor-pointer"
+                className="pl-2 pr-6 py-2 bg-zinc-50 dark:bg-zinc-950 border border-zinc-300 dark:border-zinc-800 text-xs font-semibold rounded-lg text-zinc-700 dark:text-zinc-300 focus:outline-none focus:ring-1 focus:ring-sky-500 cursor-pointer"
               >
                 <option value="all">📁 All Categories</option>
                 <option value="authentication">🔐 Authentication</option>
@@ -420,7 +420,7 @@ export default function AdminTab({ logs, onClearLogs, onRunTest, healthServices,
                       <th className="py-2.5 px-3">Details Summary</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-zinc-200 dark:divide-zinc-850 text-zinc-800 dark:text-zinc-300">
+                  <tbody className="divide-y divide-zinc-200 dark:divide-zinc-800 text-zinc-800 dark:text-zinc-300">
                     {filteredLogs.length === 0 ? (
                       <tr>
                         <td colSpan={5} className="py-8 px-3 text-center text-zinc-400">
@@ -447,7 +447,7 @@ export default function AdminTab({ logs, onClearLogs, onRunTest, healthServices,
                               <span className="capitalize text-[8px] font-bold">{log.status}</span>
                             </div>
                           </td>
-                          <td className="py-2.5 px-3 text-zinc-650 dark:text-zinc-400 break-words max-w-[200px]">
+                          <td className="py-2.5 px-3 text-zinc-500 dark:text-zinc-400 break-words max-w-[200px]">
                             {log.details}
                           </td>
                         </tr>

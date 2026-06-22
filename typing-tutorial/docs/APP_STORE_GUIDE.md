@@ -2,7 +2,7 @@
 ## Document ID: TUC-INC-2026-004
 ### Core Platforms: Apple iOS & Google Android OS
 
-This manual provides detail workflows to submit the encapsulated Techbridge Typing Master mobile app compiled via Capacitor to public application directories.
+This manual provides detail workflows to submit the encapsulated VortexType mobile app compiled via Capacitor to public application directories.
 
 ---
 
@@ -19,7 +19,7 @@ This manual provides detail workflows to submit the encapsulated Techbridge Typi
 ### 1.2 App Store Connect Configuration
 1. Enter **App Store Connect** (`appstoreconnect.apple.com`).
 2. Select **My Apps** -> click **"+"** -> select **New App**:
-   - **Name:** Techbridge Typing Master
+   - **Name:** VortexType
    - **Primary Language:** English (UK)
    - **Bundle ID:** `com.techbridge.typingtutor`
    - **SKU:** `TUC-TT-2026-SKU`
@@ -49,7 +49,7 @@ This manual provides detail workflows to submit the encapsulated Techbridge Typi
 ### 2.1 Google Play Console Setup
 1. Log in to the **Google Play Console** (`play.google.com/console`).
 2. Select **Create App**:
-   - **App Name:** Techbridge Typing Master
+   - **App Name:** VortexType
    - **Default Language:** English (UK)
    - **App Category:** Educational Game
    - **Free or Paid:** Free

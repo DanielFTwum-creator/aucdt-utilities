@@ -394,7 +394,7 @@ export default function GameTab({ onGameFinished }: GameTabProps) {
           <div className="p-8 space-y-6">
 
             {/* Stats bar */}
-            <div className="flex items-center justify-between text-xs px-4 py-2 bg-zinc-50 dark:bg-zinc-850 rounded-xl">
+            <div className="flex items-center justify-between text-xs px-4 py-2 bg-zinc-50 dark:bg-zinc-800 rounded-xl">
               {(gameMode === "arcade" || gameMode === "listen") ? (
                 <div className="flex items-center space-x-1.5 font-mono font-bold text-zinc-700 dark:text-zinc-300">
                   <Timer size={14} className="text-rose-500" />
@@ -595,7 +595,7 @@ export default function GameTab({ onGameFinished }: GameTabProps) {
               <p className="text-xs text-zinc-500">Your total achievements recorded inside memory arrays:</p>
             </div>
 
-            <div className="bg-zinc-50 dark:bg-zinc-850 p-5 rounded-2xl max-w-sm mx-auto font-mono shadow-inner space-y-2">
+            <div className="bg-zinc-50 dark:bg-zinc-800 p-5 rounded-2xl max-w-sm mx-auto font-mono shadow-inner space-y-2">
               <div className="flex justify-between items-center border-b border-zinc-200 dark:border-zinc-800 pb-1.5">
                 <span className="text-zinc-500">DIFFICULTY:</span>
                 <span className="font-bold text-lg text-zinc-900 dark:text-zinc-100 capitalize">{difficulty}</span>

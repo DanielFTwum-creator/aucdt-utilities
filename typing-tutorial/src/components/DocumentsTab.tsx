@@ -173,7 +173,7 @@ export default function DocumentsTab() {
             className={`w-full text-left px-4 py-3 rounded-lg text-xs font-bold transition-all flex items-center space-x-2 ${
               activeDoc === "architecture"
                 ? "bg-emerald-600 text-white shadow-sm font-black"
-                : "text-zinc-700 dark:text-zinc-450 hover:bg-zinc-100 dark:hover:bg-zinc-850"
+                : "text-zinc-700 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800"
             }`}
           >
             <Cpu size={14} />
@@ -186,7 +186,7 @@ export default function DocumentsTab() {
             className={`w-full text-left px-4 py-3 rounded-lg text-xs font-bold transition-all flex items-center space-x-2 ${
               activeDoc === "erd"
                 ? "bg-emerald-600 text-white shadow-sm font-black"
-                : "text-zinc-700 dark:text-zinc-450 hover:bg-zinc-100 dark:hover:bg-zinc-850"
+                : "text-zinc-700 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800"
             }`}
           >
             <Database size={14} />
@@ -199,7 +199,7 @@ export default function DocumentsTab() {
             className={`w-full text-left px-4 py-3 rounded-lg text-xs font-bold transition-all flex items-center space-x-2 ${
               activeDoc === "srs"
                 ? "bg-emerald-600 text-white shadow-sm font-black"
-                : "text-zinc-700 dark:text-zinc-450 hover:bg-zinc-100 dark:hover:bg-zinc-850"
+                : "text-zinc-700 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800"
             }`}
           >
             <BookOpen size={14} />
@@ -212,7 +212,7 @@ export default function DocumentsTab() {
             className={`w-full text-left px-4 py-3 rounded-lg text-xs font-bold transition-all flex items-center space-x-2 ${
               activeDoc === "reset"
                 ? "bg-emerald-600 text-white shadow-sm font-black"
-                : "text-zinc-700 dark:text-zinc-450 hover:bg-zinc-100 dark:hover:bg-zinc-850"
+                : "text-zinc-700 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800"
             }`}
           >
             <RefreshCw size={14} />
@@ -225,7 +225,7 @@ export default function DocumentsTab() {
             className={`w-full text-left px-4 py-3 rounded-lg text-xs font-bold transition-all flex items-center space-x-2 ${
               activeDoc === "appstore"
                 ? "bg-emerald-600 text-white shadow-sm font-black"
-                : "text-zinc-700 dark:text-zinc-450 hover:bg-zinc-100 dark:hover:bg-zinc-850"
+                : "text-zinc-700 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800"
             }`}
           >
             <Award size={14} />
@@ -238,7 +238,7 @@ export default function DocumentsTab() {
             className={`w-full text-left px-4 py-3 rounded-lg text-xs font-bold transition-all flex items-center space-x-2 ${
               activeDoc === "mobile"
                 ? "bg-emerald-600 text-white shadow-sm font-black"
-                : "text-zinc-700 dark:text-zinc-450 hover:bg-zinc-100 dark:hover:bg-zinc-850"
+                : "text-zinc-700 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800"
             }`}
           >
             <Cpu size={14} />
@@ -251,7 +251,7 @@ export default function DocumentsTab() {
             className={`w-full text-left px-4 py-3 rounded-lg text-xs font-bold transition-all flex items-center space-x-2 ${
               activeDoc === "icons"
                 ? "bg-emerald-600 text-white shadow-sm font-black"
-                : "text-zinc-700 dark:text-zinc-450 hover:bg-zinc-100 dark:hover:bg-zinc-850"
+                : "text-zinc-700 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800"
             }`}
           >
             <Info size={14} />
@@ -264,7 +264,7 @@ export default function DocumentsTab() {
             className={`w-full text-left px-4 py-3 rounded-lg text-xs font-bold transition-all flex items-center space-x-2 ${
               activeDoc === "privacy"
                 ? "bg-emerald-600 text-white shadow-sm font-black"
-                : "text-zinc-700 dark:text-zinc-450 hover:bg-zinc-100 dark:hover:bg-zinc-850"
+                : "text-zinc-700 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800"
             }`}
           >
             <FileText size={14} />
@@ -277,7 +277,7 @@ export default function DocumentsTab() {
           
           {activeDoc === "architecture" && (
             <div className="space-y-4">
-              <div className="border-b border-zinc-150 dark:border-zinc-800 pb-3">
+              <div className="border-b border-zinc-200 dark:border-zinc-800 pb-3">
                 <h3 className="text-base font-bold text-zinc-900 dark:text-white font-mono uppercase">
                   Nginx Server Reverse Proxy Setup (TUC-INC-2026-001)
                 </h3>
@@ -286,7 +286,7 @@ export default function DocumentsTab() {
                 </p>
               </div>
               {renderArchitectureSVG()}
-              <div className="text-xs text-zinc-650 dark:text-zinc-400 leading-relaxed font-mono space-y-2">
+              <div className="text-xs text-zinc-500 dark:text-zinc-400 leading-relaxed font-mono space-y-2">
                 <p><strong>• Vite Web Integration:</strong> High speed assets reside locally and utilize browser structures. HMR switches seamlessly under local configurations.</p>
                 <p><strong>• Capacitor Native Layers:</strong> Mirrors JavaScript code straight into Xcode/Android packages, and maps viewport boundaries to prevent scaling glitches.</p>
                 <p><strong>• Nginx Reverse Proxy:</strong> Manages inbound SSL terminations and redirects packets natively to node processes on port 3000.</p>
@@ -296,7 +296,7 @@ export default function DocumentsTab() {
 
           {activeDoc === "erd" && (
             <div className="space-y-4">
-              <div className="border-b border-zinc-150 dark:border-zinc-800 pb-3">
+              <div className="border-b border-zinc-200 dark:border-zinc-800 pb-3">
                 <h3 className="text-base font-bold text-zinc-900 dark:text-white font-mono uppercase">
                   UML MariaDB Database Schema (TUC-ICT-SRS-2026-001)
                 </h3>
@@ -305,7 +305,7 @@ export default function DocumentsTab() {
                 </p>
               </div>
               {renderErdSVG()}
-              <div className="text-xs text-zinc-650 dark:text-zinc-400 leading-relaxed font-mono space-y-2">
+              <div className="text-xs text-zinc-500 dark:text-zinc-400 leading-relaxed font-mono space-y-2">
                 <p><strong>• High Efficiency Indexes:</strong> The PK student_id is indexed natively inside database structures. This handles high student query lists cleanly.</p>
                 <p><strong>• Transient Logs:</strong> tuc_audit_logs record specific micro events and clean up automatically to free up disk storage.</p>
               </div>
@@ -314,7 +314,7 @@ export default function DocumentsTab() {
 
           {activeDoc === "srs" && (
             <div className="space-y-4 font-mono text-xs leading-relaxed max-h-[500px] overflow-y-auto pr-2">
-              <div className="border-b border-zinc-150 dark:border-zinc-800 pb-3">
+              <div className="border-b border-zinc-200 dark:border-zinc-800 pb-3">
                 <h3 className="text-base font-bold text-zinc-900 dark:text-white font-mono uppercase">
                   IEEE 830 / 29148 Spec (TUC-ICT-SRS-2026-001 · Rev 3)
                 </h3>
@@ -322,7 +322,7 @@ export default function DocumentsTab() {
               </div>
               <div className="bg-zinc-50 dark:bg-zinc-950 p-4 rounded border border-zinc-200 dark:border-zinc-800 font-sans text-xs text-zinc-700 dark:text-zinc-300 space-y-4">
                 <h4 className="font-bold text-sm text-zinc-950 dark:text-white">1.0 Scope</h4>
-                <p>Vortex Type targets first-year computer literacy students at TUC, Ghana. The system delivers 11 progressive keyboard lessons (home row → top row → number row → bottom row → numeric keypad), a timed WPM speed test, two arcade game modes, and an admin audit panel — all deployed at <span className="font-mono">ai-tools.techbridge.edu.gh/typing-tutor/</span>.</p>
+                <p>VortexType targets first-year computer literacy students at TUC, Ghana. The system delivers 11 progressive keyboard lessons (home row → top row → number row → bottom row → numeric keypad), a timed WPM speed test, two arcade game modes, and an admin audit panel — all deployed at <span className="font-mono">ai-tools.techbridge.edu.gh/typing-tutor/</span>.</p>
 
                 <h4 className="font-bold text-sm text-zinc-950 dark:text-white">2.0 Functional Requirements</h4>
                 <p><strong>FR-01 Lesson Engine:</strong> 11 lessons unlock progressively at ≥80% accuracy. Each lesson contains 4 randomised practice drills. Lessons 1–10 use the QWERTY hand diagram + per-finger colour coding. Lesson 11 activates the dedicated NumpadGuide ghost-hand overlay for the right-hand numeric keypad.</p>
@@ -351,7 +351,7 @@ export default function DocumentsTab() {
 
           {activeDoc === "reset" && (
             <div className="space-y-4 font-mono text-xs leading-relaxed max-h-[500px] overflow-y-auto pr-2">
-              <div className="border-b border-zinc-150 dark:border-zinc-800 pb-3">
+              <div className="border-b border-zinc-200 dark:border-zinc-800 pb-3">
                 <h3 className="text-base font-bold text-zinc-900 dark:text-white font-mono uppercase">
                   Operational Recovery Checklist (TUC-INC-2026-002)
                 </h3>
@@ -359,16 +359,16 @@ export default function DocumentsTab() {
               </div>
               <div className="bg-zinc-50 dark:bg-zinc-950 p-4 rounded border border-zinc-200 dark:border-zinc-800 space-y-3 font-sans">
                 <h4 className="font-bold text-xs text-zinc-950 dark:text-white">✔ Browser Reset workflow</h4>
-                <p className="text-xs text-zinc-650 dark:text-zinc-400">Instruct students to open Browser DevTools (F12) and toggle Storage. Flush `tuc_user_progress` and trigger a hard reload (F5) to clear cache files.</p>
+                <p className="text-xs text-zinc-500 dark:text-zinc-400">Instruct students to open Browser DevTools (F12) and toggle Storage. Flush `tuc_user_progress` and trigger a hard reload (F5) to clear cache files.</p>
                 <h4 className="font-bold text-xs text-zinc-950 dark:text-white">✔ Environment Restart</h4>
-                <p className="text-xs text-zinc-650 dark:text-zinc-400">Log in to Plesk web host (ict-server.tuc.edu.gh:8443) and trigger restart pipelines on Node containers to resolve memory lock states.</p>
+                <p className="text-xs text-zinc-500 dark:text-zinc-400">Log in to Plesk web host (ict-server.tuc.edu.gh:8443) and trigger restart pipelines on Node containers to resolve memory lock states.</p>
               </div>
             </div>
           )}
 
           {activeDoc === "appstore" && (
             <div className="space-y-4 font-mono text-xs leading-relaxed max-h-[500px] overflow-y-auto pr-2">
-              <div className="border-b border-zinc-150 dark:border-zinc-800 pb-3">
+              <div className="border-b border-zinc-200 dark:border-zinc-800 pb-3">
                 <h3 className="text-base font-bold text-zinc-900 dark:text-white font-mono uppercase">
                   Google Play & App Store Submission Guide (TUC-INC-2026-004)
                 </h3>
@@ -376,16 +376,16 @@ export default function DocumentsTab() {
               </div>
               <div className="bg-zinc-50 dark:bg-zinc-950 p-4 rounded border border-zinc-200 dark:border-zinc-800 space-y-3 font-sans">
                 <h4 className="font-bold text-xs text-zinc-950 dark:text-white">✔ Apple App Store Connect Check</h4>
-                <p className="text-xs text-zinc-650 dark:text-zinc-400">Configure provisioning profiles on developer.apple.com to merge certificates and select com.techbridge.typingtutor ID. Compile Apple archives within Xcode workspace and distribute.</p>
+                <p className="text-xs text-zinc-500 dark:text-zinc-400">Configure provisioning profiles on developer.apple.com to merge certificates and select com.techbridge.typingtutor ID. Compile Apple archives within Xcode workspace and distribute.</p>
                 <h4 className="font-bold text-xs text-zinc-950 dark:text-white">✔ Google Play AAB Signing</h4>
-                <p className="text-xs text-zinc-650 dark:text-zinc-400">Open android packages on Android Studio. Generate Signed Android App Bundle (AAB), define keystore file passwords, compile outputs, and push to production console tracks.</p>
+                <p className="text-xs text-zinc-500 dark:text-zinc-400">Open android packages on Android Studio. Generate Signed Android App Bundle (AAB), define keystore file passwords, compile outputs, and push to production console tracks.</p>
               </div>
             </div>
           )}
 
           {activeDoc === "mobile" && (
             <div className="space-y-4 font-mono text-xs leading-relaxed max-h-[500px] overflow-y-auto pr-2 font-mono">
-              <div className="border-b border-zinc-150 dark:border-zinc-800 pb-3">
+              <div className="border-b border-zinc-200 dark:border-zinc-800 pb-3">
                 <h3 className="text-base font-bold text-zinc-900 dark:text-white font-mono uppercase">
                   Capacitor Compiling SOP (TUC-INC-2026-005)
                 </h3>
@@ -406,7 +406,7 @@ export default function DocumentsTab() {
 
           {activeDoc === "icons" && (
             <div className="space-y-4 font-mono text-xs leading-relaxed max-h-[500px] overflow-y-auto pr-2">
-              <div className="border-b border-zinc-150 dark:border-zinc-800 pb-3">
+              <div className="border-b border-zinc-200 dark:border-zinc-800 pb-3">
                 <h3 className="text-base font-bold text-zinc-900 dark:text-white font-mono uppercase">
                   Capacitor Launcher Icon Sizing Manifest (TUC-INC-2026-006)
                 </h3>
@@ -421,13 +421,13 @@ export default function DocumentsTab() {
 
           {activeDoc === "privacy" && (
             <div className="space-y-4 font-mono text-xs leading-relaxed max-h-[500px] overflow-y-auto pr-2">
-              <div className="border-b border-zinc-150 dark:border-zinc-800 pb-3">
+              <div className="border-b border-zinc-200 dark:border-zinc-800 pb-3">
                 <h3 className="text-base font-bold text-zinc-900 dark:text-white font-mono uppercase">
                   CCPA / GDPR / GDPA Compliance Sheet (privacy.html)
                 </h3>
                 <p className="text-xs text-zinc-500">Ghana Data Protection Act 2012 (Act 843) aligned user policies.</p>
               </div>
-              <div className="p-4 bg-zinc-50 dark:bg-zinc-950 rounded border border-zinc-200 dark:border-zinc-800 text-zinc-750 dark:text-zinc-300 space-y-3 font-sans text-xs">
+              <div className="p-4 bg-zinc-50 dark:bg-zinc-950 rounded border border-zinc-200 dark:border-zinc-800 text-zinc-700 dark:text-zinc-300 space-y-3 font-sans text-xs">
                 <p><strong>✔ Student Data Isolation:</strong> The platform processes speeds (WPM), mistakes, progress parameters entirely offline inside native client caches. No student identifiers map to external cloud storage.</p>
                 <p><strong>✔ User Rights:</strong> Students retain rights to erase local metadata instantly by triggering "Reset Progress" or selecting hard caches wipes.</p>
               </div>
