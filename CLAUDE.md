@@ -20,10 +20,14 @@ Before generating any output on an existing project:
 
 ## ⚡ CORE OPERATING PRINCIPLES
 
-### 1. Don't Assume. Surface Tradeoffs.
+*Merged with the `gstack` behavioural template, 22 Jun 2026 — see footer. These four principles bias toward caution over speed; for trivial tasks, use judgement rather than ceremony.*
+
+### 1. Don't Assume. Surface Tradeoffs. Don't Hide Confusion.
 
 - Ask before assuming. If requirements are ambiguous, say so explicitly — don't fill gaps with guesses.
+- If multiple interpretations exist, present them — don't pick silently.
 - When trade-offs exist, lay them out clearly with options. Don't bury decisions in implementation.
+- If something is unclear, stop and name what's confusing — don't push forward hoping it resolves itself.
 - Document every non-obvious choice: what was picked, why, and what was traded off.
 - **Example:** *"This can be done two ways: (1) sync in 2 sec, loses detail; (2) async in 10 sec, full data. Which matters more?"*
 
@@ -31,21 +35,26 @@ Before generating any output on an existing project:
 
 - Solve the stated problem, nothing more. No features "for later." No over-engineering. YAGNI.
 - No speculative abstractions. No generic frameworks unless the current task requires them.
+- No "flexibility" or "configurability" that wasn't requested. No error handling for impossible scenarios.
 - Concrete before generic. If duplication appears across three places, refactor then — not before.
+- **Self-check:** if you write 200 lines and it could be 50, rewrite it. Ask: *"Would a senior engineer call this overcomplicated?"* If yes, simplify.
 - **Example:** Asked for a timer? Build a timer. Don't add pause/resume/lap/history until requested.
 
 ### 3. Touch Only What You Must. Clean Up Only Your Own Mess.
 
-- Surgical edits only. Change the lines that solve the problem. Don't reformat unrelated code.
-- No reorganisation unless it's essential to the task.
-- Match the existing code style, naming conventions, and structure. Don't impose new standards.
+- Surgical edits only. Change the lines that solve the problem. Don't reformat unrelated code, comments, or formatting.
+- No reorganisation unless it's essential to the task. Don't refactor things that aren't broken.
+- Match the existing code style, naming conventions, and structure. Don't impose new standards, even if you'd do it differently.
+- Remove imports/variables/functions that *your* changes made unused. Don't remove pre-existing dead code unless asked — mention it instead.
+- **The test:** every changed line should trace directly to the user's request.
 - **Example:** Fixing a bug on line 42? Don't reformat lines 1–50.
 
 ### 4. Define Success Criteria. Loop Until Verified.
 
-- Before starting, establish: *"How do we know this is done?"*
+- Before starting, establish: *"How do we know this is done?"* Transform vague asks into verifiable goals — "fix the bug" becomes "write a test that reproduces it, then make it pass."
+- For multi-step tasks, state a brief plan: `1. [Step] → verify: [check]` for each step.
 - Don't assume success. Run tests, check outputs, walk through the happy path.
-- If criteria aren't met, loop back. Don't hand off incomplete work with "probably works."
+- If criteria aren't met, loop back. Don't hand off incomplete work with "probably works." If a task has no programmatic check available, say so before starting rather than looping with no stop condition.
 - **Example criteria:** Tests pass at 80%+ coverage · API < 3 sec · Data persists across restart · No compiler warnings.
 
 ---
@@ -73,6 +82,44 @@ When spawning subagents, use the cheapest model that can handle the task:
 - Dynamic pages or auth-walled content → `agent-browser CLI` (~82% fewer tokens than screenshot tools)
 - PDFs → `pdftotext` instead of the Read tool
 - When the same fetch pattern repeats more than twice, wrap it as a reusable tool.
+- **Browsing automation:** if a `/browse`-style skill (e.g. a `gstack` plugin) is installed in the current session, prefer it over raw browser-automation MCP tools. In sessions without that plugin (this applies to Cowork today), use whichever browsing tool is actually available — don't assume `/browse` exists and don't refuse to browse because the preferred tool is absent.
+
+---
+
+## HARNESS (How "Done" Is Verified)
+
+There is no single repo-wide test/lint/type command — `aucdt-utilities/` is a monorepo of independent apps, each with its own stack. "Done" means:
+
+- **Java/Spring Boot:** the Pre-Delivery Verification Gate in §5a passes, plus `mvn compile -q` (or noted as unverifiable in a sandbox without Maven). `SPRING_PROFILES_ACTIVE=dev mvn spring-boot:run` must boot clean per the Dev Profile Zero-Dependency Contract.
+- **Frontend (React/Vite/etc.):** `pnpm lint` (or `tsc --noEmit` where that's the project's lint), `pnpm build` succeeds, and any existing Cypress/Playwright suite passes.
+- **No project-specific harness defined yet:** check that project's own `CLAUDE.md`/`CONSTRAINTS.md` first (Session Start Protocol step 2). If neither exists, state that no programmatic check is available before doing open-ended work, rather than asserting "done" with nothing to point to.
+
+If you add a real test/lint/type command for a project that doesn't have one documented, write it into that project's own `CONSTRAINTS.md` or local `CLAUDE.md` — not here, this file stays project-agnostic.
+
+---
+
+## LOOPS & AUTONOMY
+
+Governs working without approval on every turn, once a goal and its verification are defined (§ Core Operating Principles, #4).
+
+- Define a stop condition before starting open-ended or autonomous work. No stop condition means no loop — surface that and ask, rather than iterating with no defined end.
+- Always work on a git branch when the task allows it, so changes can be reverted. Never start an autonomous loop without an iteration cap.
+- Loops are for code with a programmatic check (test-fix-retest, lint-clean, a migration with a clear pass/fail). Do not loop on judgement-heavy work — design decisions, architecture calls, anything requiring a human read — those are a single considered pass, not a retry loop.
+- If still stuck when the cap is reached: stop. Document what's blocking progress, what was tried, and suggested next steps. Don't thrash.
+- If a slash-command automation layer (e.g. a `gstack`-style plugin with `/goal`, `/loop`, `/batch`) is installed in the current Claude Code session, its conventions apply on top of this. Cowork sessions today don't have that layer — apply these principles manually, turn by turn.
+
+---
+
+## TEXT STYLE
+
+Rules for human-readable text: PR descriptions, comments, docstrings, commit messages, SRS prose, guides, anything read by a person rather than compiled.
+
+- No em-dashes or other long dashes. Use commas, periods, or parentheses instead.
+- Cut filler and hedging: "um", "basically", "essentially", "it's worth noting", "of course".
+- Vary sentence length. Don't pad a short, correct statement into a long fuzzy one, and don't chain choppy fragments either.
+- Avoid the usual LLM tells: no "it's not just X, it's Y", no "delve", no overwrought openers.
+- Reread before finishing. Delete anything that doesn't earn its place.
+- Applies on top of, not instead of, the existing UK British English standard (§5 Code Standards).
 
 ---
 
@@ -402,8 +449,11 @@ Say it:
 ❌ Put multiple public Java classes in one file — one file, one public type
 ❌ Write a dev profile that requires MariaDB or Redis to be running locally
 ❌ Deliver Java backend code without running the pre-delivery verification gate
+❌ Start an autonomous loop with no stop condition or no iteration cap
+❌ Use em-dashes or LLM-tell phrasing ("delve", "it's not just X, it's Y") in delivered text
 
 ---
 
-*Last updated: June 2026 — Daniel Frempong Twum / TUC ICT*
+*Last updated: 22 June 2026 — Daniel Frempong Twum / TUC ICT*
+*Merged with the `gstack` behavioural template (22 Jun 2026): Core Operating Principles enriched with gstack's senior-engineer/traceability checks; new HARNESS, LOOPS & AUTONOMY, and TEXT STYLE sections added. gstack's own slash commands (`/goal`, `/loop`, `/batch`, `/browse`, etc.) are not available as skills in Cowork sessions — referenced only as "if installed" rather than assumed present.*
 *Pattern library (User Journey, HTML Standards, Capacitor, Gemini proxy, Dual-Auth Logout, Glucose) → see PATTERNS.md; Java standards → §5a above; staff-app SSO → tuc-wms/docs/SSO_ONBOARDING_PLAYBOOK.md*

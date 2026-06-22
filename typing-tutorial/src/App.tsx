@@ -318,10 +318,11 @@ export default function App() {
 
       </main>
 
-      {/* Footer is hidden during active practice — it adds height with no
-          functional value while the user is mid-exercise, and the goal there
-          is to fit the whole drill (keyboard included) within one screen. */}
-      {!selectedLesson && (
+      {/* Footer is hidden during active practice and on the Lessons roadmap —
+          both need to fit fully within one screen (drill + keyboard, or all
+          12 lesson cards) and the footer adds height with no functional
+          value on either view. */}
+      {!selectedLesson && activeTab !== "lessons" && (
         <footer className="w-full px-4 sm:px-6 lg:px-8 py-8 mt-12 border-t border-[#E5DED4] dark:border-neutral-800 text-center text-xs text-stone-500 font-mono">
           <p>&copy; 2026 Techbridge University College, Oyibi, Ghana. Department of ICT.</p>
           <p className="mt-1 text-[10px] text-zinc-400">Document Mapping Standard: TUC-INC-2026-001 | Host: Plesk Nginx Reversed Node CLI</p>
