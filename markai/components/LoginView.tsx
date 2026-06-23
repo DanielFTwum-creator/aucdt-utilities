@@ -236,7 +236,7 @@ const LoginView: React.FC = () => {
       <div className="absolute top-4 right-4 z-20">
         <ThemeSwitcher />
       </div>
-      <div className="w-full max-w-md relative z-10">
+      <div className="w-full max-w-2xl relative z-10">
         <div className="flex justify-center mb-8">
             <Logo size="lg" />
         </div>

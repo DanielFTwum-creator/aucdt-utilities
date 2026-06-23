@@ -1,11 +1,12 @@
-import { GoogleGenAI } from '@google/genai';
-
-let client: GoogleGenAI | null = null;
-
-function getClient() {
-  if (!client) client = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY || '' });
-  return client;
-}
+// Relays through the central WMS Gemini proxy (Pattern 11) instead of holding
+// a raw Gemini key here. See PATTERNS.md Pattern 11 — the key lives ONLY in
+// WMS; this service authenticates with GEMINI_PROXY_KEY, a separate, lower-
+// stakes credential. (Previously called @google/genai directly with a
+// hardcoded key in deploy.ps1 — the confirmed leak vector for the 22 Jun 2026
+// fleet key revocation. Never reintroduce a raw GEMINI_API_KEY here.)
+const WMS_GEMINI_URL = process.env.WMS_GEMINI_URL || 'https://wms.techbridge.edu.gh/api/gemini/generate';
+const GEMINI_PROXY_KEY = process.env.GEMINI_PROXY_KEY || '';
+const GEMINI_MODEL = 'gemini-2.5-flash';
 
 export interface AISignalResult {
   signal: 'buy' | 'sell' | 'hold';
@@ -30,7 +31,9 @@ export async function analyzeStock(
   fiftyTwoWeekHigh: number,
   fiftyTwoWeekLow: number
 ): Promise<AISignalResult> {
-  const ai = getClient();
+  if (!GEMINI_PROXY_KEY) {
+    throw new Error('GEMINI_PROXY_KEY is not configured on the server.');
+  }
 
   const prompt = `You are a professional stock analyst at a top-tier investment firm. Analyze ${ticker} and provide a structured investment signal.
 
@@ -63,13 +66,22 @@ Rules:
 - Consider volume strength, momentum, and valuation
 - IMPORTANT: End with the standard disclaimer in rationale`;
 
-  const response = await ai.models.generateContent({
-    model: 'gemini-2.5-flash',
-    contents: prompt,
-    config: { responseMimeType: 'application/json' },
+  const upstream = await fetch(`${WMS_GEMINI_URL}?model=${encodeURIComponent(GEMINI_MODEL)}`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'X-Gemini-Proxy-Key': GEMINI_PROXY_KEY },
+    body: JSON.stringify({
+      contents: [{ parts: [{ text: prompt }] }],
+      generationConfig: { responseMimeType: 'application/json' },
+    }),
   });
 
-  const raw = JSON.parse(response.text || '{}');
+  if (!upstream.ok) {
+    throw new Error(`WMS Gemini proxy returned ${upstream.status}: ${await upstream.text()}`);
+  }
+
+  const data: any = await upstream.json();
+  const text = data?.candidates?.[0]?.content?.parts?.[0]?.text ?? '{}';
+  const raw = JSON.parse(text);
   return {
     signal: ['buy', 'sell', 'hold'].includes(raw.signal) ? raw.signal : 'hold',
     confidence: Math.max(0, Math.min(100, Number(raw.confidence) || 50)),

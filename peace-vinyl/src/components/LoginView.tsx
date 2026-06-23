@@ -24,7 +24,7 @@ export default function LoginView() {
 
       {/* Content */}
       <div className="relative z-10 min-h-screen flex items-center justify-center p-4">
-        <div className="max-w-sm w-full text-center">
+        <div className="max-w-2xl w-full text-center">
         <h1 className="text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-orange-400 to-red-500 mb-2">
           Peace Vinyl
         </h1>

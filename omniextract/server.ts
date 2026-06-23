@@ -4,7 +4,6 @@ import dotenv from 'dotenv';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { GoogleGenerativeAI, SchemaType, type ResponseSchema } from '@google/generative-ai';
 
 dotenv.config();
 
@@ -14,73 +13,41 @@ const PORT = Number(process.env.PORT) || 3009;
 const GOOGLE_CLIENT_ID     = process.env.VITE_GOOGLE_CLIENT_ID     || '';
 const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET       || '';
 const REDIRECT_URI         = process.env.VITE_GOOGLE_REDIRECT_URI   || 'https://ai-tools.techbridge.edu.gh/omniextract/callback';
-// --- Gemini key custody: fetched from the WMS proxy, never stored here (FR-SSO-011) ---
-// WMS is the single rotation point. Cached in memory with a TTL; invalidateGeminiKey()
-// forces a refetch after Google rejects it, so rotation self-heals within one request.
-// The key remains server-side only — it must NEVER reach the browser bundle.
-const WMS_KEY_URL = 'https://wms.techbridge.edu.gh/api/gemini/key';
-const KEY_TTL_MS = 6 * 60 * 60 * 1000;
-let cachedGeminiKey: string | null = null;
-let keyFetchedAt = 0;
 
-function invalidateGeminiKey() { cachedGeminiKey = null; keyFetchedAt = 0; }
+// Phase 2 migration: OmniExtract no longer calls Gemini directly and no longer
+// holds the API key — not even temporarily. All generateContent calls are
+// forwarded to WMS /api/gemini/generate, which holds the key server-side and
+// relays to Google. The GEMINI_PROXY_KEY is a service credential (not the API key)
+// used only to authenticate this server with WMS.
+const WMS = process.env.VITE_WMS_BASE ?? 'https://wms.techbridge.edu.gh';
 
-async function getGeminiKey(): Promise<string> {
-  if (cachedGeminiKey && Date.now() - keyFetchedAt < KEY_TTL_MS) return cachedGeminiKey;
-  const proxyKey = process.env.GEMINI_PROXY_KEY;
-  if (!proxyKey) {
-    // Local dev fallback only — production must use the WMS relay.
-    const local = process.env.GEMINI_API_KEY || process.env.API_KEY;
-    if (local) return local;
-    throw new Error('GEMINI_PROXY_KEY is not set (and no local key fallback).');
-  }
-  const r = await fetch(WMS_KEY_URL, { headers: { 'X-Gemini-Proxy-Key': proxyKey } });
-  if (!r.ok) throw new Error(`WMS key fetch failed: ${r.status} ${await r.text()}`);
-  cachedGeminiKey = (await r.json() as { apiKey: string }).apiKey;
-  keyFetchedAt = Date.now();
-  return cachedGeminiKey;
-}
-
-async function getGenAI(): Promise<GoogleGenerativeAI> {
-  return new GoogleGenerativeAI(await getGeminiKey());
-}
-
-/** Drop the cached key when Google says it is invalid/expired so the next request refetches. */
-const handleStaleKey = (error: unknown) => {
-  const msg = String((error as Error)?.message || '');
-  if (msg.includes('API_KEY_INVALID') || msg.includes('API key expired')) {
-    console.warn('[OmniExtract] Gemini rejected the key — invalidating cache to refetch from WMS.');
-    invalidateGeminiKey();
-  }
-};
-
-// JSON schema for the invoice/receipt extraction (moved server-side from the
-// former client-side invoiceExtractor.ts).
+// JSON schema for invoice/receipt extraction sent as part of the Gemini request.
+// Type values use the Gemini REST API string format (not SDK enums).
 const invoiceSchema = {
-  type: SchemaType.OBJECT,
+  type: 'OBJECT',
   properties: {
-    isInvoice:    { type: SchemaType.BOOLEAN, description: "Is the document an invoice or receipt? Responds false if it's not." },
-    vendorName:   { type: SchemaType.STRING,  description: 'The name of the business issuing the invoice.' },
-    customerName: { type: SchemaType.STRING,  description: "The name of the customer. Should be 'N/A' if not present." },
-    invoiceId:    { type: SchemaType.STRING,  description: 'The invoice number or ID.' },
-    issueDate:    { type: SchemaType.STRING,  description: 'The date the invoice was issued.' },
+    isInvoice:    { type: 'BOOLEAN', description: "Is the document an invoice or receipt? Responds false if it's not." },
+    vendorName:   { type: 'STRING',  description: 'The name of the business issuing the invoice.' },
+    customerName: { type: 'STRING',  description: "The name of the customer. Should be 'N/A' if not present." },
+    invoiceId:    { type: 'STRING',  description: 'The invoice number or ID.' },
+    issueDate:    { type: 'STRING',  description: 'The date the invoice was issued.' },
     lineItems: {
-      type: SchemaType.ARRAY,
+      type: 'ARRAY',
       description: 'A list of all purchased items or services.',
       items: {
-        type: SchemaType.OBJECT,
+        type: 'OBJECT',
         properties: {
-          quantity:    { type: SchemaType.NUMBER, description: 'The quantity of the item.' },
-          description: { type: SchemaType.STRING, description: 'The description of the item.' },
-          unitPrice:   { type: SchemaType.NUMBER, description: 'The price per unit (Rate).' },
-          total:       { type: SchemaType.NUMBER, description: 'The total price for the line item.' },
+          quantity:    { type: 'NUMBER', description: 'The quantity of the item.' },
+          description: { type: 'STRING', description: 'The description of the item.' },
+          unitPrice:   { type: 'NUMBER', description: 'The price per unit (Rate).' },
+          total:       { type: 'NUMBER', description: 'The total price for the line item.' },
         },
         required: ['quantity', 'description', 'unitPrice', 'total'],
       },
     },
-    subtotal:   { type: SchemaType.NUMBER, description: 'The total amount before discounts or taxes.' },
-    discount:   { type: SchemaType.NUMBER, description: 'The total discount amount applied. 0 if not present.' },
-    grandTotal: { type: SchemaType.NUMBER, description: 'The final amount to be paid.' },
+    subtotal:   { type: 'NUMBER', description: 'The total amount before discounts or taxes.' },
+    discount:   { type: 'NUMBER', description: 'The total discount amount applied. 0 if not present.' },
+    grandTotal: { type: 'NUMBER', description: 'The final amount to be paid.' },
   },
   required: ['isInvoice', 'vendorName', 'invoiceId', 'issueDate', 'lineItems', 'subtotal', 'grandTotal'],
 };
@@ -150,7 +117,7 @@ app.get(['/callback', '/omniextract/callback'], async (req, res) => {
       name:  userInfo.name,
       email: userInfo.email,
     });
-    
+
     const b64User = Buffer.from(userJson).toString('base64');
 
     // Cookie readable by JS so AuthContext can hydrate user on page load
@@ -176,9 +143,10 @@ app.get(['/api/health', '/omniextract/api/health'], (_req, res) => {
 });
 
 // ── Invoice extraction proxy ──
-// Keeps the Gemini API key server-side. Frontend extracts PDF text/images in
-// the browser, then posts them here for AI analysis. Accepts either
-// { text } (text-based PDFs) or { imagePart: { inlineData } } (scanned pages).
+// All AI key handling is inside WMS. Frontend extracts PDF text/images in the
+// browser and posts them here. This server builds the Gemini request body and
+// forwards it to WMS /api/gemini/generate — the API key never leaves WMS.
+// Accepts either { text } (text-based PDFs) or { imagePart: { inlineData } }.
 app.post(['/api/extract', '/omniextract/api/extract'], async (req, res) => {
   try {
     const { text, imagePart } = req.body as {
@@ -194,17 +162,50 @@ app.post(['/api/extract', '/omniextract/api/extract'], async (req, res) => {
       ? [{ text: `${SYSTEM_PROMPT} Extract data for the single invoice in the provided image.` }, imagePart]
       : [{ text: `${SYSTEM_PROMPT} Text from PDF: ${text ?? ''}` }];
 
-    const model = (await getGenAI()).getGenerativeModel({
-      model: 'gemini-2.5-flash',
-      generationConfig: { responseMimeType: 'application/json', responseSchema: invoiceSchema as ResponseSchema },
-    });
-    const result = await model.generateContent({ contents: [{ role: 'user', parts }] });
+    const geminiBody = {
+      contents: [{ role: 'user', parts }],
+      generationConfig: {
+        responseMimeType: 'application/json',
+        responseSchema: invoiceSchema,
+      },
+    };
 
-    const parsed = JSON.parse((await result.response).text().trim());
+    const proxyKey = process.env.GEMINI_PROXY_KEY;
+    if (!proxyKey) {
+      console.error('[OmniExtract] GEMINI_PROXY_KEY is not set');
+      return res.status(503).json({ error: 'Gemini proxy not configured.' });
+    }
+
+    const wmsRes = await fetch(`${WMS}/api/gemini/generate`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Gemini-Proxy-Key': proxyKey,
+      },
+      body: JSON.stringify(geminiBody),
+    });
+
+    if (!wmsRes.ok) {
+      const errBody = await wmsRes.text();
+      console.error(`[OmniExtract] WMS generate failed ${wmsRes.status}: ${errBody}`);
+      return res.status(502).json({ error: 'AI extraction failed.' });
+    }
+
+    // WMS relays the raw Gemini REST response verbatim.
+    const geminiResponse = await wmsRes.json() as {
+      candidates?: Array<{ content: { parts: Array<{ text: string }> } }>;
+    };
+
+    const rawText = geminiResponse.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
+    if (!rawText) {
+      console.error('[OmniExtract] Empty or unexpected Gemini response:', JSON.stringify(geminiResponse));
+      return res.status(502).json({ error: 'AI returned an empty response.' });
+    }
+
+    const parsed = JSON.parse(rawText);
     return res.json({ result: parsed });
   } catch (err) {
     console.error('[OmniExtract] extract error:', err);
-    handleStaleKey(err);
     return res.status(500).json({ error: 'AI extraction failed.' });
   }
 });

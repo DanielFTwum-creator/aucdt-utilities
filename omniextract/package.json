@@ -19,7 +19,6 @@
     "cy:run:ui": "cypress run --config-file cypress.config.ts --spec cypress/e2e/ui.cy.ts"
   },
   "dependencies": {
-    "@google/generative-ai": "^0.24.1",
     "cookie-parser": "^1.4.7",
     "dotenv": "^16.4.5",
     "express": "^4.21.2",

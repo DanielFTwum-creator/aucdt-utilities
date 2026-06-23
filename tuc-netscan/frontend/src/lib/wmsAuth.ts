@@ -1,7 +1,7 @@
 // WMS SSO pass-through client (TUC-ICT-SRS-2026-013 §5.1).
-// NetScan bootstraps its own session from a WMS identity: obtain a WMS access token (via OAuth
-// code exchange or silent refresh against the WMS host), then exchange it at NetScan's own
-// /api/v1/auth/sso-exchange, which relays it to WMS /api/me and returns a NetScan JWT.
+// Phase 1 migration: NetScan API is now hosted by WMS, so the WMS access token
+// is used directly for all /api/v1/netscan/* calls. The separate netscanSsoExchange
+// step (which issued a second, NetScan-specific JWT) has been removed.
 
 const WMS = (import.meta as any).env?.VITE_WMS_BASE ?? 'https://wms.techbridge.edu.gh';
 
@@ -40,11 +40,12 @@ export async function wmsMfa(path: string, body: unknown): Promise<MfaResult> {
   return res.json();
 }
 
-/** Exchange a WMS access token for a NetScan session token (NetScan backend trusts WMS /api/me). */
-export async function netscanSsoExchange(wmsToken: string): Promise<{ token: string; username: string; role: string }> {
-  const res = await fetch('/api/v1/auth/sso-exchange', {
-    method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ wmsToken }),
+/** Fetch the authenticated user's profile from WMS. Returns email and name. */
+export async function wmsMe(accessToken: string): Promise<{ email: string; name: string }> {
+  const res = await fetch(`${WMS}/api/me`, {
+    headers: { Authorization: `Bearer ${accessToken}` },
+    credentials: 'include',
   });
-  if (!res.ok) throw new Error('NetScan SSO exchange failed');
+  if (!res.ok) throw new Error('WMS /api/me failed');
   return res.json();
 }

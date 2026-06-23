@@ -1,4 +1,4 @@
-# ============================================================
+﻿# ============================================================
 # deploy-fleet.ps1
 # Deploy all (or a filtered subset) of apps in the fleet.
 #
@@ -15,9 +15,9 @@
 #   .\deploy-fleet.ps1 -SkipTest                    # skip compliance check
 #
 # Architecture types (auto-detected):
-#   standard   — server-side git clone + pnpm build; invoked with -Build
-#   local-scp  — local build + SCP to server (e.g. stockpulse); no -Build flag
-#   java-maven — local Maven build + SCP jar (tuc-wms/backend); SKIPPED by default
+#   standard   - server-side git clone + pnpm build; invoked with -Build
+#   local-scp  - local build + SCP to server (e.g. stockpulse); no -Build flag
+#   java-maven - local Maven build + SCP jar (tuc-wms/backend); SKIPPED by default
 #
 # Exit code: 0 = all passed, 1 = one or more failed
 # ============================================================
@@ -41,14 +41,14 @@ function Write-Banner {
     param([string]$Text, [ConsoleColor]$Color = "Cyan")
     Write-Host ""
     Write-Host "  $Text" -ForegroundColor $Color
-    Write-Host "  $("─" * ($Text.Length))" -ForegroundColor DarkGray
+    Write-Host "  $("-" * ($Text.Length))" -ForegroundColor DarkGray
 }
 
 function Get-ArchType {
     param([string]$Content)
-    # Java/Maven backend — no Node on server
+    # Java/Maven backend - no Node on server
     if ($Content -match '\[switch\]\$NoBuild') { return "java-maven" }
-    # Build flag defaults to $true — local build + SCP
+    # Build flag defaults to $true - local build + SCP
     if ($Content -match '\[switch\]\$Build\s*=\s*\$true') { return "local-scp" }
     # Standard: server-side git clone + pnpm build
     if ($Content -match '\[switch\]\$Build') { return "standard" }
@@ -58,7 +58,7 @@ function Get-ArchType {
 
 function Get-DeployArgs {
     param([string]$ArchType)
-    # Return hashtables — used with @splat so named parameters bind correctly.
+    # Return hashtables - used with @splat so named parameters bind correctly.
     # String arrays like @("-Build") bind to the first POSITIONAL param, not the switch.
     switch ($ArchType) {
         "standard"   { return @{ Build = $true } }
@@ -103,7 +103,7 @@ foreach ($f in $allScripts) {
     $content = [System.IO.File]::ReadAllText($f.FullName)
     $arch    = Get-ArchType $content
 
-    # ── Filters ─────────────────────────────────────────────────────────────
+    # -- Filters -------------------------------------------------------------
     if ($arch -eq "java-maven" -and -not $IncludeJava) {
         $plan.Add([PSCustomObject]@{
             AppName = $appName; Rel = $rel; Dir = $f.DirectoryName
@@ -112,7 +112,7 @@ foreach ($f in $allScripts) {
         continue
     }
     if ($Apps.Count -gt 0 -and $Apps -notcontains $appName) {
-        continue   # whitelist active — exclude anything not listed
+        continue   # whitelist active - exclude anything not listed
     }
     if ($Exclude -contains $appName) {
         $plan.Add([PSCustomObject]@{
@@ -137,10 +137,10 @@ $skipped = $plan | Where-Object {  $_.Skip }
 
 # ---- Plan preview ----------------------------------------------------------
 
-Write-Banner "FLEET DEPLOYMENT$(if ($DryRun) { ' — DRY RUN' })"
+Write-Banner "FLEET DEPLOYMENT$(if ($DryRun) { ' - DRY RUN' })"
 
 Write-Host ("  {0,-40} {1,-12} {2}" -f "App", "Type", "Args") -ForegroundColor DarkGray
-Write-Host ("  {0,-40} {1,-12} {2}" -f ("─" * 38), ("─" * 10), ("─" * 10)) -ForegroundColor DarkGray
+Write-Host ("  {0,-40} {1,-12} {2}" -f ("-" * 38), ("-" * 10), ("-" * 10)) -ForegroundColor DarkGray
 
 foreach ($item in $active) {
     $argStr = Format-Args $item.Args
@@ -151,7 +151,7 @@ if ($skipped.Count -gt 0) {
     Write-Host ""
     Write-Host "  Skipping $($skipped.Count) app(s):" -ForegroundColor DarkGray
     foreach ($s in $skipped) {
-        Write-Host ("  — {0,-38} {1}" -f $s.AppName, $s.SkipReason) -ForegroundColor DarkGray
+        Write-Host ("  - {0,-38} {1}" -f $s.AppName, $s.SkipReason) -ForegroundColor DarkGray
     }
 }
 
@@ -161,7 +161,7 @@ Write-Host ("  {0} app(s) scheduled  |  Parallelism: {1}  |  Mode: {2}" -f `
 Write-Host ""
 
 if ($DryRun) {
-    Write-Host "  DRY RUN complete — no changes made." -ForegroundColor Yellow
+    Write-Host "  DRY RUN complete - no changes made." -ForegroundColor Yellow
     exit 0
 }
 
@@ -188,11 +188,11 @@ function Invoke-Deploy {
 
     $label   = "[{0,3}/{1}] {2}" -f $Index, $Total, $Item.AppName
     $t0      = Get-Date
-    Write-Host "  $label — STARTING..." -ForegroundColor DarkYellow
+    Write-Host "  $label - STARTING..." -ForegroundColor DarkYellow
 
     Push-Location $Item.Dir
     try {
-        $splat  = $Item.Args   # hashtable — splatted so named params bind correctly
+        $splat  = $Item.Args   # hashtable - splatted so named params bind correctly
         $output = & .\deploy.ps1 @splat 2>&1
         $code   = $LASTEXITCODE
     } catch {
@@ -219,26 +219,26 @@ function Invoke-Deploy {
 }
 
 if ($Parallel -le 1) {
-    # ── Sequential ──────────────────────────────────────────────────────────
+    # -- Sequential ----------------------------------------------------------
     foreach ($item in $active) {
         $index++
         $r = Invoke-Deploy $item $index $total
         $results.Add($r)
 
         $color = if ($r.Success) { "Green" } else { "Red" }
-        $icon  = if ($r.Success) { "✓" }     else { "✗" }
+        $icon  = if ($r.Success) { "OK" }     else { "X" }
         $label = "[{0,3}/{1}] {2}" -f $index, $total, $item.AppName
-        Write-Host ("  $icon $label — {0}" -f $r.Elapsed) -ForegroundColor $color
+        Write-Host ("  $icon $label - {0}" -f $r.Elapsed) -ForegroundColor $color
 
         if (-not $r.Success) {
-            Write-Host "    ── Last 10 lines of output ──" -ForegroundColor DarkGray
+            Write-Host "    -- Last 10 lines of output --" -ForegroundColor DarkGray
             ($r.Output | Select-Object -Last 10) | ForEach-Object {
                 Write-Host "    $_" -ForegroundColor DarkGray
             }
         }
     }
 } else {
-    # ── Parallel (job-based) ─────────────────────────────────────────────────
+    # -- Parallel (job-based) -------------------------------------------------
     Write-Host "  Running up to $Parallel deploys concurrently..." -ForegroundColor DarkGray
     Write-Host ""
 
@@ -262,7 +262,7 @@ if ($Parallel -le 1) {
             } -ArgumentList $item.Dir, $item.Args, $item.AppName
 
             $running[$job.Id] = @{ Item=$item; Index=$i; StartTime=(Get-Date) }
-            Write-Host ("  ▶ [{0,3}/{1}] {2} — started" -f $i, $total, $item.AppName) -ForegroundColor DarkYellow
+            Write-Host ("  > [{0,3}/{1}] {2} - started" -f $i, $total, $item.AppName) -ForegroundColor DarkYellow
         }
 
         # Heartbeat every 10 s so terminal never looks frozen
@@ -271,7 +271,7 @@ if ($Parallel -le 1) {
                 $sec = [math]::Round(((Get-Date) - $_.StartTime).TotalSeconds)
                 "$($_.Item.AppName) (${sec}s)"
             }
-            Write-Host ("  ⏳ {0}" -f ($statusParts -join " · ")) -ForegroundColor DarkGray
+            Write-Host ("  ... {0}" -f ($statusParts -join " - ")) -ForegroundColor DarkGray
             $lastHeartbeat = Get-Date
         }
 
@@ -305,8 +305,8 @@ if ($Parallel -le 1) {
             $results.Add($r)
 
             $color = if ($r.Success) { "Green" } else { "Red" }
-            $icon  = if ($r.Success) { "✓" }     else { "✗" }
-            Write-Host ("  $icon [{0,3}/{1}] {2} — {3}" -f $meta.Index, $total, $r.AppName, $r.Elapsed) -ForegroundColor $color
+            $icon  = if ($r.Success) { "OK" }     else { "X" }
+            Write-Host ("  $icon [{0,3}/{1}] {2} - {3}" -f $meta.Index, $total, $r.AppName, $r.Elapsed) -ForegroundColor $color
 
             if (-not $r.Success) {
                 ($output | Select-Object -Last 5) | ForEach-Object {
@@ -331,13 +331,13 @@ $passed  = ($results | Where-Object {  $_.Success }).Count
 $failed  = ($results | Where-Object { -not $_.Success }).Count
 
 Write-Host ""
-Write-Host "  ─────────────────────────────────────────────────────" -ForegroundColor DarkGray
+Write-Host "  -----------------------------------------------------" -ForegroundColor DarkGray
 Write-Host "  RESULTS" -ForegroundColor Cyan
 Write-Host ""
 
 $resultsSorted = $results | Sort-Object AppName
 foreach ($r in $resultsSorted) {
-    $icon  = if ($r.Success) { "✓" } else { "✗" }
+    $icon  = if ($r.Success) { "OK" } else { "X" }
     $color = if ($r.Success) { "Green" } else { "Red" }
     Write-Host ("  $icon  {0,-40} {1,6}" -f $r.AppName, $r.Elapsed) -ForegroundColor $color
 }
@@ -351,9 +351,10 @@ if ($failed -gt 0) {
     Write-Host ""
     Write-Host "  Failed apps:" -ForegroundColor Red
     $results | Where-Object { -not $_.Success } | ForEach-Object {
-        Write-Host "    · $($_.AppName)  (exit $($_.ExitCode))" -ForegroundColor Red
+        Write-Host "    - $($_.AppName)  (exit $($_.ExitCode))" -ForegroundColor Red
     }
 }
 
 Write-Host ""
 exit $(if ($failed -gt 0) { 1 } else { 0 })
+

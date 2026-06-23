@@ -19,13 +19,13 @@ export interface InterfaceStatus {
 }
 
 export interface BwSample {
-  interfaceId: number; interfaceName: string; bytesIn: number;
+  interfaceName: string; bytesIn: number;
   bytesOut: number; utilisationPct: number; sampledAt: string;
 }
 
 export interface BlockEntry {
   id: number; deviceId: number; mac: string; reason: string;
-  blockedBy: string; blockedAt: string; active: boolean; script: string;
+  blockedBy: string; blockedAt: string; active: boolean;
 }
 
 export interface AuditEntry {
@@ -34,7 +34,7 @@ export interface AuditEntry {
 }
 
 export interface SystemHealth {
-  dbOk: boolean; redisOk: boolean; activeDevices: number; rogueDevices: number;
+  dbOk: boolean; activeDevices: number; rogueDevices: number;
   activeAlerts: number; wanUtilisationPct: number; lastScan: string;
 }
 
@@ -64,7 +64,10 @@ export const useAuthStore = create<AuthState>((set) => ({
 }));
 
 // ── API Client ────────────────────────────────────────────────────────
-const BASE = '/api/v1';
+// Phase 1 migration: NetScan API is now served by WMS.
+// Dev: the Vite proxy rewrites /api → http://localhost:8080 (WMS dev server).
+// Prod: same relative path works because netscan.techbridge.edu.gh proxies /api to wms.techbridge.edu.gh.
+const BASE = '/api/v1/netscan';
 
 function getToken() { return localStorage.getItem('netscan_token'); }
 
@@ -85,16 +88,16 @@ async function apiFetch<T>(path: string, init?: RequestInit): Promise<T> {
 }
 
 export const api = {
-  login: (username: string, password: string) =>
-    apiFetch<{ token: string; username: string }>('/auth/login', {
-      method: 'POST', body: JSON.stringify({ username, password })
-    }),
-
-  health:  () => apiFetch<SystemHealth>('/health'),
+  health: () => apiFetch<SystemHealth>('/scan/health'),
 
   devices: {
-    list:     (status?: string, search?: string) =>
-      apiFetch<Device[]>(`/devices${status || search ? '?' : ''}${status ? `status=${status}` : ''}${status && search ? '&' : ''}${search ? `search=${search}` : ''}`),
+    list:     (status?: string, search?: string) => {
+      const params = new URLSearchParams();
+      if (status) params.set('status', status);
+      if (search) params.set('search', search);
+      const qs = params.toString();
+      return apiFetch<Device[]>(`/devices${qs ? '?' + qs : ''}`);
+    },
     get:      (id: number) => apiFetch<Device>(`/devices/${id}`),
     annotate: (id: number, label: string) =>
       apiFetch<void>(`/devices/${id}/annotate`, { method: 'POST', body: JSON.stringify({ label }) }),
@@ -108,16 +111,20 @@ export const api = {
   },
 
   bandwidth: {
-    interfaces:   () => apiFetch<InterfaceStatus[]>('/bandwidth/interfaces'),
-    history:      (iface?: string, seconds = 3600) =>
-      apiFetch<BwSample[]>(`/bandwidth/history?${iface ? `iface=${iface}&` : ''}seconds=${seconds}`),
-    topConsumers: (n = 10) => apiFetch<any[]>(`/bandwidth/top-consumers?n=${n}`),
+    interfaces: () => apiFetch<InterfaceStatus[]>('/bandwidth/interfaces'),
+    history:    (iface?: string) =>
+      apiFetch<BwSample[]>(iface ? `/bandwidth/interfaces/${iface}/history` : '/bandwidth/history'),
   },
 
   alerts: {
-    list: (severity?: string, status?: string) =>
-      apiFetch<Alert[]>(`/alerts${severity || status ? '?' : ''}${severity ? `severity=${severity}` : ''}${severity && status ? '&' : ''}${status ? `status=${status}` : ''}`),
-    ack:  (id: number, note: string) =>
+    list: (severity?: string, status?: string) => {
+      const params = new URLSearchParams();
+      if (severity) params.set('severity', severity);
+      if (status)   params.set('status', status);
+      const qs = params.toString();
+      return apiFetch<Alert[]>(`/alerts${qs ? '?' + qs : ''}`);
+    },
+    ack: (id: number, note: string) =>
       apiFetch<void>(`/alerts/${id}/ack`, { method: 'POST', body: JSON.stringify({ note }) }),
   },
 
@@ -126,12 +133,17 @@ export const api = {
       apiFetch<{ blockId: number; script: string; message: string }>('/control/block', {
         method: 'POST', body: JSON.stringify({ targetMac, reason })
       }),
-    list:    () => apiFetch<BlockEntry[]>('/control/block'),
-    unblock: (id: number) => apiFetch<void>(`/control/block/${id}`, { method: 'DELETE' }),
+    list:    () => apiFetch<BlockEntry[]>('/control/blocklist'),
+    unblock: (id: number) => apiFetch<void>(`/control/unblock/${id}`, { method: 'DELETE' }),
   },
 
   audit: {
-    list: (actionType?: string, actor?: string) =>
-      apiFetch<AuditEntry[]>(`/audit${actionType || actor ? '?' : ''}${actionType ? `actionType=${actionType}` : ''}${actionType && actor ? '&' : ''}${actor ? `actor=${actor}` : ''}`),
+    list: (actionType?: string, actor?: string) => {
+      const params = new URLSearchParams();
+      if (actionType) params.set('actionType', actionType);
+      if (actor)      params.set('actor', actor);
+      const qs = params.toString();
+      return apiFetch<AuditEntry[]>(`/audit${qs ? '?' + qs : ''}`);
+    },
   },
 };

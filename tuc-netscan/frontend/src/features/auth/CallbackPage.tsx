@@ -1,13 +1,16 @@
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { wmsExchangeCode, netscanSsoExchange } from '../../lib/wmsAuth';
+import { wmsExchangeCode, wmsMe } from '../../lib/wmsAuth';
 import { useAuthStore } from '../../lib/api';
 
 /**
  * Handles the WMS SSO redirect (TUC-ICT-SRS-2026-013):
- *   ?code=…        -> exchange for a WMS token, then NetScan sso-exchange -> enter app
+ *   ?code=…        -> exchange for a WMS token, fetch /api/me for username -> enter app
  *   ?mfa_ticket=…  -> route to the MFA screen
  *   ?error=…       -> back to login with the reason
+ *
+ * Phase 1: WMS access token is used directly for all /api/v1/netscan/* calls.
+ * The separate netscanSsoExchange step has been removed.
  */
 export function CallbackPage() {
   const navigate = useNavigate();
@@ -29,8 +32,8 @@ export function CallbackPage() {
       (async () => {
         try {
           const wmsToken = await wmsExchangeCode(code);
-          const r = await netscanSsoExchange(wmsToken);
-          login(r.token, r.username);
+          const user = await wmsMe(wmsToken);
+          login(wmsToken, user.email);
           navigate('/', { replace: true });
         } catch (e: any) {
           setError(e?.message || 'Sign-in failed');

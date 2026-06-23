@@ -126,7 +126,7 @@ export const LoginView: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-cyan-50 to-slate-100 flex flex-col items-center justify-center p-6">
-      <div className="w-full max-w-sm">
+      <div className="w-full max-w-2xl">
         <div className="text-center mb-8">
           <img
             src="https://techbridge.edu.gh/static/TUC_LOGO_1.png"

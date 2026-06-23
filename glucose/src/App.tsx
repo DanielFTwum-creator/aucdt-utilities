@@ -319,17 +319,33 @@ function AppContent() {
 
       await Promise.all(activeWorkers);
 
+      // Per-chunk save errors, kept separate from scan failures (failedFiles)
+      // so a save failure on one chunk is reported accurately rather than
+      // silently swallowed.
+      const saveErrors: string[] = [];
+      let savedCount = 0;
+
       if (rowsToSave.length > 0) {
         setUploadProgress(95);
         setUploadStatus(`Saving ${rowsToSave.length} successfully scanned readings...`);
 
-        // Chunk into batches of 20 to avoid 502 server crashes
+        // Chunk into batches of 20 to avoid 502 server crashes. Each chunk is
+        // saved independently — a failure on one chunk must NOT discard
+        // chunks that already saved or chunks still to come (this was the
+        // cause of a "lose everything" bug: one failed chunk used to abort
+        // the whole loop via an uncaught exception).
         const BATCH_SIZE = 20;
         for (let i = 0; i < rowsToSave.length; i += BATCH_SIZE) {
           const chunk = rowsToSave.slice(i, i + BATCH_SIZE);
-          await batchUpsertReadings(chunk);
+          try {
+            await batchUpsertReadings(chunk);
+            savedCount += chunk.length;
+          } catch (saveErr) {
+            console.error(`[SCAN] Failed to save rows ${i + 1}-${i + chunk.length}:`, saveErr);
+            saveErrors.push(`Rows ${i + 1}-${i + chunk.length} (${chunk.length} dates): ${String(saveErr)}`);
+          }
         }
-        
+
         const refreshed = await getAllReadings();
         const refreshedTyped = refreshed as Row[];
         setRows(refreshedTyped);
@@ -345,16 +361,17 @@ function AppContent() {
         }
       }
 
-      if (failedFiles.length > 0) {
+      if (failedFiles.length > 0 || saveErrors.length > 0) {
         const failedSummary = failedFiles.map(f => `• ${f.name}: ${f.reason}`).join('\n');
-        if (rowsToSave.length > 0) {
-          setUploadError(`Successfully imported ${rowsToSave.length} dates, but ${failedFiles.length} file(s) failed:\n${failedSummary}`);
+        const saveSummary = saveErrors.length > 0 ? `\n\nSave errors (scanned OK but not saved):\n${saveErrors.join('\n')}` : '';
+        if (savedCount > 0) {
+          setUploadError(`Successfully imported ${savedCount} of ${rowsToSave.length} scanned dates. ${failedFiles.length} file(s) failed to scan:\n${failedSummary}${saveSummary}`);
         } else {
-          setUploadError(`All selected files failed to scan:\n${failedSummary}`);
+          setUploadError(`All selected files failed:\n${failedSummary}${saveSummary}`);
         }
       } else {
         setUploadProgress(100);
-        setUploadStatus(`Successfully processed ${files.length} file(s)! Extracted ${successCount} entries across ${rowsToSave.length} dates.`);
+        setUploadStatus(`Successfully processed ${files.length} file(s)! Extracted ${successCount} entries across ${savedCount} dates.`);
         setTimeout(() => setIsUploading(false), 3000);
       }
     } catch (err) {

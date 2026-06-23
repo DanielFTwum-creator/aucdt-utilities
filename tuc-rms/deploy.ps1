@@ -112,15 +112,19 @@ $apiProxy  RewriteRule ^ ${base}index.html [QSA,L]
 </IfModule>
 <IfModule mod_expires.c>
   ExpiresActive On
-  <FilesMatch '\.(js|css|png|jpg|jpeg|gif|svg|woff2|woff|ttf|eot|ico)$'>
-    ExpiresDefault 'max-age=31536000'
-    Header set Cache-Control 'public, immutable'
+  <FilesMatch "\.(js|css|png|jpg|jpeg|gif|svg|woff2|woff|ttf|eot|ico)$">
+    ExpiresDefault "max-age=31536000"
+    Header set Cache-Control "public, immutable"
   </FilesMatch>
-  <FilesMatch '\.(html|json)$'>
-    ExpiresDefault 'max-age=0'
-    Header set Cache-Control 'no-cache, no-store, must-revalidate'
-    Header set Pragma 'no-cache'
-    Header set Expires '0'
+  <FilesMatch "\.(html|json)$">
+    ExpiresDefault "max-age=0"
+    Header set Cache-Control "public, must-revalidate"
+  </FilesMatch>
+</IfModule>
+
+<IfModule mod_headers.c>
+  <FilesMatch "\.(html)$">
+    Header set Cache-Control "public, must-revalidate, max-age=0"
   </FilesMatch>
 </IfModule>
 "@ | ssh -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax=3 $RemoteHost "cat > ${RemotePath}.htaccess" 2>$null

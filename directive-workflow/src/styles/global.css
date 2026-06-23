@@ -68,7 +68,6 @@ body {
   font-family: var(--font-sans);
   background: var(--bg);
   color: var(--text);
-  overflow: hidden;
   transition: background var(--transition-base), color var(--transition-base);
 }
 

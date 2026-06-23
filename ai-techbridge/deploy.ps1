@@ -102,15 +102,19 @@ Log "INFO" "Step 4: Writing .htaccess..." Yellow
 </IfModule>
 <IfModule mod_expires.c>
   ExpiresActive On
-  <FilesMatch '\.(js|css|png|jpg|jpeg|gif|svg|woff2|woff|ttf|eot|ico)$'>
-    ExpiresDefault 'max-age=31536000'
-    Header set Cache-Control 'public, immutable'
+  <FilesMatch "\.(js|css|png|jpg|jpeg|gif|svg|woff2|woff|ttf|eot|ico)$">
+    ExpiresDefault "max-age=31536000"
+    Header set Cache-Control "public, immutable"
   </FilesMatch>
-  <FilesMatch '\.(html|json)$'>
-    ExpiresDefault 'max-age=0'
-    Header set Cache-Control 'no-cache, no-store, must-revalidate'
-    Header set Pragma 'no-cache'
-    Header set Expires '0'
+  <FilesMatch "\.(html|json)$">
+    ExpiresDefault "max-age=0"
+    Header set Cache-Control "public, must-revalidate"
+  </FilesMatch>
+</IfModule>
+
+<IfModule mod_headers.c>
+  <FilesMatch "\.(html)$">
+    Header set Cache-Control "public, must-revalidate, max-age=0"
   </FilesMatch>
 </IfModule>
 "@ | ssh -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax=3 $RemoteHost "cat > ${RemotePath}.htaccess" 2>$null
@@ -122,4 +126,7 @@ Log "INFO" "Health check..." Yellow
 ssh -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax=3 $RemoteHost "test -f ${RemotePath}index.html && echo 'OK index.html present' || echo 'MISSING index.html'"
 
 $elapsed = [math]::Round(((Get-Date) - $__deployStart).TotalSeconds, 1)
-$timeStr = if ($elapsed -ge 60) { "$([math]::Floor($elapsed
+$timeStr = if ($elapsed -ge 60) { "$([math]::Floor($elapsed / 60))m $([math]::Round($elapsed % 60, 1))s" } else { "${elapsed}s" }
+Log "SUCCESS" "========================================" Green
+Log "SUCCESS" "DEPLOYMENT COMPLETE in $timeStr" Green
+Log "SUCCESS" "URL:  https://ai-tools.techbridge.edu.gh/ai-techbridge/" Green

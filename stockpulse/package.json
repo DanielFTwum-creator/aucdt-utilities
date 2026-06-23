@@ -1,6 +1,6 @@
 {
   "name": "stockpulse",
-  "packageManager": "pnpm@11.5.3",
+  "packageManager": "pnpm@11.8.0",
   "private": true,
   "version": "0.0.0",
   "type": "module",

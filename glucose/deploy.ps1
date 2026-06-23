@@ -185,15 +185,19 @@ $htaccessContent = @'
 </IfModule>
 <IfModule mod_expires.c>
   ExpiresActive On
-  <FilesMatch '\.(js|css|png|jpg|jpeg|gif|svg|woff2|woff|ttf|eot|ico)$'>
-    ExpiresDefault 'max-age=31536000'
-    Header set Cache-Control 'public, immutable'
+  <FilesMatch "\.(js|css|png|jpg|jpeg|gif|svg|woff2|woff|ttf|eot|ico)$">
+    ExpiresDefault "max-age=31536000"
+    Header set Cache-Control "public, immutable"
   </FilesMatch>
-  <FilesMatch '\.(html|json)$'>
-    ExpiresDefault 'max-age=0'
-    Header set Cache-Control 'no-cache, no-store, must-revalidate'
-    Header set Pragma 'no-cache'
-    Header set Expires '0'
+  <FilesMatch "\.(html|json)$">
+    ExpiresDefault "max-age=0"
+    Header set Cache-Control "public, must-revalidate"
+  </FilesMatch>
+</IfModule>
+
+<IfModule mod_headers.c>
+  <FilesMatch "\.(html)$">
+    Header set Cache-Control "public, must-revalidate, max-age=0"
   </FilesMatch>
 </IfModule>
 '@
@@ -251,4 +255,10 @@ $indexCheck = & $SSH @SSH_OPTS $RemoteHost "test -f ${RemotePath}index.html && e
 Write-Host $indexCheck -ForegroundColor $(if ($indexCheck -match '^OK') { 'Green' } else { 'Red' })
 
 $portCheck = & $SSH @SSH_OPTS $RemoteHost "ss -tlnp | grep -q ':${PORT}' && echo 'OK port ${PORT} listening' || echo 'WARN port ${PORT} not found'"
-Write-Host $portCheck -ForegroundColor $(if ($portCheck -match '^OK') { 'Green' } else { 'Y
+Write-Host $portCheck -ForegroundColor $(if ($portCheck -match '^OK') { 'Green' } else { 'Yellow' })
+
+$elapsed = [math]::Round(((Get-Date) - $__deployStart).TotalSeconds, 1)
+$timeStr = if ($elapsed -ge 60) { "$([math]::Floor($elapsed / 60))m $([math]::Round($elapsed % 60, 1))s" } else { "${elapsed}s" }
+Log -Level 'SUCCESS' -Msg '========================================' -Color Green
+Log -Level 'SUCCESS' -Msg "DEPLOYMENT COMPLETE in $timeStr" -Color Green
+Log -Level 'SUCCESS' -Msg "URL:  https://ai-tools.techbridge.edu.gh/glucose/" -Color Green

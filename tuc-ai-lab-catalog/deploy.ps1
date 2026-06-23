@@ -195,19 +195,23 @@ $htaccessContent = @(
   "  RewriteRule ^ - [L]",
   "  RewriteRule ^ /ai-lab/index.html [QSA,L]",
   "</IfModule>",
-  "<IfModule mod_expires.c>",
-  "  ExpiresActive On",
-  "  <FilesMatch '\.(js|css|png|jpg|jpeg|gif|svg|woff2|woff|ttf|eot|ico)`$'>",
-  "    ExpiresDefault 'max-age=31536000'",
-  "    Header set Cache-Control 'public, immutable'",
-  "  </FilesMatch>",
-  "  <FilesMatch '\.(html|json)`$'>",
-  "    ExpiresDefault 'max-age=0'",
-  "    Header set Cache-Control 'no-cache, no-store, must-revalidate'",
-  "    Header set Pragma 'no-cache'",
-  "    Header set Expires '0'",
-  "  </FilesMatch>",
-  "</IfModule>"
+  "<IfModule mod_expires.c>
+  ExpiresActive On
+  <FilesMatch "\.(js|css|png|jpg|jpeg|gif|svg|woff2|woff|ttf|eot|ico)$">
+    ExpiresDefault "max-age=31536000"
+    Header set Cache-Control "public, immutable"
+  </FilesMatch>
+  <FilesMatch "\.(html|json)$">
+    ExpiresDefault "max-age=0"
+    Header set Cache-Control "public, must-revalidate"
+  </FilesMatch>
+</IfModule>
+
+<IfModule mod_headers.c>
+  <FilesMatch "\.(html)$">
+    Header set Cache-Control "public, must-revalidate, max-age=0"
+  </FilesMatch>
+</IfModule>"
 ) -join "`n"
 $localHtaccess = [System.IO.Path]::Combine([System.IO.Path]::GetTempPath(), "tuc-ai-lab_htaccess_$([Guid]::NewGuid().ToString('N')).txt")
 Write-LfFile -path $localHtaccess -content $htaccessContent

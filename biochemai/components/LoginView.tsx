@@ -245,7 +245,7 @@ export const LoginView: React.FC = () => {
       <div className="radial-glow" />
       <AnimatedMolecularBackground />
 
-      <div className="w-full max-w-sm relative z-10">
+      <div className="w-full max-w-2xl relative z-10">
         <div className="text-center mb-8">
           <div className="biochem-wordmark">
             <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">

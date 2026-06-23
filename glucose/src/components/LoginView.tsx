@@ -256,7 +256,7 @@ export const LoginView: React.FC = () => {
         </svg>
       </div>
 
-      <div className="w-full max-w-sm relative z-10">
+      <div className="w-full max-w-2xl relative z-10">
         {/* R4 + R5: Logo block with faster fade-up + scale entrance */}
         <div className="text-center mb-16 animate-fadeUpLogo">
           {/* R1 + R6: Dial measurement logo — arc needle + gauge (increased size for prominence) */}

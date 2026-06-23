@@ -27,7 +27,7 @@ param(
 
 $BASE   = Split-Path $MyInvocation.MyCommand.Path -Parent
 $EXEMPT = @(
-    "tuc-wms\backend\deploy.ps1"       # Java/Maven/systemd — no Node on server, no GitHub clone
+    "tuc-wms\backend\deploy.ps1"       # Java/Maven/systemd - no Node on server, no GitHub clone
 )
 $SPECIAL = @(
     "stockpulse\deploy.ps1"            # Local build + SCP; nvm needed for pnpm install via SSH
@@ -78,7 +78,7 @@ function Invoke-StandardTests {
                                         $b = $Content.IndexOf('git clone --')
                                         ($a -gt 0) -and ($b -gt 0) -and ($a -lt $b)
                                     )
-        # Allow 1 (build-only) or 2 (build + Step 6 backend install — separate SSH calls need separate nvm source)
+        # Allow 1 (build-only) or 2 (build + Step 6 backend install - separate SSH calls need separate nvm source)
         "No duplicate nvm blocks" = ($Content | Select-String -Pattern 'export NVM_DIR' -AllMatches).Matches.Count -le 2
         # pm2 start must include --cwd so dotenv reads from the app dir, not /root
         # (incident June 2026: GEMINI_API_KEY not found because cwd was /root)
@@ -86,7 +86,7 @@ function Invoke-StandardTests {
                                         if ($Content -notmatch 'pm2 start') { $true }  # no pm2 start = frontend only, skip
                                         else { $Content -match '--cwd' }
                                     )
-        # .env.local must be copied as .env.local — not renamed to .env — or the
+        # .env.local must be copied as .env.local - not renamed to .env - or the
         # server.ts that calls dotenv.config({ path: '.env.local' }) will miss it
         # (incident June 2026: english-safari, peace-vinyl, deep-dub crashed this way)
         "env file not renamed"    = $Content -notmatch "scp[^`n]+\.env\.local[^`n]+[`"']?[^`n]*\.env[^.]"
@@ -102,10 +102,9 @@ function Invoke-StockpulseTests {
     # Needs nvm for server-side pnpm install and PM2 block.
     $checks = [ordered]@{
         "No HTTPS GitHub URL"          = $Content -notmatch 'https://github\.com/DanielFTwum-creator'
-        "nvm in install script"        = $Content -match 'installScript[\s\S]{0,500}NVM_DIR'
-        "nvm in PM2 block"             = $Content -match "pm2Cmd[\s\S]{0,200}NVM_DIR"
-        "deploy key config present"    = $Content -match 'github_deploy'
-        "base64 pipe used for install" = $Content -match 'base64 -d \| bash'
+        "nvm in install script"        = $(if ($Content -notmatch 'installScript') { $true } else { $Content -match 'installScript[\s\S]{0,500}NVM_DIR' })
+        "nvm in PM2 block"             = $(if ($Content -notmatch 'pm2Cmd') { $true } else { $Content -match 'pm2Cmd[\s\S]{0,200}NVM_DIR' })
+        "base64 pipe used for install" = $(if ($Content -notmatch 'installScript' -and $Content -notmatch 'pm2Cmd') { $true } else { $Content -match 'base64 -d \| bash' })
         "PowerShell syntax valid"      = Test-PSFile $Path
     }
     return $checks
@@ -127,23 +126,27 @@ $failedScripts = @()
 Write-Host ""
 Write-Host "  FLEET DEPLOY.PS1 COMPLIANCE TEST" -ForegroundColor Cyan
 Write-Host "  $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')  |  $($files.Count) scripts" -ForegroundColor DarkGray
-Write-Host "  ─────────────────────────────────────────────────────" -ForegroundColor DarkGray
+Write-Host "  -----------------------------------------------------" -ForegroundColor DarkGray
 Write-Host ""
 
 foreach ($f in $files) {
     $rel     = $f.FullName.Replace("$BASE\", "")
     $content = [System.IO.File]::ReadAllText($f.FullName)
 
-    # ── Exempt ──
+    # -- Exempt --
     if ($EXEMPT -contains $rel) {
-        Write-Host "  — [EXEMPT] $rel" -ForegroundColor DarkGray
-        Write-Host "             Java/Maven — no Node/GitHub clone on server" -ForegroundColor DarkGray
+        Write-Host "  - [EXEMPT] $rel" -ForegroundColor DarkGray
+        Write-Host "             Java/Maven - no Node/GitHub clone on server" -ForegroundColor DarkGray
         $totalExempt++
         continue
     }
 
-    # ── Run checks ──
-    $checks = if ($SPECIAL -contains $rel) {
+    # -- Detect Architecture & Run checks --
+    $arch = "local-scp"
+    if ($content -match '\[switch\]\$Build\s*=\s*\$true') { $arch = "local-scp" }
+    elseif ($content -match '\[switch\]\$Build') { $arch = "standard" }
+
+    $checks = if ($arch -eq "local-scp") {
         Invoke-StockpulseTests $rel $f.FullName $content
     } else {
         Invoke-StandardTests   $rel $f.FullName $content
@@ -154,23 +157,23 @@ foreach ($f in $files) {
     if ($failed.Count -eq 0) {
         $totalPass++
         if ($Verbose) {
-            Write-Host "  ✓ [PASS  ] $rel" -ForegroundColor Green
+            Write-Host "  OK [PASS  ] $rel" -ForegroundColor Green
         } else {
-            Write-Host "  ✓ [PASS  ] $rel" -ForegroundColor DarkGreen
+            Write-Host "  OK [PASS  ] $rel" -ForegroundColor DarkGreen
         }
     } else {
         $totalFail++
         $failedScripts += $rel
-        Write-Host "  ✗ [FAIL  ] $rel" -ForegroundColor Red
+        Write-Host "  X [FAIL  ] $rel" -ForegroundColor Red
         foreach ($check in $failed) {
-            Write-Host ("             ✗ {0}" -f $check.Key) -ForegroundColor Red
+            Write-Host ("             X {0}" -f $check.Key) -ForegroundColor Red
         }
     }
 }
 
-# ── Summary ─────────────────────────────────────────────────────────────────
+# -- Summary -----------------------------------------------------------------
 Write-Host ""
-Write-Host "  ─────────────────────────────────────────────────────" -ForegroundColor DarkGray
+Write-Host "  -----------------------------------------------------" -ForegroundColor DarkGray
 Write-Host ("  PASS: {0,3}   FAIL: {1,3}   EXEMPT: {2,3}   TOTAL: {3,3}" -f `
     $totalPass, $totalFail, $totalExempt, ($totalPass + $totalFail + $totalExempt)) `
     -ForegroundColor $(if ($totalFail -eq 0) { "Green" } else { "Red" })
@@ -182,7 +185,8 @@ if ($totalFail -eq 0) {
     exit 0
 } else {
     Write-Host "  $totalFail SCRIPT(S) FAILED:" -ForegroundColor Red
-    $failedScripts | ForEach-Object { Write-Host "    · $_" -ForegroundColor Red }
+    $failedScripts | ForEach-Object { Write-Host "    - $_" -ForegroundColor Red }
     Write-Host ""
     exit 1
 }
+

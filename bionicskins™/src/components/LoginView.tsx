@@ -32,7 +32,7 @@ export const LoginView: React.FC = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#ECF0F4]">
-      <div className="w-full max-w-md mx-4 p-8 bg-white rounded-lg shadow-lg">
+      <div className="w-full max-w-2xl mx-4 p-8 bg-white rounded-lg shadow-lg">
         <h1 className="text-3xl font-bold mb-6 text-[#164975]">Welcome</h1>
         {error && <p className="mb-4 text-sm text-red-600">{error}</p>}
 

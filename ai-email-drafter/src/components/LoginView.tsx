@@ -73,7 +73,7 @@ export const LoginView: React.FC = () => {
       </video>
       <div className="absolute inset-0 bg-black/40" style={{ zIndex: 1 }}></div>
       <div className="relative z-10 w-full">
-        <div className="w-full max-w-sm">
+        <div className="w-full max-w-2xl">
           <div className="text-center mb-8">
             <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-blue-600 mb-4">
               <svg xmlns="http://www.w3.org/2000/svg" className="w-8 h-8 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
