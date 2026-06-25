@@ -25,10 +25,16 @@ export default defineConfig(({ mode }) => {
       build: {
         rollupOptions: {
           output: {
-            manualChunks: {
-              'vendor': ['react', 'react-dom'],
-              'ui': ['lucide-react'],
-              'gemini': ['@google/genai'],
+            manualChunks: (id) => {
+              if (id.includes('node_modules/react') || id.includes('node_modules/react-dom')) {
+                return 'vendor-react';
+              }
+              if (id.includes('node_modules/lucide-react')) {
+                return 'vendor-ui';
+              }
+              if (id.includes('node_modules/@google')) {
+                return 'vendor-gemini';
+              }
             }
           }
         },
