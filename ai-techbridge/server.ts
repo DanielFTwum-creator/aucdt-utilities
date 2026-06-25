@@ -6,9 +6,32 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 
 dotenv.config();
+dotenv.config({ path: '.env.local', override: true });
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PORT = Number(process.env.PORT) || 3031;
+
+const WMS_KEY_URL = 'https://wms.techbridge.edu.gh/api/gemini/key';
+const KEY_TTL_MS = 6 * 60 * 60 * 1000;
+let cachedGeminiKey: string | null = null;
+let keyFetchedAt = 0;
+
+function invalidateGeminiKey() { cachedGeminiKey = null; keyFetchedAt = 0; }
+
+async function getGeminiKey(): Promise<string> {
+  if (cachedGeminiKey && Date.now() - keyFetchedAt < KEY_TTL_MS) return cachedGeminiKey;
+  const proxyKey = process.env.GEMINI_PROXY_KEY;
+  if (!proxyKey) {
+    const local = process.env.GEMINI_API_KEY;
+    if (local) return local;
+    throw new Error('GEMINI_PROXY_KEY not set and no local fallback.');
+  }
+  const r = await fetch(WMS_KEY_URL, { headers: { 'X-Gemini-Proxy-Key': proxyKey } });
+  if (!r.ok) throw new Error(`WMS key fetch failed: ${r.status} ${await r.text()}`);
+  cachedGeminiKey = ((await r.json()) as any).apiKey;
+  keyFetchedAt = Date.now();
+  return cachedGeminiKey!;
+}
 const GOOGLE_CLIENT_ID = process.env.VITE_GOOGLE_CLIENT_ID || '';
 const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET || '';
 const REDIRECT_URI = process.env.VITE_GOOGLE_REDIRECT_URI || 'https://ai-tools.techbridge.edu.gh/ai-techbridge/callback';
@@ -68,6 +91,28 @@ app.get(['/callback', '/ai-techbridge/callback'], async (req, res) => {
   } catch (err) {
     console.error('[ai-techbridge] OAuth error:', err);
     return res.redirect('/ai-techbridge/?error=internal_error');
+  }
+});
+
+// Gemini text proxy — keeps the API key server-side
+app.post(['/api/gemini/generate', '/ai-techbridge/api/gemini/generate'], async (req, res) => {
+  try {
+    const { query, systemInstruction, model = 'gemini-1.5-flash' } = req.body;
+    if (!query) return res.status(400).json({ error: 'Missing query' });
+
+    const apiKey = await getGeminiKey();
+    const { GoogleGenAI } = await import('@google/genai');
+    const genAI = new GoogleGenAI({ apiKey });
+    const result = await genAI.models.generateContent({
+      model,
+      contents: query,
+      config: systemInstruction ? { systemInstruction } : undefined,
+    });
+    res.json({ text: result.text });
+  } catch (error: any) {
+    console.error('[ai-techbridge] Gemini proxy error:', error);
+    if (error?.message?.includes('API_KEY_INVALID') || error?.status === 401) invalidateGeminiKey();
+    res.status(500).json({ error: 'AI generation failed' });
   }
 });
 

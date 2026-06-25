@@ -1,34 +1,35 @@
-import { GoogleGenAI, Modality, Type, Chat, StyleReferenceImage } from "@google/genai";
+import { Type, Chat } from "@google/genai";
 import { addLog } from "./auditLogService";
 import { isSimulatorEnabled, getSimulatorResponse } from "./simulationService";
-import type { 
-    UiComponent, 
-    SentimentAnalysisResult, 
+import type {
+    UiComponent,
+    SentimentAnalysisResult,
     EthicalAnalysisResult,
     PersonalizationResult,
     BrandingResult,
     AuthenticityResult
 } from '../types';
 
-const API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
+// All Gemini calls are routed through the backend proxy (FR-SSO-011).
+// No API key is present in the browser bundle.
+const proxyBase = () => (import.meta.env.BASE_URL?.replace(/\/$/, '') || '');
 
-// Lazily construct the SDK clients. Instantiating GoogleGenAI at module load
-// throws "An API Key must be set when running in a browser" when no key is
-// baked in (which is intentional — keys must NOT be in the bundle). Lazy init
-// lets the app load; the individual AI calls still need a backend proxy, but
-// they only fail when invoked, not at import (which previously hung the app).
-let _ai: GoogleGenAI | null = null;
-let _imageAi: GoogleGenAI | null = null;
-let _videoAi: GoogleGenAI | null = null;
-const ai = new Proxy({} as GoogleGenAI, {
-  get(_t, prop) { (_ai ??= new GoogleGenAI({ apiKey: API_KEY })); return (_ai as any)[prop]; },
-});
-const imageAi = new Proxy({} as GoogleGenAI, {
-  get(_t, prop) { (_imageAi ??= new GoogleGenAI({ apiKey: API_KEY, httpOptions: { apiVersion: 'v1' } })); return (_imageAi as any)[prop]; },
-});
-const videoAi = new Proxy({} as GoogleGenAI, {
-  get(_t, prop) { (_videoAi ??= new GoogleGenAI({ apiKey: API_KEY, httpOptions: { apiVersion: 'v1alpha' } })); return (_videoAi as any)[prop]; },
-});
+async function callGeminiProxy(opts: {
+  prompt: string;
+  systemInstruction?: string;
+  model?: string;
+  responseMimeType?: string;
+  responseSchema?: object;
+}): Promise<string> {
+  const res = await fetch(`${proxyBase()}/api/gemini/generate`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(opts),
+  });
+  if (!res.ok) throw new Error(`Gemini proxy ${res.status}`);
+  const { text } = await res.json();
+  return text;
+}
 
 // Candidate image models to try in order of preference
 const IMAGE_GENERATE_MODELS = ['imagen-3.0-generate-001', 'imagen-3.0-fast-generate-001'];
@@ -120,14 +121,7 @@ export const generateText = async (prompt: string, systemInstruction?: string): 
   try {
     await handleSimulator();
     addLog(`Initiating text generation: "${prompt.substring(0, 30)}..."`);
-    const response = await withTimeout(ai.models.generateContent({
-      model: 'gemini-1.5-flash',
-      contents: prompt,
-      config: {
-        ...(systemInstruction && { systemInstruction }),
-      }
-    }));
-    return response.text;
+    return await withTimeout(callGeminiProxy({ prompt, systemInstruction, model: 'gemini-1.5-flash' }));
   } catch (error) {
     throw new Error(parseAiError(error));
   }
@@ -161,96 +155,38 @@ export const generateImage = async (prompt: string, base64Image?: string, mimeTy
 };
 
 
-export const generateVideo = async (prompt: string) => {
-    try {
-        await handleSimulator();
-        addLog(`Initiating video production: "${prompt.substring(0, 30)}..."`);
-        let operation = await withTimeout(videoAi.models.generateVideos({
-            model: 'veo-2.0-generate',
-            prompt,
-            config: {
-                numberOfVideos: 1,
-                resolution: '720p',
-                aspectRatio: '16:9'
-            }
-        }));
-
-        let attempts = 0;
-        const maxAttempts = 12; // 2 minutes total wait
-        while (!operation.done && attempts < maxAttempts) {
-            await new Promise(resolve => setTimeout(resolve, 10000));
-            operation = await withTimeout(videoAi.operations.getVideosOperation({ operation: operation }));
-            attempts++;
-        }
-
-        if (!operation.done) {
-            throw new Error("VIDEO_PROCESSING_TIMEOUT");
-        }
-        
-        const downloadLink = operation.response?.generatedVideos?.[0]?.video?.uri;
-        if (downloadLink) {
-            const response = await fetch(`${downloadLink}&key=${API_KEY}`);
-            const blob = await response.blob();
-            return URL.createObjectURL(blob);
-        }
-        throw new Error("EMPTY_RESPONSE");
-    } catch (error) {
-        throw new Error(parseAiError(error));
-    }
+export const generateVideo = async (_prompt: string): Promise<string> => {
+    // Video generation (VEO) requires server-side polling and is not yet proxied.
+    // Route through the backend when a /api/gemini/video endpoint is added.
+    throw new Error("VIDEO_NOT_AVAILABLE");
 };
 
 
-export const createChat = (): Chat => {
-  return ai.chats.create({
-    model: 'gemini-1.5-flash',
-    config: {
-      systemInstruction: 'You are an AI assistant for a creative writing tool. Help the user build an interactive story. Keep your responses concise and dramatic, ending with a choice for the user. Use British English throughout.',
+// Chat is not proxied — returns a stateless function that uses the text proxy per turn.
+export const createChat = (): { sendMessage: (msg: string) => Promise<{ response: { text: () => string } }> } => {
+  const history: string[] = [];
+  const systemInstruction = 'You are an AI assistant for a creative writing tool. Help the user build an interactive story. Keep your responses concise and dramatic, ending with a choice for the user. Use British English throughout.';
+  return {
+    sendMessage: async (msg: string) => {
+      history.push(`User: ${msg}`);
+      const prompt = history.join('\n');
+      const text = await callGeminiProxy({ prompt, systemInstruction, model: 'gemini-1.5-flash' });
+      history.push(`Assistant: ${text}`);
+      return { response: { text: () => text } };
     },
-  });
+  };
 };
 
 export const generateUiFromPrompt = async (prompt: string): Promise<UiComponent> => {
     try {
         await handleSimulator();
         addLog(`Initiating UX/UI wireframe generation: "${prompt.substring(0, 30)}..."`);
-        const response = await withTimeout(ai.models.generateContent({
+        const text = await withTimeout(callGeminiProxy({
+            prompt: `Based on the following user prompt, generate a JSON object representing a simple UI layout. Use a nested structure with 'type', 'props', and 'children' keys. Supported types are 'container', 'text', 'button', 'input', 'image'. Prompt: "${prompt}"`,
             model: 'gemini-1.5-flash',
-            contents: `Based on the following user prompt, generate a JSON object representing a simple UI layout. Use a nested structure with 'type', 'props', and 'children' keys. Supported types are 'container', 'text', 'button', 'input', 'image'. Prompt: "${prompt}"`,
-            config: {
-                responseMimeType: "application/json",
-                responseSchema: {
-                    type: Type.OBJECT,
-                    properties: {
-                        type: { type: Type.STRING },
-                        props: { type: Type.OBJECT },
-                        children: {
-                            type: Type.ARRAY,
-                            items: {
-                                type: Type.OBJECT,
-                                properties: {
-                                    type: { type: Type.STRING },
-                                    props: { type: Type.OBJECT },
-                                    content: { type: Type.STRING },
-                                    children: {
-                                        type: Type.ARRAY,
-                                        items: { 
-                                            type: Type.OBJECT,
-                                            properties: {
-                                                type: { type: Type.STRING },
-                                                props: { type: Type.OBJECT },
-                                                content: { type: Type.STRING },
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
+            responseMimeType: 'application/json',
         }));
-        const jsonText = response.text.trim();
-        return JSON.parse(jsonText) as UiComponent;
+        return JSON.parse(text.trim()) as UiComponent;
     } catch (error) {
         throw new Error(parseAiError(error));
     }
@@ -260,66 +196,28 @@ export const analyzeSentiment = async (text: string): Promise<SentimentAnalysisR
     try {
         await handleSimulator();
         addLog(`Initiating sentiment analysis: "${text.substring(0, 30)}..."`);
-        const prompt = `Analyse the sentiment of the following text. Use British English in your response. Respond with a JSON object containing 'sentiment' ("Positive", "Negative", or "Neutral"), 'confidence' (a number between 0 and 1), and a brief 'explanation'. Text: "${text}"`;
-        const response = await ai.models.generateContent({
-            model: "gemini-1.5-flash",
-            contents: prompt,
-            config: {
-                responseMimeType: "application/json",
-                responseSchema: {
-                    type: Type.OBJECT,
-                    properties: {
-                        sentiment: { type: Type.STRING },
-                        confidence: { type: Type.NUMBER },
-                        explanation: { type: Type.STRING }
-                    },
-                    required: ["sentiment", "confidence", "explanation"]
-                }
-            }
+        const result = await callGeminiProxy({
+            prompt: `Analyse the sentiment of the following text. Use British English in your response. Respond with a JSON object containing 'sentiment' ("Positive", "Negative", or "Neutral"), 'confidence' (a number between 0 and 1), and a brief 'explanation'. Text: "${text}"`,
+            model: 'gemini-1.5-flash',
+            responseMimeType: 'application/json',
         });
-        const jsonText = response.text.trim();
-        return JSON.parse(jsonText) as SentimentAnalysisResult;
+        return JSON.parse(result.trim()) as SentimentAnalysisResult;
     } catch (error) {
         throw new Error(parseAiError(error));
     }
 };
 
 export const analyzeEthics = async (prompt: string): Promise<EthicalAnalysisResult> => {
-    const systemInstruction = `You are an AI ethics expert specialising in Digital Media and Communication Design. Analyse the user's prompt for potential ethical issues such as bias, dark patterns, misinformation, or manipulative design. Provide a structured JSON response. Use British English throughout.`;
-    const fullPrompt = `Analyse the following design or campaign idea for ethical concerns. Respond with a JSON object. The root object should have a 'summary' string and a 'concerns' array. Each item in 'concerns' should have 'issue' (a title), 'severity' ('Low', 'Medium', or 'High'), and a detailed 'explanation'. Idea: "${prompt}"`;
-
     try {
         await handleSimulator();
         addLog(`Initiating ethical risk assessment: "${prompt.substring(0, 30)}..."`);
-        const response = await ai.models.generateContent({
-            model: "gemini-1.5-flash",
-            contents: fullPrompt,
-            config: {
-                systemInstruction,
-                responseMimeType: "application/json",
-                responseSchema: {
-                    type: Type.OBJECT,
-                    properties: {
-                        summary: { type: Type.STRING },
-                        concerns: {
-                            type: Type.ARRAY,
-                            items: {
-                                type: Type.OBJECT,
-                                properties: {
-                                    issue: { type: Type.STRING },
-                                    severity: { type: Type.STRING },
-                                    explanation: { type: Type.STRING }
-                                },
-                                required: ["issue", "severity", "explanation"]
-                            }
-                        }
-                    },
-                    required: ["summary", "concerns"]
-                }
-            }
+        const result = await callGeminiProxy({
+            prompt: `Analyse the following design or campaign idea for ethical concerns. Respond with a JSON object. The root object should have a 'summary' string and a 'concerns' array. Each item in 'concerns' should have 'issue' (a title), 'severity' ('Low', 'Medium', or 'High'), and a detailed 'explanation'. Idea: "${prompt}"`,
+            systemInstruction: `You are an AI ethics expert specialising in Digital Media and Communication Design. Analyse the user's prompt for potential ethical issues such as bias, dark patterns, misinformation, or manipulative design. Provide a structured JSON response. Use British English throughout.`,
+            model: 'gemini-1.5-flash',
+            responseMimeType: 'application/json',
         });
-        const jsonText = response.text.trim();
-        return JSON.parse(jsonText) as EthicalAnalysisResult;
+        return JSON.parse(result.trim()) as EthicalAnalysisResult;
     } catch (error) {
         throw new Error(parseAiError(error));
     }
@@ -329,33 +227,12 @@ export const personalizeContent = async (audience: string, product: string): Pro
     try {
         await handleSimulator();
         addLog(`Initiating personalization for audience: "${audience}"`);
-        const prompt = `Generate 3 variations of marketing copy for a product called "${product}" tailored to the following audience: "${audience}". For each variation, provide the 'persona', the 'copy', and the 'rationale' for why it works for that persona. Use British English throughout. Respond with a JSON object containing a 'variants' array.`;
-        const response = await ai.models.generateContent({
-            model: "gemini-1.5-flash",
-            contents: prompt,
-            config: {
-                responseMimeType: "application/json",
-                responseSchema: {
-                    type: Type.OBJECT,
-                    properties: {
-                        variants: {
-                            type: Type.ARRAY,
-                            items: {
-                                type: Type.OBJECT,
-                                properties: {
-                                    persona: { type: Type.STRING },
-                                    copy: { type: Type.STRING },
-                                    rationale: { type: Type.STRING }
-                                },
-                                required: ["persona", "copy", "rationale"]
-                            }
-                        }
-                    },
-                    required: ["variants"]
-                }
-            }
+        const result = await callGeminiProxy({
+            prompt: `Generate 3 variations of marketing copy for a product called "${product}" tailored to the following audience: "${audience}". For each variation, provide the 'persona', the 'copy', and the 'rationale' for why it works for that persona. Use British English throughout. Respond with a JSON object containing a 'variants' array.`,
+            model: 'gemini-1.5-flash',
+            responseMimeType: 'application/json',
         });
-        return JSON.parse(response.text.trim()) as PersonalizationResult;
+        return JSON.parse(result.trim()) as PersonalizationResult;
     } catch (error) {
         throw new Error(parseAiError(error));
     }
@@ -365,35 +242,12 @@ export const generateBrandingIdentity = async (brandName: string, values: string
     try {
         await handleSimulator();
         addLog(`Initiating brand identity generation for: "${brandName}"`);
-        const prompt = `Develop a brand identity for "${brandName}" based on these core values: "${values}". Include a 'manifesto' (vision statement), a 'colourPalette' (array of 3 objects with 'hex', 'name', and 'reason'), and a 'logoConcept' (detailed text description). Use British English throughout. Respond with a JSON object.`;
-        const response = await ai.models.generateContent({
-            model: "gemini-1.5-flash",
-            contents: prompt,
-            config: {
-                responseMimeType: "application/json",
-                responseSchema: {
-                    type: Type.OBJECT,
-                    properties: {
-                        manifesto: { type: Type.STRING },
-                        colorPalette: {
-                            type: Type.ARRAY,
-                            items: {
-                                type: Type.OBJECT,
-                                properties: {
-                                    hex: { type: Type.STRING },
-                                    name: { type: Type.STRING },
-                                    reason: { type: Type.STRING }
-                                },
-                                required: ["hex", "name", "reason"]
-                            }
-                        },
-                        logoConcept: { type: Type.STRING }
-                    },
-                    required: ["manifesto", "colorPalette", "logoConcept"]
-                }
-            }
+        const result = await callGeminiProxy({
+            prompt: `Develop a brand identity for "${brandName}" based on these core values: "${values}". Include a 'manifesto' (vision statement), a 'colourPalette' (array of 3 objects with 'hex', 'name', and 'reason'), and a 'logoConcept' (detailed text description). Use British English throughout. Respond with a JSON object.`,
+            model: 'gemini-1.5-flash',
+            responseMimeType: 'application/json',
         });
-        return JSON.parse(response.text.trim()) as BrandingResult;
+        return JSON.parse(result.trim()) as BrandingResult;
     } catch (error) {
         throw new Error(parseAiError(error));
     }
@@ -403,25 +257,12 @@ export const analyzeAuthenticity = async (mediaClaim: string): Promise<Authentic
     try {
         await handleSimulator();
         addLog(`Initiating authenticity analysis for claim: "${mediaClaim.substring(0, 30)}..."`);
-        const prompt = `Perform a forensic authenticity analysis of the following media claim: "${mediaClaim}". Provide a 'score' (0 to 100, where 100 is likely authentic), an array of 'flags' (potential AI indicators or red flags), a detailed 'analysis', and a final 'verdict' ("Likely Authentic", "Potentially Synthetic", or "Highly Suspicious"). Use British English throughout. Respond with a JSON object.`;
-        const response = await ai.models.generateContent({
-            model: "gemini-1.5-flash",
-            contents: prompt,
-            config: {
-                responseMimeType: "application/json",
-                responseSchema: {
-                    type: Type.OBJECT,
-                    properties: {
-                        score: { type: Type.NUMBER },
-                        flags: { type: Type.ARRAY, items: { type: Type.STRING } },
-                        analysis: { type: Type.STRING },
-                        verdict: { type: Type.STRING }
-                    },
-                    required: ["score", "flags", "analysis", "verdict"]
-                }
-            }
+        const result = await callGeminiProxy({
+            prompt: `Perform a forensic authenticity analysis of the following media claim: "${mediaClaim}". Provide a 'score' (0 to 100, where 100 is likely authentic), an array of 'flags' (potential AI indicators or red flags), a detailed 'analysis', and a final 'verdict' ("Likely Authentic", "Potentially Synthetic", or "Highly Suspicious"). Use British English throughout. Respond with a JSON object.`,
+            model: 'gemini-1.5-flash',
+            responseMimeType: 'application/json',
         });
-        return JSON.parse(response.text.trim()) as AuthenticityResult;
+        return JSON.parse(result.trim()) as AuthenticityResult;
     } catch (error) {
         throw new Error(parseAiError(error));
     }

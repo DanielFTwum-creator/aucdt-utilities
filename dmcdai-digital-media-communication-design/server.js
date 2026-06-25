@@ -245,6 +245,33 @@ async function startServer() {
     }
   });
 
+  // Gemini text proxy — keeps the API key server-side (FR-SSO-011)
+  app.post(['/api/gemini/generate', '/dmcdai/api/gemini/generate'], async (req, res) => {
+    try {
+      const { prompt, systemInstruction, model = 'gemini-1.5-flash', responseMimeType, responseSchema } = req.body;
+      if (!prompt) return res.status(400).json({ error: 'Missing prompt' });
+
+      const apiKey = await getGeminiKey();
+      const { GoogleGenAI } = await import('@google/genai');
+      const genAI = new GoogleGenAI({ apiKey });
+      const config = {};
+      if (systemInstruction) config.systemInstruction = systemInstruction;
+      if (responseMimeType) config.responseMimeType = responseMimeType;
+      if (responseSchema) config.responseSchema = responseSchema;
+
+      const response = await genAI.models.generateContent({
+        model,
+        contents: prompt,
+        config: Object.keys(config).length ? config : undefined,
+      });
+      res.json({ text: response.text });
+    } catch (error) {
+      console.error('[DMCDAI] Gemini text proxy error:', error);
+      handleStaleKey(error);
+      res.status(500).json({ error: 'AI generation failed' });
+    }
+  });
+
   // Image generation proxy to bypass CORS
   app.post('/api/generate-image', async (req, res) => {
     try {

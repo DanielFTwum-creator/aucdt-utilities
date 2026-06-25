@@ -2,24 +2,11 @@ import React, { useState } from 'react';
 import { generateVideo } from '../services/geminiService';
 import { Loader } from '../components/Loader';
 
-const API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
-
 const Module2VideoProduction: React.FC = () => {
   const [prompt, setPrompt] = useState<string>('A cinematic shot of a robot tending to a glowing, digital garden on a spaceship');
   const [videoUrl, setVideoUrl] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
-
-  if (!API_KEY) {
-    return (
-      <div className="w-full text-center bg-[var(--color-background-card)] p-8 rounded-lg border border-[var(--color-primary)]/50 font-inter">
-        <h2 className="text-2xl font-bold text-[var(--color-primary)] mb-4 font-playfair">API Key Required</h2>
-        <p className="text-[var(--color-foreground-muted)]">
-          Video generation requires a Gemini API key with VEO access. Please set <code className="font-mono text-sm bg-[var(--color-background-card-hover)] px-1 rounded">VITE_GEMINI_API_KEY</code> in your <code className="font-mono text-sm bg-[var(--color-background-card-hover)] px-1 rounded">.env.local</code> file and restart the dev server.
-        </p>
-      </div>
-    );
-  }
 
   const handleGenerate = async () => {
     if (!prompt) {
@@ -33,11 +20,13 @@ const Module2VideoProduction: React.FC = () => {
       const url = await generateVideo(prompt);
       setVideoUrl(url);
     } catch (err: any) {
-      if (err.message === 'QUOTA_EXCEEDED') {
+      if (err.message === 'VIDEO_NOT_AVAILABLE') {
+        setError('Video generation is not yet available on this platform. Please contact your administrator.');
+      } else if (err.message === 'QUOTA_EXCEEDED') {
         setError('API Rate limit reached. Video generation is resource-intensive. Please wait a few minutes and try again.');
       } else if (err.message === 'SAFETY_BLOCK') {
         setError('Your video prompt was flagged by the safety filters. Please rephrase and try again.');
-      } else if (err.message === 'MODEL_NOT_FOUND' || err.message === 'INVALID_KEY' || err.message.includes('Requested entity was not found')) {
+      } else if (err.message === 'MODEL_NOT_FOUND' || err.message === 'INVALID_KEY') {
         setError('Video generation failed. The institutional API key may lack VEO permissions. Please contact your administrator.');
       } else {
         setError('An unexpected error occurred during video generation. Please check the console.');
