@@ -1,20 +1,14 @@
-import { GoogleGenAI } from "@google/genai";
-
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+export interface GeneratedSong {
+  title: string;
+  lyrics: string;
+}
 
 const MAX_RETRIES = 3;
 const BACKOFF_MS = 1000;
 
 const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
-export interface GeneratedSong {
-  title: string;
-  lyrics: string;
-}
-
 // ─── R1: Reject the Expected ───────────────────────────────────────────────
-// Moved banned terms into a structured constant so they can be reused
-// in validation or extended without touching the prompt string.
 const BANNED_PHRASES = [
   '"Yeah mon"', '"One Love" (as filler)', '"Irie" (generic)',
   '"Jammin"', '"Island vibes"', '"Feeling irie"',
@@ -23,7 +17,6 @@ const BANNED_PHRASES = [
 ];
 
 // ─── R2: Regional Reality ──────────────────────────────────────────────────
-// Explicit checklist forces the model to touch ≥3 items per generation.
 const REGIONAL_CHECKLIST = `
 MANDATORY REGIONAL CHECKLIST — you MUST reference at least 3 of the following:
 Places: "Half Way Tree", "Papine", "Portmore Causeway", "Red Hills Road",
@@ -33,7 +26,6 @@ Transport/Items: "Coaster bus", "Honda Fit", "Route taxi", "Magnum",
 `;
 
 // ─── R3: Raw Texture ───────────────────────────────────────────────────────
-// Provides analogy templates the model must emulate, not just be told about.
 const TEXTURE_TEMPLATES = `
 SENSORY TEMPLATES — match this register exactly:
 ✗ WEAK : "It was very hot outside."
@@ -47,7 +39,6 @@ SOUND CUES: Every verse must contain at least 1 parenthetical: (Lighter flicks),
 `;
 
 // ─── R4: Rhythmic Syncopation ──────────────────────────────────────────────
-// Counter-example makes the rule concrete, not abstract.
 const RHYTHM_RULES = `
 RHYTHM LAW — the skank lives on the off-beat:
 ✗ FORBIDDEN (AABB tourist flow):
@@ -63,7 +54,6 @@ Break the line. Breathe. Break again.
 `;
 
 // ─── R5: Roleplay Depth ───────────────────────────────────────────────────
-// Minimum stage-direction count is now a numbered rule, not a suggestion.
 const STAGE_DIRECTION_RULES = `
 STAGE DIRECTION MANDATE:
 - Minimum 5 [Stage Direction] blocks per song (e.g. [Voice drops to gravel],
@@ -77,7 +67,6 @@ STAGE DIRECTION MANDATE:
 `;
 
 // ─── R6: Rewind Factor ────────────────────────────────────────────────────
-// Chorus must be isolated and crowd-testable.
 const HOOK_RULES = `
 HOOK MANDATE:
 - The chorus is the reason the crowd paid entry. Label it clearly: (Chorus).
@@ -180,7 +169,6 @@ Choose ONLY ONE of the following (or none, if it doesn't fit):
 `;
 
 // ─── Self-Audit Block ─────────────────────────────────────────────────────
-// After writing the song, the model validates its own output before returning.
 const SELF_AUDIT = `
 ═══════════════════════════════════════════════════
 SELF-AUDIT — complete this checklist BEFORE outputting the final lyrics
@@ -207,7 +195,6 @@ export const generateLyrics = async (
   songDescription: string = ""
 ): Promise<GeneratedSong> => {
 
-  // ─── R2 reinforcement: inject checklist into the per-call prompt ──────
   const prompt = `
 SCENE: High-stakes recording session, Kingston. Night.
 PRODUCER: "Give me something original. No tourist stuff. Gritty. Make it hurt a little."
@@ -233,20 +220,26 @@ ACTION: Write the master recording now.
 ${SELF_AUDIT}
 `;
 
+  const basePath = window.location.pathname.replace(/\/$/, '') || '';
+
   for (let i = 0; i < MAX_RETRIES; i++) {
     try {
-      const response = await ai.models.generateContent({
-        model: "gemini-2.5-pro",
-        contents: prompt,
-        config: {
-          systemInstruction: SYSTEM_INSTRUCTION,
-          temperature: 0.95,
-          topP: 0.9,
-          thinkingConfig: { thinkingBudget: 12000 },
-        },
+      const response = await fetch(`${basePath}/api/gemini/generate`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          prompt,
+          systemInstruction: SYSTEM_INSTRUCTION
+        })
       });
 
-      const text = response.text ?? "";
+      if (!response.ok) {
+        throw new Error(`Proxy error: ${response.statusText}`);
+      }
+
+      const data = await response.json();
+      const text = data.text ?? "";
+      
       const lines = text.trim().split("\n");
       const titleMatch = lines[0].match(/"([^"]+)"/);
       const title = titleMatch ? titleMatch[1] : "Untitled Riddim";
@@ -257,7 +250,7 @@ ${SELF_AUDIT}
       return { title, lyrics };
     } catch (err: unknown) {
       if (i === MAX_RETRIES - 1) {
-        console.error("Gemini API error after max retries:", err);
+        console.error("API error after max retries:", err);
         throw err;
       }
       await delay(BACKOFF_MS * Math.pow(2, i));
