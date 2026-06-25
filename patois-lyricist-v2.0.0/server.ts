@@ -8,6 +8,7 @@ import fetch from "node-fetch";
 import { GoogleGenAI } from "@google/genai";
 
 dotenv.config();
+dotenv.config({ path: '.env.local', override: true });
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -66,8 +67,13 @@ async function startServer() {
   const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
   const REDIRECT_URI = process.env.VITE_GOOGLE_REDIRECT_URI || 'https://ai-tools.techbridge.edu.gh/patois/auth/google/callback';
 
-  // Base path based on redirect URI or hardcoded fallback
-  const basePath = new URL(REDIRECT_URI).pathname.replace(/\/auth\/google\/callback$/, '');
+  // Derive base path safely — fall back to /patois if the URI isn't a valid absolute URL
+  let basePath = '/patois';
+  try {
+    basePath = new URL(REDIRECT_URI).pathname.replace(/\/auth\/google\/callback$/, '');
+  } catch {
+    console.warn('[Patois Lyricist] Could not parse VITE_GOOGLE_REDIRECT_URI — defaulting basePath to /patois');
+  }
 
   // Google OAuth callback — server-side exchange
   app.get(['/auth/google/callback', `${basePath}/auth/google/callback`], async (req, res) => {
