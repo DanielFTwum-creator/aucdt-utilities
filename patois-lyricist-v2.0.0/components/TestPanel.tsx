@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { GoogleGenAI } from "@google/genai";
 import html2canvas from 'html2canvas';
 import TestSongGenerator from './TestSongGenerator';
 
@@ -93,40 +92,27 @@ const TestPanel: React.FC = () => {
         setTestResults([...results, localStorageTest]);
         results.push(localStorageTest);
 
-        // Test 2: Gemini API Key
-        const apiKeyTest: TestResult = { name: 'Gemini API Key', status: 'running', message: 'Checking...' };
-        setTestResults([...results, apiKeyTest]);
-        if (process.env.API_KEY) {
-            apiKeyTest.status = 'success';
-            apiKeyTest.message = 'API_KEY is present.';
-        } else {
-            apiKeyTest.status = 'error';
-            apiKeyTest.message = 'API_KEY environment variable not set.';
-        }
+        // Test 2: Gemini API Key (key lives server-side via WMS — always pass this check)
+        const apiKeyTest: TestResult = { name: 'Gemini API Key', status: 'success', message: 'Key managed server-side via WMS proxy.' };
         setTestResults([...results, apiKeyTest]);
         results.push(apiKeyTest);
 
-        // Test 3: Gemini API Connection
-        const apiConnectionTest: TestResult = { name: 'Gemini API Connection', status: 'running', message: 'Pinging model...' };
+        // Test 3: Gemini API Connection (via backend proxy — key never exposed to browser)
+        const apiConnectionTest: TestResult = { name: 'Gemini API Connection', status: 'running', message: 'Pinging proxy...' };
         setTestResults([...results, apiConnectionTest]);
-        if (apiKeyTest.status === 'success') {
-            try {
-                const ai = new GoogleGenAI({ apiKey: process.env.API_KEY as string });
-                // Set budget to 1024 to satisfy models that require non-zero budget
-                await ai.models.generateContent({ 
-                    model: "gemini-2.5-flash",
-                    contents: 'Health check: return "OK"',
-                    config: { thinkingConfig: { thinkingBudget: 1024 } }
-                });
-                apiConnectionTest.status = 'success';
-                apiConnectionTest.message = 'Successfully connected to Gemini API.';
-            } catch (e: any) {
-                apiConnectionTest.status = 'error';
-                apiConnectionTest.message = `API connection failed: ${e.message}`;
-            }
-        } else {
+        try {
+            const base = window.location.pathname.replace(/\/$/, '').replace(/\/[^/]*$/, '');
+            const r = await fetch(`${base}/api/gemini/generate`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ prompt: 'Health check: return "OK"', systemInstruction: 'Return only the word OK.' }),
+            });
+            if (!r.ok) throw new Error(`HTTP ${r.status}`);
+            apiConnectionTest.status = 'success';
+            apiConnectionTest.message = 'Successfully connected to Gemini API via proxy.';
+        } catch (e: any) {
             apiConnectionTest.status = 'error';
-            apiConnectionTest.message = 'Skipped due to missing API key.';
+            apiConnectionTest.message = `API connection failed: ${e.message}`;
         }
         setTestResults([...results, apiConnectionTest]);
 
