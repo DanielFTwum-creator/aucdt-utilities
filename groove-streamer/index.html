@@ -7,18 +7,18 @@
     <!-- SEO -->
     <meta name="keywords" content="Techbridge University College, TUC, design education, technology education, Accra university, Ghana university, product design, entrepreneurship, private university Ghana, design school" />
     <meta name="author" content="Techbridge University College" />
-    <meta name="publisher" content="Techbridge University College" />
-    <link rel="canonical" href="https://www.techbridge.edu.gh/" />
+    <meta name="publisher" content="TUC ICT Department" />
+    <link rel="canonical" href="https://ai-tools.techbridge.edu.gh/groove-streamer/" />
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
     <!-- Geographic -->
     <meta name="language" content="English" />
     <meta name="geo.region" content="GH-AA" />
-    <meta name="geo.placename" content="Accra" />
+    <meta name="geo.placename" content="Accra, Ghana" />
     <meta name="geo.position" content="5.6037;-0.1870" />
     <meta name="ICBM" content="5.6037, -0.1870" />
     <!-- Open Graph -->
     <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://www.techbridge.edu.gh/" />
+    <meta property="og:url" content="https://ai-tools.techbridge.edu.gh/groove-streamer/" />
     <meta property="og:site_name" content="Techbridge University College" />
     <meta property="og:title" content="Groove Streamer — Studio Session" />
     <meta property="og:description" content="AI-powered groove generator. Lay down the perfect beat — Afrobeats, Highlife, Reggae, Jazz-Funk and beyond." />
@@ -48,6 +48,9 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Space+Mono:wght@400;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-FKXTELQ71R"></script>
+    <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-FKXTELQ71R');</script>
     <style id="groove-splash-styles">
       body.loading {
         background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%) !important;
@@ -145,5 +148,11 @@
       </div>
     </div>
     <script type="module" src="/src/main.tsx"></script>
+    <script>
+      (function() {
+        var theme = localStorage.getItem('groove-streamer-theme') || 'dark';
+        document.documentElement.setAttribute('data-theme', theme);
+      })();
+    </script>
   </body>
 </html>

@@ -1,14 +1,36 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en-GB">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+    <meta name="author" content="Techbridge University College" />
+    <meta name="publisher" content="TUC ICT Department" />
+    <meta name="robots" content="index, follow" />
+    <meta name="description" content="AI-powered marking and assessment assistant — Techbridge University College." />
+    <link rel="canonical" href="https://ai-tools.techbridge.edu.gh/markai/" />
+    <meta name="geo.region" content="GH-AA" />
+    <meta name="geo.placename" content="Accra, Ghana" />
+    <meta name="geo.position" content="5.6037;-0.1870" />
+    <meta name="ICBM" content="5.6037, -0.1870" />
     <meta property="og:type" content="website" />
     <meta property="og:title" content="MarKAI" />
     <meta property="og:description" content="AI-powered marketing and content strategy platform." />
     <meta property="og:locale" content="en_GB" />
+    <meta property="og:url" content="https://ai-tools.techbridge.edu.gh/markai/" />
+    <meta property="og:site_name" content="Techbridge University College" />
+    <meta property="og:image" content="https://techbridge.edu.gh/static/TUC_LOGO.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@TUCGhana" />
+    <meta name="twitter:creator" content="@TUCGhana" />
+    <meta name="twitter:image" content="https://techbridge.edu.gh/static/TUC_LOGO.png" />
+    <meta name="theme-color" content="#6c63ff" />
+    <meta name="msapplication-TileColor" content="#6c63ff" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>MarkAI: Marketing for Non-Marketers</title>
+    <title>MarkAI</title>
+
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-FKXTELQ71R"></script>
+    <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-FKXTELQ71R');</script>
 
     <!-- Fonts: Clash Display (display) + Inter Variable (body) + JetBrains Mono -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -212,134 +234,14 @@
         }
       }
     </style>
-    <script>
-      tailwind.config = {
-        theme: {
-          extend: {
-            fontFamily: {
-              display: ['Clash Display', 'ui-sans-serif', 'system-ui'],
-              body:    ['Inter', 'ui-sans-serif', 'system-ui'],
-              mono:    ['JetBrains Mono', 'ui-monospace', 'monospace'],
-            },
-            backgroundColor: {
-              'primary':   'rgb(var(--color-bg-primary) / <alpha-value>)',
-              'secondary': 'rgb(var(--color-bg-secondary) / <alpha-value>)',
-            },
-            textColor: {
-              'primary':   'rgb(var(--color-text-primary) / <alpha-value>)',
-              'secondary': 'rgb(var(--color-text-secondary) / <alpha-value>)',
-            },
-            borderColor: {
-              'default': 'rgb(var(--color-border) / <alpha-value>)',
-            },
-            colors: {
-              'accent-primary':   'rgb(var(--color-accent-primary) / <alpha-value>)',
-              'accent-secondary': 'rgb(var(--color-accent-secondary) / <alpha-value>)',
-              'accent-tertiary':  'rgb(var(--color-accent-tertiary) / <alpha-value>)',
-            },
-          }
-        }
-      }
-    </script>
-    <!-- importmap removed: React, lucide-react, html2canvas, @google/genai are
-         bundled from npm by Vite. The CDN importmap broke the production build. -->
-
-    <style id="markai-splash-styles">
-      body {
-        background: radial-gradient(circle at 50% 50%, #fafafa 0%, #f4f4f5 100%) !important;
-        margin: 0;
-        padding: 0;
-        font-family: 'Inter', sans-serif;
-        overflow: hidden;
-      }
-      #root {
-        width: 100%;
-      }
-      .markai-splash-container {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        min-height: 100vh;
-      }
-      .markai-splash {
-        text-align: center;
-        border: 1px solid rgba(228, 228, 231, 0.8);
-        padding: 55px 75px;
-        background: rgba(255, 255, 255, 0.9);
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
-        border-radius: 24px;
-        box-shadow: 0 10px 30px -10px rgba(9, 9, 11, 0.05);
-        position: relative;
-      }
-      .markai-splash::before {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 5px;
-        background: linear-gradient(90deg, #2563eb, #3b82f6);
-        border-top-left-radius: 24px;
-        border-top-right-radius: 24px;
-      }
-      .markai-logo {
-        color: #18181b;
-        font-size: 2.3rem;
-        font-weight: 800;
-        letter-spacing: -0.02em;
-        margin-bottom: 6px;
-        display: block;
-      }
-      .markai-logo span {
-        color: #2563eb;
-      }
-      .markai-status {
-        color: #71717a;
-        text-transform: uppercase;
-        letter-spacing: 0.35em;
-        font-size: 0.75rem;
-        font-weight: 600;
-        opacity: 0.9;
-      }
-      .markai-loading {
-        margin-top: 25px;
-        height: 3px;
-        width: 130px;
-        background: rgba(37, 99, 235, 0.1);
-        margin-left: auto;
-        margin-right: auto;
-        position: relative;
-        overflow: hidden;
-        border-radius: 3px;
-      }
-      .markai-loading::after {
-        content: "";
-        position: absolute;
-        left: -100%;
-        width: 50%;
-        height: 100%;
-        background: #2563eb;
-        border-radius: 3px;
-        animation: markai-load 1.5s infinite ease-in-out;
-      }
-      @keyframes markai-load {
-        0% { left: -100%; }
-        100% { left: 150%; }
-      }
-    </style>
   </head>
   <body>
-    <a href="#main-content" class="skip-link">Skip to main content</a>
-    <div id="root">
-      <div class="markai-splash-container">
-        <div class="markai-splash">
-          <span class="markai-logo">Mark <span>AI</span></span>
-          <div class="markai-status">Marketing Platform</div>
-          <div class="markai-loading"></div>
-        </div>
-      </div>
-    </div>
-    <script type="module" src="./index.tsx"></script>
+    <div id="root"></div>
+    <script>
+      (function() {
+        var theme = localStorage.getItem('markai-theme') || 'dark';
+        document.documentElement.setAttribute('data-theme', theme);
+      })();
+    </script>
   </body>
 </html>

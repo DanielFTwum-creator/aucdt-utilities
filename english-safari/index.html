@@ -8,8 +8,8 @@
     <meta name="description" content="Techbridge University College (TUC) is a premier private institution in Accra pioneering innovative and progressive higher education in design and entrepreneurship." />
     <meta name="keywords" content="Techbridge University College, TUC, design education, technology education, Accra university, Ghana university, product design, entrepreneurship, private university Ghana, design school" />
     <meta name="author" content="Techbridge University College" />
-    <meta name="publisher" content="Techbridge University College" />
-    <link rel="canonical" href="https://www.techbridge.edu.gh/" />
+    <meta name="publisher" content="TUC ICT Department" />
+    <link rel="canonical" href="https://ai-tools.techbridge.edu.gh/english-safari/" />
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
     <!-- Geographic -->
     <meta name="language" content="English" />
@@ -19,7 +19,7 @@
     <meta name="ICBM" content="5.6037, -0.1870" />
     <!-- Open Graph -->
     <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://www.techbridge.edu.gh/" />
+    <meta property="og:url" content="https://ai-tools.techbridge.edu.gh/english-safari/" />
     <meta property="og:site_name" content="Techbridge University College" />
     <meta property="og:title" content="English Safari | Techbridge University College" />
     <meta property="og:description" content="Techbridge University College (TUC) is a premier private institution in Accra pioneering innovative and progressive higher education in design and entrepreneurship." />
@@ -54,6 +54,10 @@
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="https://techbridge.edu.gh/static/TUC_LOGO.png" />
 
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-FKXTELQ71R"></script>
+    <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-FKXTELQ71R');</script>
+
     <style>
       body {
         font-family: 'Inter', sans-serif;
@@ -67,7 +71,7 @@
     </style>
 
     <script type="module" src="./src/index.tsx"></script>
-  
+
     <style id="tuc-splash-styles">
       body { background-color: #0F0C07 !important; margin: 0; padding: 0; display: flex; align-items: center; justify-content: center; min-height: 100vh; font-family: serif; overflow: hidden; }
       .tuc-splash { text-align: center; border: 1px solid rgba(200,168,75,0.2); padding: 60px; background: #141210; position: relative; }
@@ -81,7 +85,7 @@
 </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
-    
+
     <div id="root">
       <div class="tuc-splash">
         <span class="tuc-logo">TECHBRIDGE</span>
@@ -90,5 +94,11 @@
       </div>
     </div>
 
+    <script>
+      (function() {
+        var theme = localStorage.getItem('english-safari-theme') || 'dark';
+        document.documentElement.setAttribute('data-theme', theme);
+      })();
+    </script>
   </body>
 </html>

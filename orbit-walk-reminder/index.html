@@ -1,14 +1,37 @@
 <!doctype html>
-<html lang="en">
+<html lang="en-GB">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Orbit Walk Reminder</title>
+    <meta name="description" content="Smart walking and wellness reminder application — Techbridge University College." />
+    <meta name="author" content="Techbridge University College" />
+    <meta name="publisher" content="TUC ICT Department" />
+    <meta name="robots" content="index, follow" />
+    <meta name="theme-color" content="#00c896" />
+    <meta name="msapplication-TileColor" content="#00c896" />
+    <link rel="canonical" href="https://ai-tools.techbridge.edu.gh/orbit-walk-reminder/" />
+    <meta name="geo.region" content="GH-AA" />
+    <meta name="geo.placename" content="Accra, Ghana" />
+    <meta name="geo.position" content="5.6037;-0.1870" />
+    <meta name="ICBM" content="5.6037, -0.1870" />
     <meta property="og:type" content="website" />
     <meta property="og:title" content="Orbit Walk Reminder" />
     <meta property="og:description" content="Smart reminder system for scheduled walking and activity breaks." />
     <meta property="og:locale" content="en_GB" />
+    <meta property="og:url" content="https://ai-tools.techbridge.edu.gh/orbit-walk-reminder/" />
+    <meta property="og:site_name" content="Techbridge University College" />
+    <meta property="og:image" content="https://techbridge.edu.gh/static/TUC_LOGO.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@TUCGhana" />
+    <meta name="twitter:creator" content="@TUCGhana" />
+    <meta name="twitter:image" content="https://techbridge.edu.gh/static/TUC_LOGO.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
     <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-FKXTELQ71R"></script>
+    <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-FKXTELQ71R');</script>
     <style id="orbit-splash-styles">
       body {
         background: radial-gradient(circle at 50% 50%, #fafafa 0%, #f4f4f5 100%) !important;
@@ -105,6 +128,11 @@
       </div>
     </div>
     <script type="module" src="/src/main.tsx"></script>
+    <script>
+      (function() {
+        var theme = localStorage.getItem('orbit-walk-reminder-theme') || 'dark';
+        document.documentElement.setAttribute('data-theme', theme);
+      })();
+    </script>
   </body>
 </html>
-

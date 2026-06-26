@@ -7,14 +7,36 @@ import { GoogleGenerativeAI, SchemaType } from "@google/generative-ai";
 dotenv.config();
 
 const PORT = Number(process.env.PORT) || 3002;
-const GEMINI_API_KEY = process.env.GEMINI_API_KEY || process.env.VITE_GEMINI_API_KEY;
 const GOOGLE_CLIENT_ID = process.env.VITE_GOOGLE_CLIENT_ID;
 const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
 const REDIRECT_URI = process.env.VITE_GOOGLE_REDIRECT_URI || 'https://ai-tools.techbridge.edu.gh/biochemai/callback';
 
-if (!GEMINI_API_KEY) {
-  console.error("[BioChemAI] FATAL: GEMINI_API_KEY not set in environment");
-  process.exit(1);
+// --- Gemini key custody: fetched from the WMS proxy, never stored here ---
+// WMS is the single rotation point. Cached in memory with a 6-hour TTL.
+const WMS_KEY_URL = 'https://wms.techbridge.edu.gh/api/gemini/key';
+const KEY_TTL_MS  = 6 * 60 * 60 * 1000;
+let cachedGeminiKey: string | null = null;
+let keyFetchedAt = 0;
+
+function invalidateGeminiKey() { cachedGeminiKey = null; keyFetchedAt = 0; }
+
+async function getGeminiKey(): Promise<string> {
+  if (cachedGeminiKey && Date.now() - keyFetchedAt < KEY_TTL_MS) return cachedGeminiKey;
+  const proxyKey = process.env.GEMINI_PROXY_KEY;
+  if (!proxyKey) {
+    const local = process.env.GEMINI_API_KEY || process.env.VITE_GEMINI_API_KEY;
+    if (local) return local;
+    throw new Error('GEMINI_PROXY_KEY is not set (and no local key fallback).');
+  }
+  const r = await fetch(WMS_KEY_URL, { headers: { 'X-Gemini-Proxy-Key': proxyKey } });
+  if (!r.ok) throw new Error(`WMS key fetch failed: ${r.status} ${await r.text()}`);
+  cachedGeminiKey = (await r.json() as any).apiKey;
+  keyFetchedAt = Date.now();
+  return cachedGeminiKey!;
+}
+
+if (!process.env.GEMINI_PROXY_KEY) {
+  console.warn('[BioChemAI] WARNING: GEMINI_PROXY_KEY not set — AI routes will use local fallback or fail');
 }
 
 interface GoogleTokenResponse {
@@ -33,7 +55,6 @@ function decodeJWT(token: string) {
   return JSON.parse(decoded);
 }
 
-const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
 const MODEL = "gemini-2.5-flash";
 
 const app = express();
@@ -101,6 +122,8 @@ app.post(["/api/gemini/bio-chem", "/biochemai/api/gemini/bio-chem"], async (req,
   }
 
   try {
+    const key = await getGeminiKey();
+    const genAI = new GoogleGenerativeAI(key);
     const model = genAI.getGenerativeModel({ model: MODEL, systemInstruction });
     const result = await model.generateContent({
       contents: [{ role: "user", parts: [{ text: prompt }] }],
@@ -119,6 +142,9 @@ app.post(["/api/gemini/bio-chem", "/biochemai/api/gemini/bio-chem"], async (req,
     res.json({ text, sources });
   } catch (err: any) {
     console.error("[BioChemAI] bio-chem error:", err?.message);
+    if (err?.message?.includes('API_KEY_INVALID') || err?.message?.includes('INVALID_ARGUMENT')) {
+      invalidateGeminiKey();
+    }
     res.status(500).json({ error: "Gemini call failed" });
   }
 });
@@ -133,6 +159,8 @@ app.post(["/api/gemini/quiz", "/biochemai/api/gemini/quiz"], async (req, res) =>
   }
 
   try {
+    const key = await getGeminiKey();
+    const genAI = new GoogleGenerativeAI(key);
     const model = genAI.getGenerativeModel({
       model: MODEL,
       systemInstruction,
@@ -169,6 +197,9 @@ app.post(["/api/gemini/quiz", "/biochemai/api/gemini/quiz"], async (req, res) =>
     res.json(parsed);
   } catch (err: any) {
     console.error("[BioChemAI] quiz error:", err?.message);
+    if (err?.message?.includes('API_KEY_INVALID') || err?.message?.includes('INVALID_ARGUMENT')) {
+      invalidateGeminiKey();
+    }
     res.status(500).json({ error: "Gemini call failed" });
   }
 });

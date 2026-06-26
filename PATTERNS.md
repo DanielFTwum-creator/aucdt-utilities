@@ -22,6 +22,8 @@
 | 10 | pnpm native binary permissions | All apps with esbuild / better-sqlite3 / protobufjs |
 | 11 | WMS Gemini Key Proxy | All fleet apps that call Gemini AI |
 | 12 | NVM sourcing before server-side pnpm install | All deploy.ps1 backend install steps |
+| 13 | tsx in dependencies + PM2 wrapper for Node v26 | All apps with server.ts running in production |
+| 14 | node_modules binary permissions after deploy chmod | All deploy.ps1 scripts with chmod sweeps |
 | — | WMS SSO + TOTP onboarding (staff apps) | → `tuc-wms/docs/SSO_ONBOARDING_PLAYBOOK.md` |
 
 ---
@@ -971,6 +973,116 @@ All 13 affected apps now use `$nvmPrefix` with `nvm use 26`:
 
 `biochemai`, `omniextract` — their entire build runs in a bash script that sources NVM at the top.  
 `glucose`, `deep-dub-vibes-player`, `willpro`, `ai-email-drafter` — use the `$nvmPrefix` or inline `$step6Script` pattern.
+
+---
+
+## PATTERN 13: TSX IN DEPENDENCIES + PM2 WRAPPER SCRIPT FOR NODE v26
+
+**Origin:** Fleet recovery, June 2026 — subagent deploy wiped `data/glucose.db` and ran `pnpm install --prod`, which stripped `tsx` (a devDependency). Both `glucose` and `tuc-ai-lab` went into crash loops with `pid: N/A`. The system `node` was v20 but Node v26.3.1 was available under `~/.nvm/`.
+
+### The Two Rules
+
+**Rule A — tsx must be in `dependencies`, not `devDependencies`, for any app whose `server.ts` runs in production.**
+
+`pnpm install --prod` (run by all deploy.ps1 scripts) strips devDependencies. If `tsx` is a devDependency, the server can never start after a fresh deploy.
+
+Affected apps (already fixed): `glucose`  
+Check all other apps: `grep -r '"tsx"' */package.json` — move to `dependencies` wherever the app has a `server.ts`.
+
+**Rule B — Use Node v26 for all AI/cutting-edge apps. Use the wrapper script pattern when PM2 cannot set NODE_ENV or the node binary correctly.**
+
+Server has three Node versions:
+- `/usr/bin/node` → v20.20.2 (system default — do not use for new apps)
+- `/root/.nvm/versions/node/v24.17.0/bin/node` → v24 LTS
+- `/root/.nvm/versions/node/v26.3.1/bin/node` → v26 (preferred for AI apps per Daniel)
+
+### Wrapper Script Pattern (for apps needing NODE_ENV or non-default node)
+
+Create `/usr/local/bin/start-<appname>.sh`:
+
+```bash
+#!/bin/bash
+export NODE_ENV=production        # required for apps that gate vite import on this
+cd /var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/<appname>
+exec /root/.nvm/versions/node/v26.3.1/bin/node \
+  --import /path/to/app/node_modules/tsx/dist/esm/index.mjs \
+  /path/to/app/server.ts
+```
+
+```bash
+chmod +x /usr/local/bin/start-<appname>.sh
+pm2 start /usr/local/bin/start-<appname>.sh --name <appname> --cwd /path/to/app
+pm2 save
+```
+
+Benefits over `--interpreter-args tsx`:
+- NODE_ENV is guaranteed set (PM2's `--env` flag selects named profiles, not individual vars)
+- The correct node binary is used regardless of system PATH
+- `cd` ensures dotenv resolves `.env.local` from the right directory (belt-and-suspenders alongside `--cwd`)
+
+### Recovery Commands (when glucose or ai-lab crash with pid: N/A)
+
+```bash
+# 1. Check if tsx is present
+ls /path/to/app/node_modules/.bin/tsx || echo "tsx missing — need to install"
+
+# 2. Install without --prod (strips tsx from devDependencies)
+cd /path/to/app
+# If packageManager field enforces pnpm 11+ and system node is v20, bypass it:
+node -e "const fs=require('fs'); const p=JSON.parse(fs.readFileSync('package.json')); delete p.packageManager; fs.writeFileSync('package.json',JSON.stringify(p,null,2));" && \
+COREPACK_ENABLE_STRICT=0 /usr/bin/pnpm install && \
+git checkout package.json   # restore original
+
+# 3. Restore glucose DB from backup
+cp /var/backups/glucose/glucose-YYYY-MM-DD.db /path/to/glucose/data/glucose.db
+
+# 4. Restart via wrapper
+pm2 restart glucose
+```
+
+### Fixed apps (June 2026)
+- `glucose` — tsx moved to dependencies; wrapper at `/usr/local/bin/start-glucose.sh`
+- `tuc-ai-lab` — wrapper at `/usr/local/bin/start-ai-lab.sh`; uses tsx from `tuc-ai-lab-catalog/node_modules`
+
+---
+
+## PATTERN 14: node_modules BINARY PERMISSIONS AFTER DEPLOY CHMOD
+
+**Problem:** `deploy.ps1` applies `find ${DEPLOY_PATH} -type f -exec chmod 644 {} \;` to normalise file permissions after copy. This strips the execute bit (`+x`) from native binaries inside `node_modules`, in particular:
+
+- `node_modules/@esbuild/linux-x64/bin/esbuild` — used by tsx at startup
+- `node_modules/.bin/*` symlink targets
+- Any other compiled native add-on
+
+**Symptom:** App starts but crashes immediately with:
+
+```text
+Error: EACCES: permission denied, spawn .../esbuild
+TransformError: The service is no longer running
+```
+
+PM2 shows 50+ restarts in under a minute. Health endpoint never responds.
+
+**Fix A (deploy.ps1 — permanent):** Exclude `node_modules` from the chmod find:
+
+```bash
+# Bad — strips execute from node_modules binaries:
+find ${DEPLOY_PATH} -type f -exec chmod 644 {} \;
+
+# Good — exclude node_modules:
+find ${DEPLOY_PATH} -not -path '${DEPLOY_PATH}/node_modules/*' -type f -exec chmod 644 {} \;
+```
+
+**Fix B (server — emergency recovery):**
+
+```bash
+DEPLOY=/var/www/vhosts/.../myapp
+find $DEPLOY/node_modules -type f \( -name 'esbuild' -o -name '*.node' \) -exec chmod +x {} \;
+find $DEPLOY/node_modules/.bin -exec chmod +x {} \; 2>/dev/null || true
+pm2 restart myapp
+```
+
+**Rule:** Always exclude `node_modules` from blanket `chmod 644` sweeps in deploy scripts. `chown -R` is safe; `chmod -R 644` on the full deploy path is not.
 
 ---
 

@@ -124,7 +124,8 @@ cp index.html "`$DEPLOY_PATH/dist/index.html" 2>/dev/null || true
 log '[7/7] Installing backend deps...'
 cp server.ts package.json pnpm-lock.yaml "`$DEPLOY_PATH/" 2>/dev/null || true
 cd "`$DEPLOY_PATH"
-pnpm install --prod --silent 2>/dev/null || npm install --omit=dev --silent
+# No --prod: tsx must be available to run server.ts (see PATTERNS.md Pattern 13)
+pnpm install --silent 2>/dev/null || npm install --silent
 
 log 'Build and deploy complete.'
 "@
@@ -177,11 +178,12 @@ Remove-Item -Path $localHtaccess -Force -ErrorAction SilentlyContinue
 
 # Step 5: Server environment
 Log -Level 'INFO' -Msg 'Step 5: Configuring server environment...' -Color Yellow
-& $SSH @SSH_OPTS $REMOTE "cp /tmp/.env.biochemai ${DEPLOY_PATH}/.env; chown -R techbridge.edu.gh_md:psaserv ${DEPLOY_PATH} 2>/dev/null || true; find ${DEPLOY_PATH} -type d -exec chmod 755 {} \; 2>/dev/null || true; find ${DEPLOY_PATH} -type f -exec chmod 644 {} \; 2>/dev/null || true"
+& $SSH @SSH_OPTS $REMOTE "cp /tmp/.env.biochemai ${DEPLOY_PATH}/.env; chown -R techbridge.edu.gh_md:psaserv ${DEPLOY_PATH} 2>/dev/null || true; find ${DEPLOY_PATH} -not -path '${DEPLOY_PATH}/node_modules/*' -type d -exec chmod 755 {} \; 2>/dev/null || true; find ${DEPLOY_PATH} -not -path '${DEPLOY_PATH}/node_modules/*' -type f -exec chmod 644 {} \; 2>/dev/null || true"
 
 # Step 6: Restart backend
 Log -Level 'INFO' -Msg 'Step 6: Restarting backend...' -Color Yellow
-$pm2Result = & $SSH @SSH_OPTS $REMOTE "if pm2 describe ${PM2_APP} > /dev/null 2>&1; then pm2 reload ${PM2_APP}; echo 'pm2: reloaded ${PM2_APP}'; else cd ${DEPLOY_PATH}; PORT=${PORT} pm2 start server.ts --name ${PM2_APP} --interpreter npx --interpreter-args tsx --cwd ${DEPLOY_PATH}; echo 'pm2: started ${PM2_APP}'; fi"
+$nvmPrefix = 'export NVM_DIR="$HOME/.nvm"; [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"; nvm use 26 >/dev/null 2>&1 || true'
+$pm2Result = & $SSH @SSH_OPTS $REMOTE "$nvmPrefix; NODE26=/root/.nvm/versions/node/v26.3.1/bin/node; TSX_ESM=${DEPLOY_PATH}/node_modules/tsx/dist/esm/index.mjs; if pm2 describe ${PM2_APP} > /dev/null 2>&1; then pm2 reload ${PM2_APP} --update-env; echo 'pm2: reloaded ${PM2_APP}'; else pm2 start ${DEPLOY_PATH}/server.ts --name ${PM2_APP} --interpreter `$NODE26 --interpreter-args `"--import `$TSX_ESM`" --cwd ${DEPLOY_PATH}; echo 'pm2: started ${PM2_APP}'; fi; pm2 save --force >/dev/null 2>&1 || true"
 Write-Host $pm2Result -ForegroundColor DarkGray
 
 # Health checks

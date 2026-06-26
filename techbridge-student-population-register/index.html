@@ -45,7 +45,14 @@
     <link rel="icon" type="image/png" href="https://techbridge.edu.gh/static/TUC_LOGO.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Techbridge STudent Population Register</title>
-  
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-FKXTELQ71R"></script>
+    <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-FKXTELQ71R');</script>
+    <!-- Font preconnect -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
     <style id="tuc-splash-styles">
       body { background-color: #0F0C07 !important; margin: 0; padding: 0; display: flex; align-items: center; justify-content: center; min-height: 100vh; font-family: serif; overflow: hidden; }
       .tuc-splash { text-align: center; border: 1px solid rgba(200,168,75,0.2); padding: 60px; background: #141210; position: relative; }
@@ -58,7 +65,7 @@
     </style>
 </head>
   <body>
-    
+
     <div id="root">
       <div class="tuc-splash">
         <span class="tuc-logo">TECHBRIDGE</span>
@@ -68,6 +75,13 @@
     </div>
 
     <script type="module" src="./src/main.tsx"></script>
+    <!-- Theme persistence -->
+    <script>
+      (function() {
+        var theme = localStorage.getItem('techbridge-student-population-register-theme') || 'dark';
+        document.documentElement.setAttribute('data-theme', theme);
+      })();
+    </script>
   </body>
 </html>
 

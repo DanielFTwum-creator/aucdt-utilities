@@ -1,17 +1,38 @@
 <!doctype html>
-<html lang="en">
+<html lang="en-GB">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="Deep Dub Vibes Player - Interactive reggae and dub music player with spinning vinyl and audio visualizer." />
     <meta name="keywords" content="music, reggae, dub, audio player, vinyl, waveform, visualizer, TUC" />
+    <meta name="author" content="Techbridge University College" />
+    <meta name="publisher" content="TUC ICT Department" />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://ai-tools.techbridge.edu.gh/deep-dub-vibes-player/" />
+    <meta name="geo.region" content="GH-AA" />
+    <meta name="geo.placename" content="Accra, Ghana" />
+    <meta name="geo.position" content="5.6037;-0.1870" />
+    <meta name="ICBM" content="5.6037, -0.1870" />
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="Deep Dub Vibes Player | Reggae & Dub Audio Experience" />
-    <meta property="og:description" content="Interactive music player with custom vinyl spinning mechanics, interactive waveform, and live frequency analyzer." />
-    <meta property="og:locale" content="en_US" />
+    <meta property="og:title" content="Deep Dub Vibes Player | Reggae &amp; Dub Audio Experience" />
+    <meta property="og:description" content="Interactive music player with custom vinyl spinning mechanics, interactive waveform, and live frequency analyser." />
+    <meta property="og:locale" content="en_GB" />
+    <meta property="og:url" content="https://ai-tools.techbridge.edu.gh/deep-dub-vibes-player/" />
+    <meta property="og:site_name" content="Techbridge University College" />
+    <meta property="og:image" content="https://techbridge.edu.gh/static/TUC_LOGO.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@TUCGhana" />
+    <meta name="twitter:creator" content="@TUCGhana" />
+    <meta name="twitter:image" content="https://techbridge.edu.gh/static/TUC_LOGO.png" />
     <meta name="theme-color" content="#FFD700" />
+    <meta name="msapplication-TileColor" content="#0f1117" />
     <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
-    <title>Deep Dub Vibes Player — Reggae & Dub Audio Experience</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet" />
+    <title>Deep Dub Vibes Player — Reggae &amp; Dub Audio Experience</title>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-FKXTELQ71R"></script>
+    <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-FKXTELQ71R');</script>
     <style id="vibes-splash-styles">
       .loading body {
         background: #050200 !important;
@@ -108,6 +129,12 @@
         <div class="vibes-loading"></div>
       </div>
     </div>
+    <script>
+      (function() {
+        var theme = localStorage.getItem('deep-dub-vibes-player-theme') || 'dark';
+        document.documentElement.setAttribute('data-theme', theme);
+      })();
+    </script>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

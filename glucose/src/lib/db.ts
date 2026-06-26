@@ -1,3 +1,12 @@
+import {
+  idbGetAllReadings,
+  idbUpsertReading,
+  idbDeleteReading,
+  idbBulkUpsert,
+  idbGetProfile,
+  idbSaveProfile,
+} from './idb';
+
 export interface AuditLogEntry {
   id: string;
   timestamp: string;
@@ -57,11 +66,20 @@ export const getAuditLog = async (): Promise<AuditLogEntry[]> => {
 };
 
 export const getAllReadings = async (): Promise<ReadingRow[]> => {
-  const res = await fetch('/api/readings');
-  if (!res.ok) return [];
-  const allReadings = await res.json();
-  console.log('[DB] getAllReadings returned', allReadings.length, 'readings');
-  return allReadings;
+  try {
+    const res = await fetch('/api/readings');
+    if (!res.ok) throw new Error(`API ${res.status}`);
+    const allReadings: ReadingRow[] = await res.json();
+    console.log('[DB] getAllReadings returned', allReadings.length, 'readings from API');
+    // Mirror to IndexedDB on every successful load (keeps backup fresh)
+    idbBulkUpsert(allReadings).catch(() => {});
+    return allReadings;
+  } catch (err) {
+    console.warn('[DB] API unreachable, falling back to IndexedDB:', err);
+    const cached = await idbGetAllReadings();
+    console.log('[DB] IndexedDB fallback returned', cached.length, 'readings');
+    return cached;
+  }
 };
 
 export const upsertReading = async (row: ReadingRow): Promise<void> => {
@@ -74,6 +92,8 @@ export const upsertReading = async (row: ReadingRow): Promise<void> => {
   if (!res.ok) {
     throw new Error('Failed to upsert reading');
   }
+  // Mirror to IndexedDB after confirmed server write
+  idbUpsertReading(row).catch(() => {});
 };
 
 export const deleteReading = async (id: string): Promise<void> => {
@@ -83,6 +103,8 @@ export const deleteReading = async (id: string): Promise<void> => {
   if (!res.ok) {
     throw new Error('Failed to delete reading');
   }
+  // Mirror deletion to IndexedDB
+  idbDeleteReading(id).catch(() => {});
 };
 
 export const batchUpsertReadings = async (rows: ReadingRow[]): Promise<void> => {
@@ -102,13 +124,22 @@ export const batchUpsertReadings = async (rows: ReadingRow[]): Promise<void> => 
     } catch (e) {}
     throw new Error(errMsg);
   }
+  // Mirror to IndexedDB after confirmed server write
+  idbBulkUpsert(rows).catch(() => {});
 };
 
 export const getProfile = async (): Promise<Profile | undefined> => {
-  const res = await fetch('/api/profile');
-  if (!res.ok) return undefined;
-  const data = await res.json();
-  return data || undefined;
+  try {
+    const res = await fetch('/api/profile');
+    if (!res.ok) throw new Error(`API ${res.status}`);
+    const data = await res.json();
+    const profile = data || undefined;
+    if (profile) idbSaveProfile(profile).catch(() => {});
+    return profile;
+  } catch (err) {
+    console.warn('[DB] Profile API unreachable, falling back to IndexedDB:', err);
+    return idbGetProfile();
+  }
 };
 
 export const saveProfile = async (data: Omit<Profile, 'updatedAt'>): Promise<void> => {
@@ -120,4 +151,6 @@ export const saveProfile = async (data: Omit<Profile, 'updatedAt'>): Promise<voi
   if (!res.ok) {
     throw new Error('Failed to save profile');
   }
+  const withTimestamp: Profile = { ...data, updatedAt: Date.now() };
+  idbSaveProfile(withTimestamp).catch(() => {});
 };

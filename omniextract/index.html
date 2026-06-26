@@ -10,18 +10,18 @@
     <meta name="description" content="Omniextract — Techbridge University College (TUC) is a premier private institution in Accra pioneering innovative and progressive higher education in design and technology." />
     <meta name="keywords" content="Techbridge University College, TUC, omniextract, design education, technology education, Accra university, Ghana university, product design, entrepreneurship" />
     <meta name="author" content="Techbridge University College" />
-    <meta name="publisher" content="Techbridge University College" />
-    <link rel="canonical" href="https://techbridge.edu.gh/" />
+    <meta name="publisher" content="TUC ICT Department" />
+    <link rel="canonical" href="https://ai-tools.techbridge.edu.gh/omniextract/" />
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
     <meta name="language" content="English" />
     <meta name="geo.region" content="GH-AA" />
-    <meta name="geo.placename" content="Accra" />
+    <meta name="geo.placename" content="Accra, Ghana" />
     <meta name="geo.position" content="5.6037;-0.1870" />
     <meta name="ICBM" content="5.6037, -0.1870" />
 
     <!-- ========== OPEN GRAPH META TAGS ========== -->
     <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://techbridge.edu.gh/" />
+    <meta property="og:url" content="https://ai-tools.techbridge.edu.gh/omniextract/" />
     <meta property="og:site_name" content="Techbridge University College" />
     <meta property="og:title" content="Omniextract | Techbridge University College" />
     <meta property="og:description" content="Omniextract — Techbridge University College (TUC) is a premier private institution in Accra pioneering innovative and progressive higher education in design and technology." />
@@ -63,6 +63,8 @@
     <!-- Fonts preconnect -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!-- Inter font -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" />
 
     <!-- PDF.js — loaded as a global so pdfUtils.ts can access window.pdfjsLib -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
@@ -78,5 +80,11 @@
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
+    <script>
+      (function() {
+        var theme = localStorage.getItem('omniextract-theme') || 'dark';
+        document.documentElement.setAttribute('data-theme', theme);
+      })();
+    </script>
   </body>
 </html>

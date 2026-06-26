@@ -1,28 +1,52 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en-GB">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Patois Lyricist v2.0.0 | AI-Powered Reggae Songwriter</title>
     <meta name="description" content="Craft authentic Jamaican Patois reggae lyrics in seconds. Choose from curated DJ personas and generate studio-quality, culture-forward lyrics based on your theme." />
-    
+    <meta name="author" content="Techbridge University College" />
+    <meta name="publisher" content="TUC ICT Department" />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://ai-tools.techbridge.edu.gh/patois-lyricist/" />
+
+    <!-- Geographic Meta -->
+    <meta name="geo.region" content="GH-AA" />
+    <meta name="geo.placename" content="Accra, Ghana" />
+    <meta name="geo.position" content="5.6037;-0.1870" />
+    <meta name="ICBM" content="5.6037, -0.1870" />
+
+    <!-- Theme Colours -->
+    <meta name="theme-color" content="#ffb300" />
+    <meta name="msapplication-TileColor" content="#ffb300" />
+
     <!-- PWA -->
     <link rel="manifest" href="./manifest.json" />
     <link rel="apple-touch-icon" href="./icon-192.png" />
-    
+
     <!-- Open Graph Tags -->
     <meta property="og:title" content="Patois Lyricist v2.0.0" />
     <meta property="og:description" content="Your AI-powered bridge to authentic Jamaican Patois reggae lyricism." />
     <meta property="og:type" content="website" />
     <meta property="og:image" content="./assets/og-image.png" />
-    
+    <meta property="og:url" content="https://ai-tools.techbridge.edu.gh/patois-lyricist/" />
+    <meta property="og:site_name" content="Techbridge University College" />
+    <meta property="og:locale" content="en_GB" />
+
     <!-- Twitter Tags -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="Patois Lyricist v2.0.0" />
     <meta name="twitter:description" content="Craft authentic Jamaican Patois reggae lyrics in seconds." />
+    <meta name="twitter:site" content="@TUCGhana" />
+    <meta name="twitter:creator" content="@TUCGhana" />
+    <meta name="twitter:image" content="https://techbridge.edu.gh/static/TUC_LOGO.png" />
 
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-FKXTELQ71R"></script>
+    <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-FKXTELQ71R');</script>
 
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -84,7 +108,7 @@
         transition: background-color 0.3s, color 0.3s;
       }
       .app-background {
-        background-image: linear-gradient(45deg, rgba(0,0,0,0.2) 25%, transparent 25%, transparent 75%, rgba(0,0,0,0.2) 75%, rgba(0,0,0,0.2)), 
+        background-image: linear-gradient(45deg, rgba(0,0,0,0.2) 25%, transparent 25%, transparent 75%, rgba(0,0,0,0.2) 75%, rgba(0,0,0,0.2)),
                           linear-gradient(45deg, rgba(0,0,0,0.2) 25%, transparent 25%, transparent 75%, rgba(0,0,0,0.2) 75%, rgba(0,0,0,0.2));
         background-size: 60px 60px;
         background-position: 0 0, 30px 30px;
@@ -99,7 +123,7 @@
         background: linear-gradient(to right, #009B48, #FCD116, #CE1126);
         height: 8px;
       }
-      
+
       .bg-card { background-color: var(--bg-card); }
       .border-primary { border-color: var(--border-primary); }
       .bg-input { background-color: var(--bg-input); }
@@ -112,13 +136,13 @@
       .login-background::before { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: radial-gradient(circle at 20% 50%, rgba(255, 215, 0, 0.05) 0%, transparent 50%), radial-gradient(circle at 80% 50%, rgba(34, 139, 34, 0.05) 0%, transparent 50%); animation: pulse 8s ease-in-out infinite; }
       .login-container { position: relative; z-index: 1; width: 100%; max-width: 480px; padding: 20px; }
       .login-header { text-align: center; margin-bottom: 20px; animation: fadeInDown 0.8s ease-out; }
-      
-      .login-logo { 
-        font-size: 3.5rem; 
-        font-weight: 900; 
-        font-family: 'Rokkitt', serif; 
+
+      .login-logo {
+        font-size: 3.5rem;
+        font-weight: 900;
+        font-family: 'Rokkitt', serif;
         display: inline-block;
-        background: 
+        background:
           repeating-linear-gradient(90deg, transparent 0px, transparent 4px, #1a1a1a 4px, #1a1a1a 6px),
           repeating-linear-gradient(0deg, transparent 0px, transparent 2px, rgba(26, 26, 26, 0.4) 2px, rgba(26, 26, 26, 0.4) 4px),
           linear-gradient(to bottom, #CE1126 0%, #FCD116 50%, #009B48 100%);
@@ -131,27 +155,27 @@
         animation: eq-pulse 0.5s ease-in-out infinite alternate, eq-color-flow 4s linear infinite;
         text-shadow: 0 0 30px rgba(255, 215, 0, 0.2);
       }
-      
+
       @keyframes eq-pulse {
         0% { filter: brightness(1) contrast(1.1); transform: scale(1); }
         100% { filter: brightness(1.4) contrast(1.3); transform: scale(1.02); }
       }
-      
+
       @keyframes eq-color-flow {
         0% { background-position: 0 0, 0 0, 0 0%; }
         100% { background-position: 0 0, 0 0, 0 100%; }
       }
-      
-      .login-subtitle { 
-        color: #4ade80; 
-        font-size: 1.1rem; 
-        font-weight: 500; 
-        letter-spacing: 1px; 
-        animation: fadeIn 1s ease-out 0.3s both, subtitlePulse 4s ease-in-out infinite; 
+
+      .login-subtitle {
+        color: #4ade80;
+        font-size: 1.1rem;
+        font-weight: 500;
+        letter-spacing: 1px;
+        animation: fadeIn 1s ease-out 0.3s both, subtitlePulse 4s ease-in-out infinite;
         text-shadow: 0 0 10px rgba(74, 222, 128, 0.2);
         display: inline-block;
       }
-      
+
       @keyframes subtitlePulse {
         0%, 100% { letter-spacing: 1px; opacity: 0.8; text-shadow: 0 0 10px rgba(74, 222, 128, 0.2); transform: scale(1); }
         50% { letter-spacing: 3px; opacity: 1; text-shadow: 0 0 20px rgba(74, 222, 128, 0.6); transform: scale(1.02); }
@@ -169,7 +193,7 @@
         background: rgba(0, 0, 0, 0.4);
         border-radius: 16px;
         border: 1px solid rgba(255, 215, 0, 0.15);
-        box-shadow: 
+        box-shadow:
           0 8px 32px rgba(0, 0, 0, 0.4),
           inset 0 1px 10px rgba(255, 215, 0, 0.05);
         backdrop-filter: blur(8px);
@@ -450,6 +474,12 @@
           bar.style.cssText = '--lo:' + LO[i] + 'px;--hi:' + HI[i] + 'px;--dur:' + DUR[i] + 's;animation-delay:' + (i * 0.04) + 's';
           eq.appendChild(bar);
         }
+      })();
+    </script>
+    <script>
+      (function() {
+        var theme = localStorage.getItem('patois-lyricist-v2-0-0-theme') || 'dark';
+        document.documentElement.setAttribute('data-theme', theme);
       })();
     </script>
     <script type="module" src="./index.tsx"></script>

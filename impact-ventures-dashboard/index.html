@@ -8,18 +8,18 @@
     <meta name="description" content="Techbridge University College (TUC) is a premier private institution in Accra pioneering innovative and progressive higher education in design and entrepreneurship." />
     <meta name="keywords" content="Techbridge University College, TUC, design education, technology education, Accra university, Ghana university, product design, entrepreneurship, private university Ghana, design school" />
     <meta name="author" content="Techbridge University College" />
-    <meta name="publisher" content="Techbridge University College" />
-    <link rel="canonical" href="https://www.techbridge.edu.gh/" />
+    <meta name="publisher" content="TUC ICT Department" />
+    <link rel="canonical" href="https://ai-tools.techbridge.edu.gh/impact-ventures/" />
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
     <!-- Geographic -->
     <meta name="language" content="English" />
     <meta name="geo.region" content="GH-AA" />
-    <meta name="geo.placename" content="Accra" />
+    <meta name="geo.placename" content="Accra, Ghana" />
     <meta name="geo.position" content="5.6037;-0.1870" />
     <meta name="ICBM" content="5.6037, -0.1870" />
     <!-- Open Graph -->
     <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://www.techbridge.edu.gh/" />
+    <meta property="og:url" content="https://ai-tools.techbridge.edu.gh/impact-ventures/" />
     <meta property="og:site_name" content="Techbridge University College" />
     <meta property="og:title" content="Impact Ventures Dashboard | Techbridge University College" />
     <meta property="og:description" content="Techbridge University College (TUC) is a premier private institution in Accra pioneering innovative and progressive higher education in design and entrepreneurship." />
@@ -191,45 +191,43 @@
         margin-top: 25px;
         height: 3px;
         width: 130px;
-        background: rgba(37, 99, 235, 0.1);
+        background: #e4e4e7;
+        border-radius: 99px;
+        overflow: hidden;
         margin-left: auto;
         margin-right: auto;
-        position: relative;
-        overflow: hidden;
-        border-radius: 3px;
       }
-      .ventures-loading::after {
-        content: "";
-        position: absolute;
-        left: -100%;
-        width: 50%;
+      .ventures-loading-bar {
         height: 100%;
-        background: #2563eb;
-        border-radius: 3px;
-        animation: ventures-load 1.5s infinite ease-in-out;
+        width: 40%;
+        background: linear-gradient(90deg, #2563eb, #3b82f6);
+        border-radius: 99px;
+        animation: ventures-loading-anim 1.2s ease-in-out infinite;
       }
-      @keyframes ventures-load {
-        0% { left: -100%; }
-        100% { left: 150%; }
+      @keyframes ventures-loading-anim {
+        0% { transform: translateX(-100%); }
+        100% { transform: translateX(350%); }
       }
     </style>
   </head>
-  <body class="antialiased">
-    <script>
-      (function() {
-        const theme = localStorage.getItem('impact-ventures-theme') || 'dark';
-        document.documentElement.setAttribute('data-theme', theme);
-      })();
-    </script>
+  <body>
     <div id="root">
       <div class="ventures-splash-container">
         <div class="ventures-splash">
-          <span class="ventures-logo">Impact <span>Ventures</span></span>
-          <div class="ventures-status">Venture Intelligence</div>
-          <div class="ventures-loading"></div>
+          <span class="ventures-logo">Impact<span>Ventures</span></span>
+          <div class="ventures-status">Loading dashboard&hellip;</div>
+          <div class="ventures-loading">
+            <div class="ventures-loading-bar"></div>
+          </div>
         </div>
       </div>
     </div>
     <script type="module" src="/src/main.tsx"></script>
+    <script>
+      (function() {
+        var theme = localStorage.getItem('impact-ventures-dashboard-theme') || 'dark';
+        document.documentElement.setAttribute('data-theme', theme);
+      })();
+    </script>
   </body>
 </html>

@@ -4,20 +4,42 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    
+
     <!-- SEO Meta Tags -->
     <meta name="description" content="Interactive chronicle reader and drafting workshop platform for the 'Deliberate Magic' tech philosophy chronicles. Explore systems metaphors, metabolic compute, and software design." />
     <meta name="keywords" content="Deliberate Magic, Tech Philosophy, Software Systems Metaphors, Essay Reader, TUC, Google AI Studio" />
     <meta name="author" content="Techbridge University College" />
-    <meta name="publisher" content="TUC ICT Operations" />
+    <meta name="publisher" content="TUC ICT Department" />
     <meta name="robots" content="index, follow" />
-    
+    <meta name="theme-color" content="#6c63ff" />
+    <meta name="msapplication-TileColor" content="#6c63ff" />
+
+    <!-- Canonical -->
+    <link rel="canonical" href="https://ai-tools.techbridge.edu.gh/deliberate-magic-reader/" />
+
+    <!-- Geographic Meta -->
+    <meta name="geo.region" content="GH-AA" />
+    <meta name="geo.placename" content="Accra, Ghana" />
+    <meta name="geo.position" content="5.6037;-0.1870" />
+    <meta name="ICBM" content="5.6037, -0.1870" />
+
     <!-- Open Graph Tags -->
     <meta property="og:type" content="website" />
     <meta property="og:title" content="Deliberate Magic | Essay Reader & Drafting Workshop" />
     <meta property="og:description" content="Dive into the tech philosophy essay chronicles. Experience an interactive drafting workshop, telemetry graphs, and terminal diagnostics." />
     <meta property="og:locale" content="en_GB" />
-    
+    <meta property="og:url" content="https://ai-tools.techbridge.edu.gh/deliberate-magic-reader/" />
+    <meta property="og:site_name" content="Techbridge University College" />
+    <meta property="og:image" content="https://techbridge.edu.gh/static/TUC_LOGO.png" />
+
+    <!-- Twitter Card Tags -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@TUCGhana" />
+    <meta name="twitter:creator" content="@TUCGhana" />
+    <meta name="twitter:image" content="https://techbridge.edu.gh/static/TUC_LOGO.png" />
+    <meta name="twitter:title" content="Deliberate Magic | Essay Reader & Drafting Workshop" />
+    <meta name="twitter:description" content="Dive into the tech philosophy essay chronicles. Experience an interactive drafting workshop, telemetry graphs, and terminal diagnostics." />
+
     <title>Deliberate Magic | Essay Reader & Drafting Workshop</title>
 
     <!-- Google Fonts: Inter & JetBrains Mono -->
@@ -27,6 +49,10 @@
 
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-FKXTELQ71R"></script>
+    <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-FKXTELQ71R');</script>
 
     <style>
       body {
@@ -71,78 +97,78 @@
         justify-content: center;
         min-height: 100vh;
       }
-      .magic-splash { 
-        text-align: center; 
-        border: 1px solid rgba(148, 163, 184, 0.1); 
-        padding: 60px 80px; 
-        background: rgba(15, 23, 42, 0.75); 
+      .magic-splash {
+        text-align: center;
+        border: 1px solid rgba(148, 163, 184, 0.1);
+        padding: 60px 80px;
+        background: rgba(15, 23, 42, 0.75);
         backdrop-filter: blur(16px);
         -webkit-backdrop-filter: blur(16px);
         border-radius: 24px;
         box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-        position: relative; 
+        position: relative;
       }
-      .magic-splash::before { 
-        content: ""; 
-        position: absolute; 
-        top: 0; 
-        left: 0; 
-        width: 100%; 
-        height: 4px; 
-        background: linear-gradient(90deg, #6366f1, #a855f7, #6366f1); 
+      .magic-splash::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 4px;
+        background: linear-gradient(90deg, #6366f1, #a855f7, #6366f1);
         border-top-left-radius: 24px;
         border-top-right-radius: 24px;
       }
-      .magic-logo { 
-        color: #f8fafc; 
-        font-size: 2.5rem; 
-        font-weight: 800; 
-        letter-spacing: -0.025em; 
-        margin-bottom: 8px; 
-        display: block; 
+      .magic-logo {
+        color: #f8fafc;
+        font-size: 2.5rem;
+        font-weight: 800;
+        letter-spacing: -0.025em;
+        margin-bottom: 8px;
+        display: block;
       }
       .magic-logo span {
         color: #818cf8;
         font-family: 'JetBrains Mono', monospace;
       }
-      .magic-status { 
-        color: #94a3b8; 
-        text-transform: uppercase; 
-        letter-spacing: 0.4em; 
-        font-size: 0.75rem; 
+      .magic-status {
+        color: #94a3b8;
+        text-transform: uppercase;
+        letter-spacing: 0.4em;
+        font-size: 0.75rem;
         font-weight: 600;
-        opacity: 0.8; 
+        opacity: 0.8;
       }
-      .magic-loading { 
-        margin-top: 30px; 
-        height: 2px; 
-        width: 160px; 
-        background: rgba(99, 102, 241, 0.1); 
-        margin-left: auto; 
-        margin-right: auto; 
-        position: relative; 
-        overflow: hidden; 
+      .magic-loading {
+        margin-top: 30px;
+        height: 2px;
+        width: 160px;
+        background: rgba(99, 102, 241, 0.1);
+        margin-left: auto;
+        margin-right: auto;
+        position: relative;
+        overflow: hidden;
         border-radius: 2px;
       }
-      .magic-loading::after { 
-        content: ""; 
-        position: absolute; 
-        left: -100%; 
-        width: 50%; 
-        height: 100%; 
-        background: linear-gradient(90deg, #6366f1, #a855f7); 
-        animation: magic-load 1.8s infinite cubic-bezier(0.4, 0, 0.2, 1); 
+      .magic-loading::after {
+        content: "";
+        position: absolute;
+        left: -100%;
+        width: 50%;
+        height: 100%;
+        background: linear-gradient(90deg, #6366f1, #a855f7);
+        animation: magic-load 1.8s infinite cubic-bezier(0.4, 0, 0.2, 1);
       }
-      @keyframes magic-load { 
-        0% { left: -100%; } 
-        100% { left: 150%; } 
+      @keyframes magic-load {
+        0% { left: -100%; }
+        100% { left: 150%; }
       }
     </style>
 </head>
 <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <a href="#main-content" class="skip-to-main">Skip to main content</a>
-    
+
     <div id="root">
       <div class="magic-splash-container">
         <div class="magic-splash">
@@ -154,5 +180,13 @@
     </div>
 
     <script type="module" src="/src/main.tsx"></script>
+
+    <!-- Theme Persistence -->
+    <script>
+      (function() {
+        var theme = localStorage.getItem('deliberate-magic-reader-theme') || 'dark';
+        document.documentElement.setAttribute('data-theme', theme);
+      })();
+    </script>
 </body>
 </html>
