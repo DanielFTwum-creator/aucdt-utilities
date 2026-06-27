@@ -926,12 +926,22 @@ if (errorMessage.includes('API_KEY_INVALID') || errorMessage.includes('INVALID_A
 | `GEMINI_PROXY_KEY` | PM2 shell-level var + `.env.local` | Authenticates with WMS proxy |
 | `GEMINI_API_KEY` | `.env.local` (dev only) | Local fallback when WMS unavailable |
 
-### Status (June 2026)
+### Status (verified 2026-06-27)
 
-`GEMINI_PROXY_KEY` is not yet activated fleet-wide. Current production apps use the `GEMINI_API_KEY` fallback path. When `GEMINI_PROXY_KEY` is set fleet-wide, the WMS relay activates automatically.
+**The WMS relay is LIVE and activated.** `/opt/tuc-wms/.env` on the server has both
+`GEMINI_API_KEY` (central key) and `GEMINI_PROXY_KEY` (64-char service credential) set;
+`GET https://wms.techbridge.edu.gh/api/gemini/health` returns `{"ready":true}` and a
+`POST /api/gemini/generate` round-trip succeeds. Apps that present the matching
+`GEMINI_PROXY_KEY` can use the relay now (no client-side key needed).
 
-Migrated: `english-safari`, `glucose`  
-Reference: `dmcdai` (JS implementation)  
+- **Central key custody:** the single Gemini key lives ONLY in `/opt/tuc-wms/.env`.
+  Rotate fleet-wide by editing `GEMINI_API_KEY` there + `systemctl restart tuc-wms`.
+- **Two consumption modes:** `GET /api/gemini/key` (app fetches + caches the key, then
+  calls Gemini itself — the documented impl above) or `POST /api/gemini/generate` (WMS
+  relays the call; the app never receives the key — strongest custody).
+
+Migrated: `english-safari`, `glucose`, `bridge-radio`  
+Reference: `dmcdai` (JS, `/key`) · OmniExtract (`/generate` relay)  
 Old pattern (do not copy): `biochemai` — direct key, fatal startup check
 
 ---
