@@ -166,6 +166,20 @@ ls -la dist/
 
 ## Apache Configuration
 
+> **⚠️ Production reality (Plesk on 66.226.72.199).** The live `rms.techbridge.edu.gh`
+> vhost is Plesk-managed: `httpd.conf` is auto-generated and must NOT be edited.
+> Custom Apache directives — including the SPA fallback and the `/api` reverse proxy —
+> live in the version-controlled **[`vhost_ssl.conf`](./vhost_ssl.conf)** (deployed to
+> `/var/www/vhosts/system/rms.techbridge.edu.gh/conf/vhost_ssl.conf`, applied with
+> `plesk sbin httpdmng --reconfigure-domain rms.techbridge.edu.gh`).
+>
+> **Two non-obvious rules that previously caused a full outage** (see fleet `PATTERNS.md` #15):
+> at *VirtualHost* context the SPA fallback must use `%{DOCUMENT_ROOT}%{REQUEST_URI}`
+> (NOT `%{REQUEST_FILENAME}`, which is unmapped there and rewrites real assets to
+> `index.html` → `text/html` MIME errors); and `ProxyPass` must target `[::1]:5000`
+> because the Node backend binds IPv6 loopback only. The generic example below is for a
+> standalone Apache host — on Plesk, use `vhost_ssl.conf`.
+
 ### Enable Required Modules
 
 ```bash
