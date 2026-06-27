@@ -17,7 +17,7 @@
 | 3001 | peace-vinyl                      | peace-vinyl                                   | Online              |
 | 3002 | biochemai                        | biochemai                                     | Online              |
 | 3003 | tuc-ai-lab                       | tuc-ai-lab-catalog                            | Online              |
-| 3004 | groove-streamer                  | groove-streamer                               | Online              |
+| 3046 | groove-streamer                  | groove-streamer                               | Online              |
 | 3005 | tb-ai-blueprint                  | techbridge-ai-blueprint                       | Online              |
 | 3006 | glucose                          | glucose                                       | Online              |
 | 3007 | ai-email-drafter                 | ai-email-drafter                              | Online              |
@@ -34,7 +34,7 @@
 | 3018 | youtube-genie                    | enhanced-youtube-genie                        | Online              |
 | 3019 | playgrow                         | playgrow-smart-fun-for-bright-minds           | Online              |
 | 3020 | stockpulse-backend               | stockpulse                                    | Online              |
-| 3021 | —                                | —                                             | Available           |
+| 3021 | bridge-radio                     | bridge-radio                                  | Reserved (deploy pending) |
 | 3022 | techbridge-media-club-platform   | techbridge-media-club-platform                | Not deployed        |
 | 3023 | techbridge-strategy-dashboard    | techbridge-strategy-dashboard                 | Not deployed        |
 | 3024 | techbridge-technical-quiz-platform | techbridge-technical-quiz-platform          | Online              |

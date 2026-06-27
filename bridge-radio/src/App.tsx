@@ -28,7 +28,6 @@ import {
   MessageSquare
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
-import { GoogleGenAI } from "@google/genai";
 import { Track, Genre, HistoryItem } from './types';
 
 const GENRES: Genre[] = [
@@ -292,27 +291,25 @@ export default function App() {
   }, [tracks]);
 
   const fetchLyrics = async (trackName: string, genreLabel: string) => {
-    if (!process.env.GEMINI_API_KEY) {
-      setLyrics("AI Services Unavailable (Missing API Key)");
-      return;
-    }
-
     setIsFetchingLyrics(true);
     setLyrics(null);
-    
-    try {
-      const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
-      const response = await ai.models.generateContent({
-        model: "gemini-3-flash-preview",
-        contents: `Find or generate poetic lyrics for a track titled "${trackName}" in the ${genreLabel} music genre. Format with line breaks. If no suitable lyrics can be found or imagined for this specific track title and mood, simply respond with "Lyrics not found".`,
-      });
 
-      const text = response.text;
-      if (text && text.trim().toLowerCase() !== "lyrics not found") {
-        setLyrics(text);
-      } else {
-        setLyrics("Lyrics not found");
+    try {
+      // Lyrics are generated server-side (/api/lyrics) so the Gemini key never
+      // reaches the browser. See server.ts + PATTERNS.md #11.
+      const res = await fetch(
+        `/api/lyrics?track=${encodeURIComponent(trackName)}&genre=${encodeURIComponent(genreLabel)}`
+      );
+      if (res.status === 503) {
+        setLyrics("AI Services Unavailable");
+        return;
       }
+      if (!res.ok) {
+        setLyrics("Lyrics not found (Service Error)");
+        return;
+      }
+      const data = (await res.json()) as { lyrics: string | null };
+      setLyrics(data.lyrics ?? "Lyrics not found");
     } catch (e) {
       console.error("Error fetching lyrics:", e);
       setLyrics("Lyrics not found (Service Error)");

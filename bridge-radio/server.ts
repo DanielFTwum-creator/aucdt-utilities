@@ -3,14 +3,74 @@ import { createServer as createViteServer } from "vite";
 import path from "path";
 import { fileURLToPath } from "url";
 import fetch from "node-fetch";
+import { GoogleGenAI } from "@google/genai";
 import "dotenv/config";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+// ── Gemini key custody via WMS proxy (PATTERNS.md #11) ──────────────────────
+// The key is NEVER sent to the browser. The client calls /api/lyrics and this
+// server resolves the key at runtime (WMS proxy, with a local dev fallback).
+const WMS_KEY_URL = "https://wms.techbridge.edu.gh/api/gemini/key";
+const KEY_TTL_MS = 6 * 60 * 60 * 1000; // 6 hours
+let cachedGeminiKey: string | null = null;
+let keyFetchedAt = 0;
+
+function invalidateGeminiKey() { cachedGeminiKey = null; keyFetchedAt = 0; }
+
+async function getGeminiKey(): Promise<string> {
+  if (cachedGeminiKey && Date.now() - keyFetchedAt < KEY_TTL_MS) return cachedGeminiKey;
+  const proxyKey = process.env.GEMINI_PROXY_KEY;
+  if (!proxyKey) {
+    // Local dev fallback only — production must set GEMINI_PROXY_KEY via WMS.
+    const local = process.env.GEMINI_API_KEY || process.env.VITE_GEMINI_API_KEY;
+    if (local) return local;
+    throw new Error("GEMINI_PROXY_KEY is not set (and no local key fallback).");
+  }
+  const r = await fetch(WMS_KEY_URL, { headers: { "X-Gemini-Proxy-Key": proxyKey } });
+  if (!r.ok) throw new Error(`WMS key fetch failed: ${r.status} ${await r.text()}`);
+  cachedGeminiKey = ((await r.json()) as { apiKey: string }).apiKey;
+  keyFetchedAt = Date.now();
+  return cachedGeminiKey!;
+}
+
+if (!process.env.GEMINI_PROXY_KEY) {
+  console.warn("[bridge-radio] WARNING: GEMINI_PROXY_KEY not set — /api/lyrics will use local fallback or return 503");
+}
+
 async function startServer() {
   const app = express();
-  const PORT = 3000;
+  const PORT = Number(process.env.PORT) || 3021;
+
+  // AI lyrics — server-side so the Gemini key never reaches the browser.
+  app.get("/api/lyrics", async (req, res) => {
+    const track = (req.query.track as string || "").trim();
+    const genre = (req.query.genre as string || "").trim();
+    if (!track) return res.status(400).json({ error: "track parameter is required" });
+
+    const geminiKey = await getGeminiKey().catch((err: any) => {
+      console.error("[bridge-radio] Gemini key fetch failed:", err.message);
+      return null;
+    });
+    if (!geminiKey) return res.status(503).json({ error: "AI service temporarily unavailable" });
+
+    try {
+      const ai = new GoogleGenAI({ apiKey: geminiKey });
+      const response = await ai.models.generateContent({
+        model: "gemini-3-flash-preview",
+        contents: `Find or generate poetic lyrics for a track titled "${track}" in the ${genre || "instrumental"} music genre. Format with line breaks. If no suitable lyrics can be found or imagined for this specific track title and mood, simply respond with "Lyrics not found".`,
+      });
+      const text = (response.text || "").trim();
+      const found = text && text.toLowerCase() !== "lyrics not found";
+      return res.json({ lyrics: found ? text : null });
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : String(e);
+      console.error("[bridge-radio] lyrics generation error:", msg);
+      if (msg.includes("API_KEY_INVALID") || msg.includes("INVALID_ARGUMENT")) invalidateGeminiKey();
+      return res.status(502).json({ error: "Lyrics generation failed" });
+    }
+  });
 
   // Proxy route to bypass CORS
   app.get("/api/proxy", async (req, res) => {
