@@ -1,0 +1,5 @@
+{
+  "name": "Bridge Radio",
+  "description": "A high-performance cinematic music player for TechBridge, featuring HLS streaming, real-time audio visualization, and AI-powered lyrics.",
+  "requestFramePermissions": []
+}

@@ -1,0 +1,43 @@
+<svg width="800" height="600" xmlns="http://www.w3.org/2000/svg">
+  <rect width="800" height="600" fill="#0a0a0a" />
+  
+  <text x="400" y="50" fill="#e8ff3c" font-family="Arial" font-size="24" text-anchor="middle" font-weight="bold">HLS DATA ARCHITECTURE</text>
+
+  <!-- Multivariant Playlist -->
+  <rect x="50" y="100" width="200" height="150" rx="5" fill="#1a1a1a" stroke="#e8ff3c" stroke-width="2" />
+  <text x="150" y="130" fill="white" font-family="Arial" font-size="14" text-anchor="middle" font-weight="bold">Master Playlist</text>
+  <text x="150" y="160" fill="#ffffff88" font-family="Arial" font-size="10" text-anchor="middle">#EXT-X-STREAM-INF</text>
+  <text x="150" y="180" fill="#ffffff88" font-family="Arial" font-size="10" text-anchor="middle">BANDWIDTH=...</text>
+  <text x="150" y="200" fill="#ffffff88" font-family="Arial" font-size="10" text-anchor="middle">CODECS=...</text>
+
+  <!-- Media Playlists -->
+  <rect x="300" y="100" width="200" height="150" rx="5" fill="#1a1a1a" stroke="#a855f7" stroke-width="2" />
+  <text x="400" y="130" fill="white" font-family="Arial" font-size="14" text-anchor="middle" font-weight="bold">Media Playlist (High)</text>
+  <text x="400" y="160" fill="#ffffff88" font-family="Arial" font-size="10" text-anchor="middle">#EXTINF:10.0</text>
+  <text x="400" y="180" fill="#ffffff88" font-family="Arial" font-size="10" text-anchor="middle">segment_01_hi.ts</text>
+
+  <rect x="300" y="300" width="200" height="150" rx="5" fill="#1a1a1a" stroke="#ff6b35" stroke-width="2" />
+  <text x="400" y="330" fill="white" font-family="Arial" font-size="14" text-anchor="middle" font-weight="bold">Media Playlist (Low)</text>
+  <text x="400" y="360" fill="#ffffff88" font-family="Arial" font-size="10" text-anchor="middle">#EXTINF:10.0</text>
+  <text x="400" y="380" fill="#ffffff88" font-family="Arial" font-size="10" text-anchor="middle">segment_01_lo.ts</text>
+
+  <!-- Segments -->
+  <rect x="550" y="100" width="200" height="350" rx="5" fill="#1a1a1a" stroke="#ffffff33" stroke-width="2" />
+  <text x="650" y="130" fill="white" font-family="Arial" font-size="14" text-anchor="middle" font-weight="bold">TS Segments</text>
+  <circle cx="650" cy="180" r="20" fill="#2a2a2a" stroke="#ffffff44" />
+  <circle cx="650" cy="240" r="20" fill="#2a2a2a" stroke="#ffffff44" />
+  <circle cx="650" cy="300" r="20" fill="#2a2a2a" stroke="#ffffff44" />
+  <text x="650" y="360" fill="#ffffff44" font-family="Arial" font-size="10" text-anchor="middle">MPEG-2 Transport Stream</text>
+
+  <!-- Arrows -->
+  <path d="M 250 175 L 300 175" stroke="white" stroke-width="1" fill="none" marker-end="url(#arrow)" />
+  <path d="M 250 175 L 300 375" stroke="white" stroke-width="1" fill="none" marker-end="url(#arrow)" />
+  <path d="M 500 175 L 550 175" stroke="white" stroke-width="1" fill="none" marker-end="url(#arrow)" />
+  <path d="M 500 375 L 550 375" stroke="white" stroke-width="1" fill="none" marker-end="url(#arrow)" />
+
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="white" />
+    </marker>
+  </defs>
+</svg>

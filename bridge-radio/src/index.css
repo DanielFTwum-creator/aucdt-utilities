@@ -1,0 +1,81 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Space+Grotesk:wght@300..700&family=Space+Mono:wght@400;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Bebas Neue", sans-serif;
+  --font-serif: "Playfair Display", serif;
+  --font-mono: "Space Mono", monospace;
+  
+  --color-accent: #e8ff3c;
+  --color-accent-secondary: #ff6b35;
+  --color-surface: rgba(10, 10, 10, 0.82);
+  --color-surface-muted: rgba(255, 255, 255, 0.07);
+}
+
+@layer base {
+  :root {
+    --bg-primary: #0a0a0a;
+    --text-primary: #f0f0f0;
+    --text-muted: rgba(240, 240, 240, 0.5);
+    --glass-bg: rgba(0, 0, 0, 0.8);
+    --glass-border: rgba(255, 255, 255, 0.1);
+  }
+
+  :root[data-theme='light'] {
+    --bg-primary: #f5f5f5;
+    --text-primary: #1a1a1a;
+    --text-muted: rgba(26, 26, 26, 0.6);
+    --glass-bg: rgba(255, 255, 255, 0.8);
+    --glass-border: rgba(0, 0, 0, 0.1);
+  }
+
+  :root[data-theme='high-contrast'] {
+    --bg-primary: #000000;
+    --text-primary: #ffffff;
+    --text-muted: #cccccc;
+    --glass-bg: #000000;
+    --glass-border: #ffffff;
+    --color-accent: #ffff00;
+  }
+
+  body {
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    @apply font-sans transition-colors duration-300 overflow-x-hidden;
+  }
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.animate-spin-slow {
+  animation: spin 4s linear infinite;
+}
+
+.glass-morphism {
+  backdrop-filter: blur(20px);
+  background-color: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+}
+
+.text-muted {
+  color: var(--text-muted);
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-primary);
+}
+::-webkit-scrollbar-thumb {
+  background: #333;
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #444;
+}
