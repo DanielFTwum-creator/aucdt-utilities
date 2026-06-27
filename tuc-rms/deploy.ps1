@@ -132,8 +132,33 @@ $apiProxy  RewriteRule ^ ${base}index.html [QSA,L]
 Log "INFO" "Step 5: Setting permissions..." Yellow
 ssh -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax=3 $RemoteHost "chown -R techbridge.edu.gh_md:psaserv $RemotePath && chmod -R 755 $RemotePath && chmod 644 ${RemotePath}.htaccess 2>/dev/null; true" | Out-Null
 
-Log "INFO" "Health check..." Yellow
-ssh -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax=3 $RemoteHost "test -f ${RemotePath}index.html && echo 'OK index.html present' || echo 'MISSING index.html'"
+Log "INFO" "Health check (asset/HTML sync — see PATTERNS.md #15)..." Yellow
+# Guard against the `text/html` MIME trap: assert that every hashed bundle the
+# deployed index.html references actually exists on disk. A missing asset makes
+# the SPA fallback serve index.html in its place (Content-Type text/html), which
+# the browser rejects under strict module MIME checking. Checking index.html
+# existence alone is NOT enough — that always passed even when the site was broken.
+$healthScript = @"
+set -e
+cd '$RemotePath' || { echo '[FAIL] docroot missing'; exit 2; }
+[ -f index.html ] || { echo '[FAIL] index.html missing'; exit 2; }
+refs=`$(grep -oE 'assets/[A-Za-z0-9_.-]+\.(js|css)' index.html | sort -u)
+[ -n "`$refs" ] || { echo '[WARN] no /assets refs found in index.html (non-hashed build?)'; exit 0; }
+missing=0
+for r in `$refs; do
+  if [ -f "`$r" ]; then echo "  OK  `$r"; else echo "  MISSING  `$r"; missing=1; fi
+done
+if [ `$missing -ne 0 ]; then
+  echo '[FAIL] index.html references bundles not present on disk — asset/HTML out of sync.'
+  echo '       Re-run with -Build, or rsync dist/. atomically to the docroot.'
+  exit 3
+fi
+echo '[OK] index.html and all referenced assets present and in sync.'
+"@
+$hb64 = [Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes($healthScript.Replace("`r", "")))
+ssh -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax=3 $RemoteHost "echo $hb64 | base64 -d | bash"
+if ($LASTEXITCODE -ne 0) { Log "ERROR" "Asset/HTML sync check FAILED (exit $LASTEXITCODE) — site will throw the text/html MIME error. Not reporting success." Red; exit $LASTEXITCODE }
+Log "SUCCESS" "Asset/HTML sync verified" Green
 
 $elapsed = [math]::Round(((Get-Date) - $__deployStart).TotalSeconds, 1)
 $timeStr = if ($elapsed -ge 60) { "$([math]::Floor($elapsed/60))m $([math]::Round($elapsed%60,1))s" } else { "${elapsed}s" }
