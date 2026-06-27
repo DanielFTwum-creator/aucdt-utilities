@@ -13,7 +13,7 @@
 | App name | Bridge Radio (HLS music radio) |
 | Origin | Built in **Google AI Studio** (Gemini); source captured into this repo 2026-06-27 |
 | PM2 process | `bridge-radio` — runs the Express/tsx backend (proxy + AI lyrics) |
-| Backend port | **3021** (see root `SERVER_PORTS.md`) |
+| Backend port | **3032** (see root `SERVER_PORTS.md`) |
 | Frontend URL | `https://radio.techbridge.edu.gh/` (Plesk **root vhost**) |
 | Deploy path | `/var/www/vhosts/techbridge.edu.gh/radio/` |
 | Stack | React 19 + Vite 6 + TypeScript · hls.js · Tailwind 4 · Express (tsx) |
@@ -42,7 +42,7 @@
    (not `%{REQUEST_FILENAME}`). Canonical copy: [`docs/vhost_ssl.conf`](./docs/vhost_ssl.conf).
    See `PATTERNS.md` #15 (this is what caused the rms outage).
 3. **`server.ts` is run by PM2 via `tsx`** (Pattern 13) — `tsx` is a runtime dependency,
-   not devDependency. It listens on `0.0.0.0:$PORT` so Apache proxies `127.0.0.1:3021`.
+   not devDependency. It listens on `0.0.0.0:$PORT` so Apache proxies `127.0.0.1:3032`.
 4. **Package manager: pnpm.** Node v26 on the server (`nvm use 26`).
 
 ---
@@ -51,7 +51,7 @@
 
 | Variable | Purpose |
 |---|---|
-| `PORT` | `3021` — backend listen port (matches `SERVER_PORTS.md`) |
+| `PORT` | `3032` — backend listen port (matches `SERVER_PORTS.md`) |
 | `NODE_ENV` | `production` — serves built `dist/`; otherwise Vite dev middleware |
 | `GEMINI_PROXY_KEY` | Authenticates with the WMS Gemini proxy (production) |
 | `GEMINI_API_KEY` | Local dev fallback only — never commit a real key |

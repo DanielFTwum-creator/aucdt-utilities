@@ -17,7 +17,7 @@ param(
     [string]$RemotePath = "/var/www/vhosts/techbridge.edu.gh/radio/",
     [string]$Domain     = "radio.techbridge.edu.gh",
     [string]$PublicUrl  = "https://radio.techbridge.edu.gh",
-    [int]   $Port       = 3021,
+    [int]   $Port       = 3032,
     [switch]$Build = $false
 )
 

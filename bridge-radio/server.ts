@@ -28,7 +28,10 @@ async function getGeminiKey(): Promise<string> {
     if (local) return local;
     throw new Error("GEMINI_PROXY_KEY is not set (and no local key fallback).");
   }
-  const r = await fetch(WMS_KEY_URL, { headers: { "X-Gemini-Proxy-Key": proxyKey } });
+  // Use Node's native fetch (undici) here, NOT node-fetch v2 — node-fetch chokes
+  // on WMS's HTTP/2 response with "Premature close". Native fetch handles it.
+  const nativeFetch: typeof globalThis.fetch = (globalThis as any).fetch;
+  const r = await nativeFetch(WMS_KEY_URL, { headers: { "X-Gemini-Proxy-Key": proxyKey } });
   if (!r.ok) throw new Error(`WMS key fetch failed: ${r.status} ${await r.text()}`);
   cachedGeminiKey = ((await r.json()) as { apiKey: string }).apiKey;
   keyFetchedAt = Date.now();

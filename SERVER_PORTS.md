@@ -34,7 +34,7 @@
 | 3018 | youtube-genie                    | enhanced-youtube-genie                        | Online              |
 | 3019 | playgrow                         | playgrow-smart-fun-for-bright-minds           | Online              |
 | 3020 | stockpulse-backend               | stockpulse                                    | Online              |
-| 3021 | bridge-radio                     | bridge-radio                                  | Reserved (deploy pending) |
+| 3021 | tb-ai-english-safari (ACTUAL)    | english-safari                                | Online — squatting 3021 (doc listed 3028); verify/reconcile |
 | 3022 | techbridge-media-club-platform   | techbridge-media-club-platform                | Not deployed        |
 | 3023 | techbridge-strategy-dashboard    | techbridge-strategy-dashboard                 | Not deployed        |
 | 3024 | techbridge-technical-quiz-platform | techbridge-technical-quiz-platform          | Online              |
@@ -45,6 +45,7 @@
 | 3029 | workshop                         | ai-stand-up-workshop-prep-dashboard           | Not deployed        |
 | 3030 | smartscale                       | smartscale-ai-presentation-platform           | Not deployed        |
 | 3031 | tb-poster-studio                 | techbridge-poster-studio                      | Not deployed        |
+| 3032 | bridge-radio                     | bridge-radio                                  | Online (radio.techbridge.edu.gh) |
 | 5000 | tuc-rms                          | tuc-rms                                       | Online (localhost)  |
 | 8080 | tuc-wms (Spring Boot)            | tuc-wms/backend                               | Online (systemd)    |
 
