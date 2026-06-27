@@ -6,7 +6,6 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "build:prod": "vite build --config vite.config.production.js",
     "lint": "eslint .",
     "preview": "vite preview",
     "mobile:sync": "cap sync",

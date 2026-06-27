@@ -24,6 +24,7 @@
 | 12 | NVM sourcing before server-side pnpm install | All deploy.ps1 backend install steps |
 | 13 | tsx in dependencies + PM2 wrapper for Node v26 | All apps with server.ts running in production |
 | 14 | node_modules binary permissions after deploy chmod | All deploy.ps1 scripts with chmod sweeps |
+| 15 | SPA asset/HTML sync — the `text/html` MIME trap | All Vite SPA deploys (Apache/nginx) |
 | — | WMS SSO + TOTP onboarding (staff apps) | → `tuc-wms/docs/SSO_ONBOARDING_PLAYBOOK.md` |
 
 ---
@@ -1083,6 +1084,116 @@ pm2 restart myapp
 ```
 
 **Rule:** Always exclude `node_modules` from blanket `chmod 644` sweeps in deploy scripts. `chown -R` is safe; `chmod -R 644` on the full deploy path is not.
+
+---
+
+## PATTERN 15: SPA ASSET/HTML SYNC — THE `text/html` MIME TRAP
+
+**Applies to:** every Vite SPA deployed behind Apache or nginx (tuc-rms, and all
+React apps that ship a hashed `dist/`).
+
+**Symptom (browser console):**
+
+```text
+Failed to load module script: Expected a JavaScript-or-Wasm module script but
+the server responded with a MIME type of "text/html". Strict MIME type checking
+is enforced for module scripts per HTML spec.
+```
+
+The page loads blank or half-rendered. A `<script type="module">` request for a
+hashed bundle (e.g. `/assets/index-DBGOXJ4r.js`) returns **HTTP 200 with
+`Content-Type: text/html`** instead of `application/javascript`.
+
+**Root cause — NOT caching.** The deployed `index.html` references an asset hash
+that is **not present in the live docroot's `assets/`**. The SPA fallback rewrite
+(`RewriteRule ^ /index.html [L]` on Apache, `try_files $uri /index.html` on nginx)
+then serves `index.html` in place of the missing `.js` — so the browser receives
+HTML where it expected a module. `index.html` and `assets/` are **out of sync on
+the server itself**. Hard-refreshing does nothing; a stale service-worker or
+browser cache is a red herring (confirm with `curl`, below).
+
+Three ways the server gets into this state:
+
+1. **Broken SPA-fallback condition (the Plesk one — caused the tuc-rms outage).**
+   The fallback's "skip real files" guard never matches, so *every* request —
+   including existing `.js`/`.css`/`.svg` — is rewritten to `index.html`. Tell-tale
+   sign: **every** path returns the same byte-for-byte `index.html` (a missing
+   route AND a real asset AND `/favicon.svg` all return identical bytes). Root
+   cause: the rewrite uses `%{REQUEST_FILENAME}` in **server / VirtualHost
+   context** (e.g. Plesk's `conf/vhost_ssl.conf`), where it is *not yet mapped to
+   the filesystem path* — so `!-f` is always true. **Fix:** use
+   `%{DOCUMENT_ROOT}%{REQUEST_URI}` instead. See the Plesk note below.
+2. **Partial deploy** — a new `index.html` lands but the matching `assets/` bundles
+   don't (e.g. `scp -r dist/*` silently skips a subdir; a transfer is interrupted).
+3. **Wrong docroot** — the vhost serves a folder that isn't the one the deploy
+   script wrote to (two doc roots: a stale `index.html` references a hash whose
+   bundle only exists in the other folder).
+
+**Plesk-specific notes (learned the hard way on `rms.techbridge.edu.gh`):**
+
+- Plesk runs **nginx → Apache (`:7081`)**; nginx just reverse-proxies, so Apache +
+  rewrite rules are authoritative. Custom rules belong in
+  `/var/www/vhosts/system/<domain>/conf/vhost_ssl.conf` (NOT `httpd.conf`, which is
+  auto-generated). Changes there survive `plesk sbin httpdmng --reconfigure-domain <domain>`.
+- The correct vhost-level SPA block:
+  ```apache
+  RewriteEngine On
+  RewriteCond %{REQUEST_URI} !^/api/                    # let API proxy through
+  RewriteCond %{DOCUMENT_ROOT}%{REQUEST_URI} !-f        # NOT %{REQUEST_FILENAME}
+  RewriteCond %{DOCUMENT_ROOT}%{REQUEST_URI} !-d
+  RewriteRule ^ /index.html [L]
+  ```
+  Note `!^/api/` with the **leading slash** — in server context the matched path
+  keeps its slash, so a `(?!api/)` lookahead silently fails to exclude the API and
+  swallows `/api/*` into `index.html` (breaks login/data calls).
+- **Reverse-proxy IPv4/IPv6 mismatch:** a Node backend that listens on `localhost`
+  often binds `[::1]` (IPv6) **only**. An Apache `ProxyPass http://127.0.0.1:5000`
+  (IPv4) then can't connect and `/api/*` returns the SPA `index.html`. Check with
+  `ss -ltnp | grep :5000`; point `ProxyPass`/`ProxyPassReverse` at `http://[::1]:5000`
+  (or bind the backend to `127.0.0.1`).
+
+**Diagnose in 3 curls** (`<host>` = the live origin):
+
+```bash
+# 1. What hash does the LIVE index.html reference?
+curl -s https://<host>/index.html | grep -oE '/assets/[A-Za-z0-9_-]+\.js'
+# 2. Does that exact bundle exist? MUST be application/javascript, not text/html:
+curl -s -D - https://<host>/assets/<that-hash>.js -o /dev/null | grep -i content-type
+# 3. text/html  → file missing → asset/HTML mismatch confirmed.
+```
+
+**Fix (immediate):** redeploy `dist/` **atomically** — write `index.html` and
+`assets/` to the exact vhost docroot in one operation, never separately:
+
+```bash
+rsync -a --delete dist/. <user>@<host>:<EXACT_VHOST_DOCROOT>/
+# verify docroot first:  apachectl -S   (or Plesk → Hosting Settings → Document root)
+```
+
+**Fix (permanent — add a post-deploy guard to `deploy.ps1`).** After the copy,
+assert every hash the deployed HTML references actually serves as JS on the live
+URL; fail the deploy loudly if not:
+
+```bash
+ASSETS=$(curl -s "https://$HOST/index.html" | grep -oE '/assets/[A-Za-z0-9_-]+\.(js|css)')
+for a in $ASSETS; do
+  ct=$(curl -s -D - "https://$HOST$a" -o /dev/null | tr -d '\r' | awk -F': ' 'tolower($1)=="content-type"{print $2}')
+  case "$a:$ct" in
+    *.js:*javascript*|*.css:*css*) : ;;
+    *) echo "[DEPLOY-FAIL] $a served as '$ct' — index.html/assets out of sync"; exit 3 ;;
+  esac
+done
+```
+
+**Rules:**
+
+- Deploy `dist/` as a unit (`rsync -a --delete dist/.`); never copy `index.html`
+  and `assets/` in separate steps.
+- Confirm the deploy target **is** the vhost docroot (`apachectl -S` / Plesk).
+- Keep `index.html` at `Cache-Control: no-cache, must-revalidate` and hashed
+  assets `immutable` — already correct in the tuc-rms `.htaccess` generator.
+- A `text/html` MIME error on a `.js` means *missing file → SPA fallback*, almost
+  never a MIME-mapping problem. Check existence first.
 
 ---
 
