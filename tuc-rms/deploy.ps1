@@ -5,8 +5,16 @@
 param(
     [string]$RemoteHost = "root@techbridge.edu.gh",
     [string]$RemotePath = "/var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/tuc-rms/",
+    # Public URL to verify end-to-end after deploy. Defaults from RemotePath:
+    # the ai-tools sub-path vs the rms root vhost. Set explicitly when deploying elsewhere.
+    [string]$PublicUrl = "",
     [switch]$Build = $false
 )
+if (-not $PublicUrl) {
+    $PublicUrl = if ($RemotePath -match '/rms\.techbridge\.edu\.gh/?$') { "https://rms.techbridge.edu.gh" }
+                 elseif ($RemotePath -match '/tuc-rms/?$') { "https://ai-tools.techbridge.edu.gh/tuc-rms" }
+                 else { "" }
+}
 
 $ErrorActionPreference = "Stop"
 $__deployStart = Get-Date
@@ -158,7 +166,40 @@ echo '[OK] index.html and all referenced assets present and in sync.'
 $hb64 = [Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes($healthScript.Replace("`r", "")))
 ssh -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax=3 $RemoteHost "echo $hb64 | base64 -d | bash"
 if ($LASTEXITCODE -ne 0) { Log "ERROR" "Asset/HTML sync check FAILED (exit $LASTEXITCODE) — site will throw the text/html MIME error. Not reporting success." Red; exit $LASTEXITCODE }
-Log "SUCCESS" "Asset/HTML sync verified" Green
+Log "SUCCESS" "Asset/HTML sync verified (on disk)" Green
+
+# End-to-end check over the PUBLIC URL — what a browser actually receives.
+# The disk check above is necessary but NOT sufficient: a broken SPA rewrite
+# (e.g. vhost_ssl.conf using %{REQUEST_FILENAME} instead of %{DOCUMENT_ROOT}%{REQUEST_URI})
+# serves index.html — Content-Type text/html — for assets that DO exist on disk.
+# That exact failure shipped once with the disk check passing. This catches it.
+if ($PublicUrl) {
+    Log "INFO" "End-to-end check via $PublicUrl ..." Yellow
+    try {
+        $idx = Invoke-WebRequest -Uri "$PublicUrl/index.html" -UseBasicParsing -TimeoutSec 20
+        $assetPaths = [regex]::Matches($idx.Content, 'assets/[A-Za-z0-9_.-]+\.(?:js|css)') |
+                      ForEach-Object { $_.Value } | Sort-Object -Unique
+        if (-not $assetPaths) { Log "WARN" "No /assets refs in live index.html — skipping MIME check" Yellow }
+        $bad = 0
+        foreach ($a in $assetPaths) {
+            $r  = Invoke-WebRequest -Uri "$PublicUrl/$a" -UseBasicParsing -TimeoutSec 20
+            $ct = "$($r.Headers['Content-Type'])"
+            $okType = if ($a -like '*.js') { $ct -match 'javascript' } else { $ct -match 'css' }
+            if ($okType) { Log "INFO" "  OK  $a -> $ct" Green }
+            else { Log "ERROR" "  BAD $a -> $ct (expected JS/CSS; SPA fallback is serving HTML)" Red; $bad++ }
+        }
+        if ($bad -ne 0) {
+            Log "ERROR" "End-to-end MIME check FAILED — the public site is broken despite files being on disk." Red
+            Log "ERROR" "Check the SPA rewrite in conf/vhost_ssl.conf (use %{DOCUMENT_ROOT}%{REQUEST_URI}). See PATTERNS.md #15." Red
+            exit 4
+        }
+        Log "SUCCESS" "End-to-end MIME check passed — assets serve as JS/CSS over HTTPS" Green
+    } catch {
+        Log "WARN" "End-to-end check could not reach ${PublicUrl}: $($_.Exception.Message)" Yellow
+    }
+} else {
+    Log "WARN" "No PublicUrl resolved — skipping end-to-end MIME check (pass -PublicUrl to enable)" Yellow
+}
 
 $elapsed = [math]::Round(((Get-Date) - $__deployStart).TotalSeconds, 1)
 $timeStr = if ($elapsed -ge 60) { "$([math]::Floor($elapsed/60))m $([math]::Round($elapsed%60,1))s" } else { "${elapsed}s" }
