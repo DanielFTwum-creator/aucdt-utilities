@@ -28,14 +28,16 @@ export const FormLoginView: React.FC<FormLoginViewProps> = ({
   return (
     <div
       style={{
-        minHeight: '100vh',
-        width: '100%',
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
         padding: '24px',
-        position: 'relative',
         overflow: 'hidden',
         opacity: redirecting ? 0 : 1,
         transition: 'opacity 0.3s ease',
