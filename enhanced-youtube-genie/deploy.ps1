@@ -98,7 +98,7 @@ log '[2/7] Inject .env.local for Vite build...'
 cp /tmp/.env.youtube-genie .env.local
 
 log '[3/7] Install (full) + build...'
-pnpm install --no-frozen-lockfile --silent
+pnpm install --no-frozen-lockfile
 pnpm build
 
 log '[4/7] Sync built SPA to deploy path (keep backend files + .env)...'
