@@ -98,7 +98,7 @@ log '[2/7] Inject .env.local for Vite build...'
 cp /tmp/.env.youtube-genie .env.local
 
 log '[3/7] Install (full) + build...'
-pnpm install --no-frozen-lockfile
+pnpm install --no-frozen-lockfile --silent 2>/dev/null || npm install --silent
 pnpm build
 
 log '[4/7] Sync built SPA to deploy path (keep backend files + .env)...'
@@ -112,7 +112,7 @@ log '[5/7] Copy backend files + install prod deps...'
 cp server.ts package.json pnpm-lock.yaml "`$DEPLOY/" 2>/dev/null || true
 [ -f pnpm-workspace.yaml ] && cp pnpm-workspace.yaml "`$DEPLOY/" || true
 cd "`$DEPLOY"
-pnpm install --prod --no-frozen-lockfile
+pnpm install --prod --silent 2>/dev/null || npm install --omit=dev --silent
 
 log '[6/7] Ensure GEMINI_PROXY_KEY present in deploy .env (copied from WMS if missing)...'
 touch "`$DEPLOY/.env"
@@ -125,11 +125,9 @@ chmod 600 "`$DEPLOY/.env"
 
 log '[7/7] (Re)start PM2 process from server.ts...'
 cd "`$DEPLOY"
-TSX_BIN="`$DEPLOY/node_modules/.bin/tsx"
-if [ ! -f "`$TSX_BIN" ]; then log "ERROR: tsx not found at `$TSX_BIN after prod install"; exit 1; fi
 pm2 describe "`$PM2_APP" >/dev/null 2>&1 \
   && pm2 reload "`$PM2_APP" --update-env \
-  || pm2 start server.ts --name "`$PM2_APP" --interpreter "`$TSX_BIN" --cwd "`$DEPLOY"
+  || pm2 start server.ts --name "`$PM2_APP" --interpreter npx --interpreter-args tsx --cwd "`$DEPLOY"
 pm2 save >/dev/null 2>&1 || true
 sleep 3
 pm2 describe "`$PM2_APP" | grep -E 'status|restart' | head -2
