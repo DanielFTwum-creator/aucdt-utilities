@@ -45,11 +45,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Enhanced Youtube Genie | Techbridge University College</title>
 
-    <!-- TailwindCSS -->
-    <!-- Fonts -->
+    <!-- ── Theme: apply before first paint to prevent flash ──────── -->
+    <script>
+      (function () {
+        var t = localStorage.getItem('youtube-genie-theme') || 'dark';
+        if (!['dark', 'light', 'high-contrast'].includes(t)) t = 'dark';
+        document.documentElement.setAttribute('data-theme', t);
+      })();
+    </script>
+    <!-- ────────────────────────────────────────────────────────────── -->
+
+    <!-- Fonts: TUC standard stack -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Bebas+Neue&family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
 
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="https://techbridge.edu.gh/static/TUC_LOGO.png" />

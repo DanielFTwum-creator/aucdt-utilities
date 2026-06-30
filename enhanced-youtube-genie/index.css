@@ -1,2 +1,73 @@
 @import "tailwindcss";
 
+/* ── TUC Three-Theme System ─────────────────────────────────────
+   Theme is set by data-theme attribute on <html>.
+   Inline script in index.html applies it before first paint.
+   Tokens: TUC Gold #C8A84B · Ink #0F0C07 · Cream #F2EBD9
+─────────────────────────────────────────────────────────────── */
+
+:root,
+[data-theme='dark'] {
+  --tuc-bg:           #0F0C07;
+  --tuc-surface:      #1a1612;
+  --tuc-surface-2:    #222018;
+  --tuc-border:       rgba(200, 168, 75, 0.15);
+  --tuc-text:         #F2EBD9;
+  --tuc-text-muted:   #a09880;
+  --tuc-gold:         #C8A84B;
+  --tuc-gold-dim:     rgba(200, 168, 75, 0.2);
+  --tuc-error:        #f87171;
+  --tuc-error-bg:     rgba(248, 113, 113, 0.1);
+  --tuc-success:      #4ade80;
+  --tuc-card-bg:      rgba(26, 22, 18, 0.8);
+  --tuc-input-bg:     #111;
+  --tuc-spinner:      #C8A84B;
+}
+
+[data-theme='light'] {
+  --tuc-bg:           #F2EBD9;
+  --tuc-surface:      #ede5d0;
+  --tuc-surface-2:    #e5dcc5;
+  --tuc-border:       rgba(15, 12, 7, 0.15);
+  --tuc-text:         #0F0C07;
+  --tuc-text-muted:   #5a5040;
+  --tuc-gold:         #9a7a2a;
+  --tuc-gold-dim:     rgba(15, 12, 7, 0.08);
+  --tuc-error:        #dc2626;
+  --tuc-error-bg:     rgba(220, 38, 38, 0.08);
+  --tuc-success:      #16a34a;
+  --tuc-card-bg:      rgba(255, 255, 255, 0.7);
+  --tuc-input-bg:     #fff;
+  --tuc-spinner:      #9a7a2a;
+}
+
+[data-theme='high-contrast'] {
+  --tuc-bg:           #000000;
+  --tuc-surface:      #0a0a0a;
+  --tuc-surface-2:    #111111;
+  --tuc-border:       #FFD700;
+  --tuc-text:         #FFFFFF;
+  --tuc-text-muted:   #cccccc;
+  --tuc-gold:         #FFD700;
+  --tuc-gold-dim:     rgba(255, 215, 0, 0.15);
+  --tuc-error:        #ff4444;
+  --tuc-error-bg:     rgba(255, 68, 68, 0.15);
+  --tuc-success:      #00ff88;
+  --tuc-card-bg:      #0a0a0a;
+  --tuc-input-bg:     #000;
+  --tuc-spinner:      #FFD700;
+}
+
+/* Base styles */
+html,
+body {
+  background-color: var(--tuc-bg);
+  color: var(--tuc-text);
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+#root {
+  min-height: 100vh;
+  background-color: var(--tuc-bg);
+}
+

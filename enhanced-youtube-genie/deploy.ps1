@@ -1,10 +1,10 @@
 # enhanced-youtube-genie — Deploy Script (Node/PM2, mirrors dfs-website)
 # URL  : https://ai-tools.techbridge.edu.gh/youtube-genie/
-# Port : 3018  |  PM2 app: youtube-genie
+# Port : 3028  |  PM2 app: youtube-genie
 # Usage: .\deploy.ps1 -Build
 #
 # Server-side build, then runs server.ts under PM2 (Gemini relay -> WMS proxy).
-# The SPA is served by the Node server; nginx must proxy /youtube-genie/api/ -> :3018.
+# The SPA is served by the Node server; nginx must proxy /youtube-genie/api/ -> :3028.
 
 param(
     [string]$RemoteHost = "root@techbridge.edu.gh",
@@ -16,7 +16,7 @@ $ErrorActionPreference = "Stop"
 $__deployStart = Get-Date
 $GITHUB_REPO   = "git@github.com:DanielFTwum-creator/aucdt-utilities.git"
 $SUBFOLDER     = "enhanced-youtube-genie"
-$PORT          = 3018
+$PORT          = 3028
 $PM2_APP       = "youtube-genie"
 
 function Log {
