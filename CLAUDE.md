@@ -457,9 +457,10 @@ Say it:
 ❌ Deliver Java backend code without running the pre-delivery verification gate
 ❌ Start an autonomous loop with no stop condition or no iteration cap
 ❌ Use em-dashes or LLM-tell phrasing ("delve", "it's not just X, it's Y") in delivered text
+❌ Use `min-height: 100vh; width: 100%` for full-screen overlays — TUC splash sets `body { display: flex }`, shrinking `#root` to content width. Use `position: fixed; inset: 0` instead (Pattern 19)
 
 ---
 
-*Last updated: 22 June 2026 — Daniel Frempong Twum / TUC ICT*
+*Last updated: 30 June 2026 — Daniel Frempong Twum / TUC ICT*
 *Merged with the `gstack` behavioural template (22 Jun 2026): Core Operating Principles enriched with gstack's senior-engineer/traceability checks; new HARNESS, LOOPS & AUTONOMY, and TEXT STYLE sections added. gstack's own slash commands (`/goal`, `/loop`, `/batch`, `/browse`, etc.) are not available as skills in Cowork sessions — referenced only as "if installed" rather than assumed present.*
 *Pattern library (User Journey, HTML Standards, Capacitor, Gemini proxy, Dual-Auth Logout, Glucose) → see PATTERNS.md; Java standards → §5a above; staff-app SSO → tuc-wms/docs/SSO_ONBOARDING_PLAYBOOK.md*

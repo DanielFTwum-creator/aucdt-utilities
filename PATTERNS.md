@@ -28,6 +28,7 @@
 | 16 | PM2 Fleet-Wide Log Timestamps | All PM2-managed apps |
 | 17 | Fleet Node/PM2 Server-Side Deploy | All Node/PM2 apps with server.ts |
 | 18 | pnpm 11 `allowBuilds` Config | All apps with esbuild / Tailwind 4 / native modules |
+| 19 | TUC Full-Screen Overlay | Any full-screen gate, overlay, or loading screen |
 | — | WMS SSO + TOTP onboarding (staff apps) | → `tuc-wms/docs/SSO_ONBOARDING_PLAYBOOK.md` |
 
 ---
@@ -1437,6 +1438,74 @@ picks it up. Both are acceptable outcomes.
 | System node (do not use) | v20.20.2 at `/usr/bin/node` |
 
 NVM must be sourced before any pnpm command in server-side scripts (Pattern 12).
+
+---
+
+---
+
+## PATTERN 19: TUC FULL-SCREEN OVERLAY
+
+**Origin:** enhanced-youtube-genie login screen, 30 June 2026.
+**Applies to:** Any full-screen gate, overlay, loading screen, or login wall in a TUC React app.
+
+### Root Cause
+
+Every TUC app has a splash screen in `index.html`:
+
+```css
+/* in <style id="tuc-splash-styles"> */
+body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+}
+```
+
+This persists in the DOM until React hydrates. The `#root` div becomes a flex child and shrinks to fit its content. `min-height: 100vh; width: 100%` on a component inside `#root` does not produce a full-viewport element — `width: 100%` resolves to the flex child's shrunk content width, not the viewport width.
+
+**Symptom:** A login screen or overlay renders as a narrow centred column with black bars on both sides.
+
+### Fix: Always Use `position: fixed` for Full-Screen Overlays
+
+```tsx
+// CORRECT — bypasses the flex body entirely
+<div
+  style={{
+    position: 'fixed',
+    top: 0, left: 0, right: 0, bottom: 0,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    overflow: 'hidden',
+    // ...
+  }}
+>
+
+// WRONG — collapses to flex-child width inside the splash-screen body
+<div
+  style={{
+    minHeight: '100vh',
+    width: '100%',
+    // ...
+  }}
+>
+```
+
+`position: fixed` takes the element out of the normal flow and positions it relative to the viewport, not the flex parent. The layout of `body` or `#root` has no effect on it.
+
+### When This Applies
+
+Any component that must cover the full viewport:
+
+- Auth gates (`AuthGate.tsx`)
+- Loading screens / skeletons
+- Full-screen modals or lightboxes
+- Onboarding overlays
+
+### Note on Scrollable Content
+
+If the overlay itself needs to scroll, set `overflow-y: auto` on the inner container, not the fixed outer wrapper. The outer wrapper should stay `overflow: hidden` to prevent the body from scrolling behind it.
 
 ---
 
