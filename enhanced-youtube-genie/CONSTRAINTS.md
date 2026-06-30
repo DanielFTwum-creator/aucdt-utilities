@@ -109,7 +109,16 @@ Local dev: `pnpm dev` runs the Vite dev server (port 5173). The server.ts relay 
 .\deploy.ps1 -Build
 ```
 
-Applies: **Pattern 9** (Express server + PM2) · **Pattern 13** (tsx entry point).
+Applies: **Pattern 9** (Express server + PM2) · **Pattern 17** (fleet Node/PM2 deploy)
+· **Pattern 18** (pnpm 11 `allowBuilds`).
+
+**Key deploy decisions (30 June 2026):**
+
+- Install steps use `pnpm install --silent 2>/dev/null || npm install` fallback — do not
+  fight pnpm 11 build approval; npm runs esbuild/oxide lifecycle scripts without restriction.
+- `pnpm-workspace.yaml` uses pnpm 11 `allowBuilds` format (NOT the removed `onlyBuiltDependencies`).
+- PM2 uses `--interpreter npx --interpreter-args tsx` — more portable than a hardcoded binary path.
+- `tsx` is in `dependencies` (not `devDependencies`) so it survives `pnpm install --prod`.
 
 nginx proxy location block: `/var/www/vhosts/system/ai-tools.techbridge.edu.gh/conf/vhost_nginx.conf`
 

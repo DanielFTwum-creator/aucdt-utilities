@@ -241,6 +241,12 @@ Confirm each item with ✅ before proceeding. Stop and report if any item fails.
 
 - **All projects use pnpm** (not npm or yarn)
 - Commit `pnpm-lock.yaml` — delete `package-lock.json` if migrating from npm
+- **Server runs pnpm 11.9.0** (Node v26.3.1 via NVM). pnpm 11 breaking changes:
+  - `onlyBuiltDependencies` / `neverBuiltDependencies` **removed** — replaced by `allowBuilds` key-value map in `pnpm-workspace.yaml` (see Pattern 18)
+  - The `pnpm` field in `package.json` is no longer read — all settings are in `pnpm-workspace.yaml`
+- **Deploy install pattern** — do not fight pnpm's build approval. Use the fleet fallback (Pattern 17):
+  `pnpm install --silent 2>/dev/null || npm install --silent`
+- `tsx` must be in `dependencies` (not `devDependencies`) for PM2 prod deployments
 
 ### Code Standards
 

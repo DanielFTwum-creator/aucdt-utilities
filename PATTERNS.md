@@ -25,6 +25,9 @@
 | 13 | tsx in dependencies + PM2 wrapper for Node v26 | All apps with server.ts running in production |
 | 14 | node_modules binary permissions after deploy chmod | All deploy.ps1 scripts with chmod sweeps |
 | 15 | SPA asset/HTML sync — the `text/html` MIME trap | All Vite SPA deploys (Apache/nginx) |
+| 16 | PM2 Fleet-Wide Log Timestamps | All PM2-managed apps |
+| 17 | Fleet Node/PM2 Server-Side Deploy | All Node/PM2 apps with server.ts |
+| 18 | pnpm 11 `allowBuilds` Config | All apps with esbuild / Tailwind 4 / native modules |
 | — | WMS SSO + TOTP onboarding (staff apps) | → `tuc-wms/docs/SSO_ONBOARDING_PLAYBOOK.md` |
 
 ---
@@ -1207,5 +1210,235 @@ done
 
 ---
 
-*Last updated: June 2026 — Daniel Frempong Twum / TUC ICT*  
+## PATTERN 16: PM2 FLEET-WIDE LOG TIMESTAMPS
+
+**Origin:** TUC NetScan deploy, June 2026 — PM2 log output had no timestamps, making crash-loop diagnosis impossible (no way to tell if restarts were seconds or minutes apart).  
+**Applies to:** Every PM2-managed app on the fleet.
+
+### The Problem
+
+By default PM2 logs look like:
+
+```
+67|tuc-net | [TUC NetScan] FATAL: Port 3017 is already in use.
+67|tuc-net | [TUC NetScan] FATAL: Port 3017 is already in use.
+```
+
+No timestamp, no way to tell if these are 100ms apart or 10 minutes apart.
+
+### Fleet-Wide Fix (one-off, run once per server)
+
+```bash
+pm2 set pm2:log_date_format 'YYYY-MM-DD HH:mm:ss' && pm2 reload all --update-env && pm2 save --force
+```
+
+`pm2 reload` does a graceful restart (SIGINT → wait → new process) so there is no hard cutover. After this, all new log lines carry a timestamp:
+
+```
+67|tuc-net | 2026-06-30 11:02:53: [TUC NetScan] Unified full-stack server running on port 3027
+```
+
+Old log entries (before the reload) have no timestamp — that is expected.
+
+### Per-Process Fix (new apps and deploy.ps1)
+
+Add `--log-date-format` to the `pm2 start` command in every deploy.ps1 so timestamps survive a `pm2 delete` + fresh start:
+
+```bash
+pm2 start server.ts \
+  --name my-app \
+  --interpreter ./node_modules/.bin/tsx \
+  --cwd /path/to/app \
+  --log-date-format 'YYYY-MM-DD HH:mm:ss'
+```
+
+In PowerShell deploy.ps1 (inside the SSH string):
+
+```powershell
+$pm2Result = & $SSH @SSH_OPTS $RemoteHost "... pm2 start server.ts --name ${PM2_APP} --interpreter ./node_modules/.bin/tsx --cwd ${RemotePath} --log-date-format 'YYYY-MM-DD HH:mm:ss'; ..."
+```
+
+### Verification — Single App
+
+```bash
+pm2 logs <app-name> --lines 5 --nostream
+```
+
+The last line of output should carry a `YYYY-MM-DD HH:mm:ss:` prefix.
+
+### Verification — Full Fleet (Required After Any pm2 resurrect)
+
+The global `pm2:log_date_format` setting does NOT automatically apply to processes resurrected from `dump.pm2`. After any reboot or `pm2 resurrect`, run this to find every app missing timestamps:
+
+```bash
+pm2 jlist | python3 -c "
+import json, sys, os, re
+apps = json.load(sys.stdin)
+for app in apps:
+    name = app['name']
+    if app.get('pm2_env', {}).get('status') != 'online':
+        continue
+    log = app.get('pm2_env', {}).get('pm_out_log_path', '')
+    if not log or not os.path.exists(log):
+        print(f'? {name} (no log file)')
+        continue
+    try:
+        with open(log, 'rb') as f:
+            f.seek(0, 2)
+            f.seek(max(0, f.tell() - 3000))
+            content = f.read().decode('utf-8', errors='ignore')
+        has_ts = bool(re.search(r'\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}', content))
+        print(f\"{'OK' if has_ts else 'MISSING'} {name}\")
+    except Exception as e:
+        print(f'ERR {name} ({e})')
+"
+```
+
+For every app that prints `MISSING`, apply the timestamp restart sequentially:
+
+```bash
+for app in <space-separated list of MISSING apps>; do
+  echo "Restarting $app..."
+  pm2 restart "$app" --update-env --log-date-format 'YYYY-MM-DD HH:mm:ss'
+done && pm2 save --force
+```
+
+Never use `pm2 reload all` for this — it spawns all processes simultaneously and will OOM a memory-constrained server. Sequential `pm2 restart` in a loop is safe.
+
+### Critical Finding (30 June 2026)
+
+`pm2 set pm2:log_date_format` sets a default for NEW processes only. It does not retroactively update the saved config of existing processes in `dump.pm2`. After `pm2 resurrect`, every process comes back with whatever timestamp config was in the dump at save time — which is often none. The fleet-audit script above is the only reliable way to verify coverage.
+
+---
+
+---
+
+## PATTERN 17: FLEET NODE/PM2 SERVER-SIDE DEPLOY
+
+**Origin:** enhanced-youtube-genie deploy, 30 June 2026 — weeks of ERR_PNPM_IGNORED_BUILDS
+failures resolved by reading how ai-lab and patois already handled it.
+**Applies to:** Every `deploy.ps1` that does a server-side build + PM2 start.
+
+### The Problem
+
+pnpm 11 blocks lifecycle scripts (postinstall) for native modules like `esbuild`
+and `@tailwindcss/oxide` unless explicitly approved. This causes
+`ERR_PNPM_IGNORED_BUILDS` during `pnpm install` on the server.
+
+### The Fleet Solution: pnpm with npm Fallback
+
+Do not fight pnpm's approval mechanism. Use pnpm with a silent npm fallback.
+npm runs all lifecycle scripts without requiring approval.
+
+```bash
+# Step 3: Full install for build (in /tmp clone)
+pnpm install --no-frozen-lockfile --silent 2>/dev/null || npm install --silent
+
+# Step 5: Prod install in deploy directory
+pnpm install --prod --silent 2>/dev/null || npm install --omit=dev --silent
+```
+
+If pnpm fails for any reason (ERR_PNPM_IGNORED_BUILDS, lockfile mismatch, etc.),
+npm takes over silently. The build continues cleanly.
+
+### PM2 Start — Use `npx tsx`
+
+Do not hardcode the tsx binary path. Use `npx` as the interpreter with `tsx` as
+the args — npx resolves tsx from local node_modules without path assumptions.
+
+```bash
+# Start (first deploy)
+pm2 start server.ts \
+  --name "$PM2_APP" \
+  --interpreter npx \
+  --interpreter-args tsx \
+  --cwd "$DEPLOY"
+
+# Reload (subsequent deploys — graceful, no downtime)
+pm2 reload "$PM2_APP" --update-env
+```
+
+Full step 7 idiom:
+```bash
+pm2 describe "$PM2_APP" >/dev/null 2>&1 \
+  && pm2 reload "$PM2_APP" --update-env \
+  || pm2 start server.ts --name "$PM2_APP" --interpreter npx --interpreter-args tsx --cwd "$DEPLOY"
+pm2 save >/dev/null 2>&1 || true
+```
+
+### tsx Must Be in `dependencies` (Not `devDependencies`)
+
+`pnpm install --prod` only installs `dependencies`. If `tsx` is in `devDependencies`,
+it will be missing in the deploy directory and PM2 will fall back to plain `node`,
+which cannot run TypeScript.
+
+```json
+"dependencies": {
+  "tsx": "^4.19.2"
+}
+```
+
+### Reference Implementations
+
+| App | Status |
+|---|---|
+| tuc-ai-lab-catalog | Reference — this pattern originated here |
+| patois-lyricist-v2.0.0 | Uses same pnpm-or-npm fallback |
+| enhanced-youtube-genie | Aligned to this pattern 30 June 2026 |
+
+---
+
+## PATTERN 18: PNPM 11 `allowBuilds` CONFIG
+
+**Origin:** enhanced-youtube-genie deploy, 30 June 2026 — multiple failed attempts
+using the old pnpm 10 syntax.
+**Applies to:** Any project deploying on this server (pnpm 11.9.0 / Node v26.3.1).
+
+### Breaking Change in pnpm 11
+
+`onlyBuiltDependencies`, `neverBuiltDependencies`, and `ignoredBuiltDependencies`
+were **removed** in pnpm 11 and replaced by a single `allowBuilds` key-value map.
+
+| pnpm 10 (removed) | pnpm 11 (correct) |
+|---|---|
+| `onlyBuiltDependencies: [esbuild]` | `allowBuilds: { esbuild: true }` |
+| `neverBuiltDependencies: [core-js]` | `allowBuilds: { core-js: false }` |
+| `ignoredBuiltDependencies: [esbuild]` | `allowBuilds: { esbuild: false }` |
+
+The pnpm 10 format is silently ignored in pnpm 11 — no error, no warning.
+
+### Correct `pnpm-workspace.yaml` for Vite + Tailwind 4 Projects
+
+```yaml
+allowBuilds:
+  esbuild: true
+  "@tailwindcss/oxide": true
+```
+
+### Config File Location
+
+Settings live in `pnpm-workspace.yaml` (not `pnpm.yaml`, not `.npmrc`, not the
+`pnpm` field in `package.json` — all of those were the pnpm 10 locations).
+
+### Practical Note
+
+In practice, the fleet uses Pattern 17's npm fallback and this config is a
+belt-and-suspenders measure. If pnpm install succeeds (because `allowBuilds`
+is correct), the build is reproducible and lockfile-stable. If pnpm fails, npm
+picks it up. Both are acceptable outcomes.
+
+### Server Context
+
+| Item | Value |
+|---|---|
+| pnpm version on server | 11.9.0 |
+| Node version on server | v26.3.1 (NVM, path: `/root/.nvm/versions/node/v26.3.1/`) |
+| pnpm binary | `/root/.nvm/versions/node/v26.3.1/bin/pnpm` |
+| System node (do not use) | v20.20.2 at `/usr/bin/node` |
+
+NVM must be sourced before any pnpm command in server-side scripts (Pattern 12).
+
+---
+
+*Last updated: 30 June 2026 — Daniel Frempong Twum / TUC ICT*  
 *Core session directives → see CLAUDE.md*
