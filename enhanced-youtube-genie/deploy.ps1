@@ -112,7 +112,7 @@ log '[5/7] Copy backend files + install prod deps...'
 cp server.ts package.json pnpm-lock.yaml "`$DEPLOY/" 2>/dev/null || true
 [ -f pnpm-workspace.yaml ] && cp pnpm-workspace.yaml "`$DEPLOY/" || true
 cd "`$DEPLOY"
-pnpm install --prod --no-frozen-lockfile --silent
+pnpm install --prod --no-frozen-lockfile
 
 log '[6/7] Ensure GEMINI_PROXY_KEY present in deploy .env (copied from WMS if missing)...'
 touch "`$DEPLOY/.env"
@@ -125,9 +125,11 @@ chmod 600 "`$DEPLOY/.env"
 
 log '[7/7] (Re)start PM2 process from server.ts...'
 cd "`$DEPLOY"
+TSX_BIN="`$DEPLOY/node_modules/.bin/tsx"
+if [ ! -f "`$TSX_BIN" ]; then log "ERROR: tsx not found at `$TSX_BIN after prod install"; exit 1; fi
 pm2 describe "`$PM2_APP" >/dev/null 2>&1 \
   && pm2 reload "`$PM2_APP" --update-env \
-  || pm2 start server.ts --name "`$PM2_APP" --interpreter `$(command -v tsx || echo node) --cwd "`$DEPLOY"
+  || pm2 start server.ts --name "`$PM2_APP" --interpreter "`$TSX_BIN" --cwd "`$DEPLOY"
 pm2 save >/dev/null 2>&1 || true
 sleep 3
 pm2 describe "`$PM2_APP" | grep -E 'status|restart' | head -2
