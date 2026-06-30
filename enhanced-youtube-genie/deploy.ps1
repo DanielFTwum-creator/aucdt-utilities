@@ -112,7 +112,7 @@ log '[5/7] Copy backend files + install prod deps...'
 cp server.ts package.json pnpm-lock.yaml "`$DEPLOY/" 2>/dev/null || true
 [ -f pnpm-workspace.yaml ] && cp pnpm-workspace.yaml "`$DEPLOY/" || true
 cd "`$DEPLOY"
-pnpm install --prod --silent 2>/dev/null || npm install --omit=dev --silent
+CI=true pnpm install --prod --silent 2>/dev/null || npm install --omit=dev --silent
 
 log '[6/7] Ensure GEMINI_PROXY_KEY present in deploy .env (copied from WMS if missing)...'
 touch "`$DEPLOY/.env"
