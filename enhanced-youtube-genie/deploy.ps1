@@ -98,8 +98,12 @@ log '[2/7] Inject .env.local for Vite build...'
 cp /tmp/.env.youtube-genie .env.local
 
 log '[3/7] Install (full) + build...'
-pnpm install --no-frozen-lockfile --silent
-pnpm build
+# Pattern 13: use explicit Node v26 binary so corepack runs under the correct runtime,
+# regardless of PATH. System node (v20) cannot run pnpm 11.5.3 (requires Node >=22.13).
+NODE26=/root/.nvm/versions/node/v26.3.1/bin/node
+PNPM26=/root/.nvm/versions/node/v26.3.1/bin/pnpm
+`$NODE26 `$PNPM26 install --no-frozen-lockfile --silent
+`$NODE26 `$PNPM26 build
 
 log '[4/7] Sync built SPA to deploy path (keep backend files + .env)...'
 mkdir -p "`$DEPLOY"
@@ -112,7 +116,7 @@ log '[5/7] Copy backend files + install prod deps...'
 cp server.ts package.json pnpm-lock.yaml "`$DEPLOY/" 2>/dev/null || true
 [ -f pnpm-workspace.yaml ] && cp pnpm-workspace.yaml "`$DEPLOY/" || true
 cd "`$DEPLOY"
-pnpm install --prod --no-frozen-lockfile --silent
+`$NODE26 `$PNPM26 install --prod --no-frozen-lockfile --silent
 
 log '[6/7] Ensure GEMINI_PROXY_KEY present in deploy .env (copied from WMS if missing)...'
 touch "`$DEPLOY/.env"
