@@ -114,12 +114,27 @@ cp server.ts package.json pnpm-lock.yaml "`$DEPLOY/" 2>/dev/null || true
 cd "`$DEPLOY"
 CI=true pnpm install --prod --silent 2>/dev/null || npm install --omit=dev --silent
 
-log '[6/7] Ensure GEMINI_PROXY_KEY present in deploy .env (copied from WMS if missing)...'
+log '[6/7] Ensure all credentials present in deploy .env...'
 touch "`$DEPLOY/.env"
+
+# GEMINI_PROXY_KEY — pull from WMS service env
 if ! grep -q '^GEMINI_PROXY_KEY=' "`$DEPLOY/.env"; then
   K=`$(grep '^GEMINI_PROXY_KEY=' /opt/tuc-wms/.env | cut -d= -f2-)
   [ -n "`$K" ] && printf 'GEMINI_PROXY_KEY=%s\n' "`$K" >> "`$DEPLOY/.env" && echo 'added GEMINI_PROXY_KEY' || echo 'WARN: WMS proxy key not found'
 fi
+
+# Google OAuth credentials — always overwrite from .env.local (source of truth)
+for VAR in VITE_GOOGLE_CLIENT_ID GOOGLE_CLIENT_SECRET; do
+  V=`$(grep "^\${VAR}=" /tmp/.env.youtube-genie 2>/dev/null | cut -d= -f2-)
+  if [ -n "`$V" ]; then
+    sed -i "/^\${VAR}=/d" "`$DEPLOY/.env"
+    printf '%s=%s\n' "`$VAR" "`$V" >> "`$DEPLOY/.env"
+    echo "wrote `$VAR"
+  else
+    echo "WARN: `$VAR not found in .env.local"
+  fi
+done
+
 grep -q '^PORT=' "`$DEPLOY/.env" || echo "PORT=`$PORT" >> "`$DEPLOY/.env"
 chmod 600 "`$DEPLOY/.env"
 
