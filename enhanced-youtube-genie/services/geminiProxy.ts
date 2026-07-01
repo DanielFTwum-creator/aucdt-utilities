@@ -28,7 +28,7 @@ export async function generateViaProxy(
     },
   };
 
-  const res = await fetch(`/api/generate?model=${encodeURIComponent(model)}`, {
+  const res = await fetch(`/youtube-genie/api/generate?model=${encodeURIComponent(model)}`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(body),
