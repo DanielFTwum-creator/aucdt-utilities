@@ -29,6 +29,9 @@
 | 17 | Fleet Node/PM2 Server-Side Deploy | All Node/PM2 apps with server.ts |
 | 18 | pnpm 11 `allowBuilds` Config | All apps with esbuild / Tailwind 4 / native modules |
 | 19 | TUC Full-Screen Overlay | Any full-screen gate, overlay, or loading screen |
+| 20 | PowerShell Heredoc Bash Variable Escaping | Any deploy.ps1 with a bash for-loop over variable names |
+| 21 | BOM Propagation into Extracted .env Values | Any deploy that copies keys from WMS .env via grep |
+| 22 | `const` Temporal Dead Zone in Server Diagnostics | Any server.ts with startup console.log blocks |
 | — | WMS SSO + TOTP onboarding (staff apps) | → `tuc-wms/docs/SSO_ONBOARDING_PLAYBOOK.md` |
 
 ---
@@ -1509,5 +1512,179 @@ If the overlay itself needs to scroll, set `overflow-y: auto` on the inner conta
 
 ---
 
-*Last updated: 30 June 2026 — Daniel Frempong Twum / TUC ICT*  
+## PATTERN 20: POWERSHELL HEREDOC BASH VARIABLE ESCAPING
+
+**Origin:** enhanced-youtube-genie deploy.ps1, 1 July 2026.
+**Applies to:** Any `deploy.ps1` that embeds a bash script via a PowerShell `@"..."@` heredoc.
+
+### Root Cause
+
+Inside a PowerShell `@"..."@` double-quoted heredoc, PowerShell expands variables before the string is sent to the server. A bash `for` loop that uses `${VAR}` in its body:
+
+```bash
+for VAR in KEY_ONE KEY_TWO; do
+  V=$(grep "^${VAR}=" file | cut -d= -f2-)
+done
+```
+
+...looks safe in bash but is broken inside a PowerShell heredoc. PowerShell sees `${VAR}` and expands it as a PowerShell variable. Since `$VAR` is not defined in PowerShell, it expands to an empty string, and the grep pattern becomes `^=` — matching nothing.
+
+The symptom is silent: the loop runs, the grep finds nothing, and any fallback `WARN:` message fires even though the source file has the correct values.
+
+### Wrong (inside PowerShell heredoc)
+
+```powershell
+$script = @"
+for VAR in VITE_GOOGLE_CLIENT_ID GOOGLE_CLIENT_SECRET; do
+  V=`$(grep "^\${VAR}=" /tmp/.env 2>/dev/null | cut -d= -f2-)
+  ...
+done
+"@
+```
+
+`\${VAR}` — the `\$` is not a PowerShell escape (backtick is). PowerShell expands `${VAR}` as an empty PS variable. The grep pattern breaks.
+
+### Correct — drop the loop, hardcode variable names
+
+```powershell
+$script = @"
+CID=`$(grep "^VITE_GOOGLE_CLIENT_ID=" /tmp/.env 2>/dev/null | cut -d= -f2- | tr -d '\r')
+CSEC=`$(grep "^GOOGLE_CLIENT_SECRET=" /tmp/.env 2>/dev/null | cut -d= -f2- | tr -d '\r')
+"@
+```
+
+No bash loop variables — nothing for PowerShell to expand. The only `$` signs are prefixed with a backtick (`` ` ``), which is the PowerShell escape for a literal `$`.
+
+### General Rule
+
+Inside a PowerShell `@"..."@` heredoc:
+
+| You want bash to see | Write in heredoc |
+|---|---|
+| `$VAR` (bash variable) | `` `$VAR `` |
+| `${VAR}` (bash variable) | `` `${ ``VAR`}` — or better, avoid bash loop vars entirely |
+| `$(command)` (bash subshell) | `` `$(command) `` |
+| Literal `$` in a string | `` `$ `` |
+
+When a bash script in a heredoc uses a loop variable (`for VAR in ...`), replace the loop with hardcoded names to eliminate the escaping problem entirely.
+
+### Bonus: CRLF in Windows .env Files
+
+Windows-created `.env.local` files have CRLF line endings. When uploaded via SCP and read with `grep | cut` on Linux, the extracted value includes a trailing `\r`. Always strip it:
+
+```bash
+VALUE=$(grep "^KEY=" /tmp/.env | cut -d= -f2- | tr -d '\r')
+```
+
+### pm2 restart with env changes
+
+Plain `pm2 restart <app>` may not pick up new environment variables. Always use:
+
+```bash
+pm2 restart <app> --update-env
+```
+
+---
+
+## PATTERN 21: BOM PROPAGATION INTO EXTRACTED .env VALUES
+
+**Origin:** enhanced-youtube-genie deploy, 1 July 2026.
+**Applies to:** Any deploy script that copies keys from WMS `.env` via `grep`.
+
+### Two Forms of BOM Corruption
+
+**Form A — file-header BOM (well-known).** WMS `.env` starts with a UTF-8 BOM (`\xEF\xBB\xBF`). A blind `cp` or `cat` of the whole file carries the BOM into the destination. Strip with `sed 's/^\xEF\xBB\xBF//'` on the output file. Pattern 20 already covers this for CRLF; same approach applies here.
+
+**Form B — value-embedded BOM (the trap).** If the key being grepped is on the **first line** of the BOM-headed source file, `grep '^KEY='` returns `\xEF\xBB\xBFvalue` — the BOM is inside the value string itself. A file-level BOM strip on the destination `.env` does not help because the BOM is mid-file, inside a value.
+
+**Form C — UTF-16 LE file encoding.** A `.env` file created or edited on Windows and SCP'd to the server may be UTF-16 LE instead of UTF-8. `grep` and `sed` treat it as binary. `sed -i` on a UTF-16 file can silently wipe the content (treats the whole file as one "line"). `dotenv` (Node.js) cannot parse UTF-16.
+
+### Symptoms
+
+| Symptom | Likely form |
+|---|---|
+| `grep: file: binary file matches` | Form B or C — BOM in value or UTF-16 file |
+| `GEMINI_PROXY_KEY` set but WMS returns 401 | Form B — BOM prefix in the key value |
+| After `sed -i` to delete one key, `.env` becomes empty | Form C — UTF-16 file, `sed` wiped it |
+| `file .env` → `Unicode text, UTF-16, little-endian text` | Form C |
+
+### Fix
+
+**Extraction (Form B):** strip BOM from the extracted value, not just the destination file:
+
+```bash
+K=$(grep '^GEMINI_PROXY_KEY=' /opt/tuc-wms/.env | head -1 | cut -d= -f2- | tr -d '\r\000' | LC_ALL=C sed 's/\xef\xbb\xbf//g')
+```
+
+**Destination file (Form C):** never trust the existing `.env` encoding. Wipe and rebuild from scratch on every deploy:
+
+```bash
+# Step 6 — start with an empty, clean file
+> "$DEPLOY/.env"
+# then write all keys via printf
+```
+
+This replaces the old `touch + BOM strip` approach, which failed against UTF-16 files.
+
+**Always overwrite, never conditional.** The `if ! grep -q '^KEY='` pattern preserves a corrupt value across deploys. Use `sed -i '/^KEY=/d'` + re-write instead.
+
+### Rule for All deploy.ps1 Scripts that Copy from WMS
+
+```bash
+# Extract with full BOM + CR + null stripping on the VALUE
+K=$(grep '^GEMINI_PROXY_KEY=' /opt/tuc-wms/.env | head -1 | cut -d= -f2- | tr -d '\r\000' | LC_ALL=C sed 's/\xef\xbb\xbf//g')
+# Always delete old line before writing
+sed -i '/^GEMINI_PROXY_KEY=/d' "$DEPLOY/.env"
+[ -n "$K" ] && printf 'GEMINI_PROXY_KEY=%s\n' "$K" >> "$DEPLOY/.env" && echo "wrote (len=${#K})"
+```
+
+---
+
+## PATTERN 22: `const` TEMPORAL DEAD ZONE IN SERVER STARTUP DIAGNOSTICS
+
+**Origin:** enhanced-youtube-genie server.ts crash, 1 July 2026.
+**Applies to:** Any `server.ts` that has a startup `console.log` diagnostic block.
+
+### Root Cause
+
+In a Node.js ES module (`"type": "module"` in `package.json`), `const` declarations are hoisted but **not initialised** until the declaration line is executed. Accessing a `const` before its declaration throws:
+
+```
+ReferenceError: Cannot access 'GEMINI_PROXY_KEY' before initialization
+```
+
+This is the **temporal dead zone (TDZ)**. Unlike `var`, a `const` cannot be read before its declaration — even if you intend to use it only in a log.
+
+### How It Happens
+
+A diagnostic log is added above an existing `const` declaration — a common pattern when adding visibility to a variable that is already defined "somewhere below":
+
+```typescript
+// WRONG — log added above the declaration
+console.log(`GEMINI_PROXY_KEY: ${GEMINI_PROXY_KEY ? 'set' : 'MISSING'}`); // TDZ crash
+
+const WMS_GEMINI_URL  = process.env.WMS_GEMINI_URL  || '...';
+const GEMINI_PROXY_KEY = process.env.GEMINI_PROXY_KEY || '';
+```
+
+### Fix
+
+Declare all variables **before** the diagnostic block:
+
+```typescript
+// CORRECT — declarations first
+const WMS_GEMINI_URL  = process.env.WMS_GEMINI_URL  || '...';
+const GEMINI_PROXY_KEY = process.env.GEMINI_PROXY_KEY || '';
+
+// Diagnostics after all consts are initialised
+console.log(`GEMINI_PROXY_KEY: ${GEMINI_PROXY_KEY ? `set (len=${GEMINI_PROXY_KEY.length})` : 'MISSING'}`);
+```
+
+### Rule
+
+When adding a new variable to the startup diagnostic block in any `server.ts`, always check that its `const` declaration appears **above** the `console.log` line. If the declaration is further down the file, move it up.
+
+---
+
+*Last updated: 1 July 2026 — Daniel Frempong Twum / TUC ICT*  
 *Core session directives → see CLAUDE.md*
