@@ -165,11 +165,22 @@ export const generateDescription = async (formData: FormData): Promise<string> =
   }
 };
 
-// Utility function to check API availability (via the relay/proxy)
+// Utility function to check API availability (via the relay/proxy).
+// Availability = the relay + WMS + Gemini path answers with HTTP 200. We do NOT
+// require text in the response: gemini-2.5-flash is a thinking model, so a tiny
+// token budget can be fully consumed by reasoning (finishReason MAX_TOKENS, empty
+// parts) even though the service is perfectly healthy. Gate on res.ok only.
 export const checkAPIAvailability = async (): Promise<boolean> => {
   try {
-    const text = await generateViaProxy("Test", "", { maxOutputTokens: 10 });
-    return !!text;
+    const res = await fetch('/youtube-genie/api/generate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        contents: [{ role: 'user', parts: [{ text: 'ping' }] }],
+        generationConfig: { maxOutputTokens: 256 },
+      }),
+    });
+    return res.ok;
   } catch (error) {
     console.error('[geminiService] checkAPIAvailability caught:', error);
     return false;
