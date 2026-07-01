@@ -114,15 +114,22 @@ cp server.ts package.json pnpm-lock.yaml "`$DEPLOY/" 2>/dev/null || true
 cd "`$DEPLOY"
 CI=true pnpm install --prod --silent 2>/dev/null || npm install --omit=dev --silent
 
-log '[6/7] Ensure all credentials present in deploy .env...'
-touch "`$DEPLOY/.env"
-# Strip BOM and null bytes that propagate from WMS .env source
-tr -d '\000' < "`$DEPLOY/.env" | sed 's/^\xEF\xBB\xBF//' > /tmp/.env.clean && mv /tmp/.env.clean "`$DEPLOY/.env"
+log '[6/7] Rebuild credentials .env (UTF-8, LF)...'
+# Wipe any previous .env — it may have UTF-16 or BOM encoding from prior deploys.
+# All required keys are written fresh below from their authoritative sources.
+> "`$DEPLOY/.env"
 
-# GEMINI_PROXY_KEY — pull from WMS service env
-if ! grep -q '^GEMINI_PROXY_KEY=' "`$DEPLOY/.env"; then
-  K=`$(grep '^GEMINI_PROXY_KEY=' /opt/tuc-wms/.env | cut -d= -f2-)
-  [ -n "`$K" ] && printf 'GEMINI_PROXY_KEY=%s\n' "`$K" >> "`$DEPLOY/.env" && echo 'added GEMINI_PROXY_KEY' || echo 'WARN: WMS proxy key not found'
+# GEMINI_PROXY_KEY — always overwrite from WMS; strip BOM from the extracted value.
+# (WMS .env has a UTF-8 BOM. If GEMINI_PROXY_KEY is the first line of that file,
+# the BOM is included in the grepped value. The file-level BOM strip above only
+# handles the file header, not BOM bytes embedded inside a value.)
+sed -i '/^GEMINI_PROXY_KEY=/d' "`$DEPLOY/.env"
+K=`$(grep '^GEMINI_PROXY_KEY=' /opt/tuc-wms/.env | head -1 | cut -d= -f2- | tr -d '\r\000' | LC_ALL=C sed 's/\xef\xbb\xbf//g')
+if [ -n "`$K" ]; then
+  printf 'GEMINI_PROXY_KEY=%s\n' "`$K" >> "`$DEPLOY/.env"
+  echo "wrote GEMINI_PROXY_KEY (len=`${#K})"
+else
+  echo 'WARN: GEMINI_PROXY_KEY not found in WMS .env'
 fi
 
 # Google OAuth credentials — always overwrite from .env.local (source of truth)
