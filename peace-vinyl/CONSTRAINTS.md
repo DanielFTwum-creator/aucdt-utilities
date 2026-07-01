@@ -12,7 +12,7 @@
 |---|---|
 | App name | Peace Vinyl |
 | PM2 process | `peace-vinyl` |
-| Port | **3029** |
+| Port | **3026** |
 | Public URL | `https://ai-tools.techbridge.edu.gh/peace-vinyl/` |
 | Deploy path | `/var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/peace-vinyl/` |
 | Stack | React 19 · Vite 6 · Tailwind CSS 4 · Express 4 · Node.js (ESM) · Google Gemini AI · Google OAuth 2.0 |

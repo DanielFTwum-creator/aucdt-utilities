@@ -2,7 +2,7 @@
 # SmartScale AI Presentation Platform — Deploy Script
 # Remote : root@techbridge.edu.gh
 # Path   : /var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/smartscale-ai-presentation-platform
-# Port   : 3020  |  PM2 app: smartscale
+# Port   : 3036  |  PM2 app: smartscale
 # Usage  : .\deploy.ps1
 # ============================================================
 
@@ -11,7 +11,7 @@ param([switch]$Build)
 $ErrorActionPreference = 'Stop'
 $REMOTE      = 'root@techbridge.edu.gh'
 $DEPLOY_PATH = '/var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/smartscale-ai-presentation-platform'
-$PORT        = 3020
+$PORT        = 3036
 $PM2_APP     = 'smartscale'
 $HEALTH_URL  = 'https://ai-tools.techbridge.edu.gh/smartscale-ai-presentation-platform'
 $GITHUB_REPO = 'git@github.com:DanielFTwum-creator/aucdt-utilities.git'

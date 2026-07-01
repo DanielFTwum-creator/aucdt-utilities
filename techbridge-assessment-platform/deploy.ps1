@@ -2,7 +2,7 @@
 # Techbridge Assessment Platform — Deploy Script
 # Remote : root@techbridge.edu.gh
 # Path   : /var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/techbridge-assessment-platform
-# Port   : 3021  |  PM2 app: techbridge-assessment
+# Port   : 3038  |  PM2 app: techbridge-assessment
 # Usage  : .\deploy.ps1
 # ============================================================
 
@@ -11,7 +11,7 @@ param([switch]$Build)
 $ErrorActionPreference = 'Stop'
 $REMOTE      = 'root@techbridge.edu.gh'
 $DEPLOY_PATH = '/var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/techbridge-assessment-platform'
-$PORT        = 3021
+$PORT        = 3038
 $PM2_APP     = 'techbridge-assessment'
 $HEALTH_URL  = 'https://ai-tools.techbridge.edu.gh/techbridge-assessment-platform'
 $GITHUB_REPO = 'git@github.com:DanielFTwum-creator/aucdt-utilities.git'

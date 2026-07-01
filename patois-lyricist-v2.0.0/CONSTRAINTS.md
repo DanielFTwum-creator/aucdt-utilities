@@ -12,7 +12,7 @@
 |---|---|
 | App name | Patois Lyricist v2.0.0 |
 | PM2 process | `patois-lyricist` |
-| Port | **3028** |
+| Port | **3017** |
 | Public URL | `https://ai-tools.techbridge.edu.gh/patois-lyricist/` |
 | Deploy path | `/var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/patois-lyricist-v2.0.0/` |
 | Stack | React 19 · TypeScript · Express 5 · Vite · tsx · Google GenAI (`@google/genai`) |
@@ -105,7 +105,7 @@ Before deploying, confirm:
 ☐ VITE_GOOGLE_CLIENT_ID and VITE_GOOGLE_REDIRECT_URI are set correctly for production
 ☐ tsx is in dependencies (not devDependencies) — required by PM2 at runtime
 ☐ pnpm install run with no --prod flag
-☐ PORT env var set to 3028 in PM2 config / ecosystem file
+☐ PORT env var set to 3017 in PM2 config / ecosystem file
 ☐ Health check passes: GET /patois-lyricist/api/health → { ok: true }
 ☐ OAuth callback URL matches VITE_GOOGLE_REDIRECT_URI exactly (including path)
 ☐ tsc --noEmit passes with no type errors before build

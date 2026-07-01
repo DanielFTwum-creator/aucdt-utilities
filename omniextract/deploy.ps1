@@ -2,7 +2,7 @@
 # OmniExtract — Deploy Script
 # Remote : root@techbridge.edu.gh
 # Path   : /var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/omniextract
-# Port   : 3009  |  PM2 app: omniextract
+# Port   : 3005  |  PM2 app: omniextract
 # Usage  : .\deploy.ps1 -Build
 # ============================================================
 
@@ -12,7 +12,7 @@ $ErrorActionPreference = 'Stop'
 
 $REMOTE      = 'root@techbridge.edu.gh'
 $DEPLOY_PATH = '/var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/omniextract'
-$PORT        = 3009
+$PORT        = 3005
 $PM2_APP     = 'omniextract'
 $HEALTH_URL  = 'https://ai-tools.techbridge.edu.gh/omniextract'
 $GITHUB_REPO = 'git@github.com:DanielFTwum-creator/aucdt-utilities.git'
@@ -163,11 +163,11 @@ RewriteBase /omniextract/
 
 RewriteCond %{REQUEST_URI} ^/omniextract/callback [OR]
 RewriteCond %{REQUEST_URI} ^/callback
-RewriteRule ^(callback/?.*)$ http://localhost:3009/omniextract/$1 [P,L]
+RewriteRule ^(callback/?.*)$ http://localhost:3005/omniextract/$1 [P,L]
 
 RewriteCond %{REQUEST_URI} ^/omniextract/api/ [OR]
 RewriteCond %{REQUEST_URI} ^/api/
-RewriteRule ^(api/.*)$ http://localhost:3009/omniextract/$1 [P,L]
+RewriteRule ^(api/.*)$ http://localhost:3005/omniextract/$1 [P,L]
 
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d

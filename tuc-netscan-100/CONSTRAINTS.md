@@ -12,9 +12,9 @@
 |---|---|
 | App name | TUC NetScan 100 |
 | PM2 process | `tuc-netscan-100` (deploy.ps1 uses alias `tuc-netscan-backend`) |
-| Port | **3017** |
-| Public URL | `https://ai-tools.techbridge.edu.gh/netscan/` |
-| Deploy path | `/var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/tuc-netscan-100/` |
+| Port | **3027** |
+| Public URL | `https://netscan.techbridge.edu.gh` |
+| Deploy path | `/var/www/vhosts/techbridge.edu.gh/netscan/` |
 | Stack | React 19 · TypeScript · Vite 8 · Express 5 · Tailwind CSS 4 · Gemini AI (`@google/genai`) |
 | SRS reference | TUC-ICT-SRS-2026-013 |
 
@@ -50,7 +50,7 @@
 |---|---|---|
 | `GEMINI_API_KEY` | Yes | Gemini AI diagnosis gateway. If absent or contains `MY_GEMINI_API_KEY`, the server falls back to local expert rules — no crash, but AI features are disabled. Set in `.env` on the server. |
 | `WMS_BASE` | No | Base URL for WMS SSO token validation. Defaults to `http://127.0.0.1:8081` (server-to-server, bypasses WAF). Override if WMS runs on a different port. |
-| `PORT` | No | Defaults to `3017`. Do not change in production. |
+| `PORT` | No | Defaults to `3027`. Do not change in production. |
 | `NETSCAN_LOCAL_MODE` | Dev only | Set to `1` to bypass WMS SSO on the backend. **Never set this on the production server** — it disables all authentication. |
 | `VITE_WMS_BASE` | Build-time | Frontend SSO base URL. Defaults to `https://wms.techbridge.edu.gh`. Set at build time if WMS is on a custom domain. |
 | `VITE_NETSCAN_LOCAL_MODE` | Dev only | Set to `1` at build time to skip the SSO gate in the React frontend. Pair with `NETSCAN_LOCAL_MODE=1` on the backend. |
@@ -88,7 +88,7 @@ This is a **unified full-stack server** — `server.ts` both serves the Express 
 
 ```
 pnpm build        # Vite compiles React → dist/
-pnpm start        # tsx server.ts — serves API + dist/ on port 3017
+pnpm start        # tsx server.ts — serves API + dist/ on port 3027
 ```
 
 In development, `pnpm dev` runs Vite's dev server (port 3000) with the NetScan API mounted directly via a Vite plugin — no separate Express process needed.
@@ -102,6 +102,8 @@ In development, `pnpm dev` runs Vite's dev server (port 3000) with the NetScan A
 ```
 
 Applies: **Pattern 9** (Express server + PM2) · **Pattern 13** (tsx entry point) · **Pattern 14** (chmod sweep if needed).
+
+nginx vhost_nginx.conf (API proxy location): `/var/www/vhosts/system/netscan.techbridge.edu.gh/conf/vhost_nginx.conf`
 
 The deploy script SSHs to `root@66.226.72.199`, pulls from GitHub, runs `pnpm install`, `pnpm build`, then restarts the PM2 process.
 
@@ -120,7 +122,7 @@ Before deploying, confirm:
 ☐ tsx is in dependencies (not devDependencies) — confirmed in package.json
 ☐ pnpm install run without --prod flag so tsx is available
 ☐ pnpm build completes without TypeScript errors (pnpm lint)
-☐ Health check passes: GET https://ai-tools.techbridge.edu.gh/tuc-netscan-100 → 200
+☐ Health check passes: GET https://netscan.techbridge.edu.gh → 200
 ☐ WMS SSO gate is active: unauthenticated GET /api/v1/* → 401
 ☐ PM2 process name matches deploy.ps1: tuc-netscan-backend
 ```

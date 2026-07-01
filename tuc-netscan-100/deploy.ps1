@@ -1,22 +1,23 @@
 # ============================================================
-# TUC NetScan-100 — Deploy Script
-# Remote : root@techbridge.edu.gh
-# Path   : /var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/tuc-netscan-100/
-# Port   : 3017  |  PM2 app: tuc-netscan-100
+# TUC NetScan — Deploy Script
+# Remote : root@66.226.72.199
+# Path   : /var/www/vhosts/techbridge.edu.gh/netscan/
+# Port   : 3027  |  PM2 app: tuc-netscan-backend
+# URL    : https://netscan.techbridge.edu.gh
 # Usage  : .\deploy.ps1 [-Build]
 # ============================================================
 
 param(
     [string]$RemoteHost = 'root@66.226.72.199',
-    [string]$RemotePath = '/var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/tuc-netscan-100/',
+    [string]$RemotePath = '/var/www/vhosts/techbridge.edu.gh/netscan/',
     [switch]$Build = $false
 )
 
 $ErrorActionPreference = 'Stop'
 
-$PORT        = 3017
+$PORT        = 3027
 $PM2_APP     = 'tuc-netscan-backend'
-$HEALTH_URL  = 'https://ai-tools.techbridge.edu.gh/tuc-netscan-100'
+$HEALTH_URL  = 'https://netscan.techbridge.edu.gh'
 $GITHUB_REPO = 'git@github.com:DanielFTwum-creator/aucdt-utilities.git'
 $SUBFOLDER   = 'tuc-netscan-100'
 $SSH_OPTS    = @('-o', 'StrictHostKeyChecking=no', '-o', 'BatchMode=yes', '-o', 'ServerAliveInterval=30', '-o', 'ServerAliveCountMax=3')
@@ -147,11 +148,11 @@ Log -Level 'INFO' -Msg 'Step 4: Writing .htaccess...' -Color Yellow
 $htaccessContent = @'
 <IfModule mod_rewrite.c>
   RewriteEngine On
-  RewriteBase /tuc-netscan-100/
+  RewriteBase /
   RewriteCond %{REQUEST_FILENAME} -f [OR]
   RewriteCond %{REQUEST_FILENAME} -d
   RewriteRule ^ - [L]
-  RewriteRule ^ /tuc-netscan-100/index.html [QSA,L]
+  RewriteRule ^ /index.html [QSA,L]
 </IfModule>
 <IfModule mod_expires.c>
   ExpiresActive On
@@ -198,16 +199,16 @@ $nvmPrefix = 'export NVM_DIR="$HOME/.nvm"; [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_D
 
 # Step 7: Restart backend
 Log -Level 'INFO' -Msg 'Step 7: Restarting backend (PM2)...' -Color Yellow
-$pm2Result = & $SSH @SSH_OPTS $RemoteHost "if pm2 describe ${PM2_APP} > /dev/null 2>&1; then pm2 reload ${PM2_APP} --update-env; echo 'pm2: reloaded ${PM2_APP}'; else cd ${RemotePath} && NODE_ENV=production PORT=${PORT} pm2 start server.ts --name ${PM2_APP} --interpreter ./node_modules/.bin/tsx --cwd ${RemotePath}; echo 'pm2: started ${PM2_APP}'; fi; pm2 save --force > /dev/null 2>&1 || true"
+$pm2Result = & $SSH @SSH_OPTS $RemoteHost "if pm2 describe ${PM2_APP} > /dev/null 2>&1; then pm2 reload ${PM2_APP} --update-env; echo 'pm2: reloaded ${PM2_APP}'; else cd ${RemotePath} && NODE_ENV=production PORT=${PORT} pm2 start server.ts --name ${PM2_APP} --interpreter ./node_modules/.bin/tsx --cwd ${RemotePath} --log-date-format 'YYYY-MM-DD HH:mm:ss'; echo 'pm2: started ${PM2_APP}'; fi; pm2 save --force > /dev/null 2>&1 || true"
 Write-Host $pm2Result -ForegroundColor DarkGray
 
-# Step 8: Nginx API proxy config (routes /tuc-netscan-100/api/ → port 3017)
+# Step 8: Nginx API proxy config (routes /tuc-netscan-100/api/ → port 3027)
 Log -Level 'INFO' -Msg 'Step 8: Writing Nginx API proxy location block...' -Color Yellow
 $nginxSnippet = @"
 # TUC NetScan — API reverse-proxy
 # DO NOT REMOVE — required for scanning and device API calls
-location /tuc-netscan-100/api/ {
-    proxy_pass         http://127.0.0.1:3017/api/;
+location /api/ {
+    proxy_pass         http://127.0.0.1:3027/api/;
     proxy_http_version 1.1;
     proxy_set_header   Host \$host;
     proxy_set_header   X-Real-IP \$remote_addr;
@@ -218,13 +219,13 @@ location /tuc-netscan-100/api/ {
 "@
 $nginxSnippetEscaped = $nginxSnippet -replace '"', '\"'
 & $SSH @SSH_OPTS $RemoteHost @"
-NGINX_CONF="/var/www/vhosts/techbridge.edu.gh/subdomains/ai-tools/conf/vhost_nginx.conf"
+NGINX_CONF="/var/www/vhosts/system/netscan.techbridge.edu.gh/conf/vhost_nginx.conf"
 mkdir -p `$(dirname `$NGINX_CONF)
 # Remove old netscan snippet if present, then append fresh
-grep -v 'tuc-netscan-100/api' `$NGINX_CONF 2>/dev/null | grep -v 'proxy_pass.*3017' | grep -v 'TUC NetScan' > /tmp/vhost_nginx_clean.conf 2>/dev/null || true
+grep -v 'TUC NetScan' `$NGINX_CONF 2>/dev/null | grep -v 'proxy_pass.*3027' > /tmp/vhost_nginx_clean.conf 2>/dev/null || true
 cat /tmp/vhost_nginx_clean.conf > `$NGINX_CONF 2>/dev/null || true
 printf '%s\n' '$nginxSnippetEscaped' >> `$NGINX_CONF
-plesk bin domain --sync-virtualhost techbridge.edu.gh 2>/dev/null || nginx -s reload 2>/dev/null || service nginx reload 2>/dev/null || true
+nginx -s reload 2>/dev/null || service nginx reload 2>/dev/null || true
 echo "Nginx proxy config applied."
 "@
 Log -Level 'SUCCESS' -Msg 'Nginx API proxy configured' -Color Green
@@ -232,7 +233,7 @@ Log -Level 'SUCCESS' -Msg 'Nginx API proxy configured' -Color Green
 Log -Level 'INFO' -Msg 'Health checks...' -Color Yellow
 Start-Sleep -Seconds 5
 
-$indexCheck = & $SSH @SSH_OPTS $RemoteHost "test -f ${RemotePath}index.html && echo 'OK index.html present' || echo 'MISSING index.html'"
+$indexCheck = & $SSH @SSH_OPTS $RemoteHost "test -f ${RemotePath}index.html && echo 'OK index.html present' || echo 'MISSING index.html - did Plesk save the new docroot?'"
 Write-Host $indexCheck -ForegroundColor $(if ($indexCheck -match '^OK') { 'Green' } else { 'Red' })
 
 $portCheck = & $SSH @SSH_OPTS $RemoteHost "ss -tlnp | grep -q ':${PORT}' && echo 'OK port ${PORT} listening' || echo 'WARN port ${PORT} not found'"

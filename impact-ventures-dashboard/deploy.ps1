@@ -2,7 +2,7 @@
 # Impact Ventures Dashboard — Deploy Script
 # Remote : root@techbridge.edu.gh
 # Path   : /var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/impact-ventures-dashboard
-# Port   : 3025  |  PM2 app: impact-ventures
+# Port   : 3016  |  PM2 app: impact-ventures
 # Usage  : .\deploy.ps1
 # ============================================================
 
@@ -11,7 +11,7 @@ param([switch]$Build)
 $ErrorActionPreference = 'Stop'
 $REMOTE      = 'root@techbridge.edu.gh'
 $DEPLOY_PATH = '/var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/impact-ventures-dashboard'
-$PORT        = 3025
+$PORT        = 3016
 $PM2_APP     = 'impact-ventures'
 $HEALTH_URL  = 'https://ai-tools.techbridge.edu.gh/impact-ventures-dashboard'
 $GITHUB_REPO = 'git@github.com:DanielFTwum-creator/aucdt-utilities.git'

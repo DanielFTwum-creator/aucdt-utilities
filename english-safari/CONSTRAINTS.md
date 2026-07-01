@@ -12,7 +12,7 @@
 |---|---|
 | App name | English Safari |
 | PM2 process | `tb-ai-english-safari` |
-| Port | **3005** |
+| Port | **3021** |
 | Public URL | `https://ai-tools.techbridge.edu.gh/english-safari/` |
 | Deploy path | `/var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/english-safari/` |
 | Stack | React 19 + TypeScript · Vite · Express 5 · `tsx` · Tailwind CSS v4 · `@google/genai` |
@@ -38,7 +38,7 @@
 | Node version | **v26.3.1** |
 | `tsx` | In `dependencies` — available after `pnpm install` (no `--prod`) |
 | PM2 interpreter | Node v26 + `--import node_modules/tsx/dist/esm/index.mjs` pointing at `server.ts` |
-| Reverse proxy | nginx (Plesk-managed) — routes `/english-safari/` to `:3005` |
+| Reverse proxy | nginx (Plesk-managed) — routes `/english-safari/` to `:3021` |
 
 ---
 
@@ -48,7 +48,7 @@
 |---|---|---|
 | `GEMINI_PROXY_KEY` | Auth token for WMS key-proxy | **Primary key mechanism — must be set in production.** |
 | `GEMINI_API_KEY` | Local dev fallback only | Used when `GEMINI_PROXY_KEY` is absent (never in production). |
-| `PORT` | Express listen port | Defaults to `3005` if unset. |
+| `PORT` | Express listen port | Defaults to `3021` if unset. |
 
 **Key custody note:** The Gemini API key is never stored locally in production. `server.ts` fetches it at request time from `https://wms.techbridge.edu.gh/api/gemini/key` using `GEMINI_PROXY_KEY` for auth, following fleet standard FR-SSO-011. The fetched key is cached in memory with a 6-hour TTL.
 
@@ -56,7 +56,7 @@ Set variables in `.env.local` for local development:
 
 ```
 GEMINI_API_KEY=your-local-key-here
-PORT=3005
+PORT=3021
 ```
 
 ---

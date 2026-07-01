@@ -139,7 +139,7 @@ if command -v pm2 &>/dev/null; then
       --name deep-dub-vibes-player \
       --cwd $RemotePath \
       --max-memory-restart 1G \
-      --env PORT=3013 \
+      --env PORT=3023 \
       --env NODE_ENV=production
     echo 'pm2: started deep-dub-vibes-player'
   fi

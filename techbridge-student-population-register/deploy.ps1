@@ -134,7 +134,7 @@ if command -v pm2 &>/dev/null; then
   if pm2 describe tb-student-reg &>/dev/null; then
     pm2 reload tb-student-reg --update-env && echo 'pm2: reloaded tb-student-reg'
   else
-    cd $RemotePath && PORT=3000 pm2 start server.ts --name tb-student-reg --interpreter npx --interpreter-args tsx --cwd $RemotePath
+    cd $RemotePath && PORT=3013 pm2 start server.ts --name tb-student-reg --interpreter npx --interpreter-args tsx --cwd $RemotePath
     echo 'pm2: started tb-student-reg'
   fi
   pm2 save --force &>/dev/null
@@ -145,7 +145,7 @@ ssh -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax
 
 Log "INFO" "Health check..." Yellow
 ssh -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax=3 $RemoteHost "test -f ${RemotePath}index.html && echo 'OK index.html present' || echo 'MISSING index.html'"
-ssh -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax=3 $RemoteHost "ss -tlnp | grep -q ':3000' && echo 'OK port 3000 listening' || echo 'WARN port 3000 not found'"
+ssh -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax=3 $RemoteHost "ss -tlnp | grep -q ':3013' && echo 'OK port 3013 listening' || echo 'WARN port 3013 not found'"
 
 $elapsed = [math]::Round(((Get-Date) - $__deployStart).TotalSeconds, 1)
 $timeStr = if ($elapsed -ge 60) { "$([math]::Floor($elapsed/60))m $([math]::Round($elapsed%60,1))s" } else { "${elapsed}s" }

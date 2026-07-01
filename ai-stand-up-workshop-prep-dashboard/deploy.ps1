@@ -2,7 +2,7 @@
 # AI Workshop Prep Dashboard — Deploy Script
 # Remote : root@techbridge.edu.gh
 # Path   : /var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/workshop
-# Port   : 3016  |  PM2 app: workshop
+# Port   : 3035  |  PM2 app: workshop
 # Usage  : .\deploy.ps1
 # ============================================================
 
@@ -11,7 +11,7 @@ param([switch]$Build)
 $ErrorActionPreference = 'Stop'
 $REMOTE      = 'root@techbridge.edu.gh'
 $DEPLOY_PATH = '/var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/workshop'
-$PORT        = 3016
+$PORT        = 3035
 $PM2_APP     = 'workshop'
 $HEALTH_URL  = 'https://ai-tools.techbridge.edu.gh/workshop'
 $GITHUB_REPO = 'git@github.com:DanielFTwum-creator/aucdt-utilities.git'

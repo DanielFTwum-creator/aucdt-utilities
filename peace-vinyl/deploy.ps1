@@ -134,7 +134,7 @@ if command -v pm2 &>/dev/null; then
   if pm2 describe peace-vinyl &>/dev/null; then
     pm2 reload peace-vinyl --update-env && echo 'pm2: reloaded peace-vinyl'
   else
-    cd $RemotePath && PORT=3001 pm2 start server.js --name peace-vinyl --interpreter npx --interpreter-args tsx --cwd $RemotePath
+    cd $RemotePath && PORT=3026 pm2 start server.js --name peace-vinyl --interpreter npx --interpreter-args tsx --cwd $RemotePath
     echo 'pm2: started peace-vinyl'
   fi
   pm2 save --force &>/dev/null

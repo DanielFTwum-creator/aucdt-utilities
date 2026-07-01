@@ -12,7 +12,7 @@
 |---|---|
 | App name | Deep Dub Vibes Player |
 | PM2 process | `deep-dub-vibes-player` |
-| Port | **3013** |
+| Port | **3023** |
 | Public URL | `https://ai-tools.techbridge.edu.gh/deep-dub-vibes-player/` |
 | Deploy path | `/var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/deep-dub-vibes-player/` |
 | Stack | React 19 · Vite 8 · Tailwind CSS 4 · Express 5 · TypeScript · Node.js (ESM server) |
@@ -92,7 +92,7 @@ Applies: **Pattern 9** (Express server + PM2) · **Pattern 14** (chmod sweep if 
 
 The deploy script pulls from GitHub (`aucdt-utilities` monorepo, `deep-dub-vibes-player` subfolder), runs `pnpm install`, optionally runs `pnpm build`, and restarts the PM2 process.
 
-> **Port note:** The server code defaults to `process.env.PORT || 3009`. Ensure `PORT=3013` is set in `.env.local` on the server, or PM2 ecosystem config passes the correct port — otherwise the process will bind to 3009, not 3013.
+> **Port note:** The server code defaults to `process.env.PORT || 3009`. Ensure `PORT=3023` is set in `.env.local` on the server, or PM2 ecosystem config passes the correct port — otherwise the process will bind to 3009, not 3023.
 
 ---
 
@@ -101,7 +101,7 @@ The deploy script pulls from GitHub (`aucdt-utilities` monorepo, `deep-dub-vibes
 Before deploying, confirm:
 
 ```
-☐ PORT=3013 is set in .env.local on the server (server.js falls back to 3009 if missing)
+☐ PORT=3023 is set in .env.local on the server (server.js falls back to 3009 if missing)
 ☐ VITE_GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, VITE_GOOGLE_REDIRECT_URI are set and valid
 ☐ VITE_GEMINI_API_KEY is set (and key exposure risk accepted or mitigated)
 ☐ Google Console has https://ai-tools.techbridge.edu.gh/callback as an authorised redirect URI

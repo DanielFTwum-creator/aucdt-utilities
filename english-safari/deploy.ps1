@@ -1,10 +1,10 @@
 # english-safari — Deploy Script
-# URL: https://ai-tools.techbridge.edu.gh/english-safari/  (backend server.ts on PORT 3005, pm2 name tb-ai-english-safari)
+# URL: https://ai-tools.techbridge.edu.gh/english-safari/  (backend server.ts on PORT 3021, pm2 name tb-ai-english-safari)
 # Usage: .\deploy.ps1 -Build
 
 param(
     [string]$RemoteHost = "root@techbridge.edu.gh",
-    # Live URL is /english-safari/ (matches nginx OAuth proxy for /english-safari/callback -> :3005 and the app .env).
+    # Live URL is /english-safari/ (matches nginx OAuth proxy for /english-safari/callback -> :3021 and the app .env).
     [string]$RemotePath = "/var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/english-safari/",
     [switch]$Build = $false
 )
@@ -136,9 +136,9 @@ export NVM_DIR="`$HOME/.nvm"; [ -s "`$NVM_DIR/nvm.sh" ] && . "`$NVM_DIR/nvm.sh";
 NPXPATH=`$(which npx)
 if command -v pm2 &>/dev/null; then
   if pm2 describe tb-ai-english-safari &>/dev/null; then
-    NODE_ENV=production PORT=3005 pm2 reload tb-ai-english-safari --update-env && echo 'pm2: reloaded tb-ai-english-safari'
+    NODE_ENV=production PORT=3021 pm2 reload tb-ai-english-safari --update-env && echo 'pm2: reloaded tb-ai-english-safari'
   else
-    NODE_ENV=production PORT=3005 pm2 start $RemotePath/server.ts \
+    NODE_ENV=production PORT=3021 pm2 start $RemotePath/server.ts \
       --name tb-ai-english-safari \
       --interpreter "`$NPXPATH" \
       --interpreter-args tsx \

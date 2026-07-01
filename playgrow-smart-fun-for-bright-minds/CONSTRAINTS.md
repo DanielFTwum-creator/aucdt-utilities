@@ -12,7 +12,7 @@
 |---|---|
 | App name | playgrow-smart-fun-for-bright-minds |
 | PM2 process | `playgrow` |
-| Port | **3019** |
+| Port | **3025** |
 | Public URL | `https://ai-tools.techbridge.edu.gh/playgrow/` |
 | Deploy path | `/var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/playgrow-smart-fun-for-bright-minds/` |
 | Stack | React 19 + Vite + TypeScript · Express (server.ts) · Tailwind CSS v4 · Google OAuth 2.0 · Gemini via WMS proxy relay |
@@ -51,13 +51,13 @@
 | `VITE_GOOGLE_CLIENT_ID` | Google OAuth 2.0 client ID — exposed to Vite/browser build |
 | `VITE_GOOGLE_REDIRECT_URI` | OAuth redirect URI — defaults to `https://ai-tools.techbridge.edu.gh/playgrow/callback` |
 | `GOOGLE_CLIENT_SECRET` | Google OAuth 2.0 client secret — **server-side only, never expose to client** |
-| `PORT` | Listening port — must be `3019` in production (server.ts defaults to 3015 if unset; `.env` must set this explicitly) |
+| `PORT` | Listening port — must be `3025` in production (server.ts defaults to 3015 if unset; `.env` must set this explicitly) |
 | `WMS_GEMINI_URL` | WMS central Gemini proxy endpoint — defaults to `https://wms.techbridge.edu.gh/api/gemini/generate` |
 | `GEMINI_PROXY_KEY` | Service credential for the WMS Gemini relay — **server-side only** |
 
 All variables are loaded via `dotenv` from `.env` at startup. If any are missing, check `.env.local` on the server.
 
-> **Note on PORT:** `server.ts` defaults to `3015` if `PORT` is unset. This collides with willpro. The production `.env` **must** explicitly set `PORT=3019`.
+> **Note on PORT:** `server.ts` defaults to `3015` if `PORT` is unset. This collides with willpro. The production `.env` **must** explicitly set `PORT=3025`.
 
 ---
 
@@ -104,14 +104,14 @@ The deploy script pulls from `git@github.com:DanielFTwum-creator/aucdt-utilities
 Before deploying, confirm:
 
 ```
-☐ PORT=3019 is set explicitly in the server .env (default in server.ts is 3015 — wrong port)
+☐ PORT=3025 is set explicitly in the server .env (default in server.ts is 3015 — wrong port)
 ☐ GOOGLE_CLIENT_SECRET is set in the server .env (never in Vite/client env)
 ☐ WMS_GEMINI_URL and GEMINI_PROXY_KEY are set in the server .env
 ☐ Authorised redirect URI https://ai-tools.techbridge.edu.gh/playgrow/callback is registered in Google Cloud Console
 ☐ tsx is in dependencies (not devDependencies only) — required for PM2 to run server.ts
 ☐ pnpm install run without --prod flag so tsx is available
 ☐ pnpm build completes without errors
-☐ Health check passes: GET /playgrow/api/health → { ok: true, service: "playgrow", port: 3019 }
+☐ Health check passes: GET /playgrow/api/health → { ok: true, service: "playgrow", port: 3025 }
 ```
 
 ---

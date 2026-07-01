@@ -12,7 +12,7 @@
 |---|---|
 | App name | OmniExtract |
 | PM2 process | `omniextract` |
-| Port | **3009** |
+| Port | **3005** |
 | Public URL | `https://ai-tools.techbridge.edu.gh/omniextract/` |
 | Deploy path | `/var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/omniextract/` |
 | Stack | TypeScript · Express · Vite (React frontend) · Google OAuth 2.0 · WMS Gemini Proxy |
@@ -46,7 +46,7 @@
 
 | Variable | Purpose |
 |---|---|
-| `PORT` | Express listen port — defaults to `3009` if unset |
+| `PORT` | Express listen port — defaults to `3005` if unset |
 | `VITE_GOOGLE_CLIENT_ID` | Google OAuth 2.0 client ID (used server-side and exposed to Vite frontend) |
 | `GOOGLE_CLIENT_SECRET` | Google OAuth 2.0 client secret (server-side only — never expose to frontend) |
 | `VITE_GOOGLE_REDIRECT_URI` | OAuth callback URL — production value: `https://ai-tools.techbridge.edu.gh/omniextract/callback` |

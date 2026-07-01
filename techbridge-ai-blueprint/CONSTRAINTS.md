@@ -12,12 +12,12 @@
 |---|---|
 | App name | techbridge-ai-blueprint |
 | PM2 process | `tb-ai-blueprint` |
-| Port | **3016** |
+| Port | **3022** |
 | Public URL | `https://ai-tools.techbridge.edu.gh/tb-ai-blueprint/` |
 | Deploy path | `/var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/techbridge-ai-blueprint/` |
 | Stack | React 19 + TypeScript · Vite 5 · Express 5 · Tailwind CSS 4 · Node v26 |
 
-> **Note:** The deploy script and server fallback reference `/blueprint/` and port `3005` — these are stale values. The canonical port is **3016** and the public path is `/tb-ai-blueprint/`. Verify `.env` and nginx config match before deploying.
+> **Note:** The deploy script and server fallback reference `/blueprint/` and port `3005` — these are stale values. The canonical port is **3022** and the public path is `/tb-ai-blueprint/`. Verify `.env` and nginx config match before deploying.
 
 ---
 
@@ -40,7 +40,7 @@
 | Node version | **v26.3.1** |
 | tsx | **Not in `dependencies`** — must be added before deploying `server.ts` (see §7) |
 | PM2 interpreter | Node v26 + `--import node_modules/tsx/dist/esm/index.mjs` |
-| Reverse proxy | nginx (Plesk-managed) — proxies `/tb-ai-blueprint/` → `localhost:3016` |
+| Reverse proxy | nginx (Plesk-managed) — proxies `/tb-ai-blueprint/` → `localhost:3022` |
 
 ---
 
@@ -51,7 +51,7 @@
 | `VITE_GOOGLE_CLIENT_ID` | Google OAuth 2.0 client ID — exposed to Vite frontend build |
 | `VITE_GOOGLE_REDIRECT_URI` | OAuth redirect URI (must match Google Console) — e.g. `https://ai-tools.techbridge.edu.gh/tb-ai-blueprint/callback` |
 | `GOOGLE_CLIENT_SECRET` | Google OAuth 2.0 client secret — server-side only, never expose to frontend |
-| `PORT` | Express server port — must be set to `3016` in production `.env` |
+| `PORT` | Express server port — must be set to `3022` in production `.env` |
 
 > All four variables are required at runtime. If `.env` is missing, the server will start but OAuth will fail silently. Check `.env.local` for local development overrides.
 
@@ -88,13 +88,13 @@ The deploy script clones from GitHub (`DanielFTwum-creator/aucdt-utilities`) and
 Before deploying, confirm:
 
 ```
-☐ PORT=3016 is set in .env on the server (not 3005)
+☐ PORT=3022 is set in .env on the server (not 3005)
 ☐ VITE_GOOGLE_REDIRECT_URI matches the URI registered in Google Cloud Console
 ☐ GOOGLE_CLIENT_SECRET is present in server .env (never committed to git)
 ☐ tsx is in dependencies (not devDependencies) — required for server.ts at runtime
 ☐ pnpm install run without --prod flag so tsx is available
 ☐ Cookie path updated from /blueprint/ to /tb-ai-blueprint/ if using canonical URL
-☐ nginx proxy rule points /tb-ai-blueprint/ → localhost:3016
+☐ nginx proxy rule points /tb-ai-blueprint/ → localhost:3022
 ☐ PM2 process name is tb-ai-blueprint and uses Node v26 interpreter
 ☐ Health check passes: GET /tb-ai-blueprint/api/health → { ok: true }
 ```

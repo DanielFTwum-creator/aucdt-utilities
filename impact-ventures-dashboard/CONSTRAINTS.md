@@ -12,7 +12,7 @@
 |---|---|
 | App name | Impact Ventures Dashboard |
 | PM2 process | `impact-ventures` |
-| Port | **3025** |
+| Port | **3016** |
 | Public URL | `https://ai-tools.techbridge.edu.gh/impact-ventures/` |
 | Deploy path | `/var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/impact-ventures-dashboard/` |
 | Stack | React 19 · TypeScript · Express 5 · Vite · Tailwind CSS · Recharts · `@google/genai` |
@@ -52,7 +52,7 @@
 | `VITE_GOOGLE_CLIENT_ID` | Google OAuth 2.0 client ID (also used client-side via Vite) |
 | `VITE_GOOGLE_REDIRECT_URI` | OAuth redirect URI — defaults to `https://ai-tools.techbridge.edu.gh/impact-ventures-dashboard/callback` |
 | `GOOGLE_CLIENT_SECRET` | Google OAuth 2.0 client secret (server-side only — never expose to client) |
-| `PORT` | Express listen port — must be **3025** in production |
+| `PORT` | Express listen port — must be **3016** in production |
 
 All variables are loaded via `dotenv` from `.env` at server startup. If any are missing, check `.env.local` or the Plesk environment panel.
 
@@ -82,7 +82,7 @@ All variables are loaded via `dotenv` from `.env` at server startup. If any are 
 
 Applies: **Pattern 9** (Express server + PM2), **Pattern 13** (tsx as runtime), **Pattern 14** (chmod sweep recommended for deploy path).
 
-The script pulls from `git@github.com:DanielFTwum-creator/aucdt-utilities.git`, subfolder `impact-ventures-dashboard`, and restarts the `impact-ventures` PM2 process on port 3025.
+The script pulls from `git@github.com:DanielFTwum-creator/aucdt-utilities.git`, subfolder `impact-ventures-dashboard`, and restarts the `impact-ventures` PM2 process on port 3016.
 
 ---
 
@@ -91,12 +91,12 @@ The script pulls from `git@github.com:DanielFTwum-creator/aucdt-utilities.git`, 
 Before deploying, confirm:
 
 ```
-☐ All four env vars are present in the server .env file: VITE_GOOGLE_CLIENT_ID, VITE_GOOGLE_REDIRECT_URI, GOOGLE_CLIENT_SECRET, PORT=3025
+☐ All four env vars are present in the server .env file: VITE_GOOGLE_CLIENT_ID, VITE_GOOGLE_REDIRECT_URI, GOOGLE_CLIENT_SECRET, PORT=3016
 ☐ Gemini API key is set (check exact var name in .env.local — not in detected vars)
 ☐ tsx is in dependencies (not devDependencies) — required for server.ts at runtime
 ☐ pnpm install run WITHOUT --prod flag (devDependencies needed for Vite SSR dev branch)
 ☐ Google Cloud Console redirect URI matches VITE_GOOGLE_REDIRECT_URI exactly
-☐ PM2 process 'impact-ventures' is running on port 3025 post-deploy
+☐ PM2 process 'impact-ventures' is running on port 3016 post-deploy
 ☐ Health check passes: GET /impact-ventures-dashboard/api/health → { ok: true }
 ☐ OAuth flow completes and sets impact_ventures_dashboard_user cookie correctly
 ```

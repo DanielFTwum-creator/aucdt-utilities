@@ -2,7 +2,7 @@
 # Playgrow — Deploy Script
 # Remote : root@techbridge.edu.gh
 # Path   : /var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/playgrow
-# Port   : 3019  |  PM2 app: playgrow   (3015 was a collision with willpro)
+# Port   : 3025  |  PM2 app: playgrow   (3015 was a collision with willpro)
 # Usage  : .\deploy.ps1
 # ============================================================
 
@@ -11,7 +11,7 @@ param([switch]$Build)
 $ErrorActionPreference = 'Stop'
 $REMOTE      = 'root@techbridge.edu.gh'
 $DEPLOY_PATH = '/var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/playgrow'
-$PORT        = 3019
+$PORT        = 3025
 $PM2_APP     = 'playgrow'
 $HEALTH_URL  = 'https://ai-tools.techbridge.edu.gh/playgrow'
 $GITHUB_REPO = 'git@github.com:DanielFTwum-creator/aucdt-utilities.git'

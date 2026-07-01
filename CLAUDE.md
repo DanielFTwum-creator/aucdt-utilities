@@ -154,7 +154,7 @@ Rules for human-readable text: PR descriptions, comments, docstrings, commit mes
 - React / Angular / TypeScript component boilerplate
 - CRUD endpoints (Spring Boot / Express / FastAPI)
 - SQL schema files and migration scripts
-- Playwright test suite generation
+- E2E/integration test suite generation (Cypress, Playwright, or Puppeteer; all three are acceptable. Cypress is already wired into the root `package.json`)
 - Dockerfile and docker-compose files
 - Repetitive utility functions and helpers
 - CSS / Tailwind styling of pre-designed components
@@ -195,7 +195,7 @@ Confirm each item with ✅ before proceeding. Stop and report if any item fails.
 
 ☐ 3. TESTING
    - Integrate self-testing capabilities                 [Sonnet design → Haiku scaffold]
-   - Create Playwright test suite                        [Haiku]
+   - Create E2E test suite (Cypress / Playwright / Puppeteer) [Haiku]
    - Add interactive test tab with screenshot capture    [Haiku]
 
 ☐ 4. DOCUMENTATION
@@ -461,6 +461,35 @@ Say it:
 
 ---
 
-*Last updated: 30 June 2026 — Daniel Frempong Twum / TUC ICT*
+## 12. SECURITY CONSTRAINTS (ABSOLUTE — NO EXCEPTIONS)
+
+**Claude's responses SHALL NOT expose client secrets.**
+
+This means every response, command, script, and code snippet must comply with all of the following:
+
+- Never print, echo, log, or display a secret value in any form — not in terminal output, not in a chat response, not in a comment
+- Never put a secret value on a command line where it appears in bash history (e.g. `export SECRET=abc123` is forbidden; write to a file instead)
+- When copying credentials between files on the server, always use file-to-file operations (`grep "^VAR=" src >> dest`) with stdout redirected — never `cat`, `echo`, or print the value
+- When suggesting SSH commands that touch `.env` files, use `nano`/`vim` for the edit step — never `echo "SECRET=value" >> .env`
+- Never include a placeholder like `<your_secret>` in a command that would appear in shell history with the real value substituted
+- Covers: API keys, OAuth client secrets, database passwords, TOTP seeds, JWT signing keys, session secrets, proxy keys, and any value stored in `.env` files
+
+Applies to all responses regardless of context: debugging sessions, deploy scripts, one-liners, documentation examples, and code reviews.
+
+---
+
+## 13. COMMAND FORMATTING (ABSOLUTE — NO EXCEPTIONS)
+
+**All commands in responses must use full Windows paths so they can be copy-pasted directly into PowerShell without modification.**
+
+- Never use bare relative paths like `.\deploy.ps1` or `cd ..` without the full leading path
+- PowerShell example: `cd C:\Development\github\aucdt-utilities\enhanced-youtube-genie` then `.\deploy.ps1 -Build`
+- SSH server paths: always use full `/var/www/vhosts/...` or `/opt/...` absolute paths — never `cd ../` patterns
+- Git commands: `cd C:\Development\github\aucdt-utilities` then `git ...`
+- Applies to every shell command in every response: PowerShell, bash, git, pm2, ssh, pnpm
+
+---
+
+*Last updated: 1 July 2026 — Daniel Frempong Twum / TUC ICT*
 *Merged with the `gstack` behavioural template (22 Jun 2026): Core Operating Principles enriched with gstack's senior-engineer/traceability checks; new HARNESS, LOOPS & AUTONOMY, and TEXT STYLE sections added. gstack's own slash commands (`/goal`, `/loop`, `/batch`, `/browse`, etc.) are not available as skills in Cowork sessions — referenced only as "if installed" rather than assumed present.*
 *Pattern library (User Journey, HTML Standards, Capacitor, Gemini proxy, Dual-Auth Logout, Glucose) → see PATTERNS.md; Java standards → §5a above; staff-app SSO → tuc-wms/docs/SSO_ONBOARDING_PLAYBOOK.md*

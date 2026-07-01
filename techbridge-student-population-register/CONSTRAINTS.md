@@ -12,7 +12,7 @@
 |---|---|
 | App name | Techbridge Student Population Register |
 | PM2 process | `tb-student-reg` |
-| Port | **3027** |
+| Port | **3013** |
 | Public URL | `https://ai-tools.techbridge.edu.gh/tb-student-reg/` |
 | Deploy path | `/var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/techbridge-student-population-register/` |
 | Stack | React 19 · TypeScript · Express · Vite 6 · better-sqlite3 · Google OAuth 2.0 · Gemini AI (`@google/genai`) |
@@ -51,9 +51,9 @@
 | `VITE_GOOGLE_CLIENT_ID` | Google OAuth 2.0 client ID — exposed to Vite frontend build |
 | `VITE_GOOGLE_REDIRECT_URI` | OAuth redirect URI — must match Google Console exactly; production value is `https://ai-tools.techbridge.edu.gh/techbridge-student-population-register/callback` |
 | `GOOGLE_CLIENT_SECRET` | Google OAuth 2.0 client secret — server-side only, never expose to client |
-| `PORT` | Express listen port — set to `3027` in production `.env`; server.ts defaults to `3013` if unset, so this **must** be set |
+| `PORT` | Express listen port — set to `3013` in production `.env`; server.ts defaults to `3013` if unset, so this **must** be set |
 
-> Note: The server.ts hardcodes `3013` as the `PORT` fallback. Always ensure `PORT=3027` is set in the production `.env` file so PM2 picks up the correct port.
+> Note: The server.ts hardcodes `3013` as the `PORT` fallback. Always ensure `PORT=3013` is set in the production `.env` file so PM2 picks up the correct port.
 
 ---
 
@@ -112,7 +112,7 @@ PM2 ecosystem config must use:
 Before deploying, confirm:
 
 ```
-☐ PORT=3027 is set in production .env (server.ts defaults to 3013 — this will break nginx routing)
+☐ PORT=3013 is set in production .env (server.ts defaults to 3013 — this will break nginx routing)
 ☐ GEMINI_API_KEY, VITE_GOOGLE_CLIENT_ID, VITE_GOOGLE_REDIRECT_URI, GOOGLE_CLIENT_SECRET all present in .env
 ☐ tsx is in dependencies (not devDependencies) — required for PM2 tsx import flag
 ☐ pnpm install run without --prod flag (tsx must be installed)

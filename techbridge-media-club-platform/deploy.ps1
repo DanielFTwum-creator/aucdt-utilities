@@ -12,7 +12,7 @@ $ErrorActionPreference = "Stop"
 $__deployStart = Get-Date
 $GITHUB_REPO   = "git@github.com:DanielFTwum-creator/aucdt-utilities.git"
 $SUBFOLDER     = "techbridge-media-club-platform"
-$PORT          = 3022
+$PORT          = 3039
 $PM2_APP       = "techbridge-media-club-platform"
 
 function Log {
