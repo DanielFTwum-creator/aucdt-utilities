@@ -171,6 +171,7 @@ export const checkAPIAvailability = async (): Promise<boolean> => {
     const text = await generateViaProxy("Test", "", { maxOutputTokens: 10 });
     return !!text;
   } catch (error) {
+    console.error('[geminiService] checkAPIAvailability caught:', error);
     return false;
   }
 };
