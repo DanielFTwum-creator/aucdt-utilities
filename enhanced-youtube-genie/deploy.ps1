@@ -41,8 +41,8 @@ Log "INFO" ""
 Log "INFO" "Step 1: Pre-flight checks..." Yellow
 if (-not (Test-Path ".env.local")) { Log "ERROR" ".env.local not found" Red; exit 1 }
 $envContent = Get-Content ".env.local" -Raw
-if ($envContent -notmatch "VITE_GOOGLE_CLIENT_ID") { Log "ERROR" "VITE_GOOGLE_CLIENT_ID missing in .env.local" Red; exit 1 }
-if ($envContent -notmatch "GOOGLE_CLIENT_SECRET")  { Log "ERROR" "GOOGLE_CLIENT_SECRET missing in .env.local" Red; exit 1 }
+if ($envContent -notmatch "(?m)^VITE_GOOGLE_CLIENT_ID=\S") { Log "ERROR" "VITE_GOOGLE_CLIENT_ID missing or empty in .env.local (must be an uncommented KEY=value line)" Red; exit 1 }
+if ($envContent -notmatch "(?m)^GOOGLE_CLIENT_SECRET=\S")  { Log "ERROR" "GOOGLE_CLIENT_SECRET missing or empty in .env.local (must be an uncommented KEY=value line)" Red; exit 1 }
 Log "SUCCESS" "Pre-flight OK (OAuth credentials verified)" Green
 
 Log "INFO" "Step 2: Verifying git state..." Yellow
@@ -124,16 +124,22 @@ if ! grep -q '^GEMINI_PROXY_KEY=' "`$DEPLOY/.env"; then
 fi
 
 # Google OAuth credentials — always overwrite from .env.local (source of truth)
-for VAR in VITE_GOOGLE_CLIENT_ID GOOGLE_CLIENT_SECRET; do
-  V=`$(grep "^\${VAR}=" /tmp/.env.youtube-genie 2>/dev/null | cut -d= -f2-)
-  if [ -n "`$V" ]; then
-    sed -i "/^\${VAR}=/d" "`$DEPLOY/.env"
-    printf '%s=%s\n' "`$VAR" "`$V" >> "`$DEPLOY/.env"
-    echo "wrote `$VAR"
-  else
-    echo "WARN: `$VAR not found in .env.local"
-  fi
-done
+CID=`$(grep "^VITE_GOOGLE_CLIENT_ID=" /tmp/.env.youtube-genie 2>/dev/null | cut -d= -f2- | tr -d '\r')
+if [ -n "`$CID" ]; then
+  sed -i "/^VITE_GOOGLE_CLIENT_ID=/d" "`$DEPLOY/.env"
+  printf 'VITE_GOOGLE_CLIENT_ID=%s\n' "`$CID" >> "`$DEPLOY/.env"
+  echo "wrote VITE_GOOGLE_CLIENT_ID (len=`${#CID})"
+else
+  echo "WARN: VITE_GOOGLE_CLIENT_ID not found in .env.local"
+fi
+CSEC=`$(grep "^GOOGLE_CLIENT_SECRET=" /tmp/.env.youtube-genie 2>/dev/null | cut -d= -f2- | tr -d '\r')
+if [ -n "`$CSEC" ]; then
+  sed -i "/^GOOGLE_CLIENT_SECRET=/d" "`$DEPLOY/.env"
+  printf 'GOOGLE_CLIENT_SECRET=%s\n' "`$CSEC" >> "`$DEPLOY/.env"
+  echo "wrote GOOGLE_CLIENT_SECRET (len=`${#CSEC})"
+else
+  echo "WARN: GOOGLE_CLIENT_SECRET not found in .env.local"
+fi
 
 grep -q '^PORT=' "`$DEPLOY/.env" || echo "PORT=`$PORT" >> "`$DEPLOY/.env"
 chmod 600 "`$DEPLOY/.env"

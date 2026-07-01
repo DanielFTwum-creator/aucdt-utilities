@@ -14,9 +14,9 @@ const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET       || '';
 const REDIRECT_URI         = process.env.VITE_GOOGLE_REDIRECT_URI   || 'https://ai-tools.techbridge.edu.gh/youtube-genie/callback';
 
 // Startup diagnostics — presence checks only, no secret values logged
-console.log(`[youtube-genie] GOOGLE_CLIENT_ID  : ${GOOGLE_CLIENT_ID  ? `set (${GOOGLE_CLIENT_ID.slice(0, 12)}…)` : 'MISSING'}`);
-console.log(`[youtube-genie] GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET ? 'set' : 'MISSING'}`);
-console.log(`[youtube-genie] REDIRECT_URI       : ${REDIRECT_URI}`);
+console.log(`[youtube-genie] GOOGLE_CLIENT_ID    : ${GOOGLE_CLIENT_ID    ? `set (${GOOGLE_CLIENT_ID.slice(0, 20)}…)` : 'MISSING'}`);
+console.log(`[youtube-genie] GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET ? `set (len=${GOOGLE_CLIENT_SECRET.length})` : 'MISSING'}`);
+console.log(`[youtube-genie] REDIRECT_URI        : ${REDIRECT_URI}`);
 // Gemini via the central WMS proxy — this app holds NO Gemini key. The relay
 // presents the X-Gemini-Proxy-Key service credential (server env only).
 const WMS_GEMINI_URL = process.env.WMS_GEMINI_URL || 'https://wms.techbridge.edu.gh/api/gemini/generate';
@@ -34,6 +34,7 @@ app.use(cookieParser());
 
 app.get(['/callback', '/youtube-genie/callback'], async (req, res) => {
   const { code, error } = req.query as Record<string, string>;
+  console.log(`[youtube-genie] /callback — code:${code ? `present(len=${code.length})` : 'MISSING'} google_error:${error ?? 'none'}`);
   if (error) return res.redirect(`/youtube-genie/?error=${encodeURIComponent(error)}`);
   if (!code) return res.redirect('/youtube-genie/?error=missing_code');
   try {
@@ -42,10 +43,19 @@ app.get(['/callback', '/youtube-genie/callback'], async (req, res) => {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ client_id: GOOGLE_CLIENT_ID, client_secret: GOOGLE_CLIENT_SECRET, code, grant_type: 'authorization_code', redirect_uri: REDIRECT_URI }),
     });
-    if (!tokenResponse.ok) { const err = await tokenResponse.json(); console.error('[youtube-genie] Token exchange failed:', err); return res.redirect('/youtube-genie/?error=token_exchange_failed'); }
+    if (!tokenResponse.ok) {
+      const errBody = await tokenResponse.json() as { error?: string; error_description?: string };
+      console.error(`[youtube-genie] Token exchange FAILED — HTTP ${tokenResponse.status}`);
+      console.error(`[youtube-genie]   google error      : ${errBody.error}`);
+      console.error(`[youtube-genie]   google description: ${errBody.error_description}`);
+      console.error(`[youtube-genie]   client_secret len : ${GOOGLE_CLIENT_SECRET.length}`);
+      const googleError = errBody.error ?? 'token_exchange_failed';
+      return res.redirect(`/youtube-genie/?error=${encodeURIComponent(googleError)}&desc=${encodeURIComponent(errBody.error_description ?? '')}`);
+    }
     const tokens = await tokenResponse.json() as { id_token?: string };
     if (!tokens.id_token) return res.redirect('/youtube-genie/?error=no_id_token');
     const userInfo = decodeJWT(tokens.id_token);
+    console.log(`[youtube-genie] OAuth success — user: ${userInfo.email}`);
     const userJson = JSON.stringify({ id: userInfo.sub, name: userInfo.name, email: userInfo.email });
     res.cookie('youtube-genie_user', Buffer.from(userJson).toString('base64'), { httpOnly: false, secure: true, sameSite: 'lax', maxAge: 7 * 24 * 60 * 60 * 1000, path: '/youtube-genie/' });
     return res.redirect('/youtube-genie/');

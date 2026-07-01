@@ -42,7 +42,11 @@ export function AuthGate({ children, onLogout }: { children: React.ReactNode; on
 
     const params = new URLSearchParams(window.location.search);
     const oauthError = params.get('error');
-    if (oauthError) setError(`Google login failed: ${oauthError}`);
+    const oauthDesc  = params.get('desc');
+    if (oauthError) {
+      console.error('[AuthGate] OAuth error from server:', oauthError, oauthDesc ?? '');
+      setError(`Google login failed: ${oauthError}${oauthDesc ? ` — ${oauthDesc}` : ''}`);
+    }
   }, []);
 
   const handleLogout = () => {
@@ -68,6 +72,9 @@ export function AuthGate({ children, onLogout }: { children: React.ReactNode; on
       prompt: 'select_account',
       state,
     });
+    console.log('[AuthGate] Starting Google OAuth');
+    console.log('[AuthGate]   client_id prefix :', clientId.slice(0, 20) + '…');
+    console.log('[AuthGate]   redirect_uri      :', redirectUri);
     window.location.href = `https://accounts.google.com/o/oauth2/v2/auth?${p}`;
   };
 
