@@ -13,15 +13,16 @@ const GOOGLE_CLIENT_ID     = process.env.VITE_GOOGLE_CLIENT_ID     || '';
 const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET       || '';
 const REDIRECT_URI         = process.env.VITE_GOOGLE_REDIRECT_URI   || 'https://ai-tools.techbridge.edu.gh/youtube-genie/callback';
 
+// Gemini via the central WMS proxy — this app holds NO Gemini key. The relay
+// presents the X-Gemini-Proxy-Key service credential (server env only).
+const WMS_GEMINI_URL = process.env.WMS_GEMINI_URL || 'https://wms.techbridge.edu.gh/api/gemini/generate';
+const GEMINI_PROXY_KEY = process.env.GEMINI_PROXY_KEY || '';
+
 // Startup diagnostics — presence checks only, no secret values logged
 console.log(`[youtube-genie] GOOGLE_CLIENT_ID    : ${GOOGLE_CLIENT_ID    ? `set (${GOOGLE_CLIENT_ID.slice(0, 20)}…)` : 'MISSING'}`);
 console.log(`[youtube-genie] GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET ? `set (len=${GOOGLE_CLIENT_SECRET.length})` : 'MISSING'}`);
 console.log(`[youtube-genie] REDIRECT_URI        : ${REDIRECT_URI}`);
 console.log(`[youtube-genie] GEMINI_PROXY_KEY    : ${GEMINI_PROXY_KEY    ? `set (len=${GEMINI_PROXY_KEY.length})` : 'MISSING — AI relay will return 503'}`);
-// Gemini via the central WMS proxy — this app holds NO Gemini key. The relay
-// presents the X-Gemini-Proxy-Key service credential (server env only).
-const WMS_GEMINI_URL = process.env.WMS_GEMINI_URL || 'https://wms.techbridge.edu.gh/api/gemini/generate';
-const GEMINI_PROXY_KEY = process.env.GEMINI_PROXY_KEY || '';
 
 function decodeJWT(token: string): Record<string, string> {
   const parts = token.split('.');
