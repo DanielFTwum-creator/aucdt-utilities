@@ -4,7 +4,10 @@
 
 param(
     [string]$RemoteHost = "root@techbridge.edu.gh",
-    [string]$RemotePath = "/var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/patois/",
+    # Live app (backend process cwd + served dist) runs from the 'lyricist' folder, not 'patois'.
+    # The public URL is /patois/ (nginx path) but the files live here. Deploying to 'patois/'
+    # lands in an unused folder — verified 2026-07-01. Keep this pointed at 'lyricist'.
+    [string]$RemotePath = "/var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/lyricist/",
     [switch]$Build = $false
 )
 
