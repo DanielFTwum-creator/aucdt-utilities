@@ -134,7 +134,7 @@ export const generateDescription = async (formData: FormData): Promise<string> =
     `;
 
     // Make API call (via server-side relay -> WMS proxy) with enhanced error handling
-    const text = await generateViaProxy(prompt, "gemini-2.0-flash", {
+    const text = await generateViaProxy(prompt, "", {
       responseMimeType: "application/json",
       responseSchema: responseSchema,
       temperature: 0.8,
@@ -168,7 +168,7 @@ export const generateDescription = async (formData: FormData): Promise<string> =
 // Utility function to check API availability (via the relay/proxy)
 export const checkAPIAvailability = async (): Promise<boolean> => {
   try {
-    const text = await generateViaProxy("Test", "gemini-2.0-flash", { maxOutputTokens: 10 });
+    const text = await generateViaProxy("Test", "", { maxOutputTokens: 10 });
     return !!text;
   } catch (error) {
     return false;
