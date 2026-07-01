@@ -31,6 +31,10 @@ export const LoginView: React.FC = () => {
   const [error, setError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isRedirecting, setIsRedirecting] = useState(false);
+  // Login-screen privacy (PATTERNS.md #6): fields render read-only until first focus
+  // so the browser can't pre-fill the last user's email on shared machines.
+  const [fieldsUnlocked, setFieldsUnlocked] = useState(false);
+  const unlockFields = () => setFieldsUnlocked(true);
 
   const eqRef = useRef<HTMLDivElement>(null);
 
@@ -286,6 +290,9 @@ export const LoginView: React.FC = () => {
                   onChange={e => setIdentifier(e.target.value)}
                   placeholder="Enter username or email"
                   disabled={isSubmitting}
+                  readOnly={!fieldsUnlocked}
+                  onFocus={unlockFields}
+                  autoComplete="off"
                   required
                 />
               </div>
@@ -314,6 +321,9 @@ export const LoginView: React.FC = () => {
                   onChange={e => setPassword(e.target.value)}
                   placeholder="Enter password"
                   disabled={isSubmitting}
+                  readOnly={!fieldsUnlocked}
+                  onFocus={unlockFields}
+                  autoComplete="new-password"
                   required
                 />
                 <button type="button" className="input-icon" onClick={() => setShowPassword(p => !p)} tabIndex={-1}>
