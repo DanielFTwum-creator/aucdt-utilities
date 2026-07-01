@@ -42,8 +42,8 @@ Log "INFO" "Step 1: Pre-flight checks..." Yellow
 if (-not (Test-Path ".env.local")) { Log "ERROR" ".env.local not found" Red; exit 1 }
 $envContent = Get-Content ".env.local" -Raw
 if ($envContent -notmatch "(?m)^VITE_GOOGLE_CLIENT_ID=\S") { Log "ERROR" "VITE_GOOGLE_CLIENT_ID missing or empty in .env.local (must be an uncommented KEY=value line)" Red; exit 1 }
-if ($envContent -notmatch "(?m)^GOOGLE_CLIENT_SECRET=\S")  { Log "ERROR" "GOOGLE_CLIENT_SECRET missing or empty in .env.local (must be an uncommented KEY=value line)" Red; exit 1 }
-Log "SUCCESS" "Pre-flight OK (OAuth credentials verified)" Green
+# GOOGLE_CLIENT_SECRET no longer required here — token exchange goes via the WMS OAuth relay.
+Log "SUCCESS" "Pre-flight OK (OAuth client id verified)" Green
 
 Log "INFO" "Step 2: Verifying git state..." Yellow
 $commit = (git rev-parse --short HEAD 2>$null).Trim()
@@ -141,14 +141,10 @@ if [ -n "`$CID" ]; then
 else
   echo "WARN: VITE_GOOGLE_CLIENT_ID not found in .env.local"
 fi
-CSEC=`$(grep "^GOOGLE_CLIENT_SECRET=" /tmp/.env.youtube-genie 2>/dev/null | cut -d= -f2- | tr -d '\r')
-if [ -n "`$CSEC" ]; then
-  sed -i "/^GOOGLE_CLIENT_SECRET=/d" "`$DEPLOY/.env"
-  printf 'GOOGLE_CLIENT_SECRET=%s\n' "`$CSEC" >> "`$DEPLOY/.env"
-  echo "wrote GOOGLE_CLIENT_SECRET (len=`${#CSEC})"
-else
-  echo "WARN: GOOGLE_CLIENT_SECRET not found in .env.local"
-fi
+# GOOGLE_CLIENT_SECRET no longer used — token exchange goes via the WMS OAuth relay.
+# Strip any legacy secret from the server .env so it lives only in /opt/tuc-wms/.env.
+sed -i "/^GOOGLE_CLIENT_SECRET=/d" "`$DEPLOY/.env" 2>/dev/null || true
+echo "ensured no GOOGLE_CLIENT_SECRET in .env (OAuth now via WMS relay)"
 
 grep -q '^PORT=' "`$DEPLOY/.env" || echo "PORT=`$PORT" >> "`$DEPLOY/.env"
 chmod 600 "`$DEPLOY/.env"
