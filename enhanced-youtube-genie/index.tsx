@@ -1,6 +1,7 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import './index.css';
 import App from './AppEnhanced';
 import { AuthGate } from './AuthGate';
 
