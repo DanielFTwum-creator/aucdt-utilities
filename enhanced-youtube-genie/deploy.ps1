@@ -116,6 +116,8 @@ CI=true pnpm install --prod --silent 2>/dev/null || npm install --omit=dev --sil
 
 log '[6/7] Ensure all credentials present in deploy .env...'
 touch "`$DEPLOY/.env"
+# Strip BOM and null bytes that propagate from WMS .env source
+tr -d '\000' < "`$DEPLOY/.env" | sed 's/^\xEF\xBB\xBF//' > /tmp/.env.clean && mv /tmp/.env.clean "`$DEPLOY/.env"
 
 # GEMINI_PROXY_KEY — pull from WMS service env
 if ! grep -q '^GEMINI_PROXY_KEY=' "`$DEPLOY/.env"; then
