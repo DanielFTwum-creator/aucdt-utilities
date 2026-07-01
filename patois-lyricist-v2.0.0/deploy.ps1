@@ -4,10 +4,14 @@
 
 param(
     [string]$RemoteHost = "root@techbridge.edu.gh",
-    # Live app (backend process cwd + served dist) runs from the 'lyricist' folder, not 'patois'.
-    # The public URL is /patois/ (nginx path) but the files live here. Deploying to 'patois/'
-    # lands in an unused folder — verified 2026-07-01. Keep this pointed at 'lyricist'.
-    [string]$RemotePath = "/var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/lyricist/",
+    # WARNING (2026-07-01): the LIVE app runs from the 'lyricist/' folder, but this script is
+    # NOT safe to point there. It copies only server.ts/ecosystem (NOT package.json/pnpm-lock)
+    # and its file-sync wipes .env + node_modules. Pointing RemotePath at 'lyricist/' took
+    # patois DOWN (lost GEMINI_PROXY_KEY + express). Until this script is reworked to
+    # (a) sync package.json + pnpm-lock, (b) preserve .env, (c) install deps in place and
+    # target lyricist/, deploy to the throwaway 'patois/' folder and hand-sync server.ts/dist
+    # into 'lyricist/' manually. See project memory 'project_patois_deploy_fragile'.
+    [string]$RemotePath = "/var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/patois/",
     [switch]$Build = $false
 )
 
