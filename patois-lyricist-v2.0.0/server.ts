@@ -63,8 +63,7 @@ async function startServer() {
   app.use(express.json({ limit: '5mb' }));
   app.use(cookieParser());
 
-  const GOOGLE_CLIENT_ID = process.env.VITE_GOOGLE_CLIENT_ID;
-  const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
+  // client_id/secret now live only in WMS (the OAuth relay); this app keeps neither.
   const REDIRECT_URI = process.env.VITE_GOOGLE_REDIRECT_URI || 'https://ai-tools.techbridge.edu.gh/patois/auth/google/callback';
 
   // Derive base path safely — fall back to /patois if the URI isn't a valid absolute URL
@@ -82,16 +81,16 @@ async function startServer() {
     if (!code) return res.redirect(`${basePath}/?error=missing_code`);
 
     try {
-      const tokenResponse = await fetch('https://oauth2.googleapis.com/token', {
+      // Token exchange via the central WMS relay — this app holds NO Google client secret.
+      // WMS holds the shared client_id/secret and returns Google's token response verbatim.
+      const WMS_OAUTH_URL = process.env.WMS_OAUTH_URL || 'https://wms.techbridge.edu.gh/api/oauth/google/exchange';
+      const tokenResponse = await fetch(WMS_OAUTH_URL, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          client_id: GOOGLE_CLIENT_ID,
-          client_secret: GOOGLE_CLIENT_SECRET,
-          code,
-          grant_type: 'authorization_code',
-          redirect_uri: REDIRECT_URI,
-        }),
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Gemini-Proxy-Key': process.env.GEMINI_PROXY_KEY || '',
+        },
+        body: JSON.stringify({ code, redirectUri: REDIRECT_URI }),
       });
 
       if (!tokenResponse.ok) {

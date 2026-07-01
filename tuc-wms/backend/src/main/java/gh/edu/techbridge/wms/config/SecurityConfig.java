@@ -65,6 +65,7 @@ public class SecurityConfig {
                         "/api/gemini/health",    // public readiness probe — boolean only, no key/config exposed
                         "/api/gemini/generate",  // controller enforces its own auth: WMS JWT OR X-Gemini-Proxy-Key (service relays have no JWT)
                         "/api/gemini/key",       // same controller-enforced auth as /generate — service relays (markai) fetch the key here
+                        "/api/oauth/google/exchange", // Google token-exchange relay — controller enforces X-Gemini-Proxy-Key; NOT domain-gated (public apps' end users aren't @techbridge.edu.gh)
                         // OpenAPI/Swagger docs — only actually served when springdoc is enabled
                         // (SWAGGER_ENABLED=true; OFF in prod). Permitted so dev/staging can view them.
                         "/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**"
