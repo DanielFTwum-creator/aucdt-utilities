@@ -6,48 +6,52 @@ import https from 'https';
 import jwt from 'jsonwebtoken';
 import mysql from 'mysql2/promise';
 import dotenv from 'dotenv';
-import { GoogleGenAI } from '@google/genai';
 
 dotenv.config();
 
-// --- Gemini key custody: fetched from the WMS proxy, never stored here (FR-SSO-011) ---
-// WMS is the single rotation point. Cached in memory with a TTL; invalidateGeminiKey()
-// forces a refetch after Google rejects it, so rotation self-heals within one request.
-const WMS_KEY_URL = 'https://wms.techbridge.edu.gh/api/gemini/key';
-const KEY_TTL_MS = 6 * 60 * 60 * 1000;
-let cachedGeminiKey = null;
-let keyFetchedAt = 0;
+// --- Gemini custody: this app NEVER holds the key (fleet standard, Pattern 11). ---
+// Every call is relayed to WMS, which adds the central key server-side:
+//   :generateContent -> POST /api/gemini/generate   (text + image-edit)
+//   :predict         -> POST /api/gemini/predict     (Imagen text-to-image)
+// The key never reaches this process.
+const WMS_GENERATE_URL = process.env.WMS_GEMINI_URL || 'https://wms.techbridge.edu.gh/api/gemini/generate';
+const WMS_PREDICT_URL  = process.env.WMS_GEMINI_PREDICT_URL || 'https://wms.techbridge.edu.gh/api/gemini/predict';
+const GEMINI_PROXY_KEY = process.env.GEMINI_PROXY_KEY || '';
 
-function invalidateGeminiKey() { cachedGeminiKey = null; keyFetchedAt = 0; }
-
-async function getGeminiKey() {
-  if (cachedGeminiKey && Date.now() - keyFetchedAt < KEY_TTL_MS) return cachedGeminiKey;
-  const proxyKey = process.env.GEMINI_PROXY_KEY;
-  if (!proxyKey) {
-    // Local dev fallback only — production must use the WMS relay.
-    const local = process.env.VITE_GEMINI_API_KEY || process.env.GEMINI_API_KEY;
-    if (local) return local;
-    throw new Error('GEMINI_PROXY_KEY is not set (and no local key fallback).');
-  }
-  const r = await fetch(WMS_KEY_URL, { headers: { 'X-Gemini-Proxy-Key': proxyKey } });
-  if (!r.ok) throw new Error(`WMS key fetch failed: ${r.status} ${await r.text()}`);
-  cachedGeminiKey = (await r.json()).apiKey;
-  keyFetchedAt = Date.now();
-  return cachedGeminiKey;
+if (!GEMINI_PROXY_KEY) {
+  console.warn('[DMCDAI] WARNING: GEMINI_PROXY_KEY not set — AI routes will return 503');
 }
 
-/** Imagen 4 and the gemini-*-image models require v1beta. */
-async function getImageAi() {
-  return new GoogleGenAI({ apiKey: await getGeminiKey(), httpOptions: { apiVersion: 'v1beta' } });
+/** Relay a raw generateContent body to WMS; returns the parsed Gemini REST response. */
+async function relayGenerate(model, body) {
+  if (!GEMINI_PROXY_KEY) { const e = new Error('GEMINI_PROXY_KEY not configured'); e.status = 503; throw e; }
+  const r = await fetch(`${WMS_GENERATE_URL}?model=${encodeURIComponent(model)}`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'X-Gemini-Proxy-Key': GEMINI_PROXY_KEY },
+    body: JSON.stringify(body),
+  });
+  const text = await r.text();
+  if (!r.ok) { const e = new Error(`WMS generate relay ${r.status}: ${text.slice(0, 300)}`); e.status = r.status; throw e; }
+  return JSON.parse(text);
 }
 
-/** Drop the cached key when Google says it is invalid/expired so the next request refetches. */
-const handleStaleKey = (error) => {
-  if (String(error?.message || '').includes('API_KEY_INVALID') || String(error?.message || '').includes('API key expired')) {
-    console.warn('[DMCDAI] Gemini rejected the key — invalidating cache to refetch from WMS.');
-    invalidateGeminiKey();
-  }
-};
+/** Relay a raw :predict body (Imagen) to WMS; returns the parsed predict response. */
+async function relayPredict(model, body) {
+  if (!GEMINI_PROXY_KEY) { const e = new Error('GEMINI_PROXY_KEY not configured'); e.status = 503; throw e; }
+  const r = await fetch(`${WMS_PREDICT_URL}?model=${encodeURIComponent(model)}`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'X-Gemini-Proxy-Key': GEMINI_PROXY_KEY },
+    body: JSON.stringify(body),
+  });
+  const text = await r.text();
+  if (!r.ok) { const e = new Error(`WMS predict relay ${r.status}: ${text.slice(0, 300)}`); e.status = r.status; throw e; }
+  return JSON.parse(text);
+}
+
+/** Join all text parts of a generateContent response. */
+function responseText(resp) {
+  return (resp?.candidates?.[0]?.content?.parts ?? []).map((p) => p.text ?? '').join('');
+}
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -245,30 +249,29 @@ async function startServer() {
     }
   });
 
-  // Gemini text proxy — keeps the API key server-side (FR-SSO-011)
+  app.get(['/api/health', '/dmcdai/api/health'], (_req, res) =>
+    res.json({ ok: true, service: 'dmcdai', custody: GEMINI_PROXY_KEY ? 'wms-relay' : 'unconfigured' })
+  );
+
+  // Gemini text proxy — relayed to WMS; the API key never reaches this app (Pattern 11)
   app.post(['/api/gemini/generate', '/dmcdai/api/gemini/generate'], async (req, res) => {
     try {
       const { prompt, systemInstruction, model = 'gemini-1.5-flash', responseMimeType, responseSchema } = req.body;
       if (!prompt) return res.status(400).json({ error: 'Missing prompt' });
 
-      const apiKey = await getGeminiKey();
-      const { GoogleGenAI } = await import('@google/genai');
-      const genAI = new GoogleGenAI({ apiKey });
-      const config = {};
-      if (systemInstruction) config.systemInstruction = systemInstruction;
-      if (responseMimeType) config.responseMimeType = responseMimeType;
-      if (responseSchema) config.responseSchema = responseSchema;
+      const generationConfig = {};
+      if (responseMimeType) generationConfig.responseMimeType = responseMimeType;
+      if (responseSchema) generationConfig.responseSchema = responseSchema;
 
-      const response = await genAI.models.generateContent({
-        model,
-        contents: prompt,
-        config: Object.keys(config).length ? config : undefined,
-      });
-      res.json({ text: response.text });
+      const body = { contents: [{ role: 'user', parts: [{ text: prompt }] }] };
+      if (systemInstruction) body.systemInstruction = { parts: [{ text: systemInstruction }] };
+      if (Object.keys(generationConfig).length) body.generationConfig = generationConfig;
+
+      const resp = await relayGenerate(model, body);
+      res.json({ text: responseText(resp) });
     } catch (error) {
-      console.error('[DMCDAI] Gemini text proxy error:', error);
-      handleStaleKey(error);
-      res.status(500).json({ error: 'AI generation failed' });
+      console.error('[DMCDAI] Gemini text relay error:', error);
+      res.status(error.status === 503 ? 503 : 500).json({ error: 'AI generation failed' });
     }
   });
 
@@ -278,17 +281,19 @@ async function startServer() {
       const { prompt, base64Image, mimeType } = req.body;
 
       if (base64Image && mimeType) {
-      // Edit path: use gemini-2.0-flash-preview-image-generation which supports
-      // image-in, image-out editing via generateContent.
-      const response = await (await getImageAi()).models.generateContent({
-        model: 'gemini-2.0-flash-preview-image-generation',
-        contents: [
-          { inlineData: { data: base64Image, mimeType } },
-          { text: prompt },
-        ],
-        config: { responseModalities: ['IMAGE', 'TEXT'] },
+      // Edit path: gemini-2.0-flash-preview-image-generation supports image-in,
+      // image-out editing via generateContent — relayed through WMS /generate.
+      const resp = await relayGenerate('gemini-2.0-flash-preview-image-generation', {
+        contents: [{
+          role: 'user',
+          parts: [
+            { inlineData: { data: base64Image, mimeType } },
+            { text: prompt },
+          ],
+        }],
+        generationConfig: { responseModalities: ['IMAGE', 'TEXT'] },
       });
-      const parts = response.candidates?.[0]?.content?.parts ?? [];
+      const parts = resp?.candidates?.[0]?.content?.parts ?? [];
       const imgPart = parts.find((p) => p.inlineData?.data);
       if (imgPart) {
         const mt = imgPart.inlineData.mimeType || 'image/png';
@@ -297,13 +302,12 @@ async function startServer() {
       throw new Error("EMPTY_RESPONSE");
     }
 
-    // Generate path: text-to-image. Try models in order of quality, falling
-    // back to higher-quota models on 429 RESOURCE_EXHAUSTED (imagen-4-ultra has
-    // very low quota and was 429-ing every request).
+    // Generate path: text-to-image via Imagen :predict, relayed through WMS /predict.
+    // Try models in order of quality, falling back to higher-quota models on 429
+    // RESOURCE_EXHAUSTED (imagen-4-ultra has very low quota and was 429-ing every request).
     // Models verified available to the shared key (2026-06-04):
     //   imagen-4.0-fast-generate-001 -> OK (highest quota)
     //   imagen-4.0-ultra-generate-001 -> 429 (quota exhausted) — last resort
-    //   imagen-3.0-* / 4.0-generate-001 -> 404/503
     // Lead with the fast model; fall through to the next on quota/transient errors.
     const GENERATE_MODELS = [
       'imagen-4.0-fast-generate-001',
@@ -312,14 +316,14 @@ async function startServer() {
     let lastErr;
     for (const model of GENERATE_MODELS) {
       try {
-        const response = await (await getImageAi()).models.generateImages({
-          model,
-          prompt,
-          config: { numberOfImages: 1 },
+        // Imagen :predict body — instances[].prompt + parameters.sampleCount.
+        const resp = await relayPredict(model, {
+          instances: [{ prompt }],
+          parameters: { sampleCount: 1 },
         });
-        const generatedImage = response.generatedImages?.[0];
-        if (generatedImage?.image?.imageBytes) {
-          return res.json({ result: `data:image/png;base64,${generatedImage.image.imageBytes}` });
+        const b64 = resp?.predictions?.[0]?.bytesBase64Encoded;
+        if (b64) {
+          return res.json({ result: `data:image/png;base64,${b64}` });
         }
         lastErr = new Error('EMPTY_RESPONSE');
       } catch (err) {
@@ -332,12 +336,11 @@ async function startServer() {
     throw lastErr || new Error('EMPTY_RESPONSE');
     } catch (error) {
       console.error('[DMCDAI] Image gen error:', error);
-      handleStaleKey(error);
       // Surface quota exhaustion clearly instead of a generic 500.
       if (error?.status === 429) {
         return res.status(429).json({ error: 'IMAGE_QUOTA_EXHAUSTED', message: 'The image service is over its quota right now. Please try again in a few minutes.' });
       }
-      res.status(500).json({ error: error.message });
+      res.status(error?.status === 503 ? 503 : 500).json({ error: error.message });
     }
   });
 
@@ -373,7 +376,8 @@ async function startServer() {
   }
 
   app.listen(PORT, '0.0.0.0', () => {
-    console.log(`[DMCDAI] Server running on http://localhost:${PORT}`);
+    console.log(`[DMCDAI] WMS relay listening on http://localhost:${PORT}`);
+    console.log(`[DMCDAI] Gemini custody: ${GEMINI_PROXY_KEY ? 'WMS relay (proxy key set)' : 'NOT CONFIGURED — AI routes will 503'}`);
   });
 }
 

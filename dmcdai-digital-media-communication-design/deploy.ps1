@@ -144,24 +144,44 @@ ssh -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax
 Log "INFO" "Step 6: Deploying backend files..." Yellow
 scp -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax=3 server.js package.json pnpm-lock.yaml pnpm-workspace.yaml "${RemoteHost}:${RemotePath}" 2>$null | Out-Null
 if (Test-Path ".env.local") { scp -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax=3 ".env.local" "${RemoteHost}:${RemotePath}.env" 2>$null | Out-Null }
+# Key custody (Pattern 11 fleet standard): the app relays via WMS and must never hold a
+# raw GEMINI_API_KEY. Strip it and inject GEMINI_PROXY_KEY from WMS custody
+# (/opt/tuc-wms/.env), BOM/CR/null-stripped (Pattern 21); no bash loop vars (Pattern 20).
+$envInject = ssh -o StrictHostKeyChecking=no $RemoteHost "touch ${RemotePath}.env; sed -i '/^GEMINI_API_KEY=/d;/^VITE_GEMINI_API_KEY=/d;/^GEMINI_PROXY_KEY=/d' ${RemotePath}.env; K=`$(grep '^GEMINI_PROXY_KEY=' /opt/tuc-wms/.env | head -1 | cut -d= -f2- | tr -d '\r\000' | LC_ALL=C sed 's/\xef\xbb\xbf//g'); if [ -n `"`$K`" ]; then printf 'GEMINI_PROXY_KEY=%s\n' `"`$K`" >> ${RemotePath}.env; echo 'env: GEMINI_PROXY_KEY injected'; else echo 'WARN: GEMINI_PROXY_KEY not found in WMS'; fi; chmod 600 ${RemotePath}.env"
+Write-Host $envInject -ForegroundColor DarkGray
+if ($envInject -match 'WARN') { Log "ERROR" "GEMINI_PROXY_KEY unavailable — AI routes would 503. Aborting." Red; exit 1 }
 $nvmPrefix = 'export NVM_DIR="$HOME/.nvm"; [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"; nvm use 26 >/dev/null 2>&1 || true'
 ssh -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax=3 $RemoteHost "$nvmPrefix; cd $RemotePath && pnpm install --prod --silent"
 
-Log "INFO" "Step 7: Restarting backend (PM2)..." Yellow
+Log "INFO" "Step 7: Restarting backend (hard delete + start, Pattern 23)..." Yellow
+# pm2 reload/restart --update-env keeps a stale env (old GEMINI_PROXY_KEY -> WMS 401)
+# AND stale tsx-transpiled server.js. Hard delete + fresh start is the only reliable way
+# to pick up a changed env var or edited backend; then assert the new banner.
 $restartCmd = @"
+$nvmPrefix
 if command -v pm2 &>/dev/null; then
-  if pm2 describe dmcdai &>/dev/null; then
-    pm2 reload dmcdai --update-env && echo 'pm2: reloaded dmcdai'
-  else
-    cd $RemotePath && NODE_ENV=production PORT=3014 pm2 start server.js --name dmcdai --interpreter npx --interpreter-args tsx --cwd $RemotePath
-    echo 'pm2: started dmcdai'
-  fi
+  pm2 delete dmcdai &>/dev/null || true
+  cd $RemotePath && NODE_ENV=production PORT=3014 pm2 start server.js --name dmcdai --interpreter npx --interpreter-args tsx --cwd $RemotePath
+  echo 'pm2: started dmcdai'
   pm2 save --force &>/dev/null
+  sleep 3
+  pm2 logs dmcdai --lines 20 --nostream 2>&1 | grep -q 'WMS relay listening' && echo 'OK new build running' || echo 'WARN stale build — banner not found'
 fi
 "@
 $b64r = [Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes($restartCmd.Replace("`r", "")))
-ssh -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax=3 $RemoteHost "echo $b64r | base64 -d | bash"
+$restartOut = ssh -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax=3 $RemoteHost "echo $b64r | base64 -d | bash"
+Write-Host $restartOut -ForegroundColor DarkGray
+if ($restartOut -match 'WARN stale build') { Log "ERROR" "PM2 running stale code — investigate." Red; exit 5 }
 
-Log "INFO" "Health check..." Yellow
-ssh -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax=3 $RemoteHost "test -f ${RemotePath}index.html && echo 'OK index.html present' || echo 'MISSING index.html'"
-ss
+Log "INFO" "Step 8: Health checks..." Yellow
+$indexCheck = ssh -o StrictHostKeyChecking=no $RemoteHost "test -f ${RemotePath}index.html && echo 'OK index.html present' || echo 'MISSING index.html'"
+Write-Host $indexCheck -ForegroundColor $(if ($indexCheck -match '^OK') { 'Green' } else { 'Red' })
+$portCheck = ssh -o StrictHostKeyChecking=no $RemoteHost "for i in `$(seq 1 12); do ss -tlnp | grep -q ':3014' && { echo 'OK port 3014 listening'; exit 0; }; sleep 5; done; echo 'WARN port 3014 not found'"
+Write-Host $portCheck -ForegroundColor $(if ($portCheck -match '^OK') { 'Green' } else { 'Yellow' })
+try {
+    $h = Invoke-RestMethod -Uri "https://ai-tools.techbridge.edu.gh/dmcdai/api/health" -TimeoutSec 15
+    Write-Host "health: $($h | ConvertTo-Json -Compress)" -ForegroundColor Green
+} catch { Write-Host "WARN health unreachable: $($_.Exception.Message)" -ForegroundColor Yellow }
+
+$elapsed = [math]::Round(((Get-Date) - $__deployStart).TotalSeconds, 1)
+Log "SUCCESS" "DEPLOYMENT COMPLETE in ${elapsed}s — https://ai-tools.techbridge.edu.gh/dmcdai/" Green
