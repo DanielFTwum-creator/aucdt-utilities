@@ -76,7 +76,7 @@ export default function Guide() {
                   </ul>
                 </li>
                 <li><strong className="text-gray-800 dark:text-gray-200">Interactive Charting:</strong> Clicking on any row instantly loads that stock's detailed historical chart on the right panel. You can adjust the timeframe using the buttons above the chart (1D, 5D, 1mo, 3mo, 6mo, 1y).</li>
-                <li><strong className="text-gray-800 dark:text-gray-200">Comparison Tool:</strong> At the top of the chart panel, you can toggle between "Chart" and "Compare". <em>Note: Currently, the compare tool automatically overlays the performance of the top two stocks in your watchlist list.</em></li>
+                <li><strong className="text-gray-800 dark:text-gray-200">Comparison Tool:</strong> To compare two stocks side-by-side, check the boxes next to any two tickers in your watchlist. Then, toggle to "Compare" at the top of the chart panel.</li>
               </ul>
             </div>
 

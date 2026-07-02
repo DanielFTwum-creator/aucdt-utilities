@@ -63,7 +63,7 @@ export default function PerformanceChart({ authFetch }: Props) {
     : [];
 
   return (
-    <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 p-5">
+    <div id="performance-chart" className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 p-5">
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300">
           Performance vs S&amp;P 500 <span className="font-normal text-gray-400">(indexed to 100)</span>
@@ -116,7 +116,7 @@ export default function PerformanceChart({ authFetch }: Props) {
 
       {!loading && !error && hasData && (
         <div className="h-56" aria-label="Portfolio performance chart">
-          <ResponsiveContainer width="100%" height="100%">
+          <ResponsiveContainer width="100%" height="100%" minWidth={1} minHeight={1}>
             <LineChart data={chartData} margin={{ top: 4, right: 4, bottom: 0, left: 0 }}>
               <CartesianGrid strokeDasharray="3 3" stroke="currentColor" className="text-gray-100 dark:text-gray-800" />
               <XAxis

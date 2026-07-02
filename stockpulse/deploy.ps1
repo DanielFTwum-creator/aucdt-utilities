@@ -156,14 +156,21 @@ Write-Host "Copying backend source files..."
 & scp -r @SSH_OPTS backend/src/* "${RemoteHost}:${RemotePath}/backend/src/"
 
 Write-Host "Checking for production environment configurations..."
-$prodEnv = 'PORT={PORT}
+$secretsFile = Join-Path $PSScriptRoot '.env.secrets.local'
+if (-not (Test-Path $secretsFile)) {
+    Write-Host "ERROR: $secretsFile not found." -ForegroundColor Red
+    exit 1
+}
+$secrets = (Get-Content $secretsFile -Raw).TrimEnd()
+
+$prodEnv = "PORT=$PORT
 NODE_ENV=production
-JWT_SECRET=stockpulse-prod-secure-token-secret-2026-TUC
+$secrets
 JWT_EXPIRE=7d
-GEMINI_API_KEY=AIzaSyA78NtdellwQtEUIb3i_D7NhnSF4UYMj9E
 CORS_ORIGIN=https://ai-tools.techbridge.edu.gh
+APP_URL=https://ai-tools.techbridge.edu.gh/$SubdomainPath
 DB_PATH=./data/stockpulse.db
-ADMIN_EMAILS=daniel.twum@techbridge.edu.gh,daniel.twum@gmail.com' -replace '{PORT}', $PORT
+ADMIN_EMAILS=daniel.twum@techbridge.edu.gh,daniel.twum@gmail.com"
 
 $localEnvTmp = [System.IO.Path]::GetTempFileName()
 $prodEnv | Set-Content $localEnvTmp
@@ -220,12 +227,9 @@ Write-Host "Setting remote permissions..."
 & ssh @SSH_OPTS $RemoteHost "chown -R techbridge.edu.gh_md:psaserv $RemotePath ; chmod -R 755 $RemotePath ; chmod 644 $RemotePath/.htaccess ; chmod 600 $RemotePath/backend/.env"
 
 Write-Host "Checking if port $PORT is listening..."
-$portCheck = "OK"
-if ($portCheck.Trim() -eq "OK") {
-    Write-Host " Port $PORT is listening successfully" -ForegroundColor Green
-} else {
-    Write-Host " Warning: Port $PORT does not seem to be listening. Check PM2 logs on the server." -ForegroundColor Yellow
-}
+$portCheck = & ssh @SSH_OPTS $RemoteHost "for i in `$(seq 1 12); do ss -tlnp | grep -q ':${PORT}' && { echo 'OK port ${PORT} listening'; exit 0; }; sleep 5; done; echo 'FAIL port ${PORT} not listening after 60s'"
+Write-Host $portCheck -ForegroundColor $(if ($portCheck -match '^OK') { 'Green' } else { 'Red' })
+if ($portCheck -notmatch '^OK') { exit 1 }
 
 Write-Host " StockPulse successfully deployed!" -ForegroundColor Green
 # Cleanup Staging

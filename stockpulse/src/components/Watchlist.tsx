@@ -1,5 +1,5 @@
-import { useState, useEffect, useCallback } from 'react';
-import { Plus, Trash2, RefreshCw, TrendingUp, TrendingDown, Crown, GitCompare } from 'lucide-react';
+import React, { useState, useEffect, useCallback } from 'react';
+import { Plus, Trash2, RefreshCw, TrendingUp, TrendingDown, Crown, GitCompare, GripVertical } from 'lucide-react';
 import ComparativeChart from './ComparativeChart';
 import {
   AreaChart, Area, BarChart, Bar, Cell,
@@ -154,7 +154,7 @@ function TickerChartPanel({ ticker }: { ticker: string }) {
       ) : (
         <div className="flex-1 flex flex-col gap-2 min-h-0">
           <div className="flex-1 min-h-0">
-            <ResponsiveContainer width="100%" height="100%">
+            <ResponsiveContainer width="100%" height="100%" minWidth={1} minHeight={1}>
               <AreaChart data={data} margin={{ top: 4, right: 8, left: 0, bottom: 0 }}>
                 <defs>
                   <linearGradient id={`grad-${ticker}`} x1="0" y1="0" x2="0" y2="1">
@@ -198,7 +198,7 @@ function TickerChartPanel({ ticker }: { ticker: string }) {
             </ResponsiveContainer>
           </div>
           <div className="h-[72px] shrink-0">
-            <ResponsiveContainer width="100%" height="100%">
+            <ResponsiveContainer width="100%" height="100%" minWidth={1} minHeight={1}>
               <BarChart data={data} margin={{ top: 0, right: 8, left: 0, bottom: 0 }}>
                 <XAxis dataKey="date" hide />
                 <YAxis hide />
@@ -239,6 +239,8 @@ export default function Watchlist({ user, authFetch, onUpgrade, onLoginClick }: 
   const [refreshing, setRefreshing] = useState(false);
   const [selectedTicker, setSelectedTicker] = useState<string | null>(null);
   const [chartMode, setChartMode] = useState<'chart' | 'compare'>('chart');
+  const [compareTickers, setCompareTickers] = useState<string[]>([]);
+  const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
 
   const limit = TIER_LIMITS[user?.tier ?? 'free'].watchlist;
 
@@ -251,6 +253,10 @@ export default function Watchlist({ user, authFetch, onUpgrade, onLoginClick }: 
       if (data.length > 0) {
         fetchQuotes(data.map(d => d.ticker));
         if (!selectedTicker && data.length > 0) setSelectedTicker(data[0].ticker);
+        setCompareTickers(prev => {
+          if (prev.length === 0 && data.length >= 2) return [data[0].ticker, data[1].ticker];
+          return prev;
+        });
       }
     }
   }, [user, authFetch, selectedTicker]);
@@ -329,6 +335,36 @@ export default function Watchlist({ user, authFetch, onUpgrade, onLoginClick }: 
     if (selectedTicker === ticker) {
       const remaining = items.filter(i => i.ticker !== ticker);
       setSelectedTicker(remaining.length > 0 ? remaining[0].ticker : null);
+    }
+  };
+
+  const handleDragStart = (e: React.DragEvent<HTMLTableRowElement>, index: number) => {
+    setDraggedIndex(index);
+    e.dataTransfer.effectAllowed = 'move';
+  };
+
+  const handleDragOver = (e: React.DragEvent<HTMLTableRowElement>) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+  };
+
+  const handleDrop = async (e: React.DragEvent<HTMLTableRowElement>, dropIndex: number) => {
+    e.preventDefault();
+    if (draggedIndex === null || draggedIndex === dropIndex) return;
+
+    const newItems = [...items];
+    const [removed] = newItems.splice(draggedIndex, 1);
+    newItems.splice(dropIndex, 0, removed);
+    setItems(newItems);
+    setDraggedIndex(null);
+
+    try {
+      await authFetch('/api/watchlist/reorder', {
+        method: 'PUT',
+        body: JSON.stringify({ tickers: newItems.map(i => i.ticker) })
+      });
+    } catch (err) {
+      console.error('Failed to save new order:', err);
     }
   };
 
@@ -492,10 +528,12 @@ export default function Watchlist({ user, authFetch, onUpgrade, onLoginClick }: 
           {/* Left: table (40%) */}
           <div className="w-full lg:w-[40%] flex flex-col min-h-0 overflow-hidden">
             <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 overflow-hidden flex flex-col flex-1 min-h-0">
-              <div className="overflow-y-auto flex-1">
+              <div className="overflow-auto flex-1">
                 <table className="w-full text-sm" role="table" aria-label="Watchlist">
                   <thead className="sticky top-0 bg-white dark:bg-gray-900 z-10">
                     <tr className="border-b border-gray-100 dark:border-gray-800">
+                      <th scope="col" className="px-2 py-3 w-6"></th>
+                      <th scope="col" className="px-3 py-3 w-8"></th>
                       <th scope="col" className="text-left px-4 py-3 text-[11px] font-medium text-gray-400 dark:text-gray-500">Ticker</th>
                       <th scope="col" className="text-right px-3 py-3 text-[11px] font-medium text-gray-400 dark:text-gray-500">Price</th>
                       <th scope="col" className="text-right px-3 py-3 text-[11px] font-medium text-gray-400 dark:text-gray-500">Chg%</th>
@@ -506,7 +544,7 @@ export default function Watchlist({ user, authFetch, onUpgrade, onLoginClick }: 
                     </tr>
                   </thead>
                   <tbody>
-                    {items.map(item => {
+                    {items.map((item, index) => {
                       const q = quotes[item.ticker];
                       const up = (q?.changePercent ?? 0) >= 0;
                       const isSelected = selectedTicker === item.ticker;
@@ -514,14 +552,37 @@ export default function Watchlist({ user, authFetch, onUpgrade, onLoginClick }: 
                       return (
                         <tr
                           key={item.ticker}
+                          draggable
+                          onDragStart={(e) => handleDragStart(e, index)}
+                          onDragOver={handleDragOver}
+                          onDrop={(e) => handleDrop(e, index)}
                           onClick={() => setSelectedTicker(item.ticker)}
                           className={`border-b border-gray-50 dark:border-gray-800/50 cursor-pointer transition-colors h-12 ${
                             isSelected
                               ? 'bg-indigo-50 dark:bg-indigo-900/20'
                               : 'hover:bg-gray-50 dark:hover:bg-gray-800/30'
-                          }`}
+                          } ${draggedIndex === index ? 'opacity-50' : ''}`}
                           aria-selected={isSelected}
                         >
+                          <td className="px-2 py-0 text-center cursor-grab active:cursor-grabbing text-gray-300 dark:text-gray-600 hover:text-gray-500" onClick={e => e.stopPropagation()}>
+                            <GripVertical size={14} />
+                          </td>
+                          <td className="px-3 py-0 text-center" onClick={e => e.stopPropagation()}>
+                            <input
+                              type="checkbox"
+                              aria-label={`Compare ${item.ticker}`}
+                              checked={compareTickers.includes(item.ticker)}
+                              onChange={(e) => {
+                                if (e.target.checked) {
+                                  setCompareTickers(prev => prev.length >= 2 ? [prev[1], item.ticker] : [...prev, item.ticker]);
+                                } else {
+                                  setCompareTickers(prev => prev.filter(t => t !== item.ticker));
+                                  if (chartMode === 'compare') setChartMode('chart');
+                                }
+                              }}
+                              className="w-4 h-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500 dark:border-gray-600 dark:bg-gray-800 cursor-pointer"
+                            />
+                          </td>
                           <td className="px-4 py-0">
                             <div className="text-[13px] font-semibold text-gray-900 dark:text-white leading-tight">{item.ticker}</div>
                             <div className="text-[11px] text-gray-400 dark:text-gray-500 truncate max-w-[90px] leading-tight">{q?.name ?? '—'}</div>
@@ -596,7 +657,7 @@ export default function Watchlist({ user, authFetch, onUpgrade, onLoginClick }: 
                 >
                   <TrendingUp size={11} aria-hidden="true" /> Chart
                 </button>
-                {items.length >= 2 && (
+                {compareTickers.length === 2 && (
                   <button
                     type="button"
                     onClick={() => setChartMode('compare')}
@@ -611,16 +672,16 @@ export default function Watchlist({ user, authFetch, onUpgrade, onLoginClick }: 
                   </button>
                 )}
               </div>
-              {chartMode === 'compare' && items.length >= 2 && (
+              {chartMode === 'compare' && compareTickers.length === 2 && (
                 <span className="text-[11px] text-gray-400 dark:text-gray-500">
-                  {items[0].ticker} vs {items[1].ticker}
+                  {compareTickers[0]} vs {compareTickers[1]}
                 </span>
               )}
             </div>
 
             <div className="flex-1 min-h-0">
-              {chartMode === 'compare' && items.length >= 2 ? (
-                <ComparativeChart ticker1={items[0].ticker} ticker2={items[1].ticker} />
+              {chartMode === 'compare' && compareTickers.length === 2 ? (
+                <ComparativeChart ticker1={compareTickers[0]} ticker2={compareTickers[1]} />
               ) : selectedTicker ? (
                 <TickerChartPanel ticker={selectedTicker} />
               ) : (

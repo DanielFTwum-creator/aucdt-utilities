@@ -34,11 +34,11 @@ export default function AllocationChart({ positions }: Props) {
   if (data.length === 0) return null;
 
   return (
-    <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 p-5">
+    <div id="allocation-chart" className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 p-5">
       <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-4">Allocation</h3>
       <div className="flex items-center gap-6">
         <div className="w-40 h-40 shrink-0" aria-hidden="true">
-          <ResponsiveContainer width="100%" height="100%">
+          <ResponsiveContainer width="100%" height="100%" minWidth={1} minHeight={1}>
             <PieChart>
               <Pie
                 data={data}

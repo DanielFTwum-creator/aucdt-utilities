@@ -133,4 +133,6 @@ db.exec(`
 try { db.exec('ALTER TABLE users ADD COLUMN google_id TEXT'); } catch { /* already exists */ }
 db.exec('CREATE UNIQUE INDEX IF NOT EXISTS uq_users_google_id ON users (google_id) WHERE google_id IS NOT NULL');
 
+try { db.exec('ALTER TABLE watchlists ADD COLUMN sort_order INTEGER DEFAULT 0'); } catch { /* already exists */ }
+
 export default db;

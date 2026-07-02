@@ -1,4 +1,4 @@
-import { Sun, Moon, Bell, LogOut, Crown, User as UserIcon } from 'lucide-react';
+import { Sun, Moon, Bell, LogOut, Crown, User as UserIcon, Menu } from 'lucide-react';
 import type { User, IndexData, Theme } from '../../types';
 
 interface NavbarProps {
@@ -10,6 +10,7 @@ interface NavbarProps {
   onLogout: () => void;
   onUpgradeClick: () => void;
   alertCount: number;
+  onToggleMobileMenu?: () => void;
 }
 
 function fmt(n: number, decimals = 2) {
@@ -47,7 +48,7 @@ const INDEX_LABELS: Record<string, string> = {
   '^GSPC': 'S&P 500', '^IXIC': 'NASDAQ', '^DJI': 'DOW', '^VIX': 'VIX',
 };
 
-export default function Navbar({ user, indices, theme, onToggleTheme, onLoginClick, onLogout, onUpgradeClick, alertCount }: NavbarProps) {
+export default function Navbar({ user, indices, theme, onToggleTheme, onLoginClick, onLogout, onUpgradeClick, alertCount, onToggleMobileMenu }: NavbarProps) {
   const { isOpen, timeStr } = getMarketStatus();
 
   return (
@@ -55,6 +56,18 @@ export default function Navbar({ user, indices, theme, onToggleTheme, onLoginCli
       className="h-12 bg-white dark:bg-gray-900 border-b border-gray-100 dark:border-gray-800 flex items-center px-5 gap-5 sticky top-0 z-30 shrink-0"
       role="banner"
     >
+      {/* Mobile Menu Button */}
+      {onToggleMobileMenu && (
+        <button
+          type="button"
+          className="md:hidden p-1.5 -ml-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+          onClick={onToggleMobileMenu}
+          aria-label="Toggle mobile menu"
+        >
+          <Menu size={20} />
+        </button>
+      )}
+
       {/* Market status pill */}
       <span
         className={`hidden sm:flex items-center gap-1.5 text-[11px] font-semibold px-2.5 py-1 rounded-full shrink-0 ${

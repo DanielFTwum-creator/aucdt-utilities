@@ -54,8 +54,11 @@ app.use((err: Error, _req: express.Request, res: express.Response, _next: expres
   res.status(500).json({ error: 'Internal server error' });
 });
 
+import { startAlertWorker } from './services/alertWorker';
+
 app.listen(PORT, () => {
   console.log(`StockPulse API running on http://localhost:${PORT}`);
+  startAlertWorker();
 });
 
 export default app;

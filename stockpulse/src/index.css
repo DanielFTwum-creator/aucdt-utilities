@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@custom-variant dark (&:is(.dark *));
 
 @layer base {
   :root {
@@ -15,4 +16,17 @@
   }
   .gain { color: var(--color-gain); }
   .loss { color: var(--color-loss); }
+}
+
+body {
+  overflow-x: hidden;
+  max-width: 100vw;
+}
+
+.pdf-export-mode .overflow-x-auto {
+  overflow-x: visible !important;
+}
+.pdf-export-mode {
+  width: max-content !important;
+  min-width: 100% !important;
 }

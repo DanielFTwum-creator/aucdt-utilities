@@ -32,6 +32,7 @@ export default function App() {
   const [showUpgrade, setShowUpgrade] = useState(false);
   const [indices, setIndices] = useState<IndexData[]>([]);
   const [alertCount, setAlertCount] = useState(0);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     const onHash = () => setView(hashToView());
@@ -42,6 +43,7 @@ export default function App() {
   const navigateTo = (v: View) => {
     setView(v);
     window.location.hash = `/${v}`;
+    setIsMobileMenuOpen(false);
   };
 
   useEffect(() => {
@@ -74,15 +76,28 @@ export default function App() {
   const sharedProps = { user, authFetch, onLoginClick: () => setShowAuth(true), onUpgrade: () => setShowUpgrade(true) };
 
   return (
-    <div className={`flex h-screen overflow-hidden bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-white`}>
-      <Sidebar
-        activeView={view}
-        onViewChange={navigateTo}
-        user={user}
-        onLoginClick={() => setShowAuth(true)}
-      />
+    <div className={`flex h-screen w-full max-w-[100vw] overflow-x-hidden overflow-y-hidden bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-white`}>
+      {isMobileMenuOpen && (
+        <div 
+          className="fixed inset-0 bg-black/50 z-40 md:hidden"
+          onClick={() => setIsMobileMenuOpen(false)}
+        />
+      )}
 
-      <div className="flex-1 flex flex-col overflow-hidden">
+      <div className={`
+        fixed inset-y-0 left-0 z-50 w-[240px] md:w-[200px] h-full transition-transform duration-200 ease-in-out
+        md:relative md:translate-x-0
+        ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-[240px] md:translate-x-0'}
+      `}>
+        <Sidebar
+          activeView={view}
+          onViewChange={navigateTo}
+          user={user}
+          onLoginClick={() => { setShowAuth(true); setIsMobileMenuOpen(false); }}
+        />
+      </div>
+
+      <div className="flex-1 flex flex-col overflow-hidden min-w-0">
         <Navbar
           user={user}
           indices={indices}
@@ -92,6 +107,7 @@ export default function App() {
           onLogout={logout}
           onUpgradeClick={() => setShowUpgrade(true)}
           alertCount={alertCount}
+          onToggleMobileMenu={() => setIsMobileMenuOpen(true)}
         />
 
         <main className="flex-1 overflow-y-auto" role="main" id="main-content">

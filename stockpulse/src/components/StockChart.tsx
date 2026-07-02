@@ -108,7 +108,7 @@ export default function StockChart({ ticker1, ticker2, data, alerts = [], active
 
       <div className="flex-1 flex flex-col gap-2 min-h-0">
         <div className="h-[70%]">
-          <ResponsiveContainer width="100%" height="100%">
+          <ResponsiveContainer width="100%" height="100%" minWidth={1} minHeight={1}>
             <LineChart data={data} margin={{ top: 4, right: 8, left: 0, bottom: 0 }}>
               <CartesianGrid vertical={false} stroke="#F3F4F6" className="dark:opacity-10" />
               <XAxis dataKey="date" hide />
@@ -158,7 +158,7 @@ export default function StockChart({ ticker1, ticker2, data, alerts = [], active
         </div>
 
         <div className="h-[30%]">
-          <ResponsiveContainer width="100%" height="100%">
+          <ResponsiveContainer width="100%" height="100%" minWidth={1} minHeight={1}>
             <BarChart data={data} barCategoryGap="30%" margin={{ top: 0, right: 8, left: 0, bottom: 0 }}>
               <XAxis
                 dataKey="date"

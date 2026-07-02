@@ -35,7 +35,7 @@ export default function Sidebar({ activeView, onViewChange, user, onLoginClick }
 
   return (
     <aside
-      className="w-[200px] bg-[#F7F7F6] dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800 flex flex-col shrink-0"
+      className="w-[240px] md:w-[200px] h-full bg-[#F7F7F6] dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800 flex flex-col shrink-0"
       role="navigation"
       aria-label="Main navigation"
     >

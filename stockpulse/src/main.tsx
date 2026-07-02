@@ -14,6 +14,15 @@ window.fetch = function (input, init) {
   return originalFetch(input, init);
 };
 
+// Suppress noisy Recharts ResponsiveContainer warnings caused by initial flex layout mounting
+const originalWarn = console.warn;
+console.warn = (...args) => {
+  if (typeof args[0] === 'string' && args[0].includes('The width(') && args[0].includes('of chart should be greater than 0')) {
+    return;
+  }
+  originalWarn(...args);
+};
+
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <App />

@@ -167,62 +167,66 @@ export default function PaperTrading({ user, authFetch, onLoginClick }: Props) {
             positions.length === 0 ? (
               <div className="py-12 text-center text-gray-400 dark:text-gray-500 text-sm">No open positions. Place an order to get started.</div>
             ) : (
-              <table className="w-full text-sm" aria-label="Paper trading positions">
-                <thead>
-                  <tr className="text-xs text-gray-400 dark:text-gray-500 border-b border-gray-100 dark:border-gray-800">
-                    {['Ticker', 'Shares', 'Avg Cost', 'Current', 'P&L', 'Return'].map(h => (
-                      <th key={h} scope="col" className={`px-4 py-2.5 ${h === 'Ticker' ? 'text-left' : 'text-right'}`}>{h}</th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody>
-                  {positions.map(p => {
-                    const up = p.unrealizedPL >= 0;
-                    return (
-                      <tr key={p.ticker} className="border-b border-gray-50 dark:border-gray-800/50 hover:bg-gray-50 dark:hover:bg-gray-800/30">
-                        <td className="px-4 py-3 font-semibold text-gray-900 dark:text-white">{p.ticker}</td>
-                        <td className="px-4 py-3 text-right font-mono text-gray-700 dark:text-gray-300">{p.shares.toFixed(3)}</td>
-                        <td className="px-4 py-3 text-right font-mono text-gray-500 dark:text-gray-400">${p.avgCost.toFixed(2)}</td>
-                        <td className="px-4 py-3 text-right font-mono text-gray-900 dark:text-white">${p.currentPrice.toFixed(2)}</td>
-                        <td className={`px-4 py-3 text-right font-mono font-semibold ${up ? 'text-green-600 dark:text-green-400' : 'text-red-500'}`}>
-                          {up ? '+' : ''}${p.unrealizedPL.toFixed(2)}
-                        </td>
-                        <td className={`px-4 py-3 text-right flex items-center justify-end gap-1 ${up ? 'text-green-600 dark:text-green-400' : 'text-red-500'}`}>
-                          {up ? <TrendingUp size={12} /> : <TrendingDown size={12} />}
-                          {up ? '+' : ''}{p.unrealizedPLPercent.toFixed(2)}%
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm" aria-label="Paper trading positions">
+                  <thead>
+                    <tr className="text-xs text-gray-400 dark:text-gray-500 border-b border-gray-100 dark:border-gray-800">
+                      {['Ticker', 'Shares', 'Avg Cost', 'Current', 'P&L', 'Return'].map(h => (
+                        <th key={h} scope="col" className={`px-4 py-2.5 ${h === 'Ticker' ? 'text-left' : 'text-right'}`}>{h}</th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {positions.map(p => {
+                      const up = p.unrealizedPL >= 0;
+                      return (
+                        <tr key={p.ticker} className="border-b border-gray-50 dark:border-gray-800/50 hover:bg-gray-50 dark:hover:bg-gray-800/30">
+                          <td className="px-4 py-3 font-semibold text-gray-900 dark:text-white">{p.ticker}</td>
+                          <td className="px-4 py-3 text-right font-mono text-gray-700 dark:text-gray-300">{p.shares.toFixed(3)}</td>
+                          <td className="px-4 py-3 text-right font-mono text-gray-500 dark:text-gray-400">${p.avgCost.toFixed(2)}</td>
+                          <td className="px-4 py-3 text-right font-mono text-gray-900 dark:text-white">${p.currentPrice.toFixed(2)}</td>
+                          <td className={`px-4 py-3 text-right font-mono font-semibold ${up ? 'text-green-600 dark:text-green-400' : 'text-red-500'}`}>
+                            {up ? '+' : ''}${p.unrealizedPL.toFixed(2)}
+                          </td>
+                          <td className={`px-4 py-3 text-right flex items-center justify-end gap-1 ${up ? 'text-green-600 dark:text-green-400' : 'text-red-500'}`}>
+                            {up ? <TrendingUp size={12} /> : <TrendingDown size={12} />}
+                            {up ? '+' : ''}{p.unrealizedPLPercent.toFixed(2)}%
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
             )
           ) : (
             orders.length === 0 ? (
               <div className="py-12 text-center text-gray-400 dark:text-gray-500 text-sm">No order history yet.</div>
             ) : (
-              <table className="w-full text-sm" aria-label="Paper order history">
-                <thead>
-                  <tr className="text-xs text-gray-400 dark:text-gray-500 border-b border-gray-100 dark:border-gray-800">
-                    {['Date', 'Ticker', 'Action', 'Shares', 'Fill Price', 'Total', 'Status'].map(h => (
-                      <th key={h} scope="col" className={`px-4 py-2.5 ${h === 'Date' ? 'text-left' : 'text-right'}`}>{h}</th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody>
-                  {orders.slice(0, 20).map(o => (
-                    <tr key={o.id} className="border-b border-gray-50 dark:border-gray-800/50 hover:bg-gray-50 dark:hover:bg-gray-800/30">
-                      <td className="px-4 py-2.5 text-gray-500 dark:text-gray-400 text-xs">{new Date(o.created_at).toLocaleDateString()}</td>
-                      <td className="px-4 py-2.5 text-right font-semibold text-gray-900 dark:text-white">{o.ticker}</td>
-                      <td className={`px-4 py-2.5 text-right font-semibold ${o.action === 'buy' ? 'text-green-600 dark:text-green-400' : 'text-red-500'}`}>{o.action.toUpperCase()}</td>
-                      <td className="px-4 py-2.5 text-right font-mono text-gray-700 dark:text-gray-300">{o.shares}</td>
-                      <td className="px-4 py-2.5 text-right font-mono text-gray-700 dark:text-gray-300">${o.fill_price?.toFixed(2) ?? '—'}</td>
-                      <td className="px-4 py-2.5 text-right font-mono text-gray-700 dark:text-gray-300">${(o.shares * (o.fill_price ?? 0)).toFixed(2)}</td>
-                      <td className="px-4 py-2.5 text-right"><span className="bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 text-xs px-2 py-0.5 rounded-full font-medium">{o.status}</span></td>
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm" aria-label="Paper order history">
+                  <thead>
+                    <tr className="text-xs text-gray-400 dark:text-gray-500 border-b border-gray-100 dark:border-gray-800">
+                      {['Date', 'Ticker', 'Action', 'Shares', 'Fill Price', 'Total', 'Status'].map(h => (
+                        <th key={h} scope="col" className={`px-4 py-2.5 ${h === 'Date' ? 'text-left' : 'text-right'}`}>{h}</th>
+                      ))}
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {orders.slice(0, 20).map(o => (
+                      <tr key={o.id} className="border-b border-gray-50 dark:border-gray-800/50 hover:bg-gray-50 dark:hover:bg-gray-800/30">
+                        <td className="px-4 py-2.5 text-gray-500 dark:text-gray-400 text-xs">{new Date(o.created_at).toLocaleDateString()}</td>
+                        <td className="px-4 py-2.5 text-right font-semibold text-gray-900 dark:text-white">{o.ticker}</td>
+                        <td className={`px-4 py-2.5 text-right font-semibold ${o.action === 'buy' ? 'text-green-600 dark:text-green-400' : 'text-red-500'}`}>{o.action.toUpperCase()}</td>
+                        <td className="px-4 py-2.5 text-right font-mono text-gray-700 dark:text-gray-300">{o.shares}</td>
+                        <td className="px-4 py-2.5 text-right font-mono text-gray-700 dark:text-gray-300">${o.fill_price?.toFixed(2) ?? '—'}</td>
+                        <td className="px-4 py-2.5 text-right font-mono text-gray-700 dark:text-gray-300">${(o.shares * (o.fill_price ?? 0)).toFixed(2)}</td>
+                        <td className="px-4 py-2.5 text-right"><span className="bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 text-xs px-2 py-0.5 rounded-full font-medium">{o.status}</span></td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             )
           )}
         </div>

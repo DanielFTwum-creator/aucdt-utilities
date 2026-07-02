@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Plus, RefreshCw, Download, TrendingUp } from 'lucide-react';
+import { Plus, RefreshCw, Download, TrendingUp, Link2 } from 'lucide-react';
 import type { PortfolioSummary as PortfolioSummaryType, User } from '../types';
 import PortfolioSummaryCards from './Portfolio/PortfolioSummary';
 import HoldingsTable from './Portfolio/HoldingsTable';
@@ -8,9 +8,10 @@ import PerformanceChart from './Portfolio/PerformanceChart';
 import MetricsPanel from './Portfolio/MetricsPanel';
 import DividendLog from './Portfolio/DividendLog';
 import { exportPortfolioCsv } from '../utils/exportCsv';
+import { generateStatement } from '../utils/pdfGenerator';
+import BrokerSyncModal from './Portfolio/BrokerSyncModal';
 
 type Tab = 'holdings' | 'performance' | 'dividends';
-
 interface Props {
   user: User | null;
   authFetch: (url: string, options?: RequestInit) => Promise<Response>;
@@ -30,13 +31,16 @@ interface RawPosition {
   shares: number;
   purchase_price: number;
   purchase_date: string;
+  notes?: string;
 }
 
 export default function Portfolio({ user, authFetch, onLoginClick }: Props) {
   const [summary, setSummary] = useState<PortfolioSummaryType | null>(null);
   const [rawPositions, setRawPositions] = useState<RawPosition[]>([]);
   const [loading, setLoading] = useState(false);
+  const [isExporting, setIsExporting] = useState(false);
   const [showAdd, setShowAdd] = useState(false);
+  const [showBrokerSync, setShowBrokerSync] = useState(false);
   const [tab, setTab] = useState<Tab>('holdings');
   const [form, setForm] = useState<AddForm>({
     ticker: '',
@@ -61,6 +65,20 @@ export default function Portfolio({ user, authFetch, onLoginClick }: Props) {
   }, [user, authFetch]);
 
   useEffect(() => { fetchData(); }, [fetchData]);
+
+  const exportPdf = async () => {
+    if (!summary || !user) return;
+    try {
+      setIsExporting(true);
+      document.body.classList.add('pdf-export-mode');
+      await generateStatement(summary, user, 'allocation-chart', 'performance-chart');
+    } catch (err) {
+      console.error('Failed to export PDF', err);
+    } finally {
+      document.body.classList.remove('pdf-export-mode');
+      setIsExporting(false);
+    }
+  };
 
   const addPosition = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -105,13 +123,14 @@ export default function Portfolio({ user, authFetch, onLoginClick }: Props) {
   }
 
   const hasPositions = (summary?.positions.length ?? 0) > 0;
+  const connectedBroker = rawPositions.find(p => p.notes?.startsWith('Imported from '))?.notes?.replace('Imported from ', '');
 
   return (
-    <div className="p-6 max-w-6xl mx-auto">
+    <div className="p-6 max-w-6xl mx-auto" id="portfolio-dashboard-content">
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Portfolio</h1>
-        <div className="flex gap-2">
+        <div className="flex gap-2 no-export">
           <button
             type="button"
             onClick={fetchData}
@@ -121,16 +140,39 @@ export default function Portfolio({ user, authFetch, onLoginClick }: Props) {
             <RefreshCw size={18} className={loading ? 'animate-spin' : ''} />
           </button>
           {hasPositions && (
-            <button
-              type="button"
-              onClick={() => exportPortfolioCsv(summary!.positions)}
-              aria-label="Export portfolio as CSV"
-              className="flex items-center gap-1.5 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 text-sm font-medium px-3 py-1.5 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
-            >
-              <Download size={14} />
-              Export
-            </button>
+            <div className="flex gap-2">
+              <button
+                type="button"
+                onClick={() => exportPortfolioCsv(summary!.positions)}
+                aria-label="Export portfolio as CSV"
+                className="flex items-center gap-1.5 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 text-sm font-medium px-3 py-1.5 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+              >
+                <Download size={14} />
+                CSV
+              </button>
+              <button
+                type="button"
+                onClick={exportPdf}
+                disabled={isExporting}
+                aria-label="Export portfolio as PDF"
+                className="flex items-center gap-1.5 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 text-sm font-medium px-3 py-1.5 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors disabled:opacity-50"
+              >
+                {isExporting ? <RefreshCw size={14} className="animate-spin" /> : <Download size={14} />}
+                PDF
+              </button>
+            </div>
           )}
+          <button
+            type="button"
+            onClick={() => setShowBrokerSync(true)}
+            className={`flex items-center gap-1.5 text-sm font-semibold px-3 py-1.5 rounded-lg transition-colors ${
+              connectedBroker 
+                ? 'bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-100 dark:hover:bg-emerald-900/50' 
+                : 'bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-100 dark:hover:bg-indigo-900/50'
+            }`}
+          >
+            <Link2 size={15} /> {connectedBroker ? `${connectedBroker} Connected` : 'Connect Broker'}
+          </button>
           <button
             type="button"
             onClick={() => setShowAdd(s => !s)}
@@ -140,6 +182,8 @@ export default function Portfolio({ user, authFetch, onLoginClick }: Props) {
           </button>
         </div>
       </div>
+
+      <div>
 
       {/* Summary cards */}
       {summary && <PortfolioSummaryCards summary={summary} />}
@@ -252,6 +296,15 @@ export default function Portfolio({ user, authFetch, onLoginClick }: Props) {
       <p className="text-xs text-gray-400 dark:text-gray-500 mt-4 text-center">
         Prices from Yahoo Finance · 15-min delay · Not investment advice
       </p>
+      </div>
+
+      {showBrokerSync && (
+        <BrokerSyncModal
+          authFetch={authFetch}
+          onClose={() => setShowBrokerSync(false)}
+          onSuccess={fetchData}
+        />
+      )}
     </div>
   );
 }

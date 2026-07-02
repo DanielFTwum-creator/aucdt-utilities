@@ -437,4 +437,36 @@ router.delete('/position/:id', requireAuth, (req: AuthRequest, res: Response) =>
   res.json({ deleted: true });
 });
 
+router.post('/sync', requireAuth, (req: AuthRequest, res: Response) => {
+  const { provider, token } = req.body as { provider: string; token: string };
+  if (!provider || !token) {
+    res.status(400).json({ error: 'provider and token are required' });
+    return;
+  }
+
+  const mockHoldings = [
+    { ticker: 'AAPL', shares: 15, purchase_price: 150.25, purchase_date: '2023-01-15' },
+    { ticker: 'MSFT', shares: 10, purchase_price: 260.00, purchase_date: '2023-03-22' },
+    { ticker: 'GOOGL', shares: 8, purchase_price: 105.50, purchase_date: '2023-05-10' },
+    { ticker: 'TSLA', shares: 5, purchase_price: 210.00, purchase_date: '2023-06-01' },
+    { ticker: 'NVDA', shares: 12, purchase_price: 450.00, purchase_date: '2023-08-15' },
+  ];
+
+  try {
+    db.exec('BEGIN TRANSACTION');
+    const stmt = db.prepare(
+      'INSERT INTO portfolio_positions (user_id, ticker, shares, purchase_price, purchase_date, notes) VALUES (?, ?, ?, ?, ?, ?)'
+    );
+    for (const h of mockHoldings) {
+      stmt.run(req.user!.id, h.ticker, h.shares, h.purchase_price, h.purchase_date, `Imported from ${provider}`);
+    }
+    db.exec('COMMIT');
+    res.json({ success: true, imported: mockHoldings.length });
+  } catch (err) {
+    db.exec('ROLLBACK');
+    console.error('Broker sync error:', err);
+    res.status(500).json({ error: 'Failed to sync broker' });
+  }
+});
+
 export default router;
