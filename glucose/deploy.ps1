@@ -265,7 +265,7 @@ Write-Host $indexCheck -ForegroundColor $(if ($indexCheck -match '^OK') { 'Green
 $portCheck = & $SSH @SSH_OPTS $RemoteHost "ss -tlnp | grep -q ':${PORT}' && echo 'OK port ${PORT} listening' || echo 'WARN port ${PORT} not found'"
 Write-Host $portCheck -ForegroundColor $(if ($portCheck -match '^OK') { 'Green' } else { 'Yellow' })
 
-$elapsed = [math]::Round(((Get-Date) - $__deployStart).TotalSeconds, 1)
+$elapsed = [math]::Round(((Get-Date) - $START_TIME).TotalSeconds, 1)
 $timeStr = if ($elapsed -ge 60) { "$([math]::Floor($elapsed / 60))m $([math]::Round($elapsed % 60, 1))s" } else { "${elapsed}s" }
 Log -Level 'SUCCESS' -Msg '========================================' -Color Green
 Log -Level 'SUCCESS' -Msg "DEPLOYMENT COMPLETE in $timeStr" -Color Green
