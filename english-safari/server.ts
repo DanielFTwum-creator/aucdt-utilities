@@ -8,41 +8,38 @@
 
 import express from "express";
 import dotenv from "dotenv";
-import { GoogleGenAI, Type } from "@google/genai";
 
 dotenv.config({ path: ".env.local" });
 dotenv.config();
 
-// --- Gemini key custody: fetched from the WMS proxy, never stored here (FR-SSO-011) ---
-// WMS is the single rotation point. Cached in memory with a 6-hour TTL.
-const WMS_KEY_URL = 'https://wms.techbridge.edu.gh/api/gemini/key';
-const KEY_TTL_MS  = 6 * 60 * 60 * 1000;
-let cachedGeminiKey: string | null = null;
-let keyFetchedAt = 0;
+// --- Gemini custody: this app NEVER holds the key (fleet standard, Pattern 11). ---
+// Every generateContent call is relayed to the WMS proxy with the GEMINI_PROXY_KEY
+// service credential; only WMS adds the key. The key never reaches this process.
+const WMS_GEMINI_URL = process.env.WMS_GEMINI_URL || 'https://wms.techbridge.edu.gh/api/gemini/generate';
+const GEMINI_PROXY_KEY = process.env.GEMINI_PROXY_KEY || '';
 
-function invalidateGeminiKey() { cachedGeminiKey = null; keyFetchedAt = 0; }
+interface GeminiResponse {
+  candidates?: Array<{ content?: { parts?: Array<{ text?: string }> } }>;
+}
 
-async function getGeminiKey(): Promise<string> {
-  if (cachedGeminiKey && Date.now() - keyFetchedAt < KEY_TTL_MS) return cachedGeminiKey;
-  const proxyKey = process.env.GEMINI_PROXY_KEY;
-  if (!proxyKey) {
-    // Local dev fallback only — production must set GEMINI_PROXY_KEY.
-    const local = process.env.GEMINI_API_KEY || process.env.VITE_GEMINI_API_KEY;
-    if (local) return local;
-    throw new Error('GEMINI_PROXY_KEY is not set (and no local key fallback).');
-  }
-  const r = await fetch(WMS_KEY_URL, { headers: { 'X-Gemini-Proxy-Key': proxyKey } });
-  if (!r.ok) throw new Error(`WMS key fetch failed: ${r.status} ${await r.text()}`);
-  cachedGeminiKey = (await r.json()).apiKey;
-  keyFetchedAt = Date.now();
-  return cachedGeminiKey!;
+// Relay a raw Gemini generateContent body to WMS; return the joined text, or throw.
+async function generateViaWms(model: string, body: unknown): Promise<string> {
+  if (!GEMINI_PROXY_KEY) throw new Error('GEMINI_PROXY_KEY not configured');
+  const r = await fetch(`${WMS_GEMINI_URL}?model=${encodeURIComponent(model)}`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'X-Gemini-Proxy-Key': GEMINI_PROXY_KEY },
+    body: JSON.stringify(body),
+  });
+  if (!r.ok) throw new Error(`WMS relay failed: ${r.status} ${await r.text()}`);
+  const data = (await r.json()) as GeminiResponse;
+  return (data.candidates?.[0]?.content?.parts ?? []).map(p => p.text ?? '').join('');
 }
 
 const PORT = Number(process.env.PORT) || 3005;
 const MODEL = "gemini-2.5-flash";
 
 if (!process.env.GEMINI_PROXY_KEY) {
-  console.warn("[EnglishSafari] WARNING: GEMINI_PROXY_KEY not set — AI routes will use local fallback or fail");
+  console.warn("[EnglishSafari] WARNING: GEMINI_PROXY_KEY not set — AI routes will return 503");
 }
 
 const app = express();
@@ -85,37 +82,31 @@ app.post(["/api/gemini/story", "/english-safari/api/gemini/story"], async (req, 
     }
   `;
 
-  try {
-    const geminiKey = await getGeminiKey().catch((err: any) => {
-      console.error('[EnglishSafari] Key fetch failed:', err.message);
-      return null;
-    });
-    if (!geminiKey) return res.status(503).json({ error: 'AI service temporarily unavailable' });
+  if (!GEMINI_PROXY_KEY) return res.status(503).json({ error: 'AI service temporarily unavailable' });
 
-    const ai = new GoogleGenAI({ apiKey: geminiKey });
+  try {
     const prompt = topic
       ? `Write a short story for Ghanaian children about: ${topic}`
       : `Write a short story for Ghanaian children. Pick a random grammar topic and a fun scenario.`;
 
-    const response = await ai.models.generateContent({
-      model: MODEL,
-      contents: prompt,
-      config: {
-        systemInstruction,
+    const text = await generateViaWms(MODEL, {
+      systemInstruction: { parts: [{ text: systemInstruction }] },
+      contents: [{ role: "user", parts: [{ text: prompt }] }],
+      generationConfig: {
         responseMimeType: "application/json",
         responseSchema: {
-          type: Type.OBJECT,
+          type: "OBJECT",
           properties: {
-            title: { type: Type.STRING },
-            story: { type: Type.STRING },
-            grammarFocus: { type: Type.STRING },
+            title: { type: "STRING" },
+            story: { type: "STRING" },
+            grammarFocus: { type: "STRING" },
             question: {
-              type: Type.OBJECT,
+              type: "OBJECT",
               properties: {
-                text: { type: Type.STRING },
-                options: { type: Type.ARRAY, items: { type: Type.STRING } },
-                correctIndex: { type: Type.NUMBER },
-                explanation: { type: Type.STRING },
+                text: { type: "STRING" },
+                options: { type: "ARRAY", items: { type: "STRING" } },
+                correctIndex: { type: "NUMBER" },
+                explanation: { type: "STRING" },
               },
               required: ["text", "options", "correctIndex", "explanation"],
             },
@@ -125,13 +116,10 @@ app.post(["/api/gemini/story", "/english-safari/api/gemini/story"], async (req, 
       },
     });
 
-    const parsed = JSON.parse(response.text ?? "{}");
+    const parsed = JSON.parse(text || "{}");
     res.json(parsed);
   } catch (err: any) {
     console.error("[EnglishSafari] story error:", err?.message);
-    if (String(err?.message).includes('API_KEY_INVALID') || String(err?.message).includes('API key expired')) {
-      invalidateGeminiKey();
-    }
     res.status(500).json({ error: "Story generation failed" });
   }
 });
