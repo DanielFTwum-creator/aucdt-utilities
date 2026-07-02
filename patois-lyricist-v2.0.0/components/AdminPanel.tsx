@@ -56,7 +56,7 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ currentUser }) => {
                     <span>Identity Repository</span>
                     <span className="text-xs opacity-50" aria-label={`${Object.keys(users).length} users total`}>{Object.keys(users).length} Active Entities</span>
                 </h3>
-                <div className="max-h-60 overflow-y-auto">
+                <div className="max-h-60 overflow-auto">
                     <table className="w-full text-left text-sm" role="table">
                         <thead className="bg-gray-800/80 sticky top-0">
                             <tr>

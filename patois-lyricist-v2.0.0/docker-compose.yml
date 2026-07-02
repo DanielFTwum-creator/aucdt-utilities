@@ -7,9 +7,13 @@ services:
         GEMINI_API_KEY: ${GEMINI_API_KEY:-}
     container_name: patois-lyricist-v2
     ports:
-      - "3000:80"
+      - "3000:80"      # nginx frontend on localhost:3000
+      - "3004:3004"    # Node.js backend on localhost:3004 (for local OAuth testing)
     environment:
       - GEMINI_API_KEY=${GEMINI_API_KEY}
+      - VITE_GOOGLE_CLIENT_ID=${VITE_GOOGLE_CLIENT_ID:-}
+      - VITE_GOOGLE_REDIRECT_URI=${VITE_GOOGLE_REDIRECT_URI:-}
+      - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET:-}
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:80/"]

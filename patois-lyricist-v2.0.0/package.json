@@ -1,11 +1,13 @@
 {
   "name": "patois-lyricist",
-  "packageManager": "pnpm@11.5.3",
+  "packageManager": "pnpm@11.9.0",
   "private": true,
   "version": "2.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "dev:full": "concurrently \"tsx server.ts\" \"vite\" --kill-others-on-exit",
+    "start": "tsx server.ts",
     "build": "tsc && vite build",
     "preview": "vite preview",
     "lint": "tsc --noEmit",
@@ -15,18 +17,30 @@
   },
   "dependencies": {
     "@google/genai": "^1.11.0",
-    "react-dom": "19.2.5",
-    "react": "19.2.5",
+    "cookie-parser": "^1.4.7",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
     "html2canvas": "^1.4.1",
-    "jspdf": "^2.5.1"
+    "jspdf": "^2.5.1",
+    "lucide-react": "^1.21.0",
+    "node-fetch": "^3.3.2",
+    "react": "19.2.5",
+    "react-dom": "19.2.5",
+    "tsx": "^4.22.4"
   },
   "devDependencies": {
+    "@playwright/test": "^1.45.0",
+    "@types/cookie-parser": "^1.4.10",
+    "@types/express": "^5.0.6",
     "@types/node": "^22.14.0",
     "@vitejs/plugin-react": "^5.0.0",
+    "autoprefixer": "^10.5.1",
+    "concurrently": "^8.2.2",
+    "jsdom": "^25.0.0",
+    "postcss": "^8.5.15",
+    "tailwindcss": "^3.4.19",
     "typescript": "~5.8.2",
     "vite": "^6.2.0",
-    "vitest": "^4.1.0",
-    "jsdom": "^25.0.0",
-    "@playwright/test": "^1.45.0"
+    "vitest": "^4.1.0"
   }
 }

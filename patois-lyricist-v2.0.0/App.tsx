@@ -12,6 +12,7 @@ import HeaderIcon from './components/HeaderIcon';
 import ThemeSwitcher from './components/ThemeSwitcher';
 import AdminPanel from './components/AdminPanel';
 import TestPanel from './components/TestPanel';
+import { useAuth } from './contexts/AuthContext';
 import PatoisDictionary from './components/PatoisDictionary';
 import Equalizer from './components/Equalizer';
 import jsPDF from 'jspdf';
@@ -71,18 +72,14 @@ const PERSONA_DESCRIPTIONS: Record<string, string> = {
 
 const App: React.FC = () => {
   // --- Auth & Session (SOC 2 Governance) ---
-  const [currentUser, setCurrentUser] = useState<string | null>(() => localStorage.getItem('patoisLyricistCurrentUser'));
-  const [currentUserRole, setCurrentUserRole] = useState<'user' | 'admin'>('user');
-  const [authView, setAuthView] = useState<'login' | 'register'>('login');
-  const [authUsername, setAuthUsername] = useState('');
-  const [authPassword, setAuthPassword] = useState('');
-  const [privacyAccepted, setPrivacyAccepted] = useState(false);
-  const [authError, setAuthError] = useState<string | null>(null);
-  const [failedAttempts, setFailedAttempts] = useState(0);
-  const [lockoutUntil, setLockoutUntil] = useState<number | null>(null);
+  const { user, logout } = useAuth();
+  const currentUser = user?.email || 'unknown';
+  const currentUserRole: string = 'user';
+  
   const [sessionTimeoutReached, setSessionTimeoutReached] = useState(false);
   const [showErasureConfirm, setShowErasureConfirm] = useState(false);
   const [showDirective, setShowDirective] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   // --- Laboratory State ---
   const [themeInput, setThemeInput] = useState<string>('');
@@ -121,10 +118,10 @@ const App: React.FC = () => {
   // --- SOC 2 Guardrails ---
   const resetInactivityTimer = useCallback(() => {
     if (timeoutRef.current) window.clearTimeout(timeoutRef.current);
-    if (currentUser) {
+    if (currentUser && currentUser !== 'unknown') {
       timeoutRef.current = window.setTimeout(() => {
         setSessionTimeoutReached(true);
-        handleLogout();
+        logout();
       }, INACTIVITY_LIMIT);
     }
   }, [currentUser]);
@@ -140,15 +137,12 @@ const App: React.FC = () => {
   }, [resetInactivityTimer]);
 
   useEffect(() => {
-    const loggedInUser = localStorage.getItem('patoisLyricistCurrentUser');
-    if (loggedInUser) {
-      const users = secureGetItem<Record<string, User>>('patoisLyricistUsers') || {};
-      if (users[loggedInUser]) {
-        setCurrentUser(loggedInUser);
-        setCurrentUserRole(users[loggedInUser].role);
-        setHistory(secureGetItem<HistoryEntry[]>(`patoisLyricistHistory_${loggedInUser}`) || []);
-      } else { handleLogout(); }
+    if (currentUser && currentUser !== 'unknown') {
+      setHistory(secureGetItem<HistoryEntry[]>(`patoisLyricistHistory_${currentUser}`) || []);
     }
+  }, [currentUser]);
+
+  useEffect(() => {
     const savedTheme = localStorage.getItem('patoisLyricistTheme') as Theme || 'dark';
     document.body.setAttribute('data-theme', savedTheme);
     
@@ -175,7 +169,7 @@ const App: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    if (currentUser) secureSetItem(`patoisLyricistHistory_${currentUser}`, history);
+    if (currentUser && currentUser !== 'unknown') secureSetItem(`patoisLyricistHistory_${currentUser}`, history);
   }, [history, currentUser]);
 
   // Persist song structure changes to secure storage
@@ -193,47 +187,6 @@ const App: React.FC = () => {
     }
   };
 
-  const handleLogin = () => {
-    if (lockoutUntil && Date.now() < lockoutUntil) {
-      setAuthError(`Security Lockout. Retry in ${Math.ceil((lockoutUntil - Date.now()) / 1000)}s.`);
-      return;
-    }
-    const users = secureGetItem<Record<string, User>>('patoisLyricistUsers') || {};
-    const user = users[authUsername];
-    if (user && user.password === authPassword) {
-      localStorage.setItem('patoisLyricistCurrentUser', authUsername);
-      setCurrentUser(authUsername);
-      setCurrentUserRole(user.role);
-      setAuthUsername(''); setAuthPassword(''); setAuthError(null); setFailedAttempts(0);
-      setHistory(secureGetItem<HistoryEntry[]>(`patoisLyricistHistory_${authUsername}`) || []);
-      logAction(authUsername, 'Identity Verification Success', { forensics: true });
-    } else {
-      const attempts = failedAttempts + 1;
-      setFailedAttempts(attempts);
-      if (attempts >= MAX_FAILED_ATTEMPTS) setLockoutUntil(Date.now() + LOCKOUT_DURATION);
-      setAuthError(`Verification Failed. ${MAX_FAILED_ATTEMPTS - attempts} attempts remaining.`);
-      logAction(authUsername || 'unknown', 'Identity Verification Failure', { attempt: attempts });
-    }
-  };
-
-  const handleRegister = () => {
-    if (!authUsername.trim() || authPassword.length < 8) {
-      setAuthError('Identity requires username & 8+ char password.'); return;
-    }
-    if (!privacyAccepted) { setAuthError('Privacy Consent Required.'); return; }
-    const users = secureGetItem<Record<string, User>>('patoisLyricistUsers') || {};
-    if (users[authUsername]) { setAuthError('Identity already exists.'); return; }
-    users[authUsername] = { password: authPassword, role: authUsername === 'admin' ? 'admin' : 'user', privacyAccepted: true };
-    secureSetItem('patoisLyricistUsers', users);
-    logAction('system', 'Identity Enrollment', { username: authUsername });
-    handleLogin();
-  };
-
-  const handleLogout = () => {
-    logAction(currentUser || 'unknown', 'Session Termination', {});
-    localStorage.removeItem('patoisLyricistCurrentUser');
-    setCurrentUser(null); setHistory([]); setCurrentView('main');
-  };
 
   const handleGenerate = useCallback(async () => {
     if (!themeInput.trim()) return;
@@ -268,22 +221,43 @@ const App: React.FC = () => {
     
     try {
       if (format === 'pdf') {
-        const outputEl = document.getElementById('lyrics-export-container');
-        if (outputEl) {
-          const canvas = await html2canvas(outputEl, { backgroundColor: '#111111', scale: 2 });
-          const imgData = canvas.toDataURL('image/png');
-          const pdfWidth = 210; // A4 width in mm
-          const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
-          
-          const doc = new jsPDF({
-            orientation: pdfHeight > pdfWidth ? 'portrait' : 'landscape',
-            unit: 'mm',
-            format: [pdfWidth, pdfHeight]
-          });
-          
-          doc.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
-          doc.save(`${(songTitle || 'riddim').replace(/\s+/g, '_').toLowerCase()}.pdf`);
+        const doc = new jsPDF();
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(20);
+        doc.text(songTitle || 'Untitled Riddim', 20, 20);
+
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(12);
+        doc.text(`Theme: ${themeInput}`, 20, 30);
+        doc.text(`Style: ${djPersona} (${rhymeScheme})`, 20, 38);
+        
+        let yPos = 46;
+        if (songDescription) {
+          const splitDesc = doc.splitTextToSize(`Vision: ${songDescription}`, 170);
+          doc.text(splitDesc, 20, yPos);
+          yPos += splitDesc.length * 6 + 2;
         }
+        
+        const splitStructure = doc.splitTextToSize(`Structure: ${songStructure.join(' -> ')}`, 170);
+        doc.text(splitStructure, 20, yPos);
+        yPos += splitStructure.length * 6 + 8;
+        
+        doc.line(20, yPos - 6, 190, yPos - 6);
+        yPos += 4;
+        
+        doc.setFont("courier", "normal");
+        const splitLyrics = doc.splitTextToSize(lyrics, 170);
+        
+        for (let i = 0; i < splitLyrics.length; i++) {
+          if (yPos > 280) {
+            doc.addPage();
+            yPos = 20;
+          }
+          doc.text(splitLyrics[i], 20, yPos);
+          yPos += 6;
+        }
+
+        doc.save(`${(songTitle || 'riddim').replace(/\\s+/g, '_').toLowerCase()}.pdf`);
       } else {
         let content = '';
         if (format === 'md') {
@@ -333,156 +307,46 @@ const App: React.FC = () => {
     setShowErasureConfirm(false);
     
     // 5. Terminate Session
-    handleLogout();
+    logout();
   };
 
-  if (!currentUser) {
-    return (
-      <div className="login-background" role="main">
-        {sessionTimeoutReached && (
-          <div className="fixed top-5 left-1/2 -translate-x-1/2 bg-yellow-600 text-black px-6 py-2 rounded-full font-bold z-50 shadow-2xl" role="alert">
-            ⚠️ Security: Session Expired
-          </div>
-        )}
-        <div className="login-container">
-          <div className="login-header">
-            <h1 className="login-logo">PATOISLyricist</h1>
-            <p className="login-subtitle">SECURE RIDDIM LABORATORY</p>
-            <div className="relative">
-              <Equalizer speed={eqSpeed} />
-              <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 flex gap-3 text-[9px] font-black tracking-widest text-white/40">
-                <button 
-                  onClick={() => setEqSpeed('S')} 
-                  className={`hover:text-green-500 transition-colors px-2 py-1 rounded border border-white/5 ${eqSpeed === 'S' ? 'text-green-500 border-green-500/30 bg-green-500/10' : ''}`}
-                  aria-label="Set roots tempo (Slow)"
-                >S (ROOTS)</button>
-                <button 
-                  onClick={() => setEqSpeed('M')} 
-                  className={`hover:text-yellow-500 transition-colors px-2 py-1 rounded border border-white/5 ${eqSpeed === 'M' ? 'text-yellow-500 border-yellow-500/30 bg-yellow-500/10' : ''}`}
-                  aria-label="Set riddim tempo (Medium)"
-                >M (RIDDIM)</button>
-                <button 
-                  onClick={() => setEqSpeed('F')} 
-                  className={`hover:text-red-500 transition-colors px-2 py-1 rounded border border-white/5 ${eqSpeed === 'F' ? 'text-red-500 border-red-500/30 bg-red-500/10' : ''}`}
-                  aria-label="Set dancehall tempo (Fast)"
-                >F (VAR)</button>
-              </div>
-            </div>
-          </div>
-          <div className="login-card mt-12">
-            <h2 className="card-title" id="auth-heading">{authView === 'login' ? 'Verification' : 'Enrollment'}</h2>
-            {authError && <p className="text-red-400 text-center mb-4 text-sm font-bold bg-red-900/20 p-2 rounded" role="alert">{authError}</p>}
-            <form onSubmit={e => { e.preventDefault(); authView === 'login' ? handleLogin() : handleRegister(); }} aria-labelledby="auth-heading">
-              <div className="form-group">
-                <label className="sr-only" htmlFor="username">Username</label>
-                <div className="input-wrapper">
-                   <input 
-                      id="username" 
-                      type="text" 
-                      placeholder="Identity Handle" 
-                      required 
-                      value={authUsername} 
-                      onChange={e => setAuthUsername(e.target.value)} 
-                      aria-required="true" 
-                      className="focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 outline-none transition-all"
-                   />
-                   <span className="input-icon" aria-hidden="true">👤</span>
-                </div>
-              </div>
-              <div className="form-group">
-                <label className="sr-only" htmlFor="password">Password</label>
-                <div className="input-wrapper">
-                   <input 
-                      id="password" 
-                      type="password" 
-                      placeholder="Access Token" 
-                      required 
-                      value={authPassword} 
-                      onChange={e => setAuthPassword(e.target.value)} 
-                      aria-required="true"
-                      className="focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 outline-none transition-all"
-                   />
-                   <span className="input-icon" aria-hidden="true">🔑</span>
-                </div>
-              </div>
-              {authView === 'register' && (
-                <div className="flex flex-col gap-2 mb-6">
-                  <div className="flex items-start gap-3">
-                    <input id="consent" type="checkbox" checked={privacyAccepted} onChange={e => setPrivacyAccepted(e.target.checked)} className="accent-[#D4AF37] w-5 h-5 mt-0.5" aria-required="true" />
-                    <label htmlFor="consent" className="text-xs opacity-60 cursor-pointer">
-                      I have read and consent to the <button type="button" onClick={() => setShowDirective(true)} className="text-title font-bold underline hover:text-white">SOC 2 Security Directive</button> concerning local data obfuscation and forensic monitoring.
-                    </label>
-                  </div>
-                </div>
-              )}
-              <button type="submit" className="login-btn">{authView === 'login' ? 'Validate Identity' : 'Enroll Identity'}</button>
-              <p className="register-link">
-                {authView === 'login' ? "New entity?" : "Existing entity?"} 
-                <button type="button" onClick={() => setAuthView(authView === 'login' ? 'register' : 'login')} className="ml-2 underline text-title font-bold">{authView === 'login' ? 'Enroll' : 'Verify'}</button>
-              </p>
-            </form>
-          </div>
-          
-          <div className="mt-8 text-center">
-             <button onClick={() => setShowDirective(true)} className="text-[10px] text-gray-500 uppercase tracking-widest hover:text-title transition-colors border-b border-dashed border-gray-700 pb-1">Review SOC 2 Phase 1 Directive</button>
-          </div>
 
-        </div>
-        
-        {showDirective && (
-            <div className="fixed inset-0 bg-black/95 flex items-center justify-center z-50 p-4 backdrop-blur-md" role="dialog" aria-modal="true" aria-labelledby="directive-title">
-              <div className="bg-[#111] p-8 rounded-[2rem] shadow-2xl border border-title/20 max-w-2xl w-full relative overflow-hidden">
-                <div className="rasta-stripes absolute top-0 left-0 right-0 h-1"></div>
-                <h3 id="directive-title" className="text-2xl font-black text-title mb-6 uppercase tracking-widest border-b border-white/10 pb-4">Security Directive: Phase 1</h3>
-                
-                <div className="space-y-4 text-sm text-gray-300 max-h-[60vh] overflow-y-auto pr-2 mb-6 font-mono">
-                  <p><strong className="text-white">1.0 ACCESS CONTROL POLICY</strong><br/>
-                  Access to the Patois Lyricist Laboratory is restricted to authorized entities. All identity verification events are logged. Brute force attempts (3 failures) result in a mandatory 60-second lockout.</p>
-                  
-                  <p><strong className="text-white">2.0 FORENSIC MONITORING</strong><br/>
-                  To maintain SOC 2 compliance, this system captures forensic metadata during all sessions, including but not limited to User Agent strings, Screen Resolution, Timezone, and Language settings. This data is immutable.</p>
-                  
-                  <p><strong className="text-white">3.0 DATA CONFIDENTIALITY (AT-REST)</strong><br/>
-                  All user generated content (lyrics, themes, history) and identity tokens stored within the browser's LocalStorage are subject to Base64 obfuscation. No data is transmitted to third parties except for the stateless processing required by the Gemini API.</p>
-                  
-                  <p><strong className="text-white">4.0 DATA SOVEREIGNTY</strong><br/>
-                  Users retain full ownership of their generated lyrics. The "Right to be Forgotten" is exercisable via the "Purge My Repository" function, which executes a nuclear erasure of all local data.</p>
-                </div>
-                
-                <button onClick={() => setShowDirective(false)} className="w-full py-4 bg-gray-800 hover:bg-title hover:text-black rounded-xl font-black uppercase tracking-[0.2em] transition-all">Acknowledge Directive</button>
-              </div>
-            </div>
-        )}
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen relative" role="application" aria-label="Patois Lyricist App">
       <div className="rasta-stripes" aria-hidden="true" />
-      <div className="container mx-auto p-6 max-w-4xl">
-        <header className="mb-12 flex flex-col items-center" role="banner">
-          <div className="w-full flex justify-between items-center mb-6">
-            <ThemeSwitcher onThemeChange={t => { document.body.setAttribute('data-theme', t); localStorage.setItem('patoisLyricistTheme', t); }} />
-            <div className="text-right flex items-center gap-4">
+      <div className="container mx-auto p-4 md:p-6 max-w-4xl">
+        <header className="mb-8 md:mb-12 flex flex-col items-center" role="banner">
+          <div className="w-full flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
+            <div className="flex justify-between w-full md:w-auto items-center">
+               <ThemeSwitcher onThemeChange={t => { document.body.setAttribute('data-theme', t); localStorage.setItem('patoisLyricistTheme', t); }} />
+               <button 
+                  className="md:hidden p-2 text-title" 
+                  onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                  aria-label="Toggle Menu"
+               >
+                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
+               </button>
+            </div>
+            <div className={`w-full md:w-auto text-center md:text-right flex flex-col md:flex-row items-center gap-3 md:gap-4 transition-all duration-300 ${isMobileMenuOpen ? 'h-auto opacity-100 mt-4' : 'h-0 opacity-0 overflow-hidden md:h-auto md:opacity-100 md:mt-0'}`}>
               <div className="flex items-center gap-1.5 px-2 py-1 bg-green-500/10 border border-green-500/20 rounded-md">
                 <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" />
                 <span className="text-[9px] font-black text-green-500 uppercase">Audit Link Active</span>
               </div>
               <button onClick={() => setShowErasureConfirm(true)} className="text-[10px] text-red-500/40 hover:text-red-500 font-bold uppercase transition-colors" aria-label="Nuclear erasure of all your data">Purge My Repository</button>
-              <div className="h-4 w-px bg-white/10" />
-              <div>
-                <span className="text-xs opacity-50 block uppercase tracking-tighter">Identity: {currentUser}</span>
-                <button onClick={handleLogout} className="text-xs font-black text-title hover:underline uppercase" aria-label="Terminate current session">Terminate Session</button>
+                <div className="hidden md:block h-4 w-px bg-white/10" />
+              <div className="flex flex-col items-center md:items-end">
+                <span className="text-[10px] md:text-xs opacity-50 block uppercase tracking-tighter">Identity: {currentUser}</span>
+                <button onClick={logout} className="text-[10px] md:text-xs font-black text-title hover:underline uppercase mt-1 md:mt-0" aria-label="Terminate current session">Terminate Session</button>
               </div>
             </div>
           </div>
           <HeaderIcon />
-          <nav className="flex gap-10 mt-10 border-b border-white/5 w-full justify-center pb-4" role="navigation" aria-label="Primary Navigation">
-            <button onClick={() => setCurrentView('main')} aria-current={currentView === 'main' ? 'page' : undefined} className={`text-xs font-black uppercase tracking-[0.2em] transition-all ${currentView === 'main' ? 'text-title' : 'opacity-30 hover:opacity-60'}`}>Laboratory</button>
-            <button onClick={() => setCurrentView('dictionary')} aria-current={currentView === 'dictionary' ? 'page' : undefined} className={`text-xs font-black uppercase tracking-[0.2em] transition-all ${currentView === 'dictionary' ? 'text-title' : 'opacity-30 hover:opacity-60'}`}>Glossary</button>
-            {currentUserRole === 'admin' && <button onClick={() => setCurrentView('admin')} aria-current={currentView === 'admin' ? 'page' : undefined} className={`text-xs font-black uppercase tracking-[0.2em] transition-all ${currentView === 'admin' ? 'text-title' : 'opacity-30 hover:opacity-60'}`}>Governance</button>}
-            <button onClick={() => setCurrentView('testing')} aria-current={currentView === 'testing' ? 'page' : undefined} className={`text-xs font-black uppercase tracking-[0.2em] transition-all ${currentView === 'testing' ? 'text-title' : 'opacity-30 hover:opacity-60'}`}>Diagnostics</button>
+          <nav className="flex flex-wrap gap-4 md:gap-10 mt-8 md:mt-10 border-b border-white/5 w-full justify-center pb-4" role="navigation" aria-label="Primary Navigation">
+            <button onClick={() => setCurrentView('main')} aria-current={currentView === 'main' ? 'page' : undefined} className={`text-[10px] md:text-xs font-black uppercase tracking-[0.2em] transition-all ${currentView === 'main' ? 'text-title' : 'opacity-30 hover:opacity-60'}`}>Laboratory</button>
+            <button onClick={() => setCurrentView('dictionary')} aria-current={currentView === 'dictionary' ? 'page' : undefined} className={`text-[10px] md:text-xs font-black uppercase tracking-[0.2em] transition-all ${currentView === 'dictionary' ? 'text-title' : 'opacity-30 hover:opacity-60'}`}>Glossary</button>
+            {currentUserRole === 'admin' && <button onClick={() => setCurrentView('admin')} aria-current={currentView === 'admin' ? 'page' : undefined} className={`text-[10px] md:text-xs font-black uppercase tracking-[0.2em] transition-all ${currentView === 'admin' ? 'text-title' : 'opacity-30 hover:opacity-60'}`}>Governance</button>}
+            <button onClick={() => setCurrentView('testing')} aria-current={currentView === 'testing' ? 'page' : undefined} className={`text-[10px] md:text-xs font-black uppercase tracking-[0.2em] transition-all ${currentView === 'testing' ? 'text-title' : 'opacity-30 hover:opacity-60'}`}>Diagnostics</button>
           </nav>
         </header>
 
