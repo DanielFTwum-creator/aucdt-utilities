@@ -186,16 +186,17 @@ log 'Build and deploy complete.'
 
 # Step 4: .htaccess
 Log -Level 'INFO' -Msg 'Step 4: Writing .htaccess...' -Color Yellow
-$htaccessContent = @(
-  "<IfModule mod_rewrite.c>",
-  "  RewriteEngine On",
-  "  RewriteBase /ai-lab/",
-  "  RewriteCond %{REQUEST_FILENAME} -f [OR]",
-  "  RewriteCond %{REQUEST_FILENAME} -d",
-  "  RewriteRule ^ - [L]",
-  "  RewriteRule ^ /ai-lab/index.html [QSA,L]",
-  "</IfModule>",
-  "<IfModule mod_expires.c>
+$htaccessContent = @"
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /ai-lab/
+  RewriteCond %{REQUEST_FILENAME} -f [OR]
+  RewriteCond %{REQUEST_FILENAME} -d
+  RewriteRule ^ - [L]
+  RewriteRule ^ /ai-lab/index.html [QSA,L]
+</IfModule>
+
+<IfModule mod_expires.c>
   ExpiresActive On
   <FilesMatch "\.(js|css|png|jpg|jpeg|gif|svg|woff2|woff|ttf|eot|ico)$">
     ExpiresDefault "max-age=31536000"
@@ -211,8 +212,8 @@ $htaccessContent = @(
   <FilesMatch "\.(html)$">
     Header set Cache-Control "public, must-revalidate, max-age=0"
   </FilesMatch>
-</IfModule>"
-) -join "`n"
+</IfModule>
+"@
 $localHtaccess = [System.IO.Path]::Combine([System.IO.Path]::GetTempPath(), "tuc-ai-lab_htaccess_$([Guid]::NewGuid().ToString('N')).txt")
 Write-LfFile -path $localHtaccess -content $htaccessContent
 & $SCP @SSH_OPTS $localHtaccess "${RemoteHost}:${RemotePath}.htaccess"
@@ -231,7 +232,7 @@ Log -Level 'INFO' -Msg 'Step 5: Setting permissions...' -Color Yellow
 Log -Level 'INFO' -Msg 'Step 6: Deploying backend files...' -Color Yellow
 & $SCP @SSH_OPTS server.ts package.json pnpm-lock.yaml "${RemoteHost}:${RemotePath}" 2>$null | Out-Null
 if (Test-Path '.env.local') {
-    & $SCP @SSH_OPTS '.env.local' "${RemoteHost}:${RemotePath}.env" 2>$null | Out-Null
+    & $SCP @SSH_OPTS '.env.local' "${RemoteHost}:${RemotePath}.env.local" 2>$null | Out-Null
 }
 $nvmPrefix = 'export NVM_DIR="$HOME/.nvm"; [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"; nvm use 26 >/dev/null 2>&1 || true'
 & $SSH @SSH_OPTS $RemoteHost "$nvmPrefix; cd $RemotePath && pnpm install --prod --silent 2>/dev/null || npm install --omit=dev --silent"

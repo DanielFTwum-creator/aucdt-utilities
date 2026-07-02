@@ -317,7 +317,7 @@ export default function App() {
       </div>
 
       {/* Featured Apps Marquee */}
-      <div style={{ background:'#fff', borderBottom:'0.5px solid #e2e0d8', padding:'0', flexShrink:0, overflow:'hidden', height:'56px', display:'flex', alignItems:'center' }}>
+      <div className="featured-marquee" style={{ background:'#fff', borderBottom:'0.5px solid #e2e0d8', padding:'0', flexShrink:0, overflow:'hidden', height:'56px', display:'flex', alignItems:'center' }}>
         <motion.div
           style={{ display:'flex', gap:'12px', paddingX:'16px' }}
           animate={{ x: [0, -2000] }}
@@ -377,6 +377,7 @@ export default function App() {
             <div style={{ display:'flex', gap:'8px', minWidth:'min-content', justifyContent:'center', flexWrap:'wrap' }}>
               {CAT_LIST.map((cat) => (
                 <button
+                  className="category-filter-btn"
                   title={`Filter tools by ${cat} category`}
                   key={cat}
                   onClick={() => setActiveCategory(cat)}

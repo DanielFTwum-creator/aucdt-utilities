@@ -12,7 +12,11 @@ import fetch from "node-fetch";
 import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
 
-dotenv.config();
+if (fs.existsSync(".env.local")) {
+  dotenv.config({ path: ".env.local" });
+} else {
+  dotenv.config();
+}
 
 interface GoogleTokenResponse {
   id_token: string;
