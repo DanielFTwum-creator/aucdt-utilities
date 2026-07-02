@@ -276,7 +276,7 @@ async function startServer() {
   });
 
   // Image generation proxy to bypass CORS
-  app.post('/api/generate-image', async (req, res) => {
+  app.post(['/api/generate-image', '/dmcdai/api/generate-image'], async (req, res) => {
     try {
       const { prompt, base64Image, mimeType } = req.body;
 
@@ -364,7 +364,11 @@ async function startServer() {
       }
     });
   } else {
-    const distPath = path.join(__dirname, 'dist');
+    // Local build puts the SPA in dist/; deploy.ps1 rsyncs dist/* directly into the
+    // docroot alongside server.js, so __dirname itself is the web root there. Probe
+    // for dist/index.html and fall back to __dirname.
+    const distCandidate = path.join(__dirname, 'dist');
+    const distPath = fs.existsSync(path.join(distCandidate, 'index.html')) ? distCandidate : __dirname;
     app.use(express.static(distPath));
     app.get(/.*/, (req, res) => {
       if (!req.path.startsWith('/api/')) {
