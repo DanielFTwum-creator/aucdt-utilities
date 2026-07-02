@@ -1,13 +1,68 @@
 <!doctype html>
-<html lang="en">
+<html lang="en-GB">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>TUC Results Management System</title>
+
+    <!-- SEO -->
+    <meta name="description" content="TUC Results Management System — securely view, manage, and publish student results at Techbridge University College, Accra." />
+    <meta name="keywords" content="TUC results, student results, results management, Techbridge University College, Ghana university, academic records" />
+    <meta name="author" content="Techbridge University College" />
+    <meta name="publisher" content="TUC ICT Department" />
+    <link rel="canonical" href="https://rms.techbridge.edu.gh/" />
+    <meta name="robots" content="noindex, nofollow" />
+
+    <!-- Geographic (Accra, Ghana) -->
+    <meta name="geo.region" content="GH-AA" />
+    <meta name="geo.placename" content="Accra, Ghana" />
+    <meta name="geo.position" content="5.6037;-0.1870" />
+    <meta name="ICBM" content="5.6037, -0.1870" />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://rms.techbridge.edu.gh/" />
+    <meta property="og:site_name" content="Techbridge University College" />
+    <meta property="og:title" content="TUC Results Management System" />
+    <meta property="og:description" content="Securely view, manage, and publish student results — Techbridge University College." />
+    <meta property="og:image" content="https://techbridge.edu.gh/static/TUC_LOGO.png" />
+    <meta property="og:locale" content="en_GB" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@TUCGhana" />
+    <meta name="twitter:creator" content="@TUCGhana" />
+    <meta name="twitter:title" content="TUC Results Management System" />
+    <meta name="twitter:description" content="Securely view, manage, and publish student results — Techbridge University College." />
+    <meta name="twitter:image" content="https://techbridge.edu.gh/static/TUC_LOGO.png" />
+
+    <!-- Branding -->
+    <meta name="theme-color" content="#1e3a5f" />
+    <meta name="msapplication-TileColor" content="#1e3a5f" />
+
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-FKXTELQ71R"></script>
     <script>
-      // FOSC prevention: Apply theme from localStorage before rendering
-      document.documentElement.setAttribute('data-theme', localStorage.getItem('tuc_theme') || 'light');
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-FKXTELQ71R');
+    </script>
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>TUC Results Management System</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Theme persistence — before DOM renders to prevent flash -->
+    <script>
+      (function() {
+        var theme = localStorage.getItem('tuc-rms-theme') || 'light';
+        document.documentElement.setAttribute('data-theme', theme);
+      })();
     </script>
   </head>
   <body>
