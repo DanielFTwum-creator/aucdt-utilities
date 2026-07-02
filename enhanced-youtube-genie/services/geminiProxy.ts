@@ -28,21 +28,31 @@ export async function generateViaProxy(
     },
   };
 
-  const res = await fetch(`/youtube-genie/api/generate?model=${encodeURIComponent(model)}`, {
+  const url = model
+    ? `/youtube-genie/api/generate?model=${encodeURIComponent(model)}`
+    : '/youtube-genie/api/generate';
+  console.log(`[geminiProxy] POST ${url} (model=${model || 'WMS-default'})`);
+
+  const res = await fetch(url, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(body),
   });
 
+  console.log(`[geminiProxy] response status: ${res.status} ${res.statusText}`);
+
   if (!res.ok) {
     const errText = await res.text();
+    console.error(`[geminiProxy] error body:`, errText);
     throw new Error(`Proxy returned ${res.status}: ${errText}`);
   }
 
   const data = await res.json();
   const text: string | undefined = data?.candidates?.[0]?.content?.parts?.[0]?.text;
   if (text == null) {
+    console.error('[geminiProxy] unexpected response shape:', JSON.stringify(data).slice(0, 300));
     throw new Error('Empty or invalid response from AI service.');
   }
+  console.log(`[geminiProxy] success — text length: ${text.length}`);
   return text;
 }

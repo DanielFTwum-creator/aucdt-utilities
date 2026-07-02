@@ -117,9 +117,16 @@ const AppEnhanced: React.FC = () => {
   const [apiStatus, setApiStatus] = useState<'checking' | 'available' | 'unavailable'>('checking');
 
   useEffect(() => {
+    console.log('[App] checking AI availability via /youtube-genie/api/generate...');
     checkAPIAvailability()
-      .then(ok => setApiStatus(ok ? 'available' : 'unavailable'))
-      .catch(() => setApiStatus('unavailable'));
+      .then(ok => {
+        console.log(`[App] AI availability check result: ${ok ? 'available' : 'unavailable'}`);
+        setApiStatus(ok ? 'available' : 'unavailable');
+      })
+      .catch(err => {
+        console.error('[App] AI availability check threw:', err);
+        setApiStatus('unavailable');
+      });
   }, []);
 
   // Persist form data with debounce

@@ -106,11 +106,12 @@ Local dev: `pnpm dev` runs the Vite dev server (port 5173). The server.ts relay 
 ## 8. Deploy Pattern
 
 ```powershell
+cd C:\Development\github\aucdt-utilities\enhanced-youtube-genie
 .\deploy.ps1 -Build
 ```
 
 Applies: **Pattern 9** (Express server + PM2) · **Pattern 17** (fleet Node/PM2 deploy)
-· **Pattern 18** (pnpm 11 `allowBuilds`).
+· **Pattern 18** (pnpm 11 `allowBuilds`) · **Pattern 20** (PowerShell heredoc bash variable escaping).
 
 **Key deploy decisions (30 June 2026):**
 
@@ -121,6 +122,13 @@ Applies: **Pattern 9** (Express server + PM2) · **Pattern 17** (fleet Node/PM2 
 - `tsx` is in `dependencies` (not `devDependencies`) so it survives `pnpm install --prod`.
 
 nginx proxy location block: `/var/www/vhosts/system/ai-tools.techbridge.edu.gh/conf/vhost_nginx.conf`
+
+**Deploy gotchas (1 July 2026):**
+
+- **Commit and push before deploying.** The deploy script clones from GitHub — uncommitted local changes are never picked up. The deploy will always run the last pushed commit.
+- **`.env.local` CRLF.** Windows `.env.local` has CRLF line endings. Values extracted on the server via `grep | cut` include a trailing `\r` unless piped through `tr -d '\r'`. The deploy script handles this — do not remove it.
+- **PM2 env update.** After a deploy that changes env vars, use `pm2 restart youtube-genie --update-env`, not plain `pm2 restart`.
+- **PowerShell heredoc bash loops.** See Pattern 20. The deploy script avoids bash `for` loops over variable names inside the heredoc — all credential greps use hardcoded variable names.
 
 ---
 
