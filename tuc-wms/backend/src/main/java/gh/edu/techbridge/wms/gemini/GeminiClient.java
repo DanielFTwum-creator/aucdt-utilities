@@ -41,23 +41,39 @@ public class GeminiClient {
      * verbatim so callers get Gemini's own error detail.
      */
     public Result generateContent(String model, String requestJson) {
+        return call(model, "generateContent", requestJson, Duration.ofSeconds(60));
+    }
+
+    /**
+     * Forward a {@code :predict} request to Gemini — the method Imagen text-to-image
+     * models (imagen-4.0-*) use. {@code requestJson} is the raw predict body
+     * ({@code {"instances":[...],"parameters":{...}}}) supplied by the caller; the proxy
+     * adds only the model + key. Image generation is slower, so the timeout is longer.
+     * The key never reaches the browser (same custody as {@link #generateContent}).
+     */
+    public Result predict(String model, String requestJson) {
+        return call(model, "predict", requestJson, Duration.ofSeconds(120));
+    }
+
+    /** Shared upstream call for both :generateContent and :predict. */
+    private Result call(String model, String method, String requestJson, Duration timeout) {
         String chosen = (model == null || model.isBlank()) ? props.getDefaultModel() : model;
         String url = props.getBaseUrl()
                 + "/v1beta/models/" + URLEncoder.encode(chosen, StandardCharsets.UTF_8)
-                + ":generateContent?key=" + URLEncoder.encode(props.getApiKey(), StandardCharsets.UTF_8);
+                + ":" + method + "?key=" + URLEncoder.encode(props.getApiKey(), StandardCharsets.UTF_8);
         try {
             HttpRequest req = HttpRequest.newBuilder(URI.create(url))
-                    .timeout(Duration.ofSeconds(60))
+                    .timeout(timeout)
                     .header("Content-Type", "application/json")
                     .POST(HttpRequest.BodyPublishers.ofString(requestJson, StandardCharsets.UTF_8))
                     .build();
             HttpResponse<String> res = http.send(req, HttpResponse.BodyHandlers.ofString());
             if (res.statusCode() >= 400) {
-                log.warn("[gemini] upstream {} for model {} — body: {}", res.statusCode(), chosen, res.body());
+                log.warn("[gemini] upstream {} for {}:{} — body: {}", res.statusCode(), chosen, method, res.body());
             }
             return new Result(res.statusCode(), res.body());
         } catch (Exception e) {
-            log.warn("[gemini] call for model {} failed: {}", chosen, e.toString());
+            log.warn("[gemini] {} call for model {} failed: {}", method, chosen, e.toString());
             return new Result(502, "{\"error\":\"Gemini upstream call failed\"}");
         }
     }

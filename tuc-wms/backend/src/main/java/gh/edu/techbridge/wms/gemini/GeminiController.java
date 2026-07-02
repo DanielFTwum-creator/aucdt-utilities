@@ -93,6 +93,33 @@ public class GeminiController {
                 .body(r.body());
     }
 
+    /**
+     * Proxy a Gemini {@code :predict} call — used by Imagen text-to-image models
+     * (imagen-4.0-*), which are not served by {@code :generateContent}. Body is the raw
+     * predict request JSON ({@code instances}/{@code parameters}); ?model= selects the
+     * Imagen model. Same auth + verbatim relay as {@link #generate}; the key stays server-side.
+     */
+    @PostMapping(value = "/predict", consumes = MediaType.APPLICATION_JSON_VALUE,
+                 produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> predict(@RequestParam(required = false) String model,
+                                          @RequestHeader(value = "X-Gemini-Proxy-Key", required = false) String proxyKey,
+                                          @RequestBody String requestJson) {
+        if (!isAuthorised(proxyKey)) {
+            return ResponseEntity.status(401)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body("{\"error\":\"Unauthorised: present a WMS bearer token or a valid X-Gemini-Proxy-Key.\"}");
+        }
+        if (!props.isEnabled()) {
+            return ResponseEntity.status(503)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body("{\"error\":\"GEMINI_API_KEY not configured on the WMS server.\"}");
+        }
+        GeminiClient.Result r = client.predict(model, requestJson);
+        return ResponseEntity.status(r.status())
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(r.body());
+    }
+
     /** Accept either an authenticated WMS user (JWT) or a valid service proxy key. */
     private boolean isAuthorised(String presentedProxyKey) {
         if (props.matchesProxyKey(presentedProxyKey)) return true;
