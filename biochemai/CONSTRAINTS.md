@@ -47,8 +47,8 @@
 
 | Variable | Source | Purpose |
 |---|---|---|
-| `GEMINI_PROXY_KEY` | WMS-issued secret | Authenticates key fetch from WMS proxy (Pattern 11) |
-| `GEMINI_API_KEY` | Dev only / fallback | Local dev fallback if `GEMINI_PROXY_KEY` not set |
+| `GEMINI_PROXY_KEY` | WMS-issued secret | Authenticates the generate relay to WMS (Pattern 11) |
+| `WMS_GEMINI_URL` | Optional override | Relay endpoint; defaults to `https://wms.techbridge.edu.gh/api/gemini/generate` |
 | `VITE_GOOGLE_CLIENT_ID` | Google Workspace console | OAuth client ID (frontend + server) |
 | `GOOGLE_CLIENT_SECRET` | Google Workspace console | OAuth token exchange (server only) |
 | `VITE_GOOGLE_REDIRECT_URI` | Deploy config | OAuth callback URI |
@@ -58,20 +58,25 @@
 
 ---
 
-## 5. Gemini Key Pattern (Pattern 11 — WMS Proxy)
+## 5. Gemini Key Pattern (Pattern 11 — WMS Relay, fleet standard)
 
-BioChemAI uses the WMS Gemini key proxy. Key is never stored in code or `.env.local` directly.
+BioChemAI never holds the Gemini key — not in code, not in `.env`, not fetched at runtime.
+All generateContent calls are relayed to WMS, which adds the key server-side:
 
 ```
-GET https://wms.techbridge.edu.gh/api/gemini/key
+POST https://wms.techbridge.edu.gh/api/gemini/generate?model=gemini-2.5-flash
 Header: X-Gemini-Proxy-Key: <GEMINI_PROXY_KEY>
-Response: { "apiKey": "..." }
+Body: raw Gemini generateContent JSON (contents / systemInstruction / tools / generationConfig)
+Response: raw Gemini REST response, relayed verbatim
 ```
 
-- Cached in memory for 6 hours
-- Invalidated automatically on `API_KEY_INVALID` / `INVALID_ARGUMENT` errors
-- Falls back to local `GEMINI_API_KEY` only in dev (when `GEMINI_PROXY_KEY` not set)
-- Reference implementation: `server.ts` → `getGeminiKey()` / `invalidateGeminiKey()`
+- No key cache, no key invalidation — the app has no key to manage
+- Missing `GEMINI_PROXY_KEY` → AI routes return HTTP 503 (server still boots)
+- Reference implementation: `server.ts` → `callGemini()`; same idiom as omniextract
+- Migrated from the transitional key-fetch mode on 2 Jul 2026
+- Known dead code: `components/voice/VoiceContainer.tsx` reads `process.env.API_KEY`
+  (never injected by vite.config) — voice mode is non-functional and holds no key.
+  A future fix needs the Live API ephemeral-token flow, not the REST relay.
 
 ---
 
@@ -102,8 +107,8 @@ Response: { "apiKey": "..." }
 Before deploying, confirm:
 
 ```
-☐ server.ts uses getGeminiKey() — no direct GEMINI_API_KEY reference in API routes
-☐ No process.exit(1) on missing key — return HTTP 503 instead
+☐ server.ts relays via callGemini() — no GEMINI_API_KEY reference anywhere in server.ts
+☐ No process.exit(1) on missing proxy key — AI routes return HTTP 503 instead
 ☐ tsx is in dependencies (not devDependencies) in package.json
 ☐ pnpm build succeeds locally
 ☐ Health check passes: GET /biochemai/api/health → { ok: true }

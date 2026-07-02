@@ -177,8 +177,16 @@ if ($LASTEXITCODE -ne 0) {
 Remove-Item -Path $localHtaccess -Force -ErrorAction SilentlyContinue
 
 # Step 5: Server environment
+# Key custody (Pattern 11 fleet standard): the deployed .env must never contain the raw
+# GEMINI_API_KEY. GEMINI_PROXY_KEY is injected server-side from WMS custody
+# (/opt/tuc-wms/.env) with BOM/CR/null stripping (Pattern 21). No bash loop vars (Pattern 20).
 Log -Level 'INFO' -Msg 'Step 5: Configuring server environment...' -Color Yellow
-& $SSH @SSH_OPTS $REMOTE "cp /tmp/.env.biochemai ${DEPLOY_PATH}/.env; chown -R techbridge.edu.gh_md:psaserv ${DEPLOY_PATH} 2>/dev/null || true; find ${DEPLOY_PATH} -not -path '${DEPLOY_PATH}/node_modules/*' -type d -exec chmod 755 {} \; 2>/dev/null || true; find ${DEPLOY_PATH} -not -path '${DEPLOY_PATH}/node_modules/*' -type f -exec chmod 644 {} \; 2>/dev/null || true"
+$envResult = & $SSH @SSH_OPTS $REMOTE "cp /tmp/.env.biochemai ${DEPLOY_PATH}/.env; sed -i '/^GEMINI_API_KEY=/d;/^GEMINI_PROXY_KEY=/d' ${DEPLOY_PATH}/.env; K=`$(grep '^GEMINI_PROXY_KEY=' /opt/tuc-wms/.env | head -1 | cut -d= -f2- | tr -d '\r\000' | LC_ALL=C sed 's/\xef\xbb\xbf//g'); if [ -n `"`$K`" ]; then printf 'GEMINI_PROXY_KEY=%s\n' `"`$K`" >> ${DEPLOY_PATH}/.env; echo 'env: GEMINI_PROXY_KEY injected from WMS custody'; else echo 'WARN: GEMINI_PROXY_KEY not found in /opt/tuc-wms/.env'; fi; chmod 600 ${DEPLOY_PATH}/.env; chown -R techbridge.edu.gh_md:psaserv ${DEPLOY_PATH} 2>/dev/null || true; find ${DEPLOY_PATH} -not -path '${DEPLOY_PATH}/node_modules/*' -type d -exec chmod 755 {} \; 2>/dev/null || true; find ${DEPLOY_PATH} -not -path '${DEPLOY_PATH}/node_modules/*' -not -name '.env' -type f -exec chmod 644 {} \; 2>/dev/null || true"
+Write-Host $envResult -ForegroundColor DarkGray
+if ($envResult -match 'WARN') {
+    Log -Level 'ERROR' -Msg 'GEMINI_PROXY_KEY unavailable — AI routes would 503. Aborting before PM2 restart.' -Color Red
+    exit 1
+}
 
 # Step 6: Restart backend
 Log -Level 'INFO' -Msg 'Step 6: Restarting backend...' -Color Yellow
