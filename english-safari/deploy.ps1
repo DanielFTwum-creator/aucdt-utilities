@@ -136,28 +136,31 @@ if ($envInject -match 'WARN') { Log "ERROR" "GEMINI_PROXY_KEY unavailable — st
 $nvmPrefix = 'export NVM_DIR="$HOME/.nvm"; [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"; nvm use 26 >/dev/null 2>&1 || true'
 ssh -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax=3 $RemoteHost "$nvmPrefix; cd $RemotePath && pnpm install --prod --silent 2>/dev/null || npm install --omit=dev --silent"
 
-Log "INFO" "Step 7: Restarting backend (PM2)..." Yellow
+Log "INFO" "Step 7: Restarting backend (hard delete + start, Pattern 23)..." Yellow
+# Pattern 23: pm2 reload/restart --update-env keeps a stale env (old GEMINI_PROXY_KEY
+# -> WMS 401) AND stale tsx-transpiled server.ts. Hard delete + fresh start is the only
+# reliable way to pick up a changed env var or edited backend.
 $restartCmd = @"
 export NVM_DIR="`$HOME/.nvm"; [ -s "`$NVM_DIR/nvm.sh" ] && . "`$NVM_DIR/nvm.sh"; nvm use 26 >/dev/null 2>&1 || true
 NPXPATH=`$(which npx)
 if command -v pm2 &>/dev/null; then
-  if pm2 describe tb-ai-english-safari &>/dev/null; then
-    NODE_ENV=production PORT=3021 pm2 reload tb-ai-english-safari --update-env && echo 'pm2: reloaded tb-ai-english-safari'
-  else
-    NODE_ENV=production PORT=3021 pm2 start $RemotePath/server.ts \
-      --name tb-ai-english-safari \
-      --interpreter "`$NPXPATH" \
-      --interpreter-args tsx \
-      --cwd $RemotePath \
-      --max-memory-restart 1G
-
-    echo 'pm2: started tb-ai-english-safari'
-  fi
+  pm2 delete tb-ai-english-safari &>/dev/null || true
+  cd $RemotePath && NODE_ENV=production PORT=3021 pm2 start $RemotePath/server.ts \
+    --name tb-ai-english-safari \
+    --interpreter "`$NPXPATH" \
+    --interpreter-args tsx \
+    --cwd $RemotePath \
+    --max-memory-restart 1G
+  echo 'pm2: started tb-ai-english-safari'
   pm2 save --force &>/dev/null
+  sleep 3
+  pm2 logs tb-ai-english-safari --lines 20 --nostream 2>&1 | grep -q 'relay + SPA listening' && echo 'OK new build running' || echo 'WARN stale build — banner not found'
 fi
 "@
 $b64r = [Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes($restartCmd.Replace("`r", "")))
-ssh -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax=3 $RemoteHost "echo $b64r | base64 -d | bash"
+$restartOut = ssh -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax=3 $RemoteHost "echo $b64r | base64 -d | bash"
+Write-Host $restartOut -ForegroundColor DarkGray
+if ($restartOut -match 'WARN stale build') { Log "ERROR" "PM2 running stale code — investigate." Red; exit 5 }
 
 Log "INFO" "Step 8: Health checks..." Yellow
 $indexCheck = ssh -o StrictHostKeyChecking=no $RemoteHost "test -f ${RemotePath}index.html && echo 'OK index.html present' || echo 'MISSING index.html'"

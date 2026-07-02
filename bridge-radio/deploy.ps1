@@ -121,21 +121,25 @@ ssh -o StrictHostKeyChecking=no $RemoteHost "echo $vb64 | base64 -d > /var/www/v
 Log "INFO" "Step 6: Permissions..." Yellow
 ssh -o StrictHostKeyChecking=no $RemoteHost "chown -R techbridge.edu.gh_md:psaserv $RemotePath && chmod -R 755 $RemotePath" | Out-Null
 
-Log "INFO" "Step 7: Restarting backend (PM2 on port $Port)..." Yellow
+Log "INFO" "Step 7: Restarting backend (hard delete + start, Pattern 23)..." Yellow
+# Pattern 23: pm2 reload/restart --update-env keeps a stale env (old GEMINI_PROXY_KEY
+# -> WMS 401) AND stale tsx-transpiled server.ts. Hard delete + fresh start is the only
+# reliable way to pick up a changed env var or edited backend.
 $restartCmd = @"
 $nvmPrefix
 if command -v pm2 &>/dev/null; then
-  if pm2 describe bridge-radio &>/dev/null; then
-    pm2 reload bridge-radio --update-env && echo 'pm2: reloaded bridge-radio'
-  else
-    cd $RemotePath && NODE_ENV=production PORT=$Port pm2 start server.ts --name bridge-radio --interpreter npx --interpreter-args tsx --cwd $RemotePath
-    echo 'pm2: started bridge-radio'
-  fi
+  pm2 delete bridge-radio &>/dev/null || true
+  cd $RemotePath && NODE_ENV=production PORT=$Port pm2 start server.ts --name bridge-radio --interpreter npx --interpreter-args tsx --cwd $RemotePath
+  echo 'pm2: started bridge-radio'
   pm2 save --force &>/dev/null
+  sleep 3
+  pm2 logs bridge-radio --lines 20 --nostream 2>&1 | grep -q 'WMS relay listening' && echo 'OK new build running' || echo 'WARN stale build — banner not found'
 fi
 "@
 $b64r = [Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes($restartCmd.Replace("`r", "")))
-ssh -o StrictHostKeyChecking=no $RemoteHost "echo $b64r | base64 -d | bash"
+$restartOut = ssh -o StrictHostKeyChecking=no $RemoteHost "echo $b64r | base64 -d | bash"
+Write-Host $restartOut -ForegroundColor DarkGray
+if ($restartOut -match 'WARN stale build') { Log "ERROR" "PM2 running stale code — investigate." Red; exit 5 }
 
 Log "INFO" "Step 8: End-to-end health check (PATTERNS.md #15)..." Yellow
 if ($PublicUrl) {

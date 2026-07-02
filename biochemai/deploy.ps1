@@ -189,14 +189,21 @@ if ($envResult -match 'WARN') {
 }
 
 # Step 6: Restart backend
-Log -Level 'INFO' -Msg 'Step 6: Restarting backend...' -Color Yellow
+Log -Level 'INFO' -Msg 'Step 6: Restarting backend (hard delete + start, Pattern 23)...' -Color Yellow
+# Pattern 23: pm2 reload/restart --update-env keeps a stale env (old GEMINI_PROXY_KEY
+# -> WMS 401) AND stale tsx-transpiled server.ts. Hard delete + fresh start is the only
+# reliable way to pick up a changed env var or edited backend.
 $nvmPrefix = 'export NVM_DIR="$HOME/.nvm"; [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"; nvm use 26 >/dev/null 2>&1 || true'
-$pm2Result = & $SSH @SSH_OPTS $REMOTE "$nvmPrefix; NODE26=/root/.nvm/versions/node/v26.3.1/bin/node; TSX_ESM=${DEPLOY_PATH}/node_modules/tsx/dist/esm/index.mjs; if pm2 describe ${PM2_APP} > /dev/null 2>&1; then pm2 reload ${PM2_APP} --update-env; echo 'pm2: reloaded ${PM2_APP}'; else pm2 start ${DEPLOY_PATH}/server.ts --name ${PM2_APP} --interpreter `$NODE26 --interpreter-args `"--import `$TSX_ESM`" --cwd ${DEPLOY_PATH}; echo 'pm2: started ${PM2_APP}'; fi; pm2 save --force >/dev/null 2>&1 || true"
+$pm2Result = & $SSH @SSH_OPTS $REMOTE "$nvmPrefix; NODE26=/root/.nvm/versions/node/v26.3.1/bin/node; TSX_ESM=${DEPLOY_PATH}/node_modules/tsx/dist/esm/index.mjs; pm2 delete ${PM2_APP} >/dev/null 2>&1; cd ${DEPLOY_PATH} && pm2 start ${DEPLOY_PATH}/server.ts --name ${PM2_APP} --interpreter `$NODE26 --interpreter-args `"--import `$TSX_ESM`" --cwd ${DEPLOY_PATH}; echo 'pm2: started ${PM2_APP}'; pm2 save --force >/dev/null 2>&1 || true"
 Write-Host $pm2Result -ForegroundColor DarkGray
 
 # Health checks
 Log -Level 'INFO' -Msg 'Health checks...' -Color Yellow
 Start-Sleep -Seconds 8
+
+# Pattern 23: assert the new build is actually running (not stale tsx code).
+$bannerCheck = & $SSH @SSH_OPTS $REMOTE "$nvmPrefix; pm2 logs ${PM2_APP} --lines 25 --nostream 2>&1 | grep -q 'Gemini relay (WMS custody) listening' && echo 'OK new build running' || echo 'WARN stale build — banner not found'"
+Write-Host $bannerCheck -ForegroundColor $(if ($bannerCheck -match '^OK') { 'Green' } else { 'Red' })
 
 $indexCheck = & $SSH @SSH_OPTS $REMOTE "test -f ${DEPLOY_PATH}/dist/index.html && echo 'OK index.html present' || echo 'MISSING index.html'"
 Write-Host $indexCheck -ForegroundColor $(if ($indexCheck -match '^OK') { 'Green' } else { 'Red' })
