@@ -32,6 +32,7 @@
 | 20 | PowerShell Heredoc Bash Variable Escaping | Any deploy.ps1 with a bash for-loop over variable names |
 | 21 | BOM Propagation into Extracted .env Values | Any deploy that copies keys from WMS .env via grep |
 | 22 | `const` Temporal Dead Zone in Server Diagnostics | Any server.ts with startup console.log blocks |
+| 23 | PM2 Hard Restart After Env / server.ts Change | Any deploy that changes env vars or edits a tsx-run server.ts |
 | — | WMS SSO + TOTP onboarding (staff apps) | → `tuc-wms/docs/SSO_ONBOARDING_PLAYBOOK.md` |
 
 ---
@@ -1693,5 +1694,70 @@ When adding a new variable to the startup diagnostic block in any `server.ts`, a
 
 ---
 
-*Last updated: 1 July 2026 — Daniel Frempong Twum / TUC ICT*  
+## PATTERN 23: PM2 HARD RESTART AFTER ENV / server.ts CHANGE
+
+**Origin:** WMS-only key-custody migration, 2 July 2026 — english-safari deploy.
+**Applies to:** Every deploy that changes environment variables OR edits a `server.ts`
+run by PM2 through the `tsx` interpreter.
+
+### Root Cause
+
+`pm2 reload` and `pm2 restart --update-env` are NOT reliable after a deploy that changes
+either the environment or the code:
+
+1. **Stale env in the process descriptor.** PM2 stores the env captured at the original
+   `pm2 start`. `--update-env` re-reads the *shell* environment, not the app's `.env` /
+   `.env.local`, and it does **not evict** a previously-stored variable. A `GEMINI_PROXY_KEY`
+   baked in months ago keeps being sent even after `/opt/tuc-wms/.env` and the app's `.env`
+   are corrected.
+2. **Stale transpiled code.** Under `--interpreter npx --interpreter-args tsx`, a `pm2 reload`
+   can keep executing the OLD `server.ts` — the new file is on disk but the running process
+   never re-transpiles it.
+
+### The Tell-Tale Symptoms
+
+| Symptom | Meaning |
+|---|---|
+| WMS relay returns **401** (not 503) after you fixed the key | stale non-empty key in PM2 env |
+| `pm2 env <id>` key ≠ `/opt/tuc-wms/.env` key | stale env confirmed |
+| A `curl` to WMS with the on-disk key returns 200, but the app still 401s | process env, not the file, is wrong |
+| Startup banner in `pm2 logs` shows the OLD message after deploy | stale code confirmed |
+| A newly added route 404s though the code is on disk | stale code confirmed |
+
+### The Rule
+
+After any deploy that changes env vars or edits `server.ts`, do a **hard** restart —
+`pm2 delete` then a fresh `pm2 start` — never rely on `reload`/`restart --update-env`:
+
+```bash
+export NVM_DIR="$HOME/.nvm"; [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"; nvm use 26 >/dev/null 2>&1
+NPXPATH=$(which npx)
+pm2 delete "$PM2_APP" >/dev/null 2>&1
+cd "$DEPLOY" && NODE_ENV=production PORT="$PORT" pm2 start "$DEPLOY/server.ts" \
+  --name "$PM2_APP" --interpreter "$NPXPATH" --interpreter-args tsx --cwd "$DEPLOY" \
+  --max-memory-restart 1G
+pm2 save --force
+```
+
+### Verify — assert the new build is actually running
+
+Grep the startup banner for a string unique to the new build. Give each `server.ts` a
+distinctive `app.listen` banner (e.g. change it when you change behaviour) so this check has
+something to anchor on:
+
+```bash
+pm2 logs "$PM2_APP" --lines 20 --nostream 2>&1 | grep -i 'relay + SPA listening' \
+  || echo "[DEPLOY-FAIL] new banner not found — PM2 is running stale code"
+```
+
+### Note
+
+A plain `pm2 reload` is still fine for a pure frontend-asset redeploy where neither the env
+nor `server.ts` changed. The hard restart is required only when env or backend code moved.
+Sequential per-app restarts only — never `pm2 reload all` on the RAM-constrained box (it
+spawns everything at once and OOMs; see Pattern 16).
+
+---
+
+*Last updated: 2 July 2026 — Daniel Frempong Twum / TUC ICT*  
 *Core session directives → see CLAUDE.md*
