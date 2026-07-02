@@ -1,5 +1,4 @@
 import express from 'express';
-import { GoogleGenAI, Type } from '@google/genai';
 import dotenv from 'dotenv';
 import { DatabaseSync } from 'node:sqlite';
 import path from 'path';
@@ -8,33 +7,33 @@ import fs from 'fs';
 dotenv.config({ path: '.env.local' });
 dotenv.config();
 
-// --- Gemini key custody: fetched from the WMS proxy, never stored here (FR-SSO-011) ---
-// WMS is the single rotation point. Cached in memory with a 6-hour TTL.
-const WMS_KEY_URL = 'https://wms.techbridge.edu.gh/api/gemini/key';
-const KEY_TTL_MS  = 6 * 60 * 60 * 1000;
-let cachedGeminiKey: string | null = null;
-let keyFetchedAt = 0;
+// --- Gemini custody: this app NEVER holds the key (fleet standard, Pattern 11). ---
+// Every generateContent call is relayed to the WMS proxy with the GEMINI_PROXY_KEY
+// service credential; only WMS adds the key. The key never reaches this process.
+const WMS_GEMINI_URL = process.env.WMS_GEMINI_URL || 'https://wms.techbridge.edu.gh/api/gemini/generate';
+const GEMINI_PROXY_KEY = process.env.GEMINI_PROXY_KEY || '';
 
-function invalidateGeminiKey() { cachedGeminiKey = null; keyFetchedAt = 0; }
+interface GeminiResponse {
+  candidates?: Array<{ content?: { parts?: Array<{ text?: string }> } }>;
+}
 
-async function getGeminiKey(): Promise<string> {
-  if (cachedGeminiKey && Date.now() - keyFetchedAt < KEY_TTL_MS) return cachedGeminiKey;
-  const proxyKey = process.env.GEMINI_PROXY_KEY;
-  if (!proxyKey) {
-    // Local dev fallback only — production must set GEMINI_PROXY_KEY.
-    const local = process.env.GEMINI_API_KEY || process.env.VITE_GEMINI_API_KEY;
-    if (local) return local;
-    throw new Error('GEMINI_PROXY_KEY is not set (and no local key fallback).');
-  }
-  const r = await fetch(WMS_KEY_URL, { headers: { 'X-Gemini-Proxy-Key': proxyKey } });
-  if (!r.ok) throw new Error(`WMS key fetch failed: ${r.status} ${await r.text()}`);
-  cachedGeminiKey = (await r.json()).apiKey;
-  keyFetchedAt = Date.now();
-  return cachedGeminiKey!;
+// Relay a raw Gemini generateContent body to WMS; return the joined text, or throw.
+// Replaces the SDK's generateContentStream — the relay does non-streaming
+// generateContent, so we collect the full text server-side (same result to the client).
+async function generateViaWms(model: string, body: unknown): Promise<string> {
+  if (!GEMINI_PROXY_KEY) throw new Error('GEMINI_PROXY_KEY not configured');
+  const r = await fetch(`${WMS_GEMINI_URL}?model=${encodeURIComponent(model)}`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'X-Gemini-Proxy-Key': GEMINI_PROXY_KEY },
+    body: JSON.stringify(body),
+  });
+  if (!r.ok) throw new Error(`WMS relay failed: ${r.status} ${await r.text()}`);
+  const data = (await r.json()) as GeminiResponse;
+  return (data.candidates?.[0]?.content?.parts ?? []).map(p => p.text ?? '').join('');
 }
 
 if (!process.env.GEMINI_PROXY_KEY) {
-  console.warn('[GLUCOSE-API] WARNING: GEMINI_PROXY_KEY not set — AI routes will use local fallback or fail');
+  console.warn('[GLUCOSE-API] WARNING: GEMINI_PROXY_KEY not set — AI routes will return 503');
 }
 
 const app = express();
@@ -460,16 +459,11 @@ app.post(['/api/scan-glucose', '/glucose/api/scan-glucose'], async (req, res) =>
 
     console.log('[SCAN-API] Processing image, size:', imageData.length, 'chars');
 
-    const geminiKey = await getGeminiKey().catch((err: any) => {
-      console.error('[SCAN-API] Key fetch failed:', err.message);
-      return null;
-    });
-    if (!geminiKey) return res.status(503).json({ error: 'AI service temporarily unavailable' });
-    const client = new GoogleGenAI({ apiKey: geminiKey });
+    if (!GEMINI_PROXY_KEY) return res.status(503).json({ error: 'AI service temporarily unavailable' });
 
-    const responseStream = await client.models.generateContentStream({
-      model: 'gemini-2.5-flash',
-      contents: {
+    const text = await generateViaWms('gemini-2.5-flash', {
+      contents: [{
+        role: 'user',
         parts: [
           {
             text: `Role: You are a highly accurate clinical data entry assistant.
@@ -485,42 +479,30 @@ Rules:
 Restrictions:
 - ONLY output the JSON array. Make sure the output precisely matches the JSON response schema.`,
           },
-          {
-            inlineData: {
-              data: imageData,
-              mimeType: mimeType,
-            },
-          },
+          { inlineData: { data: imageData, mimeType: mimeType } },
         ],
-      },
-      config: {
+      }],
+      generationConfig: {
         temperature: 0,
         responseMimeType: 'application/json',
         responseSchema: {
-          type: Type.ARRAY,
+          type: 'ARRAY',
           items: {
-            type: Type.OBJECT,
+            type: 'OBJECT',
             properties: {
-              date: { type: Type.STRING },
-              fasting: { type: Type.STRING },
-              post_breakfast: { type: Type.STRING },
-              pre_lunch: { type: Type.STRING },
-              post_lunch: { type: Type.STRING },
-              pre_dinner: { type: Type.STRING },
-              post_dinner: { type: Type.STRING },
+              date: { type: 'STRING' },
+              fasting: { type: 'STRING' },
+              post_breakfast: { type: 'STRING' },
+              pre_lunch: { type: 'STRING' },
+              post_lunch: { type: 'STRING' },
+              pre_dinner: { type: 'STRING' },
+              post_dinner: { type: 'STRING' },
             },
             required: ['date'],
           },
         },
       },
     });
-
-    let text = '';
-    for await (const chunk of responseStream) {
-      if (chunk.text) {
-        text += chunk.text;
-      }
-    }
 
     console.log('[SCAN-API] Response received, length:', text.length);
 
@@ -542,10 +524,6 @@ Restrictions:
     const errorMessage = error instanceof Error ? error.message : String(error);
     const errorStack = error instanceof Error ? error.stack : '';
     console.error('[SCAN-API] Stack:', errorStack);
-    // Invalidate cached key if Gemini rejects it so next request re-fetches from WMS
-    if (errorMessage.includes('API_KEY_INVALID') || errorMessage.includes('INVALID_ARGUMENT')) {
-      invalidateGeminiKey();
-    }
     res.status(500).json({
       error: 'Failed to process image',
       details: errorMessage,
@@ -563,6 +541,6 @@ app.get(['/api/health', '/glucose/api/health'], (req, res) => {
 // Start Server
 const PORT = Number(process.env.PORT) || 3006;
 app.listen(PORT, '0.0.0.0', () => {
-  console.log(`[GLUCOSE-API] Server running on http://0.0.0.0:${PORT}`);
-  console.log(`[GLUCOSE-API] Gemini key source: ${process.env.GEMINI_PROXY_KEY ? 'WMS proxy' : 'local fallback'}`);
+  console.log(`[GLUCOSE-API] WMS relay listening on http://0.0.0.0:${PORT}`);
+  console.log(`[GLUCOSE-API] Gemini custody: ${GEMINI_PROXY_KEY ? 'WMS relay (proxy key set)' : 'NOT CONFIGURED — AI routes will 503'}`);
 });

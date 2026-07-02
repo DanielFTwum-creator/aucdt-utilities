@@ -132,7 +132,7 @@ log '[4/5] Building...'
 
 log '[5/5] Deploying dist/ to web root...'
 mkdir -p "`$DEPLOY_PATH"
-rsync -a --delete --exclude='.env' --exclude='node_modules/' --exclude='server.ts' --exclude='server.cjs' --exclude='server.js' --exclude='package.json' --exclude='pnpm-lock.yaml' --exclude='pnpm-workspace.yaml' --exclude='ecosystem.config.js' --exclude='.htaccess' dist/. "`$DEPLOY_PATH"
+rsync -a --delete --exclude='.env' --exclude='.env.local' --exclude='data/' --exclude='node_modules/' --exclude='server.ts' --exclude='server.cjs' --exclude='server.js' --exclude='package.json' --exclude='pnpm-lock.yaml' --exclude='pnpm-workspace.yaml' --exclude='ecosystem.config.js' --exclude='.htaccess' dist/. "`$DEPLOY_PATH"
 
 log 'Build and deploy complete.'
 "@
@@ -221,31 +221,39 @@ Log -Level 'INFO' -Msg 'Step 6: Deploying backend files...' -Color Yellow
 if (Test-Path '.env.local') {
     & $SCP @SSH_OPTS '.env.local' "${RemoteHost}:${RemotePath}.env.local" 2>$null | Out-Null
 }
+# Key custody (Pattern 11 fleet standard): the app relays via WMS and must never hold a
+# raw GEMINI_API_KEY. Strip it and inject GEMINI_PROXY_KEY from WMS custody
+# (/opt/tuc-wms/.env), BOM/CR/null-stripped (Pattern 21); no bash loop vars (Pattern 20).
+$envInject = & $SSH @SSH_OPTS $RemoteHost "touch ${RemotePath}.env.local; sed -i '/^GEMINI_API_KEY=/d;/^VITE_GEMINI_API_KEY=/d;/^GEMINI_PROXY_KEY=/d' ${RemotePath}.env.local; K=`$(grep '^GEMINI_PROXY_KEY=' /opt/tuc-wms/.env | head -1 | cut -d= -f2- | tr -d '\r\000' | LC_ALL=C sed 's/\xef\xbb\xbf//g'); if [ -n `"`$K`" ]; then printf 'GEMINI_PROXY_KEY=%s\n' `"`$K`" >> ${RemotePath}.env.local; echo 'env: GEMINI_PROXY_KEY injected'; else echo 'WARN: GEMINI_PROXY_KEY not found in WMS'; fi; chmod 600 ${RemotePath}.env.local"
+Write-Host $envInject -ForegroundColor DarkGray
+if ($envInject -match 'WARN') { Log -Level 'ERROR' -Msg 'GEMINI_PROXY_KEY unavailable — scan route would 503. Aborting.' -Color Red; exit 1 }
 $nvmPrefix = 'export NVM_DIR="$HOME/.nvm"; [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"; nvm use 26 >/dev/null 2>&1 || true'
 & $SSH @SSH_OPTS $RemoteHost "$nvmPrefix; cd ${RemotePath} && pnpm install --prod --silent"
 
-# Step 7: Restart backend
-Log -Level 'INFO' -Msg 'Step 7: Restarting backend (PM2)...' -Color Yellow
+# Step 7: Restart backend (hard delete + start, Pattern 23)
+# pm2 reload/restart --update-env keeps a stale env (old GEMINI_PROXY_KEY -> WMS 401)
+# AND stale tsx-transpiled server.ts. Hard delete + fresh start is the only reliable way
+# to pick up a changed env var or edited backend; then assert the new banner.
+Log -Level 'INFO' -Msg 'Step 7: Restarting backend (hard delete + start, Pattern 23)...' -Color Yellow
 $pm2StartScript = @"
 export NVM_DIR="`$HOME/.nvm"; [ -s "`$NVM_DIR/nvm.sh" ] && . "`$NVM_DIR/nvm.sh"; nvm use 26 >/dev/null 2>&1 || true
 NPXPATH=`$(which npx)
-if pm2 describe ${PM2_APP} > /dev/null 2>&1; then
-  NODE_ENV=production PORT=${PORT} pm2 reload ${PM2_APP} --update-env
-  echo 'pm2: reloaded ${PM2_APP}'
-else
-  NODE_ENV=production PORT=${PORT} pm2 start ${RemotePath}server.ts \
-    --name ${PM2_APP} \
-    --interpreter "`$NPXPATH" \
-    --interpreter-args tsx \
-    --cwd ${RemotePath} \
-    --max-memory-restart 1G
-  echo 'pm2: started ${PM2_APP}'
-fi
+pm2 delete ${PM2_APP} > /dev/null 2>&1 || true
+cd ${RemotePath} && NODE_ENV=production PORT=${PORT} pm2 start ${RemotePath}server.ts \
+  --name ${PM2_APP} \
+  --interpreter "`$NPXPATH" \
+  --interpreter-args tsx \
+  --cwd ${RemotePath} \
+  --max-memory-restart 1G
+echo 'pm2: started ${PM2_APP}'
 pm2 save --force > /dev/null 2>&1 || true
+sleep 3
+pm2 logs ${PM2_APP} --lines 20 --nostream 2>&1 | grep -q 'WMS relay listening' && echo 'OK new build running' || echo 'WARN stale build — banner not found'
 "@
 $b64pm2 = [Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes($pm2StartScript.Replace("`r", "")))
 $pm2Result = & $SSH @SSH_OPTS $RemoteHost "echo $b64pm2 | base64 -d | bash"
 Write-Host $pm2Result -ForegroundColor DarkGray
+if ($pm2Result -match 'WARN stale build') { Log -Level 'ERROR' -Msg 'PM2 running stale code — investigate.' -Color Red; exit 5 }
 
 # Health checks
 Log -Level 'INFO' -Msg 'Health checks...' -Color Yellow
