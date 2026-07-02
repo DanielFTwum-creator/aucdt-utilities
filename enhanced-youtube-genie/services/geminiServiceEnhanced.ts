@@ -138,7 +138,9 @@ export const generateDescription = async (formData: FormData): Promise<string> =
       responseMimeType: "application/json",
       responseSchema: responseSchema,
       temperature: 0.8,
-      maxOutputTokens: 2048,
+      // gemini-2.5-flash is a thinking model: reasoning tokens count against this
+      // budget (observed 1400-2100 per request). 2048 truncated the JSON mid-string.
+      maxOutputTokens: 8192,
     });
 
     const jsonText = text.trim();
