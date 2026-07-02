@@ -9,7 +9,12 @@ import { google } from 'googleapis';
 import session from 'express-session';
 import cookieParser from 'cookie-parser';
 
-dotenv.config();
+import fs from "fs";
+if (fs.existsSync(".env.local")) {
+  dotenv.config({ path: ".env.local" });
+} else {
+  dotenv.config();
+}
 
 const OAUTH_CLIENT_ID     = process.env.VITE_GOOGLE_CLIENT_ID     || '';
 const OAUTH_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET       || '';

@@ -81,7 +81,7 @@ log '[4/5] Building...'
 pnpm build
 log '[5/5] Deploying dist/ to web root...'
 mkdir -p $RemotePath
-rsync -a --delete --exclude='.env' --exclude='node_modules/' --exclude='server.ts' --exclude='server.cjs' --exclude='server.js' --exclude='package.json' --exclude='pnpm-lock.yaml' --exclude='pnpm-workspace.yaml' --exclude='ecosystem.config.js' --exclude='.htaccess' dist/. $RemotePath
+rsync -a --delete --exclude='.env.local' --exclude='node_modules/' --exclude='server.ts' --exclude='server.cjs' --exclude='server.js' --exclude='package.json' --exclude='pnpm-lock.yaml' --exclude='pnpm-workspace.yaml' --exclude='ecosystem.config.js' --exclude='.htaccess' dist/. $RemotePath
 log 'Build and deploy complete.'
 "@
     $b64 = [Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes($serverScript.Replace("`r", "")))
@@ -152,7 +152,7 @@ if command -v pm2 &>/dev/null; then
   if pm2 describe groove-streamer &>/dev/null; then
     pm2 reload groove-streamer --update-env && echo 'pm2: reloaded groove-streamer'
   else
-    cd $RemotePath && NODE_ENV=production PORT=3004 pm2 start server.ts --name groove-streamer --interpreter npx --interpreter-args tsx --cwd $RemotePath
+    cd $RemotePath && NODE_ENV=production PORT=3046 pm2 start server.ts --name groove-streamer --interpreter npx --interpreter-args tsx --cwd $RemotePath
     echo 'pm2: started groove-streamer'
   fi
   pm2 save --force &>/dev/null

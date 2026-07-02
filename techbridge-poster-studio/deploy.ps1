@@ -74,7 +74,7 @@ log '[4/5] Building...'
 pnpm build
 log '[5/5] Deploying dist/ to web root...'
 mkdir -p $RemotePath
-rsync -a --delete --exclude='.env' --exclude='node_modules/' --exclude='server.ts' --exclude='server.cjs' --exclude='server.js' --exclude='package.json' --exclude='pnpm-lock.yaml' --exclude='pnpm-workspace.yaml' --exclude='ecosystem.config.js' --exclude='.htaccess' dist/. $RemotePath
+rsync -a --delete --exclude='.env.local' --exclude='node_modules/' --exclude='server.ts' --exclude='server.cjs' --exclude='server.js' --exclude='package.json' --exclude='pnpm-lock.yaml' --exclude='pnpm-workspace.yaml' --exclude='ecosystem.config.js' --exclude='.htaccess' dist/. $RemotePath
 log 'Build and deploy complete.'
 "@
     $b64 = [Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes($serverScript.Replace("`r", "")))
@@ -134,7 +134,7 @@ if command -v pm2 &>/dev/null; then
   if pm2 describe tb-poster-studio &>/dev/null; then
     pm2 reload tb-poster-studio --update-env && echo 'pm2: reloaded tb-poster-studio'
   else
-    cd $RemotePath && PORT=3000 pm2 start server.ts --name tb-poster-studio --interpreter npx --interpreter-args tsx --cwd $RemotePath
+    cd $RemotePath && PORT=3031 pm2 start server.ts --name tb-poster-studio --interpreter npx --interpreter-args tsx --cwd $RemotePath
     echo 'pm2: started tb-poster-studio'
   fi
   pm2 save --force &>/dev/null
@@ -145,7 +145,7 @@ ssh -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax
 
 Log "INFO" "Health check..." Yellow
 ssh -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax=3 $RemoteHost "test -f ${RemotePath}index.html && echo 'OK index.html present' || echo 'MISSING index.html'"
-ssh -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax=3 $RemoteHost "ss -tlnp | grep -q ':3000' && echo 'OK port 3000 listening' || echo 'WARN port 3000 not found'"
+ssh -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax=3 $RemoteHost "for i in `$(seq 1 12); do ss -tlnp | grep -q ':3031' && { echo 'OK port 3031 listening'; exit 0; }; sleep 5; done; echo 'WARN port 3031 not found'"
 
 $elapsed = [math]::Round(((Get-Date) - $__deployStart).TotalSeconds, 1)
 $timeStr = if ($elapsed -ge 60) { "$([math]::Floor($elapsed/60))m $([math]::Round($elapsed%60,1))s" } else { "${elapsed}s" }

@@ -9,7 +9,12 @@ import { getPosterHtml } from './src/lib/poster-utils';
 import { getPosterDimensions } from './src/constants';
 import dotenv from 'dotenv';
 
-dotenv.config();
+import fs from "fs";
+if (fs.existsSync(".env.local")) {
+  dotenv.config({ path: ".env.local" });
+} else {
+  dotenv.config();
+}
 
 function decodeJWT(token: string): Record<string, string> {
   const parts = token.split('.');
