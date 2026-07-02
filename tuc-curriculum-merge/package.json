@@ -1,0 +1,13 @@
+{
+  "name": "tuc-curriculum-merge",
+  "version": "1.0.0",
+  "scripts": {
+    "merge": "node merge_curriculum_to_google_drive.js",
+    "verify": "node verify_merged_curriculum.js"
+  },
+  "dependencies": {
+    "dotenv": "^16.0.0",
+    "google-auth-library": "^9.0.0",
+    "googleapis": "^170.0.0"
+  }
+}

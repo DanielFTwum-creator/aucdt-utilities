@@ -38,6 +38,12 @@ service-account.json
 # Read-only clones of the legacy Bitbucket fleet (15 nested git repos)
 legacy-bitbucket-repos/
 
+# Standalone git repo living alongside the monorepo (own history, not a submodule)
+techbridge-ship1-starter/
+
+# One-off Google Drive data backups (8MB+ JSON, external-storage material)
+tuc-curriculum-merge/backups/
+
 # Logs
 npm-debug.log*
 yarn-debug.log*
