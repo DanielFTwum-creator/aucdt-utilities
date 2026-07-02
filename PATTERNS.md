@@ -868,9 +868,16 @@ PM2's `--env` flag takes a named environment (e.g. `--env production`), not `KEY
 
 **Reference implementation:** `dmcdai-digital-media-communication-design/server.js`
 
-### The Rule
+> **Fleet standard (2 Jul 2026, Daniel):** no app holds the Gemini key at all — not in the
+> bundle, not in the app's `.env`, not fetched at runtime. Only WMS holds it. Apps present
+> their `GEMINI_PROXY_KEY` service credential and use the **`POST /api/gemini/generate`
+> relay** (the app never receives the key). The key-fetch mode documented below is
+> transitional only; migrate remaining `/key`-mode apps (dmcdai, english-safari, glucose,
+> bridge-radio) and biochemai (direct key) as they are touched.
 
-Every fleet app that calls Gemini AI must:
+### The Rule (transitional key-fetch mode — do not use for new work)
+
+Every fleet app still on key-fetch mode must:
 1. Fetch the key from WMS at runtime (not at startup)
 2. Cache the key in memory with a 6-hour TTL
 3. Invalidate the cache on `API_KEY_INVALID` errors so the next request re-fetches
@@ -944,8 +951,8 @@ if (errorMessage.includes('API_KEY_INVALID') || errorMessage.includes('INVALID_A
 - **Central key custody:** the single Gemini key lives ONLY in `/opt/tuc-wms/.env`.
   Rotate fleet-wide by editing `GEMINI_API_KEY` there + `systemctl restart tuc-wms`.
 - **Two consumption modes:** `GET /api/gemini/key` (app fetches + caches the key, then
-  calls Gemini itself — the documented impl above) or `POST /api/gemini/generate` (WMS
-  relays the call; the app never receives the key — strongest custody).
+  calls Gemini itself — transitional, being phased out) or `POST /api/gemini/generate`
+  (WMS relays the call; the app never receives the key — **the fleet standard**).
 
 Migrated: `english-safari`, `glucose`, `bridge-radio`  
 Reference: `dmcdai` (JS, `/key`) · OmniExtract (`/generate` relay)  
