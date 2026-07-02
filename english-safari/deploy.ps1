@@ -159,4 +159,15 @@ fi
 $b64r = [Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes($restartCmd.Replace("`r", "")))
 ssh -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax=3 $RemoteHost "echo $b64r | base64 -d | bash"
 
-Log "INFO" "Health 
+Log "INFO" "Step 8: Health checks..." Yellow
+$indexCheck = ssh -o StrictHostKeyChecking=no $RemoteHost "test -f ${RemotePath}index.html && echo 'OK index.html present' || echo 'MISSING index.html'"
+Write-Host $indexCheck -ForegroundColor $(if ($indexCheck -match '^OK') { 'Green' } else { 'Red' })
+$portCheck = ssh -o StrictHostKeyChecking=no $RemoteHost "for i in `$(seq 1 12); do ss -tlnp | grep -q ':3021' && { echo 'OK port 3021 listening'; exit 0; }; sleep 5; done; echo 'WARN port 3021 not found'"
+Write-Host $portCheck -ForegroundColor $(if ($portCheck -match '^OK') { 'Green' } else { 'Yellow' })
+try {
+    $h = Invoke-RestMethod -Uri "https://ai-tools.techbridge.edu.gh/english-safari/api/health" -TimeoutSec 15
+    Write-Host "health: $($h | ConvertTo-Json -Compress)" -ForegroundColor Green
+} catch { Write-Host "WARN health unreachable: $($_.Exception.Message)" -ForegroundColor Yellow }
+
+$elapsed = [math]::Round(((Get-Date) - $__deployStart).TotalSeconds, 1)
+Log "SUCCESS" "DEPLOYMENT COMPLETE in ${elapsed}s — https://ai-tools.techbridge.edu.gh/english-safari/" Green

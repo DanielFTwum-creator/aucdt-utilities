@@ -8,6 +8,11 @@
 
 import express from "express";
 import dotenv from "dotenv";
+import path from "path";
+import fs from "fs";
+import { fileURLToPath } from "url";
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 dotenv.config({ path: ".env.local" });
 dotenv.config();
@@ -129,6 +134,19 @@ app.get(["/api/health", "/english-safari/api/health"], (_req, res) =>
   res.json({ ok: true, service: "english-safari" })
 );
 
+// ─── Serve the SPA ───────────────────────────────────────────────────────────
+// nginx proxies the whole /english-safari/ path to this backend, so it must
+// serve the built frontend too. deploy.ps1 rsyncs dist/* alongside server.ts,
+// so __dirname is the web root (index.html + assets/ sit here). Falls back to
+// index.html for client-side routing.
+app.use("/english-safari", express.static(__dirname, { index: false }));
+app.get(["/english-safari", "/english-safari/*splat"], (_req, res) => {
+  const indexPath = path.join(__dirname, "index.html");
+  if (!fs.existsSync(indexPath)) return res.status(404).send("App not built");
+  res.setHeader("Cache-Control", "no-cache, must-revalidate");
+  res.sendFile(indexPath);
+});
+
 app.listen(PORT, "0.0.0.0", () => {
-  console.log(`[EnglishSafari] Gemini proxy listening on http://localhost:${PORT}`);
+  console.log(`[EnglishSafari] Gemini relay + SPA listening on http://localhost:${PORT}`);
 });
