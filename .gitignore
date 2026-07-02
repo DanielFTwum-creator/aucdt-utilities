@@ -30,6 +30,13 @@ docs/SECURITY-INCIDENT-*
 .env.development.local
 .env.test.local
 .env.production.local
+temp.env
+
+# Cloud credentials — never commit
+service-account.json
+
+# Read-only clones of the legacy Bitbucket fleet (15 nested git repos)
+legacy-bitbucket-repos/
 
 # Logs
 npm-debug.log*
