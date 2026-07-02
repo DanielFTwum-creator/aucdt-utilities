@@ -1,2 +1,70 @@
 @import "tailwindcss";
 
+@theme {
+  --font-space-grotesk: 'Space Grotesk', sans-serif;
+}
+
+/* ── Login shimmer wordmark ──────────────────────────────────── */
+@keyframes shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position:  200% center; }
+}
+.shimmer-gradient {
+  background: linear-gradient(90deg, #db2777 0%, #f9a8d4 50%, #db2777 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shimmer 3s linear infinite;
+}
+
+/* ── Card entrance ───────────────────────────────────────────── */
+@keyframes fadeInDown {
+  from { opacity: 0; transform: translateY(-20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-in-down { animation: fadeInDown 0.5s ease-out forwards; }
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-in-up { animation: fadeInUp 0.5s ease-out forwards; }
+
+/* ── Floating SVG objects — energetic ───────────────────────── */
+@keyframes floatEnergetic {
+  0%   { transform: translateY(0)     rotate(0deg)   scale(1);    }
+  20%  { transform: translateY(-22px) rotate(7deg)   scale(1.07); }
+  45%  { transform: translateY(-32px) rotate(-5deg)  scale(0.95); }
+  65%  { transform: translateY(-16px) rotate(9deg)   scale(1.04); }
+  85%  { transform: translateY(-26px) rotate(-3deg)  scale(1.02); }
+  100% { transform: translateY(0)     rotate(0deg)   scale(1);    }
+}
+@keyframes floatEnergeticB {
+  0%   { transform: translateY(0)    rotate(0deg)   scale(1);    }
+  25%  { transform: translateY(24px) rotate(-9deg)  scale(1.06); }
+  55%  { transform: translateY(36px) rotate(6deg)   scale(0.94); }
+  80%  { transform: translateY(14px) rotate(-6deg)  scale(1.03); }
+  100% { transform: translateY(0)    rotate(0deg)   scale(1);    }
+}
+@keyframes spinMedium {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+@keyframes pulseVibrant {
+  0%, 100% { opacity: 0.08; transform: scale(1);    }
+  30%      { opacity: 0.25; transform: scale(1.14); }
+  65%      { opacity: 0.14; transform: scale(1.06); }
+}
+.svg-float-a { animation: floatEnergetic  5.5s ease-in-out infinite; }
+.svg-float-b { animation: floatEnergeticB 7s   ease-in-out infinite 1s; }
+.svg-float-c { animation: floatEnergetic  6.5s ease-in-out infinite 2.2s; }
+.svg-float-d { animation: floatEnergeticB 8.5s ease-in-out infinite 0.4s; }
+.svg-spin    { animation: spinMedium      10s  linear      infinite; }
+.svg-pulse   { animation: pulseVibrant    3.5s ease-in-out infinite; }
+
+/* ── Submit particle burst ───────────────────────────────────── */
+@keyframes loginBurst {
+  0%   { transform: translate(-50%, -50%) translate(0, 0) scale(1); opacity: 1; }
+  100% { transform: translate(-50%, -50%) translate(var(--burst-dx), var(--burst-dy)) scale(0); opacity: 0; }
+}

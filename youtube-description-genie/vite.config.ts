@@ -4,7 +4,8 @@ import { defineConfig } from 'vite';
 
 export default defineConfig(() => {
     return {
-  base: './',
+  base: '/youtube-genie/',
+  plugins: [tailwindcss()],
   build: {
     chunkSizeWarningLimit: 1000,
     rollupOptions: {

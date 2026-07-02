@@ -6,6 +6,8 @@ import { generateDescription } from './services/geminiService';
 import type { FormData } from './types';
 import { DESCRIPTION_TEMPLATE } from './constants';
 import { SparklesIcon } from './components/ui/icons';
+import { Menu, X } from 'lucide-react';
+import { useAuth } from './contexts/AuthContext';
 
 const App: React.FC = () => {
   const [formData, setFormData] = useState<FormData>({
@@ -22,6 +24,10 @@ const App: React.FC = () => {
   const [generatedDescription, setGeneratedDescription] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  
+  const { user, logout } = useAuth();
+  const currentUser = user?.email || 'unknown';
 
   const handleGenerate = useCallback(async () => {
     setIsLoading(true);
@@ -41,14 +47,35 @@ const App: React.FC = () => {
   return (
     <div className="min-h-screen bg-gray-900 text-gray-100 font-sans p-4 sm:p-6 lg:p-8">
       <div className="max-w-7xl mx-auto">
-        <header className="text-center mb-8">
-          <h1 className="text-4xl sm:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500 flex items-center justify-center gap-3">
-            <SparklesIcon className="w-10 h-10" />
-            YouTube Description Genie
-          </h1>
-          <p className="mt-2 text-lg text-gray-400">
-            Craft the perfect YouTube description for your music with AI.
-          </p>
+        <header className="mb-8" role="banner">
+          <div className="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
+            <div className="flex justify-between w-full md:w-auto items-center">
+              <h1 className="text-2xl sm:text-3xl lg:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500 flex items-center gap-3">
+                <SparklesIcon className="w-8 h-8 lg:w-10 lg:h-10 text-blue-400" />
+                YT Genie
+              </h1>
+              <button 
+                className="md:hidden p-2 text-gray-400 hover:text-white" 
+                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                aria-label="Toggle Menu"
+              >
+                {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+              </button>
+            </div>
+            
+            <div className={`w-full md:w-auto flex flex-col md:flex-row items-center gap-3 md:gap-4 transition-all duration-300 ${isMobileMenuOpen ? 'h-auto opacity-100 mt-4' : 'h-0 opacity-0 overflow-hidden md:h-auto md:opacity-100 md:mt-0'}`}>
+              <div className="flex flex-col items-center md:items-end">
+                <span className="text-[10px] md:text-xs opacity-50 block uppercase tracking-wider text-gray-400">Identity: {currentUser}</span>
+                <button onClick={logout} className="text-[10px] md:text-xs font-black text-pink-500 hover:text-pink-400 hover:underline uppercase mt-1 md:mt-0 transition-colors" aria-label="Terminate current session">Terminate Session</button>
+              </div>
+            </div>
+          </div>
+          
+          <div className="text-center mt-8">
+            <p className="mt-2 text-sm sm:text-lg text-gray-400">
+              Craft the perfect YouTube description for your music with AI.
+            </p>
+          </div>
         </header>
 
         <main className="grid grid-cols-1 lg:grid-cols-2 gap-8">

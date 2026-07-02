@@ -2,6 +2,26 @@ import express from 'express';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import cookieParser from 'cookie-parser';
+import dotenv from 'dotenv';
+
+dotenv.config();
+
+function decodeJWT(token: string) {
+  const parts = token.split('.');
+  if (parts.length !== 3) throw new Error('Invalid token');
+  const decoded = Buffer.from(parts[1], 'base64').toString('utf-8');
+  return JSON.parse(decoded);
+}
+
+interface GoogleTokenResponse {
+  id_token: string;
+  access_token?: string;
+  refresh_token?: string;
+  expires_in?: number;
+  token_type?: string;
+  scope?: string;
+}
 
 // ── Server-side relay to the central WMS Gemini proxy ──────────────────────
 // The Gemini API key is NO LONGER in this app at all. The browser calls this
@@ -21,8 +41,72 @@ if (!PROXY_KEY) {
 
 const app = express();
 app.use(express.json({ limit: '2mb' }));
+app.use(cookieParser());
 
 app.get('/health', (_req, res) => res.type('text').send('healthy'));
+
+const GOOGLE_CLIENT_ID = process.env.VITE_GOOGLE_CLIENT_ID;
+const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
+const REDIRECT_URI = process.env.VITE_GOOGLE_REDIRECT_URI || 'https://ai-tools.techbridge.edu.gh/youtube-genie/auth/google/callback';
+const basePath = new URL(REDIRECT_URI).pathname.replace(/\/auth\/google\/callback$/, '') || '/youtube-genie';
+
+// Google OAuth callback — server-side exchange
+app.get(['/auth/google/callback', `${basePath}/auth/google/callback`], async (req, res) => {
+  const { code, error } = req.query;
+  if (error) return res.redirect(`${basePath}/?error=${error}`);
+  if (!code) return res.redirect(`${basePath}/?error=missing_code`);
+
+  try {
+    const tokenResponse = await fetch('https://oauth2.googleapis.com/token', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        client_id: GOOGLE_CLIENT_ID,
+        client_secret: GOOGLE_CLIENT_SECRET,
+        code,
+        grant_type: 'authorization_code',
+        redirect_uri: REDIRECT_URI,
+      }),
+    });
+
+    if (!tokenResponse.ok) {
+      const err = await tokenResponse.json();
+      console.error('[ytdg] Token exchange error:', err);
+      return res.redirect(`${basePath}/?error=token_exchange_failed`);
+    }
+
+    const tokens = await tokenResponse.json() as GoogleTokenResponse;
+    const userInfo = decodeJWT(tokens.id_token);
+
+    const userData = {
+      id: userInfo.sub,
+      username: userInfo.name,
+      email: userInfo.email,
+    };
+    const userJson = JSON.stringify(userData);
+
+    res.cookie('youtubegenie_user', Buffer.from(userJson).toString('base64'), {
+      httpOnly: false,
+      secure: true,
+      sameSite: 'lax',
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+      path: basePath || '/',
+    });
+
+    // Pass user data in URL as fallback if cookie doesn't work
+    const encodedUser = Buffer.from(userJson).toString('base64');
+    res.redirect(`${basePath}/?user=${encodedUser}`);
+  } catch (error) {
+    console.error('[ytdg] OAuth callback error:', error);
+    res.redirect(`${basePath}/?error=internal_error`);
+  }
+});
+
+// OAuth logout
+app.post(['/api/auth/logout', `${basePath}/api/auth/logout`], (_req, res) => {
+  res.clearCookie('youtubegenie_user', { path: basePath || '/' });
+  res.json({ success: true, message: 'Logged out' });
+});
 
 // Generate-description proxy. Body is the raw Gemini generateContent request
 // (contents + generationConfig) built client-side; we relay it to WMS verbatim.
@@ -48,14 +132,25 @@ app.post('/api/generate', async (req, res) => {
 });
 
 // ── Serve the SPA (replaces `serve -s dist`) ──
-const distDir = path.join(__dirname, 'dist');
-app.use(express.static(distDir, { index: false }));
-app.get('*', (_req, res) => {
-  const indexPath = path.join(distDir, 'index.html');
+// base path matches vite.config.ts base: '/youtube-genie/'
+// Static assets served at /youtube-genie/assets/... -> dist/assets/...
+// Falls back to index.html for all unmatched sub-paths (client-side routing).
+//
+// Path detection: in local dev, Vite puts the build in dist/ (sibling of server.ts).
+// In production, deploy.ps1 copies dist/* directly into $RemotePath alongside server.ts,
+// so __dirname itself is the web root. We check which layout is present at runtime.
+const distDirCandidate = path.join(__dirname, 'dist');
+const distDir = fs.existsSync(path.join(distDirCandidate, 'index.html'))
+  ? distDirCandidate  // local: pnpm build → dist/index.html
+  : __dirname;        // production: deploy.ps1 → index.html beside server.ts
+const indexPath = path.join(distDir, 'index.html');
+app.use('/youtube-genie', express.static(distDir, { index: false }));
+app.get(['/youtube-genie', '/youtube-genie/*'], (_req, res) => {
   if (!fs.existsSync(indexPath)) return res.status(404).send('App not built — run pnpm build');
-  res.setHeader('Cache-Control', 'no-cache');
+  res.setHeader('Cache-Control', 'no-cache, must-revalidate');
   res.sendFile(indexPath);
 });
+app.get('/', (_req, res) => res.redirect('/youtube-genie/'));
 
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`[ytdg] listening on http://localhost:${PORT} — Gemini via WMS proxy`);
