@@ -23,8 +23,11 @@ const typeThrough = (target: string): boolean =>
   target.split('').every((char, i) => target[i] === char && TYPABLE.includes(char));
 
 describe('drill typability (VTX-HYPHEN regression)', () => {
-  it('every practice drill in every lesson and difficulty pool contains only US-QWERTY-typable characters', () => {
+  it('every practice drill in every lesson and difficulty pool contains only typable characters', () => {
     for (const lesson of LESSONS) {
+      // Lessons with an inputMap extend the typable set with the mapped outputs
+      // (e.g. Ghanaian-language characters produced via 3 / ) / q).
+      const mapped = Object.values(lesson.inputMap ?? {});
       const pools = {
         beginner: lesson.practices,
         intermediate: lesson.practicesIntermediate ?? [],
@@ -34,11 +37,34 @@ describe('drill typability (VTX-HYPHEN regression)', () => {
         for (const practice of drills) {
           for (const char of practice) {
             expect(
-              TYPABLE.includes(char),
+              TYPABLE.includes(char) || mapped.includes(char),
               `Lesson ${lesson.id} ("${lesson.title}") ${pool} drill "${practice}" contains untypable character "${char}" (U+${char.codePointAt(0)!.toString(16).toUpperCase().padStart(4, '0')})`,
             ).toBe(true);
           }
         }
+      }
+    }
+  });
+
+  it('Ghanaian Extra Honours lesson maps every special character to a US-QWERTY source key', () => {
+    const ghana = LESSONS.find((l) => l.id === 13)!;
+    expect(ghana.inputMap).toBeDefined();
+    // Every source key must itself be typable on a US keyboard.
+    for (const key of Object.keys(ghana.inputMap!)) {
+      expect(TYPABLE.includes(key), `inputMap source "${key}" is not typable`).toBe(true);
+    }
+    // The map covers exactly the Ghanaian characters used by the drills.
+    expect(ghana.inputMap).toEqual({ '3': '\u025b', ')': '\u0254', 'q': '\u014b' });
+    const allDrills = [...ghana.practices, ...(ghana.practicesIntermediate ?? []), ...(ghana.practicesAdvanced ?? [])];
+    const specials = new Set<string>();
+    for (const drill of allDrills) for (const c of drill) if (!TYPABLE.includes(c)) specials.add(c);
+    for (const c of specials) {
+      expect(Object.values(ghana.inputMap!).includes(c), `Drill character "${c}" has no inputMap source`).toBe(true);
+    }
+    // Source keys must not appear literally in the drills (they would be transformed away).
+    for (const drill of allDrills) {
+      for (const key of Object.keys(ghana.inputMap!)) {
+        expect(drill.includes(key), `Drill "${drill}" contains raw source key "${key}"`).toBe(false);
       }
     }
   });

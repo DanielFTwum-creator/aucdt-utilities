@@ -301,6 +301,32 @@ export const LESSONS: Lesson[] = [
       "Proverb: 'One head does not hold council' - unity builds the village.",
       "Type 100% clean: kente (Bonwire), shea (Tamale), cocoa (Kumasi), salt (Ada).",
     ]
+  },
+  {
+    id: 13,
+    title: "Ghanaian Languages - Extra Honours",
+    description: "Type Twi, Ewe and Ga with their own letters. Use 3 for \u025b, ) for \u0254 and q for \u014b, or type them directly from a Ghana keyboard layout.",
+    keys: "abcdefghijklmnoprstuwy\u025b\u0254\u014b",
+    icon: "\ud83c\uddec\ud83c\udded",
+    inputMap: { "3": "\u025b", ")": "\u0254", "q": "\u014b" },
+    practices: [
+      "\u025by\u025b \u0254d\u0254 aane daabi",
+      "nsuo aduane \u0254man papa",
+      "akwaaba medaase \u0254hene",
+      "\u025bnn\u025b \u0254kyena \u0254baa k\u025bse\u025b"
+    ],
+    practicesIntermediate: [
+      "\u025bte s\u025bn; me ho y\u025b",
+      "me d\u0254 wo; mepa wo ky\u025bw",
+      "nante yie; y\u025bb\u025bhyia bio",
+      "woez\u0254; \u014bdi nyuie; akpe"
+    ],
+    practicesAdvanced: [
+      "mepa wo ky\u025bw, ma me nsuo ne aduane.",
+      "\u025bnn\u025b y\u025b \u025bda pa; me ho y\u025b, meda wo ase.",
+      "\u0254hene ne \u0254hemmaa b\u025bba dwab\u0254 no ase \u0254kyena.",
+      "woez\u0254 loo; \u014bdi nyuie; y\u025bb\u025bhyia bio, nante yie."
+    ]
   }
 ];
 

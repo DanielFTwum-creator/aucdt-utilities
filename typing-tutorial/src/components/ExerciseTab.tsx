@@ -706,7 +706,12 @@ export default function ExerciseTab({ lesson, difficulty, progress, onFinish, on
   }, [lesson]);
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
+    // Per-lesson key substitutions (e.g. 3 -> \u025b for Ghanaian languages).
+    // Natively typed special characters pass through untouched.
+    const raw = e.target.value;
+    const value = lesson.inputMap
+      ? raw.split("").map((c) => lesson.inputMap![c] ?? c).join("")
+      : raw;
     const currentText = isCalibrationMode ? calibrationText : targetText;
     
     // Lock length range
@@ -833,7 +838,16 @@ export default function ExerciseTab({ lesson, difficulty, progress, onFinish, on
   // Numpad lessons use the dedicated numeric-keypad finger guidance/diagram
   // instead of the QWERTY hand diagram and keyboard guide.
   const isNumpad = lesson.inputMode === "numpad";
-  const fingerGuidance = isNumpad ? getNumpadFingerGuidance(nextTargetChar) : getFingerGuidance(nextTargetChar || "");
+
+  // For mapped lessons, hand/keyboard guidance points at the physical key that
+  // produces the expected character ( ")" lives on the 0 key ).
+  const guidanceChar = (() => {
+    if (!lesson.inputMap || !nextTargetChar) return nextTargetChar;
+    const source = Object.entries(lesson.inputMap).find(([, out]) => out === nextTargetChar)?.[0];
+    if (!source) return nextTargetChar;
+    return source === ")" ? "0" : source;
+  })();
+  const fingerGuidance = isNumpad ? getNumpadFingerGuidance(guidanceChar) : getFingerGuidance(guidanceChar || "");
 
   const keyboardRows = [
     ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"],
@@ -1004,6 +1018,19 @@ export default function ExerciseTab({ lesson, difficulty, progress, onFinish, on
                 <span className="font-bold text-cyan-400">—</span>
               )}
             </span>
+
+            {/* Ghanaian character key map (mapped lessons only) */}
+            {lesson.inputMap && (
+              <span className="text-slate-400" id="ghanaianKeyMapHint">
+                {Object.entries(lesson.inputMap).map(([key, out]) => (
+                  <span key={key} className="mr-3">
+                    <span className="font-bold text-amber-400">{out}</span>
+                    {" = "}
+                    <span className="font-bold text-cyan-300">{key === ")" ? "Shift+0" : key}</span>
+                  </span>
+                ))}
+              </span>
+            )}
 
             {/* Streak / combo */}
             <span className="text-slate-400">
@@ -1220,7 +1247,7 @@ export default function ExerciseTab({ lesson, difficulty, progress, onFinish, on
             activeHand={fingerGuidance?.hand ?? ""}
             activeFinger={fingerGuidance?.finger ?? ""}
             isIdle={!isStarted}
-            nextTargetChar={nextTargetChar}
+            nextTargetChar={guidanceChar}
           />
         )}
       </div>

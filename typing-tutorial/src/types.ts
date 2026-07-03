@@ -19,6 +19,12 @@ export interface Lesson {
   practicesAdvanced?: string[];
   /** "numpad" renders the dedicated numeric-keypad guide instead of the QWERTY hand/keyboard view. Defaults to "qwerty". */
   inputMode?: "qwerty" | "numpad";
+  /**
+   * Physical-key substitutions applied to typed input while this lesson is active,
+   * e.g. { "3": "\u025b" } lets a QWERTY typist produce Ghanaian-language characters.
+   * Characters typed natively (from a Ghana keyboard layout) pass through unchanged.
+   */
+  inputMap?: Record<string, string>;
 }
 
 export interface UserProgress {

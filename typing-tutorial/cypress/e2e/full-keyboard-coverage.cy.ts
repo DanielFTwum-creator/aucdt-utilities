@@ -6,6 +6,9 @@
 //
 // Tier 11 (Numeric Keypad - Fast Data Entry) exercises the dedicated numpad guide:
 // digits 0-9, "." and "-" via the ghost-hand/NumpadGuide component.
+//
+// Tier 13 (Ghanaian Languages - Extra Honours) types Twi/Ewe drills; cy.type()
+// inserts the special characters natively, which the input accepts unchanged.
 
 describe('VortexType: Full keyboard coverage across all lessons', () => {
   beforeEach(() => {
@@ -18,7 +21,7 @@ describe('VortexType: Full keyboard coverage across all lessons', () => {
   });
 
   it('completes every lesson tier, exercising every key (QWERTY + numpad), the results screen, and the spacebar-highlight path', () => {
-    const LESSON_COUNT = 12;
+    const LESSON_COUNT = 13;
 
     for (let id = 1; id <= LESSON_COUNT; id++) {
       // Lessons unlock progressively: completing lesson N unlocks lesson N+1.
