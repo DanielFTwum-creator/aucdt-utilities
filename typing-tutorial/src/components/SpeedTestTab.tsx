@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, ChangeEvent } from "react";
+import { normaliseTypedInput } from "../inputNormalisation";
 import { REFERENCE_SPEEDTEXTS } from "../data";
 import { RefreshCw, Play, BarChart, FileText, Timer } from "lucide-react";
 
@@ -58,7 +59,7 @@ export default function SpeedTestTab({ onRecordResult }: SpeedTestTabProps) {
 
   const handleInputChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     if (!isTesting) return;
-    const value = e.target.value;
+    const value = normaliseTypedInput(e.target.value);
     setInputVal(value);
 
     // Compute live WPM and Accuracy

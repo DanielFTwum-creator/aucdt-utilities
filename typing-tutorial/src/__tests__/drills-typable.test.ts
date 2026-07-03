@@ -112,3 +112,30 @@ describe('drill typability (VTX-HYPHEN regression)', () => {
     expect(typeThrough('snake_case_name')).toBe(true);
   });
 });
+
+// Smart-punctuation input normalisation (VTX-HYPHEN follow-up): the OS or a
+// browser extension may rewrite typed keystrokes; the tutor must judge the
+// keystroke, not the autocorrection.
+import { normaliseTypedInput, SMART_PUNCTUATION } from '../inputNormalisation';
+
+describe('typed-input normalisation', () => {
+  it('converts autocorrected dashes and curly quotes back to the plain keystroke', () => {
+    expect(normaliseTypedInput('Node v24.17.0 — pnpm')).toBe('Node v24.17.0 - pnpm');
+    expect(normaliseTypedInput('–')).toBe('-');
+    expect(normaliseTypedInput('Daniel’s “report”')).toBe('Daniel\'s "report"');
+    expect(normaliseTypedInput('a b')).toBe('a b');
+  });
+
+  it('every smart-punctuation output is itself US-QWERTY typable', () => {
+    for (const out of Object.values(SMART_PUNCTUATION)) {
+      expect(/^[-'" ]$/.test(out), `unexpected normalisation output "${out}"`).toBe(true);
+    }
+  });
+
+  it('applies the Ghanaian input map after straightening quotes', () => {
+    const map = { '3': 'ɛ', ')': 'ɔ', 'q': 'ŋ' };
+    expect(normaliseTypedInput('y3 aw) qdi', map)).toBe('yɛ awɔ ŋdi');
+    // Native special characters pass through untouched.
+    expect(normaliseTypedInput('ɛɔŋ', map)).toBe('ɛɔŋ');
+  });
+});

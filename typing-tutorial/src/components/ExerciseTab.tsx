@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, ChangeEvent } from "react";
 import { Lesson, UserProgress, Difficulty } from "../types";
+import { normaliseTypedInput } from "../inputNormalisation";
 import { ArrowLeft, Play, RefreshCw, Volume2, VolumeX, Keyboard, Settings } from "lucide-react";
 
 // Per-finger colour-coding shared between the hand diagram and the keyboard's
@@ -706,12 +707,10 @@ export default function ExerciseTab({ lesson, difficulty, progress, onFinish, on
   }, [lesson]);
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-    // Per-lesson key substitutions (e.g. 3 -> \u025b for Ghanaian languages).
-    // Natively typed special characters pass through untouched.
-    const raw = e.target.value;
-    const value = lesson.inputMap
-      ? raw.split("").map((c) => lesson.inputMap![c] ?? c).join("")
-      : raw;
+    // Undo OS/browser smart punctuation (em-dash for "-", curly quotes) and
+    // apply the lesson's key substitutions (e.g. 3 -> \u025b for Ghanaian
+    // languages). Natively typed special characters pass through untouched.
+    const value = normaliseTypedInput(e.target.value, lesson.inputMap);
     const currentText = isCalibrationMode ? calibrationText : targetText;
     
     // Lock length range
