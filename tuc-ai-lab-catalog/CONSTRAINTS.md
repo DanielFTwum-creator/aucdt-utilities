@@ -51,7 +51,8 @@
 | `VITE_GOOGLE_CLIENT_ID` | Google OAuth 2.0 client ID (exposed to frontend via Vite) |
 | `VITE_GOOGLE_REDIRECT_URI` | OAuth redirect URI — must match Google Console exactly (e.g. `https://ai-tools.techbridge.edu.gh/ai-lab/callback`) |
 | `GOOGLE_CLIENT_SECRET` | Server-side OAuth secret — never expose to frontend |
-| `GEMINI_API_KEY` | Google Gemini AI API key — server-side only |
+| `GEMINI_PROXY_KEY` | WMS-issued relay credential (Pattern 11) — this app never holds the Gemini key |
+| `WMS_GEMINI_URL` | Optional relay endpoint override — defaults to `https://wms.techbridge.edu.gh/api/gemini/generate` |
 
 Env file loading order: `.env.local` (checked first) → `.env` (fallback). Store secrets in `.env.local`; never commit it.
 
@@ -70,9 +71,14 @@ The OAuth code exchange is performed **server-side** to avoid WAF blocks on URL 
 
 ---
 
-## 6. Gemini AI Proxy
+## 6. Gemini Key Pattern (Pattern 11 — WMS Relay, fleet standard)
 
-The server proxies Gemini API calls so `GEMINI_API_KEY` is never sent to the browser. All Gemini requests must go through Express API routes, not direct frontend fetch calls.
+This app never holds the Gemini key — not in code, not in `.env`, not fetched at runtime.
+The dictation route relays generateContent calls to WMS, which adds the key server-side
+(`X-Gemini-Proxy-Key: <GEMINI_PROXY_KEY>` against `WMS_GEMINI_URL`). Missing
+`GEMINI_PROXY_KEY` → the dictation route returns HTTP 503 (server still boots).
+All Gemini requests must go through Express API routes, not direct frontend fetch calls.
+Migrated from a direct `generativelanguage.googleapis.com` call on 3 Jul 2026.
 
 ---
 
@@ -104,7 +110,8 @@ Before deploying, confirm:
 ☐ NODE_ENV=production is set in the PM2 ecosystem config or start command
 ☐ tsx is in dependencies (not devDependencies)
 ☐ pnpm install with no --prod flag (tsx must be installed)
-☐ VITE_GOOGLE_CLIENT_ID, VITE_GOOGLE_REDIRECT_URI, GOOGLE_CLIENT_SECRET, GEMINI_API_KEY are set in .env.local on the server
+☐ VITE_GOOGLE_CLIENT_ID, VITE_GOOGLE_REDIRECT_URI, GOOGLE_CLIENT_SECRET, GEMINI_PROXY_KEY are set in .env.local on the server
+☐ server.ts relays via WMS — no GEMINI_API_KEY reference anywhere in server.ts
 ☐ VITE_GOOGLE_REDIRECT_URI matches the registered URI in Google Cloud Console exactly
 ☐ Vite build completes without errors (pnpm run build)
 ☐ Health check passes: GET https://ai-tools.techbridge.edu.gh/ai-lab → HTTP 200

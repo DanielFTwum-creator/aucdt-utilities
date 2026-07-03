@@ -232,9 +232,10 @@ async function startServer() {
   // Serve pre-generated screenshots
   app.get(["/api/health", "/ai-lab/api/health"], (_req, res) => res.json({ ok: true }));
 
-  // Dictation transcription + polish. Calls Gemini server-side (GEMINI_API_KEY never
-  // reaches the client) and returns { rawTranscription, polishedNote }. Restores the
-  // dictation-app processing path (previously a phantom 404 endpoint).
+  // Dictation transcription + polish. Relays Gemini calls through WMS (Pattern 11:
+  // this app never holds the Gemini key, only the GEMINI_PROXY_KEY service credential)
+  // and returns { rawTranscription, polishedNote }. Restores the dictation-app
+  // processing path (previously a phantom 404 endpoint).
   app.post(["/api/dictation/process", "/ai-lab/api/dictation/process"], async (req, res) => {
     // Three modes (chunked dictation, TUC-ICT):
     //   { base64Audio, polish:false } -> transcribe one segment only (fast, no polish)
@@ -243,18 +244,19 @@ async function startServer() {
     const { mimeType, base64Audio, text, polish } = (req.body || {}) as
       { mimeType?: string; base64Audio?: string; text?: string; polish?: boolean };
 
-    const KEY = process.env.GEMINI_API_KEY;
-    if (!KEY) return res.status(503).json({ error: "Transcription is not configured." });
+    const PROXY_KEY = process.env.GEMINI_PROXY_KEY;
+    if (!PROXY_KEY) return res.status(503).json({ error: "Transcription is not configured." });
 
     const model = "gemini-2.5-flash";
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${KEY}`;
+    const wmsUrl = process.env.WMS_GEMINI_URL || "https://wms.techbridge.edu.gh/api/gemini/generate";
+    const url = `${wmsUrl}?model=${encodeURIComponent(model)}`;
     const callGemini = async (parts: any[]): Promise<string> => {
       const r = await fetch(url, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", "X-Gemini-Proxy-Key": PROXY_KEY },
         body: JSON.stringify({ contents: [{ parts }] }),
       });
-      if (!r.ok) throw new Error(`Gemini ${r.status}: ${await r.text()}`);
+      if (!r.ok) throw new Error(`WMS relay ${r.status}: ${(await r.text()).slice(0, 500)}`);
       const data: any = await r.json();
       return (data?.candidates?.[0]?.content?.parts || []).map((p: any) => p.text || "").join("").trim();
     };
@@ -365,7 +367,7 @@ async function startServer() {
           responses: {
             "200": { description: "Transcript + polished Markdown", content: { "application/json": { schema: { type: "object", properties: { rawTranscription: { type: "string" }, polishedNote: { type: "string" } } } } } },
             "400": { description: "Missing audio" },
-            "503": { description: "GEMINI_API_KEY not configured" },
+            "503": { description: "GEMINI_PROXY_KEY (WMS relay credential) not configured" },
           },
         },
       },
