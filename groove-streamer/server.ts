@@ -28,6 +28,16 @@ function decodeJWT(token: string): Record<string, string> {
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
+// --- Gemini custody: this app NEVER holds the Gemini key (fleet standard, ---
+// --- Pattern 11). The Lyria groove call is relayed to the WMS proxy with   ---
+// --- the GEMINI_PROXY_KEY service credential; only WMS adds the key.       ---
+const WMS_GEMINI_URL = process.env.WMS_GEMINI_URL || 'https://wms.techbridge.edu.gh/api/gemini/generate';
+const GEMINI_PROXY_KEY = process.env.GEMINI_PROXY_KEY || '';
+
+if (!GEMINI_PROXY_KEY) {
+  console.warn('[groove-streamer] WARNING: GEMINI_PROXY_KEY not set — /api/groove will return 503');
+}
+
 async function startServer() {
   const app = express();
   const PORT = process.env.PORT || 3004;
@@ -76,31 +86,42 @@ async function startServer() {
     }
   });
 
-  // Groove (Lyria audio) generation proxy — keeps GEMINI_API_KEY server-side.
-  // The client builds the prompt; we stream the audio here and return base64.
+  // Groove (Lyria audio) generation, relayed through WMS (Pattern 11) — this app
+  // holds no Gemini key. The client builds the prompt; WMS relays the raw
+  // generateContent call and we concatenate the audio parts from the single
+  // (non-streamed) REST response.
+  // NOTE: the former SDK path used generateContentStream; the WMS relay is
+  // request/response, so the full clip arrives in one JSON body. Verify a real
+  // groove generation on first deploy (clip responses are large; the WMS-side
+  // body limit needs to accommodate them).
   app.post(['/api/groove', '/groove-streamer/api/groove'], async (req, res) => {
-    const apiKey = process.env.GEMINI_API_KEY;
-    if (!apiKey) return res.status(503).json({ error: 'GEMINI_API_KEY not configured.' });
+    if (!GEMINI_PROXY_KEY) return res.status(503).json({ error: 'Gemini proxy not configured.' });
     const { prompt } = req.body as { prompt?: string };
     if (!prompt) return res.status(400).json({ error: 'prompt is required.' });
     try {
-      const { GoogleGenAI, Modality } = await import('@google/genai');
-      const ai = new GoogleGenAI({ apiKey });
-      const stream = await ai.models.generateContentStream({
-        model: 'lyria-3-clip-preview',
-        contents: prompt,
-        config: { responseModalities: [Modality.AUDIO] },
+      const upstream = await fetch(`${WMS_GEMINI_URL}?model=${encodeURIComponent('lyria-3-clip-preview')}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-Gemini-Proxy-Key': GEMINI_PROXY_KEY },
+        body: JSON.stringify({
+          contents: [{ role: 'user', parts: [{ text: prompt }] }],
+          generationConfig: { responseModalities: ['AUDIO'] },
+        }),
       });
+      if (!upstream.ok) {
+        const errText = await upstream.text();
+        console.error(`[groove-streamer] WMS relay failed ${upstream.status}: ${errText.slice(0, 500)}`);
+        return res.status(502).json({ error: 'Groove generation failed.' });
+      }
+      const data = await upstream.json() as {
+        candidates?: Array<{ content?: { parts?: Array<{ inlineData?: { data?: string; mimeType?: string } }> } }>;
+      };
       let base64 = '';
       let mimeType = 'audio/wav';
-      for await (const chunk of stream) {
-        const parts = chunk.candidates?.[0]?.content?.parts ?? [];
-        for (const part of parts) {
-          const inline = part.inlineData;
-          if (!inline?.data) continue;
-          if (inline.mimeType && mimeType === 'audio/wav') mimeType = inline.mimeType;
-          base64 += inline.data;
-        }
+      for (const part of data.candidates?.[0]?.content?.parts ?? []) {
+        const inline = part.inlineData;
+        if (!inline?.data) continue;
+        if (inline.mimeType && mimeType === 'audio/wav') mimeType = inline.mimeType;
+        base64 += inline.data;
       }
       if (!base64) return res.status(502).json({ error: 'No audio data from the model.' });
       return res.json({ base64, mimeType });

@@ -1,6 +1,6 @@
-// Audio generation runs on the backend (/api/groove) so the GEMINI_API_KEY is
-// never bundled into the browser. This module builds the prompt client-side
-// and posts it to the proxy.
+// Audio generation runs on the backend (/api/groove), which relays through the
+// WMS Gemini proxy (Pattern 11) - no Gemini key exists in this app at all.
+// This module builds the prompt client-side and posts it to the proxy.
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 

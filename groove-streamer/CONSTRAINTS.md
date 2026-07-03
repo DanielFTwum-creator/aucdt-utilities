@@ -47,7 +47,8 @@
 
 | Variable | Purpose |
 |---|---|
-| `GEMINI_API_KEY` | Google Gemini AI API key — required for all AI features |
+| `GEMINI_PROXY_KEY` | WMS-issued relay credential (Pattern 11) — this app never holds the Gemini key |
+| `WMS_GEMINI_URL` | Optional relay endpoint override — defaults to `https://wms.techbridge.edu.gh/api/gemini/generate` |
 | `GOOGLE_CLIENT_SECRET` | Google OAuth 2.0 client secret — server-side only, never exposed to client |
 | `VITE_GOOGLE_CLIENT_ID` | Google OAuth 2.0 client ID — exposed to Vite frontend build |
 | `VITE_GOOGLE_REDIRECT_URI` | OAuth redirect URI — must match Google Console exactly; production value is `https://ai-tools.techbridge.edu.gh/groove-streamer/callback` |
@@ -69,11 +70,20 @@
 
 ---
 
-## 6. Gemini AI Proxy
+## 6. Gemini Key Pattern (Pattern 11 — WMS Relay, fleet standard)
 
-- The server proxies Gemini AI requests via `@google/genai` to keep `GEMINI_API_KEY` off the client.
-- The Express JSON body limit is set to `25mb` to accommodate large audio base64 payloads returned by Gemini.
-- All Gemini calls must route through the Express API — never import `@google/genai` in frontend code.
+This app never holds the Gemini key — not in code, not in `.env`, not fetched at runtime.
+The Lyria groove route relays generateContent calls to WMS, which adds the key server-side
+(`X-Gemini-Proxy-Key: <GEMINI_PROXY_KEY>` against `WMS_GEMINI_URL`, model
+`lyria-3-clip-preview`, `responseModalities: ["AUDIO"]`).
+
+- Missing `GEMINI_PROXY_KEY` → `/api/groove` returns HTTP 503 (server still boots)
+- Migrated from the SDK `generateContentStream` path on 3 Jul 2026: the relay is
+  request/response, so the full clip now arrives in one JSON body instead of a stream.
+  **Verify a real groove generation on first deploy** — audio responses are large and the
+  WMS-side body limit must accommodate them. The `@google/genai` dependency is removed.
+- The Express JSON body limit stays at `25mb` for the large audio base64 payloads.
+- All Gemini calls must route through the Express API — never call Gemini from frontend code.
 
 ---
 
