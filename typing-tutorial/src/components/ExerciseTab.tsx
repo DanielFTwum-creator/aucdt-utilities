@@ -3,6 +3,17 @@ import { Lesson, UserProgress, Difficulty } from "../types";
 import { normaliseTypedInput } from "../inputNormalisation";
 import { ArrowLeft, Play, RefreshCw, Volume2, VolumeX, Keyboard, Settings } from "lucide-react";
 
+// US-QWERTY shift pairs: maps a shifted character to the physical key that
+// produces it, so the tactile highlight and finger guidance can point at a real
+// key instead of falling back silently (TUC-ICT-FIX-2026-VTX-PUNCT).
+const SHIFTED_TO_BASE: Record<string, string> = {
+  "!": "1", "@": "2", "#": "3", "$": "4", "%": "5", "^": "6", "&": "7", "*": "8",
+  "(": "9", ")": "0", "_": "-", "+": "=",
+  "{": "[", "}": "]", "|": "\\",
+  ":": ";", '"': "'",
+  "<": ",", ">": ".", "?": "/",
+};
+
 // Per-finger colour-coding shared between the hand diagram and the keyboard's
 // active-key highlight, so each finger always maps to the same colour everywhere.
 // "Active": full-strength colour + glow. "Idle": same colour at low opacity.
@@ -223,10 +234,10 @@ function KeyboardWithHands({ activeHand, activeFinger, isIdle, nextTargetChar }:
   const ROW_Y = [14, 58, 102, 146];
   const PALM_TOP = 220;
 
-  const NUM_KEYS  = ["1","2","3","4","5","6","7","8","9","0","-"];
-  const TOP_KEYS  = ["q","w","e","r","t","y","u","i","o","p"];
-  const HOME_KEYS = ["a","s","d","f","g","h","j","k","l",";"];
-  const BOT_KEYS  = ["z","x","c","v","b","n","m",",","."];
+  const NUM_KEYS  = ["1","2","3","4","5","6","7","8","9","0","-","="];
+  const TOP_KEYS  = ["q","w","e","r","t","y","u","i","o","p","[","]","\\"];
+  const HOME_KEYS = ["a","s","d","f","g","h","j","k","l",";","'"];
+  const BOT_KEYS  = ["z","x","c","v","b","n","m",",",".","/"];
 
   const KEY_FINGER: Record<string, { hand: "L" | "R"; finger: string }> = {
     "1":{hand:"L",finger:"Pinky"},"q":{hand:"L",finger:"Pinky"},"a":{hand:"L",finger:"Pinky"},"z":{hand:"L",finger:"Pinky"},
@@ -239,7 +250,9 @@ function KeyboardWithHands({ activeHand, activeFinger, isIdle, nextTargetChar }:
     "8":{hand:"R",finger:"Middle"},"i":{hand:"R",finger:"Middle"},"k":{hand:"R",finger:"Middle"},",":{hand:"R",finger:"Middle"},
     "9":{hand:"R",finger:"Ring"  },"o":{hand:"R",finger:"Ring"  },"l":{hand:"R",finger:"Ring"  },".":{hand:"R",finger:"Ring"  },
     "0":{hand:"R",finger:"Pinky" },"p":{hand:"R",finger:"Pinky" },";":{hand:"R",finger:"Pinky" },"/":{hand:"R",finger:"Pinky" },
-    "-":{hand:"R",finger:"Pinky" },
+    "-":{hand:"R",finger:"Pinky" },"=":{hand:"R",finger:"Pinky"},
+    "[":{hand:"R",finger:"Pinky" },"]":{hand:"R",finger:"Pinky"},"\\":{hand:"R",finger:"Pinky"},
+    "'":{hand:"R",finger:"Pinky" },
   };
 
   const FINGER_HEX: Record<string,string> = {
@@ -252,9 +265,9 @@ function KeyboardWithHands({ activeHand, activeFinger, isIdle, nextTargetChar }:
   const creaseSt = "rgba(95,53,27,0.45)";
   const skinShadow = "#72401f";
   const isSpace = activeHand === "Hands";
-  // "_" is Shift + "-": highlight the physical "-" key for the shifted variant.
+  // Shifted characters highlight the physical key that produces them.
   const rawTarget = (nextTargetChar ?? "").toLowerCase();
-  const target = rawTarget === "_" ? "-" : rawTarget;
+  const target = SHIFTED_TO_BASE[rawTarget] ?? rawTarget;
 
   const liftY = (side: "L" | "R", name: string): number => {
     if (isIdle || isSpace) return 0;
@@ -362,10 +375,10 @@ function KeyboardWithHands({ activeHand, activeFinger, isIdle, nextTargetChar }:
   return (
     <div style={{ animation: "kbHandEntry 580ms ease-out both" }}>
       <style>{`@keyframes kbHandEntry{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}`}</style>
-      <svg viewBox="0 0 598 328" className="w-full max-w-5xl mx-auto" aria-hidden="true">
+      <svg viewBox="0 0 686 328" className="w-full max-w-5xl mx-auto" aria-hidden="true">
 
         {/* Keyboard backdrop */}
-        <rect x="6" y="6" width="586" height="238" rx="14" fill="#0f1420" fillOpacity="0.97" />
+        <rect x="6" y="6" width="674" height="238" rx="14" fill="#0f1420" fillOpacity="0.97" />
 
         {/* Key rows */}
         {renderKeys(NUM_KEYS,  0)}
@@ -585,7 +598,7 @@ export default function ExerciseTab({ lesson, difficulty, progress, onFinish, on
     if ("yhnujm67".includes(c)) return { hand: "Right Hand", finger: "Index", anchor: "J", path: "Anchor Right Index on J" + (c !== "j" ? ` and reach diagonal/left to grasp ${c.toUpperCase()}` : " tactile anchor key with bump") };
     if ("ik,8".includes(c)) return { hand: "Right Hand", finger: "Middle", anchor: "K", path: "Anchor Right Middle on K" + (c !== "k" ? ` and reach upward to register ${c.toUpperCase()}` : " tactile home key") };
     if ("ol.9".includes(c)) return { hand: "Right Hand", finger: "Ring", anchor: "L", path: "Anchor Right Ring on L" + (c !== "l" ? ` and displace upward to strike ${c.toUpperCase()}` : " tactile home key") };
-    if ("p;/0".includes(c)) return { hand: "Right Hand", finger: "Pinky", anchor: ";", path: "Anchor Right Pinky on ;" + (c !== ";" ? ` and pitch outward to record ${c.toUpperCase()}` : " tactile home key") };
+    if ("p;/0['\\]=".includes(c)) return { hand: "Right Hand", finger: "Pinky", anchor: ";", path: "Anchor Right Pinky on ;" + (c !== ";" ? ` and pitch outward to record ${c.toUpperCase()}` : " tactile home key") };
     if (c === "-" || c === "_") return { hand: "Right Hand", finger: "Pinky", anchor: ";", path: `Anchor Right Pinky on ; and reach up past 0 to strike -${c === "_" ? " while holding Shift for _" : ""}` };
     // Unmapped characters must fail loudly rather than masquerade as a mapped key.
     console.warn(`[VortexType] No finger guidance mapping for character: "${char}"`);
@@ -841,10 +854,14 @@ export default function ExerciseTab({ lesson, difficulty, progress, onFinish, on
   // For mapped lessons, hand/keyboard guidance points at the physical key that
   // produces the expected character ( ")" lives on the 0 key ).
   const guidanceChar = (() => {
-    if (!lesson.inputMap || !nextTargetChar) return nextTargetChar;
-    const source = Object.entries(lesson.inputMap).find(([, out]) => out === nextTargetChar)?.[0];
-    if (!source) return nextTargetChar;
-    return source === ")" ? "0" : source;
+    if (!nextTargetChar) return nextTargetChar;
+    // Lesson input map first (e.g. Ghanaian characters back to their source key)...
+    const source = lesson.inputMap
+      ? Object.entries(lesson.inputMap).find(([, out]) => out === nextTargetChar)?.[0]
+      : undefined;
+    const char = source ?? nextTargetChar;
+    // ...then shifted characters back to the physical key that produces them.
+    return SHIFTED_TO_BASE[char] ?? char;
   })();
   const fingerGuidance = isNumpad ? getNumpadFingerGuidance(guidanceChar) : getFingerGuidance(guidanceChar || "");
 
