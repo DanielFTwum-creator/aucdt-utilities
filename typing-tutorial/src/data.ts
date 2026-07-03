@@ -12,6 +12,18 @@ export const LESSONS: Lesson[] = [
       "sad dad fasf dads",
       "asa sda faf sads",
       "dff ass sdd saff ddf"
+    ],
+    practicesIntermediate: [
+      "adds dads fads sass",
+      "asdf fdsa asdf fdsa",
+      "dass fass sadd fadd",
+      "sad fad dad add saff",
+    ],
+    practicesAdvanced: [
+      "dad adds fads as sad dads add a fad",
+      "asdf fdsa dsfa fads sadf dfas sdda fasd",
+      "a sad dad adds fads as dass fass sadd",
+      "fasf dass adds fads asdf sadd fass dafs",
     ]
   },
   {
@@ -25,6 +37,18 @@ export const LESSONS: Lesson[] = [
       "jak jal kal; jalk",
       "jaj kdk lfl ;s;",
       "lass kals jass kaff"
+    ],
+    practicesIntermediate: [
+      "jak kal laj jall ;a;",
+      "jjkk llaa kjlk ljkj",
+      "lask jald kalj ;lka",
+      "jaks lads kals jall",
+    ],
+    practicesAdvanced: [
+      "jak jal kal lass fall jall dask lakj salk",
+      "kljd fjsl a;sl dkfj slak jdka ls;a kdjf",
+      "all lads fall as jaks kall sad jall lass",
+      "jkl; asdf ;lkj fdsa jkl; asdf ;lkj fdsa",
     ]
   },
   {
@@ -38,6 +62,18 @@ export const LESSONS: Lesson[] = [
       "shall flash flask flaks",
       "salsa halls falls jals",
       "flask salad jads kals"
+    ],
+    practicesIntermediate: [
+      "kasa adaka dada lass",
+      "salad flask falls all",
+      "a sad lad asks all dads",
+      "jak falls as dad adds salad",
+    ],
+    practicesAdvanced: [
+      "dada kasa adaka; all lads ask all dads",
+      "salad flasks fall; a lass asks all sad lads",
+      "ask dad; add a salad flask; all salsa falls",
+      "kasa dada; adaka falls; sad lads ask a lass",
     ]
   },
   {
@@ -51,6 +87,18 @@ export const LESSONS: Lesson[] = [
       "red tare rate wafer",
       "raw straw sweat tread",
       "water treats state safe"
+    ],
+    practicesIntermediate: [
+      "sweet water treats last",
+      "we read fast; take a seat",
+      "trade wares at a late rate",
+      "start a draft; state a date",
+    ],
+    practicesAdvanced: [
+      "steadfast traders sell sweet dates at fast rates",
+      "a lad reads faster after real tests; well stated",
+      "salted waters settle; red seas swell late",
+      "street sellers trade sweet water treats fast",
     ]
   },
   {
@@ -64,6 +112,18 @@ export const LESSONS: Lesson[] = [
       "pour prior loyalty",
       "utility plot youth",
       "propitory trial write"
+    ],
+    practicesIntermediate: [
+      "kofi ate jollof; adjoa likes fufu",
+      "yaa sells gari at osu; esi is happy",
+      "a trotro ride to aburi is pretty quiet",
+      "oware players study duel plays deeply",
+    ],
+    practicesAdvanced: [
+      "esi shares waakye with adjoa; yaa likes fufu",
+      "kofi took a trotro from osu to aburi to eat jollof",
+      "the quiet typist props up a steady output all day",
+      "yaa esi adjoa afia kojo kofi; proud typists all",
     ]
   },
   {
@@ -77,6 +137,18 @@ export const LESSONS: Lesson[] = [
       "54321 15243 32541",
       "12 34 55 43 21 5",
       "15 sad 24 dad 35 fas"
+    ],
+    practicesIntermediate: [
+      "esi typed 12345 fast",
+      "add 12 and 34; keep 5",
+      "kofi is 15; adjoa is 24",
+      "take 3 seats at gate 45",
+    ],
+    practicesAdvanced: [
+      "route 154 trotro leaves at 12; seat 35 is free",
+      "adjoa typed 54321 12345 24135 with steady speed",
+      "kofi added 21 and 34; the total was 55",
+      "level 5 opens after 4 wins; try 3 more today",
     ]
   },
   {
@@ -90,6 +162,18 @@ export const LESSONS: Lesson[] = [
       "09876 68790 98076",
       "66 77 88 99 00 6",
       "jalk 678 lads 90 ;s"
+    ],
+    practicesIntermediate: [
+      "ghana turned free in 1957",
+      "dial 0800 900 700 for help",
+      "kofi typed 67890 09876 fast",
+      "ghana lifted the fifa youth trophy in 2009",
+    ],
+    practicesAdvanced: [
+      "freedom arrived in 1957; the year 1960 followed",
+      "yaa typed 1957 6 7 8 9 0 while esi read history",
+      "our 400 year old story holds 1000 proud tales",
+      "seats 67 89 and 90 sold out early today",
     ]
   },
   {
@@ -103,6 +187,18 @@ export const LESSONS: Lesson[] = [
       "zeal crest cave exact",
       "vext crack vest wax",
       "zapped active vertex caw"
+    ],
+    practicesIntermediate: [
+      "accra is close to the cape coast",
+      "cocoa exports raise the cedi value",
+      "chale cassava fufu is extra good",
+      "lake volta covers a vast quiet zone",
+    ],
+    practicesAdvanced: [
+      "cocoa fields across ghana provide the crops we export",
+      "accra to cape coast takes just over two quiet hours",
+      "lake volta creates power for cities across ghana",
+      "the cedi traded up as cocoa prices rose this week",
     ]
   },
   {
@@ -116,6 +212,18 @@ export const LESSONS: Lesson[] = [
       "born norm corn barn bank",
       "name map coma comma dot.",
       "men back normal comma."
+    ],
+    practicesIntermediate: [
+      "akwaaba means welcome, come in.",
+      "banku and kenkey are corn meals.",
+      "kumasi is home to ashanti kente.",
+      "azonto and highlife move the nation.",
+    ],
+    practicesAdvanced: [
+      "sankofa means go back and take it; learn from the past.",
+      "kelewele, banku, kenkey, and jollof make a proud menu.",
+      "the ashanti kingdom wove kente in bonwire near kumasi.",
+      "from bolgatanga to takoradi, the drums bind the nation.",
     ]
   },
   {
@@ -129,6 +237,18 @@ export const LESSONS: Lesson[] = [
       "Pack my box with five dozen liquor jugs.",
       "All the world is a stage and all people play parts.",
       "Typing smoothly minimizes mistakes and maximizes speed."
+    ],
+    practicesIntermediate: [
+      "Kwame Nkrumah led Ghana to freedom.",
+      "The talking drum speaks history and pride.",
+      "Adinkra symbols carry wisdom from the Akan.",
+      "Highlife guitars dance with jazzy horns.",
+    ],
+    practicesAdvanced: [
+      "Kwame Nkrumah declared that Ghana our beloved country is free forever.",
+      "From Jamestown to Bolgatanga market queens balance trade with quick wit.",
+      "The Sankofa bird looks backward to carry forward what must never be lost.",
+      "Anansi the spider spun clever webs of wisdom across Akan folk tales.",
     ]
   },
   {
@@ -143,6 +263,18 @@ export const LESSONS: Lesson[] = [
       "2026-06-15 2025-12-31",
       "199.99 45.50 1000.00",
       "10293-84756 30219-58473"
+    ],
+    practicesIntermediate: [
+      "1957-03-06 1960-07-01",
+      "233 030 0233 3020",
+      "45.50 199.99 12.00 0.50",
+      "0244-123-456 0302-654-321",
+    ],
+    practicesAdvanced: [
+      "1957-03-06 1966-02-24 1979-06-04 1981-12-31",
+      "233-302-213-850 233-244-767-676",
+      "12345.67 89012.34 56789.01 23456.78",
+      "20.50 45.75 1250.00 33.25 890.10 6.05",
     ]
   },
   {
@@ -156,6 +288,18 @@ export const LESSONS: Lesson[] = [
       "The system flagged 3 errors at 14:07; review logs before Friday's deadline.",
       "Daniel's report (2026) states: 'Typing fluency is a core ICT competency.'",
       "Node v24.17.0 - pnpm install && pnpm build && rsync dist/ root@server:/var/www/"
+    ],
+    practicesIntermediate: [
+      "Akwaaba! Ghana welcomes you; enjoy the jollof.",
+      "Dr. Kwame Nkrumah (1909-1972) led the way.",
+      "Market update: cocoa up 12%, gold up 8%.",
+      "The griot said: 'Wisdom is like a baobab tree.'",
+    ],
+    practicesAdvanced: [
+      "'Se wo werefi na wosankofa a yenkyi' teaches: return for what you forgot.",
+      "Ghana's 16 regions span savanna, forest, and coast; Accra anchors them all.",
+      "Proverb: 'One head does not hold council' - unity builds the village.",
+      "Type 100% clean: kente (Bonwire), shea (Tamale), cocoa (Kumasi), salt (Ada).",
     ]
   }
 ];
@@ -298,11 +442,34 @@ export const GAME_WORDS = [
   "university", "daniel", "twum", "ict", "system", "lecturer", "campus", "faculty",
   "graduation", "calculator", "birthday", "neighbor", "hospital", "hello", "world", "typing",
   "master", "practice",
+  // African culture bank: Ghanaian food, Adinkra & craft, peoples & languages,
+  // music & dance, festivals, places & nature, and Akan day names.
+  "jollof", "waakye", "kenkey", "banku", "fufu", "kelewele", "shito", "gari",
+  "ampesi", "sobolo", "chinchinga", "plantain", "cassava", "cocoyam", "millet", "sorghum",
+  "okra", "tilapia", "groundnut", "omotuo", "adinkra", "sankofa", "kente", "akwaaba",
+  "oware", "ampe", "batakari", "fugu", "ahenema", "calabash", "cowrie", "griot",
+  "ubuntu", "durbar", "asafo", "okyeame", "talkingdrum", "chieftaincy", "ashanti", "akan",
+  "fante", "dagomba", "frafra", "gonja", "nzema", "hausa", "swahili", "yoruba",
+  "igbo", "zulu", "xhosa", "amharic", "wolof", "twi", "highlife", "hiplife",
+  "afrobeats", "azonto", "adowa", "kpanlogo", "agbadza", "borborbor", "djembe", "kora",
+  "balafon", "mbira", "kalimba", "gyil", "seprewa", "atumpan", "fontomfrom", "axatse",
+  "gankogui", "shekere", "homowo", "aboakyer", "damba", "hogbetsotso", "odwira", "akwasidae",
+  "elmina", "tema", "osu", "aburi", "akosombo", "bonwire", "koforidua", "sunyani",
+  "bolgatanga", "navrongo", "winneba", "axim", "keta", "hohoe", "nsawam", "obuasi",
+  "kintampo", "kakum", "afadjato", "densu", "ankobra", "volta", "weija", "makola",
+  "kaneshie", "kejetia", "harmattan", "savanna", "sahel", "sahara", "serengeti", "kilimanjaro",
+  "zambezi", "limpopo", "timbuktu", "baobab", "shea", "nkrumah", "asantehene", "otumfuo",
+  "kwame", "kofi", "kojo", "kwabena", "kweku", "yaw", "kwasi", "kwadwo",
+  "abena", "akosua", "adwoa", "afia", "akua", "esi", "ama", "efua",
+  "araba",
 ];
 
 export const REFERENCE_SPEEDTEXTS = [
   "Techbridge University College in Oyibi, Ghana, excels in providing robust technical certifications. Under the leadership of Daniel Twum, Head of ICT, the college is pioneering interactive student interfaces to build professional computer typing speeds. Practice remains the ultimate catalyst for muscle memory development.",
   "Computer keyboard mastery forms the fundamental bedrock of modern engineering productivity. When preparing educational builds, standard software compliance requires complete specifications under UK English conventions. Striking the character keys smoothly secures higher WPM indexes.",
   "Responsive web apps render inside accessible frames. For typing tasks, this means tracking character indexes in real time, validating errors seamlessly, and offering dark or high-contrast styles for low-vision students. Always align your index fingers on the home keys f and j.",
-  "Capacitor bridges the web development ecosystem with native mobile distributions. Building iOS and Android packages can be completed via npx cap sync commands. Once archived via Android Studio or Xcode, developers upload release bundles to official App Stores for academic distribution."
+  "Capacitor bridges the web development ecosystem with native mobile distributions. Building iOS and Android packages can be completed via npx cap sync commands. Once archived via Android Studio or Xcode, developers upload release bundles to official App Stores for academic distribution.",
+  "Ghana gained independence on 6 March 1957 under Kwame Nkrumah, becoming the first sub-Saharan nation to break free from colonial rule. The black star on the flag still symbolises African freedom, and Independence Square in Accra hosts the national parade every year.",
+  "Kente cloth began in the Ashanti village of Bonwire, where weavers turn silk and cotton strips into bold geometric patterns. Every colour speaks: gold for royalty, green for growth, black for maturity, and red for the blood of ancestors who defended the land.",
+  "From highlife guitars in the 1950s to hiplife and afrobeats today, Ghanaian music keeps reinventing itself. Drum ensembles still open festivals like Homowo and Aboakyer, while azonto dancers translate everyday gestures into rhythm on the streets of Accra."
 ];

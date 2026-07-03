@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Lesson, UserProgress, AuditLog, ServiceHealth, ThemeMode } from "./types";
+import { Lesson, UserProgress, AuditLog, ServiceHealth, ThemeMode, Difficulty } from "./types";
 import { LESSONS } from "./data";
 import Navbar from "./components/Navbar";
 import LessonsTab from "./components/LessonsTab";
@@ -13,6 +13,16 @@ export default function App() {
   // Navigation & views active states
   const [activeTab, setActiveTab] = useState<string>("lessons");
   const [selectedLesson, setSelectedLesson] = useState<Lesson | null>(null);
+
+  // Difficulty selects which drill pool each lesson serves (persisted per device)
+  const [difficulty, setDifficulty] = useState<Difficulty>(() => {
+    const cached = localStorage.getItem("tuc_difficulty");
+    return cached === "intermediate" || cached === "advanced" ? cached : "beginner";
+  });
+  const handleDifficultyChange = (d: Difficulty) => {
+    setDifficulty(d);
+    localStorage.setItem("tuc_difficulty", d);
+  };
 
   // User stats & progress metrics state
   const [progress, setProgress] = useState<UserProgress>(() => {
@@ -272,6 +282,7 @@ export default function App() {
         {selectedLesson ? (
           <ExerciseTab
             lesson={selectedLesson}
+            difficulty={difficulty}
             progress={progress}
             onFinish={handleCompleteLessonExercise}
             onBack={() => {
@@ -285,6 +296,8 @@ export default function App() {
             {activeTab === "lessons" && (
               <LessonsTab
                 progress={progress}
+                difficulty={difficulty}
+                onDifficultyChange={handleDifficultyChange}
                 onSelectLesson={(lesson) => {
                   setSelectedLesson(lesson);
                   addAuditLog("EXERCISE_STARTED", "lesson", "success", `Began Guided row-exercise: ${lesson.title}`);

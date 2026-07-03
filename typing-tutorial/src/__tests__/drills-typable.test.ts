@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { LESSONS } from '../data';
+import { LESSONS, GAME_WORDS, REFERENCE_SPEEDTEXTS } from '../data';
 
 // Regression guard for TUC-ICT-FIX-2026-VTX-HYPHEN.
 //
@@ -23,15 +23,50 @@ const typeThrough = (target: string): boolean =>
   target.split('').every((char, i) => target[i] === char && TYPABLE.includes(char));
 
 describe('drill typability (VTX-HYPHEN regression)', () => {
-  it('every practice drill in every lesson contains only US-QWERTY-typable characters', () => {
+  it('every practice drill in every lesson and difficulty pool contains only US-QWERTY-typable characters', () => {
     for (const lesson of LESSONS) {
-      for (const practice of lesson.practices) {
-        for (const char of practice) {
-          expect(
-            TYPABLE.includes(char),
-            `Lesson ${lesson.id} ("${lesson.title}") drill "${practice}" contains untypable character "${char}" (U+${char.codePointAt(0)!.toString(16).toUpperCase().padStart(4, '0')})`,
-          ).toBe(true);
+      const pools = {
+        beginner: lesson.practices,
+        intermediate: lesson.practicesIntermediate ?? [],
+        advanced: lesson.practicesAdvanced ?? [],
+      };
+      for (const [pool, drills] of Object.entries(pools)) {
+        for (const practice of drills) {
+          for (const char of practice) {
+            expect(
+              TYPABLE.includes(char),
+              `Lesson ${lesson.id} ("${lesson.title}") ${pool} drill "${practice}" contains untypable character "${char}" (U+${char.codePointAt(0)!.toString(16).toUpperCase().padStart(4, '0')})`,
+            ).toBe(true);
+          }
         }
+      }
+    }
+  });
+
+  it('every lesson offers all three difficulty pools with four drills each', () => {
+    for (const lesson of LESSONS) {
+      expect(lesson.practices.length, `Lesson ${lesson.id} beginner pool`).toBe(4);
+      expect(lesson.practicesIntermediate?.length, `Lesson ${lesson.id} intermediate pool`).toBe(4);
+      expect(lesson.practicesAdvanced?.length, `Lesson ${lesson.id} advanced pool`).toBe(4);
+    }
+  });
+
+  it('the game word bank is lowercase a-z, duplicate-free, and typable', () => {
+    const seen = new Set<string>();
+    for (const word of GAME_WORDS) {
+      expect(/^[a-z]+$/.test(word), `GAME_WORDS entry "${word}" is not lowercase a-z`).toBe(true);
+      expect(seen.has(word), `GAME_WORDS entry "${word}" is duplicated`).toBe(false);
+      seen.add(word);
+    }
+  });
+
+  it('every speed-test reference text is typable', () => {
+    for (const text of REFERENCE_SPEEDTEXTS) {
+      for (const char of text) {
+        expect(
+          TYPABLE.includes(char),
+          `Speed text "${text.slice(0, 40)}..." contains untypable character "${char}"`,
+        ).toBe(true);
       }
     }
   });

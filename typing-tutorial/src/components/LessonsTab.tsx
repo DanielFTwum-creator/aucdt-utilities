@@ -1,10 +1,12 @@
 import { useState } from "react";
-import { Lesson, UserProgress } from "../types";
+import { Lesson, UserProgress, Difficulty } from "../types";
 import { LESSONS } from "../data";
 import { CheckCircle2, Lock, Play, ChevronDown } from "lucide-react";
 
 interface LessonsTabProps {
   progress: UserProgress;
+  difficulty: Difficulty;
+  onDifficultyChange: (d: Difficulty) => void;
   onSelectLesson: (lesson: Lesson) => void;
 }
 
@@ -47,7 +49,13 @@ function keyUnderline(key: string): string {
   return finger ? FINGER_UNDERLINE[finger] : "border-b-stone-300";
 }
 
-export default function LessonsTab({ progress, onSelectLesson }: LessonsTabProps) {
+const DIFFICULTY_LEVELS: Array<{ id: Difficulty; label: string; hint: string }> = [
+  { id: "beginner", label: "Beginner", hint: "Short drills, gentle pace" },
+  { id: "intermediate", label: "Intermediate", hint: "Longer lines, new vocabulary" },
+  { id: "advanced", label: "Advanced", hint: "Long, dense lines at full difficulty" },
+];
+
+export default function LessonsTab({ progress, difficulty, onDifficultyChange, onSelectLesson }: LessonsTabProps) {
   const pct = Math.round((progress.lessonsCompleted / LESSONS.length) * 100);
   const [expandedIdx, setExpandedIdx] = useState<number | null>(null);
 
@@ -76,6 +84,34 @@ export default function LessonsTab({ progress, onSelectLesson }: LessonsTabProps
             />
           </div>
         </div>
+      </div>
+
+      {/* Difficulty selector — switches every lesson's drill pool */}
+      <div className="flex flex-col sm:flex-row sm:items-center gap-2" role="radiogroup" aria-label="Difficulty level">
+        <span className="text-sm font-semibold text-neutral-700 dark:text-neutral-300 shrink-0">Difficulty:</span>
+        <div className="flex gap-2">
+          {DIFFICULTY_LEVELS.map(({ id, label, hint }) => (
+            <button
+              key={id}
+              type="button"
+              id={`difficulty-${id}`}
+              role="radio"
+              aria-checked={difficulty === id}
+              title={hint}
+              onClick={() => onDifficultyChange(id)}
+              className={`px-3 py-1.5 rounded-lg text-sm font-semibold border transition-all cursor-pointer ${
+                difficulty === id
+                  ? "bg-emerald-600 text-white border-emerald-600"
+                  : "bg-white dark:bg-neutral-900 text-neutral-600 dark:text-neutral-400 border-neutral-200 dark:border-neutral-700 hover:border-emerald-400"
+              }`}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+        <span className="text-xs text-neutral-400 dark:text-neutral-500 sm:ml-2">
+          {DIFFICULTY_LEVELS.find((d) => d.id === difficulty)?.hint}
+        </span>
       </div>
 
       {/* Tips strip */}

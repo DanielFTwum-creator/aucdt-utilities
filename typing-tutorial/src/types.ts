@@ -3,13 +3,20 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+export type Difficulty = "beginner" | "intermediate" | "advanced";
+
 export interface Lesson {
   id: number;
   title: string;
   description: string;
   keys: string;
   icon: string;
+  /** Beginner drill pool (the default). */
   practices: string[];
+  /** Intermediate drill pool — longer lines, new vocabulary. Falls back to `practices` when absent. */
+  practicesIntermediate?: string[];
+  /** Advanced drill pool — long, dense lines at full difficulty. Falls back to `practices` when absent. */
+  practicesAdvanced?: string[];
   /** "numpad" renders the dedicated numeric-keypad guide instead of the QWERTY hand/keyboard view. Defaults to "qwerty". */
   inputMode?: "qwerty" | "numpad";
 }

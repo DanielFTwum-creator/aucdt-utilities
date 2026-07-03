@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, ChangeEvent } from "react";
-import { Lesson, UserProgress } from "../types";
+import { Lesson, UserProgress, Difficulty } from "../types";
 import { ArrowLeft, Play, RefreshCw, Volume2, VolumeX, Keyboard, Settings } from "lucide-react";
 
 // Per-finger colour-coding shared between the hand diagram and the keyboard's
@@ -513,15 +513,23 @@ function NumpadGuide({ activeKey }: { activeKey?: string }) {
 
 interface ExerciseTabProps {
   lesson: Lesson;
+  difficulty: Difficulty;
   progress: UserProgress;
   onFinish: (accuracy: number, wpm: number, points: number, sessionMaxCombo: number) => void;
   onBack: () => void;
 }
 
-export default function ExerciseTab({ lesson, progress, onFinish, onBack }: ExerciseTabProps) {
+export default function ExerciseTab({ lesson, difficulty, progress, onFinish, onBack }: ExerciseTabProps) {
+  // The active drill pool for this lesson at the selected difficulty.
+  // Pools are optional per lesson; missing pools fall back to the beginner set.
+  const practicePool =
+    (difficulty === "advanced" && lesson.practicesAdvanced?.length ? lesson.practicesAdvanced : undefined) ??
+    (difficulty !== "beginner" && lesson.practicesIntermediate?.length ? lesson.practicesIntermediate : undefined) ??
+    lesson.practices;
+
   const [currentPracticeIdx, setCurrentPracticeIdx] = useState(0);
   const [usedPracticeIndices, setUsedPracticeIndices] = useState<number[]>([]);
-  const targetText = lesson.practices[currentPracticeIdx];
+  const targetText = practicePool[currentPracticeIdx];
 
   const [inputVal, setInputVal] = useState("");
   const [isStarted, setIsStarted] = useState(false);
@@ -693,7 +701,7 @@ export default function ExerciseTab({ lesson, progress, onFinish, onBack }: Exer
     setUsedPracticeIndices([]);
     usedPracticeIndicesRef.current = [];
     // Select a random practice to start with
-    const randomIndex = Math.floor(Math.random() * lesson.practices.length);
+    const randomIndex = Math.floor(Math.random() * practicePool.length);
     setCurrentPracticeIdx(randomIndex);
   }, [lesson]);
 
@@ -796,7 +804,7 @@ export default function ExerciseTab({ lesson, progress, onFinish, onBack }: Exer
           setUsedPracticeIndices(newUsed);
 
           // Calculate available practice indices
-          const allIndices = Array.from({ length: lesson.practices.length }, (_, i) => i);
+          const allIndices = Array.from({ length: practicePool.length }, (_, i) => i);
           const availableIndices = allIndices.filter(i => !newUsed.includes(i));
 
           if (availableIndices.length === 0) {
@@ -850,7 +858,7 @@ export default function ExerciseTab({ lesson, progress, onFinish, onBack }: Exer
     setMaxCombo(0);
     setIsCalibrationMode(false);
     setCalibrationText("");
-    const randomIndex = Math.floor(Math.random() * lesson.practices.length);
+    const randomIndex = Math.floor(Math.random() * practicePool.length);
     setCurrentPracticeIdx(randomIndex);
     handleReset();
   };
@@ -1066,7 +1074,7 @@ export default function ExerciseTab({ lesson, progress, onFinish, onBack }: Exer
           <div className="flex items-center space-x-2 text-[10px] font-mono font-bold tracking-widest text-sky-600 dark:text-cyan-400 uppercase">
             <span>{isCalibrationMode ? "Fix-up mode" : "Current Target Tiers"}</span>
             <span className={`w-1.5 h-1.5 rounded-full animate-bounce ${isCalibrationMode ? 'bg-amber-500' : 'bg-cyan-400'}`}></span>
-            <span>Set {currentPracticeIdx + 1} of {lesson.practices.length}</span>
+            <span>Set {currentPracticeIdx + 1} of {practicePool.length}</span>
           </div>
         </div>
 
