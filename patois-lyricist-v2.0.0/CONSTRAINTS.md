@@ -47,7 +47,8 @@
 
 | Variable | Purpose | Notes |
 |---|---|---|
-| `GEMINI_PROXY_KEY` | Authenticates requests to the WMS Gemini key broker at `wms.techbridge.edu.gh` | **Required in production.** Without it the AI routes fail. Local dev may fall back to `GEMINI_API_KEY` or `VITE_GEMINI_API_KEY`. |
+| `GEMINI_PROXY_KEY` | Authenticates the generate relay to WMS (Pattern 11) | **Required for AI routes.** Without it they return 503; the server still boots. No local key fallback exists. |
+| `WMS_GEMINI_URL` | Optional relay endpoint override | Defaults to `https://wms.techbridge.edu.gh/api/gemini/generate` |
 | `VITE_GOOGLE_CLIENT_ID` | Google OAuth 2.0 client ID — exposed to the frontend via Vite | Set in `.env` or `.env.local` |
 | `VITE_GOOGLE_REDIRECT_URI` | Full callback URL used by both the frontend and the server to derive `basePath` | Default: `https://ai-tools.techbridge.edu.gh/patois/auth/google/callback` |
 | `GOOGLE_CLIENT_SECRET` | Server-side Google OAuth secret — never exposed to the client | Set in `.env.local` only; never commit |
@@ -56,18 +57,24 @@
 
 ---
 
-## 5. Gemini AI — WMS Key Proxy
+## 5. Gemini Key Pattern (Pattern 11 — WMS Relay, fleet standard)
 
-The server does **not** hold a raw Gemini API key in production. Instead it calls the internal WMS broker:
+This app never holds the Gemini key — not in code, not in `.env`, not fetched at runtime.
+All generateContent calls are relayed to WMS, which adds the key server-side:
 
 ```
-GET https://wms.techbridge.edu.gh/api/gemini/key
+POST https://wms.techbridge.edu.gh/api/gemini/generate?model=gemini-2.5-pro
 Header: X-Gemini-Proxy-Key: <GEMINI_PROXY_KEY>
+Body: raw Gemini generateContent JSON (contents / systemInstruction / generationConfig)
+Response: raw Gemini REST response, relayed verbatim
 ```
 
-- The resolved key is cached in-process for **6 hours** (TTL: `KEY_TTL_MS`).
-- If `GEMINI_PROXY_KEY` is absent, the server logs a warning and falls back to `GEMINI_API_KEY` / `VITE_GEMINI_API_KEY` (local dev only).
-- Never set a raw `GEMINI_API_KEY` in production — always use `GEMINI_PROXY_KEY`.
+- No key cache, no key invalidation — the app has no key to manage
+- Missing `GEMINI_PROXY_KEY` → AI routes return HTTP 503 (server still boots)
+- Reference implementation: `server.ts` → `callGemini()`; same idiom as biochemai/omniextract
+- Migrated from the transitional key-fetch mode (WMS key broker + 6h cache + local
+  `GEMINI_API_KEY`/`VITE_GEMINI_API_KEY` fallback) on 3 Jul 2026; `@google/genai` SDK removed
+- Never set a raw `GEMINI_API_KEY` anywhere — always use `GEMINI_PROXY_KEY`.
 
 ---
 

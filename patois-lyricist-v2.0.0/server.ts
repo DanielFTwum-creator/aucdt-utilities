@@ -5,7 +5,6 @@ import { fileURLToPath } from "url";
 import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
 import fetch from "node-fetch";
-import { GoogleGenAI } from "@google/genai";
 
 dotenv.config();
 dotenv.config({ path: '.env.local', override: true });
@@ -29,31 +28,46 @@ function decodeJWT(token: string) {
   return JSON.parse(decoded);
 }
 
-const WMS_KEY_URL = 'https://wms.techbridge.edu.gh/api/gemini/key';
-const KEY_TTL_MS  = 6 * 60 * 60 * 1000; // 6 hours
-let cachedGeminiKey: string | null = null;
-let keyFetchedAt = 0;
+// --- Gemini custody: this app NEVER holds the Gemini key (fleet standard, ---
+// --- Pattern 11). Every generateContent call is relayed to the WMS proxy  ---
+// --- with the GEMINI_PROXY_KEY service credential; only WMS adds the key. ---
+const WMS_GEMINI_URL = process.env.WMS_GEMINI_URL || 'https://wms.techbridge.edu.gh/api/gemini/generate';
+const GEMINI_PROXY_KEY = process.env.GEMINI_PROXY_KEY || '';
+const MODEL = 'gemini-2.5-pro';
 
-function invalidateGeminiKey() { cachedGeminiKey = null; keyFetchedAt = 0; }
-
-async function getGeminiKey(): Promise<string> {
-  if (cachedGeminiKey && Date.now() - keyFetchedAt < KEY_TTL_MS) return cachedGeminiKey;
-  const proxyKey = process.env.GEMINI_PROXY_KEY;
-  if (!proxyKey) {
-    // Local dev fallback only — production must set GEMINI_PROXY_KEY via WMS.
-    const local = process.env.GEMINI_API_KEY || process.env.VITE_GEMINI_API_KEY;
-    if (local) return local;
-    throw new Error('GEMINI_PROXY_KEY is not set (and no local key fallback).');
-  }
-  const r = await fetch(WMS_KEY_URL, { headers: { 'X-Gemini-Proxy-Key': proxyKey } });
-  if (!r.ok) throw new Error(`WMS key fetch failed: ${r.status} ${await r.text()}`);
-  cachedGeminiKey = ((await r.json()) as any).apiKey;
-  keyFetchedAt = Date.now();
-  return cachedGeminiKey!;
+if (!GEMINI_PROXY_KEY) {
+  console.warn('[Patois Lyricist] WARNING: GEMINI_PROXY_KEY not set — AI routes will return 503');
 }
 
-if (!process.env.GEMINI_PROXY_KEY) {
-  console.warn('[Patois Lyricist] WARNING: GEMINI_PROXY_KEY not set — AI routes will use local fallback or fail');
+interface GeminiResponse {
+  candidates?: Array<{ content?: { parts?: Array<{ text?: string }> } }>;
+}
+
+class RelayError extends Error {
+  constructor(message: string, public status: number) {
+    super(message);
+    this.name = 'RelayError';
+  }
+}
+
+// Relay a raw Gemini generateContent body to WMS and return the parsed REST response.
+async function callGemini(body: unknown): Promise<GeminiResponse> {
+  if (!GEMINI_PROXY_KEY) throw new RelayError('GEMINI_PROXY_KEY not configured', 503);
+  const upstream = await fetch(`${WMS_GEMINI_URL}?model=${encodeURIComponent(MODEL)}`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'X-Gemini-Proxy-Key': GEMINI_PROXY_KEY },
+    body: JSON.stringify(body),
+  });
+  if (!upstream.ok) {
+    const errText = await upstream.text();
+    console.error(`[Patois Lyricist] WMS relay failed ${upstream.status}: ${errText.slice(0, 500)}`);
+    throw new RelayError(`WMS relay returned ${upstream.status}`, 502);
+  }
+  return await upstream.json() as GeminiResponse;
+}
+
+function extractText(response: GeminiResponse): string {
+  return (response.candidates?.[0]?.content?.parts ?? []).map(p => p.text ?? '').join('');
 }
 
 async function startServer() {
@@ -140,30 +154,21 @@ async function startServer() {
         return res.status(400).json({ error: "Missing prompt or systemInstruction" });
       }
 
-      const apiKey = await getGeminiKey();
-      const genAI = new GoogleGenAI({ apiKey });
-
-      const response = await genAI.models.generateContent({
-        model: "gemini-2.5-pro",
-        contents: prompt,
-        config: {
-          systemInstruction: systemInstruction,
+      const response = await callGemini({
+        contents: [{ role: "user", parts: [{ text: prompt }] }],
+        systemInstruction: { parts: [{ text: systemInstruction }] },
+        generationConfig: {
           temperature: 0.95,
           topP: 0.9,
           thinkingConfig: { thinkingBudget: 12000 },
         },
       });
 
-      res.json({ text: response.text });
+      res.json({ text: extractText(response) });
     } catch (error: any) {
-      console.error("[Patois Lyricist] Gemini Proxy Error:", error);
-      
-      // If it's a key error, invalidate it so the next request re-fetches
-      if (error?.message?.includes('API_KEY_INVALID') || error?.status === 401 || error?.status === 400 || error?.message?.includes('API key not valid')) {
-          invalidateGeminiKey();
-      }
-
-      res.status(500).json({ error: "Failed to generate lyrics" });
+      console.error("[Patois Lyricist] Gemini Relay Error:", error);
+      const status = error instanceof RelayError ? error.status : 500;
+      res.status(status).json({ error: "Failed to generate lyrics" });
     }
   });
 
