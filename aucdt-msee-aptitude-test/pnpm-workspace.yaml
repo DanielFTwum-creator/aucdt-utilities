@@ -1,5 +1,6 @@
 allowBuilds:
   '@firebase/util': true
+  bcrypt: set this to true or false
   core-js: true
   core-js-pure: true
   esbuild: true

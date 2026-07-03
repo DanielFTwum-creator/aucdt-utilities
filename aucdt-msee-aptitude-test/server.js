@@ -5,7 +5,6 @@ import cors from 'cors';
 import mysql from 'mysql2/promise';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import { GoogleGenAI, Type } from '@google/genai';
 import { fileURLToPath } from 'url';
 
 // --- Server Setup ---
@@ -39,19 +38,43 @@ try {
 }
 
 
-// --- Gemini API Initialization ---
-// Accept GEMINI_API_KEY (the monorepo/.env standard) and fall back to API_KEY.
-const GEMINI_KEY = process.env.GEMINI_API_KEY || process.env.API_KEY;
-let ai;
-if (!GEMINI_KEY) {
-  console.error('FATAL ERROR: GEMINI_API_KEY (or API_KEY) environment variable is not set.');
-  process.exit(1);
+// --- Gemini custody: this app NEVER holds the Gemini key (fleet standard, ---
+// --- Pattern 11). Every generateContent call is relayed to the WMS proxy  ---
+// --- with the GEMINI_PROXY_KEY service credential; only WMS adds the key. ---
+const WMS_GEMINI_URL = process.env.WMS_GEMINI_URL || 'https://wms.techbridge.edu.gh/api/gemini/generate';
+const GEMINI_PROXY_KEY = process.env.GEMINI_PROXY_KEY || '';
+const MODEL = 'gemini-2.5-flash';
+
+if (!GEMINI_PROXY_KEY) {
+  console.warn('[msee] WARNING: GEMINI_PROXY_KEY not set — /api/generate will return 503');
 }
-try {
-  ai = new GoogleGenAI({ apiKey: GEMINI_KEY });
-} catch (e) {
-  console.error("Error during Gemini AI client initialization.", e);
-  process.exit(1);
+
+class RelayError extends Error {
+  constructor(message, status) {
+    super(message);
+    this.name = 'RelayError';
+    this.status = status;
+  }
+}
+
+// Relay a raw Gemini generateContent body to WMS and return the parsed REST response.
+async function callGemini(body) {
+  if (!GEMINI_PROXY_KEY) throw new RelayError('GEMINI_PROXY_KEY not configured', 503);
+  const upstream = await fetch(`${WMS_GEMINI_URL}?model=${encodeURIComponent(MODEL)}`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'X-Gemini-Proxy-Key': GEMINI_PROXY_KEY },
+    body: JSON.stringify(body),
+  });
+  if (!upstream.ok) {
+    const errText = await upstream.text();
+    console.error(`[msee] WMS relay failed ${upstream.status}: ${errText.slice(0, 500)}`);
+    throw new RelayError(`WMS relay returned ${upstream.status}`, 502);
+  }
+  return await upstream.json();
+}
+
+function extractText(response) {
+  return (response.candidates?.[0]?.content?.parts ?? []).map(p => p.text ?? '').join('');
 }
 
 // --- Auth Middleware ---
@@ -220,11 +243,11 @@ app.post('/api/generate', authenticateToken, isAdmin, async (req, res) => {
   if (!text || !count || !subject) return res.status(400).json({ error: 'Missing required fields.' });
 
   const questionSchema = {
-    type: Type.OBJECT,
+    type: "OBJECT",
     properties: {
-        question: { type: Type.STRING },
-        options: { type: Type.ARRAY, items: { type: Type.STRING } },
-        correct: { type: Type.INTEGER },
+        question: { type: "STRING" },
+        options: { type: "ARRAY", items: { type: "STRING" } },
+        correct: { type: "INTEGER" },
     },
     required: ["question", "options", "correct"],
   };
@@ -232,20 +255,23 @@ app.post('/api/generate', authenticateToken, isAdmin, async (req, res) => {
   const prompt = `Based on the following text about "${subject}", generate ${count} multiple-choice questions. Format the response as a JSON array. Text: --- ${sanitizedText} ---`;
 
   try {
-    const response = await ai.models.generateContent({
-        model: "gemini-2.5-flash",
-        contents: prompt,
-        config: {
+    const response = await callGemini({
+        contents: [{ role: "user", parts: [{ text: prompt }] }],
+        generationConfig: {
             responseMimeType: "application/json",
-            responseSchema: { type: Type.ARRAY, items: questionSchema },
+            responseSchema: { type: "ARRAY", items: questionSchema },
         },
     });
-    res.json(JSON.parse(response.text.trim()));
+    res.json(JSON.parse(extractText(response).trim()));
   } catch (error) {
-    console.error("Gemini API Error:", error);
-    res.status(500).json({ error: 'Failed to generate questions from AI service.' });
+    console.error("Gemini relay error:", error);
+    const status = error instanceof RelayError ? error.status : 500;
+    res.status(status).json({ error: 'Failed to generate questions from AI service.' });
   }
 });
+
+// Health check (fleet standard)
+app.get(['/api/health', '/aucdt-msee-aptitude-test/api/health'], (_req, res) => res.json({ ok: true }));
 
 // --- Static File Serving ---
 // Express 5 (path-to-regexp 8) rejects the bare '*' wildcard; use a regex

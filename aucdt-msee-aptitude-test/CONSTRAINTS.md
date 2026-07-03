@@ -48,7 +48,8 @@
 
 | Variable | Purpose | Notes |
 |---|---|---|
-| `GEMINI_API_KEY` | Gemini AI API key | Primary key; server also accepts `API_KEY` as a fallback. Missing = fatal crash. |
+| `GEMINI_PROXY_KEY` | Authenticates the generate relay to WMS (Pattern 11) | WMS-issued service credential — this app never holds the Gemini key. Missing = AI route returns 503 (server still boots). |
+| `WMS_GEMINI_URL` | Relay endpoint override | Defaults to `https://wms.techbridge.edu.gh/api/gemini/generate` |
 | `PORT` | Server port | Must be `3011`; set in `ecosystem.config.js` to avoid EADDRINUSE conflicts. |
 | `DB_HOST` | MySQL host | Defaults to `localhost` if unset |
 | `DB_USER` | MySQL username | Defaults to `root` if unset |
@@ -63,12 +64,26 @@
 
 ---
 
-## 5. Gemini AI Integration
+## 5. Gemini Key Pattern (Pattern 11 — WMS Relay, fleet standard)
 
-- Client: `@google/genai` v1.9+ (`GoogleGenAI` class, not the legacy `@google-cloud/aiplatform`).
-- Initialised at startup; missing `GEMINI_API_KEY` causes `process.exit(1)` immediately.
-- The server accepts either `GEMINI_API_KEY` or `API_KEY` (monorepo fallback convention). Always set `GEMINI_API_KEY` as the canonical variable.
-- Uses structured output (`Type` from `@google/genai`) — do not downgrade the SDK below `^1.9.0`.
+This app never holds the Gemini key — not in code, not in `.env`, not fetched at runtime.
+All generateContent calls are relayed to WMS, which adds the key server-side:
+
+```
+POST https://wms.techbridge.edu.gh/api/gemini/generate?model=gemini-2.5-flash
+Header: X-Gemini-Proxy-Key: <GEMINI_PROXY_KEY>
+Body: raw Gemini generateContent JSON (contents / generationConfig with REST-style
+      type strings, e.g. "OBJECT" / "ARRAY" — the SDK Type enum is gone)
+Response: raw Gemini REST response, relayed verbatim
+```
+
+- No key cache, no key invalidation — the app has no key to manage
+- Missing `GEMINI_PROXY_KEY` → `/api/generate` returns HTTP 503 (server still boots)
+- Reference implementation: `server.js` → `callGemini()`; same idiom as biochemai/omniextract
+- Migrated from direct `@google/genai` SDK usage on 3 Jul 2026 (SDK dependency removed;
+  the startup `process.exit(1)` on missing key is also gone)
+- Known dead code: `index.html` still carries an AI Studio importmap entry for
+  `@google/genai` — unused by any component, left in place (pre-existing).
 
 ---
 
@@ -112,7 +127,8 @@ PM2 ecosystem must set `PORT=3011` explicitly to prevent port collision with oth
 Before deploying, confirm:
 
 ```
-☐ GEMINI_API_KEY is set in server .env (not just locally)
+☐ server.js relays via callGemini() — no GEMINI_API_KEY reference anywhere in server.js
+☐ GEMINI_PROXY_KEY is set in server .env (not just locally)
 ☐ JWT_SECRET is set in server .env
 ☐ DB_HOST, DB_USER, DB_PASSWORD, DB_NAME are set in server .env
 ☐ MySQL database `msee_test_db` exists and schema is up to date

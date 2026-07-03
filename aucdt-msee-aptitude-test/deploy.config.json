@@ -4,6 +4,6 @@
   "deployPath": "/var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/aucdt-msee-aptitude-test",
   "buildTool": "pnpm",
   "outputDir": "dist",
-  "requiredEnvVars": ["GEMINI_API_KEY"],
+  "requiredEnvVars": ["GEMINI_PROXY_KEY"],
   "healthCheckUrl": "https://ai-tools.techbridge.edu.gh/aucdt-msee-aptitude-test/"
 }
