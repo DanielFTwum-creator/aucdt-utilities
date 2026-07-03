@@ -4,4 +4,5 @@ allowBuilds:
   '@playwright/browser-chromium': true
   '@playwright/browser-firefox': true
   '@playwright/browser-webkit': true
+  esbuild: set this to true or false
   protobufjs: true

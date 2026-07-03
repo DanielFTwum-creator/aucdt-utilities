@@ -52,7 +52,9 @@
 | `VITE_GOOGLE_CLIENT_ID` | Google OAuth 2.0 client ID (also used client-side via Vite) |
 | `VITE_GOOGLE_REDIRECT_URI` | OAuth redirect URI — defaults to `https://ai-tools.techbridge.edu.gh/impact-ventures-dashboard/callback` |
 | `GOOGLE_CLIENT_SECRET` | Google OAuth 2.0 client secret (server-side only — never expose to client) |
-| `PORT` | Express listen port — must be **3016** in production |
+| `PORT` | Express listen port — must be **3016** in production (in-code default now 3016) |
+| `GEMINI_PROXY_KEY` | WMS-issued relay credential (Pattern 11) — this app never holds the Gemini key |
+| `WMS_GEMINI_URL` | Optional relay endpoint override — defaults to `https://wms.techbridge.edu.gh/api/gemini/generate` |
 
 All variables are loaded via `dotenv` from `.env` at server startup. If any are missing, check `.env.local` or the Plesk environment panel.
 
@@ -67,10 +69,17 @@ All variables are loaded via `dotenv` from `.env` at server startup. If any are 
 
 ---
 
-## 6. Gemini AI (`@google/genai`)
+## 6. Gemini Key Pattern (Pattern 11 — WMS Relay, fleet standard)
 
-- The `@google/genai` SDK (`^1.50.1`) is in `dependencies` and runs server-side only.
-- No `GEMINI_API_KEY` was found in the detected env vars — confirm the key name in `.env.local` before deploying. The SDK typically requires `GOOGLE_API_KEY` or a key passed explicitly to the client constructor.
+This app never holds the Gemini key — not in code, not in `.env`, not fetched at runtime.
+The strategic-brief route (`POST /api/brief`) relays generateContent calls to WMS, which
+adds the key server-side (`X-Gemini-Proxy-Key: <GEMINI_PROXY_KEY>` against `WMS_GEMINI_URL`).
+
+- Missing `GEMINI_PROXY_KEY` → `/api/brief` returns HTTP 503 (server still boots)
+- Migrated on 3 Jul 2026 from a broken frontend SDK call: the SPA previously constructed
+  `GoogleGenAI` with `process.env.GEMINI_API_KEY` in the browser, which threw
+  `process is not defined` at load (Vite injects no such define). The `@google/genai`
+  dependency is removed; the SPA now posts `{ prompt }` to `/api/brief`.
 
 ---
 
@@ -92,7 +101,8 @@ Before deploying, confirm:
 
 ```
 ☐ All four env vars are present in the server .env file: VITE_GOOGLE_CLIENT_ID, VITE_GOOGLE_REDIRECT_URI, GOOGLE_CLIENT_SECRET, PORT=3016
-☐ Gemini API key is set (check exact var name in .env.local — not in detected vars)
+☐ GEMINI_PROXY_KEY is set in the server .env — POST /api/brief must not return 503
+☐ No GEMINI_API_KEY / @google/genai reference anywhere in the app
 ☐ tsx is in dependencies (not devDependencies) — required for server.ts at runtime
 ☐ pnpm install run WITHOUT --prod flag (devDependencies needed for Vite SSR dev branch)
 ☐ Google Cloud Console redirect URI matches VITE_GOOGLE_REDIRECT_URI exactly

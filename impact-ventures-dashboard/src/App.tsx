@@ -1,6 +1,5 @@
 import React, { useState, useMemo, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { GoogleGenAI } from "@google/genai";
 import {
   BarChart3,
   Target,
@@ -43,7 +42,12 @@ import {
 import { APP_DATA, STRATEGIC_OBSERVATIONS, type AppRanking } from './data';
 import { cn } from './lib/utils';
 
-const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+// AI briefs are generated server-side via the WMS Gemini relay (Pattern 11);
+// no Gemini key or SDK exists in this bundle. The API base handles both the
+// nginx sub-path (/impact-ventures-dashboard) and bare local dev.
+const API_BASE = window.location.pathname.startsWith("/impact-ventures-dashboard")
+  ? "/impact-ventures-dashboard/api"
+  : "/api";
 
 // ── Admin types ──────────────────────────────────────────────────────────────
 const ADMIN_PASSWORD = 'admin123';
@@ -378,9 +382,7 @@ export default function App() {
     }));
 
     try {
-      const response = await ai.models.generateContent({
-        model: "gemini-3-flash-preview",
-        contents: `Generate a concise, professional strategic brief for an AI venture. 
+      const prompt = `Generate a concise, professional strategic brief for an AI venture. 
           Venture Name: ${app.name}
           Category: ${app.category}
           Description: ${app.description}
@@ -393,10 +395,17 @@ export default function App() {
           1. Commercial Scalability
           2. Societal Impact
           3. Key Risks
-          4. Strategic Recommendation`,
-      });
+          4. Strategic Recommendation`;
 
-      const text = response.text || "Failed to generate brief.";
+      const response = await fetch(`${API_BASE}/brief`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ prompt }),
+      });
+      if (!response.ok) throw new Error(`Brief request failed: ${response.status}`);
+      const data = (await response.json()) as { text?: string };
+
+      const text = data.text || "Failed to generate brief.";
       setBriefs(prev => ({ 
         ...prev, 
         [app.rank]: { text, loading: false } 
