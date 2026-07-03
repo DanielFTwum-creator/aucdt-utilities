@@ -19,9 +19,46 @@ function decodeJWT(token: string): Record<string, string> {
   return JSON.parse(Buffer.from(parts[1], 'base64').toString('utf-8'));
 }
 
+// --- Gemini custody: this app NEVER holds the Gemini key (fleet standard, ---
+// --- Pattern 11). Feedback calls are relayed to the WMS proxy with the     ---
+// --- GEMINI_PROXY_KEY service credential; only WMS adds the key.           ---
+const WMS_GEMINI_URL = process.env.WMS_GEMINI_URL || 'https://wms.techbridge.edu.gh/api/gemini/generate';
+const GEMINI_PROXY_KEY = process.env.GEMINI_PROXY_KEY || '';
+const MODEL = 'gemini-2.5-flash';
+
+if (!GEMINI_PROXY_KEY) {
+  console.warn('[techbridge-assessment-platform] WARNING: GEMINI_PROXY_KEY not set — /api/feedback will return 503');
+}
+
 const app = express();
 app.use(express.json({ limit: '1mb' }));
 app.use(cookieParser());
+
+// AI feedback generation, relayed through WMS. The SPA posts { prompt }.
+app.post(['/api/feedback', '/techbridge-assessment-platform/api/feedback'], async (req, res) => {
+  if (!GEMINI_PROXY_KEY) return res.status(503).json({ error: 'Gemini proxy not configured.' });
+  const { prompt } = req.body as { prompt?: string };
+  if (!prompt) return res.status(400).json({ error: 'prompt is required.' });
+  try {
+    const upstream = await fetch(`${WMS_GEMINI_URL}?model=${encodeURIComponent(MODEL)}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-Gemini-Proxy-Key': GEMINI_PROXY_KEY },
+      body: JSON.stringify({ contents: [{ role: 'user', parts: [{ text: prompt }] }] }),
+    });
+    if (!upstream.ok) {
+      const errText = await upstream.text();
+      console.error(`[techbridge-assessment-platform] WMS relay failed ${upstream.status}: ${errText.slice(0, 500)}`);
+      return res.status(502).json({ error: 'Feedback generation failed.' });
+    }
+    const data = await upstream.json() as { candidates?: Array<{ content?: { parts?: Array<{ text?: string }> } }> };
+    const text = (data.candidates?.[0]?.content?.parts ?? []).map(p => p.text ?? '').join('');
+    if (!text) return res.status(502).json({ error: 'Empty response from the model.' });
+    return res.json({ text });
+  } catch (err) {
+    console.error('[techbridge-assessment-platform] feedback error:', err);
+    return res.status(500).json({ error: 'Feedback generation failed.' });
+  }
+});
 
 app.get(['/callback', '/techbridge-assessment-platform/callback'], async (req, res) => {
   const { code, error } = req.query as Record<string, string>;

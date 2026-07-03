@@ -20,7 +20,39 @@ function decodeJWT(token: string): Record<string, string> {
 }
 
 const app = express();
-app.use(express.json({ limit: '1mb' }));
+app.use(express.json({ limit: '5mb' }));
+
+// --- Gemini custody: this app NEVER holds the Gemini key (fleet standard, ---
+// --- Pattern 11). The SPA posts raw generateContent bodies here and this  ---
+// --- route relays them to WMS with the GEMINI_PROXY_KEY credential.       ---
+const WMS_GEMINI_URL = process.env.WMS_GEMINI_URL || 'https://wms.techbridge.edu.gh/api/gemini/generate';
+const GEMINI_PROXY_KEY = process.env.GEMINI_PROXY_KEY || '';
+
+if (!GEMINI_PROXY_KEY) {
+  console.warn('[smartscale-ai-presentation-platform] WARNING: GEMINI_PROXY_KEY not set — /api/gemini/generate will return 503');
+}
+
+app.post(['/api/gemini/generate', '/smartscale-ai-presentation-platform/api/gemini/generate'], async (req, res) => {
+  if (!GEMINI_PROXY_KEY) return res.status(503).json({ error: 'Gemini proxy not configured.' });
+  const { model, body } = req.body as { model?: string; body?: unknown };
+  if (!body) return res.status(400).json({ error: 'body is required.' });
+  try {
+    const upstream = await fetch(`${WMS_GEMINI_URL}?model=${encodeURIComponent(model || 'gemini-2.5-flash')}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-Gemini-Proxy-Key': GEMINI_PROXY_KEY },
+      body: JSON.stringify(body),
+    });
+    const text = await upstream.text();
+    if (!upstream.ok) {
+      console.error(`[smartscale-ai-presentation-platform] WMS relay failed ${upstream.status}: ${text.slice(0, 500)}`);
+      return res.status(502).json({ error: 'AI request failed.' });
+    }
+    res.type('application/json').send(text);
+  } catch (err) {
+    console.error('[smartscale-ai-presentation-platform] relay error:', err);
+    return res.status(500).json({ error: 'AI request failed.' });
+  }
+});
 app.use(cookieParser());
 
 app.get(['/callback', '/smartscale-ai-presentation-platform/callback'], async (req, res) => {

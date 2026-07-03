@@ -1,5 +1,4 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { GoogleGenAI } from "@google/genai";
 import { 
   Sparkles, 
   Image as ImageIcon, 
@@ -250,17 +249,30 @@ export const AISandbox: React.FC<AISandboxProps> = ({ isOpen, onClose, initialPr
     setError(null);
 
     try {
-      const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
-      
-      if (currentMode === 'text') {
-        const response = await ai.models.generateContent({
-          model: 'gemini-3-flash-preview',
-          contents: prompt,
-          config: {
-            systemInstruction: "You are a specialized AI business consultant for West African SMEs. Provide practical, concise, and highly relevant business advice, scripts, or plans.",
-          },
+      // AI calls run server-side via the WMS Gemini relay (Pattern 11);
+      // this bundle holds no key and no SDK.
+      const API_BASE = window.location.pathname.startsWith('/smartscale-ai-presentation-platform')
+        ? '/smartscale-ai-presentation-platform/api'
+        : '/api';
+      const callGemini = async (model: string, body: unknown) => {
+        const r = await fetch(`${API_BASE}/gemini/generate`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ model, body }),
         });
-        setResultText(response.text || 'No response generated.');
+        if (!r.ok) throw new Error(`AI request failed: ${r.status}`);
+        return (await r.json()) as {
+          candidates?: Array<{ content?: { parts?: Array<{ text?: string; inlineData?: { data?: string } }> } }>;
+        };
+      };
+
+      if (currentMode === 'text') {
+        const response = await callGemini('gemini-3-flash-preview', {
+          contents: [{ role: 'user', parts: [{ text: prompt }] }],
+          systemInstruction: { parts: [{ text: "You are a specialized AI business consultant for West African SMEs. Provide practical, concise, and highly relevant business advice, scripts, or plans." }] },
+        });
+        const text = (response.candidates?.[0]?.content?.parts ?? []).map(p => p.text ?? '').join('');
+        setResultText(text || 'No response generated.');
       } else {
         // Construct enhanced prompt using placeholder logic
         let finalPrompt = prompt;
@@ -283,19 +295,16 @@ export const AISandbox: React.FC<AISandboxProps> = ({ isOpen, onClose, initialPr
         // Clean up formatting
         finalPrompt = finalPrompt.replace(/\s+/g, ' ').trim();
 
-        const response = await ai.models.generateContent({
-          model: 'gemini-2.5-flash-image',
-          contents: {
-            parts: [{ text: finalPrompt }],
-          },
-          config: {
+        const response = await callGemini('gemini-2.5-flash-image', {
+          contents: [{ role: 'user', parts: [{ text: finalPrompt }] }],
+          generationConfig: {
             imageConfig: {
               aspectRatio: aspectRatio,
-            }
-          }
+            },
+          },
         });
-        
-        const part = response.candidates?.[0]?.content?.parts.find(p => p.inlineData);
+
+        const part = response.candidates?.[0]?.content?.parts?.find(p => p.inlineData);
         if (part?.inlineData) {
           setResultImage(`data:image/png;base64,${part.inlineData.data}`);
         } else {
@@ -304,7 +313,7 @@ export const AISandbox: React.FC<AISandboxProps> = ({ isOpen, onClose, initialPr
       }
     } catch (err: any) {
       console.error("AI Generation Error:", err);
-      setError(err.message || "An error occurred during generation. Please check your connection and API key.");
+      setError(err.message || "An error occurred during generation. Please check your connection and try again.");
     } finally {
       setLoading(false);
     }

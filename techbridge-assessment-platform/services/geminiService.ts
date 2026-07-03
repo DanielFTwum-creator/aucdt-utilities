@@ -1,20 +1,13 @@
-
-import { GoogleGenAI } from "@google/genai";
 import { Results } from "../types";
 
-const API_KEY = process.env.API_KEY;
-
-if (!API_KEY) {
-  console.warn("API_KEY environment variable not set. AI features will be disabled.");
-}
-
-const ai = new GoogleGenAI({ apiKey: API_KEY! });
+// AI feedback is generated server-side via the WMS Gemini relay (Pattern 11);
+// no Gemini key or SDK exists in this bundle. The API base handles both the
+// nginx sub-path and bare local dev.
+const API_BASE = window.location.pathname.startsWith("/techbridge-assessment-platform")
+  ? "/techbridge-assessment-platform/api"
+  : "/api";
 
 export const generateFeedback = async (results: Results): Promise<string> => {
-  if (!API_KEY) {
-    return "AI feedback is not configured because the API key is missing.\n\nBased on your results, focus on reviewing the topics where you made mistakes. Great effort!";
-  }
-
   const incorrectAnswers = results.questions
     .map((q, i) => ({ ...q, userAnswer: results.answers[i] }))
     .filter(q => q.userAnswer !== q.answer);
@@ -26,11 +19,14 @@ ${incorrectAnswers.map(q => `- Question: "${q.question}", Their Answer: "${q.use
 Provide encouraging, personalised feedback in British English. Explain why some of their incorrect answers might have been wrong and offer brief, constructive advice for improvement. Keep it concise and supportive. Start with "Well done on completing the assessment!".`;
 
   try {
-    const response = await ai.models.generateContent({
-      model: 'gemini-2.5-flash',
-      contents: prompt,
+    const response = await fetch(`${API_BASE}/feedback`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ prompt }),
     });
-    return response.text;
+    if (!response.ok) throw new Error(`Feedback request failed: ${response.status}`);
+    const data = (await response.json()) as { text?: string };
+    return data.text || "There was an issue generating your feedback. Please try again later. Well done on completing the assessment!";
   } catch (error) {
     console.error("Error fetching AI feedback:", error);
     return "There was an issue generating your feedback. Please try again later. Well done on completing the assessment!";
