@@ -323,9 +323,9 @@ export default function DraftingWorkshop({ onAddCustomEssay }: DraftingWorkshopP
                   <p className="text-[11px] font-mono text-zinc-650 dark:text-zinc-400 bg-black/10 dark:bg-white/5 p-3.5 rounded border border-black/10 dark:border-white/10 leading-relaxed text-left max-h-[160px] overflow-y-auto">
                     {draftError}
                   </p>
-                  {draftError.includes("GEMINI_API_KEY") && (
+                  {draftError.includes("not configured") && (
                     <p className="text-[10px] text-zinc-500 font-sans leading-relaxed py-1">
-                      💡 <strong>Key Required:</strong> Go to the <strong>Settings</strong> button at the top right of the dashboard, add your <code>GEMINI_API_KEY</code>, then try again!
+                      💡 <strong>AI relay unavailable:</strong> the server's WMS relay credential is not configured. Contact the administrator.
                     </p>
                   )}
                 </div>

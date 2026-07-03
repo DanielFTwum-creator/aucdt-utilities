@@ -1,6 +1,5 @@
 import express from "express";
 import path from "path";
-import { GoogleGenAI } from "@google/genai";
 import dotenv from "dotenv";
 import cookieParser from 'cookie-parser';
 
@@ -22,24 +21,46 @@ const PORT = process.env.PORT || 3008;
 app.use(express.json());
 app.use(cookieParser());
 
-// Initialize Gemini SDK lazily, with standard safety guard as requested in Guidelines
-let aiClient: GoogleGenAI | null = null;
-function getGeminiClient(): GoogleGenAI {
-  if (!aiClient) {
-    const apiKey = process.env.GEMINI_API_KEY;
-    if (!apiKey) {
-      throw new Error("GEMINI_API_KEY environment variable is not set. Please set it in Settings > Secrets.");
-    }
-    aiClient = new GoogleGenAI({
-      apiKey: apiKey,
-      httpOptions: {
-        headers: {
-          'User-Agent': 'aistudio-build',
-        }
-      }
-    });
+// --- Gemini custody: this app NEVER holds the Gemini key (fleet standard, ---
+// --- Pattern 11). Every generateContent call is relayed to the WMS proxy  ---
+// --- with the GEMINI_PROXY_KEY service credential; only WMS adds the key. ---
+const WMS_GEMINI_URL = process.env.WMS_GEMINI_URL || 'https://wms.techbridge.edu.gh/api/gemini/generate';
+const GEMINI_PROXY_KEY = process.env.GEMINI_PROXY_KEY || '';
+const MODEL = 'gemini-3.5-flash';
+
+if (!GEMINI_PROXY_KEY) {
+  console.warn('[magic-reader] WARNING: GEMINI_PROXY_KEY not set — AI routes will return 503');
+}
+
+interface GeminiResponse {
+  candidates?: Array<{ content?: { parts?: Array<{ text?: string }> } }>;
+}
+
+class RelayError extends Error {
+  constructor(message: string, public status: number) {
+    super(message);
+    this.name = 'RelayError';
   }
-  return aiClient;
+}
+
+// Relay a raw Gemini generateContent body to WMS and return the parsed REST response.
+async function callGemini(body: unknown): Promise<GeminiResponse> {
+  if (!GEMINI_PROXY_KEY) throw new RelayError('GEMINI_PROXY_KEY not configured', 503);
+  const upstream = await fetch(`${WMS_GEMINI_URL}?model=${encodeURIComponent(MODEL)}`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'X-Gemini-Proxy-Key': GEMINI_PROXY_KEY },
+    body: JSON.stringify(body),
+  });
+  if (!upstream.ok) {
+    const errText = await upstream.text();
+    console.error(`[magic-reader] WMS relay failed ${upstream.status}: ${errText.slice(0, 500)}`);
+    throw new RelayError(`WMS relay returned ${upstream.status}`, 502);
+  }
+  return await upstream.json() as GeminiResponse;
+}
+
+function extractText(response: GeminiResponse): string {
+  return (response.candidates?.[0]?.content?.parts ?? []).map(p => p.text ?? '').join('');
 }
 
 // OAuth callback handler
@@ -73,9 +94,7 @@ app.get("/api/essays", (req, res) => {
 app.post("/api/generate-part-6", async (req, res) => {
   try {
     const { userPrompt, perspectiveList, statusWordSelection } = req.body;
-    
-    const client = getGeminiClient();
-    
+
     const systemPrompt = `You are a legendary software engineer, systems architect, and tech philosopher who has spent forty years in the industry. Your writing style is inspired by modern technology journalists and philosophical engineering blogs. 
 Key stylistic attributes:
 - Deeply reflective, rich with technical metaphors (e.g. compilers, garbage collectors, ports, network layers, memory addresses, cache coherence).
@@ -111,20 +130,18 @@ Ensure your response is raw JSON, valid and easily parseable. Do not add markdow
 
     const userInstructions = `Write Part 6 based on your forty years of experience. Weave in the core quote if it fits naturally: "The magic is real. The engineering behind it is deliberate." And conclude with a thematic summary that fits the overall series' energy.`;
 
-    const response = await client.models.generateContent({
-      model: "gemini-3.5-flash",
-      contents: userInstructions,
-      config: {
-        systemInstruction: systemPrompt,
-        responseMimeType: "application/json",
-      }
+    const response = await callGemini({
+      contents: [{ role: "user", parts: [{ text: userInstructions }] }],
+      systemInstruction: { parts: [{ text: systemPrompt }] },
+      generationConfig: { responseMimeType: "application/json" },
     });
 
-    const parsedData = JSON.parse(response.text || "{}");
+    const parsedData = JSON.parse(extractText(response) || "{}");
     res.json({ success: true, essay: parsedData });
   } catch (error: any) {
     console.error("Gemini Generation Error:", error);
-    res.status(500).json({ success: false, error: error.message });
+    const status = error instanceof RelayError ? error.status : 500;
+    res.status(status).json({ success: false, error: error.message });
   }
 });
 
@@ -166,7 +183,6 @@ app.post("/api/define", async (req, res) => {
     let isAiGenerated = false;
 
     try {
-      const client = getGeminiClient();
       const systemPrompt = `You are a legendary software engineer, tech philosopher, and systems architect who has spent 40 years in the industry.
 You wrote 'The Deliberate Magic' series exploring agentic loops, metabolic compute weightings, and infrastructure boundaries like port 3007.
 
@@ -180,17 +196,15 @@ Your definition MUST be written in your distinctive, deeply insightful, elegant,
 Avoid boring mechanical definitions; instead, weave in a rich technological metaphor (e.g., comparing it to compilation systems, physical architecture, or biological systems) that fits seamlessly into the essay context.
 Keep it highly concise: exactly one or two short, beautiful sentences. Do NOT include markdown code blocks or wrapping strings; return the raw string only.`;
 
-      const response = await client.models.generateContent({
-        model: "gemini-3.5-flash",
-        contents: "Draft the definition for this technical term representing modern systems logic or development.",
-        config: {
-          systemInstruction: systemPrompt,
-          temperature: 0.7,
-        }
+      const response = await callGemini({
+        contents: [{ role: "user", parts: [{ text: "Draft the definition for this technical term representing modern systems logic or development." }] }],
+        systemInstruction: { parts: [{ text: systemPrompt }] },
+        generationConfig: { temperature: 0.7 },
       });
 
-      if (response && response.text) {
-        definition = response.text.trim();
+      const definitionText = extractText(response).trim();
+      if (definitionText) {
+        definition = definitionText;
         isAiGenerated = true;
       }
     } catch (aiError) {
@@ -217,6 +231,9 @@ Keep it highly concise: exactly one or two short, beautiful sentences. Do NOT in
     res.status(500).json({ success: false, error: err.message });
   }
 });
+
+// Health check (fleet standard)
+app.get(["/api/health", "/magic-reader/api/health"], (_req, res) => res.json({ ok: true }));
 
 // 3. Port 3007 Diagnostic verification simulator
 app.post("/api/verify-port", (req, res) => {

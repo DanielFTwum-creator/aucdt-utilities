@@ -49,7 +49,8 @@
 
 | Variable | Purpose | Notes |
 |---|---|---|
-| `GEMINI_API_KEY` | Authenticates requests to Google Gemini AI | AI key — keep secret; server-side only |
+| `GEMINI_PROXY_KEY` | Authenticates the generate relay to WMS (Pattern 11) | WMS-issued service credential — this app never holds the Gemini key |
+| `WMS_GEMINI_URL` | Relay endpoint override | Defaults to `https://wms.techbridge.edu.gh/api/gemini/generate` |
 | `VITE_GOOGLE_CLIENT_ID` | Google OAuth 2.0 client ID | Exposed to browser via Vite prefix; also used server-side for token exchange |
 | `VITE_GOOGLE_REDIRECT_URI` | OAuth callback URI | Production value: `https://ai-tools.techbridge.edu.gh/magic-reader/callback` |
 | `GOOGLE_CLIENT_SECRET` | Google OAuth 2.0 client secret | Server-side only — never expose to client |
@@ -59,12 +60,23 @@ All variables must be present in the server `.env` on the production host before
 
 ---
 
-## 5. Gemini AI Integration
+## 5. Gemini Key Pattern (Pattern 11 — WMS Relay, fleet standard)
 
-- SDK: `@google/genai` v2.6+
-- Client is initialised lazily via `getGeminiClient()` — instantiation fails fast with a clear error if `GEMINI_API_KEY` is missing.
-- Custom `User-Agent: aistudio-build` header is set on all Gemini HTTP requests — do not remove this.
-- Do not move Gemini calls to the frontend; the API key is server-side only.
+This app never holds the Gemini key — not in code, not in `.env`, not fetched at runtime.
+All generateContent calls are relayed to WMS, which adds the key server-side:
+
+```
+POST https://wms.techbridge.edu.gh/api/gemini/generate?model=gemini-3.5-flash
+Header: X-Gemini-Proxy-Key: <GEMINI_PROXY_KEY>
+Body: raw Gemini generateContent JSON
+Response: raw Gemini REST response, relayed verbatim
+```
+
+- No key cache, no key invalidation — the app has no key to manage
+- Missing `GEMINI_PROXY_KEY` → AI routes return HTTP 503 (server still boots)
+- Reference implementation: `server.ts` → `callGemini()`; same idiom as biochemai/omniextract
+- Migrated from direct `@google/genai` SDK usage on 3 Jul 2026 (SDK dependency removed)
+- Do not move Gemini calls to the frontend; the relay credential is server-side only.
 
 ---
 
@@ -102,7 +114,8 @@ Before deploying, confirm:
 ☐ GOOGLE_CLIENT_SECRET is not committed to the repository
 ☐ OAuth redirect URI in Google Cloud Console matches VITE_GOOGLE_REDIRECT_URI
 ☐ pnpm install run without --prod flag (devDependencies needed for build tooling)
-☐ Health check passes: GET /deliberate-magic-reader/api/health → { ok: true }
+☐ server.ts relays via callGemini() — no GEMINI_API_KEY reference anywhere in server.ts
+☐ Health check passes: GET /magic-reader/api/health → { ok: true }
 ☐ PM2 process named deliberate-magic-reader is running on port 3008
 ```
 
