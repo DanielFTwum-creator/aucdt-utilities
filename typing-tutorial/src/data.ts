@@ -152,10 +152,10 @@ export const LESSONS: Lesson[] = [
     keys: "abcdefghijklmnopqrstuvwxyz0123456789.,;:!?-'\"()",
     icon: "🎓",
     practices: [
-      "Accuracy: 98%. Speed: 75 WPM. Focus — every keystroke counts.",
+      "Accuracy: 98%. Speed: 75 WPM. Focus - every keystroke counts.",
       "The system flagged 3 errors at 14:07; review logs before Friday's deadline.",
       "Daniel's report (2026) states: 'Typing fluency is a core ICT competency.'",
-      "Node v24.17.0 — pnpm install && pnpm build && rsync dist/ root@server:/var/www/"
+      "Node v24.17.0 - pnpm install && pnpm build && rsync dist/ root@server:/var/www/"
     ]
   }
 ];

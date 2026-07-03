@@ -222,7 +222,7 @@ function KeyboardWithHands({ activeHand, activeFinger, isIdle, nextTargetChar }:
   const ROW_Y = [14, 58, 102, 146];
   const PALM_TOP = 220;
 
-  const NUM_KEYS  = ["1","2","3","4","5","6","7","8","9","0"];
+  const NUM_KEYS  = ["1","2","3","4","5","6","7","8","9","0","-"];
   const TOP_KEYS  = ["q","w","e","r","t","y","u","i","o","p"];
   const HOME_KEYS = ["a","s","d","f","g","h","j","k","l",";"];
   const BOT_KEYS  = ["z","x","c","v","b","n","m",",","."];
@@ -238,6 +238,7 @@ function KeyboardWithHands({ activeHand, activeFinger, isIdle, nextTargetChar }:
     "8":{hand:"R",finger:"Middle"},"i":{hand:"R",finger:"Middle"},"k":{hand:"R",finger:"Middle"},",":{hand:"R",finger:"Middle"},
     "9":{hand:"R",finger:"Ring"  },"o":{hand:"R",finger:"Ring"  },"l":{hand:"R",finger:"Ring"  },".":{hand:"R",finger:"Ring"  },
     "0":{hand:"R",finger:"Pinky" },"p":{hand:"R",finger:"Pinky" },";":{hand:"R",finger:"Pinky" },"/":{hand:"R",finger:"Pinky" },
+    "-":{hand:"R",finger:"Pinky" },
   };
 
   const FINGER_HEX: Record<string,string> = {
@@ -250,7 +251,9 @@ function KeyboardWithHands({ activeHand, activeFinger, isIdle, nextTargetChar }:
   const creaseSt = "rgba(95,53,27,0.45)";
   const skinShadow = "#72401f";
   const isSpace = activeHand === "Hands";
-  const target = (nextTargetChar ?? "").toLowerCase();
+  // "_" is Shift + "-": highlight the physical "-" key for the shifted variant.
+  const rawTarget = (nextTargetChar ?? "").toLowerCase();
+  const target = rawTarget === "_" ? "-" : rawTarget;
 
   const liftY = (side: "L" | "R", name: string): number => {
     if (isIdle || isSpace) return 0;
@@ -573,7 +576,10 @@ export default function ExerciseTab({ lesson, progress, onFinish, onBack }: Exer
     if ("yhnujm67".includes(c)) return { hand: "Right Hand", finger: "Index", anchor: "J", path: "Anchor Right Index on J" + (c !== "j" ? ` and reach diagonal/left to grasp ${c.toUpperCase()}` : " tactile anchor key with bump") };
     if ("ik,8".includes(c)) return { hand: "Right Hand", finger: "Middle", anchor: "K", path: "Anchor Right Middle on K" + (c !== "k" ? ` and reach upward to register ${c.toUpperCase()}` : " tactile home key") };
     if ("ol.9".includes(c)) return { hand: "Right Hand", finger: "Ring", anchor: "L", path: "Anchor Right Ring on L" + (c !== "l" ? ` and displace upward to strike ${c.toUpperCase()}` : " tactile home key") };
-    if ("p;/".includes(c)) return { hand: "Right Hand", finger: "Pinky", anchor: ";", path: "Anchor Right Pinky on ;" + (c !== ";" ? ` and pitch outward to record ${c.toUpperCase()}` : " tactile home key") };
+    if ("p;/0".includes(c)) return { hand: "Right Hand", finger: "Pinky", anchor: ";", path: "Anchor Right Pinky on ;" + (c !== ";" ? ` and pitch outward to record ${c.toUpperCase()}` : " tactile home key") };
+    if (c === "-" || c === "_") return { hand: "Right Hand", finger: "Pinky", anchor: ";", path: `Anchor Right Pinky on ; and reach up past 0 to strike -${c === "_" ? " while holding Shift for _" : ""}` };
+    // Unmapped characters must fail loudly rather than masquerade as a mapped key.
+    console.warn(`[VortexType] No finger guidance mapping for character: "${char}"`);
     return { hand: "Fingers", finger: "Finger", anchor: "Home", path: `Stroke ${char.toUpperCase()} returning swiftly to standard home row resting rows.` };
   };
 
