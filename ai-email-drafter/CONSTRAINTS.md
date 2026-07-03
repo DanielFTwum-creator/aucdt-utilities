@@ -46,22 +46,33 @@
 
 | Variable | Purpose | Notes |
 |---|---|---|
-| `GEMINI_API_KEY` | Gemini AI draft generation | Server-side only; also checked as `VITE_GEMINI_API_KEY` fallback |
+| `GEMINI_PROXY_KEY` | Authenticates the generate relay to WMS (Pattern 11) | WMS-issued service credential — this app never holds the Gemini key |
+| `WMS_GEMINI_URL` | Relay endpoint override | Defaults to `https://wms.techbridge.edu.gh/api/gemini/generate` |
 | `VITE_GOOGLE_CLIENT_ID` | Google OAuth client ID | Exposed to frontend via Vite |
 | `VITE_GOOGLE_REDIRECT_URI` | OAuth callback URI | Defaults to `https://ai-tools.techbridge.edu.gh/email-drafter/callback` if unset |
 | `GOOGLE_CLIENT_SECRET` | Google OAuth token exchange | Server-side only — never expose to client |
 | `PORT` | Express listen port | Defaults to `3007` if unset |
 
-If any variable is missing from `.env`, the server starts but `/api/gemini/draft` returns `500` (Gemini) or OAuth exchange fails silently.
+If any variable is missing from `.env`, the server starts but `/api/gemini/draft` returns `503` (relay unconfigured) or OAuth exchange fails silently.
 
 ---
 
-## 5. Gemini AI Integration
+## 5. Gemini Key Pattern (Pattern 11 — WMS Relay, fleet standard)
 
-- SDK: `@google/genai` (`^1.28.0`) — **not** the legacy `@google-cloud/vertexai`.
-- The `GoogleGenAI` instance is created once at startup with `GEMINI_API_KEY`.
-- If `GEMINI_API_KEY` is absent, `gemini` is `null` and the draft endpoint is non-functional — a `console.warn` is emitted at boot.
-- All Gemini calls are server-side (Express route); the key is never sent to the browser.
+This app never holds the Gemini key — not in code, not in `.env`, not fetched at runtime.
+All generateContent calls are relayed to WMS, which adds the key server-side:
+
+```
+POST https://wms.techbridge.edu.gh/api/gemini/generate?model=gemini-2.5-flash
+Header: X-Gemini-Proxy-Key: <GEMINI_PROXY_KEY>
+Body: raw Gemini generateContent JSON
+Response: raw Gemini REST response, relayed verbatim
+```
+
+- No key cache, no key invalidation — the app has no key to manage
+- Missing `GEMINI_PROXY_KEY` → `/api/gemini/draft` returns HTTP 503 (server still boots)
+- Reference implementation: `server.ts` → `callGemini()`; same idiom as biochemai/omniextract
+- Migrated from direct `@google/genai` SDK usage on 3 Jul 2026 (SDK dependency removed)
 
 ---
 
@@ -97,7 +108,8 @@ Applies: **Pattern 9** (Express server + PM2), **Pattern 13** (tsx for TypeScrip
 Before deploying, confirm:
 
 ```
-☐ GEMINI_API_KEY set in .env on server — GET /api/gemini/draft must not return 500
+☐ server.ts relays via callGemini() — no GEMINI_API_KEY reference anywhere in server.ts
+☐ GEMINI_PROXY_KEY set in .env on server — POST /api/gemini/draft must not return 503
 ☐ VITE_GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, VITE_GOOGLE_REDIRECT_URI set in .env on server
 ☐ VITE_GOOGLE_REDIRECT_URI matches the URI registered in Google Cloud Console exactly
 ☐ tsx is in dependencies (not devDependencies) — confirmed at ^4.22.3

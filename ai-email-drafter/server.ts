@@ -5,13 +5,50 @@ import fs from "fs";
 import fetch from "node-fetch";
 import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
-import { GoogleGenAI } from "@google/genai";
 
 dotenv.config();
 
-const GEMINI_API_KEY = process.env.GEMINI_API_KEY || process.env.VITE_GEMINI_API_KEY;
-const gemini = GEMINI_API_KEY ? new GoogleGenAI({ apiKey: GEMINI_API_KEY }) : null;
-if (!gemini) console.warn('[email-drafter] GEMINI_API_KEY not set; /api/gemini/draft will return 500');
+// --- Gemini custody: this app NEVER holds the Gemini key (fleet standard, ---
+// --- Pattern 11). Every generateContent call is relayed to the WMS proxy  ---
+// --- with the GEMINI_PROXY_KEY service credential; only WMS adds the key. ---
+const WMS_GEMINI_URL = process.env.WMS_GEMINI_URL || 'https://wms.techbridge.edu.gh/api/gemini/generate';
+const GEMINI_PROXY_KEY = process.env.GEMINI_PROXY_KEY || '';
+const MODEL = 'gemini-2.5-flash';
+
+if (!GEMINI_PROXY_KEY) {
+  console.warn('[email-drafter] WARNING: GEMINI_PROXY_KEY not set — /api/gemini/draft will return 503');
+}
+
+interface GeminiResponse {
+  candidates?: Array<{ content?: { parts?: Array<{ text?: string }> } }>;
+}
+
+class RelayError extends Error {
+  constructor(message: string, public status: number) {
+    super(message);
+    this.name = 'RelayError';
+  }
+}
+
+// Relay a raw Gemini generateContent body to WMS and return the parsed REST response.
+async function callGemini(body: unknown): Promise<GeminiResponse> {
+  if (!GEMINI_PROXY_KEY) throw new RelayError('GEMINI_PROXY_KEY not configured', 503);
+  const upstream = await fetch(`${WMS_GEMINI_URL}?model=${encodeURIComponent(MODEL)}`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'X-Gemini-Proxy-Key': GEMINI_PROXY_KEY },
+    body: JSON.stringify(body),
+  });
+  if (!upstream.ok) {
+    const errText = await upstream.text();
+    console.error(`[email-drafter] WMS relay failed ${upstream.status}: ${errText.slice(0, 500)}`);
+    throw new RelayError(`WMS relay returned ${upstream.status}`, 502);
+  }
+  return await upstream.json() as GeminiResponse;
+}
+
+function extractText(response: GeminiResponse): string {
+  return (response.candidates?.[0]?.content?.parts ?? []).map(p => p.text ?? '').join('');
+}
 
 interface GoogleTokenResponse {
   id_token: string;
@@ -147,7 +184,7 @@ async function startServer() {
 
   // Gemini proxy — drafts an email from {to, cc, bcc, subject, body, attachments}
   app.post(['/api/gemini/draft', '/email-drafter/api/gemini/draft'], async (req, res) => {
-    if (!gemini) return res.status(500).json({ error: 'Gemini not configured' });
+    if (!GEMINI_PROXY_KEY) return res.status(503).json({ error: 'Gemini proxy not configured' });
     const { to = [], cc = [], bcc = [], subject = '', body = '', attachments = [] } = req.body ?? {};
 
     const recipients = [
@@ -176,14 +213,14 @@ async function startServer() {
     }));
 
     try {
-      const response = await gemini.models.generateContent({
-        model: 'gemini-2.5-flash',
-        contents: { parts: [{ text: prompt }, ...imageParts] },
+      const response = await callGemini({
+        contents: [{ role: 'user', parts: [{ text: prompt }, ...imageParts] }],
       });
-      res.json({ text: response.text });
+      res.json({ text: extractText(response) });
     } catch (err: any) {
-      console.error('[email-drafter] Gemini error:', err?.message);
-      res.status(500).json({ error: 'Gemini call failed', details: err?.message });
+      console.error('[email-drafter] Gemini relay error:', err?.message);
+      const status = err instanceof RelayError ? err.status : 500;
+      res.status(status).json({ error: 'Gemini call failed', details: err?.message });
     }
   });
 
