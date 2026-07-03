@@ -1,8 +1,6 @@
 const express = require("express");
 const dotenv = require("dotenv");
 const cors = require("cors");
-const { GoogleGenAI, Type, Modality } = require("@google/genai");
-
 const fs = require("fs");
 if (fs.existsSync(".env.local")) {
   dotenv.config({ path: ".env.local" });
@@ -16,50 +14,57 @@ const port = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json({ limit: '20mb' })); // UI allows 10MB images; base64-in-JSON inflates ~33% (+ prompt)
 
-// --- Gemini key custody: fetched from the WMS proxy, never stored here ---
-// WMS is the single rotation point (TUC central key custody). The key is cached
-// in memory with a TTL; invalidateGeminiKey() forces a refetch after Google
-// rejects it (expired/rotated), so rotation self-heals within one request.
-const WMS_KEY_URL = "https://wms.techbridge.edu.gh/api/gemini/key";
-const KEY_TTL_MS = 6 * 60 * 60 * 1000;
-let cachedGeminiKey = null;
-let keyFetchedAt = 0;
+// --- Gemini custody: this app NEVER holds the key (fleet standard, Pattern 11). ---
+// Every call is relayed to WMS, which adds the central key server-side:
+//   :generateContent -> POST /api/gemini/generate   (text + image-edit)
+//   :predict         -> POST /api/gemini/predict     (Imagen text-to-image)
+// The key never reaches this process. No key cache, no invalidation — there is
+// no key to manage. Migrated from the transitional key-fetch mode on 3 Jul 2026.
+const WMS_GENERATE_URL = process.env.WMS_GEMINI_URL || "https://wms.techbridge.edu.gh/api/gemini/generate";
+const WMS_PREDICT_URL  = process.env.WMS_GEMINI_PREDICT_URL || "https://wms.techbridge.edu.gh/api/gemini/predict";
+const GEMINI_PROXY_KEY = process.env.GEMINI_PROXY_KEY || "";
 
-function invalidateGeminiKey() { cachedGeminiKey = null; keyFetchedAt = 0; }
-
-async function getGeminiKey() {
-  if (cachedGeminiKey && Date.now() - keyFetchedAt < KEY_TTL_MS) return cachedGeminiKey;
-  const proxyKey = process.env.GEMINI_PROXY_KEY;
-  if (!proxyKey) {
-    // Local dev fallback only — production must use the WMS relay.
-    if (process.env.API_KEY) return process.env.API_KEY;
-    throw new Error("GEMINI_PROXY_KEY is not set (and no local API_KEY fallback).");
-  }
-  const res = await fetch(WMS_KEY_URL, { headers: { "X-Gemini-Proxy-Key": proxyKey } });
-  if (!res.ok) throw new Error(`WMS key fetch failed: ${res.status} ${await res.text()}`);
-  cachedGeminiKey = (await res.json()).apiKey;
-  keyFetchedAt = Date.now();
-  return cachedGeminiKey;
+if (!GEMINI_PROXY_KEY) {
+  console.warn("[MarkAI] WARNING: GEMINI_PROXY_KEY not set — AI routes will return 503");
 }
 
-// Centralized error handler for API key
-const checkApiKey = async (req, res, next) => {
-  try {
-    const apiKey = await getGeminiKey();
-    req.ai = new GoogleGenAI({ apiKey });
-    next();
-  } catch (error) {
-    console.error("❌ Could not obtain Gemini key from WMS:", error.message);
-    res.status(503).json({ error: "AI service key unavailable. Please try again shortly.", details: error.message });
-  }
-};
+/** Relay a raw generateContent body to WMS; returns the parsed Gemini REST response. */
+async function relayGenerate(model, body) {
+  if (!GEMINI_PROXY_KEY) { const e = new Error("GEMINI_PROXY_KEY not configured"); e.status = 503; throw e; }
+  const r = await fetch(`${WMS_GENERATE_URL}?model=${encodeURIComponent(model)}`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", "X-Gemini-Proxy-Key": GEMINI_PROXY_KEY },
+    body: JSON.stringify(body),
+  });
+  const text = await r.text();
+  if (!r.ok) { const e = new Error(`WMS generate relay ${r.status}: ${text.slice(0, 300)}`); e.status = r.status; throw e; }
+  return JSON.parse(text);
+}
 
-/** Drop the cached key when Google says it is invalid/expired so the next request refetches. */
-const handleStaleKey = (error) => {
-  if (String(error?.message || "").includes("API_KEY_INVALID") || String(error?.message || "").includes("API key expired")) {
-    console.warn("⚠️ Gemini rejected the key — invalidating cache to refetch from WMS.");
-    invalidateGeminiKey();
+/** Relay a raw :predict body (Imagen) to WMS; returns the parsed predict response. */
+async function relayPredict(model, body) {
+  if (!GEMINI_PROXY_KEY) { const e = new Error("GEMINI_PROXY_KEY not configured"); e.status = 503; throw e; }
+  const r = await fetch(`${WMS_PREDICT_URL}?model=${encodeURIComponent(model)}`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", "X-Gemini-Proxy-Key": GEMINI_PROXY_KEY },
+    body: JSON.stringify(body),
+  });
+  const text = await r.text();
+  if (!r.ok) { const e = new Error(`WMS predict relay ${r.status}: ${text.slice(0, 300)}`); e.status = r.status; throw e; }
+  return JSON.parse(text);
+}
+
+/** Join all text parts of a generateContent response. */
+function responseText(resp) {
+  return (resp?.candidates?.[0]?.content?.parts ?? []).map((p) => p.text ?? "").join("");
+}
+
+// Route guard: AI routes return 503 while the relay credential is missing.
+const checkApiKey = (req, res, next) => {
+  if (!GEMINI_PROXY_KEY) {
+    return res.status(503).json({ error: "AI service unavailable: relay credential not configured." });
   }
+  next();
 };
 
 // ==========================================
@@ -205,16 +210,16 @@ app.post("/api/generate", checkApiKey, async (req, res) => {
 
   try {
     const responseSchema = {
-      type: Type.ARRAY,
+      type: "ARRAY",
       items: {
-        type: Type.OBJECT,
+        type: "OBJECT",
         properties: {
-          platform: { type: Type.STRING, description: "The social media platform for this content. Must be one of the requested platforms." },
-          content: { type: Type.STRING, description: "The marketing copy for the post, tailored to the platform." },
-          imagePrompt: { type: Type.STRING, description: "A descriptive prompt for an AI image generator to create a visually appealing and relevant image for this post." },
+          platform: { type: "STRING", description: "The social media platform for this content. Must be one of the requested platforms." },
+          content: { type: "STRING", description: "The marketing copy for the post, tailored to the platform." },
+          imagePrompt: { type: "STRING", description: "A descriptive prompt for an AI image generator to create a visually appealing and relevant image for this post." },
           variants: {
-            type: Type.ARRAY,
-            items: { type: Type.STRING },
+            type: "ARRAY",
+            items: { type: "STRING" },
             description: "For 'Email' platform only, an array of alternative subject lines. For other platforms, this should be an empty array.",
           },
         },
@@ -236,24 +241,22 @@ app.post("/api/generate", checkApiKey, async (req, res) => {
     const actualModelName = model === 'pro' ? 'gemini-2.5-pro' : 'gemini-2.5-flash';
     console.log(`🤖 Using model: ${actualModelName} (requested: ${model})`);
 
-    const response = await req.ai.models.generateContent({
-      model: actualModelName,
-      contents: fullPrompt,
-      config: {
-        systemInstruction: brandVoice,
+    const response = await relayGenerate(actualModelName, {
+      contents: [{ role: "user", parts: [{ text: fullPrompt }] }],
+      systemInstruction: { parts: [{ text: brandVoice }] },
+      generationConfig: {
         responseMimeType: "application/json",
         responseSchema: responseSchema,
-      }
+      },
     });
 
-    const generatedContent = JSON.parse(response.text);
+    const generatedContent = JSON.parse(responseText(response));
     console.log("✅ Successfully got structured response from Gemini API");
     res.json(generatedContent);
 
   } catch (error) {
-    console.error("❌ Error calling Gemini API for content generation:", error);
-    handleStaleKey(error);
-    res.status(500).json({ error: "Something went wrong while generating content.", details: error.message });
+    console.error("❌ Error calling Gemini relay for content generation:", error);
+    res.status(error?.status === 503 ? 503 : 500).json({ error: "Something went wrong while generating content.", details: error.message });
   }
 });
 
@@ -269,18 +272,18 @@ app.post("/api/edit-image", checkApiKey, async (req, res) => {
     const modelName = "gemini-2.5-flash-image";
     console.log(`🖼️ Using model: ${modelName} for image editing`);
 
-    const response = await req.ai.models.generateContent({
-      model: modelName,
-      contents: {
+    const response = await relayGenerate(modelName, {
+      contents: [{
+        role: "user",
         parts: [
           { inlineData: { data: base64ImageData, mimeType: mimeType } },
           { text: prompt },
         ],
-      },
-      config: { responseModalities: [Modality.IMAGE] },
+      }],
+      generationConfig: { responseModalities: ["IMAGE"] },
     });
 
-    for (const part of response.candidates[0].content.parts) {
+    for (const part of response?.candidates?.[0]?.content?.parts ?? []) {
       if (part.inlineData) {
         const base64ImageBytes = part.inlineData.data;
         const imageUrl = `data:${part.inlineData.mimeType};base64,${base64ImageBytes}`;
@@ -288,13 +291,12 @@ app.post("/api/edit-image", checkApiKey, async (req, res) => {
         return res.json({ imageUrl });
       }
     }
-    
+
     throw new Error("No image data found in Gemini API response.");
 
   } catch (error) {
-    console.error("❌ Error calling Gemini API for image editing:", error);
-    handleStaleKey(error);
-    res.status(500).json({ error: "Something went wrong while editing the image.", details: error.message });
+    console.error("❌ Error calling Gemini relay for image editing:", error);
+    res.status(error?.status === 503 ? 503 : 500).json({ error: "Something went wrong while editing the image.", details: error.message });
   }
 });
 
@@ -319,17 +321,17 @@ app.post("/api/generate-image", checkApiKey, async (req, res) => {
     for (const modelName of GENERATE_MODELS) {
       try {
         console.log(`🎨 Using model: ${modelName} for image generation`);
-        const response = await req.ai.models.generateImages({
-          model: modelName,
-          prompt: prompt,
-          config: {
-            numberOfImages: 1,
+        // Imagen :predict body — instances[].prompt + parameters, relayed through WMS /predict.
+        const response = await relayPredict(modelName, {
+          instances: [{ prompt }],
+          parameters: {
+            sampleCount: 1,
             outputMimeType: outputMimeType,
             aspectRatio: '16:9', // Better for social media posts
           },
         });
 
-        const base64ImageBytes = response.generatedImages[0]?.image?.imageBytes;
+        const base64ImageBytes = response?.predictions?.[0]?.bytesBase64Encoded;
         if (base64ImageBytes) {
           const imageUrl = `data:${outputMimeType};base64,${base64ImageBytes}`;
           console.log(`✅ Successfully generated image with ${modelName}`);
@@ -346,12 +348,11 @@ app.post("/api/generate-image", checkApiKey, async (req, res) => {
     throw lastErr || new Error("No image data found in Imagen API response.");
 
   } catch (error) {
-    console.error("❌ Error calling Imagen API for image generation:", error);
-    handleStaleKey(error);
+    console.error("❌ Error calling Imagen relay for image generation:", error);
     if (error?.status === 429) {
       return res.status(429).json({ error: 'IMAGE_QUOTA_EXHAUSTED', message: 'The image service is over its quota right now. Please try again in a few minutes.' });
     }
-    res.status(500).json({ error: "Something went wrong while generating the image.", details: error.message });
+    res.status(error?.status === 503 ? 503 : 500).json({ error: "Something went wrong while generating the image.", details: error.message });
   }
 });
 

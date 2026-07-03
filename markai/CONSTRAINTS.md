@@ -53,24 +53,34 @@
 | `VITE_GOOGLE_CLIENT_ID` | Google OAuth — exposed to Vite frontend build |
 | `VITE_GOOGLE_REDIRECT_URI` | Google OAuth redirect URI — exposed to Vite frontend build |
 | `PORT` | Express listen port (defaults to `3000` if unset) |
-| `GEMINI_PROXY_KEY` | Auth key for the TUC WMS Gemini key relay (`wms.techbridge.edu.gh`) |
+| `GEMINI_PROXY_KEY` | Authenticates the generate relay to WMS (Pattern 11) — this app never holds the Gemini key |
+| `WMS_GEMINI_URL` | Optional generate relay override (defaults to `https://wms.techbridge.edu.gh/api/gemini/generate`) |
+| `WMS_GEMINI_PREDICT_URL` | Optional Imagen relay override (defaults to `https://wms.techbridge.edu.gh/api/gemini/predict`) |
 
 All vars live in `.env.local` (preferred) or `.env`. The server checks for `.env.local` first at startup.
 
-> **Local dev fallback:** If `GEMINI_PROXY_KEY` is absent, the server falls back to `API_KEY`. This fallback must **not** be used in production.
-
 ---
 
-## 5. Gemini AI — WMS Key Relay
+## 5. Gemini Key Pattern (Pattern 11 — WMS Relay, fleet standard)
 
-MarkAI does **not** hold a raw Gemini API key. Instead it fetches a short-lived key from the TUC central key-custody service (WMS) on first use and caches it for 6 hours.
+MarkAI never holds the Gemini key — not in code, not in `.env`, not fetched at runtime.
+All calls are relayed to WMS, which adds the key server-side:
 
-| Item | Value |
+| Path | WMS endpoint |
 |---|---|
-| WMS endpoint | `https://wms.techbridge.edu.gh/api/gemini/key` |
-| Request header | `X-Gemini-Proxy-Key: <GEMINI_PROXY_KEY>` |
-| Cache TTL | 6 hours (in-process memory) |
-| Stale-key handling | `API_KEY_INVALID` / `API key expired` errors auto-invalidate the cache; the next request refetches |
+| Text + image-edit (`generateContent`) | `POST /api/gemini/generate?model=<model>` |
+| Imagen text-to-image (`:predict`) | `POST /api/gemini/predict?model=<model>` |
+
+Both authenticated with `X-Gemini-Proxy-Key: <GEMINI_PROXY_KEY>`; bodies are raw
+Gemini REST JSON, responses relayed verbatim.
+
+- No key cache, no key invalidation — the app has no key to manage
+- Missing `GEMINI_PROXY_KEY` → AI routes return HTTP 503 (server still boots)
+- Reference implementation: `server.cjs` → `relayGenerate()` / `relayPredict()`; same idiom as dmcdai
+- Migrated from the transitional key-fetch mode (`/api/gemini/key` + 6h cache + local `API_KEY` fallback) on 3 Jul 2026
+- Known dead code: `components/LiveChatView.tsx` (Live audio chat) still fetches
+  `/api/gemini/key`, an endpoint that no longer exists — the feature errors out and
+  holds no key. A future fix needs the Live API ephemeral-token flow, not the REST relay.
 
 **Never hardcode a raw Gemini key in this repo.** Always use the WMS relay pattern.
 
@@ -102,8 +112,9 @@ The deploy script pulls from `git@github.com:DanielFTwum-creator/aucdt-utilities
 Before deploying, confirm:
 
 ```
-☐ All five env vars present in .env.local on the server
+☐ All required env vars present in .env.local on the server
 ☐ GEMINI_PROXY_KEY is set — WMS relay must be reachable
+☐ server.cjs relays via relayGenerate()/relayPredict() — no GEMINI_API_KEY / API_KEY reference in server.cjs
 ☐ Vite build completed if frontend changed (pnpm build)
 ☐ No --prod flag on pnpm install (all deps needed at runtime)
 ☐ PM2 start command is: node server.cjs (no tsx, no --import flag)
