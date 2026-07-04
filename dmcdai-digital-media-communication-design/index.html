@@ -209,5 +209,8 @@
         document.documentElement.setAttribute('data-theme', theme);
       })();
     </script>
+    <!-- App entry — without this tag the built page ships no JS at all
+         (black-screen regression, 4 Jul 2026) -->
+    <script type="module" src="/index.tsx"></script>
   </body>
 </html>
