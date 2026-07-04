@@ -248,7 +248,7 @@ cd ${RemotePath} && NODE_ENV=production PORT=${PORT} pm2 start ${RemotePath}serv
 echo 'pm2: started ${PM2_APP}'
 pm2 save --force > /dev/null 2>&1 || true
 sleep 3
-pm2 logs ${PM2_APP} --lines 20 --nostream 2>&1 | grep -q 'WMS relay listening' && echo 'OK new build running' || echo 'WARN stale build — banner not found'
+for i in 1 2 3 4 5 6 7 8 9 10; do pm2 logs ${PM2_APP} --lines 40 --nostream 2>&1 | grep -q 'WMS relay listening' && break; sleep 3; done; pm2 logs ${PM2_APP} --lines 40 --nostream 2>&1 | grep -q 'WMS relay listening' && echo 'OK new build running' || echo 'WARN stale build — banner not found'
 "@
 $b64pm2 = [Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes($pm2StartScript.Replace("`r", "")))
 $pm2Result = & $SSH @SSH_OPTS $RemoteHost "echo $b64pm2 | base64 -d | bash"

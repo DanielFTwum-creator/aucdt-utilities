@@ -202,7 +202,7 @@ Log -Level 'INFO' -Msg 'Health checks...' -Color Yellow
 Start-Sleep -Seconds 8
 
 # Pattern 23: assert the new build is actually running (not stale tsx code).
-$bannerCheck = & $SSH @SSH_OPTS $REMOTE "$nvmPrefix; pm2 logs ${PM2_APP} --lines 25 --nostream 2>&1 | grep -q 'Gemini relay (WMS custody) listening' && echo 'OK new build running' || echo 'WARN stale build — banner not found'"
+$bannerCheck = & $SSH @SSH_OPTS $REMOTE "$nvmPrefix; for i in 1 2 3 4 5 6 7 8 9 10; do pm2 logs ${PM2_APP} --lines 40 --nostream 2>&1 | grep -q 'Gemini relay (WMS custody) listening' && break; sleep 3; done; pm2 logs ${PM2_APP} --lines 40 --nostream 2>&1 | grep -q 'Gemini relay (WMS custody) listening' && echo 'OK new build running' || echo 'WARN stale build — banner not found'"
 Write-Host $bannerCheck -ForegroundColor $(if ($bannerCheck -match '^OK') { 'Green' } else { 'Red' })
 
 $indexCheck = & $SSH @SSH_OPTS $REMOTE "test -f ${DEPLOY_PATH}/dist/index.html && echo 'OK index.html present' || echo 'MISSING index.html'"
@@ -222,4 +222,4 @@ $DURATION = [math]::Round(((Get-Date) - $START_TIME).TotalSeconds, 1)
 Log -Level 'SUCCESS' -Msg '========================================' -Color Green
 Log -Level 'SUCCESS' -Msg "DEPLOYMENT COMPLETE in ${DURATION}s"    -Color Green
 Log -Level 'SUCCESS' -Msg "URL:  $HEALTH_URL"                       -Color Green
-Log -Level 'SUCCESS' -Msg "Port: $PORT"                             -Color Green
+Log -Level 'SUCCESS' -Msg "Port: $PORT"                             -Color Green

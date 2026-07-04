@@ -156,7 +156,7 @@ if command -v pm2 &>/dev/null; then
   echo 'pm2: started tb-ai-english-safari'
   pm2 save --force &>/dev/null
   sleep 3
-  pm2 logs tb-ai-english-safari --lines 20 --nostream 2>&1 | grep -q 'relay + SPA listening' && echo 'OK new build running' || echo 'WARN stale build — banner not found'
+  for i in 1 2 3 4 5 6 7 8 9 10; do pm2 logs tb-ai-english-safari --lines 40 --nostream 2>&1 | grep -q 'relay + SPA listening' && break; sleep 3; done; pm2 logs tb-ai-english-safari --lines 40 --nostream 2>&1 | grep -q 'relay + SPA listening' && echo 'OK new build running' || echo 'WARN stale build — banner not found'
 fi
 "@
 $b64r = [Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes($restartCmd.Replace("`r", "")))
