@@ -59,6 +59,12 @@ export default function LessonsTab({ progress, difficulty, onDifficultyChange, o
   const pct = Math.round((progress.lessonsCompleted / LESSONS.length) * 100);
   const [expandedIdx, setExpandedIdx] = useState<number | null>(null);
 
+  // Language lessons (those with an inputMap) live in their own Extra Honours
+  // section below the roadmap, so they are visible and explained even while
+  // locked, instead of hiding as the thirteenth identical grid card.
+  const roadmapLessons = LESSONS.filter((l) => !l.inputMap);
+  const honoursLessons = LESSONS.filter((l) => l.inputMap);
+
   return (
     <div className="space-y-5">
 
@@ -140,7 +146,7 @@ export default function LessonsTab({ progress, difficulty, onDifficultyChange, o
       {/* Lesson cards — 4 columns on large screens (3 rows for 12 lessons,
           instead of 4) so the whole roadmap fits in one screen with no scroll */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        {LESSONS.map((lesson, idx) => {
+        {roadmapLessons.map((lesson, idx) => {
           const isCompleted = progress.lessonsCompleted > idx;
           const isUnlocked = progress.lessonsCompleted >= idx;
           const isExpanded = expandedIdx === idx;
@@ -244,6 +250,80 @@ export default function LessonsTab({ progress, difficulty, onDifficultyChange, o
           );
         })}
       </div>
+
+      {/* Extra Honours — Ghanaian language lessons, always visible */}
+      {honoursLessons.length > 0 && (
+        <div className="space-y-3">
+          <div className="flex items-center justify-between">
+            <h3 className="text-sm font-semibold text-neutral-700 dark:text-neutral-300">Extra Honours</h3>
+            <span className="text-xs text-neutral-400 dark:text-neutral-500">Type Ghana&apos;s own languages</span>
+          </div>
+
+          {honoursLessons.map((lesson) => {
+            const idx = LESSONS.indexOf(lesson);
+            const isCompleted = progress.lessonsCompleted > idx;
+            const isUnlocked = progress.lessonsCompleted >= idx;
+
+            return (
+              <div
+                key={lesson.id}
+                id={`lesson-card-${lesson.id}`}
+                className={`relative overflow-hidden flex flex-col sm:flex-row sm:items-center gap-4 p-5 rounded-2xl border-2 transition-all duration-200 ${
+                  isCompleted
+                    ? "bg-emerald-50 dark:bg-emerald-950/20 border-emerald-300 dark:border-emerald-700/60"
+                    : isUnlocked
+                    ? "bg-gradient-to-r from-amber-50 via-[#FCFBF8] to-emerald-50 dark:from-amber-950/25 dark:via-neutral-900/60 dark:to-emerald-950/25 border-amber-400 dark:border-amber-600/60 shadow-md"
+                    : "bg-gradient-to-r from-amber-50/60 via-[#FCFBF8] to-emerald-50/60 dark:from-amber-950/15 dark:via-neutral-900/40 dark:to-emerald-950/15 border-amber-200 dark:border-amber-800/40"
+                }`}
+              >
+                <div className="flex items-center gap-4 flex-1 min-w-0">
+                  <div className="w-14 h-14 flex items-center justify-center rounded-2xl text-3xl shrink-0 bg-white dark:bg-neutral-800 border border-amber-200 dark:border-amber-800/50 shadow-sm">
+                    {lesson.icon}
+                  </div>
+                  <div className="min-w-0">
+                    <div className="flex items-center gap-2 mb-1">
+                      <span className="px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest rounded-full bg-amber-500 text-white">Extra Honours</span>
+                      <span className="text-xs font-bold text-amber-600 dark:text-amber-500 uppercase tracking-widest font-mono">Lesson {idx + 1}</span>
+                    </div>
+                    <h4 className="text-base font-bold text-neutral-900 dark:text-white leading-snug">{lesson.title}</h4>
+                    <p className="mt-1 text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed">{lesson.description}</p>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-4 shrink-0 sm:flex-col sm:items-end lg:flex-row lg:items-center">
+                  {/* Special-character key hints */}
+                  <div className="flex gap-2">
+                    {Object.entries(lesson.inputMap!).map(([key, out]) => (
+                      <span key={key} className="px-2.5 py-1.5 text-xs font-mono font-bold bg-white dark:bg-neutral-800 text-stone-700 dark:text-neutral-200 rounded-md border border-amber-200 dark:border-amber-800/50 border-b-2">
+                        {out} <span className="text-neutral-400">=</span> {key === ")" ? "\u21e7 0" : key}
+                      </span>
+                    ))}
+                  </div>
+
+                  {isUnlocked ? (
+                    <button
+                      id={`start-lesson-btn-${lesson.id}`}
+                      onClick={() => onSelectLesson(lesson)}
+                      className={`flex items-center gap-1.5 px-4 py-2.5 rounded-lg text-xs font-bold transition-all active:scale-95 ${
+                        isCompleted
+                          ? "bg-emerald-100 hover:bg-emerald-200 text-emerald-700 dark:bg-emerald-900/40 dark:hover:bg-emerald-800/50 dark:text-emerald-300"
+                          : "bg-amber-500 hover:bg-amber-600 text-white shadow-sm hover:shadow-md"
+                      }`}
+                    >
+                      <Play size={11} fill="currentColor" />
+                      {isCompleted ? "Retry" : "Start"}
+                    </button>
+                  ) : (
+                    <span className="flex items-center gap-1.5 text-xs font-semibold text-amber-700/70 dark:text-amber-400/70">
+                      <Lock size={11} /> Complete Lesson {idx} to unlock
+                    </span>
+                  )}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
 
     </div>
   );
