@@ -160,6 +160,14 @@ async function startServer() {
 
   app.use(express.json());
 
+  // nginx forwards the /dmcdai prefix through to this process. Normalise it
+  // once here so every /api route works at both paths — individual dual
+  // registrations kept missing routes (auth/login 404'd in prod, 4 Jul 2026).
+  app.use((req, _res, next) => {
+    if (req.url.startsWith('/dmcdai/api/')) req.url = req.url.slice('/dmcdai'.length);
+    next();
+  });
+
   // POST /api/auth/login — First Name + Last Name → magic link
   app.post('/api/auth/login', async (req, res) => {
     try {

@@ -16,7 +16,11 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onClose, hideCancel = fa
   const [resolvedEmail, setResolvedEmail] = useState('');
   const [loading, setLoading] = useState(false);
   const [linkSent, setLinkSent] = useState(false);
+  // linkError is reserved for magic-link verification failures (the full-screen
+  // "Link expired" card). Form-submit failures render inline as formError —
+  // a failed login request is not an expired link (mislabel fixed 4 Jul 2026).
   const [linkError, setLinkError] = useState('');
+  const [formError, setFormError] = useState('');
   const [verifying, setVerifying] = useState(false);
 
   // Handle magic link click — ?token=&otp= in URL
@@ -57,17 +61,18 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onClose, hideCancel = fa
         body: JSON.stringify({ email }),
       });
       const data = await res.json();
-      if (!res.ok) { setLinkError(data.message || 'Username not found — check your spelling'); setLoading(false); return; }
+      if (!res.ok) { setFormError(data.message || 'Username not found — check your spelling'); setLoading(false); return; }
+      setFormError('');
       setResolvedEmail(email);
       setLinkSent(true);
     } catch {
-      setLinkError('Network error — please try again.');
+      setFormError('Network error — please try again.');
     } finally {
       setLoading(false);
     }
   };
 
-  const reset = () => { setLinkSent(false); setLinkError(''); setHandle(''); setResolvedEmail(''); };
+  const reset = () => { setLinkSent(false); setLinkError(''); setFormError(''); setHandle(''); setResolvedEmail(''); };
 
   const cardStyle: React.CSSProperties = {
     background: 'var(--color-background-card)',
@@ -183,7 +188,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onClose, hideCancel = fa
             </div>
           </div>
 
-          {linkError && <p style={{ color: '#ef4444', fontSize: 12, marginTop: 8, textAlign: 'left' }}>{linkError}</p>}
+          {formError && <p style={{ color: '#ef4444', fontSize: 12, marginTop: 8, textAlign: 'left' }}>{formError}</p>}
 
           <button type="submit" disabled={loading} style={{ ...btnPrimary, opacity: loading ? 0.7 : 1 }}>
             {loading ? 'Sending…' : 'Send Login Link'}
