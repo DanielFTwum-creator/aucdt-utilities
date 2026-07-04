@@ -369,9 +369,26 @@ async function startServer() {
     // for dist/index.html and fall back to __dirname.
     const distCandidate = path.join(__dirname, 'dist');
     const distPath = fs.existsSync(path.join(distCandidate, 'index.html')) ? distCandidate : __dirname;
+
+    // The docroot also holds backend files (rsync --delete excludes them); never
+    // serve those over HTTP. Dotfiles like .env are already ignored by
+    // express.static's default dotfiles policy.
+    const BLOCKED = ['server.js', 'server.cjs', 'server.ts', 'package.json', 'pnpm-lock.yaml', 'pnpm-workspace.yaml', 'ecosystem.config.js'];
+    app.use((req, res, next) => {
+      if (BLOCKED.includes(path.basename(req.path))) return res.status(404).send('Not found');
+      next();
+    });
+
+    // nginx forwards the /dmcdai prefix through to this process (the API routes
+    // are dual-registered for the same reason), so the static handler must be
+    // mounted at both the bare root and the sub-path. With only the bare mount,
+    // /dmcdai/assets/*.js fell through to the SPA catch-all and was served as
+    // text/html; strict MIME checking then blocked every module script
+    // (live black screen after the 4 Jul rebuild).
     app.use(express.static(distPath));
+    app.use('/dmcdai', express.static(distPath));
     app.get(/.*/, (req, res) => {
-      if (!req.path.startsWith('/api/')) {
+      if (!req.path.startsWith('/api/') && !req.path.startsWith('/dmcdai/api/')) {
         res.sendFile(path.join(distPath, 'index.html'));
       } else {
         res.status(404).send('Not found');
