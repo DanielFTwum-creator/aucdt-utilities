@@ -129,6 +129,7 @@ pnpm install --silent
 
 log '[5/7] Building...'
 pnpm build
+if ! grep -Eq '<script[^>]+(src="[^"]*\.js"|type="module")' dist/index.html; then echo '[FATAL] dist/index.html ships no JS bundle (missing module entry in index.html). Aborting deploy.'; exit 1; fi
 
 log '[6/7] Deploying dist/ to web root (top level, like sibling apps)...'
 mkdir -p "`$DEPLOY_PATH"

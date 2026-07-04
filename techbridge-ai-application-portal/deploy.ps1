@@ -133,6 +133,7 @@ fi
 
 log '[4/5] Building...'
 pnpm build
+if ! grep -Eq '<script[^>]+(src="[^"]*\.js"|type="module")' dist/index.html; then echo '[FATAL] dist/index.html ships no JS bundle (missing module entry in index.html). Aborting deploy.'; exit 1; fi
 
 log '[5/5] Deploying dist/ to web root...'
 mkdir -p "`$DEPLOY_PATH"
@@ -164,6 +165,7 @@ log 'Build and deploy complete.'
 } else {
     Log "INFO" "Step 3: Copying local dist/ to server..." Yellow
     if (-not (Test-Path "dist")) { Log "ERROR" "dist/ not found. Run with -Build flag." Red; exit 1 }
+    if (-not (Select-String -Path "dist/index.html" -Pattern '<script[^>]+(src="[^"]*\.js"|type="module")' -Quiet)) { Log "ERROR" "dist/index.html ships no JS bundle (missing module entry in index.html). Aborting deploy." Red; exit 1 }
     & $SSH @SSH_OPTS $RemoteHost "mkdir -p $RemotePath && rm -rf ${RemotePath}*"
     & $SCP @SSH_OPTS -r dist/* "${RemoteHost}:${RemotePath}"
     Log "SUCCESS" "dist/* copied to server" Green

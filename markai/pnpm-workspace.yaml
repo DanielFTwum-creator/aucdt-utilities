@@ -3,5 +3,6 @@ allowBuilds:
   '@playwright/browser-chromium': true
   '@playwright/browser-firefox': true
   '@playwright/browser-webkit': true
+  cypress: set this to true or false
   esbuild: true
   protobufjs: true

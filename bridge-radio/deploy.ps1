@@ -68,6 +68,7 @@ log '[3/5] Installing dependencies...'
 pnpm install --no-frozen-lockfile --silent 2>/dev/null || npm install --silent
 log '[4/5] Building...'
 pnpm build
+if ! grep -Eq '<script[^>]+(src="[^"]*\.js"|type="module")' dist/index.html; then echo '[FATAL] dist/index.html ships no JS bundle (missing module entry in index.html). Aborting deploy.'; exit 1; fi
 if [ ! -f dist/index.html ]; then echo '[ERROR] build produced no dist/index.html — aborting'; exit 2; fi
 log '[5/5] Deploying dist/ to web root (preserving backend files)...'
 mkdir -p $RemotePath
@@ -81,6 +82,7 @@ log 'Frontend sync complete.'
 } else {
     Log "INFO" "Step 3: Copying local dist/ to server..." Yellow
     if (-not (Test-Path "dist")) { Log "ERROR" "dist/ not found. Run with -Build flag." Red; exit 1 }
+    if (-not (Select-String -Path "dist/index.html" -Pattern '<script[^>]+(src="[^"]*\.js"|type="module")' -Quiet)) { Log "ERROR" "dist/index.html ships no JS bundle (missing module entry in index.html). Aborting deploy." Red; exit 1 }
     ssh -o StrictHostKeyChecking=no $RemoteHost "mkdir -p ${RemotePath}assets && rm -rf ${RemotePath}assets/*"
     scp -r dist/* "${RemoteHost}:${RemotePath}"
 }

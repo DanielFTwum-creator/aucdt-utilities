@@ -130,6 +130,7 @@ fi
 
 log '[4/5] Building...'
 pnpm build
+if ! grep -Eq '<script[^>]+(src="[^"]*\.js"|type="module")' dist/index.html; then echo '[FATAL] dist/index.html ships no JS bundle (missing module entry in index.html). Aborting deploy.'; exit 1; fi
 
 log '[5/5] Deploying dist/ to web root...'
 mkdir -p "`$DEPLOY_PATH"

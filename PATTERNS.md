@@ -1761,3 +1761,43 @@ spawns everything at once and OOMs; see Pattern 16).
 
 *Last updated: 2 July 2026 — Daniel Frempong Twum / TUC ICT*  
 *Core session directives → see CLAUDE.md*
+
+
+---
+
+## PATTERN 24: BUILT-SPA BUNDLE GUARD (NO-JS BLACK SCREEN)
+
+### Root Cause
+
+A Vite SPA whose source `index.html` loses its module entry tag
+(`<script type="module" src="/index.tsx"></script>`) still builds without
+any error. `vite build` emits a dist/index.html that ships no application
+JavaScript at all: the page loads, the console is clean, `#root` stays
+empty, and a dark default theme paints the viewport black. Old working
+`dist/` folders on the server mask the defect until the first clean
+rebuild ships it (dmcdai went black this way on 4 Jul 2026; markai,
+willpro and techbridge-ai-blueprint carried the same latent defect).
+
+### The Rule
+
+Never ship a `dist/` whose index.html references no JS bundle. Every
+deploy script must verify, between build and rsync/scp:
+
+```bash
+if ! grep -Eq '<script[^>]+(src="[^"]*\.js"|type="module")' dist/index.html; then
+  echo '[FATAL] dist/index.html ships no JS bundle. Aborting deploy.'; exit 1
+fi
+```
+
+All fleet `deploy.ps1` scripts carry this guard in both build paths as of
+4 Jul 2026 (bash server-side builds and the local-dist copy branch).
+Standalone checkers: `scripts/verify-dist.sh` and `scripts/Verify-Dist.ps1`.
+
+### Verify
+
+```
+bash scripts/verify-dist.sh <app-dir>     # [OK] ... references a JS bundle
+```
+
+A page that builds but ships no `<script type="module">` or `assets/*.js`
+reference must fail the deploy, never reach the web root.
