@@ -1801,3 +1801,58 @@ bash scripts/verify-dist.sh <app-dir>     # [OK] ... references a JS bundle
 
 A page that builds but ships no `<script type="module">` or `assets/*.js`
 reference must fail the deploy, never reach the web root.
+
+
+---
+
+## PATTERN 25: GOLD-STANDARD DEPLOY PIPELINE (dmcdai REFERENCE)
+
+### Why
+
+The dmcdai rollout of 4 Jul 2026 exercised every failure mode the fleet has
+hit: a build that shipped no JS, assets served as text/html behind the nginx
+sub-path, API routes missing their prefixed twins, a stale-build check that
+cried wolf, and a deploy that ran one commit behind the fix it was meant to
+ship. Its deploy script now carries the counter-measure for each, verified
+live. New apps copy `dmcdai-digital-media-communication-design/deploy.ps1`;
+existing scripts converge on it when next touched.
+
+### The Stages
+
+```
+1. Approval gate            Approve-App.ps1 before anything ships
+2. Git state print          commit hash + branch logged; confirm the fix you
+                            think you are shipping is actually in the log
+3. Server-side build        sparse clone (depth 1) + pnpm install + pnpm build
+                            with CI=true; builds from main, never local state
+4. Bundle guard             Pattern 24: abort unless dist/index.html
+                            references a JS bundle
+5. rsync dist               --delete with backend exclusions (.env,
+                            server.*, package.json, lockfiles, ecosystem)
+6. .htaccess + permissions  SPA rewrite with existing-file passthrough
+7. Backend + env            ship server file; inject env file-to-file only,
+                            secrets never on a command line or in output
+8. Hard restart             Pattern 23: pm2 delete + fresh start (never
+                            reload/restart --update-env)
+9. Boot-banner poll         grep pm2 logs for the app's boot banner every 3s
+                            up to 30s; single-shot checks false-alarm on tsx
+10. Health checks           index present, port listening, GET /api/health
+                            returns { ok, service, custody } — custody proves
+                            which key mode the running build uses
+```
+
+### Companion app-side rules (what the pipeline assumes)
+
+- index.html carries its module entry tag (Pattern 24 catches the miss).
+- One middleware normalises the nginx sub-path prefix for ALL /api routes;
+  per-route dual registration has missed routes twice, do not use it.
+- express.static mounted at both the bare root and the sub-path; backend
+  files in the docroot answer 404 over HTTP.
+- The boot banner and the /api/health custody field exist so stages 9-10
+  have something real to assert.
+
+### Verify
+
+A green run ends with: bundle guard passed, 'OK new build running' from the
+banner poll, and a health JSON whose custody field matches the intended key
+mode ('wms-relay' for Pattern 11 apps).
