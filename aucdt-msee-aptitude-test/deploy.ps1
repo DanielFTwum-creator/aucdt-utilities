@@ -136,6 +136,13 @@ if (Test-Path ".env.local") { scp -o StrictHostKeyChecking=no -o ServerAliveInte
 $nvmPrefix = 'export NVM_DIR="$HOME/.nvm"; [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"; nvm use 26 >/dev/null 2>&1 || true'
 ssh -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax=3 $RemoteHost "$nvmPrefix; cd $RemotePath && CI=true pnpm install --prod --silent"
 
+# Pattern 25 stage 7: the server .env may still carry a raw GEMINI_API_KEY.
+# Strip it and inject GEMINI_PROXY_KEY from WMS custody (/opt/tuc-wms/.env),
+# BOM/CR/null-stripped (Pattern 21). The key never exists on the dev machine.
+$envInject = ssh -o StrictHostKeyChecking=no $RemoteHost "touch ${RemotePath}.env; sed -i '/^GEMINI_API_KEY=/d;/^VITE_GEMINI_API_KEY=/d;/^GEMINI_PROXY_KEY=/d' ${RemotePath}.env; K=`$(grep '^GEMINI_PROXY_KEY=' /opt/tuc-wms/.env | head -1 | cut -d= -f2- | tr -d '\r\000' | LC_ALL=C sed 's/\xef\xbb\xbf//g'); if [ -n `"`$K`" ]; then printf 'GEMINI_PROXY_KEY=%s\n' `"`$K`" >> ${RemotePath}.env; echo 'env: GEMINI_PROXY_KEY injected'; else echo 'WARN: GEMINI_PROXY_KEY not found in WMS'; fi; chmod 600 ${RemotePath}.env"
+Write-Host $envInject -ForegroundColor DarkGray
+if ($envInject -match 'WARN') { Log "ERROR" "GEMINI_PROXY_KEY unavailable — AI routes would 503. Aborting." Red; exit 1 }
+
 Log "INFO" "Step 7: Restarting backend (PM2)..." Yellow
 $restartCmd = @"
 if command -v pm2 &>/dev/null; then

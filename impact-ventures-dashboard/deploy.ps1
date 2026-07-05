@@ -90,6 +90,13 @@ Log -Level 'SUCCESS' -Msg 'Build complete' -Color Green
 Log -Level 'INFO' -Msg 'Step 4: Server environment...' -Color Yellow
 & $SSH @SSH_OPTS $REMOTE "cp /tmp/.env.${PM2_APP} ${DEPLOY_PATH}/.env; chown -R techbridge.edu.gh_md:psaserv ${DEPLOY_PATH} 2>/dev/null||true; find ${DEPLOY_PATH} -type d -exec chmod 755 {} \; 2>/dev/null||true; find ${DEPLOY_PATH} -type f -exec chmod 644 {} \; 2>/dev/null||true"
 
+# Pattern 25 stage 7: the server .env may still carry a raw GEMINI_API_KEY.
+# Strip it and inject GEMINI_PROXY_KEY from WMS custody (/opt/tuc-wms/.env),
+# BOM/CR/null-stripped (Pattern 21). The key never exists on the dev machine.
+$envInject = & $SSH @SSH_OPTS $REMOTE "touch ${DEPLOY_PATH}/.env; sed -i '/^GEMINI_API_KEY=/d;/^VITE_GEMINI_API_KEY=/d;/^GEMINI_PROXY_KEY=/d' ${DEPLOY_PATH}/.env; K=`$(grep '^GEMINI_PROXY_KEY=' /opt/tuc-wms/.env | head -1 | cut -d= -f2- | tr -d '\r\000' | LC_ALL=C sed 's/\xef\xbb\xbf//g'); if [ -n `"`$K`" ]; then printf 'GEMINI_PROXY_KEY=%s\n' `"`$K`" >> ${DEPLOY_PATH}/.env; echo 'env: GEMINI_PROXY_KEY injected'; else echo 'WARN: GEMINI_PROXY_KEY not found in WMS'; fi; chmod 600 ${DEPLOY_PATH}/.env"
+Write-Host $envInject -ForegroundColor DarkGray
+if ($envInject -match 'WARN') { Log -Level 'ERROR' -Msg 'GEMINI_PROXY_KEY unavailable — AI routes would 503. Aborting.' -Color Red; exit 1 }
+
 Log -Level 'INFO' -Msg 'Step 5: Restarting backend...' -Color Yellow
 $r=& $SSH @SSH_OPTS $REMOTE "if pm2 describe ${PM2_APP}>\/dev\/null 2>&1; then pm2 reload ${PM2_APP}; echo 'pm2: reloaded'; else cd ${DEPLOY_PATH}; PORT=${PORT} pm2 start server.js --name ${PM2_APP} --cwd ${DEPLOY_PATH}; echo 'pm2: started'; fi"
 Write-Host $r -ForegroundColor DarkGray
