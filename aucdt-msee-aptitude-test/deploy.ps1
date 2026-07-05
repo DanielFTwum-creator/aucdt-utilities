@@ -87,7 +87,7 @@ log 'Build and deploy complete.'
     $b64 = [Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes($serverScript.Replace("`r", "")))
     ssh -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax=3 $RemoteHost "echo $b64 | base64 -d | bash"
     if ($LASTEXITCODE -eq 0) { Log "SUCCESS" "Server-side build and file sync complete" Green }
-    else { Log "WARN" "Server build returned $LASTEXITCODE" Yellow }
+    else { Log "ERROR" "Server build returned $LASTEXITCODE — aborting (Pattern 25: a failed build must not ship)" Red; exit 3 }
     ssh -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax=3 $RemoteHost "rm -rf $buildDir" 2>$null | Out-Null
 } else {
     Log "INFO" "Step 3: Copying local dist/ to server..." Yellow
