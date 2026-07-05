@@ -179,4 +179,3 @@ Log ($(if ($code -eq '200') {'SUCCESS'} else {'WARN'})) "backend /api/health -> 
 $elapsed = [math]::Round(((Get-Date) - $__deployStart).TotalSeconds, 1)
 Log "SUCCESS" "========================================" Green
 Log "SUCCESS" "DEPLOYMENT COMPLETE in ${elapsed}s" Green
-Log

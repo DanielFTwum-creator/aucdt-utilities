@@ -155,4 +155,6 @@ $b64r = [Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes($restart
 ssh -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax=3 $RemoteHost "echo $b64r | base64 -d | bash"
 
 Log "INFO" "Health check..." Yellow
-ssh -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax=3 $RemoteHost "test -f ${RemotePath}index.html && echo 'OK index.html present' 
+ssh -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax=3 $RemoteHost "test -f ${RemotePath}index.html && echo 'OK index.html present' || echo 'FAIL index.html missing'"
+$elapsed = [math]::Round(((Get-Date) - $__deployStart).TotalSeconds, 1)
+Log "SUCCESS" "DEPLOYMENT COMPLETE in ${elapsed}s — $RemotePath" Green

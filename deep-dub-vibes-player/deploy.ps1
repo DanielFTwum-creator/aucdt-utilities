@@ -149,4 +149,6 @@ if command -v pm2 &>/dev/null; then
 fi
 "@
 $b64r = [Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes($restartCmd.Replace("`r", "")))
-ssh -o StrictHostKeyChecking=no -o ServerAliveInterval=30 
+ssh -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax=3 $RemoteHost "test -f ${RemotePath}index.html && echo 'OK index.html present' || echo 'FAIL index.html missing'"
+$elapsed = [math]::Round(((Get-Date) - $__deployStart).TotalSeconds, 1)
+Log "SUCCESS" "DEPLOYMENT COMPLETE in ${elapsed}s — $RemotePath" Green
