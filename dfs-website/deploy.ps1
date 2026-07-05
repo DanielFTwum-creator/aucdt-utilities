@@ -145,7 +145,7 @@ rsync -a --delete \
 log '[7/7] Installing backend deps...'
 cp server.ts package.json pnpm-lock.yaml pnpm-workspace.yaml "`$DEPLOY_PATH/" 2>/dev/null || true
 cd "`$DEPLOY_PATH"
-pnpm install --prod --silent
+CI=true pnpm install --prod --silent
 
 log 'Build and deploy complete.'
 "@

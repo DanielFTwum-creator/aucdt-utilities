@@ -195,7 +195,7 @@ Host github.com
 SSHCONF
 fi
 cd $RemotePath/backend
-pnpm install --prod --silent
+CI=true pnpm install --prod --silent
 "@
 $b64Install = [Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes($installScript.Replace("`r", "")))
 & ssh @SSH_OPTS $RemoteHost "echo $b64Install | base64 -d | bash"

@@ -226,7 +226,7 @@ Log -Level 'INFO' -Msg 'Step 6: Deploying backend files...' -Color Yellow
 if (Test-Path '.env.local') {
     & $SCP @SSH_OPTS '.env.local' "${RemoteHost}:${RemotePath}.env" 2>$null | Out-Null
 }
-$step6Script = "export NVM_DIR=`"`$HOME/.nvm`"; [ -s `"`$NVM_DIR/nvm.sh`" ] && . `"`$NVM_DIR/nvm.sh`"; nvm use 26 >/dev/null 2>&1 || true; cd $RemotePath && timeout 120 pnpm install --prod 2>&1 | tail -10 || timeout 120 npm install --omit=dev 2>&1 | tail -10"
+$step6Script = "export NVM_DIR=`"`$HOME/.nvm`"; [ -s `"`$NVM_DIR/nvm.sh`" ] && . `"`$NVM_DIR/nvm.sh`"; nvm use 26 >/dev/null 2>&1 || true; cd $RemotePath && timeout 120 CI=true pnpm install --prod 2>&1 | tail -10 || timeout 120 npm install --omit=dev 2>&1 | tail -10"
 & $SSH @SSH_OPTS $RemoteHost $step6Script
 
 # Step 7: Restarting backend

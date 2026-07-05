@@ -97,7 +97,7 @@ $envInject = & ssh -o StrictHostKeyChecking=no $RemoteHost "touch ${RemotePath}.
 Write-Host $envInject -ForegroundColor DarkGray
 if ($envInject -match 'WARN') { Log "ERROR" "GEMINI_PROXY_KEY unavailable — /api/lyrics would 503. Aborting." Red; exit 1 }
 $nvmPrefix = 'export NVM_DIR="$HOME/.nvm"; [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"; nvm use 26 >/dev/null 2>&1 || true'
-ssh -o StrictHostKeyChecking=no $RemoteHost "$nvmPrefix; cd $RemotePath && pnpm install --prod --silent 2>/dev/null || npm install --omit=dev --silent"
+ssh -o StrictHostKeyChecking=no $RemoteHost "$nvmPrefix; cd $RemotePath && CI=true pnpm install --prod --silent 2>/dev/null || npm install --omit=dev --silent"
 
 Log "INFO" "Step 5: Writing radio vhost_ssl.conf (root-vhost SPA + /api proxy)..." Yellow
 # Root vhost: .htaccess is overridden by Plesk's vhost_ssl.conf. Canonical copy

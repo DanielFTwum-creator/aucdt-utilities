@@ -102,7 +102,7 @@ mkdir -p "`$DEPLOY_PATH" && rsync -a --delete dist/ "`$DEPLOY_PATH/dist/"
 cp index.html "`$DEPLOY_PATH/dist/index.html" 2>/dev/null || true
 log '[7/7] Installing backend deps...'
 cp server.ts package.json pnpm-lock.yaml "`$DEPLOY_PATH/" 2>/dev/null || true
-cd "`$DEPLOY_PATH" && pnpm install --prod --silent 2>/dev/null || npm install --omit=dev --silent
+cd "`$DEPLOY_PATH" && CI=true pnpm install --prod --silent 2>/dev/null || npm install --omit=dev --silent
 log 'Build and deploy complete.'
 "@
 

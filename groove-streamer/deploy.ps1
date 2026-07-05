@@ -146,7 +146,7 @@ Log "INFO" "Step 6: Deploying backend files..." Yellow
 scp -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax=3 server.ts package.json pnpm-lock.yaml pnpm-workspace.yaml "${RemoteHost}:${RemotePath}" 2>$null | Out-Null
 if (Test-Path ".env.local") { scp -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax=3 ".env.local" "${RemoteHost}:${RemotePath}.env" 2>$null | Out-Null }
 $nvmPrefix = 'export NVM_DIR="$HOME/.nvm"; [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"; nvm use 26 >/dev/null 2>&1 || true'
-ssh -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax=3 $RemoteHost "$nvmPrefix; cd $RemotePath && pnpm install --prod --silent 2>/dev/null || npm install --omit=dev --silent"
+ssh -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax=3 $RemoteHost "$nvmPrefix; cd $RemotePath && CI=true pnpm install --prod --silent 2>/dev/null || npm install --omit=dev --silent"
 
 Log "INFO" "Step 7: Restarting backend (PM2)..." Yellow
 $restartCmd = @"
@@ -154,7 +154,7 @@ if command -v pm2 &>/dev/null; then
   if pm2 describe groove-streamer &>/dev/null; then
     pm2 reload groove-streamer --update-env && echo 'pm2: reloaded groove-streamer'
   else
-    cd $RemotePath && NODE_ENV=production PORT=3046 pm2 start server.ts --name groove-streamer --interpreter npx --interpreter-args tsx --cwd $RemotePath
+    cd $RemotePath && NODE_ENV=production PORT=3004 pm2 start server.ts --name groove-streamer --interpreter npx --interpreter-args tsx --cwd $RemotePath
     echo 'pm2: started groove-streamer'
   fi
   pm2 save --force &>/dev/null

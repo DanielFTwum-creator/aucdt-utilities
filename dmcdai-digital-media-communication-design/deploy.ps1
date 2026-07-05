@@ -153,7 +153,7 @@ $envInject = ssh -o StrictHostKeyChecking=no $RemoteHost "touch ${RemotePath}.en
 Write-Host $envInject -ForegroundColor DarkGray
 if ($envInject -match 'WARN') { Log "ERROR" "GEMINI_PROXY_KEY unavailable — AI routes would 503. Aborting." Red; exit 1 }
 $nvmPrefix = 'export NVM_DIR="$HOME/.nvm"; [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"; nvm use 26 >/dev/null 2>&1 || true'
-ssh -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax=3 $RemoteHost "$nvmPrefix; cd $RemotePath && pnpm install --prod --silent"
+ssh -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax=3 $RemoteHost "$nvmPrefix; cd $RemotePath && CI=true pnpm install --prod --silent"
 
 Log "INFO" "Step 7: Restarting backend (hard delete + start, Pattern 23)..." Yellow
 # pm2 reload/restart --update-env keeps a stale env (old GEMINI_PROXY_KEY -> WMS 401)

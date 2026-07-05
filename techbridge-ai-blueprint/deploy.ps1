@@ -1,10 +1,10 @@
 # techbridge-ai-blueprint — Deploy Script
-# URL: https://ai-tools.techbridge.edu.gh/blueprint/  (backend server.ts on PORT 3005, pm2 name tb-ai-blueprint)
+# URL: https://ai-tools.techbridge.edu.gh/blueprint/  (backend server.ts on PORT 3022, pm2 name tb-ai-blueprint)
 # Usage: .\deploy.ps1 -Build
 
 param(
     [string]$RemoteHost = "root@techbridge.edu.gh",
-    # Live URL is /blueprint/ (matches nginx OAuth proxy for /blueprint/callback -> :3005 and the app .env).
+    # Live URL is /blueprint/ (matches nginx OAuth proxy for /blueprint/callback -> :3022 and the app .env).
     [string]$RemotePath = "/var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/blueprint/",
     [switch]$Build = $false
 )
@@ -130,7 +130,7 @@ Log "INFO" "Step 6: Deploying backend files..." Yellow
 scp -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax=3 server.ts package.json pnpm-lock.yaml "${RemoteHost}:${RemotePath}" 2>$null | Out-Null
 if (Test-Path ".env.local") { scp -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax=3 ".env.local" "${RemoteHost}:${RemotePath}.env" 2>$null | Out-Null }
 $nvmPrefix = 'export NVM_DIR="$HOME/.nvm"; [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"; nvm use 26 >/dev/null 2>&1 || true'
-ssh -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax=3 $RemoteHost "$nvmPrefix; cd $RemotePath && pnpm install --prod --silent 2>/dev/null || npm install --omit=dev --silent"
+ssh -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax=3 $RemoteHost "$nvmPrefix; cd $RemotePath && CI=true pnpm install --prod --silent 2>/dev/null || npm install --omit=dev --silent"
 
 Log "INFO" "Step 7: Restarting backend (PM2)..." Yellow
 $restartCmd = @"
@@ -138,7 +138,7 @@ if command -v pm2 &>/dev/null; then
   if pm2 describe tb-ai-blueprint &>/dev/null; then
     pm2 reload tb-ai-blueprint --update-env && echo 'pm2: reloaded tb-ai-blueprint'
   else
-    cd $RemotePath && PORT=3005 pm2 start server.ts --name tb-ai-blueprint --interpreter npx --interpreter-args tsx --cwd $RemotePath
+    cd $RemotePath && PORT=3022 pm2 start server.ts --name tb-ai-blueprint --interpreter npx --interpreter-args tsx --cwd $RemotePath
     echo 'pm2: started tb-ai-blueprint'
   fi
   pm2 save --force &>/dev/null
@@ -149,7 +149,7 @@ ssh -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax
 
 Log "INFO" "Health check..." Yellow
 ssh -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax=3 $RemoteHost "test -f ${RemotePath}index.html && echo 'OK index.html present' || echo 'MISSING index.html'"
-ssh -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax=3 $RemoteHost "ss -tlnp | grep -q ':3005' && echo 'OK port 3005 listening' || echo 'WARN port 3005 not found'"
+ssh -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax=3 $RemoteHost "ss -tlnp | grep -q ':3022' && echo 'OK port 3022 listening' || echo 'WARN port 3022 not found'"
 
 $elapsed = [math]::Round(((Get-Date) - $__deployStart).TotalSeconds, 1)
 $timeStr = if ($elapsed -ge 60) { "$([math]::Floor($elapsed/60))m $([math]::Round($elapsed%60,1))s" } else { "${elapsed}s" }

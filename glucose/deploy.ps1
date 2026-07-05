@@ -228,7 +228,7 @@ $envInject = & $SSH @SSH_OPTS $RemoteHost "touch ${RemotePath}.env.local; sed -i
 Write-Host $envInject -ForegroundColor DarkGray
 if ($envInject -match 'WARN') { Log -Level 'ERROR' -Msg 'GEMINI_PROXY_KEY unavailable — scan route would 503. Aborting.' -Color Red; exit 1 }
 $nvmPrefix = 'export NVM_DIR="$HOME/.nvm"; [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"; nvm use 26 >/dev/null 2>&1 || true'
-& $SSH @SSH_OPTS $RemoteHost "$nvmPrefix; cd ${RemotePath} && pnpm install --prod --silent"
+& $SSH @SSH_OPTS $RemoteHost "$nvmPrefix; cd ${RemotePath} && CI=true pnpm install --prod --silent"
 
 # Step 7: Restart backend (hard delete + start, Pattern 23)
 # pm2 reload/restart --update-env keeps a stale env (old GEMINI_PROXY_KEY -> WMS 401)
