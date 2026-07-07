@@ -55,6 +55,11 @@ async function startServer() {
     }
   }));
 
+  // Fleet-standard health check (Pattern 25 stage 10)
+  app.get(['/api/health', '/groove-streamer/api/health'], (_req, res) =>
+    res.json({ ok: true, service: 'groove-streamer', custody: GEMINI_PROXY_KEY ? 'wms-relay' : 'unconfigured' })
+  );
+
   // OAuth callback handler
   app.get(['/callback', '/groove-streamer/callback'], async (req: any, res: any) => {
     const { code, error } = req.query as Record<string, string>;

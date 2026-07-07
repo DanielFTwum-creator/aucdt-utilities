@@ -75,7 +75,7 @@ log '[3/7] Injecting .env.local...'; cp /tmp/.env.${PM2_APP} .env.local 2>/dev/n
 log '[4/7] Installing...'; export PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1; pnpm install --frozen-lockfile --silent 2>/dev/null || pnpm install --no-frozen-lockfile --silent
 log '[5/7] Building...'; pnpm build
 log '[6/7] Deploying...'; mkdir -p "`$DEPLOY_PATH" && rsync -a --delete dist/ "`$DEPLOY_PATH/dist/"; cp index.html "`$DEPLOY_PATH/dist/index.html" 2>/dev/null || true
-log '[7/7] Backend deps...'; cp server.js package.json "`$DEPLOY_PATH/" 2>/dev/null || true; cd "`$DEPLOY_PATH" && { CI=true pnpm install --prod --silent 2>/dev/null || { echo '[WARN] pnpm install failed — falling back to npm'; npm install --omit=dev --silent; }; } || true
+log '[7/7] Backend deps...'; cp server.ts package.json pnpm-lock.yaml pnpm-workspace.yaml "`$DEPLOY_PATH/"; cd "`$DEPLOY_PATH" && { CI=true pnpm install --prod --silent 2>/dev/null || { echo '[WARN] pnpm install failed — falling back to npm'; npm install --omit=dev --silent; }; } || true
 log 'Done.'
 "@
 
@@ -98,7 +98,7 @@ Write-Host $envInject -ForegroundColor DarkGray
 if ($envInject -match 'WARN') { Log -Level 'ERROR' -Msg 'GEMINI_PROXY_KEY unavailable — AI routes would 503. Aborting.' -Color Red; exit 1 }
 
 Log -Level 'INFO' -Msg 'Step 5: Restarting backend...' -Color Yellow
-$r=& $SSH @SSH_OPTS $REMOTE "if pm2 describe ${PM2_APP}>\/dev\/null 2>&1; then pm2 reload ${PM2_APP}; echo 'pm2: reloaded'; else cd ${DEPLOY_PATH}; PORT=${PORT} pm2 start server.js --name ${PM2_APP} --cwd ${DEPLOY_PATH}; echo 'pm2: started'; fi"
+$r=& $SSH @SSH_OPTS $REMOTE "pm2 delete ${PM2_APP} >/dev/null 2>&1 || true; cd ${DEPLOY_PATH}; NODE_ENV=production PORT=${PORT} pm2 start server.ts --name ${PM2_APP} --interpreter npx --interpreter-args tsx --cwd ${DEPLOY_PATH}; pm2 save --force >/dev/null 2>&1 || true; echo 'pm2: hard restart (Pattern 23)'"
 Write-Host $r -ForegroundColor DarkGray
 
 Log -Level 'INFO' -Msg 'Health checks...' -Color Yellow; Start-Sleep -Seconds 8
@@ -106,6 +106,9 @@ $ic=& $SSH @SSH_OPTS $REMOTE "test -f ${DEPLOY_PATH}/dist/index.html && echo 'OK
 Write-Host $ic -ForegroundColor $(if($ic -match '^OK'){'Green'}else{'Red'})
 $pc=& $SSH @SSH_OPTS $REMOTE "ss -tlnp | grep -q :${PORT} && echo 'OK port ${PORT} listening' || echo 'WARN port ${PORT} not found'"
 Write-Host $pc -ForegroundColor $(if($pc -match '^OK'){'Green'}else{'Yellow'})
+$hc=& $SSH @SSH_OPTS $REMOTE "curl -s -o /dev/null -w '%{http_code}' -m 5 http://127.0.0.1:${PORT}/api/health"
+Write-Host "health: HTTP $hc" -ForegroundColor $(if($hc -eq '200'){'Green'}else{'Red'})
+if ($hc -ne '200') { Log -Level 'ERROR' -Msg "/api/health returned $hc — backend not serving" -Color Red; exit 1 }
 
 $DURATION=[math]::Round(((Get-Date)-$START_TIME).TotalSeconds,1)
 Log -Level 'SUCCESS' -Msg '========================================' -Color Green

@@ -23,6 +23,7 @@
 | 3000 | markai                             | markai                                        | Online |
 | 3002 | biochemai                          | biochemai                                     | Online |
 | 3003 | tuc-ai-lab                         | tuc-ai-lab-catalog (ai-lab)                   | Online |
+| 3004 | groove-streamer                    | groove-streamer (groove)                      | Online (verified 6 Jul 2026; /api/health added 7 Jul) |
 | 3005 | omniextract                        | omniextract                                   | Online |
 | 3006 | glucose                            | glucose                                       | Online |
 | 3007 | ai-email-drafter                   | ai-email-drafter                              | Online |
@@ -52,7 +53,7 @@
 
 | Name             | Intended port | Note |
 |------------------|---------------|------|
-| groove-streamer  | 3004          | Not listening. Port 3004 reserved; app is down — needs investigation. |
+| (none)           |               | groove-streamer moved to the listening table 7 Jul 2026: it was bound to 3004 all along; earlier probes checked the wrong port (3046). |
 
 ## Reserved for undeployed apps (assigned 1 Jul 2026, not yet running)
 

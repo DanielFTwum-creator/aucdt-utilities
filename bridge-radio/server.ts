@@ -42,6 +42,11 @@ async function startServer() {
   const app = express();
   const PORT = Number(process.env.PORT) || 3021;
 
+  // Fleet-standard health check (Pattern 25 stage 10)
+  app.get("/api/health", (_req, res) =>
+    res.json({ ok: true, service: "bridge-radio", custody: process.env.GEMINI_PROXY_KEY ? "wms-relay" : "unconfigured" })
+  );
+
   // AI lyrics — server-side so the Gemini key never reaches the browser.
   app.get("/api/lyrics", async (req, res) => {
     const track = (req.query.track as string || "").trim();
