@@ -1856,3 +1856,70 @@ existing scripts converge on it when next touched.
 A green run ends with: bundle guard passed, 'OK new build running' from the
 banner poll, and a health JSON whose custody field matches the intended key
 mode ('wms-relay' for Pattern 11 apps).
+
+---
+
+## PATTERN 26: NGINX CONFIG CHANGE GATE (WHOLE-DOMAIN OUTAGE GUARD)
+
+### Why
+
+Incident TUC-INC-2026-010 (6 Jul 2026): an AI-assisted session generating an
+nginx config for NetScan was cut off mid-write when its credits ran out,
+leaving a half-written file on the server. The running nginx was unaffected,
+so nothing looked wrong. When the server rebooted the next morning, nginx
+read the broken file, refused to start, and entered a restart loop. Because
+one nginx fronts every vhost, techbridge.edu.gh and all subdomains were down
+for roughly four hours.
+
+Two properties of nginx make this class of failure nasty:
+
+1. **Configs are landmines, not tripwires.** nginx only reads config at
+   start or reload. A broken file can sit on disk for days looking harmless,
+   then take the whole domain down at the next reboot.
+2. **Blast radius is total.** One invalid file for one tool fails validation
+   for the entire config tree. Every site behind that nginx goes down
+   together.
+
+### The Rules
+
+1. **Never edit a live nginx config in place.** Write the candidate to a
+   separate file first, then install it through the gate below.
+2. **Validate before it can take effect.** `nginx -t` must pass after the
+   file is installed and before any reload. On failure, restore the previous
+   file immediately.
+3. **Reload, never restart.** `systemctl reload nginx` keeps the old config
+   serving if the new one is bad. `systemctl restart nginx` takes the site
+   down and gambles on the new config being valid. Restart only when a
+   reload provably cannot apply the change (new listen ports, module
+   changes).
+4. **Config writes are atomic units of work.** An infra-config change is
+   never left half-done at the end of a session, credit limit or not. If a
+   session doing nginx work is interrupted for any reason, the first action
+   on resume (or by a human) is `nginx -t`.
+5. **Catch latent breakage daily.** A cron `nginx -t` catches a landmine
+   before the next reboot does:
+
+   ```
+   0 7 * * * nginx -t >/dev/null 2>&1 || echo "nginx -t FAILED on $(hostname) - config invalid, next reboot will take the site down" | mail -s "URGENT: nginx config invalid" daniel.twum@techbridge.edu.gh
+   ```
+
+6. **Plesk boxes:** put per-vhost custom directives in
+   `/var/www/vhosts/system/<domain>/conf/vhost_nginx.conf` and let Plesk
+   include them. Never hand-edit files Plesk regenerates.
+
+### The Gate Script
+
+`scripts/nginx-safe-apply.sh` (deploy to `/usr/local/sbin/nginx-safe-apply`
+on the server). Backs up the target, installs the candidate, runs
+`nginx -t`, reloads on success, restores the backup and leaves nginx
+untouched on failure. Exits non-zero on rollback so calling scripts abort.
+
+```
+nginx-safe-apply /var/www/vhosts/system/techbridge.edu.gh/conf/vhost_nginx.conf /root/candidate.conf
+```
+
+### Verify
+
+A green apply ends with `[OK] ... applied and nginx reloaded` and
+`systemctl is-active nginx` returning `active`. A failed apply ends with
+`[ROLLBACK]` plus a non-zero exit, and every vhost still serves.
