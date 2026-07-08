@@ -1,0 +1,18 @@
+# Keep shell scripts and server-bound config LF on every platform.
+# On Windows, git's core.autocrlf would otherwise check these out with CRLF;
+# scp'ing them to a Linux server then leaves a `\r` in the shebang
+# (`/usr/bin/env: 'bash\r'`) or in nginx directives, which breaks execution
+# and nginx -t (near-miss, 8 Jul 2026 — see PATTERNS.md Pattern 20).
+*.sh    text eol=lf
+*.bash  text eol=lf
+
+# nginx / server config fragments must stay LF.
+*.conf  text eol=lf
+
+# .env templates and lockfiles: LF.
+.env.example      text eol=lf
+*.env.example     text eol=lf
+pnpm-lock.yaml    text eol=lf
+
+# PowerShell deploy scripts run on Windows — leave them CRLF.
+*.ps1   text eol=crlf
