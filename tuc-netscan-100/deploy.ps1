@@ -202,33 +202,47 @@ Log -Level 'INFO' -Msg 'Step 7: Restarting backend (PM2)...' -Color Yellow
 $pm2Result = & $SSH @SSH_OPTS $RemoteHost "if pm2 describe ${PM2_APP} > /dev/null 2>&1; then pm2 reload ${PM2_APP} --update-env; echo 'pm2: reloaded ${PM2_APP}'; else cd ${RemotePath} && NODE_ENV=production PORT=${PORT} pm2 start server.ts --name ${PM2_APP} --interpreter ./node_modules/.bin/tsx --cwd ${RemotePath} --log-date-format 'YYYY-MM-DD HH:mm:ss'; echo 'pm2: started ${PM2_APP}'; fi; pm2 save --force > /dev/null 2>&1 || true"
 Write-Host $pm2Result -ForegroundColor DarkGray
 
-# Step 8: Nginx API proxy config (routes /tuc-netscan-100/api/ → port 3027)
-Log -Level 'INFO' -Msg 'Step 8: Writing Nginx API proxy location block...' -Color Yellow
-$nginxSnippet = @"
+# Step 8: Nginx API proxy config (routes netscan /api/ → port 3027).
+# The vhost file is dedicated to this single block, so we overwrite it whole
+# each deploy — idempotent, no accumulation. The remote script is a
+# SINGLE-QUOTED PowerShell here-string so PowerShell never expands the nginx
+# $variables (Pattern 20 — the old @"..."@ ate $host into $Host and blanked
+# the rest, taking nginx -t down: incident 8 Jul 2026). The config is applied
+# through nginx-safe-apply, which runs nginx -t and rolls back on failure
+# (Pattern 26); we refuse to write nginx config blind if the gate is absent.
+Log -Level 'INFO' -Msg 'Step 8: Applying Nginx API proxy via nginx-safe-apply...' -Color Yellow
+$nginxRemote = @'
+set -e
+NGINX_CONF="/var/www/vhosts/system/netscan.techbridge.edu.gh/conf/vhost_nginx.conf"
+CAND="$(mktemp /tmp/netscan_vhost_XXXXXX.conf)"
+cat > "$CAND" << 'NGINXEOF'
 # TUC NetScan — API reverse-proxy
 # DO NOT REMOVE — required for scanning and device API calls
 location /api/ {
     proxy_pass         http://127.0.0.1:3027/api/;
     proxy_http_version 1.1;
-    proxy_set_header   Host \$host;
-    proxy_set_header   X-Real-IP \$remote_addr;
-    proxy_set_header   X-Forwarded-For \$proxy_add_x_forwarded_for;
-    proxy_set_header   X-Forwarded-Proto \$scheme;
+    proxy_set_header   Host $host;
+    proxy_set_header   X-Real-IP $remote_addr;
+    proxy_set_header   X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header   X-Forwarded-Proto $scheme;
     proxy_read_timeout 120s;
 }
-"@
-$nginxSnippetEscaped = $nginxSnippet -replace '"', '\"'
-& $SSH @SSH_OPTS $RemoteHost @"
-NGINX_CONF="/var/www/vhosts/system/netscan.techbridge.edu.gh/conf/vhost_nginx.conf"
-mkdir -p `$(dirname `$NGINX_CONF)
-# Remove old netscan snippet if present, then append fresh
-grep -v 'TUC NetScan' `$NGINX_CONF 2>/dev/null | grep -v 'proxy_pass.*3027' > /tmp/vhost_nginx_clean.conf 2>/dev/null || true
-cat /tmp/vhost_nginx_clean.conf > `$NGINX_CONF 2>/dev/null || true
-printf '%s\n' '$nginxSnippetEscaped' >> `$NGINX_CONF
-nginx -s reload 2>/dev/null || service nginx reload 2>/dev/null || true
-echo "Nginx proxy config applied."
-"@
-Log -Level 'SUCCESS' -Msg 'Nginx API proxy configured' -Color Green
+NGINXEOF
+if ! command -v nginx-safe-apply >/dev/null 2>&1; then
+  echo "[FATAL] nginx-safe-apply not installed — refusing to write nginx config blind (Pattern 26)"
+  rm -f "$CAND"; exit 1
+fi
+nginx-safe-apply "$NGINX_CONF" "$CAND"; rc=$?
+rm -f "$CAND"
+exit $rc
+'@
+$nginxResult = & $SSH @SSH_OPTS $RemoteHost $nginxRemote
+Write-Host $nginxResult -ForegroundColor DarkGray
+if ($LASTEXITCODE -ne 0 -or $nginxResult -notmatch '\[OK\]') {
+    Log -Level 'ERROR' -Msg 'Nginx apply failed or rolled back — see output above' -Color Red
+    exit 1
+}
+Log -Level 'SUCCESS' -Msg 'Nginx API proxy configured (validated)' -Color Green
 # Health checks
 Log -Level 'INFO' -Msg 'Health checks...' -Color Yellow
 Start-Sleep -Seconds 5

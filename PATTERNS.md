@@ -1576,6 +1576,32 @@ Inside a PowerShell `@"..."@` heredoc:
 
 When a bash script in a heredoc uses a loop variable (`for VAR in ...`), replace the loop with hardcoded names to eliminate the escaping problem entirely.
 
+### The nginx-config variant (near-miss, 8 Jul 2026)
+
+The netscan `deploy.ps1` Step 8 wrote an nginx proxy block through a `@"..."@`
+heredoc containing `proxy_set_header Host \$host;`. `\$` is not a PowerShell
+escape, so PowerShell expanded its built-in `$Host` object — the literal string
+`System.Management.Automation.Internal.Host.InternalHost` landed in the config —
+and `$remote_addr` / `$proxy_add_x_forwarded_for` / `$scheme` (undefined in
+PowerShell) blanked to nothing, producing `proxy_set_header X-Real-IP ;`. That is
+"invalid number of arguments" and it takes `nginx -t` down. The running nginx
+kept serving on its last-good in-memory config, so it looked fine — until the
+next reload or reboot, which is precisely the TUC-INC-2026-010 failure mode.
+
+Two fixes, both applied:
+1. **Never build nginx config in a double-quoted PowerShell heredoc.** Use a
+   SINGLE-quoted here-string `@'...'@` (PowerShell expands nothing) wrapping a
+   bash quoted heredoc `<< 'EOF'` (bash expands nothing), so the nginx `$vars`
+   pass through literally.
+2. **Apply through `nginx-safe-apply` (Pattern 26), never a raw `nginx -s
+   reload`.** Validation then catches a bad write before it can take effect, and
+   the deploy aborts if the gate binary is absent.
+
+Also seen here: an append-based "dedup" that only stripped some lines left
+orphaned `location /api/ {` blocks to accumulate across deploys. For a
+single-purpose vhost file, overwrite the whole file each deploy instead of
+appending.
+
 ### Bonus: CRLF in Windows .env Files
 
 Windows-created `.env.local` files have CRLF line endings. When uploaded via SCP and read with `grep | cut` on Linux, the extracted value includes a trailing `\r`. Always strip it:
