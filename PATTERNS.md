@@ -285,6 +285,32 @@ body {
 .animate-slide-in { animation: slideIn 0.3s ease forwards; }
 ```
 
+### AI Studio export catch (brand before first deploy)
+
+Apps exported from Google AI Studio ship a stub `index.html`:
+
+```html
+<title>My Google AI Studio App</title>
+```
+
+with no SEO, no favicon (so the browser requests `/favicon.ico` and logs a
+404), no `theme-color`, and `lang="en"`. fail2ban-ai went live on 8 Jul 2026
+still titled "My Google AI Studio App". Fold this into every import's
+standardisation pass, before first deploy:
+
+```
+☐ <title> branded: "<App> | Techbridge University College"
+☐ lang="en-GB"
+☐ description + author + publisher meta
+☐ robots: "noindex, nofollow" for SSO-gated staff tools; "index, follow" for public
+☐ theme-color + msapplication-TileColor
+☐ favicon present — inline an SVG data: URI to avoid the /favicon.ico 404
+☐ module entry <script> retained (Pattern 24 bundle guard)
+```
+
+Inline-SVG favicon (no external file, no 404) is preferred for these imports;
+see `fail2ban-ai/index.html` for a working example.
+
 ---
 
 ## PATTERN 3: CAPACITOR MOBILE DEPLOYMENT

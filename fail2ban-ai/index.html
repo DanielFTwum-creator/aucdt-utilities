@@ -1,13 +1,35 @@
 <!doctype html>
-<html lang="en">
+<html lang="en-GB">
   <head>
     <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>My Google AI Studio App</title>
+
+    <title>Fail2Ban AI | Techbridge University College</title>
+
+    <!-- SEO — gated staff tool: do not index -->
+    <meta name="description" content="Fail2Ban AI — Techbridge University College ICT threat-intelligence console. Analyses banned IPs, attack origins and exposed services. Staff access only." />
+    <meta name="author" content="Techbridge University College" />
+    <meta name="publisher" content="TUC ICT Department" />
+    <meta name="robots" content="noindex, nofollow" />
+
+    <!-- Geographic -->
+    <meta name="geo.region" content="GH-AA" />
+    <meta name="geo.placename" content="Accra, Ghana" />
+
+    <!-- Theme -->
+    <meta name="theme-color" content="#0b1220" />
+    <meta name="msapplication-TileColor" content="#0b1220" />
+    <meta name="copyright" content="Techbridge University College" />
+
+    <!-- Inline SVG favicon (no external file — avoids the /favicon.ico 404) -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230b1220'/%3E%3Cpath d='M16 4l10 4v6c0 6-4 11-10 14C10 25 6 20 6 14V8l10-4z' fill='none' stroke='%2338bdf8' stroke-width='2'/%3E%3Cpath d='M11 16l3 3 7-7' fill='none' stroke='%2338bdf8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" />
   </head>
   <body>
     <div id="root"></div>
+    <!-- App entry — Vite rewrites this to the hashed bundle under the
+         /fail2ban-ai/ base at build; without it the page ships no JS
+         (Pattern 24 bundle guard). -->
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
-
