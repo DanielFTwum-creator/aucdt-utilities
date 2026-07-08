@@ -66,7 +66,7 @@
 | 3037 | techbridge-strategy-dashboard |
 | 3038 | techbridge-assessment-platform |
 | 3039 | techbridge-media-club-platform |
-| 3041 | aitopia (assigned 8 Jul 2026, app import pending) |
+| 3041 | aitopia (standardised 8 Jul 2026; folder aitopia-learning-assistant; first deploy pending) |
 
 (deploy.ps1 + server.ts defaults set to match each of these. Assignment ledger: PORT-REGISTRY.md.)
 

@@ -5,6 +5,9 @@ import {defineConfig} from 'vite';
 
 export default defineConfig(() => {
   return {
+    // Served under the /aitopia/ sub-path on ai-tools.techbridge.edu.gh;
+    // assets and API calls resolve relative to this base.
+    base: '/aitopia/',
     plugins: [react(), tailwindcss()],
     resolve: {
       alias: {

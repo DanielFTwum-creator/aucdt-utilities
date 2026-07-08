@@ -67,7 +67,7 @@ export default function AITutorAndAnalyzer({ onSyncWithFlute }: AITutorProps) {
     setIsChatLoading(true);
 
     try {
-      const response = await fetch("/api/chat", {
+      const response = await fetch(`${import.meta.env.BASE_URL}api/chat`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -115,7 +115,7 @@ export default function AITutorAndAnalyzer({ onSyncWithFlute }: AITutorProps) {
     setVideoSummary(null);
 
     try {
-      const response = await fetch("/api/analyze-video", {
+      const response = await fetch(`${import.meta.env.BASE_URL}api/analyze-video`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

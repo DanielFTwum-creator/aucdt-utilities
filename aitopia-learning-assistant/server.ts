@@ -1,10 +1,40 @@
 import express from "express";
 import path from "path";
-import { createServer as createViteServer } from "vite";
-import { GoogleGenAI, Type } from "@google/genai";
 import dotenv from "dotenv";
+import { requireWmsAuth } from "./src/server/wmsAuthMiddleware.ts";
+// vite is a devDependency, imported dynamically in the dev-only branch below;
+// a static import crashes the production server after pnpm install --prod.
 
 dotenv.config();
+
+// --- Gemini custody: this app NEVER holds the Gemini key (Pattern 11). Every
+// --- model call is relayed to the WMS proxy with the GEMINI_PROXY_KEY service
+// --- credential; only WMS adds the real key. ---
+const WMS_GEMINI_URL = process.env.WMS_GEMINI_URL || "https://wms.techbridge.edu.gh/api/gemini/generate";
+const GEMINI_PROXY_KEY = process.env.GEMINI_PROXY_KEY || "";
+const MODEL = "gemini-3.5-flash";
+
+if (!GEMINI_PROXY_KEY) {
+  console.warn("[aitopia] WARNING: GEMINI_PROXY_KEY not set — AI routes fall back to built-in educational responses");
+}
+
+interface GeminiResponse {
+  candidates?: { content?: { parts?: { text?: string }[] } }[];
+}
+
+// Relay a raw generateContent body to WMS (which injects the key) and return the
+// concatenated text. Structured-output requests (generationConfig with a
+// responseSchema) pass straight through to Gemini.
+async function relayGenerate(body: Record<string, unknown>): Promise<string> {
+  const r = await fetch(`${WMS_GEMINI_URL}?model=${MODEL}`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", "X-Gemini-Proxy-Key": GEMINI_PROXY_KEY },
+    body: JSON.stringify(body),
+  });
+  if (!r.ok) throw new Error(`WMS relay failed: ${r.status} ${await r.text()}`);
+  const data = (await r.json()) as GeminiResponse;
+  return (data.candidates?.[0]?.content?.parts ?? []).map(p => p.text ?? "").join("");
+}
 
 // High-quality, beautifully-formatted educational fallback responses for AITOPIA learning assistant
 function generateFallbackResponse(userMessage: string): string {
@@ -148,61 +178,58 @@ Thank you for your question about **"${capitalize(userMessage)}"**! As your prem
 
 async function startServer() {
   const app = express();
-  const PORT = 3000;
+  const PORT = Number(process.env.PORT) || 3041;
 
   app.use(express.json());
 
+  // nginx forwards the /aitopia prefix through to this server; normalise it for
+  // ALL /api routes in one place (Pattern 25 — per-route dual registration has
+  // missed routes twice, do not use it).
+  app.use((req, _res, next) => {
+    if (req.url.startsWith("/aitopia/api/")) req.url = req.url.slice("/aitopia".length);
+    next();
+  });
+
+  // Fleet-standard health check (Pattern 25 stage 10)
+  app.get("/api/health", (_req, res) =>
+    res.json({ ok: true, service: "aitopia", custody: GEMINI_PROXY_KEY ? "wms-relay" : "unconfigured" })
+  );
+
   // API endpoints
-  app.post("/api/chat", async (req, res) => {
+  app.post("/api/chat", requireWmsAuth, async (req, res) => {
     try {
       const { messages, systemInstruction } = req.body;
-      const apiKey = process.env.GEMINI_API_KEY;
-      
-      // Get the latest user query to use as a fallback if needed
+
+      // Latest user query, used for the graceful offline fallback
       const lastUserMsg = [...messages].reverse().find((m: any) => m.role === "user")?.content || "";
 
-      if (!apiKey) {
-        // If API key is missing, return a high-quality fallback or simulation
-        const simulatedText = generateFallbackResponse(lastUserMsg);
-        return res.status(200).json({ 
-          text: simulatedText || "⚠️ **Gemini API Key is not configured.**\n\nPlease configure your `GEMINI_API_KEY` in the **Settings > Secrets** panel in AI Studio."
-        });
+      if (!GEMINI_PROXY_KEY) {
+        return res.status(200).json({ text: generateFallbackResponse(lastUserMsg) });
       }
 
       try {
-        const ai = new GoogleGenAI({
-          apiKey: apiKey,
-          httpOptions: { headers: { 'User-Agent': 'aistudio-build' } }
-        });
-
-        // Prepare contents
         const contents = messages.map((m: any) => ({
           role: m.role,
           parts: [{ text: m.content }]
         }));
 
-        const response = await ai.models.generateContent({
-          model: "gemini-3.5-flash",
-          contents: contents,
-          config: {
-            systemInstruction: systemInstruction || "You are a helpful learning assistant.",
-          }
+        const text = await relayGenerate({
+          contents,
+          systemInstruction: { parts: [{ text: systemInstruction || "You are a helpful learning assistant." }] },
         });
 
-        return res.json({ text: response.text });
+        return res.json({ text });
       } catch (geminiErr: any) {
-        console.warn("Gemini API call failed, falling back to simulated high-quality response:", geminiErr);
-        // Fall back gracefully with custom simulation text
-        const simulatedText = generateFallbackResponse(lastUserMsg);
-        return res.json({ text: simulatedText });
+        console.warn("WMS relay chat failed, using educational fallback:", geminiErr);
+        return res.json({ text: generateFallbackResponse(lastUserMsg) });
       }
     } catch (err: any) {
-      console.error("Gemini Chat Error:", err);
-      return res.status(500).json({ error: err.message || "An error occurred with Gemini API" });
+      console.error("Chat error:", err);
+      return res.status(500).json({ error: err.message || "An error occurred" });
     }
   });
 
-  app.post("/api/analyze-video", async (req, res) => {
+  app.post("/api/analyze-video", requireWmsAuth, async (req, res) => {
     // Preset fallback response that provides fully functional, rich analysis data
     const PRESET_FALLBACK = {
       summary: "This tutorial features Kudjo explaining how to play the Atɛntɛbɛn (Ghanaian bamboo flute), particularly focusing on the Ashanti Funeral Dirge. It covers structural details of the instrument, essential performance parameters like moisture, and basic scale practices. The guide provides step-by-step guidance for beginners to interface flute playing with cultural drumming contexts.",
@@ -222,47 +249,42 @@ async function startServer() {
 
     try {
       const { videoTitle, videoTranscript } = req.body;
-      const apiKey = process.env.GEMINI_API_KEY;
-      if (!apiKey) {
-        // Return a mock/fallback response if API key is missing, so user doesn't get blocked
+      if (!GEMINI_PROXY_KEY) {
+        // Relay credential missing — return the rich preset so the user isn't blocked
         return res.json(PRESET_FALLBACK);
       }
 
       try {
-        const ai = new GoogleGenAI({
-          apiKey: apiKey,
-          httpOptions: { headers: { 'User-Agent': 'aistudio-build' } }
-        });
-
         const prompt = `You are a YouTube video analysis assistant. Your task is to summarize the content of the video and generate a summary that includes highlights with key moments and topics discussed in the video.
-        
+
 Video Title: ${videoTitle}
 Video Content:
 ${videoTranscript}
 
 Please analyze this content and populate the output JSON according to the schema. Make sure the highlights list has between 5 to 10 key moments. For each highlight, calculate the exact seconds offset (secondValue) based on the timestamp (e.g. 00:02:27:00 is 147 seconds, 00:03:38:00 is 218 seconds) and provide a brief description and why it is significant. Do NOT change the timestamp format (00:00:00:00 format).`;
 
-        const response = await ai.models.generateContent({
-          model: "gemini-3.5-flash",
-          contents: prompt,
-          config: {
+        // REST generateContent: schema types are plain strings (OBJECT/STRING/
+        // ARRAY/INTEGER), not the SDK Type enum. WMS forwards this body verbatim.
+        const text = await relayGenerate({
+          contents: [{ role: "user", parts: [{ text: prompt }] }],
+          generationConfig: {
             responseMimeType: "application/json",
             responseSchema: {
-              type: Type.OBJECT,
+              type: "OBJECT",
               properties: {
                 summary: {
-                  type: Type.STRING,
+                  type: "STRING",
                   description: "Concise summary of the video (3-5 sentences) capturing the core essence, themes, and conclusions."
                 },
                 highlights: {
-                  type: Type.ARRAY,
+                  type: "ARRAY",
                   items: {
-                    type: Type.OBJECT,
+                    type: "OBJECT",
                     properties: {
-                      timestamp: { type: Type.STRING, description: "The original video timestamp format like 00:02:27:00" },
-                      secondValue: { type: Type.INTEGER, description: "Total integer seconds from the start of the video (e.g., 00:02:27:00 would be 147)" },
-                      description: { type: Type.STRING, description: "A brief description of what happens at this timestamp." },
-                      significance: { type: Type.STRING, description: "Why this moment is significant and what is learned." }
+                      timestamp: { type: "STRING", description: "The original video timestamp format like 00:02:27:00" },
+                      secondValue: { type: "INTEGER", description: "Total integer seconds from the start of the video (e.g., 00:02:27:00 would be 147)" },
+                      description: { type: "STRING", description: "A brief description of what happens at this timestamp." },
+                      significance: { type: "STRING", description: "Why this moment is significant and what is learned." }
                     },
                     required: ["timestamp", "secondValue", "description", "significance"]
                   }
@@ -273,9 +295,9 @@ Please analyze this content and populate the output JSON according to the schema
           }
         });
 
-        return res.json(JSON.parse(response.text || "{}"));
+        return res.json(JSON.parse(text || "{}"));
       } catch (geminiErr: any) {
-        console.warn("Gemini video analysis failed, returning preset fallback:", geminiErr);
+        console.warn("WMS relay video analysis failed, returning preset fallback:", geminiErr);
         return res.json(PRESET_FALLBACK);
       }
     } catch (err: any) {
@@ -287,6 +309,7 @@ Please analyze this content and populate the output JSON according to the schema
 
   // Vite middleware for development
   if (process.env.NODE_ENV !== "production") {
+    const { createServer: createViteServer } = await import("vite");
     const vite = await createViteServer({
       server: { middlewareMode: true },
       appType: "spa",
@@ -294,14 +317,16 @@ Please analyze this content and populate the output JSON according to the schema
     app.use(vite.middlewares);
   } else {
     const distPath = path.join(process.cwd(), 'dist');
+    // Dual mounts: nginx forwards the /aitopia prefix through (Pattern 25)
     app.use(express.static(distPath));
-    app.get('*', (req, res) => {
+    app.use('/aitopia', express.static(distPath));
+    app.get(/.*/, (_req, res) => {
       res.sendFile(path.join(distPath, 'index.html'));
     });
   }
 
   app.listen(PORT, "0.0.0.0", () => {
-    console.log(`Server running on port ${PORT}`);
+    console.log(`[aitopia] listening on http://localhost:${PORT} (custody: ${GEMINI_PROXY_KEY ? "wms-relay" : "unconfigured"})`);
   });
 }
 
