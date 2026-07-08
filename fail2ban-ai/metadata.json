@@ -1,0 +1,6 @@
+{
+  "name": "IP Ban List & Attack Origin Map",
+  "description": "An interactive full-stack IP mapping and log analysis tool that parses logs, geolocates attack origins, and generates AI security recommendations using Gemini.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
