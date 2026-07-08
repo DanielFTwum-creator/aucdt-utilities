@@ -41,12 +41,11 @@ Log -Level 'INFO' -Msg "Path   : $DEPLOY_PATH/"
 Log -Level 'INFO' -Msg ''
 
 Log -Level 'INFO' -Msg 'Step 1: Pre-flight checks...' -Color Yellow
-if (-not (Test-Path '.env.local')) { Log -Level 'ERROR' -Msg '.env.local not found — aborting' -Color Red; exit 1 }
-$envContent = Get-Content '.env.local' -Raw
-foreach ($key in @('VITE_GOOGLE_CLIENT_ID','GOOGLE_CLIENT_SECRET')) {
-    if ($envContent -notmatch $key) { Log -Level 'ERROR' -Msg "$key missing in .env.local" -Color Red; exit 1 }
-}
-Log -Level 'SUCCESS' -Msg 'Pre-flight OK (.env.local validated)' -Color Green
+# fail2ban-ai holds no build-time secrets: authentication is WMS SSO (WMS owns
+# the Google secret, not this app) and GEMINI_PROXY_KEY is injected server-side.
+# The only build-time var is VITE_WMS_BASE, which defaults. So .env.local is
+# optional — used only to override VITE_WMS_BASE for off-prod testing.
+Log -Level 'SUCCESS' -Msg 'Pre-flight OK (no build-time secrets required)' -Color Green
 
 Log -Level 'INFO' -Msg 'Step 2: Verifying git state...' -Color Yellow
 $COMMIT = (git rev-parse --short HEAD 2>$null).Trim()
@@ -54,10 +53,13 @@ $BRANCH = (git rev-parse --abbrev-ref HEAD 2>$null).Trim()
 Log -Level 'INFO' -Msg "Commit : $COMMIT on $BRANCH"
 
 Log -Level 'INFO' -Msg 'Step 3: Server-side build (git clone + pnpm build)' -Color Yellow
-Log -Level 'INFO' -Msg 'Uploading .env.local to server...' -Color DarkGray
-& $SCP @SSH_OPTS .env.local "${REMOTE}:/tmp/.env.${PM2_APP}" 2>&1 | Out-Null
-if ($LASTEXITCODE -ne 0) { Log -Level 'ERROR' -Msg 'Failed to upload .env.local' -Color Red; exit 1 }
-Log -Level 'SUCCESS' -Msg '.env.local uploaded' -Color Green
+if (Test-Path '.env.local') {
+    & $SCP @SSH_OPTS .env.local "${REMOTE}:/tmp/.env.${PM2_APP}" 2>&1 | Out-Null
+    if ($LASTEXITCODE -eq 0) { Log -Level 'SUCCESS' -Msg '.env.local uploaded (VITE_WMS_BASE override)' -Color Green }
+    else { Log -Level 'WARN' -Msg 'Failed to upload .env.local — build uses default VITE_WMS_BASE' -Color Yellow }
+} else {
+    Log -Level 'INFO' -Msg 'No .env.local — build uses default VITE_WMS_BASE (wms.techbridge.edu.gh)' -Color DarkGray
+}
 
 $remoteBuildScript = @"
 #!/usr/bin/env bash
@@ -91,8 +93,8 @@ find /tmp -maxdepth 1 -name '*_deploy_*' -type d -mmin +30 -exec rm -rf {} + 2>/
 log '[2/7] Cloning ${SUBFOLDER} (sparse, depth 1)...'
 git clone --filter=blob:none --sparse --depth 1 "`$REPO" "`$TMPDIR"
 cd "`$TMPDIR" && git sparse-checkout set ${SUBFOLDER} && cd ${SUBFOLDER}
-log '[3/7] Injecting .env.local...'
-cp /tmp/.env.${PM2_APP} .env.local
+log '[3/7] Injecting .env.local (optional)...'
+cp /tmp/.env.${PM2_APP} .env.local 2>/dev/null || log 'No .env.local — build uses default VITE_WMS_BASE'
 log '[4/7] Installing dependencies...'
 pnpm install --frozen-lockfile --silent 2>/dev/null || pnpm install --no-frozen-lockfile --silent
 log '[5/7] Building...'
