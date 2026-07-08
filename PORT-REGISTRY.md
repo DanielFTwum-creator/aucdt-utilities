@@ -61,17 +61,20 @@ reassigned to free ports so they are deploy-safe. `deploy.ps1` and `server.ts` d
 | 3038 | techbridge-assessment-platform | matched |
 | 3039 | techbridge-media-club-platform | matched |
 
+| 3040 | fail2ban-ai | matched (assigned 8 Jul 2026) |
+| 3041 | aitopia | reserved (assigned 8 Jul 2026; app import pending) |
+
 ## Next available
 
-**3040** — increment from here for new apps.
+**3042** — increment from here for new apps.
 
-Currently free/unused: 3001, 3040+.
+Currently free/unused: 3001, 3042+.
 
 ## Known unresolved (undeployed backend apps with drifting defaults)
 
 These folders have a `server.ts` with a hardcoded port default that collides with another
 app or is otherwise unregistered. None are currently running, so no live impact, but they
-must be assigned a unique port from 3040+ before they ever deploy:
+must be assigned a unique port from 3042+ before they ever deploy:
 
 | App | Current server.ts default | Collides with |
 |-----|---------------------------|---------------|

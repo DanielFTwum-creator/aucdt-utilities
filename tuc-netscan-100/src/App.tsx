@@ -72,11 +72,11 @@ export default function App() {
   const fetchBackendData = async () => {
     try {
       const [devsRes, intsRes, alertsRes, auditsRes, healthRes] = await Promise.all([
-        fetch('api/v1/devices'),
-        fetch('api/v1/bandwidth/interfaces'),
-        fetch('api/v1/alerts'),
-        fetch('api/v1/audit'),
-        fetch('api/v1/health')
+        fetch('/api/v1/devices'),
+        fetch('/api/v1/bandwidth/interfaces'),
+        fetch('/api/v1/alerts'),
+        fetch('/api/v1/audit'),
+        fetch('/api/v1/health')
       ]);
 
       if (devsRes.ok) {
@@ -94,11 +94,11 @@ export default function App() {
       if (healthRes.ok) setHealthState(await healthRes.json());
 
       // Fetch history for bandwidth charts
-      const histRes = await fetch('api/v1/bandwidth/history?hours=6');
+      const histRes = await fetch('/api/v1/bandwidth/history?hours=6');
       if (histRes.ok) setHistoryState(await histRes.json());
 
       // Fetch inferred network topology
-      const topoRes = await fetch('api/v1/topology');
+      const topoRes = await fetch('/api/v1/topology');
       if (topoRes.ok) setTopology(await topoRes.json());
     } catch (e) {
       console.error('Error fetching REST APIs:', e);
@@ -108,7 +108,7 @@ export default function App() {
   // Load settings from backend on mount
   const loadSettings = async () => {
     try {
-      const res = await fetch('api/v1/settings');
+      const res = await fetch('/api/v1/settings');
       if (res.ok) {
         const s = await res.json();
         if (s.configured_cidrs !== undefined) setSubnetConfig(s.configured_cidrs);
@@ -124,7 +124,7 @@ export default function App() {
   // Persist settings to backend
   const handleSaveSettings = async () => {
     try {
-      const res = await fetch('api/v1/settings', {
+      const res = await fetch('/api/v1/settings', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -155,7 +155,7 @@ export default function App() {
     setIsScanning(true);
     setScanResultDesc('Executing network active sweeping sequence securely via SNMP and ARP queries...');
     try {
-      const response = await fetch('api/v1/scan/trigger', {
+      const response = await fetch('/api/v1/scan/trigger', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ subnet: subnet || 'ALL SUBNETS' })
@@ -199,7 +199,7 @@ export default function App() {
     }
 
     try {
-      const res = await fetch('api/v1/control/block', {
+      const res = await fetch('/api/v1/control/block', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ mac_address: showConfirmBlock, reason: blockReason })
@@ -238,7 +238,7 @@ export default function App() {
   // REST API: ADD TO AUTHORISED DEVICE REGISTRY (WHITELIST)
   const handleWhitelistDevice = async (mac: string, label: string) => {
     try {
-      const res = await fetch('api/v1/control/whitelist', {
+      const res = await fetch('/api/v1/control/whitelist', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ mac_address: mac, label })
@@ -282,7 +282,7 @@ export default function App() {
     setAiLoading(true);
     setAiAnalysisResult(null);
     try {
-      const res = await fetch('api/v1/ai/explain', {
+      const res = await fetch('/api/v1/ai/explain', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ topic, context: contextObj })
@@ -310,7 +310,7 @@ export default function App() {
     setCliCommand('');
 
     try {
-      const res = await fetch('api/v1/cli/execute', {
+      const res = await fetch('/api/v1/cli/execute', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ command: commandText, apiKey: 'NETSCAN_ADMIN_TOKEN_2026' })

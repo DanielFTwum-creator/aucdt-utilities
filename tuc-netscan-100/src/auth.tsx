@@ -39,7 +39,9 @@ async function exchangeCode(code: string): Promise<string> {
   if (!r.ok) throw new Error('exchange failed');
   return (await r.json()).access_token;
 }
-const cleanUrl = () => window.history.replaceState({}, '', window.location.pathname);
+// Return to the app root after the SSO callback — keeping /auth/callback in
+// the address bar made every relative API path resolve under /auth/ and fail.
+const cleanUrl = () => window.history.replaceState({}, '', '/');
 
 type Status = 'booting' | 'login' | 'mfa' | 'authed';
 
