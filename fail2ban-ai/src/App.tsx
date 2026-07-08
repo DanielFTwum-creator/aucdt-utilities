@@ -531,19 +531,56 @@ export default function App() {
     setAiAnalysis("");
   };
 
-  // Pull the server's LIVE fail2ban bans (GET /api/banlist, staff-only) and run
-  // them through the geolocation pipeline. Falls back silently to the bundled
-  // snapshot when the endpoint is unavailable or the server has no active bans.
+  // Pull the server's LIVE fail2ban bans and plot them. The server does the
+  // heavy lifting: GET /api/banlist returns the real {ip,jail} bans, then a
+  // single POST /api/geolocate geolocates them all server-side (the endpoint
+  // batches 100/call to ip-api and caches, so ~950 IPs resolve in one request
+  // instead of ~190 client round-trips). Falls back silently to the bundled
+  // snapshot if either endpoint is unavailable or there are no active bans.
+  const [liveLoading, setLiveLoading] = useState(false);
   const loadLiveBans = async () => {
+    setLiveLoading(true);
     try {
       const res = await fetch(`${import.meta.env.BASE_URL}api/banlist`);
-      if (!res.ok) return; // 401/relay/etc. — keep whatever is displayed
+      if (!res.ok) return;
       const data = await res.json();
-      if (Array.isArray(data?.ips) && data.ips.length > 0) {
-        await handleParseComplete(data.ips.map((b: { ip: string; jail: string }) => ({ ip: b.ip, jail: b.jail })));
+      const rawBans: { ip: string; jail: string }[] = Array.isArray(data?.ips) ? data.ips : [];
+      if (rawBans.length === 0) return;
+
+      const jailByIp = new Map(rawBans.map(b => [b.ip, b.jail]));
+      const uniqueIps = Array.from(jailByIp.keys());
+
+      const geoRes = await fetch(`${import.meta.env.BASE_URL}api/geolocate`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ips: uniqueIps }),
+      });
+      if (!geoRes.ok) return;
+      const geoData = await geoRes.json();
+      const results: any[] = Array.isArray(geoData?.results) ? geoData.results : [];
+
+      const merged: IPData[] = results.map(r => ({
+        ip: r.ip,
+        jail: jailByIp.get(r.ip) || "unknown",
+        country: r.country || "Unknown",
+        countryCode: r.countryCode || "",
+        city: r.city || "Unknown",
+        lat: typeof r.lat === "number" ? r.lat : 0,
+        lon: typeof r.lon === "number" ? r.lon : 0,
+        isp: r.isp,
+        status: "success",
+      }));
+
+      if (merged.length > 0) {
+        setIpsData(merged);
+        setServerLocation(DEFAULT_SERVER_LOCATION);
+        const jailCount = new Set(merged.map(m => m.jail)).size;
+        setActiveLogSample(`Live fail2ban snapshot from mail.aucdt.edu.gh: ${merged.length} banned IPs across ${jailCount} jails.`);
       }
     } catch {
       // network/parse failure — keep the current view
+    } finally {
+      setLiveLoading(false);
     }
   };
 
@@ -753,11 +790,12 @@ export default function App() {
             {/* Pull live server bans */}
             <button
               onClick={loadLiveBans}
-              className="px-3 py-2 rounded-lg text-xs font-mono border border-emerald-800 hover:border-emerald-600 bg-zinc-950 text-emerald-400 hover:text-emerald-300 transition-all flex items-center gap-1.5"
+              disabled={liveLoading}
+              className="px-3 py-2 rounded-lg text-xs font-mono border border-emerald-800 hover:border-emerald-600 bg-zinc-950 text-emerald-400 hover:text-emerald-300 transition-all flex items-center gap-1.5 disabled:opacity-60 disabled:cursor-wait"
               title="Pull this server's live fail2ban bans"
             >
-              <Server className="w-3.5 h-3.5" />
-              Live Bans
+              <Server className={`w-3.5 h-3.5 ${liveLoading ? "animate-spin" : ""}`} />
+              {liveLoading ? "Loading…" : "Live Bans"}
             </button>
 
             {/* Reset to Snapshot */}
