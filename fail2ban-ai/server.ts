@@ -1,40 +1,59 @@
 import express from "express";
 import path from "path";
 import dotenv from "dotenv";
-import { createServer as createViteServer } from "vite";
-import { GoogleGenAI } from "@google/genai";
+// vite is a devDependency, imported dynamically in the dev-only branch below;
+// a static import crashes the production server after pnpm install --prod.
 
 dotenv.config();
+
+// --- Gemini custody: this app NEVER holds the Gemini key (fleet standard, ---
+// --- Pattern 11). Log analysis is relayed to the WMS proxy with the        ---
+// --- GEMINI_PROXY_KEY service credential; only WMS adds the real key.      ---
+const WMS_GEMINI_URL = process.env.WMS_GEMINI_URL || "https://wms.techbridge.edu.gh/api/gemini/generate";
+const GEMINI_PROXY_KEY = process.env.GEMINI_PROXY_KEY || "";
+const MODEL = "gemini-3.5-flash";
+
+if (!GEMINI_PROXY_KEY) {
+  console.warn("[fail2ban-ai] WARNING: GEMINI_PROXY_KEY not set — /api/analyze-logs will fall back to the offline summary");
+}
+
+interface GeminiResponse {
+  candidates?: { content?: { parts?: { text?: string }[] } }[];
+}
+
+async function relayGenerate(prompt: string): Promise<string> {
+  const r = await fetch(`${WMS_GEMINI_URL}?model=${MODEL}`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", "X-Gemini-Proxy-Key": GEMINI_PROXY_KEY },
+    body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] }),
+  });
+  if (!r.ok) throw new Error(`WMS relay failed: ${r.status} ${await r.text()}`);
+  const data = (await r.json()) as GeminiResponse;
+  return (data.candidates?.[0]?.content?.parts ?? []).map(p => p.text ?? "").join("");
+}
 
 // In-memory cache for geolocated IPs to prevent hitting ip-api.com rate limits
 const geoCache = new Map<string, any>();
 
 async function startServer() {
   const app = express();
-  const PORT = 3000;
+  const PORT = Number(process.env.PORT) || 3040;
 
   // Middleware for parsing JSON requests
   app.use(express.json());
 
-  // Initialize Gemini Client safely (lazy initialization as per instructions)
-  let ai: GoogleGenAI | null = null;
-  function getGeminiClient(): GoogleGenAI {
-    if (!ai) {
-      const apiKey = process.env.GEMINI_API_KEY;
-      if (!apiKey) {
-        console.warn("GEMINI_API_KEY is not defined in environment variables.");
-      }
-      ai = new GoogleGenAI({
-        apiKey: apiKey || "MOCK_KEY",
-        httpOptions: {
-          headers: {
-            "User-Agent": "aistudio-build",
-          },
-        },
-      });
-    }
-    return ai;
-  }
+  // nginx forwards the /fail2ban-ai prefix through to this server; normalise
+  // it for ALL /api routes in one place (Pattern 25 — per-route dual
+  // registration has missed routes twice, do not use it).
+  app.use((req, _res, next) => {
+    if (req.url.startsWith("/fail2ban-ai/api/")) req.url = req.url.slice("/fail2ban-ai".length);
+    next();
+  });
+
+  // Fleet-standard health check (Pattern 25 stage 10)
+  app.get("/api/health", (_req, res) =>
+    res.json({ ok: true, service: "fail2ban-ai", custody: GEMINI_PROXY_KEY ? "wms-relay" : "unconfigured" })
+  );
 
   // API Route: Geolocate a list of IP addresses (supports batching)
   app.post("/api/geolocate", async (req, res) => {
@@ -236,12 +255,9 @@ async function startServer() {
         return res.status(400).json({ error: "Invalid request. 'ipsData' must be an array." });
       }
 
-      const client = getGeminiClient();
-      const apiKey = process.env.GEMINI_API_KEY;
-
-      if (!apiKey || apiKey === "MY_GEMINI_API_KEY") {
+      if (!GEMINI_PROXY_KEY) {
         return res.json({
-          analysis: "### ℹ️ Gemini API Configuration Required\nTo generate AI security recommendations and detailed threat analysis, please configure your **GEMINI_API_KEY** in the Secrets panel.\n\nHere is a quick summary based on pre-compiled threat models:\n- **Main Attack Origins**: " + 
+          analysis: "### ℹ️ AI Analysis Unavailable\nThe WMS relay credential (GEMINI_PROXY_KEY) is not configured on this server, so AI recommendations are offline.\n\nHere is a quick summary based on pre-compiled threat models:\n- **Main Attack Origins**: " +
             Array.from(new Set(ipsData.map(ip => ip.country).filter(Boolean))).slice(0, 3).join(", ") + "\n- **Primary Targets**: SSH and related service panels.\n- **Action Item**: Add fail2ban configurations, use key-based authentication, and whitelist administration IPs.",
         });
       }
@@ -271,12 +287,9 @@ Please provide a markdown analysis including:
 
 Keep your response extremely professional, elegant, and directly useful to a sysadmin. Use clean headers, bullet points, and code blocks for commands.`;
 
-      const response = await client.models.generateContent({
-        model: "gemini-3.5-flash",
-        contents: prompt,
-      });
+      const analysis = await relayGenerate(prompt);
 
-      return res.json({ analysis: response.text });
+      return res.json({ analysis });
     } catch (error: any) {
       console.error("Analyze-logs endpoint error:", error);
       return res.status(500).json({ error: error.message || "Internal server error" });
@@ -285,6 +298,7 @@ Keep your response extremely professional, elegant, and directly useful to a sys
 
   // Serve static files / Vite dev middleware
   if (process.env.NODE_ENV !== "production") {
+    const { createServer: createViteServer } = await import("vite");
     const vite = await createViteServer({
       server: { middlewareMode: true },
       appType: "spa",
@@ -292,15 +306,16 @@ Keep your response extremely professional, elegant, and directly useful to a sys
     app.use(vite.middlewares);
   } else {
     const distPath = path.join(process.cwd(), "dist");
+    // Dual mounts: nginx forwards the /fail2ban-ai prefix through (Pattern 25)
     app.use(express.static(distPath));
-    // For Express 4
-    app.get("*", (req, res) => {
+    app.use("/fail2ban-ai", express.static(distPath));
+    app.get(/.*/, (_req, res) => {
       res.sendFile(path.join(distPath, "index.html"));
     });
   }
 
   app.listen(PORT, "0.0.0.0", () => {
-    console.log(`Server running on http://localhost:${PORT}`);
+    console.log(`[fail2ban-ai] listening on http://localhost:${PORT} (custody: ${GEMINI_PROXY_KEY ? "wms-relay" : "unconfigured"})`);
   });
 }
 

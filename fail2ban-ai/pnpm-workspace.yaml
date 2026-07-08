@@ -1,0 +1,7 @@
+packages:
+  - '.'
+
+# pnpm 11: build-script approval lives here (Pattern 18). Real booleans only —
+# placeholder strings break installs fleet-wide.
+allowBuilds:
+  esbuild: true

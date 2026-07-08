@@ -65,6 +65,8 @@
 | 3037 | techbridge-strategy-dashboard |
 | 3038 | techbridge-assessment-platform |
 | 3039 | techbridge-media-club-platform |
+| 3040 | fail2ban-ai (assigned 8 Jul 2026) |
+| 3041 | aitopia (assigned 8 Jul 2026, app import pending) |
 
 (deploy.ps1 + server.ts defaults set to match each of these. Assignment ledger: PORT-REGISTRY.md.)
 
