@@ -1,5 +1,6 @@
 import express from "express";
 import path from "path";
+import fs from "fs";
 import dotenv from "dotenv";
 import { execFile } from "child_process";
 import { promisify } from "util";
@@ -10,6 +11,12 @@ import { requireWmsAuth } from "./src/server/wmsAuthMiddleware.ts";
 dotenv.config();
 
 const execFileAsync = promisify(execFile);
+
+// Short-lived cache of the raw fail2ban ban list so rapid dashboard loads don't
+// re-shell to fail2ban-client on every visit. Bans don't need second-level
+// freshness on a threat dashboard.
+const BANLIST_TTL_MS = 60_000;
+let banlistCache: { at: number; data: { ip: string; jail: string }[] } | null = null;
 
 // Read the server's live fail2ban bans via fail2ban-client (current banned IPs
 // per jail). Fixed-argument execFile — jail names come from fail2ban-client
@@ -62,8 +69,32 @@ async function relayGenerate(prompt: string): Promise<string> {
   return (data.candidates?.[0]?.content?.parts ?? []).map(p => p.text ?? "").join("");
 }
 
-// In-memory cache for geolocated IPs to prevent hitting ip-api.com rate limits
+// Cache for geolocated IPs — avoids re-hitting ip-api.com. Persisted to disk so
+// the ~1600-IP first-load geolocation happens once ever, not once per PM2
+// restart or reboot. IP->location is stable, so entries never expire.
 const geoCache = new Map<string, any>();
+const GEO_CACHE_FILE = path.join(process.cwd(), ".geo-cache.json");
+
+try {
+  if (fs.existsSync(GEO_CACHE_FILE)) {
+    const obj = JSON.parse(fs.readFileSync(GEO_CACHE_FILE, "utf8"));
+    for (const [k, v] of Object.entries(obj)) geoCache.set(k, v);
+    console.log(`[fail2ban-ai] geo cache loaded: ${geoCache.size} entries`);
+  }
+} catch {
+  // corrupt/absent cache file — start empty, no harm
+}
+
+let geoCacheDirty = false;
+function persistGeoCache(): void {
+  if (!geoCacheDirty) return;
+  try {
+    fs.writeFileSync(GEO_CACHE_FILE, JSON.stringify(Object.fromEntries(geoCache)));
+    geoCacheDirty = false;
+  } catch {
+    // best-effort — a failed write just means we re-geolocate next restart
+  }
+}
 
 async function startServer() {
   const app = express();
@@ -90,7 +121,11 @@ async function startServer() {
   // empty list + error note so the frontend falls back to its sample snapshot.
   app.get("/api/banlist", requireWmsAuth, async (_req, res) => {
     try {
+      if (banlistCache && Date.now() - banlistCache.at < BANLIST_TTL_MS) {
+        return res.json({ server: "mail.aucdt.edu.gh", count: banlistCache.data.length, ips: banlistCache.data, cached: true });
+      }
       const ips = await getFail2banBans();
+      banlistCache = { at: Date.now(), data: ips };
       res.json({ server: "mail.aucdt.edu.gh", count: ips.length, ips });
     } catch (err: any) {
       res.json({ server: null, count: 0, ips: [], error: err?.message || "fail2ban-client unavailable" });
@@ -274,6 +309,10 @@ async function startServer() {
             });
           }
         }
+        // New geolocations were resolved — persist the cache to disk so the
+        // next process start reads them instead of re-hitting ip-api.
+        geoCacheDirty = true;
+        persistGeoCache();
       }
 
       // Re-order results to match the original input array order
