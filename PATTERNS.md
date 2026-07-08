@@ -1959,3 +1959,52 @@ nginx-safe-apply /var/www/vhosts/system/techbridge.edu.gh/conf/vhost_nginx.conf 
 A green apply ends with `[OK] ... applied and nginx reloaded` and
 `systemctl is-active nginx` returning `active`. A failed apply ends with
 `[ROLLBACK]` plus a non-zero exit, and every vhost still serves.
+
+---
+
+## PATTERN 27: LOCKFILES MUST RESOLVE UNDER THE SERVER'S minimumReleaseAge POLICY
+
+### Why
+
+The deploy server's pnpm (11.9.0) enforces a `minimumReleaseAge` supply-chain
+policy: it rejects any package published within a rolling cutoff (~24h) as a
+guard against just-published malicious releases. On 8 Jul 2026 a fail2ban-ai
+`-Build` failed with `ERR_PNPM_MINIMUM_RELEASE_AGE_VIOLATION` because the
+lockfile had been regenerated in a sandbox with no such policy, which resolved
+three transitive deps (`@types/node`, `@types/express-serve-static-core`,
+`electron-to-chromium`) to versions published hours earlier. The server refused
+them.
+
+### The Trap
+
+- A sandbox / dev machine without the policy resolves to the **latest** version
+  of everything. The server then rejects the too-new entries.
+- `pnpm install --no-frozen-lockfile` does **not** fix it: when the lockfile
+  already matches `package.json`, pnpm skips resolution ("Lockfile is up to
+  date, resolution step is skipped") and goes straight to the policy check,
+  which fails. It only re-resolves when the lockfile is actually removed.
+
+### The Rule
+
+1. **Never regenerate a lockfile off-server.** Adding a dependency, or any
+   change that rewrites `pnpm-lock.yaml`, must be resolved on the deploy server
+   (or any environment with the same `minimumReleaseAge` policy), so pnpm steers
+   resolution to versions old enough to pass.
+2. To regenerate under the policy: on the server clone, force a fresh
+   resolution and copy the result back into the repo:
+   ```bash
+   cd <clone>/<app> && rm -f pnpm-lock.yaml && pnpm install   # picks pre-cutoff versions
+   ```
+   ```powershell
+   scp root@techbridge.edu.gh:<clone>/<app>/pnpm-lock.yaml <repo>\<app>\pnpm-lock.yaml
+   ```
+   Then commit the policy-clean lockfile. `--frozen-lockfile` passes on the next
+   deploy.
+3. **Do not relax or disable the policy** to make a build pass — it is a
+   security control (CLAUDE.md §12). Fix the lockfile, not the guard.
+
+### Detection
+
+`ERR_PNPM_MINIMUM_RELEASE_AGE_VIOLATION` in a `-Build`, naming each package and
+its publish time versus the cutoff. A fresh resolution that picks a version with
+"(newer available)" beside it is the policy working as intended, not a problem.
