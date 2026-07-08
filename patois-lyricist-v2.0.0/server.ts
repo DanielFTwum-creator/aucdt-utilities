@@ -149,16 +149,22 @@ async function startServer() {
   // Gemini Generation Proxy
   app.post(['/api/gemini/generate', `${basePath}/api/gemini/generate`], async (req, res) => {
     try {
-      const { prompt, systemInstruction } = req.body;
+      const { prompt, systemInstruction, temperature } = req.body;
       if (!prompt || !systemInstruction) {
         return res.status(400).json({ error: "Missing prompt or systemInstruction" });
       }
+
+      // Honour a client-supplied temperature (the two-pass critique lowers it
+      // for the revise pass); clamp to a sane range and default to 0.95.
+      const temp = typeof temperature === "number" && temperature >= 0 && temperature <= 2
+        ? temperature
+        : 0.95;
 
       const response = await callGemini({
         contents: [{ role: "user", parts: [{ text: prompt }] }],
         systemInstruction: { parts: [{ text: systemInstruction }] },
         generationConfig: {
-          temperature: 0.95,
+          temperature: temp,
           topP: 0.9,
           thinkingConfig: { thinkingBudget: 12000 },
         },
