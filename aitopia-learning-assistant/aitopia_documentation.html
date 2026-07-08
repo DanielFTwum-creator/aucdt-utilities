@@ -1,0 +1,927 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AITOPIA: AI Academy & Atɛntɛbɛn Flute Studio – Complete System Manual</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+    :root {
+      --color-slate-50: #f8fafc;
+      --color-slate-100: #f1f5f9;
+      --color-slate-200: #e2e8f0;
+      --color-slate-300: #cbd5e1;
+      --color-slate-700: #334155;
+      --color-slate-800: #1e293b;
+      --color-slate-900: #0f172a;
+      --color-amber-500: #f59e0b;
+      --color-amber-600: #d97706;
+      --color-emerald-500: #10b981;
+      --color-emerald-600: #059669;
+      --color-emerald-950: #022c22;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background-color: var(--color-slate-50);
+      color: var(--color-slate-800);
+      line-height: 1.6;
+      padding: 0;
+    }
+
+    header {
+      background: linear-gradient(135deg, var(--color-slate-900) 0%, #1e1e38 100%);
+      color: white;
+      padding: 4rem 2rem;
+      position: relative;
+      overflow: hidden;
+      border-bottom: 5px solid var(--color-emerald-500);
+    }
+
+    header::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 350px;
+      height: 350px;
+      background: radial-gradient(circle, rgba(16, 185, 129, 0.15) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    header::after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: 10%;
+      width: 250px;
+      height: 250px;
+      background: radial-gradient(circle, rgba(245, 158, 11, 0.1) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    .header-content {
+      max-width: 1100px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 10;
+    }
+
+    .badge-group {
+      display: flex;
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .badge {
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: 0.35rem 1rem;
+      border-radius: 9999px;
+      display: inline-block;
+    }
+
+    .badge-emerald {
+      background-color: rgba(16, 185, 129, 0.15);
+      color: var(--color-emerald-500);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+
+    .badge-amber {
+      background-color: rgba(245, 158, 11, 0.15);
+      color: var(--color-amber-500);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+    }
+
+    header h1 {
+      font-size: 2.75rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.15;
+      margin-bottom: 1rem;
+    }
+
+    header h1 span {
+      color: var(--color-emerald-500);
+    }
+
+    header p {
+      font-size: 1.125rem;
+      color: var(--color-slate-300);
+      max-width: 800px;
+      font-weight: 300;
+    }
+
+    nav {
+      background-color: white;
+      border-bottom: 1px solid var(--color-slate-200);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+    }
+
+    .nav-container {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      overflow-x: auto;
+      white-space: nowrap;
+      padding: 0 1rem;
+    }
+
+    .nav-container a {
+      color: var(--color-slate-700);
+      text-decoration: none;
+      padding: 1.25rem 1.5rem;
+      font-size: 0.875rem;
+      font-weight: 600;
+      border-bottom: 3px solid transparent;
+      transition: all 0.2s ease-in-out;
+      display: inline-block;
+    }
+
+    .nav-container a:hover {
+      color: var(--color-emerald-600);
+      background-color: var(--color-slate-50);
+    }
+
+    .nav-container a.active {
+      color: var(--color-emerald-600);
+      border-bottom-color: var(--color-emerald-500);
+    }
+
+    main {
+      max-width: 1100px;
+      margin: 3rem auto;
+      padding: 0 2rem;
+    }
+
+    section {
+      background-color: white;
+      border: 1px solid var(--color-slate-200);
+      border-radius: 1rem;
+      padding: 3rem;
+      margin-bottom: 3rem;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px -1px rgba(0, 0, 0, 0.01);
+    }
+
+    h2 {
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--color-slate-900);
+      margin-bottom: 1.5rem;
+      border-bottom: 2px solid var(--color-slate-100);
+      padding-bottom: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    h2::before {
+      content: "";
+      display: inline-block;
+      width: 6px;
+      height: 24px;
+      background-color: var(--color-emerald-500);
+      border-radius: 3px;
+    }
+
+    h3 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--color-slate-900);
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+    }
+
+    p {
+      margin-bottom: 1.25rem;
+      font-size: 0.95rem;
+      color: var(--color-slate-700);
+    }
+
+    ul, ol {
+      margin-bottom: 1.5rem;
+      padding-left: 1.5rem;
+    }
+
+    li {
+      margin-bottom: 0.5rem;
+      font-size: 0.95rem;
+      color: var(--color-slate-700);
+    }
+
+    .highlight-box {
+      background-color: rgba(245, 158, 11, 0.05);
+      border-left: 4px solid var(--color-amber-500);
+      padding: 1.5rem;
+      border-radius: 0.5rem;
+      margin: 2rem 0;
+    }
+
+    .highlight-box h4 {
+      color: var(--color-amber-600);
+      font-weight: 700;
+      font-size: 1rem;
+      margin-bottom: 0.5rem;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+    }
+
+    .emerald-box {
+      background-color: rgba(16, 185, 129, 0.03);
+      border-left: 4px solid var(--color-emerald-500);
+      padding: 1.5rem;
+      border-radius: 0.5rem;
+      margin: 2rem 0;
+    }
+
+    .emerald-box h4 {
+      color: var(--color-emerald-600);
+      font-weight: 700;
+      font-size: 1rem;
+      margin-bottom: 0.5rem;
+      text-transform: uppercase;
+    }
+
+    code {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      background-color: var(--color-slate-100);
+      padding: 0.2rem 0.4rem;
+      border-radius: 4px;
+      color: #e11d48;
+    }
+
+    pre {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      background-color: var(--color-slate-900);
+      color: #e2e8f0;
+      padding: 1.5rem;
+      border-radius: 0.5rem;
+      overflow-x: auto;
+      margin-bottom: 1.5rem;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 2rem 0;
+      font-size: 0.9rem;
+    }
+
+    th, td {
+      border: 1px solid var(--color-slate-200);
+      padding: 0.75rem 1rem;
+      text-align: left;
+    }
+
+    th {
+      background-color: var(--color-slate-100);
+      color: var(--color-slate-900);
+      font-weight: 600;
+    }
+
+    tr:nth-child(even) {
+      background-color: var(--color-slate-50);
+    }
+
+    .diagram {
+      border: 1px solid var(--color-slate-200);
+      border-radius: 0.75rem;
+      padding: 2rem;
+      background-color: white;
+      margin: 2rem 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .flute-graphic {
+      width: 100%;
+      max-width: 450px;
+      height: 40px;
+      background-color: #d97706;
+      border-radius: 20px;
+      position: relative;
+      margin: 2rem 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      padding: 0 30px;
+      box-shadow: inset 0 3px 6px rgba(0,0,0,0.3);
+    }
+
+    .flute-hole {
+      width: 16px;
+      height: 16px;
+      background-color: var(--color-emerald-950);
+      border-radius: 50%;
+      border: 2px solid #b45309;
+    }
+
+    .flute-hole.active {
+      background-color: var(--color-emerald-500);
+      box-shadow: 0 0 10px var(--color-emerald-500);
+    }
+
+    footer {
+      background-color: var(--color-slate-900);
+      color: var(--color-slate-300);
+      padding: 4rem 2rem;
+      text-align: center;
+      border-top: 1px solid var(--color-slate-800);
+    }
+
+    footer p {
+      font-size: 0.875rem;
+      color: #94a3b8;
+    }
+
+    .btn-download {
+      background-color: var(--color-emerald-500);
+      color: white;
+      font-size: 0.875rem;
+      font-weight: 600;
+      padding: 0.75rem 1.5rem;
+      border-radius: 0.5rem;
+      border: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: background-color 0.2s ease;
+      text-decoration: none;
+      margin-top: 1rem;
+    }
+
+    .btn-download:hover {
+      background-color: var(--color-emerald-600);
+    }
+
+    .weekly-card {
+      background-color: var(--color-slate-50);
+      border: 1px solid var(--color-slate-200);
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .weekly-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(15, 23, 42, 0.05);
+    }
+    .weekly-card h4 {
+      font-size: 1.05rem;
+      color: var(--color-slate-900);
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-weight: 700;
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+    .weekly-card h4::before {
+      content: "📅";
+      font-size: 1rem;
+    }
+    .workshop-box {
+      background-color: rgba(16, 185, 129, 0.05);
+      border-left: 3px solid var(--color-emerald-500);
+      padding: 0.75rem 1rem;
+      border-radius: 0.25rem;
+      margin-top: 0.75rem;
+      font-size: 0.85rem;
+      color: var(--color-slate-700);
+    }
+    .exercise-box {
+      background-color: rgba(245, 158, 11, 0.05);
+      border-left: 3px solid var(--color-amber-500);
+      padding: 0.75rem 1rem;
+      border-radius: 0.25rem;
+      margin-top: 0.5rem;
+      font-size: 0.85rem;
+      color: var(--color-slate-700);
+    }
+
+    @media (max-width: 768px) {
+      header {
+        padding: 2.5rem 1rem;
+      }
+      header h1 {
+        font-size: 2rem;
+      }
+      section {
+        padding: 1.5rem;
+      }
+      nav {
+        position: static;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="header-content">
+      <div class="badge-group">
+        <span class="badge badge-emerald">AITOPIA Studio Pack</span>
+        <span class="badge badge-amber">Interactive Manual</span>
+      </div>
+      <h1>AITOPIA: <span>AI Academy &amp; Atɛntɛbɛn Flute Studio</span></h1>
+      <p>The definitive system documentation, technical architectural blueprint, 14-week blended computer science curriculum, and West African bamboo flute fingering manual.</p>
+    </div>
+  </header>
+
+  <nav>
+    <div class="nav-container">
+      <a href="#overview">System Overview</a>
+      <a href="#architecture">Architecture</a>
+      <a href="#curriculum">14-Week Curriculum</a>
+      <a href="#flute">Atɛntɛbɛn Manual</a>
+      <a href="#analyzer">AI &amp; Video Sync</a>
+      <a href="#qa-ethics">QA &amp; Ethical Framework</a>
+    </div>
+  </nav>
+
+  <main>
+    <!-- OVERVIEW -->
+    <section id="overview">
+      <h2>1. System Overview &amp; Vision</h2>
+      <p>
+        <strong>AITOPIA</strong> is an avant-garde educational platform that harmonizes the high-tech worlds of Artificial Intelligence and Computer Science with the rich acoustic heritage of West Africa—specifically, the traditional Ghanaian <strong>Atɛntɛbɛn</strong> bamboo flute.
+      </p>
+      <p>
+        By combining a full-scale 14-week curriculum with an interactive web simulator, a YouTube transcript analyzer powered by Gemini AI, and an adaptive study workspace, AITOPIA provides students with a multidimensional learning model. Here, symbolic programming is paired with acoustic mathematics, and neural models are grounded in non-Western ethical contexts.
+      </p>
+
+      <div class="emerald-box">
+        <h4>Key Project Pillars</h4>
+        <ul>
+          <li><strong>Bimodal Learning Architecture:</strong> Seamlessly switch between the conceptual Course Workspace (Syllabus + AI Tutor) and the immersive Atɛntɛbɛn Flute Studio.</li>
+          <li><strong>Responsive Audio Simulation:</strong> An interactive, real-time audio synthesizer simulating the traditional C4–C5 scale of the bamboo flute.</li>
+          <li><strong>Server-Side Generative AI:</strong> Powered by the Gemini 3.5 Flash model with graceful offline simulation fallbacks to guarantee uninterrupted user experience.</li>
+          <li><strong>Multicultural Grounding:</strong> Broadens the computer science conversation by integrating ethnic musicology and non-Western data governance concepts directly into core coursework.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ARCHITECTURE -->
+    <section id="architecture">
+      <h2>2. Software Architecture Blueprint</h2>
+      <p>
+        AITOPIA is designed as a secure, full-stack application built using React 18, Vite, and Express. The architecture isolates API keys and models on the server, serving a clean, high-performance interface to the client.
+      </p>
+
+      <h3>System Topology Diagram</h3>
+      <div class="diagram">
+        <pre>
+┌────────────────────────────────────────────────────────────────┐
+│                        CLIENT APPLICATION                      │
+│   (Vite + React 18, Tailwind CSS, Lucide Icons, Web Audio API) │
+└───────────────────────────────┬────────────────────────────────┘
+                                │
+               HTTP REST API    │  POST /api/chat
+               Requests         │  POST /api/analyze-video
+                                ▼
+┌────────────────────────────────────────────────────────────────┐
+│                        EXPRESS GATEWAY                         │
+│               (Port 3000 Ingress, Node.js ESM)                 │
+└───────────────────────────────┬────────────────────────────────┘
+                                │
+                Secure Key      │  Google GenAI SDK
+                Validation      │  Model: gemini-3.5-flash
+                                ▼
+┌────────────────────────────────────────────────────────────────┐
+│                       GOOGLE GEMINI API                        │
+│      (Generates context-aware tutoring and transcript JSON)    │
+└────────────────────────────────────────────────────────────────┘
+        </pre>
+      </div>
+
+      <h3>Technology Stack Details</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Layer</th>
+            <th>Technology</th>
+            <th>Role &amp; Configuration</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Frontend Engine</strong></td>
+            <td>React 18 + Vite</td>
+            <td>Modular components with strict TypeScript, serving client-side state machine.</td>
+          </tr>
+          <tr>
+            <td><strong>Styling &amp; UX</strong></td>
+            <td>Tailwind CSS</td>
+            <td>High-contrast, eye-safe typography palette utilizing Inter and JetBrains Mono.</td>
+          </tr>
+          <tr>
+            <td><strong>Acoustic Model</strong></td>
+            <td>Web Audio API</td>
+            <td>Native hardware oscillators modeling pure and wet flute timbres with sine/triangle wave fusion.</td>
+          </tr>
+          <tr>
+            <td><strong>Backend Server</strong></td>
+            <td>Express.js</td>
+            <td>Handles standard port 3000 ingress, static builds production assets routing.</td>
+          </tr>
+          <tr>
+            <td><strong>AI Orchestrator</strong></td>
+            <td>@google/genai SDK</td>
+            <td>Communicates securely with gemini-3.5-flash, enforcing structured JSON Schemas.</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- CURRICULUM -->
+    <section id="curriculum">
+      <h2>3. The 14-Week AI Academy Curriculum</h2>
+      <p>
+        The course is divided into five rigorous academic modules designed to deliver hands-on competence in AI algorithm design, text engineering, deep neural networks, and global socio-technical issues.
+      </p>
+
+      <h3>Module 1: AI Foundations &amp; Searching (Weeks 1–2)</h3>
+      <div class="weekly-card">
+        <h4>Week 1: Foundations of Intelligent Agents &amp; Bimodal Environments</h4>
+        <p><strong>Core Theory:</strong> Rationality metrics, agent-environment loops, and symbolic representations.</p>
+        <div class="workshop-box">
+          <strong>🛠️ Academic Workshop:</strong> <em>The Autonomous Musician State-Machine.</em> Build a deterministic state-machine simulation of an autonomous Atɛntɛbɛn performance agent in a live browser context, mapping simulated acoustic sensor states to musical action policies.
+        </div>
+        <div class="exercise-box">
+          <strong>📝 Practical Exercise:</strong> Formulate mathematical rationality metrics measuring the utility <code>U(a)</code> of finger-hole adjustment operations under varying environmental acoustic noise thresholds.
+        </div>
+      </div>
+
+      <div class="weekly-card">
+        <h4>Week 2: Advanced Search &amp; Spatial Pitch Navigation</h4>
+        <p><strong>Core Theory:</strong> Blind vs. heuristic searching. BFS, DFS, and A* search optimization algorithms applied to melodic transition paths.</p>
+        <div class="workshop-box">
+          <strong>🛠️ Academic Workshop:</strong> <em>Polyrhythmic Pathfinders.</em> Create a spatial search visualizer applying BFS, DFS, and A* to pathfinding through a labyrinth representing West African polyrhythmic drum metrics and pitch constraints.
+        </div>
+        <div class="exercise-box">
+          <strong>📝 Practical Exercise:</strong> Code the heuristic cost function <code>f(n) = g(n) + h(n)</code> for pitch transitions with constraints simulating finger-movement friction and acoustic transition costs.
+        </div>
+      </div>
+
+      <h3>Module 2: Machine Learning Pipelines &amp; Regression (Weeks 3–8)</h3>
+      <div class="weekly-card">
+        <h4>Week 3: Data Integrity, Outlier Filtering &amp; Audio Feature Pipelines</h4>
+        <p><strong>Core Theory:</strong> Outlier correction, statistical scaling, feature engineering, and pipeline diagnostics.</p>
+        <div class="workshop-box">
+          <strong>🛠️ Academic Workshop:</strong> <em>The Acoustic Feature Pipeline.</em> Engineer an audio feature extraction pipeline converting raw wav signals from flute recordings into numerical pitch and moisture metrics using discrete frequency bins.
+        </div>
+        <div class="exercise-box">
+          <strong>📝 Practical Exercise:</strong> Implement anomaly detection routines using standard deviation thresholds to prune acoustic outliers caused by room resonance or breath distortion.
+        </div>
+      </div>
+
+      <div class="weekly-card">
+        <h4>Week 4: Supervised Learning – Parametric Regression Models</h4>
+        <p><strong>Core Theory:</strong> Mathematical formulations of Linear and Logistic Regression, gradient descent mechanics, and cost functions.</p>
+        <div class="workshop-box">
+          <strong>🛠️ Academic Workshop:</strong> <em>Predictive Woodwind Lifespans.</em> Program a local script calculating univariate linear regression coefficients to predict traditional bamboo wood decay rates as a function of cumulative daily play cycles and relative humidity.
+        </div>
+        <div class="exercise-box">
+          <strong>📝 Practical Exercise:</strong> Derive and compute gradient descent weight updates manually for a miniature dataset of 5 distinct woodwind density ratings.
+        </div>
+      </div>
+
+      <div class="weekly-card">
+        <h4>Week 5: Inductive Decision Trees &amp; Entropy Metrics</h4>
+        <p><strong>Core Theory:</strong> Information gain formulas, Gini impurities, recursive partitioning, and structural overfitting.</p>
+        <div class="workshop-box">
+          <strong>🛠️ Academic Workshop:</strong> <em>The Master Kudjo Moisture Classifier.</em> Design a binary classification system that classifies an acoustic recording into "Wet/Moist Tone" vs. "Brittle/Dry Tone" based on harmonic energy ratios.
+        </div>
+        <div class="exercise-box">
+          <strong>📝 Practical Exercise:</strong> Calculate the Gini Impurity and Information Gain metrics for a splitting tree node representing high-frequency audio bands (<code>&gt;1200 Hz</code>).
+        </div>
+      </div>
+
+      <div class="weekly-card">
+        <h4>Week 6: Ensemble Architectures &amp; Bootstrap Aggregating</h4>
+        <p><strong>Core Theory:</strong> Random Forest bagging techniques, out-of-bag error estimation, and introduction to Gradient Boosting.</p>
+        <div class="workshop-box">
+          <strong>🛠️ Academic Workshop:</strong> <em>The Woodwind Authenticator.</em> Construct a random forest classification pool to distinguish authentic hand-crafted Ghanaian Atɛntɛbɛn flutes from industrial plastic replicas using high-frequency resonance profiles.
+        </div>
+        <div class="exercise-box">
+          <strong>📝 Practical Exercise:</strong> Implement bootstrap aggregating (bagging) logic from scratch in TypeScript and compute out-of-bag (OOB) error margins.
+        </div>
+      </div>
+
+      <div class="weekly-card">
+        <h4>Week 7: Unsupervised Clustering &amp; Spectral Dimensionality Reduction</h4>
+        <p><strong>Core Theory:</strong> K-Means clustering, Principal Component Analysis (PCA) eigenvectors, and cluster validation metrics (Silhouette score).</p>
+        <div class="workshop-box">
+          <strong>🛠️ Academic Workshop:</strong> <em>The Acoustic Style Clusterizer.</em> Analyze high-dimensional spectral acoustic data using Principal Component Analysis (PCA) and visualize spectral clusters using Recharts.
+        </div>
+        <div class="exercise-box">
+          <strong>📝 Practical Exercise:</strong> Compute the covariance matrix and determine the eigenvectors for a 2-dimensional vector of pitch resonance and blowing pressure.
+        </div>
+      </div>
+
+      <div class="weekly-card">
+        <h4>Week 8: Statistical Diagnostics, Bias-Variance &amp; Cross-Validation</h4>
+        <p><strong>Core Theory:</strong> Bias-Variance trade-off, k-fold cross-validation pipelines, and continuous model verification.</p>
+        <div class="workshop-box">
+          <strong>🛠️ Academic Workshop:</strong> <em>The Melodic Robustness Clinic.</em> Build a modular validation suite that splits acoustic data into <code>k</code>-folds to evaluate pitch detection robustly under high-noise simulation environments.
+        </div>
+        <div class="exercise-box">
+          <strong>📝 Practical Exercise:</strong> Diagnose high-variance overfitting in a simulated model and formulate L1 (Lasso) and L2 (Ridge) regularization constraints to bound weights.
+        </div>
+      </div>
+
+      <h3>Module 3: Deep Learning &amp; Representation (Weeks 9–10)</h3>
+      <div class="weekly-card">
+        <h4>Week 9: Backpropagation Mathematics &amp; Computation Graphs</h4>
+        <p><strong>Core Theory:</strong> Computational graphs, chain-rule calculus of backpropagation, and structural optimization.</p>
+        <div class="workshop-box">
+          <strong>🛠️ Academic Workshop:</strong> <em>Micro-Grad from Scratch.</em> Implement a reverse-mode automatic differentiation engine in TypeScript representing simple neuron weights and bias adjustments.
+        </div>
+        <div class="exercise-box">
+          <strong>📝 Practical Exercise:</strong> Derive partial derivatives of loss with respect to weights for a simple 3-layer neural network with Sigmoid activation functions.
+        </div>
+      </div>
+
+      <div class="weekly-card">
+        <h4>Week 10: Advanced Computer Vision &amp; Melodic Sequence Models</h4>
+        <p><strong>Core Theory:</strong> Convolutional filters, stride pooling, Recurrent Networks (RNNs) and LSTM gated states.</p>
+        <div class="workshop-box">
+          <strong>🛠️ Academic Workshop:</strong> <em>Traditional Melody Predictor.</em> Construct a sequence model (simulated LSTM) designed to predict the next note in a traditional Ghanaian melody (e.g., "Yaa Amponsah").
+        </div>
+        <div class="exercise-box">
+          <strong>📝 Practical Exercise:</strong> Implement convolutional 1D kernel operations on a frequency spectrum array to detect rapid note transitions (trills).
+        </div>
+      </div>
+
+      <h3>Module 4: Text Representation, Attention &amp; LLMs (Weeks 11–12)</h3>
+      <div class="weekly-card">
+        <h4>Week 11: NLP Pipelines &amp; Vector Embeddings</h4>
+        <p><strong>Core Theory:</strong> TF-IDF weighting, tokenization matrices, Word2Vec neural representations, and semantic distances.</p>
+        <div class="workshop-box">
+          <strong>🛠️ Academic Workshop:</strong> <em>Oral History Document Indexer.</em> Formulate a TF-IDF term-document weighting system to index ethnomusicological oral history archives from central Ghana.
+        </div>
+        <div class="exercise-box">
+          <strong>📝 Practical Exercise:</strong> Calculate cosine similarities between semantic embeddings of flute techniques like "Kudjo Moisture Trick" and "Acoustic Low-Pass".
+        </div>
+      </div>
+
+      <div class="weekly-card">
+        <h4>Week 12: Transformers &amp; Large Language Models</h4>
+        <p><strong>Core Theory:</strong> Scaled dot-product attention, multi-head attention blocks, positional encoding, and instruction tuning.</p>
+        <div class="workshop-box">
+          <strong>🛠️ Academic Workshop:</strong> <em>The Tablature Attention Block.</em> Prototype a multi-head self-attention module in TypeScript that processes tokens of traditional flute tablature and scores musical correlation.
+        </div>
+        <div class="exercise-box">
+          <strong>📝 Practical Exercise:</strong> Trace the matrix multiplication of Query, Key, and Value vectors for a sequence length of 4 notes manually.
+        </div>
+      </div>
+
+      <h3>Module 5: Responsible AI &amp; Capstones (Weeks 13–14)</h3>
+      <div class="weekly-card">
+        <h4>Week 13: Socio-Technical Ethics &amp; Bias</h4>
+        <p><strong>Core Theory:</strong> Algorithmic audits, demographic parity, non-Western ethical frameworks (Ubuntu data principles), and policy compliance.</p>
+        <div class="workshop-box">
+          <strong>🛠️ Academic Workshop:</strong> <em>The Algorithmic Ethnomusicology Audit.</em> Audit an automatic grading algorithm trained on European flute metrics to identify demographic parity bias against traditional African blowing dynamics.
+        </div>
+        <div class="exercise-box">
+          <strong>📝 Practical Exercise:</strong> Design a data governance framework incorporating Ghanaian "Ubuntu" philosophical concepts regarding collective data ownership.
+        </div>
+      </div>
+
+      <div class="weekly-card">
+        <h4>Week 14: Portfolio Engineering, Showcase &amp; Defence</h4>
+        <p><strong>Core Theory:</strong> Capstone verification, containerized deployments, and continuous formative reviews.</p>
+        <div class="workshop-box">
+          <strong>🛠️ Academic Workshop:</strong> <em>Live System Defence.</em> Host a live, containerized deployment simulation of the AITOPIA full-stack suite, defending the system topology and AI-video synchronization to academic evaluators.
+        </div>
+        <div class="exercise-box">
+          <strong>📝 Practical Exercise:</strong> Document codebases with strict JSDoc structures, execute linter checks, and establish a release readiness blueprint.
+        </div>
+      </div>
+    </section>
+
+    <!-- ATENTEBEN FLUTE -->
+    <section id="flute">
+      <h2>4. Atɛntɛbɛn Flute Technical Guide</h2>
+      <p>
+        The <strong>Atɛntɛbɛn</strong> is a traditional Ghanaian woodwind instrument, traditionally crafted from local bamboo (<em>Oxytenanthera abyssinica</em>).
+      </p>
+
+      <div class="highlight-box">
+        <h4>The Master Kudjo Moisture Secret 💧</h4>
+        <p>
+          Dry bamboo has rigid, brittle fibers that introduce harsh, airy turbulence in the upper frequency harmonics. By soaking the foot of your bamboo flute in cool water for exactly <strong>10 minutes</strong> before playing, the wood fibers swell slightly. This acts as a natural low-pass acoustic dampener, filtering out high-pitched breathy noise and yielding a rich, deeply resonance <strong>"moist" tone</strong>.
+        </p>
+      </div>
+
+      <h3>Acoustic Hole Anatomy</h3>
+      <p>
+        The instrument consists of <strong>6 front-facing finger holes</strong> arranged in three ergonomic groups of two, and <strong>1 thumb-facing hole on the back</strong>.
+      </p>
+
+      <div class="diagram">
+        <strong>Atɛntɛbɛn Fingering Schematic</strong>
+        <div class="flute-graphic">
+          <div class="flute-hole active" title="Hole 1 (Left Index)"></div>
+          <div class="flute-hole active" title="Hole 2 (Left Middle)"></div>
+          <div class="flute-hole" title="Hole 3 (Left Ring)"></div>
+          <div class="flute-hole" title="Hole 4 (Right Index)"></div>
+          <div class="flute-hole" title="Hole 5 (Right Middle)"></div>
+          <div class="flute-hole" title="Hole 6 (Right Ring)"></div>
+        </div>
+        <p style="font-size: 0.8rem; color: var(--color-slate-700);">Green indicators show closed holes. Adjust fingers to navigate the diatonic scale.</p>
+      </div>
+
+      <h3>Diatonic Fingering &amp; Note Frequency Map</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Note</th>
+            <th>Solfège</th>
+            <th>Frequency (Hz)</th>
+            <th>Thumb (Back)</th>
+            <th>H1 (L-Index)</th>
+            <th>H2 (L-Middle)</th>
+            <th>H3 (L-Ring)</th>
+            <th>H4 (R-Index)</th>
+            <th>H5 (R-Middle)</th>
+            <th>H6 (R-Ring)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>C4</strong></td>
+            <td>Doh</td>
+            <td>261.63 Hz</td>
+            <td>Closed (●)</td>
+            <td>Closed (●)</td>
+            <td>Closed (●)</td>
+            <td>Closed (●)</td>
+            <td>Closed (●)</td>
+            <td>Closed (●)</td>
+            <td>Closed (●)</td>
+          </tr>
+          <tr>
+            <td><strong>D4</strong></td>
+            <td>Ray</td>
+            <td>293.66 Hz</td>
+            <td>Closed (●)</td>
+            <td>Closed (●)</td>
+            <td>Closed (●)</td>
+            <td>Closed (●)</td>
+            <td>Closed (●)</td>
+            <td>Closed (●)</td>
+            <td>Open (○)</td>
+          </tr>
+          <tr>
+            <td><strong>E4</strong></td>
+            <td>Me</td>
+            <td>329.63 Hz</td>
+            <td>Closed (●)</td>
+            <td>Closed (●)</td>
+            <td>Closed (●)</td>
+            <td>Closed (●)</td>
+            <td>Closed (●)</td>
+            <td>Open (○)</td>
+            <td>Open (○)</td>
+          </tr>
+          <tr>
+            <td><strong>F4</strong></td>
+            <td>Fah</td>
+            <td>349.23 Hz</td>
+            <td>Closed (●)</td>
+            <td>Closed (●)</td>
+            <td>Closed (●)</td>
+            <td>Closed (●)</td>
+            <td>Open (○)</td>
+            <td>Open (○)</td>
+            <td>Open (○)</td>
+          </tr>
+          <tr>
+            <td><strong>G4</strong></td>
+            <td>Soh</td>
+            <td>392.00 Hz</td>
+            <td>Closed (●)</td>
+            <td>Closed (●)</td>
+            <td>Closed (●)</td>
+            <td>Open (○)</td>
+            <td>Open (○)</td>
+            <td>Open (○)</td>
+            <td>Open (○)</td>
+          </tr>
+          <tr>
+            <td><strong>A4</strong></td>
+            <td>La</td>
+            <td>440.00 Hz</td>
+            <td>Closed (●)</td>
+            <td>Closed (●)</td>
+            <td>Open (○)</td>
+            <td>Open (○)</td>
+            <td>Open (○)</td>
+            <td>Open (○)</td>
+            <td>Open (○)</td>
+          </tr>
+          <tr>
+            <td><strong>B4</strong></td>
+            <td>Te</td>
+            <td>493.88 Hz</td>
+            <td>Closed (●)</td>
+            <td>Open (○)</td>
+            <td>Open (○)</td>
+            <td>Open (○)</td>
+            <td>Open (○)</td>
+            <td>Open (○)</td>
+            <td>Open (○)</td>
+          </tr>
+          <tr>
+            <td><strong>C5</strong></td>
+            <td>Doh'</td>
+            <td>523.25 Hz</td>
+            <td>Open (○)</td>
+            <td>Closed (●)</td>
+            <td>Closed (●)</td>
+            <td>Open (○)</td>
+            <td>Open (○)</td>
+            <td>Open (○)</td>
+            <td>Open (○)</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- VIDEO SYNC -->
+    <section id="analyzer">
+      <h2>5. AI Chat &amp; Video Transcript Synchronization</h2>
+      <p>
+        The <strong>AITOPIA Tutor Suite</strong> includes an automated video indexing platform. When a video transcript is analyzed, a specialized JSON layout is parsed, extracting precise milliseconds mappings.
+      </p>
+      <p>
+        Clicking on any highlight row in the <strong>Video Analysis AI</strong> panel executes a sync cascade:
+      </p>
+      <ol>
+        <li>An event trigger is raised containing the precise timestamp and secondary action details.</li>
+        <li>The main application intercepts the event and updates the active view mode to the <strong>Atɛntɛbɛn Flute Studio</strong>.</li>
+        <li>The flute simulator intercepts the active fingering state and lights up the target fingering indicators (such as Doh, Ray, or the "Moisture Trick" parameter).</li>
+      </ol>
+      <p>
+        This bidirectional feedback ensures that students can hear, see, and interact with the physical parameters taught in theoretical tutorials instantly.
+      </p>
+    </section>
+
+    <!-- QA & ETHICS -->
+    <section id="qa-ethics">
+      <h2>6. Quality Assurance &amp; Inclusive Ethics Framework</h2>
+      <p>
+        AITOPIA does not evaluate in isolation. The curriculum is subjected to strict, continuous quality metrics managed by academic advisory teams.
+      </p>
+
+      <h3>continuous Quality Metrics (QA)</h3>
+      <ul>
+        <li><strong>Curriculum Completeness Indicator:</strong> Calculated by real-time checklist states in the syllabus manager, preventing syllabus drift.</li>
+        <li><strong>Continuous Feedback Loop:</strong> 60% of all student grades are sourced from continuous peer-review labs, code defense, and performance-based checks rather than high-stakes final testing.</li>
+        <li><strong>Dampened Diagnostic Curves:</strong> Course dashboards plot diagnostic metrics to locate students struggling with algorithmic complexity early.</li>
+      </ul>
+
+      <h3>Inclusive Ethnomusicological Ethics</h3>
+      <p>
+        Traditional technology programs often treat cultural aesthetics as secondary. AITOPIA's integration of the Ghanaian Atɛntɛbɛn flute directly counters this bias. It teaches students that engineering flourishes when designed inside a culture's specific physical, acoustic, and narrative contexts.
+      </p>
+
+      <div class="emerald-box">
+        <h4>Standalone Documentation Download</h4>
+        <p>To take this documentation manual offline, print it, or distribute it to your study group, you can save a standalone HTML copy using the link below.</p>
+        <button class="btn-download" onclick="window.print()">
+          🖨️ Print / Save as PDF
+        </button>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>© 2026 AITOPIA Academic Consortium. All rights reserved.</p>
+    <p style="margin-top: 0.5rem; font-size: 0.75rem; color: #64748b;">Grounded in Inclusive West African Art and AI Engineering Standards.</p>
+  </footer>
+
+</body>
+</html>

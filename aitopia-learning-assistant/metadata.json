@@ -1,0 +1,6 @@
+{
+  "name": "AITOPIA Learning Assistant",
+  "description": "An AI-powered learning companion featuring an interactive course syllabus navigator, real-time AI tutor, YouTube video summarizer, and an interactive Ghanaian Atɛntɛbɛn bamboo flute simulator.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
