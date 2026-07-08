@@ -66,6 +66,17 @@ relays it to WMS, which adds the key (`X-Gemini-Proxy-Key: <GEMINI_PROXY_KEY>`).
 - Converted on 8 Jul 2026 from a server-held `GEMINI_API_KEY` +
   `@google/genai` SDK call; the SDK has been removed
 
+## 4a-ii. Live fail2ban Feed
+
+`GET /api/banlist` (staff-only, `requireWmsAuth`) returns the server's real
+current bans by shelling to `fail2ban-client status` and `status <jail>` via
+`execFile` (fixed args — jail names come from fail2ban-client, never user
+input, so no shell-injection surface). The PM2 process runs as root, which is
+required for `fail2ban-client` socket access. On any failure (binary absent, no
+permission) the route responds 200 with an empty list so the frontend falls
+back to its bundled sample snapshot. The dashboard calls this on mount and via
+the "Live Bans" header button, then geolocates the IPs through the WMS relay.
+
 ## 4b. Other External Calls
 
 - `/api/geolocate` uses a local offline IP database first, then ip-api.com for

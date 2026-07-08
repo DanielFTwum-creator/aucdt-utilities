@@ -531,6 +531,29 @@ export default function App() {
     setAiAnalysis("");
   };
 
+  // Pull the server's LIVE fail2ban bans (GET /api/banlist, staff-only) and run
+  // them through the geolocation pipeline. Falls back silently to the bundled
+  // snapshot when the endpoint is unavailable or the server has no active bans.
+  const loadLiveBans = async () => {
+    try {
+      const res = await fetch(`${import.meta.env.BASE_URL}api/banlist`);
+      if (!res.ok) return; // 401/relay/etc. — keep whatever is displayed
+      const data = await res.json();
+      if (Array.isArray(data?.ips) && data.ips.length > 0) {
+        await handleParseComplete(data.ips.map((b: { ip: string; jail: string }) => ({ ip: b.ip, jail: b.jail })));
+      }
+    } catch {
+      // network/parse failure — keep the current view
+    }
+  };
+
+  // On first load, show the server's real bans (not the bundled sample) if the
+  // live endpoint is reachable.
+  useEffect(() => {
+    loadLiveBans();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   // Export report as markdown or plain text
   const handleExportText = (format: "txt" | "md") => {
     let content = "";
@@ -727,11 +750,21 @@ export default function App() {
               <span>Mitigation: {mitigationMode ? "ON" : "OFF"}</span>
             </button>
 
+            {/* Pull live server bans */}
+            <button
+              onClick={loadLiveBans}
+              className="px-3 py-2 rounded-lg text-xs font-mono border border-emerald-800 hover:border-emerald-600 bg-zinc-950 text-emerald-400 hover:text-emerald-300 transition-all flex items-center gap-1.5"
+              title="Pull this server's live fail2ban bans"
+            >
+              <Server className="w-3.5 h-3.5" />
+              Live Bans
+            </button>
+
             {/* Reset to Snapshot */}
             <button
               onClick={handleResetToDefault}
               className="px-3 py-2 rounded-lg text-xs font-mono border border-zinc-800 hover:border-zinc-700 bg-zinc-950 text-zinc-400 hover:text-zinc-200 transition-all flex items-center gap-1.5"
-              title="Reset to default snapshot"
+              title="Reset to default sample snapshot"
             >
               <RefreshCw className="w-3.5 h-3.5" />
               Reset Snapshot

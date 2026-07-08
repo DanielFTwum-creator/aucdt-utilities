@@ -1,11 +1,40 @@
 import express from "express";
 import path from "path";
 import dotenv from "dotenv";
+import { execFile } from "child_process";
+import { promisify } from "util";
 import { requireWmsAuth } from "./src/server/wmsAuthMiddleware.ts";
 // vite is a devDependency, imported dynamically in the dev-only branch below;
 // a static import crashes the production server after pnpm install --prod.
 
 dotenv.config();
+
+const execFileAsync = promisify(execFile);
+
+// Read the server's live fail2ban bans via fail2ban-client (current banned IPs
+// per jail). Fixed-argument execFile — jail names come from fail2ban-client
+// output, never user input, so there is no shell-injection surface.
+async function getFail2banBans(): Promise<{ ip: string; jail: string }[]> {
+  const { stdout: statusOut } = await execFileAsync("fail2ban-client", ["status"], { timeout: 8000 });
+  const jailLine = statusOut.split("\n").find(l => l.includes("Jail list:"));
+  const jails = jailLine
+    ? jailLine.split("Jail list:")[1].split(",").map(s => s.trim()).filter(Boolean)
+    : [];
+
+  const bans: { ip: string; jail: string }[] = [];
+  for (const jail of jails) {
+    try {
+      const { stdout } = await execFileAsync("fail2ban-client", ["status", jail], { timeout: 8000 });
+      const banLine = stdout.split("\n").find(l => l.includes("Banned IP list:"));
+      if (!banLine) continue;
+      const ips = banLine.split("Banned IP list:")[1].trim().split(/\s+/).filter(Boolean);
+      for (const ip of ips) bans.push({ ip, jail });
+    } catch {
+      // a jail we cannot read — skip it rather than fail the whole request
+    }
+  }
+  return bans;
+}
 
 // --- Gemini custody: this app NEVER holds the Gemini key (fleet standard, ---
 // --- Pattern 11). Log analysis is relayed to the WMS proxy with the        ---
@@ -55,6 +84,18 @@ async function startServer() {
   app.get("/api/health", (_req, res) =>
     res.json({ ok: true, service: "fail2ban-ai", custody: GEMINI_PROXY_KEY ? "wms-relay" : "unconfigured" })
   );
+
+  // Live fail2ban bans from this server (staff-only). Returns { ips: [{ip,jail}] }.
+  // On any failure (fail2ban-client absent, no permission) responds 200 with an
+  // empty list + error note so the frontend falls back to its sample snapshot.
+  app.get("/api/banlist", requireWmsAuth, async (_req, res) => {
+    try {
+      const ips = await getFail2banBans();
+      res.json({ server: "mail.aucdt.edu.gh", count: ips.length, ips });
+    } catch (err: any) {
+      res.json({ server: null, count: 0, ips: [], error: err?.message || "fail2ban-client unavailable" });
+    }
+  });
 
   // API Route: Geolocate a list of IP addresses (supports batching)
   app.post("/api/geolocate", requireWmsAuth, async (req, res) => {
