@@ -1757,6 +1757,16 @@ nor `server.ts` changed. The hard restart is required only when env or backend c
 Sequential per-app restarts only — never `pm2 reload all` on the RAM-constrained box (it
 spawns everything at once and OOMs; see Pattern 16).
 
+### Corollary: never register a hard interpreter path (8 Jul 2026)
+
+deliberate-magic-reader sat "online" with pid N/A for two days after the 6 Jul reboot,
+with an empty error log. Its PM2 entry had been registered with
+`--interpreter <app>/node_modules/.bin/tsx` (a hard path). A pnpm reinstall relinked
+`.bin` after registration, the symlink vanished, and every resurrect spawned nothing —
+too early to log anything, so PM2 kept reporting "online". Always register with
+`--interpreter npx --interpreter-args tsx`, which resolves tsx by name at each spawn.
+Detection: `pm2 ls` shows pid N/A with 0 restarts, and the port answers `000`.
+
 ---
 
 *Last updated: 2 July 2026 — Daniel Frempong Twum / TUC ICT*  

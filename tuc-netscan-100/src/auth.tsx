@@ -64,6 +64,10 @@ export function AuthGate({ children }: { children: React.ReactNode }) {
         catch { setReason('oauth'); setStatus('login'); }
         cleanUrl(); return;
       }
+      // No callback params: a returning session lands here (often still on
+      // /auth/callback from a bookmark or re-visit). Normalise the URL so it
+      // doesn't stick on the callback path.
+      if (window.location.pathname !== '/') cleanUrl();
       const t = await silentRefresh();
       if (t) { wmsToken = t; setStatus('authed'); } else setStatus('login');
     })();
