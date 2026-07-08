@@ -5,6 +5,9 @@ import {defineConfig} from 'vite';
 
 export default defineConfig(() => {
   return {
+    // Served under the /fail2ban-ai/ sub-path on ai-tools.techbridge.edu.gh;
+    // assets and API calls resolve relative to this base.
+    base: '/fail2ban-ai/',
     plugins: [react(), tailwindcss()],
     resolve: {
       alias: {

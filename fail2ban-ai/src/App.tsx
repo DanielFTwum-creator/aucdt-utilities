@@ -269,7 +269,7 @@ export default function App() {
           `[QUERY] Fetching geolocations for batch ${chunkIdx + 1}/${totalChunks}: [${chunkIps.join(", ")}]...`
         ]);
 
-        const response = await fetch("/api/geolocate", {
+        const response = await fetch(`${import.meta.env.BASE_URL}api/geolocate`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -498,7 +498,7 @@ export default function App() {
     setIsAnalyzing(true);
     setActiveTab("ai-insights");
     try {
-      const response = await fetch("/api/analyze-logs", {
+      const response = await fetch(`${import.meta.env.BASE_URL}api/analyze-logs`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

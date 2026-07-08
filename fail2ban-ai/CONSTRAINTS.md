@@ -75,6 +75,31 @@ relays it to WMS, which adds the key (`X-Gemini-Proxy-Key: <GEMINI_PROXY_KEY>`).
 
 ---
 
+## 4c. Authentication (WMS SSO, staff-only)
+
+fail2ban-ai exposes the server's banned-IP list, attack origins and exposed
+services — reconnaissance-grade data — so it is gated behind WMS SSO before any
+public exposure (TUC-ICT-SRS-2026-013, archetype B, same as netscan-100).
+
+- Client: `src/auth.tsx` wraps the app. Silent session adoption on load, else
+  "Continue with Google" → `{WMS}/api/auth/google?app=fail2ban-ai`, with a
+  TOTP MFA modal. The WMS token is held in memory and injected into every
+  same-origin `/fail2ban-ai/api/` call via a global fetch wrapper.
+- Server: `src/server/wmsAuthMiddleware.ts` (`requireWmsAuth`) guards
+  `/api/geolocate` and `/api/analyze-logs`, validating the Bearer token against
+  WMS `/api/me` and domain-gating to `@techbridge.edu.gh`. `/api/health` stays
+  public for the deploy health check.
+- App is a sub-path SPA: `vite base` = `/fail2ban-ai/`; API calls use
+  `import.meta.env.BASE_URL`.
+
+**WMS-side registration (before first deploy, done once):**
+1. Edit `/opt/tuc-wms/application.yml`: add `app-bases.fail2ban-ai:
+   "https://ai-tools.techbridge.edu.gh/fail2ban-ai"` and ensure
+   `https://ai-tools.techbridge.edu.gh` is in `allowed-origins` (it already is).
+2. `systemctl restart tuc-wms` (brief; additive change).
+3. Verify: `curl -sI "https://wms.techbridge.edu.gh/api/auth/google?app=fail2ban-ai"`
+   returns 302.
+
 ## 5. Deploy Pattern (first deploy checklist)
 
 ```powershell

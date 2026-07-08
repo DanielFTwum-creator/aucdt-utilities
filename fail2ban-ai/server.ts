@@ -1,6 +1,7 @@
 import express from "express";
 import path from "path";
 import dotenv from "dotenv";
+import { requireWmsAuth } from "./src/server/wmsAuthMiddleware.ts";
 // vite is a devDependency, imported dynamically in the dev-only branch below;
 // a static import crashes the production server after pnpm install --prod.
 
@@ -56,7 +57,7 @@ async function startServer() {
   );
 
   // API Route: Geolocate a list of IP addresses (supports batching)
-  app.post("/api/geolocate", async (req, res) => {
+  app.post("/api/geolocate", requireWmsAuth, async (req, res) => {
     try {
       const { ips } = req.body;
       if (!Array.isArray(ips) || ips.length === 0) {
@@ -248,7 +249,7 @@ async function startServer() {
   });
 
   // API Route: Analyze logs and IPs using Gemini
-  app.post("/api/analyze-logs", async (req, res) => {
+  app.post("/api/analyze-logs", requireWmsAuth, async (req, res) => {
     try {
       const { ipsData, logSample } = req.body;
       if (!Array.isArray(ipsData)) {
