@@ -104,6 +104,10 @@ log '[6/7] Deploying dist/ to web root...'
 mkdir -p "`$DEPLOY_PATH" && rsync -a --delete dist/ "`$DEPLOY_PATH/dist/"
 log '[7/7] Installing backend deps...'
 cp server.ts package.json pnpm-lock.yaml pnpm-workspace.yaml "`$DEPLOY_PATH/"
+# server.ts imports ./src/server/wmsAuthMiddleware.ts (WMS SSO guard) — ship it,
+# or tsx crashes on the missing import and the port never binds.
+mkdir -p "`$DEPLOY_PATH/src/server"
+cp src/server/wmsAuthMiddleware.ts "`$DEPLOY_PATH/src/server/"
 cd "`$DEPLOY_PATH" && CI=true pnpm install --prod --silent 2>/dev/null || npm install --omit=dev --silent
 log 'Build and deploy complete.'
 "@
