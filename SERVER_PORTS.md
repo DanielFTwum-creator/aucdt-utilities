@@ -46,6 +46,7 @@
 | 3027 | tuc-netscan-backend                | netscan (netscan.techbridge.edu.gh)           | Online |
 | 3028 | youtube-genie                      | youtube-genie (enhanced-youtube-genie)        | Online |
 | 3032 | bridge-radio                       | radio (radio.techbridge.edu.gh)               | Online |
+| 3040 | fail2ban-ai                        | fail2ban-ai (ai-tools/fail2ban-ai)            | Online (deployed 8 Jul 2026; WMS SSO staff-only) |
 | 5000 | tuc-rms                            | tuc-rms-api                                   | Online ([::1] only) |
 | 8081 | tuc-wms (Spring Boot)              | /opt/tuc-wms                                  | Online (systemd; Java) |
 
@@ -65,7 +66,6 @@
 | 3037 | techbridge-strategy-dashboard |
 | 3038 | techbridge-assessment-platform |
 | 3039 | techbridge-media-club-platform |
-| 3040 | fail2ban-ai (assigned 8 Jul 2026) |
 | 3041 | aitopia (assigned 8 Jul 2026, app import pending) |
 
 (deploy.ps1 + server.ts defaults set to match each of these. Assignment ledger: PORT-REGISTRY.md.)
