@@ -109,6 +109,39 @@ The deploy script SSHs to `root@66.226.72.199`, pulls from GitHub, runs `pnpm in
 
 Note: `deploy.ps1` uses PM2 app name `tuc-netscan-backend` — ensure the PM2 ecosystem config or `pm2 start` command matches this name.
 
+## 8a. nginx Config Safety (Added 2026-07-06 — Outage Post-Mortem)
+
+`vhost_nginx.conf` for this app is Plesk-managed and **shared with every other
+subdomain on techbridge.edu.gh** — a broken file here takes down the entire
+domain, not just netscan.
+
+**Incident:** An AI-assisted (Fable) session generating this vhost config ran
+out of credits mid-generation. The half-written file was left in place,
+nginx failed `nginx -t` on next restart, and the whole domain went down for
+~4 hours (6 July 2026).
+
+**Rule — never apply an nginx config change (AI-generated or hand-edited)
+directly to the live path:**
+
+```bash
+# 1. Write/generate to a staging copy first
+cp /var/www/vhosts/system/netscan.techbridge.edu.gh/conf/vhost_nginx.conf \
+   /tmp/vhost_nginx.conf.staged
+
+# 2. Edit the staged copy, then validate BEFORE it touches the live file
+nginx -t -c /tmp/vhost_nginx.conf.staged 2>&1 || echo "[ABORT] invalid config, not deploying"
+
+# 3. Only on success, move into place and reload (not blind restart)
+cp /tmp/vhost_nginx.conf.staged \
+   /var/www/vhosts/system/netscan.techbridge.edu.gh/conf/vhost_nginx.conf
+nginx -t && systemctl reload nginx
+```
+
+Any AI/agent session generating this file must be treated as **incomplete
+until the full file is read back and validated** — a session interrupted
+by a credit limit, timeout, or disconnect is not a partial success, it's an
+unfinished write.
+
 ---
 
 ## 9. Pre-Delivery Gate

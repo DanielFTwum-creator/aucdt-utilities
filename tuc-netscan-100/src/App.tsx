@@ -1186,6 +1186,21 @@ export default function App() {
                     </div>
                   </div>
 
+                  {aiAnalysisResult && !aiLoading && (
+                    <div className="bg-white border-2 border-emerald-500 rounded-lg p-4 space-y-3 animate-fadeIn">
+                      <div className="flex items-center justify-between border-b border-slate-100 pb-2">
+                        <div className="flex items-center gap-2">
+                          <Sparkles className="w-4 h-4 text-emerald-600" />
+                          <span className="font-bold text-[#1B3A6B] text-sm">AI QoS Advisory</span>
+                        </div>
+                        <button type="button" onClick={() => setAiAnalysisResult(null)} title="Dismiss advisory" className="text-slate-400 hover:text-slate-600">
+                          <X className="w-4 h-4" />
+                        </button>
+                      </div>
+                      <div className="text-xs text-slate-700 leading-relaxed max-h-[300px] overflow-y-auto whitespace-pre-wrap pr-2 font-serif">{aiAnalysisResult}</div>
+                    </div>
+                  )}
+
                   <div className="h-64">
                     <ResponsiveContainer width="100%" height="100%">
                       <AreaChart data={historyState}>
