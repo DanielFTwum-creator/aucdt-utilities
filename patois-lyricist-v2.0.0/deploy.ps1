@@ -83,6 +83,13 @@ if [ -f $RemotePath.env.local ]; then
 elif [ -f $RemotePath.env ]; then
   cp $RemotePath.env .env.local
 fi
+touch .env.local
+# VITE_* is baked in at build time — a missing VITE_GOOGLE_CLIENT_ID renders
+# 'Google login is not configured'. Guarantee it is present in the BUILD env
+# regardless of server .env state (public OAuth client ID; the secret stays in
+# /opt/tuc-wms/.env and exchange goes via the WMS OAuth relay).
+grep -q '^VITE_GOOGLE_CLIENT_ID=' .env.local || echo 'VITE_GOOGLE_CLIENT_ID=537671076222-q0ovngh3m2m560kdcrsn2hk0cae5rudg.apps.googleusercontent.com' >> .env.local
+grep -q '^VITE_GOOGLE_REDIRECT_URI=' .env.local || echo 'VITE_GOOGLE_REDIRECT_URI=https://ai-tools.techbridge.edu.gh/patois/auth/google/callback' >> .env.local
 ./node_modules/.bin/vite build
 log '[5/5] Deploying dist/ to web root...'
 mkdir -p $RemotePath
