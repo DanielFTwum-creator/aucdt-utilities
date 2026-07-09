@@ -1,32 +1,12 @@
 import express from "express";
 import path from "path";
 import fs from "fs";
-import { fileURLToPath } from "url";
-import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
 import fetch from "node-fetch";
+import { requireWmsAuth } from "./src/server/wmsAuthMiddleware.ts";
 
 dotenv.config();
 dotenv.config({ path: '.env.local', override: true });
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-interface GoogleTokenResponse {
-  id_token: string;
-  access_token?: string;
-  refresh_token?: string;
-  expires_in?: number;
-  token_type?: string;
-  scope?: string;
-}
-
-function decodeJWT(token: string) {
-  const parts = token.split('.');
-  if (parts.length !== 3) throw new Error('Invalid token');
-  const decoded = Buffer.from(parts[1], 'base64').toString('utf-8');
-  return JSON.parse(decoded);
-}
 
 // --- Gemini custody: this app NEVER holds the Gemini key (fleet standard, ---
 // --- Pattern 11). Every generateContent call is relayed to the WMS proxy  ---
@@ -75,79 +55,14 @@ async function startServer() {
   const PORT = Number(process.env.PORT) || 3004;
 
   app.use(express.json({ limit: '5mb' }));
-  app.use(cookieParser());
 
-  // client_id/secret now live only in WMS (the OAuth relay); this app keeps neither.
-  const REDIRECT_URI = process.env.VITE_GOOGLE_REDIRECT_URI || 'https://ai-tools.techbridge.edu.gh/patois/auth/google/callback';
+  // Served under the /patois sub-path (Apache/.htaccess proxies /patois/api/ here).
+  // Sign-in is delegated entirely to WMS SSO — the app no longer runs its own
+  // Google OAuth callback; the client exchanges the code with WMS directly.
+  const basePath = process.env.APP_BASE_PATH || '/patois';
 
-  // Derive base path safely — fall back to /patois if the URI isn't a valid absolute URL
-  let basePath = '/patois';
-  try {
-    basePath = new URL(REDIRECT_URI).pathname.replace(/\/auth\/google\/callback$/, '');
-  } catch {
-    console.warn('[Patois Lyricist] Could not parse VITE_GOOGLE_REDIRECT_URI — defaulting basePath to /patois');
-  }
-
-  // Google OAuth callback — server-side exchange
-  app.get(['/auth/google/callback', `${basePath}/auth/google/callback`], async (req, res) => {
-    const { code, error } = req.query;
-    if (error) return res.redirect(`${basePath}/?error=${error}`);
-    if (!code) return res.redirect(`${basePath}/?error=missing_code`);
-
-    try {
-      // Token exchange via the central WMS relay — this app holds NO Google client secret.
-      // WMS holds the shared client_id/secret and returns Google's token response verbatim.
-      const WMS_OAUTH_URL = process.env.WMS_OAUTH_URL || 'https://wms.techbridge.edu.gh/api/oauth/google/exchange';
-      const tokenResponse = await fetch(WMS_OAUTH_URL, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-Gemini-Proxy-Key': process.env.GEMINI_PROXY_KEY || '',
-        },
-        body: JSON.stringify({ code, redirectUri: REDIRECT_URI }),
-      });
-
-      if (!tokenResponse.ok) {
-        const err = await tokenResponse.json();
-        console.error('[Patois Lyricist] Token exchange error:', err);
-        return res.redirect(`${basePath}/?error=token_exchange_failed`);
-      }
-
-      const tokens = await tokenResponse.json() as GoogleTokenResponse;
-      const userInfo = decodeJWT(tokens.id_token);
-
-      const userData = {
-        id: userInfo.sub,
-        username: userInfo.name,
-        email: userInfo.email,
-      };
-      const userJson = JSON.stringify(userData);
-
-      res.cookie('patois_user', Buffer.from(userJson).toString('base64'), {
-        httpOnly: false,
-        secure: true,
-        sameSite: 'lax',
-        maxAge: 7 * 24 * 60 * 60 * 1000,
-        path: basePath || '/',
-      });
-
-      // Pass user data in URL as fallback if cookie doesn't work
-      const encodedUser = Buffer.from(userJson).toString('base64');
-      res.redirect(`${basePath}/?user=${encodeURIComponent(encodedUser)}`);
-    } catch (error) {
-      console.error('[Patois Lyricist] OAuth callback error:', error);
-      res.redirect(`${basePath}/?error=internal_error`);
-    }
-  });
-
-  // OAuth logout
-  app.post(['/api/auth/logout', `${basePath}/api/auth/logout`], (_req, res) => {
-    res.clearCookie('patois_user', { path: basePath || '/' });
-    res.json({ success: true, message: 'Logged out' });
-  });
-
-  // Gemini Generation Proxy
-  app.post(['/api/gemini/generate', `${basePath}/api/gemini/generate`], async (req, res) => {
+  // Gemini Generation Proxy — WMS SSO guarded (all TUC, @techbridge.edu.gh).
+  app.post(['/api/gemini/generate', `${basePath}/api/gemini/generate`], requireWmsAuth, async (req, res) => {
     try {
       const { prompt, systemInstruction, temperature } = req.body;
       if (!prompt || !systemInstruction) {

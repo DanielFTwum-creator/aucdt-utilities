@@ -84,17 +84,17 @@ elif [ -f $RemotePath.env ]; then
   cp $RemotePath.env .env.local
 fi
 touch .env.local
-# VITE_* is baked in at build time — a missing VITE_GOOGLE_CLIENT_ID renders
-# 'Google login is not configured'. Guarantee it is present in the BUILD env
-# regardless of server .env state (public OAuth client ID; the secret stays in
-# /opt/tuc-wms/.env and exchange goes via the WMS OAuth relay).
-grep -q '^VITE_GOOGLE_CLIENT_ID=' .env.local || echo 'VITE_GOOGLE_CLIENT_ID=537671076222-q0ovngh3m2m560kdcrsn2hk0cae5rudg.apps.googleusercontent.com' >> .env.local
-grep -q '^VITE_GOOGLE_REDIRECT_URI=' .env.local || echo 'VITE_GOOGLE_REDIRECT_URI=https://ai-tools.techbridge.edu.gh/patois/auth/google/callback' >> .env.local
+# WMS SSO needs no build-time VITE vars: sign-in is delegated to WMS, and
+# VITE_WMS_BASE defaults to https://wms.techbridge.edu.gh in the client. The old
+# VITE_GOOGLE_CLIENT_ID/REDIRECT_URI (bespoke Google OAuth) are no longer used.
 ./node_modules/.bin/vite build
 log '[5/5] Deploying dist/ to web root...'
 mkdir -p $RemotePath
 rsync -a --delete dist/. $RemotePath
 cp server.ts package.json pnpm-lock.yaml ecosystem.config.js $RemotePath 2>/dev/null || log 'Note: Some files copied via scp instead'
+# server.ts imports ./src/server/wmsAuthMiddleware.ts (WMS SSO guard) — ship it.
+mkdir -p ${RemotePath}src/server
+cp src/server/wmsAuthMiddleware.ts ${RemotePath}src/server/ 2>/dev/null || log 'Note: wmsAuthMiddleware copied via scp instead'
 log 'Build and deploy complete.'
 "@
     $b64 = [Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes($serverScript.Replace("`r", "")))
@@ -105,6 +105,8 @@ log 'Build and deploy complete.'
     # Copy backend files that may not have been in build directory
     Log "INFO" "Step 3b: Copying backend files to server..." Yellow
     scp -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax=3 server.ts ecosystem.config.js "${RemoteHost}:${RemotePath}" 2>$null | Out-Null
+    ssh -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax=3 $RemoteHost "mkdir -p ${RemotePath}src/server" 2>$null | Out-Null
+    scp -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax=3 src/server/wmsAuthMiddleware.ts "${RemoteHost}:${RemotePath}src/server/" 2>$null | Out-Null
 } else {
     Log "INFO" "Step 3: Copying local dist/ to server..." Yellow
     if (-not (Test-Path "dist")) { Log "ERROR" "dist/ not found. Run with -Build flag." Red; exit 1 }
@@ -114,14 +116,14 @@ log 'Build and deploy complete.'
     ssh -o StrictHostKeyChecking=no $RemoteHost "
         cd $RemotePath
         curl -s https://wms.techbridge.edu.gh/api/gemini/key | jq -r '.apiKey' | awk '{print \"GEMINI_PROXY_KEY=\"$1}' > .env
-        echo \"VITE_GOOGLE_CLIENT_ID=537671076222-q0ovngh3m2m560kdcrsn2hk0cae5rudg.apps.googleusercontent.com\" >> .env
-        echo \"VITE_GOOGLE_REDIRECT_URI=https://ai-tools.techbridge.edu.gh/patois/auth/google/callback\" >> .env
-        # GOOGLE_CLIENT_SECRET intentionally NOT written here — token exchange now goes via the
-        # WMS OAuth relay (authenticated with GEMINI_PROXY_KEY). The secret lives only in /opt/tuc-wms/.env.
+        # Sign-in is WMS SSO — no VITE_GOOGLE_* or Google client secret is needed
+        # or written here. VITE_WMS_BASE defaults to the public WMS host in the client.
     "
     ssh -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax=3 $RemoteHost "find $RemotePath -mindepth 1 -maxdepth 1 ! -name '.env*' ! -name 'node_modules' -exec rm -rf {} +"
     scp -r -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax=3 dist/* "${RemoteHost}:${RemotePath}"
     scp -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax=3 server.ts package.json pnpm-lock.yaml ecosystem.config.js "${RemoteHost}:${RemotePath}"
+    ssh -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax=3 $RemoteHost "mkdir -p ${RemotePath}src/server"
+    scp -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax=3 src/server/wmsAuthMiddleware.ts "${RemoteHost}:${RemotePath}src/server/"
     Log "SUCCESS" "dist/* and backend files copied to server" Green
 }
 
@@ -131,9 +133,12 @@ Log "INFO" "Step 4: Writing .htaccess..." Yellow
   RewriteEngine On
   RewriteBase /patois/
 
-  RewriteCond %{REQUEST_URI} ^/patois/(api|auth)/ [NC,OR]
-  RewriteCond %{REQUEST_URI} ^/(api|auth)/ [NC]
-  RewriteRule ^(api|auth)/(.*)$ http://localhost:3017/$1/$2 [P,L,NC]
+  # Only /api/ is proxied to the Node backend. The WMS SSO callback lands on
+  # /patois/auth/callback?code=... and MUST fall through to the SPA (index.html)
+  # so the client can exchange the code — it is NOT a backend route.
+  RewriteCond %{REQUEST_URI} ^/patois/api/ [NC,OR]
+  RewriteCond %{REQUEST_URI} ^/api/ [NC]
+  RewriteRule ^api/(.*)$ http://localhost:3017/api/$1 [P,L,NC]
 
   RewriteCond %{REQUEST_FILENAME} -f [OR]
   RewriteCond %{REQUEST_FILENAME} -d

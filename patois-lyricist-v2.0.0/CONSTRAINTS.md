@@ -49,9 +49,10 @@
 |---|---|---|
 | `GEMINI_PROXY_KEY` | Authenticates the generate relay to WMS (Pattern 11) | **Required for AI routes.** Without it they return 503; the server still boots. No local key fallback exists. |
 | `WMS_GEMINI_URL` | Optional relay endpoint override | Defaults to `https://wms.techbridge.edu.gh/api/gemini/generate` |
-| `VITE_GOOGLE_CLIENT_ID` | Google OAuth 2.0 client ID — exposed to the frontend via Vite | Set in `.env` or `.env.local` |
-| `VITE_GOOGLE_REDIRECT_URI` | Full callback URL used by both the frontend and the server to derive `basePath` | Default: `https://ai-tools.techbridge.edu.gh/patois/auth/google/callback` |
-| `GOOGLE_CLIENT_SECRET` | Server-side Google OAuth secret — never exposed to the client | Set in `.env.local` only; never commit |
+| `WMS_BASE` | Server-side WMS base for the `requireWmsAuth` token check (`/api/me`) | Optional. Defaults to `http://127.0.0.1:8081` (bypasses public/WAF). |
+| `VITE_WMS_BASE` | Client-side WMS base for the SSO flow | Optional. Defaults to `https://wms.techbridge.edu.gh`. No build-time value needed. |
+
+> Sign-in is WMS SSO (see §6). No `VITE_GOOGLE_*` client ID/redirect and no `GOOGLE_CLIENT_SECRET` are used any more — they were removed with the bespoke OAuth flow.
 
 > `.env` is loaded first; `.env.local` is loaded second with `override: true`, so `.env.local` wins on conflicts.
 
@@ -78,14 +79,26 @@ Response: raw Gemini REST response, relayed verbatim
 
 ---
 
-## 6. Google OAuth
+## 6. Authentication — WMS SSO (archetype B, all-TUC)
 
-- Server-side authorisation code exchange is handled at:
-  - `GET /auth/google/callback`
-  - `GET /<basePath>/auth/google/callback`
-- `basePath` is derived at startup by parsing `VITE_GOOGLE_REDIRECT_URI`; it defaults to `/patois` if the URI cannot be parsed.
-- `GOOGLE_CLIENT_SECRET` is used exclusively server-side — confirm it is **never** injected into the Vite build.
-- The client ID (`VITE_GOOGLE_CLIENT_ID`) is intentionally public and safe to expose via Vite.
+Consolidated onto the WMS SSO family on 9 Jul 2026 (TUC-ICT-SRS-2026-013), replacing
+the bespoke Google-OAuth + fake password/register login. All sign-in is delegated to
+WMS (Google OAuth + TOTP MFA), domain-gated to `@techbridge.edu.gh` so all TUC members
+(students + staff) can use the lyricist.
+
+- **Client:** `contexts/AuthContext.tsx` runs the WMS flow — silent session adoption
+  (fleet refresh cookie), "Continue with Google" handoff to `${WMS}/api/auth/google?app=patois`,
+  and the TOTP modal. It keeps the same `useAuth()` surface (`user`, `logout`) the app
+  already consumed, so `App.tsx` is unchanged. The WMS access token is held in memory and
+  injected into `/patois/api/` calls via a `window.fetch` wrapper.
+- **Server:** `src/server/wmsAuthMiddleware.ts` → `requireWmsAuth` guards `/api/gemini/generate`.
+  It validates the Bearer token against WMS `/api/me` (60s cache) and enforces the domain gate.
+  There is **no** server-side OAuth callback route any more — the SSO callback lands on
+  `/patois/auth/callback?code=` and is served by the SPA (the `.htaccess` proxies only `/api/`).
+- **WMS registration (required):** patois must be registered as an SSO app-base
+  (`app-bases.patois`) in `/opt/tuc-wms/application.yml`, pointing at
+  `https://ai-tools.techbridge.edu.gh/patois/`, same as aitopia/fail2ban-ai. Edit with `nano`.
+- To restrict to staff only, narrow `ALLOWED_DOMAIN` in `wmsAuthMiddleware.ts` (one line).
 
 ---
 
@@ -108,13 +121,14 @@ Before deploying, confirm:
 
 ```
 ☐ GEMINI_PROXY_KEY is set in the server environment (not just .env.local)
-☐ GOOGLE_CLIENT_SECRET is set server-side and absent from the Vite build output
-☐ VITE_GOOGLE_CLIENT_ID and VITE_GOOGLE_REDIRECT_URI are set correctly for production
+☐ patois is registered as an SSO app-base (app-bases.patois) in /opt/tuc-wms/application.yml
+☐ src/server/wmsAuthMiddleware.ts is shipped alongside server.ts to the deploy path
+☐ .htaccess proxies only /patois/api/ to 3017 — /patois/auth/callback falls through to the SPA
 ☐ tsx is in dependencies (not devDependencies) — required by PM2 at runtime
 ☐ pnpm install run with no --prod flag
 ☐ PORT env var set to 3017 in PM2 config / ecosystem file
-☐ Health check passes: GET /patois-lyricist/api/health → { ok: true }
-☐ OAuth callback URL matches VITE_GOOGLE_REDIRECT_URI exactly (including path)
+☐ Health check passes: GET /patois/api/health → { status: "operational" }
+☐ Sign-in works: Continue with Google → (MFA) → app renders; /patois/api/gemini/generate returns 401 without a token
 ☐ tsc --noEmit passes with no type errors before build
 ```
 
