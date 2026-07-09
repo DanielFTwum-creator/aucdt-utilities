@@ -70,9 +70,9 @@
 
 (deploy.ps1 + server.ts defaults set to match each of these. Assignment ledger: PORT-REGISTRY.md.)
 
-## Free ports (not bound, not reserved, as of 1 Jul 2026)
+## Free ports (not bound, not reserved, as of 9 Jul 2026)
 
-3001, 3040+
+3001, 3042+ (3040 fail2ban-ai, 3041 aitopia now live)
 
 ## Infrastructure (not app ports)
 
