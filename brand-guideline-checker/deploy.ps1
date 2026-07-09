@@ -41,12 +41,10 @@ Log -Level 'INFO' -Msg "Path   : $DEPLOY_PATH/"
 Log -Level 'INFO' -Msg ''
 
 Log -Level 'INFO' -Msg 'Step 1: Pre-flight checks...' -Color Yellow
-if (-not (Test-Path '.env.local')) { Log -Level 'ERROR' -Msg '.env.local not found — aborting' -Color Red; exit 1 }
-$envContent = Get-Content '.env.local' -Raw
-foreach ($key in @('VITE_GOOGLE_CLIENT_ID','GOOGLE_CLIENT_SECRET')) {
-    if ($envContent -notmatch $key) { Log -Level 'ERROR' -Msg "$key missing in .env.local" -Color Red; exit 1 }
-}
-Log -Level 'SUCCESS' -Msg 'Pre-flight OK (.env.local validated)' -Color Green
+# Sign-in is WMS SSO — no VITE_GOOGLE_* / GOOGLE_CLIENT_SECRET are needed. The only
+# server secret is GEMINI_PROXY_KEY, sourced server-side file-to-file (Step 4), never
+# from this machine. No .env.local is required.
+Log -Level 'SUCCESS' -Msg 'Pre-flight OK (WMS SSO — no client secrets on this machine)' -Color Green
 
 Log -Level 'INFO' -Msg 'Step 2: Verifying git state...' -Color Yellow
 $COMMIT = (git rev-parse --short HEAD 2>$null).Trim()
@@ -54,10 +52,6 @@ $BRANCH = (git rev-parse --abbrev-ref HEAD 2>$null).Trim()
 Log -Level 'INFO' -Msg "Commit : $COMMIT on $BRANCH"
 
 Log -Level 'INFO' -Msg 'Step 3: Server-side build (git clone + pnpm build)' -Color Yellow
-Log -Level 'INFO' -Msg 'Uploading .env.local to server...' -Color DarkGray
-& $SCP @SSH_OPTS .env.local "${REMOTE}:/tmp/.env.${PM2_APP}" 2>&1 | Out-Null
-if ($LASTEXITCODE -ne 0) { Log -Level 'ERROR' -Msg 'Failed to upload .env.local' -Color Red; exit 1 }
-Log -Level 'SUCCESS' -Msg '.env.local uploaded' -Color Green
 
 $remoteBuildScript = @"
 #!/usr/bin/env bash
@@ -91,17 +85,18 @@ find /tmp -maxdepth 1 -name '*_deploy_*' -type d -mmin +30 -exec rm -rf {} + 2>/
 log '[2/7] Cloning ${SUBFOLDER} (sparse, depth 1)...'
 git clone --filter=blob:none --sparse --depth 1 "`$REPO" "`$TMPDIR"
 cd "`$TMPDIR" && git sparse-checkout set ${SUBFOLDER} && cd ${SUBFOLDER}
-log '[3/7] Injecting .env.local...'
-cp /tmp/.env.${PM2_APP} .env.local
-log '[4/7] Installing dependencies...'
+log '[3/7] Installing dependencies...'
 pnpm install --frozen-lockfile --silent 2>/dev/null || pnpm install --no-frozen-lockfile --silent
-log '[5/7] Building...'
+log '[4/7] Building (WMS SSO — no build-time VITE secrets needed)...'
 pnpm build
-log '[6/7] Deploying dist/ to web root...'
+log '[5/7] Deploying dist/ to web root...'
 mkdir -p "`$DEPLOY_PATH" && rsync -a --delete dist/ "`$DEPLOY_PATH/dist/"
 cp index.html "`$DEPLOY_PATH/dist/index.html" 2>/dev/null || true
-log '[7/7] Installing backend deps...'
+log '[6/7] Copying backend files...'
 cp server.ts package.json pnpm-lock.yaml "`$DEPLOY_PATH/" 2>/dev/null || true
+# server.ts imports ./src/server/wmsAuthMiddleware.ts (WMS SSO guard) — ship it.
+mkdir -p "`$DEPLOY_PATH/src/server" && cp src/server/wmsAuthMiddleware.ts "`$DEPLOY_PATH/src/server/"
+log '[7/7] Installing backend deps...'
 cd "`$DEPLOY_PATH" && CI=true pnpm install --prod --silent 2>/dev/null || npm install --omit=dev --silent
 log 'Build and deploy complete.'
 "@
@@ -118,7 +113,12 @@ if ($buildExit -ne 0) { Log -Level 'ERROR' -Msg "Remote build failed (exit $buil
 Log -Level 'SUCCESS' -Msg 'Server-side build and file sync complete' -Color Green
 
 Log -Level 'INFO' -Msg 'Step 4: Configuring server environment...' -Color Yellow
-& $SSH @SSH_OPTS $REMOTE "cp /tmp/.env.${PM2_APP} ${DEPLOY_PATH}/.env; chown -R techbridge.edu.gh_md:psaserv ${DEPLOY_PATH} 2>/dev/null || true; find ${DEPLOY_PATH} -type d -exec chmod 755 {} \; 2>/dev/null || true; find ${DEPLOY_PATH} -type f -exec chmod 644 {} \; 2>/dev/null || true"
+# GEMINI_PROXY_KEY custody (Pattern 11 + §12): sourced server-side file-to-file from
+# an already-relayed sibling app (aitopia), never uploaded from this machine or echoed.
+# An existing .env is preserved on redeploys.
+$DONOR_ENV = '/var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/aitopia/.env'
+$envSetup = "touch ${DEPLOY_PATH}/.env; if ! grep -q '^GEMINI_PROXY_KEY=' ${DEPLOY_PATH}/.env 2>/dev/null; then if [ -f '${DONOR_ENV}' ]; then grep '^GEMINI_PROXY_KEY=' '${DONOR_ENV}' >> ${DEPLOY_PATH}/.env && echo 'GEMINI_PROXY_KEY sourced from sibling app'; else echo 'WARN: GEMINI_PROXY_KEY not set — add it manually (file-to-file from a relayed app)'; fi; fi"
+& $SSH @SSH_OPTS $REMOTE "$envSetup; chown -R techbridge.edu.gh_md:psaserv ${DEPLOY_PATH} 2>/dev/null || true; find ${DEPLOY_PATH} -type d -exec chmod 755 {} \; 2>/dev/null || true; find ${DEPLOY_PATH} -type f -exec chmod 644 {} \; 2>/dev/null || true"
 
 Log -Level 'INFO' -Msg 'Step 5: Restarting backend...' -Color Yellow
 $pm2Result = & $SSH @SSH_OPTS $REMOTE "if pm2 describe ${PM2_APP} > /dev/null 2>&1; then pm2 reload ${PM2_APP}; echo 'pm2: reloaded ${PM2_APP}'; else cd ${DEPLOY_PATH}; PORT=${PORT} pm2 start server.ts --name ${PM2_APP} --interpreter npx --interpreter-args tsx --cwd ${DEPLOY_PATH}; echo 'pm2: started ${PM2_APP}'; fi"
