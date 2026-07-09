@@ -96,6 +96,212 @@ function persistGeoCache(): void {
   }
 }
 
+// --- Geolocation core (shared by /api/geolocate and /api/live-bans) ----------
+// Local offline database of preset IPs for instant, foolproof mapping.
+const LOCAL_GEO_DB: Record<string, any> = {
+  "36.255.220.145": { country: "China", countryCode: "CN", city: "Shanghai", lat: 31.2243, lon: 121.4691, isp: "China Telecom", status: "success" },
+  "43.156.61.33": { country: "Japan", countryCode: "JP", city: "Tokyo", lat: 35.6762, lon: 139.6503, isp: "Tencent Building", status: "success" },
+  "43.165.170.198": { country: "Japan", countryCode: "JP", city: "Tokyo", lat: 35.6762, lon: 139.6503, isp: "Zenlayer Inc", status: "success" },
+  "45.15.226.100": { country: "Netherlands", countryCode: "NL", city: "Amsterdam", lat: 52.3676, lon: 4.9041, isp: "Liteserver B.V.", status: "success" },
+  "45.148.10.121": { country: "Netherlands", countryCode: "NL", city: "Amsterdam", lat: 52.3676, lon: 4.9041, isp: "TECHOFF SRV LIMITED", status: "success" },
+  "45.148.10.141": { country: "Netherlands", countryCode: "NL", city: "Amsterdam", lat: 52.3676, lon: 4.9041, isp: "TECHOFF SRV LIMITED", status: "success" },
+  "45.148.10.151": { country: "Netherlands", countryCode: "NL", city: "Amsterdam", lat: 52.3676, lon: 4.9041, isp: "TECHOFF SRV LIMITED", status: "success" },
+  "61.223.116.74": { country: "Taiwan", countryCode: "TW", city: "Changhua", lat: 24.0518, lon: 120.5161, isp: "Chunghwa Telecom", status: "success" },
+  "68.178.160.25": { country: "India", countryCode: "IN", city: "Mumbai", lat: 19.0760, lon: 72.8777, isp: "GoDaddy.com, LLC", status: "success" },
+  "81.30.98.81": { country: "Germany", countryCode: "DE", city: "Kiel", lat: 54.3233, lon: 10.1228, isp: "Deutsche Telekom", status: "success" },
+  "83.219.249.173": { country: "Russia", countryCode: "RU", city: "Moscow", lat: 55.7558, lon: 37.6173, isp: "Rostelecom", status: "success" },
+  "83.246.133.16": { country: "Russia", countryCode: "RU", city: "Barnaul", lat: 53.3606, lon: 83.7636, isp: "TTK", status: "success" },
+  "91.92.40.10": { country: "Bulgaria", countryCode: "BG", city: "Sofia", lat: 42.6977, lon: 23.3219, isp: "Neterra Ltd", status: "success" },
+  "106.75.25.139": { country: "China", countryCode: "CN", city: "Shanghai", lat: 31.2243, lon: 121.4691, isp: "Ucloud Technology", status: "success" },
+  "118.193.45.134": { country: "China", countryCode: "CN", city: "Beijing", lat: 39.9042, lon: 116.4074, isp: "Beijing Capital Online", status: "success" },
+  "120.36.82.210": { country: "China", countryCode: "CN", city: "Fuzhou", lat: 26.0614, lon: 119.3061, isp: "China Unicom", status: "success" },
+  "125.137.115.145": { country: "South Korea", countryCode: "KR", city: "Seoul", lat: 37.5665, lon: 126.9780, isp: "SK Broadband", status: "success" },
+  "125.212.244.35": { country: "Vietnam", countryCode: "VN", city: "Hanoi", lat: 21.0285, lon: 105.8542, isp: "Viettel Group", status: "success" },
+  "137.74.47.71": { country: "France", countryCode: "FR", city: "Paris", lat: 48.8566, lon: 2.3522, isp: "OVH SAS", status: "success" },
+  "152.32.163.183": { country: "Hong Kong", countryCode: "HK", city: "Hong Kong", lat: 22.3193, lon: 114.1694, isp: "Tencent Building", status: "success" },
+  "154.161.187.225": { country: "Ghana", countryCode: "GH", city: "Accra", lat: 5.6037, lon: -0.1870, isp: "MTN Ghana", status: "success" },
+  "172.188.89.41": { country: "United Kingdom", countryCode: "GB", city: "London", lat: 51.5074, lon: -0.1278, isp: "Microsoft Corporation", status: "success" },
+  "176.53.159.197": { country: "Turkey", countryCode: "TR", city: "Istanbul", lat: 41.0082, lon: 28.9784, isp: "Radore Ortak Altyapi", status: "success" },
+  "178.16.55.216": { country: "Germany", countryCode: "DE", city: "Kassel", lat: 51.3127, lon: 9.4797, isp: "1&1 IONOS SE", status: "success" },
+  "187.191.48.23": { country: "Mexico", countryCode: "MX", city: "Mexico City", lat: 19.4326, lon: -99.1332, isp: "Uninet", status: "success" },
+  "189.204.230.91": { country: "Mexico", countryCode: "MX", city: "Mexico City", lat: 19.4326, lon: -99.1332, isp: "Alestra", status: "success" },
+  "198.244.140.51": { country: "Canada", countryCode: "CA", city: "Montreal", lat: 45.5017, lon: -73.5673, isp: "OVH SAS", status: "success" }
+};
+
+// Common worldwide coordinates for deterministic offline fallback when an IP is
+// neither cached nor in the preset DB and the external lookup is unavailable.
+const FALLBACK_COUNTRIES = [
+  { country: "United States", countryCode: "US", city: "Ashburn", lat: 39.0437, lon: -77.4874, isp: "Amazon Technologies Inc." },
+  { country: "China", countryCode: "CN", city: "Guangzhou", lat: 23.1167, lon: 113.2500, isp: "Chinanet" },
+  { country: "Germany", countryCode: "DE", city: "Frankfurt", lat: 50.1109, lon: 8.6821, isp: "DigitalOcean LLC" },
+  { country: "Japan", countryCode: "JP", city: "Osaka", lat: 34.6937, lon: 135.5023, isp: "Sakura Internet" },
+  { country: "Netherlands", countryCode: "NL", city: "Rotterdam", lat: 51.9244, lon: 4.4777, isp: "Leaseweb" },
+  { country: "United Kingdom", countryCode: "GB", city: "Manchester", lat: 53.4808, lon: -2.2426, isp: "M247 Ltd" },
+  { country: "India", countryCode: "IN", city: "Bangalore", lat: 12.9716, lon: 77.5946, isp: "Reliance Jio" },
+  { country: "France", countryCode: "FR", city: "Lyon", lat: 45.7640, lon: 4.8357, isp: "Scaleway" },
+  { country: "Brazil", countryCode: "BR", city: "Rio de Janeiro", lat: -22.9068, lon: -43.1729, isp: "Claro Brazil" },
+  { country: "Australia", countryCode: "AU", city: "Melbourne", lat: -37.8136, lon: 144.9631, isp: "Telstra" },
+  { country: "Russia", countryCode: "RU", city: "Saint Petersburg", lat: 59.9343, lon: 30.3351, isp: "Selectel" },
+  { country: "Canada", countryCode: "CA", city: "Toronto", lat: 43.6532, lon: -79.3832, isp: "Rogers Cable" },
+  { country: "Singapore", countryCode: "SG", city: "Singapore", lat: 1.3521, lon: 103.8198, isp: "Singtel" },
+  { country: "South Africa", countryCode: "ZA", city: "Johannesburg", lat: -26.2041, lon: 28.0473, isp: "Liquid Intelligent Technologies" },
+  { country: "Ukraine", countryCode: "UA", city: "Lviv", lat: 49.8397, lon: 24.0297, isp: "Ukrtelecom" },
+];
+
+function getDeterministicGeoFallback(ip: string) {
+  const trimmed = ip.trim();
+  if (LOCAL_GEO_DB[trimmed]) {
+    return { ip: trimmed, ...LOCAL_GEO_DB[trimmed] };
+  }
+
+  const octets = trimmed.split(".").map(o => parseInt(o, 10));
+  const validOctets = octets.filter(o => !isNaN(o) && o >= 0 && o <= 255);
+  let hash = 0;
+  if (validOctets.length > 0) {
+    hash = validOctets.reduce((acc, val) => acc + val, 0);
+  } else {
+    for (let i = 0; i < trimmed.length; i++) {
+      hash += trimmed.charCodeAt(i);
+    }
+  }
+
+  const fallback = FALLBACK_COUNTRIES[hash % FALLBACK_COUNTRIES.length];
+  const latOffset = ((hash % 17) - 8) * 0.15;
+  const lonOffset = ((hash % 13) - 6) * 0.15;
+
+  return {
+    ip: trimmed,
+    country: fallback.country,
+    countryCode: fallback.countryCode,
+    city: fallback.city,
+    lat: fallback.lat + latOffset,
+    lon: fallback.lon + lonOffset,
+    isp: fallback.isp,
+    status: "success",
+    message: "Resolved via robust offline lookup engine"
+  };
+}
+
+// Resolve a list of IPs to geo records, returned in the same order as the input.
+// Disk-backed geoCache first, then the preset DB, then ip-api.com in 100-IP
+// batches, then a deterministic offline fallback. New lookups are persisted.
+async function geolocateIps(inputIps: string[]): Promise<any[]> {
+  const uniqueIps = Array.from(new Set(inputIps.map(ip => ip.trim()).filter(Boolean)));
+  const results: any[] = [];
+  const ipsToFetch: string[] = [];
+
+  // Check cache & local DB first
+  for (const ip of uniqueIps) {
+    const trimmedIp = ip.trim();
+    if (geoCache.has(trimmedIp)) {
+      results.push(geoCache.get(trimmedIp));
+    } else if (LOCAL_GEO_DB[trimmedIp]) {
+      const info = { ip: trimmedIp, ...LOCAL_GEO_DB[trimmedIp] };
+      geoCache.set(trimmedIp, info);
+      results.push(info);
+    } else {
+      ipsToFetch.push(trimmedIp);
+    }
+  }
+
+  // Fetch uncached, non-local IPs from external API
+  if (ipsToFetch.length > 0) {
+    const chunkSize = 100;
+    for (let i = 0; i < ipsToFetch.length; i += chunkSize) {
+      const chunk = ipsToFetch.slice(i, i + chunkSize);
+
+      try {
+        const response = await fetch("http://ip-api.com/batch", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(chunk),
+        });
+
+        if (!response.ok) {
+          throw new Error(`Failed to fetch from ip-api.com: ${response.statusText}`);
+        }
+
+        const apiData = await response.json();
+        if (Array.isArray(apiData)) {
+          apiData.forEach((item, index) => {
+            const ip = chunk[index];
+            if (item.status === "success") {
+              const geoInfo = {
+                ip,
+                country: item.country,
+                countryCode: item.countryCode,
+                region: item.regionName,
+                city: item.city,
+                zip: item.zip,
+                lat: item.lat,
+                lon: item.lon,
+                isp: item.isp,
+                org: item.org,
+                as: item.as,
+                status: "success",
+              };
+              geoCache.set(ip, geoInfo);
+              results.push(geoInfo);
+            } else {
+              const fallbackInfo = getDeterministicGeoFallback(ip);
+              geoCache.set(ip, fallbackInfo);
+              results.push(fallbackInfo);
+            }
+          });
+        } else {
+          chunk.forEach(ip => {
+            const fallbackInfo = getDeterministicGeoFallback(ip);
+            geoCache.set(ip, fallbackInfo);
+            results.push(fallbackInfo);
+          });
+        }
+      } catch (error) {
+        console.error("Error batch fetching geolocations from external API, using deterministic fallback:", error);
+        chunk.forEach(ip => {
+          const fallbackInfo = getDeterministicGeoFallback(ip);
+          geoCache.set(ip, fallbackInfo);
+          results.push(fallbackInfo);
+        });
+      }
+    }
+    // New geolocations were resolved — persist the cache to disk so the next
+    // process start reads them instead of re-hitting ip-api.
+    geoCacheDirty = true;
+    persistGeoCache();
+  }
+
+  // Re-order results to match the original input array order
+  return inputIps.map(ip => {
+    const trimmed = ip.trim();
+    return results.find(r => r.ip === trimmed) || getDeterministicGeoFallback(trimmed);
+  });
+}
+
+// Persisted merged snapshot of the last successful live-ban resolution. Painted
+// instantly on the next dashboard load so the ~950-IP geolocation round-trip no
+// longer blocks first paint; the fresh set is fetched in the background and
+// swapped in when ready.
+const SNAPSHOT_FILE = path.join(process.cwd(), ".last-snapshot.json");
+
+async function buildLiveBans(): Promise<{ server: string | null; count: number; generatedAt: number; ips: any[] }> {
+  const bans = await getFail2banBans();
+  if (bans.length === 0) return { server: "mail.aucdt.edu.gh", count: 0, generatedAt: Date.now(), ips: [] };
+  const jailByIp = new Map(bans.map(b => [b.ip, b.jail]));
+  const geo = await geolocateIps(Array.from(jailByIp.keys()));
+  const ips = geo.map(r => ({
+    ip: r.ip,
+    jail: jailByIp.get(r.ip) || "unknown",
+    country: r.country || "Unknown",
+    countryCode: r.countryCode || "",
+    city: r.city || "Unknown",
+    lat: typeof r.lat === "number" ? r.lat : 0,
+    lon: typeof r.lon === "number" ? r.lon : 0,
+    isp: r.isp,
+    status: "success",
+  }));
+  return { server: "mail.aucdt.edu.gh", count: ips.length, generatedAt: Date.now(), ips };
+}
+
 async function startServer() {
   const app = express();
   const PORT = Number(process.env.PORT) || 3040;
@@ -139,192 +345,40 @@ async function startServer() {
       if (!Array.isArray(ips) || ips.length === 0) {
         return res.status(400).json({ error: "Invalid request. 'ips' must be a non-empty array of strings." });
       }
-
-      // Filter out duplicate IPs from this request
-      const uniqueIps = Array.from(new Set(ips.map(ip => ip.trim()).filter(Boolean)));
-      
-      const results: any[] = [];
-      const ipsToFetch: string[] = [];
-
-      // Local offline database of preset IPs for instant, foolproof mapping
-      const LOCAL_GEO_DB: Record<string, any> = {
-        "36.255.220.145": { country: "China", countryCode: "CN", city: "Shanghai", lat: 31.2243, lon: 121.4691, isp: "China Telecom", status: "success" },
-        "43.156.61.33": { country: "Japan", countryCode: "JP", city: "Tokyo", lat: 35.6762, lon: 139.6503, isp: "Tencent Building", status: "success" },
-        "43.165.170.198": { country: "Japan", countryCode: "JP", city: "Tokyo", lat: 35.6762, lon: 139.6503, isp: "Zenlayer Inc", status: "success" },
-        "45.15.226.100": { country: "Netherlands", countryCode: "NL", city: "Amsterdam", lat: 52.3676, lon: 4.9041, isp: "Liteserver B.V.", status: "success" },
-        "45.148.10.121": { country: "Netherlands", countryCode: "NL", city: "Amsterdam", lat: 52.3676, lon: 4.9041, isp: "TECHOFF SRV LIMITED", status: "success" },
-        "45.148.10.141": { country: "Netherlands", countryCode: "NL", city: "Amsterdam", lat: 52.3676, lon: 4.9041, isp: "TECHOFF SRV LIMITED", status: "success" },
-        "45.148.10.151": { country: "Netherlands", countryCode: "NL", city: "Amsterdam", lat: 52.3676, lon: 4.9041, isp: "TECHOFF SRV LIMITED", status: "success" },
-        "61.223.116.74": { country: "Taiwan", countryCode: "TW", city: "Changhua", lat: 24.0518, lon: 120.5161, isp: "Chunghwa Telecom", status: "success" },
-        "68.178.160.25": { country: "India", countryCode: "IN", city: "Mumbai", lat: 19.0760, lon: 72.8777, isp: "GoDaddy.com, LLC", status: "success" },
-        "81.30.98.81": { country: "Germany", countryCode: "DE", city: "Kiel", lat: 54.3233, lon: 10.1228, isp: "Deutsche Telekom", status: "success" },
-        "83.219.249.173": { country: "Russia", countryCode: "RU", city: "Moscow", lat: 55.7558, lon: 37.6173, isp: "Rostelecom", status: "success" },
-        "83.246.133.16": { country: "Russia", countryCode: "RU", city: "Barnaul", lat: 53.3606, lon: 83.7636, isp: "TTK", status: "success" },
-        "91.92.40.10": { country: "Bulgaria", countryCode: "BG", city: "Sofia", lat: 42.6977, lon: 23.3219, isp: "Neterra Ltd", status: "success" },
-        "106.75.25.139": { country: "China", countryCode: "CN", city: "Shanghai", lat: 31.2243, lon: 121.4691, isp: "Ucloud Technology", status: "success" },
-        "118.193.45.134": { country: "China", countryCode: "CN", city: "Beijing", lat: 39.9042, lon: 116.4074, isp: "Beijing Capital Online", status: "success" },
-        "120.36.82.210": { country: "China", countryCode: "CN", city: "Fuzhou", lat: 26.0614, lon: 119.3061, isp: "China Unicom", status: "success" },
-        "125.137.115.145": { country: "South Korea", countryCode: "KR", city: "Seoul", lat: 37.5665, lon: 126.9780, isp: "SK Broadband", status: "success" },
-        "125.212.244.35": { country: "Vietnam", countryCode: "VN", city: "Hanoi", lat: 21.0285, lon: 105.8542, isp: "Viettel Group", status: "success" },
-        "137.74.47.71": { country: "France", countryCode: "FR", city: "Paris", lat: 48.8566, lon: 2.3522, isp: "OVH SAS", status: "success" },
-        "152.32.163.183": { country: "Hong Kong", countryCode: "HK", city: "Hong Kong", lat: 22.3193, lon: 114.1694, isp: "Tencent Building", status: "success" },
-        "154.161.187.225": { country: "Ghana", countryCode: "GH", city: "Accra", lat: 5.6037, lon: -0.1870, isp: "MTN Ghana", status: "success" },
-        "172.188.89.41": { country: "United Kingdom", countryCode: "GB", city: "London", lat: 51.5074, lon: -0.1278, isp: "Microsoft Corporation", status: "success" },
-        "176.53.159.197": { country: "Turkey", countryCode: "TR", city: "Istanbul", lat: 41.0082, lon: 28.9784, isp: "Radore Ortak Altyapi", status: "success" },
-        "178.16.55.216": { country: "Germany", countryCode: "DE", city: "Kassel", lat: 51.3127, lon: 9.4797, isp: "1&1 IONOS SE", status: "success" },
-        "187.191.48.23": { country: "Mexico", countryCode: "MX", city: "Mexico City", lat: 19.4326, lon: -99.1332, isp: "Uninet", status: "success" },
-        "189.204.230.91": { country: "Mexico", countryCode: "MX", city: "Mexico City", lat: 19.4326, lon: -99.1332, isp: "Alestra", status: "success" },
-        "198.244.140.51": { country: "Canada", countryCode: "CA", city: "Montreal", lat: 45.5017, lon: -73.5673, isp: "OVH SAS", status: "success" }
-      };
-
-      // Set of common worldwide coordinates for dynamic deterministic fallback if not in preset DB
-      const FALLBACK_COUNTRIES = [
-        { country: "United States", countryCode: "US", city: "Ashburn", lat: 39.0437, lon: -77.4874, isp: "Amazon Technologies Inc." },
-        { country: "China", countryCode: "CN", city: "Guangzhou", lat: 23.1167, lon: 113.2500, isp: "Chinanet" },
-        { country: "Germany", countryCode: "DE", city: "Frankfurt", lat: 50.1109, lon: 8.6821, isp: "DigitalOcean LLC" },
-        { country: "Japan", countryCode: "JP", city: "Osaka", lat: 34.6937, lon: 135.5023, isp: "Sakura Internet" },
-        { country: "Netherlands", countryCode: "NL", city: "Rotterdam", lat: 51.9244, lon: 4.4777, isp: "Leaseweb" },
-        { country: "United Kingdom", countryCode: "GB", city: "Manchester", lat: 53.4808, lon: -2.2426, isp: "M247 Ltd" },
-        { country: "India", countryCode: "IN", city: "Bangalore", lat: 12.9716, lon: 77.5946, isp: "Reliance Jio" },
-        { country: "France", countryCode: "FR", city: "Lyon", lat: 45.7640, lon: 4.8357, isp: "Scaleway" },
-        { country: "Brazil", countryCode: "BR", city: "Rio de Janeiro", lat: -22.9068, lon: -43.1729, isp: "Claro Brazil" },
-        { country: "Australia", countryCode: "AU", city: "Melbourne", lat: -37.8136, lon: 144.9631, isp: "Telstra" },
-        { country: "Russia", countryCode: "RU", city: "Saint Petersburg", lat: 59.9343, lon: 30.3351, isp: "Selectel" },
-        { country: "Canada", countryCode: "CA", city: "Toronto", lat: 43.6532, lon: -79.3832, isp: "Rogers Cable" },
-        { country: "Singapore", countryCode: "SG", city: "Singapore", lat: 1.3521, lon: 103.8198, isp: "Singtel" },
-        { country: "South Africa", countryCode: "ZA", city: "Johannesburg", lat: -26.2041, lon: 28.0473, isp: "Liquid Intelligent Technologies" },
-        { country: "Ukraine", countryCode: "UA", city: "Lviv", lat: 49.8397, lon: 24.0297, isp: "Ukrtelecom" },
-      ];
-
-      const getDeterministicGeoFallback = (ip: string) => {
-        const trimmed = ip.trim();
-        if (LOCAL_GEO_DB[trimmed]) {
-          return { ip: trimmed, ...LOCAL_GEO_DB[trimmed] };
-        }
-
-        const octets = trimmed.split(".").map(o => parseInt(o, 10));
-        const validOctets = octets.filter(o => !isNaN(o) && o >= 0 && o <= 255);
-        let hash = 0;
-        if (validOctets.length > 0) {
-          hash = validOctets.reduce((acc, val) => acc + val, 0);
-        } else {
-          for (let i = 0; i < trimmed.length; i++) {
-            hash += trimmed.charCodeAt(i);
-          }
-        }
-
-        const fallback = FALLBACK_COUNTRIES[hash % FALLBACK_COUNTRIES.length];
-        const latOffset = ((hash % 17) - 8) * 0.15;
-        const lonOffset = ((hash % 13) - 6) * 0.15;
-
-        return {
-          ip: trimmed,
-          country: fallback.country,
-          countryCode: fallback.countryCode,
-          city: fallback.city,
-          lat: fallback.lat + latOffset,
-          lon: fallback.lon + lonOffset,
-          isp: fallback.isp,
-          status: "success",
-          message: "Resolved via robust offline lookup engine"
-        };
-      };
-
-      // Check cache & local DB first
-      for (const ip of uniqueIps) {
-        const trimmedIp = ip.trim();
-        if (geoCache.has(trimmedIp)) {
-          results.push(geoCache.get(trimmedIp));
-        } else if (LOCAL_GEO_DB[trimmedIp]) {
-          const info = { ip: trimmedIp, ...LOCAL_GEO_DB[trimmedIp] };
-          geoCache.set(trimmedIp, info);
-          results.push(info);
-        } else {
-          ipsToFetch.push(trimmedIp);
-        }
-      }
-
-      // Fetch uncached, non-local IPs from external API
-      if (ipsToFetch.length > 0) {
-        const chunkSize = 100;
-        for (let i = 0; i < ipsToFetch.length; i += chunkSize) {
-          const chunk = ipsToFetch.slice(i, i + chunkSize);
-          
-          try {
-            const response = await fetch("http://ip-api.com/batch", {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify(chunk),
-            });
-
-            if (!response.ok) {
-              throw new Error(`Failed to fetch from ip-api.com: ${response.statusText}`);
-            }
-
-            const apiData = await response.json();
-            if (Array.isArray(apiData)) {
-              apiData.forEach((item, index) => {
-                const ip = chunk[index];
-                if (item.status === "success") {
-                  const geoInfo = {
-                    ip,
-                    country: item.country,
-                    countryCode: item.countryCode,
-                    region: item.regionName,
-                    city: item.city,
-                    zip: item.zip,
-                    lat: item.lat,
-                    lon: item.lon,
-                    isp: item.isp,
-                    org: item.org,
-                    as: item.as,
-                    status: "success",
-                  };
-                  geoCache.set(ip, geoInfo);
-                  results.push(geoInfo);
-                } else {
-                  // Fall back deterministically on individual API failure
-                  const fallbackInfo = getDeterministicGeoFallback(ip);
-                  geoCache.set(ip, fallbackInfo);
-                  results.push(fallbackInfo);
-                }
-              });
-            } else {
-              // Fall back deterministically if unexpected response structure
-              chunk.forEach(ip => {
-                const fallbackInfo = getDeterministicGeoFallback(ip);
-                geoCache.set(ip, fallbackInfo);
-                results.push(fallbackInfo);
-              });
-            }
-          } catch (error) {
-            console.error("Error batch fetching geolocations from external API, using deterministic fallback:", error);
-            // Fall back deterministically on connection errors
-            chunk.forEach(ip => {
-              const fallbackInfo = getDeterministicGeoFallback(ip);
-              geoCache.set(ip, fallbackInfo);
-              results.push(fallbackInfo);
-            });
-          }
-        }
-        // New geolocations were resolved — persist the cache to disk so the
-        // next process start reads them instead of re-hitting ip-api.
-        geoCacheDirty = true;
-        persistGeoCache();
-      }
-
-      // Re-order results to match the original input array order
-      const orderedResults = ips.map(ip => {
-        const trimmed = ip.trim();
-        return results.find(r => r.ip === trimmed) || getDeterministicGeoFallback(trimmed);
-      });
-
-      return res.json({ results: orderedResults });
+      return res.json({ results: await geolocateIps(ips) });
     } catch (error: any) {
       console.error("Geolocate endpoint error:", error);
       return res.status(500).json({ error: error.message || "Internal server error" });
+    }
+  });
+
+  // Instant snapshot of the last resolved live-ban set (staff-only). Served
+  // straight from disk with no fail2ban or geolocation work, so the dashboard
+  // paints without waiting; the client refreshes via /api/live-bans afterwards.
+  app.get("/api/snapshot", requireWmsAuth, (_req, res) => {
+    try {
+      if (fs.existsSync(SNAPSHOT_FILE)) {
+        return res.json(JSON.parse(fs.readFileSync(SNAPSHOT_FILE, "utf8")));
+      }
+    } catch {
+      // corrupt/absent snapshot — fall through to the empty response
+    }
+    res.json({ server: null, count: 0, generatedAt: 0, ips: [] });
+  });
+
+  // Fresh live bans: fail2ban ban list + server-side geolocation, merged. Persists
+  // the result as the snapshot for the next load. On any failure responds 200 with
+  // an empty set so the frontend keeps its current view.
+  app.get("/api/live-bans", requireWmsAuth, async (_req, res) => {
+    try {
+      const snap = await buildLiveBans();
+      if (snap.ips.length > 0) {
+        try { fs.writeFileSync(SNAPSHOT_FILE, JSON.stringify(snap)); }
+        catch { /* best-effort — a failed write just means no instant paint next time */ }
+      }
+      res.json(snap);
+    } catch (err: any) {
+      res.json({ server: null, count: 0, generatedAt: 0, ips: [], error: err?.message || "fail2ban-client unavailable" });
     }
   });
 

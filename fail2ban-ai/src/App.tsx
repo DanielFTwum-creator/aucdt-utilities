@@ -531,52 +531,43 @@ export default function App() {
     setAiAnalysis("");
   };
 
-  // Pull the server's LIVE fail2ban bans and plot them. The server does the
-  // heavy lifting: GET /api/banlist returns the real {ip,jail} bans, then a
-  // single POST /api/geolocate geolocates them all server-side (the endpoint
-  // batches 100/call to ip-api and caches, so ~950 IPs resolve in one request
-  // instead of ~190 client round-trips). Falls back silently to the bundled
-  // snapshot if either endpoint is unavailable or there are no active bans.
+  // Pull the server's LIVE fail2ban bans and plot them. The server does all the
+  // heavy lifting: GET /api/live-bans returns the real bans already geolocated
+  // and merged (fail2ban ban list + one server-side ip-api batch, disk-cached).
+  // To hide the ~10s cold resolution, GET /api/snapshot paints the last persisted
+  // set instantly on mount, then /api/live-bans refreshes it in the background.
+  // Falls back silently to whatever is on screen if the endpoint is unavailable
+  // or there are no active bans.
   const [liveLoading, setLiveLoading] = useState(false);
+  const [hasSnapshot, setHasSnapshot] = useState(false);
+
+  const applyLiveBans = (ips: any[]) => {
+    const merged: IPData[] = ips.map(r => ({
+      ip: r.ip,
+      jail: r.jail || "unknown",
+      country: r.country || "Unknown",
+      countryCode: r.countryCode || "",
+      city: r.city || "Unknown",
+      lat: typeof r.lat === "number" ? r.lat : 0,
+      lon: typeof r.lon === "number" ? r.lon : 0,
+      isp: r.isp,
+      status: "success",
+    }));
+    if (merged.length === 0) return;
+    setIpsData(merged);
+    setServerLocation(DEFAULT_SERVER_LOCATION);
+    setHasSnapshot(true);
+    const jailCount = new Set(merged.map(m => m.jail)).size;
+    setActiveLogSample(`Live fail2ban snapshot from mail.aucdt.edu.gh: ${merged.length} banned IPs across ${jailCount} jails.`);
+  };
+
   const loadLiveBans = async () => {
     setLiveLoading(true);
     try {
-      const res = await fetch(`${import.meta.env.BASE_URL}api/banlist`);
+      const res = await fetch(`${import.meta.env.BASE_URL}api/live-bans`);
       if (!res.ok) return;
       const data = await res.json();
-      const rawBans: { ip: string; jail: string }[] = Array.isArray(data?.ips) ? data.ips : [];
-      if (rawBans.length === 0) return;
-
-      const jailByIp = new Map(rawBans.map(b => [b.ip, b.jail]));
-      const uniqueIps = Array.from(jailByIp.keys());
-
-      const geoRes = await fetch(`${import.meta.env.BASE_URL}api/geolocate`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ips: uniqueIps }),
-      });
-      if (!geoRes.ok) return;
-      const geoData = await geoRes.json();
-      const results: any[] = Array.isArray(geoData?.results) ? geoData.results : [];
-
-      const merged: IPData[] = results.map(r => ({
-        ip: r.ip,
-        jail: jailByIp.get(r.ip) || "unknown",
-        country: r.country || "Unknown",
-        countryCode: r.countryCode || "",
-        city: r.city || "Unknown",
-        lat: typeof r.lat === "number" ? r.lat : 0,
-        lon: typeof r.lon === "number" ? r.lon : 0,
-        isp: r.isp,
-        status: "success",
-      }));
-
-      if (merged.length > 0) {
-        setIpsData(merged);
-        setServerLocation(DEFAULT_SERVER_LOCATION);
-        const jailCount = new Set(merged.map(m => m.jail)).size;
-        setActiveLogSample(`Live fail2ban snapshot from mail.aucdt.edu.gh: ${merged.length} banned IPs across ${jailCount} jails.`);
-      }
+      if (Array.isArray(data?.ips) && data.ips.length > 0) applyLiveBans(data.ips);
     } catch {
       // network/parse failure — keep the current view
     } finally {
@@ -584,10 +575,21 @@ export default function App() {
     }
   };
 
-  // On first load, show the server's real bans (not the bundled sample) if the
-  // live endpoint is reachable.
+  // On first load, paint the last persisted snapshot immediately (instant), then
+  // fetch the fresh live set in the background and swap it in when ready.
   useEffect(() => {
-    loadLiveBans();
+    (async () => {
+      try {
+        const s = await fetch(`${import.meta.env.BASE_URL}api/snapshot`);
+        if (s.ok) {
+          const d = await s.json();
+          if (Array.isArray(d?.ips) && d.ips.length > 0) applyLiveBans(d.ips);
+        }
+      } catch {
+        // no snapshot — the blocking banner shows while we fetch fresh
+      }
+      loadLiveBans();
+    })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -894,6 +896,22 @@ export default function App() {
 
       {/* Main Body */}
       <main className="flex-1 max-w-7xl w-full mx-auto p-4 md:p-8">
+        {/* Live-bans fetch state: blocking banner on first-ever load (no snapshot
+            yet), a subtle refreshing pill once a snapshot is already on screen. */}
+        {liveLoading && (
+          hasSnapshot ? (
+            <div className="mb-4 flex items-center gap-2 text-xs font-mono text-emerald-400/80 print:hidden">
+              <Server className="w-3.5 h-3.5 animate-spin" />
+              <span>Updating live bans from the server…</span>
+            </div>
+          ) : (
+            <div className="mb-6 p-4 rounded-lg border border-emerald-800/40 bg-emerald-950/20 flex items-center gap-3 text-sm text-emerald-300 print:hidden">
+              <Server className="w-5 h-5 flex-shrink-0 animate-spin text-emerald-400" />
+              <span>Fetching the latest bans from the server… this first load geolocates every active IP and can take a few seconds.</span>
+            </div>
+          )
+        )}
+
         {notification && (
           <div className={`mb-6 p-4 rounded-lg border flex items-center justify-between gap-3 text-sm transition-all print:hidden ${
             notification.type === "success" 

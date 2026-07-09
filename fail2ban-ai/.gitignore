@@ -7,3 +7,4 @@ coverage/
 .env*
 !.env.example
 .geo-cache.json
+.last-snapshot.json
