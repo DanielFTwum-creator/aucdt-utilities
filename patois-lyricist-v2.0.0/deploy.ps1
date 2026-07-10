@@ -202,7 +202,10 @@ if command -v pm2 &>/dev/null; then
 fi
 "@
 $b64r = [Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes($restartCmd.Replace("`r", "")))
-ssh -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax=3 $RemoteHost "echo `$b64r | base64 -d | bash"
+# NOTE: $b64r must be PowerShell-interpolated here (no backtick). The old `$b64r sent the
+# literal string "$b64r" to the remote shell, so the decode|bash ran nothing and the PM2
+# restart was a silent no-op — files synced but the process never reloaded (4-day uptimes).
+ssh -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax=3 $RemoteHost "echo $b64r | base64 -d | bash"
 
 Log "INFO" "Health check..." Yellow
 ssh -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax=3 $RemoteHost "test -f ${RemotePath}index.html && echo 'OK index.html present' || echo 'MISSING index.html'"
