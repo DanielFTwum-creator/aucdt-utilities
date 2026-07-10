@@ -2034,3 +2034,65 @@ them.
 `ERR_PNPM_MINIMUM_RELEASE_AGE_VIOLATION` in a `-Build`, naming each package and
 its publish time versus the cutoff. A fresh resolution that picks a version with
 "(newer available)" beside it is the policy working as intended, not a problem.
+
+---
+
+## PATTERN 28: MATCH THE NGINX BLOCK TO THE APP'S ARCHETYPE (STATIC-SPA vs SELF-SERVING NODE)
+
+### Why
+
+10 Jul 2026, found by a random regression sweep: `ai-tools.techbridge.edu.gh/stockpulse/`
+returned `{"error":"Route not found"}` on every page load. The static SPA and a correct
+`.htaccess` were sitting in the docroot, unused, because two nginx blocks added during the
+1 Jul port-fix sweep proxied the whole sub-path to the API-only backend:
+
+```
+location /stockpulse/ { proxy_pass http://localhost:3020/stockpulse/; }   # kills the SPA
+location /stockpulse/api/ { proxy_pass http://localhost:3020/stockpulse/api/; }  # wrong path too
+```
+
+The self-serving-Node template (`location /app/ → proxy_pass backend`) was applied to an app
+that isn't one. stockpulse is a **static SPA + separate API backend**, designed to run on its
+Apache `.htaccess` (static files served directly; only `/api/` proxied, with the `/stockpulse`
+prefix stripped). Proxying everything to an API-only Express server 404s every non-`/api/` route.
+
+### The two fleet archetypes
+
+| Archetype | Serves the SPA | Correct nginx |
+|---|---|---|
+| **Self-serving Node** (aitopia, fail2ban-ai, brand-guideline-checker) | the Node server (`express.static` + SPA fallback) | `location /app/ { proxy_pass http://127.0.0.1:PORT; }` — one block, everything to Node |
+| **Static SPA + API** (stockpulse) | Apache/Plesk static from the docroot; `.htaccess` proxies `/api/` and does the SPA fallback | **no nginx location at all** — let nginx fall through to Apache so `.htaccess` runs |
+
+### The Rules
+
+1. **Before adding an nginx `location /app/` block, check whether the app serves its own SPA.**
+   If the docroot holds `index.html` + `assets/` + an `.htaccess` with a `RewriteRule ^api/`,
+   it is static-SPA+API — do **not** add a catch-all proxy; it shadows Apache and breaks the SPA.
+2. **A self-serve proxy_pass must go to a server that serves the SPA.** An API-only backend
+   (routes only under `/api`, 404s everything else) is never a valid target for `location /app/`.
+3. **Watch the proxy path.** `proxy_pass http://localhost:PORT/app/api/` forwards the `/app`
+   prefix; if the backend mounts routes at `/api` (not `/app/api`), it 404s. Strip the prefix
+   (`proxy_pass .../api/`) or rely on the `.htaccess` which already rewrites `^api/(.*)$ → /api/$1`.
+
+### The fix (reversible, pattern-based)
+
+Remove the mismatched blocks so nginx falls back to Apache + `.htaccess`:
+
+```bash
+CONF=/var/www/vhosts/system/<domain>/conf/vhost_nginx.conf
+cp -p "$CONF" "${CONF}.bak-$(date +%Y%m%d-%H%M%S)"
+awk '
+/^[[:space:]]*location \/<app>\// { inblk=1 }
+inblk { if (/\{/) d++; if (/\}/) { d--; if (d<=0){inblk=0; d=0}; next } next }
+{ print }
+' "$CONF" > "${CONF}.new"
+cp "${CONF}.new" "$CONF" && nginx -t && systemctl reload nginx || cp -p "${CONF}.bak-"* "$CONF"
+```
+
+### Verify
+
+`curl -w "%{http_code} %{content_type}"` the app root and `index.html` → `200 text/html`
+(SPA served, not the backend's JSON 404), and a real API route (`/app/api/health`) →
+`200 application/json`. Note: the nginx `-n` line numbers from `nginx -T` are offsets in the
+whole assembled dump, **not** positions in `vhost_nginx.conf` — always `grep -n 'location /<app>'`
+the file itself before deleting by line, or delete by pattern as above.
