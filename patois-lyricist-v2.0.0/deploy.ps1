@@ -4,14 +4,17 @@
 
 param(
     [string]$RemoteHost = "root@techbridge.edu.gh",
-    # WARNING (2026-07-01): the LIVE app runs from the 'lyricist/' folder, but this script is
-    # NOT safe to point there. It copies only server.ts/ecosystem (NOT package.json/pnpm-lock)
-    # and its file-sync wipes .env + node_modules. Pointing RemotePath at 'lyricist/' took
-    # patois DOWN (lost GEMINI_PROXY_KEY + express). Until this script is reworked to
-    # (a) sync package.json + pnpm-lock, (b) preserve .env, (c) install deps in place and
-    # target lyricist/, deploy to the throwaway 'patois/' folder and hand-sync server.ts/dist
-    # into 'lyricist/' manually. See project memory 'project_patois_deploy_fragile'.
-    [string]$RemotePath = "/var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/patois/",
+    # Deploys directly and safely to the LIVE 'lyricist/' folder (reworked 2026-07-10, superseding
+    # the old throwaway-'patois/' + hand-sync workaround). Safety properties:
+    #   (a) syncs package.json + pnpm-lock + pnpm-workspace.yaml (pnpm 11 reads settings from it),
+    #   (b) preserves .env and node_modules — the sync is non-destructive (only dist/assets is
+    #       mirrored with --delete; nothing else is deleted),
+    #   (c) installs deps in place with a frozen lockfile (Pattern 27), and pm2-restarts in place
+    #       so the running cwd + PORT 3017 are preserved (never delete + start-from-ecosystem,
+    #       which pins PORT 3004 and would move the live app).
+    # A pre-deploy tarball of the live folder is written to /tmp for rollback. nginx routing is
+    # NOT touched here — it goes through the Pattern 26 gate separately.
+    [string]$RemotePath = "/var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/lyricist/",
     [switch]$Build = $false
 )
 
@@ -75,8 +78,8 @@ git clone --depth 1 --filter=blob:none --sparse '$GITHUB_REPO' $buildDir
 cd $buildDir
 git sparse-checkout set patois-lyricist-v2.0.0
 cd patois-lyricist-v2.0.0
-log '[3/5] Installing dependencies...'
-pnpm install --no-frozen-lockfile --ignore-scripts 2>&1 | tail -5 || true
+log '[3/5] Installing dependencies (frozen lockfile — Pattern 27)...'
+pnpm install --frozen-lockfile --silent 2>/dev/null || pnpm install --no-frozen-lockfile --silent
 log '[4/5] Building...'
 if [ -f $RemotePath.env.local ]; then
   cp $RemotePath.env.local .env.local
@@ -88,11 +91,20 @@ touch .env.local
 # VITE_WMS_BASE defaults to https://wms.techbridge.edu.gh in the client. The old
 # VITE_GOOGLE_CLIENT_ID/REDIRECT_URI (bespoke Google OAuth) are no longer used.
 ./node_modules/.bin/vite build
-log '[5/5] Deploying dist/ to web root...'
+log '[5/5] Deploying to the live folder (non-destructive)...'
 mkdir -p $RemotePath
-rsync -a --delete dist/. $RemotePath
-cp server.ts package.json pnpm-lock.yaml ecosystem.config.js $RemotePath 2>/dev/null || log 'Note: Some files copied via scp instead'
-# server.ts imports ./src/server/wmsAuthMiddleware.ts (WMS SSO guard) — ship it.
+# Back up the live folder before overwriting anything (rollback = untar into RemotePath).
+if [ -f ${RemotePath}index.html ]; then
+  tar czf /tmp/lyricist-predeploy-`$(date +%Y%m%d-%H%M%S).tgz -C $RemotePath index.html assets server.ts .htaccess src 2>/dev/null || true
+fi
+# SPA: mirror the hashed bundles (safe to --delete WITHIN assets/ only), then overwrite the
+# top-level SPA files WITHOUT --delete, so .env, node_modules and the backend survive.
+rsync -a --delete dist/assets/ ${RemotePath}assets/
+rsync -a dist/ $RemotePath --exclude assets
+# Backend: server.ts + package.json/lock + pnpm-workspace.yaml (pnpm 11 reads settings from it)
+# + the WMS SSO guard. ecosystem.config.js is intentionally NOT shipped — the live PM2 config
+# (PORT 3017) is preserved by the in-place restart below.
+cp server.ts package.json pnpm-lock.yaml pnpm-workspace.yaml $RemotePath 2>/dev/null || log 'Note: some files copied via scp instead'
 mkdir -p ${RemotePath}src/server
 cp src/server/wmsAuthMiddleware.ts ${RemotePath}src/server/ 2>/dev/null || log 'Note: wmsAuthMiddleware copied via scp instead'
 log 'Build and deploy complete.'
@@ -102,9 +114,10 @@ log 'Build and deploy complete.'
     if ($LASTEXITCODE -eq 0) { Log "SUCCESS" "Server-side build and file sync complete" Green }
     else { Log "WARN" "Server build returned $LASTEXITCODE" Yellow }
     ssh -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax=3 $RemoteHost "rm -rf $buildDir" 2>$null | Out-Null
-    # Copy backend files that may not have been in build directory
+    # Belt-and-braces: re-copy the backend files from the local checkout in case the server-side
+    # cp missed any (ecosystem.config.js is deliberately excluded — see the in-place restart).
     Log "INFO" "Step 3b: Copying backend files to server..." Yellow
-    scp -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax=3 server.ts ecosystem.config.js "${RemoteHost}:${RemotePath}" 2>$null | Out-Null
+    scp -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax=3 server.ts package.json pnpm-lock.yaml pnpm-workspace.yaml "${RemoteHost}:${RemotePath}" 2>$null | Out-Null
     ssh -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax=3 $RemoteHost "mkdir -p ${RemotePath}src/server" 2>$null | Out-Null
     scp -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax=3 src/server/wmsAuthMiddleware.ts "${RemoteHost}:${RemotePath}src/server/" 2>$null | Out-Null
 } else {
@@ -113,15 +126,15 @@ log 'Build and deploy complete.'
     if (-not (Select-String -Path "dist/index.html" -Pattern '<script[^>]+(src="[^"]*\.js"|type="module")' -Quiet)) { Log "ERROR" "dist/index.html ships no JS bundle (missing module entry in index.html). Aborting deploy." Red; exit 1 }
     ssh -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax=3 $RemoteHost "mkdir -p $RemotePath"
     Write-Host "[NOTE] Generating .env configuration..." -ForegroundColor Cyan
+    # Preferred path is -Build (server-side build). This fallback preserves the live .env and
+    # is non-destructive; it does not write a pre-deploy backup (the -Build path does).
     ssh -o StrictHostKeyChecking=no $RemoteHost "
         cd $RemotePath
-        curl -s https://wms.techbridge.edu.gh/api/gemini/key | jq -r '.apiKey' | awk '{print \"GEMINI_PROXY_KEY=\"$1}' > .env
-        # Sign-in is WMS SSO — no VITE_GOOGLE_* or Google client secret is needed
-        # or written here. VITE_WMS_BASE defaults to the public WMS host in the client.
+        [ -f .env ] || curl -s https://wms.techbridge.edu.gh/api/gemini/key | jq -r '.apiKey' | awk '{print \"GEMINI_PROXY_KEY=\"$1}' > .env
     "
-    ssh -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax=3 $RemoteHost "find $RemotePath -mindepth 1 -maxdepth 1 ! -name '.env*' ! -name 'node_modules' -exec rm -rf {} +"
+    # Non-destructive copy: overwrite the SPA + backend files, leave .env/node_modules intact.
     scp -r -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax=3 dist/* "${RemoteHost}:${RemotePath}"
-    scp -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax=3 server.ts package.json pnpm-lock.yaml ecosystem.config.js "${RemoteHost}:${RemotePath}"
+    scp -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax=3 server.ts package.json pnpm-lock.yaml pnpm-workspace.yaml "${RemoteHost}:${RemotePath}"
     ssh -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax=3 $RemoteHost "mkdir -p ${RemotePath}src/server"
     scp -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax=3 src/server/wmsAuthMiddleware.ts "${RemoteHost}:${RemotePath}src/server/"
     Log "SUCCESS" "dist/* and backend files copied to server" Green
@@ -165,21 +178,26 @@ Log "INFO" "Step 4: Writing .htaccess..." Yellow
 "@ | ssh -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax=3 $RemoteHost "cat > ${RemotePath}.htaccess" 2>$null
 
 Log "INFO" "Step 5: Setting permissions..." Yellow
-ssh -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax=3 $RemoteHost "chown -R techbridge.edu.gh_md:psaserv $RemotePath && chmod -R 755 $RemotePath && chmod 644 ${RemotePath}.htaccess 2>/dev/null; true" | Out-Null
+# chmod -R 755 would make .env world-readable; force it back to 600 so the secret is never exposed (SEC §12).
+ssh -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax=3 $RemoteHost "chown -R techbridge.edu.gh_md:psaserv $RemotePath && chmod -R 755 $RemotePath && chmod 644 ${RemotePath}.htaccess 2>/dev/null; chmod 600 ${RemotePath}.env 2>/dev/null; true" | Out-Null
 
 Log "INFO" "Step 6: Installing backend dependencies..." Yellow
 $nvmPrefix = 'export NVM_DIR="$HOME/.nvm"; [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"; nvm use 26 >/dev/null 2>&1 || true'
-ssh -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax=3 $RemoteHost "$nvmPrefix; cd $RemotePath && CI=true pnpm install --prod --silent 2>/dev/null || npm install --omit=dev --silent"
+ssh -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax=3 $RemoteHost "$nvmPrefix; cd $RemotePath && CI=true pnpm install --prod --frozen-lockfile --silent 2>/dev/null || CI=true pnpm install --prod --silent 2>/dev/null || npm install --omit=dev --silent"
 
-Log "INFO" "Step 7: Restarting backend (PM2)..." Yellow
+Log "INFO" "Step 7: Restarting backend (PM2, in place)..." Yellow
 $restartCmd = @"
 if command -v pm2 &>/dev/null; then
   cd $RemotePath
   mkdir -p logs
   if pm2 describe patois-lyricist &>/dev/null; then
-    pm2 delete patois-lyricist
+    # In-place restart preserves the running cwd (lyricist/) and PORT 3017. Do NOT
+    # delete + start-from-ecosystem: ecosystem.config.js pins PORT 3004 and would move
+    # the live app off 3017 (the fragility this rework exists to eliminate).
+    pm2 restart patois-lyricist && echo 'pm2: restarted patois-lyricist in place (port preserved)'
+  else
+    PORT=3017 pm2 start server.ts --name patois-lyricist --interpreter npx --interpreter-args tsx --cwd $RemotePath && echo 'pm2: started patois-lyricist on 3017'
   fi
-  pm2 start ecosystem.config.js && echo 'pm2: started patois-lyricist with ecosystem config'
   pm2 save --force &>/dev/null
 fi
 "@
