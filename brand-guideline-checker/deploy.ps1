@@ -93,7 +93,10 @@ log '[5/7] Deploying dist/ to web root...'
 mkdir -p "`$DEPLOY_PATH" && rsync -a --delete dist/ "`$DEPLOY_PATH/dist/"
 cp index.html "`$DEPLOY_PATH/dist/index.html" 2>/dev/null || true
 log '[6/7] Copying backend files...'
-cp server.ts package.json pnpm-lock.yaml "`$DEPLOY_PATH/" 2>/dev/null || true
+# pnpm-workspace.yaml is required in the deploy dir: pnpm 11 reads packages/allowBuilds
+# from it, and the committed lockfile is a workspace lockfile — without it the --prod
+# install below aborts (exit 1) on a lockfile/workspace mismatch.
+cp server.ts package.json pnpm-lock.yaml pnpm-workspace.yaml "`$DEPLOY_PATH/" 2>/dev/null || true
 # server.ts imports ./src/server/wmsAuthMiddleware.ts (WMS SSO guard) — ship it.
 mkdir -p "`$DEPLOY_PATH/src/server" && cp src/server/wmsAuthMiddleware.ts "`$DEPLOY_PATH/src/server/"
 log '[7/7] Installing backend deps...'
