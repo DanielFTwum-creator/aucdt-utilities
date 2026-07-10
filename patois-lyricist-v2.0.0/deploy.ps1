@@ -4,16 +4,17 @@
 
 param(
     [string]$RemoteHost = "root@techbridge.edu.gh",
-    # Deploys directly and safely to the LIVE 'lyricist/' folder (reworked 2026-07-10, superseding
-    # the old throwaway-'patois/' + hand-sync workaround). Safety properties:
-    #   (a) syncs package.json + pnpm-lock + pnpm-workspace.yaml (pnpm 11 reads settings from it),
-    #   (b) preserves .env and node_modules — the sync is non-destructive (only dist/assets is
-    #       mirrored with --delete; nothing else is deleted),
-    #   (c) installs deps in place with a frozen lockfile (Pattern 27), and pm2-restarts in place
-    #       so the running cwd + PORT 3017 are preserved (never delete + start-from-ecosystem,
-    #       which pins PORT 3004 and would move the live app).
-    # A pre-deploy tarball of the live folder is written to /tmp for rollback. nginx routing is
-    # NOT touched here — it goes through the Pattern 26 gate separately.
+    # Self-serving-Node deploy (reworked 2026-07-10). patois is unified to the fleet archetype
+    # used by aitopia/fail2ban-ai/brand-guideline-checker: the Node process serves the SPA (from
+    # dist/, under NODE_ENV=production), the WMS-guarded /api/, and the SPA fallback (incl.
+    # /patois/auth/callback). nginx proxies ALL of /patois/ to localhost:3017 — no Apache, no
+    # .htaccess, no two-folder split. Properties:
+    #   (a) SPA -> RemotePath/dist/ (mirrored); backend + pnpm-workspace.yaml -> RemotePath,
+    #   (b) preserves .env and node_modules (non-destructive; only dist/ is mirrored),
+    #   (c) ensures NODE_ENV=production, installs with a frozen lockfile (Pattern 27), and
+    #       pm2-restarts in place (cwd + PORT 3017 preserved; never delete + start-from-ecosystem).
+    # Pre-deploy tarball -> /tmp for rollback. The one-time nginx `location /patois/ -> :3017`
+    # change goes through the Pattern 26 gate, NOT this script.
     [string]$RemotePath = "/var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/lyricist/",
     [switch]$Build = $false
 )
@@ -91,22 +92,25 @@ touch .env.local
 # VITE_WMS_BASE defaults to https://wms.techbridge.edu.gh in the client. The old
 # VITE_GOOGLE_CLIENT_ID/REDIRECT_URI (bespoke Google OAuth) are no longer used.
 ./node_modules/.bin/vite build
-log '[5/5] Deploying to the live folder (non-destructive)...'
+log '[5/5] Deploying (self-serving-Node — Node serves the SPA from dist/)...'
 mkdir -p $RemotePath
 # Back up the live folder before overwriting anything (rollback = untar into RemotePath).
-if [ -f ${RemotePath}index.html ]; then
-  tar czf /tmp/lyricist-predeploy-`$(date +%Y%m%d-%H%M%S).tgz -C $RemotePath index.html assets server.ts .htaccess src 2>/dev/null || true
+if [ -d ${RemotePath}dist ] || [ -f ${RemotePath}server.ts ]; then
+  tar czf /tmp/lyricist-predeploy-`$(date +%Y%m%d-%H%M%S).tgz -C $RemotePath dist server.ts src 2>/dev/null || true
 fi
-# SPA: mirror the hashed bundles (safe to --delete WITHIN assets/ only), then overwrite the
-# top-level SPA files WITHOUT --delete, so .env, node_modules and the backend survive.
-rsync -a --delete dist/assets/ ${RemotePath}assets/
-rsync -a dist/ $RemotePath --exclude assets
+# SPA is served by the Node process itself (server.ts express.static under NODE_ENV=production),
+# so the build goes into dist/ inside the Node's cwd — NOT the folder root. Mirror it so stale
+# hashed bundles are removed. .env and node_modules live outside dist/ and are untouched.
+rsync -a --delete dist/ ${RemotePath}dist/
 # Backend: server.ts + package.json/lock + pnpm-workspace.yaml (pnpm 11 reads settings from it)
 # + the WMS SSO guard. ecosystem.config.js is intentionally NOT shipped — the live PM2 config
 # (PORT 3017) is preserved by the in-place restart below.
 cp server.ts package.json pnpm-lock.yaml pnpm-workspace.yaml $RemotePath 2>/dev/null || log 'Note: some files copied via scp instead'
 mkdir -p ${RemotePath}src/server
 cp src/server/wmsAuthMiddleware.ts ${RemotePath}src/server/ 2>/dev/null || log 'Note: wmsAuthMiddleware copied via scp instead'
+# Self-serving-Node requires NODE_ENV=production (gates the express.static block). Not a secret.
+touch ${RemotePath}.env
+grep -q '^NODE_ENV=' ${RemotePath}.env || echo 'NODE_ENV=production' >> ${RemotePath}.env
 log 'Build and deploy complete.'
 "@
     $b64 = [Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes($serverScript.Replace("`r", "")))
@@ -131,55 +135,24 @@ log 'Build and deploy complete.'
     ssh -o StrictHostKeyChecking=no $RemoteHost "
         cd $RemotePath
         [ -f .env ] || curl -s https://wms.techbridge.edu.gh/api/gemini/key | jq -r '.apiKey' | awk '{print \"GEMINI_PROXY_KEY=\"$1}' > .env
+        grep -q '^NODE_ENV=' .env || echo 'NODE_ENV=production' >> .env
     "
-    # Non-destructive copy: overwrite the SPA + backend files, leave .env/node_modules intact.
-    scp -r -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax=3 dist/* "${RemoteHost}:${RemotePath}"
+    # Non-destructive: the SPA goes into dist/ (Node serves it); backend files overwrite; .env/node_modules stay.
+    scp -r -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax=3 dist "${RemoteHost}:${RemotePath}"
     scp -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax=3 server.ts package.json pnpm-lock.yaml pnpm-workspace.yaml "${RemoteHost}:${RemotePath}"
     ssh -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax=3 $RemoteHost "mkdir -p ${RemotePath}src/server"
     scp -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax=3 src/server/wmsAuthMiddleware.ts "${RemoteHost}:${RemotePath}src/server/"
     Log "SUCCESS" "dist/* and backend files copied to server" Green
 }
 
-Log "INFO" "Step 4: Writing .htaccess..." Yellow
-@"
-<IfModule mod_rewrite.c>
-  RewriteEngine On
-  RewriteBase /patois/
-
-  # Only /api/ is proxied to the Node backend. The WMS SSO callback lands on
-  # /patois/auth/callback?code=... and MUST fall through to the SPA (index.html)
-  # so the client can exchange the code — it is NOT a backend route.
-  RewriteCond %{REQUEST_URI} ^/patois/api/ [NC,OR]
-  RewriteCond %{REQUEST_URI} ^/api/ [NC]
-  RewriteRule ^api/(.*)$ http://localhost:3017/api/$1 [P,L,NC]
-
-  RewriteCond %{REQUEST_FILENAME} -f [OR]
-  RewriteCond %{REQUEST_FILENAME} -d
-  RewriteRule ^ - [L]
-  RewriteRule ^ /patois/index.html [QSA,L]
-</IfModule>
-<IfModule mod_expires.c>
-  ExpiresActive On
-  <FilesMatch "\.(js|css|png|jpg|jpeg|gif|svg|woff2|woff|ttf|eot|ico)$">
-    ExpiresDefault "max-age=31536000"
-    Header set Cache-Control "public, immutable"
-  </FilesMatch>
-  <FilesMatch "\.(html|json)$">
-    ExpiresDefault "max-age=0"
-    Header set Cache-Control "public, must-revalidate"
-  </FilesMatch>
-</IfModule>
-
-<IfModule mod_headers.c>
-  <FilesMatch "\.(html)$">
-    Header set Cache-Control "public, must-revalidate, max-age=0"
-  </FilesMatch>
-</IfModule>
-"@ | ssh -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax=3 $RemoteHost "cat > ${RemotePath}.htaccess" 2>$null
+Log "INFO" "Step 4: (self-serving-Node — no .htaccess; nginx proxies /patois/ to the Node)" Yellow
+# The Node process serves the SPA, /api/, and the SPA fallback (incl. /patois/auth/callback).
+# nginx routes all of /patois/ to localhost:3017 (a one-time config, applied via the Pattern 26
+# gate — not this script). Apache/.htaccess is not in the path, so nothing is written here.
 
 Log "INFO" "Step 5: Setting permissions..." Yellow
 # chmod -R 755 would make .env world-readable; force it back to 600 so the secret is never exposed (SEC §12).
-ssh -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax=3 $RemoteHost "chown -R techbridge.edu.gh_md:psaserv $RemotePath && chmod -R 755 $RemotePath && chmod 644 ${RemotePath}.htaccess 2>/dev/null; chmod 600 ${RemotePath}.env 2>/dev/null; true" | Out-Null
+ssh -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax=3 $RemoteHost "chown -R techbridge.edu.gh_md:psaserv $RemotePath && chmod -R 755 $RemotePath && chmod 600 ${RemotePath}.env 2>/dev/null; true" | Out-Null
 
 Log "INFO" "Step 6: Installing backend dependencies..." Yellow
 $nvmPrefix = 'export NVM_DIR="$HOME/.nvm"; [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"; nvm use 26 >/dev/null 2>&1 || true'

@@ -94,7 +94,13 @@ WMS (Google OAuth + TOTP MFA), domain-gated to `@techbridge.edu.gh` so all TUC m
 - **Server:** `src/server/wmsAuthMiddleware.ts` → `requireWmsAuth` guards `/api/gemini/generate`.
   It validates the Bearer token against WMS `/api/me` (60s cache) and enforces the domain gate.
   There is **no** server-side OAuth callback route any more — the SSO callback lands on
-  `/patois/auth/callback?code=` and is served by the SPA (the `.htaccess` proxies only `/api/`).
+  `/patois/auth/callback?code=` and is served by the SPA fallback.
+- **Serving (self-serving-Node, unified 2026-07-10):** the Node process serves the SPA from
+  `dist/` (under `NODE_ENV=production`, `express.static(basePath, dist)` + SPA fallback), the
+  WMS-guarded `/api/`, and `/patois/auth/callback`. nginx proxies **all** of `/patois/` to
+  `localhost:3017`. No Apache, no `.htaccess`, no two-folder split — patois now matches the
+  aitopia/fail2ban-ai/brand-guideline-checker archetype. `.env` sits outside `dist/`, so it is
+  never web-served. The old `patois/` Apache docroot is retired.
 - **WMS registration (required):** patois must be registered as an SSO app-base
   (`app-bases.patois`) in `/opt/tuc-wms/application.yml`, pointing at
   `https://ai-tools.techbridge.edu.gh/patois/`, same as aitopia/fail2ban-ai. Edit with `nano`.
