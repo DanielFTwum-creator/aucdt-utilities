@@ -46,6 +46,7 @@
 | 3027 | tuc-netscan-backend                | netscan (netscan.techbridge.edu.gh)           | Online |
 | 3028 | youtube-genie                      | youtube-genie (enhanced-youtube-genie)        | Online |
 | 3032 | bridge-radio                       | radio (radio.techbridge.edu.gh)               | Online |
+| 3034 | brand-guideline-checker            | brand-guideline-checker (ai-tools)            | Online (deployed 10 Jul 2026; WMS SSO all-TUC) |
 | 3040 | fail2ban-ai                        | fail2ban-ai (ai-tools/fail2ban-ai)            | Online (deployed 8 Jul 2026; WMS SSO staff-only) |
 | 3041 | aitopia                            | aitopia (ai-tools/aitopia)                    | Online (deployed 9 Jul 2026; WMS SSO all-TUC) |
 | 5000 | tuc-rms                            | tuc-rms-api                                   | Online ([::1] only) |
@@ -61,7 +62,6 @@
 
 | Port | App |
 |------|-----|
-| 3034 | brand-guideline-checker |
 | 3035 | ai-stand-up-workshop-prep-dashboard |
 | 3036 | smartscale-ai-presentation-platform |
 | 3037 | techbridge-strategy-dashboard |
@@ -70,9 +70,9 @@
 
 (deploy.ps1 + server.ts defaults set to match each of these. Assignment ledger: PORT-REGISTRY.md.)
 
-## Free ports (not bound, not reserved, as of 9 Jul 2026)
+## Free ports (not bound, not reserved, as of 10 Jul 2026)
 
-3001, 3042+ (3040 fail2ban-ai, 3041 aitopia now live)
+3001, 3042+ (3034 brand-guideline-checker, 3040 fail2ban-ai, 3041 aitopia now live)
 
 ## Infrastructure (not app ports)
 
