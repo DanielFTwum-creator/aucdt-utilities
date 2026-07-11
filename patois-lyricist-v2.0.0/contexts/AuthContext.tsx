@@ -29,7 +29,7 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
-// Served at /patois/ (vite base is './', so import.meta.env.BASE_URL is unreliable here).
+// Served at /patois/ (matches vite base). Hardcoded so the value is stable regardless of build config.
 const APP_PATH = '/patois/';
 
 // ── Token store + fetch wrapper ──────────────────────────────────────────────

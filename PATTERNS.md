@@ -2096,3 +2096,70 @@ cp "${CONF}.new" "$CONF" && nginx -t && systemctl reload nginx || cp -p "${CONF}
 `200 application/json`. Note: the nginx `-n` line numbers from `nginx -T` are offsets in the
 whole assembled dump, **not** positions in `vhost_nginx.conf` — always `grep -n 'location /<app>'`
 the file itself before deleting by line, or delete by pattern as above.
+
+---
+
+## PATTERN 29: A SUB-PATH SPA WITH NESTED ROUTES NEEDS AN ABSOLUTE VITE BASE
+
+### Why
+
+11 Jul 2026, found by a browser smoke of the Lyricist deploy: the app root
+`/patois/` loaded fine, but the OAuth return URL `/patois/auth/callback?mfa_ticket=...`
+died with `Failed to load module script: Expected a JavaScript-or-Wasm module but the
+server responded with a MIME type of "text/html"` for every bundle, plus a manifest
+syntax error. Sign-in could never complete because the SPA never booted on the one
+route the SSO flow always lands on.
+
+The root cause is subtle and passes every curl check. `vite.config.ts` had
+`base: './'`, so the built `index.html` referenced assets **relative**:
+`src="./assets/index-*.js"`. The browser resolves that against the *current* URL:
+
+- on `/patois/` → `/patois/assets/index-*.js` ✅
+- on `/patois/auth/callback` (one level deeper) → `/patois/auth/assets/index-*.js` ❌
+
+The deeper path has no such file, so express.static misses and the SPA fallback
+returns `index.html` (text/html) with a 200 — which is exactly why the earlier
+`curl -w "%{http_code}"` on the callback said `200` and looked healthy. Status 200
+on the *document* says nothing about whether its nested-route assets resolve; only a
+real browser (or a curl of the asset URL the browser would compute) exposes it.
+
+### The rule
+
+An SPA served under a fixed sub-path that has **any** client route deeper than the
+base (an OAuth callback, `/app/settings/x`, etc.) must build with an **absolute**
+base equal to that sub-path, not a relative one:
+
+```ts
+// vite.config.ts — app served at https://host/patois/
+base: '/patois/',   // NOT './'
+```
+
+Absolute base pins every bundle to `/patois/assets/...` regardless of how deep the
+current route is. Relative base (`./`) only works for a flat app served at its base
+and breaks the moment a route goes deeper.
+
+Vite rewrites the module/style tags it manages, but it does **not** rewrite
+hand-authored `<link>` refs in `index.html` (`rel="manifest"`, `apple-touch-icon`,
+`icon`). Make those absolute by hand too, or they 404-to-fallback on deep routes the
+same way (the manifest syntax error above):
+
+```html
+<link rel="manifest" href="/patois/manifest.json" />   <!-- not ./manifest.json -->
+```
+
+Relative base is the right choice only for `file://`-served builds (Capacitor/mobile);
+a web app behind a sub-path is the opposite case. If a project later adds a mobile
+build, override base per-mode rather than reverting the web default to `./`.
+
+### Verify
+
+Don't trust a `%{http_code}` on the document. Curl the asset URL the browser computes
+from the **deep** route, and confirm it is JS, not the HTML fallback:
+
+```bash
+curl -s -o /dev/null -w "%{http_code} %{content_type}\n" \
+  "https://ai-tools.techbridge.edu.gh/patois/assets/$(curl -s https://ai-tools.techbridge.edu.gh/patois/ | grep -oE 'assets/index-[^\"]+\.js' | head -1)"
+# expect: 200 text/javascript   (NOT 200 text/html)
+```
+Then load `/patois/auth/callback` in a real browser with DevTools open — zero red
+module-load errors in the console is the true pass.

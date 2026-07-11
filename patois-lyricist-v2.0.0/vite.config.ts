@@ -5,7 +5,12 @@ import react from '@vitejs/plugin-react';
 export default defineConfig(({ mode }) => {
     const env = loadEnv(mode, '.', '');
     return {
-      base: './',
+      // Absolute base: the app is served under the /patois/ sub-path and has a nested OAuth
+      // callback route (/patois/auth/callback). A relative base ('./') resolves asset URLs
+      // against the current route, so on the deeper callback path the bundles were requested
+      // from /patois/auth/assets/... (404 -> SPA fallback -> text/html -> module MIME error,
+      // app never boots). An absolute base pins assets to /patois/assets/... at any depth.
+      base: '/patois/',
       server: {
         port: 3000,
         host: '0.0.0.0',

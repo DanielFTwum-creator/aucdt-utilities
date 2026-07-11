@@ -95,6 +95,11 @@ WMS (Google OAuth + TOTP MFA), domain-gated to `@techbridge.edu.gh` so all TUC m
   It validates the Bearer token against WMS `/api/me` (60s cache) and enforces the domain gate.
   There is **no** server-side OAuth callback route any more — the SSO callback lands on
   `/patois/auth/callback?code=` and is served by the SPA fallback.
+- **Vite base must be absolute `/patois/`** (not `./`). The SSO callback is a nested route
+  (`/patois/auth/callback`); a relative base makes the bundles resolve to
+  `/patois/auth/assets/...` on that route → 404 → SPA fallback returns HTML → module MIME
+  error → the app never boots and sign-in cannot complete. Hand-authored `<link>` refs in
+  `index.html` (manifest/icon/favicon) are also absolute for the same reason. See PATTERN 29.
 - **Serving (self-serving-Node, unified 2026-07-10):** the Node process serves the SPA from
   `dist/` (under `NODE_ENV=production`, `express.static(basePath, dist)` + SPA fallback), the
   WMS-guarded `/api/`, and `/patois/auth/callback`. nginx proxies **all** of `/patois/` to
