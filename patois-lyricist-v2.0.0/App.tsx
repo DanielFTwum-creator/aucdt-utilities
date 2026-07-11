@@ -1,6 +1,7 @@
 
 import React, { useState, useCallback, useEffect, useRef } from 'react';
 import { generateLyrics } from './services/geminiService';
+import { GENRE_PACKS, LANGUAGE_PACKS, DEFAULT_GENRE_ID, DEFAULT_LANGUAGE_ID, getGenrePack, getLanguagePack, getPersona } from './services/lyricistPacks';
 import { logAction } from './services/auditLogService';
 import { secureGetItem, secureSetItem } from './services/storageService';
 import { initializeDictionary } from './services/dictionaryService';
@@ -29,7 +30,10 @@ export interface HistoryEntry {
   lyrics: string;
   timestamp: string;
   rhymeScheme: string;
-  djPersona: string;
+  genre?: string;
+  language?: string;
+  personaId?: string;
+  djPersona?: string; // legacy entries (pre-Lyricist)
   songStructure: string[];
 }
 
@@ -60,16 +64,6 @@ declare global {
   }
 }
 
-const PERSONA_DESCRIPTIONS: Record<string, string> = {
-  "Hype Man": "High octane energy. Focus on crowd interaction, 'Call & Response', and energetic ad-libs.",
-  "Storyteller": "Narrative flow with a chronological arc. Rich sensory descriptions and emotional delivery.",
-  "Roots Conscious": "Spiritual, heavy use of Rastafarian terminology. Focus on 'Livity', nature, and social justice.",
-  "DJ General": "Aggressive and authoritative. Military metaphors and dominance suitable for Sound Clashes.",
-  "Sound System Operator": "Technical focus on the equipment (amps, bass). Exclusive dubplate boasting.",
-  "Roots Dub Poet": "Rhythmic spoken word. Intellectual analysis of social issues with deep poetic metaphors.",
-  "Spoken Word": "Purely rhythmic spoken delivery. No singing. Focus on street philosophy, cadence, and intentional pauses."
-};
-
 const App: React.FC = () => {
   // --- Auth & Session (SOC 2 Governance) ---
   const { user, logout } = useAuth();
@@ -85,7 +79,15 @@ const App: React.FC = () => {
   const [themeInput, setThemeInput] = useState<string>('');
   const [songDescription, setSongDescription] = useState<string>('');
   const [rhymeScheme, setRhymeScheme] = useState<string>('AABB');
-  const [djPersona, setDjPersona] = useState<string>('Hype Man');
+  const [genre, setGenre] = useState<string>(DEFAULT_GENRE_ID);
+  const [language, setLanguage] = useState<string>(DEFAULT_LANGUAGE_ID);
+  const [personaId, setPersonaId] = useState<string>(getGenrePack(DEFAULT_GENRE_ID).personas[0].id);
+  // Derived: the currently-selected pack + persona (recomputed each render).
+  const currentPack = getGenrePack(genre);
+  const currentLanguage = getLanguagePack(language);
+  const currentPersona = getPersona(genre, personaId);
+  // Switching genre repopulates the persona list, so snap to that genre's first persona.
+  const changeGenre = (g: string) => { setGenre(g); setPersonaId(getGenrePack(g).personas[0].id); };
   
   // Initialize structure from secure storage to persist user customization across reloads
   const [songStructure, setSongStructure] = useState<string[]>(() => {
@@ -191,22 +193,22 @@ const App: React.FC = () => {
   const handleGenerate = useCallback(async () => {
     if (!themeInput.trim()) return;
     setIsLoading(true); setLyrics(''); setSongTitle('');
-    setGenerationStatus('Constructing riddim... please hold.');
+    setGenerationStatus('Composing your song... please hold.');
     try {
-      const result = await generateLyrics(themeInput, rhymeScheme, djPersona, songStructure, songDescription);
+      const result = await generateLyrics(themeInput, rhymeScheme, genre, language, personaId, songStructure, songDescription);
       setLyrics(result.lyrics);
       setSongTitle(result.title);
-      setGenerationStatus('Riddim construction complete!');
+      setGenerationStatus('Song complete!');
       setHistory(prev => [{
         id: Date.now(), theme: themeInput, songDescription: songDescription, songTitle: result.title, artistName: '', albumName: '', lyrics: result.lyrics,
-        timestamp: new Date().toISOString(), rhymeScheme, djPersona, songStructure
+        timestamp: new Date().toISOString(), rhymeScheme, genre, language, personaId, songStructure
       }, ...prev].slice(0, 50));
-      logAction(currentUser || 'unknown', 'Riddim Generated', { title: result.title });
+      logAction(currentUser || 'unknown', 'Song Generated', { title: result.title });
     } catch (err: any) {
-      setGenerationStatus('Construction failed. Try again.');
+      setGenerationStatus('Composition failed. Try again.');
       console.error(err);
     } finally { setIsLoading(false); }
-  }, [themeInput, rhymeScheme, djPersona, songStructure, songDescription, currentUser]);
+  }, [themeInput, rhymeScheme, genre, language, personaId, songStructure, songDescription, currentUser]);
 
   const handleCopy = () => {
     if (!lyrics) return;
@@ -224,12 +226,12 @@ const App: React.FC = () => {
         const doc = new jsPDF();
         doc.setFont("helvetica", "bold");
         doc.setFontSize(20);
-        doc.text(songTitle || 'Untitled Riddim', 20, 20);
+        doc.text(songTitle || 'Untitled', 20, 20);
 
         doc.setFont("helvetica", "normal");
         doc.setFontSize(12);
         doc.text(`Theme: ${themeInput}`, 20, 30);
-        doc.text(`Style: ${djPersona} (${rhymeScheme})`, 20, 38);
+        doc.text(`Style: ${currentPack.label} · ${currentPersona?.label || ''} (${rhymeScheme})`, 20, 38);
         
         let yPos = 46;
         if (songDescription) {
@@ -257,13 +259,13 @@ const App: React.FC = () => {
           yPos += 6;
         }
 
-        doc.save(`${(songTitle || 'riddim').replace(/\\s+/g, '_').toLowerCase()}.pdf`);
+        doc.save(`${(songTitle || 'song').replace(/\\s+/g, '_').toLowerCase()}.pdf`);
       } else {
         let content = '';
         if (format === 'md') {
-            content = `# ${songTitle || 'Untitled Riddim'}\n\n**Theme:** ${themeInput}\n**Description:** ${songDescription}\n**Rhyme Scheme:** ${rhymeScheme}\n**Persona:** ${djPersona}\n**Structure:** ${songStructure.join(' → ')}\n\n---\n\n${lyrics}`;
+            content = `# ${songTitle || 'Untitled'}\n\n**Theme:** ${themeInput}\n**Description:** ${songDescription}\n**Genre:** ${currentPack.label}\n**Language:** ${currentLanguage.label}\n**Rhyme Scheme:** ${rhymeScheme}\n**Persona:** ${currentPersona?.label || ''}\n**Structure:** ${songStructure.join(' → ')}\n\n---\n\n${lyrics}`;
         } else {
-            content = `TITLE: ${songTitle || 'Untitled Riddim'}\nTHEME: ${themeInput}\nDESCRIPTION: ${songDescription}\nRHYME SCHEME: ${rhymeScheme}\nPERSONA: ${djPersona}\nSTRUCTURE: ${songStructure.join(' -> ')}\n\n--------------------------------------------------\n\n${lyrics}`;
+            content = `TITLE: ${songTitle || 'Untitled'}\nTHEME: ${themeInput}\nDESCRIPTION: ${songDescription}\nGENRE: ${currentPack.label}\nLANGUAGE: ${currentLanguage.label}\nRHYME SCHEME: ${rhymeScheme}\nPERSONA: ${currentPersona?.label || ''}\nSTRUCTURE: ${songStructure.join(' -> ')}\n\n--------------------------------------------------\n\n${lyrics}`;
         }
         
         const mimeType = format === 'md' ? 'text/markdown' : 'text/plain';
@@ -271,7 +273,7 @@ const App: React.FC = () => {
         const url = URL.createObjectURL(blob);
         const link = document.createElement('a');
         link.href = url;
-        link.download = `${(songTitle || 'riddim').replace(/\s+/g, '_').toLowerCase()}.${format}`;
+        link.download = `${(songTitle || 'song').replace(/\s+/g, '_').toLowerCase()}.${format}`;
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
@@ -313,7 +315,7 @@ const App: React.FC = () => {
 
 
   return (
-    <div className="min-h-screen relative" role="application" aria-label="Patois Lyricist App">
+    <div className="min-h-screen relative" role="application" aria-label="Lyricist App">
       <div className="rasta-stripes" aria-hidden="true" />
       <div className="container mx-auto p-4 md:p-6 max-w-4xl">
         <header className="mb-8 md:mb-12 flex flex-col items-center" role="banner">
@@ -351,7 +353,7 @@ const App: React.FC = () => {
         </header>
 
         {currentView === 'main' && (
-          <main className="grid gap-10 fade-in" aria-label="Riddim Laboratory Content">
+          <main className="grid gap-10 fade-in" aria-label="Lyric Laboratory Content">
             <section className="bg-card p-8 rounded-[2rem] border border-white/5 shadow-inner" aria-labelledby="input-heading">
               <div className="flex justify-between items-center mb-6">
                 <h3 id="input-heading" className="font-black uppercase tracking-widest text-title text-sm">Vision Input</h3>
@@ -375,7 +377,7 @@ const App: React.FC = () => {
                   value={themeInput} 
                   onChange={e => setThemeInput(e.target.value)} 
                   maxLength={THEME_LIMIT} 
-                  placeholder="Narrative for the Riddim..." 
+                  placeholder="Narrative for your song..."
                   className="w-full p-6 bg-black/40 border-2 border-white/5 rounded-3xl focus:border-amber-500 focus:ring-4 focus:ring-amber-500/10 outline-none transition-all h-40 text-lg placeholder:opacity-30" 
                 />
                 <div className="flex justify-between items-center text-[10px] font-black uppercase tracking-widest mt-2 px-4">
@@ -404,13 +406,38 @@ const App: React.FC = () => {
                 </div>
               </div>
 
+              <div className="grid md:grid-cols-2 gap-6 mb-6">
+                <div className="flex flex-col gap-2">
+                  <label htmlFor="genre" className="text-[10px] uppercase font-bold opacity-40 ml-2">Genre Tradition</label>
+                  <select
+                    id="genre"
+                    value={genre}
+                    onChange={e => changeGenre(e.target.value)}
+                    className="p-4 bg-black/40 border border-white/5 rounded-2xl text-sm outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all"
+                  >
+                    {GENRE_PACKS.map(g => <option key={g.id} value={g.id}>{g.label}</option>)}
+                  </select>
+                </div>
+                <div className="flex flex-col gap-2">
+                  <label htmlFor="language" className="text-[10px] uppercase font-bold opacity-40 ml-2">Language / Diction</label>
+                  <select
+                    id="language"
+                    value={language}
+                    onChange={e => setLanguage(e.target.value)}
+                    className="p-4 bg-black/40 border border-white/5 rounded-2xl text-sm outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all"
+                  >
+                    {LANGUAGE_PACKS.map(l => <option key={l.id} value={l.id}>{l.label}</option>)}
+                  </select>
+                </div>
+              </div>
+
               <div className="grid md:grid-cols-2 gap-6">
                 <div className="flex flex-col gap-2">
                   <label htmlFor="cadence" className="text-[10px] uppercase font-bold opacity-40 ml-2">Cadence Control</label>
-                  <select 
-                    id="cadence" 
-                    value={rhymeScheme} 
-                    onChange={e => setRhymeScheme(e.target.value)} 
+                  <select
+                    id="cadence"
+                    value={rhymeScheme}
+                    onChange={e => setRhymeScheme(e.target.value)}
                     className="p-4 bg-black/40 border border-white/5 rounded-2xl text-sm outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all"
                   >
                     <option value="AABB">Couplets (AABB)</option>
@@ -424,29 +451,23 @@ const App: React.FC = () => {
                     <div className="group relative">
                       <span className="text-[10px] cursor-help border-b border-dashed border-white/30 text-white/50 hover:text-white transition-colors">ℹ️ Info</span>
                       <div className="absolute right-0 top-full mt-2 w-64 p-4 bg-gray-900 border border-[#D4AF37]/30 rounded-xl shadow-2xl hidden group-hover:block z-20 text-xs text-gray-300 pointer-events-none">
-                         <span className="text-[#D4AF37] font-bold block mb-1">{djPersona}</span>
-                         {PERSONA_DESCRIPTIONS[djPersona]}
+                         <span className="text-[#D4AF37] font-bold block mb-1">{currentPersona?.label}</span>
+                         {currentPersona?.direction}
                       </div>
                     </div>
                   </div>
-                  <select 
-                    id="signature" 
-                    value={djPersona} 
-                    onChange={e => setDjPersona(e.target.value)} 
+                  <select
+                    id="signature"
+                    value={personaId}
+                    onChange={e => setPersonaId(e.target.value)}
                     className="p-4 bg-black/40 border border-white/5 rounded-2xl text-sm outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all w-full"
                   >
-                    <option value="Hype Man">Hype Man</option>
-                    <option value="Storyteller">Storyteller</option>
-                    <option value="Roots Conscious">Roots Conscious</option>
-                    <option value="DJ General">DJ General</option>
-                    <option value="Sound System Operator">Sound System Operator</option>
-                    <option value="Roots Dub Poet">Roots Dub Poet</option>
-                    <option value="Spoken Word">Spoken Word</option>
+                    {currentPack.personas.map(p => <option key={p.id} value={p.id}>{p.label}</option>)}
                   </select>
-                  
+
                   <div className="mt-2 p-3 bg-white/5 rounded-xl border border-white/5 text-xs text-gray-400 italic">
-                      <span className="text-title not-italic font-bold mr-1">Current Persona Context:</span>
-                      {PERSONA_DESCRIPTIONS[djPersona] || "Select a persona to define the vocal style."}
+                      <span className="text-title not-italic font-bold mr-1">Lineage:</span>
+                      {currentPersona ? `${currentPersona.lineage}. ${currentPersona.direction}` : "Select a persona to define the vocal style."}
                   </div>
                 </div>
               </div>
@@ -454,7 +475,7 @@ const App: React.FC = () => {
               <div className="mt-10"><StructureBuilder structure={songStructure} setStructure={setSongStructure} disabled={isLoading} /></div>
               
               <button onClick={handleGenerate} disabled={isLoading || !themeInput.trim()} className="w-full mt-12 bg-green-600 hover:bg-green-500 disabled:opacity-20 py-5 rounded-3xl font-black uppercase tracking-[0.3em] text-white shadow-2xl transition-all active:scale-[0.98]" aria-busy={isLoading}>
-                CONSTRUCT RIDDIM
+                GENERATE SONG
               </button>
               {isLoading && <Spinner status={generationStatus} />}
               <div className="mt-2 text-center text-xs opacity-50 font-bold" aria-live="polite">
@@ -467,16 +488,16 @@ const App: React.FC = () => {
                 <div id="lyrics-export-container" className="absolute -top-[9999px] -left-[9999px] w-[800px]" aria-hidden="true">
                   <div className="p-10 bg-[#111111] text-white">
                     <div className="rasta-stripes mb-8 h-2 w-full" />
-                    <h1 className="text-4xl font-bold mb-4 text-[#D4AF37] font-serif">{songTitle || 'Untitled Riddim'}</h1>
+                    <h1 className="text-4xl font-bold mb-4 text-[#D4AF37] font-serif">{songTitle || 'Untitled'}</h1>
                     <div className="grid grid-cols-2 gap-4 mb-8 text-sm opacity-70 border-b border-white/10 pb-4">
                       <p><strong className="text-[#D4AF37]">Theme:</strong> {themeInput}</p>
-                      <p><strong className="text-[#D4AF37]">Style:</strong> {djPersona} ({rhymeScheme})</p>
+                      <p><strong className="text-[#D4AF37]">Style:</strong> {currentPack.label} · {currentPersona?.label} ({rhymeScheme})</p>
                       {songDescription && <p className="col-span-2 italic"><strong className="text-[#D4AF37]">Vision:</strong> {songDescription}</p>}
                       <p className="col-span-2"><strong className="text-[#D4AF37]">Structure:</strong> {songStructure.join(' → ')}</p>
                     </div>
                     <div className="whitespace-pre-wrap font-mono text-lg leading-relaxed">{lyrics}</div>
                     <div className="mt-10 pt-4 border-t border-white/10 text-center text-xs opacity-30 uppercase tracking-widest">
-                      Generated by Patois Lyricist • {new Date().toLocaleDateString()}
+                      Generated by Lyricist • {new Date().toLocaleDateString()}
                     </div>
                   </div>
                 </div>
@@ -546,7 +567,8 @@ const App: React.FC = () => {
               setLyrics(h.lyrics); 
               setSongTitle(h.songTitle); 
               if (h.rhymeScheme) setRhymeScheme(h.rhymeScheme);
-              if (h.djPersona) setDjPersona(h.djPersona);
+              if (h.genre) { changeGenre(h.genre); if (h.personaId) setPersonaId(h.personaId); }
+              if (h.language) setLanguage(h.language);
               if (h.songStructure) setSongStructure(h.songStructure);
             }} onClear={() => setHistory([])} />
           </main>
