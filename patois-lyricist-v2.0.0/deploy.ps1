@@ -82,15 +82,10 @@ cd patois-lyricist-v2.0.0
 log '[3/5] Installing dependencies (frozen lockfile — Pattern 27)...'
 pnpm install --frozen-lockfile --silent 2>/dev/null || pnpm install --no-frozen-lockfile --silent
 log '[4/5] Building...'
-if [ -f $RemotePath.env.local ]; then
-  cp $RemotePath.env.local .env.local
-elif [ -f $RemotePath.env ]; then
-  cp $RemotePath.env .env.local
-fi
-touch .env.local
-# WMS SSO needs no build-time VITE vars: sign-in is delegated to WMS, and
-# VITE_WMS_BASE defaults to https://wms.techbridge.edu.gh in the client. The old
-# VITE_GOOGLE_CLIENT_ID/REDIRECT_URI (bespoke Google OAuth) are no longer used.
+# WMS SSO needs no build-time VITE vars (sign-in is delegated to WMS; VITE_WMS_BASE defaults),
+# so the runtime .env is NOT copied into the build dir. Copying it previously pulled the runtime
+# secret into the build and made Vite warn about NODE_ENV=production in .env (Vite ignores it for
+# the build anyway). NODE_ENV is a runtime-only var — set in RemotePath/.env at deploy time.
 ./node_modules/.bin/vite build
 log '[5/5] Deploying (self-serving-Node — Node serves the SPA from dist/)...'
 mkdir -p $RemotePath
