@@ -2163,3 +2163,56 @@ curl -s -o /dev/null -w "%{http_code} %{content_type}\n" \
 ```
 Then load `/patois/auth/callback` in a real browser with DevTools open — zero red
 module-load errors in the console is the true pass.
+
+---
+
+## PATTERN 30: TOTP ENROLMENT — SHOW THE BASE32 KEY, NOT THE RAW `secret`
+
+### Why
+
+11 Jul 2026, found when the Head of ICT hit patois's WMS MFA enrolment as a genuine
+first-timer. The `WmsMfaModal` enrol screen showed a "Setup key" of
+`r4YvB2QqTbsZ/ccWuFIuAxxXw5s=` and no QR. Microsoft/Google Authenticator both
+rejected that key, and there was nothing to scan — enrolment was a dead end.
+
+`GET /api/auth/mfa/enroll/begin` returns two fields:
+
+```json
+{ "secret": "r4YvB2QqTbsZ/ccWuFIuAxxXw5s=",              // base64 — a server round-trip token
+  "otpauthUri": "otpauth://totp/TUC-WMS:me@...?secret=V6DC6B3EFJG3WGP5Y4LLQUROAMOFPQ43&..." }
+```
+
+The value a human types into an authenticator is the **base32** `secret=` param inside
+`otpauthUri` (chars `A–Z2–7` only). The top-level `secret` is **base64** (`+ / =`,
+lowercase) — it is only the token the client sends back at `enroll/confirm`, never
+something a user enters. Surfacing `secret` under a "Setup key" label guarantees a
+failed manual entry. patois's modal did exactly that; markai masked the same bug
+because its QR (which encodes `otpauthUri`) was the primary path and nobody read the
+"can't scan" line.
+
+### The rule
+
+For any TOTP enrolment UI:
+
+1. **Render a QR of `otpauthUri`, generated client-side** (`qrcode` ^1.5.4, bundled —
+   already in markai and patois). The TOTP secret must never be sent to an external
+   QR service — that leaks a credential (SEC §12). Scanning is the 99% path.
+2. **Manual fallback shows the base32 key parsed from `otpauthUri`**, not the raw
+   `secret`:
+   ```ts
+   const manualKey = new URLSearchParams(otpauthUri.split('?')[1]).get('secret');
+   ```
+3. Keep the raw `secret` in state only to POST back at `enroll/confirm`; never label
+   it "Setup key" or show it for entry.
+
+### Gotcha: single-use ticket
+
+`mfa_ticket` is single-use and short-lived. Retrying enrolment on an old tab reuses a
+consumed ticket → `enroll/begin` and `auth/refresh` return `401`. Enrol from one fresh
+sign-in, start to finish; those 401s are stale-ticket noise, not a broken endpoint.
+
+### Verify
+
+First-time enrol from a fresh sign-in: a QR renders, a real authenticator scan +
+6-digit code completes `enroll/confirm`, and the next sign-in shows the *verify* step.
+The manual key, if typed instead of scanned, must also succeed (proves it's base32).
