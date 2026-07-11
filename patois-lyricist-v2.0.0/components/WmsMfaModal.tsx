@@ -1,12 +1,15 @@
 import React, { useState } from 'react';
+// @ts-ignore — qrcode ships without types; tsconfig is non-strict
+import QRCode from 'qrcode';
 import { useAuth } from '../contexts/AuthContext';
 import { wmsMfaVerify, wmsMfaEnrollBegin, wmsMfaEnrollConfirm } from '../services/wmsAuthService';
 
 // TOTP step for WMS sign-in (archetype B — no routes, so MFA is a modal over the
-// login screen). Verify for enrolled users; a manual-key enrolment wizard for
-// first-timers. Enrolment shows the secret and otpauth URI as text rather than a
-// QR image, so the migration needs no extra dependency — most TUC members are
-// already enrolled through another fleet app and only ever see the verify step.
+// login screen). Verify for enrolled users; a QR enrolment wizard for first-timers
+// (matches the markai reference). The QR encodes the otpauthUri client-side, so the
+// TOTP secret never leaves the browser. The manual fallback shows the base32 key
+// (parsed from the otpauth URI) — authenticator apps reject the raw base64 `secret`,
+// which is only the round-trip token the server needs back at confirm time.
 
 export const WmsMfaModal: React.FC = () => {
   const { wmsMfaTicket, clearWmsMfaTicket, adoptWmsSession } = useAuth();
@@ -15,7 +18,8 @@ export const WmsMfaModal: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const [secret, setSecret] = useState<string | null>(null);
-  const [otpauthUri, setOtpauthUri] = useState<string | null>(null);
+  const [qrDataUrl, setQrDataUrl] = useState<string | null>(null);
+  const [manualKey, setManualKey] = useState<string | null>(null);
   const [enrolStarted, setEnrolStarted] = useState(false);
 
   if (!wmsMfaTicket) return null;
@@ -33,7 +37,11 @@ export const WmsMfaModal: React.FC = () => {
     try {
       const res = await wmsMfaEnrollBegin(wmsMfaTicket);
       setSecret(res.secret);
-      setOtpauthUri(res.otpauthUri);
+      setQrDataUrl(await QRCode.toDataURL(res.otpauthUri, { margin: 1, width: 200 }));
+      // The base32 key an authenticator accepts for manual entry lives in the otpauth URI,
+      // not in res.secret (which is base64 and only used for the confirm round-trip).
+      try { setManualKey(new URLSearchParams(res.otpauthUri.split('?')[1]).get('secret')); }
+      catch { setManualKey(null); }
       setEnrolStarted(true);
     } catch (err) { setError(err instanceof Error ? err.message : 'Could not start enrolment'); }
     finally { setBusy(false); }
@@ -88,22 +96,22 @@ export const WmsMfaModal: React.FC = () => {
         ) : !enrolStarted ? (
           <div>
             <h2 style={{ color: '#f5f5f5', fontSize: '1.05rem', fontWeight: 900, margin: 0 }}>Set up two-factor</h2>
-            <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: '0.82rem', margin: '6px 0 4px' }}>Your account needs an authenticator app (Google Authenticator, Authy, 1Password…). We'll give you a setup key.</p>
+            <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: '0.82rem', margin: '6px 0 4px' }}>Your account needs an authenticator app (Microsoft Authenticator, Google Authenticator, Authy…). We'll show a QR code to scan.</p>
             {error && <p style={{ color: '#f87171', fontSize: '0.8rem', marginTop: 10 }}>{error}</p>}
             <button type="button" onClick={beginEnrol} disabled={busy} style={{ ...btn, opacity: busy ? 0.5 : 1 }}>{busy ? '…' : 'Begin setup'}</button>
             <button type="button" onClick={() => { setMode('verify'); setError(null); }} style={linkBtn}>← I already have a code</button>
           </div>
         ) : (
           <form onSubmit={confirmEnrol}>
-            <h2 style={{ color: '#f5f5f5', fontSize: '1.05rem', fontWeight: 900, margin: 0 }}>Add &amp; verify</h2>
-            <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: '0.82rem', margin: '6px 0 8px' }}>Add this key to your authenticator app, then enter the 6-digit code it shows.</p>
-            {secret && (
-              <div style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 10, padding: 12, marginBottom: 8 }}>
-                <div style={{ color: 'rgba(255,255,255,0.4)', fontSize: '0.65rem', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 4 }}>Setup key</div>
-                <code style={{ color: '#FCD116', fontSize: '0.85rem', wordBreak: 'break-all' }}>{secret}</code>
-                {otpauthUri && (
-                  <div style={{ color: 'rgba(255,255,255,0.25)', fontSize: '0.65rem', wordBreak: 'break-all', marginTop: 6 }}>{otpauthUri}</div>
-                )}
+            <h2 style={{ color: '#f5f5f5', fontSize: '1.05rem', fontWeight: 900, margin: 0 }}>Scan &amp; verify</h2>
+            <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: '0.82rem', margin: '6px 0 8px' }}>Scan this with your authenticator app (Microsoft Authenticator, Google Authenticator, Authy…), then enter the 6-digit code it shows.</p>
+            {qrDataUrl && (
+              <img src={qrDataUrl} alt="Authenticator QR code" style={{ display: 'block', margin: '0 auto 8px', borderRadius: 10, background: '#fff', padding: 6 }} />
+            )}
+            {manualKey && (
+              <div style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 10, padding: 12, marginBottom: 8, textAlign: 'center' }}>
+                <div style={{ color: 'rgba(255,255,255,0.4)', fontSize: '0.65rem', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 4 }}>Can’t scan? Enter this key manually</div>
+                <code style={{ color: '#FCD116', fontSize: '0.85rem', wordBreak: 'break-all', letterSpacing: '0.05em' }}>{manualKey}</code>
               </div>
             )}
             {codeInput}
