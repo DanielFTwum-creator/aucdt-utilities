@@ -2375,3 +2375,55 @@ node scripts/check-manifests.mjs <appdir>   # one app
 
 `node scripts/check-manifests.mjs` exits 0, and the deployed app's console no longer
 shows the "icon from the Manifest" error on load.
+
+---
+
+## PATTERN 34: A NEW APP'S FIRST `-Build` FAILS AT `[install]` FOR TWO STACKED REASONS
+
+### Why
+
+12 Jul 2026, first deploy of lecturer-ai-handbook: `[4/7] Installing dependencies` →
+`Remote build failed (exit 1)`, and the message was **empty** — the deploy ran the
+install as `pnpm install --frozen-lockfile --silent 2>/dev/null || pnpm install
+--no-frozen-lockfile --silent`, so both the error text and the exit came back blind.
+It took several round-trips to learn there were **two different failures stacked**, each
+hidden. Every freshly-scaffolded AI-Studio app hits this on its first `-Build`.
+
+### The two failures
+
+1. **`ERR_PNPM_MINIMUM_RELEASE_AGE_VIOLATION` (Pattern 27).** A lockfile resolved on a
+   dev/sandbox machine pins the newest versions; the server's pnpm rejects anything
+   inside its ~24h cutoff. The old `|| … --no-frozen-lockfile` fallback is a **no-op**:
+   pnpm skips resolution when the lockfile matches `package.json`, so it re-hits the
+   policy. Only **removing** the lockfile forces a policy-clean re-resolve.
+2. **`ERR_PNPM_IGNORED_BUILDS` (Pattern 18).** pnpm 11 makes an *undecided* build script
+   a **fatal** error, not a warning. A common trigger: `motion` (framer-motion) pulls
+   `core-js`, whose postinstall (a funding notice) isn't in `allowBuilds`. Until every
+   build-script dep has an explicit `true`/`false` in `pnpm-workspace.yaml`, install
+   exits 1.
+
+### The trap
+
+`--silent 2>/dev/null` on the **only** install attempt hides both. You cannot diagnose
+a masked install — the first move is always to **un-mask it**.
+
+### The fix (both halves)
+
+1. **Deploy fallback re-resolves, and is not silent** (so any residual error prints):
+   ```bash
+   pnpm install --frozen-lockfile --silent 2>/dev/null \
+     || { echo '[install] re-resolving under server policy (Pattern 27)'; rm -f pnpm-lock.yaml && pnpm install; }
+   ```
+2. **Commit a policy-clean lockfile** (Pattern 27 rule 2: resolve it on the server clone,
+   `scp` it back) so `--frozen-lockfile` passes on the fast path.
+3. **Decide every build script** in `pnpm-workspace.yaml` `allowBuilds` (Pattern 18).
+   For the standard AI-Studio stack: `esbuild: true`; add `core-js: false` for any app
+   using `motion`; `@google/genai: true` + `protobufjs: true` only if that SDK is present
+   (the WMS-relay apps drop it). The *value* (`true`/`false`) doesn't matter for clearing
+   the error — the **decision** does; use `false` for scripts you don't need (core-js).
+
+### Verify
+
+`pnpm install` (non-silent) ends with `Done`, **no** `Ignored build scripts` line and
+**no** release-age violation. On the server the `-Build` clears `[4/7]` and reaches
+`[5/7] Building`. Grep the whole install output for `ERR_PNPM_` before trusting a green.
