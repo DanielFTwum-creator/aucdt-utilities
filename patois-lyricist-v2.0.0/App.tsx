@@ -1,5 +1,5 @@
 
-import React, { useState, useCallback, useEffect, useRef } from 'react';
+import React, { useState, useCallback, useEffect, useRef, Suspense, lazy } from 'react';
 import { generateLyrics } from './services/geminiService';
 import { GENRE_PACKS, LANGUAGE_PACKS, DEFAULT_GENRE_ID, DEFAULT_LANGUAGE_ID, getGenrePack, getLanguagePack, getPersona } from './services/lyricistPacks';
 import { logAction } from './services/auditLogService';
@@ -11,13 +11,15 @@ import History from './components/History';
 import StructureBuilder from './components/StructureBuilder';
 import HeaderIcon from './components/HeaderIcon';
 import ThemeSwitcher from './components/ThemeSwitcher';
-import AdminPanel from './components/AdminPanel';
-import TestPanel from './components/TestPanel';
 import { useAuth } from './contexts/AuthContext';
-import PatoisDictionary from './components/PatoisDictionary';
 import Equalizer from './components/Equalizer';
-import jsPDF from 'jspdf';
-import html2canvas from 'html2canvas';
+
+// Secondary views are code-split (Pattern 31): they only load when their tab is
+// opened, keeping them out of the initial bundle. jsPDF is loaded on demand in
+// the PDF export handler below (it is the single heaviest dependency here).
+const AdminPanel = lazy(() => import('./components/AdminPanel'));
+const TestPanel = lazy(() => import('./components/TestPanel'));
+const PatoisDictionary = lazy(() => import('./components/PatoisDictionary'));
 
 // Types
 export interface HistoryEntry {
@@ -223,6 +225,7 @@ const App: React.FC = () => {
     
     try {
       if (format === 'pdf') {
+        const { default: jsPDF } = await import('jspdf');
         const doc = new jsPDF();
         doc.setFont("helvetica", "bold");
         doc.setFontSize(20);
@@ -574,9 +577,11 @@ const App: React.FC = () => {
           </main>
         )}
 
-        {currentView === 'dictionary' && <PatoisDictionary currentUser={currentUser} />}
-        {currentView === 'admin' && currentUserRole === 'admin' && <AdminPanel currentUser={currentUser} />}
-        {currentView === 'testing' && <TestPanel />}
+        <Suspense fallback={<Spinner status="Loading…" />}>
+          {currentView === 'dictionary' && <PatoisDictionary currentUser={currentUser} />}
+          {currentView === 'admin' && currentUserRole === 'admin' && <AdminPanel currentUser={currentUser} />}
+          {currentView === 'testing' && <TestPanel />}
+        </Suspense>
 
         <footer className="mt-32 text-center opacity-10 text-[9px] uppercase tracking-[0.4em] pb-10" role="contentinfo">
           SOC 2 Certification Active • Secure Environment v3.0.0 • Final Refresh Complete

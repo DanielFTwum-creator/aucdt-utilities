@@ -1,6 +1,4 @@
 import React, { useState } from 'react';
-// @ts-ignore — qrcode ships without types; tsconfig is non-strict
-import QRCode from 'qrcode';
 import { useAuth } from '../contexts/AuthContext';
 import { wmsMfaVerify, wmsMfaEnrollBegin, wmsMfaEnrollConfirm } from '../services/wmsAuthService';
 
@@ -37,6 +35,9 @@ export const WmsMfaModal: React.FC = () => {
     try {
       const res = await wmsMfaEnrollBegin(wmsMfaTicket);
       setSecret(res.secret);
+      // qrcode is loaded on demand (Pattern 31) — only first-time enrolment needs it.
+      // @ts-ignore — qrcode ships without types; tsconfig is non-strict
+      const { default: QRCode } = await import('qrcode');
       setQrDataUrl(await QRCode.toDataURL(res.otpauthUri, { margin: 1, width: 200 }));
       // The base32 key an authenticator accepts for manual entry lives in the otpauth URI,
       // not in res.secret (which is base64 and only used for the confirm round-trip).

@@ -91,7 +91,7 @@ When spawning subagents, use the cheapest model that can handle the task:
 There is no single repo-wide test/lint/type command — `aucdt-utilities/` is a monorepo of independent apps, each with its own stack. "Done" means:
 
 - **Java/Spring Boot:** the Pre-Delivery Verification Gate in §5a passes, plus `mvn compile -q` (or noted as unverifiable in a sandbox without Maven). `SPRING_PROFILES_ACTIVE=dev mvn spring-boot:run` must boot clean per the Dev Profile Zero-Dependency Contract.
-- **Frontend (React/Vite/etc.):** `pnpm lint` (or `tsc --noEmit` where that's the project's lint), `pnpm build` succeeds, and any existing Cypress/Playwright suite passes.
+- **Frontend (React/Vite/etc.):** `pnpm lint` (or `tsc --noEmit` where that's the project's lint), `pnpm build` succeeds, and any existing Cypress/Playwright suite passes. Every app we build must **code-split**: lazy-load heavy libs (jsPDF, html2canvas, qrcode, chart/canvas/docx/xlsx) at their point of use via dynamic `import()`, and `React.lazy` + `Suspense` for secondary tabs, so `pnpm build` shows **no** `chunks larger than 600 kB` warning. Full recipe → PATTERNS.md Pattern 31.
 - **No project-specific harness defined yet:** check that project's own `CLAUDE.md`/`CONSTRAINTS.md` first (Session Start Protocol step 2). If neither exists, state that no programmatic check is available before doing open-ended work, rather than asserting "done" with nothing to point to.
 
 If you add a real test/lint/type command for a project that doesn't have one documented, write it into that project's own `CONSTRAINTS.md` or local `CLAUDE.md` — not here, this file stays project-agnostic.

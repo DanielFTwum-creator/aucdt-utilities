@@ -2216,3 +2216,57 @@ sign-in, start to finish; those 401s are stale-ticket noise, not a broken endpoi
 First-time enrol from a fresh sign-in: a QR renders, a real authenticator scan +
 6-digit code completes `enroll/confirm`, and the next sign-in shows the *verify* step.
 The manual key, if typed instead of scanned, must also succeed (proves it's base32).
+
+---
+
+## PATTERN 31: CODE-SPLIT EVERY APP — LAZY-LOAD HEAVY DEPS AND SECONDARY VIEWS
+
+### Why
+
+The AI-Studio-scaffolded apps ship one giant initial chunk because every heavy,
+rarely-used library and every secondary tab is imported at the top of `App.tsx`, so
+first paint downloads code the user may never touch. patois built a single 678 kB
+`index` chunk (gzip 208 kB) and Vite warned `chunks larger than 600 kB`. Splitting it
+dropped the main chunk to **78 kB** (gzip 27.5 kB) — jsPDF (358 kB), html2canvas
+(202 kB), qrcode (26 kB) and the three admin/testing/dictionary views now load only
+when actually needed. ~600 kB no longer blocks first paint. This is the fleet default,
+not an optimisation to reach for later.
+
+### The rule (apply to every app we build)
+
+1. **Lazy-load heavy libs at their point of use** with dynamic `import()` — never a
+   top-level `import`:
+   ```ts
+   const handleExportPdf = async () => {
+     const { default: jsPDF } = await import('jspdf');   // loads on click, not on boot
+     const doc = new jsPDF();
+     // …
+   };
+   ```
+   Same for `qrcode` (load on MFA enrol), `html2canvas`, chart/canvas libs, `docx`,
+   `xlsx` — anything large and event-triggered.
+
+2. **Route/tab-level `React.lazy` + `Suspense`** for secondary views (Admin, Testing,
+   Dictionary, Diagnostics):
+   ```tsx
+   const AdminPanel = lazy(() => import('./components/AdminPanel'));
+   // …
+   <Suspense fallback={<Spinner status="Loading…" />}>
+     {view === 'admin' && <AdminPanel />}
+   </Suspense>
+   ```
+
+3. **Keep `manualChunks`** in `vite.config.ts` for vendor splitting (react, etc.).
+
+4. **Delete dead imports first** — patois imported `html2canvas` and never used it; that
+   alone was 202 kB. Grep each heavy import for a real reference before splitting it.
+
+5. **Target: no chunk > ~600 kB.** Only raise `build.chunkSizeWarningLimit` with a
+   written reason in the config — never to silence the warning.
+
+### Verify
+
+`pnpm build` shows the heavy libs and secondary views as their own hashed chunks, the
+main `index` chunk well under 600 kB, and **no** `chunks larger than 600 kB` warning.
+Then exercise a lazy path in the browser (open the Admin tab, export a PDF) with the
+Network panel open and confirm the extra chunk fetches on demand, not at boot.
