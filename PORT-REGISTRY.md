@@ -64,9 +64,15 @@ reassigned to free ports so they are deploy-safe. `deploy.ps1` and `server.ts` d
 | 3040 | fail2ban-ai | matched (assigned 8 Jul 2026) |
 | 3041 | aitopia | reserved (assigned 8 Jul 2026; app import pending) |
 
+## Allocated via next-port.mjs
+
+| Port | App (PM2 name) | Repo folder |
+|------|----------------|-------------|
+| 3042 | lecturer-ai-handbook | lecturer-ai-handbook |
+
 ## Next available
 
-**3042** — increment from here for new apps.
+**3043** — increment from here for new apps.
 
 Currently free/unused: 3001, 3042+.
 
@@ -91,7 +97,10 @@ must be assigned a unique port from 3042+ before they ever deploy:
 
 One app, one number, matched everywhere. To avoid the recurring per-session drift:
 
-1. **One source of truth per app = this registry.** Pick the next-available number here first.
+1. **One source of truth per app = this registry.** Get the next-available number with
+   `node scripts/next-port.mjs` (reads this registry + every `server.ts` default so it never
+   hands out a drifting hardcoded port), then claim it with
+   `node scripts/next-port.mjs --assign <pm2-name> <repo-folder>`.
 2. **Make them match.** That same number goes in, identically, in all of:
    `server.ts` default (`process.env.PORT) || NNNN`), `deploy.ps1` (`$PORT` and any `PORT=` in the
    PM2 start line), the server `.env` `PORT=`, the nginx `proxy_pass` target, and this registry row.
