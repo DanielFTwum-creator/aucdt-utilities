@@ -5,6 +5,8 @@ packages:
 # self-contained workspace root so pnpm does not walk up to the monorepo root
 # (and its cypress). Static SPA — no build scripts need approval.
 allowBuilds:
-  # motion (framer-motion) pulls core-js, whose postinstall is a funding notice.
-  # pnpm 11 fails the install unless the decision is explicit; deny it.
+  # esbuild (transitive via vite) fetches its platform binary in a build script;
+  # allow it, like every fleet app. Without this pnpm 11 fails ERR_PNPM_IGNORED_BUILDS.
+  esbuild: true
+  # motion (framer-motion) pulls core-js, whose postinstall is a funding notice; deny it.
   core-js: false
