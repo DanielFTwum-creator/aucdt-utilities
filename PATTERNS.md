@@ -2270,3 +2270,63 @@ not an optimisation to reach for later.
 main `index` chunk well under 600 kB, and **no** `chunks larger than 600 kB` warning.
 Then exercise a lazy path in the browser (open the Admin tab, export a PDF) with the
 Network panel open and confirm the extra chunk fetches on demand, not at boot.
+
+---
+
+## PATTERN 32: LEAN INITIAL LOAD — NO EXTERNAL CDNs AT BOOT
+
+### Why
+
+Ghana connectivity is often slow and flaky, so every foreign CDN hit at boot (its own
+DNS + TLS + fetch to a distant host) is a stall risk, and a blocked/slow CDN can leave
+the page unstyled or fontless. The AI-Studio scaffold ships **four** external boot
+dependencies in every app:
+
+- `cdn.tailwindcss.com` — a **blocking** script that also **compiles the CSS in the
+  browser** on every load (the "cdn.tailwindcss.com should not be used in production"
+  console warning). Worst offender.
+- `fonts.googleapis.com` + `fonts.gstatic.com` — two more hosts for web fonts.
+- `googletagmanager.com` — analytics, competing with first paint.
+- an `esm.sh` importmap (react/jspdf/…) — dead weight once Vite bundles from
+  `node_modules`.
+
+After Pattern 31 the *local* JS is already lean; these foreign round-trips are what's
+left. patois's boot went from four external hosts to **zero**: Tailwind became a local
+28 kB CSS (gzip 5.8 kB), fonts are local woff2, GA fires after `load`.
+
+### The rule (every app we build)
+
+1. **Build-time Tailwind, drop the CDN.** `postcss.config.js` already has `tailwindcss`
+   + `autoprefixer`. Add real `content` globs (every source dir), a CSS entry with
+   `@tailwind base/components/utilities`, import it from the app entry, and delete
+   `<script src="https://cdn.tailwindcss.com">`.
+   ```js
+   // tailwind.config.js
+   content: ['./index.html','./*.{ts,tsx}','./components/**/*.{ts,tsx}',
+             './contexts/**/*.{ts,tsx}','./services/**/*.{ts,tsx}'],
+   ```
+   Regression watch: build-time Tailwind emits only classes it finds in `content`. If
+   the app builds class names dynamically (`bg-${x}`), the purge drops them — grep for
+   interpolated class prefixes first and `safelist` any. patois had none.
+2. **Self-host fonts** via `@fontsource/*` (latin subset), imported from the app entry;
+   delete the `fonts.googleapis.com` `<link>`s. Vite bundles the woff2 locally.
+   ```ts
+   import '@fontsource/inter/latin-400.css';   // + 700, 900
+   import '@fontsource/rokkitt/latin-700.css';
+   ```
+3. **Defer analytics** — inject the gtag `<script>` on `window.load`, not at boot.
+4. **Delete the `esm.sh` importmap** from `index.html` — Vite bundles those deps.
+
+### Verify
+
+```bash
+grep -oE 'https://[a-z0-9./?=_-]*' dist/index.html | sort -u
+```
+The only external URLs left should be non-fetched meta (canonical/og/twitter) and the
+deferred GA. Every `<script src>` / `<link href>` the browser loads at boot must be a
+local `/<slug>/assets/…` path. Build shows no `content option … missing` and no
+`> 600 kB` warning. Confirm the purged CSS carries arbitrary-value utilities too — the
+selectors are escaped in the output (`.rounded-\[2rem\]`), so `grep -F 'rounded-[2rem]'`
+will *falsely* miss; search the escaped form. Then eyeball the deployed app — the
+Tailwind swap is the one change with visual-regression risk, so a human look is the
+real pass.

@@ -1,0 +1,5 @@
+/* Build-time Tailwind (Pattern 32) — replaces the cdn.tailwindcss.com runtime script.
+   Only the utility classes actually used in the app are emitted, served locally. */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
