@@ -13,9 +13,10 @@
 | App name | Drumming for SEL Success |
 | PM2 process | `dfs-website` |
 | Port | **3012** |
-| Public URL | `https://ai-tools.techbridge.edu.gh/dfs-website/` |
+| Public URL | `https://ai-tools.techbridge.edu.gh/dfs/` (verified against `deploy.ps1` — NOT `/dfs-website/`; repo folder and deployed slug differ) |
 | Deploy path | `/var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/dfs/` |
 | Stack | TypeScript · Express · Vite · React · Tailwind CSS · Nodemailer · Gemini (via WMS proxy) |
+| Auth | **None** — public marketing site with a contact form; no login anywhere in `server.ts` |
 
 ---
 
@@ -74,6 +75,25 @@ Contact-form submissions are emailed to `sbferrar10@gmail.com` via Gmail SMTP us
 - Credential: `GMAIL_APP_PASSWORD` (whitespace stripped automatically)
 - Reply-To is set to the enquirer's email address
 - If Gmail app password is rotated, update `.env` on the server and restart PM2
+
+---
+
+## 6a. Frontend standards
+
+- **Vite base:** `process.env.NODE_ENV === 'production' ? './' : '/'` — relative in
+  production, correct for a flat marketing site with no nested client routes under
+  its sub-path.
+- **Lean initial load (Pattern 32) — not compliant.** `index.html` loads Google Fonts
+  (`fonts.googleapis.com`/`fonts.gstatic.com`) and `googletagmanager.com/gtag/js` at
+  boot, not deferred to `window.load`. No Tailwind CDN, no `esm.sh` importmap.
+- `vite.config.ts` raises `chunkSizeWarningLimit` to 1000 with no comment explaining
+  why (Pattern 31 wants a written reason for any raise) — worth a look next time
+  this app is touched, together with a real `pnpm build` to check actual chunk sizes.
+- No `manifest.json` in `public/` and none referenced in `index.html`, so Pattern 33
+  doesn't apply.
+- No AI SDK dependency — `@google/genai` is absent from `package.json`; the Gemini
+  assistant route is a clean server-side relay (§5), consistent with the fleet
+  standard.
 
 ---
 

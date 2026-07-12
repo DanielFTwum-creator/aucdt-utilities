@@ -1,20 +1,43 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://ai.google.dev/static/site-assets/images/share-ais-513315318.png" />
-</div>
+# Bridge Radio
 
-# Run and deploy your AI Studio app
+A public internet radio player for Techbridge University College — live HLS streams
+across three genre channels (afrobeats, music, neosoul), a spinning-vinyl UI, and an
+optional "find the lyrics" AI lookup.
 
-This contains everything you need to run your app locally.
+Live at: **https://radio.techbridge.edu.gh/**
 
-View your app in AI Studio: https://ai.studio/apps/be581df9-13a7-4f7d-b2c8-6b5c9c68385a
+## Stack
 
-## Run Locally
+- React 19 + Vite 6 + TypeScript, Tailwind CSS 4, hls.js for playback
+- Express (run via `tsx`) as a thin backend: HLS CORS/proxy + AI lyrics relay
+- No login — the player is open to anyone
 
-**Prerequisites:**  Node.js
+## How it works
 
+- The player streams static HLS (`master.m3u8` per genre) served from
+  `ai.techbridge.edu.gh`; `/api/proxy` on this app's backend works around CORS and
+  rewrites relative `.m3u8` segment URLs to absolute ones.
+- `/api/lyrics?track=&genre=` asks Gemini (via the central WMS relay — this app never
+  holds a Gemini key) for plausible lyrics to display alongside a track.
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+## Run locally
+
+```powershell
+cd C:\Development\github\aucdt-utilities\bridge-radio
+pnpm install
+pnpm dev
+```
+
+Set `GEMINI_PROXY_KEY` in `.env.local` if you want `/api/lyrics` to return real
+results locally (otherwise it responds `503`). See `.env.example`.
+
+## Deploy
+
+```powershell
+cd C:\Development\github\aucdt-utilities\bridge-radio
+.\deploy.ps1 -Build
+```
+
+Builds server-side, rsyncs `dist/`, ships `server.ts`, writes the Plesk root-vhost
+nginx config (`vhost_ssl.conf`), and (re)starts the `bridge-radio` PM2 process on
+port 3032. See `CONSTRAINTS.md` for the full environment spec and pre-delivery gate.

@@ -1,20 +1,38 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://ai.google.dev/static/site-assets/images/share-ais-513315318.png" />
-</div>
+# Deliberate Magic Reader
 
-# Run and deploy your AI Studio app
+An interactive reader for the "Deliberate Magic" essay chronicle, with AI-assisted
+essay drafting and an AI glossary of the series' recurring technical metaphors.
 
-This contains everything you need to run your app locally.
+Live at: **https://ai-tools.techbridge.edu.gh/magic-reader/**
+(the deployed URL slug is `magic-reader`, not the `deliberate-magic-reader` repo
+folder name — see `CONSTRAINTS.md`.)
 
-View your app in AI Studio: https://ai.studio/apps/e5511dc3-7199-4271-894f-d81aa92cac02
+## Stack
 
-## Run Locally
+- React 19 + Vite 8 + TypeScript, Tailwind CSS 4
+- Express 5 backend (`server.ts`, run via `tsx`) — OAuth callback, essay/glossary AI
+  routes relayed through the central WMS Gemini proxy
+- Sign-in: bespoke Google OAuth 2.0 (cookie-based), not WMS SSO
 
-**Prerequisites:**  Node.js
+## Run locally
 
+```powershell
+cd C:\Development\github\aucdt-utilities\deliberate-magic-reader
+pnpm install
+pnpm dev
+```
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+Set `VITE_GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `VITE_GOOGLE_REDIRECT_URI` and
+(optionally, for real AI output) `GEMINI_PROXY_KEY` in `.env.local`. See
+`.env.example`.
+
+## Deploy
+
+```powershell
+cd C:\Development\github\aucdt-utilities\deliberate-magic-reader
+.\deploy.ps1 -Build
+```
+
+Ships `server.ts` to run under PM2 via `tsx`, plus the built Vite static assets, to
+the `magic-reader` PM2 process on port 3008. See `CONSTRAINTS.md` for the full
+environment spec, known packaging gaps, and pre-delivery gate.

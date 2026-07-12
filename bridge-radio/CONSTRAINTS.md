@@ -32,6 +32,25 @@
 
 ---
 
+## 2a. Authentication
+
+**None.** Bridge Radio is a public HLS player with no login, no user accounts, and no
+session state (`src/` has no `auth.tsx`/`AuthContext`/`AuthGate`). `/api/proxy` and
+`/api/lyrics` are open endpoints; only `/api/lyrics` is Gemini-gated (503 without a
+configured relay key).
+
+## 2b. Frontend standards
+
+- **Vite base is relative (`./`)** — correct here because the app is served at the Plesk
+  **root vhost** (`radio.techbridge.edu.gh/`), not a sub-path, and has no nested client
+  routes (Pattern 29 does not apply).
+- `public/manifest.json` icon is a local `favicon.svg` (Pattern 33 compliant).
+- `index.html` has no external CDN `<script>`/`<link>` at boot (Pattern 32 compliant) —
+  no Tailwind CDN, no Google Fonts, no analytics tag, no esm.sh importmap.
+- No code-splitting audit done in this pass (Pattern 31) — `pnpm build` not run.
+
+---
+
 ## 3. Hard Constraints
 
 1. **NEVER expose the Gemini key to the client.** No `@google/genai` import in `src/`,
@@ -54,7 +73,21 @@
 | `PORT` | `3032` — backend listen port (matches `SERVER_PORTS.md`) |
 | `NODE_ENV` | `production` — serves built `dist/`; otherwise Vite dev middleware |
 | `GEMINI_PROXY_KEY` | Authenticates with the WMS Gemini proxy (production) |
-| `GEMINI_API_KEY` | Local dev fallback only — never commit a real key |
+
+> Verified against `server.ts`: there is **no** local `GEMINI_API_KEY` fallback in code —
+> only `GEMINI_PROXY_KEY` is read. Without it, `/api/lyrics` returns 503 and the server
+> still boots (`custody: "unconfigured"` on `/api/health`). `.env.example` lists a
+> `GEMINI_API_KEY` dev-fallback line that the code does not actually implement; treat
+> that line in `.env.example` as aspirational, not real.
+
+### Known drift: `server.ts` port default vs `SERVER_PORTS.md`
+
+`server.ts` line 43 hardcodes `Number(process.env.PORT) || 3021` (3021 is
+tb-ai-english-safari's port, not bridge-radio's). `deploy.ps1`'s `$Port` parameter
+correctly defaults to **3032** and passes it explicitly as an env var at PM2 start, so
+the live process runs on 3032 as intended — but the in-code fallback is wrong. Harmless
+today because `deploy.ps1` always sets `PORT` explicitly; would misbind if ever started
+without that env var. Not fixed here (docs-only pass) — flag for a future code touch.
 
 ---
 

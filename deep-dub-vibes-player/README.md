@@ -1,19 +1,36 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# Deep Dub Vibes Player
 
-# Run and deploy your AI Studio app
+An interactive reggae and dub music player for Techbridge University College, with a
+spinning vinyl centrepiece, an interactive waveform, and a live frequency analyser.
 
-This contains everything you need to run your app locally.
-https://ai.studio/apps/1736f931-2165-4bff-ac6a-481310a173cb
+Live at: **https://ai-tools.techbridge.edu.gh/deep-dub-vibes-player/**
 
-## Run Locally
+## Stack
 
-**Prerequisites:**  Node.js
+- React 19 + Vite 8 + TypeScript, Tailwind CSS 4
+- Express 5 (`server.js`) — handles the Google OAuth token exchange and serves the
+  built SPA in production
+- Sign-in: bespoke Google OAuth 2.0 (not WMS SSO)
 
+## Run locally
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+```powershell
+cd C:\Development\github\aucdt-utilities\deep-dub-vibes-player
+pnpm install
+pnpm dev
+```
+
+Copy `.env.example` to `.env.local` and set `VITE_GOOGLE_CLIENT_ID`,
+`GOOGLE_CLIENT_SECRET`, and `VITE_GOOGLE_REDIRECT_URI` — the server exits at boot if
+the OAuth vars are missing.
+
+## Deploy
+
+```powershell
+cd C:\Development\github\aucdt-utilities\deep-dub-vibes-player
+.\deploy.ps1 -Build
+```
+
+Pulls from the `aucdt-utilities` monorepo, builds with Vite, and (re)starts the
+`deep-dub-vibes-player` PM2 process on port 3023. See `CONSTRAINTS.md` for the full
+environment spec, known issues, and pre-delivery gate.

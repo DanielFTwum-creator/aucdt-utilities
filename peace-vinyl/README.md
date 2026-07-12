@@ -1,20 +1,37 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# Peace Vinyl
 
-# Run and deploy your AI Studio app
+An interactive vinyl-record music player ("Peace & One Love") for Techbridge
+University College, with Google sign-in.
 
-This contains everything you need to run your app locally.
+Live at: **https://ai-tools.techbridge.edu.gh/peace-vinyl/**
 
-View your app in AI Studio: https://ai.studio/apps/c82b3081-a5e8-4363-9c35-ea5e8f38785f
+## Stack
 
-## Run Locally
+- React 19 + Vite 6 + TypeScript, Tailwind CSS 4
+- Express 4 (`server.js`) — handles the Google OAuth token exchange and serves the
+  built SPA in production
+- Sign-in: bespoke Google OAuth 2.0 (not WMS SSO) — see `CONSTRAINTS.md` for a known
+  redirect-path bug in the current OAuth flow
 
-**Prerequisites:**  Node.js
+## Run locally
 
+```powershell
+cd C:\Development\github\aucdt-utilities\peace-vinyl
+pnpm install
+pnpm dev
+```
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+Copy `.env.example` to `.env.local` and set `VITE_GOOGLE_CLIENT_ID`,
+`GOOGLE_CLIENT_SECRET`, and `VITE_GOOGLE_REDIRECT_URI` — the server exits at boot if
+the OAuth vars are missing.
+
+## Deploy
+
+```powershell
+cd C:\Development\github\aucdt-utilities\peace-vinyl
+.\deploy.ps1 -Build
+```
+
+Builds the SPA and (re)starts the `peace-vinyl` PM2 process on port 3026. See
+`CONSTRAINTS.md` for the full environment spec, a known OAuth path bug, and the
+pre-delivery gate.
