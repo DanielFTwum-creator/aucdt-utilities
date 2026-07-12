@@ -2330,3 +2330,48 @@ selectors are escaped in the output (`.rounded-\[2rem\]`), so `grep -F 'rounded-
 will *falsely* miss; search the escaped form. Then eyeball the deployed app — the
 Tailwind swap is the one change with visual-regression risk, so a human look is the
 real pass.
+
+---
+
+## PATTERN 33: MANIFEST ICONS MUST RESOLVE TO A LOCAL FILE
+
+### Why
+
+The AI-Studio scaffold writes a `manifest.json` that references icon PNGs
+(`icon-192.png`, `android-chrome-512x512.png`, …) which were never added to the app —
+or worse, points at an external image (`picsum.photos`, a random `myjoyonline` URL, an
+off-site `TUC_LOGO.png`). Either way the browser logs
+`Error while trying to use the following icon from the Manifest … isn't a valid image`
+on every load, and the external ones also violate Pattern 32 (foreign round-trip at
+boot). A fleet scan found ~8 apps affected; a manual look kept missing cases, which is
+why this needs a guard, not eyeballing.
+
+### The rule
+
+1. **Every manifest icon `src` is a relative `"favicon.svg"`** (`sizes: "any"`,
+   `type: "image/svg+xml"`). Relative resolves against the *manifest* URL
+   (`/<slug>/manifest.json` → `/<slug>/favicon.svg`), so it is correct under any deploy
+   slug **and** verifiable on disk — unlike a slug-absolute `"/patois/favicon.svg"`,
+   which a static check can't resolve and which hardcodes the slug.
+2. **Every app ships `public/favicon.svg`.** 37 already do; for the rest, drop in a
+   simple SVG tile (a rounded rect + initial in the app's theme colour is fine).
+3. **No external icon URLs** — bundle it locally (Pattern 32).
+4. **`screenshots` are optional** — include them only if the PNGs actually exist.
+5. **One manifest per app** — the served one is `public/manifest.json`; delete any
+   duplicate `manifest.json` at the app root (Vite only serves `public/`).
+
+### The guard
+
+`scripts/check-manifests.mjs` scans every app manifest, resolves each icon/screenshot
+`src` against the app's web root, and exits 1 on any missing local file or external
+URL. Run it before a deploy round (it belongs alongside `test-fleet-deploy.ps1`):
+
+```bash
+node scripts/check-manifests.mjs            # whole fleet
+node scripts/check-manifests.mjs <appdir>   # one app
+```
+
+### Verify
+
+`node scripts/check-manifests.mjs` exits 0, and the deployed app's console no longer
+shows the "icon from the Manifest" error on load.

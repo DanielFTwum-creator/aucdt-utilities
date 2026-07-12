@@ -9,7 +9,7 @@
   "theme_color": "#ffcc00",
   "icons": [
     {
-      "src": "/patois/favicon.svg",
+      "src": "favicon.svg",
       "sizes": "any",
       "type": "image/svg+xml",
       "purpose": "any"

@@ -9,20 +9,6 @@
   "background_color": "#FAF7F0",
   "theme_color": "#8B1A2F",
   "categories": ["graphics", "productivity"],
-  "screenshots": [
-    {
-      "src": "/icons/screenshot-540x720.png",
-      "sizes": "540x720",
-      "type": "image/png",
-      "form_factor": "narrow"
-    },
-    {
-      "src": "/icons/screenshot-1280x720.png",
-      "sizes": "1280x720",
-      "type": "image/png",
-      "form_factor": "wide"
-    }
-  ],
   "icons": [
     {
       "src": "/icons/icon-48.png",
