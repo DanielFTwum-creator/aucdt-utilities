@@ -6,3 +6,7 @@ packages:
 # workspace root so pnpm does not walk up to the monorepo root (and its cypress).
 allowBuilds:
   esbuild: true
+  # motion (framer-motion) pulls core-js, whose postinstall is a funding notice.
+  # pnpm 11 fails the install (ERR_PNPM_IGNORED_BUILDS) unless the decision is
+  # explicit; deny it (the script does nothing we need) so the build proceeds.
+  core-js: false

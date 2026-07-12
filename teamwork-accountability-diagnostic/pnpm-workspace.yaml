@@ -4,4 +4,7 @@ packages:
 # pnpm 11: build-script approval lives here (Pattern 18). Makes this app a
 # self-contained workspace root so pnpm does not walk up to the monorepo root
 # (and its cypress). Static SPA — no build scripts need approval.
-allowBuilds: {}
+allowBuilds:
+  # motion (framer-motion) pulls core-js, whose postinstall is a funding notice.
+  # pnpm 11 fails the install unless the decision is explicit; deny it.
+  core-js: false
