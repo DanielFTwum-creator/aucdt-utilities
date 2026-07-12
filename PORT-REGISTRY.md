@@ -143,6 +143,7 @@ Pure SPA frontends with no Node backend:
 - poster
 - techbridge-ai-workshop-flyer
 - techbridge-university-college-banner
+- teamwork-accountability-diagnostic
 - typing-tutorial
 - typing-and-mathematics-tutorial
 - umat

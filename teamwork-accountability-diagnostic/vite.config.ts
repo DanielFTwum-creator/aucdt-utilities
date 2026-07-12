@@ -5,6 +5,9 @@ import {defineConfig} from 'vite';
 
 export default defineConfig(() => {
   return {
+    // Served as a static SPA under /teamwork/; absolute base keeps asset URLs
+    // correct at any route depth (Pattern 29).
+    base: '/teamwork/',
     plugins: [react(), tailwindcss()],
     resolve: {
       alias: {

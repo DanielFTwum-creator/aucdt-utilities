@@ -1,0 +1,7 @@
+packages:
+  - '.'
+
+# pnpm 11: build-script approval lives here (Pattern 18). Makes this app a
+# self-contained workspace root so pnpm does not walk up to the monorepo root
+# (and its cypress). Static SPA — no build scripts need approval.
+allowBuilds: {}
