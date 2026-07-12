@@ -95,7 +95,7 @@ cd "`$TMPDIR" && git sparse-checkout set ${SUBFOLDER} && cd ${SUBFOLDER}
 log '[3/7] Injecting .env.local (optional)...'
 cp /tmp/.env.${PM2_APP} .env.local 2>/dev/null || log 'No .env.local — build uses default VITE_WMS_BASE'
 log '[4/7] Installing dependencies...'
-pnpm install --frozen-lockfile --silent 2>/dev/null || pnpm install --no-frozen-lockfile --silent
+pnpm install --frozen-lockfile --silent 2>/dev/null || { echo '[install] frozen lockfile rejected (Pattern 27 minimumReleaseAge) — removing lockfile and re-resolving under the server policy'; rm -f pnpm-lock.yaml && pnpm install; }
 log '[5/7] Building...'
 pnpm build
 if ! grep -Eq '<script[^>]+(src="[^"]*\.js"|type="module")' dist/index.html; then echo '[FATAL] dist/index.html references no JS bundle (Pattern 24) — aborting'; exit 1; fi

@@ -72,7 +72,7 @@ cd $buildDir
 git sparse-checkout set $SUBFOLDER
 cd $SUBFOLDER
 log '[3/5] Installing dependencies...'
-pnpm install --no-frozen-lockfile --silent
+pnpm install --frozen-lockfile --silent 2>/dev/null || { echo '[install] frozen lockfile rejected (Pattern 27 minimumReleaseAge) — removing lockfile and re-resolving under the server policy'; rm -f pnpm-lock.yaml && pnpm install; }
 log '[4/5] Building...'
 pnpm build
 if ! grep -Eq '<script[^>]+(src="[^"]*\.js"|type="module")' dist/index.html; then echo '[FATAL] dist/index.html ships no JS bundle. Aborting deploy.'; exit 1; fi
