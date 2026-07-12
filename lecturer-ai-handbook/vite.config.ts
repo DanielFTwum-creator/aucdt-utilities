@@ -5,6 +5,10 @@ import {defineConfig} from 'vite';
 
 export default defineConfig(() => {
   return {
+    // Served under the /lecturer/ sub-path with a nested OAuth callback route
+    // (/lecturer/auth/callback); an absolute base keeps asset URLs correct at any
+    // depth (Pattern 29). BASE_URL ('/lecturer/') also drives the API prefix + SSO.
+    base: '/lecturer/',
     plugins: [react(), tailwindcss()],
     resolve: {
       alias: {

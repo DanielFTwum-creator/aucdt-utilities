@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { FileText, Download, Check, Sparkles, AlertCircle } from 'lucide-react';
-import { jsPDF } from 'jspdf';
 import { PromptTemplate } from '../data';
 
 interface ExportTemplatePDFProps {
@@ -16,7 +15,8 @@ export default function ExportTemplatePDF({ template }: ExportTemplatePDFProps) 
     setSuccess(false);
 
     try {
-      // Create jsPDF document instance
+      // jsPDF is loaded on demand (Pattern 31) — only when the user exports.
+      const { jsPDF } = await import('jspdf');
       const doc = new jsPDF({
         orientation: 'portrait',
         unit: 'mm',

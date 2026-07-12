@@ -78,7 +78,7 @@ export default function ExercisePlayground({
     setSaved(false);
     
     try {
-      const res = await fetch('/api/gemini/generate', {
+      const res = await fetch(`${import.meta.env.BASE_URL}api/gemini/generate`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
@@ -120,7 +120,7 @@ export default function ExercisePlayground({
       // Compile entire history as prompt or send historical context
       const fullPromptContext = updatedHistory.map(item => `${item.role === 'user' ? 'Lecturer Prompt' : 'AI Assistant Output'}:\n${item.text}`).join('\n\n') + '\n\nGenerate the next improved version reflecting the command: ' + query;
 
-      const res = await fetch('/api/gemini/generate', {
+      const res = await fetch(`${import.meta.env.BASE_URL}api/gemini/generate`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 

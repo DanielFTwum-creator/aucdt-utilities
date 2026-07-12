@@ -9,7 +9,7 @@ export default function Header({ onStartTour }: HeaderProps) {
   const [isApiConnected, setIsApiConnected] = useState<boolean | null>(null);
 
   useEffect(() => {
-    fetch('/api/gemini/status')
+    fetch(`${import.meta.env.BASE_URL}api/gemini/status`)
       .then((res) => res.json())
       .then((data) => setIsApiConnected(!!data.available))
       .catch(() => setIsApiConnected(false));
