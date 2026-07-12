@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Bridge Radio">
+  <rect width="64" height="64" rx="14" fill="#111111"/>
+  <g fill="none" stroke="#e8ff3c" stroke-width="3.5" stroke-linecap="round">
+    <path d="M22 31a14 14 0 0 1 20 0"/>
+    <path d="M17 25a22 22 0 0 1 30 0"/>
+  </g>
+  <circle cx="32" cy="41" r="5" fill="#e8ff3c"/>
+</svg>

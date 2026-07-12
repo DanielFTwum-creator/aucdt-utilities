@@ -7,14 +7,10 @@
   "theme_color": "#e8ff3c",
   "icons": [
     {
-      "src": "https://picsum.photos/seed/bridgeradio/192/192",
-      "sizes": "192x192",
-      "type": "image/png"
-    },
-    {
-      "src": "https://picsum.photos/seed/bridgeradio/512/512",
-      "sizes": "512x512",
-      "type": "image/png"
+      "src": "favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
     }
   ]
 }
