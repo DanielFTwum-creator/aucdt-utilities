@@ -1,0 +1,6 @@
+{
+  "name": "Lecturer AI Handbook",
+  "description": "An interactive digital handbook and prompt engineering companion for university college lecturers.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

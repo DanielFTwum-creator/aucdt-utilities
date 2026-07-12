@@ -1,0 +1,148 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="100%" height="100%">
+  <!-- Definitions for gradients and shadows -->
+  <defs>
+    <linearGradient id="navy-header" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#002147" />
+      <stop offset="100%" stop-color="#00356B" />
+    </linearGradient>
+    <linearGradient id="table-bg" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF" />
+      <stop offset="100%" stop-color="#F9F8F5" />
+    </linearGradient>
+    <filter id="box-shadow" x="-5%" y="-5%" width="110%" height="110%">
+      <feDropShadow dx="2" dy="3" stdDeviation="3" flood-color="#000000" flood-opacity="0.12" />
+    </filter>
+  </defs>
+
+  <!-- Background Canvas -->
+  <rect width="800" height="600" fill="#F4F2EB" rx="15" />
+  
+  <!-- Outer Gold Frame -->
+  <rect x="10" y="10" width="780" height="580" fill="none" stroke="#D4AF37" stroke-width="1.5" rx="10" />
+
+  <!-- HEADER BLOCK -->
+  <g transform="translate(40, 45)">
+    <rect x="0" y="0" width="720" height="60" fill="url(#navy-header)" rx="8" filter="url(#box-shadow)" />
+    <text x="20" y="38" font-family="'Lora', Georgia, serif" font-weight="bold" font-size="22" fill="#FFFFFF">LECTURER AI — RELATIONAL DATABASE SCHEMA ERD</text>
+    <text x="700" y="35" font-family="'Inter', sans-serif" font-size="10" font-weight="bold" fill="#D4AF37" text-anchor="end">REF: TUC-DB-ERD-2026</text>
+  </g>
+
+  <!-- SUB TITLE / CONTEXT -->
+  <text x="45" y="130" font-family="'Inter', sans-serif" font-size="11" font-weight="bold" fill="#5C5850">TECHBRIDGE UNIVERSITY COLLEGE (TUC)  •  MARIADB/MYSQL COMPLIANCE</text>
+
+  <!-- TABLE 1: tuc_audit_logs (RELATIONAL LOGS) -->
+  <g transform="translate(40, 170)" filter="url(#box-shadow)">
+    <!-- Main Table Container -->
+    <rect width="280" height="230" fill="url(#table-bg)" stroke="#D1CEC7" stroke-width="1.5" rx="8" />
+    
+    <!-- Table Header -->
+    <path d="M 0 8 A 8 8 0 0 1 8 0 L 272 0 A 8 8 0 0 1 280 8 L 280 35 L 0 35 Z" fill="#002147" />
+    <text x="15" y="22" font-family="'Inter', sans-serif" font-weight="bold" font-size="11" fill="#FFFFFF">TABLE: tuc_audit_logs</text>
+    <text x="265" y="22" font-family="'Inter', sans-serif" font-size="8.5" font-weight="bold" fill="#D4AF37" text-anchor="end">SYSTEM ACTIONS</text>
+    
+    <!-- Columns Section -->
+    <g transform="translate(15, 55)">
+      <!-- id (PK) -->
+      <text x="0" y="12" font-family="'Inter', sans-serif" font-weight="bold" font-size="10.5" fill="#D4AF37">🔑 id</text>
+      <text x="90" y="12" font-family="'Inter', sans-serif" font-size="10" fill="#1A1A1A">VARCHAR(50)</text>
+      <text x="250" y="12" font-family="'Inter', sans-serif" font-size="9" font-style="italic" fill="#8C887D" text-anchor="end">PK</text>
+      
+      <!-- timestamp -->
+      <text x="0" y="36" font-family="'Inter', sans-serif" font-size="10.5" fill="#1A1A1A">timestamp</text>
+      <text x="90" y="36" font-family="'Inter', sans-serif" font-size="10" fill="#5C5850">DATETIME</text>
+      <text x="250" y="36" font-family="'Inter', sans-serif" font-size="9" fill="#8C887D" text-anchor="end">NOT NULL</text>
+      
+      <!-- ip_address -->
+      <text x="0" y="60" font-family="'Inter', sans-serif" font-size="10.5" fill="#1A1A1A">ip_address</text>
+      <text x="90" y="60" font-family="'Inter', sans-serif" font-size="10" fill="#5C5850">VARCHAR(45)</text>
+      
+      <!-- user_email -->
+      <text x="0" y="84" font-family="'Inter', sans-serif" font-size="10.5" fill="#1A1A1A">user_email</text>
+      <text x="90" y="84" font-family="'Inter', sans-serif" font-size="10" fill="#5C5850">VARCHAR(100)</text>
+      <text x="250" y="84" font-family="'Inter', sans-serif" font-size="9" font-style="italic" fill="#8C887D" text-anchor="end">INDEX</text>
+      
+      <!-- action -->
+      <text x="0" y="108" font-family="'Inter', sans-serif" font-size="10.5" fill="#1A1A1A">action</text>
+      <text x="90" y="108" font-family="'Inter', sans-serif" font-size="10" fill="#5C5850">TEXT</text>
+      
+      <!-- category -->
+      <text x="0" y="132" font-family="'Inter', sans-serif" font-size="10.5" fill="#1A1A1A">category</text>
+      <text x="90" y="132" font-family="'Inter', sans-serif" font-size="10" fill="#5C5850">VARCHAR(20)</text>
+      
+      <!-- status -->
+      <text x="0" y="156" font-family="'Inter', sans-serif" font-size="10.5" fill="#1A1A1A">status</text>
+      <text x="90" y="156" font-family="'Inter', sans-serif" font-size="10" fill="#5C5850">VARCHAR(15)</text>
+    </g>
+  </g>
+
+  <!-- TABLE 2: tuc_lecturers (USER REGISTRY) -->
+  <g transform="translate(480, 170)" filter="url(#box-shadow)">
+    <rect width="280" height="230" fill="url(#table-bg)" stroke="#D1CEC7" stroke-width="1.5" rx="8" />
+    <path d="M 0 8 A 8 8 0 0 1 8 0 L 272 0 A 8 8 0 0 1 280 8 L 280 35 L 0 35 Z" fill="#002147" />
+    <text x="15" y="22" font-family="'Inter', sans-serif" font-weight="bold" font-size="11" fill="#FFFFFF">TABLE: tuc_lecturers</text>
+    <text x="265" y="22" font-family="'Inter', sans-serif" font-size="8.5" font-weight="bold" fill="#D4AF37" text-anchor="end">USER ACCOUNTS</text>
+    
+    <g transform="translate(15, 55)">
+      <!-- email (PK) -->
+      <text x="0" y="12" font-family="'Inter', sans-serif" font-weight="bold" font-size="10.5" fill="#D4AF37">🔑 email</text>
+      <text x="90" y="12" font-family="'Inter', sans-serif" font-size="10" fill="#1A1A1A">VARCHAR(100)</text>
+      <text x="250" y="12" font-family="'Inter', sans-serif" font-size="9" font-style="italic" fill="#8C887D" text-anchor="end">PK</text>
+      
+      <!-- full_name -->
+      <text x="0" y="36" font-family="'Inter', sans-serif" font-size="10.5" fill="#1A1A1A">full_name</text>
+      <text x="90" y="36" font-family="'Inter', sans-serif" font-size="10" fill="#5C5850">VARCHAR(120)</text>
+      
+      <!-- department -->
+      <text x="0" y="60" font-family="'Inter', sans-serif" font-size="10.5" fill="#1A1A1A">department</text>
+      <text x="90" y="60" font-family="'Inter', sans-serif" font-size="10" fill="#5C5850">VARCHAR(80)</text>
+      
+      <!-- last_login -->
+      <text x="0" y="84" font-family="'Inter', sans-serif" font-size="10.5" fill="#1A1A1A">last_login</text>
+      <text x="90" y="84" font-family="'Inter', sans-serif" font-size="10" fill="#5C5850">DATETIME</text>
+      
+      <!-- role_status -->
+      <text x="0" y="108" font-family="'Inter', sans-serif" font-size="10.5" fill="#1A1A1A">role_status</text>
+      <text x="90" y="108" font-family="'Inter', sans-serif" font-size="10" fill="#5C5850">VARCHAR(25)</text>
+      
+      <!-- created_at -->
+      <text x="0" y="132" font-family="'Inter', sans-serif" font-size="10.5" fill="#1A1A1A">created_at</text>
+      <text x="90" y="132" font-family="'Inter', sans-serif" font-size="10" fill="#5C5850">DATETIME</text>
+    </g>
+  </g>
+
+  <!-- RELATIONSHIP LINK / CARDINALITY (1 to Many relationship) -->
+  <g transform="translate(320, 275)">
+    <!-- Horizontal connection line -->
+    <path d="M 0 0 L 160 0" fill="none" stroke="#D4AF37" stroke-width="2" />
+    
+    <!-- Cardinality Symbols (1 on user_email PK, many on user_email index) -->
+    <!-- '1' indicator on tuc_lecturers (right side) -->
+    <line x1="145" y1="-8" x2="145" y2="8" stroke="#002147" stroke-width="2" />
+    <line x1="150" y1="-8" x2="150" y2="8" stroke="#002147" stroke-width="2" />
+    
+    <!-- 'Many' crow-foot indicator on tuc_audit_logs (left side) -->
+    <line x1="0" y1="0" x2="15" y2="-8" stroke="#002147" stroke-width="2" />
+    <line x1="0" y1="0" x2="15" y2="8" stroke="#002147" stroke-width="2" />
+    <line x1="15" y1="-8" x2="15" y2="8" stroke="#002147" stroke-width="2" />
+
+    <rect x="30" y="-18" width="100" height="15" fill="#F4F2EB" rx="3" />
+    <text x="80" y="-6" font-family="'Inter', sans-serif" font-size="8.5" font-weight="bold" fill="#002147" text-anchor="middle">1-TO-MANY (FK LINK)</text>
+  </g>
+
+  <!-- SUMMARY COMPLIANCE BLOCK -->
+  <g transform="translate(40, 430)">
+    <rect x="0" y="0" width="720" height="130" fill="#FFFFFF" stroke="#D1CEC7" stroke-width="1.2" rx="8" filter="url(#box-shadow)" />
+    <rect x="0" y="0" width="720" height="30" fill="#F2EFE9" rx="8" />
+    <text x="15" y="19" font-family="'Inter', sans-serif" font-weight="bold" font-size="10" fill="#002147">ACADEMIC DATA AUDIT INTEGRITY NORMS</text>
+    
+    <text x="15" y="50" font-family="'Inter', sans-serif" font-size="9.5" fill="#1A1A1A">
+      • <tspan font-weight="bold">Referential Integrity:</tspan> The field `tuc_audit_logs.user_email` maps as a Foreign Key (FK) directly back to `tuc_lecturers.email`.
+    </text>
+    <text x="15" y="72" font-family="'Inter', sans-serif" font-size="9.5" fill="#1A1A1A">
+      • <tspan font-weight="bold">Audit Trace Retention:</tspan> To satisfy regional tertiary board auditing, records are persistent and structured to prevent truncating by standard users.
+    </text>
+    <text x="15" y="94" font-family="'Inter', sans-serif" font-size="9.5" fill="#1A1A1A">
+      • <tspan font-weight="bold">Performance Indexing:</tspan> Indexing tags are mapped on `user_email` and `timestamp` to secure sub-millisecond retrieval on-premise.
+    </text>
+  </g>
+</svg>

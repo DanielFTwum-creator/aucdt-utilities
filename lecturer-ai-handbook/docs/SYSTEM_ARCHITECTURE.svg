@@ -1,0 +1,174 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="100%" height="100%">
+  <!-- Definitions for gradients and shadows -->
+  <defs>
+    <linearGradient id="navy-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#002147" />
+      <stop offset="100%" stop-color="#003B75" />
+    </linearGradient>
+    <linearGradient id="gold-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#D4AF37" />
+      <stop offset="100%" stop-color="#AA841C" />
+    </linearGradient>
+    <linearGradient id="light-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#F9F7F2" />
+      <stop offset="100%" stop-color="#EBE7DC" />
+    </linearGradient>
+    <linearGradient id="green-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#137333" />
+      <stop offset="100%" stop-color="#0B4E20" />
+    </linearGradient>
+    <filter id="shadow" x="-5%" y="-5%" width="110%" height="110%">
+      <feDropShadow dx="3" dy="4" stdDeviation="4" flood-color="#000000" flood-opacity="0.15" />
+    </filter>
+  </defs>
+
+  <!-- Background Canvas -->
+  <rect width="800" height="600" fill="#F4F2EB" rx="15" />
+  
+  <!-- Outer Frame gold border -->
+  <rect x="10" y="10" width="780" height="580" fill="none" stroke="#D4AF37" stroke-width="1.5" rx="10" />
+
+  <!-- TITLE BLOCK -->
+  <g transform="translate(40, 45)">
+    <rect x="0" y="0" width="720" height="60" fill="url(#navy-grad)" rx="8" filter="url(#shadow)" />
+    <text x="20" y="38" font-family="'Lora', Georgia, serif" font-weight="bold" font-size="22" fill="#FFFFFF">LECTURER AI — ENTERPRISE SYSTEM ARCHITECTURE DIAGRAM</text>
+    <text x="700" y="35" font-family="'Inter', sans-serif" font-size="10" font-weight="bold" fill="#D4AF37" text-anchor="end">REF: TUC-SYS-ARCH-2026</text>
+  </g>
+
+  <!-- SUB TITLE / INSTITUTION -->
+  <text x="45" y="130" font-family="'Inter', sans-serif" font-size="11" font-weight="bold" fill="#5C5850">TECHBRIDGE UNIVERSITY COLLEGE (TUC)  •  OYIBI, GHANA</text>
+
+  <!-- USER AGENT LAYER -->
+  <g transform="translate(40, 160)">
+    <rect x="0" y="0" width="180" height="340" fill="url(#light-grad)" stroke="#D1CEC7" stroke-width="1.5" rx="8" filter="url(#shadow)" />
+    <rect x="0" y="0" width="180" height="35" fill="#002147" rx="8" />
+    <text x="90" y="22" font-family="'Inter', sans-serif" font-weight="bold" font-size="11" fill="#FFFFFF" text-anchor="middle">CLIENT LAYER (SPA)</text>
+    
+    <!-- User web application box -->
+    <g transform="translate(15, 55)">
+      <rect x="0" y="0" width="150" height="55" fill="#FFFFFF" stroke="#002147" stroke-width="1" rx="5" />
+      <text x="75" y="24" font-family="'Inter', sans-serif" font-size="10" font-weight="bold" fill="#002147" text-anchor="middle">React 18 / Tailwind SPA</text>
+      <text x="75" y="38" font-family="'Inter', sans-serif" font-size="8" fill="#5C5850" text-anchor="middle">Workbook Framework</text>
+    </g>
+
+    <!-- Capacitor native container -->
+    <g transform="translate(15, 125)">
+      <rect x="0" y="0" width="150" height="75" fill="#FFFFFF" stroke="#D4AF37" stroke-width="1.2" rx="5" />
+      <text x="75" y="20" font-family="'Inter', sans-serif" font-size="10" font-weight="bold" fill="#D4AF37" text-anchor="middle">Capacitor Native Shell</text>
+      <text x="75" y="36" font-family="'Inter', sans-serif" font-size="8" fill="#1A1A1A" text-anchor="middle">iOS WebView Container</text>
+      <text x="75" y="52" font-family="'Inter', sans-serif" font-size="8" fill="#1A1A1A" text-anchor="middle">Android Native View</text>
+    </g>
+
+    <!-- Briefcase storage -->
+    <g transform="translate(15, 215)">
+      <rect x="0" y="0" width="150" height="55" fill="#FFFFFF" stroke="#D1CEC7" stroke-width="1" rx="5" />
+      <text x="75" y="22" font-family="'Inter', sans-serif" font-size="9" font-weight="bold" fill="#1A1A1A" text-anchor="middle">Local Briefcase Engine</text>
+      <text x="75" y="38" font-family="'Inter', sans-serif" font-size="8" fill="#5C5850" text-anchor="middle">localStorage Buffer Sync</text>
+    </g>
+
+    <!-- Accessibility AA layer -->
+    <g transform="translate(15, 285)">
+      <rect x="0" y="0" width="150" height="40" fill="#002147" fill-opacity="0.05" stroke="#002147" stroke-dasharray="3,3" stroke-width="1" rx="5" />
+      <text x="75" y="24" font-family="'Inter', sans-serif" font-size="9" font-weight="bold" fill="#002147" text-anchor="middle">W3C WCAG AA ARIA</text>
+    </g>
+  </g>
+
+  <!-- FLOW ARROWS FROM CLIENT TO GATEWAY -->
+  <g transform="translate(225, 290)">
+    <path d="M 0 0 L 60 0" fill="none" stroke="#002147" stroke-width="2.5" stroke-dasharray="5,3" />
+    <polygon points="65,0 55,-5 55,5" fill="#002147" />
+    <text x="30" y="-10" font-family="'Inter', sans-serif" font-size="8" font-weight="bold" fill="#5C5850" text-anchor="middle">PORT 3000</text>
+    <text x="30" y="20" font-family="'Inter', sans-serif" font-size="8" fill="#5C5850" text-anchor="middle">HTTPS REST</text>
+  </g>
+
+  <!-- GATEWAY LAYER (DOCKER / PLESK) -->
+  <g transform="translate(295, 160)">
+    <rect x="0" y="0" width="210" height="340" fill="url(#light-grad)" stroke="#D1CEC7" stroke-width="1.5" rx="8" filter="url(#shadow)" />
+    <rect x="0" y="0" width="210" height="35" fill="#002147" rx="8" />
+    <text x="105" y="22" font-family="'Inter', sans-serif" font-weight="bold" font-size="11" fill="#FFFFFF" text-anchor="middle">ON-PREMISE SERVICES</text>
+    
+    <!-- Plesk Obsidian banner -->
+    <rect x="15" y="48" width="180" height="20" fill="#D4AF37" rx="4" />
+    <text x="105" y="61" font-family="'Inter', sans-serif" font-size="8.5" font-weight="bold" fill="#1A1A1A" text-anchor="middle">Plesk Obsidian Docker Engine</text>
+
+    <!-- Nginx proxy -->
+    <g transform="translate(15, 80)">
+      <rect x="0" y="0" width="180" height="45" fill="#FFFFFF" stroke="#002147" stroke-width="1" rx="5" />
+      <text x="90" y="18" font-family="'Inter', sans-serif" font-size="9" font-weight="bold" fill="#002147" text-anchor="middle">Nginx Ingress Proxy</text>
+      <text x="90" y="32" font-family="'Inter', sans-serif" font-size="7.5" fill="#5C5850" text-anchor="middle">TLS Term. (Let's Encrypt)</text>
+    </g>
+
+    <!-- Express API router -->
+    <g transform="translate(15, 140)">
+      <rect x="0" y="0" width="180" height="75" fill="#FFFFFF" stroke="#002147" stroke-width="1.2" rx="5" />
+      <text x="90" y="18" font-family="'Inter', sans-serif" font-size="9" font-weight="bold" fill="#002147" text-anchor="middle">NodeJS / Express Core</text>
+      <text x="90" y="32" font-family="'Inter', sans-serif" font-size="7.5" fill="#5C5850" text-anchor="middle">Bundled 'dist/server.cjs'</text>
+      <rect x="15" y="45" width="150" height="18" fill="#137333" fill-opacity="0.1" stroke="#137333" rx="3" />
+      <text x="90" y="57" font-family="'Inter', sans-serif" font-size="7.5" font-weight="bold" fill="#137333" text-anchor="middle">Health Check Endpoint</text>
+    </g>
+
+    <!-- Admin & Diagnostics Security Controller -->
+    <g transform="translate(15, 230)">
+      <rect x="0" y="0" width="180" height="90" fill="#FFFFFF" stroke="#D4AF37" stroke-width="1" rx="5" />
+      <text x="90" y="18" font-family="'Inter', sans-serif" font-size="9" font-weight="bold" fill="#1A1A1A" text-anchor="middle">Admin Diagnostics Module</text>
+      <text x="90" y="32" font-family="'Inter', sans-serif" font-size="7.5" fill="#5C5850" text-anchor="middle">Security Auth &amp; Logger</text>
+      <text x="90" y="46" font-family="'Inter', sans-serif" font-size="7.5" fill="#5C5850" text-anchor="middle">Playwright Diagnostic Exec</text>
+      <text x="90" y="70" font-family="'Inter', sans-serif" font-weight="bold" font-size="8" fill="#D4AF37" text-anchor="middle">Password-Protected Gate</text>
+    </g>
+  </g>
+
+  <!-- FLOW ARROWS TO BACKEND SERVICES -->
+  <g transform="translate(510, 240)">
+    <path d="M 0 10 L 50 10" fill="none" stroke="#137333" stroke-width="2" />
+    <polygon points="55,10 45,6 45,14" fill="#137333" />
+    <text x="25" y="-2" font-family="'Inter', sans-serif" font-size="7.5" fill="#5C5850" text-anchor="middle">SQL Link</text>
+  </g>
+
+  <g transform="translate(510, 340)">
+    <path d="M 0 0 L 50 0" fill="none" stroke="#002147" stroke-width="2" />
+    <polygon points="55,0 45,-4 45,4" fill="#002147" />
+    <text x="25" y="-10" font-family="'Inter', sans-serif" font-size="7.5" fill="#5C5850" text-anchor="middle">Secure SDK</text>
+  </g>
+
+  <!-- DATABASES & INTEGRATIONS LAYER -->
+  <g transform="translate(570, 160)">
+    <rect x="0" y="0" width="190" height="340" fill="url(#light-grad)" stroke="#D1CEC7" stroke-width="1.5" rx="8" filter="url(#shadow)" />
+    <rect x="0" y="0" width="190" height="35" fill="#002147" rx="8" />
+    <text x="95" y="22" font-family="'Inter', sans-serif" font-weight="bold" font-size="11" fill="#FFFFFF" text-anchor="middle">DATA &amp; EXTERNAL API</text>
+    
+    <!-- MySQL Database logs -->
+    <g transform="translate(15, 55)">
+      <rect x="0" y="0" width="160" height="85" fill="#FFFFFF" stroke="#137333" stroke-width="1.2" rx="5" />
+      <text x="80" y="20" font-family="'Inter', sans-serif" font-size="10" font-weight="bold" fill="#137333" text-anchor="middle">MySQL / MariaDB</text>
+      <text x="80" y="36" font-family="'Inter', sans-serif" font-size="8" fill="#5C5850" text-anchor="middle">audit_logs schema</text>
+      <text x="80" y="52" font-family="'Inter', sans-serif" font-size="8" fill="#5C5850" text-anchor="middle">System Audit Trails</text>
+      <rect x="15" y="62" width="130" height="15" fill="#137333" rx="2" />
+      <text x="80" y="72" font-family="'Inter', sans-serif" font-size="7" font-weight="bold" fill="#FFFFFF" text-anchor="middle">ON-PREMISE REPLICATED</text>
+    </g>
+
+    <!-- Gemini AI platform -->
+    <g transform="translate(15, 175)">
+      <rect x="0" y="0" width="160" height="85" fill="#FFFFFF" stroke="#002147" stroke-width="1.2" rx="5" />
+      <text x="80" y="22" font-family="'Inter', sans-serif" font-size="10" font-weight="bold" fill="#002147" text-anchor="middle">Google Gemini API</text>
+      <text x="80" y="38" font-family="'Inter', sans-serif" font-size="8" fill="#5C5850" text-anchor="middle">Model Core: gemini-2.5</text>
+      <text x="80" y="52" font-family="'Inter', sans-serif" font-size="8" fill="#5C5850" text-anchor="middle">AI Handout Synthesis</text>
+      <text x="80" y="70" font-family="'Inter', sans-serif" font-weight="bold" font-size="7.5" fill="#D4AF37" text-anchor="middle">SERVER SECURED KEY</text>
+    </g>
+
+    <!-- jsPDF Engine -->
+    <g transform="translate(15, 275)">
+      <rect x="0" y="0" width="160" height="50" fill="#FFFFFF" stroke="#D1CEC7" stroke-width="1" rx="5" />
+      <text x="80" y="20" font-family="'Inter', sans-serif" font-size="9" font-weight="bold" fill="#1A1A1A" text-anchor="middle">jsPDF Handout Engine</text>
+      <text x="80" y="36" font-family="'Inter', sans-serif" font-size="8" fill="#5C5850" text-anchor="middle">A4 Academic Layouts</text>
+    </g>
+  </g>
+
+  <!-- SYSTEM SECURITY FOOTNOTE ACCENT -->
+  <g transform="translate(40, 520)">
+    <rect x="0" y="0" width="720" height="40" fill="#F2EFE9" stroke="#D1CEC7" stroke-width="1" rx="6" />
+    <text x="15" y="24" font-family="'Inter', sans-serif" font-size="9" fill="#1A1A1A">
+      <tspan font-weight="bold" fill="#002147">SECURITY POLICY NOTE: </tspan>
+      All Gemini API operations occur strictly server-side. Third-party keys are masked from the client browser. All transactions are logged inside the relational audit trail.
+    </text>
+  </g>
+</svg>

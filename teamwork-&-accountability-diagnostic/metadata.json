@@ -1,0 +1,6 @@
+{
+  "name": "Teamwork & Accountability Diagnostic",
+  "description": "An interactive diagnostic tool assessing teamwork, coordination, and accountability in professional and academic projects, themed around real-world case studies.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
