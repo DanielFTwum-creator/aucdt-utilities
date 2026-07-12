@@ -81,10 +81,10 @@ export const PatoisWmsLogin: React.FC = () => {
         <div className="text-center mb-10">
           <div ref={eqRef} style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'center', gap: 4, height: 40, marginBottom: 16 }} />
           <h1 className="rasta-title" style={{ fontSize: '2.6rem', fontWeight: 900, letterSpacing: '-0.01em', marginBottom: 6 }}>
-            Patois Lyricist
+            Lyricist
           </h1>
           <p style={{ color: 'rgba(255,255,255,0.35)', fontSize: '0.75rem', fontWeight: 700, letterSpacing: '0.2em', textTransform: 'uppercase' }}>
-            AI-Powered Reggae &amp; Dancehall Generator
+            AI Songwriting Studio
           </p>
         </div>
 
@@ -100,7 +100,7 @@ export const PatoisWmsLogin: React.FC = () => {
             Welcome
           </h2>
           <p style={{ color: 'rgba(255,255,255,0.3)', fontSize: '0.78rem', textAlign: 'center', marginBottom: 24 }}>
-            Sign in with your Techbridge account to access your riddim laboratory
+            Sign in with your Techbridge account to access your songwriting studio
           </p>
 
           {wmsError && (

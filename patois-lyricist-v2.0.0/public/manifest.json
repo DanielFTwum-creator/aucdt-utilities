@@ -1,21 +1,18 @@
 {
-  "name": "Patois Lyricist",
-  "short_name": "PatoisLyric",
-  "description": "AI-powered Reggae lyric generator.",
-  "start_url": "./",
+  "name": "Lyricist",
+  "short_name": "Lyricist",
+  "description": "AI songwriting studio for African and diaspora music.",
+  "start_url": "/patois/",
+  "scope": "/patois/",
   "display": "standalone",
   "background_color": "#000000",
   "theme_color": "#ffcc00",
   "icons": [
     {
-      "src": "./icon-192.png",
-      "sizes": "192x192",
-      "type": "image/png"
-    },
-    {
-      "src": "./icon-512.png",
-      "sizes": "512x512",
-      "type": "image/png"
+      "src": "/patois/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
     }
   ]
 }
