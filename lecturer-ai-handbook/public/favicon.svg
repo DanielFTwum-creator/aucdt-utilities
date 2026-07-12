@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Lecturer AI Handbook">
+  <rect width="64" height="64" rx="14" fill="#6366f1"/>
+  <path d="M14 20c6-3 12-3 18 0v26c-6-3-12-3-18 0z" fill="#ffffff"/>
+  <path d="M50 20c-6-3-12-3-18 0v26c6-3 12-3 18 0z" fill="#ffffff" opacity="0.82"/>
+</svg>
