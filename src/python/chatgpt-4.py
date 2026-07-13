@@ -2,7 +2,7 @@ import openai
 import os
 
 # set up your OpenAI API key
-openai.api_key = os.environ["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"]
+openai.api_key = os.environ["REPLACE_WITH_REAL_KEY_VIA_ENV"]
 
 # prompt for generating text
 prompt = "Hello, ChatGPT-4!"

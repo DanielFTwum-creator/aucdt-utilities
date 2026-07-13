@@ -160,7 +160,7 @@ $prodEnv = 'PORT={PORT}
 NODE_ENV=production
 JWT_SECRET=stockpulse-prod-secure-token-secret-2026-TUC
 JWT_EXPIRE=7d
-GEMINI_API_KEY=AIzaSyA78NtdellwQtEUIb3i_D7NhnSF4UYMj9E
+GEMINI_API_KEY=REPLACE_WITH_REAL_KEY_VIA_ENV
 CORS_ORIGIN=https://ai-tools.techbridge.edu.gh
 DB_PATH=./data/stockpulse.db
 ADMIN_EMAILS=daniel.twum@techbridge.edu.gh,daniel.twum@gmail.com' -replace '{PORT}', $PORT

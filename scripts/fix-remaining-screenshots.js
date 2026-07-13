@@ -7,7 +7,7 @@ const fs    = require("fs");
 
 const ROOT = path.resolve(__dirname, "..");
 const CAT  = path.join(ROOT, "catalogue");
-const API_KEY = "AIzaSyC7LpZwibE5Hwb5P7kzyOxI2Xe-pzSGRLI";
+const API_KEY = "REPLACE_WITH_REAL_KEY_VIA_ENV";
 
 // Apps that have dist and should render fine now
 const DIST_APPS = [

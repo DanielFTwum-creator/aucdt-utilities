@@ -43,7 +43,7 @@ Ensure the variables are populated as follows:
 # .env file content
 NODE_ENV=production
 PORT=3000
-GEMINI_API_KEY=AIzaSyD_your_secure_server_only_gemini_key
+GEMINI_API_KEY=REPLACE_WITH_REAL_KEY_VIA_ENVkey
 ```
 
 ### Step 3: Build the Docker Image
