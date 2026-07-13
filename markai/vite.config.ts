@@ -14,7 +14,11 @@ export default defineConfig({
       forceBuildInstrument: process.env.VITE_COVERAGE === 'true',
     }),
   ],
-  base: './',
+  // Absolute base (not './') so assets resolve on nested routes like
+  // /markai/auth/callback. With a relative base the callback route requests
+  // /markai/auth/assets/*.js (404 -> SPA serves index.html -> MIME error) and
+  // the OAuth callback JS never runs (Pattern 29).
+  base: '/markai/',
   build: {
     rollupOptions: {
       onwarn(warning, warn) {
