@@ -24,13 +24,15 @@ target/
 # Security incident reports — local only, never push to the public mirror
 docs/SECURITY-INCIDENT-*
 
-# Local env files
+# Local env files — real values live only on the server, never in git.
+# Examples/templates are the exception and stay tracked (see negations below).
 .env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
+.env.*
 temp.env
+!.env.example
+!.env.*.example
+!.env.sample
+!.env.template
 
 # Cloud credentials — never commit
 service-account.json
