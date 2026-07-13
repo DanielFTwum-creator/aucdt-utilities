@@ -47,33 +47,12 @@ package-lock.json
 
 ```
 
-### FILE: .env
-```text
-# GEMINI_API_KEY: Required for Gemini AI API calls.
-# AI Studio automatically injects this at runtime from user secrets.
-# Users configure this via the Secrets panel in the AI Studio UI.
-GEMINI_API_KEY=[REDACTED_CREDENTIAL]
+### FILE: (environment files omitted)
 
-# APP_URL: The URL where this applet is hosted.
-# AI Studio automatically injects this at runtime with the Cloud Run service URL.
-# Used for self-referential links, OAuth callbacks, and API endpoints.
-APP_URL="MY_APP_URL"
-
-```
-
-### FILE: .env.example
-```text
-# GEMINI_API_KEY: Required for Gemini AI API calls.
-# AI Studio automatically injects this at runtime from user secrets.
-# Users configure this via the Secrets panel in the AI Studio UI.
-GEMINI_API_KEY=[REDACTED_CREDENTIAL]
-
-# APP_URL: The URL where this applet is hosted.
-# AI Studio automatically injects this at runtime with the Cloud Run service URL.
-# Used for self-referential links, OAuth callbacks, and API endpoints.
-APP_URL="MY_APP_URL"
-
-```
+> Environment files are never committed. See the repo's own `.env.example`
+> for variable names; real values live only in the server's untracked
+> `.env.local` / `.env.production`. This block was removed by the fleet
+> secret-scrub (blueprint minus secrets).
 
 ### FILE: .gitignore
 ```text
@@ -646,7 +625,7 @@ ssh root@66.226.72.199 "tail -f /var/log/apache2/ai-tools.techbridge.edu.gh-acce
 ### Create .env File on Server
 ```bash
 ssh root@66.226.72.199 "cat > /var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/luxthumb/.env" << 'EOF'
-GEMINI_API_KEY=[REDACTED_CREDENTIAL]
+GEMINI_API_KEY=<REDACTED>
 APP_URL=https://ai-tools.techbridge.edu.gh/luxthumb
 NODE_ENV=production
 EOF
@@ -655,7 +634,7 @@ EOF
 ### Or Upload from Local
 ```bash
 # Create .env.production locally
-echo "GEMINI_API_KEY=[REDACTED_CREDENTIAL]
+echo "GEMINI_API_KEY=<REDACTED>
 echo "APP_URL=https://ai-tools.techbridge.edu.gh/luxthumb" >> .env.production
 
 # Upload
@@ -1942,7 +1921,7 @@ cp .env.example .env.local
 
 Edit `.env.local`:
 ```
-GEMINI_API_KEY=[REDACTED_CREDENTIAL]
+GEMINI_API_KEY=<REDACTED>
 APP_URL=https://luxthumb.techbridge.edu.gh
 ```
 
@@ -2045,7 +2024,7 @@ Plesk auto-generates, but verify `.htaccess` in document root:
 ### 4.7 Configure Environment Variables
 Create `.env` in document root:
 ```
-GEMINI_API_KEY=[REDACTED_CREDENTIAL]
+GEMINI_API_KEY=<REDACTED>
 APP_URL=https://luxthumb.techbridge.edu.gh
 ```
 
@@ -2094,7 +2073,7 @@ gcloud run deploy luxthumb-agent \
   --image gcr.io/your-project/luxthumb-agent:latest \
   --region us-central1 \
   --allow-unauthenticated \
-  --set-env-vars GEMINI_API_KEY=[REDACTED_CREDENTIAL]
+  --set-env-vars GEMINI_API_KEY=<REDACTED>
 ```
 
 ### 5.4 Configure Custom Domain

@@ -35,11 +35,12 @@ Use this agent when working on the dmcdai project for tasks involving AI-assiste
 - "Fix failing Playwright tests for the dashboard"
 ```
 
-### FILE: .env.local
-```text
-GEMINI_API_KEY=[REDACTED_CREDENTIAL]
-VITE_GEMINI_API_KEY=[REDACTED_CREDENTIAL]
-```
+### FILE: (environment files omitted)
+
+> Environment files are never committed. See the repo's own `.env.example`
+> for variable names; real values live only in the server's untracked
+> `.env.local` / `.env.production`. This block was removed by the fleet
+> secret-scrub (blueprint minus secrets).
 
 ### FILE: .gitignore
 ```text
@@ -1376,7 +1377,7 @@ All modules use the same shell:
 
 ```typescript
 // Environment
-const API_KEY = [REDACTED_CREDENTIAL]
+const API_KEY = <REDACTED>
 
 // Core function signatures:
 generateText(prompt: string): Promise<string>
@@ -12326,7 +12327,7 @@ pnpm install
 
 # 2. Configure Environment
 # Create .env.local and add your Institutional API Key
-VITE_GEMINI_API_KEY=[REDACTED_CREDENTIAL]
+VITE_GEMINI_API_KEY=<REDACTED>
 
 # 3. Start Development Server
 pnpm run dev
@@ -13143,7 +13144,7 @@ import React, { useState } from 'react';
 import { generateVideo } from '../services/geminiService';
 import { Loader } from '../components/Loader';
 
-const API_KEY = [REDACTED_CREDENTIAL]
+const API_KEY = <REDACTED>
 
 const Module2VideoProduction: React.FC = () => {
   const [prompt, setPrompt] = useState<string>('A cinematic shot of a robot tending to a glowing, digital garden on a spaceship');
@@ -17205,7 +17206,7 @@ A modular pedagogical sandbox for DMCD students to explore AI-driven design, con
 2. Set your Gemini API key in `.env.local`:
 
    ```env
-   VITE_GEMINI_API_KEY=[REDACTED_CREDENTIAL]
+   VITE_GEMINI_API_KEY=<REDACTED>
    ```
 
 3. Start the dev server:
@@ -17461,7 +17462,7 @@ import type {
     AuthenticityResult
 } from '../types';
 
-const API_KEY = [REDACTED_CREDENTIAL]
+const API_KEY = <REDACTED>
 
 // Default client — v1beta (chat, text, etc.)
 const ai = new GoogleGenAI({ apiKey: API_KEY });

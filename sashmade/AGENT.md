@@ -3,22 +3,12 @@
 > [!IMPORTANT]
 > This is an auto-generated monolithic blueprint containing the source code for sashmade.
 
-### FILE: .env.example
-```text
-# GEMINI_API_KEY: Required for Gemini AI API calls.
-# AI Studio automatically injects this at runtime from user secrets.
-# Users configure this via the Secrets panel in the AI Studio UI.
-GEMINI_API_KEY=[REDACTED_CREDENTIAL]
+### FILE: (environment files omitted)
 
-# APP_URL: The URL where this applet is hosted.
-# AI Studio automatically injects this at runtime with the Cloud Run service URL.
-# Used for self-referential links, OAuth callbacks, and API endpoints.
-APP_URL="MY_APP_URL"
-
-# VITE_GOOGLE_CLIENT_ID: Used for Google OAuth login on the frontend
-VITE_GOOGLE_CLIENT_ID=[REDACTED_CREDENTIAL]
-
-```
+> Environment files are never committed. See the repo's own `.env.example`
+> for variable names; real values live only in the server's untracked
+> `.env.local` / `.env.production`. This block was removed by the fleet
+> secret-scrub (blueprint minus secrets).
 
 ### FILE: .gitignore
 ```text
@@ -63,7 +53,7 @@ pnpm run test:e2e:report  # Open last test report
 
 Requires a `.env` or `.env.local` file with:
 ```
-GEMINI_API_KEY=[REDACTED_CREDENTIAL]
+GEMINI_API_KEY=<REDACTED>
 ```
 
 Vite exposes this via `process.env.GEMINI_API_KEY` (defined in `vite.config.ts` — do not change this pattern).
@@ -260,7 +250,7 @@ Navigate to `/admin/audit` to view security events stored in `localStorage`:
 1. Clone the repository and `cd sashmade`.
 2. Create `.env.local`:
    ```env
-   GEMINI_API_KEY=[REDACTED_CREDENTIAL]
+   GEMINI_API_KEY=<REDACTED>
    ```
 
 ## 3. Installation
@@ -298,7 +288,7 @@ Chunk splitting is configured in `vite.config.ts` â€” expect 7â€“9 `.j
 ### 6.3 Docker
 ```bash
 docker build -t sashmade .
-docker run -p 3000:80 -e GEMINI_API_KEY=[REDACTED_CREDENTIAL]
+docker run -p 3000:80 -e GEMINI_API_KEY=<REDACTED>
 ```
 
 ## 7. Post-Deployment Verification

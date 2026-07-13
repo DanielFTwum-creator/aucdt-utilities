@@ -3,52 +3,12 @@
 > [!IMPORTANT]
 > This is an auto-generated monolithic blueprint containing the source code for stockpulse.
 
-### FILE: .env.example
-```text
-# ─── Frontend (Vite) ───────────────────────────────────────────────────────────
-# No browser-exposed secrets — all API calls go through the backend proxy
-APP_URL="http://localhost:3000"
+### FILE: (environment files omitted)
 
-# ─── Backend (stockpulse/backend/) ─────────────────────────────────────────────
-PORT=3001
-NODE_ENV=development
-
-# JWT — generate a strong secret: openssl rand -hex 64
-JWT_SECRET=[REDACTED_CREDENTIAL]
-JWT_EXPIRE=7d
-
-# Gemini AI — server-side only, never exposed to the browser
-GEMINI_API_KEY=[REDACTED_CREDENTIAL]
-
-# CORS — frontend origin
-CORS_ORIGIN=http://localhost:3000
-
-# SQLite database path (relative to backend/)
-DB_PATH=./data/stockpulse.db
-
-# Admin panel — comma-separated admin email addresses
-ADMIN_EMAILS=admin@example.com
-
-# Stripe (wire up before production launch)
-# STRIPE_SECRET_KEY=[REDACTED_CREDENTIAL]
-# STRIPE_WEBHOOK_SECRET=[REDACTED_CREDENTIAL]
-# STRIPE_PREMIUM_PRICE_ID=price_...
-
-```
-
-### FILE: .env.local
-```text
-# GEMINI_API_KEY: Required for Gemini AI API calls.
-# AI Studio automatically injects this at runtime from user secrets.
-# Users configure this via the Secrets panel in the AI Studio UI.
-GEMINI_API_KEY=[REDACTED_CREDENTIAL]
-
-# APP_URL: The URL where this applet is hosted.
-# AI Studio automatically injects this at runtime with the Cloud Run service URL.
-# Used for self-referential links, OAuth callbacks, and API endpoints.
-APP_URL="MY_APP_URL"
-
-```
+> Environment files are never committed. See the repo's own `.env.example`
+> for variable names; real values live only in the server's untracked
+> `.env.local` / `.env.production`. This block was removed by the fleet
+> secret-scrub (blueprint minus secrets).
 
 ### FILE: .gitignore
 ```text
@@ -67,9 +27,9 @@ coverage/
 ```text
 PORT=3001
 NODE_ENV=development
-JWT_SECRET=[REDACTED_CREDENTIAL]
+JWT_SECRET=<REDACTED>
 JWT_EXPIRE=7d
-GEMINI_API_KEY=[REDACTED_CREDENTIAL]
+GEMINI_API_KEY=<REDACTED>
 CORS_ORIGIN=http://localhost:3000
 DB_PATH=./data/stockpulse.db
 ADMIN_EMAILS=danieltwum@gmail.com
@@ -576,7 +536,7 @@ import db from '../db/schema';
 import { requireAuth, AuthRequest } from '../middleware/auth';
 
 const router = Router();
-const JWT_SECRET = [REDACTED_CREDENTIAL]
+const JWT_SECRET = <REDACTED>
 const JWT_EXPIRE = process.env.JWT_EXPIRE || '7d';
 
 function makeToken(user: { id: number; email: string; tier: string }) {
@@ -1985,9 +1945,9 @@ All routes follow the same pattern: import `db` from `schema.ts`, use `requireAu
 
 ```
 PORT=3001
-JWT_SECRET=[REDACTED_CREDENTIAL]
+JWT_SECRET=<REDACTED>
 CORS_ORIGIN=http://localhost:3000
-GEMINI_API_KEY=[REDACTED_CREDENTIAL]
+GEMINI_API_KEY=<REDACTED>
 ADMIN_EMAILS=admin@example.com
 ```
 

@@ -32,20 +32,12 @@ playwright-report
 
 ```
 
-### FILE: .env.local
-```text
-GEMINI_API_KEY=[REDACTED_CREDENTIAL]
-VITE_GOOGLE_CLIENT_ID=[REDACTED_CREDENTIAL]
-VITE_GOOGLE_REDIRECT_URI=http://localhost:5173/auth/google/callback
+### FILE: (environment files omitted)
 
-```
-
-### FILE: .env.production
-```text
-VITE_GOOGLE_CLIENT_ID=[REDACTED_CREDENTIAL]
-VITE_GOOGLE_REDIRECT_URI=https://ai-tools.techbridge.edu.gh/brainiac-challenge/auth/google/callback
-
-```
+> Environment files are never committed. See the repo's own `.env.example`
+> for variable names; real values live only in the server's untracked
+> `.env.local` / `.env.production`. This block was removed by the fleet
+> secret-scrub (blueprint minus secrets).
 
 ### FILE: .gitignore
 ```text
@@ -2673,8 +2665,8 @@ If quiz generation fails:
 ## 2. Environment Variables
 Create a `.env` file in the root directory:
 ```env
-API_KEY=[REDACTED_CREDENTIAL]
-FIREBASE_API_KEY=[REDACTED_CREDENTIAL]
+API_KEY=<REDACTED>
+FIREBASE_API_KEY=<REDACTED>
 FIREBASE_AUTH_DOMAIN=your_project.firebaseapp.com
 FIREBASE_PROJECT_ID=your_project_id
 ```
@@ -3929,7 +3921,7 @@ const mysql = require('mysql2/promise');
 const PORT = process.env.PORT || 4017;
 const DB_HOST = process.env.DB_HOST || 'localhost';
 const DB_USER = process.env.DB_USER || 'appuser';
-const DB_PASSWORD = [REDACTED_CREDENTIAL]
+const DB_PASSWORD = <REDACTED>
 const DB_NAME = process.env.DB_NAME || 'brainiac_challenge';
 
 let pool;
@@ -4283,7 +4275,7 @@ import { GoogleGenAI, Type } from "@google/genai";
 import { Question } from '../types';
 import { LLM_PROMPT } from '../constants';
 
-const API_KEY = [REDACTED_CREDENTIAL]
+const API_KEY = <REDACTED>
 
 if (!API_KEY) {
     console.error("Gemini API key is missing. Please set the API_KEY environment variable.");

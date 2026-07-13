@@ -32,12 +32,12 @@ playwright-report
 
 ```
 
-### FILE: .env.production
-```text
-# Create .env.production file
-echo "GENERATE_SOURCEMAP=false" >> .env.production
-echo "INLINE_RUNTIME_CHUNK=false" >> .env.production
-```
+### FILE: (environment files omitted)
+
+> Environment files are never committed. See the repo's own `.env.example`
+> for variable names; real values live only in the server's untracked
+> `.env.local` / `.env.production`. This block was removed by the fleet
+> secret-scrub (blueprint minus secrets).
 
 ### FILE: .gitignore
 ```text

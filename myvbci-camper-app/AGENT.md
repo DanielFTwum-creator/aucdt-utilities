@@ -3485,7 +3485,7 @@ View your app in AI Studio: https://ai.studio/apps/drive/1fYQZx2T-u7qI5HrDDr-HlJ
 ```typescript
 import { GoogleGenAI } from "@google/genai";
 
-const API_KEY = [REDACTED_CREDENTIAL]
+const API_KEY = <REDACTED>
 
 export const askCampAssistant = async (
   userQuery: string,

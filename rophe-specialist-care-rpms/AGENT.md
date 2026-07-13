@@ -32,19 +32,12 @@ playwright-report
 
 ```
 
-### FILE: .env.development.local
-```text
-VITE_GOOGLE_CLIENT_ID=[REDACTED_CREDENTIAL]
-VITE_GOOGLE_REDIRECT_URI=http://localhost:3000/auth/google/callback
+### FILE: (environment files omitted)
 
-```
-
-### FILE: .env.local
-```text
-VITE_GOOGLE_CLIENT_ID=[REDACTED_CREDENTIAL]
-VITE_GOOGLE_REDIRECT_URI=https://ai-tools.techbridge.edu.gh/rophe-specialist-care-rpms/auth/google/callback
-
-```
+> Environment files are never committed. See the repo's own `.env.example`
+> for variable names; real values live only in the server's untracked
+> `.env.local` / `.env.production`. This block was removed by the fleet
+> secret-scrub (blueprint minus secrets).
 
 ### FILE: .npmrc
 ```text
@@ -4526,7 +4519,7 @@ npm run preview
 
 Set `GEMINI_API_KEY` in [.env.local](.env.local) before running:
 ```
-GEMINI_API_KEY=[REDACTED_CREDENTIAL]
+GEMINI_API_KEY=<REDACTED>
 ```
 
 The app accesses it via `process.env.GEMINI_API_KEY` (configured in vite.config.ts).
@@ -5585,7 +5578,7 @@ Successfully implemented **three major clinical intelligence features** for Roph
 
 8. **`.env.local`** (Configuration)
    ```
-   GEMINI_API_KEY=[REDACTED_CREDENTIAL]
+   GEMINI_API_KEY=<REDACTED>
    ```
 
 ### Documentation Files (5 guides)
@@ -6276,7 +6269,7 @@ The `App.tsx` needs minor modifications to pass the patient object and audit cal
 
 ```bash
 # .env.local should have:
-GEMINI_API_KEY=[REDACTED_CREDENTIAL]
+GEMINI_API_KEY=<REDACTED>
 ```
 
 ### Step 3: Install & Run
@@ -6978,7 +6971,7 @@ New prescription: Ibuprofen (MED-008)
 
 **Solutions:**
 1. Check `.env.local` exists: `ls .env.local`
-2. Verify content: `cat .env.local` should show `GEMINI_API_KEY=[REDACTED_CREDENTIAL]
+2. Verify content: `cat .env.local` should show `GEMINI_API_KEY=<REDACTED>
 3. Restart dev server: `npm run dev`
 4. Clear browser cache and reload
 
@@ -7202,7 +7195,7 @@ npm install
 
 Edit `.env.local`:
 ```
-GEMINI_API_KEY=[REDACTED_CREDENTIAL]
+GEMINI_API_KEY=<REDACTED>
 ```
 
 Get your key from: https://ai.google.dev/
@@ -7322,7 +7315,7 @@ ls -la .env.local
 
 # Verify content
 cat .env.local
-# Should show: GEMINI_API_KEY=[REDACTED_CREDENTIAL]
+# Should show: GEMINI_API_KEY=<REDACTED>
 
 # Restart dev server
 npm run dev
@@ -8182,7 +8175,7 @@ npm install
 2. **Configure Gemini API:**
 ```bash
 # Edit .env.local and add your Gemini API key
-GEMINI_API_KEY=[REDACTED_CREDENTIAL]
+GEMINI_API_KEY=<REDACTED>
 ```
 
 3. **Start development server:**

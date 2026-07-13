@@ -32,11 +32,12 @@ playwright-report
 
 ```
 
-### FILE: .env.local
-```text
-GEMINI_API_KEY=[REDACTED_CREDENTIAL]
+### FILE: (environment files omitted)
 
-```
+> Environment files are never committed. See the repo's own `.env.example`
+> for variable names; real values live only in the server's untracked
+> `.env.local` / `.env.production`. This block was removed by the fleet
+> secret-scrub (blueprint minus secrets).
 
 ### FILE: .gitignore
 ```text
@@ -627,7 +628,7 @@ export const GuideModal: React.FC<GuideModalProps> = ({ onClose }) => {
               <li>
                 <strong>Set API Key:</strong> The application requires a Google Gemini API key. You must create a file named <code>.env</code> in the root of the project directory and add the following line, replacing `YOUR_API_KEY_HERE` with your actual key:
                 <br />
-                <code className="bg-gray-200 p-1 rounded text-sm block my-2">REACT_APP_API_KEY=[REDACTED_CREDENTIAL]
+                <code className="bg-gray-200 p-1 rounded text-sm block my-2">REACT_APP_API_KEY=<REDACTED>
                 <br />
                 <em>Note: In a production environment, this key would be managed securely on the server side.</em>
               </li>
@@ -1772,7 +1773,7 @@ export const exportMappingsToPdf = (
 import { GoogleGenAI, Type } from "@google/genai";
 import { SearchType, Restaurant, Pantry } from '../types';
 
-const API_KEY = [REDACTED_CREDENTIAL]
+const API_KEY = <REDACTED>
 if (!API_KEY) {
   // This is a fallback for development, but the app expects the key to be set in the environment.
   console.warn("API_KEY environment variable not set.");

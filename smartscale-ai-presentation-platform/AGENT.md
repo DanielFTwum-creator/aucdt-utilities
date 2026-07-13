@@ -32,11 +32,12 @@ playwright-report
 
 ```
 
-### FILE: .env.local
-```text
-GEMINI_API_KEY=[REDACTED_CREDENTIAL]
+### FILE: (environment files omitted)
 
-```
+> Environment files are never committed. See the repo's own `.env.example`
+> for variable names; real values live only in the server's untracked
+> `.env.local` / `.env.production`. This block was removed by the fleet
+> secret-scrub (blueprint minus secrets).
 
 ### FILE: .gitignore
 ```text
@@ -2992,7 +2993,7 @@ const mysql = require('mysql2/promise');
 const PORT = process.env.PORT || 4023;
 const DB_HOST = process.env.DB_HOST || 'localhost';
 const DB_USER = process.env.DB_USER || 'appuser';
-const DB_PASSWORD = [REDACTED_CREDENTIAL]
+const DB_PASSWORD = <REDACTED>
 const DB_NAME = process.env.DB_NAME || 'presentation_platform';
 
 let pool;

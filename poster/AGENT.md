@@ -3,12 +3,12 @@
 > [!IMPORTANT]
 > This is an auto-generated monolithic blueprint containing the source code for poster.
 
-### FILE: .env.local
-```text
-VITE_GOOGLE_CLIENT_ID=[REDACTED_CREDENTIAL]
-VITE_GOOGLE_REDIRECT_URI=https://ai-tools.techbridge.edu.gh/poster/auth/google/callback
+### FILE: (environment files omitted)
 
-```
+> Environment files are never committed. See the repo's own `.env.example`
+> for variable names; real values live only in the server's untracked
+> `.env.local` / `.env.production`. This block was removed by the fleet
+> secret-scrub (blueprint minus secrets).
 
 ### FILE: CREATION.md
 ```md

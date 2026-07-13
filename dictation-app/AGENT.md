@@ -32,11 +32,12 @@ playwright-report
 
 ```
 
-### FILE: .env.local
-```text
-GEMINI_API_KEY=[REDACTED_CREDENTIAL]
+### FILE: (environment files omitted)
 
-```
+> Environment files are never committed. See the repo's own `.env.example`
+> for variable names; real values live only in the server's untracked
+> `.env.local` / `.env.production`. This block was removed by the fleet
+> secret-scrub (blueprint minus secrets).
 
 ### FILE: .gitignore
 ```text
@@ -2193,7 +2194,7 @@ Record:
 
 ### C. Environment Variables
 ```
-GEMINI_API_KEY=[REDACTED_CREDENTIAL]
+GEMINI_API_KEY=<REDACTED>
 VITE_API_URL=http://localhost:5000 (development)
 ```
 

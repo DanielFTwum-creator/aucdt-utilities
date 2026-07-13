@@ -32,11 +32,12 @@ playwright-report
 
 ```
 
-### FILE: .env.local
-```text
-GEMINI_API_KEY=[REDACTED_CREDENTIAL]
+### FILE: (environment files omitted)
 
-```
+> Environment files are never committed. See the repo's own `.env.example`
+> for variable names; real values live only in the server's untracked
+> `.env.local` / `.env.production`. This block was removed by the fleet
+> secret-scrub (blueprint minus secrets).
 
 ### FILE: .gitignore
 ```text
@@ -1317,7 +1318,7 @@ If analysis fails:
 ## 2. Environment Variables
 Create a `.env` file in the root directory:
 ```env
-VITE_GEMINI_API_KEY=[REDACTED_CREDENTIAL]
+VITE_GEMINI_API_KEY=<REDACTED>
 ```
 
 ## 3. Institutional Build
@@ -2083,7 +2084,7 @@ import { GoogleGenAI, Type } from "@google/genai";
 import { BRAND_GUIDELINES_PROMPT, SRS_TO_LATEX_PROMPT } from '../constants';
 import type { AnalysisReport } from '../types';
 
-const API_KEY = [REDACTED_CREDENTIAL]
+const API_KEY = <REDACTED>
 
 if (!API_KEY) {
     throw new Error("API_KEY environment variable not set");
@@ -2371,7 +2372,7 @@ const mysql = require('mysql2/promise');
 const PORT = process.env.PORT || 4001;
 const DB_HOST = process.env.DB_HOST || 'localhost';
 const DB_USER = process.env.DB_USER || 'appuser';
-const DB_PASSWORD = [REDACTED_CREDENTIAL]
+const DB_PASSWORD = <REDACTED>
 const DB_NAME = process.env.DB_NAME || 'brand_checker';
 
 let pool;

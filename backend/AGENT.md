@@ -21,26 +21,12 @@ README.md
 
 ```
 
-### FILE: .env
-```text
-PORT=5000
-NODE_ENV=development
+### FILE: (environment files omitted)
 
-# MySQL Configuration (Ubuntu Server)
-DB_HOST=localhost
-DB_USER=root
-DB_PASSWORD=[REDACTED_CREDENTIAL]
-DB_NAME=aucdt_auth
-
-# JWT Configuration
-JWT_SECRET=[REDACTED_CREDENTIAL]
-JWT_EXPIRES_IN=24h
-
-# Admin Credentials (Default)
-ADMIN_USERNAME=admin
-ADMIN_PASSWORD=[REDACTED_CREDENTIAL]
-
-```
+> Environment files are never committed. See the repo's own `.env.example`
+> for variable names; real values live only in the server's untracked
+> `.env.local` / `.env.production`. This block was removed by the fleet
+> secret-scrub (blueprint minus secrets).
 
 ### FILE: .gitignore
 ```text
@@ -241,7 +227,7 @@ import { Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 import { UserModel } from '../models/User';
 
-const JWT_SECRET = [REDACTED_CREDENTIAL]
+const JWT_SECRET = <REDACTED>
 const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || '24h';
 
 export const login = async (req: Request, res: Response) => {
@@ -312,7 +298,7 @@ export const validateToken = [REDACTED_CREDENTIAL]
 import { NextFunction, Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 
-const JWT_SECRET = [REDACTED_CREDENTIAL]
+const JWT_SECRET = <REDACTED>
 
 export const authenticateJWT = (req: Request, res: Response, next: NextFunction) => {
   const authHeader = req.headers.authorization;

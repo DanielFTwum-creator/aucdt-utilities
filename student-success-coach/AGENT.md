@@ -32,15 +32,12 @@ playwright-report
 
 ```
 
-### FILE: .env.example
-```text
-PORT=4048
-DB_HOST=localhost
-DB_USER=appuser
-DB_PASSWORD=[REDACTED_CREDENTIAL]
-DB_NAME=student_success_coach
+### FILE: (environment files omitted)
 
-```
+> Environment files are never committed. See the repo's own `.env.example`
+> for variable names; real values live only in the server's untracked
+> `.env.local` / `.env.production`. This block was removed by the fleet
+> secret-scrub (blueprint minus secrets).
 
 ### FILE: client/docs/ADMIN_GUIDE.md
 ```md

@@ -32,20 +32,12 @@ playwright-report
 
 ```
 
-### FILE: .env.development.local
-```text
-VITE_GOOGLE_CLIENT_ID=[REDACTED_CREDENTIAL]
-VITE_GOOGLE_REDIRECT_URI=http://localhost:3000/auth/google/callback
+### FILE: (environment files omitted)
 
-```
-
-### FILE: .env.local
-```text
-GEMINI_API_KEY=[REDACTED_CREDENTIAL]
-VITE_GOOGLE_CLIENT_ID=[REDACTED_CREDENTIAL]
-VITE_GOOGLE_REDIRECT_URI=https://ai-tools.techbridge.edu.gh/techbridge-ai-workshop-flyer/auth/google/callback
-
-```
+> Environment files are never committed. See the repo's own `.env.example`
+> for variable names; real values live only in the server's untracked
+> `.env.local` / `.env.production`. This block was removed by the fleet
+> secret-scrub (blueprint minus secrets).
 
 ### FILE: .gitignore
 ```text

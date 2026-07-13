@@ -32,11 +32,12 @@ playwright-report
 
 ```
 
-### FILE: .env.local
-```text
-GEMINI_API_KEY=[REDACTED_CREDENTIAL]
+### FILE: (environment files omitted)
 
-```
+> Environment files are never committed. See the repo's own `.env.example`
+> for variable names; real values live only in the server's untracked
+> `.env.local` / `.env.production`. This block was removed by the fleet
+> secret-scrub (blueprint minus secrets).
 
 ### FILE: .gitignore
 ```text
@@ -1607,7 +1608,7 @@ If AI synchronization fails:
 ## 2. Environment Configuration
 Create a `.env` file in the root directory:
 ```env
-VITE_GEMINI_API_KEY=[REDACTED_CREDENTIAL]
+VITE_GEMINI_API_KEY=<REDACTED>
 ```
 
 ## 3. Build & Verification

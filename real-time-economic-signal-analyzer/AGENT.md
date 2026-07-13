@@ -389,7 +389,7 @@ pnpm test:e2e             # E2E tests
 ## 12. Environment Variables
 
 ```bash
-GOOGLE_GENAI_API_KEY=[REDACTED_CREDENTIAL]
+GOOGLE_GENAI_API_KEY=<REDACTED>
 DATABASE_PATH=./db/signals.db
 PORT=3000
 API_URL=http://localhost:3000

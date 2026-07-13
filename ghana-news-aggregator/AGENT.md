@@ -32,11 +32,12 @@ playwright-report
 
 ```
 
-### FILE: .env.local
-```text
-GEMINI_API_KEY=[REDACTED_CREDENTIAL]
+### FILE: (environment files omitted)
 
-```
+> Environment files are never committed. See the repo's own `.env.example`
+> for variable names; real values live only in the server's untracked
+> `.env.local` / `.env.production`. This block was removed by the fleet
+> secret-scrub (blueprint minus secrets).
 
 ### FILE: .gitignore
 ```text
@@ -2154,7 +2155,7 @@ export const NewsFeed: React.FC<NewsFeedProps> = ({ articles, socialConfig, onUp
         body: JSON.stringify({
           message: message,
           link: article.originalUrl,
-          access_token: accessToken,
+          access_token: <REDACTED>
         }),
       });
 
@@ -4652,9 +4653,9 @@ The system currently supports **Facebook Graph API**.
 ## 2. Environment Configuration
 Create a `.env` file in the root directory:
 ```env
-VITE_API_KEY=[REDACTED_CREDENTIAL]
+VITE_API_KEY=<REDACTED>
 VITE_META_PAGE_ID=your_page_id
-VITE_META_ACCESS_TOKEN=[REDACTED_CREDENTIAL]
+VITE_META_ACCESS_TOKEN=<REDACTED>
 ```
 
 ## 3. Institutional Build

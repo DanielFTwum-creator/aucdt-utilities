@@ -3,47 +3,12 @@
 > [!IMPORTANT]
 > This is an auto-generated monolithic blueprint containing the source code for flydee.
 
-### FILE: .env.example
-```text
-# GEMINI_API_KEY: Required for Gemini AI API calls.
-# AI Studio automatically injects this at runtime from user secrets.
-# Users configure this via the Secrets panel in the AI Studio UI.
-GEMINI_API_KEY=[REDACTED_CREDENTIAL]
+### FILE: (environment files omitted)
 
-# APP_URL: The URL where this applet is hosted.
-# AI Studio automatically injects this at runtime with the Cloud Run service URL.
-# Used for self-referential links, OAuth callbacks, and API endpoints.
-APP_URL=your_app_url_here
-
-VITE_OPENSKY_USERNAME=your_opensky_username
-VITE_OPENSKY_PASSWORD=[REDACTED_CREDENTIAL]
-VITE_FIREBASE_API_KEY=
-[REDACTED_CREDENTIAL]
-VITE_FIREBASE_PROJECT_ID=
-VITE_FIREBASE_APP_ID=
-VITE_FIREBASE_STORAGE_BUCKET=
-VITE_FIREBASE_MESSAGING_SENDER_ID=
-VITE_FIREBASE_FIRESTORE_ID=
-
-```
-
-### FILE: .env.local
-```text
-GEMINI_API_KEY=[REDACTED_CREDENTIAL]
-APP_URL=http://localhost:3000
-
-VITE_OPENSKY_USERNAME=commandert
-VITE_OPENSKY_PASSWORD=[REDACTED_CREDENTIAL]
-
-VITE_FIREBASE_API_KEY=[REDACTED_CREDENTIAL]
-VITE_FIREBASE_AUTH_DOMAIN=flydee-e4046.firebaseapp.com
-VITE_FIREBASE_PROJECT_ID=flydee-e4046
-VITE_FIREBASE_STORAGE_BUCKET=flydee-e4046.firebasestorage.app
-VITE_FIREBASE_MESSAGING_SENDER_ID=23530603425
-VITE_FIREBASE_APP_ID=1:23530603425:web:ed46c86733fb42234341e0
-VITE_FIREBASE_FIRESTORE_ID=(default)
-
-```
+> Environment files are never committed. See the repo's own `.env.example`
+> for variable names; real values live only in the server's untracked
+> `.env.local` / `.env.production`. This block was removed by the fleet
+> secret-scrub (blueprint minus secrets).
 
 ### FILE: .gitignore
 ```text
@@ -112,7 +77,7 @@ VITE_FIREBASE_MESSAGING_SENDER_ID=
 VITE_FIREBASE_APP_ID=
 VITE_FIREBASE_FIRESTORE_ID=      # Named Firestore database ID (not "(default)")
 
-GEMINI_API_KEY=                   [REDACTED_CREDENTIAL]
+GEMINI_API_KEY=                   <REDACTED>
 
 # Optional — increases OpenSky rate limit from 10 req/min to 100/min
 VITE_OPENSKY_USERNAME=
@@ -3766,7 +3731,7 @@ export interface UserProfile {
 /// <reference types="vite/client" />
 
 interface ImportMetaEnv {
-  readonly VITE_FIREBASE_API_KEY: string
+  readonly VITE_FIREBASE_API_KEY: <REDACTED>
   readonly VITE_FIREBASE_AUTH_DOMAIN: string
   readonly VITE_FIREBASE_PROJECT_ID: string
   readonly VITE_FIREBASE_APP_ID: string

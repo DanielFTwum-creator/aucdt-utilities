@@ -23,13 +23,12 @@ e2e
 
 ```
 
-### FILE: .env
-```text
-PUBLIC_URL=/aucdt-analytics-dashboard/
-VITE_API_URL=http://localhost:5000
-VITE_ADMIN_USERNAME=admin
+### FILE: (environment files omitted)
 
-```
+> Environment files are never committed. See the repo's own `.env.example`
+> for variable names; real values live only in the server's untracked
+> `.env.local` / `.env.production`. This block was removed by the fleet
+> secret-scrub (blueprint minus secrets).
 
 ### FILE: .npmrc
 ```text
@@ -48,7 +47,7 @@ NODE_ENV=development
 DATABASE_URL=postgresql://user:password@localhost:5432/tuc_analytics_dashboard_db
 
 # JWT Configuration
-JWT_SECRET=[REDACTED_CREDENTIAL]
+JWT_SECRET=<REDACTED>
 JWT_EXPIRES_IN=24h
 
 # CORS Configuration
@@ -1749,7 +1748,7 @@ Create `.env.production` file:
 ```bash
 # API Configuration
 VITE_API_URL=https://api.aucdt.edu.au
-VITE_API_KEY=[REDACTED_CREDENTIAL]
+VITE_API_KEY=<REDACTED>
 
 # Feature Flags
 VITE_ENABLE_ADMIN_PANEL=true
@@ -21155,7 +21154,7 @@ const mysql = require('mysql2/promise');
 const PORT = process.env.PORT || 4019;
 const DB_HOST = process.env.DB_HOST || 'localhost';
 const DB_USER = process.env.DB_USER || 'appuser';
-const DB_PASSWORD = [REDACTED_CREDENTIAL]
+const DB_PASSWORD = <REDACTED>
 const DB_NAME = process.env.DB_NAME || 'analytics_dashboard';
 
 let pool;

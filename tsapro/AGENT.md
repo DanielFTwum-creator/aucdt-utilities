@@ -32,17 +32,12 @@ playwright-report
 
 ```
 
-### FILE: .env
-```text
-VITE_API_URL=http://localhost:5000
+### FILE: (environment files omitted)
 
-```
-
-### FILE: .env.local
-```text
-GEMINI_API_KEY=[REDACTED_CREDENTIAL]
-
-```
+> Environment files are never committed. See the repo's own `.env.example`
+> for variable names; real values live only in the server's untracked
+> `.env.local` / `.env.production`. This block was removed by the fleet
+> secret-scrub (blueprint minus secrets).
 
 ### FILE: .gitignore
 ```text
@@ -223,7 +218,7 @@ pnpm preview         # Preview production build
 ### Environment Setup
 Create `.env.local` with:
 ```
-GEMINI_API_KEY=[REDACTED_CREDENTIAL]
+GEMINI_API_KEY=<REDACTED>
 ```
 
 Required for AI features (PDF parsing, natural language queries, audit analysis). The app functions without it, but AI assistant features will be unavailable.
@@ -7388,7 +7383,7 @@ const mysql = require('mysql2/promise');
 const PORT = process.env.PORT || 4007;
 const DB_HOST = process.env.DB_HOST || 'localhost';
 const DB_USER = process.env.DB_USER || 'appuser';
-const DB_PASSWORD = [REDACTED_CREDENTIAL]
+const DB_PASSWORD = <REDACTED>
 const DB_NAME = process.env.DB_NAME || 'tsapro';
 
 let pool;

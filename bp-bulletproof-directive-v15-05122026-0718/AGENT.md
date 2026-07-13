@@ -3863,7 +3863,7 @@ export const useAdminAuth = () => {
         window.process = window.process || {};
         window.process.env = window.process.env || {};
         if (typeof window.process.env.NODE_ENV === 'undefined') window.process.env.NODE_ENV = 'development';
-        if (typeof window.process.env.API_KEY =[REDACTED_CREDENTIAL]
+        if (typeof window.process.env.API_KEY =<REDACTED>
 
         tailwind.config = {
             darkMode: 'class',

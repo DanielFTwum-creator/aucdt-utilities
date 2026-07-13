@@ -1615,7 +1615,7 @@ export const Documentation: React.FC = () => {
 
                           <h3>2. Environment Setup</h3>
                           <p>Create a <code>.env</code> file in the root directory:</p>
-                          <pre><code>REACT_APP_API_KEY=[REDACTED_CREDENTIAL]
+                          <pre><code>REACT_APP_API_KEY=<REDACTED>
 
                           <h3>3. Build Process</h3>
                           <p>Run the following commands in your terminal:</p>

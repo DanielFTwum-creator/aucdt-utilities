@@ -32,11 +32,12 @@ playwright-report
 
 ```
 
-### FILE: .env.local
-```text
-GEMINI_API_KEY=[REDACTED_CREDENTIAL]
+### FILE: (environment files omitted)
 
-```
+> Environment files are never committed. See the repo's own `.env.example`
+> for variable names; real values live only in the server's untracked
+> `.env.local` / `.env.production`. This block was removed by the fleet
+> secret-scrub (blueprint minus secrets).
 
 ### FILE: .gitignore
 ```text
@@ -2094,7 +2095,7 @@ const ApiGateway: React.FC = () => {
     switch(type) {
       case AuthType.OAUTH2: return '🔐 OAuth2';
       case AuthType.JWT: return '🎫 JWT';
-      case AuthType.API_KEY: return '🔑 Key';
+      case AuthType.API_KEY: <REDACTED>'🔑 Key';
       case AuthType.NONE: return '🔓 Public';
       default: return '?';
     }
@@ -5193,7 +5194,7 @@ export enum HttpMethod {
 
 export enum AuthType {
   NONE = 'NONE',
-  API_KEY = [REDACTED_CREDENTIAL]
+  API_KEY = <REDACTED>
   OAUTH2 = 'OAUTH2',
   JWT = 'JWT'
 }

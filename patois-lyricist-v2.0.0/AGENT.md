@@ -29,20 +29,12 @@ docs
 
 ```
 
-### FILE: .env.example
-```text
-# .env.example
-VITE_GEMINI_API_KEY=
+### FILE: (environment files omitted)
 
-[REDACTED_CREDENTIAL]
-
-### FILE: .env.local
-```text
-GEMINI_API_KEY=[REDACTED_CREDENTIAL]
-VITE_GOOGLE_CLIENT_ID=[REDACTED_CREDENTIAL]
-VITE_GOOGLE_REDIRECT_URI=https://ai-tools.techbridge.edu.gh/lyricist/auth/google/callback
-
-```
+> Environment files are never committed. See the repo's own `.env.example`
+> for variable names; real values live only in the server's untracked
+> `.env.local` / `.env.production`. This block was removed by the fleet
+> secret-scrub (blueprint minus secrets).
 
 ### FILE: .gitignore
 ```text
@@ -2331,8 +2323,8 @@ RUN npm install -g pnpm && \
 COPY . .
 
 # Build the application
-ARG GEMINI_API_KEY=[REDACTED_CREDENTIAL]
-ENV GEMINI_API_KEY=[REDACTED_CREDENTIAL]
+ARG GEMINI_API_KEY=<REDACTED>
+ENV GEMINI_API_KEY=<REDACTED>
 RUN npm run build
 
 # Stage 2: Runtime (nginx static server)
@@ -2482,7 +2474,7 @@ cd patois-lyricist-v2.0.0
 # Copy and configure .env file
 cp .env.example .env.local
 # Edit .env.local and add your Gemini API key:
-#   GEMINI_API_KEY=[REDACTED_CREDENTIAL]
+#   GEMINI_API_KEY=<REDACTED>
 ```
 
 ### 2. Build & Start Container
@@ -2528,7 +2520,7 @@ docker-compose down --rmi unused --volumes
 cd patois-lyricist-v2.0.0
 
 # Build with API key baked in (less secure)
-docker build --build-arg GEMINI_API_KEY=[REDACTED_CREDENTIAL]
+docker build --build-arg GEMINI_API_KEY=<REDACTED>
 
 # Or build without key (set at runtime)
 docker build -t patois-lyricist:v2.0.0 .
@@ -2541,14 +2533,14 @@ docker build -t patois-lyricist:v2.0.0 .
 docker run -d \
   --name patois-v2 \
   -p 3000:80 \
-  -e GEMINI_API_KEY=[REDACTED_CREDENTIAL]
+  -e GEMINI_API_KEY=<REDACTED>
   patois-lyricist:v2.0.0
 
 # With custom restart policy and memory limits
 docker run -d \
   --name patois-v2 \
   -p 3000:80 \
-  -e GEMINI_API_KEY=[REDACTED_CREDENTIAL]
+  -e GEMINI_API_KEY=<REDACTED>
   --restart unless-stopped \
   --memory=512m \
   --cpus=1 \
@@ -2685,7 +2677,7 @@ docker service create \
   --name patois-lyricist \
   --replicas 3 \
   -p 80:80 \
-  --env GEMINI_API_KEY=[REDACTED_CREDENTIAL]
+  --env GEMINI_API_KEY=<REDACTED>
   your-registry/patois-lyricist:v2.0.0
 
 # View service status
@@ -2710,7 +2702,7 @@ docker service rm patois-lyricist
 ```bash
 # Option 1: Docker Compose secrets (Swarm/K8s)
 # Option 2: Environment file at runtime
-docker run -e GEMINI_API_KEY=[REDACTED_CREDENTIAL]
+docker run -e GEMINI_API_KEY=<REDACTED>
 
 # Option 3: Docker BuildKit with secrets
 docker build --secret gemini_key=/path/to/key -t patois:v2 .
@@ -2818,7 +2810,7 @@ docker run -p 8080:80 patois-lyricist:v2.0.0
 docker exec patois-v2 env | grep GEMINI
 
 # Check if API key is being passed correctly
-docker run -e GEMINI_API_KEY=[REDACTED_CREDENTIAL]
+docker run -e GEMINI_API_KEY=<REDACTED>
 ```
 
 ### Health Check Failing
@@ -2931,7 +2923,7 @@ Add BuildKit secret support for better secret handling in production:
 ```dockerfile
 # Build with: docker build --secret gemini_key=/path/to/key -t patois:v2 .
 RUN --mount=type=secret,id=gemini_key \
-    export GEMINI_API_KEY=[REDACTED_CREDENTIAL]
+    export GEMINI_API_KEY=<REDACTED>
     npm run build
 ```
 

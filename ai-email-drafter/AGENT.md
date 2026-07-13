@@ -927,7 +927,7 @@ The application requires a Gemini API key to function. This key must be provided
 2.  Add your Gemini API key to this file:
 
     ```
-    API_KEY=[REDACTED_CREDENTIAL]
+    API_KEY=<REDACTED>
     ```
 
 **IMPORTANT**: Never commit the `.env.production` file or your API key directly to your Git repository. Add `.env.production` to your `.gitignore` file. Most deployment platforms provide a secure way to manage environment variables.
@@ -1312,7 +1312,7 @@ The application requires a Gemini API key to function. This key must be provided
 2.  Add your Gemini API key to this file:
 
     ```
-    API_KEY=[REDACTED_CREDENTIAL]
+    API_KEY=<REDACTED>
     ```
 
 **IMPORTANT**: Never commit the `.env.production` file or your API key directly to your Git repository. Add `.env.production` to your `.gitignore` file. Most deployment platforms provide a secure way to manage environment variables.

@@ -21,11 +21,12 @@ pnpm-debug.log*
 
 ```
 
-### FILE: .env
-```text
-PUBLIC_URL=/kanban-app/
+### FILE: (environment files omitted)
 
-```
+> Environment files are never committed. See the repo's own `.env.example`
+> for variable names; real values live only in the server's untracked
+> `.env.local` / `.env.production`. This block was removed by the fleet
+> secret-scrub (blueprint minus secrets).
 
 ### FILE: .gitignore
 ```text
@@ -72,7 +73,7 @@ NODE_ENV=development
 DATABASE_URL=postgresql://user:password@localhost:5432/kanban_db
 
 # JWT Configuration
-JWT_SECRET=[REDACTED_CREDENTIAL]
+JWT_SECRET=<REDACTED>
 JWT_EXPIRES_IN=24h
 
 # CORS Configuration
@@ -279,7 +280,7 @@ docker run -p 3001:3001 --env-file .env kanban-backend
 PORT=3001
 NODE_ENV=development
 DATABASE_URL=postgresql://user:password@localhost:5432/kanban_db
-JWT_SECRET=[REDACTED_CREDENTIAL]
+JWT_SECRET=<REDACTED>
 JWT_EXPIRES_IN=24h
 FRONTEND_URL=http://localhost:5173
 RATE_LIMIT_WINDOW_MS=900000

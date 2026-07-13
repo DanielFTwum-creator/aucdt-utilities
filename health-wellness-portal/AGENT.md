@@ -32,15 +32,12 @@ playwright-report
 
 ```
 
-### FILE: .env.example
-```text
-PORT=4054
-DB_HOST=localhost
-DB_USER=appuser
-DB_PASSWORD=[REDACTED_CREDENTIAL]
-DB_NAME=health_wellness
+### FILE: (environment files omitted)
 
-```
+> Environment files are never committed. See the repo's own `.env.example`
+> for variable names; real values live only in the server's untracked
+> `.env.local` / `.env.production`. This block was removed by the fleet
+> secret-scrub (blueprint minus secrets).
 
 ### FILE: backend/.env.example
 ```text
@@ -52,7 +49,7 @@ NODE_ENV=development
 DATABASE_URL=postgresql://user:password@localhost:5432/health_wellness_portal_db
 
 # JWT Configuration
-JWT_SECRET=[REDACTED_CREDENTIAL]
+JWT_SECRET=<REDACTED>
 JWT_EXPIRES_IN=24h
 
 # CORS Configuration

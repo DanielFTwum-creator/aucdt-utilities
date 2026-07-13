@@ -1574,7 +1574,7 @@ const mysql = require('mysql2/promise');
 const PORT = process.env.PORT || 4018;
 const DB_HOST = process.env.DB_HOST || 'localhost';
 const DB_USER = process.env.DB_USER || 'appuser';
-const DB_PASSWORD = [REDACTED_CREDENTIAL]
+const DB_PASSWORD = <REDACTED>
 const DB_NAME = process.env.DB_NAME || 'lead_generation';
 
 let pool;

@@ -22,33 +22,12 @@ tests
 
 ```
 
-### FILE: .env.capacitor
-```text
-VITE_BUILD_TARGET=capacitor
+### FILE: (environment files omitted)
 
-```
-
-### FILE: .env.example
-```text
-# GEMINI_API_KEY: Required for Gemini AI API calls.
-# AI Studio automatically injects this at runtime from user secrets.
-# Users configure this via the Secrets panel in the AI Studio UI.
-GEMINI_API_KEY=[REDACTED_CREDENTIAL]
-
-# APP_URL: The URL where this applet is hosted.
-# AI Studio automatically injects this at runtime with the Cloud Run service URL.
-# Used for self-referential links, OAuth callbacks, and API endpoints.
-APP_URL="MY_APP_URL"
-
-# Admin Panel Access
-# Set this to enable the admin diagnostics panel
-# VITE_ADMIN_PASSWORD=[REDACTED_CREDENTIAL]
-
-# Build Target
-# Set to 'capacitor' when building for mobile (uses relative base path)
-# VITE_BUILD_TARGET=
-
-```
+> Environment files are never committed. See the repo's own `.env.example`
+> for variable names; real values live only in the server's untracked
+> `.env.local` / `.env.production`. This block was removed by the fleet
+> secret-scrub (blueprint minus secrets).
 
 ### FILE: .gitignore
 ```text
@@ -252,7 +231,7 @@ Located in `src/lib/video-export.ts` (`exportViaMediaRecorder`)
 
 ### `.env.example`
 ```
-GEMINI_API_KEY=[REDACTED_CREDENTIAL]
+GEMINI_API_KEY=<REDACTED>
 APP_URL=<cloud-run-url>           # For API redirects
 VITE_ADMIN_PASSWORD=[REDACTED_CREDENTIAL]
 VITE_BUILD_TARGET=capacitor       # Set for mobile builds
@@ -582,7 +561,7 @@ http://your-server/api/generate     # PDF/PNG API
 
 ```bash
 # Optional: Set environment variables
-export GEMINI_API_KEY=[REDACTED_CREDENTIAL]
+export GEMINI_API_KEY=<REDACTED>
 
 docker-compose up -d
 ```
@@ -4073,7 +4052,7 @@ techbridge-poster-studio/
 ### Development
 - `.env.local` (git-ignored):
   ```
-  GEMINI_API_KEY=[REDACTED_CREDENTIAL]
+  GEMINI_API_KEY=<REDACTED>
   ```
 
 ### Production (Server)

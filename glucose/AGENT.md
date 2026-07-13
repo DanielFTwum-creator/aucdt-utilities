@@ -3,39 +3,12 @@
 > [!IMPORTANT]
 > This is an auto-generated monolithic blueprint containing the source code for glucose.
 
-### FILE: .env.development.local
-```text
-VITE_GOOGLE_CLIENT_ID=[REDACTED_CREDENTIAL]
-VITE_GOOGLE_REDIRECT_URI=http://localhost:3001/auth/google/callback
-VITE_GEMINI_API_KEY=[REDACTED_CREDENTIAL]
+### FILE: (environment files omitted)
 
-```
-
-### FILE: .env.example
-```text
-# VITE_GEMINI_API_KEY: Required for Gemini AI image scanning.
-# In development: set in .env.local
-# In AI Studio: automatically injected from user secrets
-# In aistudiocdn.com: automatically injected at build time
-VITE_GEMINI_API_KEY=[REDACTED_CREDENTIAL]
-
-# Google OAuth client-side popup flow.
-VITE_GOOGLE_CLIENT_ID=[REDACTED_CREDENTIAL]
-VITE_GOOGLE_REDIRECT_URI="https://ai-tools.techbridge.edu.gh/glucose/auth/google/callback"
-
-# APP_URL: The URL where this applet is hosted.
-# AI Studio automatically injects this at runtime with the Cloud Run service URL.
-# Used for self-referential links, OAuth callbacks, and API endpoints.
-APP_URL="MY_APP_URL"
-
-```
-
-### FILE: .env.local
-```text
-VITE_GOOGLE_CLIENT_ID=[REDACTED_CREDENTIAL]
-VITE_GOOGLE_REDIRECT_URI=https://ai-tools.techbridge.edu.gh/glucose/auth/google/callback
-VITE_GEMINI_API_KEY=[REDACTED_CREDENTIAL]
-```
+> Environment files are never committed. See the repo's own `.env.example`
+> for variable names; real values live only in the server's untracked
+> `.env.local` / `.env.production`. This block was removed by the fleet
+> secret-scrub (blueprint minus secrets).
 
 ### FILE: .gitignore
 ```text
@@ -89,8 +62,8 @@ pnpm build
 ## Pre-Deployment Setup
 
 1. **Ensure GEMINI_API_KEY is configured**
-   - For local development: create `.env.local` with `GEMINI_API_KEY=[REDACTED_CREDENTIAL]
-   - For Docker: pass as build argument `--build-arg GEMINI_API_KEY=[REDACTED_CREDENTIAL]
+   - For local development: create `.env.local` with `GEMINI_API_KEY=<REDACTED>
+   - For Docker: pass as build argument `--build-arg GEMINI_API_KEY=<REDACTED>
    - For static hosting: configure at runtime or in environment
 
 2. **Build size verification**
@@ -113,7 +86,7 @@ npm i -g vercel
 vercel
 
 # Set environment variable in dashboard
-# GEMINI_API_KEY=[REDACTED_CREDENTIAL]
+# GEMINI_API_KEY=<REDACTED>
 ```
 
 #### Netlify
@@ -139,7 +112,7 @@ git push
 ```bash
 # Build image
 docker build -t rophe-sugar-logger \
-  --build-arg GEMINI_API_KEY=[REDACTED_CREDENTIAL]
+  --build-arg GEMINI_API_KEY=<REDACTED>
 
 # Run container
 docker run -p 3000:80 rophe-sugar-logger
@@ -155,16 +128,16 @@ services:
     build:
       context: .
       args:
-        GEMINI_API_KEY: ${GEMINI_API_KEY}
+        GEMINI_API_KEY: <REDACTED>
     ports:
       - "80:80"
     environment:
-      - GEMINI_API_KEY=[REDACTED_CREDENTIAL]
+      - GEMINI_API_KEY=<REDACTED>
 ```
 
 Run with:
 ```bash
-GEMINI_API_KEY=[REDACTED_CREDENTIAL]
+GEMINI_API_KEY=<REDACTED>
 ```
 
 ### Option 3: Traditional Server (Node.js)
@@ -258,7 +231,7 @@ EOF
 
 **"Cannot find GEMINI_API_KEY"**
 - Ensure the environment variable is set before build/run
-- For Docker: use `--build-arg GEMINI_API_KEY=[REDACTED_CREDENTIAL]
+- For Docker: use `--build-arg GEMINI_API_KEY=<REDACTED>
 - For static hosting: configure in provider's dashboard
 
 **"IndexedDB not working"**
@@ -615,8 +588,8 @@ COPY package.json pnpm-lock.yaml ./
 RUN pnpm install --frozen-lockfile
 
 COPY . .
-ARG GEMINI_API_KEY=[REDACTED_CREDENTIAL]
-ENV GEMINI_API_KEY=[REDACTED_CREDENTIAL]
+ARG GEMINI_API_KEY=<REDACTED>
+ENV GEMINI_API_KEY=<REDACTED>
 RUN pnpm build
 
 # Production stage
@@ -667,7 +640,7 @@ The Glucose app uses Google's Gemini 3.1 Pro Vision API to extract glucose readi
 2. **Generate API key** (no project required for free tier)
 3. **Add to .env.local:**
    ```bash
-   VITE_GEMINI_API_KEY=[REDACTED_CREDENTIAL]
+   VITE_GEMINI_API_KEY=<REDACTED>
    ```
 4. **Build and deploy:**
    ```bash
@@ -1867,7 +1840,7 @@ pnpm run deploy:verify
 
 ```bash
 # .env.local (not committed, local only)
-VITE_GEMINI_API_KEY=[REDACTED_CREDENTIAL]
+VITE_GEMINI_API_KEY=<REDACTED>
 ```
 
 **How to get API key:**
@@ -3350,7 +3323,7 @@ pnpm install
 
 # Create environment file
 cat > .env.local <<EOF
-VITE_GEMINI_API_KEY=[REDACTED_CREDENTIAL]
+VITE_GEMINI_API_KEY=<REDACTED>
 EOF
 
 # Start development server
@@ -5076,12 +5049,12 @@ Nginx (Reverse Proxy)
 
 The backend reads from `.env.local`:
 ```
-VITE_ANTHROPIC_API_KEY=[REDACTED_CREDENTIAL]
+VITE_ANTHROPIC_API_KEY=<REDACTED>
 ```
 
 **Important:** Never commit `.env.local` to git. Set it on the production server:
 ```bash
-echo "VITE_ANTHROPIC_API_KEY=[REDACTED_CREDENTIAL]
+echo "VITE_ANTHROPIC_API_KEY=<REDACTED>
 chmod 600 .env.local
 ```
 

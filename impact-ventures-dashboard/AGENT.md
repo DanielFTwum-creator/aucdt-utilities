@@ -3,27 +3,12 @@
 > [!IMPORTANT]
 > This is an auto-generated monolithic blueprint containing the source code for impact-ventures-dashboard.
 
-### FILE: .env.example
-```text
-# GEMINI_API_KEY: Required for Gemini AI API calls.
-# AI Studio automatically injects this at runtime from user secrets.
-# Users configure this via the Secrets panel in the AI Studio UI.
-GEMINI_API_KEY=[REDACTED_CREDENTIAL]
+### FILE: (environment files omitted)
 
-# APP_URL: The URL where this applet is hosted.
-# AI Studio automatically injects this at runtime with the Cloud Run service URL.
-# Used for self-referential links, OAuth callbacks, and API endpoints.
-APP_URL="MY_APP_URL"
-
-```
-
-### FILE: .env.local
-```text
-# Local-only — gitignored. Do not commit.
-# Paste your rotated Gemini API key below (no quotes needed, no spaces).
-GEMINI_API_KEY=[REDACTED_CREDENTIAL]
-
-```
+> Environment files are never committed. See the repo's own `.env.example`
+> for variable names; real values live only in the server's untracked
+> `.env.local` / `.env.production`. This block was removed by the fleet
+> secret-scrub (blueprint minus secrets).
 
 ### FILE: .gitignore
 ```text
@@ -201,14 +186,14 @@ All significant actions are logged automatically:
 ```bash
 cd impact-ventures-dashboard
 pnpm install
-GEMINI_API_KEY=[REDACTED_CREDENTIAL]
+GEMINI_API_KEY=<REDACTED>
 # Opens at http://localhost:5173
 ```
 
 ## Production Build
 
 ```bash
-GEMINI_API_KEY=[REDACTED_CREDENTIAL]
+GEMINI_API_KEY=<REDACTED>
 # Output: dist/
 ```
 
@@ -216,7 +201,7 @@ GEMINI_API_KEY=[REDACTED_CREDENTIAL]
 
 ```bash
 docker build -t impact-ventures-dashboard .
-docker run -p 80:80 -e GEMINI_API_KEY=[REDACTED_CREDENTIAL]
+docker run -p 80:80 -e GEMINI_API_KEY=<REDACTED>
 ```
 
 ### Docker Compose (monorepo)

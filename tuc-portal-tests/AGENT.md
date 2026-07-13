@@ -32,48 +32,12 @@ playwright-report
 
 ```
 
-### FILE: .env.example
-```text
-# Environment Variables Template
-# Copy this file to .env and fill in your actual values
+### FILE: (environment files omitted)
 
-# Application URLs
-BASE_URL=https://portal.aucdt.edu.gh/admissions-qa/#/
-LOGIN_URL=https://portal.aucdt.edu.gh/admissions-qa/#/main-applcation-login
-
-# Test Credentials (use test accounts, never production credentials)
-TEST_USERNAME=your_test_username
-TEST_PASSWORD=[REDACTED_CREDENTIAL]
-TEST_EMAIL=your_test_email@example.com
-
-# Test Configuration
-HEADLESS=true
-TIMEOUT=30000
-RETRY_COUNT=2
-
-# Browser Configuration
-BROWSER=chromium
-SLOW_MO=0
-
-# Screenshot and Video
-SCREENSHOT_ON_FAILURE=true
-VIDEO_ON_FAILURE=true
-
-# Reporting
-REPORT_DIR=test-results
-SCREENSHOT_DIR=test-results/screenshots
-
-# CI/CD
-CI=false
-
-# Database Configuration (optional, for test data management)
-DB_HOST=localhost
-DB_PORT=3306
-DB_NAME=test_db
-DB_USER=test_user
-DB_PASSWORD=[REDACTED_CREDENTIAL]
-
-```
+> Environment files are never committed. See the repo's own `.env.example`
+> for variable names; real values live only in the server's untracked
+> `.env.local` / `.env.production`. This block was removed by the fleet
+> secret-scrub (blueprint minus secrets).
 
 ### FILE: .gitignore
 ```text
@@ -147,7 +111,7 @@ NODE_ENV=development
 DATABASE_URL=postgresql://user:password@localhost:5432/tuc_portal_tests_db
 
 # JWT Configuration
-JWT_SECRET=[REDACTED_CREDENTIAL]
+JWT_SECRET=<REDACTED>
 JWT_EXPIRES_IN=24h
 
 # CORS Configuration
@@ -652,7 +616,7 @@ export const ENV = {
   DB_PORT: process.env.DB_PORT,
   DB_NAME: process.env.DB_NAME,
   DB_USER: process.env.DB_USER,
-  DB_PASSWORD: process.env.DB_PASSWORD,
+  DB_PASSWORD: <REDACTED>
 };
 
 export default ENV;
@@ -1856,7 +1820,7 @@ const mysql = require('mysql2/promise');
 const PORT = process.env.PORT || 4037;
 const DB_HOST = process.env.DB_HOST || 'localhost';
 const DB_USER = process.env.DB_USER || 'appuser';
-const DB_PASSWORD = [REDACTED_CREDENTIAL]
+const DB_PASSWORD = <REDACTED>
 const DB_NAME = process.env.DB_NAME || 'test_management';
 
 let pool;

@@ -3,12 +3,12 @@
 > [!IMPORTANT]
 > This is an auto-generated monolithic blueprint containing the source code for modern-product-development-lifecycle.
 
-### FILE: .env.local
-```text
-GEMINI_API_KEY=[REDACTED_CREDENTIAL]
-VITE_GEMINI_API_KEY=[REDACTED_CREDENTIAL]
+### FILE: (environment files omitted)
 
-```
+> Environment files are never committed. See the repo's own `.env.example`
+> for variable names; real values live only in the server's untracked
+> `.env.local` / `.env.production`. This block was removed by the fleet
+> secret-scrub (blueprint minus secrets).
 
 ### FILE: .gitignore
 ```text
@@ -1795,7 +1795,7 @@ The application requires your Google Gemini API key to be available as an enviro
 2.  Add the following line to the file, replacing `YOUR_GEMINI_API_KEY` with your actual key:
 
     ```
-    REACT_APP_API_KEY=[REDACTED_CREDENTIAL]
+    REACT_APP_API_KEY=<REDACTED>
     ```
 
     *Note: The `REACT_APP_` prefix is a convention for Create React App and other frameworks to expose the variable to the client-side code. If you are using a different build tool like Vite, the variable name might be `VITE_API_KEY`.*
@@ -2176,7 +2176,7 @@ The application requires your Google Gemini API key to be available as an enviro
 2.  Add the following line to the file, replacing `YOUR_GEMINI_API_KEY` with your actual key:
 
     ```
-    REACT_APP_API_KEY=[REDACTED_CREDENTIAL]
+    REACT_APP_API_KEY=<REDACTED>
     ```
 
     *Note: The `REACT_APP_` prefix is a convention for Create React App and other frameworks to expose the variable to the client-side code. If you are using a different build tool like Vite, the variable name might be `VITE_API_KEY`.*

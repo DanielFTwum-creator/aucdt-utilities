@@ -71,7 +71,7 @@ NODE_ENV=development
 DATABASE_URL=postgresql://user:password@localhost:5432/dns_copy_utility_db
 
 # JWT Configuration
-JWT_SECRET=[REDACTED_CREDENTIAL]
+JWT_SECRET=<REDACTED>
 JWT_EXPIRES_IN=24h
 
 # CORS Configuration

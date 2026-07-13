@@ -3,25 +3,12 @@
 > [!IMPORTANT]
 > This is an auto-generated monolithic blueprint containing the source code for markai.
 
-### FILE: .env.example
-```text
-API_KEY=
-[REDACTED_CREDENTIAL]
-GOOGLE_CLIENT_SECRET=
+### FILE: (environment files omitted)
 
-[REDACTED_CREDENTIAL]
-
-### FILE: .env.local
-```text
-# AI Configuration for MarkAI
-API_KEY=[REDACTED_CREDENTIAL]
-GOOGLE_CLIENT_ID=[REDACTED_CREDENTIAL]
-GOOGLE_CLIENT_SECRET=[REDACTED_CREDENTIAL]
-VITE_GOOGLE_CLIENT_ID=[REDACTED_CREDENTIAL]
-VITE_GOOGLE_REDIRECT_URI=https://ai-tools.techbridge.edu.gh/markai/auth/google/callback
-PORT=3000
-
-```
+> Environment files are never committed. See the repo's own `.env.example`
+> for variable names; real values live only in the server's untracked
+> `.env.local` / `.env.production`. This block was removed by the fleet
+> secret-scrub (blueprint minus secrets).
 
 ### FILE: App.tsx
 ```typescript
@@ -5658,7 +5645,7 @@ The backend server requires a Google Gemini API key to function.
 2.  Add your API key to this file:
 
     ```
-    API_KEY=[REDACTED_CREDENTIAL]
+    API_KEY=<REDACTED>
     ```
 
 ### 3. Running the Application
@@ -5775,7 +5762,7 @@ app.post('/api/auth/google/exchange', async (req, res) => {
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       body: new URLSearchParams({
         client_id: process.env.GOOGLE_CLIENT_ID,
-        client_secret: process.env.GOOGLE_CLIENT_SECRET,
+        client_secret: <REDACTED>
         code,
         grant_type: 'authorization_code',
         redirect_uri: redirectUri,

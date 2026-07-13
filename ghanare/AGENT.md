@@ -993,7 +993,7 @@ The application requires a Gemini API key for the AI-Powered Trip Suggestions fe
 2.  Add your Gemini API key to this file:
 
     ```
-    API_KEY=[REDACTED_CREDENTIAL]
+    API_KEY=<REDACTED>
     ```
 
 **IMPORTANT**: Never commit the `.env` file or your API key directly to your Git repository. Add `.env` to your `.gitignore` file. Most deployment platforms provide a secure way to manage environment variables.

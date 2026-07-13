@@ -42,7 +42,7 @@ NODE_ENV=development
 DATABASE_URL=postgresql://user:password@localhost:5432/internship_program_db
 
 # JWT Configuration
-JWT_SECRET=[REDACTED_CREDENTIAL]
+JWT_SECRET=<REDACTED>
 JWT_EXPIRES_IN=24h
 
 # CORS Configuration
@@ -715,7 +715,7 @@ const mysql = require('mysql2/promise');
 const PORT = process.env.PORT || 4058;
 const DB_HOST = process.env.DB_HOST || 'localhost';
 const DB_USER = process.env.DB_USER || 'appuser';
-const DB_PASSWORD = [REDACTED_CREDENTIAL]
+const DB_PASSWORD = <REDACTED>
 const DB_NAME = process.env.DB_NAME || 'internship_program';
 
 let pool;

@@ -2175,12 +2175,12 @@ The backend server (`server.js`) requires several environment variables to run c
     # Database Configuration
     DB_HOST="localhost"
     DB_USER="msee_user"
-    DB_PASSWORD=[REDACTED_CREDENTIAL]
+    DB_PASSWORD=<REDACTED>
     DB_NAME="msee_test_db"
 
     # Application Secrets
-    JWT_SECRET=[REDACTED_CREDENTIAL]
-    API_KEY=[REDACTED_CREDENTIAL]
+    JWT_SECRET=<REDACTED>
+    API_KEY=<REDACTED>
     ```
     *   **IMPORTANT**: Ensure the `.gitignore` file contains `.env` to prevent committing secrets to version control.
 

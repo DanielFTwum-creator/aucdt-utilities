@@ -32,11 +32,12 @@ playwright-report
 
 ```
 
-### FILE: .env.local
-```text
-GEMINI_API_KEY=[REDACTED_CREDENTIAL]
+### FILE: (environment files omitted)
 
-```
+> Environment files are never committed. See the repo's own `.env.example`
+> for variable names; real values live only in the server's untracked
+> `.env.local` / `.env.production`. This block was removed by the fleet
+> secret-scrub (blueprint minus secrets).
 
 ### FILE: .gitignore
 ```text
@@ -211,7 +212,7 @@ NODE_ENV=development
 DATABASE_URL=postgresql://user:password@localhost:5432/fees_comparison_dashboard_db
 
 # JWT Configuration
-JWT_SECRET=[REDACTED_CREDENTIAL]
+JWT_SECRET=<REDACTED>
 JWT_EXPIRES_IN=24h
 
 # CORS Configuration
@@ -1619,7 +1620,7 @@ Coverage target: â‰¥70% across branches/functions/lines/statements (TUC mono
 
 ```bash
 # .env.local
-GEMINI_API_KEY=[REDACTED_CREDENTIAL]
+GEMINI_API_KEY=<REDACTED>
 ```
 
 The Vite `define` block exposes `process.env.GEMINI_API_KEY` so any historical reference still resolves.
@@ -2998,7 +2999,7 @@ const mysql = require('mysql2/promise');
 const PORT = process.env.PORT || 4020;
 const DB_HOST = process.env.DB_HOST || 'localhost';
 const DB_USER = process.env.DB_USER || 'appuser';
-const DB_PASSWORD = [REDACTED_CREDENTIAL]
+const DB_PASSWORD = <REDACTED>
 const DB_NAME = process.env.DB_NAME || 'fees_comparison';
 
 let pool;

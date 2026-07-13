@@ -32,11 +32,12 @@ playwright-report
 
 ```
 
-### FILE: .env.local
-```text
-GEMINI_API_KEY=[REDACTED_CREDENTIAL]
+### FILE: (environment files omitted)
 
-```
+> Environment files are never committed. See the repo's own `.env.example`
+> for variable names; real values live only in the server's untracked
+> `.env.local` / `.env.production`. This block was removed by the fleet
+> secret-scrub (blueprint minus secrets).
 
 ### FILE: .gitignore
 ```text
@@ -1992,7 +1993,7 @@ npm install
 Create a file named `.env` in the project root. Add your Gemini API key to this file:
 
 ```
-VITE_API_KEY=[REDACTED_CREDENTIAL]
+VITE_API_KEY=<REDACTED>
 ```
 
 ### 4. Run the Application
@@ -2548,7 +2549,7 @@ const mysql = require('mysql2/promise');
 const PORT = process.env.PORT || 4040;
 const DB_HOST = process.env.DB_HOST || 'localhost';
 const DB_USER = process.env.DB_USER || 'appuser';
-const DB_PASSWORD = [REDACTED_CREDENTIAL]
+const DB_PASSWORD = <REDACTED>
 const DB_NAME = process.env.DB_NAME || 'content_generation';
 
 let pool;
@@ -3073,7 +3074,7 @@ The application requires a Google Gemini API key to function.
 2.  Add your API key to this file in the following format:
 
     ```
-    VITE_API_KEY=[REDACTED_CREDENTIAL]
+    VITE_API_KEY=<REDACTED>
     ```
 
     The Vite development server will automatically load this variable and make it available to the application.

@@ -32,11 +32,12 @@ playwright-report
 
 ```
 
-### FILE: .env
-```text
-VITE_GEMINI_API_KEY=[REDACTED_CREDENTIAL]
+### FILE: (environment files omitted)
 
-```
+> Environment files are never committed. See the repo's own `.env.example`
+> for variable names; real values live only in the server's untracked
+> `.env.local` / `.env.production`. This block was removed by the fleet
+> secret-scrub (blueprint minus secrets).
 
 ### FILE: .gitignore
 ```text
@@ -2494,7 +2495,7 @@ import { GoogleGenAI, Type } from "@google/genai";
 import { Question } from '../types';
 import { LLM_PROMPT } from '../constants';
 
-const API_KEY = [REDACTED_CREDENTIAL]
+const API_KEY = <REDACTED>
 
 if (!API_KEY) {
     throw new Error("Gemini API key is missing. Please set the GEMINI_API_KEY environment variable.");
