@@ -133,13 +133,16 @@ Log "INFO" "Step 4: Writing .htaccess..." Yellow
 
 Log "INFO" "Step 5: Setting permissions..." Yellow
 # Pattern 14: chown is safe; chmod -R on the full path strips execute from node_modules binaries.
-# Exclude node_modules from the find sweep.
-ssh -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax=3 $RemoteHost @"
+# Exclude node_modules from the find sweep. Base64 + CR-strip (as Steps 3/6/7 do) so a CRLF
+# checkout of this script can't leak a trailing \r into $RemotePath — that was breaking chown/find.
+$permCmd = @"
 chown -R techbridge.edu.gh_md:psaserv $RemotePath
 find $RemotePath -not -path '${RemotePath}node_modules/*' -type f -exec chmod 644 {} \;
 find $RemotePath -not -path '${RemotePath}node_modules/*' -type d -exec chmod 755 {} \;
 chmod 644 ${RemotePath}.htaccess 2>/dev/null; true
-"@ | Out-Null
+"@
+$b64p = [Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes($permCmd.Replace("`r", "")))
+ssh -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax=3 $RemoteHost "echo $b64p | base64 -d | bash" | Out-Null
 
 Log "INFO" "Step 6: Installing backend dependencies..." Yellow
 if (Test-Path ".env.local") { scp -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax=3 ".env.local" "${RemoteHost}:${RemotePath}.env" 2>$null | Out-Null }
