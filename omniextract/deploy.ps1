@@ -192,7 +192,10 @@ Remove-Item -Path $localHtaccess -Force -ErrorAction SilentlyContinue
 
 # Step 5: Server environment
 Log -Level 'INFO' -Msg 'Step 5: Configuring server environment...' -Color Yellow
-& $SSH @SSH_OPTS $REMOTE "cp /tmp/.env.omniextract ${DEPLOY_PATH}/.env; chown -R techbridge.edu.gh_md:psaserv ${DEPLOY_PATH} 2>/dev/null || true; find ${DEPLOY_PATH} -type d -exec chmod 755 {} \; 2>/dev/null || true; find ${DEPLOY_PATH} -type f -exec chmod 644 {} \; 2>/dev/null || true"
+# The build .env.local carries a possibly-stale GEMINI_PROXY_KEY. Strip it and
+# re-inject the live one from WMS custody (/opt/tuc-wms/.env), so a redeploy never
+# clobbers the rotated proxy key (used by both the Gemini and OAuth relays).
+& $SSH @SSH_OPTS $REMOTE "cp /tmp/.env.omniextract ${DEPLOY_PATH}/.env; sed -i '/^GEMINI_PROXY_KEY=/d' ${DEPLOY_PATH}/.env; grep -m1 '^GEMINI_PROXY_KEY=' /opt/tuc-wms/.env >> ${DEPLOY_PATH}/.env; chown -R techbridge.edu.gh_md:psaserv ${DEPLOY_PATH} 2>/dev/null || true; find ${DEPLOY_PATH} -type d -exec chmod 755 {} \; 2>/dev/null || true; find ${DEPLOY_PATH} -type f -exec chmod 644 {} \; 2>/dev/null || true"
 
 # Step 6: Restart backend
 Log -Level 'INFO' -Msg 'Step 6: Restarting backend...' -Color Yellow
