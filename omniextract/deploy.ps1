@@ -199,7 +199,11 @@ Log -Level 'INFO' -Msg 'Step 5: Configuring server environment...' -Color Yellow
 
 # Step 6: Restart backend
 Log -Level 'INFO' -Msg 'Step 6: Restarting backend...' -Color Yellow
-$pm2Result = & $SSH @SSH_OPTS $REMOTE "if pm2 describe ${PM2_APP} > /dev/null 2>&1; then pm2 reload ${PM2_APP} --update-env; echo 'pm2: reloaded ${PM2_APP}'; else cd ${DEPLOY_PATH}; NODE_ENV=production PORT=${PORT} pm2 start server.ts --name ${PM2_APP} --interpreter npx --interpreter-args tsx --cwd ${DEPLOY_PATH}; echo 'pm2: started ${PM2_APP}'; fi; pm2 save > /dev/null 2>&1"
+# Pattern 23 hard restart (delete + fresh start), NOT reload/--update-env: dotenv
+# won't override a value pm2 already has in the process env, so a soft reload keeps
+# a stale GEMINI_PROXY_KEY. A clean start makes dotenv re-read the injected .env.
+# Interpreter is the local tsx binary (not the runner) to avoid cold-resolve flaking.
+$pm2Result = & $SSH @SSH_OPTS $REMOTE "pm2 delete ${PM2_APP} > /dev/null 2>&1 || true; cd ${DEPLOY_PATH}; NODE_ENV=production PORT=${PORT} pm2 start server.ts --name ${PM2_APP} --interpreter ${DEPLOY_PATH}/node_modules/.bin/tsx --cwd ${DEPLOY_PATH}; echo 'pm2: hard restart (Pattern 23)'; pm2 save > /dev/null 2>&1"
 Write-Host $pm2Result -ForegroundColor DarkGray
 
 # Health checks
