@@ -2427,3 +2427,66 @@ a masked install — the first move is always to **un-mask it**.
 `pnpm install` (non-silent) ends with `Done`, **no** `Ignored build scripts` line and
 **no** release-age violation. On the server the `-Build` clears `[4/7]` and reaches
 `[5/7] Building`. Grep the whole install output for `ERR_PNPM_` before trusting a green.
+
+---
+
+## PATTERN 35: MIGRATE A SELF-EXCHANGING APP TO THE WMS OAUTH RELAY
+
+**Context.** Many fleet apps do their own Google OAuth code→token exchange, holding
+`GOOGLE_CLIENT_SECRET` in their `.env`. That means a client-secret rotation must touch
+every app. WMS exposes a relay (`POST /api/oauth/google/exchange`, controller-auth via
+`X-Gemini-Proxy-Key`, permitted in `SecurityConfig`) that does the exchange centrally and
+returns Google's token response **verbatim**. Migrating an app to it removes the secret
+from that app for good, so future rotations only ever touch `/opt/tuc-wms/.env`.
+
+**Prerequisite (verify, don't assume).** The app's "Sign in with Google" button must use
+the **same shared client id** WMS holds (`grep '^GOOGLE_CLIENT_ID=' /opt/tuc-wms/.env`).
+Google ties the auth code to the requesting client, so a code from a *different* client id
+will fail the exchange at WMS. The whole fleet currently shares one client id.
+
+### The code change (server.ts / server.js / server.cjs)
+
+Replace the direct-to-Google exchange:
+```ts
+// BEFORE — app holds the secret
+const r = await fetch('https://oauth2.googleapis.com/token', { method:'POST',
+  headers:{'Content-Type':'application/json'},
+  body: JSON.stringify({ client_id, client_secret: GOOGLE_CLIENT_SECRET, code,
+                         grant_type:'authorization_code', redirect_uri: REDIRECT_URI }) });
+// AFTER — relay through WMS; response shape is identical, downstream code unchanged
+const proxyKey = process.env.GEMINI_PROXY_KEY;
+const r = await fetch(`${WMS}/api/oauth/google/exchange`, { method:'POST',
+  headers:{'Content-Type':'application/json','X-Gemini-Proxy-Key': proxyKey},
+  body: JSON.stringify({ code, redirectUri: REDIRECT_URI }) });
+```
+Then drop `GOOGLE_CLIENT_SECRET` (const + any startup guard). Keep `GOOGLE_CLIENT_ID`
+(public, still used for the authorization request). Apps already relaying Gemini have
+`WMS` and `GEMINI_PROXY_KEY` in scope.
+
+### The deploy must also do BOTH of these (this is where omniextract fought back)
+
+The migration is only live if the runtime `.env` carries the correct proxy key **and** the
+process actually re-reads it. Three independent layers each failed once:
+
+1. **Stale env clobber.** A deploy that ships the build `.env.local` as the runtime `.env`
+   overwrites the rotated `GEMINI_PROXY_KEY`. Re-inject WMS's live key after the copy.
+2. **BOM/CR in the extracted value (Pattern 21).** A naive `grep '^KEY=' wms.env >> app.env`
+   can carry a BOM/CR into the value → `matchesProxyKey` (exact byte compare) fails. Extract
+   the value and strip it:
+   ```bash
+   K=$(grep '^GEMINI_PROXY_KEY=' /opt/tuc-wms/.env | head -1 | cut -d= -f2- | tr -d '\r\000' | LC_ALL=C sed 's/\xef\xbb\xbf//g')
+   sed -i '/^GEMINI_PROXY_KEY=/d' "$DEPLOY/.env"; [ -n "$K" ] && printf 'GEMINI_PROXY_KEY=%s\n' "$K" >> "$DEPLOY/.env"
+   ```
+3. **dotenv/pm2 env shadow (Pattern 23).** `dotenv.config()` does NOT override a value pm2
+   already has in the process env, and `pm2 reload`/`restart --update-env` reuses pm2's saved
+   env. So a fixed `.env` is ignored until a **hard restart** (`pm2 delete` + fresh `pm2 start`).
+
+### Verify
+
+`echo "wrote (len=64)"` on inject; a byte-match of the app's `.env` value vs WMS's; then a
+**real browser login** (OAuth can't be curled). Success = the app redirects to its callback
+with a session, no `token_exchange_failed` / `Unauthorised: ...Proxy-Key`. Watch WMS with
+`journalctl -u tuc-wms -f` and the app with `pm2 logs <app>` during the attempt.
+
+**Origin:** omniextract, 2026-07-14 — first app migrated off self-exchange; the three deploy
+layers above each broke the login in turn before it went green.
