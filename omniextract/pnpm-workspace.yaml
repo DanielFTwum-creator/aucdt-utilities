@@ -1,3 +1,8 @@
-onlyBuiltDependencies:
-  - core-js
-  - esbuild
+# pnpm 11 removed onlyBuiltDependencies/neverBuiltDependencies; build-script
+# approval now lives in the allowBuilds map (Pattern 18). Every package with a
+# build script must be decided (true/false) or pnpm 11 errors ERR_PNPM_IGNORED_BUILDS.
+allowBuilds:
+  esbuild: true    # vite's bundler
+  core-js: false   # postinstall is only a funding notice
+  cypress: false   # dev/test tool, not needed for the build
+  canvas: false    # not imported by this app; avoid a native build on missing libs
