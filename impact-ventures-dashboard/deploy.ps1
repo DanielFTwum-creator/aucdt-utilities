@@ -98,7 +98,7 @@ Write-Host $envInject -ForegroundColor DarkGray
 if ($envInject -match 'WARN') { Log -Level 'ERROR' -Msg 'GEMINI_PROXY_KEY unavailable — AI routes would 503. Aborting.' -Color Red; exit 1 }
 
 Log -Level 'INFO' -Msg 'Step 5: Restarting backend...' -Color Yellow
-$r=& $SSH @SSH_OPTS $REMOTE "pm2 delete ${PM2_APP} >/dev/null 2>&1 || true; cd ${DEPLOY_PATH}; NODE_ENV=production PORT=${PORT} pm2 start server.ts --name ${PM2_APP} --interpreter npx --interpreter-args tsx --cwd ${DEPLOY_PATH}; pm2 save --force >/dev/null 2>&1 || true; echo 'pm2: hard restart (Pattern 23)'"
+$r=& $SSH @SSH_OPTS $REMOTE "pm2 delete ${PM2_APP} >/dev/null 2>&1 || true; cd ${DEPLOY_PATH}; NODE_ENV=production PORT=${PORT} pm2 start server.ts --name ${PM2_APP} --interpreter ${DEPLOY_PATH}/node_modules/.bin/tsx --cwd ${DEPLOY_PATH}; pm2 save --force >/dev/null 2>&1 || true; echo 'pm2: hard restart (Pattern 23)'"
 Write-Host $r -ForegroundColor DarkGray
 
 Log -Level 'INFO' -Msg 'Health checks...' -Color Yellow; Start-Sleep -Seconds 8
