@@ -11,7 +11,9 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const PORT = Number(process.env.PORT) || 3005;
 const GOOGLE_CLIENT_ID     = process.env.VITE_GOOGLE_CLIENT_ID     || '';
-const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET       || '';
+// GOOGLE_CLIENT_SECRET removed: the code->token exchange is relayed to WMS
+// (/api/oauth/google/exchange, Pattern 11 extended to OAuth). This app never
+// holds the client secret; WMS does the exchange with its own copy.
 const REDIRECT_URI         = process.env.VITE_GOOGLE_REDIRECT_URI   || 'https://ai-tools.techbridge.edu.gh/omniextract/callback';
 
 // Phase 2 migration: OmniExtract no longer calls Gemini directly and no longer
@@ -54,8 +56,8 @@ const invoiceSchema = {
 
 const SYSTEM_PROMPT = `You are an expert invoice and receipt data extractor. Your task is to accurately pull out the key information according to the provided JSON schema. Pay close attention to line items, totals, and invoice details. If the document does not seem to be an invoice or a receipt, set 'isInvoice' to false and leave other fields blank.`;
 
-if (!GOOGLE_CLIENT_ID || !GOOGLE_CLIENT_SECRET) {
-  console.warn('[OmniExtract] WARNING: VITE_GOOGLE_CLIENT_ID or GOOGLE_CLIENT_SECRET not set — OAuth will fail');
+if (!GOOGLE_CLIENT_ID) {
+  console.warn('[OmniExtract] WARNING: VITE_GOOGLE_CLIENT_ID not set — OAuth will fail');
 }
 
 function decodeJWT(token: string): Record<string, string> {
@@ -83,16 +85,23 @@ app.get(['/callback', '/omniextract/callback'], async (req, res) => {
   }
 
   try {
-    // Exchange auth code for tokens
-    const tokenResponse = await fetch('https://oauth2.googleapis.com/token', {
+    // Exchange auth code for tokens via the WMS relay — this app never holds the
+    // client secret. WMS returns Google's token response verbatim, so the id_token
+    // handling below is unchanged. Auth to WMS uses the existing GEMINI_PROXY_KEY.
+    const proxyKey = process.env.GEMINI_PROXY_KEY;
+    if (!proxyKey) {
+      console.error('[OmniExtract] GEMINI_PROXY_KEY not set — OAuth relay unavailable');
+      return res.redirect('/omniextract/?error=oauth_relay_unconfigured');
+    }
+    const tokenResponse = await fetch(`${WMS}/api/oauth/google/exchange`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Gemini-Proxy-Key': proxyKey,
+      },
       body: JSON.stringify({
-        client_id:     GOOGLE_CLIENT_ID,
-        client_secret: GOOGLE_CLIENT_SECRET,
         code,
-        grant_type:    'authorization_code',
-        redirect_uri:  REDIRECT_URI,
+        redirectUri: REDIRECT_URI,
       }),
     });
 
