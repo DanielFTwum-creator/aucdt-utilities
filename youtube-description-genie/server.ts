@@ -33,6 +33,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const PORT          = Number(process.env.PORT) || 4173;
 const WMS_GEMINI_URL = process.env.WMS_GEMINI_URL || 'https://wms.techbridge.edu.gh/api/gemini/generate';
+const WMS_OAUTH_EXCHANGE_URL = process.env.WMS_OAUTH_EXCHANGE_URL || 'https://wms.techbridge.edu.gh/api/oauth/google/exchange';
 const PROXY_KEY      = process.env.GEMINI_PROXY_KEY || '';
 
 if (!PROXY_KEY) {
@@ -45,8 +46,8 @@ app.use(cookieParser());
 
 app.get('/health', (_req, res) => res.type('text').send('healthy'));
 
-const GOOGLE_CLIENT_ID = process.env.VITE_GOOGLE_CLIENT_ID;
-const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
+// OAuth: no client id/secret held server-side — the code->token exchange is
+// relayed to WMS (Pattern 35). Only REDIRECT_URI is needed for the exchange.
 const REDIRECT_URI = process.env.VITE_GOOGLE_REDIRECT_URI || 'https://ai-tools.techbridge.edu.gh/youtube-genie/auth/google/callback';
 const basePath = new URL(REDIRECT_URI).pathname.replace(/\/auth\/google\/callback$/, '') || '/youtube-genie';
 
@@ -57,16 +58,12 @@ app.get(['/auth/google/callback', `${basePath}/auth/google/callback`], async (re
   if (!code) return res.redirect(`${basePath}/?error=missing_code`);
 
   try {
-    const tokenResponse = await fetch('https://oauth2.googleapis.com/token', {
+    // Relay the code->token exchange through WMS (Pattern 35); the response is
+    // Google's token payload verbatim, so the decode below is unchanged. No secret held.
+    const tokenResponse = await fetch(WMS_OAUTH_EXCHANGE_URL, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        client_id: GOOGLE_CLIENT_ID,
-        client_secret: GOOGLE_CLIENT_SECRET,
-        code,
-        grant_type: 'authorization_code',
-        redirect_uri: REDIRECT_URI,
-      }),
+      headers: { 'Content-Type': 'application/json', 'X-Gemini-Proxy-Key': PROXY_KEY },
+      body: JSON.stringify({ code, redirectUri: REDIRECT_URI }),
     });
 
     if (!tokenResponse.ok) {

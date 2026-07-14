@@ -143,6 +143,23 @@ chmod 644 ${RemotePath}.htaccess 2>/dev/null; true
 
 Log "INFO" "Step 6: Installing backend dependencies..." Yellow
 if (Test-Path ".env.local") { scp -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax=3 ".env.local" "${RemoteHost}:${RemotePath}.env" 2>$null | Out-Null }
+
+# Key custody (Pattern 11 fleet standard): the deployed .env must never carry a raw
+# GEMINI_API_KEY. GEMINI_PROXY_KEY is injected server-side from WMS custody
+# (/opt/tuc-wms/.env) with BOM/CR/null stripping (Pattern 21). Both the Gemini relay
+# and the OAuth code->token relay (Pattern 35) present this key, so abort if it is missing.
+$envInject = @"
+cd $RemotePath
+sed -i '/^GEMINI_API_KEY=/d;/^GEMINI_PROXY_KEY=/d' .env 2>/dev/null || true
+K=`$(grep '^GEMINI_PROXY_KEY=' /opt/tuc-wms/.env | head -1 | cut -d= -f2- | tr -d '\r\000' | LC_ALL=C sed 's/\xef\xbb\xbf//g')
+if [ -n "`$K" ]; then printf 'GEMINI_PROXY_KEY=%s\n' "`$K" >> .env; echo 'env: GEMINI_PROXY_KEY injected from WMS custody'; else echo 'WARN: GEMINI_PROXY_KEY not found in /opt/tuc-wms/.env'; fi
+chmod 600 .env
+"@
+$b64e = [Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes($envInject.Replace("`r", "")))
+$envResult = ssh -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax=3 $RemoteHost "echo $b64e | base64 -d | bash"
+Write-Host $envResult -ForegroundColor DarkGray
+if ($envResult -match 'WARN') { Log "ERROR" "GEMINI_PROXY_KEY unavailable — AI + OAuth relay would fail. Aborting before restart." Red; exit 1 }
+
 $nvmPrefix = 'export NVM_DIR="$HOME/.nvm"; [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"; nvm use 26 >/dev/null 2>&1 || true'
 ssh -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax=3 $RemoteHost "$nvmPrefix; cd $RemotePath && CI=true pnpm install --prod --silent 2>/dev/null || npm install --omit=dev --silent"
 
@@ -152,19 +169,19 @@ export NVM_DIR="`$HOME/.nvm"; [ -s "`$NVM_DIR/nvm.sh" ] && . "`$NVM_DIR/nvm.sh";
 NODE26=/root/.nvm/versions/node/v26.3.1/bin/node
 TSX_ESM=$RemotePath/node_modules/tsx/dist/esm/index.mjs
 if command -v pm2 &>/dev/null; then
-  if pm2 describe youtube-genie &>/dev/null; then
-    pm2 reload youtube-genie --update-env && echo 'pm2: reloaded youtube-genie'
-  else
-    # Pattern 9: always use --cwd so dotenv resolves .env from the app directory
-    # Pattern 13: use Node v26 + tsx --import flag (wrapper approach)
-    PORT=$PORT pm2 start $RemotePath/server.ts \
-      --name youtube-genie \
-      --interpreter "`$NODE26" \
-      --interpreter-args "--import `$TSX_ESM" \
-      --cwd $RemotePath \
-      --max-memory-restart 1G
-    echo 'pm2: started youtube-genie'
-  fi
+  # Pattern 23: reload/restart --update-env keeps a stale env (old GEMINI_PROXY_KEY -> WMS 401)
+  # AND stale tsx-transpiled server.ts. Hard delete + fresh start is the only reliable way to
+  # pick up the injected GEMINI_PROXY_KEY and the edited OAuth-relay backend.
+  # Pattern 9: --cwd so dotenv resolves .env from the app directory.
+  # Pattern 13: Node v26 + tsx --import flag (wrapper approach).
+  pm2 delete youtube-genie >/dev/null 2>&1 || true
+  PORT=$PORT pm2 start $RemotePath/server.ts \
+    --name youtube-genie \
+    --interpreter "`$NODE26" \
+    --interpreter-args "--import `$TSX_ESM" \
+    --cwd $RemotePath \
+    --max-memory-restart 1G
+  echo 'pm2: hard restart youtube-genie (Pattern 23)'
   pm2 save --force &>/dev/null
 fi
 "@
