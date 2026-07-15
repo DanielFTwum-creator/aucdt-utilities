@@ -107,7 +107,7 @@ app.post(['/api/auth/logout', `${basePath}/api/auth/logout`], (_req, res) => {
 
 // Generate-description proxy. Body is the raw Gemini generateContent request
 // (contents + generationConfig) built client-side; we relay it to WMS verbatim.
-app.post('/api/generate', async (req, res) => {
+app.post(['/api/generate', `${basePath}/api/generate`], async (req, res) => {
   if (!PROXY_KEY) {
     return res.status(503).json({ error: 'GEMINI_PROXY_KEY not configured on the server.' });
   }

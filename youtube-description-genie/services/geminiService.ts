@@ -47,7 +47,7 @@ export const generateDescription = async (formData: FormData): Promise<string> =
   };
 
   try {
-    const res = await fetch('/api/generate?model=gemini-2.5-flash', {
+    const res = await fetch('/youtube-genie/api/generate?model=gemini-2.5-flash', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(requestBody),
