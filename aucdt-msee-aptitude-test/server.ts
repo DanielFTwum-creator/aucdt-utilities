@@ -9,11 +9,9 @@ dotenv.config();
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PORT = Number(process.env.PORT) || 3011;
-// OAuth: no client id/secret held server-side — the code->token exchange is
-// relayed to WMS (Pattern 35) with the GEMINI_PROXY_KEY service credential.
+const GOOGLE_CLIENT_ID     = process.env.VITE_GOOGLE_CLIENT_ID     || '';
+const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET       || '';
 const REDIRECT_URI         = process.env.VITE_GOOGLE_REDIRECT_URI   || 'https://ai-tools.techbridge.edu.gh/aucdt-msee-aptitude-test/callback';
-const WMS_OAUTH_EXCHANGE_URL = process.env.WMS_OAUTH_EXCHANGE_URL || 'https://wms.techbridge.edu.gh/api/oauth/google/exchange';
-const GEMINI_PROXY_KEY     = process.env.GEMINI_PROXY_KEY || '';
 
 function decodeJWT(token: string): Record<string, string> {
   const parts = token.split('.');
@@ -30,11 +28,10 @@ app.get(['/callback', '/aucdt-msee-aptitude-test/callback'], async (req, res) =>
   if (error) return res.redirect(`/aucdt-msee-aptitude-test/?error=${encodeURIComponent(error)}`);
   if (!code) return res.redirect('/aucdt-msee-aptitude-test/?error=missing_code');
   try {
-    // Relay the code->token exchange through WMS (Pattern 35); response is Google's token payload verbatim.
-    const tokenResponse = await fetch(WMS_OAUTH_EXCHANGE_URL, {
+    const tokenResponse = await fetch('https://oauth2.googleapis.com/token', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'X-Gemini-Proxy-Key': GEMINI_PROXY_KEY },
-      body: JSON.stringify({ code, redirectUri: REDIRECT_URI }),
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ client_id: GOOGLE_CLIENT_ID, client_secret: GOOGLE_CLIENT_SECRET, code, grant_type: 'authorization_code', redirect_uri: REDIRECT_URI }),
     });
     if (!tokenResponse.ok) { const err = await tokenResponse.json(); console.error('[aucdt-msee-aptitude-test] Token exchange failed:', err); return res.redirect('/aucdt-msee-aptitude-test/?error=token_exchange_failed'); }
     const tokens = await tokenResponse.json() as { id_token?: string };

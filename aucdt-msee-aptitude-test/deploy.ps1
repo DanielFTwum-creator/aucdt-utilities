@@ -149,7 +149,7 @@ if command -v pm2 &>/dev/null; then
   if pm2 describe aucdt-msee-aptitude-test &>/dev/null; then
     pm2 delete aucdt-msee-aptitude-test
   fi
-  cd $RemotePath && NODE_ENV=production PORT=3011 pm2 start server.ts --name aucdt-msee-aptitude-test --interpreter npx --interpreter-args tsx --cwd $RemotePath
+  cd $RemotePath && NODE_ENV=production PORT=3011 pm2 start server.js --name aucdt-msee-aptitude-test --interpreter npx --interpreter-args tsx --cwd $RemotePath
   echo 'pm2: started aucdt-msee-aptitude-test'
   pm2 save --force &>/dev/null
 fi
