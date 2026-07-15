@@ -51,6 +51,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           setUser(userData);
           setIsAuthenticated(true);
           localStorage.setItem('youtubegenie_user', JSON.stringify(userData));
+          document.cookie = 'youtubegenie_user=; max-age=0; path=/youtube-genie';
           document.cookie = 'youtubegenie_user=; max-age=0; path=/youtube-genie/';
           // Clean URL after OAuth callback
           if (window.location.search.includes('code=')) {
@@ -134,11 +135,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setUser(null);
     setIsAuthenticated(false);
     localStorage.removeItem('youtubegenie_user');
-    // Clear cookie with all matching attributes to ensure immediate removal
+    // Clear the cookie at the exact path the server set it (basePath = /youtube-genie, no trailing
+    // slash) plus fallbacks — a path mismatch leaves the cookie and initAuth re-logs you straight in.
+    document.cookie = 'youtubegenie_user=; max-age=0; path=/youtube-genie';
     document.cookie = 'youtubegenie_user=; max-age=0; path=/youtube-genie/';
     document.cookie = 'youtubegenie_user=; max-age=0; path=/';
     try {
-      await fetch('/api/auth/logout', { method: 'POST', credentials: 'include' }).catch(() => {});
+      // Base-path URL so nginx proxies it to the backend (a bare /api/... is not routed to the app)
+      await fetch('/youtube-genie/api/auth/logout', { method: 'POST', credentials: 'include' }).catch(() => {});
     } finally {
       window.location.href = '/youtube-genie/';
     }
