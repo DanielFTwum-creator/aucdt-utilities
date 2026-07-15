@@ -153,6 +153,12 @@ if (Test-Path ".env.local") { scp -o StrictHostKeyChecking=no -o ServerAliveInte
 # and the OAuth code->token relay (Pattern 35) present this key, so abort if it is missing.
 $envInject = @"
 cd $RemotePath
+# Windows/PowerShell often saves .env.local as UTF-16; scp copies it verbatim and every dotenv
+# loader then parses 0 vars (null byte between each char), so GEMINI_PROXY_KEY reports 'not set'
+# even though it is present. Normalise to UTF-8 (+ strip any BOM) before touching the keys.
+BOM=`$(od -An -tx1 -N2 .env 2>/dev/null | tr -d ' \n')
+if [ "`$BOM" = "fffe" ] || [ "`$BOM" = "feff" ]; then iconv -f UTF-16 -t UTF-8 .env -o .env.utf8 && mv .env.utf8 .env && echo 'env: normalised UTF-16 .env -> UTF-8'; fi
+sed -i '1s/^\xEF\xBB\xBF//' .env 2>/dev/null || true
 sed -i '/^GEMINI_API_KEY=/d;/^GEMINI_PROXY_KEY=/d' .env 2>/dev/null || true
 K=`$(grep '^GEMINI_PROXY_KEY=' /opt/tuc-wms/.env | head -1 | cut -d= -f2- | tr -d '\r\000' | LC_ALL=C sed 's/\xef\xbb\xbf//g')
 if [ -n "`$K" ]; then printf 'GEMINI_PROXY_KEY=%s\n' "`$K" >> .env; echo 'env: GEMINI_PROXY_KEY injected from WMS custody'; else echo 'WARN: GEMINI_PROXY_KEY not found in /opt/tuc-wms/.env'; fi
