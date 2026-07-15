@@ -28,6 +28,15 @@
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
 
+    <!-- PWA: installable, offline-capable for low-connectivity classrooms -->
+    <link rel="manifest" href="./manifest.webmanifest" />
+    <meta name="theme-color" content="#2563eb" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="VortexType" />
+    <link rel="apple-touch-icon" href="./favicon.svg" />
+
     <style>
       body {
         margin: 0;
@@ -155,5 +164,16 @@
     </div>
 
     <script type="module" src="/src/main.tsx"></script>
+
+    <!-- Register the offline service worker (scope: this app's sub-path) -->
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function () {
+          navigator.serviceWorker.register('./sw.js').catch(function (e) {
+            console.warn('[VortexType] service worker registration failed:', e);
+          });
+        });
+      }
+    </script>
 </body>
 </html>
