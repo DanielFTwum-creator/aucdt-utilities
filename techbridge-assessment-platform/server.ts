@@ -9,9 +9,10 @@ dotenv.config();
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PORT = Number(process.env.PORT) || 3038;
-const GOOGLE_CLIENT_ID     = process.env.VITE_GOOGLE_CLIENT_ID     || '';
-const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET       || '';
+// OAuth: no client id/secret held server-side — the code->token exchange is
+// relayed to WMS (Pattern 35). Only REDIRECT_URI is needed for the exchange.
 const REDIRECT_URI         = process.env.VITE_GOOGLE_REDIRECT_URI   || 'https://ai-tools.techbridge.edu.gh/techbridge-assessment-platform/callback';
+const WMS_OAUTH_EXCHANGE_URL = process.env.WMS_OAUTH_EXCHANGE_URL || 'https://wms.techbridge.edu.gh/api/oauth/google/exchange';
 
 function decodeJWT(token: string): Record<string, string> {
   const parts = token.split('.');
@@ -65,10 +66,11 @@ app.get(['/callback', '/techbridge-assessment-platform/callback'], async (req, r
   if (error) return res.redirect(`/techbridge-assessment-platform/?error=${encodeURIComponent(error)}`);
   if (!code) return res.redirect('/techbridge-assessment-platform/?error=missing_code');
   try {
-    const tokenResponse = await fetch('https://oauth2.googleapis.com/token', {
+    // Relay the code->token exchange through WMS (Pattern 35); response is Google's token payload verbatim.
+    const tokenResponse = await fetch(WMS_OAUTH_EXCHANGE_URL, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ client_id: GOOGLE_CLIENT_ID, client_secret: GOOGLE_CLIENT_SECRET, code, grant_type: 'authorization_code', redirect_uri: REDIRECT_URI }),
+      headers: { 'Content-Type': 'application/json', 'X-Gemini-Proxy-Key': GEMINI_PROXY_KEY },
+      body: JSON.stringify({ code, redirectUri: REDIRECT_URI }),
     });
     if (!tokenResponse.ok) { const err = await tokenResponse.json(); console.error('[techbridge-assessment-platform] Token exchange failed:', err); return res.redirect('/techbridge-assessment-platform/?error=token_exchange_failed'); }
     const tokens = await tokenResponse.json() as { id_token?: string };
