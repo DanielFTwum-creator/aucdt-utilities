@@ -2490,3 +2490,164 @@ with a session, no `token_exchange_failed` / `Unauthorised: ...Proxy-Key`. Watch
 
 **Origin:** omniextract, 2026-07-14 — first app migrated off self-exchange; the three deploy
 layers above each broke the login in turn before it went green.
+
+---
+
+## PATTERN 36: PRE-DEPLOY CHECKLIST — SUB-PATH SPA + WMS RELAY
+
+**Origin:** youtube-description-genie WMS OAuth relay migration, 15 Jul 2026 (commits
+`08fe9721`, `3729df35`, `a25ef82f`, `c0b22015`).
+**Applies to:** Any fleet app served under an nginx/Apache sub-path (Pattern 29) that
+relays Gemini and/or Google OAuth through WMS (Pattern 11, Pattern 35).
+
+### Why
+
+Migrating youtube-genie onto the WMS OAuth relay surfaced six separate faults, one at a
+time, each hiding behind the previous fix looking green. Curl-based health checks caught
+none of them; the OAuth ones only showed up in a real browser login (Pattern 35's
+Verify step). The six guards below are now a single pre-deploy checklist so the next
+sub-path SPA + WMS-relay app does not repeat them one by one.
+
+### The six guards (symptom → root cause → fix → where implemented)
+
+**1. UTF-16 `.env`**
+- **Symptom:** the server-side dotenv loader reports zero injected variables and
+  `GEMINI_PROXY_KEY not set`, even though the key is visibly present in the file;
+  `head -c2 .env` (or `od -An -tx1 -N2 .env`) shows a `ff fe` byte-order mark.
+- **Root cause:** Windows/PowerShell saves `.env.local` as UTF-16; `scp` copies it
+  verbatim; a null byte sits between every character, so dotenv parses the whole file
+  as noise.
+- **Fix:** detect the BOM before touching any key, convert to UTF-8, then strip any
+  UTF-8 BOM as well.
+- **Where implemented:** `youtube-description-genie/deploy.ps1:159-161` (Step 6 env
+  inject) — `BOM=$(od -An -tx1 -N2 .env ...)`, `iconv -f UTF-16 -t UTF-8`, then
+  `sed -i '1s/^\xEF\xBB\xBF//' .env`. Introduced in commit `08fe9721`.
+- **Cross-reference:** extends Pattern 21 Form C (BOM Propagation into Extracted .env
+  Values). Pattern 21's Form C fix wipes and rebuilds the destination `.env` from
+  scratch; this app instead converts the existing file in place before the
+  Pattern 21 Form B value-extraction step runs — an in-place alternative for apps
+  where the `.env` also carries hand-set values worth preserving.
+
+**2. CRLF here-string piped to ssh**
+- **Symptom:** `chown: cannot access '.../youtube-genie/'$'\r'` and
+  `find: missing argument to -exec` on the server, even though `$RemotePath` in the
+  script looks correct.
+- **Root cause:** a PowerShell here-string (`@"..."@`) piped straight to `ssh` carries a
+  trailing CR into the remote command when the `.ps1` file itself is checked out with
+  CRLF line endings, so bash receives `$RemotePath\r` instead of `$RemotePath`.
+- **Fix:** base64-encode the script body and strip CR before sending it, the same
+  idiom the build/env/restart steps already use: `ssh ... "echo <b64> | base64 -d | bash"`.
+- **Where implemented:** `youtube-description-genie/deploy.ps1:144-145` (Step 5
+  permissions block: `$b64p = [Convert]::ToBase64String(...Replace("`r", ""))`),
+  matching the same pattern already in Step 3 (`deploy.ps1:90-91`), Step 6
+  (`deploy.ps1:167-168`) and Step 7 (`deploy.ps1:197-198`). Introduced in commit
+  `3729df35`.
+
+**3. Deploy port vs registry**
+- **Symptom:** nginx/Apache returns 502 Bad Gateway on every request while the Node
+  backend itself is healthy (PM2 shows it online, `curl localhost:<its-real-port>`
+  answers).
+- **Root cause:** `deploy.ps1`'s `$PORT` (a transposition typo, `3018`) did not match
+  the registered/proxied port for the app (`3028`), so the app listened on a port
+  nothing ever routed traffic to.
+- **Fix:** `$PORT` in `deploy.ps1` must equal the app's row in `SERVER_PORTS.md`
+  (reality) — check both `SERVER_PORTS.md` and `PORT-REGISTRY.md` before deploying,
+  and if they disagree, flag it rather than picking one silently (CLAUDE.md, "Reality
+  over intent").
+- **Where implemented:** `youtube-description-genie/deploy.ps1:8`
+  (`[string]$PORT = "3028"`), matching `SERVER_PORTS.md:47` and
+  `PORT-REGISTRY.md:39`. Fixed in commit `a25ef82f`.
+- **Cross-reference:** Pattern 8 (Port Assignment & Conflict Prevention).
+
+**4. Base-path API routing**
+- **Symptom:** a request to `/api/generate` or the logout endpoint returns a 404 HTML
+  page (an Apache error-docs page, not the app's own JSON 404).
+- **Root cause:** the app's `.htaccess`/nginx rule only proxies
+  `/youtube-genie/(api|auth)/` to the Node backend; a bare `/api/...` call falls
+  through to Apache's default handling instead of reaching Express.
+- **Fix:** the frontend must call the base-path-prefixed route, and the server must
+  register both the bare and base-path-prefixed versions of every route so either
+  form reaches the handler.
+- **Where implemented:** frontend call at
+  `youtube-description-genie/services/geminiService.ts:50`
+  (`fetch('/youtube-genie/api/generate?...')`); server dual-registration at
+  `youtube-description-genie/server.ts:103` (`['/api/auth/logout',
+  \`${basePath}/api/auth/logout\`]`) and `server.ts:110`
+  (`['/api/generate', \`${basePath}/api/generate\`]`).
+- **Cross-reference:** Pattern 29 (absolute Vite base for the same reason — assets and
+  API calls both need the sub-path baked in); Pattern 28 (confirm the app is the
+  self-serving-Node archetype before assuming this routing shape applies).
+
+**5. Redirect-uri registration**
+- **Symptom:** Google returns `Error 400: redirect_uri_mismatch` on the OAuth consent
+  screen.
+- **Root cause:** the app's exact callback URI is not present in the shared Google
+  OAuth client's Authorized redirect URIs list. The fleet convention is `/<slug>/callback`,
+  but not every app follows it.
+- **Fix:** read the app's `LoginView` to see the exact `redirect_uri` it sends, and
+  register that literal string with Google — do not assume the fleet convention
+  without checking.
+- **Where implemented:** `youtube-description-genie/components/LoginView.tsx:14-15`
+  sends `redirectUri = ... || \`${window.location.origin}/youtube-genie/auth/google/callback\``;
+  the server accepts the matching path at `youtube-description-genie/server.ts:51-55`
+  (`REDIRECT_URI` default `.../youtube-genie/auth/google/callback`, registered on
+  `['/auth/google/callback', \`${basePath}/auth/google/callback\`]`). This app uses
+  `/auth/google/callback`, not the shorter `/callback` convention — confirmed by
+  reading the code, not assumed.
+- **Cross-reference:** Pattern 35 (WMS OAuth relay migration) — the relay only works
+  if the code being exchanged came from a request whose `redirect_uri` Google actually
+  recognises.
+
+**6. AuthContext base path and cookie path**
+- **Symptom (a):** logout POSTs to a 404 because it hit the repo folder name instead
+  of the deployed slug. **Symptom (b):** logout does not stick — the user is instantly
+  re-authenticated on the next load.
+- **Root cause:** a hardcoded repo-folder name in place of the deployed slug in one of
+  the auth calls; and a cookie cleared at a path that does not exactly match the path
+  the server used when it set the cookie (a trailing-slash mismatch is enough to leave
+  the original cookie in place).
+- **Fix:** use the deployed base path consistently everywhere in `AuthContext`, clear
+  the cookie at the exact server-set path plus reasonable fallbacks (with and without
+  trailing slash, and root), and post logout to the base-path-prefixed route.
+- **Where implemented:** `youtube-description-genie/contexts/AuthContext.tsx:140-142`
+  clears `youtubegenie_user` at `path=/youtube-genie` (no trailing slash, matching the
+  server's `basePath`), `path=/youtube-genie/`, and `path=/`; logout POSTs to
+  `/youtube-genie/api/auth/logout` at `AuthContext.tsx:145`. The server sets the cookie
+  at `path: basePath` in `server.ts:90`, where `basePath` (`server.ts:52`) is derived
+  from `REDIRECT_URI` with no trailing slash — the frontend's first fallback path
+  matches this exactly.
+
+### Pre-deploy checklist
+
+Run through this before shipping any new sub-path SPA + WMS-relay app, or when
+touching an existing one's `deploy.ps1`:
+
+```
+☐ 1. .env encoding — od -An -tx1 -N2 the runtime .env on the server after inject;
+     confirm no ff fe / fe ff BOM before trusting a "not set" warning is a real
+     missing key (Pattern 21, guard 1 above).
+☐ 2. Every here-string piped to ssh in deploy.ps1 goes through the base64 + CR-strip
+     idiom, not a raw pipe (guard 2 above; Pattern 20 covers the sibling escaping trap).
+☐ 3. deploy.ps1 $PORT equals the app's row in SERVER_PORTS.md (reality), cross-checked
+     against PORT-REGISTRY.md (intent) (Pattern 8; guard 3 above).
+☐ 4. Frontend fetch()/redirect calls use the base-path prefix; server.ts registers
+     both the bare and prefixed route for every endpoint (Pattern 29; guard 4 above).
+☐ 5. Read LoginView.tsx for the literal redirect_uri sent to Google; confirm that
+     exact string is registered in the shared OAuth client before first login attempt
+     (Pattern 35; guard 5 above).
+☐ 6. AuthContext uses the deployed slug everywhere (no repo-folder-name leftovers);
+     cookie clears at the exact server-set path plus fallbacks; logout POSTs to the
+     base-path route (guard 6 above).
+☐ 7. After any env or server.ts change, hard-restart (pm2 delete + fresh pm2 start),
+     never reload/restart --update-env (Pattern 23) — otherwise guards 1, 3 and 5 can
+     look fixed on disk while the running process still serves the old behaviour.
+☐ 8. Verify OAuth end-to-end in a real browser, not curl — a 200 on the document says
+     nothing about whether the deep route's assets or the token exchange actually work
+     (Pattern 29's Verify note; Pattern 35's Verify step).
+```
+
+### Verify
+
+All eight checklist items pass, plus a real browser login/logout cycle: sign in with
+Google, confirm the session survives a refresh, sign out, and confirm the next load
+shows the login screen rather than silently re-authenticating.
