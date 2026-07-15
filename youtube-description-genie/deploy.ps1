@@ -5,7 +5,7 @@
 param(
     [string]$RemoteHost = "root@techbridge.edu.gh",
     [string]$RemotePath = "/var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/youtube-genie/",
-    [string]$PORT = "3018",
+    [string]$PORT = "3028",
     [switch]$Build = $false
 )
 
