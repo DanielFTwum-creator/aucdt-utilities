@@ -87,7 +87,9 @@ if ($bx -ne 0) { Log -Level 'ERROR' -Msg "Build failed ($bx)" -Color Red; exit 1
 Log -Level 'SUCCESS' -Msg 'Build complete' -Color Green
 
 Log -Level 'INFO' -Msg 'Step 4: Server environment...' -Color Yellow
-& $SSH @SSH_OPTS $REMOTE "cp /tmp/.env.${PM2_APP} ${DEPLOY_PATH}/.env; chown -R techbridge.edu.gh_md:psaserv ${DEPLOY_PATH} 2>/dev/null||true; find ${DEPLOY_PATH} -type d -exec chmod 755 {} \; 2>/dev/null||true; find ${DEPLOY_PATH} -type f -exec chmod 644 {} \; 2>/dev/null||true"
+$envResult = & $SSH @SSH_OPTS $REMOTE "cp /tmp/.env.${PM2_APP} ${DEPLOY_PATH}/.env; BOM=`$(od -An -tx1 -N2 ${DEPLOY_PATH}/.env 2>/dev/null | tr -d ' \n'); if [ `"`$BOM`" = 'fffe' ] || [ `"`$BOM`" = 'feff' ]; then iconv -f UTF-16 -t UTF-8 ${DEPLOY_PATH}/.env -o ${DEPLOY_PATH}/.env.u8 && mv ${DEPLOY_PATH}/.env.u8 ${DEPLOY_PATH}/.env; fi; sed -i '1s/^\xEF\xBB\xBF//;/^GEMINI_API_KEY=/d;/^GOOGLE_CLIENT_SECRET=/d;/^GEMINI_PROXY_KEY=/d' ${DEPLOY_PATH}/.env; K=`$(grep '^GEMINI_PROXY_KEY=' /opt/tuc-wms/.env | head -1 | cut -d= -f2- | tr -d '\r\000' | LC_ALL=C sed 's/\xef\xbb\xbf//g'); if [ -n `"`$K`" ]; then printf 'GEMINI_PROXY_KEY=%s\n' `"`$K`" >> ${DEPLOY_PATH}/.env; echo 'env: GEMINI_PROXY_KEY injected from WMS custody'; else echo 'WARN: GEMINI_PROXY_KEY not found in /opt/tuc-wms/.env'; fi; chmod 600 ${DEPLOY_PATH}/.env; chown -R techbridge.edu.gh_md:psaserv ${DEPLOY_PATH} 2>/dev/null||true; find ${DEPLOY_PATH} -type d -exec chmod 755 {} \; 2>/dev/null||true; find ${DEPLOY_PATH} -not -name '.env' -type f -exec chmod 644 {} \; 2>/dev/null||true"
+Write-Host $envResult -ForegroundColor DarkGray
+if ($envResult -match 'WARN') { Log -Level 'ERROR' -Msg 'GEMINI_PROXY_KEY unavailable — OAuth + Gemini relay would fail. Aborting before restart.' -Color Red; exit 1 }
 
 Log -Level 'INFO' -Msg 'Step 5: Restarting backend...' -Color Yellow
 $r=& $SSH @SSH_OPTS $REMOTE "pm2 delete ${PM2_APP} >/dev/null 2>&1; cd ${DEPLOY_PATH}; PORT=${PORT} pm2 start server.ts --name ${PM2_APP} --interpreter npx --interpreter-args tsx --cwd ${DEPLOY_PATH}; echo 'pm2: hard restart (Pattern 23)'; pm2 save --force >/dev/null 2>&1 || true"
