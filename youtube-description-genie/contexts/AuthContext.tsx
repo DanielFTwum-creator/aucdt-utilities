@@ -33,7 +33,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           setIsAuthenticated(true);
           localStorage.setItem('youtubegenie_user', JSON.stringify(userData));
           // Hard redirect to reload the app with auth in localStorage
-          window.location.href = '/youtube-description-genie/';
+          window.location.href = '/youtube-genie/';
           return;
         } catch (e) {
           console.error('[Auth] Failed to parse user from URL:', e);
@@ -51,10 +51,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           setUser(userData);
           setIsAuthenticated(true);
           localStorage.setItem('youtubegenie_user', JSON.stringify(userData));
-          document.cookie = 'youtubegenie_user=; max-age=0; path=/youtube-description-genie/';
+          document.cookie = 'youtubegenie_user=; max-age=0; path=/youtube-genie/';
           // Clean URL after OAuth callback
           if (window.location.search.includes('code=')) {
-            window.history.replaceState({}, '', '/youtube-description-genie/');
+            window.history.replaceState({}, '', '/youtube-genie/');
           }
           return;
         } catch (e) {
@@ -135,12 +135,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setIsAuthenticated(false);
     localStorage.removeItem('youtubegenie_user');
     // Clear cookie with all matching attributes to ensure immediate removal
-    document.cookie = 'youtubegenie_user=; max-age=0; path=/youtube-description-genie/';
+    document.cookie = 'youtubegenie_user=; max-age=0; path=/youtube-genie/';
     document.cookie = 'youtubegenie_user=; max-age=0; path=/';
     try {
       await fetch('/api/auth/logout', { method: 'POST', credentials: 'include' }).catch(() => {});
     } finally {
-      window.location.href = '/youtube-description-genie/';
+      window.location.href = '/youtube-genie/';
     }
   };
 
