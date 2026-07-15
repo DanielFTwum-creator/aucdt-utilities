@@ -163,7 +163,7 @@ Scripts with Apache mod_expires + Cache-Control headers (hash-busted assets: 315
 - brand-guideline-checker
 - ai-techbridge
 - omniextract
-- enhanced-youtube-genie
+- youtube-description-genie
 - ghana-news-aggregator
 - midjourney-prompt-helper
 - smartscale-ai-presentation-platform

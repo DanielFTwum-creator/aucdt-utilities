@@ -36,7 +36,7 @@
 | 3025 | playgrow | playgrow-smart-fun-for-bright-minds |
 | 3026 | peace-vinyl | peace-vinyl |
 | 3027 | tuc-netscan-backend | tuc-netscan-100 |
-| 3028 | youtube-genie | enhanced-youtube-genie |
+| 3028 | youtube-genie | youtube-description-genie |
 | 3032 | bridge-radio | bridge-radio |
 | 5000 | tuc-rms | tuc-rms (binds `[::1]` only) |
 | 8081 | tuc-wms (Spring Boot) | /opt/tuc-wms (systemd, not PM2) |

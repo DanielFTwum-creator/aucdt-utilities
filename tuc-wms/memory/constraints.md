@@ -20,7 +20,7 @@ Rules Daniel has set that override default behaviour in every session.
 **All commands must use full Windows paths so they can be copy-pasted directly into PowerShell without modification.**
 
 - Never use relative paths like `.\deploy.ps1` or `cd ..` alone — always include the full path
-- PowerShell: `cd C:\Development\github\aucdt-utilities\enhanced-youtube-genie` then `.\deploy.ps1 -Build`
+- PowerShell: `cd C:\Development\github\aucdt-utilities\youtube-description-genie` then `.\deploy.ps1 -Build`
 - SSH paths on the server: always use full `/var/www/vhosts/...` paths
 - Applies to every command in every response: PowerShell, bash, git, pm2, ssh
 

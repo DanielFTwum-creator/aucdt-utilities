@@ -44,7 +44,7 @@
 | 3025 | playgrow                           | playgrow                                      | Online (nginx /playgrow/api/ was routed to dead 3019 → public 502; fixed 1 Jul) |
 | 3026 | peace-vinyl                        | peace-vinyl                                   | Online (env PORT=3026 confirmed) |
 | 3027 | tuc-netscan-backend                | netscan (netscan.techbridge.edu.gh)           | Online |
-| 3028 | youtube-genie                      | youtube-genie (enhanced-youtube-genie)        | Online |
+| 3028 | youtube-genie                      | youtube-genie (youtube-description-genie)     | Online |
 | 3032 | bridge-radio                       | radio (radio.techbridge.edu.gh)               | Online |
 | 3034 | brand-guideline-checker            | brand-guideline-checker (ai-tools)            | Online (deployed 10 Jul 2026; WMS SSO all-TUC) |
 | 3040 | fail2ban-ai                        | fail2ban-ai (ai-tools/fail2ban-ai)            | Online (deployed 8 Jul 2026; WMS SSO staff-only) |

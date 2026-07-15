@@ -483,7 +483,7 @@ Applies to all responses regardless of context: debugging sessions, deploy scrip
 **All commands in responses must use full Windows paths so they can be copy-pasted directly into PowerShell without modification.**
 
 - Never use bare relative paths like `.\deploy.ps1` or `cd ..` without the full leading path
-- PowerShell example: `cd C:\Development\github\aucdt-utilities\enhanced-youtube-genie` then `.\deploy.ps1 -Build`
+- PowerShell example: `cd C:\Development\github\aucdt-utilities\youtube-description-genie` then `.\deploy.ps1 -Build`
 - SSH server paths: always use full `/var/www/vhosts/...` or `/opt/...` absolute paths — never `cd ../` patterns
 - Git commands: `cd C:\Development\github\aucdt-utilities` then `git ...`
 - Applies to every shell command in every response: PowerShell, bash, git, pm2, ssh, pnpm

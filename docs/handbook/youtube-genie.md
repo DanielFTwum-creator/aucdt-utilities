@@ -1,17 +1,11 @@
 ### youtube-genie
 
-> **UNVERIFIED / flagged before anything else**: two separate repo folders both claim
-> this exact PM2 app name, port, and public URL: `youtube-description-genie` (this
-> section's primary source, per the task's naming) and `enhanced-youtube-genie`.
-> Both `deploy.ps1` scripts target PM2 app `youtube-genie`, port `3028`, URL
-> `https://ai-tools.techbridge.edu.gh/youtube-genie/`, and the same remote path
-> (`enhanced-youtube-genie/deploy.ps1:1-20`; `youtube-description-genie/deploy.ps1:1-8,16`).
-> They differ in build/serve mechanics (Apache `.htaccess` + dist-at-webroot for
-> `youtube-description-genie` vs. nginx + `dist/` subfolder for `enhanced-youtube-genie`)
-> and in their PM2 restart commands. `SERVER_PORTS.md:47` (verified live reality, 1 Jul 2026)
-> records the live process `cwd` as `enhanced-youtube-genie`, not `youtube-description-genie`.
-> Whichever folder's `deploy.ps1` ran most recently is what is actually live; this cannot be
-> confirmed from the repo alone. Report this conflict before either app is next deployed.
+> **Resolved 15 Jul 2026**: the earlier duplicate-folder conflict is closed.
+> `youtube-description-genie` is the sole canonical source of record (live, on the
+> WMS OAuth relay, with all deploy guards). The redundant `enhanced-youtube-genie`
+> folder, previously the source of the live process per `SERVER_PORTS.md:47`, has
+> been retired (removed from the repo; recoverable from git history). `SERVER_PORTS.md:47`
+> and `PORT-REGISTRY.md:39` now point at `youtube-description-genie`.
 
 - **URL**: `https://ai-tools.techbridge.edu.gh/youtube-genie/` (`youtube-description-genie/deploy.ps1:2`; matches `youtube-description-genie/server.ts:51` default `VITE_GOOGLE_REDIRECT_URI` base path)
 - **Port**: 3028 (`youtube-description-genie/deploy.ps1:8` `[string]$PORT = "3028"`). This matches verified live reality `SERVER_PORTS.md:47` (`| 3028 | youtube-genie | youtube-genie (enhanced-youtube-genie) | Online |`) and the intent ledger `PORT-REGISTRY.md:39`. **Flag**: `youtube-description-genie/CONSTRAINTS.md:15` still states `Port: 3018` and `youtube-description-genie/CONSTRAINTS.md:58` repeats `PORT=3018` as the production value — this is the corrected 3018 typo the task description mentions, and it is stale inside this app's own `CONSTRAINTS.md` even though the app's own `deploy.ps1` already uses 3028. `server.ts`'s own code default is 4173 (`youtube-description-genie/server.ts:34`), overridden to 3028 by the deploy script's `env` on PM2 start (`youtube-description-genie/deploy.ps1:187`) — reality (3028, per `SERVER_PORTS.md` + this app's `deploy.ps1`) wins over both the code default and the stale `CONSTRAINTS.md` value.
@@ -22,7 +16,7 @@
 - **Gemini custody**: WMS relay (Pattern 11, `POST /api/generate` → WMS `/api/gemini/generate`). `server.ts` never holds a Gemini key; `X-Gemini-Proxy-Key: GEMINI_PROXY_KEY` is presented to WMS (`youtube-description-genie/server.ts:18-20,35-37,110-129`). Missing `GEMINI_PROXY_KEY` returns HTTP 503 without crashing (`youtube-description-genie/server.ts:39-41,111-113`). Confirmed by `youtube-description-genie/CONSTRAINTS.md:65-75`.
 - **Deploy**: `.\deploy.ps1 -Build` for a full server-side rebuild (git clone → pnpm install → `vite build` → rsync dist to web root → `.htaccess` write → env injection → PM2 hard restart), or `.\deploy.ps1` (no switch) for a local-`dist/`-only scp-based deploy (`youtube-description-genie/deploy.ps1:39-104`). `GEMINI_PROXY_KEY` is always re-injected from `/opt/tuc-wms/.env` with BOM/CR stripping (Pattern 21), and the script aborts before restart if that key can't be found (`youtube-description-genie/deploy.ps1:150-171`). PM2 restart is a hard `pm2 delete` + `pm2 start` with the Node v26 `--import tsx/…/index.mjs` wrapper, not `reload` (Pattern 23, `youtube-description-genie/deploy.ps1:176-198`).
 - **Known gotchas**:
-  - **Duplicate-folder conflict** (see flag above) — resolve which of `enhanced-youtube-genie` / `youtube-description-genie` is the deploy-of-record before the next `deploy.ps1 -Build` run on either, or one will silently overwrite the other's live process.
+  - **Duplicate-folder conflict — resolved** (see note at top): `youtube-description-genie` is the sole deploy-of-record; `enhanced-youtube-genie` was retired 15 Jul 2026.
   - Pattern 15 — this app deploys `dist/` contents directly to the web root (not a `dist/` subfolder) specifically to keep `index.html` and hashed assets in sync (`youtube-description-genie/deploy.ps1:85-86,98`), with a post-deploy MIME-type curl check (`youtube-description-genie/deploy.ps1:205-220`).
   - Pattern 21 — BOM/CR/UTF-16 normalisation on the deployed `.env` before extracting `GEMINI_PROXY_KEY` (`youtube-description-genie/deploy.ps1:154-171`).
   - Pattern 23 — hard restart, not `pm2 reload`, to avoid a stale proxy key or stale tsx-transpiled backend (`youtube-description-genie/deploy.ps1:181-195`).

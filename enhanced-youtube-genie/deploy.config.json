@@ -1,9 +1,0 @@
-{
-  "projectName": "enhanced-youtube-genie",
-  "remoteHost": "root@techbridge.edu.gh",
-  "deployPath": "/var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/youtube-genie",
-  "buildTool": "pnpm",
-  "outputDir": "dist",
-  "requiredEnvVars": ["GEMINI_API_KEY"],
-  "healthCheckUrl": "https://ai-tools.techbridge.edu.gh/youtube-genie/"
-}
