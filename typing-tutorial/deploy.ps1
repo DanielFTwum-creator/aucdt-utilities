@@ -69,7 +69,7 @@ cd $buildDir
 git sparse-checkout set typing-tutorial
 cd typing-tutorial
 log '[3/5] Installing dependencies...'
-pnpm install --no-frozen-lockfile --silent
+pnpm install --frozen-lockfile --silent 2>/dev/null || { echo '[install] re-resolving under server policy (Pattern 27/34)'; rm -f pnpm-lock.yaml && pnpm install; }
 log '[4/5] Building...'
 pnpm build
 if ! grep -Eq '<script[^>]+(src="[^"]*\.js"|type="module")' dist/index.html; then echo '[FATAL] dist/index.html ships no JS bundle (missing module entry in index.html). Aborting deploy.'; exit 1; fi

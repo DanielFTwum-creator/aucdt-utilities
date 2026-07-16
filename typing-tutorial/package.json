@@ -33,9 +33,9 @@
     "vite": "^8.0.14"
   },
   "devDependencies": {
-    "@fontsource/inter": "^5.2.5",
-    "@fontsource/jetbrains-mono": "^5.2.5",
-    "@fontsource/playfair-display": "^5.2.5",
+    "@fontsource/inter": "^5.0.0",
+    "@fontsource/jetbrains-mono": "^5.0.0",
+    "@fontsource/playfair-display": "^5.0.0",
     "@types/express": "^5.0.6",
     "@types/node": "^25.9.1",
     "autoprefixer": "^10.5.0",
