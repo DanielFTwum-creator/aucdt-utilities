@@ -360,6 +360,45 @@ Template: copy from `tuc-wms/CONSTRAINTS.md` (the reference example in this mono
 
 ---
 
+## 5b. NODE / SPA STANDARDS (NON-NEGOTIABLE)
+
+These apply to every Node-backed app in `aucdt-utilities/` (the `ai-tools.techbridge.edu.gh/<slug>/` fleet: React/Vite SPA + Express backend, pm2, nginx sub-path). Each rule below has already cost a multi-round debugging session at least once. Detail → PATTERNS.md.
+
+### Backend runtime
+
+- **One `server.ts`, run via `tsx`. `server.js` is not a runtime.** A `server.js` alongside `server.ts` is a trap: deploys, editors, and Claude cannot tell which one runs, and edits land in the wrong file (this caused the aucdt-msee OAuth callback to be written into a dead stub while the live process was the other file). If an app still has a `server.js`, converging it to a single `server.ts` is the standard end state.
+- `tsx` lives in `dependencies` (not `devDependencies`) — pm2 prod needs it (§5 Package Manager).
+
+### Auth: WMS OAuth relay (Pattern 35)
+
+- Google login goes through the WMS relay: the code→token exchange is POSTed to `wms.techbridge.edu.gh/api/oauth/google/exchange` with the `X-Gemini-Proxy-Key` service credential. **The app never holds `GOOGLE_CLIENT_SECRET`** — only WMS does. Mirror biochemai.
+- The public `VITE_GOOGLE_CLIENT_ID` is embedded at build time from `/opt/tuc-wms/.env` `GOOGLE_CLIENT_ID` (a `[3.5/5]` deploy step), not committed. The client id is public and safe; the secret never leaves WMS.
+- Don't stack two login walls. One sign-in. If an app has both a Google gate and its own password login, bridge them (Google callback mints the app session) rather than making the user log in twice.
+
+### Sub-path SPA serving (Pattern 29 / 36)
+
+nginx proxies `/<slug>/` to the app **without stripping the prefix** (`proxy_pass http://localhost:PORT/<slug>/;`). So:
+
+| Rule | Why |
+|---|---|
+| Vite `base: '/<slug>/'` (absolute, not `'./'`) | Relative base breaks deep links and asset resolution; symptom = **JS bundles served as `text/html`** and a blank page ("Failed to load module script … MIME type text/html"). |
+| Mount `express.static` at **both** the sub-path and root | The un-stripped prefix means `/<slug>/assets/x.js` misses a root-only mount, falls through to the SPA catch-all, and returns `index.html`. Mount `app.use('/<slug>', express.static(dir)); app.use(express.static(dir));`. |
+
+### Deploy provenance
+
+- A `-Build` deploy sources **both** frontend and backend from the **same fresh `git clone` of `main`** — never scp the backend (`server.ts`) from the local checkout, which may lag `main`. Mixing "frontend from main, backend from stale local" ships a new SPA against an old server (this is how aucdt-msee shipped an absolute-base frontend onto a server with no sub-path mount, so assets 404'd as `text/html` even after a "successful" deploy).
+- pm2 restart output: redirect the `pm2 start`/`pm2 restart` **stdout** to `/dev/null` in deploy scripts. Its box-drawing process table renders as mojibake in PowerShell and buries the real log; keep stderr for genuine errors.
+
+### Verify before "done"
+
+`pnpm build` clean (no `chunks larger than 600 kB`), then confirm the live sub-path serves JS as JS, not HTML:
+```
+ssh root@techbridge.edu.gh "curl -sI http://localhost:<PORT>/<slug>/assets/<some>.js | grep -iE 'HTTP|content-type'"
+```
+`Content-Type: text/javascript` = good; `text/html` = the static mount or Vite base is wrong.
+
+---
+
 ## 6. DOCUMENTATION STANDARDS
 
 - **Standard:** IEEE 830 / IEEE 29148 SRS format
@@ -371,20 +410,13 @@ Template: copy from `tuc-wms/CONSTRAINTS.md` (the reference example in this mono
 
 ## 7. ACTIVE PLATFORMS & PROJECTS
 
-All projects in `aucdt-utilities/` monorepo.
+The fleet is now 35+ apps and changes weekly, so a hand-maintained list here goes stale (it used to, and mis-stated stacks). **Source of truth for what is deployed and where:**
 
-| Project | Stack | Status |
-|---|---|---|
-| College Landing Page Generator | React · TypeScript · Tailwind · Vite | Active |
-| HLS Radio Streamer (`ai.techbridge.edu.gh`) | HTML/JS · Bash · Python · HLS | Active |
-| LearnAI Agentic LMS | React · Spring Boot · Claude API | Active |
-| LyriaStream (AI Music Generation) | FastAPI · Spring Boot · React · MusicGen | Active |
-| BioChemAI | React · Spring Boot | Active |
-| ThesisAI | React · Spring Boot | Active |
-| TUC NetScan | React · Spring Boot · MariaDB · Redis | Active |
-| BionicSkins™ Website | Next.js 14 · TypeScript | Consulting |
-| ROOT Drumming Systems | React | Active |
-| TUC Institutional Websites | Plesk · PHP · WordPress | Maintained |
+- **Ports + running processes (verified reality):** `SERVER_PORTS.md` (checked against `ss` + pm2), with `PORT-REGISTRY.md` as the intent ledger.
+- **Per-app detail (stack, auth, deploy):** the Fleet Developer Handbook in `docs/handbook/`.
+- **Live process list:** `pm2 list` on the server.
+
+Most `ai-tools.techbridge.edu.gh/<slug>/` apps are the React/Vite SPA + Express (`server.ts`) archetype on the WMS relay (§5b). Spring Boot apps (LMS, NetScan, ThesisAI, LyriaStream) follow §5a.
 
 ---
 
@@ -458,6 +490,10 @@ Say it:
 ❌ Start an autonomous loop with no stop condition or no iteration cap
 ❌ Use em-dashes or LLM-tell phrasing ("delve", "it's not just X, it's Y") in delivered text
 ❌ Use `min-height: 100vh; width: 100%` for full-screen overlays — TUC splash sets `body { display: flex }`, shrinking `#root` to content width. Use `position: fixed; inset: 0` instead (Pattern 19)
+❌ Keep a `server.js` next to `server.ts` — one `server.ts` runtime only, or the wrong file gets edited/deployed (§5b)
+❌ Ship a sub-path SPA with Vite `base: './'` or a root-only static mount — JS then serves as `text/html` and the page is blank (§5b, Pattern 29/36)
+❌ In a `-Build` deploy, scp the backend from the local checkout while the frontend builds from a fresh `main` clone — the two desync (§5b Deploy provenance)
+❌ Hold `GOOGLE_CLIENT_SECRET` in an app — the OAuth exchange relays through WMS (§5b, Pattern 35)
 
 ---
 
@@ -490,6 +526,7 @@ Applies to all responses regardless of context: debugging sessions, deploy scrip
 
 ---
 
+*Last updated: 16 July 2026 — Daniel Frempong Twum / TUC ICT. Added §5b Node/SPA standards (server.ts-only, WMS OAuth relay, sub-path SPA serving, deploy provenance), matching anti-patterns, and refreshed §7 to point at SERVER_PORTS.md / the handbook instead of a stale hand-list.*
 *Last updated: 1 July 2026 — Daniel Frempong Twum / TUC ICT*
 *Merged with the `gstack` behavioural template (22 Jun 2026): Core Operating Principles enriched with gstack's senior-engineer/traceability checks; new HARNESS, LOOPS & AUTONOMY, and TEXT STYLE sections added. gstack's own slash commands (`/goal`, `/loop`, `/batch`, `/browse`, etc.) are not available as skills in Cowork sessions — referenced only as "if installed" rather than assumed present.*
 *Pattern library (User Journey, HTML Standards, Capacitor, Gemini proxy, Dual-Auth Logout, Glucose) → see PATTERNS.md; Java standards → §5a above; staff-app SSO → tuc-wms/docs/SSO_ONBOARDING_PLAYBOOK.md*
