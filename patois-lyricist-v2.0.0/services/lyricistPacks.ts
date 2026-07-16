@@ -294,6 +294,7 @@ export const LANGUAGE_PACKS: LanguagePack[] = [
   { id: 'ga', label: 'Ga', dictionGuidance: `Season with Ga (Accra) phrasing and interjections; code-switch with English for clarity. Honour Ga cadence in the hook where it fits.` },
   { id: 'ee', label: 'Ewe', dictionGuidance: `Season with Ewe phrasing and interjections; code-switch with English for clarity. Let Ewe carry the most heartfelt lines.` },
   { id: 'pcm', label: 'Pidgin', dictionGuidance: `Write primarily in warm West-African Pidgin English — natural, rhythmic, globally readable. This is the everyday street-poetry register, not broken English.` },
+  { id: 'fr', label: 'French / Français', dictionGuidance: `Write primarily in West-African French — the register heard across Ghana's French-speaking neighbours (Côte d'Ivoire, Burkina Faso, Togo, Benin). Lean into the warm, danceable coupé-décalé and Ivorian nouchou flavour where the genre allows. Code-switch a little English or local phrasing for colour, but keep the body of the lyric in natural, singable French. Use proper accents (é, è, ê, à, ç).` },
 ];
 
 // ─── Registry + helpers ──────────────────────────────────────────────────────

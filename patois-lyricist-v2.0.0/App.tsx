@@ -225,32 +225,43 @@ const App: React.FC = () => {
     
     try {
       if (format === 'pdf') {
-        const { default: jsPDF } = await import('jspdf');
+        const [{ default: jsPDF }, { DEJAVU_REGULAR_B64, DEJAVU_BOLD_B64 }] = await Promise.all([
+          import('jspdf'),
+          import('./services/pdfFont'),
+        ]);
         const doc = new jsPDF();
-        doc.setFont("helvetica", "bold");
+        // The built-in helvetica/courier fonts are WinAnsi (Latin-1) and cannot render
+        // Twi ɔ/ɛ or French accents. Embed a DejaVu Sans subset that covers them.
+        doc.addFileToVFS('DejaVuSans.ttf', DEJAVU_REGULAR_B64);
+        doc.addFont('DejaVuSans.ttf', 'DejaVuSans', 'normal');
+        doc.addFileToVFS('DejaVuSans-Bold.ttf', DEJAVU_BOLD_B64);
+        doc.addFont('DejaVuSans-Bold.ttf', 'DejaVuSans', 'bold');
+
+        doc.setFont("DejaVuSans", "bold");
         doc.setFontSize(20);
         doc.text(songTitle || 'Untitled', 20, 20);
 
-        doc.setFont("helvetica", "normal");
+        doc.setFont("DejaVuSans", "normal");
         doc.setFontSize(12);
         doc.text(`Theme: ${themeInput}`, 20, 30);
         doc.text(`Style: ${currentPack.label} · ${currentPersona?.label || ''} (${rhymeScheme})`, 20, 38);
-        
+
         let yPos = 46;
         if (songDescription) {
           const splitDesc = doc.splitTextToSize(`Vision: ${songDescription}`, 170);
           doc.text(splitDesc, 20, yPos);
           yPos += splitDesc.length * 6 + 2;
         }
-        
+
         const splitStructure = doc.splitTextToSize(`Structure: ${songStructure.join(' -> ')}`, 170);
         doc.text(splitStructure, 20, yPos);
         yPos += splitStructure.length * 6 + 8;
-        
+
         doc.line(20, yPos - 6, 190, yPos - 6);
         yPos += 4;
-        
-        doc.setFont("courier", "normal");
+
+        doc.setFont("DejaVuSans", "normal");
+        doc.setFontSize(11);
         const splitLyrics = doc.splitTextToSize(lyrics, 170);
         
         for (let i = 0; i < splitLyrics.length; i++) {
