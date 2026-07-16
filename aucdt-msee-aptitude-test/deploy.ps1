@@ -85,12 +85,14 @@ if ! grep -Eq '<script[^>]+(src="[^"]*\.js"|type="module")' dist/index.html; the
 log '[5/5] Deploying dist/ to web root...'
 mkdir -p $RemotePath
 rsync -a --delete --exclude='.env' --exclude='node_modules/' --exclude='server.ts' --exclude='server.cjs' --exclude='server.js' --exclude='package.json' --exclude='pnpm-lock.yaml' --exclude='pnpm-workspace.yaml' --exclude='ecosystem.config.js' --exclude='.htaccess' dist/. $RemotePath
-# Backend from the SAME fresh main clone as the frontend, so server.js can never
+# Backend from the SAME fresh main clone as the frontend, so server.ts can never
 # lag behind main (the "frontend-from-main, backend-from-stale-local" split that
-# left the sub-path static mount missing). Step 6 no longer scps server.js from
+# left the sub-path static mount missing). Step 6 no longer scps server.ts from
 # the local checkout when -Build is used.
-log 'Deploying backend (server.js + manifests) from the fresh clone...'
-cp server.js package.json pnpm-lock.yaml pnpm-workspace.yaml $RemotePath 2>/dev/null || true
+log 'Deploying backend (server.ts + manifests) from the fresh clone...'
+cp server.ts package.json pnpm-lock.yaml pnpm-workspace.yaml $RemotePath 2>/dev/null || true
+# Purge any stale server.js left by older deploys — one server.ts runtime only (§5b).
+rm -f ${RemotePath}server.js
 log 'Build and deploy complete.'
 "@
     $b64 = [Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes($serverScript.Replace("`r", "")))
@@ -142,9 +144,10 @@ ssh -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax
 Log "INFO" "Step 6: Deploying backend files..." Yellow
 # In -Build mode the backend already came from the fresh main clone (Step 3), so do
 # NOT overwrite it with the local checkout, which may lag main. Only the non-Build
-# path (which ships local dist/) needs to push the local server.js here.
+# path (which ships local dist/) needs to push the local server.ts here.
 if (-not $Build) {
-    scp -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax=3 server.js package.json pnpm-lock.yaml pnpm-workspace.yaml "${RemoteHost}:${RemotePath}" 2>$null | Out-Null
+    scp -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax=3 server.ts package.json pnpm-lock.yaml pnpm-workspace.yaml "${RemoteHost}:${RemotePath}" 2>$null | Out-Null
+    ssh -o StrictHostKeyChecking=no $RemoteHost "rm -f ${RemotePath}server.js" 2>$null | Out-Null
 }
 if (Test-Path ".env.local") { scp -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax=3 ".env.local" "${RemoteHost}:${RemotePath}.env" 2>$null | Out-Null }
 $nvmPrefix = 'export NVM_DIR="$HOME/.nvm"; [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"; nvm use 26 >/dev/null 2>&1 || true'
@@ -163,7 +166,7 @@ if command -v pm2 &>/dev/null; then
   if pm2 describe aucdt-msee-aptitude-test &>/dev/null; then
     pm2 delete aucdt-msee-aptitude-test >/dev/null 2>&1
   fi
-  cd $RemotePath && NODE_ENV=production PORT=3011 pm2 start server.js --name aucdt-msee-aptitude-test --interpreter npx --interpreter-args tsx --cwd $RemotePath >/dev/null
+  cd $RemotePath && NODE_ENV=production PORT=3011 pm2 start server.ts --name aucdt-msee-aptitude-test --interpreter npx --interpreter-args tsx --cwd $RemotePath >/dev/null
   echo 'pm2: started aucdt-msee-aptitude-test'
   pm2 save --force &>/dev/null
 fi

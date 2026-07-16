@@ -15,7 +15,7 @@
 | Port | **3011** |
 | Public URL | `https://ai-tools.techbridge.edu.gh/aucdt-msee-aptitude-test/` |
 | Deploy path | `/var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/aucdt-msee-aptitude-test/` |
-| Stack | React 19 + Vite 6 (frontend) · Express 5 (backend, plain JS `server.js`) · MySQL (mysql2) · Gemini AI (`@google/genai`) · JWT auth |
+| Stack | React 19 + Vite 6 (frontend) · Express 5 (backend, `server.ts` via `tsx`) · MySQL (mysql2) · Gemini AI relayed through WMS · JWT auth (Google SSO) |
 
 ---
 
@@ -36,11 +36,11 @@
 |---|---|
 | Host | Ubuntu + Plesk — `66.226.72.199` |
 | Node version | **v26.3.1** |
-| Server entry | `server.js` (plain ESM — no `tsx` needed; do **not** rename to `.ts`) |
-| PM2 interpreter | Node v26, standard `node` interpreter |
+| Server entry | `server.ts` (single runtime file, run via `tsx` — §5b Node/SPA standard) |
+| PM2 interpreter | `npx tsx` (`tsx` is a runtime **dependency**, not devDependency) |
 | Reverse proxy | nginx (Plesk-managed) |
 
-> **Note:** The server is plain JavaScript (`server.js`), not TypeScript. Do not introduce `tsx` or a TypeScript server unless the project is explicitly migrated. The existing `tsconfig.json` applies to the Vite/React frontend only.
+> **Note:** Migrated from a plain-JS `server.js` to a single `server.ts` on 16 July 2026 (explicitly authorised), per the §5b "one `server.ts`, no `server.js`" standard. There is now exactly one backend runtime file. `tsx` is pinned in `dependencies` so PM2 runs it in prod. Do not reintroduce a `server.js`.
 
 ---
 

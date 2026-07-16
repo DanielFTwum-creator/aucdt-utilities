@@ -1990,7 +1990,7 @@ Create the following directory and file structure. The contents for each file ar
 ├── index.tsx
 ├── metadata.json
 ├── package.json
-├── server.js
+├── server.ts
 ├── SRS.md
 └── types.ts
 ```
@@ -2166,7 +2166,7 @@ This guide provides step-by-step instructions to deploy the AUCDT MSEE Mathemati
 
 ## Step 2: Configure the Application Server
 
-The backend server (`server.js`) requires several environment variables to run correctly. These contain sensitive credentials and should never be hardcoded.
+The backend server (`server.ts`, run via `tsx`) requires several environment variables to run correctly. These contain sensitive credentials and should never be hardcoded.
 
 1.  **Create a `.env` File:**
     *   In the root of your project directory on the server, create a file named `.env`.
@@ -2214,7 +2214,7 @@ You will deploy the entire application directory to your server and run it as a 
     ```
     *   **Start the app with pm2:**
     ```bash
-    pm2 start server.js --name "msee-app"
+    pm2 start server.ts --name "msee-app" --interpreter npx --interpreter-args tsx
     ```
     *   You can monitor the app with `pm2 list` and view logs with `pm2 logs msee-app`.
 
