@@ -71,6 +71,9 @@ git sparse-checkout set deliberate-magic-reader
 cd deliberate-magic-reader
 log '[3/5] Installing dependencies...'
 pnpm install --no-frozen-lockfile 2>&1 | tail -5 || true
+log '[3.5/5] Embedding VITE_GOOGLE_CLIENT_ID (public client id) from WMS custody...'
+CID=`$(grep '^GOOGLE_CLIENT_ID=' /opt/tuc-wms/.env | head -1 | cut -d= -f2- | tr -d '\r\000')
+if [ -n "`$CID" ]; then printf 'VITE_GOOGLE_CLIENT_ID=%s\n' "`$CID" > .env.local; echo '  VITE_GOOGLE_CLIENT_ID embedded'; else echo '  WARN: GOOGLE_CLIENT_ID not found in /opt/tuc-wms/.env'; fi
 log '[4/5] Building...'
 ./node_modules/.bin/vite build
 log '[5/5] Deploying dist/ to web root...'
