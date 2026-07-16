@@ -280,6 +280,9 @@ async function startServer() {
     // fall back to ./dist for a local production run. express.static ignores dotfiles by default,
     // so .env is never served.
     const distPath = fs.existsSync(path.join(process.cwd(), "index.html")) ? process.cwd() : path.join(process.cwd(), "dist");
+    // nginx forwards the /magic-reader/ prefix un-stripped, so serve static assets under that
+    // sub-path (else /magic-reader/assets/*.js misses and the SPA fallback returns HTML).
+    app.use("/magic-reader", express.static(distPath));
     app.use(express.static(distPath));
     app.get(/.*/, (req, res) => {
       res.sendFile(path.join(distPath, "index.html"));
