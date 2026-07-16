@@ -310,9 +310,42 @@ app.get(['/callback', '/aucdt-msee-aptitude-test/callback'], async (req, res) =>
     const tokens = await tokenResponse.json();
     if (!tokens.id_token) return res.redirect('/aucdt-msee-aptitude-test/?error=no_id_token');
     const userInfo = decodeJWT(tokens.id_token);
-    const userJson = JSON.stringify({ id: userInfo.sub, name: userInfo.name, email: userInfo.email });
+    const email = userInfo.email;
+    if (!email) return res.redirect('/aucdt-msee-aptitude-test/?error=no_email');
+
+    // Single sign-on: Google IS the login. Map the verified Google email to a row
+    // in `users` (create as a student on first sign-in, keep an existing admin
+    // role), then mint the SAME exam JWT the old password login issued. Any Google
+    // account is allowed (per the access policy). Google-only accounts get a
+    // sentinel password_hash so the password login path can never match them.
+    if (!process.env.JWT_SECRET) return res.redirect('/aucdt-msee-aptitude-test/?error=session_not_configured');
+    let userRow;
+    const [existing] = await pool.execute('SELECT id, role FROM users WHERE email = ?', [email]);
+    if (existing.length > 0) {
+      userRow = existing[0];
+    } else {
+      try {
+        const [result] = await pool.execute('INSERT INTO users (email, password_hash) VALUES (?, ?)', [email, 'google-oauth-no-password']);
+        userRow = { id: result.insertId, role: 'student' };
+      } catch (e) {
+        if (e && e.code === 'ER_DUP_ENTRY') {
+          const [again] = await pool.execute('SELECT id, role FROM users WHERE email = ?', [email]);
+          userRow = again[0];
+        } else { throw e; }
+      }
+    }
+    const accessToken = jwt.sign({ id: userRow.id, email, role: userRow.role }, process.env.JWT_SECRET, { expiresIn: '8h' });
+
+    // Google identity cookie (AuthGate reads this to mark the SPA authed).
+    const userJson = JSON.stringify({ id: userInfo.sub, name: userInfo.name, email });
     res.cookie('aucdt-msee-aptitude-test_user', Buffer.from(userJson).toString('base64'), {
       httpOnly: false, secure: true, sameSite: 'lax', maxAge: 7 * 24 * 60 * 60 * 1000, path: '/aucdt-msee-aptitude-test/',
+    });
+    // Exam-session cookie: the frontend bootstrap moves this into sessionStorage so
+    // useAuth is satisfied and the second (password) login screen never appears.
+    const sessionJson = JSON.stringify({ accessToken, user: { uid: userRow.id, email, role: userRow.role } });
+    res.cookie('msee_session', Buffer.from(sessionJson).toString('base64'), {
+      httpOnly: false, secure: true, sameSite: 'lax', maxAge: 5 * 60 * 1000, path: '/aucdt-msee-aptitude-test/',
     });
     return res.redirect('/aucdt-msee-aptitude-test/');
   } catch (err) {
