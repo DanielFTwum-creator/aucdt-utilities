@@ -76,6 +76,9 @@ git sparse-checkout set aucdt-msee-aptitude-test
 cd aucdt-msee-aptitude-test
 log '[3/5] Installing dependencies...'
 pnpm install --no-frozen-lockfile --silent 2>/dev/null || npm install --silent
+log '[3.5/5] Embedding VITE_GOOGLE_CLIENT_ID (public client id) from WMS custody...'
+CID=`$(grep '^GOOGLE_CLIENT_ID=' /opt/tuc-wms/.env | head -1 | cut -d= -f2- | tr -d '\r\000')
+if [ -n "`$CID" ]; then printf 'VITE_GOOGLE_CLIENT_ID=%s\n' "`$CID" > .env.local; echo '  VITE_GOOGLE_CLIENT_ID embedded'; else echo '  WARN: GOOGLE_CLIENT_ID not found in /opt/tuc-wms/.env'; fi
 log '[4/5] Building...'
 pnpm build
 if ! grep -Eq '<script[^>]+(src="[^"]*\.js"|type="module")' dist/index.html; then echo '[FATAL] dist/index.html ships no JS bundle (missing module entry in index.html). Aborting deploy.'; exit 1; fi

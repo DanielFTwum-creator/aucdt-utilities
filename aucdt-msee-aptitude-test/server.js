@@ -45,8 +45,22 @@ const WMS_GEMINI_URL = process.env.WMS_GEMINI_URL || 'https://wms.techbridge.edu
 const GEMINI_PROXY_KEY = process.env.GEMINI_PROXY_KEY || '';
 const MODEL = 'gemini-2.5-flash';
 
+// --- Google OAuth (fleet standard, Pattern 35): the code->token exchange is  ---
+// --- relayed through WMS with the same GEMINI_PROXY_KEY service credential,   ---
+// --- so this app never holds GOOGLE_CLIENT_SECRET. Only WMS holds it.         ---
+const WMS_OAUTH_EXCHANGE_URL = process.env.WMS_OAUTH_EXCHANGE_URL || 'https://wms.techbridge.edu.gh/api/oauth/google/exchange';
+const REDIRECT_URI = process.env.VITE_GOOGLE_REDIRECT_URI || 'https://ai-tools.techbridge.edu.gh/aucdt-msee-aptitude-test/callback';
+
 if (!GEMINI_PROXY_KEY) {
-  console.warn('[msee] WARNING: GEMINI_PROXY_KEY not set — /api/generate will return 503');
+  console.warn('[msee] WARNING: GEMINI_PROXY_KEY not set — /api/generate and Google login will return 503');
+}
+
+// Decode the payload of a Google id_token (JWT) without verifying the signature.
+// The token comes straight from Google via the trusted WMS relay, so we only read it.
+function decodeJWT(token) {
+  const parts = token.split('.');
+  if (parts.length !== 3) throw new Error('Invalid JWT');
+  return JSON.parse(Buffer.from(parts[1], 'base64').toString('utf-8'));
 }
 
 class RelayError extends Error {
@@ -272,6 +286,40 @@ app.post('/api/generate', authenticateToken, isAdmin, async (req, res) => {
 
 // Health check (fleet standard)
 app.get(['/api/health', '/aucdt-msee-aptitude-test/api/health'], (_req, res) => res.json({ ok: true }));
+
+// --- Google OAuth callback ---
+// Google redirects here with ?code=...; relay the exchange through WMS (no secret
+// held), decode the id_token, set the JS-readable user cookie the AuthGate reads,
+// then redirect back into the SPA. Registered before the static/catch-all so it wins.
+app.get(['/callback', '/aucdt-msee-aptitude-test/callback'], async (req, res) => {
+  const { code, error } = req.query;
+  if (error) return res.redirect(`/aucdt-msee-aptitude-test/?error=${encodeURIComponent(error)}`);
+  if (!code) return res.redirect('/aucdt-msee-aptitude-test/?error=missing_code');
+  if (!GEMINI_PROXY_KEY) return res.redirect('/aucdt-msee-aptitude-test/?error=oauth_not_configured');
+  try {
+    const tokenResponse = await fetch(WMS_OAUTH_EXCHANGE_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-Gemini-Proxy-Key': GEMINI_PROXY_KEY },
+      body: JSON.stringify({ code, redirectUri: REDIRECT_URI }),
+    });
+    if (!tokenResponse.ok) {
+      const err = await tokenResponse.text();
+      console.error(`[msee] Token exchange failed ${tokenResponse.status}: ${err.slice(0, 300)}`);
+      return res.redirect('/aucdt-msee-aptitude-test/?error=token_exchange_failed');
+    }
+    const tokens = await tokenResponse.json();
+    if (!tokens.id_token) return res.redirect('/aucdt-msee-aptitude-test/?error=no_id_token');
+    const userInfo = decodeJWT(tokens.id_token);
+    const userJson = JSON.stringify({ id: userInfo.sub, name: userInfo.name, email: userInfo.email });
+    res.cookie('aucdt-msee-aptitude-test_user', Buffer.from(userJson).toString('base64'), {
+      httpOnly: false, secure: true, sameSite: 'lax', maxAge: 7 * 24 * 60 * 60 * 1000, path: '/aucdt-msee-aptitude-test/',
+    });
+    return res.redirect('/aucdt-msee-aptitude-test/');
+  } catch (err) {
+    console.error('[msee] OAuth callback error:', err);
+    return res.redirect('/aucdt-msee-aptitude-test/?error=internal_error');
+  }
+});
 
 // --- Static File Serving ---
 // nginx proxies /aucdt-msee-aptitude-test/ to this app WITHOUT stripping the
