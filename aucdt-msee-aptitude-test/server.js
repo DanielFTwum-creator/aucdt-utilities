@@ -274,8 +274,15 @@ app.post('/api/generate', authenticateToken, isAdmin, async (req, res) => {
 app.get(['/api/health', '/aucdt-msee-aptitude-test/api/health'], (_req, res) => res.json({ ok: true }));
 
 // --- Static File Serving ---
+// nginx proxies /aucdt-msee-aptitude-test/ to this app WITHOUT stripping the
+// prefix, and the SPA is built with an absolute base of the same sub-path
+// (Pattern 29). Mount static at BOTH the sub-path and root so asset requests
+// (/aucdt-msee-aptitude-test/assets/*.js) resolve to files in __dirname/assets/
+// instead of falling through to the index.html catch-all (which would serve
+// JS bundles as text/html and break module loading).
 // Express 5 (path-to-regexp 8) rejects the bare '*' wildcard; use a regex
 // catch-all for the SPA fallback instead.
+app.use('/aucdt-msee-aptitude-test', express.static(__dirname));
 app.use(express.static(__dirname));
 app.get(/.*/, (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));

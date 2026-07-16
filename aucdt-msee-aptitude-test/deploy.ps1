@@ -147,9 +147,9 @@ Log "INFO" "Step 7: Restarting backend (PM2)..." Yellow
 $restartCmd = @"
 if command -v pm2 &>/dev/null; then
   if pm2 describe aucdt-msee-aptitude-test &>/dev/null; then
-    pm2 delete aucdt-msee-aptitude-test
+    pm2 delete aucdt-msee-aptitude-test >/dev/null 2>&1
   fi
-  cd $RemotePath && NODE_ENV=production PORT=3011 pm2 start server.js --name aucdt-msee-aptitude-test --interpreter npx --interpreter-args tsx --cwd $RemotePath
+  cd $RemotePath && NODE_ENV=production PORT=3011 pm2 start server.js --name aucdt-msee-aptitude-test --interpreter npx --interpreter-args tsx --cwd $RemotePath >/dev/null
   echo 'pm2: started aucdt-msee-aptitude-test'
   pm2 save --force &>/dev/null
 fi
