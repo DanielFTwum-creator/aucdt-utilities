@@ -74,7 +74,7 @@ log '[3/7] Injecting .env.local...'; cp /tmp/.env.${PM2_APP} .env.local
 log '[4/7] Installing...'; pnpm install --frozen-lockfile --silent 2>/dev/null || pnpm install --no-frozen-lockfile --silent
 log '[5/7] Building...'; pnpm build
 log '[6/7] Deploying...'; mkdir -p "`$DEPLOY_PATH" && rsync -a --delete dist/ "`$DEPLOY_PATH/dist/"; cp index.html "`$DEPLOY_PATH/dist/index.html" 2>/dev/null || true
-log '[7/7] Backend deps...'; cp server.ts package.json pnpm-lock.yaml "`$DEPLOY_PATH/" 2>/dev/null || true; cd "`$DEPLOY_PATH" && pnpm install --silent 2>/dev/null || npm install --silent
+log '[7/7] Backend deps...'; cp server.ts package.json pnpm-lock.yaml pnpm-workspace.yaml "`$DEPLOY_PATH/" 2>/dev/null || true; cd "`$DEPLOY_PATH" && { pnpm install --frozen-lockfile --silent 2>/dev/null || { echo '[7/7] re-resolving under server policy (Pattern 34, un-masked)'; rm -f pnpm-lock.yaml && pnpm install; }; }
 log 'Done.'
 "@
 
