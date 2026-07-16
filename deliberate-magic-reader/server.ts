@@ -1,5 +1,6 @@
 import express from "express";
 import path from "path";
+import fs from "fs";
 import dotenv from "dotenv";
 import cookieParser from 'cookie-parser';
 
@@ -275,7 +276,10 @@ async function startServer() {
     app.use(vite.middlewares);
   } else {
     console.log("Setting up production static file server...");
-    const distPath = path.join(process.cwd(), "dist");
+    // The deploy flattens dist/ into the web root, so serve from cwd when index.html is there;
+    // fall back to ./dist for a local production run. express.static ignores dotfiles by default,
+    // so .env is never served.
+    const distPath = fs.existsSync(path.join(process.cwd(), "index.html")) ? process.cwd() : path.join(process.cwd(), "dist");
     app.use(express.static(distPath));
     app.get(/.*/, (req, res) => {
       res.sendFile(path.join(distPath, "index.html"));
