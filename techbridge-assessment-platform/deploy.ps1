@@ -92,7 +92,7 @@ Write-Host $envResult -ForegroundColor DarkGray
 if ($envResult -match 'WARN') { Log -Level 'ERROR' -Msg 'GEMINI_PROXY_KEY unavailable — OAuth + Gemini relay would fail. Aborting before restart.' -Color Red; exit 1 }
 
 Log -Level 'INFO' -Msg 'Step 5: Restarting backend...' -Color Yellow
-$r=& $SSH @SSH_OPTS $REMOTE "pm2 delete ${PM2_APP} >/dev/null 2>&1; cd ${DEPLOY_PATH}; PORT=${PORT} pm2 start server.ts --name ${PM2_APP} --interpreter npx --interpreter-args tsx --cwd ${DEPLOY_PATH}; echo 'pm2: hard restart (Pattern 23)'; pm2 save --force >/dev/null 2>&1 || true"
+$r=& $SSH @SSH_OPTS $REMOTE "pm2 delete ${PM2_APP} >/dev/null 2>&1; cd ${DEPLOY_PATH}; PORT=${PORT} pm2 start server.ts --name ${PM2_APP} --interpreter npx --interpreter-args tsx --cwd ${DEPLOY_PATH} >/dev/null; echo 'pm2: hard restart (Pattern 23)'; pm2 save --force >/dev/null 2>&1 || true"
 Write-Host $r -ForegroundColor DarkGray
 
 Log -Level 'INFO' -Msg 'Health checks...' -Color Yellow; Start-Sleep -Seconds 8

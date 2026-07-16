@@ -146,7 +146,7 @@ if command -v pm2 &>/dev/null; then
   # Pattern 23: hard delete + fresh start so the edited server.ts (OAuth relay) actually loads,
   # not a stale tsx-transpiled copy left by reload.
   pm2 delete deliberate-magic-reader &>/dev/null || true
-  cd $RemotePath && NODE_ENV=production PORT=3008 pm2 start server.ts --name deliberate-magic-reader --interpreter npx --interpreter-args tsx --cwd $RemotePath
+  cd $RemotePath && NODE_ENV=production PORT=3008 pm2 start server.ts --name deliberate-magic-reader --interpreter npx --interpreter-args tsx --cwd $RemotePath >/dev/null
   echo 'pm2: hard restart deliberate-magic-reader (Pattern 23)'
   pm2 save --force &>/dev/null
 fi

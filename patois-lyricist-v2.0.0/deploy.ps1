@@ -162,9 +162,9 @@ if command -v pm2 &>/dev/null; then
     # In-place restart preserves the running cwd (lyricist/) and PORT 3017. Do NOT
     # delete + start-from-ecosystem: ecosystem.config.js pins PORT 3004 and would move
     # the live app off 3017 (the fragility this rework exists to eliminate).
-    pm2 restart patois-lyricist && echo 'pm2: restarted patois-lyricist in place (port preserved)'
+    pm2 restart patois-lyricist >/dev/null && echo 'pm2: restarted patois-lyricist in place (port preserved)'
   else
-    PORT=3017 pm2 start server.ts --name patois-lyricist --interpreter npx --interpreter-args tsx --cwd $RemotePath && echo 'pm2: started patois-lyricist on 3017'
+    PORT=3017 pm2 start server.ts --name patois-lyricist --interpreter npx --interpreter-args tsx --cwd $RemotePath >/dev/null && echo 'pm2: started patois-lyricist on 3017'
   fi
   pm2 save --force &>/dev/null
 fi
