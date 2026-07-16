@@ -82,6 +82,12 @@ if ! grep -Eq '<script[^>]+(src="[^"]*\.js"|type="module")' dist/index.html; the
 log '[5/5] Deploying dist/ to web root...'
 mkdir -p $RemotePath
 rsync -a --delete --exclude='.env' --exclude='node_modules/' --exclude='server.ts' --exclude='server.cjs' --exclude='server.js' --exclude='package.json' --exclude='pnpm-lock.yaml' --exclude='pnpm-workspace.yaml' --exclude='ecosystem.config.js' --exclude='.htaccess' dist/. $RemotePath
+# Backend from the SAME fresh main clone as the frontend, so server.js can never
+# lag behind main (the "frontend-from-main, backend-from-stale-local" split that
+# left the sub-path static mount missing). Step 6 no longer scps server.js from
+# the local checkout when -Build is used.
+log 'Deploying backend (server.js + manifests) from the fresh clone...'
+cp server.js package.json pnpm-lock.yaml pnpm-workspace.yaml $RemotePath 2>/dev/null || true
 log 'Build and deploy complete.'
 "@
     $b64 = [Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes($serverScript.Replace("`r", "")))
@@ -131,7 +137,12 @@ Log "INFO" "Step 5: Setting permissions..." Yellow
 ssh -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax=3 $RemoteHost "chown -R techbridge.edu.gh_md:psaserv $RemotePath && chmod -R 755 $RemotePath && chmod 644 ${RemotePath}.htaccess 2>/dev/null; true" | Out-Null
 
 Log "INFO" "Step 6: Deploying backend files..." Yellow
-scp -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax=3 server.js package.json pnpm-lock.yaml pnpm-workspace.yaml "${RemoteHost}:${RemotePath}" 2>$null | Out-Null
+# In -Build mode the backend already came from the fresh main clone (Step 3), so do
+# NOT overwrite it with the local checkout, which may lag main. Only the non-Build
+# path (which ships local dist/) needs to push the local server.js here.
+if (-not $Build) {
+    scp -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax=3 server.js package.json pnpm-lock.yaml pnpm-workspace.yaml "${RemoteHost}:${RemotePath}" 2>$null | Out-Null
+}
 if (Test-Path ".env.local") { scp -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax=3 ".env.local" "${RemoteHost}:${RemotePath}.env" 2>$null | Out-Null }
 $nvmPrefix = 'export NVM_DIR="$HOME/.nvm"; [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"; nvm use 26 >/dev/null 2>&1 || true'
 ssh -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax=3 $RemoteHost "$nvmPrefix; cd $RemotePath && CI=true pnpm install --prod --silent"
