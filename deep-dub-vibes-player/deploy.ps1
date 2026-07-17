@@ -154,6 +154,11 @@ if command -v pm2 &>/dev/null; then
 fi
 "@
 $b64r = [Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes($restartCmd.Replace("`r", "")))
+# Actually RUN the restart (this line was missing — the deploy built $b64r but never
+# executed it, so the pm2 process was never restarted and stayed on the old server.js).
+ssh -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax=3 $RemoteHost "echo $b64r | base64 -d | bash"
+
+Log "INFO" "Health check..." Yellow
 ssh -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax=3 $RemoteHost "test -f ${RemotePath}index.html && echo 'OK index.html present' || echo 'FAIL index.html missing'"
 $elapsed = [math]::Round(((Get-Date) - $__deployStart).TotalSeconds, 1)
 Log "SUCCESS" "DEPLOYMENT COMPLETE in ${elapsed}s — $RemotePath" Green
