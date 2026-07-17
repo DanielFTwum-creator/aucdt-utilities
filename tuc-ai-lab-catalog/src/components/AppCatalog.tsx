@@ -60,7 +60,7 @@ export default function AppCatalog() {
         {/* Header */}
         <div className="tuc-catalog-header mb-12 rounded-xl p-8 text-white shadow-2xl">
           <h1 className="mb-2 tracking-tight text-white">TUC AI LAB CATALOG</h1>
-          <p className="text-lg text-blue-100">Complete registry of all 28 deployed applications</p>
+          <p className="text-lg text-blue-100">Complete registry of all {appCatalog.length} deployed applications</p>
           <div className="mt-4 flex gap-3">
             <a href="/" className="text-xs px-4 py-2 bg-blue-700 hover:bg-blue-600 text-white rounded-lg transition font-semibold">← Back to AI Lab</a>
           </div>
