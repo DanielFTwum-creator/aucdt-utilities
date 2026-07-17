@@ -374,6 +374,8 @@ These apply to every Node-backed app in `aucdt-utilities/` (the `ai-tools.techbr
 - Google login goes through the WMS relay: the code→token exchange is POSTed to `wms.techbridge.edu.gh/api/oauth/google/exchange` with the `X-Gemini-Proxy-Key` service credential. **The app never holds `GOOGLE_CLIENT_SECRET`** — only WMS does. Mirror biochemai.
 - The public `VITE_GOOGLE_CLIENT_ID` is embedded at build time from `/opt/tuc-wms/.env` `GOOGLE_CLIENT_ID` (a `[3.5/5]` deploy step), not committed. The client id is public and safe; the secret never leaves WMS.
 - Don't stack two login walls. One sign-in. If an app has both a Google gate and its own password login, bridge them (Google callback mints the app session) rather than making the user log in twice.
+- **The `redirect_uri` must be byte-identical in both OAuth steps.** The `redirect_uri` sent to Google to START the flow and the `redirectUri` sent in the token EXCHANGE must be the same string. Compute it once at runtime — `` `${window.location.origin}/<slug>/callback` `` — and reuse that one value for both. Never source one from the runtime path and the other from a build-time `VITE_GOOGLE_REDIRECT_URI`: they drift (or the env var is unset) and Google rejects the exchange with `redirect_uri_mismatch`. This exact bug broke peace-vinyl and deep-dub.
+- **Register the callback URI in the shared Google OAuth client** before first login: exactly `https://ai-tools.techbridge.edu.gh/<slug>/callback` (the deployed slug, not the repo folder name). A missing registration also surfaces as `redirect_uri_mismatch` — but from Google's side, not the code.
 
 ### Sub-path SPA serving (Pattern 29 / 36)
 
@@ -383,6 +385,7 @@ nginx proxies `/<slug>/` to the app **without stripping the prefix** (`proxy_pas
 |---|---|
 | Vite `base: '/<slug>/'` (absolute, not `'./'`) | Relative base breaks deep links and asset resolution; symptom = **JS bundles served as `text/html`** and a blank page ("Failed to load module script … MIME type text/html"). |
 | Mount `express.static` at **both** the sub-path and root | The un-stripped prefix means `/<slug>/assets/x.js` misses a root-only mount, falls through to the SPA catch-all, and returns `index.html`. Mount `app.use('/<slug>', express.static(dir)); app.use(express.static(dir));`. |
+| SPA calls the API at `/<slug>/api/...` (prefix with `import.meta.env.BASE_URL`), **never** a root-relative `/api/...`; the server **strips the `/<slug>` prefix** (one middleware) or dual-registers each route | A root `/api/...` fetch escapes the app (nginx only proxies `/<slug>/*`), hits the main site, and returns an HTML 404 → the browser throws `Unexpected token '<', "<!DOCTYPE"... is not valid JSON`. Strip: `app.use((req,_res,next)=>{ if(req.url.startsWith('/<slug>/'))req.url=req.url.slice('/<slug>'.length); next(); })`. Recipe → PATTERNS.md Pattern 38. |
 
 ### Deploy provenance
 
@@ -526,6 +529,7 @@ Applies to all responses regardless of context: debugging sessions, deploy scrip
 
 ---
 
+*Last updated: 17 July 2026 — Daniel Frempong Twum / TUC ICT. Extended §5b with two precise OAuth/sub-path rules learned from the peace-vinyl / deep-dub fixes: the `redirect_uri` must be byte-identical in the auth-start and token-exchange steps (+ register `.../<slug>/callback` in the Google client), and the SPA must call the API at `/<slug>/api/...` with the server stripping the prefix (Pattern 38).*
 *Last updated: 16 July 2026 — Daniel Frempong Twum / TUC ICT. Added §5b Node/SPA standards (server.ts-only, WMS OAuth relay, sub-path SPA serving, deploy provenance), matching anti-patterns, and refreshed §7 to point at SERVER_PORTS.md / the handbook instead of a stale hand-list.*
 *Last updated: 1 July 2026 — Daniel Frempong Twum / TUC ICT*
 *Merged with the `gstack` behavioural template (22 Jun 2026): Core Operating Principles enriched with gstack's senior-engineer/traceability checks; new HARNESS, LOOPS & AUTONOMY, and TEXT STYLE sections added. gstack's own slash commands (`/goal`, `/loop`, `/batch`, `/browse`, etc.) are not available as skills in Cowork sessions — referenced only as "if installed" rather than assumed present.*
