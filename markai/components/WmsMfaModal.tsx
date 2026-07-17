@@ -17,6 +17,7 @@ const WmsMfaModal: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const [secret, setSecret] = useState<string | null>(null);
+  const [manualKey, setManualKey] = useState<string | null>(null);
   const [qrDataUrl, setQrDataUrl] = useState<string | null>(null);
   const [enrolStarted, setEnrolStarted] = useState(false);
 
@@ -35,6 +36,10 @@ const WmsMfaModal: React.FC = () => {
     try {
       const res = await wmsMfaEnrollBegin(wmsMfaTicket);
       setSecret(res.secret);
+      // Authenticator apps accept the base32 key from the otpauth URI for manual entry,
+      // NOT res.secret (base64 — that is only the server's confirm round-trip token).
+      try { setManualKey(new URLSearchParams(res.otpauthUri.split('?')[1]).get('secret')); }
+      catch { setManualKey(null); }
       setQrDataUrl(await QRCode.toDataURL(res.otpauthUri, { margin: 1, width: 200 }));
       setEnrolStarted(true);
     } catch (err) { setError(err instanceof Error ? err.message : 'Could not start enrolment'); }
@@ -100,9 +105,9 @@ const WmsMfaModal: React.FC = () => {
             <h2 className="text-xl font-bold text-primary mb-1">Scan &amp; verify</h2>
             <p className="text-sm text-secondary mb-4">Scan this with your authenticator app, then enter the 6-digit code it shows.</p>
             {qrDataUrl && <img src={qrDataUrl} alt="Authenticator QR code" className="block mx-auto mb-3 rounded-lg" />}
-            {secret && (
+            {manualKey && (
               <p className="text-xs text-secondary text-center break-all mb-3">
-                Can’t scan? Enter this key manually:<br /><code>{secret}</code>
+                Can’t scan? Enter this key manually:<br /><code>{manualKey}</code>
               </p>
             )}
             {codeInput}
