@@ -2719,6 +2719,27 @@ returns **401** (query ran) not **500** (DB error). A real Google sign-in lands 
 ❌ A password in a bash command / heredoc / `~/.mysql_history`.
 ❌ Committing DB credentials; defaulting to `root`/empty in production.
 
+### Server-level trap: one flapping app can block the whole host
+
+A misconfigured app in a failed-connection loop (e.g. mysql2 defaulting to
+`root`/empty → repeated `ER_ACCESS_DENIED`) accumulates aborted connects. MariaDB's
+`max_connect_errors` defaults to **100** — after that many failed connects from a host
+with no successful one in between, MariaDB **blocks that host for every app**, so an
+unrelated production site (e.g. the AUCDT Spring website) suddenly gets
+`Host '<ip>' is blocked because of many connection errors`.
+
+- **Recover now:** `plesk db -e "FLUSH HOSTS;"` (never `mysqladmin flush-hosts` on Plesk —
+  it wants the admin password on the command line).
+- **Stop the bleeding:** `pm2 stop <flapping-app>` until its DB creds are fixed.
+- **Durable fix:** raise the threshold on this shared box — `plesk db -e "SET GLOBAL
+  max_connect_errors=100000;"` (live, no restart) and persist `max_connect_errors = 100000`
+  under `[mysqld]` in the MariaDB server `.cnf`.
+- **Watch the churn:** `SHOW GLOBAL STATUS LIKE 'Aborted_connects';` twice a minute apart —
+  a fast climb means an app is still flapping (wrong password, or something hitting 3306
+  without a real handshake).
+- Note: `localhost` (127.0.0.1) and the box's public IP are *separate* host entries, so a
+  localhost flapper blocks `127.0.0.1`, not the IP — check which host the error names.
+
 ---
 
 ## PATTERN 38: SUB-PATH APP — API CALLS MUST USE THE SLUG, NOT ROOT `/api`
