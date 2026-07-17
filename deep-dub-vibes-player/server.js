@@ -11,6 +11,19 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 app.use(express.json());
 
+// nginx proxies /deep-dub-vibes-player/ to this app WITHOUT stripping the prefix,
+// and the SPA is built with an absolute base of /deep-dub-vibes-player/. Strip the
+// prefix so the routes below (/callback, /api/auth/google/token) and the static
+// assets — all defined at root — match the un-stripped path nginx forwards. Without
+// this, /deep-dub-vibes-player/callback and /…/api/… fall through to the SPA
+// catch-all (breaking the OAuth exchange).
+const BASE = '/deep-dub-vibes-player';
+app.use((req, _res, next) => {
+  if (req.url === BASE) req.url = '/';
+  else if (req.url.startsWith(BASE + '/')) req.url = req.url.slice(BASE.length);
+  next();
+});
+
 // In production, serve from dist
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static('dist'));

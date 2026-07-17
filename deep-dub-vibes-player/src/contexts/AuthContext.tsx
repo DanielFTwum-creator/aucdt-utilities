@@ -21,7 +21,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [isLoading, setIsLoading] = useState(true);
 
   const CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
-  const REDIRECT_URI = import.meta.env.VITE_GOOGLE_REDIRECT_URI;
+  // Compute the redirect URI at runtime so the value sent to Google to START the
+  // flow (login) and the value sent in the token EXCHANGE are byte-identical — a
+  // build-time VITE_GOOGLE_REDIRECT_URI that drifts from the runtime path causes
+  // Google to reject the exchange with redirect_uri_mismatch.
+  const REDIRECT_URI = `${window.location.origin}${APP_PATH}callback`;
 
   useEffect(() => {
     const stored = sessionStorage.getItem('deep_user');
@@ -60,7 +64,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const exchangeCodeForUser = async (code: string) => {
     try {
-      const response = await fetch('/api/auth/google/token', {
+      const response = await fetch(`${APP_PATH}api/auth/google/token`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ code, redirectUri: REDIRECT_URI }),
@@ -89,8 +93,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const responseType = 'code';
     const oauthState = Math.random().toString(36).substring(7);
 
-    // Construct redirect URI dynamically at runtime
-    const redirectUri = `${window.location.origin}${APP_PATH}callback`;
+    // Same redirect URI as the token exchange (see REDIRECT_URI above) — they must match.
+    const redirectUri = REDIRECT_URI;
 
     // Store app context before OAuth redirect
     setOAuthAppContext(APP_NAME);

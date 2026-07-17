@@ -12,6 +12,18 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 app.use(express.json());
 
+// nginx proxies /peace/ to this app WITHOUT stripping the prefix, and the SPA is
+// built with an absolute base of /peace/. Strip the prefix so the routes below
+// (/callback, /api/auth/google/token) and the static assets — all defined at root
+// — match the un-stripped path nginx forwards. Without this, /peace/callback and
+// /peace/api/... fall through to the SPA catch-all (breaking the OAuth exchange).
+const BASE = '/peace';
+app.use((req, _res, next) => {
+  if (req.url === BASE) req.url = '/';
+  else if (req.url.startsWith(BASE + '/')) req.url = req.url.slice(BASE.length);
+  next();
+});
+
 // In production, serve from dist. In dev, proxy to Vite
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static('dist'));
