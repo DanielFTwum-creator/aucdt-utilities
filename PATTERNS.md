@@ -2778,3 +2778,63 @@ so the **un-stripped** `/<slug>/api/x` nginx forwards doesn't match.
 `curl -sI http://localhost:<port>/<slug>/api/health` → 200 JSON. In the browser, no
 "Unexpected token '<'" on any API call, and POST bodies reach the server (401/400, not
 404-HTML).
+
+---
+
+## PATTERN 39: MIGRATE A `server.js` OAUTH APP TO `server.ts` + WMS RELAY
+
+The end-state for a legacy self-exchanging app (holds `GOOGLE_CLIENT_SECRET`, `server.js`
+runtime). Distilled from peace-vinyl + deep-dub — every step below cost a round when skipped.
+
+### Ground truth FIRST (before any code)
+
+- **Confirm the deployed slug against the live nginx `location`**, not the repo folder or the
+  catalog: `grep -nE 'location /<name>' …/vhost_nginx.conf`. peace-vinyl's code said `/peace/`;
+  nginx said `/peace-vinyl/`. The slug drives Vite `base`, `redirect_uri`, the server strip
+  prefix, and the Google-client registration — get it from reality.
+- Note whether nginx **strips** the prefix. If `proxy_pass` ends in the matching URI
+  (`…:PORT/<slug>/;`) it does **not** strip → the server must strip (Pattern 38). A `rewrite
+  …/(.*) /$1` would strip → server must not.
+
+### Code
+
+1. **Relay the exchange (Pattern 35).** `server.ts` POSTs `{code, redirectUri}` to
+   `wms.techbridge.edu.gh/api/oauth/google/exchange` with `X-Gemini-Proxy-Key`; decode the
+   returned `id_token`; return the same `{user}` the frontend already expects. Delete every
+   `GOOGLE_CLIENT_SECRET` / direct-Google-exchange path.
+2. **`redirect_uri` byte-identical** in the auth-start and the exchange (§5b): compute once at
+   runtime as `` `${window.location.origin}/<slug>/callback` ``, reuse for both. Never a
+   build-time `VITE_GOOGLE_REDIRECT_URI`.
+3. **API on the sub-path** (Pattern 38): frontend calls `/<slug>/api/...`; server strips the
+   prefix.
+4. **Serve the SPA from where the deploy puts it.** The `-Build` rsync syncs `dist/.` to the
+   app **root**, not a `dist/` subfolder. Resolve at boot:
+   `const DIST = fs.existsSync(path.join(__dirname,'index.html')) ? __dirname : path.join(__dirname,'dist');`
+   — serving from a hard-coded `dist/` returns `{"error":"Not found. Run pnpm build first."}`.
+5. **One runtime.** Delete `server.js`; the deploy must `rm -f` any stale copy on the server.
+6. **`tsx` in `dependencies`** (pm2 prod runs it), not `devDependencies` — **then regenerate
+   `pnpm-lock.yaml`** (`pnpm install --lockfile-only`). Moving a dep without regenerating the
+   lockfile makes the frozen (`CI=true`) prod install fail `ERR_PNPM_OUTDATED_LOCKFILE`; keep a
+   real `|| npm install` fallback (a `pnpm … | tail` pipe swallows the exit code and skips it).
+
+### Deploy (`deploy.ps1`)
+
+- Embed the public `VITE_GOOGLE_CLIENT_ID` at build from `/opt/tuc-wms/.env` (`[3.5/5]`).
+- Ship `server.ts` (+ purge `server.js`); inject `GEMINI_PROXY_KEY` and strip
+  `GOOGLE_CLIENT_SECRET` from the server `.env` (Pattern 21); set `NODE_ENV=production`.
+- **Hard restart** (Pattern 23): `pm2 delete <app>` then fresh `pm2 start server.ts
+  --interpreter npx --interpreter-args tsx`. **And confirm the restart command is actually
+  executed** — deep-dub's Step 7 built the base64 command but the `ssh "… | base64 -d | bash"`
+  line was missing, so it never ran and the app sat 4 days on the old process.
+
+### Register + verify
+
+- Add `https://ai-tools.techbridge.edu.gh/<slug>/callback` to the shared Google OAuth client.
+- `curl -X POST …/<slug>/api/auth/google/token -d '{}'` → **400** (route + relay reached),
+  not 404/HTML.
+- **`pm2 describe <app>` uptime in seconds** (the process actually swapped) — not a green
+  "DEPLOYMENT COMPLETE", which lies.
+- Real browser Google login lands in the app. A `502 google_token_endpoint_unreachable` /
+  `504` is a **transient WMS→Google** blip, not the app — confirm with
+  `curl -X POST https://oauth2.googleapis.com/token` from the server (fast `400` = healthy) and
+  retry with a fresh code.

@@ -379,7 +379,7 @@ These apply to every Node-backed app in `aucdt-utilities/` (the `ai-tools.techbr
 
 ### Sub-path SPA serving (Pattern 29 / 36)
 
-nginx proxies `/<slug>/` to the app **without stripping the prefix** (`proxy_pass http://localhost:PORT/<slug>/;`). So:
+nginx proxies `/<slug>/` to the app **without stripping the prefix** (`proxy_pass http://localhost:PORT/<slug>/;`). **The deployed slug is the live nginx `location`, not the repo folder name or the AI-Lab catalog** — verify it before setting the Vite base, `redirect_uri`, or the server strip prefix: `ssh root@techbridge.edu.gh "grep -nE 'location /<name>' /var/www/vhosts/system/ai-tools.techbridge.edu.gh/conf/vhost_nginx.conf"`. peace-vinyl's code and catalog both said `/peace/`, but the live location is `/peace-vinyl/`; trusting the folder/catalog shipped a broken `redirect_uri` and base. So:
 
 | Rule | Why |
 |---|---|
@@ -399,6 +399,12 @@ nginx proxies `/<slug>/` to the app **without stripping the prefix** (`proxy_pas
 ssh root@techbridge.edu.gh "curl -sI http://localhost:<PORT>/<slug>/assets/<some>.js | grep -iE 'HTTP|content-type'"
 ```
 `Content-Type: text/javascript` = good; `text/html` = the static mount or Vite base is wrong.
+
+On any backend/`server.ts` change, also confirm the pm2 process **actually swapped** — a green "DEPLOYMENT COMPLETE" does **not** mean the new code is live. Check the uptime reset:
+```
+ssh root@techbridge.edu.gh "pm2 describe <app> | grep -iE 'uptime|restarts'"
+```
+`uptime` in seconds = the new process is live. A large uptime (hours/days) means the deploy rebuilt the files but never restarted pm2, so the **old code is still serving** — this is how deep-dub sat on a 4-day-old `server.js` process through four "successful" deploys (Step 7 built the restart command but a missing line never executed it). A missing expected restart echo in the deploy log is the same red flag: stop and diagnose, don't move on.
 
 ---
 
