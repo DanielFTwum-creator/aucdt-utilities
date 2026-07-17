@@ -241,37 +241,33 @@ const App: React.FC = () => {
         doc.setFontSize(20);
         doc.text(songTitle || 'Untitled', 20, 20);
 
-        doc.setFont("DejaVuSans", "normal");
-        doc.setFontSize(12);
-        doc.text(`Theme: ${themeInput}`, 20, 30);
-        doc.text(`Style: ${currentPack.label} · ${currentPersona?.label || ''} (${rhymeScheme})`, 20, 38);
-
-        let yPos = 46;
-        if (songDescription) {
-          const splitDesc = doc.splitTextToSize(`Vision: ${songDescription}`, 170);
-          doc.text(splitDesc, 20, yPos);
-          yPos += splitDesc.length * 6 + 2;
-        }
-
-        const splitStructure = doc.splitTextToSize(`Structure: ${songStructure.join(' -> ')}`, 170);
-        doc.text(splitStructure, 20, yPos);
-        yPos += splitStructure.length * 6 + 8;
-
-        doc.line(20, yPos - 6, 190, yPos - 6);
-        yPos += 4;
-
-        doc.setFont("DejaVuSans", "normal");
-        doc.setFontSize(11);
-        const splitLyrics = doc.splitTextToSize(lyrics, 170);
-        
-        for (let i = 0; i < splitLyrics.length; i++) {
-          if (yPos > 280) {
-            doc.addPage();
-            yPos = 20;
+        let yPos = 32;
+        const LINE_H = 6;
+        // Draw wrapped text line-by-line with an explicit y for each line. Do NOT pass
+        // an array to doc.text(): with the embedded DejaVu subset font, jsPDF mis-computes
+        // the array's line spacing and stacks the lines, which collided the header block
+        // with the first lines of the lyrics. Per-line drawing (what the lyrics already
+        // used) keeps the spacing uniform and page breaks correct throughout.
+        const drawWrapped = (text: string, size: number, bold = false) => {
+          doc.setFont("DejaVuSans", bold ? "bold" : "normal");
+          doc.setFontSize(size);
+          for (const line of doc.splitTextToSize(text, 170)) {
+            if (yPos > 285) { doc.addPage(); yPos = 20; }
+            doc.text(line, 20, yPos);
+            yPos += LINE_H;
           }
-          doc.text(splitLyrics[i], 20, yPos);
-          yPos += 6;
-        }
+        };
+
+        drawWrapped(`Theme: ${themeInput}`, 12);
+        drawWrapped(`Style: ${currentPack.label} · ${currentPersona?.label || ''} (${rhymeScheme})`, 12);
+        if (songDescription) drawWrapped(`Vision: ${songDescription}`, 12);
+        drawWrapped(`Structure: ${songStructure.join(' -> ')}`, 12);
+
+        yPos += 2;
+        doc.line(20, yPos, 190, yPos);
+        yPos += 6;
+
+        drawWrapped(lyrics, 11);
 
         doc.save(`${(songTitle || 'song').replace(/\\s+/g, '_').toLowerCase()}.pdf`);
       } else {
