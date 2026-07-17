@@ -42,8 +42,14 @@ app.use((req, _res, next) => {
 });
 
 // --- Database Connection ---
+// The fleet's production MariaDB is the TUC stack instance on port 3307 (the same
+// one WMS uses: jdbc:mariadb://localhost:3307/...), NOT the default 3306. mysql2
+// defaults to 3306 when no port is given, which silently pointed this app at the
+// wrong instance. Credentials come from the app .env, injected at deploy from
+// central custody (/opt/tuc-wms/.env), per the WMS DB pattern.
 const dbConfig = {
   host: process.env.DB_HOST || 'localhost',
+  port: process.env.DB_PORT ? Number(process.env.DB_PORT) : 3307,
   user: process.env.DB_USER || 'root',
   password: process.env.DB_PASSWORD || '',
   database: process.env.DB_NAME || 'msee_test_db',
