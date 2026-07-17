@@ -70,6 +70,9 @@ git sparse-checkout set peace-vinyl
 cd peace-vinyl
 log '[3/5] Installing dependencies...'
 pnpm install --no-frozen-lockfile --silent 2>/dev/null || npm install --silent
+log '[3.5/5] Embedding VITE_GOOGLE_CLIENT_ID (public client id) from WMS custody...'
+CID=`$(grep '^GOOGLE_CLIENT_ID=' /opt/tuc-wms/.env | head -1 | cut -d= -f2- | tr -d '\r\000')
+if [ -n "`$CID" ]; then printf 'VITE_GOOGLE_CLIENT_ID=%s\n' "`$CID" > .env.local; echo '  VITE_GOOGLE_CLIENT_ID embedded'; else echo '  WARN: GOOGLE_CLIENT_ID not found in /opt/tuc-wms/.env'; fi
 log '[4/5] Building...'
 pnpm build
 if ! grep -Eq '<script[^>]+(src="[^"]*\.js"|type="module")' dist/index.html; then echo '[FATAL] dist/index.html ships no JS bundle (missing module entry in index.html). Aborting deploy.'; exit 1; fi
@@ -125,20 +128,27 @@ Log "INFO" "Step 5: Setting permissions..." Yellow
 ssh -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax=3 $RemoteHost "chown -R techbridge.edu.gh_md:psaserv $RemotePath && chmod -R 755 $RemotePath && chmod 644 ${RemotePath}.htaccess 2>/dev/null; true" | Out-Null
 
 Log "INFO" "Step 6: Deploying backend files..." Yellow
-scp -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax=3 server.js package.json pnpm-lock.yaml "${RemoteHost}:${RemotePath}" 2>$null | Out-Null
-if (Test-Path ".env.local") { scp -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax=3 ".env.local" "${RemoteHost}:${RemotePath}.env.local" 2>$null | Out-Null }
+scp -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax=3 server.ts package.json pnpm-lock.yaml "${RemoteHost}:${RemotePath}" 2>$null | Out-Null
+# One server.ts runtime only (§5b): purge any stale server.js from older deploys.
+ssh -o StrictHostKeyChecking=no $RemoteHost "rm -f ${RemotePath}server.js ${RemotePath}.env.local" 2>$null | Out-Null
 $nvmPrefix = 'export NVM_DIR="$HOME/.nvm"; [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"; nvm use 26 >/dev/null 2>&1 || true'
 ssh -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax=3 $RemoteHost "$nvmPrefix; cd $RemotePath && CI=true pnpm install --prod --silent 2>/dev/null || npm install --omit=dev --silent"
+
+# WMS OAuth relay (Pattern 35): the server needs GEMINI_PROXY_KEY (never GOOGLE_CLIENT_SECRET).
+# Inject it from WMS custody (/opt/tuc-wms/.env), BOM/CR/null-stripped (Pattern 21), and
+# ensure NODE_ENV=production so the static SPA is served. The key never touches the dev machine.
+$envInject = ssh -o StrictHostKeyChecking=no $RemoteHost "touch ${RemotePath}.env; sed -i '/^GEMINI_PROXY_KEY=/d;/^GOOGLE_CLIENT_SECRET=/d' ${RemotePath}.env; K=`$(grep '^GEMINI_PROXY_KEY=' /opt/tuc-wms/.env | head -1 | cut -d= -f2- | tr -d '\r\000' | LC_ALL=C sed 's/\xef\xbb\xbf//g'); if [ -n `"`$K`" ]; then printf 'GEMINI_PROXY_KEY=%s\n' `"`$K`" >> ${RemotePath}.env; echo 'env: GEMINI_PROXY_KEY injected'; else echo 'WARN: GEMINI_PROXY_KEY not found in WMS'; fi; grep -q '^NODE_ENV=' ${RemotePath}.env || echo 'NODE_ENV=production' >> ${RemotePath}.env; chmod 600 ${RemotePath}.env"
+Write-Host $envInject -ForegroundColor DarkGray
+if ($envInject -match 'WARN') { Log "ERROR" "GEMINI_PROXY_KEY unavailable — Google login would 503. Aborting." Red; exit 1 }
 
 Log "INFO" "Step 7: Restarting backend (PM2)..." Yellow
 $restartCmd = @"
 if command -v pm2 &>/dev/null; then
-  if pm2 describe peace-vinyl &>/dev/null; then
-    pm2 reload peace-vinyl --update-env && echo 'pm2: reloaded peace-vinyl'
-  else
-    cd $RemotePath && PORT=3026 pm2 start server.js --name peace-vinyl --interpreter npx --interpreter-args tsx --cwd $RemotePath
-    echo 'pm2: started peace-vinyl'
-  fi
+  # Pattern 23: hard delete + fresh start so the new server.ts (WMS relay) actually loads,
+  # not a stale server.js/tsx copy left by reload.
+  pm2 delete peace-vinyl &>/dev/null || true
+  cd $RemotePath && NODE_ENV=production PORT=3026 pm2 start server.ts --name peace-vinyl --interpreter npx --interpreter-args tsx --cwd $RemotePath >/dev/null
+  echo 'pm2: hard restart peace-vinyl (Pattern 23)'
   pm2 save --force &>/dev/null
 fi
 "@

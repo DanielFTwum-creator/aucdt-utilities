@@ -5,7 +5,7 @@ import {defineConfig} from 'vite';
 
 export default defineConfig(() => {
   return {
-    base: '/peace/',
+    base: '/peace-vinyl/',
     plugins: [react(), tailwindcss()],
     resolve: {
       alias: {

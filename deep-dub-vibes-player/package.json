@@ -8,7 +8,8 @@
     "dev": "vite --port=3000 --host=0.0.0.0",
     "build": "vite build",
     "preview": "vite preview",
-    "clean": "rm -rf dist server.js",
+    "start": "tsx server.ts",
+    "clean": "rm -rf dist",
     "lint": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest"
@@ -23,7 +24,8 @@
     "motion": "^12.40.0",
     "react": "^19.2.6",
     "react-dom": "^19.2.6",
-    "vite": "^8.0.14"
+    "vite": "^8.0.14",
+    "tsx": "^4.22.3"
   },
   "devDependencies": {
     "@types/express": "^5.0.6",
@@ -31,7 +33,6 @@
     "autoprefixer": "^10.5.0",
     "esbuild": "^0.28.0",
     "tailwindcss": "^4.3.0",
-    "tsx": "^4.22.3",
     "typescript": "~6.0.3",
     "vite": "^6.2.3",
     "vitest": "^4.1.0",
