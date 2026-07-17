@@ -131,7 +131,7 @@ Log "INFO" "Step 6: Deploying backend files..." Yellow
 scp -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax=3 server.ts package.json pnpm-lock.yaml "${RemoteHost}:${RemotePath}" 2>$null | Out-Null
 # One server.ts runtime only (§5b): purge any stale server.js from older deploys.
 ssh -o StrictHostKeyChecking=no $RemoteHost "rm -f ${RemotePath}server.js ${RemotePath}.env.local" 2>$null | Out-Null
-$step6Script = "export NVM_DIR=`"`$HOME/.nvm`"; [ -s `"`$NVM_DIR/nvm.sh`" ] && . `"`$NVM_DIR/nvm.sh`"; nvm use 26 >/dev/null 2>&1 || true; cd $RemotePath && CI=true timeout 120 pnpm install --prod 2>&1 | tail -10 || timeout 120 npm install --omit=dev 2>&1 | tail -10"
+$step6Script = "export NVM_DIR=`"`$HOME/.nvm`"; [ -s `"`$NVM_DIR/nvm.sh`" ] && . `"`$NVM_DIR/nvm.sh`"; nvm use 26 >/dev/null 2>&1 || true; cd $RemotePath && CI=true pnpm install --prod --silent 2>/dev/null || npm install --omit=dev --silent"
 ssh -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax=3 $RemoteHost $step6Script
 
 # WMS OAuth relay (Pattern 35): the server needs GEMINI_PROXY_KEY (never GOOGLE_CLIENT_SECRET).
