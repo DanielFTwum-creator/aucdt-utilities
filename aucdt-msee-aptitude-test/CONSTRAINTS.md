@@ -51,10 +51,11 @@
 | `GEMINI_PROXY_KEY` | Authenticates the generate relay to WMS (Pattern 11) | WMS-issued service credential — this app never holds the Gemini key. Missing = AI route returns 503 (server still boots). |
 | `WMS_GEMINI_URL` | Relay endpoint override | Defaults to `https://wms.techbridge.edu.gh/api/gemini/generate` |
 | `PORT` | Server port | Must be `3011`; set in `ecosystem.config.js` to avoid EADDRINUSE conflicts. |
-| `DB_HOST` | MySQL host | Defaults to `localhost` if unset |
-| `DB_USER` | MySQL username | Defaults to `root` if unset |
-| `DB_PASSWORD` | MySQL password | Defaults to `''` if unset |
-| `DB_NAME` | MySQL database name | Defaults to `msee_test_db` if unset |
+| `DB_HOST` | MariaDB host | Defaults to `localhost` if unset |
+| `DB_PORT` | MariaDB port | Defaults to `3306` (the app instance). **Never `3307` — that is the LMS.** |
+| `DB_USER` | MariaDB username | Scoped, non-root app user (e.g. `msee_app`). Code falls back to `root` only if unset — do not rely on it. |
+| `DB_PASSWORD` | MariaDB password | Set in server `.env`, never committed. |
+| `DB_NAME` | MariaDB database name | Defaults to `msee_test_db` if unset |
 | `JWT_SECRET` | JWT signing secret | Required for auth middleware; missing = all protected routes return 403 |
 | `VITE_GOOGLE_CLIENT_ID` | Google OAuth client ID | Frontend-only Vite env var (not used server-side in current code) |
 | `VITE_GOOGLE_REDIRECT_URI` | Google OAuth redirect URI | Frontend-only Vite env var |
@@ -87,12 +88,15 @@ Response: raw Gemini REST response, relayed verbatim
 
 ---
 
-## 6. MySQL Database
+## 6. MariaDB Database (fleet DB pattern — lems / tuc-rms / dmcdai)
 
 - Driver: `mysql2/promise` (connection pool).
-- Pool is created at startup; failure causes `process.exit(1)`.
-- Default database name: `msee_test_db` — ensure this schema exists on the server before first deploy.
-- No ORM — raw SQL queries throughout. Schema migrations must be run manually or via a migration script.
+- **Instance: the 10.3 MariaDB on port 3306.** The 3307 instance is the LMS — do not use it (see lems/CONSTRAINTS.md). Grants are localhost-only, so provision from the server itself.
+- **Own database + scoped user:** this app uses database `msee_test_db` with a scoped, non-root user (e.g. `msee_app`), mirroring lems (`lems`/`lems_app`). Credentials live only in the server `.env` (`DB_HOST/DB_PORT/DB_USER/DB_PASSWORD/DB_NAME`), never committed; the deploy preserves them.
+- **Schema:** `db/init.sql` (users, exams, exam_progress, audit_logs), loaded once at provisioning: `mysql msee_test_db < db/init.sql`.
+- Pool is created at startup; the first query connects. A missing DB / bad creds surfaces as HTTP 500 on the API routes (not a boot failure, since pool creation is lazy).
+- No ORM — raw SQL throughout. Schema changes are manual.
+- Google SSO auto-provisions a `users` row on first sign-in; role defaults to `student`, and an existing `admin` role is preserved.
 
 ---
 

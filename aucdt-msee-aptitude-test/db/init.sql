@@ -1,7 +1,8 @@
 -- aucdt-msee-aptitude-test — schema
 -- Reconstructed from server.ts queries (the previous init.sql was a 17-byte
--- corrupt file). Load on the production MariaDB (TUC stack, port 3307):
---   mysql -P 3307 msee_test_db < db/init.sql
+-- corrupt file). Load on the app MariaDB (10.3 instance, port 3306 — the 3307
+-- instance is the LMS, do not use):
+--   mysql msee_test_db < db/init.sql        # 3306 is the default port
 -- Google SSO auto-provisions a users row on first sign-in (password_hash gets a
 -- non-matching sentinel), so no password is required for Google logins.
 
