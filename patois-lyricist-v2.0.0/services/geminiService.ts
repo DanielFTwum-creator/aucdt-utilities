@@ -167,7 +167,8 @@ ${pack.lexicon}
 DICTION
 ═══════════════════════════════════════════════════
 ${pack.grammar}
-LANGUAGE SETTING: ${language.label} — ${language.dictionGuidance}
+OUTPUT LANGUAGE — this governs the language the lyrics are written in, and overrides the English framing of this prompt: ${language.label}
+${language.dictionGuidance}
 - REPETITION BAN: do NOT repeat the user's provided input lyrics verbatim; generate original variations only.
 - LOOP PREVENTION: do not repeat a generated line later in the song.
 
