@@ -2651,3 +2651,109 @@ touching an existing one's `deploy.ps1`:
 All eight checklist items pass, plus a real browser login/logout cycle: sign in with
 Google, confirm the session survives a refresh, sign out, and confirm the next load
 shows the login screen rather than silently re-authenticating.
+
+---
+
+## PATTERN 37: DB-BACKED NODE APP — FLEET MARIADB + PLESK-SECURE PROVISIONING
+
+### Symptom
+
+- API routes return **500**; the form shows "Database error" / "Server error".
+- `/<slug>/api/health` is **200** (it runs no query) but every DB-touching route 500s.
+- The server logs "MySQL Connection Pool created successfully" and boots fine — mysql2
+  pool creation is **lazy**, so the first real query is when it connects and fails.
+
+### Root causes (any of)
+
+1. **Wrong instance.** Two MariaDB instances: the **app instance (10.3) on port 3306**
+   and the **LMS instance (11.4) on port 3307**. App databases live on **3306**. mysql2
+   defaults to 3306, so *do not* set `DB_PORT=3307` — that points at the LMS. (WMS's own
+   Spring datasource uses 3307/`tuc_wms`; that is WMS's exception, not the app rule.)
+2. **Never provisioned.** A newly-standardised app often has no database / schema / user
+   on the server. Its `db/init.sql` may be missing or corrupt (aucdt-msee's was 17 bytes
+   of garbage).
+3. **Wrong credentials.** Defaulting to `root`/empty fails (restricted grants). The fleet
+   uses a scoped **non-root** user per app.
+
+### The pattern (lems / tuc-rms / dmcdai)
+
+- Instance **3306**; never point an app at **3307** (the LMS).
+- Each app: its **own database** + a **scoped non-root user** (lems→`lems`/`lems_app`;
+  msee→`msee_test_db`/`msee_app`). Grants are localhost-only — provision from the server.
+- Credentials live **only** in the app's server `.env` (`DB_HOST/DB_PORT=3306/DB_USER/
+  DB_PASSWORD/DB_NAME`), never committed. The deploy preserves `.env` (it only *injects*
+  `GEMINI_PROXY_KEY`), so DB creds set once persist across deploys.
+- **Ship `db/init.sql` with the deploy** so provisioning/migrations don't need a manual scp.
+
+### Plesk-secure provisioning (never bare `mysql`)
+
+On Plesk, running `mysql` as admin means exposing `/etc/psa/.psa.shadow` on the command
+line. Use **`plesk db`**, which authenticates as the Plesk admin internally. Disable the
+mysql history file for any statement carrying a password (`CREATE USER … IDENTIFIED BY`)
+so the secret is not persisted to `~/.mysql_history` (SEC §12):
+
+```
+MYSQL_HISTFILE=/dev/null plesk db
+```
+```sql
+CREATE DATABASE IF NOT EXISTS <db> CHARACTER SET utf8mb4;
+CREATE USER '<app>_app'@'localhost' IDENTIFIED BY '<password>';
+GRANT ALL PRIVILEGES ON <db>.* TO '<app>_app'@'localhost';
+FLUSH PRIVILEGES;
+USE <db>;
+SOURCE /var/www/vhosts/.../<slug>/db/init.sql;
+EXIT
+```
+Then set `DB_*` + `JWT_SECRET` in the app `.env` via `nano` (never echo), and `pm2 restart`.
+
+### Verify
+
+`curl -s -o /dev/null -w '%{http_code}' -X POST http://localhost:<port>/<slug>/api/auth/login -d '{...bad...}'`
+returns **401** (query ran) not **500** (DB error). A real Google sign-in lands in the app
+(the SSO callback also does `SELECT`/`INSERT` on `users`).
+
+### Anti-patterns
+
+❌ Pointing an app DB at port 3307 (that is the LMS).
+❌ Bare `mysql -uadmin -p<shadow>` on Plesk — exposes the admin password.
+❌ A password in a bash command / heredoc / `~/.mysql_history`.
+❌ Committing DB credentials; defaulting to `root`/empty in production.
+
+---
+
+## PATTERN 38: SUB-PATH APP — API CALLS MUST USE THE SLUG, NOT ROOT `/api`
+
+### Symptom
+
+- A fetch fails with **`Unexpected token '<', "<!DOCTYPE"... is not valid JSON`**.
+- Network shows `POST /api/...` → **404** (the main site's HTML 404 page), or the request
+  reaches the sub-path but the server still 404s.
+
+### Root cause
+
+nginx only proxies `/<slug>/*` to the app (Pattern 29/36). A root-relative `fetch('/api/x')`
+leaves the app's namespace → hits the main site → returns HTML → `JSON.parse` throws. And
+even when the frontend uses the sub-path, the Express routes are defined at `/api/*` (root),
+so the **un-stripped** `/<slug>/api/x` nginx forwards doesn't match.
+
+### Fix (both ends)
+
+- **Frontend:** prefix every API call with the Vite base — never a bare `/api/...`:
+  ```ts
+  export const apiUrl = (p: string) => `${import.meta.env.BASE_URL.replace(/\/+$/, '')}${p}`;
+  // fetch(apiUrl('/api/exams'))
+  ```
+- **Server:** strip the slug prefix so the root routes match the path nginx forwards:
+  ```ts
+  const BASE_PATH = '/<slug>';
+  app.use((req, _res, next) => {
+    if (req.url.startsWith(`${BASE_PATH}/api/`)) req.url = req.url.slice(BASE_PATH.length);
+    next();
+  });
+  ```
+
+### Verify
+
+`curl -sI http://localhost:<port>/<slug>/api/health` → 200 JSON. In the browser, no
+"Unexpected token '<'" on any API call, and POST bodies reach the server (401/400, not
+404-HTML).

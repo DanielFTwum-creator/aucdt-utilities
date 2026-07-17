@@ -84,13 +84,15 @@ pnpm build
 if ! grep -Eq '<script[^>]+(src="[^"]*\.js"|type="module")' dist/index.html; then echo '[FATAL] dist/index.html ships no JS bundle (missing module entry in index.html). Aborting deploy.'; exit 1; fi
 log '[5/5] Deploying dist/ to web root...'
 mkdir -p $RemotePath
-rsync -a --delete --exclude='.env' --exclude='node_modules/' --exclude='server.ts' --exclude='server.cjs' --exclude='server.js' --exclude='package.json' --exclude='pnpm-lock.yaml' --exclude='pnpm-workspace.yaml' --exclude='ecosystem.config.js' --exclude='.htaccess' dist/. $RemotePath
+rsync -a --delete --exclude='.env' --exclude='node_modules/' --exclude='server.ts' --exclude='server.cjs' --exclude='server.js' --exclude='package.json' --exclude='pnpm-lock.yaml' --exclude='pnpm-workspace.yaml' --exclude='ecosystem.config.js' --exclude='.htaccess' --exclude='db/' dist/. $RemotePath
 # Backend from the SAME fresh main clone as the frontend, so server.ts can never
 # lag behind main (the "frontend-from-main, backend-from-stale-local" split that
 # left the sub-path static mount missing). Step 6 no longer scps server.ts from
 # the local checkout when -Build is used.
-log 'Deploying backend (server.ts + manifests) from the fresh clone...'
+log 'Deploying backend (server.ts + manifests + db/) from the fresh clone...'
 cp server.ts package.json pnpm-lock.yaml pnpm-workspace.yaml $RemotePath 2>/dev/null || true
+# Ship db/init.sql so DB provisioning + migrations don't need a manual scp (Pattern 37).
+cp -r db $RemotePath 2>/dev/null || true
 # Purge any stale server.js left by older deploys — one server.ts runtime only (§5b).
 rm -f ${RemotePath}server.js
 log 'Build and deploy complete.'
@@ -147,6 +149,7 @@ Log "INFO" "Step 6: Deploying backend files..." Yellow
 # path (which ships local dist/) needs to push the local server.ts here.
 if (-not $Build) {
     scp -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax=3 server.ts package.json pnpm-lock.yaml pnpm-workspace.yaml "${RemoteHost}:${RemotePath}" 2>$null | Out-Null
+    scp -r -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax=3 db "${RemoteHost}:${RemotePath}" 2>$null | Out-Null
     ssh -o StrictHostKeyChecking=no $RemoteHost "rm -f ${RemotePath}server.js" 2>$null | Out-Null
 }
 if (Test-Path ".env.local") { scp -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax=3 ".env.local" "${RemoteHost}:${RemotePath}.env" 2>$null | Out-Null }

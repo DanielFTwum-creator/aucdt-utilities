@@ -233,7 +233,7 @@ Confirm each item with ✅ before proceeding. Stop and report if any item fails.
 
 - **Frontend:** React · Angular · TypeScript · JavaScript · Tailwind CSS
 - **Backend:** Java (Spring Boot) · Node.js (Express) · Python (FastAPI)
-- **Database:** MariaDB — two instances on the shared server: 10.3 on port 3306 (daemon `mysqld`; hosts `tuc_wms_db`/WMS) · 11.4 on port 3307 (daemon `mariadbd`; the lms.techbridge.edu.gh LMS database). Grants are localhost-only — query from the server itself.
+- **Database:** MariaDB — two instances on the shared server: the **app-DB instance (10.3) on port 3306** (daemon `mysqld`) and the **LMS instance (11.4) on port 3307** (daemon `mariadbd`; `lms.techbridge.edu.gh`). App databases live on **3306**, each app with its own database + a scoped **non-root** user (e.g. `lems`/`lems_app`, `msee_test_db`/`msee_app`); **never point an app at 3307 (the LMS)**. Grants are localhost-only — provision from the server itself. This is a **Plesk** box: use **`plesk db`** (authenticates as the Plesk admin internally), never bare `mysql -uadmin -p<shadow>`; prefix any `IDENTIFIED BY` statement with `MYSQL_HISTFILE=/dev/null` so the password never lands in `~/.mysql_history` (§12). Full recipe → PATTERNS.md Pattern 37.
 - **Infrastructure:** Ubuntu · Docker · Plesk · Nginx · Apache
 - **AI Tools:** Claude (Sonnet + Haiku) · Gemini CLI · Suno.ai
 
