@@ -10,6 +10,10 @@ dotenv.config();
 const app = express();
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
+// The deploy syncs the built SPA to the app root (not a dist/ subfolder), so serve
+// from wherever index.html actually is: the app root in production, ./dist locally.
+const DIST = fs.existsSync(path.join(__dirname, 'index.html')) ? __dirname : path.join(__dirname, 'dist');
+
 app.use(express.json());
 
 // nginx proxies /deep-dub-vibes-player/ to this app WITHOUT stripping the prefix
@@ -24,9 +28,9 @@ app.use((req: Request, _res: Response, next: NextFunction) => {
   next();
 });
 
-// In production, serve the built SPA from dist.
+// In production, serve the built SPA.
 if (process.env.NODE_ENV === 'production') {
-  app.use(express.static('dist'));
+  app.use(express.static(DIST));
 }
 
 // --- Google OAuth via the WMS relay (Pattern 35): the code->token exchange is
@@ -82,7 +86,7 @@ app.post('/api/auth/google/token', async (req: Request, res: Response) => {
 
 // SPA fallback for all other routes.
 app.get(/.*/, (_req: Request, res: Response) => {
-  const indexPath = path.join(__dirname, 'dist', 'index.html');
+  const indexPath = path.join(DIST, 'index.html');
   if (fs.existsSync(indexPath)) res.sendFile(indexPath);
   else res.status(404).json({ error: 'Not found. Run "pnpm build" first.' });
 });
