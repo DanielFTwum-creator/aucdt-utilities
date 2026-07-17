@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { Question, Answers, Exam } from '../types';
 import { DEFAULT_QUESTIONS, EXAM_DURATION_SECONDS } from '../constants';
+import { apiUrl } from '../services/apiBase';
 
 export const useExam = (userId?: string | null, token?: string | null) => {
   // Exam Content State
@@ -30,7 +31,7 @@ export const useExam = (userId?: string | null, token?: string | null) => {
     const fetchExams = async () => {
         setIsExamLoading(true);
         try {
-            const response = await fetch('/api/exams');
+            const response = await fetch(apiUrl('/api/exams'));
             if (!response.ok) throw new Error('Failed to fetch exams');
             const examsData: Exam[] = await response.json();
             
@@ -75,7 +76,7 @@ export const useExam = (userId?: string | null, token?: string | null) => {
         }
 
         try {
-            const response = await fetch(`/api/progress/${selectedExamId}`, {
+            const response = await fetch(apiUrl(`/api/progress/${selectedExamId}`), {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             if (response.ok) {
@@ -106,7 +107,7 @@ export const useExam = (userId?: string | null, token?: string | null) => {
     setShowResults(true);
     if (selectedExamId && userId && token) {
       try {
-        await fetch(`/api/progress/${selectedExamId}`, {
+        await fetch(apiUrl(`/api/progress/${selectedExamId}`), {
           method: 'DELETE',
           headers: { 'Authorization': `Bearer ${token}` }
         });
@@ -133,7 +134,7 @@ export const useExam = (userId?: string | null, token?: string | null) => {
       if (isStarted && !isSubmitted && selectedExamId && userId && token) {
         setIsSaving(true);
         try {
-            await fetch(`/api/progress/${selectedExamId}`, {
+            await fetch(apiUrl(`/api/progress/${selectedExamId}`), {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -168,7 +169,7 @@ export const useExam = (userId?: string | null, token?: string | null) => {
 
   const resetExam = async () => {
     if (selectedExamId && userId && token) {
-        await fetch(`/api/progress/${selectedExamId}`, { method: 'DELETE', headers: { 'Authorization': `Bearer ${token}` } });
+        await fetch(apiUrl(`/api/progress/${selectedExamId}`), { method: 'DELETE', headers: { 'Authorization': `Bearer ${token}` } });
     }
     setCurrentQuestionIndex(0);
     setAnswers({});

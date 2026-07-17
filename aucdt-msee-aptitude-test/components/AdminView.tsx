@@ -4,6 +4,7 @@ import { generateQuestionsFromText } from '../services/geminiService';
 import { AUCDT_COLORS, EXAM_SUBJECTS } from '../constants';
 import { Question, Message, User } from '../types';
 import { logEvent } from '../services/auditLogService';
+import { apiUrl } from '../services/apiBase';
 import { MessageDisplay, LatexRenderer, ConfirmationModal } from './common';
 
 interface AdminViewProps {
@@ -61,7 +62,7 @@ export const AdminView: React.FC<AdminViewProps> = ({ user, token, handleSignOut
     setIsLoading(true);
     setMessage({ text: "Saving exam to the database...", type: 'info' });
     try {
-        const response = await fetch('/api/exams', {
+        const response = await fetch(apiUrl('/api/exams'), {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

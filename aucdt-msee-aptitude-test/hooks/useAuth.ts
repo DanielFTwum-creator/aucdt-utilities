@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { User } from '../types';
 import { logEvent } from '../services/auditLogService';
+import { apiUrl } from '../services/apiBase';
 
 const TOKEN_STORAGE_KEY = 'msee_auth_token';
 const USER_STORAGE_KEY = 'msee_current_user';
@@ -50,7 +51,7 @@ export const useAuth = () => {
     setLoading(true);
     setError(null);
     try {
-        const response = await fetch('/api/auth/register', {
+        const response = await fetch(apiUrl('/api/auth/register'), {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email, password }),
@@ -72,7 +73,7 @@ export const useAuth = () => {
     setLoading(true);
     setError(null);
     try {
-        const response = await fetch('/api/auth/login', {
+        const response = await fetch(apiUrl('/api/auth/login'), {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email, password }),

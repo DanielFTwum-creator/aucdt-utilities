@@ -1,6 +1,6 @@
+import { apiUrl } from './apiBase';
 
-
-type AuditAction = 
+type AuditAction =
     | 'ADMIN_LOGIN_SUCCESS'
     | 'ADMIN_LOGIN_FAILURE'
     | 'ADMIN_LOGOUT'
@@ -24,7 +24,7 @@ export const logEvent = async (action: AuditAction, details: AuditDetails = {}):
             return;
         }
 
-        await fetch('/api/logs', {
+        await fetch(apiUrl('/api/logs'), {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

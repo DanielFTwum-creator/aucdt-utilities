@@ -1,9 +1,10 @@
 import { Question } from '../types';
+import { apiUrl } from './apiBase';
 
 export const generateQuestionsFromText = async (text: string, count: number, subject: string, token: string): Promise<Question[]> => {
   
   try {
-    const response = await fetch('/api/generate', {
+    const response = await fetch(apiUrl('/api/generate'), {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

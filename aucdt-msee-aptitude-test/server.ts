@@ -31,6 +31,16 @@ const __dirname = path.dirname(__filename);
 app.use(cors());
 app.use(express.json());
 
+// nginx proxies /aucdt-msee-aptitude-test/ here WITHOUT stripping the prefix, and
+// the SPA calls the API at that sub-path (a root-relative /api/... would miss this
+// app entirely). Strip the prefix for /aucdt-msee-aptitude-test/api/* so the routes
+// below — defined at /api/* — match. Static/SPA/callback keep their own handling.
+const BASE_PATH = '/aucdt-msee-aptitude-test';
+app.use((req, _res, next) => {
+  if (req.url.startsWith(`${BASE_PATH}/api/`)) req.url = req.url.slice(BASE_PATH.length);
+  next();
+});
+
 // --- Database Connection ---
 const dbConfig = {
   host: process.env.DB_HOST || 'localhost',
@@ -353,11 +363,13 @@ app.get(['/callback', '/aucdt-msee-aptitude-test/callback'], async (req: Request
     res.cookie('aucdt-msee-aptitude-test_user', Buffer.from(userJson).toString('base64'), {
       httpOnly: false, secure: true, sameSite: 'lax', maxAge: 7 * 24 * 60 * 60 * 1000, path: '/aucdt-msee-aptitude-test/',
     });
-    // Exam-session cookie: the frontend bootstrap moves this into sessionStorage so
-    // useAuth is satisfied and the second (password) login screen never appears.
+    // Exam-session cookie: the frontend bootstrap copies this into sessionStorage so
+    // useAuth is satisfied and the second (password) login screen never appears. It
+    // lives as long as the JWT (8h) and is kept (not one-shot), so a returning tab or
+    // reload re-hydrates the session instead of stranding the user on a login screen.
     const sessionJson = JSON.stringify({ accessToken, user: { uid: userRow.id, email, role: userRow.role } });
     res.cookie('msee_session', Buffer.from(sessionJson).toString('base64'), {
-      httpOnly: false, secure: true, sameSite: 'lax', maxAge: 5 * 60 * 1000, path: '/aucdt-msee-aptitude-test/',
+      httpOnly: false, secure: true, sameSite: 'lax', maxAge: 8 * 60 * 60 * 1000, path: '/aucdt-msee-aptitude-test/',
     });
     return res.redirect('/aucdt-msee-aptitude-test/');
   } catch (err) {
