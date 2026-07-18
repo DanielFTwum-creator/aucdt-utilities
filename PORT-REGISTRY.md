@@ -70,11 +70,25 @@ reassigned to free ports so they are deploy-safe. `deploy.ps1` and `server.ts` d
 |------|----------------|-------------|
 | 3042 | lecturer-ai-handbook | lecturer-ai-handbook |
 
+## Reserved — TUC marketing website (assigned 18 Jul 2026)
+
+Next.js migration of techbridge.edu.gh (Bitbucket repo
+`securedataghana/techbridge-website-dev-qa-uat`, branch
+`feature/ssr-geo-migration`). Runtime at `/opt/tuc-website-<env>`, deployed by
+Bitbucket Pipelines; ports set as `DEV_PORT`/`QA_PORT`/`UAT_PORT` deployment
+variables. Move to SERVER_PORTS.md once verified listening.
+
+| Port | App (PM2 name) | Serves |
+|------|----------------|--------|
+| 3043 | tuc-website-dev | dev.techbridge.edu.gh |
+| 3044 | tuc-website-qa | qa.techbridge.edu.gh |
+| 3045 | tuc-website-uat | uat.techbridge.edu.gh |
+
 ## Next available
 
-**3043** — increment from here for new apps.
+**3046** — increment from here for new apps.
 
-Currently free/unused: 3001, 3042+.
+Currently free/unused: 3001, 3046+.
 
 ## Known unresolved (undeployed backend apps with drifting defaults)
 
