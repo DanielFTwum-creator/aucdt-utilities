@@ -68,7 +68,7 @@ const UPLOADED_IMAGES = [
   '/ai-image-generator.jpg',
   '/image_1778109798863.jpeg',
   '/lTPaGSI0yHiFHw1rCOwn--0--yAt09.jpg',
-  'https://techbridge.edu.gh/static/campus_tour.mp4'
+  'https://techbridge.edu.gh/static/campus_tour_web.mp4'
 ];
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────

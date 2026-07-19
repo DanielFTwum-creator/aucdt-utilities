@@ -69,7 +69,7 @@ export const LoginView: React.FC = () => {
         className="absolute inset-0 w-full h-full object-cover"
         style={{ zIndex: 0 }}
       >
-        <source src="https://techbridge.edu.gh/static/campus_tour.mp4" type="video/mp4" />
+        <source src="https://techbridge.edu.gh/static/campus_tour_web.mp4" type="video/mp4" />
       </video>
       <div className="absolute inset-0 bg-black/40" style={{ zIndex: 1 }}></div>
       <div className="relative z-10 w-full">

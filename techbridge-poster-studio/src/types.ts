@@ -48,7 +48,7 @@ export const defaultPosterData: PosterData = {
   logoUrl: "https://images.weserv.nl/?url=https://techbridge.edu.gh/static/TUC_LOGO_1.png",
   brandName: "Techbridge University College",
   domainUrl: "techbridge.edu.gh",
-  videoUrl: "https://techbridge.edu.gh/static/campus_tour.mp4",
+  videoUrl: "https://techbridge.edu.gh/static/campus_tour_web.mp4",
   showVideo: false,
   aspectRatio: AspectRatio.LANDSCAPE
 };

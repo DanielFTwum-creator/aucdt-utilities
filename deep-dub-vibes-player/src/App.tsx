@@ -234,7 +234,7 @@ function DeepDubVibesPlayer() {
   const [volume, setVolume] = useState(80);
   const [isMuted, setIsMuted] = useState(false);
   const [liked, setLiked] = useState<Record<number, boolean>>({});
-  const [bgMediaUrl, setBgMediaUrl] = useState("https://techbridge.edu.gh/static/campus_tour.mp4");
+  const [bgMediaUrl, setBgMediaUrl] = useState("https://techbridge.edu.gh/static/campus_tour_web.mp4");
   const [bgMediaType, setBgMediaType] = useState<"video" | "image">("video");
   const [editing, setEditing] = useState<"title" | "artist" | null>(null);
   const [editValue, setEditValue] = useState("");

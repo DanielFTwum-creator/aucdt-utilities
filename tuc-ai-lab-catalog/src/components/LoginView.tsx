@@ -61,7 +61,7 @@ export const LoginView: React.FC = () => {
       onGoogleLogin={handleGoogleLogin}
       onLocalLogin={handleLocalLogin}
       onRegister={handleRegister}
-      videoBackground="https://techbridge.edu.gh/static/campus_tour.mp4"
+      videoBackground="https://techbridge.edu.gh/static/campus_tour_web.mp4"
       textColorClass="text-slate-900"
       labelColorClass="text-slate-700"
       subtitleColorClass="text-slate-600"

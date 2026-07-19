@@ -264,7 +264,7 @@ export default function HomePage() {
             className="rounded-2xl overflow-hidden shadow-2xl bg-black"
           >
             <video
-              src="https://techbridge.edu.gh/static/campus_tour.mp4"
+              src="https://techbridge.edu.gh/static/campus_tour_web.mp4"
               controls
               className="w-full h-auto"
               poster="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1920 1080'%3E%3Crect fill='%230f2545' width='1920' height='1080'/%3E%3C/svg%3E"

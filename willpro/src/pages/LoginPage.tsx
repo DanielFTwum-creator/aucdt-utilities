@@ -56,7 +56,7 @@ export default function LoginPage() {
       textColorClass="text-white"
       labelColorClass="text-white"
       subtitleColorClass="text-gray-300"
-      videoBackground="https://techbridge.edu.gh/static/campus_tour.mp4"
+      videoBackground="https://techbridge.edu.gh/static/campus_tour_web.mp4"
     />
   );
 }

@@ -22,7 +22,7 @@ export default function LoginView() {
         loop
         muted
         playsInline
-        src="https://techbridge.edu.gh/static/campus_tour.mp4"
+        src="https://techbridge.edu.gh/static/campus_tour_web.mp4"
         style={{
           position: "absolute",
           top: 0,

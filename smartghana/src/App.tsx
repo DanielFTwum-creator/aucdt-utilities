@@ -533,7 +533,7 @@ export default function App() {
                 loop 
                 playsInline
               >
-                <source src="https://techbridge.edu.gh/static/campus_tour.mp4" type="video/mp4" />
+                <source src="https://techbridge.edu.gh/static/campus_tour_web.mp4" type="video/mp4" />
                 Your browser does not support the video tag.
               </video>
               

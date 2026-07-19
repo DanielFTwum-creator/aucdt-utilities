@@ -242,7 +242,7 @@ function generateHTML(formData: FormData): string {
 <body class="flex items-center justify-center min-h-screen p-4">
   <div class="relative w-full max-w-[390px] aspect-[9/16] rounded-[2.8rem] bg-black border-[10px] border-zinc-900 overflow-hidden shadow-2xl">
     <video
-      src="https://techbridge.edu.gh/static/campus_tour.mp4"
+      src="https://techbridge.edu.gh/static/campus_tour_web.mp4"
       autoplay
       loop
       muted
