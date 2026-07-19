@@ -27,6 +27,32 @@ interface GoogleTokenResponse {
   scope?: string;
 }
 
+// OAuth code exchange via the WMS relay (Pattern 35, mirroring biochemai).
+// This app never holds GOOGLE_CLIENT_SECRET: WMS adds the client credentials
+// server-side, authenticated by the same GEMINI_PROXY_KEY service credential
+// the dictation relay uses. Returns null on any upstream failure after
+// logging it, so callers keep their existing token_exchange_failed paths.
+const WMS_OAUTH_EXCHANGE_URL = process.env.WMS_OAUTH_EXCHANGE_URL || 'https://wms.techbridge.edu.gh/api/oauth/google/exchange';
+
+async function exchangeCodeViaWms(code: string, redirectUri: string): Promise<GoogleTokenResponse | null> {
+  const proxyKey = process.env.GEMINI_PROXY_KEY;
+  if (!proxyKey) {
+    console.error('GEMINI_PROXY_KEY not configured; cannot reach the WMS OAuth relay');
+    return null;
+  }
+  const response = await fetch(WMS_OAUTH_EXCHANGE_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'X-Gemini-Proxy-Key': proxyKey },
+    body: JSON.stringify({ code, redirectUri }),
+  });
+  if (!response.ok) {
+    const err = await response.json().catch(() => ({}));
+    console.error('Token exchange error:', err);
+    return null;
+  }
+  return await response.json() as GoogleTokenResponse;
+}
+
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 // Production detection. NODE_ENV=production is the authoritative signal (set by the
 // deploy/PM2). The directory heuristics are fallbacks: in production the deploy may
@@ -52,9 +78,6 @@ async function startServer() {
   app.use(express.json({ limit: "25mb" })); // audio base64 for dictation exceeds the 100kb default
   app.use(cookieParser());
 
-  const GOOGLE_CLIENT_ID = process.env.VITE_GOOGLE_CLIENT_ID;
-  const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
-
   // OAuth callback handler - Google redirects here with code + state
   // Server-side exchange to avoid WAF blocks on URL parameters
   app.get(['/callback', '/ai-lab/callback'], async (req, res) => {
@@ -71,26 +94,11 @@ async function startServer() {
     try {
       const redirectUri = `${process.env.VITE_GOOGLE_REDIRECT_URI || 'https://ai-tools.techbridge.edu.gh/ai-lab/callback'}`;
 
-      // Exchange code for tokens server-side
-      const tokenResponse = await fetch('https://oauth2.googleapis.com/token', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          client_id: GOOGLE_CLIENT_ID,
-          client_secret: GOOGLE_CLIENT_SECRET,
-          code,
-          grant_type: 'authorization_code',
-          redirect_uri: redirectUri,
-        }),
-      });
-
-      if (!tokenResponse.ok) {
-        const error = await tokenResponse.json();
-        console.error('Token exchange error:', error);
+      // Exchange code for tokens server-side, via the WMS relay
+      const tokens = await exchangeCodeViaWms(String(code), redirectUri);
+      if (!tokens) {
         return res.redirect(`/ai-lab/?error=token_exchange_failed`);
       }
-
-      const tokens = await tokenResponse.json() as GoogleTokenResponse;
       const { id_token } = tokens;
 
       const userInfo = decodeJWT(id_token);
@@ -132,25 +140,10 @@ async function startServer() {
     try {
       const redirectUri = `${process.env.VITE_GOOGLE_REDIRECT_URI || 'https://ai-tools.techbridge.edu.gh/ai-lab/auth/google/callback'}`;
 
-      const tokenResponse = await fetch('https://oauth2.googleapis.com/token', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          client_id: GOOGLE_CLIENT_ID,
-          client_secret: GOOGLE_CLIENT_SECRET,
-          code,
-          grant_type: 'authorization_code',
-          redirect_uri: redirectUri,
-        }),
-      });
-
-      if (!tokenResponse.ok) {
-        const error = await tokenResponse.json();
-        console.error('Token exchange error:', error);
+      const tokens = await exchangeCodeViaWms(String(code), redirectUri);
+      if (!tokens) {
         return res.redirect(`/ai-lab/?error=token_exchange_failed`);
       }
-
-      const tokens = await tokenResponse.json() as GoogleTokenResponse;
       const { id_token } = tokens;
 
       const userInfo = decodeJWT(id_token);
@@ -183,31 +176,16 @@ async function startServer() {
       return res.status(400).json({ error: 'Missing authorization code' });
     }
 
-    if (!GOOGLE_CLIENT_ID || !GOOGLE_CLIENT_SECRET) {
-      console.error('Missing Google OAuth credentials');
+    if (!process.env.GEMINI_PROXY_KEY) {
+      console.error('Missing WMS relay credential (GEMINI_PROXY_KEY)');
       return res.status(500).json({ error: 'OAuth not configured' });
     }
 
     try {
-      const tokenResponse = await fetch('https://oauth2.googleapis.com/token', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          client_id: GOOGLE_CLIENT_ID,
-          client_secret: GOOGLE_CLIENT_SECRET,
-          code,
-          grant_type: 'authorization_code',
-          redirect_uri: redirectUri,
-        }),
-      });
-
-      if (!tokenResponse.ok) {
-        const error = await tokenResponse.json();
-        console.error('Token exchange error:', error);
+      const tokens = await exchangeCodeViaWms(String(code), String(redirectUri));
+      if (!tokens) {
         return res.status(400).json({ error: 'Token exchange failed' });
       }
-
-      const tokens = await tokenResponse.json() as GoogleTokenResponse;
       const { id_token } = tokens;
 
       const userInfo = decodeJWT(id_token);
