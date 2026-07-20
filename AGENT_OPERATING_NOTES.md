@@ -1,0 +1,45 @@
+# Agent Operating Notes — aucdt-utilities
+
+Short, additive rules earned from real misses in agent sessions. Read alongside
+CLAUDE.md (§12 secrets, §13 command formatting). Add a rule only after an actual
+incident, and only with the fix that makes recurrence structurally impossible.
+Keep every entry terse: the incident, then the rule.
+
+## 1. Server path selection: name the exact vhost, never a glob
+
+Incident (20 Jul 2026): `ls -d /var/www/vhosts/*/httpdocs/wp-content/uploads | head -1`
+returned `asanskafc.com`, not the intended `aucdt.edu.gh`, so an inventory ran
+against the wrong site and reported 6,012 images that were not ours.
+
+Rule: when a command targets one site's files, write the full vhost path
+explicitly, for example `/var/www/vhosts/aucdt.edu.gh/httpdocs/...`. A `*` glob
+plus `head -1` is a guess about directory ordering; never put it in an
+instruction handed to the user.
+
+## 2. SSH one-liners from PowerShell: single-quote the outer argument
+
+Incident (19 to 20 Jul 2026, twice): a double-quoted `ssh host "... $f ..."` let
+PowerShell consume `$f` / `\$f` before the remote shell ever saw it, so the loop
+died with a syntax error. The same class of error had already bitten an awk
+command earlier the same day, so this was a repeat, not a surprise.
+
+Rule: wrap the remote command in SINGLE quotes so PowerShell passes it through
+untouched: `ssh root@host 'for f in ...; do ... $f ...; done'`. Do not
+backslash-escape `$`. If the remote command itself needs single quotes, switch
+the outer quoting deliberately and reason it through; do not guess.
+
+## 3. Size before you offer shapes
+
+Incident (20 Jul 2026): a gallery-architecture choice was put to the user before
+the assets were counted, implicitly assuming "hundreds". Reality was 17,409
+files, which was 1,137 unique originals once WordPress size-variants were
+stripped. The decision was taken without the number that drives it.
+
+Rule: for any "how should we build X" decision, get the sizing fact first
+(count, disk, cardinality), then present the options with that number stated in
+the same breath as the choice.
+
+---
+*Last updated: 20 July 2026. Home for agent operating lessons; discovered via
+the Session Start Protocol top-level `ls`. If a rule becomes a hard standard,
+promote it into CLAUDE.md and delete it here to avoid drift.*
