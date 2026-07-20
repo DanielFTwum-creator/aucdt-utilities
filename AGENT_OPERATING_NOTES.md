@@ -1,4 +1,4 @@
-# Agent Operating Notes — aucdt-utilities
+# Agent Operating Notes (aucdt-utilities)
 
 Short, additive rules earned from real misses in agent sessions. Read alongside
 CLAUDE.md (§12 secrets, §13 command formatting). Add a rule only after an actual
