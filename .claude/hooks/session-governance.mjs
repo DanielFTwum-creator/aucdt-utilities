@@ -61,7 +61,12 @@ function buildBanner() {
   lines.push('AUCDT-UTILITIES GOVERNANCE — read before generating output.');
   lines.push('');
   lines.push('CLAUDE.md is already loaded; follow it, including the Session Start Protocol.');
-  lines.push('AGENT_OPERATING_NOTES.md holds hard zero-assumption rules (server paths, SSH quoting, size-before-shaping) — open it.');
+  lines.push('AGENT_OPERATING_NOTES.md holds hard zero-assumption rules (server paths, SSH quoting, size-before-shaping, copy-box commands) — open it.');
+  lines.push('');
+  lines.push('RESPONSE FORMAT (Daniel, standing rule): put every runnable command, path,');
+  lines.push('snippet, or step the user is meant to copy inside its own fenced code block');
+  lines.push('(a copy box) with full Windows/SSH absolute paths — never inline in prose,');
+  lines.push('never a bare relative path. Zero assumptions: a step the user runs is copyable.');
   lines.push('');
 
   if (patterns.length) {

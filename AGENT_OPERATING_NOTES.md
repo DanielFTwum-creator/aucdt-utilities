@@ -39,6 +39,18 @@ Rule: for any "how should we build X" decision, get the sizing fact first
 (count, disk, cardinality), then present the options with that number stated in
 the same breath as the choice.
 
+## 4. Copy-box every command, path, and step
+
+Standing instruction (Daniel, 20 Jul 2026): responses drift into inline commands
+and bare relative paths that cannot be pasted straight into PowerShell, forcing
+the user to reassemble them. This repeats CLAUDE.md §13 but kept slipping.
+
+Rule: every runnable command, file path, snippet, or step the user is meant to
+run goes inside its own fenced code block (a copy box), with full absolute
+Windows / SSH paths, never inline in a sentence and never a bare relative path.
+A step the user executes is copyable, no assumptions. Locked into session init
+via the SessionStart governance banner so it loads every session.
+
 ---
 *Last updated: 20 July 2026. Home for agent operating lessons; discovered via
 the Session Start Protocol top-level `ls`. If a rule becomes a hard standard,
