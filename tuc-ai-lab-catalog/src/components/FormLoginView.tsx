@@ -102,7 +102,7 @@ export const FormLoginView: React.FC<FormLoginViewProps> = ({
 
   return (
     <div
-      className="min-h-screen w-full flex flex-col items-center justify-center p-6 relative overflow-hidden transition-opacity duration-500"
+      className="fixed inset-0 flex flex-col items-center justify-center p-6 overflow-hidden transition-opacity duration-500"
       style={{ opacity: isRedirecting ? 0 : 1 }}
     >
       {videoBackground && (
