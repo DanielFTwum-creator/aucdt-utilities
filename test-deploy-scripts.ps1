@@ -3,7 +3,7 @@
 # Checks: PS syntax, banner, dotfile block, manifest, staging, secrets gate (B), PM2 --update-env (B), port (B).
 #
 # Usage:
-#   .\test-deploy-scripts.ps1                     # all 56 scripts
+#   .\test-deploy-scripts.ps1                     # all deploy.ps1 scripts (61 as of 21 Jul 2026)
 #   .\test-deploy-scripts.ps1 -Filter "glucose"   # single app
 #   .\test-deploy-scripts.ps1 -ShowPass           # show PASS lines too (default: failures only)
 
