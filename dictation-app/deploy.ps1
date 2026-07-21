@@ -145,4 +145,23 @@ Log "INFO" "Step 4: Writing .htaccess..." Yellow
   <FilesMatch '\.(html|json)$'>
     ExpiresDefault 'max-age=0'
     Header set Cache-Control 'no-cache, no-store, must-revalidate'
-    
+  </FilesMatch>
+</IfModule>
+
+<IfModule mod_headers.c>
+  <FilesMatch '\.(html)$'>
+    Header set Cache-Control 'no-cache, no-store, must-revalidate'
+  </FilesMatch>
+</IfModule>
+"@ | ssh -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax=3 $RemoteHost "cat > ${RemotePath}.htaccess" 2>$null
+
+Log "INFO" "Step 5: Setting permissions..." Yellow
+ssh -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax=3 $RemoteHost "chown -R techbridge.edu.gh_md:psaserv $RemotePath && chmod -R 755 $RemotePath && chmod 644 ${RemotePath}.htaccess 2>/dev/null; true" | Out-Null
+
+Log "INFO" "Health check..." Yellow
+ssh -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax=3 $RemoteHost "test -f ${RemotePath}index.html && echo 'OK index.html present' || echo 'MISSING index.html'"
+
+Log "SUCCESS" "========================================" Green
+Log "SUCCESS" "DEPLOYMENT COMPLETE" Green
+Log "SUCCESS" "URL  : https://ai-tools.techbridge.edu.gh/dictation/" Green
+Log "SUCCESS" "========================================" Green
