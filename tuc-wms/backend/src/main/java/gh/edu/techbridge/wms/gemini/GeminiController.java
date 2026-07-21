@@ -10,7 +10,10 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 /**
@@ -91,6 +94,53 @@ public class GeminiController {
         return ResponseEntity.status(r.status())
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(r.body());
+    }
+
+    /**
+     * Proxy a Gemini {@code :streamGenerateContent} call over SSE. Same body and auth
+     * as {@link #generate}, but the upstream stream is relayed to the caller event by
+     * event so BridgeBot can render the answer progressively instead of waiting for
+     * the whole reply. {@code X-Accel-Buffering: no} tells nginx not to buffer this
+     * response (no nginx config change needed); the key stays server-side.
+     */
+    @PostMapping(value = "/stream", consumes = MediaType.APPLICATION_JSON_VALUE,
+                 produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    public ResponseEntity<StreamingResponseBody> stream(@RequestParam(required = false) String model,
+                                                        @RequestHeader(value = "X-Gemini-Proxy-Key", required = false) String proxyKey,
+                                                        @RequestBody String requestJson) {
+        if (!isAuthorised(proxyKey)) {
+            return sseError(401, "Unauthorised: present a WMS bearer token or a valid X-Gemini-Proxy-Key.");
+        }
+        if (!props.isEnabled()) {
+            return sseError(503, "GEMINI_API_KEY not configured on the WMS server.");
+        }
+        GeminiClient.Stream upstream = client.streamGenerateContent(model, requestJson);
+        StreamingResponseBody body = out -> {
+            try (InputStream in = upstream.body()) {
+                byte[] buf = new byte[8192];
+                int n;
+                while ((n = in.read(buf)) != -1) {
+                    out.write(buf, 0, n);
+                    out.flush();
+                }
+            }
+        };
+        MediaType contentType = upstream.status() >= 400 ? MediaType.APPLICATION_JSON : MediaType.TEXT_EVENT_STREAM;
+        return ResponseEntity.status(upstream.status())
+                .contentType(contentType)
+                .header("X-Accel-Buffering", "no")
+                .header("Cache-Control", "no-cache")
+                .body(body);
+    }
+
+    /** Small JSON error as a StreamingResponseBody, so the auth/config guards match the /stream return type. */
+    private ResponseEntity<StreamingResponseBody> sseError(int status, String message) {
+        String json = "{\"error\":\"" + message.replace("\\", "\\\\").replace("\"", "\\\"") + "\"}";
+        StreamingResponseBody body = out -> {
+            out.write(json.getBytes(StandardCharsets.UTF_8));
+            out.flush();
+        };
+        return ResponseEntity.status(status).contentType(MediaType.APPLICATION_JSON).body(body);
     }
 
     /**
