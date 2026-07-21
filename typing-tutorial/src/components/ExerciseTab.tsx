@@ -431,20 +431,20 @@ function KeyboardWithHands({ activeHand, activeFinger, isIdle, nextTargetChar }:
           fill="none" stroke={knuckleHi} strokeWidth={6} strokeLinecap="round" strokeOpacity={0.35} />
         <path d="M 144 293 C 174 305, 210 305, 232 292 C 228 299, 223 303, 217 306 L 158 306 C 152 303, 147 299, 144 293 Z"
           fill={tendonSt} fillOpacity={0.4} />
-        {/* Left thumb: resting up toward the spacebar */}
+        {/* Left thumb: resting inward on the spacebar */}
         {isSpace && (
-          <g filter="url(#kbGlow)"><path d="M 264 256 C 258 236, 242 220, 226 216 C 216 214, 209 222, 213 232 C 218 245, 240 255, 256 261 C 262 263, 266 262, 264 256 Z"
+          <g filter="url(#kbGlow)"><path d="M 256 260 C 248 251, 255 240, 268 233 C 280 226, 292 219, 301 223 C 308 226, 307 236, 299 243 C 288 251, 273 259, 263 263 C 258 265, 254 264, 256 260 Z"
             fill="#22d3ee" opacity={0.8} /></g>
         )}
-        <path d="M 264 256 C 258 236, 242 220, 226 216 C 216 214, 209 222, 213 232 C 218 245, 240 255, 256 261 C 262 263, 266 262, 264 256 Z"
+        <path d="M 256 260 C 248 251, 255 240, 268 233 C 280 226, 292 219, 301 223 C 308 226, 307 236, 299 243 C 288 251, 273 259, 263 263 C 258 265, 254 264, 256 260 Z"
           fill="url(#kbSkinCyl)" />
-        <path d="M 264 256 C 258 236, 242 220, 226 216 C 216 214, 209 222, 213 232 C 218 245, 240 255, 256 261 C 262 263, 266 262, 264 256 Z"
+        <path d="M 256 260 C 248 251, 255 240, 268 233 C 280 226, 292 219, 301 223 C 308 226, 307 236, 299 243 C 288 251, 273 259, 263 263 C 258 265, 254 264, 256 260 Z"
           fill="none" stroke={creaseSt} strokeWidth={1.1} strokeLinecap="round" opacity={0.5} />
         {isSpace && (
-          <path d="M 264 256 C 258 236, 242 220, 226 216 C 216 214, 209 222, 213 232 C 218 245, 240 255, 256 261 C 262 263, 266 262, 264 256 Z"
+          <path d="M 256 260 C 248 251, 255 240, 268 233 C 280 226, 292 219, 301 223 C 308 226, 307 236, 299 243 C 288 251, 273 259, 263 263 C 258 265, 254 264, 256 260 Z"
             fill="none" stroke="#22d3ee" strokeWidth={1.6} opacity={0.45} />
         )}
-        <ellipse cx="224" cy="220" rx="8" ry="5" transform="rotate(-34 224 220)" fill={nailFill} />
+        <ellipse cx="297" cy="228" rx="8" ry="5" transform="rotate(-42 297 228)" fill={nailFill} />
         {/* Left fingers */}
         {renderFingers(LEFT_F, "L")}
 
@@ -457,20 +457,20 @@ function KeyboardWithHands({ activeHand, activeFinger, isIdle, nextTargetChar }:
           fill="none" stroke={knuckleHi} strokeWidth={6} strokeLinecap="round" strokeOpacity={0.35} />
         <path d="M 542 293 C 512 305, 476 305, 454 292 C 458 299, 463 303, 469 306 L 528 306 C 534 303, 539 299, 542 293 Z"
           fill={tendonSt} fillOpacity={0.4} />
-        {/* Right thumb: resting up toward the spacebar */}
+        {/* Right thumb: resting inward on the spacebar */}
         {isSpace && (
-          <g filter="url(#kbGlow)"><path d="M 422 256 C 428 236, 444 220, 460 216 C 470 214, 477 222, 473 232 C 468 245, 446 255, 430 261 C 424 263, 420 262, 422 256 Z"
+          <g filter="url(#kbGlow)"><path d="M 430 260 C 438 251, 431 240, 418 233 C 406 226, 394 219, 385 223 C 378 226, 379 236, 387 243 C 398 251, 413 259, 423 263 C 428 265, 432 264, 430 260 Z"
             fill="#22d3ee" opacity={0.8} /></g>
         )}
-        <path d="M 422 256 C 428 236, 444 220, 460 216 C 470 214, 477 222, 473 232 C 468 245, 446 255, 430 261 C 424 263, 420 262, 422 256 Z"
+        <path d="M 430 260 C 438 251, 431 240, 418 233 C 406 226, 394 219, 385 223 C 378 226, 379 236, 387 243 C 398 251, 413 259, 423 263 C 428 265, 432 264, 430 260 Z"
           fill="url(#kbSkinCyl)" />
-        <path d="M 422 256 C 428 236, 444 220, 460 216 C 470 214, 477 222, 473 232 C 468 245, 446 255, 430 261 C 424 263, 420 262, 422 256 Z"
+        <path d="M 430 260 C 438 251, 431 240, 418 233 C 406 226, 394 219, 385 223 C 378 226, 379 236, 387 243 C 398 251, 413 259, 423 263 C 428 265, 432 264, 430 260 Z"
           fill="none" stroke={creaseSt} strokeWidth={1.1} strokeLinecap="round" opacity={0.5} />
         {isSpace && (
-          <path d="M 422 256 C 428 236, 444 220, 460 216 C 470 214, 477 222, 473 232 C 468 245, 446 255, 430 261 C 424 263, 420 262, 422 256 Z"
+          <path d="M 430 260 C 438 251, 431 240, 418 233 C 406 226, 394 219, 385 223 C 378 226, 379 236, 387 243 C 398 251, 413 259, 423 263 C 428 265, 432 264, 430 260 Z"
             fill="none" stroke="#22d3ee" strokeWidth={1.6} opacity={0.45} />
         )}
-        <ellipse cx="462" cy="220" rx="8" ry="5" transform="rotate(34 462 220)" fill={nailFill} />
+        <ellipse cx="389" cy="228" rx="8" ry="5" transform="rotate(42 389 228)" fill={nailFill} />
         {/* Right fingers */}
         {renderFingers(RIGHT_F, "R")}
 
