@@ -90,6 +90,15 @@ function Invoke-StandardTests {
         # server.ts that calls dotenv.config({ path: '.env.local' }) will miss it
         # (incident June 2026: english-safari, peace-vinyl, deep-dub crashed this way)
         "env file not renamed"    = $Content -notmatch "scp[^`n]+\.env\.local[^`n]+[`"']?[^`n]*\.env[^.]"
+        # Windows .env.local ships with CRLF; newer dotenvx preserves the trailing \r,
+        # corrupting secret values (incident 2026-07: biochemai GOOGLE_CLIENT_SECRET got a
+        # trailing \r -> Google 'invalid_client'). Any deploy that copies an env file to the
+        # server MUST strip CR (sed -i 's/\r$//' or tr -d '\r') somewhere in the script.
+        "env CR stripped"         = $(
+                                        $shipsEnv = $Content -match "scp[^`n]+\.env"
+                                        if (-not $shipsEnv) { $true }  # no env copy = nothing to strip
+                                        else { $Content -match "s/\\r|tr -d '?\\r|tr -d ""?\\r" }
+                                    )
         "PowerShell syntax valid" = Test-PSFile $Path
     }
     return $checks
