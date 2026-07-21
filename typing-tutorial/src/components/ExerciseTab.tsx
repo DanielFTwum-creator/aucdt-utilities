@@ -260,10 +260,11 @@ function KeyboardWithHands({ activeHand, activeFinger, isIdle, nextTargetChar }:
   };
 
   const skinFill = "#9a6134";
-  const skinOpacity = 0.52;
+  const skinOpacity = 0.62;
   const nailFill = "#b8714a";
   const creaseSt = "rgba(95,53,27,0.45)";
   const skinShadow = "#72401f";
+  const skinHi = "#b07a45";
   const isSpace = activeHand === "Hands";
   // Shifted characters highlight the physical key that produces them.
   const rawTarget = (nextTargetChar ?? "").toLowerCase();
@@ -286,32 +287,32 @@ function KeyboardWithHands({ activeHand, activeFinger, isIdle, nextTargetChar }:
   const thumbCls = isSpace ? FINGER_ACCENTS.Thumbs.handActive : FINGER_ACCENTS.Thumbs.handIdle;
 
   const fingerPath = (x: number, y: number, w: number, h: number, lean: number): string => {
-    const tipY = y + 8, baseY = y + h + 26;
+    const tipY = y + 6, baseY = y + h + 30;
     const lb = x - 1, rb = x + w + 1;
-    const lt = x + 4 + lean, rt = x + w - 4 + lean;
+    const lt = x + 5 + lean, rt = x + w - 5 + lean;
     const mid = x + w / 2 + lean;
     return [
       `M ${lb} ${baseY}`,
-      `C ${lb-2} ${baseY-22},${lt-3} ${tipY+28},${lt} ${tipY}`,
-      `C ${lt+2} ${y-3},${rt-2} ${y-3},${rt} ${tipY}`,
-      `C ${rt+3} ${tipY+30},${rb+2} ${baseY-22},${rb} ${baseY}`,
-      `C ${rb-10} ${baseY+6},${lb+10} ${baseY+6},${lb} ${baseY} Z`,
-      `M ${mid-w*0.23} ${y+h*0.42} C ${mid-4} ${y+h*0.48},${mid+4} ${y+h*0.48},${mid+w*0.23} ${y+h*0.42}`,
-      `M ${mid-w*0.2} ${y+h*0.7} C ${mid-3} ${y+h*0.75},${mid+3} ${y+h*0.75},${mid+w*0.2} ${y+h*0.7}`,
+      `C ${lb-2} ${baseY-26},${lt-4} ${tipY+30},${lt} ${tipY}`,
+      `C ${lt+2} ${y-4},${rt-2} ${y-4},${rt} ${tipY}`,
+      `C ${rt+4} ${tipY+32},${rb+2} ${baseY-26},${rb} ${baseY}`,
+      `C ${rb-11} ${baseY+7},${lb+11} ${baseY+7},${lb} ${baseY} Z`,
+      `M ${mid-w*0.24} ${y+h*0.40} C ${mid-4} ${y+h*0.46},${mid+4} ${y+h*0.46},${mid+w*0.24} ${y+h*0.40}`,
+      `M ${mid-w*0.2} ${y+h*0.68} C ${mid-3} ${y+h*0.73},${mid+3} ${y+h*0.73},${mid+w*0.2} ${y+h*0.68}`,
     ].join(" ");
   };
 
   const LEFT_F = [
-    { name:"Pinky", x: 88, w:24, h: 90, lean:-4 },
-    { name:"Ring",  x:137, w:27, h:102, lean:-3 },
-    { name:"Middle",x:186, w:29, h:110, lean: 0 },
-    { name:"Index", x:237, w:27, h:100, lean: 3 },
+    { name:"Pinky", x: 96, w:23, h: 84, lean:-4 },
+    { name:"Ring",  x:140, w:26, h: 98, lean:-2 },
+    { name:"Middle",x:186, w:28, h:108, lean: 0 },
+    { name:"Index", x:233, w:26, h: 96, lean: 3 },
   ];
   const RIGHT_F = [
-    { name:"Index", x:387, w:27, h:100, lean:-3 },
-    { name:"Middle",x:436, w:29, h:110, lean: 0 },
-    { name:"Ring",  x:487, w:27, h:102, lean: 3 },
-    { name:"Pinky", x:538, w:24, h: 90, lean: 4 },
+    { name:"Index", x:427, w:26, h: 96, lean:-3 },
+    { name:"Middle",x:472, w:28, h:108, lean: 0 },
+    { name:"Ring",  x:520, w:26, h: 98, lean: 2 },
+    { name:"Pinky", x:567, w:23, h: 84, lean: 4 },
   ];
 
   const renderKeys = (keys: string[], rowIdx: number) =>
@@ -363,7 +364,7 @@ function KeyboardWithHands({ activeHand, activeFinger, isIdle, nextTargetChar }:
             opacity={active ? 0.82 : 0.18} />
           <path d={d} fill="transparent"
             stroke={creaseSt} strokeWidth={1.2} strokeLinecap="round" />
-          <ellipse cx={cx} cy={y+14} rx={f.w*0.27} ry={5.2}
+          <ellipse cx={cx} cy={y+13} rx={f.w*0.26} ry={5}
             fill={nailFill} fillOpacity={0.86} />
         </g>
       );
@@ -403,36 +404,45 @@ function KeyboardWithHands({ activeHand, activeFinger, isIdle, nextTargetChar }:
 
         {/* ── Hand overlay ── */}
 
-        {/* Left palm */}
-        <path d="M12,234 C18,214 33,208 62,212 C93,216 117,213 142,211 C178,208 212,212 236,222 C249,233 251,280 238,306 C199,314 63,314 22,306 C12,284 7,256 12,234 Z"
+        {/* Left hand: back-of-hand widest at knuckles, tapering to a narrow rounded wrist */}
+        <path d="M 144 306 C 122 299, 100 276, 94 247 C 91 231, 98 218, 112 215 C 130 211, 140 215, 154 214 C 173 213, 187 212, 203 212 C 223 211, 245 211, 261 216 C 273 220, 277 231, 274 247 C 269 276, 250 300, 227 306 C 205 311, 166 311, 144 306 Z"
           fill={skinFill} fillOpacity={skinOpacity} />
-        <path d="M22,261 C62,244 107,245 145,251 M45,294 C92,303 172,303 222,293"
-          fill="transparent" stroke={creaseSt} strokeWidth={1.6} strokeLinecap="round" />
-        <path d="M14,289 C64,314 188,314 240,291 C237,299 235,306 231,311 H30 C23,306 18,299 14,289 Z"
-          fill={skinShadow} fillOpacity={0.42} />
-        {/* Left thumb */}
-        <path d="M198,258 C219,250 253,258 270,278 C275,286 269,295 258,294 C231,293 205,284 192,272 C188,266 191,261 198,258 Z"
+        {/* tendons: fingers continue into the back of the hand */}
+        <path d="M 108 216 C 110 236, 112 252, 118 266 M 152 214 C 154 238, 156 258, 160 272 M 200 213 C 200 240, 200 262, 200 276 M 248 216 C 246 238, 242 258, 236 272"
+          fill="transparent" stroke={skinShadow} strokeWidth={7} strokeLinecap="round" strokeOpacity={0.22} />
+        <path d="M 154 234 C 180 227, 214 227, 244 240 C 238 251, 200 251, 170 249 C 159 248, 154 242, 154 234 Z"
+          fill={skinHi} fillOpacity={0.3} />
+        <path d="M 122 252 C 154 243, 208 243, 252 254 M 156 285 C 184 292, 216 292, 242 284"
+          fill="transparent" stroke={creaseSt} strokeWidth={1.3} strokeLinecap="round" />
+        <path d="M 144 293 C 174 305, 210 305, 232 292 C 228 299, 223 303, 217 306 L 158 306 C 152 303, 147 299, 144 293 Z"
+          fill={skinShadow} fillOpacity={0.38} />
+        {/* Left thumb: angled down toward the spacebar */}
+        <path d="M 256 250 C 278 246, 304 256, 316 276 C 321 285, 314 294, 303 292 C 280 288, 258 278, 248 266 C 244 260, 248 252, 256 250 Z"
           fill={skinFill} fillOpacity={skinOpacity} />
-        <path d="M198,258 C219,250 253,258 270,278 C275,286 269,295 258,294 C231,293 205,284 192,272 C188,266 191,261 198,258 Z"
+        <path d="M 256 250 C 278 246, 304 256, 316 276 C 321 285, 314 294, 303 292 C 280 288, 258 278, 248 266 C 244 260, 248 252, 256 250 Z"
           className={`transition-all duration-100 ${thumbCls}`} opacity={isSpace ? 0.85 : 0.18} />
-        <ellipse cx="255" cy="280" rx="8" ry="5" transform="rotate(20 255 280)"
+        <ellipse cx="301" cy="279" rx="7.5" ry="4.6" transform="rotate(24 301 279)"
           fill={nailFill} fillOpacity={0.86} />
         {/* Left fingers */}
         {renderFingers(LEFT_F, "L")}
 
-        {/* Right palm */}
-        <path d="M348,222 C372,212 407,208 443,211 C468,213 493,216 524,212 C553,208 568,214 588,234 C593,256 588,284 578,306 C537,314 401,314 362,306 C349,280 351,233 348,222 Z"
+        {/* Right hand: mirror of the left about x=343 */}
+        <path d="M 542 306 C 564 299, 586 276, 592 247 C 595 231, 588 218, 574 215 C 556 211, 546 215, 532 214 C 513 213, 499 212, 483 212 C 463 211, 441 211, 425 216 C 413 220, 409 231, 412 247 C 417 276, 436 300, 459 306 C 481 311, 520 311, 542 306 Z"
           fill={skinFill} fillOpacity={skinOpacity} />
-        <path d="M378,251 C416,245 461,244 502,261 M368,293 C418,303 498,303 545,294"
-          fill="transparent" stroke={creaseSt} strokeWidth={1.6} strokeLinecap="round" />
-        <path d="M360,291 C412,314 536,314 586,289 C582,299 577,306 570,311 H369 C365,306 362,299 360,291 Z"
-          fill={skinShadow} fillOpacity={0.42} />
+        <path d="M 578 216 C 576 236, 574 252, 568 266 M 534 214 C 532 238, 530 258, 526 272 M 486 213 C 486 240, 486 262, 486 276 M 438 216 C 440 238, 444 258, 450 272"
+          fill="transparent" stroke={skinShadow} strokeWidth={7} strokeLinecap="round" strokeOpacity={0.22} />
+        <path d="M 532 234 C 506 227, 472 227, 442 240 C 448 251, 486 251, 516 249 C 527 248, 532 242, 532 234 Z"
+          fill={skinHi} fillOpacity={0.3} />
+        <path d="M 564 252 C 532 243, 478 243, 434 254 M 530 285 C 502 292, 470 292, 444 284"
+          fill="transparent" stroke={creaseSt} strokeWidth={1.3} strokeLinecap="round" />
+        <path d="M 542 293 C 512 305, 476 305, 454 292 C 458 299, 463 303, 469 306 L 528 306 C 534 303, 539 299, 542 293 Z"
+          fill={skinShadow} fillOpacity={0.38} />
         {/* Right thumb */}
-        <path d="M402,258 C381,250 347,258 330,278 C325,286 331,295 342,294 C369,293 395,284 408,272 C412,266 409,261 402,258 Z"
+        <path d="M 430 250 C 408 246, 382 256, 370 276 C 365 285, 372 294, 383 292 C 406 288, 428 278, 438 266 C 442 260, 438 252, 430 250 Z"
           fill={skinFill} fillOpacity={skinOpacity} />
-        <path d="M402,258 C381,250 347,258 330,278 C325,286 331,295 342,294 C369,293 395,284 408,272 C412,266 409,261 402,258 Z"
+        <path d="M 430 250 C 408 246, 382 256, 370 276 C 365 285, 372 294, 383 292 C 406 288, 428 278, 438 266 C 442 260, 438 252, 430 250 Z"
           className={`transition-all duration-100 ${thumbCls}`} opacity={isSpace ? 0.85 : 0.18} />
-        <ellipse cx="345" cy="280" rx="8" ry="5" transform="rotate(-20 345 280)"
+        <ellipse cx="385" cy="279" rx="7.5" ry="4.6" transform="rotate(-24 385 279)"
           fill={nailFill} fillOpacity={0.86} />
         {/* Right fingers */}
         {renderFingers(RIGHT_F, "R")}
