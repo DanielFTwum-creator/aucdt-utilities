@@ -1,3 +1,7 @@
+// Load .env BEFORE the pool is created. server.ts imports this module before it
+// calls dotenv.config(), and ES imports run first, so without this the pool is built
+// with empty env and mysql2 falls back to root/'' (ER_ACCESS_DENIED root@localhost).
+import 'dotenv/config';
 import mysql from 'mysql2/promise';
 
 const pool = mysql.createPool({
