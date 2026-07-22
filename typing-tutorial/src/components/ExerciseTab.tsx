@@ -437,18 +437,18 @@ function KeyboardWithHands({ activeHand, activeFinger, isIdle, nextTargetChar }:
           fill={tendonSt} fillOpacity={0.34} />
         {/* Left thumb: resting inward on the spacebar */}
         {isSpace && (
-          <g filter="url(#kbGlow)"><path d="M 204 260 C 196 251 203 240 216 233 C 228 226 240 219 249 223 C 256 226 255 236 247 243 C 236 251 221 259 211 263 C 206 265 202 264 204 260 Z"
+          <g filter="url(#kbGlow)"><path d="M 196 246 C 189 238 197 228 210 224 C 222 220 233 223 235 231 C 237 240 226 248 215 251 C 207 253 200 252 196 246 Z"
             fill="#22d3ee" opacity={0.7} /></g>
         )}
-        <path d="M 204 260 C 196 251 203 240 216 233 C 228 226 240 219 249 223 C 256 226 255 236 247 243 C 236 251 221 259 211 263 C 206 265 202 264 204 260 Z"
+        <path d="M 196 246 C 189 238 197 228 210 224 C 222 220 233 223 235 231 C 237 240 226 248 215 251 C 207 253 200 252 196 246 Z"
           fill="url(#kbSkinCyl)" fillOpacity={SKIN_OP} />
-        <path d="M 204 260 C 196 251 203 240 216 233 C 228 226 240 219 249 223 C 256 226 255 236 247 243 C 236 251 221 259 211 263 C 206 265 202 264 204 260 Z"
+        <path d="M 196 246 C 189 238 197 228 210 224 C 222 220 233 223 235 231 C 237 240 226 248 215 251 C 207 253 200 252 196 246 Z"
           fill="none" stroke={creaseSt} strokeWidth={1.1} strokeLinecap="round" opacity={0.5} />
         {isSpace && (
-          <path d="M 204 260 C 196 251 203 240 216 233 C 228 226 240 219 249 223 C 256 226 255 236 247 243 C 236 251 221 259 211 263 C 206 265 202 264 204 260 Z"
+          <path d="M 196 246 C 189 238 197 228 210 224 C 222 220 233 223 235 231 C 237 240 226 248 215 251 C 207 253 200 252 196 246 Z"
             fill="none" stroke="#22d3ee" strokeWidth={1.6} opacity={0.55} />
         )}
-        <ellipse cx="245" cy="228" rx="8" ry="5" transform="rotate(-42 245 228)" fill={nailFill} fillOpacity={NAIL_OP} />
+        <ellipse cx="231" cy="228" rx="8" ry="5" transform="rotate(-40 231 228)" fill={nailFill} fillOpacity={NAIL_OP} />
         {/* Left fingers */}
         {renderFingers(LEFT_F, "L")}
 
@@ -463,18 +463,18 @@ function KeyboardWithHands({ activeHand, activeFinger, isIdle, nextTargetChar }:
           fill={tendonSt} fillOpacity={0.34} />
         {/* Right thumb: resting inward on the spacebar */}
         {isSpace && (
-          <g filter="url(#kbGlow)"><path d="M 346 260 C 354 251 347 240 334 233 C 322 226 310 219 301 223 C 294 226 295 236 303 243 C 314 251 329 259 339 263 C 344 265 348 264 346 260 Z"
+          <g filter="url(#kbGlow)"><path d="M 354 246 C 361 238 353 228 340 224 C 328 220 317 223 315 231 C 313 240 324 248 335 251 C 343 253 350 252 354 246 Z"
             fill="#22d3ee" opacity={0.7} /></g>
         )}
-        <path d="M 346 260 C 354 251 347 240 334 233 C 322 226 310 219 301 223 C 294 226 295 236 303 243 C 314 251 329 259 339 263 C 344 265 348 264 346 260 Z"
+        <path d="M 354 246 C 361 238 353 228 340 224 C 328 220 317 223 315 231 C 313 240 324 248 335 251 C 343 253 350 252 354 246 Z"
           fill="url(#kbSkinCyl)" fillOpacity={SKIN_OP} />
-        <path d="M 346 260 C 354 251 347 240 334 233 C 322 226 310 219 301 223 C 294 226 295 236 303 243 C 314 251 329 259 339 263 C 344 265 348 264 346 260 Z"
+        <path d="M 354 246 C 361 238 353 228 340 224 C 328 220 317 223 315 231 C 313 240 324 248 335 251 C 343 253 350 252 354 246 Z"
           fill="none" stroke={creaseSt} strokeWidth={1.1} strokeLinecap="round" opacity={0.5} />
         {isSpace && (
-          <path d="M 346 260 C 354 251 347 240 334 233 C 322 226 310 219 301 223 C 294 226 295 236 303 243 C 314 251 329 259 339 263 C 344 265 348 264 346 260 Z"
+          <path d="M 354 246 C 361 238 353 228 340 224 C 328 220 317 223 315 231 C 313 240 324 248 335 251 C 343 253 350 252 354 246 Z"
             fill="none" stroke="#22d3ee" strokeWidth={1.6} opacity={0.55} />
         )}
-        <ellipse cx="305" cy="228" rx="8" ry="5" transform="rotate(42 305 228)" fill={nailFill} fillOpacity={NAIL_OP} />
+        <ellipse cx="319" cy="228" rx="8" ry="5" transform="rotate(40 319 228)" fill={nailFill} fillOpacity={NAIL_OP} />
         {/* Right fingers */}
         {renderFingers(RIGHT_F, "R")}
 
