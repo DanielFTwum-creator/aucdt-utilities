@@ -1,5 +1,12 @@
 @import "tailwindcss";
 
+/* Class-based dark mode: make `dark:` utilities key off the `.dark` class that
+   App.tsx toggles on <html>, instead of Tailwind v4's default
+   `prefers-color-scheme` (the OS setting). Without this the toggle only drove
+   the hand-written `.dark ...` rules and Tailwind `dark:` utilities ignored it.
+   `high-contrast` mode also carries `.dark`, so it inherits this too. */
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
   --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
