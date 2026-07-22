@@ -69,7 +69,14 @@ pm2 start server.ts --name "$PM2_APP" --interpreter npx --interpreter-args tsx -
 pm2 save
 "@
 
-$encodedScript = [Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes($deployScript))
+# Strip CR so Windows CRLF endings don't reach the server's bash (Pattern 20):
+# unstripped, every line arrives as `...\r` → `$'\r': command not found`, `cd` fails,
+# and the here-doc's `EOF\r` never matches its `EOF` delimiter.
+$encodedScript = [Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes($deployScript.Replace("`r", "")))
 ssh $Server "echo $encodedScript | base64 -d | bash"
+if ($LASTEXITCODE -ne 0) {
+    Write-Host "=== SickBay deploy FAILED (remote script exit $LASTEXITCODE) — check output above ===" -ForegroundColor Red
+    exit $LASTEXITCODE
+}
 
 Write-Host "=== SickBay Management System Deployed Successfully on Port $PORT ===" -ForegroundColor Green
