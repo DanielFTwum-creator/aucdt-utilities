@@ -51,7 +51,31 @@ Windows / SSH paths, never inline in a sentence and never a bare relative path.
 A step the user executes is copyable, no assumptions. Locked into session init
 via the SessionStart governance banner so it loads every session.
 
+## 5. Open every task by stating the Workflow Card (JOB / BOUNDARY / HUMAN CALL)
+
+Standing instruction (Daniel, 21 Jul 2026): CLAUDE.md already forces the
+machine-checkable half of a task (OUTPUT and VERIFICATION via Core Principle #4,
+INPUTS via the Session Start Protocol), but the accountable half stayed implicit.
+The two misses that hurt, a commit landing on `main` instead of the branch and
+the urge to batch-fix the risky env/key deploy scripts blind, were both missing
+BOUNDARY and HUMAN CALL, not missing a success check.
+
+Rule: before touching anything on a non-trivial task, state the card. Six lines,
+no ceremony:
+
+- **JOB** — what am I responsible for here?
+- **INPUTS** — which files, references, constraints, current-state facts does it need?
+- **BOUNDARY** — what am I explicitly not allowed to decide or change?
+- **OUTPUT** — what artifact must exist when the job is done?
+- **VERIFICATION** — what evidence proves the output works?
+- **HUMAN CALL** — which decision still belongs to Daniel?
+
+The three that CLAUDE.md leaves implicit, JOB, BOUNDARY, HUMAN CALL, are the
+non-negotiable ones: name them out loud before the first edit. Trivial one-liners
+do not need the ceremony; use judgement. A prompt asks for activity; the card
+asks for an outcome someone is accountable for.
+
 ---
-*Last updated: 20 July 2026. Home for agent operating lessons; discovered via
+*Last updated: 21 July 2026. Home for agent operating lessons; discovered via
 the Session Start Protocol top-level `ls`. If a rule becomes a hard standard,
 promote it into CLAUDE.md and delete it here to avoid drift.*

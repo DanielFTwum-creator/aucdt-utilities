@@ -70,19 +70,24 @@ reassigned to free ports so they are deploy-safe. `deploy.ps1` and `server.ts` d
 |------|----------------|-------------|
 | 3042 | lecturer-ai-handbook | lecturer-ai-handbook |
 
-## Reserved — TUC marketing website (assigned 18 Jul 2026)
+## TUC marketing website (all three live, verified 22 Jul 2026)
 
 Next.js migration of techbridge.edu.gh (Bitbucket repo
-`securedataghana/techbridge-website-dev-qa-uat`, branch
-`feature/ssr-geo-migration`). Runtime at `/opt/tuc-website-<env>`, deployed by
-Bitbucket Pipelines; ports set as `DEV_PORT`/`QA_PORT`/`UAT_PORT` deployment
-variables. Move to SERVER_PORTS.md once verified listening.
+`securedataghana/techbridge-website-dev-qa-uat`). Runtime at
+`/opt/tuc-website-<env>`, deployed by Bitbucket Pipelines. Branch → env:
+`develop` → dev, `main` → qa, `uat` branch or custom `manual-deploy-uat` → uat.
+Ports come from the `DEV_PORT`/`QA_PORT`/`UAT_PORT` deployment variables
+(Test/Staging/Production environments): DEV_PORT in Test, QA_PORT=3044 in
+Staging, UAT_PORT=3045 in Production. Each env is a Node process fronted by an
+nginx regex reverse proxy (`location ~ ^/` → the port), which overrides Plesk's
+own docroot serving. All three verified listening and serving the Next app, so
+they now also appear in SERVER_PORTS.md.
 
-| Port | App (PM2 name) | Serves |
-|------|----------------|--------|
-| 3043 | tuc-website-dev | dev.techbridge.edu.gh |
-| 3044 | tuc-website-qa | qa.techbridge.edu.gh |
-| 3045 | tuc-website-uat | uat.techbridge.edu.gh |
+| Port | App (PM2 name) | Serves | Status |
+|------|----------------|--------|--------|
+| 3043 | tuc-website-dev | dev.techbridge.edu.gh | Live |
+| 3044 | tuc-website-qa | qa.techbridge.edu.gh | Live (QA_PORT + nginx were 3000, colliding with markai; fixed to 3044) |
+| 3045 | tuc-website-uat | uat.techbridge.edu.gh | Live (converted from a static docroot build to Node/Next) |
 
 ## Next available
 
