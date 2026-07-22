@@ -25,6 +25,10 @@ scp -r "$APP_DIR\dist\*" "${Server}:${REMOTE_DIR}/"
 scp -r "$APP_DIR\docs" "${Server}:${REMOTE_DIR}/"
 scp -r "$APP_DIR\db" "${Server}:${REMOTE_DIR}/"
 scp "$APP_DIR\server.ts" "${Server}:${REMOTE_DIR}/"
+# src/ is required at RUNTIME: server.ts imports ./src/server/{routes,db,wmsAuth} via tsx.
+# Without it the process dies on ERR_MODULE_NOT_FOUND and never binds the port.
+scp -r "$APP_DIR\src" "${Server}:${REMOTE_DIR}/"
+scp "$APP_DIR\tsconfig.json" "${Server}:${REMOTE_DIR}/"
 scp "$APP_DIR\package.json" "${Server}:${REMOTE_DIR}/"
 # ship whichever lockfile exists (repo carries package-lock.json; pnpm-lock.yaml may be local/gitignored)
 if (Test-Path "$APP_DIR\pnpm-lock.yaml") { scp "$APP_DIR\pnpm-lock.yaml" "${Server}:${REMOTE_DIR}/" }
