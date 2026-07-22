@@ -1,0 +1,818 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Plus Jakarta Sans", "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Space Grotesk", sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+}
+
+/* Custom Bento Grid Styles matching Design Template */
+.bento-card {
+  background-color: #ffffff;
+  border: 2px solid #0f172a;
+  border-radius: 2rem;
+  box-shadow: 6px 6px 0px #0f172a;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.bento-card:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 8px 8px 0px #0f172a;
+}
+
+.bento-card-indigo {
+  background-color: #4f46e5;
+  color: #ffffff;
+  border: 2px solid #0f172a;
+  border-radius: 2rem;
+  box-shadow: 6px 6px 0px #0f172a;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.bento-card-indigo:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 8px 8px 0px #0f172a;
+}
+
+.bento-card-rose {
+  background-color: #f43f5e;
+  color: #ffffff;
+  border: 2px solid #0f172a;
+  border-radius: 2rem;
+  box-shadow: 6px 6px 0px #0f172a;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.bento-card-rose:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 8px 8px 0px #0f172a;
+}
+
+.bento-card-emerald {
+  background-color: #34d399;
+  color: #0f172a;
+  border: 2px solid #0f172a;
+  border-radius: 2rem;
+  box-shadow: 6px 6px 0px #0f172a;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.bento-card-emerald:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 8px 8px 0px #0f172a;
+}
+
+.bento-card-dark {
+  background-color: #0f172a;
+  color: #ffffff;
+  border: 2px solid #0f172a;
+  border-radius: 2rem;
+  box-shadow: 6px 6px 0px #0f172a;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.bento-card-dark:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 8px 8px 0px #0f172a;
+}
+
+/* Form controls with bold borders */
+.bento-input {
+  border: 2px solid #0f172a;
+  border-radius: 1rem;
+  padding: 0.75rem 1rem;
+  font-weight: 500;
+  transition: all 0.15s ease-in-out;
+}
+
+.bento-input:focus {
+  outline: none;
+  background-color: #f8fafc;
+  box-shadow: 2px 2px 0px #0f172a;
+}
+
+/* Flat solid buttons */
+.bento-btn {
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.625rem 1.25rem;
+  border-radius: 9999px;
+  border: 2px solid #0f172a;
+  transition: all 0.15s ease;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.bento-btn-primary {
+  background-color: #0f172a;
+  color: #ffffff;
+  box-shadow: 3px 3px 0px #34d399;
+}
+
+.bento-btn-primary:hover {
+  background-color: #1e293b;
+  transform: translate(1px, 1px);
+  box-shadow: 2px 2px 0px #34d399;
+}
+
+.bento-btn-secondary {
+  background-color: #ffffff;
+  color: #0f172a;
+  box-shadow: 3px 3px 0px #0f172a;
+}
+
+.bento-btn-secondary:hover {
+  background-color: #f1f5f9;
+  transform: translate(1px, 1px);
+  box-shadow: 2px 2px 0px #0f172a;
+}
+
+.bento-btn-emerald {
+  background-color: #10b981;
+  color: #ffffff;
+  box-shadow: 3px 3px 0px #0f172a;
+}
+
+.bento-btn-emerald:hover {
+  background-color: #059669;
+  transform: translate(1px, 1px);
+  box-shadow: 2px 2px 0px #0f172a;
+}
+
+.bento-btn-rose {
+  background-color: #f43f5e;
+  color: #ffffff;
+  box-shadow: 3px 3px 0px #0f172a;
+}
+
+.bento-btn-rose:hover {
+  background-color: #e11d48;
+  transform: translate(1px, 1px);
+  box-shadow: 2px 2px 0px #0f172a;
+}
+
+/* Badge layouts */
+.bento-badge {
+  font-size: 0.6875rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.25rem 0.625rem;
+  border-radius: 9999px;
+  border: 2px solid #0f172a;
+}
+
+.bento-badge-amber {
+  background-color: #fef3c7;
+  color: #d97706;
+}
+
+.bento-badge-rose {
+  background-color: #ffe4e6;
+  color: #e11d48;
+}
+
+.bento-badge-emerald {
+  background-color: #d1fae5;
+  color: #059669;
+}
+
+.bento-badge-blue {
+  background-color: #dbeafe;
+  color: #2563eb;
+}
+
+.bento-badge-slate {
+  background-color: #f1f5f9;
+  color: #475569;
+}
+
+@keyframes laserLine {
+  0% {
+    top: 5%;
+  }
+  50% {
+    top: 95%;
+  }
+  100% {
+    top: 5%;
+  }
+}
+
+.animate-laserLine {
+  position: absolute;
+  animation: laserLine 2.5s infinite linear;
+}
+
+/* Accessibility Theme Switching Rules */
+
+/* 1. Dark Mode Theme */
+.dark {
+  background-color: #0f172a !important;
+  color: #f8fafc !important;
+}
+
+.dark header#mobile-header,
+.dark aside#desktop-sidebar {
+  background-color: #020617 !important;
+  border-color: #334155 !important;
+}
+
+.dark main {
+  background-color: #0b0f19 !important;
+}
+
+/* Card surfaces & panels in dark mode */
+.dark .bento-card,
+.dark .bg-white,
+.dark .bg-slate-50,
+.dark .bg-amber-50,
+.dark .bg-indigo-50,
+.dark .bg-emerald-50,
+.dark .bg-rose-50,
+.dark #welcome-banner,
+.dark #audit-logs-section,
+.dark #quick-diagnostic-terminal,
+.dark #system-diagnostics-hub,
+.dark #active-observation-beds,
+.dark #quick-action-cta-hero,
+.dark #clinical-activity-timeline,
+.dark #diagnostics-control-board,
+.dark #add-referral-form {
+  background-color: #1e293b !important;
+  color: #f8fafc !important;
+  border-color: #38bdf8 !important;
+  box-shadow: 4px 4px 0px #38bdf8 !important;
+}
+
+/* Bright stat cards in dark mode */
+.dark .bg-indigo-500,
+.dark .bg-rose-500,
+.dark .bg-amber-500,
+.dark .bg-emerald-500 {
+  background-color: #0f172a !important;
+  border: 2px solid #38bdf8 !important;
+  box-shadow: 4px 4px 0px #38bdf8 !important;
+}
+
+.dark .bg-indigo-500 *,
+.dark .bg-rose-500 *,
+.dark .bg-amber-500 *,
+.dark .bg-emerald-500 * {
+  color: #ffffff !important;
+}
+
+.dark h1, .dark h2, .dark h3, .dark h4, .dark h5, .dark h6,
+.dark .text-slate-900, .dark .text-slate-800, .dark .text-slate-700, .dark .text-slate-600,
+.dark .text-amber-800, .dark .text-indigo-900, .dark .text-indigo-950, .dark .text-emerald-800, .dark .text-rose-800, .dark .text-rose-900 {
+  color: #f8fafc !important;
+}
+
+.dark .text-slate-500, .dark .text-slate-400, .dark .text-slate-300, .dark .text-\[\#34d399\] {
+  color: #cbd5e1 !important;
+}
+
+.dark input, .dark select, .dark textarea {
+  background-color: #0f172a !important;
+  color: #ffffff !important;
+  border-color: #38bdf8 !important;
+  box-shadow: 2px 2px 0px #38bdf8 !important;
+}
+
+.dark input::placeholder, .dark textarea::placeholder {
+  color: #94a3b8 !important;
+}
+
+.dark .border-slate-900, .dark .border-slate-300, .dark .border-slate-200, .dark .border-slate-100 {
+  border-color: #334155 !important;
+}
+
+/* 2. High Contrast Theme (WCAG AAA Strict Enforcement) */
+.high-contrast {
+  background-color: #ffffff !important;
+  color: #000000 !important;
+}
+
+.high-contrast header#mobile-header,
+.high-contrast aside#desktop-sidebar {
+  background-color: #000000 !important;
+  border-color: #000000 !important;
+  color: #ffffff !important;
+}
+
+.high-contrast aside#desktop-sidebar *,
+.high-contrast aside#desktop-sidebar nav button,
+.high-contrast aside#desktop-sidebar span,
+.high-contrast aside#desktop-sidebar p {
+  color: #ffffff !important;
+  fill: #ffffff !important;
+}
+
+.high-contrast .bento-card,
+.high-contrast .bg-white,
+.high-contrast .bg-slate-50,
+.high-contrast .bg-amber-50,
+.high-contrast .bg-indigo-50,
+.high-contrast .bg-emerald-50,
+.high-contrast .bg-rose-50,
+.high-contrast #welcome-banner,
+.high-contrast #audit-logs-section,
+.high-contrast #quick-diagnostic-terminal,
+.high-contrast #system-diagnostics-hub,
+.high-contrast #active-observation-beds,
+.high-contrast #quick-action-cta-hero,
+.high-contrast #clinical-activity-timeline,
+.high-contrast #diagnostics-control-board,
+.high-contrast #add-referral-form,
+.high-contrast .bg-indigo-50\/40,
+.high-contrast [class*="bg-indigo-"],
+.high-contrast [class*="bg-rose-"],
+.high-contrast [class*="bg-emerald-"],
+.high-contrast [class*="bg-amber-"] {
+  background-color: #ffffff !important;
+  color: #000000 !important;
+  border: 4px solid #000000 !important;
+  box-shadow: 6px 6px 0px #000000 !important;
+}
+
+.high-contrast h1, .high-contrast h2, .high-contrast h3, .high-contrast h4, .high-contrast h5, .high-contrast h6,
+.high-contrast p, .high-contrast span, .high-contrast text, .high-contrast label, .high-contrast strong,
+.high-contrast div, .high-contrast a,
+.high-contrast .text-white, .high-contrast .text-slate-300, .high-contrast .text-slate-400,
+.high-contrast .text-slate-900, .high-contrast .text-slate-800, .high-contrast .text-slate-700, .high-contrast .text-slate-600, .high-contrast .text-slate-500,
+.high-contrast .text-amber-800, .high-contrast .text-indigo-900, .high-contrast .text-indigo-950, .high-contrast .text-emerald-800, .high-contrast .text-rose-800, .high-contrast .text-rose-900, .high-contrast .text-\[\#34d399\] {
+  color: #000000 !important;
+  font-weight: 900 !important;
+}
+
+.high-contrast .bento-badge,
+.high-contrast .bento-card-dark,
+.high-contrast .bento-card-indigo,
+.high-contrast .bento-card-rose,
+.high-contrast .bento-card-emerald {
+  background-color: #ffffff !important;
+  color: #000000 !important;
+  border: 3px solid #000000 !important;
+}
+
+.high-contrast input, .high-contrast select, .high-contrast textarea {
+  border: 3px solid #000000 !important;
+  background-color: #ffffff !important;
+  color: #000000 !important;
+  box-shadow: 3px 3px 0px #000000 !important;
+  font-weight: 900 !important;
+}
+
+.high-contrast button,
+.high-contrast .bento-btn,
+.high-contrast .bento-btn-primary,
+.high-contrast .bento-btn-secondary,
+.high-contrast .bento-btn-emerald,
+.high-contrast .bento-btn-rose {
+  background-color: #ffffff !important;
+  color: #000000 !important;
+  border: 3px solid #000000 !important;
+  box-shadow: 3px 3px 0px #000000 !important;
+  font-weight: 900 !important;
+}
+
+.high-contrast button svg,
+.high-contrast button * {
+  color: #000000 !important;
+  stroke: #000000 !important;
+}
+
+.high-contrast .border-slate-900, .high-contrast .border-slate-300, .high-contrast .border-slate-200, .high-contrast .border-slate-100 {
+  border-color: #000000 !important;
+}
+
+/* ─── Login Page ──────────────────────────────────────────────────────── */
+
+.login-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  padding: 1rem;
+}
+
+.login-bg-gradient {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 25%, #334155 50%, #0f766e 75%, #065f46 100%);
+  animation: gradientShift 12s ease-in-out infinite alternate;
+}
+
+@keyframes gradientShift {
+  0%   { background-position: 0% 50%; }
+  100% { background-position: 100% 50%; }
+}
+
+.login-bg-gradient::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 30% 50%, rgba(20, 184, 166, 0.15) 0%, transparent 50%),
+              radial-gradient(circle at 70% 30%, rgba(99, 102, 241, 0.1) 0%, transparent 40%);
+}
+
+.login-container {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  max-width: 420px;
+}
+
+.login-box {
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(24px) saturate(1.2);
+  -webkit-backdrop-filter: blur(24px) saturate(1.2);
+  border-radius: 1.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  padding: 2.5rem 2rem;
+  box-shadow: 0 24px 48px -12px rgba(0, 0, 0, 0.4);
+}
+
+.login-logo-section {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.login-logo-wrapper {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: rgba(20, 184, 166, 0.15);
+  border: 2px solid rgba(20, 184, 166, 0.3);
+  margin-bottom: 0.75rem;
+}
+
+.login-title {
+  font-family: var(--font-display), sans-serif;
+  font-size: 2rem;
+  font-weight: 900;
+  color: #f8fafc;
+  margin: 0;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.login-subtitle {
+  font-size: 0.875rem;
+  color: rgba(226, 232, 240, 0.7);
+  margin-top: 0.25rem;
+}
+
+.login-divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
+  margin: 1.25rem 0;
+}
+
+.login-institution {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  font-size: 0.8rem;
+  color: rgba(203, 213, 225, 0.8);
+}
+
+.login-tuc-logo {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+  border-radius: 4px;
+}
+
+.login-button {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 0.875rem 1.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 0.75rem;
+  background: rgba(255, 255, 255, 0.08);
+  color: #f8fafc;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.login-button:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.3);
+  transform: translateY(-1px);
+  box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.3);
+}
+
+.login-button:active {
+  transform: translateY(0);
+}
+
+.login-button--google .google-icon {
+  flex-shrink: 0;
+}
+
+.login-footer {
+  text-align: center;
+  margin-top: 1.25rem;
+  font-size: 0.75rem;
+  color: rgba(203, 213, 225, 0.6);
+  line-height: 1.5;
+}
+
+.login-footer strong {
+  color: rgba(203, 213, 225, 0.9);
+}
+
+/* ─── Auth Error Card ─────────────────────────────────────────────────── */
+
+.login-page--error {
+  background: linear-gradient(135deg, #1e1b2e 0%, #2d1f3e 50%, #1e1b2e 100%);
+}
+
+.auth-error-card {
+  position: relative;
+  z-index: 10;
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(24px);
+  border-radius: 1.5rem;
+  border: 1px solid rgba(239, 68, 68, 0.25);
+  padding: 2.5rem 2rem;
+  text-align: center;
+  max-width: 420px;
+  width: 100%;
+  box-shadow: 0 24px 48px -12px rgba(0, 0, 0, 0.4);
+}
+
+.auth-error-icon {
+  color: #ef4444;
+  margin-bottom: 1rem;
+}
+
+.auth-error-title {
+  font-family: var(--font-display), sans-serif;
+  font-weight: 700;
+  font-size: 1.5rem;
+  color: #f8fafc;
+  margin: 0 0 0.75rem;
+}
+
+.auth-error-body {
+  color: rgba(203, 213, 225, 0.8);
+  font-size: 0.9rem;
+  line-height: 1.6;
+  margin-bottom: 0.75rem;
+}
+
+.auth-error-hint {
+  color: rgba(251, 191, 36, 0.9);
+  font-size: 0.8rem;
+  margin-bottom: 1.25rem;
+}
+
+.auth-error-contact {
+  display: block;
+  margin-top: 0.75rem;
+  font-size: 0.8rem;
+  color: rgba(147, 197, 253, 0.8);
+  text-decoration: underline;
+}
+
+/* ─── MFA Modal ───────────────────────────────────────────────────────── */
+
+.mfa-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(8px);
+  padding: 1rem;
+}
+
+.mfa-card {
+  background: #ffffff;
+  border-radius: 1.25rem;
+  padding: 2rem 1.75rem;
+  width: 100%;
+  max-width: 400px;
+  box-shadow: 0 24px 48px -12px rgba(0, 0, 0, 0.3);
+}
+
+.mfa-icon-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  color: #ffffff;
+  margin: 0 auto 1rem;
+}
+
+.mfa-title {
+  text-align: center;
+  font-family: var(--font-display), sans-serif;
+  font-weight: 700;
+  font-size: 1.25rem;
+  color: #0f172a;
+  margin: 0 0 0.5rem;
+}
+
+.mfa-desc {
+  text-align: center;
+  color: #64748b;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  margin-bottom: 1rem;
+}
+
+.mfa-input {
+  width: 100%;
+  padding: 0.875rem 1rem;
+  font-size: 1.5rem;
+  letter-spacing: 0.5em;
+  text-align: center;
+  border: 2px solid #e2e8f0;
+  border-radius: 0.75rem;
+  outline: none;
+  transition: border-color 0.2s;
+  box-sizing: border-box;
+  margin-bottom: 0.75rem;
+  font-family: var(--font-mono), monospace;
+}
+
+.mfa-input:focus {
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+}
+
+.mfa-error {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  background: #fef2f2;
+  color: #dc2626;
+  border: 1px solid #fecaca;
+  border-radius: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.8rem;
+  margin-bottom: 0.75rem;
+}
+
+.mfa-button {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.875rem;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  color: #ffffff;
+  border: none;
+  border-radius: 0.75rem;
+  font-weight: 700;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.mfa-button:hover:not(:disabled) {
+  filter: brightness(1.1);
+  transform: translateY(-1px);
+}
+
+.mfa-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.mfa-link-button {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.375rem;
+  padding: 0.5rem;
+  background: none;
+  border: none;
+  color: #64748b;
+  font-size: 0.8rem;
+  cursor: pointer;
+  margin-top: 0.5rem;
+  transition: color 0.2s;
+}
+
+.mfa-link-button:hover {
+  color: #334155;
+}
+
+.mfa-qr {
+  display: block;
+  margin: 0 auto 0.75rem;
+  border-radius: 0.75rem;
+  border: 1px solid #e2e8f0;
+}
+
+.mfa-secret-fallback {
+  text-align: center;
+  font-size: 0.7rem;
+  color: #64748b;
+  margin-bottom: 0.75rem;
+  word-break: break-all;
+}
+
+.mfa-secret-code {
+  background: #f1f5f9;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-family: var(--font-mono), monospace;
+  font-size: 0.75rem;
+  color: #334155;
+  user-select: all;
+}
+
+/* ─── Boot Splash ─────────────────────────────────────────────────────── */
+
+.boot-splash {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f766e 100%);
+  color: #e2e8f0;
+  gap: 1.25rem;
+}
+
+.boot-splash-logo {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: rgba(20, 184, 166, 0.15);
+  border: 2px solid rgba(20, 184, 166, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50%      { transform: scale(1.05); opacity: 0.8; }
+}
+
+.spin {
+  animation: spinAnim 1s linear infinite;
+}
+
+@keyframes spinAnim {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+/* ─── Dark mode overrides for MFA ─────────────────────────────────────── */
+
+.dark .mfa-card {
+  background: #1e293b;
+  border: 1px solid #334155;
+}
+
+.dark .mfa-title { color: #f8fafc; }
+.dark .mfa-desc { color: #94a3b8; }
+.dark .mfa-input {
+  background: #0f172a;
+  border-color: #475569;
+  color: #f8fafc;
+}
+.dark .mfa-input:focus {
+  border-color: #818cf8;
+  box-shadow: 0 0 0 3px rgba(129, 140, 248, 0.2);
+}
+.dark .mfa-error {
+  background: rgba(239, 68, 68, 0.1);
+  border-color: rgba(239, 68, 68, 0.3);
+}
+.dark .mfa-link-button { color: #94a3b8; }
+.dark .mfa-link-button:hover { color: #cbd5e1; }
+.dark .mfa-secret-code { background: #334155; color: #e2e8f0; }

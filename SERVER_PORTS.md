@@ -52,6 +52,7 @@
 | 3043 | tuc-website-dev                    | /opt/tuc-website-dev (dev.techbridge.edu.gh)  | Online (verified 18 Jul 2026; Next.js standalone, Bitbucket Pipelines deploy) |
 | 3044 | tuc-website-qa                     | /opt/tuc-website-qa (qa.techbridge.edu.gh)    | Online (verified 22 Jul 2026; nginx regex `location ~ ^/` → 3044. Was crash-looping: QA_PORT deployment var was 3000, colliding with markai, and nginx proxied to 3000; both corrected to 3044) |
 | 3045 | tuc-website-uat                    | /opt/tuc-website-uat (uat.techbridge.edu.gh)  | Online (verified 22 Jul 2026; converted from a static 3 Jul docroot build to the Node/Next stack via `manual-deploy-uat` pipeline + Plesk additional-nginx regex proxy → 3045) |
+| 3046 | sickbay                            | sick-bay-management-system (ai-tools/sickbay/) | Online (verified 22 Jul 2026; tsx server, MariaDB tuc_sickbay on 3306 via scoped sickbay_app@localhost, WMS SSO) |
 | 5000 | tuc-rms                            | tuc-rms-api                                   | Online ([::1] only) |
 | 8081 | tuc-wms (Spring Boot)              | /opt/tuc-wms                                  | Online (systemd; Java) |
 

@@ -1,0 +1,94 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 850 550" width="100%" height="100%">
+  <defs>
+    <style>
+      .title { font-family: system-ui, -apple-system, sans-serif; font-size: 20px; font-weight: bold; fill: #0f172a; }
+      .subtitle { font-family: system-ui, -apple-system, sans-serif; font-size: 13px; fill: #64748b; }
+      .entity-title { font-family: system-ui, -apple-system, sans-serif; font-size: 14px; font-weight: bold; fill: #ffffff; }
+      .field-name { font-family: monospace; font-size: 11px; fill: #1e293b; }
+      .field-type { font-family: monospace; font-size: 10px; fill: #64748b; }
+      .pk { font-weight: bold; fill: #d97706; }
+      .box { fill: #ffffff; stroke: #0f172a; stroke-width: 2; rx: 8; filter: drop-shadow(4px 4px 0px rgba(15,23,42,0.8)); }
+      .header-blue { fill: #2563eb; rx: 8; }
+      .header-emerald { fill: #059669; rx: 8; }
+      .header-purple { fill: #7c3aed; rx: 8; }
+      .header-amber { fill: #d97706; rx: 8; }
+      .line { stroke: #0f172a; stroke-width: 2; fill: none; }
+      .cardinality { font-family: system-ui, -apple-system, sans-serif; font-size: 11px; font-weight: bold; fill: #2563eb; }
+    </style>
+    <marker id="arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#0f172a" />
+    </marker>
+  </defs>
+
+  <!-- Title Header -->
+  <text x="40" y="40" class="title">SickBay Management System — Entity Relationship Diagram (ERD)</text>
+  <text x="40" y="60" class="subtitle">Clinical Data Architecture • Techbridge University College (TUC)</text>
+
+  <!-- Patient Entity -->
+  <g transform="translate(40, 100)">
+    <rect class="box" width="220" height="200" />
+    <rect class="header-blue" width="220" height="35" />
+    <text x="15" y="23" class="entity-title">PATIENT</text>
+    <text x="15" y="60" class="field-name pk">PK  id : string</text>
+    <text x="15" y="80" class="field-name">    fullName : string</text>
+    <text x="15" y="100" class="field-name">    type : 'Student' | 'Staff'</text>
+    <text x="15" y="120" class="field-name">    age : number</text>
+    <text x="15" y="140" class="field-name">    gender : string</text>
+    <text x="15" y="160" class="field-name">    classOrDept : string</text>
+    <text x="15" y="180" class="field-name">    allergies : string[]</text>
+  </g>
+
+  <!-- Visit Entity -->
+  <g transform="translate(320, 100)">
+    <rect class="box" width="230" height="240" />
+    <rect class="header-emerald" width="230" height="35" />
+    <text x="15" y="23" class="entity-title">VISIT (ENCOUNTER)</text>
+    <text x="15" y="60" class="field-name pk">PK  id : string</text>
+    <text x="15" y="80" class="field-name pk">FK  patientId : string</text>
+    <text x="15" y="100" class="field-name">    dateTime : string</text>
+    <text x="15" y="120" class="field-name">    temperature : number</text>
+    <text x="15" y="140" class="field-name">    bloodPressure : string</text>
+    <text x="15" y="160" class="field-name">    pulseRate : number</text>
+    <text x="15" y="180" class="field-name">    disposition : string</text>
+    <text x="15" y="200" class="field-name">    treatment : string</text>
+    <text x="15" y="220" class="field-name">    treatedBy : string</text>
+  </g>
+
+  <!-- Medication Entity -->
+  <g transform="translate(600, 100)">
+    <rect class="box" width="210" height="180" />
+    <rect class="header-purple" width="210" height="35" />
+    <text x="15" y="23" class="entity-title">MEDICATION</text>
+    <text x="15" y="60" class="field-name pk">PK  id : string</text>
+    <text x="15" y="80" class="field-name">    name : string</text>
+    <text x="15" y="100" class="field-name">    category : string</text>
+    <text x="15" y="120" class="field-name">    stockQuantity : number</text>
+    <text x="15" y="140" class="field-name">    unit : string</text>
+    <text x="15" y="160" class="field-name">    expiryDate : string</text>
+  </g>
+
+  <!-- Referral Entity -->
+  <g transform="translate(320, 380)">
+    <rect class="box" width="230" height="140" />
+    <rect class="header-amber" width="230" height="35" />
+    <text x="15" y="23" class="entity-title">REFERRAL</text>
+    <text x="15" y="60" class="field-name pk">PK  id : string</text>
+    <text x="15" y="80" class="field-name pk">FK  patientId : string</text>
+    <text x="15" y="100" class="field-name">    referralHospital : string</text>
+    <text x="15" y="120" class="field-name">    reason : string</text>
+  </g>
+
+  <!-- Relationships -->
+  <!-- Patient to Visit (1 : N) -->
+  <path class="line" d="M 260 180 L 320 180" marker-end="url(#arrow)" />
+  <text x="275" y="170" class="cardinality">1 : N</text>
+
+  <!-- Patient to Referral (1 : N) -->
+  <path class="line" d="M 150 300 L 150 450 L 320 450" marker-end="url(#arrow)" />
+  <text x="160" y="440" class="cardinality">1 : N</text>
+
+  <!-- Visit to Medication (M : N Implicit Usage) -->
+  <path class="line" d="M 550 180 L 600 180" marker-end="url(#arrow)" stroke-dasharray="4,4" />
+  <text x="560" y="170" class="cardinality">prescribes</text>
+
+</svg>

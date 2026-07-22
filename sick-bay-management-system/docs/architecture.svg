@@ -1,0 +1,93 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 600" width="100%" height="100%">
+  <defs>
+    <style>
+      .title { font-family: system-ui, -apple-system, sans-serif; font-size: 20px; font-weight: bold; fill: #0f172a; }
+      .subtitle { font-family: system-ui, -apple-system, sans-serif; font-size: 13px; fill: #64748b; }
+      .node-title { font-family: system-ui, -apple-system, sans-serif; font-size: 14px; font-weight: bold; fill: #0f172a; }
+      .node-desc { font-family: system-ui, -apple-system, sans-serif; font-size: 11px; fill: #475569; }
+      .edge-label { font-family: system-ui, -apple-system, sans-serif; font-size: 10px; font-weight: bold; fill: #2563eb; }
+      .box { fill: #ffffff; stroke: #0f172a; stroke-width: 2; rx: 12; filter: drop-shadow(4px 4px 0px rgba(15,23,42,0.9)); }
+      .box-blue { fill: #eff6ff; stroke: #1d4ed8; stroke-width: 2; rx: 12; filter: drop-shadow(4px 4px 0px rgba(29,78,216,0.9)); }
+      .box-emerald { fill: #ecfdf5; stroke: #047857; stroke-width: 2; rx: 12; filter: drop-shadow(4px 4px 0px rgba(4,120,87,0.9)); }
+      .box-amber { fill: #fffbebf; stroke: #b45309; stroke-width: 2; rx: 12; filter: drop-shadow(4px 4px 0px rgba(180,83,9,0.9)); }
+      .line { stroke: #0f172a; stroke-width: 2; fill: none; stroke-dasharray: none; }
+      .line-dashed { stroke: #64748b; stroke-width: 2; fill: none; stroke-dasharray: 5,5; }
+    </style>
+    <marker id="arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#0f172a" />
+    </marker>
+  </defs>
+
+  <!-- Header -->
+  <text x="40" y="40" class="title">SickBay Management System — System Architecture</text>
+  <text x="40" y="60" class="subtitle">Techbridge University College (TUC) • IEEE 29148 Standard Compliant Spec</text>
+
+  <!-- Client Layer -->
+  <g transform="translate(40, 100)">
+    <rect class="box" width="220" height="130" />
+    <text x="20" y="30" class="node-title">React 19 SPA Client</text>
+    <text x="20" y="55" class="node-desc">• Bento Grid Clinical Dashboard</text>
+    <text x="20" y="73" class="node-desc">• Recharts Vitals Trend Visualiser</text>
+    <text x="20" y="91" class="node-desc">• jsPDF Medical Summary Export</text>
+    <text x="20" y="109" class="node-desc">• IndexedDB Session Persistence</text>
+  </g>
+
+  <!-- Nginx Reverse Proxy -->
+  <g transform="translate(340, 100)">
+    <rect class="box-blue" width="220" height="130" />
+    <text x="20" y="30" class="node-title">Nginx Proxy (/sickbay/)</text>
+    <text x="20" y="55" class="node-desc">• TLS Termination (HTTPS)</text>
+    <text x="20" y="73" class="node-desc">• Location /sickbay/ → Port 3046</text>
+    <text x="20" y="91" class="node-desc">• Location /sickbay/api/ → Proxy</text>
+    <text x="20" y="109" class="node-desc">• Sub-path strip rule (Pattern 38)</text>
+  </g>
+
+  <!-- Express Node.js Server -->
+  <g transform="translate(640, 100)">
+    <rect class="box-emerald" width="220" height="130" />
+    <text x="20" y="30" class="node-title">Express Server (Port 3046)</text>
+    <text x="20" y="55" class="node-desc">• tsx ESM Runtime (server.ts)</text>
+    <text x="20" y="73" class="node-desc">• Dual Route Handler (/api/health)</text>
+    <text x="20" y="91" class="node-desc">• Static Asset Dual Mount</text>
+    <text x="20" y="109" class="node-desc">• PM2 Autostart Management</text>
+  </g>
+
+  <!-- WMS Infrastructure Layer -->
+  <g transform="translate(340, 320)">
+    <rect class="box-amber" width="220" height="140" />
+    <text x="20" y="30" class="node-title">TUC WMS Gateway</text>
+    <text x="20" y="55" class="node-desc">• OAuth Relay Exchange</text>
+    <text x="20" y="73" class="node-desc">• Gemini Key Custody Proxy</text>
+    <text x="20" y="91" class="node-desc">• Staff Identity Authentication</text>
+    <text x="20" y="109" class="node-desc">• TOTP MFA Security Guard</text>
+    <text x="20" y="127" class="node-desc">• Port 8081 (systemd)</text>
+  </g>
+
+  <!-- External Services -->
+  <g transform="translate(640, 320)">
+    <rect class="box" width="220" height="140" />
+    <text x="20" y="30" class="node-title">Google Cloud & AI</text>
+    <text x="20" y="55" class="node-desc">• Google OAuth 2.0 API</text>
+    <text x="20" y="73" class="node-desc">• Gemini 2.5 Flash Model</text>
+    <text x="20" y="91" class="node-desc">• Clinical OCR & Triage AI</text>
+    <text x="20" y="109" class="node-desc">• Zero Client Secret Leak</text>
+  </g>
+
+  <!-- Connectors -->
+  <!-- Client to Nginx -->
+  <path class="line" d="M 260 165 L 340 165" marker-end="url(#arrow)" />
+  <text x="275" y="155" class="edge-label">HTTPS</text>
+
+  <!-- Nginx to Express -->
+  <path class="line" d="M 560 165 L 640 165" marker-end="url(#arrow)" />
+  <text x="575" y="155" class="edge-label">Port 3046</text>
+
+  <!-- Express to WMS Gateway -->
+  <path class="line" d="M 750 230 L 750 280 L 450 280 L 450 320" marker-end="url(#arrow)" />
+  <text x="580" y="275" class="edge-label">X-Gemini-Proxy-Key</text>
+
+  <!-- WMS Gateway to Google Cloud -->
+  <path class="line" d="M 560 390 L 640 390" marker-end="url(#arrow)" />
+  <text x="575" y="380" class="edge-label">HTTPS API</text>
+
+</svg>
