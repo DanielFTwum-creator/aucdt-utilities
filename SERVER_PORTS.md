@@ -50,6 +50,7 @@
 | 3040 | fail2ban-ai                        | fail2ban-ai (ai-tools/fail2ban-ai)            | Online (deployed 8 Jul 2026; WMS SSO staff-only) |
 | 3041 | aitopia                            | aitopia (ai-tools/aitopia)                    | Online (deployed 9 Jul 2026; WMS SSO all-TUC) |
 | 3043 | tuc-website-dev                    | /opt/tuc-website-dev (dev.techbridge.edu.gh)  | Online (verified 18 Jul 2026; Next.js standalone, Bitbucket Pipelines deploy) |
+| 3046 | sickbay                            | sick-bay-management-system (ai-tools/sickbay/) | Online (verified 22 Jul 2026; tsx server, MariaDB tuc_sickbay on 3306 via scoped sickbay_app@localhost, WMS SSO) |
 | 5000 | tuc-rms                            | tuc-rms-api                                   | Online ([::1] only) |
 | 8081 | tuc-wms (Spring Boot)              | /opt/tuc-wms                                  | Online (systemd; Java) |
 

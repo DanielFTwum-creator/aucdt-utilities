@@ -84,11 +84,20 @@ variables. Move to SERVER_PORTS.md once verified listening.
 | 3044 | tuc-website-qa | qa.techbridge.edu.gh |
 | 3045 | tuc-website-uat | uat.techbridge.edu.gh |
 
+## SickBay Management System (live, verified 22 Jul 2026)
+
+| Port | App (PM2 name) | Repo folder | Database |
+|------|----------------|-------------|----------|
+| 3046 | sickbay | sick-bay-management-system | MariaDB `tuc_sickbay` on 3306, scoped `sickbay_app`@localhost |
+
+Served at `ai-tools.techbridge.edu.gh/sickbay/` (tsx `server.ts`, WMS SSO relay).
+Seeded with 50 TUC staff as Staff-type patients.
+
 ## Next available
 
-**3046** — increment from here for new apps.
+**3047** — increment from here for new apps.
 
-Currently free/unused: 3001, 3046+.
+Currently free/unused: 3001, 3047+.
 
 ## Known unresolved (undeployed backend apps with drifting defaults)
 
