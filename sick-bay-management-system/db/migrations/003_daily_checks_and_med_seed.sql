@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS daily_health_checks (
   id INT AUTO_INCREMENT PRIMARY KEY,
   patient_id INT,
   temperature DECIMAL(4,1),
-  symptoms TEXT,                                    -- JSON array of strings
+  symptoms JSON NULL,                               -- JSON array of symptom strings
   status ENUM('Healthy','Needs Monitor','Refer to Sickbay'),
   notes TEXT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
