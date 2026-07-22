@@ -2838,3 +2838,144 @@ runtime). Distilled from peace-vinyl + deep-dub — every step below cost a roun
   `504` is a **transient WMS→Google** blip, not the app — confirm with
   `curl -X POST https://oauth2.googleapis.com/token` from the server (fast `400` = healthy) and
   retry with a fresh code.
+
+---
+
+## PATTERN 40: TUC ICT DOCUMENTATION HOUSE STYLE + SELF-CONTAINED PORTAL
+
+### Why
+
+Fleet docs were drifting: each app invented its own look (SickBay's old portal was
+dark-slate/sky while the TUC website briefing was maroon/gold), and old guides carried stale
+claims (SickBay's user guide still described IndexedDB persistence after the app had moved
+to MariaDB). The SickBay doc refresh of 22 Jul 2026 produced a portal that is fully
+self-contained, code-verified, and in the TUC house style. This pattern extracts it so any
+app gets the same result by copy-and-fill.
+
+**Reference implementation: `sick-bay-management-system/docs/`** (portal, both guides, both
+diagrams). **Template: `docs/templates/tuc-docs-portal.template.html`** (monorepo root).
+
+### The house style (palette + font rule)
+
+Copy the tokens exactly (they live in the template's `:root`):
+
+```
+maroon  #6B0000 / #8a1515 / ink #3d0000      gold  #ffcb05 / deep #b8930f / wash #fdf8e3
+paper   #F0EDE6   card #ffffff                ink   #2b2620 / soft #6b6459 / faint #9a938a
+amber   #b45309 (bg #fef3c7)                  live  #1e6e2e (bg #e6f4ea)   lines #e2ded4
+```
+
+Font rule (cross-reference Pattern 32, no external CDNs): **never `fonts.googleapis.com`**
+or any external font in a doc file. Docs are served offline at `/<slug>/docs/`, so an
+external `@import` is a broken page. Use the bundled-fallback stacks only:
+
+```
+--serif: Georgia, serif                  (body prose)
+--disp:  'Arial Narrow', Arial, sans-serif   (display headings, condensed uppercase)
+--mono:  Consolas, Menlo, monospace      (code, table detail)
+```
+
+### Structural components (all present in the template)
+
+- **Masthead**: maroon band, gold circular seal ("T"), letter-spaced uppercase kicker,
+  condensed uppercase `h1` with a gold-highlight `<span>`, italic strapline.
+- **Doc-ID ribbon**: dark-maroon strip with a 3px gold bottom border carrying
+  Doc / App / SRS / Date / Owner.
+- **Numbered sections**: `h2` with a gold `01`-style number span and a 2px rule.
+- **Stat cards**: white cards, 3px gold top border, condensed large numeral.
+- **Badge set**: `b-done` (green), `b-amber`, `b-gap` (slate) pills for Auth/Open/status.
+- **Note** (gold left border on gold wash) and **callout** (solid maroon, gold `h3`) blocks.
+- **Tick lists** (gold `▸`) and the **ethos footer** ending
+  "This document is generated from the code, not from memory."
+- **Print button**: fixed gold `window.print()` button with the `.no-print` class.
+
+### Doc-ID scheme
+
+`TUC-ICT-{SRS|GDE|BRF|DOC}-YYYY-NNN`
+
+| Prefix | Meaning |
+|---|---|
+| SRS | Requirements specification (IEEE 29148) |
+| GDE | Guide (user, developer, admin, portal edition of a guide) |
+| BRF | Briefing (stakeholder / review document) |
+| DOC | Documentation portal / general documentation |
+
+Keep NNN aligned with the app's SRS number where one exists (SickBay: SRS-2026-004,
+portal GDE-2026-005). Check the year's sequence before minting a new number.
+
+### The standard doc set per app (all in the app's `docs/`)
+
+| File | Register |
+|---|---|
+| `DOCUMENTATION_PORTAL.html` | Technical + visual, from the template |
+| `USER_GUIDE.md` | Plain English for end users (the "executive" register) |
+| `DEVELOPER_GUIDE.md` | Technical, for fleet developers |
+| `EXECUTIVE_BRIEFING.md` | Plain-English stakeholder summary (skeleton below) |
+| `architecture.svg`, `erd.svg` | Self-contained SVGs, white background, house palette |
+
+Two-edition convention: anything user- or stakeholder-facing is written in the plain-English
+register; anything developer-facing in the technical register; the portal carries both. The
+TUC website briefing (`TUC-ICT-BRF-2026-002`, the marketing-site DEV | QA placeholder review)
+is the exemplar of the plain-English register: verified facts only, unknowns flagged amber
+instead of invented, action tables with owners, no jargon.
+
+### Where docs live and how they ship
+
+- The app's own `docs/` directory, shipped by `deploy.ps1` alongside the build
+  (SickBay's script scp's `docs/` with `dist/`, `db/` and the server).
+- `server.ts` static-mounts it at both the root and the sub-path so nothing 404s behind
+  the un-stripped nginx prefix (Pattern 38):
+
+```typescript
+const DOCS_DIR = path.join(__dirname, 'docs');
+if (fs.existsSync(DOCS_DIR)) {
+  app.use(['/docs', `${BASE_PATH}/docs`], express.static(DOCS_DIR));
+}
+```
+
+So a filled template "just works": copy, fill, deploy, and it serves at
+`https://ai-tools.techbridge.edu.gh/<slug>/docs/DOCUMENTATION_PORTAL.html`.
+
+### Recipe (new or refreshed app)
+
+1. Copy `docs/templates/tuc-docs-portal.template.html` to
+   `<app>/docs/DOCUMENTATION_PORTAL.html`.
+2. Fill `{{APP_NAME}}`, `{{APP_SLUG}}` (from the **live nginx location**, not the repo
+   folder, per Pattern 39), `{{DOC_ID}}`, `{{SRS_ID}}`, `{{DATE}}`, `{{OWNER}}`.
+3. Replace every `{{SECTION: ...}}` stub with content verified against the code, then
+   delete the how-to comment block at the top.
+4. Inline the app's `architecture.svg` and `erd.svg` (paste the whole `<svg>` element into
+   the `.fig` divs; never an `<img src>` reference).
+5. Write `USER_GUIDE.md`, `DEVELOPER_GUIDE.md` and `EXECUTIVE_BRIEFING.md` in the matching
+   registers.
+6. Verify self-containment: grep the portal for `https?://` and `<link`/`<script src` /
+   `@import`. The only URL-like hits should be inert text (the app's own URL in prose, the
+   SVG `xmlns`). Zero network fetches.
+
+### EXECUTIVE_BRIEFING.md skeleton
+
+```markdown
+# <App Name>: Executive Briefing
+
+**Document ID:** TUC-ICT-BRF-YYYY-NNN
+**Date:** <date> · **Owner:** TUC ICT
+**Audience:** Founder / management (non-technical)
+
+## Executive Summary
+## Why this work was necessary
+## How it reaches users
+## What's live
+## What remains
+```
+
+### Pitfalls
+
+❌ A `fonts.googleapis.com` import (or any CDN asset) in a doc served at `/<slug>/docs/`.
+   Offline serving means it never loads; Pattern 32 forbids it anyway.
+❌ Referencing diagrams with `<img src="erd.svg">` instead of inlining the `<svg>`; relative
+   paths misresolve behind the un-stripped sub-path.
+❌ Writing the portal from the previous docs instead of the code. SickBay's old guide
+   claimed browser-local IndexedDB storage months after the DB migration; every claim must
+   trace to a source file.
+❌ Minting a doc ID without checking the year's NNN sequence.
+❌ Em-dashes and LLM-tell phrasing in delivered doc text (CLAUDE.md Text Style).

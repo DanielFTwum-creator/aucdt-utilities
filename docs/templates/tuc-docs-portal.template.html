@@ -1,0 +1,242 @@
+<!doctype html>
+<!--
+  ═══════════════════════════════════════════════════════════════════════════
+  TUC ICT DOCUMENTATION PORTAL TEMPLATE  (Pattern 40, PATTERNS.md)
+  Reference implementation: sick-bay-management-system/docs/DOCUMENTATION_PORTAL.html
+  ═══════════════════════════════════════════════════════════════════════════
+
+  HOW TO FILL THIS IN
+  1. Copy this file to <app>/docs/DOCUMENTATION_PORTAL.html.
+  2. Replace every {{PLACEHOLDER}}:
+       {{APP_NAME}}   Human name, e.g. "SickBay Management System"
+       {{APP_SLUG}}   The LIVE nginx sub-path slug (verify against the vhost
+                      location, not the repo folder name), e.g. "sickbay"
+       {{DOC_ID}}     TUC-ICT-GDE-YYYY-NNN (see the doc-ID scheme in Pattern 40)
+       {{SRS_ID}}     The app's SRS document ID, e.g. TUC-ICT-SRS-2026-004
+       {{DATE}}       e.g. "22 Jul 2026"
+       {{OWNER}}      Usually "TUC ICT"
+  3. Replace each {{SECTION: ...}} stub with real, code-verified content.
+     For the two diagram sections, paste the app's architecture.svg and
+     erd.svg inline (the whole <svg>...</svg> element) inside the .fig div.
+  4. Delete this comment block and any example rows you did not use.
+
+  HARD RULE (non-negotiable): this file must stay FULLY SELF-CONTAINED.
+  It is served offline at /<slug>/docs/. No external CDN, no fonts.googleapis.com,
+  no external scripts, styles or images (Pattern 32). All CSS inline, system
+  font fallback stacks only (Georgia / Arial Narrow / Consolas). Inline SVGs.
+  UK British English, no em-dashes, every factual claim verified against code.
+-->
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="robots" content="noindex" />
+<meta name="description" content="{{DOC_ID}} - {{APP_NAME}} documentation portal (self-contained, served offline at /{{APP_SLUG}}/docs/)" />
+<meta name="author" content="Daniel Frempong Twum / TUC ICT" />
+<title>{{DOC_ID}} · {{APP_NAME}} · Documentation Portal · {{DATE}}</title>
+<!-- Fully self-contained: no external fonts, scripts, styles or images. Served offline at /{{APP_SLUG}}/docs/. -->
+<style>
+  :root{
+    --maroon:#6B0000; --maroon-2:#8a1515; --maroon-ink:#3d0000;
+    --gold:#ffcb05; --gold-deep:#b8930f; --gold-wash:#fdf8e3;
+    --paper:#F0EDE6; --card:#ffffff; --line:#e2ded4; --line-soft:#edeae1;
+    --ink:#2b2620; --ink-soft:#6b6459; --ink-faint:#9a938a;
+    --amber:#b45309; --amber-bg:#fef3c7; --amber-line:#fcd34d;
+    --live:#1e6e2e; --live-bg:#e6f4ea;
+    --serif:Georgia,serif;
+    --disp:'Arial Narrow',Arial,sans-serif;
+    --mono:Consolas,Menlo,monospace;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:var(--serif); color:var(--ink); background:var(--paper); font-size:16.5px; line-height:1.66}
+  ::selection{background:var(--gold); color:var(--maroon-ink)}
+  code{font-family:var(--mono); font-size:.82em; background:var(--gold-wash); border:1px solid #efe3b0; padding:.08em .42em; border-radius:4px; color:var(--maroon-ink); white-space:nowrap}
+  strong{font-weight:600; color:var(--maroon-ink)}
+  a{color:var(--maroon)}
+
+  .mast{background:var(--maroon); color:#fff; position:relative; overflow:hidden}
+  .mast::after{content:""; position:absolute; right:-140px; top:-140px; width:480px; height:480px; border-radius:50%; border:1.5px solid rgba(255,203,5,.2); box-shadow:0 0 0 70px rgba(255,203,5,.06)}
+  .mast-inner{max-width:1040px; margin:0 auto; padding:40px 32px 34px; position:relative; z-index:2; display:flex; gap:26px; align-items:flex-start; flex-wrap:wrap}
+  .seal{width:70px; height:70px; border-radius:50%; background:var(--gold); flex-shrink:0; display:flex; align-items:center; justify-content:center; box-shadow:0 0 0 6px rgba(255,203,5,.2); font-family:var(--disp); font-weight:700; font-size:38px; color:var(--maroon)}
+  .kicker{font-family:var(--disp); font-weight:600; letter-spacing:.32em; text-transform:uppercase; font-size:12px; color:#d9a9a9; margin-bottom:10px}
+  .mast h1{font-family:var(--disp); font-weight:700; text-transform:uppercase; font-size:clamp(30px,4.5vw,46px); line-height:1}
+  .mast h1 .gold{color:var(--gold)}
+  .mast .sub{margin-top:10px; color:#e8c9c9; font-size:15.5px; font-style:italic; max-width:680px}
+  .ribbon{background:var(--maroon-ink); border-bottom:3px solid var(--gold)}
+  .ribbon-inner{max-width:1040px; margin:0 auto; padding:9px 32px; display:flex; gap:22px; align-items:center; flex-wrap:wrap; font-family:var(--disp); text-transform:uppercase; letter-spacing:.1em; font-size:13px; color:#e3c9c9}
+  .ribbon b{color:var(--gold); font-weight:600}
+
+  main{max-width:1040px; margin:0 auto; padding:34px 32px 70px}
+  section{margin-bottom:34px}
+  h2{font-family:var(--disp); text-transform:uppercase; letter-spacing:.06em; font-size:23px; color:var(--maroon); border-bottom:2px solid var(--line); padding-bottom:7px; margin-bottom:16px}
+  h2 .n{color:var(--gold-deep); margin-right:10px}
+  h3{font-family:var(--disp); text-transform:uppercase; letter-spacing:.05em; font-size:16px; color:var(--maroon-ink); margin:18px 0 8px}
+  p{margin-bottom:12px}
+  .lead{font-size:18px}
+
+  .cards{display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:14px; margin:8px 0 4px}
+  .stat{background:var(--card); border:1px solid var(--line); border-top:3px solid var(--gold); border-radius:8px; padding:16px 18px}
+  .stat .big{font-family:var(--disp); font-weight:700; font-size:38px; line-height:1; color:var(--maroon)}
+  .stat .lbl{font-family:var(--disp); text-transform:uppercase; letter-spacing:.12em; font-size:11.5px; color:var(--ink-soft); margin-top:6px}
+
+  table{width:100%; border-collapse:collapse; margin:10px 0 6px; background:var(--card); border:1px solid var(--line); font-size:15px}
+  thead th{background:var(--maroon); color:#fff; font-family:var(--disp); text-transform:uppercase; letter-spacing:.06em; font-size:12.5px; text-align:left; padding:10px 12px}
+  tbody td{border-top:1px solid var(--line-soft); padding:10px 12px; vertical-align:top}
+  tbody tr:nth-child(even){background:#faf8f3}
+  .prog{font-family:var(--disp); text-transform:uppercase; font-weight:600; color:var(--maroon-ink); letter-spacing:.03em}
+
+  .badge{display:inline-block; font-family:var(--disp); text-transform:uppercase; letter-spacing:.08em; font-size:10.5px; font-weight:600; padding:2px 8px; border-radius:20px; vertical-align:middle}
+  .b-amber{background:var(--amber-bg); color:var(--amber); border:1px solid var(--amber-line)}
+  .b-gap{background:#e7edf5; color:#345; border:1px solid #c7d5e8}
+  .b-done{background:var(--live-bg); color:var(--live); border:1px solid #b7dcc0}
+
+  .note{border-left:4px solid var(--gold); background:var(--gold-wash); padding:14px 18px; border-radius:0 8px 8px 0; margin:14px 0}
+  .note.amber{border-left-color:var(--amber-line); background:var(--amber-bg)}
+  .callout{background:var(--maroon); color:#fff; border-radius:10px; padding:22px 26px; margin:18px 0}
+  .callout h3{color:var(--gold); margin-top:0}
+  .callout code{background:rgba(255,255,255,.12); border-color:rgba(255,203,5,.3); color:#ffe9a8}
+  .callout p{color:#f3e7d0}
+
+  ul.tick{list-style:none; margin:8px 0}
+  ul.tick li{padding:5px 0 5px 26px; position:relative}
+  ul.tick li::before{content:"▸"; color:var(--gold-deep); position:absolute; left:6px; font-weight:700}
+  ol.flow{margin:8px 0 12px 22px}
+  ol.flow li{padding:3px 0}
+
+  .fig{background:var(--card); border:1px solid var(--line); border-radius:10px; padding:14px; margin:14px 0}
+  .fig svg{width:100%; height:auto; display:block}
+  .fig-cap{font-size:13.5px; color:var(--ink-soft); font-style:italic; margin-top:8px}
+
+  .btn-print{position:fixed; right:22px; top:22px; z-index:20; background:var(--gold); color:var(--maroon-ink); border:none; border-radius:8px; padding:10px 18px; font-family:var(--disp); font-weight:700; text-transform:uppercase; letter-spacing:.08em; font-size:13px; cursor:pointer; box-shadow:0 2px 8px rgba(0,0,0,.25)}
+  .btn-print:hover{background:var(--gold-deep); color:#fff}
+
+  footer{max-width:1040px; margin:0 auto; padding:22px 32px 60px; color:var(--ink-faint); font-size:13.5px; border-top:1px solid var(--line)}
+  @media print{
+    body{font-size:12pt; background:#fff}
+    .mast::after{display:none}
+    a{color:var(--ink)}
+    .no-print{display:none}
+    section{page-break-inside:avoid}
+  }
+</style>
+</head>
+<body>
+
+<button class="btn-print no-print" onclick="window.print()">Print / Export PDF</button>
+
+<header class="mast">
+  <div class="mast-inner">
+    <div class="seal">T</div>
+    <div>
+      <div class="kicker">TUC ICT · Fleet Documentation</div>
+      <h1>{{APP_NAME}} <span class="gold">Documentation</span></h1>
+      <p class="sub">{{SECTION: One-sentence strapline. What the app is, who uses it, and where its data lives. Plain English, code-verified.}}</p>
+    </div>
+  </div>
+</header>
+
+<div class="ribbon"><div class="ribbon-inner">
+  <span>Doc <b>{{DOC_ID}}</b></span>
+  <span>App <b>ai-tools.techbridge.edu.gh/{{APP_SLUG}}/</b></span>
+  <span>SRS <b>{{SRS_ID}}</b></span>
+  <span>Date <b>{{DATE}}</b></span>
+  <span>Owner <b>{{OWNER}}</b></span>
+</div></div>
+
+<main>
+
+  <section>
+    <h2><span class="n">01</span>Overview</h2>
+    <p class="lead">{{SECTION: Overview}}</p>
+    <p>{{SECTION: Stack summary in one paragraph: SPA framework, backend entry point, PM2 process name, port, database if any, auth model. Cite the source files.}}</p>
+    <div class="note"><strong>Access:</strong> {{SECTION: Who can sign in, how (WMS SSO / TOTP / none), and which roles gate which features.}}</div>
+    <h3>Documentation set</h3>
+    <ul class="tick">
+      <li><strong>User Guide</strong> (<code>USER_GUIDE.md</code>): plain-English manual for the app's end users.</li>
+      <li><strong>Developer Guide</strong> (<code>DEVELOPER_GUIDE.md</code>): technical edition for fleet developers.</li>
+      <li><strong>Executive Briefing</strong> (<code>EXECUTIVE_BRIEFING.md</code>): stakeholder summary (Pattern 40 skeleton).</li>
+      <li><strong>Diagrams</strong>: <code>architecture.svg</code> and <code>erd.svg</code>, embedded below.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2><span class="n">02</span>At a glance</h2>
+    <div class="cards">
+      <!-- Fill with the app's real, code-verified numbers. Delete unused cards. -->
+      <div class="stat"><div class="big">{{N}}</div><div class="lbl">Database tables</div></div>
+      <div class="stat"><div class="big">{{N}}</div><div class="lbl">API endpoints</div></div>
+      <div class="stat"><div class="big">{{PORT}}</div><div class="lbl">Server port</div></div>
+      <div class="stat"><div class="big">{{N}}</div><div class="lbl">SQL migrations</div></div>
+    </div>
+    <p style="margin-top:12px">{{SECTION: One short paragraph interpreting the numbers, ending with the files the figures were verified against.}}</p>
+  </section>
+
+  <section>
+    <h2><span class="n">03</span>System architecture</h2>
+    <p>{{SECTION: Architecture, inline the app's architecture.svg}}</p>
+    <div class="fig">
+      <!-- Paste the app's architecture.svg here, the whole <svg>...</svg> element. -->
+      <p class="fig-cap">Deployed topology. The same diagram is available standalone as <code>architecture.svg</code>.</p>
+    </div>
+  </section>
+
+  <section>
+    <h2><span class="n">04</span>Database schema</h2>
+    <p>{{SECTION: Database schema, inline erd.svg. Name the database, port, scoped user and declared foreign keys. Delete this whole section for apps with no database.}}</p>
+    <div class="fig">
+      <!-- Paste the app's erd.svg here, the whole <svg>...</svg> element. -->
+      <p class="fig-cap">Entity-relationship diagram. Standalone copy: <code>erd.svg</code>.</p>
+    </div>
+    <h3>Migrations</h3>
+    <table>
+      <thead><tr><th style="width:34%">File</th><th>Purpose</th></tr></thead>
+      <tbody>
+        <tr><td class="prog">{{FILE}}</td><td>{{SECTION: What it creates or seeds, and whether it is idempotent.}}</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2><span class="n">05</span>API reference</h2>
+    <p>{{SECTION: API reference. State the sub-path convention and the auth gate. Use the badge set: }}<span class="badge b-done">Auth</span> <span class="badge b-gap">Open</span> <span class="badge b-amber">Admin</span></p>
+    <table>
+      <thead><tr><th style="width:9%">Method</th><th style="width:34%">Path</th><th style="width:9%">Gate</th><th>Behaviour</th></tr></thead>
+      <tbody>
+        <tr><td class="prog">GET</td><td><code>/api/{{route}}</code></td><td><span class="badge b-done">Auth</span></td><td>{{SECTION: One line per endpoint, verified against the routes file.}}</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2><span class="n">06</span>User workflows</h2>
+    <h3>{{Workflow name}}</h3>
+    <ol class="flow">
+      <li>{{SECTION: User workflows. Numbered steps for the two or three core flows, then a tick list for the rest.}}</li>
+    </ol>
+    <ul class="tick">
+      <li><strong>{{Feature}}:</strong> {{one-line description}}</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2><span class="n">07</span>Deployment &amp; verification</h2>
+    <p>{{SECTION: Deployment. What deploy.ps1 -Build does for this app, what it ships, and how .env / secrets are handled (never quote values).}}</p>
+    <div class="callout">
+      <h3>Definition of done</h3>
+      <ul class="tick">
+        <li>{{SECTION: The app's post-deploy checks: build clean, pm2 uptime reset, health endpoint, auth gate 401, content-type check. Copy the SickBay list and adapt.}}</li>
+      </ul>
+      <p>A green deploy banner alone proves nothing; these checks do.</p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  {{DOC_ID}} · {{APP_NAME}} documentation portal · Techbridge University College ICT, {{DATE}} ·
+  Requirements: {{SRS_ID}}. Sources of truth: {{SECTION: list the source files every fact above was verified against.}}
+  This document is generated from the code, not from memory.
+</footer>
+
+</body>
+</html>
