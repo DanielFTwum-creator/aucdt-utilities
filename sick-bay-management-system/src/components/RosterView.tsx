@@ -661,7 +661,7 @@ export default function RosterView({
                 onClick={() => setFilterType(tab)}
                 className={`px-4 py-1.5 text-xs font-black rounded-lg transition-all cursor-pointer ${filterType === tab ? 'bg-slate-900 text-white shadow-xs' : 'text-slate-500 hover:text-slate-900'}`}
               >
-                {tab}s
+                {tab === 'Student' ? 'Students' : tab}
               </button>
             ))}
           </div>

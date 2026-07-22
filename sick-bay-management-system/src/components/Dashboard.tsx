@@ -218,7 +218,7 @@ export default function Dashboard({
             Sick Bay Control Panel
           </h1>
           <p className="text-slate-300 leading-relaxed text-sm font-medium">
-            Track student and staff clinical encounters, monitor medical supply lines, and respond to facility service issues. Fully optimized for high-priority care.
+            Track student and staff clinical encounters, monitor medical supply lines, and respond to facility service issues. Fully optimised for high-priority care.
           </p>
           <div className="pt-2 flex flex-wrap gap-3">
             <ActionButton

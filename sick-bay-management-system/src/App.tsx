@@ -519,7 +519,7 @@ export default function App() {
           <div className="space-y-0.5">
             <span className="text-[8px] font-black text-slate-500 uppercase tracking-widest block">System Chronometer</span>
             <span className="text-[10px] font-mono font-black text-slate-200 block" id="realtime-clock">
-              {currentTime || 'Clock initializing...'}
+              {currentTime || 'Clock initialising...'}
             </span>
           </div>
 
