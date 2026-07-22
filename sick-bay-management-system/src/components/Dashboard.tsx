@@ -149,7 +149,9 @@ export default function Dashboard({
     }
   });
 
-  // Check which of these latest visits have a fever (>= 37.8) or high BP (systolic >= 130 or diastolic >= 80)
+  // Check which of these latest visits have a fever (>= 37.8) or high BP. Uses the
+  // standard hypertension threshold (>= 140/90) so a normal 120/80 reading is not
+  // flagged as abnormal (which also kept inflating the Critical Alerts count).
   const patientsWithVitalsAlerts = Object.values(latestVisitByPatient).map(v => {
     let systolic = 120;
     let diastolic = 80;
@@ -161,7 +163,7 @@ export default function Dashboard({
       if (!isNaN(dia)) diastolic = dia;
     }
     const isFever = v.temperature >= 37.8;
-    const isHighBP = systolic >= 130 || diastolic >= 80;
+    const isHighBP = systolic >= 140 || diastolic >= 90;
     
     return {
       visit: v,

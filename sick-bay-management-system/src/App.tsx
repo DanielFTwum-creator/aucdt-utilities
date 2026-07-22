@@ -563,7 +563,7 @@ export default function App() {
               <div className="space-y-2">
                 <div className="flex items-center gap-1.5 px-2 py-1 bg-emerald-950/80 border border-emerald-500/30 rounded-lg text-emerald-400 text-[9px] font-black uppercase tracking-wider">
                   <Unlock className="w-3 h-3 text-emerald-400 shrink-0" />
-                  <span>Daniel Twum (Admin)</span>
+                  <span>{wmsUser?.name || 'Administrator'} (Admin)</span>
                 </div>
                 <button
                   onClick={handleLogout}
@@ -579,7 +579,7 @@ export default function App() {
                   <span>Standard Access</span>
                 </div>
                 <p className="text-[8px] text-slate-500 px-1 leading-relaxed">
-                  Admin features require SYSTEM_ADMIN, HOD, or MEDICAL_OFFICER role via WMS.
+                  Admin features require SYSTEM_ADMIN, HOD, ADMIN_STAFF, or MEDICAL_OFFICER role via WMS.
                 </p>
               </div>
             )}
