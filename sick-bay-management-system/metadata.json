@@ -1,0 +1,6 @@
+{
+  "name": "Sick Bay Management System",
+  "description": "A comprehensive school sick bay management system for tracking student and staff medical visits, managing medicine inventory, and generating school health reports.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
