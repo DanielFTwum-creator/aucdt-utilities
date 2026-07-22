@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
 import { Visit, Medication, FacilityLog, Patient, DailyHealthCheck } from '../types';
 import { 
-  Users, 
-  Activity, 
-  AlertTriangle, 
-  Settings, 
-  CheckCircle, 
+  Users,
+  Activity,
+  AlertTriangle,
+  CheckCircle,
   Plus, 
   Clock, 
   LogOut, 
@@ -32,6 +31,7 @@ interface DashboardProps {
   onNavigate: (tab: string) => void;
   onDischargeObservation: (visitId: string, notes: string) => void;
   onOpenQuickLog: () => void;
+  userName?: string;
 }
 
 export default function Dashboard({
@@ -43,7 +43,8 @@ export default function Dashboard({
   onAddDailyHealthCheck,
   onNavigate,
   onDischargeObservation,
-  onOpenQuickLog
+  onOpenQuickLog,
+  userName
 }: DashboardProps) {
   const [selectedVisitIdForDischarge, setSelectedVisitIdForDischarge] = useState<string | null>(null);
   const [dischargeNotes, setDischargeNotes] = useState('');
@@ -199,6 +200,20 @@ export default function Dashboard({
 
   const maxConditionCount = Math.max(...conditionData.map(d => d.count), 1);
 
+  // Today's Summary derived values (priority-first dashboard)
+  const hour = new Date().getHours();
+  const greeting = hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening';
+  const firstName = userName ? userName.trim().split(/\s+/)[0] : '';
+
+  const yesterday = new Date();
+  yesterday.setDate(yesterday.getDate() - 1);
+  const yesterdayStr = yesterday.toISOString().split('T')[0];
+  const visitsYesterdayCount = visits.filter(v => v.dateTime.startsWith(yesterdayStr)).length;
+  const visitDelta = visitsToday.length - visitsYesterdayCount;
+
+  // Critical = things that need action now: expired stock, abnormal vitals, unresolved facility faults.
+  const criticalCount = expiredMedications.length + patientsWithVitalsAlerts.length + unresolvedIssues.length;
+
   const handleDischargeSubmit = (visitId: string) => {
     onDischargeObservation(visitId, dischargeNotes || 'Discharged from sick bay after resting. Symptoms resolved.');
     setSelectedVisitIdForDischarge(null);
@@ -207,20 +222,51 @@ export default function Dashboard({
 
   return (
     <div className="space-y-8" id="dashboard-tab">
-      {/* Welcome Banner */}
-      <div className="bento-card-dark rounded-[2rem] p-6 md:p-8 relative overflow-hidden" id="welcome-banner">
+      {/* Today's Summary — compact, priority-first header */}
+      <div className="bento-card-dark rounded-[2rem] p-5 md:p-6 relative overflow-hidden" id="welcome-banner">
         <div className="absolute right-0 bottom-0 top-0 w-1/3 opacity-10 bg-radial from-emerald-500 to-transparent pointer-events-none" />
-        <div className="relative z-10 space-y-4 max-w-2xl">
-          <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#34d399]/20 text-[#34d399] rounded-full text-xs font-black tracking-wide border-2 border-[#34d399]">
-            <ShieldCheck className="w-3.5 h-3.5" /> School Health Center Live
+        <div className="relative z-10 flex flex-col xl:flex-row xl:items-center justify-between gap-5">
+          <div className="space-y-3">
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-[#34d399]/20 text-[#34d399] rounded-full text-[11px] font-black tracking-wide border-2 border-[#34d399]">
+                <ShieldCheck className="w-3.5 h-3.5" /> School Health Centre Live
+              </span>
+              <h1 className="text-xl md:text-2xl font-black tracking-tight uppercase font-display italic text-white">
+                {greeting}{firstName ? `, ${firstName}` : ''}
+              </h1>
+            </div>
+
+            {/* Live summary figures */}
+            <div className="flex flex-wrap gap-2" aria-label="Today's clinic summary">
+              <div className="bg-white/10 border border-white/15 rounded-xl px-3 py-2 min-w-[92px]">
+                <span className="block text-[9px] font-black uppercase tracking-wider text-slate-400">Visits today</span>
+                <span className="text-lg font-black text-white leading-none">
+                  {visitsToday.length}
+                  {(visitsToday.length > 0 || visitsYesterdayCount > 0) && (
+                    <span className={`ml-1.5 text-[10px] font-black align-middle ${visitDelta >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
+                      {visitDelta >= 0 ? '▲' : '▼'} {Math.abs(visitDelta)}
+                    </span>
+                  )}
+                </span>
+              </div>
+              <div className={`rounded-xl px-3 py-2 min-w-[92px] border ${criticalCount > 0 ? 'bg-rose-500/20 border-rose-400/40' : 'bg-white/10 border-white/15'}`}>
+                <span className={`block text-[9px] font-black uppercase tracking-wider ${criticalCount > 0 ? 'text-rose-300' : 'text-slate-400'}`}>Critical</span>
+                <span className={`text-lg font-black leading-none ${criticalCount > 0 ? 'text-rose-100' : 'text-white'}`}>{criticalCount}</span>
+              </div>
+              <div className="bg-white/10 border border-white/15 rounded-xl px-3 py-2 min-w-[92px]">
+                <span className="block text-[9px] font-black uppercase tracking-wider text-slate-400">In observation</span>
+                <span className="text-lg font-black text-white leading-none">{activeObservations.length}</span>
+              </div>
+              <div className="bg-white/10 border border-white/15 rounded-xl px-3 py-2 min-w-[110px]">
+                <span className="block text-[9px] font-black uppercase tracking-wider text-slate-400">Clinic status</span>
+                <span className={`text-sm font-black leading-none ${criticalCount > 0 ? 'text-amber-300' : 'text-emerald-400'}`}>
+                  {criticalCount > 0 ? 'Needs attention' : 'Operational'}
+                </span>
+              </div>
+            </div>
           </div>
-          <h1 className="text-3xl md:text-4xl font-black tracking-tight uppercase font-display italic">
-            Sick Bay Control Panel
-          </h1>
-          <p className="text-slate-300 leading-relaxed text-sm font-medium">
-            Track student and staff clinical encounters, monitor medical supply lines, and respond to facility service issues. Fully optimised for high-priority care.
-          </p>
-          <div className="pt-2 flex flex-wrap gap-3">
+
+          <div className="flex flex-wrap gap-2 shrink-0">
             <ActionButton
               id="quick-log-btn"
               onClick={onOpenQuickLog}
@@ -232,7 +278,7 @@ export default function Dashboard({
               id="view-roster-btn"
               onClick={() => onNavigate('roster')}
               variant="secondary"
-              label="Student & Staff Roster"
+              label="Roster"
               icon={Users}
               iconClassName="w-4 h-4"
             />
@@ -240,7 +286,7 @@ export default function Dashboard({
               id="daily-health-check-btn"
               onClick={() => setShowDailyCheckForm(!showDailyCheckForm)}
               variant="secondary"
-              label={showDailyCheckForm ? "Close Wellness Form" : "Daily Health Check"}
+              label={showDailyCheckForm ? "Close Form" : "Daily Check"}
               icon={Heart}
             />
           </div>
@@ -412,31 +458,55 @@ export default function Dashboard({
         </motion.div>
       )}
 
-      {/* Metrics Grid */}
+      {/* Metrics Grid — ordered by operational urgency (most critical first) */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4" id="kpi-grid">
+        {/* 1. Critical: needs action now */}
         <StatCard
-          id="kpi-visits-today"
-          status="info"
-          count={visitsToday.length}
-          label="Visits Today"
-          subtext="Active arrivals today"
-          icon={Activity}
-          onClick={() => onNavigate('visits')}
+          id="kpi-critical-alerts"
+          status={criticalCount > 0 ? 'danger' : 'success'}
+          count={criticalCount}
+          label="Critical Alerts"
+          subtext={
+            criticalCount > 0 ? (
+              <div className="flex flex-wrap gap-1 mt-0.5" id="critical-sub-counts">
+                {expiredMedications.length > 0 && (
+                  <span className="bg-red-950/40 text-rose-100 px-1.5 py-0.5 rounded text-[9px] font-black uppercase tracking-wider">
+                    {expiredMedications.length} Expired
+                  </span>
+                )}
+                {patientsWithVitalsAlerts.length > 0 && (
+                  <span className="bg-white/20 text-white px-1.5 py-0.5 rounded text-[9px] font-black uppercase tracking-wider">
+                    {patientsWithVitalsAlerts.length} Vitals
+                  </span>
+                )}
+                {unresolvedIssues.length > 0 && (
+                  <span className="bg-white/20 text-white px-1.5 py-0.5 rounded text-[9px] font-black uppercase tracking-wider">
+                    {unresolvedIssues.length} Facility
+                  </span>
+                )}
+              </div>
+            ) : (
+              "All clear"
+            )
+          }
+          icon={AlertTriangle}
+          onClick={() => onNavigate('inventory')}
         />
 
+        {/* 2. In observation now */}
         <StatCard
           id="kpi-bed-occupancy"
           status="info"
           count={activeObservations.length}
-          label="Bed Occupancy"
+          label="In Observation"
           subtext={
             activeObservations.length > 0 ? (
               <span className="underline decoration-white/50 underline-offset-2">
                 View active beds ↓
               </span>
             ) : (
-              "Patients in observation"
-)
+              "Beds free"
+            )
           }
           icon={Bed}
           onClick={
@@ -446,33 +516,33 @@ export default function Dashboard({
           }
         />
 
+        {/* 3. Visits today with trend vs yesterday */}
         <StatCard
-          id="kpi-inventory-alerts"
-          status="danger"
-          count={lowStockMedications.length + expiredMedications.length}
-          label="Medicine Alerts"
+          id="kpi-visits-today"
+          status="info"
+          count={visitsToday.length}
+          label="Visits Today"
           subtext={
-            <div className="flex flex-wrap gap-1 mt-0.5" id="medicine-sub-counts">
-              <span className="bg-red-950/40 text-rose-100 px-1.5 py-0.5 rounded text-[9px] font-black uppercase tracking-wider">
-                {lowStockMedications.length} Low Stock
+            <span className="text-[11px] font-bold flex items-center gap-1 mt-0.5">
+              <span className={visitDelta >= 0 ? 'text-emerald-300' : 'text-rose-200'}>
+                {visitDelta >= 0 ? '▲' : '▼'} {Math.abs(visitDelta)}
               </span>
-              <span className="bg-white/20 text-white px-1.5 py-0.5 rounded text-[9px] font-black uppercase tracking-wider">
-                {expiredMedications.length} Expired
-              </span>
-            </div>
+              <span className="opacity-70">vs yesterday ({visitsYesterdayCount})</span>
+            </span>
           }
-          icon={AlertTriangle}
-          onClick={() => onNavigate('inventory')}
+          icon={Activity}
+          onClick={() => onNavigate('visits')}
         />
 
+        {/* 4. Medicine stock */}
         <StatCard
-          id="kpi-facility-issues"
-          status={unresolvedIssues.length > 0 ? 'warning' : 'success'}
-          count={unresolvedIssues.length}
-          label="Facility Alerts"
-          subtext={unresolvedIssues.length > 0 ? "Unresolved Maintenance" : "All Systems Nominal"}
-          icon={Settings}
-          onClick={() => onNavigate('facility')}
+          id="kpi-inventory-alerts"
+          status={lowStockMedications.length > 0 ? 'warning' : 'success'}
+          count={lowStockMedications.length}
+          label="Low Stock Meds"
+          subtext={lowStockMedications.length > 0 ? "Below reorder level" : "Stock levels healthy"}
+          icon={Pill}
+          onClick={() => onNavigate('inventory')}
         />
       </div>
 

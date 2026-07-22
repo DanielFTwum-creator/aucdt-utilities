@@ -605,6 +605,7 @@ export default function App() {
               setPreSelectedPatientId(undefined);
               setCurrentTab('logger');
             }}
+            userName={wmsUser?.name}
           />
         )}
 
