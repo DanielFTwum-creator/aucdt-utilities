@@ -1,93 +1,109 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 600" width="100%" height="100%">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 840" font-family="Georgia, serif">
   <defs>
-    <style>
-      .title { font-family: system-ui, -apple-system, sans-serif; font-size: 20px; font-weight: bold; fill: #0f172a; }
-      .subtitle { font-family: system-ui, -apple-system, sans-serif; font-size: 13px; fill: #64748b; }
-      .node-title { font-family: system-ui, -apple-system, sans-serif; font-size: 14px; font-weight: bold; fill: #0f172a; }
-      .node-desc { font-family: system-ui, -apple-system, sans-serif; font-size: 11px; fill: #475569; }
-      .edge-label { font-family: system-ui, -apple-system, sans-serif; font-size: 10px; font-weight: bold; fill: #2563eb; }
-      .box { fill: #ffffff; stroke: #0f172a; stroke-width: 2; rx: 12; filter: drop-shadow(4px 4px 0px rgba(15,23,42,0.9)); }
-      .box-blue { fill: #eff6ff; stroke: #1d4ed8; stroke-width: 2; rx: 12; filter: drop-shadow(4px 4px 0px rgba(29,78,216,0.9)); }
-      .box-emerald { fill: #ecfdf5; stroke: #047857; stroke-width: 2; rx: 12; filter: drop-shadow(4px 4px 0px rgba(4,120,87,0.9)); }
-      .box-amber { fill: #fffbebf; stroke: #b45309; stroke-width: 2; rx: 12; filter: drop-shadow(4px 4px 0px rgba(180,83,9,0.9)); }
-      .line { stroke: #0f172a; stroke-width: 2; fill: none; stroke-dasharray: none; }
-      .line-dashed { stroke: #64748b; stroke-width: 2; fill: none; stroke-dasharray: 5,5; }
-    </style>
-    <marker id="arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-      <path d="M 0 0 L 10 5 L 0 10 z" fill="#0f172a" />
+    <marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#6B0000"/>
     </marker>
   </defs>
+  <rect width="980" height="840" fill="#ffffff"/>
+  <rect x="0" y="0" width="980" height="6" fill="#ffcb05"/>
 
-  <!-- Header -->
-  <text x="40" y="40" class="title">SickBay Management System — System Architecture</text>
-  <text x="40" y="60" class="subtitle">Techbridge University College (TUC) • IEEE 29148 Standard Compliant Spec</text>
+  <!-- Title -->
+  <text x="60" y="44" font-family="'Arial Narrow', Arial, sans-serif" font-size="24" font-weight="bold" fill="#6B0000" letter-spacing="1">SICKBAY MANAGEMENT SYSTEM - DEPLOYED TOPOLOGY</text>
+  <text x="60" y="66" font-size="13" fill="#6b6459" font-style="italic">Verified against server.ts, deploy.ps1, src/server/* and SERVER_PORTS.md (22 Jul 2026) - TUC-ICT-SRS-2026-004</text>
 
-  <!-- Client Layer -->
-  <g transform="translate(40, 100)">
-    <rect class="box" width="220" height="130" />
-    <text x="20" y="30" class="node-title">React 19 SPA Client</text>
-    <text x="20" y="55" class="node-desc">• Bento Grid Clinical Dashboard</text>
-    <text x="20" y="73" class="node-desc">• Recharts Vitals Trend Visualiser</text>
-    <text x="20" y="91" class="node-desc">• jsPDF Medical Summary Export</text>
-    <text x="20" y="109" class="node-desc">• IndexedDB Session Persistence</text>
+  <!-- Browser box -->
+  <g>
+    <rect x="60" y="90" width="360" height="150" rx="10" fill="#ffffff" stroke="#6B0000" stroke-width="2"/>
+    <path d="M 60,100 a10,10 0 0 1 10,-10 h340 a10,10 0 0 1 10,10 v20 h-360 z" fill="#6B0000"/>
+    <rect x="60" y="117" width="360" height="3" fill="#ffcb05"/>
+    <text x="74" y="111" font-family="'Arial Narrow', Arial, sans-serif" font-size="14" font-weight="bold" fill="#ffffff" letter-spacing="1">BROWSER - REACT 19 SPA</text>
+    <text x="74" y="142" font-size="12.5" fill="#2b2620">Served from /sickbay/ (Vite base '/sickbay/')</text>
+    <text x="74" y="162" font-size="12.5" fill="#2b2620">WMS access token held in memory only</text>
+    <text x="74" y="182" font-size="12.5" fill="#2b2620">Calls the API at /sickbay/api/* with a Bearer token</text>
+    <text x="74" y="202" font-size="12.5" font-weight="bold" fill="#3d0000">No clinical data in the browser</text>
+    <text x="74" y="222" font-size="12.5" fill="#6b6459" font-style="italic">(only the display-theme preference is stored locally)</text>
   </g>
 
-  <!-- Nginx Reverse Proxy -->
-  <g transform="translate(340, 100)">
-    <rect class="box-blue" width="220" height="130" />
-    <text x="20" y="30" class="node-title">Nginx Proxy (/sickbay/)</text>
-    <text x="20" y="55" class="node-desc">• TLS Termination (HTTPS)</text>
-    <text x="20" y="73" class="node-desc">• Location /sickbay/ → Port 3046</text>
-    <text x="20" y="91" class="node-desc">• Location /sickbay/api/ → Proxy</text>
-    <text x="20" y="109" class="node-desc">• Sub-path strip rule (Pattern 38)</text>
+  <!-- WMS box -->
+  <g>
+    <rect x="560" y="90" width="360" height="230" rx="10" fill="#fdf8e3" stroke="#6B0000" stroke-width="2"/>
+    <path d="M 560,100 a10,10 0 0 1 10,-10 h340 a10,10 0 0 1 10,10 v20 h-360 z" fill="#6B0000"/>
+    <rect x="560" y="117" width="360" height="3" fill="#ffcb05"/>
+    <text x="574" y="111" font-family="'Arial Narrow', Arial, sans-serif" font-size="14" font-weight="bold" fill="#ffffff" letter-spacing="1">WMS - wms.techbridge.edu.gh</text>
+    <text x="574" y="142" font-size="12.5" fill="#2b2620">Google Workspace sign-in (@techbridge.edu.gh)</text>
+    <text x="574" y="162" font-size="12.5" fill="#2b2620">TOTP MFA: verify, or first-time enrolment</text>
+    <text x="574" y="182" font-size="12.5" fill="#2b2620">Issues the access token + fleet-wide wms_refresh cookie</text>
+    <text x="574" y="202" font-size="12.5" fill="#2b2620">GET /api/me validates every SickBay API request</text>
+    <text x="574" y="222" font-size="12.5" fill="#2b2620">OAuth exchange relay (Pattern 35)</text>
+    <text x="574" y="246" font-size="12.5" font-weight="bold" fill="#3d0000">Sole custodian of GOOGLE_CLIENT_SECRET;</text>
+    <text x="574" y="264" font-size="12.5" font-weight="bold" fill="#3d0000">SickBay never holds it</text>
+    <text x="574" y="290" font-size="11.5" fill="#6b6459" font-style="italic">Relay calls authenticate with the X-Gemini-Proxy-Key header</text>
   </g>
 
-  <!-- Express Node.js Server -->
-  <g transform="translate(640, 100)">
-    <rect class="box-emerald" width="220" height="130" />
-    <text x="20" y="30" class="node-title">Express Server (Port 3046)</text>
-    <text x="20" y="55" class="node-desc">• tsx ESM Runtime (server.ts)</text>
-    <text x="20" y="73" class="node-desc">• Dual Route Handler (/api/health)</text>
-    <text x="20" y="91" class="node-desc">• Static Asset Dual Mount</text>
-    <text x="20" y="109" class="node-desc">• PM2 Autostart Management</text>
+  <!-- nginx box -->
+  <g>
+    <rect x="60" y="300" width="360" height="110" rx="10" fill="#ffffff" stroke="#6B0000" stroke-width="2"/>
+    <path d="M 60,310 a10,10 0 0 1 10,-10 h340 a10,10 0 0 1 10,10 v20 h-360 z" fill="#6B0000"/>
+    <rect x="60" y="327" width="360" height="3" fill="#ffcb05"/>
+    <text x="74" y="321" font-family="'Arial Narrow', Arial, sans-serif" font-size="14" font-weight="bold" fill="#ffffff" letter-spacing="1">NGINX - ai-tools.techbridge.edu.gh</text>
+    <text x="74" y="352" font-size="12.5" fill="#2b2620">TLS termination for the AI-Lab vhost</text>
+    <text x="74" y="372" font-size="12.5" fill="#2b2620">location /sickbay/ proxied to localhost:3046</text>
+    <text x="74" y="392" font-size="12.5" font-weight="bold" fill="#3d0000">The /sickbay prefix is NOT stripped by nginx</text>
   </g>
 
-  <!-- WMS Infrastructure Layer -->
-  <g transform="translate(340, 320)">
-    <rect class="box-amber" width="220" height="140" />
-    <text x="20" y="30" class="node-title">TUC WMS Gateway</text>
-    <text x="20" y="55" class="node-desc">• OAuth Relay Exchange</text>
-    <text x="20" y="73" class="node-desc">• Gemini Key Custody Proxy</text>
-    <text x="20" y="91" class="node-desc">• Staff Identity Authentication</text>
-    <text x="20" y="109" class="node-desc">• TOTP MFA Security Guard</text>
-    <text x="20" y="127" class="node-desc">• Port 8081 (systemd)</text>
+  <!-- Express box -->
+  <g>
+    <rect x="60" y="470" width="360" height="200" rx="10" fill="#ffffff" stroke="#6B0000" stroke-width="2"/>
+    <path d="M 60,480 a10,10 0 0 1 10,-10 h340 a10,10 0 0 1 10,10 v20 h-360 z" fill="#6B0000"/>
+    <rect x="60" y="497" width="360" height="3" fill="#ffcb05"/>
+    <text x="74" y="491" font-family="'Arial Narrow', Arial, sans-serif" font-size="14" font-weight="bold" fill="#ffffff" letter-spacing="1">EXPRESS - server.ts (tsx) - PM2 "sickbay" - :3046</text>
+    <text x="74" y="522" font-size="12.5" fill="#2b2620">Pattern 38: strips /sickbay/api to /api (+ dual mounts)</text>
+    <text x="74" y="542" font-size="12.5" font-weight="bold" fill="#3d0000">requireAuth: Bearer token re-verified at WMS /api/me,</text>
+    <text x="74" y="560" font-size="12.5" font-weight="bold" fill="#3d0000">fails closed (401 without a valid session)</text>
+    <text x="74" y="582" font-size="12.5" fill="#2b2620">20 auth-gated data routes + health / session / relay</text>
+    <text x="74" y="602" font-size="12.5" fill="#2b2620">Transactional visit write: visit + stock + referral</text>
+    <text x="74" y="622" font-size="12.5" fill="#2b2620">Maps snake_case rows to camelCase frontend types</text>
+    <text x="74" y="642" font-size="12.5" fill="#2b2620">Serves the built SPA (dist/) and /sickbay/docs/</text>
   </g>
 
-  <!-- External Services -->
-  <g transform="translate(640, 320)">
-    <rect class="box" width="220" height="140" />
-    <text x="20" y="30" class="node-title">Google Cloud & AI</text>
-    <text x="20" y="55" class="node-desc">• Google OAuth 2.0 API</text>
-    <text x="20" y="73" class="node-desc">• Gemini 2.5 Flash Model</text>
-    <text x="20" y="91" class="node-desc">• Clinical OCR & Triage AI</text>
-    <text x="20" y="109" class="node-desc">• Zero Client Secret Leak</text>
+  <!-- MariaDB box -->
+  <g>
+    <rect x="560" y="470" width="360" height="200" rx="10" fill="#ffffff" stroke="#6B0000" stroke-width="2"/>
+    <path d="M 560,480 a10,10 0 0 1 10,-10 h340 a10,10 0 0 1 10,10 v20 h-360 z" fill="#6B0000"/>
+    <rect x="560" y="497" width="360" height="3" fill="#ffcb05"/>
+    <text x="574" y="491" font-family="'Arial Narrow', Arial, sans-serif" font-size="14" font-weight="bold" fill="#ffffff" letter-spacing="1">MARIADB - tuc_sickbay @ localhost:3306</text>
+    <text x="574" y="522" font-size="12.5" fill="#2b2620">Scoped user sickbay_app@localhost (never root; Pattern 37)</text>
+    <text x="574" y="542" font-size="12.5" fill="#2b2620">App-DB instance on 3306 (3307 is the LMS: never used)</text>
+    <text x="574" y="566" font-size="12.5" font-weight="bold" fill="#3d0000">7 tables:</text>
+    <text x="574" y="586" font-size="12" fill="#2b2620">patients, visits, medications, referrals,</text>
+    <text x="574" y="604" font-size="12" fill="#2b2620">facility_logs, audit_logs, daily_health_checks</text>
+    <text x="574" y="628" font-size="12.5" fill="#2b2620">Schema + seeds: db/migrations/001, 002, 003</text>
+    <text x="574" y="648" font-size="12.5" fill="#2b2620">Applied with plesk db (each file carries USE tuc_sickbay)</text>
   </g>
 
-  <!-- Connectors -->
-  <!-- Client to Nginx -->
-  <path class="line" d="M 260 165 L 340 165" marker-end="url(#arrow)" />
-  <text x="275" y="155" class="edge-label">HTTPS</text>
+  <!-- Arrows -->
+  <path d="M 240,240 V 297" fill="none" stroke="#6B0000" stroke-width="2" marker-end="url(#ah)"/>
+  <text x="252" y="266" font-size="11.5" fill="#6B0000" font-family="Consolas, monospace">HTTPS: page load + /sickbay/api/* (Bearer)</text>
 
-  <!-- Nginx to Express -->
-  <path class="line" d="M 560 165 L 640 165" marker-end="url(#arrow)" />
-  <text x="575" y="155" class="edge-label">Port 3046</text>
+  <path d="M 240,410 V 467" fill="none" stroke="#6B0000" stroke-width="2" marker-end="url(#ah)"/>
+  <text x="252" y="436" font-size="11.5" fill="#6B0000" font-family="Consolas, monospace">proxy_pass http://localhost:3046 (un-stripped)</text>
 
-  <!-- Express to WMS Gateway -->
-  <path class="line" d="M 750 230 L 750 280 L 450 280 L 450 320" marker-end="url(#arrow)" />
-  <text x="580" y="275" class="edge-label">X-Gemini-Proxy-Key</text>
+  <path d="M 420,570 H 557" fill="none" stroke="#6B0000" stroke-width="2" marker-end="url(#ah)"/>
+  <text x="488" y="560" font-size="11.5" fill="#6B0000" font-family="Consolas, monospace" text-anchor="middle">mysql2 pool</text>
 
-  <!-- WMS Gateway to Google Cloud -->
-  <path class="line" d="M 560 390 L 640 390" marker-end="url(#arrow)" />
-  <text x="575" y="380" class="edge-label">HTTPS API</text>
+  <path d="M 420,165 H 557" fill="none" stroke="#6B0000" stroke-width="2" marker-end="url(#ah)"/>
+  <text x="488" y="150" font-size="11.5" fill="#6B0000" font-family="Consolas, monospace" text-anchor="middle">sign-in redirect,</text>
+  <text x="488" y="185" font-size="11.5" fill="#6B0000" font-family="Consolas, monospace" text-anchor="middle">code exchange + refresh</text>
 
+  <path d="M 390,470 V 436 H 740 V 323" fill="none" stroke="#6B0000" stroke-width="2" marker-end="url(#ah)"/>
+  <text x="588" y="428" font-size="11.5" fill="#6B0000" font-family="Consolas, monospace" text-anchor="middle">verify token: GET /api/me - relay exchange</text>
+
+  <!-- Audit trail note -->
+  <g>
+    <rect x="60" y="710" width="860" height="86" rx="8" fill="#fdf8e3" stroke="#e2ded4"/>
+    <rect x="60" y="710" width="5" height="86" fill="#ffcb05"/>
+    <text x="80" y="736" font-family="'Arial Narrow', Arial, sans-serif" font-size="14" font-weight="bold" fill="#3d0000" letter-spacing="1">AUDIT TRAIL &amp; DATA CUSTODY</text>
+    <text x="80" y="758" font-size="12.5" fill="#2b2620">Every AUTH, CLINICAL, INVENTORY, FACILITY and SYSTEM action is appended to audit_logs with actor and timestamp; the Reports tab reads the latest 200 entries.</text>
+    <text x="80" y="778" font-size="12.5" fill="#2b2620">All clinical state lives in MariaDB. The SPA re-pulls the authoritative dataset after every write, so every signed-in device shows the same records.</text>
+  </g>
 </svg>
