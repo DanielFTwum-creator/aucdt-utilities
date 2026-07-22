@@ -374,7 +374,7 @@ export default function App() {
     { id: 'dashboard', label: 'Overview', icon: Activity },
     { id: 'logger', label: 'Log Visit', icon: Plus },
     { id: 'visits', label: 'Encounters Journal', icon: ClipboardList },
-    { id: 'roster', label: 'Student Roster', icon: Users },
+    { id: 'roster', label: 'Student & Staff Roster', icon: Users },
     { id: 'inventory', label: 'Pharmacy Stock', icon: BriefcaseMedical, restricted: true },
     { id: 'referrals', label: 'Hospital Referrals', icon: Building2 },
     { id: 'facility', label: 'Facility Logs', icon: Wrench, restricted: true },

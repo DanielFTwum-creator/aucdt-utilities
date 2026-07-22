@@ -232,7 +232,7 @@ export default function Dashboard({
               id="view-roster-btn"
               onClick={() => onNavigate('roster')}
               variant="secondary"
-              label="Search Student Roster"
+              label="Student & Staff Roster"
               icon={Users}
               iconClassName="w-4 h-4"
             />
