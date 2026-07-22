@@ -165,8 +165,12 @@ function MfaModal({ ticket, setTicket, onDone }: MfaModalProps) {
     try {
       const res = await mfaEnrollBegin(ticket);
       setSecret(res.secret);
-      // Generate QR code via Google Charts API (no external dep required)
-      setQrDataUrl(`https://chart.googleapis.com/chart?cht=qr&chs=200x200&chl=${encodeURIComponent(res.otpauthUri)}`);
+      // Generate the QR client-side (qrcode lib, lazy-loaded so it stays out of the
+      // initial bundle). The old chart.googleapis.com QR endpoint is dead (404 —
+      // Google retired the Image Charts API), and a CDN QR would break Pattern 32
+      // (no external CDN); this keeps enrolment self-contained.
+      const QRCode = (await import('qrcode')).default;
+      setQrDataUrl(await QRCode.toDataURL(res.otpauthUri, { width: 220, margin: 1 }));
       setStarted(true);
     } catch (err: any) { setError(err.message || 'Could not start enrolment'); }
     finally { setBusy(false); }
