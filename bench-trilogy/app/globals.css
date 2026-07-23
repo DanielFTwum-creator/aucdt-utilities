@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@plugin "@tailwindcss/typography";
 
 /* THE BENCH TRILOGY — brand tokens (cinematic director's-bible look).
    Drawn from the source bibles: warm trilogy gold on near-black, ivory

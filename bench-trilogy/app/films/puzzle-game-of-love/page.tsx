@@ -1,19 +1,20 @@
 import type { Metadata } from "next";
-import { FILMS } from "@/lib/films";
-import BiblePage from "@/components/BiblePage";
+import { loadContent } from "@/lib/content";
+import BibleView from "@/components/BibleView";
 
-const film = FILMS.find((f) => f.slug === "puzzle-game-of-love")!;
+const content = loadContent("puzzle-game-of-love");
 
-export const metadata: Metadata = { title: film.title, description: film.logline };
+export const metadata: Metadata = {
+  title: content.title,
+  description: content.logline,
+};
 
 export default function Page() {
   return (
-    <BiblePage
+    <BibleView
+      content={content}
       kicker="Director's Cut Bible"
-      meta={`Film ${film.order} · ${film.mode}`}
-      title={film.title}
-      logline={film.logline}
-      sections={film.sections}
+      meta="Film 02 · Intimacy"
     />
   );
 }
