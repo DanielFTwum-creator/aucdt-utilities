@@ -32,7 +32,7 @@
 - **Vite Base:** `base: '/sickbay/'` (absolute sub-path).
 - **Express Sub-Path Strip:** `server.ts` strips `/sickbay/api/` to `/api/` (Pattern 38).
 - **OAuth Relay:** Google OAuth tokens exchange via WMS relay at `https://wms.techbridge.edu.gh/api/oauth/google/exchange` using `X-Gemini-Proxy-Key` (Pattern 35).
-- **Gemini Proxy:** AI vision & record analysis proxies through WMS proxy (Pattern 11).
+- **Gemini:** Not used. SickBay has no Gemini/AI feature; the only Gemini-named item in the code is the `GEMINI_PROXY_KEY` credential, which serves purely as the WMS relay's service-auth header above. `@google/genai` sits in `package.json` dependencies but is imported nowhere; the team may remove it.
 
 ---
 
