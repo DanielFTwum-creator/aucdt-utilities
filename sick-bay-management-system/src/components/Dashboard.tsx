@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Visit, Medication, FacilityLog, Patient, DailyHealthCheck } from '../types';
+import { Visit, Medication, FacilityLog, Patient, DailyHealthCheck, AuditLog } from '../types';
 import { 
   Users,
   Activity,
@@ -15,7 +15,9 @@ import {
   BriefcaseMedical,
   Heart,
   Pill,
-  AlertCircle
+  AlertCircle,
+  Search,
+  X
 } from 'lucide-react';
 import { motion } from 'motion/react';
 import StatCard from './StatCard';
@@ -27,6 +29,7 @@ interface DashboardProps {
   facilityLogs: FacilityLog[];
   patients: Patient[];
   dailyHealthChecks: DailyHealthCheck[];
+  auditLogs: AuditLog[];
   onAddDailyHealthCheck: (check: Omit<DailyHealthCheck, 'id' | 'dateTime'>) => void;
   onNavigate: (tab: string) => void;
   onDischargeObservation: (visitId: string, notes: string) => void;
@@ -40,6 +43,7 @@ export default function Dashboard({
   facilityLogs,
   patients,
   dailyHealthChecks,
+  auditLogs,
   onAddDailyHealthCheck,
   onNavigate,
   onDischargeObservation,
@@ -48,6 +52,17 @@ export default function Dashboard({
 }: DashboardProps) {
   const [selectedVisitIdForDischarge, setSelectedVisitIdForDischarge] = useState<string | null>(null);
   const [dischargeNotes, setDischargeNotes] = useState('');
+
+  // Global quick search across patients, staff and medicines
+  const [searchQuery, setSearchQuery] = useState('');
+  const searchTerm = searchQuery.trim().toLowerCase();
+  const patientMatches = searchTerm
+    ? patients.filter(p => p.name.toLowerCase().includes(searchTerm) || p.id.toLowerCase().includes(searchTerm) || p.classOrDept.toLowerCase().includes(searchTerm)).slice(0, 5)
+    : [];
+  const medicineMatches = searchTerm
+    ? medications.filter(m => m.name.toLowerCase().includes(searchTerm) || m.category.toLowerCase().includes(searchTerm)).slice(0, 5)
+    : [];
+  const hasSearchResults = patientMatches.length > 0 || medicineMatches.length > 0;
 
   // Daily Health Check states
   const [showDailyCheckForm, setShowDailyCheckForm] = useState(false);
@@ -293,6 +308,75 @@ export default function Dashboard({
             />
           </div>
         </div>
+      </div>
+
+      {/* Global quick search — patients, staff, medicines */}
+      <div className="relative" id="global-search">
+        <div className="flex items-center gap-2 bg-white border-2 border-slate-900 rounded-2xl px-4 py-3 shadow-[3px_3px_0px_rgba(15,23,42,1)] focus-within:ring-4 focus-within:ring-slate-900/20">
+          <Search className="w-4 h-4 text-slate-500 shrink-0" aria-hidden="true" />
+          <input
+            type="search"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Search patients, staff or medicines..."
+            aria-label="Search patients, staff or medicines"
+            className="flex-1 text-sm font-semibold text-slate-800 placeholder-slate-400 focus:outline-none bg-transparent"
+          />
+          {searchQuery && (
+            <button type="button" onClick={() => setSearchQuery('')} aria-label="Clear search" className="text-slate-400 hover:text-slate-700 cursor-pointer">
+              <X className="w-4 h-4" />
+            </button>
+          )}
+        </div>
+
+        {searchTerm && (
+          <div className="absolute z-30 mt-2 w-full bg-white border-2 border-slate-900 rounded-2xl shadow-[4px_4px_0px_rgba(15,23,42,1)] overflow-hidden" role="listbox" aria-label="Search results">
+            {hasSearchResults ? (
+              <div className="max-h-[320px] overflow-y-auto divide-y divide-slate-100">
+                {patientMatches.length > 0 && (
+                  <div className="p-2">
+                    <p className="px-2 py-1 text-[10px] font-black uppercase tracking-wider text-slate-400">People</p>
+                    {patientMatches.map(p => (
+                      <button
+                        key={p.id}
+                        type="button"
+                        onClick={() => { onNavigate('roster'); setSearchQuery(''); }}
+                        className="w-full text-left flex items-center gap-3 px-2 py-2 rounded-xl hover:bg-slate-50 focus:outline-none focus-visible:bg-slate-100 cursor-pointer"
+                      >
+                        <span className="w-8 h-8 rounded-lg bg-indigo-100 text-indigo-700 flex items-center justify-center shrink-0"><Users className="w-4 h-4" /></span>
+                        <span className="min-w-0">
+                          <span className="block text-sm font-bold text-slate-800 truncate">{p.name}</span>
+                          <span className="block text-[10px] text-slate-500 font-semibold uppercase">{p.type} • {p.classOrDept} • {p.id}</span>
+                        </span>
+                      </button>
+                    ))}
+                  </div>
+                )}
+                {medicineMatches.length > 0 && (
+                  <div className="p-2">
+                    <p className="px-2 py-1 text-[10px] font-black uppercase tracking-wider text-slate-400">Medicines</p>
+                    {medicineMatches.map(m => (
+                      <button
+                        key={m.id}
+                        type="button"
+                        onClick={() => { onNavigate('inventory'); setSearchQuery(''); }}
+                        className="w-full text-left flex items-center gap-3 px-2 py-2 rounded-xl hover:bg-slate-50 focus:outline-none focus-visible:bg-slate-100 cursor-pointer"
+                      >
+                        <span className="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0"><Pill className="w-4 h-4" /></span>
+                        <span className="min-w-0">
+                          <span className="block text-sm font-bold text-slate-800 truncate">{m.name}</span>
+                          <span className="block text-[10px] text-slate-500 font-semibold uppercase">{m.category} • {m.quantityOnHand} {m.unit} in stock</span>
+                        </span>
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+            ) : (
+              <p className="px-4 py-6 text-center text-xs text-slate-400 font-semibold uppercase">No matches for &quot;{searchQuery}&quot;</p>
+            )}
+          </div>
+        )}
       </div>
 
       {/* Daily Health Check Form Section */}
@@ -1110,6 +1194,52 @@ export default function Dashboard({
             ) : (
               <div className="text-center py-10 text-slate-400 text-xs">
                 No visitor statistics available.
+              </div>
+            )}
+          </div>
+
+          {/* Live Activity Feed (from the audit log) */}
+          <div className="bento-card p-6 space-y-4" id="activity-feed-panel">
+            <div className="flex items-center justify-between">
+              <div>
+                <h2 className="text-lg font-black uppercase italic font-display text-slate-900">Live Activity</h2>
+                <p className="text-xs text-slate-400 font-semibold uppercase">Recent clinic events, newest first</p>
+              </div>
+              <button
+                onClick={() => onNavigate('reports')}
+                className="text-xs font-black uppercase tracking-wider text-indigo-600 hover:text-indigo-800 flex items-center gap-1 cursor-pointer"
+              >
+                Full log <ChevronRight className="w-3 h-3" />
+              </button>
+            </div>
+
+            {auditLogs.length > 0 ? (
+              <ul className="space-y-3 max-h-[340px] overflow-y-auto pr-1" aria-label="Recent clinic activity">
+                {auditLogs.slice(0, 8).map(log => {
+                  const dot =
+                    log.category === 'CLINICAL' ? 'bg-emerald-500'
+                    : log.category === 'INVENTORY' ? 'bg-amber-500'
+                    : log.category === 'FACILITY' ? 'bg-orange-500'
+                    : log.category === 'AUTH' ? 'bg-slate-400'
+                    : 'bg-indigo-500';
+                  const t = new Date(log.dateTime);
+                  return (
+                    <li key={log.id} className="flex gap-3">
+                      <span className={`mt-1.5 w-2.5 h-2.5 rounded-full shrink-0 ${dot}`} aria-hidden="true" />
+                      <div className="min-w-0 flex-1">
+                        <p className="text-xs font-bold text-slate-800 leading-tight">{log.action}</p>
+                        {log.details && <p className="text-[10px] text-slate-500 line-clamp-2 mt-0.5">{log.details}</p>}
+                        <p className="text-[9px] text-slate-400 font-semibold uppercase mt-0.5">
+                          {log.actor} • {t.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                        </p>
+                      </div>
+                    </li>
+                  );
+                })}
+              </ul>
+            ) : (
+              <div className="text-center py-8 text-slate-400 text-xs border border-dashed border-slate-200 rounded-xl">
+                No activity recorded yet today.
               </div>
             )}
           </div>
