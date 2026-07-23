@@ -65,6 +65,7 @@ When spawning subagents, use the cheapest model that can handle the task:
 
 - **Haiku** — Bulk mechanical tasks: file ops, formatting, renaming, simple transformations. No judgement required.
 - **Sonnet** — Scoped research, code exploration, summarisation, synthesis across sources.
+- **Fable** for long-form documentation prose: guides, SRS and PATTERNS write-ups, briefings, release notes. Reality-verified from the repo, reviewed by the parent (the `fleet-doc-writer` agent, model-overridden to Fable, is the vehicle).
 - **Opus** — Only when real planning or trade-offs are involved: architecture, ambiguous requirements, high-stakes decisions.
 
 ### Spawn Rules
@@ -73,6 +74,15 @@ When spawning subagents, use the cheapest model that can handle the task:
 - Max spawn depth: 2 (parent → subagent → one more tier, no deeper).
 - If a subagent needs a smarter model, it returns to the parent instead of escalating.
 - **Never ask Sonnet one small thing at a time.** Group 3–5 related decisions into one message.
+
+### Standing auto-delegation permission (Daniel, 23 Jul 2026)
+
+Best-practice-gated. Two kinds of work MAY be auto-delegated to a focused subagent **without asking first**, to keep the main thread lean: (1) research, codebase exploration and parallel analysis, and (2) documentation prose (guides, SRS / PATTERNS write-ups, briefings). This is a deliberate, scoped exception to the Cowork "don't spawn unless asked" default, and it applies ONLY to those two categories.
+
+- Delegate only when it genuinely serves the task (parallelisable, prose-heavy, or wide exploration), not reflexively. A single-file read or a two-line edit stays on the main thread.
+- Never delegate the judgement. Planning, architecture, security / auth calls, trade-off decisions and the HUMAN CALL stay with the main thread (Opus).
+- The parent always reviews and verifies a subagent's output before it is committed or delivered. Subagents do not run git; the parent commits after review.
+- One task per subagent, focused. Any spawn outside these two categories still needs a stated reason or an explicit ask.
 
 ---
 
@@ -541,6 +551,7 @@ Applies to all responses regardless of context: debugging sessions, deploy scrip
 
 ---
 
+*Last updated: 23 July 2026 (later), Daniel Frempong Twum / TUC ICT. Added a standing, best-practice-gated permission (TASK DELEGATION) to auto-delegate research and documentation prose to focused subagents (Fable for prose) without asking first, to keep the main thread lean. Scoped exception to the Cowork "don't spawn unless asked" default: judgement, planning, security and the HUMAN CALL stay on the main thread, and the parent always reviews a subagent's output before committing.*
 *Last updated: 23 July 2026, Daniel Frempong Twum / TUC ICT. Reconciled a proposed workflow doctrine (plan-first, subagent strategy, self-improvement loop, verification, elegance, autonomous bug-fixing) against this file. Most of it was already present (Core Operating Principles, HARNESS, LOOPS & AUTONOMY, Working Style, TASK DELEGATION, and AGENT_OPERATING_NOTES.md as the lessons store), so only the genuinely new bits were added: re-plan when a step goes sideways, diff behaviour against the base branch, an On-a-Bug-Report stance, and an explicit pointer to AGENT_OPERATING_NOTES.md as the single lessons store. Deliberately not adopted: "spawn subagents liberally" (conflicts with the Cowork "don't spawn unless asked" default; the nuanced TASK DELEGATION rule stands), and file-based `tasks/lessons.md` / `tasks/todo.md` (duplicate the existing lessons file and the harness task list, and would drift).*
 *Last updated: 17 July 2026 — Daniel Frempong Twum / TUC ICT. Extended §5b with two precise OAuth/sub-path rules learned from the peace-vinyl / deep-dub fixes: the `redirect_uri` must be byte-identical in the auth-start and token-exchange steps (+ register `.../<slug>/callback` in the Google client), and the SPA must call the API at `/<slug>/api/...` with the server stripping the prefix (Pattern 38).*
 *Last updated: 16 July 2026 — Daniel Frempong Twum / TUC ICT. Added §5b Node/SPA standards (server.ts-only, WMS OAuth relay, sub-path SPA serving, deploy provenance), matching anti-patterns, and refreshed §7 to point at SERVER_PORTS.md / the handbook instead of a stale hand-list.*
