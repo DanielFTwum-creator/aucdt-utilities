@@ -72,6 +72,7 @@ fi
 TMPDIR=/tmp/${SUBFOLDER}_deploy_${COMMIT}
 DEPLOY_PATH=${DEPLOY_PATH}
 REPO=${GITHUB_REPO}
+BRANCH=${BRANCH}
 
 log() { NOW=`$(date '+%Y-%m-%d %H:%M:%S'); echo "[`$NOW][SERVER] `$1"; }
 
@@ -79,8 +80,8 @@ log "pnpm `$(pnpm --version 2>/dev/null || echo 'not found'), node `$(node --ver
 log '[1/6] Cleaning previous temp build...'
 rm -rf "`$TMPDIR"
 find /tmp -maxdepth 1 -name '${SUBFOLDER}_deploy_*' -type d -mmin +30 -exec rm -rf {} + 2>/dev/null || true
-log '[2/6] Cloning ${SUBFOLDER} (sparse, depth 1)...'
-git clone --filter=blob:none --sparse --depth 1 "`$REPO" "`$TMPDIR"
+log "[2/6] Cloning ${SUBFOLDER} from branch `$BRANCH (sparse, depth 1)..."
+git clone --filter=blob:none --sparse --depth 1 --branch "`$BRANCH" "`$REPO" "`$TMPDIR"
 cd "`$TMPDIR" && git sparse-checkout set ${SUBFOLDER} && cd ${SUBFOLDER}
 log '[3/6] Installing dependencies (isolated, resilient lockfile)...'
 pnpm install --ignore-workspace --frozen-lockfile --silent 2>/dev/null || { echo '[install] frozen lockfile rejected (Pattern 27) — re-resolving under server policy'; rm -f pnpm-lock.yaml && pnpm install --ignore-workspace; }
