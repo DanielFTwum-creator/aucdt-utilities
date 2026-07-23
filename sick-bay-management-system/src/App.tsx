@@ -598,6 +598,7 @@ export default function App() {
             facilityLogs={facilityLogs}
             patients={patients}
             dailyHealthChecks={dailyHealthChecks}
+            auditLogs={auditLogs}
             onAddDailyHealthCheck={handleAddDailyHealthCheck}
             onNavigate={handleTabClick}
             onDischargeObservation={handleDischargeObservation}

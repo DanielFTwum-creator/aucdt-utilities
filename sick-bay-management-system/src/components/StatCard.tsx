@@ -49,12 +49,20 @@ export default function StatCard({
       break;
   }
 
+  const interactive = !!onClick;
+
   return (
     <div
       id={id}
       onClick={onClick}
+      role={interactive ? 'button' : undefined}
+      tabIndex={interactive ? 0 : undefined}
+      aria-label={interactive ? `${label}: ${count}` : undefined}
+      onKeyDown={interactive ? (e) => {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onClick!(); }
+      } : undefined}
       className={`rounded-[2rem] p-5 flex flex-col justify-between space-y-3 transition-all duration-200 cubic-bezier(0.16, 1, 0.3, 1) ${
-        onClick ? 'cursor-pointer hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[8px_8px_0px_#0f172a]' : ''
+        interactive ? 'cursor-pointer hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[8px_8px_0px_#0f172a] focus:outline-none focus-visible:ring-4 focus-visible:ring-slate-900/40' : ''
       } ${cardClass}`}
     >
       <div className="flex items-center justify-between">
