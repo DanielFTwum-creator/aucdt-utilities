@@ -103,9 +103,21 @@ export const wmsLogout = () =>
 
 /* ── Role Helpers ──────────────────────────────────────────────────────── */
 
-/** Admin = WMS staff-admin roles */
+/** Admin = WMS staff-admin roles (retained for reference; SickBay itself gates
+ *  on the email allow-list below, not on WMS role). */
 export const isAdminRole = (role: string): boolean =>
   ['SYSTEM_ADMIN', 'HOD', 'ADMIN_STAFF', 'MEDICAL_OFFICER'].includes(role);
+
+/** SickBay administrators, by institutional email. Admin rights are granted to
+ *  these accounts ONLY, independent of WMS role, so a clinic account without an
+ *  admin role can still administer the sick bay. The server enforces the same
+ *  list (routes.ts); this drives the UI. */
+export const SICKBAY_ADMIN_EMAILS = [
+  'clinic@techbridge.edu.gh',      // primary  — clinic nurse
+  'daniel.twum@techbridge.edu.gh', // backup   — Head of ICT
+];
+export const isSickbayAdmin = (email?: string): boolean =>
+  !!email && SICKBAY_ADMIN_EMAILS.includes(email.trim().toLowerCase());
 
 /** Medical staff = roles that can log visits, dispense medication */
 export const isMedicalRole = (role: string): boolean =>

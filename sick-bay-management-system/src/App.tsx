@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Visit, Patient, Medication, Referral, FacilityLog, DailyHealthCheck, AuditLog } from './types';
-import { exchange, silentSession, setAccessToken, wmsLogout, isAdminRole, type WmsUser, type WmsSession } from './lib/wmsAuth';
+import { exchange, silentSession, setAccessToken, wmsLogout, isSickbayAdmin, type WmsUser, type WmsSession } from './lib/wmsAuth';
 import LoginPage from './components/LoginPage';
 import * as api from './lib/api';
 
@@ -62,7 +62,7 @@ export default function App() {
   const bootRan = useRef(false);
 
   // Derived admin role from WMS session
-  const isAdmin = wmsUser ? isAdminRole(wmsUser.role) : false;
+  const isAdmin = wmsUser ? isSickbayAdmin(wmsUser.email) : false;
   const [pendingTab, setPendingTab] = useState<string | null>(null);
 
   // Autosave status indicator state
@@ -579,7 +579,7 @@ export default function App() {
                   <span>Standard Access</span>
                 </div>
                 <p className="text-[8px] text-slate-500 px-1 leading-relaxed">
-                  Admin features require SYSTEM_ADMIN, HOD, ADMIN_STAFF, or MEDICAL_OFFICER role via WMS.
+                  Admin features (pharmacy, facility logs, reports) are limited to the clinic administrator accounts. Contact ICT if you need access.
                 </p>
               </div>
             )}

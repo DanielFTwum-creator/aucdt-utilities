@@ -25,6 +25,20 @@ async function requireAuth(req: Request, res: Response, next: NextFunction) {
 }
 router.use(requireAuth);
 
+/* ── Admin gate ─────────────────────────────────────────────────────────────
+   Administering the pharmacy and facility logs is limited to the clinic
+   administrator accounts (primary + backup), by institutional email. The email
+   comes from the WMS-verified token attached by requireAuth. Overridable via
+   SICKBAY_ADMIN_EMAILS in .env; the default is the two designated accounts. */
+const ADMIN_EMAILS = (process.env.SICKBAY_ADMIN_EMAILS || 'clinic@techbridge.edu.gh,daniel.twum@techbridge.edu.gh')
+  .split(',').map(e => e.trim().toLowerCase()).filter(Boolean);
+
+function requireAdmin(req: Request, res: Response, next: NextFunction) {
+  const email = (req as any).wmsUser?.email?.toLowerCase();
+  if (email && ADMIN_EMAILS.includes(email)) return next();
+  return res.status(403).json({ error: 'Administrator access required' });
+}
+
 /* ── Mapping helpers (DB snake_case ⇄ frontend camelCase types) ───────────── */
 const toArr = (v: any): string[] => {
   if (!v) return [];
@@ -243,7 +257,7 @@ router.get('/medications', async (_req, res) => {
   } catch (error) { console.error(error); res.status(500).json({ error: 'Database error' }); }
 });
 
-router.post('/medications', async (req, res) => {
+router.post('/medications', requireAdmin, async (req, res) => {
   try {
     const m = req.body;
     const [ins]: any = await db.execute(
@@ -258,7 +272,7 @@ router.post('/medications', async (req, res) => {
 
 // Full update — covers edits, restock, discard and quantity adjustments (the
 // front end always sends the whole updated medication object).
-router.put('/medications/:id', async (req, res) => {
+router.put('/medications/:id', requireAdmin, async (req, res) => {
   try {
     const { id } = req.params;
     const m = req.body;
@@ -273,7 +287,7 @@ router.put('/medications/:id', async (req, res) => {
   } catch (error) { console.error(error); res.status(500).json({ error: 'Database error' }); }
 });
 
-router.delete('/medications/:id', async (req, res) => {
+router.delete('/medications/:id', requireAdmin, async (req, res) => {
   try {
     await db.execute('DELETE FROM medications WHERE id = ?', [req.params.id]);
     res.json({ success: true });
@@ -321,7 +335,7 @@ router.get('/facility-logs', async (_req, res) => {
   } catch (error) { console.error(error); res.status(500).json({ error: 'Database error' }); }
 });
 
-router.post('/facility-logs', async (req, res) => {
+router.post('/facility-logs', requireAdmin, async (req, res) => {
   try {
     const b = req.body;
     const [ins]: any = await db.execute(
@@ -332,7 +346,7 @@ router.post('/facility-logs', async (req, res) => {
   } catch (error) { console.error(error); res.status(500).json({ error: 'Database error' }); }
 });
 
-router.put('/facility-logs/:id/resolve', async (req, res) => {
+router.put('/facility-logs/:id/resolve', requireAdmin, async (req, res) => {
   try {
     const { id } = req.params;
     const { resolutionDays } = req.body;
