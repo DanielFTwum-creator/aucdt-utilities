@@ -102,7 +102,7 @@ Seeded with 50 TUC staff as Staff-type patients.
 
 | Port | App (PM2 name) | Repo folder | Serves |
 |------|----------------|-------------|--------|
-| 3047 | bench-trilogy | bench-trilogy | Own subdomain `bench-trilogy.techbridge.edu.gh` |
+| 3047 | thebench | bench-trilogy | Own subdomain `thebench.techbridge.edu.gh` |
 
 Next.js 16 standalone (`node server.js`, PORT=3047 HOSTNAME=127.0.0.1), fronted by
 its own nginx server block (not a sub-path). Static SSG director's-cut bibles.

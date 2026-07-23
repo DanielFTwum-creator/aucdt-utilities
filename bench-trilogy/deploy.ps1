@@ -1,9 +1,9 @@
 # ============================================================
 # THE BENCH TRILOGY — Deploy Script (Next.js standalone)
 # Remote : root@techbridge.edu.gh
-# Path   : /opt/bench-trilogy   (Next standalone, run under PM2)
-# Port   : 3047  |  PM2 app: bench-trilogy
-# URL    : https://bench-trilogy.techbridge.edu.gh  (nginx proxy -> 127.0.0.1:3047)
+# Path   : /opt/thebench   (Next standalone, run under PM2)
+# Port   : 3047  |  PM2 app: thebench
+# URL    : https://thebench.techbridge.edu.gh  (nginx proxy -> 127.0.0.1:3047)
 # Usage  : .\deploy.ps1
 # Model  : fleet server-side build (Pattern 17/25), adapted for Next standalone.
 #          Static content site: no build-time secrets, no server .env.
@@ -14,11 +14,13 @@ param([switch]$Build)
 $ErrorActionPreference = 'Stop'
 
 $REMOTE      = 'root@techbridge.edu.gh'
-$DEPLOY_PATH = '/opt/bench-trilogy'
+$DEPLOY_PATH = '/opt/thebench'
 $PORT        = 3047
-$PM2_APP     = 'bench-trilogy'
-$HEALTH_URL  = 'https://bench-trilogy.techbridge.edu.gh'
+$PM2_APP     = 'thebench'
+$HEALTH_URL  = 'https://thebench.techbridge.edu.gh'
 $GITHUB_REPO = 'git@github.com:DanielFTwum-creator/aucdt-utilities.git'
+# Repo folder name (git sparse-checkout target) — stays as-is; only the
+# deployed subdomain/PM2 name is 'thebench'.
 $SUBFOLDER   = 'bench-trilogy'
 $SSH_OPTS    = @('-o', 'StrictHostKeyChecking=no', '-o', 'BatchMode=yes', '-o', 'ServerAliveInterval=30', '-o', 'ServerAliveCountMax=3')
 $SSH         = 'ssh'

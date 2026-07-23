@@ -21,7 +21,7 @@ const monoFont = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://bench-trilogy.techbridge.edu.gh"),
+  metadataBase: new URL("https://thebench.techbridge.edu.gh"),
   title: {
     default: "THE BENCH TRILOGY — One Bench. Three Worlds. Made in Ghana.",
     template: "%s · THE BENCH TRILOGY",
