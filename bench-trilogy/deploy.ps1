@@ -84,7 +84,7 @@ log "[2/6] Cloning ${SUBFOLDER} from branch `$BRANCH (sparse, depth 1)..."
 git clone --filter=blob:none --sparse --depth 1 --branch "`$BRANCH" "`$REPO" "`$TMPDIR"
 cd "`$TMPDIR" && git sparse-checkout set ${SUBFOLDER} && cd ${SUBFOLDER}
 log '[3/6] Installing dependencies (isolated, resilient lockfile)...'
-pnpm install --ignore-workspace --frozen-lockfile --silent 2>/dev/null || { echo '[install] frozen lockfile rejected (Pattern 27) — re-resolving under server policy'; rm -f pnpm-lock.yaml && pnpm install --ignore-workspace; }
+pnpm install --frozen-lockfile --silent 2>/dev/null || { echo '[install] frozen lockfile rejected (Pattern 27) — re-resolving under server policy'; rm -f pnpm-lock.yaml && pnpm install; }
 log '[4/6] Building (Next.js standalone)...'
 pnpm build
 if [ ! -f .next/standalone/server.js ]; then echo '[FATAL] .next/standalone/server.js missing — is output:standalone set? Aborting'; exit 1; fi

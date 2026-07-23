@@ -1,3 +1,11 @@
-ignoredBuiltDependencies:
-  - sharp
-  - unrs-resolver
+# pnpm 11 blocks dependency build scripts by default (supply-chain safety).
+# sharp (Next.js image optimiser) and unrs-resolver ship native binaries that
+# MUST run their build, or a server install fails with ERR_PNPM_IGNORED_BUILDS.
+# allowBuilds is the pnpm 11 key (PATTERNS.md Pattern 18). It is only read when
+# pnpm reads this file, so the deploy must NOT pass --ignore-workspace (that
+# flag makes pnpm skip pnpm-workspace.yaml settings entirely). This app is its
+# own workspace root via this file, so it stays isolated from the monorepo root
+# without that flag.
+allowBuilds:
+  sharp: true
+  unrs-resolver: true
