@@ -2979,3 +2979,70 @@ So a filled template "just works": copy, fill, deploy, and it serves at
    trace to a source file.
 ❌ Minting a doc ID without checking the year's NNN sequence.
 ❌ Em-dashes and LLM-tell phrasing in delivered doc text (CLAUDE.md Text Style).
+## PATTERN 41: SEO/GEO FOR CLIENT-RENDERED VITE SPAs (BUILD-TIME PRERENDER)
+
+**Incident (23 Jul 2026):** an SEO/GEO audit of the Vite fleet found **282 apps
+shipping the identical `<link rel="canonical" href="https://www.techbridge.edu.gh/">`**
+— a copy-paste boilerplate value that tells Google *"every one of these is a
+duplicate of the TUC homepage, fold them all into it"*, actively de-indexing the
+whole fleet. On top of that: bodies were an empty `#root` (crawlers and non-JS
+LLM answer-engine scrapers see no content), **1** app had JSON-LD, **0** had
+sitemaps, and most `og:url`/description values described the college, not the app.
+
+**Root cause:** hand-edited per-app `index.html` meta drifts and gets copy-pasted
+wrong. The fix must be **config-driven**, not another round of hand edits.
+
+### Why not classic SSR/SSG or a headless snapshot
+
+- These apps read `localStorage`/`window` at render, so Node `renderToString` crashes.
+- Most hard-gate on auth (`if (!isAuthenticated) return <LoginView/>`), so a headless
+  browser snapshot only ever captures a login wall.
+- The Plesk build box has **no Chromium**, and the server build runs `pnpm build` there,
+  so a browser step in `build` breaks deploys.
+
+So: inject a **curated, crawler-visible content block + JSON-LD from a per-app config,
+in pure Node, at build time.** `createRoot()` clears `#root` on boot, so real users
+get the app; crawlers and LLM scrapers keep the static content.
+
+### Recipe (reference implementation: `biochemai/`)
+
+1. **`seo/seo.config.json`** — single source of truth per app: `url` (the real
+   deployed sub-path, verified against nginx — §5b), `name`, `description` (about the
+   **app**, not the college), `keywords`, `features`, `audience`, `faqs`, `organization`,
+   and `index: true|false`.
+2. **`seo/prerender.mjs`** — shared, zero-dep Node script. After `vite build` it:
+   - fills `<script type="application/ld+json" id="seo-jsonld">` with an `@graph`
+     (EducationalOrganization · WebSite · SoftwareApplication · BreadcrumbList · FAQPage);
+   - replaces the block between `<!-- seo:content-start -->` / `<!-- seo:content-end -->`
+     inside `#root` with real semantic content (h1, description, features, FAQ);
+   - writes `dist/robots.txt` (with a **GEO bot allowlist**: GPTBot, OAI-SearchBot,
+     PerplexityBot, ClaudeBot, Google-Extended, CCBot…), `dist/sitemap.xml`, `dist/llms.txt`.
+3. **`index.html` source** carries: correct self-referential `canonical` + `og:url`,
+   app-accurate `description`/`title`, a `<link rel="sitemap">`, the empty
+   `id="seo-jsonld"` placeholder, and the two content-marker comments (they survive
+   the Vite build — verified).
+4. **`package.json`**: `"build": "vite build && node seo/prerender.mjs"`.
+
+For a **`noindex` internal tool**, set `index: false` — the script emits
+`Disallow: /` robots and you switch the meta robots to `noindex, nofollow`. Most of
+the ~230 auth-gated apps belong here; only the public content tier gets the full block.
+
+### Verify before "done"
+
+```bash
+# canonical/og now self-referential, not the shared homepage
+grep -oE '(rel="canonical" href|property="og:url" content)="[^"]*"' dist/index.html
+# JSON-LD parses and carries all five @types
+node -e "const g=JSON.parse(require('fs').readFileSync('dist/index.html','utf8').match(/id=\"seo-jsonld\">(.*?)<\/script>/s)[1]);console.log(g['@graph'].map(x=>x['@type']).join(', '))"
+# real body content exists (not ~20 chars of splash)
+ls dist/robots.txt dist/sitemap.xml dist/llms.txt
+```
+
+### Sub-path caveat (do not skip)
+
+`robots.txt` / `llms.txt` are only **crawler-authoritative at the domain root**.
+A file at `/<slug>/robots.txt` is emitted for completeness but is **not** honoured by
+crawlers — the shared `ai-tools.techbridge.edu.gh` domain needs an **aggregated root
+`/robots.txt` + sitemap index** listing each public app. That is a fleet-level
+follow-up, separate from this per-app pattern. Apps on their **own** domain
+(e.g. `glucose.techbridge.edu.gh`) are already root-authoritative.
