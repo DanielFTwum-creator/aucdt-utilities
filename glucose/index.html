@@ -7,7 +7,11 @@
     <meta name="keywords" content="glucose monitoring, blood sugar, health tracking, diabetes management, glucose meter, TUC" />
     <meta name="author" content="Techbridge University College" />
     <meta name="publisher" content="TUC ICT Department" />
-    <meta name="robots" content="index, follow" />
+    <!-- Auth-gated (WMS SSO): patient data behind login, keep it out of the index.
+         NOTE: the canonical below points at glucose.techbridge.edu.gh, a subdomain
+         no deploy artifact serves (real live URL is /glucose/ under ai-tools) — left
+         as-is pending a DNS check; see CONSTRAINTS.md contradiction. -->
+    <meta name="robots" content="noindex, nofollow" />
     <link rel="canonical" href="https://glucose.techbridge.edu.gh/" />
     <meta name="geo.region" content="GH-AA" />
     <meta name="geo.placename" content="Accra, Ghana" />
