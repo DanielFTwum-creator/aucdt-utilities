@@ -75,7 +75,61 @@ non-negotiable ones: name them out loud before the first edit. Trivial one-liner
 do not need the ceremony; use judgement. A prompt asks for activity; the card
 asks for an outcome someone is accountable for.
 
+## 6. `plesk db` runs its argument as SQL: pipe the file, don't name the DB
+
+Incident (23 Jul 2026): applying a SickBay migration with
+`plesk db tuc_sickbay < 003.sql` failed with `ERROR 1064 ... near 'tuc_sickbay'`.
+`plesk db` executes its positional argument as a SQL statement, so `tuc_sickbay`
+was run as SQL. The same command was handed to the user three times before the
+cause was spotted.
+
+Rule: apply SQL with `plesk db < /full/path/file.sql` and let the file's own
+`USE <db>;` first line select the database. Never pass the database name (or
+`-e`) as a positional argument. For an ad-hoc query, pipe it:
+`plesk db <<< 'USE <db>; SELECT ...;'`.
+
+## 7. After adding a dependency, install before `-Build`
+
+Incident (22 to 23 Jul 2026, twice): a new dependency was added to a SickBay
+`package.json` (`qrcode`, then `@fontsource-variable/*`) and the deploy went
+straight to `.\deploy.ps1 -Build`. Because pnpm workspace hoisting makes a plain
+`pnpm install` in the app dir a no-op, the dep was absent, the local `vite build`
+failed on the missing import, and the script shipped stale `dist/` anyway. Twice
+in two days, so a pattern, not a one-off.
+
+Rule: whenever a change adds or bumps a dependency, run
+`pnpm install --ignore-workspace` in the app directory (the isolated install the
+server deploy also uses) BEFORE `.\deploy.ps1 -Build`, and confirm the new
+package resolves. A `-Build` that follows a dependency change without an install
+is a stale-ship waiting to happen.
+
+## 8. `--ignore-workspace` disables the pnpm build-script allow-list
+
+Incident (23 Jul 2026, bench-trilogy): the server deploy failed with
+`ERR_PNPM_IGNORED_BUILDS: sharp@0.34.5` (exit 1). Two compounding faults:
+(a) the committed `pnpm-workspace.yaml` used `ignoredBuiltDependencies: [sharp,
+unrs-resolver]`, which actively BLOCKS the native build sharp needs for Next.js
+image optimisation; (b) the deploy installed with `pnpm install
+--ignore-workspace`, and that flag makes pnpm skip `pnpm-workspace.yaml`
+settings entirely, so even a correct `allowBuilds` never applied. Verified by
+reproduction on pnpm: with `--ignore-workspace` the "Ignored build scripts"
+message persists regardless of the allow-list key; without it, both
+`allowBuilds` and `onlyBuiltDependencies` are honoured. A monorepo-nested app
+that carries its OWN `pnpm-workspace.yaml` stays isolated from the monorepo
+root WITHOUT the flag, because pnpm uses the nearest `pnpm-workspace.yaml` as
+the workspace root (confirmed with a root-plus-nested layout mirroring the
+sparse checkout).
+
+Rule: for an app with native build deps (sharp, unrs-resolver, esbuild,
+`@tailwindcss/oxide`), do NOT pass `--ignore-workspace` on the deploy install.
+Give the app its own `pnpm-workspace.yaml` with an `allowBuilds` map (pnpm 11
+key, Pattern 18) listing each native dep as `true`, and let pnpm read it via a
+plain `pnpm install`. This refines §7: the "mimic the server" pre-build install
+for such an app is `pnpm install` (no flag), not `pnpm install
+--ignore-workspace`. Never leave a native dep under `ignoredBuiltDependencies`
+if the build needs it.
+
 ---
-*Last updated: 21 July 2026. Home for agent operating lessons; discovered via
+*Last updated: 23 July 2026. Home for agent operating lessons; discovered via
 the Session Start Protocol top-level `ls`. If a rule becomes a hard standard,
 promote it into CLAUDE.md and delete it here to avoid drift.*

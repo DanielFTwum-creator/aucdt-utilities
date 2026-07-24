@@ -2838,3 +2838,275 @@ runtime). Distilled from peace-vinyl + deep-dub — every step below cost a roun
   `504` is a **transient WMS→Google** blip, not the app — confirm with
   `curl -X POST https://oauth2.googleapis.com/token` from the server (fast `400` = healthy) and
   retry with a fresh code.
+
+---
+
+## PATTERN 40: TUC ICT DOCUMENTATION HOUSE STYLE + SELF-CONTAINED PORTAL
+
+### Why
+
+Fleet docs were drifting: each app invented its own look (SickBay's old portal was
+dark-slate/sky while the TUC website briefing was maroon/gold), and old guides carried stale
+claims (SickBay's user guide still described IndexedDB persistence after the app had moved
+to MariaDB). The SickBay doc refresh of 22 Jul 2026 produced a portal that is fully
+self-contained, code-verified, and in the TUC house style. This pattern extracts it so any
+app gets the same result by copy-and-fill.
+
+**Reference implementation: `sick-bay-management-system/docs/`** (portal, both guides, both
+diagrams). **Template: `docs/templates/tuc-docs-portal.template.html`** (monorepo root).
+
+### The house style (palette + font rule)
+
+Copy the tokens exactly (they live in the template's `:root`):
+
+```
+maroon  #6B0000 / #8a1515 / ink #3d0000      gold  #ffcb05 / deep #b8930f / wash #fdf8e3
+paper   #F0EDE6   card #ffffff                ink   #2b2620 / soft #6b6459 / faint #9a938a
+amber   #b45309 (bg #fef3c7)                  live  #1e6e2e (bg #e6f4ea)   lines #e2ded4
+```
+
+Font rule (cross-reference Pattern 32, no external CDNs): **never `fonts.googleapis.com`**
+or any external font in a doc file. Docs are served offline at `/<slug>/docs/`, so an
+external `@import` is a broken page. Use the bundled-fallback stacks only:
+
+```
+--serif: Georgia, serif                  (body prose)
+--disp:  'Arial Narrow', Arial, sans-serif   (display headings, condensed uppercase)
+--mono:  Consolas, Menlo, monospace      (code, table detail)
+```
+
+### Structural components (all present in the template)
+
+- **Masthead**: maroon band, gold circular seal ("T"), letter-spaced uppercase kicker,
+  condensed uppercase `h1` with a gold-highlight `<span>`, italic strapline.
+- **Doc-ID ribbon**: dark-maroon strip with a 3px gold bottom border carrying
+  Doc / App / SRS / Date / Owner.
+- **Numbered sections**: `h2` with a gold `01`-style number span and a 2px rule.
+- **Stat cards**: white cards, 3px gold top border, condensed large numeral.
+- **Badge set**: `b-done` (green), `b-amber`, `b-gap` (slate) pills for Auth/Open/status.
+- **Note** (gold left border on gold wash) and **callout** (solid maroon, gold `h3`) blocks.
+- **Tick lists** (gold `▸`) and the **ethos footer** ending
+  "This document is generated from the code, not from memory."
+- **Print button**: fixed gold `window.print()` button with the `.no-print` class.
+
+### Doc-ID scheme
+
+`TUC-ICT-{SRS|GDE|BRF|DOC}-YYYY-NNN`
+
+| Prefix | Meaning |
+|---|---|
+| SRS | Requirements specification (IEEE 29148) |
+| GDE | Guide (user, developer, admin, portal edition of a guide) |
+| BRF | Briefing (stakeholder / review document) |
+| DOC | Documentation portal / general documentation |
+
+Keep NNN aligned with the app's SRS number where one exists (SickBay: SRS-2026-004,
+portal GDE-2026-005). Check the year's sequence before minting a new number.
+
+### The standard doc set per app (all in the app's `docs/`)
+
+| File | Register |
+|---|---|
+| `DOCUMENTATION_PORTAL.html` | Technical + visual, from the template |
+| `USER_GUIDE.md` | Plain English for end users (the "executive" register) |
+| `DEVELOPER_GUIDE.md` | Technical, for fleet developers |
+| `EXECUTIVE_BRIEFING.md` | Plain-English stakeholder summary (skeleton below) |
+| `architecture.svg`, `erd.svg` | Self-contained SVGs, white background, house palette |
+
+Two-edition convention: anything user- or stakeholder-facing is written in the plain-English
+register; anything developer-facing in the technical register; the portal carries both. The
+TUC website briefing (`TUC-ICT-BRF-2026-002`, the marketing-site DEV | QA placeholder review)
+is the exemplar of the plain-English register: verified facts only, unknowns flagged amber
+instead of invented, action tables with owners, no jargon.
+
+### Where docs live and how they ship
+
+- The app's own `docs/` directory, shipped by `deploy.ps1` alongside the build
+  (SickBay's script scp's `docs/` with `dist/`, `db/` and the server).
+- `server.ts` static-mounts it at both the root and the sub-path so nothing 404s behind
+  the un-stripped nginx prefix (Pattern 38):
+
+```typescript
+const DOCS_DIR = path.join(__dirname, 'docs');
+if (fs.existsSync(DOCS_DIR)) {
+  app.use(['/docs', `${BASE_PATH}/docs`], express.static(DOCS_DIR));
+}
+```
+
+So a filled template "just works": copy, fill, deploy, and it serves at
+`https://ai-tools.techbridge.edu.gh/<slug>/docs/DOCUMENTATION_PORTAL.html`.
+
+### Recipe (new or refreshed app)
+
+1. Copy `docs/templates/tuc-docs-portal.template.html` to
+   `<app>/docs/DOCUMENTATION_PORTAL.html`.
+2. Fill `{{APP_NAME}}`, `{{APP_SLUG}}` (from the **live nginx location**, not the repo
+   folder, per Pattern 39), `{{DOC_ID}}`, `{{SRS_ID}}`, `{{DATE}}`, `{{OWNER}}`.
+3. Replace every `{{SECTION: ...}}` stub with content verified against the code, then
+   delete the how-to comment block at the top.
+4. Inline the app's `architecture.svg` and `erd.svg` (paste the whole `<svg>` element into
+   the `.fig` divs; never an `<img src>` reference).
+5. Write `USER_GUIDE.md`, `DEVELOPER_GUIDE.md` and `EXECUTIVE_BRIEFING.md` in the matching
+   registers.
+6. Verify self-containment: grep the portal for `https?://` and `<link`/`<script src` /
+   `@import`. The only URL-like hits should be inert text (the app's own URL in prose, the
+   SVG `xmlns`). Zero network fetches.
+
+### EXECUTIVE_BRIEFING.md skeleton
+
+```markdown
+# <App Name>: Executive Briefing
+
+**Document ID:** TUC-ICT-BRF-YYYY-NNN
+**Date:** <date> · **Owner:** TUC ICT
+**Audience:** Founder / management (non-technical)
+
+## Executive Summary
+## Why this work was necessary
+## How it reaches users
+## What's live
+## What remains
+```
+
+### Pitfalls
+
+❌ A `fonts.googleapis.com` import (or any CDN asset) in a doc served at `/<slug>/docs/`.
+   Offline serving means it never loads; Pattern 32 forbids it anyway.
+❌ Referencing diagrams with `<img src="erd.svg">` instead of inlining the `<svg>`; relative
+   paths misresolve behind the un-stripped sub-path.
+❌ Writing the portal from the previous docs instead of the code. SickBay's old guide
+   claimed browser-local IndexedDB storage months after the DB migration; every claim must
+   trace to a source file.
+❌ Minting a doc ID without checking the year's NNN sequence.
+❌ Em-dashes and LLM-tell phrasing in delivered doc text (CLAUDE.md Text Style).
+## PATTERN 41: SEO/GEO FOR CLIENT-RENDERED VITE SPAs (BUILD-TIME PRERENDER)
+
+**Incident (23 Jul 2026):** an SEO/GEO audit of the Vite fleet found **282 apps
+shipping the identical `<link rel="canonical" href="https://www.techbridge.edu.gh/">`**
+— a copy-paste boilerplate value that tells Google *"every one of these is a
+duplicate of the TUC homepage, fold them all into it"*, actively de-indexing the
+whole fleet. On top of that: bodies were an empty `#root` (crawlers and non-JS
+LLM answer-engine scrapers see no content), **1** app had JSON-LD, **0** had
+sitemaps, and most `og:url`/description values described the college, not the app.
+
+**Root cause:** hand-edited per-app `index.html` meta drifts and gets copy-pasted
+wrong. The fix must be **config-driven**, not another round of hand edits.
+
+### Why not classic SSR/SSG or a headless snapshot
+
+- These apps read `localStorage`/`window` at render, so Node `renderToString` crashes.
+- Most hard-gate on auth (`if (!isAuthenticated) return <LoginView/>`), so a headless
+  browser snapshot only ever captures a login wall.
+- The Plesk build box has **no Chromium**, and the server build runs `pnpm build` there,
+  so a browser step in `build` breaks deploys.
+
+So: inject a **curated, crawler-visible content block + JSON-LD from a per-app config,
+in pure Node, at build time.** `createRoot()` clears `#root` on boot, so real users
+get the app; crawlers and LLM scrapers keep the static content.
+
+### Recipe (reference implementation: `biochemai/`)
+
+1. **`seo/seo.config.json`** — single source of truth per app: `url` (the real
+   deployed sub-path, verified against nginx — §5b), `name`, `description` (about the
+   **app**, not the college), `keywords`, `features`, `audience`, `faqs`, `organization`,
+   and `index: true|false`.
+2. **`seo/prerender.mjs`** — shared, zero-dep Node script. After `vite build` it:
+   - fills `<script type="application/ld+json" id="seo-jsonld">` with an `@graph`
+     (EducationalOrganization · WebSite · SoftwareApplication · BreadcrumbList · FAQPage);
+   - replaces the block between `<!-- seo:content-start -->` / `<!-- seo:content-end -->`
+     inside `#root` with real semantic content (h1, description, features, FAQ);
+   - writes `dist/robots.txt` (with a **GEO bot allowlist**: GPTBot, OAI-SearchBot,
+     PerplexityBot, ClaudeBot, Google-Extended, CCBot…), `dist/sitemap.xml`, `dist/llms.txt`.
+3. **`index.html` source** carries: correct self-referential `canonical` + `og:url`,
+   app-accurate `description`/`title`, a `<link rel="sitemap">`, the empty
+   `id="seo-jsonld"` placeholder, and the two content-marker comments (they survive
+   the Vite build — verified).
+4. **`package.json`**: `"build": "vite build && node seo/prerender.mjs"`.
+
+For a **`noindex` internal tool**, set `index: false` — the script emits
+`Disallow: /` robots and you switch the meta robots to `noindex, nofollow`. Most of
+the ~230 auth-gated apps belong here; only the public content tier gets the full block.
+
+### Verify before "done"
+
+```bash
+# canonical/og now self-referential, not the shared homepage
+grep -oE '(rel="canonical" href|property="og:url" content)="[^"]*"' dist/index.html
+# JSON-LD parses and carries all five @types
+node -e "const g=JSON.parse(require('fs').readFileSync('dist/index.html','utf8').match(/id=\"seo-jsonld\">(.*?)<\/script>/s)[1]);console.log(g['@graph'].map(x=>x['@type']).join(', '))"
+# real body content exists (not ~20 chars of splash)
+ls dist/robots.txt dist/sitemap.xml dist/llms.txt
+```
+
+### Sub-path caveat (do not skip)
+
+`robots.txt` / `llms.txt` are only **crawler-authoritative at the domain root**.
+A file at `/<slug>/robots.txt` is emitted for completeness but is **not** honoured by
+crawlers — the shared `ai-tools.techbridge.edu.gh` domain needs an **aggregated root
+`/robots.txt` + sitemap index** listing each public app. That is a fleet-level
+follow-up, separate from this per-app pattern. Apps on their **own** domain
+(e.g. `glucose.techbridge.edu.gh`) are already root-authoritative.
+
+---
+
+## PATTERN 42: BINARY MEDIA HOSTING — PROJECT-OWNED PATH, NEVER SHARED OR DRIVE
+
+**Decision (24 Jul 2026):** where do videos and large images live? Not in git
+(the repo-wide `*.mp4` ignore exists for a reason), not on **another project's**
+media host (`media.techbridge.edu.gh` belongs to the media-club / lumina apps —
+borrowing it couples your site to their cleanup and DNS), and **not Google
+Drive** (virus-scan interstitials return HTML instead of bytes, per-file
+download quotas 403 under load, no CORS, no reliable HTTP range for video, and
+crawlers fetching an `og:image` / `VideoObject` contentUrl get HTML → the
+structured data is rejected). Drive is storage, not a CDN.
+
+### The rule
+
+| Asset | Home |
+|---|---|
+| Code, small versioned assets (favicons, posters, a ≤ few-MB preview clip) | **git `public/`** — same-origin, versioned, ships with the build |
+| Full-length video, hi-res galleries, anything large or growing | **the project's OWN media path** on the server, out of git |
+
+A small clip may stay in git behind a scoped negation (e.g.
+`bench-trilogy/.gitignore: !/public/videos/*.mp4`). Do not put large media there.
+
+### A project-owned media path (thebench reference)
+
+thebench is Next standalone at `/opt/thebench`, and its deploy does
+`rsync -a --delete .next/standalone/ /opt/thebench/`, so **anything inside
+`/opt/thebench` is wiped every deploy.** The media dir must live *outside* it and
+be served by an nginx `location` that bypasses the Next proxy:
+
+- Persistent dir: **`/opt/thebench-media/`** (survives `rsync --delete`).
+- nginx (Plesk → Domains → thebench.techbridge.edu.gh → Apache & nginx Settings →
+  **Additional nginx directives**, which Plesk validates with `nginx -t` before
+  applying — the safe path, per Pattern 26):
+
+  ```nginx
+  location /media/ {
+      alias /opt/thebench-media/;
+      autoindex off;
+      expires 30d;
+      add_header Cache-Control "public";
+      access_log off;
+  }
+  ```
+
+  `location /media/` prefix-matches ahead of the `location /` proxy, so nginx
+  serves those files from disk (with HTTP range for video) while everything else
+  still proxies to Next on 3047. The domain's Let's Encrypt cert already covers
+  it (Pattern: issue-subdomain-cert skill).
+
+- Reference from code: `${SITE.mediaBase}/<file>` where
+  `mediaBase = https://thebench.techbridge.edu.gh/media`. Keep `abs()` passing
+  absolute URLs through unchanged so a media-hosted `video.src` isn't double-prefixed.
+
+### Upload (never commit large media)
+
+```
+C:\Development\github\aucdt-utilities\scripts\push-asset.ps1 -File C:\path\to\film.mp4
+```
+
+It creates the dir if missing, uploads, fixes permissions, and verifies a range
+request serves. `-RemoteDir` / `-BaseUrl` retarget it for another project's own
+path. Small preview clips stay in git; this is for the large cuts.

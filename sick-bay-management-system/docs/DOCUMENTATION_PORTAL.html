@@ -1,93 +1,666 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en-GB">
 <head>
-  <meta charset="UTF-8">
-  <title>SickBay Management System — Documentation Portal</title>
-  <style>
-    @media print {
-      body { background: #ffffff; color: #000000; padding: 0; }
-      .no-print { display: none; }
-      .page-break { page-break-before: always; }
-    }
-    body { font-family: system-ui, -apple-system, sans-serif; background: #0f172a; color: #f8fafc; margin: 0; padding: 40px; }
-    .container { max-width: 960px; margin: 0 auto; background: #1e293b; padding: 40px; border-radius: 16px; border: 2px solid #334155; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
-    h1 { color: #38bdf8; font-size: 28px; border-bottom: 2px solid #334155; padding-bottom: 12px; }
-    h2 { color: #f1f5f9; font-size: 20px; margin-top: 30px; }
-    p, li { color: #cbd5e1; line-height: 1.6; font-size: 14px; }
-    .badge { display: inline-block; background: #0284c7; color: #ffffff; padding: 4px 8px; border-radius: 4px; font-weight: bold; font-size: 12px; }
-    .btn-print { background: #38bdf8; color: #0f172a; padding: 10px 20px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; float: right; }
-    .btn-print:hover { background: #0284c7; color: #ffffff; }
-    svg { background: #ffffff; border-radius: 12px; padding: 10px; margin: 20px 0; }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="robots" content="noindex" />
+<meta name="description" content="TUC-ICT-GDE-2026-005 - SickBay Management System documentation portal (self-contained, served offline at /sickbay/docs/)" />
+<meta name="author" content="Daniel Frempong Twum / TUC ICT" />
+<title>TUC-ICT-GDE-2026-005 · SickBay Management System · Documentation Portal · 22 July 2026</title>
+<!-- Fully self-contained: no external fonts, scripts, styles or images. Served offline at /sickbay/docs/. -->
+<style>
+  :root{
+    --maroon:#6B0000; --maroon-2:#8a1515; --maroon-ink:#3d0000;
+    --gold:#ffcb05; --gold-deep:#b8930f; --gold-wash:#fdf8e3;
+    --paper:#F0EDE6; --card:#ffffff; --line:#e2ded4; --line-soft:#edeae1;
+    --ink:#2b2620; --ink-soft:#6b6459; --ink-faint:#9a938a;
+    --amber:#b45309; --amber-bg:#fef3c7; --amber-line:#fcd34d;
+    --live:#1e6e2e; --live-bg:#e6f4ea;
+    --serif:Georgia,serif;
+    --disp:'Arial Narrow',Arial,sans-serif;
+    --mono:Consolas,Menlo,monospace;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:var(--serif); color:var(--ink); background:var(--paper); font-size:16.5px; line-height:1.66}
+  ::selection{background:var(--gold); color:var(--maroon-ink)}
+  code{font-family:var(--mono); font-size:.82em; background:var(--gold-wash); border:1px solid #efe3b0; padding:.08em .42em; border-radius:4px; color:var(--maroon-ink); white-space:nowrap}
+  strong{font-weight:600; color:var(--maroon-ink)}
+  a{color:var(--maroon)}
+
+  .mast{background:var(--maroon); color:#fff; position:relative; overflow:hidden}
+  .mast::after{content:""; position:absolute; right:-140px; top:-140px; width:480px; height:480px; border-radius:50%; border:1.5px solid rgba(255,203,5,.2); box-shadow:0 0 0 70px rgba(255,203,5,.06)}
+  .mast-inner{max-width:1040px; margin:0 auto; padding:40px 32px 34px; position:relative; z-index:2; display:flex; gap:26px; align-items:flex-start; flex-wrap:wrap}
+  .seal{width:70px; height:70px; border-radius:50%; background:var(--gold); flex-shrink:0; display:flex; align-items:center; justify-content:center; box-shadow:0 0 0 6px rgba(255,203,5,.2); font-family:var(--disp); font-weight:700; font-size:38px; color:var(--maroon)}
+  .kicker{font-family:var(--disp); font-weight:600; letter-spacing:.32em; text-transform:uppercase; font-size:12px; color:#d9a9a9; margin-bottom:10px}
+  .mast h1{font-family:var(--disp); font-weight:700; text-transform:uppercase; font-size:clamp(30px,4.5vw,46px); line-height:1}
+  .mast h1 .gold{color:var(--gold)}
+  .mast .sub{margin-top:10px; color:#e8c9c9; font-size:15.5px; font-style:italic; max-width:680px}
+  .ribbon{background:var(--maroon-ink); border-bottom:3px solid var(--gold)}
+  .ribbon-inner{max-width:1040px; margin:0 auto; padding:9px 32px; display:flex; gap:22px; align-items:center; flex-wrap:wrap; font-family:var(--disp); text-transform:uppercase; letter-spacing:.1em; font-size:13px; color:#e3c9c9}
+  .ribbon b{color:var(--gold); font-weight:600}
+
+  main{max-width:1040px; margin:0 auto; padding:34px 32px 70px}
+  section{margin-bottom:34px}
+  h2{font-family:var(--disp); text-transform:uppercase; letter-spacing:.06em; font-size:23px; color:var(--maroon); border-bottom:2px solid var(--line); padding-bottom:7px; margin-bottom:16px}
+  h2 .n{color:var(--gold-deep); margin-right:10px}
+  h3{font-family:var(--disp); text-transform:uppercase; letter-spacing:.05em; font-size:16px; color:var(--maroon-ink); margin:18px 0 8px}
+  p{margin-bottom:12px}
+  .lead{font-size:18px}
+
+  .cards{display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:14px; margin:8px 0 4px}
+  .stat{background:var(--card); border:1px solid var(--line); border-top:3px solid var(--gold); border-radius:8px; padding:16px 18px}
+  .stat .big{font-family:var(--disp); font-weight:700; font-size:38px; line-height:1; color:var(--maroon)}
+  .stat .lbl{font-family:var(--disp); text-transform:uppercase; letter-spacing:.12em; font-size:11.5px; color:var(--ink-soft); margin-top:6px}
+
+  table{width:100%; border-collapse:collapse; margin:10px 0 6px; background:var(--card); border:1px solid var(--line); font-size:15px}
+  thead th{background:var(--maroon); color:#fff; font-family:var(--disp); text-transform:uppercase; letter-spacing:.06em; font-size:12.5px; text-align:left; padding:10px 12px}
+  tbody td{border-top:1px solid var(--line-soft); padding:10px 12px; vertical-align:top}
+  tbody tr:nth-child(even){background:#faf8f3}
+  .prog{font-family:var(--disp); text-transform:uppercase; font-weight:600; color:var(--maroon-ink); letter-spacing:.03em}
+
+  .badge{display:inline-block; font-family:var(--disp); text-transform:uppercase; letter-spacing:.08em; font-size:10.5px; font-weight:600; padding:2px 8px; border-radius:20px; vertical-align:middle}
+  .b-amber{background:var(--amber-bg); color:var(--amber); border:1px solid var(--amber-line)}
+  .b-gap{background:#e7edf5; color:#345; border:1px solid #c7d5e8}
+  .b-done{background:var(--live-bg); color:var(--live); border:1px solid #b7dcc0}
+
+  .note{border-left:4px solid var(--gold); background:var(--gold-wash); padding:14px 18px; border-radius:0 8px 8px 0; margin:14px 0}
+  .note.amber{border-left-color:var(--amber-line); background:var(--amber-bg)}
+  .callout{background:var(--maroon); color:#fff; border-radius:10px; padding:22px 26px; margin:18px 0}
+  .callout h3{color:var(--gold); margin-top:0}
+  .callout code{background:rgba(255,255,255,.12); border-color:rgba(255,203,5,.3); color:#ffe9a8}
+  .callout p{color:#f3e7d0}
+
+  ul.tick{list-style:none; margin:8px 0}
+  ul.tick li{padding:5px 0 5px 26px; position:relative}
+  ul.tick li::before{content:"▸"; color:var(--gold-deep); position:absolute; left:6px; font-weight:700}
+  ol.flow{margin:8px 0 12px 22px}
+  ol.flow li{padding:3px 0}
+
+  .fig{background:var(--card); border:1px solid var(--line); border-radius:10px; padding:14px; margin:14px 0}
+  .fig svg{width:100%; height:auto; display:block}
+  .fig-cap{font-size:13.5px; color:var(--ink-soft); font-style:italic; margin-top:8px}
+
+  .btn-print{position:fixed; right:22px; top:22px; z-index:20; background:var(--gold); color:var(--maroon-ink); border:none; border-radius:8px; padding:10px 18px; font-family:var(--disp); font-weight:700; text-transform:uppercase; letter-spacing:.08em; font-size:13px; cursor:pointer; box-shadow:0 2px 8px rgba(0,0,0,.25)}
+  .btn-print:hover{background:var(--gold-deep); color:#fff}
+
+  footer{max-width:1040px; margin:0 auto; padding:22px 32px 60px; color:var(--ink-faint); font-size:13.5px; border-top:1px solid var(--line)}
+  @media print{
+    body{font-size:12pt; background:#fff}
+    .mast::after{display:none}
+    a{color:var(--ink)}
+    .no-print{display:none}
+    section{page-break-inside:avoid}
+  }
+</style>
 </head>
 <body>
-  <div class="container">
-    <button class="btn-print no-print" onclick="window.print()">Print / Export PDF</button>
-    <span class="badge">TUC-ICT-DOC-2026-004</span>
-    <h1>SickBay Management System — Official Documentation</h1>
-    <p><strong>Institution:</strong> Techbridge University College (TUC), Oyibi, Greater Accra, Ghana</p>
-    <p><strong>Author:</strong> Daniel Frempong Twum, Head of ICT & Special Advisor to the Founder</p>
 
-    <hr style="border-color: #334155; margin: 30px 0;">
+<button class="btn-print no-print" onclick="window.print()">Print / Export PDF</button>
 
-    <h2>1. System Architecture</h2>
-    <p>High-level system topology illustrating React 19 SPA client interaction through Nginx reverse proxy to Express backend and WMS Gateway.</p>
-    
-    <!-- Embedded SVG Architecture Diagram -->
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 600" width="100%">
-      <rect width="900" height="600" fill="#ffffff"/>
-      <text x="40" y="40" font-family="sans-serif" font-size="18" font-weight="bold" fill="#0f172a">SickBay System Architecture</text>
-      <rect x="40" y="80" width="220" height="120" fill="#eff6ff" stroke="#1d4ed8" stroke-width="2" rx="8"/>
-      <text x="60" y="110" font-family="sans-serif" font-size="14" font-weight="bold" fill="#1d4ed8">React 19 SPA Client</text>
-      <text x="60" y="135" font-family="sans-serif" font-size="11" fill="#475569">• Bento Grid Dashboard</text>
-      <text x="60" y="155" font-family="sans-serif" font-size="11" fill="#475569">• Recharts Trend Engine</text>
-
-      <rect x="340" y="80" width="220" height="120" fill="#f0fdf4" stroke="#15803d" stroke-width="2" rx="8"/>
-      <text x="360" y="110" font-family="sans-serif" font-size="14" font-weight="bold" fill="#15803d">Nginx Reverse Proxy</text>
-      <text x="360" y="135" font-family="sans-serif" font-size="11" fill="#15803d">• Sub-path /sickbay/</text>
-      <text x="360" y="155" font-family="sans-serif" font-size="11" fill="#15803d">• TLS Termination</text>
-
-      <rect x="640" y="80" width="220" height="120" fill="#fffbebf" stroke="#b45309" stroke-width="2" rx="8"/>
-      <text x="660" y="110" font-family="sans-serif" font-size="14" font-weight="bold" fill="#b45309">Express Backend (3046)</text>
-      <text x="660" y="135" font-family="sans-serif" font-size="11" fill="#b45309">• tsx Runtime (server.ts)</text>
-      <text x="660" y="155" font-family="sans-serif" font-size="11" fill="#b45309">• Dual Route Health API</text>
-
-      <line x1="260" y1="140" x2="340" y2="140" stroke="#0f172a" stroke-width="2"/>
-      <line x1="560" y1="140" x2="640" y2="140" stroke="#0f172a" stroke-width="2"/>
-    </svg>
-
-    <div class="page-break"></div>
-
-    <h2>2. Entity Relationship Diagram (ERD)</h2>
-    <p>Clinical data model defining core entities: Patient, Visit (Encounter), Medication, and Referral.</p>
-    
-    <!-- Embedded SVG ERD Diagram -->
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 850 450" width="100%">
-      <rect width="850" height="450" fill="#ffffff"/>
-      <text x="40" y="40" font-family="sans-serif" font-size="18" font-weight="bold" fill="#0f172a">Clinical Data Model (ERD)</text>
-      
-      <rect x="40" y="80" width="200" height="160" fill="#f8fafc" stroke="#0f172a" stroke-width="2" rx="8"/>
-      <rect x="40" y="80" width="200" height="30" fill="#2563eb" rx="8"/>
-      <text x="50" y="100" font-family="sans-serif" font-size="13" font-weight="bold" fill="#ffffff">PATIENT</text>
-      <text x="50" y="130" font-family="monospace" font-size="11" fill="#0f172a">PK id : string</text>
-      <text x="50" y="150" font-family="monospace" font-size="11" fill="#0f172a">fullName : string</text>
-      <text x="50" y="170" font-family="monospace" font-size="11" fill="#0f172a">type : Student|Staff</text>
-      <text x="50" y="190" font-family="monospace" font-size="11" fill="#0f172a">allergies : string[]</text>
-
-      <rect x="320" y="80" width="210" height="180" fill="#f8fafc" stroke="#0f172a" stroke-width="2" rx="8"/>
-      <rect x="320" y="80" width="210" height="30" fill="#059669" rx="8"/>
-      <text x="330" y="100" font-family="sans-serif" font-size="13" font-weight="bold" fill="#ffffff">VISIT (ENCOUNTER)</text>
-      <text x="330" y="130" font-family="monospace" font-size="11" fill="#0f172a">PK id : string</text>
-      <text x="330" y="150" font-family="monospace" font-size="11" fill="#0f172a">FK patientId : string</text>
-      <text x="330" y="170" font-family="monospace" font-size="11" fill="#0f172a">temperature : number</text>
-      <text x="330" y="190" font-family="monospace" font-size="11" fill="#0f172a">bloodPressure : string</text>
-
-      <line x1="240" y1="160" x2="320" y2="160" stroke="#0f172a" stroke-width="2"/>
-    </svg>
-
-    <h2>3. Production Deployment Reference</h2>
-    <p>Live URL: <a href="https://ai-tools.techbridge.edu.gh/sickbay/" style="color: #38bdf8;">https://ai-tools.techbridge.edu.gh/sickbay/</a></p>
-    <p>Express Backend Server Port: <strong>3046</strong></p>
+<header class="mast">
+  <div class="mast-inner">
+    <div class="seal">T</div>
+    <div>
+      <div class="kicker">TUC ICT · Fleet Documentation · Campus Health Services</div>
+      <h1>SickBay <span class="gold">Management System</span></h1>
+      <p class="sub">The campus clinic's record system: triage, visits, observation beds, daily wellness checks, pharmacy stock, referrals and audit reporting. Database-backed as of July 2026: every record lives in MariaDB on the TUC server, behind WMS single sign-on, and is shared across all signed-in devices.</p>
+    </div>
   </div>
+</header>
+
+<div class="ribbon"><div class="ribbon-inner">
+  <span>Doc <b>TUC-ICT-GDE-2026-005</b></span>
+  <span>App <b>ai-tools.techbridge.edu.gh/sickbay/</b></span>
+  <span>SRS <b>TUC-ICT-SRS-2026-004</b></span>
+  <span>Date <b>22 Jul 2026</b></span>
+  <span>Owner <b>TUC ICT</b></span>
+</div></div>
+
+<main>
+
+  <section>
+    <h2><span class="n">01</span>Overview</h2>
+    <p class="lead">SickBay is a React 19 single-page application served at <code>/sickbay/</code>, backed by an Express server (<code>server.ts</code> run via <code>tsx</code>, PM2 process <code>sickbay</code>, port <code>3046</code>) and a MariaDB database (<code>tuc_sickbay</code> on port 3306).</p>
+    <p>The July 2026 migration moved all clinical data out of the browser and into the central database. The SPA now fetches everything from an authenticated REST API and writes back through it; after every write it re-pulls the authoritative dataset, so every device shows the same records. The browser keeps nothing but the display-theme preference.</p>
+    <div class="note"><strong>Access:</strong> sign-in is WMS single sign-on with the staff <strong>@techbridge.edu.gh</strong> Google Workspace account plus a 6-digit authenticator code (TOTP). There are no local passwords, and the API refuses any request without a valid WMS session. Admin features (Pharmacy Stock, Facility Logs, Reports &amp; Sync) additionally require the WMS role <code>SYSTEM_ADMIN</code>, <code>HOD</code>, <code>ADMIN_STAFF</code> or <code>MEDICAL_OFFICER</code>.</div>
+    <h3>Documentation set</h3>
+    <ul class="tick">
+      <li><strong>User Guide</strong> (<code>USER_GUIDE.md</code>): plain-English manual for clinic nurses and administrators.</li>
+      <li><strong>Developer Guide</strong> (<code>DEVELOPER_GUIDE.md</code>): technical edition for fleet developers (stack, backend, API, database, deployment).</li>
+      <li><strong>SRS</strong> (<code>IEEE_SRS_TUC-ICT-SRS-2026-004.md</code>): requirements specification.</li>
+      <li><strong>Diagrams</strong>: <code>architecture.svg</code> and <code>erd.svg</code>, embedded below.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2><span class="n">02</span>At a glance</h2>
+    <div class="cards">
+      <div class="stat"><div class="big">7</div><div class="lbl">Database tables</div></div>
+      <div class="stat"><div class="big">23</div><div class="lbl">API endpoints</div></div>
+      <div class="stat"><div class="big">3046</div><div class="lbl">Server port</div></div>
+      <div class="stat"><div class="big">3</div><div class="lbl">SQL migrations</div></div>
+      <div class="stat"><div class="big">50</div><div class="lbl">Seeded staff records</div></div>
+    </div>
+    <p style="margin-top:12px">20 of the 23 endpoints are data routes gated by a WMS bearer token; the other three (health, session refresh, OAuth relay) are open by design so sign-in and monitoring work before a session exists. Facts on this page are verified against <code>server.ts</code>, <code>src/server/routes.ts</code>, <code>db/migrations/</code> and <code>SERVER_PORTS.md</code>.</p>
+  </section>
+
+  <section>
+    <h2><span class="n">03</span>System architecture</h2>
+    <p>The browser talks only to nginx, which proxies the <code>/sickbay/</code> sub-path to the Express server <em>without stripping the prefix</em> (the server strips it, Pattern 38). Authentication is delegated to WMS: the SPA obtains its session there, and the server re-verifies every request's bearer token against WMS <code>/api/me</code>. Only WMS holds the Google client secret (Pattern 35).</p>
+    <div class="fig">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 840" font-family="Georgia, serif">
+  <defs>
+    <marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#6B0000"/>
+    </marker>
+  </defs>
+  <rect width="980" height="840" fill="#ffffff"/>
+  <rect x="0" y="0" width="980" height="6" fill="#ffcb05"/>
+
+  <!-- Title -->
+  <text x="60" y="44" font-family="'Arial Narrow', Arial, sans-serif" font-size="24" font-weight="bold" fill="#6B0000" letter-spacing="1">SICKBAY MANAGEMENT SYSTEM - DEPLOYED TOPOLOGY</text>
+  <text x="60" y="66" font-size="13" fill="#6b6459" font-style="italic">Verified against server.ts, deploy.ps1, src/server/* and SERVER_PORTS.md (22 Jul 2026) - TUC-ICT-SRS-2026-004</text>
+
+  <!-- Browser box -->
+  <g>
+    <rect x="60" y="90" width="360" height="150" rx="10" fill="#ffffff" stroke="#6B0000" stroke-width="2"/>
+    <path d="M 60,100 a10,10 0 0 1 10,-10 h340 a10,10 0 0 1 10,10 v20 h-360 z" fill="#6B0000"/>
+    <rect x="60" y="117" width="360" height="3" fill="#ffcb05"/>
+    <text x="74" y="111" font-family="'Arial Narrow', Arial, sans-serif" font-size="14" font-weight="bold" fill="#ffffff" letter-spacing="1">BROWSER - REACT 19 SPA</text>
+    <text x="74" y="142" font-size="12.5" fill="#2b2620">Served from /sickbay/ (Vite base '/sickbay/')</text>
+    <text x="74" y="162" font-size="12.5" fill="#2b2620">WMS access token held in memory only</text>
+    <text x="74" y="182" font-size="12.5" fill="#2b2620">Calls the API at /sickbay/api/* with a Bearer token</text>
+    <text x="74" y="202" font-size="12.5" font-weight="bold" fill="#3d0000">No clinical data in the browser</text>
+    <text x="74" y="222" font-size="12.5" fill="#6b6459" font-style="italic">(only the display-theme preference is stored locally)</text>
+  </g>
+
+  <!-- WMS box -->
+  <g>
+    <rect x="560" y="90" width="360" height="230" rx="10" fill="#fdf8e3" stroke="#6B0000" stroke-width="2"/>
+    <path d="M 560,100 a10,10 0 0 1 10,-10 h340 a10,10 0 0 1 10,10 v20 h-360 z" fill="#6B0000"/>
+    <rect x="560" y="117" width="360" height="3" fill="#ffcb05"/>
+    <text x="574" y="111" font-family="'Arial Narrow', Arial, sans-serif" font-size="14" font-weight="bold" fill="#ffffff" letter-spacing="1">WMS - wms.techbridge.edu.gh</text>
+    <text x="574" y="142" font-size="12.5" fill="#2b2620">Google Workspace sign-in (@techbridge.edu.gh)</text>
+    <text x="574" y="162" font-size="12.5" fill="#2b2620">TOTP MFA: verify, or first-time enrolment</text>
+    <text x="574" y="182" font-size="12.5" fill="#2b2620">Issues the access token + fleet-wide wms_refresh cookie</text>
+    <text x="574" y="202" font-size="12.5" fill="#2b2620">GET /api/me validates every SickBay API request</text>
+    <text x="574" y="222" font-size="12.5" fill="#2b2620">OAuth exchange relay (Pattern 35)</text>
+    <text x="574" y="246" font-size="12.5" font-weight="bold" fill="#3d0000">Sole custodian of GOOGLE_CLIENT_SECRET;</text>
+    <text x="574" y="264" font-size="12.5" font-weight="bold" fill="#3d0000">SickBay never holds it</text>
+    <text x="574" y="290" font-size="11.5" fill="#6b6459" font-style="italic">Relay calls authenticate with the X-Gemini-Proxy-Key header</text>
+  </g>
+
+  <!-- nginx box -->
+  <g>
+    <rect x="60" y="300" width="360" height="110" rx="10" fill="#ffffff" stroke="#6B0000" stroke-width="2"/>
+    <path d="M 60,310 a10,10 0 0 1 10,-10 h340 a10,10 0 0 1 10,10 v20 h-360 z" fill="#6B0000"/>
+    <rect x="60" y="327" width="360" height="3" fill="#ffcb05"/>
+    <text x="74" y="321" font-family="'Arial Narrow', Arial, sans-serif" font-size="14" font-weight="bold" fill="#ffffff" letter-spacing="1">NGINX - ai-tools.techbridge.edu.gh</text>
+    <text x="74" y="352" font-size="12.5" fill="#2b2620">TLS termination for the AI-Lab vhost</text>
+    <text x="74" y="372" font-size="12.5" fill="#2b2620">location /sickbay/ proxied to localhost:3046</text>
+    <text x="74" y="392" font-size="12.5" font-weight="bold" fill="#3d0000">The /sickbay prefix is NOT stripped by nginx</text>
+  </g>
+
+  <!-- Express box -->
+  <g>
+    <rect x="60" y="470" width="360" height="200" rx="10" fill="#ffffff" stroke="#6B0000" stroke-width="2"/>
+    <path d="M 60,480 a10,10 0 0 1 10,-10 h340 a10,10 0 0 1 10,10 v20 h-360 z" fill="#6B0000"/>
+    <rect x="60" y="497" width="360" height="3" fill="#ffcb05"/>
+    <text x="74" y="491" font-family="'Arial Narrow', Arial, sans-serif" font-size="14" font-weight="bold" fill="#ffffff" letter-spacing="1">EXPRESS - server.ts (tsx) - PM2 "sickbay" - :3046</text>
+    <text x="74" y="522" font-size="12.5" fill="#2b2620">Pattern 38: strips /sickbay/api to /api (+ dual mounts)</text>
+    <text x="74" y="542" font-size="12.5" font-weight="bold" fill="#3d0000">requireAuth: Bearer token re-verified at WMS /api/me,</text>
+    <text x="74" y="560" font-size="12.5" font-weight="bold" fill="#3d0000">fails closed (401 without a valid session)</text>
+    <text x="74" y="582" font-size="12.5" fill="#2b2620">20 auth-gated data routes + health / session / relay</text>
+    <text x="74" y="602" font-size="12.5" fill="#2b2620">Transactional visit write: visit + stock + referral</text>
+    <text x="74" y="622" font-size="12.5" fill="#2b2620">Maps snake_case rows to camelCase frontend types</text>
+    <text x="74" y="642" font-size="12.5" fill="#2b2620">Serves the built SPA (dist/) and /sickbay/docs/</text>
+  </g>
+
+  <!-- MariaDB box -->
+  <g>
+    <rect x="560" y="470" width="360" height="200" rx="10" fill="#ffffff" stroke="#6B0000" stroke-width="2"/>
+    <path d="M 560,480 a10,10 0 0 1 10,-10 h340 a10,10 0 0 1 10,10 v20 h-360 z" fill="#6B0000"/>
+    <rect x="560" y="497" width="360" height="3" fill="#ffcb05"/>
+    <text x="574" y="491" font-family="'Arial Narrow', Arial, sans-serif" font-size="14" font-weight="bold" fill="#ffffff" letter-spacing="1">MARIADB - tuc_sickbay @ localhost:3306</text>
+    <text x="574" y="522" font-size="12.5" fill="#2b2620">Scoped user sickbay_app@localhost (never root; Pattern 37)</text>
+    <text x="574" y="542" font-size="12.5" fill="#2b2620">App-DB instance on 3306 (3307 is the LMS: never used)</text>
+    <text x="574" y="566" font-size="12.5" font-weight="bold" fill="#3d0000">7 tables:</text>
+    <text x="574" y="586" font-size="12" fill="#2b2620">patients, visits, medications, referrals,</text>
+    <text x="574" y="604" font-size="12" fill="#2b2620">facility_logs, audit_logs, daily_health_checks</text>
+    <text x="574" y="628" font-size="12.5" fill="#2b2620">Schema + seeds: db/migrations/001, 002, 003</text>
+    <text x="574" y="648" font-size="12.5" fill="#2b2620">Applied with plesk db (each file carries USE tuc_sickbay)</text>
+  </g>
+
+  <!-- Arrows -->
+  <path d="M 240,240 V 297" fill="none" stroke="#6B0000" stroke-width="2" marker-end="url(#ah)"/>
+  <text x="252" y="266" font-size="11.5" fill="#6B0000" font-family="Consolas, monospace">HTTPS: page load + /sickbay/api/* (Bearer)</text>
+
+  <path d="M 240,410 V 467" fill="none" stroke="#6B0000" stroke-width="2" marker-end="url(#ah)"/>
+  <text x="252" y="436" font-size="11.5" fill="#6B0000" font-family="Consolas, monospace">proxy_pass http://localhost:3046 (un-stripped)</text>
+
+  <path d="M 420,570 H 557" fill="none" stroke="#6B0000" stroke-width="2" marker-end="url(#ah)"/>
+  <text x="488" y="560" font-size="11.5" fill="#6B0000" font-family="Consolas, monospace" text-anchor="middle">mysql2 pool</text>
+
+  <path d="M 420,165 H 557" fill="none" stroke="#6B0000" stroke-width="2" marker-end="url(#ah)"/>
+  <text x="488" y="150" font-size="11.5" fill="#6B0000" font-family="Consolas, monospace" text-anchor="middle">sign-in redirect,</text>
+  <text x="488" y="185" font-size="11.5" fill="#6B0000" font-family="Consolas, monospace" text-anchor="middle">code exchange + refresh</text>
+
+  <path d="M 390,470 V 436 H 740 V 323" fill="none" stroke="#6B0000" stroke-width="2" marker-end="url(#ah)"/>
+  <text x="588" y="428" font-size="11.5" fill="#6B0000" font-family="Consolas, monospace" text-anchor="middle">verify token: GET /api/me - relay exchange</text>
+
+  <!-- Audit trail note -->
+  <g>
+    <rect x="60" y="710" width="860" height="86" rx="8" fill="#fdf8e3" stroke="#e2ded4"/>
+    <rect x="60" y="710" width="5" height="86" fill="#ffcb05"/>
+    <text x="80" y="736" font-family="'Arial Narrow', Arial, sans-serif" font-size="14" font-weight="bold" fill="#3d0000" letter-spacing="1">AUDIT TRAIL &amp; DATA CUSTODY</text>
+    <text x="80" y="758" font-size="12.5" fill="#2b2620">Every AUTH, CLINICAL, INVENTORY, FACILITY and SYSTEM action is appended to audit_logs with actor and timestamp; the Reports tab reads the latest 200 entries.</text>
+    <text x="80" y="778" font-size="12.5" fill="#2b2620">All clinical state lives in MariaDB. The SPA re-pulls the authoritative dataset after every write, so every signed-in device shows the same records.</text>
+  </g>
+</svg>
+      <p class="fig-cap">Deployed topology. The same diagram is available standalone as <code>architecture.svg</code>.</p>
+    </div>
+  </section>
+
+  <section>
+    <h2><span class="n">04</span>Database schema</h2>
+    <p>MariaDB database <code>tuc_sickbay</code> on the app-DB instance (<code>localhost:3306</code>), accessed by the scoped user <code>sickbay_app</code>. Seven tables; declared foreign keys link visits, referrals and daily health checks back to patients, and referrals to visits. The visits-to-medications link is enforced by the API's write transaction rather than a constraint.</p>
+    <div class="fig">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1250 880" font-family="Georgia, serif">
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#6B0000"/>
+    </marker>
+    <marker id="arrg" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#b8930f"/>
+    </marker>
+  </defs>
+  <rect width="1250" height="880" fill="#ffffff"/>
+  <rect x="0" y="0" width="1250" height="6" fill="#ffcb05"/>
+  <text x="40" y="42" font-family="'Arial Narrow', Arial, sans-serif" font-size="24" font-weight="bold" fill="#6B0000" letter-spacing="1">SICKBAY MANAGEMENT SYSTEM · DATABASE SCHEMA (ERD)</text>
+  <text x="40" y="64" font-size="13" fill="#6b6459" font-style="italic">MariaDB database tuc_sickbay on localhost:3306 · 7 tables · source: db/migrations/001, 002, 003 · TUC-ICT-SRS-2026-004</text>
+  <g font-family="Consolas, Menlo, monospace" font-size="11">
+    <rect x="950" y="24" width="260" height="40" fill="#fdf8e3" stroke="#e2ded4" rx="6"/>
+    <text x="962" y="41" fill="#b8930f" font-weight="bold">PK</text><text x="984" y="41" fill="#2b2620">primary key</text>
+    <text x="1078" y="41" fill="#b8930f" font-weight="bold">FK</text><text x="1100" y="41" fill="#2b2620">foreign key</text>
+    <text x="962" y="57" fill="#b8930f" font-weight="bold">UQ</text><text x="984" y="57" fill="#2b2620">unique</text>
+    <text x="1078" y="57" fill="#b8930f" font-weight="bold">ref</text><text x="1100" y="57" fill="#2b2620">logical, no FK</text>
+  </g>
+  <g>
+    <rect x="40" y="300" width="280" height="262" rx="8" fill="#ffffff" stroke="#6B0000" stroke-width="1.6"/>
+    <path d="M 40,308 a8,8 0 0 1 8,-8 h264 a8,8 0 0 1 8,8 v20 h-280 z" fill="#6B0000"/>
+    <rect x="40" y="325" width="280" height="3" fill="#ffcb05"/>
+    <text x="50" y="319" font-family="'Arial Narrow', Arial, sans-serif" font-size="14" font-weight="bold" fill="#ffffff" letter-spacing="1.2">PATIENTS</text>
+    <text x="310" y="319" font-family="Consolas, Menlo, monospace" font-size="10" fill="#ffcb05" text-anchor="end">13 cols</text>
+    <rect x="41" y="328" width="278" height="18" fill="#fdf8e3"/>
+    <text x="50" y="340.5" font-family="Consolas, Menlo, monospace" font-size="11" font-weight="bold" fill="#3d0000">id</text>
+    <text x="310" y="340.5" font-family="Consolas, Menlo, monospace" font-size="10" fill="#6b6459" text-anchor="end">INT <tspan fill="#b8930f" font-weight="bold">PK</tspan></text>
+    <line x1="41" y1="346" x2="319" y2="346" stroke="#f0ece2" stroke-width="1"/>
+    <text x="50" y="358.5" font-family="Consolas, Menlo, monospace" font-size="11" font-weight="bold" fill="#6B0000">patient_code</text>
+    <text x="310" y="358.5" font-family="Consolas, Menlo, monospace" font-size="10" fill="#6b6459" text-anchor="end">VARCHAR(50) <tspan fill="#b8930f" font-weight="bold">UQ</tspan></text>
+    <line x1="41" y1="364" x2="319" y2="364" stroke="#f0ece2" stroke-width="1"/>
+    <text x="50" y="376.5" font-family="Consolas, Menlo, monospace" font-size="11" fill="#2b2620">full_name</text>
+    <text x="310" y="376.5" font-family="Consolas, Menlo, monospace" font-size="10" fill="#6b6459" text-anchor="end">VARCHAR(255)<tspan fill="#b8930f" font-weight="bold"></tspan></text>
+    <line x1="41" y1="382" x2="319" y2="382" stroke="#f0ece2" stroke-width="1"/>
+    <text x="50" y="394.5" font-family="Consolas, Menlo, monospace" font-size="11" fill="#2b2620">patient_type</text>
+    <text x="310" y="394.5" font-family="Consolas, Menlo, monospace" font-size="10" fill="#6b6459" text-anchor="end">ENUM(&apos;Student&apos;,&apos;Staff&apos;)<tspan fill="#b8930f" font-weight="bold"></tspan></text>
+    <line x1="41" y1="400" x2="319" y2="400" stroke="#f0ece2" stroke-width="1"/>
+    <text x="50" y="412.5" font-family="Consolas, Menlo, monospace" font-size="11" fill="#2b2620">gender</text>
+    <text x="310" y="412.5" font-family="Consolas, Menlo, monospace" font-size="10" fill="#6b6459" text-anchor="end">ENUM(&apos;Male&apos;,&apos;Female&apos;)<tspan fill="#b8930f" font-weight="bold"></tspan></text>
+    <line x1="41" y1="418" x2="319" y2="418" stroke="#f0ece2" stroke-width="1"/>
+    <text x="50" y="430.5" font-family="Consolas, Menlo, monospace" font-size="11" fill="#2b2620">age</text>
+    <text x="310" y="430.5" font-family="Consolas, Menlo, monospace" font-size="10" fill="#6b6459" text-anchor="end">INT<tspan fill="#b8930f" font-weight="bold"></tspan></text>
+    <line x1="41" y1="436" x2="319" y2="436" stroke="#f0ece2" stroke-width="1"/>
+    <text x="50" y="448.5" font-family="Consolas, Menlo, monospace" font-size="11" fill="#2b2620">class_or_dept</text>
+    <text x="310" y="448.5" font-family="Consolas, Menlo, monospace" font-size="10" fill="#6b6459" text-anchor="end">VARCHAR(255)<tspan fill="#b8930f" font-weight="bold"></tspan></text>
+    <line x1="41" y1="454" x2="319" y2="454" stroke="#f0ece2" stroke-width="1"/>
+    <text x="50" y="466.5" font-family="Consolas, Menlo, monospace" font-size="11" fill="#2b2620">emergency_contact_name</text>
+    <text x="310" y="466.5" font-family="Consolas, Menlo, monospace" font-size="10" fill="#6b6459" text-anchor="end">VARCHAR(255)<tspan fill="#b8930f" font-weight="bold"></tspan></text>
+    <line x1="41" y1="472" x2="319" y2="472" stroke="#f0ece2" stroke-width="1"/>
+    <text x="50" y="484.5" font-family="Consolas, Menlo, monospace" font-size="11" fill="#2b2620">emergency_contact_phone</text>
+    <text x="310" y="484.5" font-family="Consolas, Menlo, monospace" font-size="10" fill="#6b6459" text-anchor="end">VARCHAR(50)<tspan fill="#b8930f" font-weight="bold"></tspan></text>
+    <line x1="41" y1="490" x2="319" y2="490" stroke="#f0ece2" stroke-width="1"/>
+    <text x="50" y="502.5" font-family="Consolas, Menlo, monospace" font-size="11" fill="#2b2620">allergies</text>
+    <text x="310" y="502.5" font-family="Consolas, Menlo, monospace" font-size="10" fill="#6b6459" text-anchor="end">TEXT (JSON array)<tspan fill="#b8930f" font-weight="bold"></tspan></text>
+    <line x1="41" y1="508" x2="319" y2="508" stroke="#f0ece2" stroke-width="1"/>
+    <text x="50" y="520.5" font-family="Consolas, Menlo, monospace" font-size="11" fill="#2b2620">chronic_conditions</text>
+    <text x="310" y="520.5" font-family="Consolas, Menlo, monospace" font-size="10" fill="#6b6459" text-anchor="end">TEXT (JSON array)<tspan fill="#b8930f" font-weight="bold"></tspan></text>
+    <line x1="41" y1="526" x2="319" y2="526" stroke="#f0ece2" stroke-width="1"/>
+    <text x="50" y="538.5" font-family="Consolas, Menlo, monospace" font-size="11" fill="#2b2620">created_at</text>
+    <text x="310" y="538.5" font-family="Consolas, Menlo, monospace" font-size="10" fill="#6b6459" text-anchor="end">TIMESTAMP<tspan fill="#b8930f" font-weight="bold"></tspan></text>
+    <line x1="41" y1="544" x2="319" y2="544" stroke="#f0ece2" stroke-width="1"/>
+    <text x="50" y="556.5" font-family="Consolas, Menlo, monospace" font-size="11" fill="#2b2620">updated_at</text>
+    <text x="310" y="556.5" font-family="Consolas, Menlo, monospace" font-size="10" fill="#6b6459" text-anchor="end">TIMESTAMP<tspan fill="#b8930f" font-weight="bold"></tspan></text>
+  </g>
+  <g>
+    <rect x="460" y="80" width="310" height="334" rx="8" fill="#ffffff" stroke="#6B0000" stroke-width="1.6"/>
+    <path d="M 460,88 a8,8 0 0 1 8,-8 h294 a8,8 0 0 1 8,8 v20 h-310 z" fill="#6B0000"/>
+    <rect x="460" y="105" width="310" height="3" fill="#ffcb05"/>
+    <text x="470" y="99" font-family="'Arial Narrow', Arial, sans-serif" font-size="14" font-weight="bold" fill="#ffffff" letter-spacing="1.2">VISITS</text>
+    <text x="760" y="99" font-family="Consolas, Menlo, monospace" font-size="10" fill="#ffcb05" text-anchor="end">17 cols</text>
+    <rect x="461" y="108" width="308" height="18" fill="#fdf8e3"/>
+    <text x="470" y="120.5" font-family="Consolas, Menlo, monospace" font-size="11" font-weight="bold" fill="#3d0000">id</text>
+    <text x="760" y="120.5" font-family="Consolas, Menlo, monospace" font-size="10" fill="#6b6459" text-anchor="end">INT <tspan fill="#b8930f" font-weight="bold">PK</tspan></text>
+    <line x1="461" y1="126" x2="769" y2="126" stroke="#f0ece2" stroke-width="1"/>
+    <text x="470" y="138.5" font-family="Consolas, Menlo, monospace" font-size="11" font-weight="bold" fill="#6B0000">patient_id</text>
+    <text x="760" y="138.5" font-family="Consolas, Menlo, monospace" font-size="10" fill="#6b6459" text-anchor="end">INT <tspan fill="#b8930f" font-weight="bold">FK</tspan></text>
+    <line x1="461" y1="144" x2="769" y2="144" stroke="#f0ece2" stroke-width="1"/>
+    <text x="470" y="156.5" font-family="Consolas, Menlo, monospace" font-size="11" fill="#2b2620">temperature</text>
+    <text x="760" y="156.5" font-family="Consolas, Menlo, monospace" font-size="10" fill="#6b6459" text-anchor="end">DECIMAL(4,1)<tspan fill="#b8930f" font-weight="bold"></tspan></text>
+    <line x1="461" y1="162" x2="769" y2="162" stroke="#f0ece2" stroke-width="1"/>
+    <text x="470" y="174.5" font-family="Consolas, Menlo, monospace" font-size="11" fill="#2b2620">blood_pressure</text>
+    <text x="760" y="174.5" font-family="Consolas, Menlo, monospace" font-size="10" fill="#6b6459" text-anchor="end">VARCHAR(20)<tspan fill="#b8930f" font-weight="bold"></tspan></text>
+    <line x1="461" y1="180" x2="769" y2="180" stroke="#f0ece2" stroke-width="1"/>
+    <text x="470" y="192.5" font-family="Consolas, Menlo, monospace" font-size="11" fill="#2b2620">pulse_rate</text>
+    <text x="760" y="192.5" font-family="Consolas, Menlo, monospace" font-size="10" fill="#6b6459" text-anchor="end">INT<tspan fill="#b8930f" font-weight="bold"></tspan></text>
+    <line x1="461" y1="198" x2="769" y2="198" stroke="#f0ece2" stroke-width="1"/>
+    <text x="470" y="210.5" font-family="Consolas, Menlo, monospace" font-size="11" fill="#2b2620">symptoms</text>
+    <text x="760" y="210.5" font-family="Consolas, Menlo, monospace" font-size="10" fill="#6b6459" text-anchor="end">TEXT<tspan fill="#b8930f" font-weight="bold"></tspan></text>
+    <line x1="461" y1="216" x2="769" y2="216" stroke="#f0ece2" stroke-width="1"/>
+    <text x="470" y="228.5" font-family="Consolas, Menlo, monospace" font-size="11" fill="#2b2620">presenting_conditions</text>
+    <text x="760" y="228.5" font-family="Consolas, Menlo, monospace" font-size="10" fill="#6b6459" text-anchor="end">TEXT (JSON array)<tspan fill="#b8930f" font-weight="bold"></tspan></text>
+    <line x1="461" y1="234" x2="769" y2="234" stroke="#f0ece2" stroke-width="1"/>
+    <text x="470" y="246.5" font-family="Consolas, Menlo, monospace" font-size="11" fill="#2b2620">severity</text>
+    <text x="760" y="246.5" font-family="Consolas, Menlo, monospace" font-size="10" fill="#6b6459" text-anchor="end">ENUM(Mild|Moderate|Severe)<tspan fill="#b8930f" font-weight="bold"></tspan></text>
+    <line x1="461" y1="252" x2="769" y2="252" stroke="#f0ece2" stroke-width="1"/>
+    <text x="470" y="264.5" font-family="Consolas, Menlo, monospace" font-size="11" fill="#2b2620">treatment</text>
+    <text x="760" y="264.5" font-family="Consolas, Menlo, monospace" font-size="10" fill="#6b6459" text-anchor="end">TEXT<tspan fill="#b8930f" font-weight="bold"></tspan></text>
+    <line x1="461" y1="270" x2="769" y2="270" stroke="#f0ece2" stroke-width="1"/>
+    <text x="470" y="282.5" font-family="Consolas, Menlo, monospace" font-size="11" font-weight="bold" fill="#6B0000">medication_dispensed_id</text>
+    <text x="760" y="282.5" font-family="Consolas, Menlo, monospace" font-size="10" fill="#6b6459" text-anchor="end">INT NULL <tspan fill="#b8930f" font-weight="bold">ref</tspan></text>
+    <line x1="461" y1="288" x2="769" y2="288" stroke="#f0ece2" stroke-width="1"/>
+    <text x="470" y="300.5" font-family="Consolas, Menlo, monospace" font-size="11" fill="#2b2620">medication_dispensed_qty</text>
+    <text x="760" y="300.5" font-family="Consolas, Menlo, monospace" font-size="10" fill="#6b6459" text-anchor="end">INT NULL<tspan fill="#b8930f" font-weight="bold"></tspan></text>
+    <line x1="461" y1="306" x2="769" y2="306" stroke="#f0ece2" stroke-width="1"/>
+    <text x="470" y="318.5" font-family="Consolas, Menlo, monospace" font-size="11" fill="#2b2620">disposition</text>
+    <text x="760" y="318.5" font-family="Consolas, Menlo, monospace" font-size="10" fill="#6b6459" text-anchor="end">ENUM(4 outcomes)<tspan fill="#b8930f" font-weight="bold"></tspan></text>
+    <line x1="461" y1="324" x2="769" y2="324" stroke="#f0ece2" stroke-width="1"/>
+    <text x="470" y="336.5" font-family="Consolas, Menlo, monospace" font-size="11" fill="#2b2620">observed_bed_no</text>
+    <text x="760" y="336.5" font-family="Consolas, Menlo, monospace" font-size="10" fill="#6b6459" text-anchor="end">VARCHAR(20) NULL<tspan fill="#b8930f" font-weight="bold"></tspan></text>
+    <line x1="461" y1="342" x2="769" y2="342" stroke="#f0ece2" stroke-width="1"/>
+    <text x="470" y="354.5" font-family="Consolas, Menlo, monospace" font-size="11" fill="#2b2620">observation_end_time</text>
+    <text x="760" y="354.5" font-family="Consolas, Menlo, monospace" font-size="10" fill="#6b6459" text-anchor="end">DATETIME NULL<tspan fill="#b8930f" font-weight="bold"></tspan></text>
+    <line x1="461" y1="360" x2="769" y2="360" stroke="#f0ece2" stroke-width="1"/>
+    <text x="470" y="372.5" font-family="Consolas, Menlo, monospace" font-size="11" fill="#2b2620">notes</text>
+    <text x="760" y="372.5" font-family="Consolas, Menlo, monospace" font-size="10" fill="#6b6459" text-anchor="end">TEXT<tspan fill="#b8930f" font-weight="bold"></tspan></text>
+    <line x1="461" y1="378" x2="769" y2="378" stroke="#f0ece2" stroke-width="1"/>
+    <text x="470" y="390.5" font-family="Consolas, Menlo, monospace" font-size="11" fill="#2b2620">treated_by</text>
+    <text x="760" y="390.5" font-family="Consolas, Menlo, monospace" font-size="10" fill="#6b6459" text-anchor="end">VARCHAR(255)<tspan fill="#b8930f" font-weight="bold"></tspan></text>
+    <line x1="461" y1="396" x2="769" y2="396" stroke="#f0ece2" stroke-width="1"/>
+    <text x="470" y="408.5" font-family="Consolas, Menlo, monospace" font-size="11" fill="#2b2620">created_at</text>
+    <text x="760" y="408.5" font-family="Consolas, Menlo, monospace" font-size="10" fill="#6b6459" text-anchor="end">TIMESTAMP<tspan fill="#b8930f" font-weight="bold"></tspan></text>
+  </g>
+  <g>
+    <rect x="920" y="80" width="290" height="226" rx="8" fill="#ffffff" stroke="#6B0000" stroke-width="1.6"/>
+    <path d="M 920,88 a8,8 0 0 1 8,-8 h274 a8,8 0 0 1 8,8 v20 h-290 z" fill="#6B0000"/>
+    <rect x="920" y="105" width="290" height="3" fill="#ffcb05"/>
+    <text x="930" y="99" font-family="'Arial Narrow', Arial, sans-serif" font-size="14" font-weight="bold" fill="#ffffff" letter-spacing="1.2">MEDICATIONS</text>
+    <text x="1200" y="99" font-family="Consolas, Menlo, monospace" font-size="10" fill="#ffcb05" text-anchor="end">11 cols</text>
+    <rect x="921" y="108" width="288" height="18" fill="#fdf8e3"/>
+    <text x="930" y="120.5" font-family="Consolas, Menlo, monospace" font-size="11" font-weight="bold" fill="#3d0000">id</text>
+    <text x="1200" y="120.5" font-family="Consolas, Menlo, monospace" font-size="10" fill="#6b6459" text-anchor="end">INT <tspan fill="#b8930f" font-weight="bold">PK</tspan></text>
+    <line x1="921" y1="126" x2="1209" y2="126" stroke="#f0ece2" stroke-width="1"/>
+    <text x="930" y="138.5" font-family="Consolas, Menlo, monospace" font-size="11" fill="#2b2620">name</text>
+    <text x="1200" y="138.5" font-family="Consolas, Menlo, monospace" font-size="10" fill="#6b6459" text-anchor="end">VARCHAR(255)<tspan fill="#b8930f" font-weight="bold"></tspan></text>
+    <line x1="921" y1="144" x2="1209" y2="144" stroke="#f0ece2" stroke-width="1"/>
+    <text x="930" y="156.5" font-family="Consolas, Menlo, monospace" font-size="11" fill="#2b2620">category</text>
+    <text x="1200" y="156.5" font-family="Consolas, Menlo, monospace" font-size="10" fill="#6b6459" text-anchor="end">ENUM(7 categories)<tspan fill="#b8930f" font-weight="bold"></tspan></text>
+    <line x1="921" y1="162" x2="1209" y2="162" stroke="#f0ece2" stroke-width="1"/>
+    <text x="930" y="174.5" font-family="Consolas, Menlo, monospace" font-size="11" fill="#2b2620">quantity_on_hand</text>
+    <text x="1200" y="174.5" font-family="Consolas, Menlo, monospace" font-size="10" fill="#6b6459" text-anchor="end">INT<tspan fill="#b8930f" font-weight="bold"></tspan></text>
+    <line x1="921" y1="180" x2="1209" y2="180" stroke="#f0ece2" stroke-width="1"/>
+    <text x="930" y="192.5" font-family="Consolas, Menlo, monospace" font-size="11" fill="#2b2620">unit</text>
+    <text x="1200" y="192.5" font-family="Consolas, Menlo, monospace" font-size="10" fill="#6b6459" text-anchor="end">VARCHAR(50)<tspan fill="#b8930f" font-weight="bold"></tspan></text>
+    <line x1="921" y1="198" x2="1209" y2="198" stroke="#f0ece2" stroke-width="1"/>
+    <text x="930" y="210.5" font-family="Consolas, Menlo, monospace" font-size="11" fill="#2b2620">reorder_threshold</text>
+    <text x="1200" y="210.5" font-family="Consolas, Menlo, monospace" font-size="10" fill="#6b6459" text-anchor="end">INT<tspan fill="#b8930f" font-weight="bold"></tspan></text>
+    <line x1="921" y1="216" x2="1209" y2="216" stroke="#f0ece2" stroke-width="1"/>
+    <text x="930" y="228.5" font-family="Consolas, Menlo, monospace" font-size="11" font-weight="bold" fill="#6B0000">batch_number</text>
+    <text x="1200" y="228.5" font-family="Consolas, Menlo, monospace" font-size="10" fill="#6b6459" text-anchor="end">VARCHAR(100) <tspan fill="#b8930f" font-weight="bold">UQ</tspan></text>
+    <line x1="921" y1="234" x2="1209" y2="234" stroke="#f0ece2" stroke-width="1"/>
+    <text x="930" y="246.5" font-family="Consolas, Menlo, monospace" font-size="11" fill="#2b2620">expiry_date</text>
+    <text x="1200" y="246.5" font-family="Consolas, Menlo, monospace" font-size="10" fill="#6b6459" text-anchor="end">DATE<tspan fill="#b8930f" font-weight="bold"></tspan></text>
+    <line x1="921" y1="252" x2="1209" y2="252" stroke="#f0ece2" stroke-width="1"/>
+    <text x="930" y="264.5" font-family="Consolas, Menlo, monospace" font-size="11" fill="#2b2620">over_stock_threshold</text>
+    <text x="1200" y="264.5" font-family="Consolas, Menlo, monospace" font-size="10" fill="#6b6459" text-anchor="end">INT<tspan fill="#b8930f" font-weight="bold"></tspan></text>
+    <line x1="921" y1="270" x2="1209" y2="270" stroke="#f0ece2" stroke-width="1"/>
+    <text x="930" y="282.5" font-family="Consolas, Menlo, monospace" font-size="11" fill="#2b2620">created_at</text>
+    <text x="1200" y="282.5" font-family="Consolas, Menlo, monospace" font-size="10" fill="#6b6459" text-anchor="end">TIMESTAMP<tspan fill="#b8930f" font-weight="bold"></tspan></text>
+    <line x1="921" y1="288" x2="1209" y2="288" stroke="#f0ece2" stroke-width="1"/>
+    <text x="930" y="300.5" font-family="Consolas, Menlo, monospace" font-size="11" fill="#2b2620">updated_at</text>
+    <text x="1200" y="300.5" font-family="Consolas, Menlo, monospace" font-size="10" fill="#6b6459" text-anchor="end">TIMESTAMP<tspan fill="#b8930f" font-weight="bold"></tspan></text>
+  </g>
+  <g>
+    <rect x="460" y="520" width="310" height="208" rx="8" fill="#ffffff" stroke="#6B0000" stroke-width="1.6"/>
+    <path d="M 460,528 a8,8 0 0 1 8,-8 h294 a8,8 0 0 1 8,8 v20 h-310 z" fill="#6B0000"/>
+    <rect x="460" y="545" width="310" height="3" fill="#ffcb05"/>
+    <text x="470" y="539" font-family="'Arial Narrow', Arial, sans-serif" font-size="14" font-weight="bold" fill="#ffffff" letter-spacing="1.2">REFERRALS</text>
+    <text x="760" y="539" font-family="Consolas, Menlo, monospace" font-size="10" fill="#ffcb05" text-anchor="end">10 cols</text>
+    <rect x="461" y="548" width="308" height="18" fill="#fdf8e3"/>
+    <text x="470" y="560.5" font-family="Consolas, Menlo, monospace" font-size="11" font-weight="bold" fill="#3d0000">id</text>
+    <text x="760" y="560.5" font-family="Consolas, Menlo, monospace" font-size="10" fill="#6b6459" text-anchor="end">INT <tspan fill="#b8930f" font-weight="bold">PK</tspan></text>
+    <line x1="461" y1="566" x2="769" y2="566" stroke="#f0ece2" stroke-width="1"/>
+    <text x="470" y="578.5" font-family="Consolas, Menlo, monospace" font-size="11" font-weight="bold" fill="#6B0000">visit_id</text>
+    <text x="760" y="578.5" font-family="Consolas, Menlo, monospace" font-size="10" fill="#6b6459" text-anchor="end">INT <tspan fill="#b8930f" font-weight="bold">FK</tspan></text>
+    <line x1="461" y1="584" x2="769" y2="584" stroke="#f0ece2" stroke-width="1"/>
+    <text x="470" y="596.5" font-family="Consolas, Menlo, monospace" font-size="11" fill="#2b2620">patient_name</text>
+    <text x="760" y="596.5" font-family="Consolas, Menlo, monospace" font-size="10" fill="#6b6459" text-anchor="end">VARCHAR(255)<tspan fill="#b8930f" font-weight="bold"></tspan></text>
+    <line x1="461" y1="602" x2="769" y2="602" stroke="#f0ece2" stroke-width="1"/>
+    <text x="470" y="614.5" font-family="Consolas, Menlo, monospace" font-size="11" font-weight="bold" fill="#6B0000">patient_id</text>
+    <text x="760" y="614.5" font-family="Consolas, Menlo, monospace" font-size="10" fill="#6b6459" text-anchor="end">INT <tspan fill="#b8930f" font-weight="bold">FK</tspan></text>
+    <line x1="461" y1="620" x2="769" y2="620" stroke="#f0ece2" stroke-width="1"/>
+    <text x="470" y="632.5" font-family="Consolas, Menlo, monospace" font-size="11" fill="#2b2620">referral_hospital</text>
+    <text x="760" y="632.5" font-family="Consolas, Menlo, monospace" font-size="10" fill="#6b6459" text-anchor="end">VARCHAR(255)<tspan fill="#b8930f" font-weight="bold"></tspan></text>
+    <line x1="461" y1="638" x2="769" y2="638" stroke="#f0ece2" stroke-width="1"/>
+    <text x="470" y="650.5" font-family="Consolas, Menlo, monospace" font-size="11" fill="#2b2620">reason</text>
+    <text x="760" y="650.5" font-family="Consolas, Menlo, monospace" font-size="10" fill="#6b6459" text-anchor="end">TEXT<tspan fill="#b8930f" font-weight="bold"></tspan></text>
+    <line x1="461" y1="656" x2="769" y2="656" stroke="#f0ece2" stroke-width="1"/>
+    <text x="470" y="668.5" font-family="Consolas, Menlo, monospace" font-size="11" fill="#2b2620">status</text>
+    <text x="760" y="668.5" font-family="Consolas, Menlo, monospace" font-size="10" fill="#6b6459" text-anchor="end">ENUM(4 statuses)<tspan fill="#b8930f" font-weight="bold"></tspan></text>
+    <line x1="461" y1="674" x2="769" y2="674" stroke="#f0ece2" stroke-width="1"/>
+    <text x="470" y="686.5" font-family="Consolas, Menlo, monospace" font-size="11" fill="#2b2620">outcome_notes</text>
+    <text x="760" y="686.5" font-family="Consolas, Menlo, monospace" font-size="10" fill="#6b6459" text-anchor="end">TEXT NULL<tspan fill="#b8930f" font-weight="bold"></tspan></text>
+    <line x1="461" y1="692" x2="769" y2="692" stroke="#f0ece2" stroke-width="1"/>
+    <text x="470" y="704.5" font-family="Consolas, Menlo, monospace" font-size="11" fill="#2b2620">created_at</text>
+    <text x="760" y="704.5" font-family="Consolas, Menlo, monospace" font-size="10" fill="#6b6459" text-anchor="end">TIMESTAMP<tspan fill="#b8930f" font-weight="bold"></tspan></text>
+    <line x1="461" y1="710" x2="769" y2="710" stroke="#f0ece2" stroke-width="1"/>
+    <text x="470" y="722.5" font-family="Consolas, Menlo, monospace" font-size="11" fill="#2b2620">updated_at</text>
+    <text x="760" y="722.5" font-family="Consolas, Menlo, monospace" font-size="10" fill="#6b6459" text-anchor="end">TIMESTAMP<tspan fill="#b8930f" font-weight="bold"></tspan></text>
+  </g>
+  <g>
+    <rect x="40" y="650" width="280" height="154" rx="8" fill="#ffffff" stroke="#6B0000" stroke-width="1.6"/>
+    <path d="M 40,658 a8,8 0 0 1 8,-8 h264 a8,8 0 0 1 8,8 v20 h-280 z" fill="#6B0000"/>
+    <rect x="40" y="675" width="280" height="3" fill="#ffcb05"/>
+    <text x="50" y="669" font-family="'Arial Narrow', Arial, sans-serif" font-size="14" font-weight="bold" fill="#ffffff" letter-spacing="1.2">DAILY_HEALTH_CHECKS</text>
+    <text x="310" y="669" font-family="Consolas, Menlo, monospace" font-size="10" fill="#ffcb05" text-anchor="end">7 cols</text>
+    <rect x="41" y="678" width="278" height="18" fill="#fdf8e3"/>
+    <text x="50" y="690.5" font-family="Consolas, Menlo, monospace" font-size="11" font-weight="bold" fill="#3d0000">id</text>
+    <text x="310" y="690.5" font-family="Consolas, Menlo, monospace" font-size="10" fill="#6b6459" text-anchor="end">INT <tspan fill="#b8930f" font-weight="bold">PK</tspan></text>
+    <line x1="41" y1="696" x2="319" y2="696" stroke="#f0ece2" stroke-width="1"/>
+    <text x="50" y="708.5" font-family="Consolas, Menlo, monospace" font-size="11" font-weight="bold" fill="#6B0000">patient_id</text>
+    <text x="310" y="708.5" font-family="Consolas, Menlo, monospace" font-size="10" fill="#6b6459" text-anchor="end">INT <tspan fill="#b8930f" font-weight="bold">FK</tspan></text>
+    <line x1="41" y1="714" x2="319" y2="714" stroke="#f0ece2" stroke-width="1"/>
+    <text x="50" y="726.5" font-family="Consolas, Menlo, monospace" font-size="11" fill="#2b2620">temperature</text>
+    <text x="310" y="726.5" font-family="Consolas, Menlo, monospace" font-size="10" fill="#6b6459" text-anchor="end">DECIMAL(4,1)<tspan fill="#b8930f" font-weight="bold"></tspan></text>
+    <line x1="41" y1="732" x2="319" y2="732" stroke="#f0ece2" stroke-width="1"/>
+    <text x="50" y="744.5" font-family="Consolas, Menlo, monospace" font-size="11" fill="#2b2620">symptoms</text>
+    <text x="310" y="744.5" font-family="Consolas, Menlo, monospace" font-size="10" fill="#6b6459" text-anchor="end">JSON NULL<tspan fill="#b8930f" font-weight="bold"></tspan></text>
+    <line x1="41" y1="750" x2="319" y2="750" stroke="#f0ece2" stroke-width="1"/>
+    <text x="50" y="762.5" font-family="Consolas, Menlo, monospace" font-size="11" fill="#2b2620">status</text>
+    <text x="310" y="762.5" font-family="Consolas, Menlo, monospace" font-size="10" fill="#6b6459" text-anchor="end">ENUM(3 outcomes)<tspan fill="#b8930f" font-weight="bold"></tspan></text>
+    <line x1="41" y1="768" x2="319" y2="768" stroke="#f0ece2" stroke-width="1"/>
+    <text x="50" y="780.5" font-family="Consolas, Menlo, monospace" font-size="11" fill="#2b2620">notes</text>
+    <text x="310" y="780.5" font-family="Consolas, Menlo, monospace" font-size="10" fill="#6b6459" text-anchor="end">TEXT NULL<tspan fill="#b8930f" font-weight="bold"></tspan></text>
+    <line x1="41" y1="786" x2="319" y2="786" stroke="#f0ece2" stroke-width="1"/>
+    <text x="50" y="798.5" font-family="Consolas, Menlo, monospace" font-size="11" fill="#2b2620">created_at</text>
+    <text x="310" y="798.5" font-family="Consolas, Menlo, monospace" font-size="10" fill="#6b6459" text-anchor="end">TIMESTAMP<tspan fill="#b8930f" font-weight="bold"></tspan></text>
+  </g>
+  <g>
+    <rect x="920" y="420" width="290" height="190" rx="8" fill="#ffffff" stroke="#6B0000" stroke-width="1.6"/>
+    <path d="M 920,428 a8,8 0 0 1 8,-8 h274 a8,8 0 0 1 8,8 v20 h-290 z" fill="#6B0000"/>
+    <rect x="920" y="445" width="290" height="3" fill="#ffcb05"/>
+    <text x="930" y="439" font-family="'Arial Narrow', Arial, sans-serif" font-size="14" font-weight="bold" fill="#ffffff" letter-spacing="1.2">FACILITY_LOGS</text>
+    <text x="1200" y="439" font-family="Consolas, Menlo, monospace" font-size="10" fill="#ffcb05" text-anchor="end">9 cols</text>
+    <rect x="921" y="448" width="288" height="18" fill="#fdf8e3"/>
+    <text x="930" y="460.5" font-family="Consolas, Menlo, monospace" font-size="11" font-weight="bold" fill="#3d0000">id</text>
+    <text x="1200" y="460.5" font-family="Consolas, Menlo, monospace" font-size="10" fill="#6b6459" text-anchor="end">INT <tspan fill="#b8930f" font-weight="bold">PK</tspan></text>
+    <line x1="921" y1="466" x2="1209" y2="466" stroke="#f0ece2" stroke-width="1"/>
+    <text x="930" y="478.5" font-family="Consolas, Menlo, monospace" font-size="11" fill="#2b2620">equipment_name</text>
+    <text x="1200" y="478.5" font-family="Consolas, Menlo, monospace" font-size="10" fill="#6b6459" text-anchor="end">VARCHAR(255)<tspan fill="#b8930f" font-weight="bold"></tspan></text>
+    <line x1="921" y1="484" x2="1209" y2="484" stroke="#f0ece2" stroke-width="1"/>
+    <text x="930" y="496.5" font-family="Consolas, Menlo, monospace" font-size="11" fill="#2b2620">status</text>
+    <text x="1200" y="496.5" font-family="Consolas, Menlo, monospace" font-size="10" fill="#6b6459" text-anchor="end">ENUM(3 states)<tspan fill="#b8930f" font-weight="bold"></tspan></text>
+    <line x1="921" y1="502" x2="1209" y2="502" stroke="#f0ece2" stroke-width="1"/>
+    <text x="930" y="514.5" font-family="Consolas, Menlo, monospace" font-size="11" fill="#2b2620">reported_issue</text>
+    <text x="1200" y="514.5" font-family="Consolas, Menlo, monospace" font-size="10" fill="#6b6459" text-anchor="end">TEXT NULL<tspan fill="#b8930f" font-weight="bold"></tspan></text>
+    <line x1="921" y1="520" x2="1209" y2="520" stroke="#f0ece2" stroke-width="1"/>
+    <text x="930" y="532.5" font-family="Consolas, Menlo, monospace" font-size="11" fill="#2b2620">reported_by</text>
+    <text x="1200" y="532.5" font-family="Consolas, Menlo, monospace" font-size="10" fill="#6b6459" text-anchor="end">VARCHAR(255)<tspan fill="#b8930f" font-weight="bold"></tspan></text>
+    <line x1="921" y1="538" x2="1209" y2="538" stroke="#f0ece2" stroke-width="1"/>
+    <text x="930" y="550.5" font-family="Consolas, Menlo, monospace" font-size="11" fill="#2b2620">resolution_days</text>
+    <text x="1200" y="550.5" font-family="Consolas, Menlo, monospace" font-size="10" fill="#6b6459" text-anchor="end">INT NULL<tspan fill="#b8930f" font-weight="bold"></tspan></text>
+    <line x1="921" y1="556" x2="1209" y2="556" stroke="#f0ece2" stroke-width="1"/>
+    <text x="930" y="568.5" font-family="Consolas, Menlo, monospace" font-size="11" fill="#2b2620">is_resolved</text>
+    <text x="1200" y="568.5" font-family="Consolas, Menlo, monospace" font-size="10" fill="#6b6459" text-anchor="end">BOOLEAN<tspan fill="#b8930f" font-weight="bold"></tspan></text>
+    <line x1="921" y1="574" x2="1209" y2="574" stroke="#f0ece2" stroke-width="1"/>
+    <text x="930" y="586.5" font-family="Consolas, Menlo, monospace" font-size="11" fill="#2b2620">created_at</text>
+    <text x="1200" y="586.5" font-family="Consolas, Menlo, monospace" font-size="10" fill="#6b6459" text-anchor="end">TIMESTAMP<tspan fill="#b8930f" font-weight="bold"></tspan></text>
+    <line x1="921" y1="592" x2="1209" y2="592" stroke="#f0ece2" stroke-width="1"/>
+    <text x="930" y="604.5" font-family="Consolas, Menlo, monospace" font-size="11" fill="#2b2620">updated_at</text>
+    <text x="1200" y="604.5" font-family="Consolas, Menlo, monospace" font-size="10" fill="#6b6459" text-anchor="end">TIMESTAMP<tspan fill="#b8930f" font-weight="bold"></tspan></text>
+  </g>
+  <g>
+    <rect x="920" y="680" width="290" height="136" rx="8" fill="#ffffff" stroke="#6B0000" stroke-width="1.6"/>
+    <path d="M 920,688 a8,8 0 0 1 8,-8 h274 a8,8 0 0 1 8,8 v20 h-290 z" fill="#6B0000"/>
+    <rect x="920" y="705" width="290" height="3" fill="#ffcb05"/>
+    <text x="930" y="699" font-family="'Arial Narrow', Arial, sans-serif" font-size="14" font-weight="bold" fill="#ffffff" letter-spacing="1.2">AUDIT_LOGS</text>
+    <text x="1200" y="699" font-family="Consolas, Menlo, monospace" font-size="10" fill="#ffcb05" text-anchor="end">6 cols</text>
+    <rect x="921" y="708" width="288" height="18" fill="#fdf8e3"/>
+    <text x="930" y="720.5" font-family="Consolas, Menlo, monospace" font-size="11" font-weight="bold" fill="#3d0000">id</text>
+    <text x="1200" y="720.5" font-family="Consolas, Menlo, monospace" font-size="10" fill="#6b6459" text-anchor="end">INT <tspan fill="#b8930f" font-weight="bold">PK</tspan></text>
+    <line x1="921" y1="726" x2="1209" y2="726" stroke="#f0ece2" stroke-width="1"/>
+    <text x="930" y="738.5" font-family="Consolas, Menlo, monospace" font-size="11" fill="#2b2620">action</text>
+    <text x="1200" y="738.5" font-family="Consolas, Menlo, monospace" font-size="10" fill="#6b6459" text-anchor="end">VARCHAR(255)<tspan fill="#b8930f" font-weight="bold"></tspan></text>
+    <line x1="921" y1="744" x2="1209" y2="744" stroke="#f0ece2" stroke-width="1"/>
+    <text x="930" y="756.5" font-family="Consolas, Menlo, monospace" font-size="11" fill="#2b2620">category</text>
+    <text x="1200" y="756.5" font-family="Consolas, Menlo, monospace" font-size="10" fill="#6b6459" text-anchor="end">ENUM(5 categories)<tspan fill="#b8930f" font-weight="bold"></tspan></text>
+    <line x1="921" y1="762" x2="1209" y2="762" stroke="#f0ece2" stroke-width="1"/>
+    <text x="930" y="774.5" font-family="Consolas, Menlo, monospace" font-size="11" fill="#2b2620">actor</text>
+    <text x="1200" y="774.5" font-family="Consolas, Menlo, monospace" font-size="10" fill="#6b6459" text-anchor="end">VARCHAR(255)<tspan fill="#b8930f" font-weight="bold"></tspan></text>
+    <line x1="921" y1="780" x2="1209" y2="780" stroke="#f0ece2" stroke-width="1"/>
+    <text x="930" y="792.5" font-family="Consolas, Menlo, monospace" font-size="11" fill="#2b2620">details</text>
+    <text x="1200" y="792.5" font-family="Consolas, Menlo, monospace" font-size="10" fill="#6b6459" text-anchor="end">TEXT<tspan fill="#b8930f" font-weight="bold"></tspan></text>
+    <line x1="921" y1="798" x2="1209" y2="798" stroke="#f0ece2" stroke-width="1"/>
+    <text x="930" y="810.5" font-family="Consolas, Menlo, monospace" font-size="11" fill="#2b2620">created_at</text>
+    <text x="1200" y="810.5" font-family="Consolas, Menlo, monospace" font-size="10" fill="#6b6459" text-anchor="end">TIMESTAMP<tspan fill="#b8930f" font-weight="bold"></tspan></text>
+  </g>
+  <path d="M 460,135.5 H 400 V 329.5 H 322" fill="none" stroke="#6B0000" stroke-width="1.6" marker-end="url(#arr)"/>
+  <text x="400" y="321.5" font-family="Consolas, Menlo, monospace" font-size="10.5" font-weight="bold" fill="#6B0000" text-anchor="middle">visits.patient_id  N:1</text>
+  <path d="M 460,611.5 H 380 V 356.5 H 322" fill="none" stroke="#6B0000" stroke-width="1.6" marker-end="url(#arr)"/>
+  <text x="380" y="603.5" font-family="Consolas, Menlo, monospace" font-size="10.5" font-weight="bold" fill="#6B0000" text-anchor="middle">referrals.patient_id  N:1</text>
+  <path d="M 615,520 V 416" fill="none" stroke="#6B0000" stroke-width="1.6" marker-end="url(#arr)"/>
+  <text x="625" y="471" font-family="Consolas, Menlo, monospace" font-size="10.5" font-weight="bold" fill="#6B0000" text-anchor="start">referrals.visit_id  N:1</text>
+  <path d="M 180,650 V 564" fill="none" stroke="#6B0000" stroke-width="1.6" marker-end="url(#arr)"/>
+  <text x="190" y="610" font-family="Consolas, Menlo, monospace" font-size="10.5" font-weight="bold" fill="#6B0000" text-anchor="start">daily_health_checks.patient_id  N:1</text>
+  <path d="M 770,279.5 H 845 V 117.5 H 918" fill="none" stroke="#b8930f" stroke-width="1.6" stroke-dasharray="6 4" marker-end="url(#arrg)"/>
+  <text x="845" y="271.5" font-family="Consolas, Menlo, monospace" font-size="10.5" font-weight="bold" fill="#b8930f" text-anchor="middle">medication_dispensed_id</text>
+  <text x="845" y="293.5" font-family="Consolas, Menlo, monospace" font-size="10.5" font-weight="bold" fill="#b8930f" text-anchor="middle">(logical ref, no FK constraint)</text>
+  <text x="40" y="842" font-size="12" fill="#6b6459" font-style="italic">Foreign keys declared in SQL: visits.patient_id, referrals.visit_id, referrals.patient_id, daily_health_checks.patient_id.</text>
+  <text x="40" y="860" font-size="12" fill="#6b6459" font-style="italic">The visits to medications link is enforced in the API transaction, not by a constraint. List columns (allergies, chronic_conditions, presenting_conditions, symptoms) hold JSON arrays serialised by the API.</text>
+</svg>
+      <p class="fig-cap">Entity-relationship diagram, generated from <code>db/migrations/001_init_sickbay.sql</code> and <code>003_daily_checks_and_med_seed.sql</code>. Standalone copy: <code>erd.svg</code>.</p>
+    </div>
+    <h3>Migrations</h3>
+    <table>
+      <thead><tr><th style="width:34%">File</th><th>Purpose</th></tr></thead>
+      <tbody>
+        <tr><td class="prog">001_init_sickbay.sql</td><td>Creates the database and the six core tables (patients, visits, medications, referrals, facility_logs, audit_logs).</td></tr>
+        <tr><td class="prog">002_seed_staff.sql</td><td>Seeds 50 staff patient records, <code>STF001</code> to <code>STF050</code>. Idempotent (<code>INSERT IGNORE</code>).</td></tr>
+        <tr><td class="prog">003_daily_checks_and_med_seed.sql</td><td>Adds the <code>daily_health_checks</code> table, a unique key on <code>medications.batch_number</code>, and seeds the standard 9-line medication inventory. Idempotent; never overwrites adjusted quantities.</td></tr>
+      </tbody>
+    </table>
+    <div class="note">Migrations are applied on the server with <code>plesk db &lt; db/migrations/&lt;file&gt;.sql</code> (never a bare <code>mysql</code> client on this Plesk box, Pattern 37). Each file carries its own <code>USE tuc_sickbay;</code> line, so no database flag is needed, and all three are safe to re-run. Database credentials live only in the server's <code>.env</code>, which the deploy script never overwrites.</div>
+  </section>
+
+  <section>
+    <h2><span class="n">05</span>API reference</h2>
+    <p>All paths are shown root-relative; in production the SPA calls them under the sub-path (<code>/sickbay/api/...</code>) and the server's strip middleware normalises them. Data routes <span class="badge b-done">Auth</span> require <code>Authorization: Bearer &lt;WMS token&gt;</code> and return <code>401</code> without one. The three <span class="badge b-gap">Open</span> routes carry no clinical data.</p>
+    <table>
+      <thead><tr><th style="width:9%">Method</th><th style="width:34%">Path</th><th style="width:9%">Gate</th><th>Behaviour</th></tr></thead>
+      <tbody>
+        <tr><td class="prog">GET</td><td><code>/api/patients</code></td><td><span class="badge b-done">Auth</span></td><td>All patients, ordered by name.</td></tr>
+        <tr><td class="prog">POST</td><td><code>/api/patients</code></td><td><span class="badge b-done">Auth</span></td><td>Create a patient; <code>409</code> if the patient code already exists.</td></tr>
+        <tr><td class="prog">GET</td><td><code>/api/visits</code></td><td><span class="badge b-done">Auth</span></td><td>All visits joined to patients, newest first.</td></tr>
+        <tr><td class="prog">POST</td><td><code>/api/visits</code></td><td><span class="badge b-done">Auth</span></td><td><strong>Transactional:</strong> inserts the visit, deducts dispensed stock, and auto-creates a Pending referral for hospital transfers. Commit or full rollback.</td></tr>
+        <tr><td class="prog">PUT</td><td><code>/api/visits/:id/discharge</code></td><td><span class="badge b-done">Auth</span></td><td>Ends observation: stamps the end time, appends checkout notes, sets disposition to Back to Class.</td></tr>
+        <tr><td class="prog">GET</td><td><code>/api/medications</code></td><td><span class="badge b-done">Auth</span></td><td>Inventory, ordered by name.</td></tr>
+        <tr><td class="prog">POST</td><td><code>/api/medications</code></td><td><span class="badge b-done">Auth</span></td><td>Add a stock line.</td></tr>
+        <tr><td class="prog">PUT</td><td><code>/api/medications/:id</code></td><td><span class="badge b-done">Auth</span></td><td>Full-object update (edit, restock, discard, adjust).</td></tr>
+        <tr><td class="prog">DELETE</td><td><code>/api/medications/:id</code></td><td><span class="badge b-done">Auth</span></td><td>Remove a stock line.</td></tr>
+        <tr><td class="prog">GET</td><td><code>/api/referrals</code></td><td><span class="badge b-done">Auth</span></td><td>All referrals joined to patients, newest first.</td></tr>
+        <tr><td class="prog">POST</td><td><code>/api/referrals</code></td><td><span class="badge b-done">Auth</span></td><td>Add a referral (default status Pending).</td></tr>
+        <tr><td class="prog">PUT</td><td><code>/api/referrals/:id</code></td><td><span class="badge b-done">Auth</span></td><td>Update status and outcome notes.</td></tr>
+        <tr><td class="prog">GET</td><td><code>/api/facility-logs</code></td><td><span class="badge b-done">Auth</span></td><td>All facility fault reports, newest first.</td></tr>
+        <tr><td class="prog">POST</td><td><code>/api/facility-logs</code></td><td><span class="badge b-done">Auth</span></td><td>Report an equipment fault.</td></tr>
+        <tr><td class="prog">PUT</td><td><code>/api/facility-logs/:id/resolve</code></td><td><span class="badge b-done">Auth</span></td><td>Mark resolved (status Functional) and record resolution days.</td></tr>
+        <tr><td class="prog">GET</td><td><code>/api/daily-checks</code></td><td><span class="badge b-done">Auth</span></td><td>Daily health checks joined to patients, newest first.</td></tr>
+        <tr><td class="prog">POST</td><td><code>/api/daily-checks</code></td><td><span class="badge b-done">Auth</span></td><td>Log a wellness check.</td></tr>
+        <tr><td class="prog">GET</td><td><code>/api/audit-logs</code></td><td><span class="badge b-done">Auth</span></td><td>Latest 200 audit entries.</td></tr>
+        <tr><td class="prog">POST</td><td><code>/api/audit-logs</code></td><td><span class="badge b-done">Auth</span></td><td>Append an audit entry (action, category, actor, details).</td></tr>
+        <tr><td class="prog">GET</td><td><code>/api/stats</code></td><td><span class="badge b-done">Auth</span></td><td>Totals: patients, visits today, low-stock medications.</td></tr>
+        <tr><td class="prog">GET</td><td><code>/api/health</code></td><td><span class="badge b-gap">Open</span></td><td>Health probe with a live database check (<code>db: connected / error</code>).</td></tr>
+        <tr><td class="prog">GET</td><td><code>/api/auth/session</code></td><td><span class="badge b-gap">Open</span></td><td>Refreshes a WMS session from the <code>wms_refresh</code> cookie.</td></tr>
+        <tr><td class="prog">POST</td><td><code>/api/auth/google/token</code></td><td><span class="badge b-gap">Open</span></td><td>WMS OAuth relay exchange (Pattern 35); the client secret stays in WMS.</td></tr>
+      </tbody>
+    </table>
+    <div class="note"><strong>Mapping contract:</strong> the database uses snake_case columns; the SPA uses camelCase types. The server owns the mapping in both directions, including JSON-array list columns and the patient identity rule (the SPA's <code>patient.id</code> is the human code such as <code>STF002</code>; the server resolves it to the integer primary key).</div>
+  </section>
+
+  <section>
+    <h2><span class="n">06</span>User workflows</h2>
+    <h3>Sign in</h3>
+    <ol class="flow">
+      <li>Open <code>https://ai-tools.techbridge.edu.gh/sickbay/</code> and click <strong>Sign in with your TUC account</strong>.</li>
+      <li>Choose the <strong>@techbridge.edu.gh</strong> Workspace account (personal Gmail is refused).</li>
+      <li>Enter the 6-digit authenticator code; first-time users enrol by scanning a QR code.</li>
+    </ol>
+    <h3>Log a visit</h3>
+    <ol class="flow">
+      <li>Click <strong>Log New Visit</strong>, select the patient, and record vitals, symptoms, severity and treatment.</li>
+      <li>Dispense medication if needed (allergy conflicts are flagged; out-of-stock lines are blocked).</li>
+      <li>Choose the disposition. Saving is atomic: visit, stock deduction and any hospital referral are written together.</li>
+    </ol>
+    <h3>Everything else</h3>
+    <ul class="tick">
+      <li><strong>Observation beds:</strong> patients under observation appear on the dashboard until discharged with checkout notes.</li>
+      <li><strong>Daily checks:</strong> the Daily Check form logs routine wellness screenings into the shared journal.</li>
+      <li><strong>Dashboard:</strong> Today's Summary (greeting, visits-today trend versus yesterday, critical count, observation count, clinic status) plus urgency-ordered KPI cards led by Critical Alerts.</li>
+      <li><strong>Reports (admin):</strong> date-range and daily PDF exports, JSON backup snapshot, searchable audit trail, and a re-sync action that reloads from the database.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2><span class="n">07</span>Deployment &amp; verification</h2>
+    <p>Deploys run from the developer machine with <code>.\deploy.ps1 -Build</code>: a local <code>pnpm build</code>, then scp of <code>dist/</code>, <code>docs/</code>, <code>db/</code>, <code>server.ts</code>, <code>src/</code> (required at runtime by tsx) and the package files, followed by a hard PM2 restart. The server-side <code>.env</code> is created from a template only on the first deploy and never overwritten, so database credentials set once persist.</p>
+    <div class="callout">
+      <h3>Definition of done</h3>
+      <ul class="tick">
+        <li><code>pnpm build</code> completes with no chunk over 600 kB (Pattern 31).</li>
+        <li><code>pm2 describe sickbay</code> shows uptime in <em>seconds</em>: the new process actually swapped.</li>
+        <li><code>curl http://localhost:3046/sickbay/api/health</code> returns <code>"db":"connected"</code>.</li>
+        <li>An unauthenticated <code>curl</code> to <code>/sickbay/api/patients</code> returns <strong>401</strong> (gate closed), not 500 (database fault) and not 200.</li>
+        <li>A JS asset under <code>/sickbay/assets/</code> is served as <code>text/javascript</code>, not <code>text/html</code>.</li>
+      </ul>
+      <p>A green deploy banner alone proves nothing; these five checks do.</p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  TUC-ICT-GDE-2026-005 · SickBay Management System documentation portal · Techbridge University College ICT, 22 July 2026 ·
+  Requirements: TUC-ICT-SRS-2026-004. Sources of truth: <code>server.ts</code>, <code>src/server/routes.ts</code>, <code>db/migrations/</code>, <code>deploy.ps1</code>, <code>SERVER_PORTS.md</code>.
+  This document is generated from the code, not from memory.
+</footer>
+
 </body>
 </html>

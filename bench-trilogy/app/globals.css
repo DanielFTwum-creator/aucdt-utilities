@@ -1,0 +1,39 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+/* THE BENCH TRILOGY — brand tokens (cinematic director's-bible look).
+   Drawn from the source bibles: warm trilogy gold on near-black, ivory
+   "paper" for text-heavy sections, Ghana flag accents on the hub. */
+@theme {
+  --color-ink: #0E0D0B;        /* near-black base */
+  --color-ink-2: #1A1A1A;      /* raised surface */
+  --color-paper: #EDE9E1;      /* ivory text */
+  --color-paper-dim: #8A8783;  /* muted text */
+  --color-gold: #D4AF37;       /* trilogy gold */
+  --color-gold-deep: #8A6B1E;
+  --color-gh-yellow: #FCD116;  /* Ghana flag */
+  --color-gh-red: #CE1126;
+  --color-gh-green: #006B3F;
+
+  --font-display: var(--ff-display), Georgia, "Times New Roman", serif;
+  --font-body: var(--ff-body), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--ff-mono), ui-monospace, "Courier New", monospace;
+}
+
+html,
+body {
+  background-color: var(--color-ink);
+  color: var(--color-paper);
+}
+
+/* Thin Ghana-flag rule, used as a brand divider */
+.gh-rule {
+  height: 3px;
+  width: 100%;
+  background: linear-gradient(
+    to right,
+    var(--color-gh-red) 0 33.33%,
+    var(--color-gh-yellow) 33.33% 66.66%,
+    var(--color-gh-green) 66.66% 100%
+  );
+}

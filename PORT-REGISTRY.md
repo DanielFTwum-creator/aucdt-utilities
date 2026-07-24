@@ -98,11 +98,20 @@ they now also appear in SERVER_PORTS.md.
 Served at `ai-tools.techbridge.edu.gh/sickbay/` (tsx `server.ts`, WMS SSO relay).
 Seeded with 50 TUC staff as Staff-type patients.
 
+## The Bench Trilogy (assigned 23 Jul 2026, deploy pending)
+
+| Port | App (PM2 name) | Repo folder | Serves |
+|------|----------------|-------------|--------|
+| 3047 | thebench | bench-trilogy | Own subdomain `thebench.techbridge.edu.gh` |
+
+Next.js 16 standalone (`node server.js`, PORT=3047 HOSTNAME=127.0.0.1), fronted by
+its own nginx server block (not a sub-path). Static SSG director's-cut bibles.
+
 ## Next available
 
-**3047** — increment from here for new apps.
+**3048** — increment from here for new apps.
 
-Currently free/unused: 3001, 3047+.
+Currently free/unused: 3001, 3048+.
 
 ## Known unresolved (undeployed backend apps with drifting defaults)
 

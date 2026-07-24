@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
-import { Visit, Medication, FacilityLog, Patient, DailyHealthCheck } from '../types';
+import { Visit, Medication, FacilityLog, Patient, DailyHealthCheck, AuditLog } from '../types';
 import { 
-  Users, 
-  Activity, 
-  AlertTriangle, 
-  Settings, 
-  CheckCircle, 
+  Users,
+  Activity,
+  AlertTriangle,
+  CheckCircle,
   Plus, 
   Clock, 
   LogOut, 
@@ -16,7 +15,9 @@ import {
   BriefcaseMedical,
   Heart,
   Pill,
-  AlertCircle
+  AlertCircle,
+  Search,
+  X
 } from 'lucide-react';
 import { motion } from 'motion/react';
 import StatCard from './StatCard';
@@ -28,10 +29,12 @@ interface DashboardProps {
   facilityLogs: FacilityLog[];
   patients: Patient[];
   dailyHealthChecks: DailyHealthCheck[];
+  auditLogs: AuditLog[];
   onAddDailyHealthCheck: (check: Omit<DailyHealthCheck, 'id' | 'dateTime'>) => void;
   onNavigate: (tab: string) => void;
   onDischargeObservation: (visitId: string, notes: string) => void;
   onOpenQuickLog: () => void;
+  userName?: string;
 }
 
 export default function Dashboard({
@@ -40,13 +43,26 @@ export default function Dashboard({
   facilityLogs,
   patients,
   dailyHealthChecks,
+  auditLogs,
   onAddDailyHealthCheck,
   onNavigate,
   onDischargeObservation,
-  onOpenQuickLog
+  onOpenQuickLog,
+  userName
 }: DashboardProps) {
   const [selectedVisitIdForDischarge, setSelectedVisitIdForDischarge] = useState<string | null>(null);
   const [dischargeNotes, setDischargeNotes] = useState('');
+
+  // Global quick search across patients, staff and medicines
+  const [searchQuery, setSearchQuery] = useState('');
+  const searchTerm = searchQuery.trim().toLowerCase();
+  const patientMatches = searchTerm
+    ? patients.filter(p => p.name.toLowerCase().includes(searchTerm) || p.id.toLowerCase().includes(searchTerm) || p.classOrDept.toLowerCase().includes(searchTerm)).slice(0, 5)
+    : [];
+  const medicineMatches = searchTerm
+    ? medications.filter(m => m.name.toLowerCase().includes(searchTerm) || m.category.toLowerCase().includes(searchTerm)).slice(0, 5)
+    : [];
+  const hasSearchResults = patientMatches.length > 0 || medicineMatches.length > 0;
 
   // Daily Health Check states
   const [showDailyCheckForm, setShowDailyCheckForm] = useState(false);
@@ -148,7 +164,9 @@ export default function Dashboard({
     }
   });
 
-  // Check which of these latest visits have a fever (>= 37.8) or high BP (systolic >= 130 or diastolic >= 80)
+  // Check which of these latest visits have a fever (>= 37.8) or high BP. Uses the
+  // standard hypertension threshold (>= 140/90) so a normal 120/80 reading is not
+  // flagged as abnormal (which also kept inflating the Critical Alerts count).
   const patientsWithVitalsAlerts = Object.values(latestVisitByPatient).map(v => {
     let systolic = 120;
     let diastolic = 80;
@@ -160,7 +178,7 @@ export default function Dashboard({
       if (!isNaN(dia)) diastolic = dia;
     }
     const isFever = v.temperature >= 37.8;
-    const isHighBP = systolic >= 130 || diastolic >= 80;
+    const isHighBP = systolic >= 140 || diastolic >= 90;
     
     return {
       visit: v,
@@ -199,6 +217,20 @@ export default function Dashboard({
 
   const maxConditionCount = Math.max(...conditionData.map(d => d.count), 1);
 
+  // Today's Summary derived values (priority-first dashboard)
+  const hour = new Date().getHours();
+  const greeting = hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening';
+  const firstName = userName ? userName.trim().split(/\s+/)[0] : '';
+
+  const yesterday = new Date();
+  yesterday.setDate(yesterday.getDate() - 1);
+  const yesterdayStr = yesterday.toISOString().split('T')[0];
+  const visitsYesterdayCount = visits.filter(v => v.dateTime.startsWith(yesterdayStr)).length;
+  const visitDelta = visitsToday.length - visitsYesterdayCount;
+
+  // Critical = things that need action now: expired stock, abnormal vitals, unresolved facility faults.
+  const criticalCount = expiredMedications.length + patientsWithVitalsAlerts.length + unresolvedIssues.length;
+
   const handleDischargeSubmit = (visitId: string) => {
     onDischargeObservation(visitId, dischargeNotes || 'Discharged from sick bay after resting. Symptoms resolved.');
     setSelectedVisitIdForDischarge(null);
@@ -207,20 +239,51 @@ export default function Dashboard({
 
   return (
     <div className="space-y-8" id="dashboard-tab">
-      {/* Welcome Banner */}
-      <div className="bento-card-dark rounded-[2rem] p-6 md:p-8 relative overflow-hidden" id="welcome-banner">
+      {/* Today's Summary — compact, priority-first header */}
+      <div className="bento-card-dark rounded-[2rem] p-5 md:p-6 relative overflow-hidden" id="welcome-banner">
         <div className="absolute right-0 bottom-0 top-0 w-1/3 opacity-10 bg-radial from-emerald-500 to-transparent pointer-events-none" />
-        <div className="relative z-10 space-y-4 max-w-2xl">
-          <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#34d399]/20 text-[#34d399] rounded-full text-xs font-black tracking-wide border-2 border-[#34d399]">
-            <ShieldCheck className="w-3.5 h-3.5" /> School Health Center Live
+        <div className="relative z-10 flex flex-col xl:flex-row xl:items-center justify-between gap-5">
+          <div className="space-y-3">
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-[#34d399]/20 text-[#34d399] rounded-full text-[11px] font-black tracking-wide border-2 border-[#34d399]">
+                <ShieldCheck className="w-3.5 h-3.5" /> School Health Centre Live
+              </span>
+              <h1 className="text-xl md:text-2xl font-black tracking-tight uppercase font-display italic text-white">
+                {greeting}{firstName ? `, ${firstName}` : ''}
+              </h1>
+            </div>
+
+            {/* Live summary figures */}
+            <div className="flex flex-wrap gap-2" aria-label="Today's clinic summary">
+              <div className="bg-white/10 border border-white/15 rounded-xl px-3 py-2 min-w-[92px]">
+                <span className="block text-[9px] font-black uppercase tracking-wider text-slate-400">Visits today</span>
+                <span className="text-lg font-black text-white leading-none">
+                  {visitsToday.length}
+                  {(visitsToday.length > 0 || visitsYesterdayCount > 0) && (
+                    <span className={`ml-1.5 text-[10px] font-black align-middle ${visitDelta >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
+                      {visitDelta >= 0 ? '▲' : '▼'} {Math.abs(visitDelta)}
+                    </span>
+                  )}
+                </span>
+              </div>
+              <div className={`rounded-xl px-3 py-2 min-w-[92px] border ${criticalCount > 0 ? 'bg-rose-500/20 border-rose-400/40' : 'bg-white/10 border-white/15'}`}>
+                <span className={`block text-[9px] font-black uppercase tracking-wider ${criticalCount > 0 ? 'text-rose-300' : 'text-slate-400'}`}>Critical</span>
+                <span className={`text-lg font-black leading-none ${criticalCount > 0 ? 'text-rose-100' : 'text-white'}`}>{criticalCount}</span>
+              </div>
+              <div className="bg-white/10 border border-white/15 rounded-xl px-3 py-2 min-w-[92px]">
+                <span className="block text-[9px] font-black uppercase tracking-wider text-slate-400">In observation</span>
+                <span className="text-lg font-black text-white leading-none">{activeObservations.length}</span>
+              </div>
+              <div className="bg-white/10 border border-white/15 rounded-xl px-3 py-2 min-w-[110px]">
+                <span className="block text-[9px] font-black uppercase tracking-wider text-slate-400">Clinic status</span>
+                <span className={`text-sm font-black leading-none ${criticalCount > 0 ? 'text-amber-300' : 'text-emerald-400'}`}>
+                  {criticalCount > 0 ? 'Needs attention' : 'Operational'}
+                </span>
+              </div>
+            </div>
           </div>
-          <h1 className="text-3xl md:text-4xl font-black tracking-tight uppercase font-display italic">
-            Sick Bay Control Panel
-          </h1>
-          <p className="text-slate-300 leading-relaxed text-sm font-medium">
-            Track student and staff clinical encounters, monitor medical supply lines, and respond to facility service issues. Fully optimized for high-priority care.
-          </p>
-          <div className="pt-2 flex flex-wrap gap-3">
+
+          <div className="flex flex-wrap gap-2 shrink-0">
             <ActionButton
               id="quick-log-btn"
               onClick={onOpenQuickLog}
@@ -232,7 +295,7 @@ export default function Dashboard({
               id="view-roster-btn"
               onClick={() => onNavigate('roster')}
               variant="secondary"
-              label="Search Student Roster"
+              label="Roster"
               icon={Users}
               iconClassName="w-4 h-4"
             />
@@ -240,11 +303,80 @@ export default function Dashboard({
               id="daily-health-check-btn"
               onClick={() => setShowDailyCheckForm(!showDailyCheckForm)}
               variant="secondary"
-              label={showDailyCheckForm ? "Close Wellness Form" : "Daily Health Check"}
+              label={showDailyCheckForm ? "Close Form" : "Daily Check"}
               icon={Heart}
             />
           </div>
         </div>
+      </div>
+
+      {/* Global quick search — patients, staff, medicines */}
+      <div className="relative" id="global-search">
+        <div className="flex items-center gap-2 bg-white border-2 border-slate-900 rounded-2xl px-4 py-3 shadow-[3px_3px_0px_rgba(15,23,42,1)] focus-within:ring-4 focus-within:ring-slate-900/20">
+          <Search className="w-4 h-4 text-slate-500 shrink-0" aria-hidden="true" />
+          <input
+            type="search"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Search patients, staff or medicines..."
+            aria-label="Search patients, staff or medicines"
+            className="flex-1 text-sm font-semibold text-slate-800 placeholder-slate-400 focus:outline-none bg-transparent"
+          />
+          {searchQuery && (
+            <button type="button" onClick={() => setSearchQuery('')} aria-label="Clear search" className="text-slate-400 hover:text-slate-700 cursor-pointer">
+              <X className="w-4 h-4" />
+            </button>
+          )}
+        </div>
+
+        {searchTerm && (
+          <div className="absolute z-30 mt-2 w-full bg-white border-2 border-slate-900 rounded-2xl shadow-[4px_4px_0px_rgba(15,23,42,1)] overflow-hidden" role="listbox" aria-label="Search results">
+            {hasSearchResults ? (
+              <div className="max-h-[320px] overflow-y-auto divide-y divide-slate-100">
+                {patientMatches.length > 0 && (
+                  <div className="p-2">
+                    <p className="px-2 py-1 text-[10px] font-black uppercase tracking-wider text-slate-400">People</p>
+                    {patientMatches.map(p => (
+                      <button
+                        key={p.id}
+                        type="button"
+                        onClick={() => { onNavigate('roster'); setSearchQuery(''); }}
+                        className="w-full text-left flex items-center gap-3 px-2 py-2 rounded-xl hover:bg-slate-50 focus:outline-none focus-visible:bg-slate-100 cursor-pointer"
+                      >
+                        <span className="w-8 h-8 rounded-lg bg-indigo-100 text-indigo-700 flex items-center justify-center shrink-0"><Users className="w-4 h-4" /></span>
+                        <span className="min-w-0">
+                          <span className="block text-sm font-bold text-slate-800 truncate">{p.name}</span>
+                          <span className="block text-[10px] text-slate-500 font-semibold uppercase">{p.type} • {p.classOrDept} • {p.id}</span>
+                        </span>
+                      </button>
+                    ))}
+                  </div>
+                )}
+                {medicineMatches.length > 0 && (
+                  <div className="p-2">
+                    <p className="px-2 py-1 text-[10px] font-black uppercase tracking-wider text-slate-400">Medicines</p>
+                    {medicineMatches.map(m => (
+                      <button
+                        key={m.id}
+                        type="button"
+                        onClick={() => { onNavigate('inventory'); setSearchQuery(''); }}
+                        className="w-full text-left flex items-center gap-3 px-2 py-2 rounded-xl hover:bg-slate-50 focus:outline-none focus-visible:bg-slate-100 cursor-pointer"
+                      >
+                        <span className="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0"><Pill className="w-4 h-4" /></span>
+                        <span className="min-w-0">
+                          <span className="block text-sm font-bold text-slate-800 truncate">{m.name}</span>
+                          <span className="block text-[10px] text-slate-500 font-semibold uppercase">{m.category} • {m.quantityOnHand} {m.unit} in stock</span>
+                        </span>
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+            ) : (
+              <p className="px-4 py-6 text-center text-xs text-slate-400 font-semibold uppercase">No matches for &quot;{searchQuery}&quot;</p>
+            )}
+          </div>
+        )}
       </div>
 
       {/* Daily Health Check Form Section */}
@@ -412,31 +544,55 @@ export default function Dashboard({
         </motion.div>
       )}
 
-      {/* Metrics Grid */}
+      {/* Metrics Grid — ordered by operational urgency (most critical first) */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4" id="kpi-grid">
+        {/* 1. Critical: needs action now */}
         <StatCard
-          id="kpi-visits-today"
-          status="info"
-          count={visitsToday.length}
-          label="Visits Today"
-          subtext="Active arrivals today"
-          icon={Activity}
-          onClick={() => onNavigate('visits')}
+          id="kpi-critical-alerts"
+          status={criticalCount > 0 ? 'danger' : 'success'}
+          count={criticalCount}
+          label="Critical Alerts"
+          subtext={
+            criticalCount > 0 ? (
+              <div className="flex flex-wrap gap-1 mt-0.5" id="critical-sub-counts">
+                {expiredMedications.length > 0 && (
+                  <span className="bg-red-950/40 text-rose-100 px-1.5 py-0.5 rounded text-[9px] font-black uppercase tracking-wider">
+                    {expiredMedications.length} Expired
+                  </span>
+                )}
+                {patientsWithVitalsAlerts.length > 0 && (
+                  <span className="bg-white/20 text-white px-1.5 py-0.5 rounded text-[9px] font-black uppercase tracking-wider">
+                    {patientsWithVitalsAlerts.length} Vitals
+                  </span>
+                )}
+                {unresolvedIssues.length > 0 && (
+                  <span className="bg-white/20 text-white px-1.5 py-0.5 rounded text-[9px] font-black uppercase tracking-wider">
+                    {unresolvedIssues.length} Facility
+                  </span>
+                )}
+              </div>
+            ) : (
+              "All clear"
+            )
+          }
+          icon={AlertTriangle}
+          onClick={() => onNavigate('inventory')}
         />
 
+        {/* 2. In observation now */}
         <StatCard
           id="kpi-bed-occupancy"
           status="info"
           count={activeObservations.length}
-          label="Bed Occupancy"
+          label="In Observation"
           subtext={
             activeObservations.length > 0 ? (
               <span className="underline decoration-white/50 underline-offset-2">
                 View active beds ↓
               </span>
             ) : (
-              "Patients in observation"
-)
+              "Beds free"
+            )
           }
           icon={Bed}
           onClick={
@@ -446,33 +602,33 @@ export default function Dashboard({
           }
         />
 
+        {/* 3. Visits today with trend vs yesterday */}
         <StatCard
-          id="kpi-inventory-alerts"
-          status="danger"
-          count={lowStockMedications.length + expiredMedications.length}
-          label="Medicine Alerts"
+          id="kpi-visits-today"
+          status="info"
+          count={visitsToday.length}
+          label="Visits Today"
           subtext={
-            <div className="flex flex-wrap gap-1 mt-0.5" id="medicine-sub-counts">
-              <span className="bg-red-950/40 text-rose-100 px-1.5 py-0.5 rounded text-[9px] font-black uppercase tracking-wider">
-                {lowStockMedications.length} Low Stock
+            <span className="text-[11px] font-bold flex items-center gap-1 mt-0.5">
+              <span className={visitDelta >= 0 ? 'text-emerald-300' : 'text-rose-200'}>
+                {visitDelta >= 0 ? '▲' : '▼'} {Math.abs(visitDelta)}
               </span>
-              <span className="bg-white/20 text-white px-1.5 py-0.5 rounded text-[9px] font-black uppercase tracking-wider">
-                {expiredMedications.length} Expired
-              </span>
-            </div>
+              <span className="opacity-70">vs yesterday ({visitsYesterdayCount})</span>
+            </span>
           }
-          icon={AlertTriangle}
-          onClick={() => onNavigate('inventory')}
+          icon={Activity}
+          onClick={() => onNavigate('visits')}
         />
 
+        {/* 4. Medicine stock */}
         <StatCard
-          id="kpi-facility-issues"
-          status={unresolvedIssues.length > 0 ? 'warning' : 'success'}
-          count={unresolvedIssues.length}
-          label="Facility Alerts"
-          subtext={unresolvedIssues.length > 0 ? "Unresolved Maintenance" : "All Systems Nominal"}
-          icon={Settings}
-          onClick={() => onNavigate('facility')}
+          id="kpi-inventory-alerts"
+          status={lowStockMedications.length > 0 ? 'warning' : 'success'}
+          count={lowStockMedications.length}
+          label="Low Stock Meds"
+          subtext={lowStockMedications.length > 0 ? "Below reorder level" : "Stock levels healthy"}
+          icon={Pill}
+          onClick={() => onNavigate('inventory')}
         />
       </div>
 
@@ -1038,6 +1194,52 @@ export default function Dashboard({
             ) : (
               <div className="text-center py-10 text-slate-400 text-xs">
                 No visitor statistics available.
+              </div>
+            )}
+          </div>
+
+          {/* Live Activity Feed (from the audit log) */}
+          <div className="bento-card p-6 space-y-4" id="activity-feed-panel">
+            <div className="flex items-center justify-between">
+              <div>
+                <h2 className="text-lg font-black uppercase italic font-display text-slate-900">Live Activity</h2>
+                <p className="text-xs text-slate-400 font-semibold uppercase">Recent clinic events, newest first</p>
+              </div>
+              <button
+                onClick={() => onNavigate('reports')}
+                className="text-xs font-black uppercase tracking-wider text-indigo-600 hover:text-indigo-800 flex items-center gap-1 cursor-pointer"
+              >
+                Full log <ChevronRight className="w-3 h-3" />
+              </button>
+            </div>
+
+            {auditLogs.length > 0 ? (
+              <ul className="space-y-3 max-h-[340px] overflow-y-auto pr-1" aria-label="Recent clinic activity">
+                {auditLogs.slice(0, 8).map(log => {
+                  const dot =
+                    log.category === 'CLINICAL' ? 'bg-emerald-500'
+                    : log.category === 'INVENTORY' ? 'bg-amber-500'
+                    : log.category === 'FACILITY' ? 'bg-orange-500'
+                    : log.category === 'AUTH' ? 'bg-slate-400'
+                    : 'bg-indigo-500';
+                  const t = new Date(log.dateTime);
+                  return (
+                    <li key={log.id} className="flex gap-3">
+                      <span className={`mt-1.5 w-2.5 h-2.5 rounded-full shrink-0 ${dot}`} aria-hidden="true" />
+                      <div className="min-w-0 flex-1">
+                        <p className="text-xs font-bold text-slate-800 leading-tight">{log.action}</p>
+                        {log.details && <p className="text-[10px] text-slate-500 line-clamp-2 mt-0.5">{log.details}</p>}
+                        <p className="text-[9px] text-slate-400 font-semibold uppercase mt-0.5">
+                          {log.actor} • {t.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                        </p>
+                      </div>
+                    </li>
+                  );
+                })}
+              </ul>
+            ) : (
+              <div className="text-center py-8 text-slate-400 text-xs border border-dashed border-slate-200 rounded-xl">
+                No activity recorded yet today.
               </div>
             )}
           </div>

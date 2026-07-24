@@ -53,7 +53,7 @@ Before generating any output on an existing project:
 
 - Before starting, establish: *"How do we know this is done?"* Transform vague asks into verifiable goals — "fix the bug" becomes "write a test that reproduces it, then make it pass."
 - For multi-step tasks, state a brief plan: `1. [Step] → verify: [check]` for each step.
-- Don't assume success. Run tests, check outputs, walk through the happy path.
+- Don't assume success. Run tests, check outputs, walk through the happy path. Where a change alters behaviour, diff it against the base branch. Before presenting, ask whether a staff engineer would approve it.
 - If criteria aren't met, loop back. Don't hand off incomplete work with "probably works." If a task has no programmatic check available, say so before starting rather than looping with no stop condition.
 - **Example criteria:** Tests pass at 80%+ coverage · API < 3 sec · Data persists across restart · No compiler warnings.
 
@@ -65,6 +65,7 @@ When spawning subagents, use the cheapest model that can handle the task:
 
 - **Haiku** — Bulk mechanical tasks: file ops, formatting, renaming, simple transformations. No judgement required.
 - **Sonnet** — Scoped research, code exploration, summarisation, synthesis across sources.
+- **Fable** for long-form documentation prose: guides, SRS and PATTERNS write-ups, briefings, release notes. Reality-verified from the repo, reviewed by the parent (the `fleet-doc-writer` agent, model-overridden to Fable, is the vehicle).
 - **Opus** — Only when real planning or trade-offs are involved: architecture, ambiguous requirements, high-stakes decisions.
 
 ### Spawn Rules
@@ -73,6 +74,15 @@ When spawning subagents, use the cheapest model that can handle the task:
 - Max spawn depth: 2 (parent → subagent → one more tier, no deeper).
 - If a subagent needs a smarter model, it returns to the parent instead of escalating.
 - **Never ask Sonnet one small thing at a time.** Group 3–5 related decisions into one message.
+
+### Standing auto-delegation permission (Daniel, 23 Jul 2026)
+
+Best-practice-gated. Two kinds of work MAY be auto-delegated to a focused subagent **without asking first**, to keep the main thread lean: (1) research, codebase exploration and parallel analysis, and (2) documentation prose (guides, SRS / PATTERNS write-ups, briefings). This is a deliberate, scoped exception to the Cowork "don't spawn unless asked" default, and it applies ONLY to those two categories.
+
+- Delegate only when it genuinely serves the task (parallelisable, prose-heavy, or wide exploration), not reflexively. A single-file read or a two-line edit stays on the main thread.
+- Never delegate the judgement. Planning, architecture, security / auth calls, trade-off decisions and the HUMAN CALL stay with the main thread (Opus).
+- The parent always reviews and verifies a subagent's output before it is committed or delivered. Subagents do not run git; the parent commits after review.
+- One task per subagent, focused. Any spawn outside these two categories still needs a stated reason or an explicit ask.
 
 ---
 
@@ -106,6 +116,8 @@ Governs working without approval on every turn, once a goal and its verification
 - Always work on a git branch when the task allows it, so changes can be reverted. Never start an autonomous loop without an iteration cap.
 - Loops are for code with a programmatic check (test-fix-retest, lint-clean, a migration with a clear pass/fail). Do not loop on judgement-heavy work — design decisions, architecture calls, anything requiring a human read — those are a single considered pass, not a retry loop.
 - If still stuck when the cap is reached: stop. Document what's blocking progress, what was tried, and suggested next steps. Don't thrash.
+- If a task goes sideways mid-flight (a step fails, an assumption breaks, the output surprises you): STOP and re-plan from the new facts. Don't keep pushing a broken approach or patch around it; a failed step is a signal to re-derive, not to force.
+- After a correction or a real miss, capture the lesson as a terse rule in `AGENT_OPERATING_NOTES.md` (the fleet's lessons store, reviewed at session start via the top-level `ls`), paired with the fix that makes recurrence structurally impossible. Don't create a separate `tasks/lessons.md` or `tasks/todo.md`: that file and the harness task list already fill those roles, and a second store just drifts. Promote a rule into CLAUDE.md once it's a hard standard.
 - If a slash-command automation layer (e.g. a `gstack`-style plugin with `/goal`, `/loop`, `/batch`) is installed in the current Claude Code session, its conventions apply on top of this. Cowork sessions today don't have that layer — apply these principles manually, turn by turn.
 
 ---
@@ -469,6 +481,10 @@ Most `ai-tools.techbridge.edu.gh/<slug>/` apps are the React/Vite SPA + Express 
 5. **Test & verify.** Run the code. Check outputs. Call out what still needs work.
 6. **Document decisions.** Brief note on *why* this path was chosen and what was traded off.
 
+### On a Bug Report
+
+Given a bug with logs, an error, or a failing check: reproduce it, find the root cause, fix it, and verify it end to end, without hand-holding. Point at the evidence, then resolve it. No temporary patches or symptom-masking, senior-developer standard. Still pause for the HUMAN CALL when the fix is hard to reverse, expands scope, or touches the risky secret / env / deploy surface (§12, AGENT_OPERATING_NOTES §5).
+
 ### When Reviewing Code
 
 - Point out assumptions · Highlight scope creep · Call out speculative abstractions
@@ -535,6 +551,8 @@ Applies to all responses regardless of context: debugging sessions, deploy scrip
 
 ---
 
+*Last updated: 23 July 2026 (later), Daniel Frempong Twum / TUC ICT. Added a standing, best-practice-gated permission (TASK DELEGATION) to auto-delegate research and documentation prose to focused subagents (Fable for prose) without asking first, to keep the main thread lean. Scoped exception to the Cowork "don't spawn unless asked" default: judgement, planning, security and the HUMAN CALL stay on the main thread, and the parent always reviews a subagent's output before committing.*
+*Last updated: 23 July 2026, Daniel Frempong Twum / TUC ICT. Reconciled a proposed workflow doctrine (plan-first, subagent strategy, self-improvement loop, verification, elegance, autonomous bug-fixing) against this file. Most of it was already present (Core Operating Principles, HARNESS, LOOPS & AUTONOMY, Working Style, TASK DELEGATION, and AGENT_OPERATING_NOTES.md as the lessons store), so only the genuinely new bits were added: re-plan when a step goes sideways, diff behaviour against the base branch, an On-a-Bug-Report stance, and an explicit pointer to AGENT_OPERATING_NOTES.md as the single lessons store. Deliberately not adopted: "spawn subagents liberally" (conflicts with the Cowork "don't spawn unless asked" default; the nuanced TASK DELEGATION rule stands), and file-based `tasks/lessons.md` / `tasks/todo.md` (duplicate the existing lessons file and the harness task list, and would drift).*
 *Last updated: 17 July 2026 — Daniel Frempong Twum / TUC ICT. Extended §5b with two precise OAuth/sub-path rules learned from the peace-vinyl / deep-dub fixes: the `redirect_uri` must be byte-identical in the auth-start and token-exchange steps (+ register `.../<slug>/callback` in the Google client), and the SPA must call the API at `/<slug>/api/...` with the server stripping the prefix (Pattern 38).*
 *Last updated: 16 July 2026 — Daniel Frempong Twum / TUC ICT. Added §5b Node/SPA standards (server.ts-only, WMS OAuth relay, sub-path SPA serving, deploy provenance), matching anti-patterns, and refreshed §7 to point at SERVER_PORTS.md / the handbook instead of a stale hand-list.*
 *Last updated: 1 July 2026 — Daniel Frempong Twum / TUC ICT*

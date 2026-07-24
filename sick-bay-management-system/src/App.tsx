@@ -1,16 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Visit, Patient, Medication, Referral, FacilityLog, DailyHealthCheck, AuditLog } from './types';
-import { exchange, silentSession, setAccessToken, wmsLogout, isAdminRole, type WmsUser, type WmsSession } from './lib/wmsAuth';
+import { exchange, silentSession, setAccessToken, wmsLogout, isSickbayAdmin, type WmsUser, type WmsSession } from './lib/wmsAuth';
 import LoginPage from './components/LoginPage';
-import { 
-  INITIAL_PATIENTS, 
-  INITIAL_MEDICATIONS, 
-  INITIAL_VISITS, 
-  INITIAL_REFERRALS, 
-  INITIAL_FACILITY_LOGS,
-  INITIAL_DAILY_CHECKS,
-  INITIAL_AUDIT_LOGS
-} from './data/mockData';
+import * as api from './lib/api';
 
 // Component Imports
 import Dashboard from './components/Dashboard';
@@ -47,8 +39,6 @@ import {
   ShieldAlert
 } from 'lucide-react';
 
-const LOCAL_STORAGE_KEY = 'sickbay_management_state_v2';
-
 export default function App() {
   // Master database state
   const [patients, setPatients] = useState<Patient[]>([]);
@@ -72,7 +62,7 @@ export default function App() {
   const bootRan = useRef(false);
 
   // Derived admin role from WMS session
-  const isAdmin = wmsUser ? isAdminRole(wmsUser.role) : false;
+  const isAdmin = wmsUser ? isSickbayAdmin(wmsUser.email) : false;
   const [pendingTab, setPendingTab] = useState<string | null>(null);
 
   // Autosave status indicator state
@@ -136,71 +126,49 @@ export default function App() {
     setBooting(false);
   };
 
-  // Append Audit Log Helper
-  const logEvent = (action: string, category: 'AUTH' | 'CLINICAL' | 'INVENTORY' | 'FACILITY' | 'SYSTEM', details: string) => {
-    const newLog: AuditLog = {
-      id: `AUD-2026-${Math.floor(100 + Math.random() * 900)}`,
-      dateTime: new Date().toISOString(),
-      action,
-      category,
-      actor: wmsUser?.name || "Clinical Staff",
-      details
-    };
-    setAuditLogs(prev => [newLog, ...prev]);
+  // Flash the "Changes Saved" toast after a successful DB write.
+  const flashSaved = () => {
+    const timeStr = new Date().toLocaleTimeString('en-US', {
+      hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true
+    });
+    setSaveStatus({ show: true, timestamp: timeStr });
+    setTimeout(() => setSaveStatus(prev => ({ ...prev, show: false })), 3500);
   };
 
-  // 1. Initial State Loading from localStorage
+  // Append Audit Log Helper — persists to the DB, shown optimistically at once.
+  const logEvent = (action: string, category: 'AUTH' | 'CLINICAL' | 'INVENTORY' | 'FACILITY' | 'SYSTEM', details: string) => {
+    const actor = wmsUser?.name || "Clinical Staff";
+    const optimistic: AuditLog = {
+      id: `tmp-${Date.now()}`,
+      dateTime: new Date().toISOString(),
+      action, category, actor, details
+    };
+    setAuditLogs(prev => [optimistic, ...prev]);
+    api.addAuditLog({ action, category, actor, details }).catch(err => console.error('audit log failed', err));
+  };
+
+  // Pull the full authoritative dataset from the SickBay database. Called once
+  // the user is signed in, and after every write so the UI reflects the DB.
+  const refreshAll = async () => {
+    const [p, m, v, r, f, d, a] = await Promise.all([
+      api.getPatients(), api.getMedications(), api.getVisits(),
+      api.getReferrals(), api.getFacilityLogs(), api.getDailyChecks(), api.getAuditLogs()
+    ]);
+    setPatients(p);
+    setMedications(m);
+    setVisits(v);
+    setReferrals(r);
+    setFacilityLogs(f);
+    setDailyHealthChecks(d);
+    setAuditLogs(a);
+  };
+
+  // Load data once the WMS session is established.
   useEffect(() => {
-    const cached = localStorage.getItem(LOCAL_STORAGE_KEY);
-    if (cached) {
-      try {
-        const parsed = JSON.parse(cached);
-        setPatients(parsed.patients || INITIAL_PATIENTS);
-        setMedications(parsed.medications || INITIAL_MEDICATIONS);
-        setVisits(parsed.visits || INITIAL_VISITS);
-        setReferrals(parsed.referrals || INITIAL_REFERRALS);
-        setFacilityLogs(parsed.facilityLogs || INITIAL_FACILITY_LOGS);
-        setDailyHealthChecks(parsed.dailyHealthChecks || INITIAL_DAILY_CHECKS);
-        setAuditLogs(parsed.auditLogs || INITIAL_AUDIT_LOGS);
-      } catch (e) {
-        console.error("Cache corrupted, loading starting dataset.", e);
-        loadDefaultDataset();
-      }
-    } else {
-      loadDefaultDataset();
-    }
-  }, []);
-
-  // 2. Real-time Database Synchronization to localStorage
-  useEffect(() => {
-    if (patients.length > 0 || medications.length > 0 || visits.length > 0) {
-      const stateToCache = {
-        patients,
-        medications,
-        visits,
-        referrals,
-        facilityLogs,
-        dailyHealthChecks,
-        auditLogs
-      };
-      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(stateToCache));
-
-      const timeStr = new Date().toLocaleTimeString('en-US', {
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit',
-        hour12: true
-      });
-
-      setSaveStatus({ show: true, timestamp: timeStr });
-
-      const timer = setTimeout(() => {
-        setSaveStatus(prev => ({ ...prev, show: false }));
-      }, 3500);
-
-      return () => clearTimeout(timer);
-    }
-  }, [patients, medications, visits, referrals, facilityLogs, dailyHealthChecks, auditLogs]);
+    if (!wmsUser) return;
+    refreshAll().catch(err => console.error('Failed to load SickBay data from the database', err));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [wmsUser]);
 
   // 3. Real-time School Clock
   useEffect(() => {
@@ -221,215 +189,175 @@ export default function App() {
     return () => clearInterval(interval);
   }, []);
 
-  const loadDefaultDataset = () => {
-    setPatients(INITIAL_PATIENTS);
-    setMedications(INITIAL_MEDICATIONS);
-    setVisits(INITIAL_VISITS);
-    setReferrals(INITIAL_REFERRALS);
-    setFacilityLogs(INITIAL_FACILITY_LOGS);
-    setDailyHealthChecks(INITIAL_DAILY_CHECKS);
-    setAuditLogs(INITIAL_AUDIT_LOGS);
-    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify({
-      patients: INITIAL_PATIENTS,
-      medications: INITIAL_MEDICATIONS,
-      visits: INITIAL_VISITS,
-      referrals: INITIAL_REFERRALS,
-      facilityLogs: INITIAL_FACILITY_LOGS,
-      dailyHealthChecks: INITIAL_DAILY_CHECKS,
-      auditLogs: INITIAL_AUDIT_LOGS
-    }));
-  };
-
-  // State Manipulation Handlers
-  const handleAddVisit = (newVisitData: Omit<Visit, 'id' | 'dateTime'> & { referralHospital?: string; referralReason?: string }) => {
-    const visitId = `VST-2026-${Math.floor(100 + Math.random() * 900)}`;
-    const nowIso = new Date().toISOString();
-
-    const finalVisit: Visit = {
-      ...newVisitData,
-      id: visitId,
-      dateTime: nowIso
-    };
-
-    // 1. Process medication stock deductions
-    if (newVisitData.medicationDispensedId && newVisitData.medicationDispensedQty) {
-      setMedications(prev => prev.map(med => {
-        if (med.id === newVisitData.medicationDispensedId) {
-          return {
-            ...med,
-            quantityOnHand: Math.max(0, med.quantityOnHand - (newVisitData.medicationDispensedQty || 0))
-          };
-        }
-        return med;
-      }));
-    }
-
-    // 2. Process emergency hospital referral protocol
-    if (newVisitData.disposition === 'Referral to Hospital' && newVisitData.referralHospital) {
-      const newReferral: Referral = {
-        id: `REF-2026-${Math.floor(100 + Math.random() * 900)}`,
-        visitId: visitId,
-        patientName: newVisitData.patientName,
-        patientId: newVisitData.patientId,
-        dateTime: nowIso,
-        referralHospital: newVisitData.referralHospital,
-        reason: newVisitData.referralReason || 'Referred for clinical assessment',
-        status: 'Pending'
-      };
-      setReferrals(prev => [newReferral, ...prev]);
-    }
-
-    // 3. Save clinical visit
-    setVisits(prev => [...prev, finalVisit]);
-    logEvent('Registered Clinical Visit', 'CLINICAL', `Registered visit for patient ${newVisitData.patientName} (ID: ${newVisitData.patientId})`);
-    setCurrentTab('dashboard');
-    setPreSelectedPatientId(undefined);
-  };
-
-  const handleDischargeObservation = (visitId: string, notes: string) => {
-    setVisits(prev => prev.map(v => {
-      if (v.id === visitId) {
-        return {
-          ...v,
-          observationEndTime: new Date().toISOString(),
-          notes: v.notes ? `${v.notes} | Checkout notes: ${notes}` : notes,
-          disposition: 'Back to Class'
-        };
-      }
-      return v;
-    }));
-    logEvent('Discharged Observation Bed', 'CLINICAL', `Discharged visit ID ${visitId} from observation bed`);
-  };
-
-  const handleAddPatient = (patient: Patient) => {
-    setPatients(prev => [patient, ...prev]);
-    logEvent('Added Patient Profile', 'CLINICAL', `Created new medical file for ${patient.name} (ID: ${patient.id})`);
-  };
-
-  const handleAddDailyHealthCheck = (check: Omit<DailyHealthCheck, 'id' | 'dateTime'>) => {
-    const newCheck: DailyHealthCheck = {
-      ...check,
-      id: `DHC-2026-${Math.floor(100 + Math.random() * 900)}`,
-      dateTime: new Date().toISOString()
-    };
-    setDailyHealthChecks(prev => [newCheck, ...prev]);
-    logEvent('Logged Morning Screening', 'CLINICAL', `Registered daily check-in for ${check.patientName}`);
-  };
-
-  const handleAddMedication = (medication: Medication) => {
-    setMedications(prev => [medication, ...prev]);
-    logEvent('Pharmacy Add Medication', 'INVENTORY', `Added new stock line ${medication.name}`);
-  };
-
-  const handleUpdateMedication = (updatedMed: Medication) => {
-    setMedications(prev => prev.map(med => med.id === updatedMed.id ? updatedMed : med));
-    logEvent('Pharmacy Stock Adjust', 'INVENTORY', `Adjusted inventory values for ${updatedMed.name}`);
-  };
-
-  const handleRemoveMedication = (id: string) => {
-    setMedications(prev => prev.filter(med => med.id !== id));
-    logEvent('Pharmacy Stock Delete', 'INVENTORY', `Removed inventory listing ID ${id}`);
-  };
-
-  const handleRestockMedication = (id: string, qty: number) => {
-    setMedications(prev => prev.map(med => {
-      if (med.id === id) {
-        return {
-          ...med,
-          quantityOnHand: med.quantityOnHand + qty
-        };
-      }
-      return med;
-    }));
-    logEvent('Pharmacy Restock', 'INVENTORY', `Restocked ${qty} units of ID ${id}`);
-  };
-
-  const handleDiscardExpiredMedication = (id: string) => {
-    setMedications(prev => prev.map(med => {
-      if (med.id === id) {
-        return {
-          ...med,
-          quantityOnHand: 0
-        };
-      }
-      return med;
-    }));
-    logEvent('Discarded Expired Medication', 'INVENTORY', `Zeroed and discarded expired batches for ID ${id}`);
-  };
-
-  const handleAddReferral = (newRef: Referral) => {
-    setReferrals(prev => [newRef, ...prev]);
-    logEvent('Added Referral Protocol', 'CLINICAL', `Initiated emergency hospital referral for ${newRef.patientName}`);
-  };
-
-  const handleUpdateReferralStatus = (id: string, status: Referral['status'], outcome?: string) => {
-    setReferrals(prev => prev.map(ref => {
-      if (ref.id === id) {
-        return {
-          ...ref,
-          status,
-          outcomeNotes: outcome || ref.outcomeNotes
-        };
-      }
-      return ref;
-    }));
-    logEvent('Updated Referral Status', 'CLINICAL', `Marked referral ID ${id} as ${status}`);
-  };
-
-  const handleAddFacilityLog = (log: FacilityLog) => {
-    setFacilityLogs(prev => [log, ...prev]);
-    logEvent('Reported Facility Defect', 'FACILITY', `Logged fault report for ${log.equipmentName}`);
-  };
-
-  const handleResolveFacilityLog = (id: string, resolutionDays: number) => {
-    setFacilityLogs(prev => prev.map(log => {
-      if (log.id === id) {
-        return {
-          ...log,
-          isResolved: true,
-          status: 'Functional',
-          resolutionDays
-        };
-      }
-      return log;
-    }));
-    logEvent('Resolved Facility Defect', 'FACILITY', `Marked defect resolution for ID ${id} in ${resolutionDays} days`);
-  };
-
-  const handleResetDatabase = () => {
-    if (window.confirm("Are you sure you want to completely wipe the local database cache? This deletes all custom school entries.")) {
-      setPatients([]);
-      setMedications([]);
-      setVisits([]);
-      setReferrals([]);
-      setFacilityLogs([]);
-      setDailyHealthChecks([]);
-      setAuditLogs([]);
-      localStorage.removeItem(LOCAL_STORAGE_KEY);
-      loadDefaultDataset();
-      logEvent('Database Hard Reset', 'SYSTEM', 'Wiped local storage container, reloaded original seed profiles');
-    }
-  };
-
-  const handleImportDatabase = (dataStr: string) => {
+  // State Manipulation Handlers — each persists to the DB, then re-pulls the
+  // authoritative dataset so every client stays consistent.
+  const handleAddVisit = async (newVisitData: Omit<Visit, 'id' | 'dateTime'> & { referralHospital?: string; referralReason?: string }) => {
+    // Stock deduction and any hospital referral are handled atomically server-side.
     try {
-      const parsed = JSON.parse(dataStr);
-      if (parsed.patients && parsed.medications && parsed.visits) {
-        setPatients(parsed.patients);
-        setMedications(parsed.medications);
-        setVisits(parsed.visits);
-        setReferrals(parsed.referrals || []);
-        setFacilityLogs(parsed.facilityLogs || []);
-        setDailyHealthChecks(parsed.dailyHealthChecks || parsed.daily_health_checks || []);
-        setAuditLogs(parsed.auditLogs || []);
-        logEvent('Database Restore', 'SYSTEM', 'Uploaded externally formatted school backup JSON');
-        alert("School Sick Bay database successfully restored!");
-      } else {
-        alert("Invalid backup schema. Key database files are missing.");
-      }
-    } catch (e) {
-      alert("Error reading JSON backup file.");
+      await api.addVisit(newVisitData as api.VisitPayload);
+      logEvent('Registered Clinical Visit', 'CLINICAL', `Registered visit for patient ${newVisitData.patientName} (ID: ${newVisitData.patientId})`);
+      await refreshAll();
+      flashSaved();
+      setCurrentTab('dashboard');
+      setPreSelectedPatientId(undefined);
+    } catch (e: any) {
+      alert(`Could not save the visit: ${e.message}`);
     }
+  };
+
+  const handleDischargeObservation = async (visitId: string, notes: string) => {
+    try {
+      await api.dischargeVisit(visitId, notes);
+      logEvent('Discharged Observation Bed', 'CLINICAL', `Discharged visit ID ${visitId} from observation bed`);
+      await refreshAll();
+      flashSaved();
+    } catch (e: any) {
+      alert(`Could not discharge: ${e.message}`);
+    }
+  };
+
+  const handleAddPatient = async (patient: Patient) => {
+    try {
+      await api.addPatient(patient);
+      logEvent('Added Patient Profile', 'CLINICAL', `Created new medical file for ${patient.name} (ID: ${patient.id})`);
+      await refreshAll();
+      flashSaved();
+    } catch (e: any) {
+      alert(`Could not add patient: ${e.message}`);
+    }
+  };
+
+  const handleAddDailyHealthCheck = async (check: Omit<DailyHealthCheck, 'id' | 'dateTime'>) => {
+    try {
+      await api.addDailyCheck(check);
+      logEvent('Logged Morning Screening', 'CLINICAL', `Registered daily check-in for ${check.patientName}`);
+      await refreshAll();
+      flashSaved();
+    } catch (e: any) {
+      alert(`Could not save check-in: ${e.message}`);
+    }
+  };
+
+  const handleAddMedication = async (medication: Medication) => {
+    try {
+      await api.addMedication(medication);
+      logEvent('Pharmacy Add Medication', 'INVENTORY', `Added new stock line ${medication.name}`);
+      await refreshAll();
+      flashSaved();
+    } catch (e: any) {
+      alert(`Could not add medication: ${e.message}`);
+    }
+  };
+
+  const handleUpdateMedication = async (updatedMed: Medication) => {
+    try {
+      await api.updateMedication(updatedMed);
+      logEvent('Pharmacy Stock Adjust', 'INVENTORY', `Adjusted inventory values for ${updatedMed.name}`);
+      await refreshAll();
+      flashSaved();
+    } catch (e: any) {
+      alert(`Could not update medication: ${e.message}`);
+    }
+  };
+
+  const handleRemoveMedication = async (id: string) => {
+    try {
+      await api.deleteMedication(id);
+      logEvent('Pharmacy Stock Delete', 'INVENTORY', `Removed inventory listing ID ${id}`);
+      await refreshAll();
+      flashSaved();
+    } catch (e: any) {
+      alert(`Could not remove medication: ${e.message}`);
+    }
+  };
+
+  const handleRestockMedication = async (id: string, qty: number) => {
+    const med = medications.find(m => m.id === id);
+    if (!med) return;
+    try {
+      await api.updateMedication({ ...med, quantityOnHand: med.quantityOnHand + qty });
+      logEvent('Pharmacy Restock', 'INVENTORY', `Restocked ${qty} units of ID ${id}`);
+      await refreshAll();
+      flashSaved();
+    } catch (e: any) {
+      alert(`Could not restock: ${e.message}`);
+    }
+  };
+
+  const handleDiscardExpiredMedication = async (id: string) => {
+    const med = medications.find(m => m.id === id);
+    if (!med) return;
+    try {
+      await api.updateMedication({ ...med, quantityOnHand: 0 });
+      logEvent('Discarded Expired Medication', 'INVENTORY', `Zeroed and discarded expired batches for ID ${id}`);
+      await refreshAll();
+      flashSaved();
+    } catch (e: any) {
+      alert(`Could not discard batch: ${e.message}`);
+    }
+  };
+
+  const handleAddReferral = async (newRef: Referral) => {
+    try {
+      await api.addReferral(newRef);
+      logEvent('Added Referral Protocol', 'CLINICAL', `Initiated emergency hospital referral for ${newRef.patientName}`);
+      await refreshAll();
+      flashSaved();
+    } catch (e: any) {
+      alert(`Could not add referral: ${e.message}`);
+    }
+  };
+
+  const handleUpdateReferralStatus = async (id: string, status: Referral['status'], outcome?: string) => {
+    try {
+      await api.updateReferral(id, status, outcome);
+      logEvent('Updated Referral Status', 'CLINICAL', `Marked referral ID ${id} as ${status}`);
+      await refreshAll();
+      flashSaved();
+    } catch (e: any) {
+      alert(`Could not update referral: ${e.message}`);
+    }
+  };
+
+  const handleAddFacilityLog = async (log: FacilityLog) => {
+    try {
+      await api.addFacilityLog(log);
+      logEvent('Reported Facility Defect', 'FACILITY', `Logged fault report for ${log.equipmentName}`);
+      await refreshAll();
+      flashSaved();
+    } catch (e: any) {
+      alert(`Could not log defect: ${e.message}`);
+    }
+  };
+
+  const handleResolveFacilityLog = async (id: string, resolutionDays: number) => {
+    try {
+      await api.resolveFacilityLog(id, resolutionDays);
+      logEvent('Resolved Facility Defect', 'FACILITY', `Marked defect resolution for ID ${id} in ${resolutionDays} days`);
+      await refreshAll();
+      flashSaved();
+    } catch (e: any) {
+      alert(`Could not resolve defect: ${e.message}`);
+    }
+  };
+
+  // Re-sync from the authoritative database (replaces the old localStorage wipe).
+  const handleResetDatabase = async () => {
+    if (window.confirm("Re-sync all records from the SickBay database? This reloads the authoritative dataset from the server.")) {
+      try {
+        await refreshAll();
+        logEvent('Data Re-sync', 'SYSTEM', 'Reloaded authoritative dataset from the SickBay database');
+        flashSaved();
+      } catch (e: any) {
+        alert(`Could not re-sync: ${e.message}`);
+      }
+    }
+  };
+
+  // In-app JSON import belonged to the localStorage era. Restore is now a
+  // server-side database operation (MariaDB backups), so this is disabled.
+  const handleImportDatabase = (_dataStr: string) => {
+    alert("In-app restore is disabled in the database-backed version. Database restores are handled server-side from MariaDB backups.");
   };
 
   // WMS SSO Logout
@@ -446,7 +374,7 @@ export default function App() {
     { id: 'dashboard', label: 'Overview', icon: Activity },
     { id: 'logger', label: 'Log Visit', icon: Plus },
     { id: 'visits', label: 'Encounters Journal', icon: ClipboardList },
-    { id: 'roster', label: 'Student Roster', icon: Users },
+    { id: 'roster', label: 'Student & Staff Roster', icon: Users },
     { id: 'inventory', label: 'Pharmacy Stock', icon: BriefcaseMedical, restricted: true },
     { id: 'referrals', label: 'Hospital Referrals', icon: Building2 },
     { id: 'facility', label: 'Facility Logs', icon: Wrench, restricted: true },
@@ -591,7 +519,7 @@ export default function App() {
           <div className="space-y-0.5">
             <span className="text-[8px] font-black text-slate-500 uppercase tracking-widest block">System Chronometer</span>
             <span className="text-[10px] font-mono font-black text-slate-200 block" id="realtime-clock">
-              {currentTime || 'Clock initializing...'}
+              {currentTime || 'Clock initialising...'}
             </span>
           </div>
 
@@ -635,7 +563,7 @@ export default function App() {
               <div className="space-y-2">
                 <div className="flex items-center gap-1.5 px-2 py-1 bg-emerald-950/80 border border-emerald-500/30 rounded-lg text-emerald-400 text-[9px] font-black uppercase tracking-wider">
                   <Unlock className="w-3 h-3 text-emerald-400 shrink-0" />
-                  <span>Daniel Twum (Admin)</span>
+                  <span>{wmsUser?.name || 'Administrator'} (Admin)</span>
                 </div>
                 <button
                   onClick={handleLogout}
@@ -651,7 +579,7 @@ export default function App() {
                   <span>Standard Access</span>
                 </div>
                 <p className="text-[8px] text-slate-500 px-1 leading-relaxed">
-                  Admin features require SYSTEM_ADMIN, HOD, or MEDICAL_OFFICER role via WMS.
+                  Admin features (pharmacy, facility logs, reports) are limited to the clinic administrator accounts. Contact ICT if you need access.
                 </p>
               </div>
             )}
@@ -670,6 +598,7 @@ export default function App() {
             facilityLogs={facilityLogs}
             patients={patients}
             dailyHealthChecks={dailyHealthChecks}
+            auditLogs={auditLogs}
             onAddDailyHealthCheck={handleAddDailyHealthCheck}
             onNavigate={handleTabClick}
             onDischargeObservation={handleDischargeObservation}
@@ -677,6 +606,7 @@ export default function App() {
               setPreSelectedPatientId(undefined);
               setCurrentTab('logger');
             }}
+            userName={wmsUser?.name}
           />
         )}
 
@@ -743,7 +673,7 @@ export default function App() {
             auditLogs={auditLogs}
             onResetDatabase={handleResetDatabase}
             onImportDatabase={handleImportDatabase}
-            onSeedDemoData={loadDefaultDataset}
+            onSeedDemoData={refreshAll}
           />
         )}
 

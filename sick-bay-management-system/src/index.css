@@ -1,4 +1,8 @@
-@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;700&display=swap');
+/* Self-hosted fonts (Pattern 32: no external CDN at boot). Variable families
+   cover every weight in one bundled asset each, served from /sickbay/assets. */
+@import '@fontsource-variable/space-grotesk';
+@import '@fontsource-variable/plus-jakarta-sans';
+@import '@fontsource-variable/jetbrains-mono';
 @import "tailwindcss";
 
 @theme {

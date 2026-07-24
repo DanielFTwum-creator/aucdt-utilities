@@ -85,7 +85,7 @@ export default function TestRunner() {
   ]);
 
   const [consoleLogs, setConsoleLogs] = useState<string[]>([
-    'TUC CARE PRO Automated Diagnostic Suite v1.0.0 initialized.',
+    'TUC CARE PRO Automated Diagnostic Suite v1.0.0 initialised.',
     'Ready to run service health diagnostics.'
   ]);
 
