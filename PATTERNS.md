@@ -3046,3 +3046,67 @@ crawlers — the shared `ai-tools.techbridge.edu.gh` domain needs an **aggregate
 `/robots.txt` + sitemap index** listing each public app. That is a fleet-level
 follow-up, separate from this per-app pattern. Apps on their **own** domain
 (e.g. `glucose.techbridge.edu.gh`) are already root-authoritative.
+
+---
+
+## PATTERN 42: BINARY MEDIA HOSTING — PROJECT-OWNED PATH, NEVER SHARED OR DRIVE
+
+**Decision (24 Jul 2026):** where do videos and large images live? Not in git
+(the repo-wide `*.mp4` ignore exists for a reason), not on **another project's**
+media host (`media.techbridge.edu.gh` belongs to the media-club / lumina apps —
+borrowing it couples your site to their cleanup and DNS), and **not Google
+Drive** (virus-scan interstitials return HTML instead of bytes, per-file
+download quotas 403 under load, no CORS, no reliable HTTP range for video, and
+crawlers fetching an `og:image` / `VideoObject` contentUrl get HTML → the
+structured data is rejected). Drive is storage, not a CDN.
+
+### The rule
+
+| Asset | Home |
+|---|---|
+| Code, small versioned assets (favicons, posters, a ≤ few-MB preview clip) | **git `public/`** — same-origin, versioned, ships with the build |
+| Full-length video, hi-res galleries, anything large or growing | **the project's OWN media path** on the server, out of git |
+
+A small clip may stay in git behind a scoped negation (e.g.
+`bench-trilogy/.gitignore: !/public/videos/*.mp4`). Do not put large media there.
+
+### A project-owned media path (thebench reference)
+
+thebench is Next standalone at `/opt/thebench`, and its deploy does
+`rsync -a --delete .next/standalone/ /opt/thebench/`, so **anything inside
+`/opt/thebench` is wiped every deploy.** The media dir must live *outside* it and
+be served by an nginx `location` that bypasses the Next proxy:
+
+- Persistent dir: **`/opt/thebench-media/`** (survives `rsync --delete`).
+- nginx (Plesk → Domains → thebench.techbridge.edu.gh → Apache & nginx Settings →
+  **Additional nginx directives**, which Plesk validates with `nginx -t` before
+  applying — the safe path, per Pattern 26):
+
+  ```nginx
+  location /media/ {
+      alias /opt/thebench-media/;
+      autoindex off;
+      expires 30d;
+      add_header Cache-Control "public";
+      access_log off;
+  }
+  ```
+
+  `location /media/` prefix-matches ahead of the `location /` proxy, so nginx
+  serves those files from disk (with HTTP range for video) while everything else
+  still proxies to Next on 3047. The domain's Let's Encrypt cert already covers
+  it (Pattern: issue-subdomain-cert skill).
+
+- Reference from code: `${SITE.mediaBase}/<file>` where
+  `mediaBase = https://thebench.techbridge.edu.gh/media`. Keep `abs()` passing
+  absolute URLs through unchanged so a media-hosted `video.src` isn't double-prefixed.
+
+### Upload (never commit large media)
+
+```
+C:\Development\github\aucdt-utilities\scripts\push-asset.ps1 -File C:\path\to\film.mp4
+```
+
+It creates the dir if missing, uploads, fixes permissions, and verifies a range
+request serves. `-RemoteDir` / `-BaseUrl` retarget it for another project's own
+path. Small preview clips stay in git; this is for the large cuts.

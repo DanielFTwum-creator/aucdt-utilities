@@ -7,7 +7,9 @@
 // below — see the marked hook in filmMovieJsonLd.
 import { FILMS, SITE, type Film } from "./films";
 
-const abs = (path: string) => `${SITE.url}${path}`;
+// Absolute URLs (e.g. a video served from the media path) pass through unchanged;
+// repo-relative paths are resolved against the site origin.
+const abs = (path: string) => (path.startsWith("http") ? path : `${SITE.url}${path}`);
 
 const ORG_ID = `${SITE.url}/#organization`;
 const SERIES_ID = `${SITE.url}/#series`;

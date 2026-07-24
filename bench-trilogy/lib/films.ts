@@ -83,4 +83,9 @@ export const SITE = {
     "A Ghanaian film trilogy that travels from a single Labadi bench to Times Square: SISTAH ONYX (Times Square Dreams), PUZZLE GAME LOVE, and FROM BENCH TO BRAND. Director's-cut bibles, the VFX kit, and the trilogy method.",
   ogImage: HERO,
   locale: "en-GH",
+  // thebench's OWN media path (nginx serves /media/ from a persistent dir
+  // outside the deploy, so large films survive `rsync --delete`). Small clips
+  // stay in the repo; large films set video.src to `${mediaBase}/<file>` and are
+  // uploaded with scripts/push-asset.ps1. Never another project's host, never Drive.
+  mediaBase: "https://thebench.techbridge.edu.gh/media",
 };
