@@ -35,7 +35,7 @@ export const FILMS: Film[] = [
     poster: HERO,
     status: "Pre-production",
     video: {
-      src: "/videos/sistah-onyx-times-square-preview.mp4",
+      src: "https://thebench.techbridge.edu.gh/media/Animate_for_a_Hollywood_B_cut.mp4",
       name: "Sistah Onyx: Times Square Dreams — Animated Preview",
       uploadDate: "2026-07-24",
     },
