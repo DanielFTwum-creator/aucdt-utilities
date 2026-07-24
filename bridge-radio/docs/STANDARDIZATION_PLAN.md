@@ -11,6 +11,11 @@ a leftover, not evidence of an AI Studio scaffold.
 > Bridge Radio is already ~70% standardized. The hard, risky parts (server
 > runtime, key custody) are done correctly. What remains is mostly the GEO layer.
 
+> **Source of truth.** The `bridge-radio/` React project **is** the live site's
+> code, so this repo-based assessment applies directly. Only the audio/HLS
+> **assets were assembled by hand**; they live on the server, not in git (correct,
+> per Pattern 42), and are referenced by URL.
+
 ## Current state (verified against the code)
 
 ### Already compliant
@@ -34,6 +39,15 @@ a leftover, not evidence of an AI Studio scaffold.
    been checked to resolve to a local `favicon.svg`.
 
 ## Plan (ordered)
+
+### 0. Source of truth (confirm, then proceed)
+The React project is already the code source of truth and matches the live site,
+so the steps below apply to it directly — no code reconciliation needed. The only
+manual part is the audio/HLS assets, which correctly live on the server (large
+media does not belong in git — Pattern 42); keep them there and reference by URL.
+Just confirm `pnpm build` from the repo reproduces the live behaviour, then the
+changes below deploy through the normal pipeline (see the deploy caveat at the
+bottom).
 
 ### 1. SEO/GEO — the main work (Pattern 41)
 Root vhost, so `canonical` / `og:url` = `https://radio.techbridge.edu.gh/`.
