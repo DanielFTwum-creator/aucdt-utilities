@@ -293,14 +293,15 @@ export default function App() {
             <div style={{ fontSize:'9px', color:'#7880b0', fontStyle:'italic', marginTop:'2px' }}>Formerly AsanSka University College of Design and Technology</div>
           </div>
         </div>
-        <div style={{ display:'flex', flex:1, maxWidth:'300px', margin:'0 14px', alignItems:'center', gap:'8px', background:'rgba(255,255,255,0.07)', border:'0.5px solid rgba(255,255,255,0.11)', borderRadius:'8px', padding:'0 11px', height:'34px' }}>
-          <Search style={{ width:'13px', height:'13px', color:'#5a6090', flexShrink:0 }} />
+        <div style={{ display:'flex', flex:1, maxWidth:'340px', margin:'0 14px', alignItems:'center', gap:'8px', background:'rgba(255,255,255,0.15)', border:'1px solid rgba(255,255,255,0.32)', borderRadius:'8px', padding:'0 11px', height:'36px' }}>
+          <Search style={{ width:'14px', height:'14px', color:'#cfd3ea', flexShrink:0 }} />
           <input
             type="text"
+            className="nav-search-input"
             placeholder="Search AI tools or describe a task…"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            style={{ background:'none', border:'none', outline:'none', color:'#fff', fontSize:'12px', flex:1, fontFamily:'inherit' }}
+            style={{ background:'none', border:'none', outline:'none', color:'#fff', fontSize:'12.5px', flex:1, fontFamily:'inherit' }}
           />
         </div>
         <div style={{ display:'flex', alignItems:'center', gap:'4px' }}>
@@ -359,13 +360,14 @@ export default function App() {
           <div style={{ background:'#fff', padding:'20px 16px', borderBottom:'0.5px solid #e2e0d8', flexShrink:0 }}>
             <div style={{ maxWidth:'600px', margin:'0 auto' }}>
               <div style={{ position:'relative', display:'flex', alignItems:'center' }}>
-                <Search style={{ position:'absolute', left:'12px', width:'16px', height:'16px', color:'#a0a6b8', flexShrink:0, pointerEvents:'none' }} />
+                <Search style={{ position:'absolute', left:'12px', width:'16px', height:'16px', color:'#64748b', flexShrink:0, pointerEvents:'none' }} />
                 <input
                   type="text"
+                  className="hero-search-input"
                   placeholder="Search for a tool or describe what you need…"
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
-                  style={{ width:'100%', paddingLeft:'36px', paddingRight:'16px', paddingTop:'12px', paddingBottom:'12px', fontSize:'13px', border:'1px solid #d1d5e0', borderRadius:'8px', outline:'none', fontFamily:'inherit', background:'#f9fafb' }}
+                  style={{ width:'100%', paddingLeft:'36px', paddingRight:'16px', paddingTop:'12px', paddingBottom:'12px', fontSize:'13px', color:'#0f172a', border:'1px solid #c3c9d9', borderRadius:'8px', outline:'none', fontFamily:'inherit', background:'#fff' }}
                 />
               </div>
             </div>
