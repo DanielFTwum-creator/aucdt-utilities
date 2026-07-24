@@ -295,8 +295,10 @@ function KeyboardWithHands({ activeHand, activeFinger, isIdle, nextTargetChar }:
          + ` M ${mid-w*0.2} ${y+h*0.68} C ${mid-3} ${y+h*0.73},${mid+3} ${y+h*0.73},${mid+w*0.2} ${y+h*0.68}`;
   };
 
-  // finger centre = x + w/2 + lean, placed on the home-key centres:
-  // A50 S100 D150 F200 (left) and J350 K400 L450 ;500 (right)
+  // finger centre = x + w/2 + lean. These raw centres sit at 50/100/150/200
+  // (left) and 350/400/450/500 (right); the hand-overlay <g> is translated +50
+  // at render so they land on the true home-key centres A100 S150 D200 F250 /
+  // J400 K450 L500 ;550.
   const LEFT_F = [
     { name:"Pinky", x: 43, w:23, h: 84, lean:-4 },
     { name:"Ring",  x: 89, w:26, h: 98, lean:-2 },
@@ -423,7 +425,12 @@ function KeyboardWithHands({ activeHand, activeFinger, isIdle, nextTargetChar }:
           fontFamily="monospace" fontSize={10} fontWeight="bold"
           fill="white" fillOpacity={0.72}>SPACE</text>
 
-        {/* ── Hand overlay ── */}
+        {/* ── Hand overlay ── shifted +50 (one key pitch) right so the fingers
+            sit on the true rendered home-key centres (A100 S150 D200 F250 /
+            J400 K450 L500 ;550). The finger/palm/thumb coords below were
+            authored for a home row one pitch further left, which put both
+            hands off by one key. */}
+        <g transform="translate(50, 0)">
 
         {/* Left hand: back-of-hand widest at knuckles, tapering to a narrow rounded wrist */}
         <path d="M 92 306 C 70 299 48 276 42 247 C 39 231 46 218 60 215 C 78 211 88 215 102 214 C 121 213 135 212 151 212 C 171 211 193 211 209 216 C 221 220 225 231 222 247 C 217 276 198 300 175 306 C 153 311 114 311 92 306 Z"
@@ -478,6 +485,7 @@ function KeyboardWithHands({ activeHand, activeFinger, isIdle, nextTargetChar }:
         {/* Right fingers */}
         {renderFingers(RIGHT_F, "R")}
 
+        </g>
       </svg>
     </div>
   );

@@ -366,6 +366,12 @@ html[data-theme="dark"] .badge-games     { color: #67e8f9; }
   transition: all 0.2s;
 }
 .search-input::placeholder { color: var(--text-ghost); }
+
+/* AI Lab search inputs — explicit placeholder contrast (RFE: search visibility).
+   Inline-styled inputs, so the placeholder needs a class hook. Two contexts:
+   nav search sits on the dark navy header, hero search on white. */
+.nav-search-input::placeholder  { color: rgba(255, 255, 255, 0.72); opacity: 1; }
+.hero-search-input::placeholder { color: #6b7280; opacity: 1; }
 .search-input:focus {
   outline: none;
   border-color: var(--accent-primary);
