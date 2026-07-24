@@ -372,7 +372,9 @@ function KeyboardWithHands({ activeHand, activeFinger, isIdle, nextTargetChar }:
       );
     });
 
-  const sx = 195, sy = 192, sw = 208, sh = 34;
+  // Spacebar centred at x=349 (sx+sw/2) to sit under the keyboard/hand centre
+  // (the hand overlay is shifted +50; the spacebar was left at the old centre).
+  const sx = 245, sy = 192, sw = 208, sh = 34;
   const isSpaceActive = target === " ";
 
   return (
@@ -493,6 +495,20 @@ function KeyboardWithHands({ activeHand, activeFinger, isIdle, nextTargetChar }:
         {renderFingers(RIGHT_F, "R")}
 
         </g>
+
+        {/* Home-row key letters re-drawn on top of the hands: the fingertips and
+            nails sit right over these keys, so without this the typist can't
+            read A S D F J K L ; through the fingers. */}
+        {HOME_KEYS.map((k, ki) => {
+          const kx = ROW_X[2] + ki * PITCH;
+          const ky = ROW_Y[2];
+          const isActive = target === k;
+          return (
+            <text key={`homelbl-${k}`} x={kx + KW / 2} y={ky + KH / 2 + 5}
+              textAnchor="middle" fontFamily="monospace" fontSize={13} fontWeight="bold"
+              fill="white" fillOpacity={isActive ? 1 : 0.96}>{k.toUpperCase()}</text>
+          );
+        })}
       </svg>
     </div>
   );
