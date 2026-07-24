@@ -10,7 +10,14 @@ export type Film = {
   logline: string;
   href: string;
   sections: string[];
+  // SEO/GEO fields (drive the Movie JSON-LD). Films are unreleased, so status
+  // stays "Pre-production" until the trailers are cut; poster is the shared
+  // trilogy key art for now (swap in per-film art when it exists).
+  poster: string;
+  status: string;
 };
+
+const HERO = "/images/times_square_billboard_photoreal.webp";
 
 export const FILMS: Film[] = [
   {
@@ -22,6 +29,8 @@ export const FILMS: Film[] = [
     logline: "From a Labadi garden bench to the lights of Times Square. One dream.",
     href: "/films/times-square-dreams",
     sections: ["Logline", "Visual Language", "Lookbook", "VFX Kit", "Shot List", "Camera", "Crew", "Deliverables"],
+    poster: HERO,
+    status: "Pre-production",
   },
   {
     slug: "puzzle-game-of-love",
@@ -32,6 +41,8 @@ export const FILMS: Film[] = [
     logline: "Some pieces only fit after fifty years. The sequel, on the same bench.",
     href: "/films/puzzle-game-of-love",
     sections: ["Logline & Theme", "Character Breakdown", "Key Art Gallery", "Puzzle Deconstruction", "The Bench", "Shot List", "Colour & Texture", "Crew Notes", "Deliverables"],
+    poster: HERO,
+    status: "Pre-production",
   },
   {
     slug: "bench-to-brand",
@@ -42,6 +53,8 @@ export const FILMS: Film[] = [
     logline: "We turned the art into a product. Made in Ghana, from Odum wood.",
     href: "/films/bench-to-brand",
     sections: ["Logline", "Market", "Hero SKUs", "Why Buy", "Flywheel", "Shot List", "Go-to-Market", "Crew & Math", "Author's Note"],
+    poster: HERO,
+    status: "Pre-production",
   },
 ];
 
@@ -50,4 +63,16 @@ export const METHOD = {
   href: "/method",
   tagline: "One bench, three worlds — how the spectacle, the intimacy and the commerce lock together.",
   sections: ["Core Loop", "Spectacle", "Intimacy", "Commerce", "Meta", "Playbook", "Kit Map"],
+};
+
+// Brand / site identity: single source of truth for metadata and JSON-LD.
+export const SITE = {
+  url: "https://thebench.techbridge.edu.gh",
+  name: "THE BENCH TRILOGY",
+  shortName: "The Bench Trilogy",
+  tagline: "One Bench. Three Worlds. Made in Ghana.",
+  description:
+    "A Ghanaian film trilogy that travels from a single Labadi bench to Times Square: SISTAH ONYX (Times Square Dreams), PUZZLE GAME LOVE, and FROM BENCH TO BRAND. Director's-cut bibles, the VFX kit, and the trilogy method.",
+  ogImage: HERO,
+  locale: "en-GH",
 };

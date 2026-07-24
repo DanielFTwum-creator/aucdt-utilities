@@ -1,8 +1,12 @@
 import type { Metadata } from "next";
 import { loadContent } from "@/lib/content";
 import BibleView, { type SectionImage } from "@/components/BibleView";
+import JsonLd from "@/components/JsonLd";
+import { FILMS } from "@/lib/films";
+import { filmMovieJsonLd } from "@/lib/seo";
 
 const content = loadContent("bench-to-brand");
+const film = FILMS.find((f) => f.slug === "bench-to-brand")!;
 
 export const metadata: Metadata = {
   title: content.title,
@@ -17,11 +21,14 @@ const images: Record<string, SectionImage[]> = {
 
 export default function Page() {
   return (
-    <BibleView
-      content={content}
-      kicker="Director's Cut Bible"
-      meta="Film 03 · Commerce"
-      images={images}
-    />
+    <>
+      <JsonLd data={filmMovieJsonLd(film, `${content.logline} ${content.intro}`)} />
+      <BibleView
+        content={content}
+        kicker="Director's Cut Bible"
+        meta="Film 03 · Commerce"
+        images={images}
+      />
+    </>
   );
 }

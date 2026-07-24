@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import { Cormorant_Garamond, Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
+import JsonLd from "@/components/JsonLd";
+import { trilogyGraphJsonLd } from "@/lib/seo";
+import { SITE } from "@/lib/films";
 
 // Self-hosted by next/font at build time (no runtime CDN, Pattern 32).
 const displayFont = Cormorant_Garamond({
@@ -44,11 +47,13 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_GH",
     siteName: "THE BENCH TRILOGY",
+    images: [{ url: SITE.ogImage, alt: "The Bench Trilogy key art" }],
   },
   twitter: {
     card: "summary_large_image",
     title: "THE BENCH TRILOGY",
     description: "One Bench. Three Worlds. Made in Ghana.",
+    images: [SITE.ogImage],
   },
 };
 
@@ -61,6 +66,7 @@ export default function RootLayout({
       className={`${displayFont.variable} ${bodyFont.variable} ${monoFont.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-ink text-paper font-body">
+        <JsonLd data={trilogyGraphJsonLd()} />
         {children}
       </body>
     </html>
