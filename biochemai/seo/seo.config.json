@@ -1,0 +1,66 @@
+{
+  "$schema": "./seo.schema.md",
+  "slug": "biochemai",
+  "url": "https://ai-tools.techbridge.edu.gh/biochemai/",
+  "name": "BioChemAI",
+  "shortName": "BioChemAI",
+  "tagline": "24/7 AI biochemistry teaching aid",
+  "applicationCategory": "EducationalApplication",
+  "operatingSystem": "Web, iOS, Android",
+  "inLanguage": "en-GB",
+  "index": true,
+  "description": "BioChemAI is an AI-powered biochemistry teaching aid from Techbridge University College. It answers biochemistry questions around the clock across five learning levels, from primary school to professional practice, and can generate quizzes, structured documents, and voice-led explanations.",
+  "keywords": [
+    "biochemistry AI tutor",
+    "biochemistry teaching aid",
+    "AI biochemistry help",
+    "Techbridge University College",
+    "biochemistry quiz generator",
+    "study biochemistry online",
+    "Accra",
+    "Ghana"
+  ],
+  "features": [
+    "Conversational biochemistry tutoring at five learning levels (primary, secondary, undergraduate, postgraduate, professional)",
+    "Auto-generated biochemistry quizzes with adjustable question counts",
+    "Answers exported to PDF and structured formats (Markdown, HTML documentation, LaTeX)",
+    "Voice input for hands-free questions",
+    "Five visual themes for comfortable reading"
+  ],
+  "audience": "Students and educators in biochemistry, from primary school through to professional practice",
+  "faqs": [
+    {
+      "q": "What is BioChemAI?",
+      "a": "BioChemAI is an AI-powered biochemistry teaching aid built by Techbridge University College. It answers biochemistry questions 24/7 and adapts its explanations to the learner's level, from primary school to professional practice."
+    },
+    {
+      "q": "Who is BioChemAI for?",
+      "a": "It is designed for students and educators studying or teaching biochemistry at primary, secondary, undergraduate, postgraduate, and professional levels."
+    },
+    {
+      "q": "What can BioChemAI do?",
+      "a": "It explains biochemistry concepts conversationally, generates practice quizzes, produces documentation in Markdown, HTML, and LaTeX, and accepts spoken questions through voice input."
+    },
+    {
+      "q": "How do I start using BioChemAI?",
+      "a": "Open the app and sign in with a Techbridge University College account or with Google, then choose your learning level and ask your first biochemistry question."
+    },
+    {
+      "q": "Who built BioChemAI?",
+      "a": "BioChemAI was built by the ICT department of Techbridge University College in Accra, Ghana."
+    }
+  ],
+  "organization": {
+    "name": "Techbridge University College",
+    "alternateName": "TUC",
+    "url": "https://www.techbridge.edu.gh/",
+    "logo": "https://techbridge.edu.gh/static/TUC_LOGO.png",
+    "locality": "Oyibi",
+    "region": "Greater Accra",
+    "country": "GH",
+    "sameAs": [
+      "https://twitter.com/TUCGhana"
+    ]
+  },
+  "image": "https://techbridge.edu.gh/static/TUC_LOGO.png"
+}
