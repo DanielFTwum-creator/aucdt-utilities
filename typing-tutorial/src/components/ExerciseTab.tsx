@@ -442,7 +442,9 @@ function KeyboardWithHands({ activeHand, activeFinger, isIdle, nextTargetChar }:
           fill="none" stroke={knuckleHi} strokeWidth={6} strokeLinecap="round" strokeOpacity={0.3} />
         <path d="M 92 293 C 122 305 158 305 180 292 C 176 299 171 303 165 306 L 106 306 C 100 303 95 299 92 293 Z"
           fill={tendonSt} fillOpacity={0.34} />
-        {/* Left thumb: resting inward on the spacebar */}
+        {/* Left thumb: resting inward on the spacebar. Scaled ~1.3 about its
+            palm-side base (198,250) so it reads in proportion to the fingers. */}
+        <g transform="translate(198,250) scale(1.3) translate(-198,-250)">
         {isSpace && (
           <g filter="url(#kbGlow)"><path d="M 196 246 C 189 238 197 228 210 224 C 222 220 233 223 235 231 C 237 240 226 248 215 251 C 207 253 200 252 196 246 Z"
             fill="#22d3ee" opacity={0.7} /></g>
@@ -456,6 +458,7 @@ function KeyboardWithHands({ activeHand, activeFinger, isIdle, nextTargetChar }:
             fill="none" stroke="#22d3ee" strokeWidth={1.6} opacity={0.55} />
         )}
         <ellipse cx="231" cy="228" rx="8" ry="5" transform="rotate(-40 231 228)" fill={nailFill} fillOpacity={NAIL_OP} />
+        </g>
         {/* Left fingers */}
         {renderFingers(LEFT_F, "L")}
 
@@ -468,7 +471,9 @@ function KeyboardWithHands({ activeHand, activeFinger, isIdle, nextTargetChar }:
           fill="none" stroke={knuckleHi} strokeWidth={6} strokeLinecap="round" strokeOpacity={0.3} />
         <path d="M 458 293 C 428 305 392 305 370 292 C 374 299 379 303 385 306 L 444 306 C 450 303 455 299 458 293 Z"
           fill={tendonSt} fillOpacity={0.34} />
-        {/* Right thumb: resting inward on the spacebar */}
+        {/* Right thumb: resting inward on the spacebar. Scaled ~1.3 about its
+            palm-side base (352,250), mirroring the left thumb. */}
+        <g transform="translate(352,250) scale(1.3) translate(-352,-250)">
         {isSpace && (
           <g filter="url(#kbGlow)"><path d="M 354 246 C 361 238 353 228 340 224 C 328 220 317 223 315 231 C 313 240 324 248 335 251 C 343 253 350 252 354 246 Z"
             fill="#22d3ee" opacity={0.7} /></g>
@@ -482,6 +487,7 @@ function KeyboardWithHands({ activeHand, activeFinger, isIdle, nextTargetChar }:
             fill="none" stroke="#22d3ee" strokeWidth={1.6} opacity={0.55} />
         )}
         <ellipse cx="319" cy="228" rx="8" ry="5" transform="rotate(40 319 228)" fill={nailFill} fillOpacity={NAIL_OP} />
+        </g>
         {/* Right fingers */}
         {renderFingers(RIGHT_F, "R")}
 
