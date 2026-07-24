@@ -13,7 +13,7 @@
 | App name | Glucose Blood Sugar Tracker |
 | PM2 process | `glucose` |
 | Port | **3006** |
-| Public URL | `https://glucose.techbridge.edu.gh/` |
+| Public URL | `https://ai-tools.techbridge.edu.gh/glucose/` (served path; there is no `glucose.techbridge.edu.gh` subdomain — matches Deploy path + Health check below) |
 | Deploy path | `/var/www/vhosts/techbridge.edu.gh/ai-tools.techbridge.edu.gh/glucose/` |
 | Stack | React + TypeScript (Vite) · Express · Node.js SQLite (`node:sqlite`) · Gemini AI (`@google/genai`) |
 
