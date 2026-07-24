@@ -42,3 +42,8 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Intentional self-hosted site media (small clips that must ship with the build).
+# Overrides the repo-wide *.mp4 rule for this directory only; large media still
+# belongs in external storage.
+!/public/videos/*.mp4
