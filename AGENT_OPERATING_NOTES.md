@@ -129,7 +129,22 @@ for such an app is `pnpm install` (no flag), not `pnpm install
 --ignore-workspace`. Never leave a native dep under `ignoredBuiltDependencies`
 if the build needs it.
 
+## 9. §13 command formatting applies to PR/issue bodies, not just chat
+
+Incident (24 Jul 2026): a PR description's deploy steps were written as bare,
+chained relative commands (`cd tuc-ai-lab-catalog && .\deploy.ps1 -Build` then
+`cd typing-tutorial && ...`) while every chat reply in the same session used
+full absolute paths. Daniel flagged it: the copy-paste-with-zero-assumptions
+rule is about the reader, so it cannot stop at chat.
+
+Rule: CLAUDE.md §13 (full Windows/SSH absolute paths, each command a standalone
+copy box, no relative `cd`, no assumed working directory) governs EVERY
+human-read artifact the agent authors: PR descriptions, PR/issue comments,
+review replies, and docs, not only chat responses. Before publishing any PR or
+issue body, re-read each command block and confirm it is a full-path, standalone
+copy box that runs from a fresh shell.
+
 ---
-*Last updated: 23 July 2026. Home for agent operating lessons; discovered via
+*Last updated: 24 July 2026. Home for agent operating lessons; discovered via
 the Session Start Protocol top-level `ls`. If a rule becomes a hard standard,
 promote it into CLAUDE.md and delete it here to avoid drift.*
