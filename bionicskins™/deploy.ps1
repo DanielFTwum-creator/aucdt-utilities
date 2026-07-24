@@ -59,7 +59,7 @@ Write-Host "Created staging directory: $staging"
 Copy-Item -Path "dist\*" -Destination $staging -Recurse -Force
 Write-Host "Copied frontend dist files"
 
-$htaccess = '
+$htaccess = @'
 <IfModule mod_rewrite.c>
   RewriteEngine On
   RewriteBase /skins/
@@ -73,8 +73,11 @@ $htaccess = '
 </FilesMatch>
 <IfModule mod_expires.c>
   ExpiresActive On
-  <FilesMatch '\.(js|css|png|jpg|jpeg|gif|svg|woff2|woff|ttf|eot|ico)
-'
+  <FilesMatch "\.(js|css|png|jpg|jpeg|gif|svg|woff2|woff|ttf|eot|ico)$">
+    ExpiresDefault "access plus 30 days"
+  </FilesMatch>
+</IfModule>
+'@
 $htaccess | Set-Content "$staging\.htaccess"
 Write-Host "Created .htaccess with dotfile block and SPA routing"
 
