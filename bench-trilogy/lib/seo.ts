@@ -63,6 +63,7 @@ export function trilogyGraphJsonLd() {
 
 /** Per-film Movie schema. `description` uses the fuller page copy when available. */
 export function filmMovieJsonLd(film: Film, description?: string) {
+  const desc = (description ?? film.logline).trim();
   return {
     "@context": "https://schema.org",
     "@type": "Movie",
@@ -70,7 +71,7 @@ export function filmMovieJsonLd(film: Film, description?: string) {
     name: film.title,
     alternateName: film.code,
     url: abs(film.href),
-    description: (description ?? film.logline).trim(),
+    description: desc,
     image: abs(film.poster),
     inLanguage: SITE.locale,
     countryOfOrigin: { "@type": "Country", name: "Ghana" },
@@ -80,15 +81,17 @@ export function filmMovieJsonLd(film: Film, description?: string) {
     isPartOf: { "@id": SERIES_ID },
     creator: { "@id": ORG_ID },
     productionCompany: { "@id": ORG_ID },
-    // HOOK (add when trailers exist): once a film has a YouTube URL, attach a
-    // trailer VideoObject here, e.g.:
-    //   trailer: {
-    //     "@type": "VideoObject",
-    //     name: `${film.title} — Trailer`,
-    //     description: film.logline,
-    //     thumbnailUrl: abs(film.poster),
-    //     uploadDate: "2026-…",
-    //     contentUrl: "https://…", embedUrl: "https://www.youtube.com/embed/…",
-    //   },
+    // Only present once a film has a self-hosted cut; kept in sync with the
+    // in-page <video> so the VideoObject describes a video actually on the page.
+    ...(film.video && {
+      trailer: {
+        "@type": "VideoObject",
+        name: film.video.name,
+        description: desc,
+        thumbnailUrl: abs(film.poster),
+        uploadDate: film.video.uploadDate,
+        contentUrl: abs(film.video.src),
+      },
+    }),
   };
 }

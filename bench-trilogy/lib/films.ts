@@ -15,6 +15,9 @@ export type Film = {
   // trilogy key art for now (swap in per-film art when it exists).
   poster: string;
   status: string;
+  // Optional self-hosted preview/trailer. Drives both the in-page player and
+  // the Movie trailer VideoObject. Absent until a film has a cut.
+  video?: { src: string; name: string; uploadDate: string };
 };
 
 const HERO = "/images/times_square_billboard_photoreal.webp";
@@ -31,6 +34,11 @@ export const FILMS: Film[] = [
     sections: ["Logline", "Visual Language", "Lookbook", "VFX Kit", "Shot List", "Camera", "Crew", "Deliverables"],
     poster: HERO,
     status: "Pre-production",
+    video: {
+      src: "/videos/sistah-onyx-times-square-preview.mp4",
+      name: "Sistah Onyx: Times Square Dreams — Animated Preview",
+      uploadDate: "2026-07-24",
+    },
   },
   {
     slug: "puzzle-game-of-love",

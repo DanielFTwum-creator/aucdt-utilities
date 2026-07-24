@@ -14,11 +14,13 @@ export default function BibleView({
   kicker,
   meta,
   images = {},
+  video,
 }: {
   content: BibleContent;
   kicker: string;
   meta: string;
   images?: Record<string, SectionImage[]>;
+  video?: { src: string; poster: string; label: string };
 }) {
   const [active, setActive] = useState(content.sections[0]?.id ?? "");
 
@@ -53,6 +55,23 @@ export default function BibleView({
           <div className="prose prose-invert mt-4 max-w-none text-sm prose-p:text-paper-dim">
             <ReactMarkdown remarkPlugins={[remarkGfm]}>{content.intro}</ReactMarkdown>
           </div>
+        )}
+        {video && (
+          <figure className="mt-8">
+            {/* preload="none" keeps the 2.5MB clip off the critical path on
+                slow links; the poster carries the first paint. */}
+            <video
+              className="w-full rounded-xl border border-paper-dim/20"
+              src={video.src}
+              poster={video.poster}
+              controls
+              preload="none"
+              playsInline
+            />
+            <figcaption className="mt-2 font-mono text-[11px] uppercase tracking-widest text-paper-dim">
+              {video.label}
+            </figcaption>
+          </figure>
         )}
         <div className="gh-rule mt-10" />
 

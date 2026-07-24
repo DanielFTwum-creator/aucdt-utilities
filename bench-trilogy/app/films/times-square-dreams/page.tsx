@@ -47,6 +47,13 @@ export default function Page() {
         kicker="Director's Cut Bible"
         meta="Film 01 · Spectacle"
         images={images}
+        video={
+          film.video && {
+            src: film.video.src,
+            poster: film.poster,
+            label: "Animated preview · B-cut",
+          }
+        }
       />
     </>
   );
