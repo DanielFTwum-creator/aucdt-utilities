@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { loadContent } from "@/lib/content";
 import BibleView, { type SectionImage } from "@/components/BibleView";
 import JsonLd from "@/components/JsonLd";
-import { FILMS, SITE } from "@/lib/films";
+import { FILMS } from "@/lib/films";
 import { filmMovieJsonLd } from "@/lib/seo";
 
 const content = loadContent("times-square-dreams");
@@ -49,7 +49,7 @@ export default function Page() {
         images={images}
         video={
           film.video && {
-            src: `${SITE.mediaBase}/${film.video.file}`,
+            src: film.video.src,
             poster: film.poster,
             label: "Animated preview · B-cut",
           }

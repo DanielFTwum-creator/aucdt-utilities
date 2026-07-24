@@ -90,7 +90,7 @@ export function filmMovieJsonLd(film: Film, description?: string) {
         description: desc,
         thumbnailUrl: abs(film.poster),
         uploadDate: film.video.uploadDate,
-        contentUrl: `${SITE.mediaBase}/${film.video.file}`,
+        contentUrl: abs(film.video.src),
       },
     }),
   };
