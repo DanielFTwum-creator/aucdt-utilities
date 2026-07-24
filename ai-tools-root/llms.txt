@@ -1,0 +1,12 @@
+# TUC AI Lab (ai-tools.techbridge.edu.gh)
+
+> A catalogue of AI-powered tools built by Techbridge University College (TUC), Accra, Ghana.
+
+## Public tools
+- AI Lab catalogue: https://ai-tools.techbridge.edu.gh/ai-lab/
+- Poster Studio (branded promotional posters): https://ai-tools.techbridge.edu.gh/poster/
+- UMaT Curriculum Recommendations Tracker: https://ai-tools.techbridge.edu.gh/umat/
+- Typing & Mathematics Island (gamified learning for children): https://ai-tools.techbridge.edu.gh/math-island/
+- TUC Banner generator: https://ai-tools.techbridge.edu.gh/techbridge-university-college-banner/
+
+Publisher: Techbridge University College (TUC), Oyibi, Greater Accra, Ghana.

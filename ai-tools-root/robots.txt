@@ -1,0 +1,21 @@
+# ai-tools.techbridge.edu.gh — TUC AI Lab (domain-root, authoritative)
+# Deploy to the vhost web root so it serves at https://ai-tools.techbridge.edu.gh/robots.txt
+User-agent: *
+Allow: /
+# OAuth callbacks and API paths are not content
+Disallow: /*/callback
+Disallow: /*/api/
+
+# Generative engines (GEO)
+User-agent: GPTBot
+Allow: /
+User-agent: OAI-SearchBot
+Allow: /
+User-agent: PerplexityBot
+Allow: /
+User-agent: ClaudeBot
+Allow: /
+User-agent: Google-Extended
+Allow: /
+
+Sitemap: https://ai-tools.techbridge.edu.gh/sitemap.xml

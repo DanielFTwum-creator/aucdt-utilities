@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ai-tools.techbridge.edu.gh domain-root sitemap. Lists the public, indexable
+     sub-path apps. Auth/internal apps (lems, aitopia, fail2ban, sickbay) are
+     intentionally excluded (they are noindex). Own-subdomain apps (netscan,
+     radio, lems) carry their own root sitemaps and are not listed here. -->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://ai-tools.techbridge.edu.gh/ai-lab/</loc><changefreq>weekly</changefreq><priority>1.0</priority></url>
+  <url><loc>https://ai-tools.techbridge.edu.gh/poster/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://ai-tools.techbridge.edu.gh/umat/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://ai-tools.techbridge.edu.gh/math-island/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://ai-tools.techbridge.edu.gh/techbridge-university-college-banner/</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+</urlset>
