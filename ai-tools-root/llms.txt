@@ -4,7 +4,6 @@
 
 ## Public tools
 - AI Lab catalogue: https://ai-tools.techbridge.edu.gh/ai-lab/
-- Poster Studio (branded promotional posters): https://ai-tools.techbridge.edu.gh/poster/
 - UMaT Curriculum Recommendations Tracker: https://ai-tools.techbridge.edu.gh/umat/
 - Typing & Mathematics Island (gamified learning for children): https://ai-tools.techbridge.edu.gh/math-island/
 - TUC Banner generator: https://ai-tools.techbridge.edu.gh/techbridge-university-college-banner/
