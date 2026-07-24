@@ -32,14 +32,34 @@ truth — if it has changed, it wins over this list.
 
 ## Detect (is this an AI Studio app?)
 
-- `metadata.json` = `{ name, description, requestFramePermissions }`
+- `metadata.json` with a `name` and `description` (`requestFramePermissions` is
+  often absent — don't require it)
 - `index.html` has `<script type="importmap">` referencing `aistudiocdn.com`
 - Google Fonts `<link href="https://fonts.googleapis.com/...">` at boot
 - `@google/genai` used with `process.env.API_KEY`, or a Vite `define` injecting the key
 
+Not all four are always present, and an app may be **partially converted**
+already (pnpm-lock present, deps in package.json, some meta fixed). Treat every
+step below as **idempotent**: check the current state and skip what already
+complies — don't re-do or undo work.
+
+## Step 0 — baseline & archetype (do this before touching anything)
+
+- **Baseline build first.** Run `pnpm install` then `pnpm build`. If it fails
+  *before* you change anything, the export is already broken (common: a
+  `vite.config` that calls `tailwindcss()` but never imports `@tailwindcss/vite`).
+  Fix that pre-existing breakage first and note it — do not let a later step get
+  blamed for a failure that was already there.
+- **Establish the archetype.** Is this app actually **deployed**? Look for a
+  `deploy.ps1` and a live nginx `location`. If there is none, it has **no slug and
+  no canonical URL yet** — steps 1, 4 and 6 can't be finished until the deploy
+  target exists. Decide with the owner: sub-path SPA (most of the fleet) vs
+  static/standalone (a `Dockerfile`/`nginx.conf` in the repo hints at the latter).
+  Don't invent a slug.
+
 ## Order of operations (each → its PATTERN)
 
-Several steps depend on the deployed **slug**, so establish that first.
+Several steps depend on the deployed **slug**, so establish that first (Step 0).
 
 1. **Confirm the deployed slug** — the live nginx `location`, not the repo folder
    name or catalog entry. Everything below (Vite base, canonical, API path) uses
@@ -69,6 +89,10 @@ Several steps depend on the deployed **slug**, so establish that first.
    (**Pattern 18**).
 9. **Layout.** Full-screen overlays use `position: fixed; inset: 0`, not
    `min-height: 100vh; width: 100%` (the TUC splash flex trap). → **Patterns 7 / 19**.
+10. **Mobile (only if the app targets iOS/Android).** Install Capacitor 8.3.3,
+    add the iOS/Android platforms, and create `capacitor.config.ts` with the app
+    id and name; set `package.json` version to 1.0.0. Skip entirely for web-only
+    apps — don't add mobile scaffolding speculatively. → **Pattern 3**.
 
 Keep edits surgical (CLAUDE.md #3) — the goal is a compliant app, not a rewrite.
 
