@@ -1,0 +1,61 @@
+{
+  "slug": "markai",
+  "url": "https://ai-tools.techbridge.edu.gh/markai/",
+  "name": "markAI",
+  "shortName": "markAI",
+  "tagline": "AI marketing for non-marketers",
+  "applicationCategory": "BusinessApplication",
+  "operatingSystem": "Web",
+  "inLanguage": "en-GB",
+  "index": true,
+  "description": "markAI is an AI-powered marketing platform from Techbridge University College that helps non-marketers do marketing. It turns a short brief into a marketing strategy and generates on-brand content, taking a campaign from strategy through to finished copy without needing a marketing background.",
+  "keywords": [
+    "AI marketing tool",
+    "marketing for non-marketers",
+    "AI content strategy",
+    "AI content generation",
+    "small business marketing",
+    "marketing strategy generator",
+    "Techbridge University College",
+    "Ghana"
+  ],
+  "features": [
+    "Turns a short brief into a structured marketing strategy",
+    "Generates on-brand marketing content and copy from that strategy",
+    "Takes a campaign from strategy through to finished content in one place",
+    "Written for non-marketers, so no marketing background is required"
+  ],
+  "audience": "Non-marketers, small-business owners, entrepreneurs, educators, and students who need to produce marketing without a marketing team",
+  "faqs": [
+    {
+      "q": "What is markAI?",
+      "a": "markAI is an AI-powered marketing platform from Techbridge University College. It helps people without a marketing background turn a brief into a marketing strategy and then generate on-brand content and copy."
+    },
+    {
+      "q": "Who is markAI for?",
+      "a": "Non-marketers: small-business owners, entrepreneurs, educators, and students who need marketing strategy and content but do not have a dedicated marketing team."
+    },
+    {
+      "q": "What does markAI produce?",
+      "a": "A marketing strategy from your brief, and on-brand marketing content and copy generated from that strategy, so a campaign can go from idea to finished content in one place."
+    },
+    {
+      "q": "Do I need marketing experience to use it?",
+      "a": "No. markAI is designed for non-marketers and guides you from strategy to content without assuming any marketing background."
+    }
+  ],
+  "organization": {
+    "name": "Techbridge University College",
+    "alternateName": "TUC",
+    "url": "https://www.techbridge.edu.gh/",
+    "logo": "https://techbridge.edu.gh/static/TUC_LOGO.png",
+    "locality": "Oyibi",
+    "region": "Greater Accra",
+    "countryName": "Ghana",
+    "country": "GH",
+    "sameAs": [
+      "https://twitter.com/TUCGhana"
+    ]
+  },
+  "image": "https://techbridge.edu.gh/static/TUC_LOGO.png"
+}

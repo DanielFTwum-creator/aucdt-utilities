@@ -6,8 +6,8 @@
   "type": "module",
   "scripts": {
     "dev": "node node_modules/vite/bin/vite.js --port=3000 --host=0.0.0.0",
-    "build": "vite build",
-    "build:web": "vite build",
+    "build": "vite build && node seo/prerender.mjs",
+    "build:web": "vite build && node seo/prerender.mjs",
     "build:ios": "vite build && npx cap sync ios",
     "build:android": "vite build && npx cap sync android",
     "ios:open": "npx cap open ios",

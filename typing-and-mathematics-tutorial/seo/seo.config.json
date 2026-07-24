@@ -1,0 +1,63 @@
+{
+  "slug": "math-island",
+  "url": "https://ai-tools.techbridge.edu.gh/math-island/",
+  "name": "Typing & Mathematics Island",
+  "shortName": "Math Island",
+  "tagline": "A gamified touch-typing and maths quest for children",
+  "applicationCategory": "GameApplication",
+  "operatingSystem": "Web",
+  "inLanguage": "en-GB",
+  "index": true,
+  "description": "Typing & Mathematics Island is a free learning game from Techbridge University College that combines touch-typing practice with mathematics puzzles and fraction drills for children. Learners travel an island map, playing typing and maths mini-games to build keyboarding skill and number sense at the same time.",
+  "keywords": [
+    "typing game for kids",
+    "maths game for children",
+    "fractions practice game",
+    "touch typing for children",
+    "educational typing game",
+    "learn typing and maths",
+    "Techbridge University College",
+    "Ghana"
+  ],
+  "features": [
+    "An island map that unlocks typing and maths mini-games as children progress",
+    "Touch-typing practice built into every level",
+    "Mathematics puzzles and dedicated fraction drills (the Fraction Bakery)",
+    "Arcade-style levels such as Block Counter, Bridge Shooter, and Cosmic Blitz",
+    "A friendly character guide and on-screen keyboard to support young learners",
+    "Free to play in the browser"
+  ],
+  "audience": "Children learning touch typing and mathematics, and the teachers and parents supporting them",
+  "faqs": [
+    {
+      "q": "What is Typing & Mathematics Island?",
+      "a": "It is a free learning game from Techbridge University College that combines touch-typing practice with mathematics puzzles and fraction drills for children, played across an island map of mini-games."
+    },
+    {
+      "q": "Who is it for?",
+      "a": "Primary-age children building typing skill and number sense, and the teachers and parents supporting them."
+    },
+    {
+      "q": "What does it teach?",
+      "a": "Touch typing alongside mathematics, including fractions, through arcade-style mini-games rather than drills alone."
+    },
+    {
+      "q": "Is it free?",
+      "a": "Yes. It runs free in a web browser, with no account required to start playing."
+    }
+  ],
+  "organization": {
+    "name": "Techbridge University College",
+    "alternateName": "TUC",
+    "url": "https://www.techbridge.edu.gh/",
+    "logo": "https://techbridge.edu.gh/static/TUC_LOGO.png",
+    "locality": "Oyibi",
+    "region": "Greater Accra",
+    "countryName": "Ghana",
+    "country": "GH",
+    "sameAs": [
+      "https://twitter.com/TUCGhana"
+    ]
+  },
+  "image": "https://techbridge.edu.gh/static/TUC_LOGO.png"
+}

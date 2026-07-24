@@ -1,0 +1,68 @@
+{
+  "slug": "typing-tutor",
+  "url": "https://ai-tools.techbridge.edu.gh/typing-tutor/",
+  "name": "VortexType",
+  "shortName": "VortexType",
+  "tagline": "Free touch-typing speed academy",
+  "applicationCategory": "EducationalApplication",
+  "operatingSystem": "Web, iOS, Android",
+  "inLanguage": "en-GB",
+  "index": true,
+  "description": "VortexType is a free touch-typing tutor from Techbridge University College. It teaches keyboarding through progressive lessons, timed speed tests that track words-per-minute and accuracy, and typing games, guided by a colour-coded on-screen keyboard that shows which finger to use. It installs as an offline-capable web app for low-connectivity classrooms.",
+  "keywords": [
+    "touch typing tutor",
+    "learn to type",
+    "typing speed test",
+    "words per minute trainer",
+    "keyboarding lessons",
+    "typing games",
+    "free typing practice",
+    "Techbridge University College",
+    "Ghana"
+  ],
+  "features": [
+    "Progressive touch-typing lessons that unlock as accuracy improves, from the home row to the full keyboard and numeric keypad",
+    "Timed speed tests with live words-per-minute and accuracy tracking",
+    "Typing games, including a Shark Attack arcade round, for practice that holds attention",
+    "A colour-coded on-screen keyboard with hand guidance showing the correct finger for every key",
+    "Free-text and document practice modes",
+    "Installable, offline-capable web app for low-connectivity classrooms"
+  ],
+  "audience": "Students and anyone learning or improving touch typing, from beginners to speed-focused typists",
+  "faqs": [
+    {
+      "q": "What is VortexType?",
+      "a": "VortexType is a free touch-typing tutor from Techbridge University College. It teaches keyboarding through progressive lessons, speed tests, and games, with an on-screen keyboard that shows which finger to use for each key."
+    },
+    {
+      "q": "Who is it for?",
+      "a": "Anyone learning or improving touch typing, from complete beginners working through the home row to typists building speed. It suits classroom use and self-paced practice alike."
+    },
+    {
+      "q": "Does it measure typing speed and accuracy?",
+      "a": "Yes. Timed speed tests track words-per-minute and accuracy live, and lessons unlock progressively as accuracy improves."
+    },
+    {
+      "q": "Is VortexType free?",
+      "a": "Yes, it is free to use. It also installs as an app and works offline, so it runs in low-connectivity classrooms."
+    },
+    {
+      "q": "Who built VortexType?",
+      "a": "It was built by the ICT department of Techbridge University College in Accra, Ghana."
+    }
+  ],
+  "organization": {
+    "name": "Techbridge University College",
+    "alternateName": "TUC",
+    "url": "https://www.techbridge.edu.gh/",
+    "logo": "https://techbridge.edu.gh/static/TUC_LOGO.png",
+    "locality": "Oyibi",
+    "region": "Greater Accra",
+    "countryName": "Ghana",
+    "country": "GH",
+    "sameAs": [
+      "https://twitter.com/TUCGhana"
+    ]
+  },
+  "image": "https://techbridge.edu.gh/static/TUC_LOGO.png"
+}
