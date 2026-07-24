@@ -74,7 +74,7 @@ export const appCatalog: CatalogApp[] = [
     url: '/sickbay/',
     localDir: 'sick-bay-management-system/',
     status: 'standardised',
-    category: 'health',
+    category: 'utility',
     vite: true,
     favicon: true,
     seo: true,
