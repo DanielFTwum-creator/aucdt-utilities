@@ -15,9 +15,11 @@ export type Film = {
   // trilogy key art for now (swap in per-film art when it exists).
   poster: string;
   status: string;
-  // Optional self-hosted preview/trailer. Drives both the in-page player and
-  // the Movie trailer VideoObject. Absent until a film has a cut.
-  video?: { src: string; name: string; uploadDate: string };
+  // Optional preview/trailer. `file` is a filename on the fleet media host
+  // (media.techbridge.edu.gh/media/), not a repo asset — video stays out of git.
+  // Drives both the in-page player and the Movie trailer VideoObject. Absent
+  // until a film has a cut.
+  video?: { file: string; name: string; uploadDate: string };
 };
 
 const HERO = "/images/times_square_billboard_photoreal.webp";
@@ -35,7 +37,7 @@ export const FILMS: Film[] = [
     poster: HERO,
     status: "Pre-production",
     video: {
-      src: "/videos/sistah-onyx-times-square-preview.mp4",
+      file: "sistah-onyx-times-square-preview.mp4",
       name: "Sistah Onyx: Times Square Dreams — Animated Preview",
       uploadDate: "2026-07-24",
     },
@@ -83,4 +85,7 @@ export const SITE = {
     "A Ghanaian film trilogy that travels from a single Labadi bench to Times Square: SISTAH ONYX (Times Square Dreams), PUZZLE GAME LOVE, and FROM BENCH TO BRAND. Director's-cut bibles, the VFX kit, and the trilogy method.",
   ogImage: HERO,
   locale: "en-GH",
+  // Own-server media host for binary assets kept out of git (videos, large
+  // images). Same-origin-family, real HTTP range for video, no third party.
+  mediaBase: "https://media.techbridge.edu.gh/media",
 };
