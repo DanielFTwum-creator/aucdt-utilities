@@ -371,13 +371,11 @@ html[data-theme="dark"] .badge-games     { color: #67e8f9; }
    Inline-styled inputs, so the placeholder needs a class hook. Two contexts:
    nav search sits on the dark navy header, hero search on white. */
 .nav-search-input::placeholder  { color: rgba(255, 255, 255, 0.72); opacity: 1; }
-.hero-search-input::placeholder { color: #6b7280; opacity: 1; }
 
 /* Visible keyboard focus indicators (WCAG 2.4.7). The inputs set outline:none
    inline, so use box-shadow (not set inline, so not overridden) for the ring.
    Nav input has no border of its own — ring the container box on focus-within. */
 .nav-search-box:focus-within  { box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.6); }
-.hero-search-input:focus-visible { box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.4); }
 .search-input:focus {
   outline: none;
   border-color: var(--accent-primary);

@@ -357,23 +357,8 @@ export default function App() {
       ) : (
         <div style={{ display:'flex', flexDirection:'column', flex:1, overflow:'hidden' }}>
 
-          {/* Hero Search */}
-          <div style={{ background:'#fff', padding:'20px 16px', borderBottom:'0.5px solid #e2e0d8', flexShrink:0 }}>
-            <div style={{ maxWidth:'600px', margin:'0 auto' }}>
-              <div role="search" style={{ position:'relative', display:'flex', alignItems:'center' }}>
-                <Search aria-hidden={true} focusable={false} style={{ position:'absolute', left:'12px', width:'16px', height:'16px', color:'#64748b', flexShrink:0, pointerEvents:'none' }} />
-                <input
-                  type="search"
-                  className="hero-search-input"
-                  aria-label="Search for a tool"
-                  placeholder="Search for a tool or describe what you need…"
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                  style={{ width:'100%', paddingLeft:'36px', paddingRight:'16px', paddingTop:'12px', paddingBottom:'12px', fontSize:'13px', color:'#0f172a', border:'1px solid #c3c9d9', borderRadius:'8px', outline:'none', fontFamily:'inherit', background:'#fff' }}
-                />
-              </div>
-            </div>
-          </div>
+          {/* Search lives in the top nav (always visible while scrolling); the
+              duplicate hero search box was removed to dedup. */}
 
           {/* Category Tabs */}
           <div style={{ background:'#fff', padding:'10px 16px', borderBottom:'0.5px solid #e2e0d8', flexShrink:0, overflowX:'auto' }}>
