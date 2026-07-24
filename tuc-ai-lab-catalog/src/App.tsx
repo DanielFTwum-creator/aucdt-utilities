@@ -56,7 +56,7 @@ const DEPLOYED_SLUGS = new Set<string>([
   "ai-stand-up-workshop-prep", "techbridge-ai-workshop-flyer", "techbridge-poster-studio",
   "tuc-2026-enrollment-command-centre", "patois-lyricist", "impact-ventures-dashboard",
   "techbridge-assessment-platform", "bionicskins", "stockpulse",
-  "english-safari",
+  "english-safari", "umat",
 ]);
 
 const isDeployed = (slug: string) => DEPLOYED_SLUGS.has(slug);
@@ -133,6 +133,7 @@ const TOOLS: Tool[] = [
   { slug: "aucdt-msee-aptitude-test", title: "MSEE Aptitude Test", desc: "Timed AI-powered maths aptitude exam for mature students", cat: "Academic" },
   { slug: "ckt-utas-modern-website", title: "CKT-UTAS Website", desc: "Modern React rebuild of the CKT-UTAS university website", cat: "Academic" },
   { slug: "dmcdai", title: "dmcdAI", desc: "Educational sandbox for AI in digital media and design", cat: "Academic" },
+  { slug: "umat", title: "UMaT Tracker", desc: "UMaT curriculum recommendations tracker for Techbridge University College", cat: "Academic" },
   { slug: "fashion-design-brochure", title: "Fashion Design Brochure", desc: "Dynamic academic brochure for the AUCDT Fashion programme", cat: "Academic" },
   { slug: "fees-comparison-dashboard", title: "Fees Comparison Dashboard", desc: "Visualises tuition fees across Ghana's universities", cat: "Academic" },
   { slug: "lecturer-assessment", title: "Lecturer Assessment Portal", desc: "Form for students to submit lecturer assessment feedback", cat: "Academic" },

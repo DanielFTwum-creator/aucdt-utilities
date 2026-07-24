@@ -50,7 +50,7 @@
 |---|---|
 | `VITE_GOOGLE_CLIENT_ID` | Google OAuth 2.0 client ID (exposed to frontend via Vite) |
 | `VITE_GOOGLE_REDIRECT_URI` | OAuth redirect URI — must match Google Console exactly (e.g. `https://ai-tools.techbridge.edu.gh/ai-lab/callback`) |
-| `GOOGLE_CLIENT_SECRET` | Server-side OAuth secret — never expose to frontend |
+| ~~`GOOGLE_CLIENT_SECRET`~~ (removed) | No longer used. The OAuth code exchange relays through WMS (Pattern 35); this app never holds the secret. |
 | `GEMINI_PROXY_KEY` | WMS-issued relay credential (Pattern 11) — this app never holds the Gemini key |
 | `WMS_GEMINI_URL` | Optional relay endpoint override — defaults to `https://wms.techbridge.edu.gh/api/gemini/generate` |
 
@@ -110,7 +110,7 @@ Before deploying, confirm:
 ☐ NODE_ENV=production is set in the PM2 ecosystem config or start command
 ☐ tsx is in dependencies (not devDependencies)
 ☐ pnpm install with no --prod flag (tsx must be installed)
-☐ VITE_GOOGLE_CLIENT_ID, VITE_GOOGLE_REDIRECT_URI, GOOGLE_CLIENT_SECRET, GEMINI_PROXY_KEY are set in .env.local on the server
+☐ VITE_GOOGLE_CLIENT_ID, VITE_GOOGLE_REDIRECT_URI, GEMINI_PROXY_KEY are set in .env.local on the server
 ☐ server.ts relays via WMS — no GEMINI_API_KEY reference anywhere in server.ts
 ☐ VITE_GOOGLE_REDIRECT_URI matches the registered URI in Google Cloud Console exactly
 ☐ Vite build completes without errors (pnpm run build)
