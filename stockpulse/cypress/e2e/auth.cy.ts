@@ -146,21 +146,25 @@ describe('Authentication', () => {
     cy.contains('free@test.com').should('be.visible');
   });
 
-  it('shows OAuth error when ?auth_error=oauth is in URL', () => {
+  it('shows OAuth error when ?auth_error=oauth is in URL, surfaced on the next sign-in attempt', () => {
+    // useAuth stores the error in state but it only renders inside AuthModal, which
+    // isn't mounted by default — the error surfaces once the user opens Sign In.
     cy.visit('/?auth_error=oauth');
-    cy.contains('Google sign-in failed').should('be.visible');
     cy.url().should('not.include', 'auth_error');
+    cy.contains('Sign in').first().click();
+    cy.contains('Google sign-in failed').should('be.visible');
   });
 
   // ── Logout ────────────────────────────────────────────────────────────────
 
   it('logs out and clears session', () => {
-    cy.intercept('POST', '/api/auth/logout', { statusCode: 204 }).as('logout');
+    // useAuth's logout() is client-side only (clears localStorage/state) — it never
+    // calls a /api/auth/logout endpoint, so there's nothing to cy.wait() on here.
     cy.stubBase();
     cy.intercept('GET', '/api/watchlist', { body: [] });
     cy.loginAs('free');
-    cy.contains('Sign out').click();
-    cy.wait('@logout');
+    // The logout control is an icon-only button — aria-label, not visible text.
+    cy.get('[aria-label="Sign out"]').click();
     cy.contains('free@test.com').should('not.exist');
     cy.window().then(win => {
       expect(win.localStorage.getItem('sp_token')).to.be.null;

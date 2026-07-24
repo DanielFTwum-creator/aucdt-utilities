@@ -87,29 +87,29 @@ export default function AlertsPanel({ user, authFetch, onLoginClick, onUpgrade }
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
           <div>
             <label htmlFor="alert-ticker" className="block text-xs text-gray-500 dark:text-gray-400 mb-1">Ticker</label>
-            <input id="alert-ticker" type="text" value={form.ticker} onChange={e => setForm(f => ({ ...f, ticker: e.target.value }))} required placeholder="AAPL" className="w-full px-3 py-2 rounded-lg bg-gray-100 dark:bg-gray-800 text-sm text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-indigo-500 uppercase" />
+            <input id="alert-ticker" data-cy="alert-ticker-input" type="text" value={form.ticker} onChange={e => setForm(f => ({ ...f, ticker: e.target.value }))} required placeholder="AAPL" className="w-full px-3 py-2 rounded-lg bg-gray-100 dark:bg-gray-800 text-sm text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-indigo-500 uppercase" />
           </div>
           <div>
             <label htmlFor="alert-type" className="block text-xs text-gray-500 dark:text-gray-400 mb-1">Type</label>
-            <select id="alert-type" value={form.alert_type} onChange={e => setForm(f => ({ ...f, alert_type: e.target.value }))} className="w-full px-3 py-2 rounded-lg bg-gray-100 dark:bg-gray-800 text-sm text-gray-900 dark:text-white outline-none">
+            <select id="alert-type" data-cy="alert-type-select" value={form.alert_type} onChange={e => setForm(f => ({ ...f, alert_type: e.target.value }))} className="w-full px-3 py-2 rounded-lg bg-gray-100 dark:bg-gray-800 text-sm text-gray-900 dark:text-white outline-none">
               <option value="price">Price</option>
               <option value="percent_change">% Change</option>
             </select>
           </div>
           <div>
             <label htmlFor="alert-condition" className="block text-xs text-gray-500 dark:text-gray-400 mb-1">Condition</label>
-            <select id="alert-condition" value={form.condition} onChange={e => setForm(f => ({ ...f, condition: e.target.value }))} className="w-full px-3 py-2 rounded-lg bg-gray-100 dark:bg-gray-800 text-sm text-gray-900 dark:text-white outline-none">
+            <select id="alert-condition" data-cy="alert-condition-select" value={form.condition} onChange={e => setForm(f => ({ ...f, condition: e.target.value }))} className="w-full px-3 py-2 rounded-lg bg-gray-100 dark:bg-gray-800 text-sm text-gray-900 dark:text-white outline-none">
               <option value="above">Above</option>
               <option value="below">Below</option>
             </select>
           </div>
           <div>
             <label htmlFor="alert-value" className="block text-xs text-gray-500 dark:text-gray-400 mb-1">{form.alert_type === 'price' ? 'Price ($)' : 'Change (%)'}</label>
-            <input id="alert-value" type="number" step="0.01" value={form.target_value} onChange={e => setForm(f => ({ ...f, target_value: e.target.value }))} required placeholder={form.alert_type === 'price' ? '150.00' : '5'} className="w-full px-3 py-2 rounded-lg bg-gray-100 dark:bg-gray-800 text-sm text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-indigo-500" />
+            <input id="alert-value" data-cy="alert-value-input" type="number" step="0.01" value={form.target_value} onChange={e => setForm(f => ({ ...f, target_value: e.target.value }))} required placeholder={form.alert_type === 'price' ? '150.00' : '5'} className="w-full px-3 py-2 rounded-lg bg-gray-100 dark:bg-gray-800 text-sm text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-indigo-500" />
           </div>
         </div>
         {error && <p role="alert" className="text-red-500 text-xs mt-2">{error}</p>}
-        <button type="submit" disabled={loading} className="mt-3 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-60 text-white text-sm font-semibold px-4 py-2 rounded-lg">
+        <button type="submit" data-cy="alert-submit-btn" disabled={loading} className="mt-3 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-60 text-white text-sm font-semibold px-4 py-2 rounded-lg">
           {loading ? 'Adding…' : 'Set Alert'}
         </button>
       </form>

@@ -28,14 +28,16 @@ describe('Alerts', () => {
     cy.intercept('GET', '/api/alerts', { body: [] }).as('emptyAlerts');
     cy.loginAs('free', '/#/alerts');
     cy.wait('@emptyAlerts');
-    cy.contains(/no alerts|create your first/i).should('be.visible');
+    cy.contains('No alerts configured').should('be.visible');
   });
 
   it('displays triggered alerts differently from active ones', () => {
     cy.intercept('GET', '/api/alerts', { body: ALERTS }).as('alerts');
     cy.loginAs('free', '/#/alerts');
     cy.wait('@alerts');
-    cy.contains(/triggered|inactive/i).should('be.visible');
+    cy.contains('Active').should('be.visible');
+    cy.contains('Inactive').should('be.visible');
+    cy.contains(/triggered/i).should('be.visible');
   });
 
   // ── Create alert ──────────────────────────────────────────────────────────
@@ -48,10 +50,10 @@ describe('Alerts', () => {
 
     cy.loginAs('free', '/#/alerts');
     cy.wait('@alerts');
-    cy.get('input[placeholder*="ticker"], input[name="ticker"]').type('NVDA');
-    cy.get('select[name="condition"]').select('above');
-    cy.get('input[placeholder*="200"], input[name="target_value"]').type('1000');
-    cy.get('button[type="submit"]').click();
+    cy.get('[data-cy="alert-ticker-input"]').type('NVDA');
+    cy.get('[data-cy="alert-condition-select"]').select('above');
+    cy.get('[data-cy="alert-value-input"]').type('1000');
+    cy.get('[data-cy="alert-submit-btn"]').click();
     cy.wait('@createAlert');
     cy.contains('NVDA').should('be.visible');
   });
@@ -60,7 +62,7 @@ describe('Alerts', () => {
     cy.intercept('GET', '/api/alerts', { body: [] }).as('alerts');
     cy.loginAs('free', '/#/alerts');
     cy.wait('@alerts');
-    cy.get('button[type="submit"]').click();
+    cy.get('[data-cy="alert-submit-btn"]').click();
     // HTML5 required validation prevents submission
     cy.get('@createAlert.all').should('have.length', 0);
   });
@@ -71,9 +73,9 @@ describe('Alerts', () => {
 
     cy.loginAs('free', '/#/alerts');
     cy.wait('@alerts');
-    cy.get('input[placeholder*="ticker"], input[name="ticker"]').type('INVALID!!!');
-    cy.get('input[placeholder*="200"], input[name="target_value"]').type('999');
-    cy.get('button[type="submit"]').click();
+    cy.get('[data-cy="alert-ticker-input"]').type('INVALID');
+    cy.get('[data-cy="alert-value-input"]').type('999');
+    cy.get('[data-cy="alert-submit-btn"]').click();
     cy.wait('@failAlert');
     cy.contains(/invalid ticker/i).should('be.visible');
   });
@@ -84,11 +86,27 @@ describe('Alerts', () => {
 
     cy.loginAs('free', '/#/alerts');
     cy.wait('@alerts');
-    cy.get('input[placeholder*="ticker"], input[name="ticker"]').type('TSLA');
-    cy.get('input[placeholder*="200"], input[name="target_value"]').type('300');
-    cy.get('button[type="submit"]').click();
+    cy.get('[data-cy="alert-ticker-input"]').type('TSLA');
+    cy.get('[data-cy="alert-value-input"]').type('300');
+    cy.get('[data-cy="alert-submit-btn"]').click();
     cy.wait('@limitHit');
     cy.contains(/upgrade|premium/i).should('be.visible');
+  });
+
+  // ── Tier limit boundary ────────────────────────────────────────────────────
+
+  it('shows the free tier active/limit count (5)', () => {
+    cy.intercept('GET', '/api/alerts', { body: ALERTS }).as('alerts'); // 1 active, 1 inactive
+    cy.loginAs('free', '/#/alerts');
+    cy.wait('@alerts');
+    cy.contains('1/5 active alerts').should('be.visible');
+  });
+
+  it('shows the premium tier active/limit count (100)', () => {
+    cy.intercept('GET', '/api/alerts', { body: ALERTS }).as('alerts');
+    cy.loginAs('premium', '/#/alerts');
+    cy.wait('@alerts');
+    cy.contains('1/100 active alerts').should('be.visible');
   });
 
   // ── Delete alert ──────────────────────────────────────────────────────────
@@ -99,8 +117,7 @@ describe('Alerts', () => {
 
     cy.loginAs('free', '/#/alerts');
     cy.wait('@alerts');
-    cy.contains('AAPL').parents('li, [class*="card"], tr, article').first()
-      .find('[aria-label*="delete"], [aria-label*="remove"], button').last().click();
+    cy.get('[aria-label="Delete alert for AAPL"]').click();
     cy.wait('@deleteAlert');
     cy.contains('AAPL').should('not.exist');
   });

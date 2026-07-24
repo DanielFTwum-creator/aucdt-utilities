@@ -1,5 +1,9 @@
-import { ADMIN_USERS, AUDIT_LOGS } from '../fixtures/data';
+import { AUDIT_LOGS } from '../fixtures/data';
 
+// AdminPanel.tsx has no user-CRUD/upgrade/downgrade/search UI — it is a single
+// hardcoded-password-gated panel (ADMIN_PASSWORD = 'admin2024') with four tabs:
+// Stats / Audit / Diagnostics / Gap Analysis. Any user (free or premium) who knows
+// the password can unlock it; there is no per-tier or per-email restriction in the UI.
 describe('Admin Panel', () => {
   beforeEach(() => {
     cy.stubBase();
@@ -8,91 +12,86 @@ describe('Admin Panel', () => {
     cy.intercept('GET', '/api/market/history/*', { body: [] });
   });
 
-  // ── Access control ────────────────────────────────────────────────────────
+  // ── Logged-out gate ───────────────────────────────────────────────────────
 
-  it('shows admin link in sidebar for admin user (admin email)', () => {
-    cy.loginAs('admin');
-    cy.contains('a', /admin/i).should('be.visible');
+  it('shows a sign-in CTA for logged-out users', () => {
+    cy.visit('/#/admin');
+    cy.contains('Admin Panel').should('be.visible');
+    cy.contains('Sign in to access administrative tools').should('be.visible');
+    cy.contains('button', 'Sign In').should('be.visible');
   });
 
-  it('hides admin link for regular users', () => {
-    cy.loginAs('free');
-    // The admin nav item should not be shown for non-admin email
-    cy.contains('a', /^admin$/i).should('not.exist');
+  // ── Password gate ─────────────────────────────────────────────────────────
+
+  it('prompts for the admin password once signed in', () => {
+    cy.loginAs('free', '/#/admin');
+    cy.contains('Admin Access').should('be.visible');
+    cy.get('input[aria-label="Admin password"]').should('be.visible');
   });
 
-  // ── Admin dashboard ───────────────────────────────────────────────────────
+  it('rejects an incorrect password', () => {
+    cy.loginAs('free', '/#/admin');
+    cy.get('input[aria-label="Admin password"]').type('wrong-password');
+    cy.contains('button', 'Unlock').click();
+    cy.contains('Incorrect password').should('be.visible');
+    cy.contains('Admin Access').should('be.visible');
+  });
 
-  it('loads the admin panel with user stats', () => {
-    cy.loginAs('admin', '/#/admin');
+  it('unlocks the panel with the correct password and loads Stats', () => {
+    cy.loginAs('free', '/#/admin');
+    cy.get('input[aria-label="Admin password"]').type('admin2024');
+    cy.contains('button', 'Unlock').click();
     cy.wait('@adminStats');
-    cy.contains('2').should('be.visible');          // total users
-    cy.contains(/admin|dashboard/i).should('be.visible');
+    cy.contains('Admin Panel').should('be.visible');
+    cy.contains('Total Users').should('be.visible');
+    cy.contains('Revenue estimate').should('be.visible');
   });
 
-  it('displays the user management table', () => {
-    cy.loginAs('admin', '/#/admin');
-    cy.wait('@adminUsers');
-    cy.contains('free@test.com').should('be.visible');
-    cy.contains('premium@test.com').should('be.visible');
-    cy.contains('free').should('be.visible');
-    cy.contains('premium').should('be.visible');
-  });
+  // ── Tabs (once unlocked) ───────────────────────────────────────────────────
 
-  it('displays audit logs', () => {
-    cy.loginAs('admin', '/#/admin');
+  function unlock() {
+    cy.loginAs('free', '/#/admin');
+    cy.get('input[aria-label="Admin password"]').type('admin2024');
+    cy.contains('button', 'Unlock').click();
+    cy.wait('@adminStats');
+  }
+
+  it('shows the Audit tab with log entries', () => {
+    unlock();
+    cy.contains('button', 'audit').click();
     cy.wait('@auditLogs');
-    cy.contains('LOGIN').should('be.visible');
-    cy.contains('REGISTER').should('be.visible');
+    cy.contains(AUDIT_LOGS[0].action).should('be.visible');
+    cy.contains(AUDIT_LOGS[1].action).should('be.visible');
     cy.contains('127.0.0.1').should('be.visible');
   });
 
-  // ── User management actions ───────────────────────────────────────────────
-
-  it('can upgrade a user to premium', () => {
-    cy.intercept('POST', '/api/admin/users/*/upgrade', { statusCode: 200, body: { message: 'Upgraded' } }).as('adminUpgrade');
-    cy.intercept('GET', '/api/admin/users*', {
-      body: { users: [{ ...ADMIN_USERS[0], tier: 'premium' }, ADMIN_USERS[1]], total: 2, page: 1, pages: 1 },
-    });
-
-    cy.loginAs('admin', '/#/admin');
-    cy.wait('@adminUsers');
-    cy.contains('free@test.com').parents('tr, [class*="row"]').first()
-      .find('button').filter(':contains("Upgrade")').click();
-    cy.wait('@adminUpgrade');
+  it('shows the Diagnostics tab with system health info', () => {
+    unlock();
+    cy.contains('button', 'diagnostics').click();
+    cy.contains('System Health').should('be.visible');
+    cy.contains('Data Integrity').should('be.visible');
+    cy.contains('WCAG 2.1 AA').should('be.visible');
   });
 
-  it('can downgrade a user to free', () => {
-    cy.intercept('POST', '/api/admin/users/*/downgrade', { statusCode: 200, body: { message: 'Downgraded' } }).as('adminDowngrade');
+  it('runs the gap analysis and can filter results by status', () => {
+    // The gap analysis probes ~two dozen live endpoints directly with fetch/authFetch.
+    // Stub everything generically first so the run is fast and deterministic, then
+    // layer the specific fixtures back on top for the ones we assert on.
+    cy.intercept('GET', '/api/**', { statusCode: 200, body: {} });
+    cy.stubBase();
+    cy.stubAdmin();
+    cy.intercept('GET', '/api/watchlist', { body: [] });
+    cy.intercept('GET', '/api/market/history/*', { body: [] });
 
-    cy.loginAs('admin', '/#/admin');
-    cy.wait('@adminUsers');
-    cy.contains('premium@test.com').parents('tr, [class*="row"]').first()
-      .find('button').filter(':contains("Downgrade")').click({ force: true });
-    cy.wait('@adminDowngrade');
-  });
+    unlock();
+    cy.contains('button', 'Gap Analysis').click();
+    cy.contains('Press Run to start').should('be.visible');
 
-  // ── Pagination / search ───────────────────────────────────────────────────
+    cy.get('[aria-label="Run gap analysis"]').click();
+    cy.contains(/checks ·/i, { timeout: 20000 }).should('be.visible');
 
-  it('searches users by email', () => {
-    cy.intercept('GET', '/api/admin/users*free*', {
-      body: { users: [ADMIN_USERS[0]], total: 1, page: 1, pages: 1 },
-    }).as('searchUsers');
-
-    cy.loginAs('admin', '/#/admin');
-    cy.wait('@adminUsers');
-    cy.get('input[placeholder*="search"], input[placeholder*="email"]').first().type('free');
-    cy.wait('@searchUsers');
-    cy.contains('free@test.com').should('be.visible');
-    cy.contains('premium@test.com').should('not.exist');
-  });
-
-  // ── Non-admin access ──────────────────────────────────────────────────────
-
-  it('shows a permission error or redirects for non-admin users who visit /#/admin', () => {
-    cy.intercept('GET', '/api/admin/*', { statusCode: 403, body: { error: 'Forbidden' } });
-    cy.loginAs('free', '/#/admin');
-    // Either it shows an error message or it's hidden entirely
-    cy.contains(/not authorized|forbidden|admin only|permission/i).should('be.visible');
+    // Filter chips: All / Pass / Fail / Partial
+    cy.contains('button', 'Pass').click().should('have.class', 'border-indigo-500');
+    cy.contains('button', 'All').click().should('have.class', 'border-indigo-500');
   });
 });

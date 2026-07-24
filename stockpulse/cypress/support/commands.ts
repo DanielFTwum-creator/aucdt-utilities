@@ -1,6 +1,6 @@
 import {
   FREE_USER, PREMIUM_USER, ADMIN_USER, TEST_TOKEN,
-  INDICES, ALERTS, WATCHLIST, PORTFOLIO_SUMMARY,
+  INDICES, ALERTS, WATCHLIST, PORTFOLIO_SUMMARY, RAW_PORTFOLIO_POSITIONS,
   PAPER_ACCOUNT, PAPER_POSITIONS, PAPER_ORDERS,
   AI_SIGNALS, NEWS, ADMIN_USERS, AUDIT_LOGS, HISTORY_BARS,
 } from '../fixtures/data';
@@ -30,11 +30,17 @@ Cypress.Commands.add('stubBase', () => {
 Cypress.Commands.add('stubWatchlist', () => {
   cy.intercept('GET', '/api/watchlist', { body: WATCHLIST }).as('watchlist');
   cy.intercept('GET', '/api/market/history/*', { body: HISTORY_BARS }).as('history');
-  cy.intercept('GET', '/api/market/quote/*', { body: WATCHLIST[0].quote }).as('quote');
+  // Watchlist.tsx fetches bulk quotes via /api/market/quotes?symbols=..., not the
+  // single-ticker /api/market/quote/:ticker route — match the real endpoint.
+  cy.intercept('GET', '/api/market/quotes*', { body: WATCHLIST.map(w => w.quote) }).as('quotes');
+  cy.intercept('GET', '/api/market/search*', { body: [] }).as('search');
 });
 
 Cypress.Commands.add('stubPortfolio', () => {
-  cy.intercept('GET', '/api/portfolio', { body: PORTFOLIO_SUMMARY }).as('portfolio');
+  // GET /api/portfolio/summary drives the rendered summary + positions;
+  // GET /api/portfolio returns the raw position rows (used for delete ids / broker notes).
+  cy.intercept('GET', '/api/portfolio/summary', { body: PORTFOLIO_SUMMARY }).as('portfolio');
+  cy.intercept('GET', '/api/portfolio', { body: RAW_PORTFOLIO_POSITIONS }).as('portfolioRaw');
   cy.intercept('GET', '/api/portfolio/metrics*', { statusCode: 403 }).as('metrics');
   cy.intercept('GET', '/api/portfolio/dividends', { body: [] }).as('dividends');
   cy.intercept('GET', '/api/portfolio/performance*', { statusCode: 403 }).as('performance');
@@ -56,13 +62,14 @@ Cypress.Commands.add('stubNews', () => {
 
 Cypress.Commands.add('stubAdmin', () => {
   cy.intercept('GET', '/api/admin/users*', { body: { users: ADMIN_USERS, total: 2, page: 1, pages: 1 } }).as('adminUsers');
-  cy.intercept('GET', '/api/admin/audit-logs*', { body: { logs: AUDIT_LOGS, total: 2, page: 1, pages: 1 } }).as('auditLogs');
-  cy.intercept('GET', '/api/admin/stats', { body: { totalUsers: 2, premiumUsers: 1, freeUsers: 1, todayLogins: 5 } }).as('adminStats');
+  // AdminPanel.tsx calls /api/admin/audit (not /api/admin/audit-logs) — match the real route.
+  cy.intercept('GET', '/api/admin/audit*', { body: { logs: AUDIT_LOGS, total: 2, page: 1, pages: 1 } }).as('auditLogs');
+  cy.intercept('GET', '/api/admin/stats', { body: { totalUsers: 2, premiumUsers: 1, freeUsers: 1, totalSignals: 12, totalOrders: 4, totalAlerts: 2 } }).as('adminStats');
 });
 
-// Navigate to a view via sidebar hash link
+// Navigate to a view via the Sidebar's data-cy nav hooks (Sidebar renders <button>s, not <a> links)
 Cypress.Commands.add('goToView', (view: string) => {
-  cy.get(`a[href="#/${view}"], button[data-view="${view}"]`).first().click();
+  cy.get(`[data-cy="nav-${view}"]`).first().click();
   cy.url().should('include', `#/${view}`);
 });
 

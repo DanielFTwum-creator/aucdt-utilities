@@ -54,6 +54,7 @@ export default function Sidebar({ activeView, onViewChange, user, onLoginClick }
             <button
               type="button"
               key={item.view}
+              data-cy={`nav-${item.view}`}
               onClick={() => handleNav(item)}
               aria-current={active ? 'page' : undefined}
               aria-label={`${item.label}${locked ? ' (Premium)' : ''}`}
@@ -78,6 +79,7 @@ export default function Sidebar({ activeView, onViewChange, user, onLoginClick }
         {user && (
           <button
             type="button"
+            data-cy="nav-admin"
             onClick={() => onViewChange('admin')}
             aria-current={activeView === 'admin' ? 'page' : undefined}
             className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-[13px] font-medium transition-colors text-left ${

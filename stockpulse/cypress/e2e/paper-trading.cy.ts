@@ -33,9 +33,9 @@ describe('Paper Trading', () => {
   it('switches to orders tab', () => {
     cy.loginAs('free', '/#/paper');
     cy.wait('@paperOrders');
-    cy.contains(/orders/i).click();
+    cy.contains('button', 'Orders').click();
     cy.contains('AAPL').should('be.visible');
-    cy.contains(/filled|pending/i).should('be.visible');
+    cy.contains('filled').should('be.visible');
   });
 
   // ── Place orders ──────────────────────────────────────────────────────────
@@ -50,10 +50,10 @@ describe('Paper Trading', () => {
 
     cy.loginAs('free', '/#/paper');
     cy.wait('@paperAccount');
-    cy.get('input[placeholder*="ticker"], input[name="ticker"]').type('NVDA');
-    cy.get('select[name="action"]').select('buy');
-    cy.get('input[placeholder*="shares"], input[name="shares"]').type('2');
-    cy.get('button[type="submit"]').filter(':contains("Place Order")').click();
+    cy.get('[data-cy="pt-ticker-input"]').type('NVDA');
+    cy.get('[data-cy="pt-action-select"]').select('buy');
+    cy.get('[data-cy="pt-shares-input"]').type('2');
+    cy.get('[data-cy="pt-submit-btn"]').click();
     cy.wait('@placeOrder');
     cy.contains(/BUY 2 NVDA|filled/i).should('be.visible');
   });
@@ -68,10 +68,10 @@ describe('Paper Trading', () => {
 
     cy.loginAs('free', '/#/paper');
     cy.wait('@paperAccount');
-    cy.get('input[placeholder*="ticker"], input[name="ticker"]').type('AAPL');
-    cy.get('select[name="action"]').select('sell');
-    cy.get('input[placeholder*="shares"], input[name="shares"]').type('5');
-    cy.get('button[type="submit"]').filter(':contains("Place Order")').click();
+    cy.get('[data-cy="pt-ticker-input"]').type('AAPL');
+    cy.get('[data-cy="pt-action-select"]').select('sell');
+    cy.get('[data-cy="pt-shares-input"]').type('5');
+    cy.get('[data-cy="pt-submit-btn"]').click();
     cy.wait('@sellOrder');
     cy.contains(/SELL 5 AAPL|filled/i).should('be.visible');
   });
@@ -84,18 +84,18 @@ describe('Paper Trading', () => {
 
     cy.loginAs('free', '/#/paper');
     cy.wait('@paperAccount');
-    cy.get('input[placeholder*="ticker"], input[name="ticker"]').type('BRK.A');
-    cy.get('input[placeholder*="shares"], input[name="shares"]').type('1000');
-    cy.get('button[type="submit"]').filter(':contains("Place Order")').click();
+    cy.get('[data-cy="pt-ticker-input"]').type('BRK.A');
+    cy.get('[data-cy="pt-shares-input"]').type('1000');
+    cy.get('[data-cy="pt-submit-btn"]').click();
     cy.wait('@failOrder');
     cy.contains(/insufficient|balance/i).should('be.visible');
   });
 
-  it('places a limit order and shows limit price field', () => {
+  it('shows the limit price field once Limit order type is selected', () => {
     cy.loginAs('free', '/#/paper');
     cy.wait('@paperAccount');
-    cy.get('select[name="order_type"]').select('limit');
-    cy.get('input[name="limit_price"], input[placeholder*="limit"]').should('be.visible').type('180');
+    cy.get('[data-cy="pt-type-select"]').select('limit');
+    cy.get('[data-cy="pt-limit-input"]').should('be.visible').type('180');
   });
 
   // ── Reset account ─────────────────────────────────────────────────────────
@@ -109,7 +109,7 @@ describe('Paper Trading', () => {
     cy.loginAs('free', '/#/paper');
     cy.wait('@paperAccount');
     cy.on('window:confirm', () => true); // auto-accept confirm dialog
-    cy.contains(/reset/i).click();
+    cy.get('[aria-label="Reset paper account"]').click();
     cy.wait('@reset');
     cy.contains('$100,000').should('be.visible');
   });
@@ -118,7 +118,7 @@ describe('Paper Trading', () => {
     cy.loginAs('free', '/#/paper');
     cy.wait('@paperAccount');
     cy.on('window:confirm', () => false); // reject confirm dialog
-    cy.contains(/reset/i).click();
+    cy.get('[aria-label="Reset paper account"]').click();
     cy.get('@paperAccount.all').should('have.length', 1); // no second fetch triggered
   });
 });

@@ -87,9 +87,10 @@ export default function AISignals({ user, authFetch, onLoginClick, onUpgrade }: 
           required
           placeholder="Enter ticker (e.g. AAPL, NVDA, MSFT)…"
           aria-label="Stock ticker for analysis"
+          data-cy="ai-ticker-input"
           className="flex-1 px-4 py-2.5 rounded-xl bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white text-sm outline-none focus:ring-2 focus:ring-indigo-500"
         />
-        <button type="submit" disabled={analyzing || !ticker} className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-60 text-white font-semibold px-5 py-2.5 rounded-xl text-sm transition-colors">
+        <button type="submit" data-cy="ai-analyze-btn" disabled={analyzing || !ticker} className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-60 text-white font-semibold px-5 py-2.5 rounded-xl text-sm transition-colors">
           <Brain size={16} />
           {analyzing ? 'Analysing…' : 'Analyse'}
         </button>

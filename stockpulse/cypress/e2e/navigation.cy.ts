@@ -15,35 +15,56 @@ describe('Navigation', () => {
   });
 
   it('navigates to Portfolio via sidebar', () => {
-    cy.contains('a', 'Portfolio').click();
+    cy.get('[data-cy="nav-portfolio"]').click();
     cy.url().should('include', '#/portfolio');
     cy.contains('Portfolio').should('be.visible');
   });
 
   it('navigates to Paper Trading via sidebar', () => {
-    cy.contains('a', 'Paper Trade').click();
+    cy.get('[data-cy="nav-paper"]').click();
     cy.url().should('include', '#/paper');
   });
 
   it('navigates to Alerts via sidebar', () => {
-    cy.contains('a', 'Alerts').click();
+    cy.get('[data-cy="nav-alerts"]').click();
     cy.url().should('include', '#/alerts');
   });
 
   it('navigates to AI Signals via sidebar', () => {
-    cy.contains('a', 'AI Signals').click();
+    cy.get('[data-cy="nav-ai"]').click();
     cy.url().should('include', '#/ai');
   });
 
   it('navigates to News via sidebar', () => {
-    cy.contains('a', 'News').click();
+    cy.get('[data-cy="nav-news"]').click();
     cy.url().should('include', '#/news');
   });
 
-  it('navigates to Screener via sidebar', () => {
-    cy.contains('a', 'Screener').click();
+  it('navigates to Screener via sidebar for premium users', () => {
+    // Screener is premiumOnly in Sidebar.tsx: for a free user, clicking it opens the
+    // sign-in/upgrade gate instead of navigating (covered separately below).
+    cy.loginAs('premium');
+    cy.get('[data-cy="nav-screener"]').click();
     cy.url().should('include', '#/screener');
     cy.contains('Stock Screener').should('be.visible');
+  });
+
+  it('clicking the locked Screener nav item does not navigate for free users', () => {
+    cy.get('[data-cy="nav-screener"]').click();
+    cy.get('[role="dialog"]').should('be.visible');
+    cy.url().should('not.include', '#/screener');
+  });
+
+  it('navigates to the User Guide via sidebar', () => {
+    cy.get('[data-cy="nav-guide"]').click();
+    cy.url().should('include', '#/guide');
+    cy.contains('Welcome to StockPulse').should('be.visible');
+  });
+
+  it('navigates to Admin via the sidebar footer button', () => {
+    cy.stubAdmin();
+    cy.get('[data-cy="nav-admin"]').click();
+    cy.url().should('include', '#/admin');
   });
 
   it('restores view from URL hash on reload', () => {
@@ -58,11 +79,9 @@ describe('Navigation', () => {
 
   it('toggles dark/light theme', () => {
     cy.get('html').should('not.have.class', 'dark');
-    cy.get('[aria-label*="theme"], [aria-label*="dark"], [aria-label*="light"], button[title*="dark"], button[title*="light"]')
-      .first().click();
+    cy.get('[aria-label*="dark"], [aria-label*="light"]').first().click();
     cy.get('html').should('have.class', 'dark');
-    cy.get('[aria-label*="theme"], [aria-label*="dark"], [aria-label*="light"], button[title*="dark"], button[title*="light"]')
-      .first().click();
+    cy.get('[aria-label*="dark"], [aria-label*="light"]').first().click();
     cy.get('html').should('not.have.class', 'dark');
   });
 
@@ -71,17 +90,17 @@ describe('Navigation', () => {
     cy.contains('S&P 500').should('be.visible');
   });
 
-  it('shows user email in navbar when signed in', () => {
+  it('shows user email in sidebar when signed in', () => {
     cy.contains('free@test.com').should('be.visible');
   });
 
   it('shows Sign In button when signed out', () => {
     cy.visit('/');
-    cy.get('[data-cy="signin-btn"], button').filter(':contains("Sign in")').should('exist');
+    cy.get('button').filter(':contains("Sign In")').should('exist');
   });
 
   it('highlights the active sidebar item', () => {
-    cy.contains('a', 'Alerts').click();
-    cy.contains('a', 'Alerts').should('have.class', /active|indigo|selected|bg-/);
+    cy.get('[data-cy="nav-alerts"]').click();
+    cy.get('[data-cy="nav-alerts"]').should('have.class', 'bg-indigo-100');
   });
 });

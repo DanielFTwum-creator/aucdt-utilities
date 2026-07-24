@@ -115,19 +115,19 @@ export default function PaperTrading({ user, authFetch, onLoginClick }: Props) {
           <form onSubmit={placeOrder} className="space-y-3">
             <div>
               <label htmlFor="pt-ticker" className="block text-xs text-gray-500 dark:text-gray-400 mb-1">Ticker</label>
-              <input id="pt-ticker" type="text" value={orderForm.ticker} onChange={e => setOrderForm(f => ({ ...f, ticker: e.target.value }))} required placeholder="AAPL" className="w-full px-3 py-2 rounded-lg bg-gray-100 dark:bg-gray-800 text-sm text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-indigo-500 uppercase" />
+              <input id="pt-ticker" data-cy="pt-ticker-input" type="text" value={orderForm.ticker} onChange={e => setOrderForm(f => ({ ...f, ticker: e.target.value }))} required placeholder="AAPL" className="w-full px-3 py-2 rounded-lg bg-gray-100 dark:bg-gray-800 text-sm text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-indigo-500 uppercase" />
             </div>
             <div className="grid grid-cols-2 gap-2">
               <div>
                 <label htmlFor="pt-action" className="block text-xs text-gray-500 dark:text-gray-400 mb-1">Action</label>
-                <select id="pt-action" value={orderForm.action} onChange={e => setOrderForm(f => ({ ...f, action: e.target.value as 'buy' | 'sell' }))} className="w-full px-3 py-2 rounded-lg bg-gray-100 dark:bg-gray-800 text-sm text-gray-900 dark:text-white outline-none">
+                <select id="pt-action" data-cy="pt-action-select" value={orderForm.action} onChange={e => setOrderForm(f => ({ ...f, action: e.target.value as 'buy' | 'sell' }))} className="w-full px-3 py-2 rounded-lg bg-gray-100 dark:bg-gray-800 text-sm text-gray-900 dark:text-white outline-none">
                   <option value="buy">Buy</option>
                   <option value="sell">Sell</option>
                 </select>
               </div>
               <div>
                 <label htmlFor="pt-type" className="block text-xs text-gray-500 dark:text-gray-400 mb-1">Order Type</label>
-                <select id="pt-type" value={orderForm.order_type} onChange={e => setOrderForm(f => ({ ...f, order_type: e.target.value as OrderType }))} className="w-full px-3 py-2 rounded-lg bg-gray-100 dark:bg-gray-800 text-sm text-gray-900 dark:text-white outline-none">
+                <select id="pt-type" data-cy="pt-type-select" value={orderForm.order_type} onChange={e => setOrderForm(f => ({ ...f, order_type: e.target.value as OrderType }))} className="w-full px-3 py-2 rounded-lg bg-gray-100 dark:bg-gray-800 text-sm text-gray-900 dark:text-white outline-none">
                   <option value="market">Market</option>
                   <option value="limit">Limit</option>
                   <option value="stop">Stop</option>
@@ -136,17 +136,17 @@ export default function PaperTrading({ user, authFetch, onLoginClick }: Props) {
             </div>
             <div>
               <label htmlFor="pt-shares" className="block text-xs text-gray-500 dark:text-gray-400 mb-1">Shares</label>
-              <input id="pt-shares" type="number" step="0.001" min="0.001" value={orderForm.shares} onChange={e => setOrderForm(f => ({ ...f, shares: e.target.value }))} required placeholder="10" className="w-full px-3 py-2 rounded-lg bg-gray-100 dark:bg-gray-800 text-sm text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-indigo-500" />
+              <input id="pt-shares" data-cy="pt-shares-input" type="number" step="0.001" min="0.001" value={orderForm.shares} onChange={e => setOrderForm(f => ({ ...f, shares: e.target.value }))} required placeholder="10" className="w-full px-3 py-2 rounded-lg bg-gray-100 dark:bg-gray-800 text-sm text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-indigo-500" />
             </div>
             {orderForm.order_type !== 'market' && (
               <div>
                 <label htmlFor="pt-limit" className="block text-xs text-gray-500 dark:text-gray-400 mb-1">{orderForm.order_type === 'limit' ? 'Limit Price' : 'Stop Price'}</label>
-                <input id="pt-limit" type="number" step="0.01" value={orderForm.limit_price} onChange={e => setOrderForm(f => ({ ...f, limit_price: e.target.value }))} placeholder="150.00" className="w-full px-3 py-2 rounded-lg bg-gray-100 dark:bg-gray-800 text-sm text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-indigo-500" />
+                <input id="pt-limit" data-cy="pt-limit-input" type="number" step="0.01" value={orderForm.limit_price} onChange={e => setOrderForm(f => ({ ...f, limit_price: e.target.value }))} placeholder="150.00" className="w-full px-3 py-2 rounded-lg bg-gray-100 dark:bg-gray-800 text-sm text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-indigo-500" />
               </div>
             )}
             {orderError && <p role="alert" className="text-red-500 text-xs">{orderError}</p>}
             {orderSuccess && <p role="status" className="text-green-600 dark:text-green-400 text-xs">{orderSuccess}</p>}
-            <button type="submit" className={`w-full text-white text-sm font-semibold py-2.5 rounded-xl transition-colors ${orderForm.action === 'buy' ? 'bg-green-600 hover:bg-green-700' : 'bg-red-500 hover:bg-red-600'}`}>
+            <button type="submit" data-cy="pt-submit-btn" className={`w-full text-white text-sm font-semibold py-2.5 rounded-xl transition-colors ${orderForm.action === 'buy' ? 'bg-green-600 hover:bg-green-700' : 'bg-red-500 hover:bg-red-600'}`}>
               {orderForm.action === 'buy' ? 'Buy' : 'Sell'} (Paper)
             </button>
           </form>

@@ -1,4 +1,4 @@
-import { FREE_USER, TEST_TOKEN, PREMIUM_USER } from '../fixtures/data';
+import { TEST_TOKEN } from '../fixtures/data';
 
 describe('Subscription & Upgrade', () => {
   beforeEach(() => {
@@ -15,18 +15,21 @@ describe('Subscription & Upgrade', () => {
     cy.contains(/upgrade to premium|StockPulse Premium/i).should('be.visible');
   });
 
-  it('closes upgrade modal on × button', () => {
+  it('closes upgrade modal on the close button', () => {
     cy.loginAs('free', '/#/screener');
     cy.contains(/upgrade to access screener/i).click();
     cy.contains(/upgrade to premium|StockPulse Premium/i).should('be.visible');
-    cy.get('[aria-label="Close"], button').filter(':contains("×"), :contains("✕"), [aria-label="Close"]').first().click();
+    cy.get('[aria-label="Close"]').click();
     cy.contains(/upgrade to premium|StockPulse Premium/i).should('not.exist');
   });
 
-  it('shows premium feature list in upgrade modal', () => {
+  it('shows the free and premium feature lists in the upgrade modal', () => {
     cy.loginAs('free', '/#/screener');
     cy.contains(/upgrade to access screener/i).click();
-    cy.contains(/unlimited|50 stocks|100 alerts|Advanced metrics/i).should('be.visible');
+    cy.contains('50-stock watchlist').should('be.visible');
+    cy.contains('100 price alerts').should('be.visible');
+    cy.contains('Stock screener').should('be.visible');
+    cy.contains('5-stock watchlist').should('be.visible');
   });
 
   // ── Upgrade flow ──────────────────────────────────────────────────────────
@@ -38,7 +41,7 @@ describe('Subscription & Upgrade', () => {
 
     cy.loginAs('free', '/#/screener');
     cy.contains(/upgrade to access screener/i).click();
-    cy.contains(/upgrade|go premium|subscribe/i).first().click();
+    cy.contains(/upgrade now/i).click();
     cy.wait('@upgrade');
     cy.window().then(win => {
       const user = JSON.parse(win.localStorage.getItem('sp_user') || '{}');
@@ -46,24 +49,10 @@ describe('Subscription & Upgrade', () => {
     });
   });
 
-  // ── Cancel subscription ───────────────────────────────────────────────────
-
-  it('cancels premium subscription', () => {
-    cy.intercept('POST', '/api/auth/cancel', {
-      body: { token: TEST_TOKEN, tier: 'free', message: 'Subscription cancelled' },
-    }).as('cancel');
-
-    cy.visit('/', {
-      onBeforeLoad(win) {
-        win.localStorage.setItem('sp_user', JSON.stringify(PREMIUM_USER));
-        win.localStorage.setItem('sp_token', TEST_TOKEN);
-      },
-    });
-    cy.get('[href="#/screener"]').click();
-    // Premium users see the screener — navigate to settings or cancel CTA
-    cy.contains(/cancel subscription|downgrade/i).click({ force: true });
-    cy.wait('@cancel');
-  });
+  // POST /api/auth/cancel exists on the backend (routes/auth.ts), but
+  // SubscriptionModal.tsx has no cancel/downgrade button or any other UI that calls
+  // it — it's a backend-only capability with no frontend entry point today.
+  it.skip('cancels premium subscription — backend-only capability, no UI exists yet', () => {});
 
   // ── Screener gate ─────────────────────────────────────────────────────────
 

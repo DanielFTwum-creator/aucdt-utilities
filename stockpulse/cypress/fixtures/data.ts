@@ -5,10 +5,14 @@ export const PREMIUM_USER = { id: 2, email: 'premium@test.com', name: 'Premium U
 export const ADMIN_USER = { id: 3, email: 'daniel.twum@techbridge.edu.gh', name: 'Daniel Twum', tier: 'premium' as const };
 export const TEST_TOKEN = 'test-jwt-token';
 
+// Symbols match backend getIndices() (services/market.ts), which always requests
+// ^GSPC/^IXIC/^DJI/^VIX — Navbar's INDEX_LABELS map keys off these exact symbols
+// to render friendly names ("S&P 500", "NASDAQ", "DOW", "VIX").
 export const INDICES = [
-  { symbol: 'SPY', name: 'S&P 500', price: 550.12, change: 2.34, changePercent: 0.43 },
-  { symbol: 'QQQ', name: 'NASDAQ 100', price: 475.88, change: -1.22, changePercent: -0.26 },
-  { symbol: 'DIA', name: 'Dow Jones', price: 435.60, change: 0.80, changePercent: 0.18 },
+  { symbol: '^GSPC', name: 'S&P 500', price: 550.12, change: 2.34, changePercent: 0.43 },
+  { symbol: '^IXIC', name: 'NASDAQ Composite', price: 17500.88, change: -45.22, changePercent: -0.26 },
+  { symbol: '^DJI', name: 'Dow Jones Industrial Average', price: 43560.60, change: 78.80, changePercent: 0.18 },
+  { symbol: '^VIX', name: 'CBOE Volatility Index', price: 14.35, change: -0.22, changePercent: -1.51 },
 ];
 
 export const WATCHLIST = [
@@ -70,3 +74,38 @@ export const HISTORY_BARS = Array.from({ length: 30 }, (_, i) => ({
   close: 186 + Math.random() * 8,
   volume: 50000000 + Math.random() * 10000000,
 }));
+
+// Raw position rows as returned by GET /api/portfolio (distinct from the
+// enriched GET /api/portfolio/summary shape used for PORTFOLIO_SUMMARY above).
+export const RAW_PORTFOLIO_POSITIONS = [
+  { id: 1, ticker: 'AAPL', shares: 50, purchase_price: 170.00, purchase_date: '2026-01-01', notes: null, created_at: '2026-01-01T00:00:00Z' },
+  { id: 2, ticker: 'MSFT', shares: 37, purchase_price: 390.00, purchase_date: '2026-01-02', notes: null, created_at: '2026-01-02T00:00:00Z' },
+];
+
+export const SEARCH_RESULTS = [
+  { ticker: 'GOOGL', name: 'Alphabet Inc.' },
+];
+
+// >=5 points required for PerformanceChart to treat the series as having data.
+export const PERFORMANCE_HISTORY = {
+  portfolio: Array.from({ length: 6 }, (_, i) => ({ date: `2026-01-0${i + 1}`, value: 20000 + i * 500, indexedValue: 100 + i * 2.5 })),
+  benchmark: Array.from({ length: 6 }, (_, i) => ({ date: `2026-01-0${i + 1}`, value: 5000 + i * 10, indexedValue: 100 + i * 1.5 })),
+};
+
+export const PERFORMANCE_METRICS = {
+  annualizedReturn: 0.18,
+  volatility30d: 0.14,
+  sharpeRatio: 1.28,
+  beta: 1.05,
+  alpha: 0.04,
+  maxDrawdown: 0.12,
+  riskFreeRate: 0.0525,
+  riskFreeRateSource: 'fred' as const,
+  period: '1y' as const,
+  computedAt: '2026-06-18T00:00:00Z',
+};
+
+export const DIVIDENDS = [
+  { ticker: 'AAPL', amount: 0.24, sharesHeld: 50, total: 12.00, exDate: '2026-02-10' },
+  { ticker: 'MSFT', amount: 0.75, sharesHeld: 37, total: 27.75, exDate: '2026-02-14' },
+];
